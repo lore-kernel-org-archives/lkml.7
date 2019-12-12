@@ -2,198 +2,99 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9325C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C1EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AE820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XCLwiiEE"
+	by mail.kernel.org (Postfix) with ESMTP id 43CA920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfLLKr3 (ORCPT
+        id S1728815AbfLLKsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:47:29 -0500
-Received: from mout.web.de ([212.227.17.12]:58431 "EHLO mout.web.de"
+        Thu, 12 Dec 2019 05:48:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:42154 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728648AbfLLKr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:47:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576147629;
-        bh=iU0ev7VoC1TijGDuRwLbBpmGPdY4l6wXakXHGIG0OlE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=XCLwiiEEagsVPHcOL/uDVAZyOVwelM3Mmf+s8rJu111S4kNmasEi4MnhCfyYOhU44
-         r57699Z5UhuLNEwD9+MXtCTqyrrym0CJMQruVAKxT2cj+SoFGNviQG2EuoUbqJct1C
-         oUEZqZCCIzcGVFA2/PJ9pc6sGMk/YlBmAK94bZfw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.43.108] ([89.204.139.166]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M6UxL-1hmGH82HNL-00yUj1; Thu, 12
- Dec 2019 11:47:09 +0100
-Subject: Re: [PATCH v2 9/9] arm64: dts: rockchip: RockPro64: hook up bluetooth
- at uart0
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191211235253.2539-1-smoch@web.de>
- <20191211235253.2539-10-smoch@web.de>
- <a0ad4723-db85-0eda-efb5-f0c9a2a6aec3@arm.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <b859b9f1-2d89-ddef-df26-724ac4ffb088@web.de>
-Date:   Thu, 12 Dec 2019 11:47:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1728458AbfLLKsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:48:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E37C9328;
+        Thu, 12 Dec 2019 02:48:36 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 117503F718;
+        Thu, 12 Dec 2019 02:48:33 -0800 (PST)
+Date:   Thu, 12 Dec 2019 10:48:32 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v4 03/12] mm: Reserve asm-generic prot flag 0x10 for arch
+ use
+Message-ID: <20191212104831.GD18258@arrakis.emea.arm.com>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-4-broonie@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a0ad4723-db85-0eda-efb5-f0c9a2a6aec3@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-Provags-ID: V03:K1:GxvXISq/vQUw0CF4n7qCFX0ucOQQ/WrciDDXrMEuGYWZVSa/9hB
- QAPsZtpo3t9v0XTThIaCt5DvRpmp3fB8lWb//T5QodTKvZBcSVje+4mohTMLZVqN14UT3pS
- 7KHQIMGBpf7mjeu1cNFW5zYEmU4IgvkoM+2RAsdoSGfHlZ5dlnc9cwEZ1igGGrszaSoUP4z
- Om2pt6sOQlrqUGzy7+qTA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tJ/tdq6fCbM=:+dw/5RxWG7gW0S7c717i5c
- qC/iLBFbuQhEZZoUY63jeayspCCRnlOuPytTsAlvpqNVatg++A2+MLAvjAG8zF3zBVe+Hhqcl
- YNsC5cTWfmNCsMOcMVdDVSGW46PPg3pW3AR7C850a2BlmmYj07PtIw84iCFGFyREwQ0bc9kFJ
- c3QPlG/1cbtv/7AXiRzHXEiqpMthD24Yst0DkfvB8JAWdEcAbVQnoeDHiuY8PxSyfB3hMCIMy
- otycqOrN5n4Av+3ebRscHZ4WOcPL0X9DZxmnW8B30wUv2ei1DQ7hLAesX8KklGAHtG/aMGyrG
- mDNNt8C2Fk2AI4OO7Yud4vFPf8QWWchLzeTzoIBEj/3Krm2p59MNAgr2RHbRVhJZqb+498iKr
- bZzTR4KbPUpmZ96FQ+zi+8h14ZFetc0ukHrepY3eAGXcYTGTMVVdqEp4clUe28GSuafEeeNW5
- I1HXygTosgqvCX64VTQzRxOXOPBFqtpEeYF9ViEwm7NXyQK5RxCpucdcd7Uq1aeosZG3i+F/9
- F/A+7CbF9I2VAZ2aXijdMuXVoKf8cNG2bfGhLkws086VBHDCBNz1GZfU9/p1tjC9XAt8vkRED
- zUuAVdNBpR9oHsfT4/99nHFTeaMK1rUwekofczJXDsCXpgOwQlJuTWEaoz0iU0iva6LL87G72
- vo9TLiBgRMpZRqtEWNKn90/Q5gXWrxMPDiUvFeNtnskT/tISY1yrCO4N2wuiM3cuddKZ74DGR
- TYfGnwGCx3ApOFNz2aqs6KchFirYOCV76JzQtPL7xKMWSbh0tJcZ9xOwgVna5Nt64d/DlyNfa
- 0G3kb0+wCwqahGqe0OOVvSGbecFFZ9c3Bx4VnIdT/yVrxoLNe8jrSSsQpt6EVXlVJOr/TYhwz
- X3Mg4FjBYjBt0uBljQU+I1peJwQ9dv2YS0rc34Oj1VAYc72Pf2bjlWKJ/iWNY5POzGXgMfi03
- Sqp8etxIB5Ir0w3k8oeIfBT1nOMt04uqhRadIq8uHlWbCZxjHO5hGN30CaIr8LEft4ghCv/9H
- alWWN2FexeAEFSz/aqV4oAmraMzBWsN0M+QxgHVMZbOHgNCZL7iVMKFNgNlA/efAUjfVl++2X
- n85ZSqEvUFoJVJvJ1JXvONkqNFdCYgWBpci68KdZi3jiDAGndXMKHvTzcypFLMMfFoDkcD0Ab
- YQ/TQLlCGs50yQTK89k5h881RUrBCZVItewkt1NKp2QWPlxIbyK2iWIPjOci+RbyLOiSgtiA4
- 3Yl5Q5K/y93xVK4y3b/JrFYO9mCnk3w3uPsN7Ow==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211154206.46260-4-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 03:41:57PM +0000, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
+> 
+> The asm-generic mman definitions are used by a few architectures
+> that also define an arch-specific PROT flag with value 0x10.  This
+> currently applies to sparc and powerpc, and arm64 will soon join
+> in.
+> 
+> To help future maintainers, document the use of this flag in the
+> asm-generic header too.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  include/uapi/asm-generic/mman-common.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> index c160a5354eb6..81442d2aaecb 100644
+> --- a/include/uapi/asm-generic/mman-common.h
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -11,6 +11,7 @@
+>  #define PROT_WRITE	0x2		/* page can be written */
+>  #define PROT_EXEC	0x4		/* page can be executed */
+>  #define PROT_SEM	0x8		/* page may be used for atomic ops */
+> + /*			0x10		   reserved for arch-specific use */
+>  #define PROT_NONE	0x0		/* page can not be accessed */
+>  #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+>  #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
 
+Since the BTI will likely be merged before the MTE series, please
+consider reserving 0x20 as well. The updated patch, acked by Arnd:
 
-On 12.12.19 11:22, Robin Murphy wrote:
-> Hi Soeren,
->
-> On 11/12/2019 11:52 pm, Soeren Moch wrote:
->> With enabled wifi support (required for firmware loading) for the
->> Ampak AP6359SA based wifi/bt combo module we now also can enable
->> the bluetooth part.
->>
->> Suggested-by: Heiko Stuebner <heiko@sntech.de>
->> Signed-off-by: Soeren Moch <smoch@web.de>
->> ---
->> changes in v2:
->> - new patch
->>
->> Cc: Heiko Stuebner <heiko@sntech.de>
->> Cc: Kalle Valo <kvalo@codeaurora.org>
->> Cc: linux-wireless@vger.kernel.org
->> Cc: brcm80211-dev-list.pdl@broadcom.com
->> Cc: brcm80211-dev-list@cypress.com
->> Cc: netdev@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-rockchip@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->> =C2=A0 .../boot/dts/rockchip/rk3399-rockpro64.dts=C2=A0=C2=A0=C2=A0 | 2=
-9 ++++++++++++++++++-
->> =C2=A0 1 file changed, 28 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->> b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->> index 9fa92790d6e0..94cc462e234d 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->> @@ -561,6 +561,20 @@
->> =C2=A0 };
->>
->> =C2=A0 &pinctrl {
->> +=C2=A0=C2=A0=C2=A0 bt {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bt_enable_h: bt-enable-h {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 roc=
-kchip,pins =3D <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bt_host_wake_l: bt-host-wak=
-e-l {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 roc=
-kchip,pins =3D <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bt_wake_l: bt-wake-l {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 roc=
-kchip,pins =3D <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +=C2=A0=C2=A0=C2=A0 };
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 buttons {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pwrbtn: pwrbtn {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 rockchip,pins =3D <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
->> @@ -729,8 +743,21 @@
->>
->> =C2=A0 &uart0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
->> -=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&uart0_xfer &uart0_cts>;
->> +=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&uart0_xfer &uart0_cts &uart0_rts>;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "okay";
->> +
->> +=C2=A0=C2=A0=C2=A0 bluetooth {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "brcm,bcm434=
-38-bt";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&rk808 1>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "extclk";
->
-> Is this right? Comparing the binding and the naming on the schematics,
-> it seems more likely that this might be the LPO clock rather than the
-> TXCO clock.
->
-> Robin.
-On second thought I have to agree. So we need another round on this.
+https://lore.kernel.org/linux-arm-kernel/20191211184027.20130-2-catalin.marinas@arm.com/
 
-Thanks for your review and bug report,
-Soeren
->
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device-wakeup-gpios =3D <&g=
-pio2 RK_PD3 GPIO_ACTIVE_HIGH>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 host-wakeup-gpios =3D <&gpi=
-o0 RK_PA4 GPIO_ACTIVE_HIGH>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shutdown-gpios =3D <&gpio0 =
-RK_PB1 GPIO_ACTIVE_HIGH>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default"=
-;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&bt_host_wak=
-e_l &bt_wake_l &bt_enable_h>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vbat-supply =3D <&vcc3v3_sy=
-s>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vddio-supply =3D <&vcc_1v8>=
-;
->> +=C2=A0=C2=A0=C2=A0 };
->> =C2=A0 };
->>
->> =C2=A0 &uart2 {
->> --
->> 2.17.1
->>
->>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->>
-
+-- 
+Catalin
