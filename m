@@ -2,89 +2,123 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396EDC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57202C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E66B2253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3584521556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576173841;
-	bh=cZV989DdYo9B9NVAqpSi0dlI1udeZn5Oa6mQtxQHc08=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Xf+WeNMhrzdjEKR0ZFtQfZ6ukOHZq5Dsg/jh9WWDgucMwLHvtVGBWgumwz+y7yyyq
-	 bplrYYrFa/fYiXqeydDVqse4FJi15yV6o65KrHzGYnYHvE5dH3TqktDwRFSSdPMfIl
-	 Wm08ywHI0Yzdorzk8yW7IIKvYxF91F/2dWcQAb9g=
+	s=default; t=1576174002;
+	bh=QbYFPcyUbQkcB6fG8/43kB0aA3LyHLLV1x1hYhirNx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sc8yC7vwwiHfoPhagrr3eZSqYNQ6AaVsEudr/c9CzrwLxkZmEqN0GiAQEMQioJDwN
+	 mY5nXrOABFRcLwEpsIe1V3WRxs7yGMLMjWNGF/r3hXC8PIKFPj2JbZfjFVpaXQhtUL
+	 w9VHFwPM7xe6ZE7JhBCqXWXerkzPhPE6VK0e6Phw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfLLSEA (ORCPT
+        id S1730271AbfLLSGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:04:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
+        Thu, 12 Dec 2019 13:06:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbfLLSD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:03:59 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
+        id S1730159AbfLLSGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:06:41 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65CC7206DA;
-        Thu, 12 Dec 2019 18:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8834214AF;
+        Thu, 12 Dec 2019 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576173839;
-        bh=cZV989DdYo9B9NVAqpSi0dlI1udeZn5Oa6mQtxQHc08=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=n13dv87dgFevQzdUeJHbKYQ3YsqGQqtTbjX7j47+p3TV5ooU736D/cx/1AgU4Xsjq
-         5m+OsPbdg4tPh8HWhMAXNmwya28fwIXsS1BKo1w3ppgJJFLNyI4LNKl8tEJDqLkr8z
-         Ajr84HjIiD0JI3HkaN6YkeHiVwDSqfX+KHMJ1qJU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ACCC73522757; Thu, 12 Dec 2019 10:03:58 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:03:58 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191212180358.GX2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <201912110621.WJ6oENgf%lkp@intel.com>
- <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
- <20191212041406.GT2889@paulmck-ThinkPad-P72>
- <5614739335088d3e9baff43b752df04b84a8ad14.camel@hammerspace.com>
+        s=default; t=1576174000;
+        bh=QbYFPcyUbQkcB6fG8/43kB0aA3LyHLLV1x1hYhirNx0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ONkagQPlYuBVQGWVNonUeKbx415r1LL+qzkuQsGkw33plWbHk8Y/45w/+OuUwoXCm
+         a5KjjB7xE5Vn1z36KKIiaXEYfj4X67Sr4VZj4DfY1fCjTA3atFezHXphkDnvLkYhOh
+         HUgLBzevlZk67TF8LP5CzctiU32bk+HDC9azTeo4=
+Date:   Thu, 12 Dec 2019 18:06:35 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212180634.GA19020@willie-the-truck>
+References: <87blslei5o.fsf@mpe.ellerman.id.au>
+ <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5614739335088d3e9baff43b752df04b84a8ad14.camel@hammerspace.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 01:45:29PM +0000, Trond Myklebust wrote:
-> On Wed, 2019-12-11 at 20:14 -0800, Paul E. McKenney wrote:
-> > On Wed, Dec 11, 2019 at 01:18:42PM +0530, 
-> > madhuparnabhowmik04@gmail.com wrote:
-> > > This build error is because the macro list_tail_rcu() is
-> > > not yet present in the mainline kernel.
-> > > 
-> > > This patch is dependent on the patch : 
-> > > https://lore.kernel.org/linux-kernel-mentees/CAF65HP2SC89k9HJZfcLgeOMRPBKRyasCMiLo2gZgBKycjHuU6A@mail.gmail.com/T/#t
-> > 
-> > If the NFS folks are OK with it, I would be happy to take it in -rcu,
-> > where the list_tail_rcu() patch is currently located.
+On Thu, Dec 12, 2019 at 09:41:32AM -0800, Linus Torvalds wrote:
+> On Thu, Dec 12, 2019 at 2:46 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > +#ifdef GCC_VERSION < 40800
 > 
-> That would be fine with me.
+> Where does that 4.8 version check come from, and why?
+> 
+> Yeah, I know, but this really wants a comment. Sadly it looks like gcc
+> bugzilla is down, so
+> 
+>    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+> 
+> currently gives an "Internal Server Error" for me.
+> 
+> [ Delete the horrid code we have because of gcc bugs ]
+> 
+> > +#else /* GCC_VERSION < 40800 */
+> > +
+> > +#define READ_ONCE_NOCHECK(x)                                           \
+> > +({                                                                     \
+> > +       typeof(x) __x = *(volatile typeof(x))&(x);                      \
+> 
+> I think we can/should just do this unconditionally if it helps th eissue.
 
-Very good!  I have queued it.
+I'm currently trying to solve the issue by removing volatile from the bitop
+function signatures, but it's grotty because there are quite a few callers
+to fix up. I'm still trying to do it, because removing volatile fields from
+structurs is generally a "good thing", but I'd be keen to simplify
+READ_ONCE() as you suggest regardless.
 
-							Thanx, Paul
+> Maybe add a warning about how gcc < 4.8 might mis-compile the kernel -
+> those versions are getting close to being unacceptable for kernel
+> builds anyway.
+> 
+> We could also look at being stricter for the normal READ/WRITE_ONCE(),
+> and require that they are
+> 
+>  (a) regular integer types
+> 
+>  (b) fit in an atomic word
+> 
+> We actually did (b) for a while, until we noticed that we do it on
+> loff_t's etc and relaxed the rules. But maybe we could have a
+> "non-atomic" version of READ/WRITE_ONCE() that is used for the
+> questionable cases?
+
+That makes a lot of sense to me, and it would allow us to use
+compiletime_assert_atomic_type() as we do for the acquire/release accessors.
+
+Will
