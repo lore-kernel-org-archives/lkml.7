@@ -2,133 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23751C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E90C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E993021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1880822527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fmsAJ85h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejIqzn/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfLLLTx (ORCPT
+        id S1728993AbfLLLUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:19:53 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15830 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728722AbfLLLTw (ORCPT
+        Thu, 12 Dec 2019 06:20:15 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40318 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbfLLLUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:19:52 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df222500000>; Thu, 12 Dec 2019 03:19:44 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 12 Dec 2019 03:19:51 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 12 Dec 2019 03:19:51 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 11:19:48 +0000
-Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191211150339.185439726@linuxfoundation.org>
- <7b43a504-160f-e793-99b2-bcb79d331b6a@nvidia.com>
- <8de7c018-32c7-f46e-4c43-ea3a70378a14@roeck-us.net>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <892c8078-6db4-d821-43fd-cacf09ca26b9@nvidia.com>
-Date:   Thu, 12 Dec 2019 11:19:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 06:20:14 -0500
+Received: by mail-lj1-f194.google.com with SMTP id s22so1837472ljs.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 03:20:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P1W0z4HqV64jzJwtaYcGadzOgRZCn2v4chbYC9m9FGs=;
+        b=ejIqzn/RWAjyKo7RBVFzhGkFkF2lSZiGd2eJMd8SI1r0ISOjFbygsYsgAQN8XmQzQk
+         0lLFXQhwKM1eITsy4avAQxAh9YW73FCSxA30SOO4ebLCpg54/FqhH1kVEkL7cqr550+3
+         I9a9nPQN0ywXQrPzcfOaggdXetKiYHLmJjI+1DZc9EUMx2O/iWPayKLBlkjZYv4V8NgJ
+         nan9YSgU3ufNHuyQvCbLyfmekHqbVqfxJNEwf9KzEqsovts3q/fPjhlFqhuzDFb1nWyW
+         xAcA0eUqzW/MADBAAmUvKLx8NNJDQc7mcfuqeaYrbAn5Geo/v9v5h5dAUr3AVBKVcV47
+         h5mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P1W0z4HqV64jzJwtaYcGadzOgRZCn2v4chbYC9m9FGs=;
+        b=WqMgN/qGCnSpx2urEiWwEWOJHhMFnVT8FU9M09GjKRbE5uVWqgqcaeSu2BZb0zET7a
+         96S2fJE97hgqYH0haTiFzMOPf92/y2nej5acHi7HoHk/7eBcr3YB+rzahYnG2DeYfqHX
+         cH0Pj2hziMVqK+TbpRHqo8wv3lDn0Hd5hoglXBgJLdnpRyQfrEMBEborJk6JFHWTLYi+
+         c/N9qxQwWiR7EZuK8+svKisM5OkAvMYz9yDMFyWWz4DGTVN4MjNxKq1jQnaRBr3htygK
+         wgYaQ6Cldl3aNbQAO4tXGOaPQR7IcqQ7fa8PVMLnapniAKvLKbD76WqTnNhcDIfcDzIB
+         ojBg==
+X-Gm-Message-State: APjAAAV1bOOnfzBAH/fD3AvzTeIR0Hggv0lLnjtF7Cmm/m9uobijgN3E
+        kTufrDAr+/o+me36ixa/OIw/8iFjw+JbqtD7SPPZrQ==
+X-Google-Smtp-Source: APXvYqwcNMZYiNwnTt8iXUn4bZLBe/VVIuZbWOxdaGwBRPCIZF6vo/z0Flel1o/NxhVXsNhFkAgOrX3kstFVUuexBm4=
+X-Received: by 2002:a2e:9a51:: with SMTP id k17mr5118022ljj.206.1576149612570;
+ Thu, 12 Dec 2019 03:20:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <8de7c018-32c7-f46e-4c43-ea3a70378a14@roeck-us.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576149584; bh=+AfDW9ORdIXJCM0WDuhqoJWQ1Cb1LoHKsESwe9yzTJs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fmsAJ85hmBfIoNIrB37Mpne0ALpWuhLh36TGBQIgnvlIUGt1tB3CR413a2TQHBN+H
-         vkKACDbeap+G+Shdsio6EbFskVUsbXGoYDWO+s7r6qmRAVkaQev6brFJJwiS+d8IPZ
-         Px5ipvfBZsTytTOh/2fqPztw8m3jWFQdApMQM/HgfsaKM4aZVyUuWAIF73lfxwMCfC
-         cqvqoHaQ4LCi6viEw+xpHVXLQ6HiGwq8sbXE3CzwhhT+aajFi02PdzMdR3jP1sEuTK
-         nr6lqq/TLjbym+gvT9kTvuLyRKmEbSyOL0jz32gZXWguctdkVf7ksCz9KSTqcrk/jP
-         wnU3lwvDo684g==
+References: <20191120220313.GC18056@pauld.bos.csb> <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com> <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com> <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com> <20191211224617.GE19256@dread.disaster.area>
+ <20191212101031.GV2827@hirez.programming.kicks-ass.net> <20191212101424.GH2871@hirez.programming.kicks-ass.net>
+ <20191212102327.GI2871@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191212102327.GI2871@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 12 Dec 2019 12:20:01 +0100
+Message-ID: <CAKfTPtCUm5vuvNiWszJ5tWHxmcZ2v_KexOxnBHLUkBcqC-P3fw@mail.gmail.com>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound kthread
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Dec 2019 at 11:23, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 11:14:24AM +0100, Peter Zijlstra wrote:
+> > On Thu, Dec 12, 2019 at 11:10:31AM +0100, Peter Zijlstra wrote:
+> > > @@ -4156,13 +4159,13 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+> > >     if (delta_exec < sysctl_sched_min_granularity)
+> > >             return;
+> > >
+> > > -   se = __pick_first_entity(cfs_rq);
+> > > +   se = __pick_next_entity(cfs_rq, NULL);
+> > >     delta = curr->vruntime - se->vruntime;
+> > >
+> > >     if (delta < 0)
+> > >             return;
+> >
+> > What I mean with the below comment is, when this isn't enough, try
+> > something like:
+> >
+> >       if (se == cfs_rq->next)
+> >               ideal_runtime /= 2;
+> >
+> > to make it yield sooner to 'next' buddies. Sadly, due to the whole
+> > cgroup mess, we can't say what actual task is on the end of it (without
+> > doing a full hierarchy pick, which is more expensive still).
+>
+> Just for giggles, that'd look something like:
+>
+>         while (!entity_is_task(se) {
+>                 cfs_rq = group_cfs_rq(se);
+>                 se = pick_next_entity(cfs_rq, cfs_rq->curr);
+>         }
+>         p = task_of(se);
+>
+>         if (is_per_cpu_kthread(p))
+>                 ideal_runtime /= 2;
+>
+> the core-scheduling patch set includes the right primitive for this I
+> think, pick_task_fair().
 
-On 12/12/2019 01:40, Guenter Roeck wrote:
-> On 12/11/19 1:36 PM, Jon Hunter wrote:
->>
->> On 11/12/2019 15:02, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.19.89 release.
->>> There are 243 patches in this series, all will be posted as a response
->>> to this one.=C2=A0 If anyone has any issues with these being applied, p=
-lease
->>> let me know.
->>>
->>> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>> =C2=A0=C2=A0=C2=A0=C2=A0https://www.kernel.org/pub/linux/kernel/v4.x/st=
-able-review/patch-4.19.89-rc1.gz
->>>
->>> or in the git tree and branch at:
->>> =C2=A0=C2=A0=C2=A0=C2=A0git://git.kernel.org/pub/scm/linux/kernel/git/s=
-table/linux-stable-rc.git
->>> linux-4.19.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>> -------------
->>> Pseudo-Shortlog of commits:
->>
->> ...
->>
->>> Linus Walleij <linus.walleij@linaro.org>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 gpio: OF: Parse MMC-specific CD and WP propert=
-ies
->>
->> The above change is causing intermittent failures on Tegra30 eMMC.
->> Reverting this change on top of the 4.19.89-rc1 fixes the problem.
->>
->=20
-> Thanks for tracking that down. I see boot failures for arm:vexpress-a9
-> when trying to boot from mmc.
->=20
-> I dimly recall that this was a problem before. Ah yes ... commit
-> 89a5e15bcba8
-> ("gpio/mmc/of: Respect polarity in the device tree") fixes the above
-> commit.
-> Can you give it a try ?
+why not only updating wan_gran() which is the only function which uses
+sysctl_sched_wakeup_granularity ?
 
-Thanks. I did try this and I can confirm that it does indeed work,
-although does not apply cleanly.
+For per cpu kthread, we could set the gran to sched_min_granularity
+instead of scaling it with thread's priority so per cpu kthread can
+still preempt current ask even if sysctl_sched_wakeup_granularity is
+large
 
-Cheers
-Jon
-
---=20
-nvpublic
+>
+> > > -   if (delta > ideal_runtime)
+> > > +   if (delta > ideal_runtime) // maybe frob this too ?
+> > >             resched_curr(rq_of(cfs_rq));
+> > >  }
