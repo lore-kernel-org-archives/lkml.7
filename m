@@ -2,220 +2,108 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ADCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70433C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026F520836
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42024214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DDPFIoc2"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mOf6cG7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLLBMX (ORCPT
+        id S1727483AbfLLBNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:12:23 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:35804 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfLLBMW (ORCPT
+        Wed, 11 Dec 2019 20:13:46 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:43875 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726791AbfLLBNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:12:22 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC154e3021324;
-        Thu, 12 Dec 2019 01:12:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=8pcHE4iVKZPDt2NxHh3s+hUhwFDrIvd6ht/hiXFyytI=;
- b=DDPFIoc2WUXIiYYXJhv2Zo6p1Vxl6QttOLWzjxPmIxjgfBp/7DZsXGfE9b59jEk4Mw6f
- KB5tl+FY5YB7pQjU5OgjuF7XFL/Eh+OvjoIxKosYkP2Y+jRojorI38a5zNdND9udM4Nx
- 6Ya+lykfUbwYpjk8GD+ifTKjgEW0pDohibMtErGScniRxUztskMJbstYpirryVakGDMp
- 6Ksvis7euXLw+OzIOAisg7H5+47sZ02/YZIhqs83UnVwQSkf7sNpmOrndvAE/Ns65mVT
- E45//77E0ejI824H+s2nCugJgY3Qm7OUGq7QbLbQ3J/7NnbQsFaZU2tLDDp1evcZU0lD Rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wrw4ncw2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 01:12:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC19DB3192981;
-        Thu, 12 Dec 2019 01:12:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wu2fv99qp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 01:12:05 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBC1C0A0025898;
-        Thu, 12 Dec 2019 01:12:00 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Dec 2019 17:12:00 -0800
-Subject: Re: [PATCH v2] hugetlbfs: Disable softIRQ when taking hugetlb_lock
-To:     Waiman Long <longman@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
-Date:   Wed, 11 Dec 2019 17:11:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 20:13:45 -0500
+X-UUID: bca38d7082df45099191f9447f744823-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=B4MILXq3ZMERWeqsdACp65BTdrLNU+AFrjMI+Ui8c0s=;
+        b=mOf6cG7lzAyHQaWJzLGQ1IwDcHX1n70k9sM+f/NzOge0xvRurzaA9nhOr+Q3LWMBQZV6cBqcyeGFUqpZAaxYRCIZ+e22jFTDCnOGhUn2hotuR3c6i3j+mwVgoqFTo2XaVR2WSk689d3oDghkpwNoo1/ZKSS9qZffPaOGTJ4GD1o=;
+X-UUID: bca38d7082df45099191f9447f744823-20191212
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1427452136; Thu, 12 Dec 2019 09:13:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 09:13:18 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 09:13:37 +0800
+Message-ID: <1576113221.17653.6.camel@mtkswgap22>
+Subject: Re: [PATCH v2 04/14] mailbox: mediatek: cmdq: clear task in channel
+ before shutdown
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Dec 2019 09:13:41 +0800
+In-Reply-To: <1575946181.16676.4.camel@mtksdaap41>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1575946181.16676.4.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912120002
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912120002
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 2:19 PM, Waiman Long wrote:
-> On 12/11/19 5:04 PM, Mike Kravetz wrote:
->> Cc: Michal
->>
->> Sorry for the late reply on this effort.
->>
->> On 12/11/19 11:46 AM, Waiman Long wrote:
->>> The following lockdep splat was observed when a certain hugetlbfs test
->>> was run:
->>>
->>> [  612.388273] ================================
->>> [  612.411273] WARNING: inconsistent lock state
->>> [  612.432273] 4.18.0-159.el8.x86_64+debug #1 Tainted: G        W --------- -  -
->>> [  612.469273] --------------------------------
->>> [  612.489273] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
->>> [  612.517273] swapper/30/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
->>> [  612.541273] ffffffff9acdc038 (hugetlb_lock){+.?.}, at: free_huge_page+0x36f/0xaa0
->>> [  612.576273] {SOFTIRQ-ON-W} state was registered at:
->>> [  612.598273]   lock_acquire+0x14f/0x3b0
->>> [  612.616273]   _raw_spin_lock+0x30/0x70
->>> [  612.634273]   __nr_hugepages_store_common+0x11b/0xb30
->>> [  612.657273]   hugetlb_sysctl_handler_common+0x209/0x2d0
->>> [  612.681273]   proc_sys_call_handler+0x37f/0x450
->>> [  612.703273]   vfs_write+0x157/0x460
->>> [  612.719273]   ksys_write+0xb8/0x170
->>> [  612.736273]   do_syscall_64+0xa5/0x4d0
->>> [  612.753273]   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
->>> [  612.777273] irq event stamp: 691296
->>> [  612.794273] hardirqs last  enabled at (691296): [<ffffffff99bb034b>] _raw_spin_unlock_irqrestore+0x4b/0x60
->>> [  612.839273] hardirqs last disabled at (691295): [<ffffffff99bb0ad2>] _raw_spin_lock_irqsave+0x22/0x81
->>> [  612.882273] softirqs last  enabled at (691284): [<ffffffff97ff0c63>] irq_enter+0xc3/0xe0
->>> [  612.922273] softirqs last disabled at (691285): [<ffffffff97ff0ebe>] irq_exit+0x23e/0x2b0
->>> [  612.962273]
->>> [  612.962273] other info that might help us debug this:
->>> [  612.993273]  Possible unsafe locking scenario:
->>> [  612.993273]
->>> [  613.020273]        CPU0
->>> [  613.031273]        ----
->>> [  613.042273]   lock(hugetlb_lock);
->>> [  613.057273]   <Interrupt>
->>> [  613.069273]     lock(hugetlb_lock);
->>> [  613.085273]
->>> [  613.085273]  *** DEADLOCK ***
->>>       :
->>> [  613.245273] Call Trace:
->>> [  613.256273]  <IRQ>
->>> [  613.265273]  dump_stack+0x9a/0xf0
->>> [  613.281273]  mark_lock+0xd0c/0x12f0
->>> [  613.297273]  ? print_shortest_lock_dependencies+0x80/0x80
->>> [  613.322273]  ? sched_clock_cpu+0x18/0x1e0
->>> [  613.341273]  __lock_acquire+0x146b/0x48c0
->>> [  613.360273]  ? trace_hardirqs_on+0x10/0x10
->>> [  613.379273]  ? trace_hardirqs_on_caller+0x27b/0x580
->>> [  613.401273]  lock_acquire+0x14f/0x3b0
->>> [  613.419273]  ? free_huge_page+0x36f/0xaa0
->>> [  613.440273]  _raw_spin_lock+0x30/0x70
->>> [  613.458273]  ? free_huge_page+0x36f/0xaa0
->>> [  613.477273]  free_huge_page+0x36f/0xaa0
->>> [  613.495273]  bio_check_pages_dirty+0x2fc/0x5c0
->>> [  613.516273]  clone_endio+0x17f/0x670 [dm_mod]
->>> [  613.536273]  ? disable_discard+0x90/0x90 [dm_mod]
->>> [  613.558273]  ? bio_endio+0x4ba/0x930
->>> [  613.575273]  ? blk_account_io_completion+0x400/0x530
->>> [  613.598273]  blk_update_request+0x276/0xe50
->>> [  613.617273]  scsi_end_request+0x7b/0x6a0
->>> [  613.636273]  ? lock_downgrade+0x6f0/0x6f0
->>> [  613.654273]  scsi_io_completion+0x1c6/0x1570
->>> [  613.674273]  ? sd_completed_bytes+0x3a0/0x3a0 [sd_mod]
->>> [  613.698273]  ? scsi_mq_requeue_cmd+0xc0/0xc0
->>> [  613.718273]  blk_done_softirq+0x22e/0x350
->>> [  613.737273]  ? blk_softirq_cpu_dead+0x230/0x230
->>> [  613.758273]  __do_softirq+0x23d/0xad8
->>> [  613.776273]  irq_exit+0x23e/0x2b0
->>> [  613.792273]  do_IRQ+0x11a/0x200
->>> [  613.806273]  common_interrupt+0xf/0xf
->>> [  613.823273]  </IRQ>
->> This is interesting.  I'm trying to wrap my head around how we ended up
->> with a BIO pointing to a hugetlbfs page.  My 'guess' is that user space
->> code passed an address to some system call or driver.  And, that system
->> call or driver set up the IO.  For the purpose of addressing this issue,
->> it does not matter.  I am just a little confused/curious.
->>
->>> Since hugetlb_lock can be taken from both process and softIRQ contexts,
->>> we need to protect the lock from nested locking by disabling softIRQ
->>> using spin_lock_bh() before taking it.
->>>
->>> Currently, only free_huge_page() is known to be called from softIRQ
->>> context.
->> We discussed this exact same issue more than a year ago.  See,
->> https://lkml.org/lkml/2018/9/5/398
->>
->> At that time, the only 'known' caller of put_page for a hugetlbfs page from
->> softirq context was in powerpc specific code.  IIRC, Aneesh addressed the
->> issue last year by modifying the powerpc specific code.  The more general
->> issue in the hugetlbfs code was never addressed. :(
->>
->> As part of the discussion in the previous e-mail thread, the issue of
->> whether we should address put_page for hugetlbfs pages for only softirq
->> or extend to hardirq context was discussed.  The conclusion (or at least
->> suggestion from Andrew and Michal) was that we should modify code to allow
->> for calls from hardirq context.  The reasoning IIRC, was that put_page of
->> other pages was allowed from hardirq context, so hugetlbfs pages should be
->> no different.
->>
->> Matthew, do you think that reasoning from last year is still valid?  Should
->> we be targeting soft or hard irq calls?
->>
->> One other thing.  free_huge_page may also take a subpool specific lock via
->> spin_lock().  See hugepage_subpool_put_pages.  This would also need to take
->> irq context into account.
-> 
-> Thanks for the background information.
-> 
-> We will need to use spin_lock_irq() or spin_lock_irqsave() for allowing
-> hardirq context calls like what is in the v1 patch. I will look further
-> into the subpool specific lock also.
+SGkgQ0ssDQoNCk9uIFR1ZSwgMjAxOS0xMi0xMCBhdCAxMDo0OSArMDgwMCwgQ0sgSHUgd3JvdGU6
+DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDk6NTggKzA4MDAs
+IERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBEbyBzdWNjZXNzIGNhbGxiYWNrIGluIGNoYW5u
+ZWwgd2hlbiBzaHV0ZG93bi4gRm9yIHRob3NlIHRhc2sgbm90IGZpbmlzaCwNCj4gPiBjYWxsYmFj
+ayB3aXRoIGVycm9yIGNvZGUgdGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJl
+c2V0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXlj
+LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tYWlsYm94L210ay1j
+bWRxLW1haWxib3guYyB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEt
+bWFpbGJveC5jDQo+ID4gaW5kZXggZmQ1MTliNmY1MThiLi5jMTJhNzY4ZDExNzUgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiBAQCAtNDUwLDYgKzQ1MCwzMiBA
+QCBzdGF0aWMgaW50IGNtZHFfbWJveF9zdGFydHVwKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+
+ID4gIA0KPiA+ICBzdGF0aWMgdm9pZCBjbWRxX21ib3hfc2h1dGRvd24oc3RydWN0IG1ib3hfY2hh
+biAqY2hhbikNCj4gPiAgew0KPiA+ICsJc3RydWN0IGNtZHFfdGhyZWFkICp0aHJlYWQgPSAoc3Ry
+dWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+ID4gKwlzdHJ1Y3QgY21kcSAqY21k
+cSA9IGRldl9nZXRfZHJ2ZGF0YShjaGFuLT5tYm94LT5kZXYpOw0KPiA+ICsJc3RydWN0IGNtZHFf
+dGFzayAqdGFzaywgKnRtcDsNCj4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKw0KPiA+
+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJnRocmVhZC0+Y2hhbi0+bG9jaywgZmxhZ3MpOw0KPiA+ICsJ
+aWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiA+ICsJCWdvdG8gZG9u
+ZTsNCj4gPiArDQo+ID4gKwlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFk
+KSA8IDApOw0KPiA+ICsNCj4gPiArCS8qIG1ha2Ugc3VyZSBleGVjdXRlZCB0YXNrcyBoYXZlIHN1
+Y2Nlc3MgY2FsbGJhY2sgKi8NCj4gPiArCWNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKGNtZHEsIHRo
+cmVhZCk7DQo+ID4gKwlpZiAobGlzdF9lbXB0eSgmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCkpDQo+
+ID4gKwkJZ290byBkb25lOw0KPiA+ICsNCj4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSh0
+YXNrLCB0bXAsICZ0aHJlYWQtPnRhc2tfYnVzeV9saXN0LA0KPiA+ICsJCQkJIGxpc3RfZW50cnkp
+IHsNCj4gPiArCQljbWRxX3Rhc2tfZXhlY19kb25lKHRhc2ssIC1FQ09OTkFCT1JURUQpOw0KPiA+
+ICsJCWtmcmVlKHRhc2spOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWNtZHFfdGhyZWFkX2Rpc2Fi
+bGUoY21kcSwgdGhyZWFkKTsNCj4gPiArCWNsa19kaXNhYmxlKGNtZHEtPmNsb2NrKTsNCj4gPiAr
+ZG9uZToNCj4gDQo+IGNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiANCj4gUmVnYXJkcywN
+Cj4gQ0sNCj4gDQoNCkNhbGwgcmVzdW1lIGhlcmUgd2lsbCBjYXVzZSB2aW9sYXRpb24uIFRoZSB0
+aHJlYWQtPnRhc2tfYnVzeV9saXN0IGVtcHR5DQptZWFucyBubyB0YXNrIHdvcmsgaW4gZ2NlIGFu
+ZCB0aHJlYWQgc3RhdGUgc2hvdWxkIGFscmVhZHkgZGlzYWJsZQ0Kd2l0aG91dCBjbG9jaywgd2hp
+Y2ggaXMgd2hhdCB3ZSB3YW50IHNpbmNlIGNsaWVudCB0cnkgdG8gc2h1dCBkb3duIHRoaXMNCm1i
+b3ggY2hhbm5lbC4gU28gSSB0aGluayB3ZSBkb24ndCBuZWVkIHJlc3VtZSBoZXJlLg0KDQoNClJl
+Z2FyZHMsDQpEZW5uaXMNCg0KPiA+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFkLT5j
+aGFuLT5sb2NrLCBmbGFncyk7DQo+ID4gIH0NCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbWJveF9jaGFuX29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7DQo+IA0KPiANCg0K
 
-Sorry,
-
-I did not fully read all of Matthew's comments/suggestions on the original
-patch.  His initial suggestion was for a workqueue approach that you did
-start implementing, but thought was too complex.  Andi also suggested this
-approach.
-
-The workqueue approach would address both soft and hard irq context issues.
-As a result, I too think this is the approach we should explore.  Since there
-is more than one lock involved, this also is reason for a work queue approach.
-
-I'll take a look at initial workqueue implementation.  However, I have not
-dealt with workqueues in some time so it may take few days to evaluate.
--- 
-Mike Kravetz
