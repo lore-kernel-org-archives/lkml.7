@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9628BC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4BFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734FD2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E2B22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfLLMeN (ORCPT
+        id S1729276AbfLLMeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:34:13 -0500
+        Thu, 12 Dec 2019 07:34:16 -0500
 Received: from mga09.intel.com ([134.134.136.24]:7200 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfLLMeL (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:34:11 -0500
+        id S1729266AbfLLMeN (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:34:13 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 04:34:10 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 04:34:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,305,1571727600"; 
-   d="scan'208";a="220684075"
+   d="scan'208";a="220684081"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 04:34:09 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 04:34:10 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v3 2/3] perf report: Support a new key to reload the browser
-Date:   Thu, 12 Dec 2019 20:33:36 +0800
-Message-Id: <20191212123337.23600-2-yao.jin@linux.intel.com>
+Subject: [PATCH v3 3/3] perf report: support hotkey to let user select any event for sorting
+Date:   Thu, 12 Dec 2019 20:33:37 +0800
+Message-Id: <20191212123337.23600-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191212123337.23600-1-yao.jin@linux.intel.com>
 References: <20191212123337.23600-1-yao.jin@linux.intel.com>
@@ -45,60 +45,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes we may need to reload the browser to update the output since
-some options are changed.
+When performing "perf report --group", it shows the event group information
+together. In previous patch, we have supported a new option "--group-sort-idx"
+to sort the output by the event at the index n in event group.
 
-This patch creates a new key K_RELOAD. Once the __cmd_report() returns
-K_RELOAD, it would repeat the whole process, such as, read samples from
-data file, sort the data and display in the browser.
+It would be nice if we can use a hotkey in browser to select a event
+to sort.
+
+For example,
+
+  # perf report --group
+
+ Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+                        Overhead  Command    Shared Object            Symbol
+  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+   1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
+   1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
+   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+   0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
+   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
+   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] check_preempt_curr
+
+When user press hotkey '3' (event index, starting from 0), it indicates
+to sort output by the forth event in group.
+
+  Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+                        Overhead  Command    Shared Object            Symbol
+  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+   0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
+   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
+   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
+   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
+   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
 
  v3:
  ---
- No change.
+ No change
 
  v2:
  ---
- This is a new patch created in v2.
+ 1. Report warning at helpline when index is invalid.
+ 2. Report warning at helpline when it's not group event.
+ 3. Use "case '0' ... '9'" to refine the code
+ 4. Split K_RELOAD implementation to another patch.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-report.c | 4 ++--
- tools/perf/ui/keysyms.h     | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/hists.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 729cf7611d8a..02178fc54d67 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -635,7 +635,7 @@ static int report__browse_hists(struct report *rep)
- 		 * Usually "ret" is the last pressed key, and we only
- 		 * care if the key notifies us to switch data file.
- 		 */
--		if (ret != K_SWITCH_INPUT_DATA)
-+		if (ret != K_SWITCH_INPUT_DATA && ret != K_RELOAD)
- 			ret = 0;
- 		break;
- 	case 2:
-@@ -1538,7 +1538,7 @@ int cmd_report(int argc, const char **argv)
- 	sort__setup_elide(stdout);
- 
- 	ret = __cmd_report(&report);
--	if (ret == K_SWITCH_INPUT_DATA) {
-+	if (ret == K_SWITCH_INPUT_DATA || ret == K_RELOAD) {
- 		perf_session__delete(session);
- 		goto repeat;
- 	} else
-diff --git a/tools/perf/ui/keysyms.h b/tools/perf/ui/keysyms.h
-index fbfac29077f2..04cc4e5c031f 100644
---- a/tools/perf/ui/keysyms.h
-+++ b/tools/perf/ui/keysyms.h
-@@ -25,5 +25,6 @@
- #define K_ERROR	 -2
- #define K_RESIZE -3
- #define K_SWITCH_INPUT_DATA -4
-+#define K_RELOAD -5
- 
- #endif /* _PERF_KEYSYMS_H_ */
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index d4d3558fdef4..b9288a1385dd 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2876,7 +2876,8 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 	"s             Switch to another data file in PWD\n"
+ 	"t             Zoom into current Thread\n"
+ 	"V             Verbose (DSO names in callchains, etc)\n"
+-	"/             Filter symbol by name";
++	"/             Filter symbol by name\n"
++	"0-9           Sort by event n in group";
+ 	static const char top_help[] = HIST_BROWSER_HELP_COMMON
+ 	"P             Print histograms to perf.hist.N\n"
+ 	"t             Zoom into current Thread\n"
+@@ -2937,6 +2938,28 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 			 * go to the next or previous
+ 			 */
+ 			goto out_free_stack;
++		case '0' ... '9':
++			if (!symbol_conf.event_group ||
++			    evsel->core.nr_members < 2) {
++				snprintf(buf, sizeof(buf),
++					 "Sort by index only available with group events!");
++				helpline = buf;
++				continue;
++			}
++
++			symbol_conf.group_sort_idx = key - '0';
++
++			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
++				snprintf(buf, sizeof(buf),
++					 "Max event group index to sort is %d (index from 0 to %d)",
++					 evsel->core.nr_members - 1,
++					 evsel->core.nr_members - 1);
++				helpline = buf;
++				continue;
++			}
++
++			key = K_RELOAD;
++			goto out_free_stack;
+ 		case 'a':
+ 			if (!hists__has(hists, sym)) {
+ 				ui_browser__warning(&browser->b, delay_secs * 2,
 -- 
 2.17.1
 
