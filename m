@@ -2,129 +2,96 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF270C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C9EC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8936D206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6848E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QGzoYy+E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiPVAoGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbfLLWTk (ORCPT
+        id S1731275AbfLLWXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:19:40 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45905 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730896AbfLLWTk (ORCPT
+        Thu, 12 Dec 2019 17:23:10 -0500
+Received: from mail-qv1-f46.google.com ([209.85.219.46]:45571 "EHLO
+        mail-qv1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730896AbfLLWXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:19:40 -0500
-Received: by mail-qv1-f66.google.com with SMTP id c2so41071qvp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 14:19:39 -0800 (PST)
+        Thu, 12 Dec 2019 17:23:09 -0500
+Received: by mail-qv1-f46.google.com with SMTP id c2so44665qvp.12;
+        Thu, 12 Dec 2019 14:23:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AqtUQa/7zK+Ip9tOn0jDtk5XmThJo8EhWPjq+zQojr8=;
-        b=QGzoYy+EGt7vzIzIKh7bl4ChMUPBF90xUvCPRGPFWHoh4ip2ABntAekCFeSwkNlzpx
-         4jhor/SnKt8Q0HMxEEyiTY9eQdGA9Y2QsfYEMBo2vfUbYXQMvgg9h1f9AVpPW6bhAWKe
-         gULQ9sStRV6lncbIJe55H6dnBqAiUIOGYK/UTBjubxEkwUmNQ9Kash70Gx+Q0KmlZcOQ
-         ucTG1RzKQgzsipVwuSl/0YYb5HmyIZ7VVMrWL8/+iRMwET2hjHog45aNBt9zRZOXF1uZ
-         wAD3GqUsZNBEQ+88j1q+XzwJCghEzR8abe04wrXFaHQIi0UV/Hm1czJ8NpZm2QxW+ELR
-         Zemg==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=j32wVhvdVRFI2lvrzbdrSaW+WfrikRKVo4pqXuJJB8I=;
+        b=EiPVAoGhXHYEikhwg8YpIRPFXZaAMMJG5rlh5Z2/MLQHstRWOvWkX4v6q2ju5EmLzy
+         2Q6UP6aHunsMWDrG6W24AsETz9cy3y2DyZcAOpZbagB2k5ouQv1dbGGr8QcuWKbqJcu0
+         VVi4oXN2xUTvPdVQSN3uoOP8xHJSyXyWMyTvv2hl1oWJOtkfQPskoK3XsJntCwA3xHGD
+         Y+3opiL9LAYvBGvrWT4tjx9CefONao79KOQ8Kin33aWW55TtRLfCE10ynJWJytQujOz9
+         +nlY3nAKw41IdIzgzhopdiVjw0w89jh1iEXOWCLPksdFubYIRmd8rtA5EPG46h5OCBEC
+         pSyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AqtUQa/7zK+Ip9tOn0jDtk5XmThJo8EhWPjq+zQojr8=;
-        b=QY2QzHjkEy97EIc+/j8RK7434X77ALTJ+CYXgOUU9ko/Hpm+EwbNErZmJwL+6dJVf1
-         2sSWP70+3t2n/OYsmNR2aP+CK0iscfmmt9SoyvDAZAJLROh5rIOd7ybyawScaXO8hwzZ
-         1zZ7I7/yntw0SvP249p9PpCRJOKodptpEyMBKIsBA9LS0rdmncmZshA+BbsbWHZ9TQgJ
-         M34o3s09R/W83EAFDI94eQt0Fwg2q4mWPAvN6WHy0pao/7OJYaRDNtFWse5X3WOT56aR
-         +79Zn+DMXc5U2Hu5aqWEnn86Ck2AMJ7nUee5b4auFPPArVNIanOlzabSj/DPTpOF173x
-         jZnQ==
-X-Gm-Message-State: APjAAAX4KuUhTVM3n2hh+LCVJ9cj/lPma3TyL17IbZSnim0FrrceSLf2
-        5tsiBUDduaDj8gVog7qM32Jor8D1YmDZM8Nq+VW6Sw==
-X-Google-Smtp-Source: APXvYqzEV428R/DLTcddJ/jGN8hXRnyb86u/LdameAN+mMUU6/9cjl357okvLixPad36LqBJsa/lZXxZnH+1he1gSmM=
-X-Received: by 2002:a0c:9476:: with SMTP id i51mr10429690qvi.75.1576189178536;
- Thu, 12 Dec 2019 14:19:38 -0800 (PST)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=j32wVhvdVRFI2lvrzbdrSaW+WfrikRKVo4pqXuJJB8I=;
+        b=P3UCaFjjp4XSTULPZB+k4G2tHMNC37GsfVQF9zIP9ZVnne99O0XhTYlhtkZA8NgOb3
+         t6Zky0kfjD0fQlgCnJDNgm2cXK+StRaAITrk6/kOKxNi9VpEU8f2A6AL09tLO6APSTqo
+         n0wLC+XleXI7DGxgMuejO1Ov1oBmmnJVFPuBYNTb2m4f8rEvq2hODdrsIuCOtTe+3iXZ
+         /cPwTk+b+2F7FW4OTFAhSnu8yMZemVicGfU7bTcbGcNhqinrqOtnhI79a9Zok5ePr2EE
+         33S00QAGFiIGpdlcmEDzS88aBshdUalxWFMb8DluRJ1l0/3DF1+fXoLbKUoF7+LaO/4n
+         gMEg==
+X-Gm-Message-State: APjAAAWxJd6sNpBPsXtPMztQWAxd6O7M/rgUUOtmItjrSljjAcKAdY38
+        FwOIUQ3aIAwKmWIwaUf+nDo=
+X-Google-Smtp-Source: APXvYqxOCXl83hHTWcOsd+KJ8Wx/M5pVbl3wqVVZAH+hzz3X14F3jdTyki3i835vM5QAnTyM6cVBYQ==
+X-Received: by 2002:a05:6214:1493:: with SMTP id bn19mr10834706qvb.83.1576189388182;
+        Thu, 12 Dec 2019 14:23:08 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id f21sm2579468qto.82.2019.12.12.14.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 14:23:07 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 12 Dec 2019 17:23:06 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>, Eugene Cohen <eugene@hp.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: efi/gop: do we need to check ConOut any more?
+Message-ID: <20191212222305.GA10385@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20191204200623.198897-1-joshdon@google.com> <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
- <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com> <edc9f4aa-a6ab-3bab-0a9e-73a155b8a48a@arm.com>
-In-Reply-To: <edc9f4aa-a6ab-3bab-0a9e-73a155b8a48a@arm.com>
-From:   Josh Don <joshdon@google.com>
-Date:   Thu, 12 Dec 2019 14:19:27 -0800
-Message-ID: <CABk29Ns3v3KqAo89oEOqQjRQxWN4Wgc+YtweWbS13MtmsUJeyw@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched hierarchy
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 1:19 AM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 06.12.19 23:13, Josh Don wrote:
->
-> [...]
->
-> > On Thu, Dec 5, 2019 at 11:57 PM Vincent Guittot
-> > <vincent.guittot@linaro.org> wrote:
-> >>
-> >> Hi Josh,
-> >>
-> >> On Wed, 4 Dec 2019 at 21:06, Josh Don <joshdon@google.com> wrote:
-> >>>
-> >>> From: Venkatesh Pallipadi <venki@google.com>
-> >>>
-> >>> Setting skip buddy all the way up the hierarchy does not play well
-> >>> with intra-cgroup yield. One typical usecase of yield is when a
-> >>> thread in a cgroup wants to yield CPU to another thread within the
-> >>> same cgroup. For such a case, setting the skip buddy all the way up
->
-> But with yield_task{_fair}() you have no way to control which other task
-> gets accelerated. The other task in the taskgroup (cgroup) could be even
-> on another CPU.
->
-> It's not like yield_to_task_fair() which uses next buddy to accelerate
-> another task p.
->
-> What's this typical usecase?
+Since commit 38cb5ef4473c ("X86: Improve GOP detection in the EFI boot
+stub") we check for a GOP device that implements ConOut protocol to find
+our primary output device. The commit log says that this was done to
+avoid problems with the ConSplitter device, which exports a virtual GOP
+interface. The original version by Matt Fleming checked for PCIIO
+protocol, with a note that says there are some Apple machines have GOPs
+without hardware, I assume that that was the same case, GOPs from
+ConSplitter.
 
-The semantics for yield_task under CFS are not well-defined.  With our
-CFS hierarchy, we cannot easily just push a yielded task to the end of
-a runqueue.  And, we don't want to play games with artificially
-increasing vruntime, as this results in potentially high latency for a
-yielded task to get back on CPU.
+However, since commit 540f4c0e894f ("efi/libstub: Skip GOP with
+PIXEL_BLT_ONLY format") we skip GOP's that don't have a framebuffer.
 
-I'd interpret a task that calls yield as saying "I can run, but try to
-run something else."  I'd agree that this patch is imperfect in
-achieving this, but I think it is better than the current
-implementation (or at least, less broken).  Currently, a side-effect
-of calling yield is that all other tasks in the same hierarchy get
-skipped as well.  This is almost certainly not what the user
-expects/wants.  It is true that if a yielded task has no other tasks
-in its cgroup on the same CPU, we will potentially end up just picking
-the yielded task again.  But this should be OK; a yielded task should
-be able to continue making forward progress.  Any yielded task that
-calls yield again is likely implementing a busy loop, which is an
-improper use of yield anyway.
+Looking at the EDK2 implementation of ConSplitter, the virtual GOP will
+advertise a framebuffer iff it is attached to exactly one GOP device, in
+which case it passes through all the information. If it is attached to a
+UGA device or to more than one GOP, it will show as a non-framebuffer
+GOP, so we will skip it anyway in those cases.
 
-I also played around with the idea of setting the skip buddy up the
-hierarchy up to the point where cfs_rq->nr_running > 1, but this is
-racy with enqueue, and in general raises questions about whether an
-enqueued task should try to clear skip buddies.
+Given that, is it still necessary to check for conout at all, or would
+it be enough to rely on the framebuffer check?
+
+PS I hope I got the latest email addresses correct for everyone
