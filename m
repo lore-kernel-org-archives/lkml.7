@@ -2,157 +2,94 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59783C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10168C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3C1205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cBeRc2H3"
+	by mail.kernel.org (Postfix) with ESMTP id D57F0206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfLLPUh (ORCPT
+        id S1729139AbfLLPWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:20:37 -0500
-Received: from mail-bn8nam11on2072.outbound.protection.outlook.com ([40.107.236.72]:41952
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728690AbfLLPUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:20:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bZ/+gti7pJhmiaVqI6Eq0LPqsQGO4w7jZ2TDjutZ0MKusVzkQhHfoZXXcG/hn+Qd3ZtOcLPhs8p7P91Ervn2ZkmNDLrObj4GDugZTzQDLLNSgunk75LYw45Kp68WK0ym35jVuhvGwGTxpV9nEWhxTuoQjM0nskLDqufn/x0y4X4zfy9VV+DiiQe/vwL8Z3MXMTzQk8PeSed4uLxBWGGfm+OaKXVTE3sukxsdGKO1lxvOhUnXiipxSdHwEHqAvPrRRkNP/WoC3JQ7rMTtmIUvcgFttzlM5L7mWrveOF6dQfOsJUWBpsbrOwP2ghaxO8uWAoys+t+Lf+3fTbq3ID8xlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G7ZYh05nnimXrzwEyippHh0SjTjSjicYw/pFpoJXIr4=;
- b=Q11sWkKBAkFTFhubm+Mn0j0VsJdW1yLZ+C8eRz21xaxE3FcQIPJu9tq+I4ZjJArYhkzp9eqHZ56/wsWxGsM7ZjBnyErBs0MH/CP0ylNvoiqlLQOh4asK6boswft/vCmcMYNP348JqCCvmd8pfi8lf2bbYsPyfS2pGlGasdJkgvKPMLovK0N5t4xcE0mRXYCFBzvM41T16sNYd0biAbaQRoPBCBSuuCPANrrlpSMV3G/Vo2zartI7KWOSkxWSuESSeiMDXxKRpqKFPxsIH7WcqmLyBGbNjUj1+8R8tz28twv9kezSoOv2AKUCFHbNTQsvAO4Xbqp3q2C9CF08AC76oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G7ZYh05nnimXrzwEyippHh0SjTjSjicYw/pFpoJXIr4=;
- b=cBeRc2H3femmyeyUicKphRIbiUxsmrJ9Sm4K1iiUdvQ6aMyJiSUSMw53wDcvWMHN+FgEBk6VlTL20rOb/BRiwW9SBurYa4JgK2Eq1rfcdXSjuAs2RZWSucoeHmg8rx9RJ3U+D2RMMe1IYYtNt2gepqY0EdBDkgTYDX/p7tIz/T8=
-Received: from CY1PR07CA0022.namprd07.prod.outlook.com
- (2a01:111:e400:c60a::32) by BYAPR02MB5416.namprd02.prod.outlook.com
- (2603:10b6:a03:a4::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18; Thu, 12 Dec
- 2019 15:20:32 +0000
-Received: from CY1NAM02FT014.eop-nam02.prod.protection.outlook.com
- (2a01:111:e400:c60a:cafe::f4) by CY1PR07CA0022.outlook.office365.com
- (2a01:111:e400:c60a::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
- Transport; Thu, 12 Dec 2019 15:20:32 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT014.mail.protection.outlook.com (10.152.75.142) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
- via Frontend Transport; Thu, 12 Dec 2019 15:20:31 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ifQGV-0000st-78; Thu, 12 Dec 2019 07:20:31 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ifQGQ-00020b-5j; Thu, 12 Dec 2019 07:20:26 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1ifQGJ-0001tX-Vj; Thu, 12 Dec 2019 07:20:20 -0800
-Subject: Re: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
-To:     Rajan Vaja <rajan.vaja@xilinx.com>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        m.tretter@pengutronix.de, gustavo@embeddedor.com,
-        tejas.patel@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
- <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
-Date:   Thu, 12 Dec 2019 16:20:16 +0100
+        Thu, 12 Dec 2019 10:22:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:50530 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728929AbfLLPWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:22:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A559030E;
+        Thu, 12 Dec 2019 07:22:15 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88AC73F6CF;
+        Thu, 12 Dec 2019 07:22:14 -0800 (PST)
+Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
+ <20191212144633.GE46910@lakrids.cambridge.arm.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
+Date:   Thu, 12 Dec 2019 15:22:13 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191212144633.GE46910@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(189003)(199004)(44832011)(478600001)(5660300002)(356004)(6666004)(316002)(31696002)(2906002)(186003)(7416002)(2616005)(70586007)(70206006)(26005)(81156014)(8676002)(9786002)(31686004)(4326008)(8936002)(81166006)(336012)(426003)(36756003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5416;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 28beec8f-f34d-43d1-aa85-08d77f16d403
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5416:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB54167FF2CFFAB545DF502865C6550@BYAPR02MB5416.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0249EFCB0B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B0a3WD9sCbd39HX/IL+atXIfZ0uxDGmY2b7xlYgKaHbfW1PRsu+HK40WXC0wFlZUap+MEwFZV5DoOWwHAWMUNr2fpMjRTthENgEy3mddPXAiYqPHWknvT0xrc/PhxRxT2N9Oc82vNeQ121Nxr1wO2nsVtktOvvExQjHRREJVIWELpcWgTgKyMk3OYLmmSFfYf+pggu8Xgh+LazAubl40zAidEJS/h2BfyKftuRwBFvlQ1i8X/vfOGDcIRQdc4vmW34ypNpS5hAYeKJm27+nKIsBvW3SdkJNXD5QdXjkB+35HT7QQA5GwW6QDJKX8VJpR7flfSVR6yVRd4DFiVA0Ks0lpj17BDVSDXWrHi9InWS6VXpb7KHm3RrRdipcC7Hsr+XQXQoClagQVciUxxqMc/tgqqkK31VbdKUjR0czM/jvruQ/bLnbLmqouYDo/alWv4whBFDqG740H6w12TJgiJDw0PSxoidetyMNQVE5gI07FIeuodJbI3pGjJSG1c218
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2019 15:20:31.7921
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28beec8f-f34d-43d1-aa85-08d77f16d403
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5416
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05. 12. 19 7:35, Rajan Vaja wrote:
-> ZynqMP clock driver can be used for Versal platform also. Add support
-> for Versal platform in ZynqMP clock driver.
+On 12/12/2019 14:46, Mark Rutland wrote:
+> On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
+>> +#define ID_ISAR6_JSCVT_SHIFT		0
+>> +#define ID_ISAR6_DP_SHIFT		4
+>> +#define ID_ISAR6_FHM_SHIFT		8
+>> +#define ID_ISAR6_SB_SHIFT		12
+>> +#define ID_ISAR6_SPECRES_SHIFT		16
+>> +#define ID_ISAR6_BF16_SHIFT		20
+>> +#define ID_ISAR6_I8MM_SHIFT		24
 > 
-> Also this patch series fixes divider calculation and adds support for get
-> maximum divider, clock with CLK_DIVIDER_POWER_OF_TWO flag and warn user if
-> clock users are more than allowed.
+>> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
+>>   	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
+>>   	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
+>>   	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
 > 
-> Rajan Vaja (5):
->   dt-bindings: clock: Add bindings for versal clock driver
->   clk: zynqmp: Extend driver for versal
->   clk: zynqmp: Warn user if clock user are more than allowed
->   clk: zynqmp: Add support for get max divider
->   clk: zynqmp: Fix divider calculation
+>> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
 > 
-> Tejas Patel (1):
->   clk: zynqmp: Add support for clock with CLK_DIVIDER_POWER_OF_TWO flag
+> Using ftr_generic_32bits exposes the lowest-common-denominator for all
+> 4-bit fields in the register, and I don't think that's the right thing
+> to do here, because:
 > 
->  .../devicetree/bindings/clock/xlnx,versal-clk.yaml |  64 +++++++++++
->  drivers/clk/zynqmp/clkc.c                          |   3 +-
->  drivers/clk/zynqmp/divider.c                       | 118 +++++++++++++++++++-
->  drivers/clk/zynqmp/pll.c                           |   6 +-
->  drivers/firmware/xilinx/zynqmp.c                   |   2 +
->  include/dt-bindings/clock/xlnx-versal-clk.h        | 123 +++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h               |   2 +
->  7 files changed, 310 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
->  create mode 100644 include/dt-bindings/clock/xlnx-versal-clk.h
+> * We have no idea what ID_ISAR6 bits [31:28] may mean in future.
 > 
+> * AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
+>    ARMv8.0-PredInv extension) operate on the local PE and are not
+>    broadcast. To make those work as a guest expects, the host will need
+>    to do additional things (e.g. to preserve that illusion when a vCPU is
+>    migrated from one pCPU to another and back).
+> 
+> Given that, think we should add an explicit ftr_id_isar6 which only
+> exposes the fields that we're certain are safe to expose to a guest
+> (i.e. without SPECRES).
 
-That firmware changes looks good. That's why feel free to add my
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-to that patches.
-If you want me to take it via my tree please let me know.
+Agree. Thanks for pointing this out. I recommended the usage of
+generic_32bits table without actually looking at the feature
+definitions.
 
-Thanks,
-Michal
+Anshuman,
+
+Sorry about this.
+
+Cheers
+Suzuki
