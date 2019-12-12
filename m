@@ -2,111 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1766C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC87BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8190214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A07Yg9j4"
+	by mail.kernel.org (Postfix) with ESMTP id A358022527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576143442;
+	bh=9T8qbkKxvGdsgH/x9PIs2KKMJmn/JOtZtnDP7i1vdy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hyms0Mhuhi15W5WiSYPbhN/hLBFNg2ZsHc+NU4kVdtU1XIGMklbB4Q+4Nq3dKfp4Z
+	 3RbK7RjQSkk2INjp8j3nlnLYI5lvklzmE8+3uLWNRL0S9BYjRb3gAST8pUyLhcw77c
+	 l1bIPsI8qWVaOkkSFet5btthaUtkiPsxc1+xVUWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfLLJhR (ORCPT
+        id S1728419AbfLLJhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:37:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22741 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728274AbfLLJhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:37:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576143436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zCO999uvdViXr9L00zEpbJgceNlZDxYWmmetd0aUHpc=;
-        b=A07Yg9j4BmEsEIIPpt68UD0ZLYcAGnStifo4m0ItixOOZ9rnSmwDvkYVRFTo13d49lkE4t
-        g4P4WjqNQL59RaG/kK7bviADKupS+UK5M46VtDEP7o0N3ZE3rIE0EmImKbQgWMdPPxuyFB
-        j28opSCpqaWC41S7nECfD795wPer/Ec=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-KnSwC2bIOpCmtzoiiIAgvg-1; Thu, 12 Dec 2019 04:37:13 -0500
-X-MC-Unique: KnSwC2bIOpCmtzoiiIAgvg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 12 Dec 2019 04:37:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728274AbfLLJhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:37:20 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FAA7991F9;
-        Thu, 12 Dec 2019 09:37:11 +0000 (UTC)
-Received: from krava (ovpn-204-197.brq.redhat.com [10.40.204.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46F2826FA2;
-        Thu, 12 Dec 2019 09:37:04 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 10:37:00 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Kajol Jain <kjain@linux.ibm.com>
-Subject: Re: [RFC 0/3] perf tools: Add support for used defined metric
-Message-ID: <20191212093700.GD22550@krava>
-References: <20191211224800.9066-1-jolsa@kernel.org>
- <20191211230126.GC862919@tassilo.jf.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 374A9214D8;
+        Thu, 12 Dec 2019 09:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576143439;
+        bh=9T8qbkKxvGdsgH/x9PIs2KKMJmn/JOtZtnDP7i1vdy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hRgDpX9Z8e16Qkn1Ta7Da8mvw31j+yI5Ls5qWySQkyZNXp9BCRSfp4a8PscoRiMXf
+         gPkxlrxtJiSTMujgYESTy2uRJ2NN0oMrlBQmyvX8UtXLKXQmogNA7vxruvkLEM/gE4
+         YvBjKVOKX2yl+Z7ueB0EnRsZDnMdiF9wKPCTZS+k=
+Date:   Thu, 12 Dec 2019 10:35:30 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/92] 4.4.206-stable review
+Message-ID: <20191212093530.GF1378792@kroah.com>
+References: <20191204174327.215426506@linuxfoundation.org>
+ <2959daae-72f2-8f85-df04-d6a0fe33516d@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211230126.GC862919@tassilo.jf.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <2959daae-72f2-8f85-df04-d6a0fe33516d@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:01:26PM -0800, Andi Kleen wrote:
-> On Wed, Dec 11, 2019 at 11:47:57PM +0100, Jiri Olsa wrote:
-> > hi,
-> > Joe asked for possibility to add user defined metrics. Given that
-> > we already have metrics support, I added --metric option that allows
-> > to specify metric on the command line, like:
+On Wed, Dec 11, 2019 at 04:19:00PM -0700, shuah wrote:
+> On 12/4/19 10:49 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.206 release.
+> > There are 92 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> >   # perf stat  --metric 'DECODED_ICACHE_UOPS% = 100 * (idq.dsb_uops / \
-> >     (idq.ms_uops + idq.mite_uops + idq.dsb_uops + lsd.uops))' ...
+> > Responses should be made by Fri, 06 Dec 2019 17:42:37 +0000.
+> > Anything received after that time might be too late.
 > > 
-> > The code facilitates the current metric code, and I was surprised
-> > how easy it was, so I'm not sure I omitted something ;-)
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.206-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> There are some asserts you can hit, like for too many events.
+> I know this is way late. I managed to boot 4.4.206 finally on my test
+> system running Ubuntu 19.10.
 > 
-> Also some of the syntax (e.g. using @ instead of / and escapes) are
-> not super user friendly.
+> It turns out, Ubuntu 19.10 defaults to LZ4 compression.
 > 
-> Other than that it should be ok.
+> /etc/initramfs-tools/initramfs.conf
+> COMPRESS=lz4
 > 
-> Of course it would be better to put it into a file,
-> and then support comments etc.
+> Enabling the following worked for me.
+> 
+> CONFIG_RD_LZ4=y
+> CONFIG_SQUASHFS_LZ4=y
+> CONFIG_LZ4_DECOMPRESS=y
+> CONFIG_DECOMPRESS_LZ4=y
+> 
+> Stable release older than 4.19 will require the above change.
 
-should be also reasonable easy, redirecting the input for lex
+Ah, thanks for figuring this out.  Or you can run without an initramfs :)
 
-> 
-> I've been considering some extensions to perf to support @file
-> reading with comment support.
-> 
-> Right now there are some very odd bugs when you do that, lie
-> 
-> -e 'event,<newline>
-> event,<newline>
-> event...'
-> 
-> adds the newline to the event name, which breaks the output formats.
-
-should be possible to ignore new lines at some point no?
-
-jirka
-
+greg k-h
