@@ -2,59 +2,84 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C94C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B6CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184182173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683A321556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TJm/Ng73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfLLXSf (ORCPT
+        id S1731152AbfLLXUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:18:35 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:37312 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731357AbfLLXSe (ORCPT
+        Thu, 12 Dec 2019 18:20:11 -0500
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:48026 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726427AbfLLXUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:18:34 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1ifXiw-0007z1-Tq; Fri, 13 Dec 2019 00:18:23 +0100
-Date:   Fri, 13 Dec 2019 00:18:22 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Florian Westphal <fw@strlen.de>, linux-mm@kvack.org, cl@linux.com,
-        penberg@kernel.org, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: remove __krealloc
-Message-ID: <20191212231822.GO795@breakpoint.cc>
-References: <20191212223442.22141-1-fw@strlen.de>
- <alpine.DEB.2.21.1912121459400.121505@chino.kir.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1912121459400.121505@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Dec 2019 18:20:10 -0500
+X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 18:20:10 EST
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 1801D30C047;
+        Thu, 12 Dec 2019 15:08:10 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 1801D30C047
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1576192090;
+        bh=GUHozoaDgbqjfROjXkEJw092rtDS8++6YoSJnSbvtOs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TJm/Ng73wQ9MRMHSQu23Rs6/CAol/PxhHn5hDL8FSzsi1yUrQ1ZWsQx8DAQKxH5H2
+         hBcjJuA6zXvysnTtThtBA3iGZkLigoAS3Lx+LNkZTmtlzVySXXaiQ3fbq4bBIKW0OT
+         8Vk3JDA/NF5tR/StYpnvUvkOw/YmzBcqWOFzVoJ0=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E6F7C140069;
+        Thu, 12 Dec 2019 15:12:43 -0800 (PST)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jim Quinlan <james.quinlan@broadcom.com>
+Subject: [PATCH] spi: bcm2835: don't print error on clk_get() DEFER
+Date:   Thu, 12 Dec 2019 18:12:13 -0500
+Message-Id: <20191212231213.29061-1-jquinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Rientjes <rientjes@google.com> wrote:
-> On Thu, 12 Dec 2019, Florian Westphal wrote:
-> 
-> > Since 5.5-rc1 the last user of this function is gone, so remove the
-> > functionality.
-> > 
-> > See commit
-> > 2ad9d7747c10 ("netfilter: conntrack: free extension area immediately")
-> > for details.
-> > 
-> > Signed-off-by: Florian Westphal <fw@strlen.de>
-> 
-> So this also means that we can fold __do_krealloc() into krealloc()?
+Otherwise one may get multiple error messages for normal
+operation of a clock provider.
 
-I would leave that to compiler but if you prefer this I can respin.
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+---
+ drivers/spi/spi-bcm2835.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index fb61a620effc..6c9addc9f276 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -1305,7 +1305,8 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 	bs->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(bs->clk)) {
+ 		err = PTR_ERR(bs->clk);
+-		dev_err(&pdev->dev, "could not get clk: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "could not get clk: %d\n", err);
+ 		goto out_controller_put;
+ 	}
+ 
+-- 
+2.17.1
+
