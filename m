@@ -2,90 +2,128 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23036C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C43AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD0B22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o41nx2Fa"
+	by mail.kernel.org (Postfix) with ESMTP id 6537B2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfLLPPb (ORCPT
+        id S1729152AbfLLPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:15:31 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40624 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfLLPPb (ORCPT
+        Thu, 12 Dec 2019 10:16:47 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:41218 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729013AbfLLPQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:15:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fqIAUYObIqhJeHpHjDLZJpvGSDr/AnjM2VLcw/JukHs=; b=o41nx2FahlOPNHfP7Q0L1ZpCw
-        WuIg0y8CiVgeOACrHgtzNu9jKnfWi55H3b3Qvd+T2Ckldvb7rZxsOeqkBiXhnq4gVfeeRpcQkntU/
-        LiBZpxsxl9jZdVx5bzEQvr1b5oet6Z+3/wrBzyzXOvN0f8eUOnBTiH+Lukt2WZyVCwo79apL7Ues3
-        /CqS8NOVf+I+PqUxBYweYwB7AFrP/sfhP6VSf4JoIA8p3Ri3JjmVYCCrKYXJUz8BZD2FMvsqEHzAf
-        fM5V8ZZAGOMjMn0PDWFOfIssp06hi/aD2oDU+F5fHL9UUVkzjfYbBm0MgL7TFUmUmOCVyDqO5dCFs
-        l48pgnpLQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifQBU-0002pM-Jb; Thu, 12 Dec 2019 15:15:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8BF5300F29;
-        Thu, 12 Dec 2019 16:13:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10DD22B195AE5; Thu, 12 Dec 2019 16:15:19 +0100 (CET)
-Date:   Thu, 12 Dec 2019 16:15:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Message-ID: <20191212151519.GA2827@hirez.programming.kicks-ass.net>
-References: <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
- <20191211173829.GB21797@linux.vnet.ibm.com>
- <20191211224617.GE19256@dread.disaster.area>
- <20191212101031.GV2827@hirez.programming.kicks-ass.net>
- <20191212150737.GC21797@linux.vnet.ibm.com>
+        Thu, 12 Dec 2019 10:16:46 -0500
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCF8WdN030734;
+        Thu, 12 Dec 2019 15:16:14 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2wuk54adxu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 15:16:13 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id BA22C66;
+        Thu, 12 Dec 2019 15:16:12 +0000 (UTC)
+Received: from [16.116.160.152] (unknown [16.116.160.152])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id F0F604F;
+        Thu, 12 Dec 2019 15:16:09 +0000 (UTC)
+Subject: Re: [PATCH] x86/platform/uv: avoid unused variable warning
+To:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20191212135815.4176658-1-arnd@arndb.de>
+ <20191212145432.GA15634@infradead.org>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <192a2aa9-5c50-bb8d-4b0f-95eb87de48c0@hpe.com>
+Date:   Thu, 12 Dec 2019 07:16:07 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212150737.GC21797@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212145432.GA15634@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_03:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0 adultscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912120116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:37:37PM +0530, Srikar Dronamraju wrote:
-> * Peter Zijlstra <peterz@infradead.org> [2019-12-12 11:10:31]:
-> 
-> > 
-> > +static struct sched_entity *
-> > +__pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr);
-> 
-> I think we already have __pick_next_entity in kernel/sched/fair.c
 
-D'oh... yeah, I just wrote stuff, it never actually got near a compiler.
+
+
+On 12/12/2019 6:54 AM, Christoph Hellwig wrote:
+> Instead of that maybe_unused mess please just use good old ifdefs.
+> 
+>>   	if (hubless)
+>> -		proc_version_fops.open = proc_hubless_open;
+>> +		proc_create_single("hubless", 0, pde, proc_hubless_show);
+>>   	else
+>> -		proc_version_fops.open = proc_hubbed_open;
+>> +		proc_create_single("hubbed", 0, pde, proc_hubbed_show);
+>>   }
+> 
+> Or someone could figure out what happens if we turn the
+> proc_create_single stub into an inline function instead of the
+> define.  That makes it used at a syntactic level, the big question is
+> if the compiler is smart enough to optimize away the unused callback
+> still.
+> 
+
+Yes, if CONFIG_PROC_FS is undefined, then this whole section can be 
+removed since it's sole purpose is to set up the /proc/ interface. 
+Something like this should suffice:
+
+> ---
+>  arch/x86/kernel/apic/x2apic_uv_x.c |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
+> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+> @@ -1533,6 +1533,7 @@ static void check_efi_reboot(void)
+>                 reboot_type = BOOT_ACPI;
+>  }
+> 
+> +#ifdef CONFIG_PROC_FS
+>  /* Setup user proc fs files */
+>  static int proc_hubbed_show(struct seq_file *file, void *data)
+>  {
+> @@ -1595,6 +1596,14 @@ static __init void uv_setup_proc_files(i
+>                 proc_version_fops.open = proc_hubbed_open;
+>  }
+> 
+> +#else /* !CONFIG_PROC_FS */
+> +
+> +static __init void uv_setup_proc_files(int hubless)
+> +{
+> +}
+> +
+> +#endif /* !CONFIG_PROC_FS */
+> +
+>  /* Initialize UV hubless systems */
+>  static __init int uv_system_init_hubless(void)
+>  {
