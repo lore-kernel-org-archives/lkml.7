@@ -2,200 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C725BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB18C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E9B2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3A12077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qNDTfWna"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m2P/fTdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLMJKU (ORCPT
+        id S1726741AbfLMJKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:10:20 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35612 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfLMJKR (ORCPT
+        Fri, 13 Dec 2019 04:10:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45216 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfLMJKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:10:17 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so5725357wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 01:10:15 -0800 (PST)
+        Fri, 13 Dec 2019 04:10:38 -0500
+Received: by mail-qk1-f193.google.com with SMTP id x1so1115218qkl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 01:10:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XLXDj2tCALFNbZtKdVocDQPJ7xc4HP2wet22NTHx+Ww=;
-        b=qNDTfWna4aa7E+3NoI36Qj5lmh3cY5n6y6XU6YD4I+jJqqbYEs2UkPW2OLI3WymCaw
-         b3JDttDHmrkWaITnq8po+rwsCUs9ZhuPjWF3ZVTQE3qI++VFJW46sR0BYLM3jNy8/+ZJ
-         zWuD9MyfiRwXvoRUHpwr2oQZufVxqp+AzGiNAxvav8NA0/BDDU2zI9pGi0OWh5+D4QR7
-         HOSZJ/Aiuq6U1lR5jltUWBSOaN1ay8aYzUaBmR/V3ecK7ydZ46R4p45MikenQnlUduWZ
-         oDmnwR+Ij+fOLCZZhlOG/cFpgps0fWhHuIpRDosnJQorFW22tU9C/3hGKeFUZoCrlEGP
-         aNaw==
+        bh=IRrlF5i6RzeEP3R8jYIvjzfeXuLk/3e9WVAuPgf3JD4=;
+        b=m2P/fTdPZDE36Gl1QUxcld1M9ENmXLASB/UHiDi/p1jULoWLSQEpWj8kgr962N0jZb
+         YxLy6VOit02AXdcfCHYv4EhefIbArcRDF78qV6X7NuV7cv6n6rf6pn/TCh9WAqixMoRK
+         CLxHsMVVkrg6oa1Db0e5SlEe0Q3m1xRHrX9rpKoFktKeVLaPIXcd8AoijuthOkg4KqEd
+         4TNez3GN9cJhh1QaGcKSWh22yEppCUQZ/sCQEYS2gdb/YNY78zh9KNUJ07KVDgPVrSfy
+         i+miyT3wOlEfo6z3m3Tnt1gbqmbyrvgHDD3zykbHQ1Eig4nP7TNv4KJqeSL0yhmxoF1r
+         oNCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XLXDj2tCALFNbZtKdVocDQPJ7xc4HP2wet22NTHx+Ww=;
-        b=Jgr3g0BN2SIUvQqRmVXNsp5z675PgmRUfFTEPYBOclqwjEyhmA126PXFQXClvOv+uJ
-         K3qRpZeazVnjzC9ICqNm3y6LdLceEIqEEdjrio9y0vd+YduWxaNUKioh227BuG3Y4Uam
-         BqgSsUhmcTsuRJAjLWRGIy5dDrSwoy2pvHM43Rk9vrLnfEUhzQgr7HZK8dSDGKxMso6I
-         Ba5gSfo05ebhXWl6weoEcmwCXNmCXMST3t6e/JL1Ih5/0+SAi+nOasZV4v/akArNVox7
-         wLtaefK/QD4uWFx98rvis2Vew71E+yABNWY23wSb8DgXkab6MswUpJzRzXURbIYWzjR8
-         UTPA==
-X-Gm-Message-State: APjAAAUGLmRwrVEM63dfN8dOr5NUNRQk6VuvivgyuWD06WCyOtn2PX5f
-        EAMhGoWO8VVFeN4Wli54BHsS254uLUJLT0EGhKK7Iw==
-X-Google-Smtp-Source: APXvYqxAtkBgMW9OplkwflBepglPjlMIZpEb15nYHCVUw7oWUhcnpHliOfTGGwLYu0CpPC5Rx3J56oc1h57lUcSIidI=
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr12443468wmc.9.1576228214657;
- Fri, 13 Dec 2019 01:10:14 -0800 (PST)
+        bh=IRrlF5i6RzeEP3R8jYIvjzfeXuLk/3e9WVAuPgf3JD4=;
+        b=Su0qUz7Gw+ILGiqLNR0wv2mDK8q6qjrhzvil5/wCAatNfrZfWZwIoeCd1t8hnNUo+T
+         qKIdbBZ4d/v1iRK1OcdFWwFJjdna3KM7xvbmwBbZzidoKuoG0M4XOSbfU0xJ4CxknVz6
+         eMH6/CTahIlNcms0qDiOV/ChC/cCqF8pcPRJXGHnuhQW/+gL/lvNm5oG/A9wlZwm2VSp
+         Qe1a0w052ugUYbKruHvBIivHYe3AQj1OkFhUCw4ww5VekMM9aeF4gNreksPIK/IpY0dp
+         lx6bc7rLt5jbn4HPHqE6pznkt9BzJpYd/ahuD1zCZguiTeQArRJhZwmil7MU2VLF2qIu
+         RRoA==
+X-Gm-Message-State: APjAAAUk0jhPJSrRpDorM3xu3Ibqb5hhCXYmGc1LwoOSexGQMg8sggZ5
+        xhecHiWLYfFW7RJlrB5I+M77T6D8wi8c69yKDitQ1umX3TM=
+X-Google-Smtp-Source: APXvYqyV30Kw+lK3xmCJOnsR4jDPKsnw36yVIx2tuAmpLnwb+nvNvQD6S+pkIJd6+XrkgxslVm9LjJsyHkumifUSt4o=
+X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr11527564qkk.8.1576228237173;
+ Fri, 13 Dec 2019 01:10:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213090646.12329-1-jlee@suse.com> <20191213090646.12329-3-jlee@suse.com>
-In-Reply-To: <20191213090646.12329-3-jlee@suse.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Dec 2019 09:10:12 +0000
-Message-ID: <CAKv+Gu_2GTqKJNVpMEg4ic_3ACb5GJKAkgfFWoEdWqMN7pmwiA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] efi: show error messages only when loading
- certificates is failed
-To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Lee, Chun-Yi" <jlee@suse.com>
+References: <000000000000b6b03205997b71cf@google.com> <20191212061206.GE4203@ZenIV.linux.org.uk>
+ <CACT4Y+YJuV8EGSx8K_5Qd0f+fUz8MHb1awyJ78Jf8zrNmKokrA@mail.gmail.com>
+ <20191212133844.GG4203@ZenIV.linux.org.uk> <CACT4Y+ZQ6C07TcuAHwc-T+Lb2ZkigkqW32d=TF054RuPwUFimw@mail.gmail.com>
+ <20191212183443.GH4203@ZenIV.linux.org.uk>
+In-Reply-To: <20191212183443.GH4203@ZenIV.linux.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 13 Dec 2019 10:10:25 +0100
+Message-ID: <CACT4Y+b7hZuNuc4sRnhFkpCw+xQg2hzX1WuD__rejigxzBpXBg@mail.gmail.com>
+Subject: Re: BUG: corrupted list in __dentry_kill (2)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 at 10:07, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+On Thu, Dec 12, 2019 at 7:34 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> When loading certificates list from EFI variables, the error
-> message and efi status code always be emitted to dmesg. It looks
-> ugly:
+> On Thu, Dec 12, 2019 at 04:57:14PM +0100, Dmitry Vyukov wrote:
 >
-> [    2.335031] Couldn't get size: 0x800000000000000e
-> [    2.335032] Couldn't get UEFI MokListRT
-> [    2.339985] Couldn't get size: 0x800000000000000e
-> [    2.339987] Couldn't get UEFI dbx list
+> > > Speaking of bisect hazards, I'd recommend to check how your bisect
+> > > went - the bug is definitely local to this commit and I really
+> > > wonder what had caused the bisect to go wrong in this particular
+> > > case.
+> >
+> > I did not get the relation of folding to bisection. Or you mean these
+> > are just separate things?
 >
-> This cosmetic patch moved the messages to the error handling code
-> path. And, it also shows the corresponding status string of status
-> code.
+> Suppose instead of folding the fix in I would've done a followup commit
+> just with the fix.  And left the branch in that form, eventually getting
+> it pulled into mainline.  From that point on, *ANY* bisect stepping into
+> the first commit would've been thrown off.  For ever and ever, since
+> once it's in mainline, it really won't go away.
 >
+> That's what folding avoids - accumulation of scar tissue, if you will.
+> Sure, there's enough cases when bug is found too late - it's already
+> in mainline or pulled into net-next or some other branch with similar
+> "no rebase, no reorder" policy.  But if you look at the patchsets posted
+> on the lists and watch them from iteration to iteration, you'll see
+> a _lot_ of fix-folding.  IME (both by my own practice and by watching
+> the patchsets posted by others) it outnumbers the cases when fix can't
+> be folded by quite a factor.  I wouldn't be surprised if it was an
+> order of magnitude...
+>
+> Strict "never fold fixes" policy would've accelerated the accumulation
+> of bisect hazards in the mainline.  And while useful bisect may be a lost
+> cause for CI bots, it isn't that for intelligent developers.  Anything
+> that makes it more painful is not going to be welcome.
 
-So what output do we get after applying this patch when those
-variables don't exist?
 
-> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
-> ---
->  security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++++-------------
->  1 file changed, 21 insertions(+), 19 deletions(-)
->
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index 81b19c52832b..b6c60fb3fb6c 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
-> @@ -39,7 +40,7 @@ static __init bool uefi_check_ignore_db(void)
->   * Get a certificate list blob from the named EFI variable.
->   */
->  static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> -                                 unsigned long *size)
-> +                                 unsigned long *size, const char *source)
->  {
->         efi_status_t status;
->         unsigned long lsize = 4;
-> @@ -48,23 +49,30 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
->
->         status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
->         if (status != EFI_BUFFER_TOO_SMALL) {
-> -               pr_err("Couldn't get size: 0x%lx\n", status);
-> -               return NULL;
-> +               if (status == EFI_NOT_FOUND) {
-> +                       pr_debug("%s list was not found\n", source);
-> +                       return NULL;
-> +               }
-> +               goto err;
->         }
->
->         db = kmalloc(lsize, GFP_KERNEL);
-> -       if (!db)
-> -               return NULL;
-> +       if (!db) {
-> +               status = EFI_OUT_OF_RESOURCES;
-> +               goto err;
-> +       }
->
->         status = efi.get_variable(name, guid, NULL, &lsize, db);
->         if (status != EFI_SUCCESS) {
->                 kfree(db);
-> -               pr_err("Error reading db var: 0x%lx\n", status);
-> -               return NULL;
-> +               goto err;
->         }
->
->         *size = lsize;
->         return db;
-> +err:
-> +       pr_err("Couldn't get %s list: %s\n", source, efi_status_to_str(status));
-> +       return NULL;
->  }
->
->  /*
-> @@ -153,10 +161,8 @@ static int __init load_uefi_certs(void)
->          * an error if we can't get them.
->          */
->         if (!uefi_check_ignore_db()) {
-> -               db = get_cert_list(L"db", &secure_var, &dbsize);
-> -               if (!db) {
-> -                       pr_err("MODSIGN: Couldn't get UEFI db list\n");
-> -               } else {
-> +               db = get_cert_list(L"db", &secure_var, &dbsize, "UEFI:db");
-> +               if (db) {
->                         rc = parse_efi_signature_list("UEFI:db",
->                                         db, dbsize, get_handler_for_db);
->                         if (rc)
-> @@ -166,10 +172,8 @@ static int __init load_uefi_certs(void)
->                 }
->         }
->
-> -       mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-> -       if (!mok) {
-> -               pr_info("Couldn't get UEFI MokListRT\n");
-> -       } else {
-> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, "UEFI:MokListRT");
-> +       if (mok) {
->                 rc = parse_efi_signature_list("UEFI:MokListRT",
->                                               mok, moksize, get_handler_for_db);
->                 if (rc)
-> @@ -177,10 +181,8 @@ static int __init load_uefi_certs(void)
->                 kfree(mok);
->         }
->
-> -       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-> -       if (!dbx) {
-> -               pr_info("Couldn't get UEFI dbx list\n");
-> -       } else {
-> +       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, "UEFI:dbx");
-> +       if (dbx) {
->                 rc = parse_efi_signature_list("UEFI:dbx",
->                                               dbx, dbxsize,
->                                               get_handler_for_dbx);
-> --
-> 2.16.4
->
+Ah, I see. Yes, folding will help future bisections. In fact, an
+unfolded bug somewhere in kernel history is exactly what caused wrong
+result on bisection for this bug.
+Just in case, I did not propose to not do folding here (or anywhere
+else as far as I remember). Handling of folded fixes is documented in
+syzbot docs:
+https://goo.gl/tpsmEJ#rebuilt-treesamended-patches
