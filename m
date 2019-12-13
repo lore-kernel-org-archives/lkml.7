@@ -2,86 +2,200 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74098C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF89C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0AA206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98656206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iXcVxJ3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLMGoj (ORCPT
+        id S1726735AbfLMGoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:44:39 -0500
-Received: from mx22.baidu.com ([220.181.50.185]:34890 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725770AbfLMGoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:44:38 -0500
-X-Greylist: delayed 975 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 01:44:37 EST
-Received: from BC-Mail-Ex30.internal.baidu.com (unknown [172.31.51.24])
-        by Forcepoint Email with ESMTPS id 1B2BE1EAD4B5A1E08CF9;
-        Fri, 13 Dec 2019 14:27:29 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BC-Mail-Ex30.internal.baidu.com (172.31.51.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 13 Dec 2019 14:27:28 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Fri, 13 Dec 2019 14:27:28 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     Saeed Mahameed <saeedm@mellanox.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3YyXSBwYWdlX3Bvb2w6IGhhbmRsZSBwYWdlIHJl?=
- =?utf-8?B?Y3ljbGUgZm9yIE5VTUFfTk9fTk9ERSBjb25kaXRpb24=?=
-Thread-Topic: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-Thread-Index: AQHVrBgioGDhH/MP9UuNcNvu7zNf3aeuC1gAgAa9z4CAACtDgIAARc8AgACSe4CAASNCAIAArxmA
-Date:   Fri, 13 Dec 2019 06:27:28 +0000
-Message-ID: <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
-References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
- <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
- <20191211194933.15b53c11@carbon>
- <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
- <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
- <20191212111831.2a9f05d3@carbon>
- <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
-In-Reply-To: <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.198.17]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex30_2019-12-13 14:27:29:041
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex30_GRAY_Inside_WithoutAtta_2019-12-13
- 14:27:29:010
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 13 Dec 2019 01:44:46 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55217 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfLMGop (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 01:44:45 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191213064443euoutp0200d9077979e4e859b96725bedad8f067~f20T9BVfU2145621456euoutp02-
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 06:44:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191213064443euoutp0200d9077979e4e859b96725bedad8f067~f20T9BVfU2145621456euoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576219483;
+        bh=k25aPoT/OyS2r8tJ1yujHHIj/GSRAZSZZq6vu4ljcak=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=iXcVxJ3pSipkLlfgeYhbSyCXru3ydHyiXhOLO3fguHLxVxHA+dK+nO3vvQQZ6Pn0p
+         kqCiUrqyGWSylZlqOLxQeiksxwIjQ04BzPFnERai2KbZS0ePMVDRKtNef2v3flEssb
+         SXCD5Lg4dGpNHIiSt/TFA+lz2aMl8HBDjuKpR89E=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191213064443eucas1p1315089e83e86b52f5b51c831dfc72880~f20TdKSsi2828228282eucas1p1I;
+        Fri, 13 Dec 2019 06:44:43 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 83.A3.60698.B5333FD5; Fri, 13
+        Dec 2019 06:44:43 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191213064443eucas1p1a4fb4d43f1e151299aaa22818115ba6d~f20TKGMXI1098410984eucas1p1Z;
+        Fri, 13 Dec 2019 06:44:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191213064443eusmtrp1596cf1f357dcb69c6a4ffbb0dd3556c1~f20TJUG9N2569625696eusmtrp1E;
+        Fri, 13 Dec 2019 06:44:43 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-de-5df3335b0ed9
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 88.83.07950.B5333FD5; Fri, 13
+        Dec 2019 06:44:43 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191213064442eusmtip24a45183f0eee40e4606e3a048f6aee4e~f20SkmUQk2296622966eusmtip2d;
+        Fri, 13 Dec 2019 06:44:42 +0000 (GMT)
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <b8dca439-ffa3-f562-e319-3413986caaaa@samsung.com>
+Date:   Fri, 13 Dec 2019 07:44:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20191213012408.GH101194@dtor-ws>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3bv7q7D6XUqO5olDAxK0sSEm4kkSS6s6OVLWCOX3lR0c2xq
+        miRmzXQY9mKpSytGTtE0k3L5gpmvqSxTK1TyQ2o0rZm0RflC5bxafvv9z/mf55w/PCQmNHE9
+        yQRFCqNSyJLEBB9v7FkY3Hkq0CrdNW92p6/lFHPoP/MtiO7JnebRnXozorU1TTg9OFjPo4uW
+        Kzl0ZVshokeaywi6ZLCNQ+sNGowuMnbx6JpWM0aX225j+5wkTboJnqShOp+QfHjfSkju9R2T
+        WBu2HuVG8UNimaSENEblHxrNj5+qK+Qoa0XpHbYeIhvpXbXIgQRqNzSOthNaxCeFVBWCyYdF
+        HFbYEDyZN+CssCKoLqrirY+Mdd/A2EYlgoridi4rLAiWSg2rLlcqAmpsU1w7u1H+YLy7iOyM
+        Ue04vDKK7ExQAaC1aAk7C6hQMF59tzqLUz7wucC8spok3Skp5FXGsxYX6Cudxu3sQPlB95dL
+        PPZJbzBayjCWRTA+fX81AlCTPDDW9ePs1eHwqz0XY9kVZnufrqXxgoFbBTg7cBnBx9e1PFYU
+        IBjJKUGsay909g5x7Rdh1HZ43OzPlsPAqDFh9jJQTjBqcWGPcIKbjcVrZQHk5QpZ9zbQ9db9
+        W/vyzTB2HYl1G6LpNsTRbYij+7/3AcKrkYhJVcvjGHWggjnvp5bJ1amKOL+YZHkDWvlkA797
+        fzxHbctnOxBFIrGjYFPsd6mQK0tTZ8g7EJCY2E3A+FqlQkGsLOMCo0o+o0pNYtQdaDOJi0WC
+        QP2MVEjFyVKYRIZRMqr1Lod08MxGJzTNmkPOFafHEo2zvseVYTX7Dz/aEkhpPMaV4d5XWjJR
+        fUxnpnN/17lggTmq5KtX0NuLjkdMWRHN6aF936KDhmbvzAUTyuEFw0+PsgN+lvxnL3wsuX2R
+        aUETssh0U5Z+us7keLDAu9OwOLC0x4kOmSmfn6s6aWuYU04uJn8iAsS4Ol4WsANTqWV/AcQf
+        5pxgAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRmVeSWpSXmKPExsVy+t/xe7rRxp9jDSb+ZbbobZrOZPH/w25G
+        i2NtT9gtDi96wWjRtXoni8X58xvYLab8Wc5ksXxfP6PF5V1z2CxmnN/HZLFoWSuzxZTtR9gt
+        Vu95wWwx98tUZgc+j52z7rJ7bFrVyeZx59oeNo95JwM9Pm+SC2CN0rMpyi8tSVXIyC8usVWK
+        NrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mt4vK6fqWCteMWhL8fYGhgXCXcx
+        cnJICJhI3Dw6kbmLkYtDSGApo8SK3iuMEAkZiZPTGlghbGGJP9e62CCKXjNKLHj3BSwhLOAu
+        sfrLYzBbREBfYvvsX4wgRcwCh1gkOpbuZYXoWMAksfPgRnaQKjYBQ4mutyCjODl4Bewktrdf
+        BYuzCKhKPO95wQJiiwrESnxf+YkRokZQ4uTMJ2BxTgE9iaOvG8HqmQXMJOZtfsgMYctLbH87
+        B8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzEC
+        o3fbsZ9bdjB2vQs+xCjAwajEw7si8VOsEGtiWXFl7iFGCQ5mJRHeVO3PsUK8KYmVValF+fFF
+        pTmpxYcYTYGem8gsJZqcD0wseSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg
+        +pg4OKUaGB2ZmaJFbpzP/trn1ZqvE7H0UBr7rrSKXw9/hKnM8hE/6Mlx9U7KhOesvwR26dd+
+        63m05IOsq7u5iV3dkvcPL9mseC7sKRxwK5fF6cn50CWOFZ5q1g4Xd5qyB9oH/ucUWZD4+ESf
+        qKrQuoRFnHcqKyzyreeKz2W2uzevW3FzYo0ai/ptV96pSizFGYmGWsxFxYkA8LD7OPQCAAA=
+X-CMS-MailID: 20191213064443eucas1p1a4fb4d43f1e151299aaa22818115ba6d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+        <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+        <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
+        <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com>
+        <20191213012408.GH101194@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gSXQgaXMgZ29vZCB0byBhbGxvY2F0ZSB0aGUgcnggcGFnZSBjbG9zZSB0byBib3RoIGNw
-dSBhbmQgZGV2aWNlLCBidXQgaWYNCj4gYm90aCBnb2FsIGNhbiBub3QgYmUgcmVhY2hlZCwgbWF5
-YmUgd2UgY2hvb3NlIHRvIGFsbG9jYXRlIHBhZ2UgdGhhdCBjbG9zZQ0KPiB0byBjcHU/DQo+IA0K
-SSB0aGluayBpdCBpcyB0cnVlDQoNCklmIGl0IGlzIHRydWUsICwgd2UgY2FuIHJlbW92ZSBwb29s
-LT5wLm5pZCwgYW5kIHJlcGxhY2UgYWxsb2NfcGFnZXNfbm9kZSB3aXRoDQphbGxvY19wYWdlcyBp
-biBfX3BhZ2VfcG9vbF9hbGxvY19wYWdlc19zbG93LCBhbmQgY2hhbmdlIHBvb2xfcGFnZV9yZXVz
-YWJsZSBhcw0KdGhhdCBwYWdlX3RvX25pZChwYWdlKSBpcyBjaGVja2VkIHdpdGggbnVtYV9tZW1f
-aWQoKSAgDQoNCnNpbmNlIGFsbG9jX3BhZ2VzIGhpbnQgdG8gdXNlIHRoZSBjdXJyZW50IG5vZGUg
-cGFnZSwgYW5kIF9fcGFnZV9wb29sX2FsbG9jX3BhZ2VzX3Nsb3cgDQp3aWxsIGJlIGNhbGxlZCBp
-biBOQVBJIHBvbGxpbmcgb2Z0ZW4gaWYgcmVjeWNsZSBmYWlsZWQsIGFmdGVyIHNvbWUgY3ljbGUs
-IHRoZSBwYWdlIHdpbGwgYmUgZnJvbQ0KbG9jYWwgbWVtb3J5IG5vZGUuDQoNCi1MaQ0KDQo=
+Hi Dmitry,
+
+On 13.12.2019 02:24, Dmitry Torokhov wrote:
+> On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
+>> On 08.11.2019 05:22, Dmitry Torokhov wrote:
+>>> We do not need a special flag to know if we are dealing with an array,
+>>> as we can get that data from ratio between element length and the data
+>>> size, however we do need a flag to know whether the data is stored
+>>> directly inside property_entry or separately.
+>>>
+>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Today I've noticed that this patch got merged to linux-next as commit
+>> e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI
+>> driver operation on Samsung Exynos5 SoCs (and probably on other SoCs
+>> which use DWC3 in host mode too). I get the following errors during boot:
+>>
+>> dwc3 12000000.dwc3: failed to add properties to xHCI
+>> dwc3 12000000.dwc3: failed to initialize host
+>> dwc3: probe of 12000000.dwc3 failed with error -61
+>>
+>> Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
+>>
+>> https://protect2.fireeye.com/url?k=df93ba76-820d14ec-df923139-0cc47a336fae-f751d8b108bc5bdf&u=https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
+>>
+>> (lack of 'ref' clk is not related nor fatal to the driver operation).
+>>
+>> The code which fails after this patch is located in
+>> drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
+> Does the following help? If, as I expect, it does, I'll submit it
+> formally.
+
+Yes, it fixes the issue. If possible, please add the following tags:
+
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+to the final patch.
+
+> ---
+>
+> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+> index 5567ed2cddbec..fa252870c926f 100644
+> --- a/drivers/usb/dwc3/host.c
+> +++ b/drivers/usb/dwc3/host.c
+> @@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+>   	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+>   
+>   	if (dwc->usb3_lpm_capable)
+> -		props[prop_idx++].name = "usb3-lpm-capable";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
+>   
+>   	if (dwc->usb2_lpm_disable)
+> -		props[prop_idx++].name = "usb2-lpm-disable";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+>   
+>   	/**
+>   	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+> @@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+>   	 * This following flag tells XHCI to do just that.
+>   	 */
+>   	if (dwc->revision <= DWC3_REVISION_300A)
+> -		props[prop_idx++].name = "quirk-broken-port-ped";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+>   
+>   	if (prop_idx) {
+>   		ret = platform_device_add_properties(xhci, props);
+>
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
