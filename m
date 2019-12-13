@@ -2,94 +2,96 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715DFC341CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5F5C3498A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BC324753
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B91C24754
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fAowkLwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLMMbj (ORCPT
+        id S1727543AbfLMNaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:31:39 -0500
-Received: from mga07.intel.com ([134.134.136.100]:38502 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbfLMMbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:31:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 04:31:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="220913279"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 13 Dec 2019 04:31:35 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 13 Dec 2019 14:31:34 +0200
-Date:   Fri, 13 Dec 2019 14:31:34 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     linux@roeck-us.net, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: typec: fusb302: Fix an undefined reference to
- 'extcon_get_state'
-Message-ID: <20191213123134.GG31345@kuha.fi.intel.com>
-References: <20191212122053.GA1541203@kroah.com>
- <1576239378-50795-1-git-send-email-zhongjiang@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576239378-50795-1-git-send-email-zhongjiang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 13 Dec 2019 08:30:12 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37365 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfLMNaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:30:02 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so6677610wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 05:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=RihAxbyPf1sWOBRmJF5IKCF0zpUINaJgm3m7kfkEZZY=;
+        b=fAowkLwbvcaMDwhICxvEuVnjEW+/HgTUaD7s4A/Xn36fZT0rVKZ4y7m1k0IE2WY4yG
+         HpLmm5baYQ5QfDQDu1l10QecPEfxHOTfdJPIpLnZ51SFJQ4h0v/1XCERjTz+Lewf5W0S
+         RoqxDd5K94lovPJJYQIzqqsWkO4Qd8QDymklzOooZuJrb9LpQFXyXk5+KLfphgJeKNY/
+         rmGC7TI6Wv2mdHg7NC3Q0x6uxP4dOZEwaNz7COjP6srZrTQrT36UqZt2d1GSZdsWDte9
+         eJDuz/WkglAvJY9CbMC40XjUUkcqgFwuOeInr59Xp2kvFvbrbOsB5eGqYlqUMV+MDr2Z
+         HD7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=RihAxbyPf1sWOBRmJF5IKCF0zpUINaJgm3m7kfkEZZY=;
+        b=b29Mil1fcXZ+k3pzC4YfeOXwSCOaJX7iCqhfX/PqqWbMIHsnS2d0GPMgse+sguHddG
+         BKBTKSu0yLBCFocLVow95RO2G9nwtAqTfvI2U+ntIbT8OWvdrJPnZlZVcZ+ZxzUooCPo
+         MKoSorKy1xQ3Lbtisst2TPiEjpawsLjGxhSVF9wU3/pzH5EG3dMxnxA9XUV8GhTwsr2h
+         bKPVQE6Pa+NUJ2/D7dGWXxsFT/jUdRFtmsg8qQ7S9dXLT5IgTNO9Ptksho4ifKnKO9+y
+         K65FIB2XqNGdnl+E6AO9WWkhZi5V8iNnVSxGMy1D3ZDM25+yk+AYGKbdHnBxpIvVcgSp
+         LxIA==
+X-Gm-Message-State: APjAAAXKHGhfsMEFLcVBhNDfkmVC2Q/PINaS4Nzm+1Maty+sHH/012q3
+        zIBjDPeQLRYAx53WRhxRPv2vzA==
+X-Google-Smtp-Source: APXvYqwNnx7cmRRsx41+o7uRC5/UJmd0OtDKCdpnC8FmFH+IVjL9ZtYfSJJwPHF91ntNAr9l0PWr/w==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr12978031wrm.284.1576243800998;
+        Fri, 13 Dec 2019 05:30:00 -0800 (PST)
+Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 05:30:00 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     narmstrong@baylibre.com, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
+        devicetree@vger.kernel.org
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] arm64: dts: meson-g12g12: add syscon phandle in cec node
+Date:   Fri, 13 Dec 2019 14:29:55 +0100
+Message-Id: <20191213132956.11074-3-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213132956.11074-1-glaroque@baylibre.com>
+References: <20191213132956.11074-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 08:16:18PM +0800, zhong jiang wrote:
-> Fixes the following compile error:
-> 
-> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
-> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
-> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
-> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
-> make: *** [vmlinux] Error 1
-> 
-> It is because EXTCON is build as a module, but FUSB302 is not.
-> 
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+add syscon phandle in cec node to activate wakeup support
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/usb/typec/tcpm/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-> index 72481bb..5b986d6 100644
-> --- a/drivers/usb/typec/tcpm/Kconfig
-> +++ b/drivers/usb/typec/tcpm/Kconfig
-> @@ -32,6 +32,7 @@ endif # TYPEC_TCPCI
->  config TYPEC_FUSB302
->  	tristate "Fairchild FUSB302 Type-C chip driver"
->  	depends on I2C
-> +	depends on EXTCON || !EXTCON
->  	help
->  	  The Fairchild FUSB302 Type-C chip driver that works with
->  	  Type-C Port Controller Manager to provide USB PD and USB
-> -- 
-> 1.7.12.4
-
-thanks,
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 7fabc8d9654a..98c6a1d1d035 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -1899,6 +1899,7 @@
+ 				interrupts = <GIC_SPI 203 IRQ_TYPE_EDGE_RISING>;
+ 				clocks = <&clkc_AO CLKID_AO_CTS_OSCIN>;
+ 				clock-names = "oscin";
++				amlogic,ao-sysctrl = <&rti>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
-heikki
+2.17.1
+
