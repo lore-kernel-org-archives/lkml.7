@@ -2,130 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE074C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2119C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6102073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950102077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ryi//oUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLMKHZ (ORCPT
+        id S1726735AbfLMKH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:07:25 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2184 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfLMKHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:07:25 -0500
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 80148902FA778704197D;
-        Fri, 13 Dec 2019 10:07:23 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Dec 2019 10:07:22 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
- 2019 10:07:22 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-From:   John Garry <john.garry@huawei.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Ming Lei <ming.lei@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hare@suse.com" <hare@suse.com>, "hch@lst.de" <hch@lst.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
- <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
- <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
- <6e513d25d8b0c6b95d37a64df0c27b78@www.loen.fr>
- <06d1e2ff-9ec7-2262-25a0-4503cb204b0b@huawei.com>
- <5caa8414415ab35e74662ac0a30bb4ac@www.loen.fr>
- <f58c3ae0-9807-bea8-4570-28d975336090@huawei.com>
-Message-ID: <2443e657-2ccd-bf85-072c-284ea0b3ce40@huawei.com>
-Date:   Fri, 13 Dec 2019 10:07:21 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 13 Dec 2019 05:07:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33690 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMKH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:07:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDA6Vu9160793;
+        Fri, 13 Dec 2019 10:07:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=AKoeB1RqPNNBZudW1VjtdbzEXr+fRKjptWA5OqnDUZY=;
+ b=Ryi//oUxON/6AbsjrfhDL8Kq653YUs7wNwH+EKN7V3VXf7R0rCuZX1QlB4Fh7jxzTuaM
+ rjSXikzPcV/vgfc33cJeqnFbRGJA1U9MA4BN5dwtv4g4lLkqTC5/uvT0ixpFirf2iUPi
+ SmIP8EkN8Xj3WwC8jeB+Tqw+PXax6QiZO7neSaHGR0hBJgdtxqU96qLbO9JNNSWqZ+0z
+ 3014jDqpv+oCn01Lt4S9iV2qMZR5KGvR60s0D1b7r8V/ua3l06VOyz7pL5Xrcjtz50kZ
+ g61VB0ZS3VCrMMOtU+fD6r/9aLtn76gYKjnfqX0J4/rtr2a8JdhBhzIw+lMtRBMevHov 9w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2wr41qr8kv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 10:07:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDA6RXx041407;
+        Fri, 13 Dec 2019 10:07:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2wumu641rv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 10:07:48 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBDA7iD8008063;
+        Fri, 13 Dec 2019 10:07:44 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Dec 2019 02:07:43 -0800
+Date:   Fri, 13 Dec 2019 13:07:37 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Stephen Boyd <sboyd@kernel.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: drivers/clk/ingenic/jz4770-cgu.c:442 jz4770_cgu_init() error: we
+ previously assumed 'cgu' could be null (see line 435)
+Message-ID: <20191213100737.GC2407@kadam>
 MIME-Version: 1.0
-In-Reply-To: <f58c3ae0-9807-bea8-4570-28d975336090@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912130080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912130080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 09:41, John Garry wrote:
-> On 10/12/2019 18:32, Marc Zyngier wrote:
->>>>> The ITS code will make the lowest online CPU in the affinity mask
->>>>> the
->>>>> target CPU for the interrupt, which may result in some CPUs
->>>>> handling
->>>>> so many interrupts.
->>>> If what you want is for the*default*  affinity to be spread around,
->>>> that should be achieved pretty easily. Let me have a think about how
->>>> to do that.
->>> Cool, I anticipate that it should help my case.
->>>
->>> I can also seek out some NVMe cards to see how it would help a more
->>> "generic" scenario.
->> Can you give the following a go? It probably has all kind of warts on
->> top of the quality debug information, but I managed to get my D05 and
->> a couple of guests to boot with it. It will probably eat your data,
->> so use caution!;-)
->>
-> 
-> Hi Marc,
-> 
-> Ok, we'll give it a spin.
-> 
-> Thanks,
-> John
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9455d25f4e3b3d009fa1b810862e5b06229530e4
+commit: cd94eade0b2ab7673a97223d09406abf668b7f73 clk: ingenic: Allow drivers to be built with COMPILE_TEST
+date:   2 weeks ago
 
-Hi Marc,
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-JFYI, we're still testing this and the patch itself seems to work as 
-intended.
+smatch warnings:
+drivers/clk/ingenic/jz4770-cgu.c:442 jz4770_cgu_init() error: we previously assumed 'cgu' could be null (see line 435)
 
-Here's the kernel log if you just want to see how the interrupts are 
-getting assigned:
-https://pastebin.com/hh3r810g
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cd94eade0b2ab7673a97223d09406abf668b7f73
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout cd94eade0b2ab7673a97223d09406abf668b7f73
+vim +/cgu +442 drivers/clk/ingenic/jz4770-cgu.c
 
-For me, I did get a performance boost for NVMe testing, but my colleague 
-Xiang Chen saw a drop for our storage test of interest  - that's the 
-HiSi SAS controller. We're trying to make sense of it now.
+7a01c19007ad3c Paul Cercueil 2018-01-16  429  static void __init jz4770_cgu_init(struct device_node *np)
+7a01c19007ad3c Paul Cercueil 2018-01-16  430  {
+7a01c19007ad3c Paul Cercueil 2018-01-16  431  	int retval;
+7a01c19007ad3c Paul Cercueil 2018-01-16  432  
+7a01c19007ad3c Paul Cercueil 2018-01-16  433  	cgu = ingenic_cgu_new(jz4770_cgu_clocks,
+7a01c19007ad3c Paul Cercueil 2018-01-16  434  			      ARRAY_SIZE(jz4770_cgu_clocks), np);
+7a01c19007ad3c Paul Cercueil 2018-01-16 @435  	if (!cgu)
+7a01c19007ad3c Paul Cercueil 2018-01-16  436  		pr_err("%s: failed to initialise CGU\n", __func__);
+7a01c19007ad3c Paul Cercueil 2018-01-16  437  
+7a01c19007ad3c Paul Cercueil 2018-01-16  438  	retval = ingenic_cgu_register_clocks(cgu);
+7a01c19007ad3c Paul Cercueil 2018-01-16  439  	if (retval)
+7a01c19007ad3c Paul Cercueil 2018-01-16  440  		pr_err("%s: failed to register CGU Clocks\n", __func__);
+7a01c19007ad3c Paul Cercueil 2018-01-16  441  
+2ee93e3c953b72 Paul Cercueil 2019-06-11 @442  	ingenic_cgu_register_syscore_ops(cgu);
+7a01c19007ad3c Paul Cercueil 2018-01-16  443  }
 
-Thanks,
-John
-
-> 
->> Thanks,
->>
->>           M.
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index e05673bcd52b..301ee3bc0602 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -177,6 +177,8 @@ static DEFINE_IDA(its_vpeid_ida);
-> 
-
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
