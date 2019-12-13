@@ -4,166 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C90FC34981
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D803C34991
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC65246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE131246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLMLhB (ORCPT
+        id S1726863AbfLMLsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:37:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:55886 "EHLO foss.arm.com"
+        Fri, 13 Dec 2019 06:48:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:56292 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfLMLhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:37:01 -0500
+        id S1725980AbfLMLsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:48:22 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BADB51045;
-        Fri, 13 Dec 2019 03:37:00 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 332B73F718;
-        Fri, 13 Dec 2019 03:37:00 -0800 (PST)
-Date:   Fri, 13 Dec 2019 11:36:58 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: uniphier: remove module code from built-in driver
-Message-ID: <20191213113657.GM24359@e119886-lin.cambridge.arm.com>
-References: <20191114122654.1490-1-yamada.masahiro@socionext.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ED401045;
+        Fri, 13 Dec 2019 03:48:22 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AD1B3F718;
+        Fri, 13 Dec 2019 03:48:20 -0800 (PST)
+Subject: Re: [PATCH v2] sched/fair: Optimize select_idle_cpu
+To:     Cheng Jian <cj.chengjian@huawei.com>, mingo@kernel.org,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Cc:     chenwandun@huawei.com, xiexiuqi@huawei.com, liwei391@huawei.com,
+        huawei.libin@huawei.com, bobo.shaobowang@huawei.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org
+References: <20191213024530.28052-1-cj.chengjian@huawei.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <ac11014d-ffc9-f0b2-3d48-2456c1c5edfa@arm.com>
+Date:   Fri, 13 Dec 2019 11:48:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114122654.1490-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191213024530.28052-1-cj.chengjian@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 09:26:54PM +0900, Masahiro Yamada wrote:
-> builtin_platform_driver() and MODULE_* are always odd combination.
+On 13/12/2019 02:45, Cheng Jian wrote:
+> select_idle_cpu() will scan the LLC domain for idle CPUs,
+> it's always expensive. so the next commit :
 > 
-> The MODULE_* tags are never populated since CONFIG_PCIE_UNIPHIER is
-> a bool option.
+> 	1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
 > 
-> You can see similar cleanups by:
->   git log --grep='explicitly non-modular'
-
-Thanks for the justification, it's helpful - however this doesn't belong
-on the commit message so please remove that.
-
-
+> introduces a way to limit how many CPUs we scan.
 > 
-> Following those commits, remove all the MODULE_* tags and the driver
-> detach code.
+> But it consume some CPUs out of 'nr' that are not allowed
+> for the task and thus waste our attempts. The function
+> always return nr_cpumask_bits, and we can't find a CPU
+> which our task is allowed to run.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Cpumask may be too big, similar to select_idle_core(), use
+> per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
+> 
+> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
 
-Please remove Reviewed-by tags that were not given on the public lists,
-reviews should be performed on list (as per [1]).
-
-[1] https://lore.kernel.org/linux-arm-kernel/20191015164303.GC25674@e121166-lin.cambridge.arm.com/
-
-The patch looks OK to me - however can you update the commit message
-to better describe this (take inspiration from the examples you gave)?
-And there is no need to make any reference to similar commits in the
-history.
-
-Thanks,
-
-Andrew Murray
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
 > ---
+>  kernel/sched/fair.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
->  drivers/pci/controller/dwc/pcie-uniphier.c | 31 +---------------------
->  1 file changed, 1 insertion(+), 30 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 3f30ee4a00b3..8c92b660a0f6 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -9,11 +9,11 @@
->  #include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/init.h>
->  #include <linux/interrupt.h>
->  #include <linux/iopoll.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
-> -#include <linux/module.h>
->  #include <linux/of_irq.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
-> @@ -161,12 +161,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->  }
->  
-> -static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
-> -{
-> -	writel(0, priv->base + PCL_RCV_INT);
-> -	writel(0, priv->base + PCL_RCV_INTX);
-> -}
-> -
->  static void uniphier_pcie_irq_ack(struct irq_data *d)
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 08a233e97a01..d48244388ce9 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5828,6 +5828,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
+>   */
+>  static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
 >  {
->  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-> @@ -387,14 +381,6 @@ static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
->  	return ret;
->  }
+> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+>  	struct sched_domain *this_sd;
+>  	u64 avg_cost, avg_idle;
+>  	u64 time, cost;
+> @@ -5859,11 +5860,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 >  
-> -static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
-> -{
-> -	uniphier_pcie_irq_disable(priv);
-> -	phy_exit(priv->phy);
-> -	reset_control_assert(priv->rst);
-> -	clk_disable_unprepare(priv->clk);
-> -}
-> -
->  static const struct dw_pcie_ops dw_pcie_ops = {
->  	.start_link = uniphier_pcie_establish_link,
->  	.stop_link = uniphier_pcie_stop_link,
-> @@ -446,31 +432,16 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->  	return uniphier_add_pcie_port(priv, pdev);
->  }
+>  	time = cpu_clock(this);
 >  
-> -static int uniphier_pcie_remove(struct platform_device *pdev)
-> -{
-> -	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
-> -
-> -	uniphier_pcie_host_disable(priv);
-> -
-> -	return 0;
-> -}
-> -
->  static const struct of_device_id uniphier_pcie_match[] = {
->  	{ .compatible = "socionext,uniphier-pcie", },
->  	{ /* sentinel */ },
->  };
-> -MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
->  
->  static struct platform_driver uniphier_pcie_driver = {
->  	.probe  = uniphier_pcie_probe,
-> -	.remove = uniphier_pcie_remove,
->  	.driver = {
->  		.name = "uniphier-pcie",
->  		.of_match_table = uniphier_pcie_match,
->  	},
->  };
->  builtin_platform_driver(uniphier_pcie_driver);
-> -
-> -MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-> -MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
-> -MODULE_LICENSE("GPL v2");
-> -- 
-> 2.17.1
+> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
+> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+> +
+> +	for_each_cpu_wrap(cpu, cpus, target) {
+>  		if (!--nr)
+>  			return si_cpu;
+> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+> -			continue;
+>  		if (available_idle_cpu(cpu))
+>  			break;
+>  		if (si_cpu == -1 && sched_idle_cpu(cpu))
 > 
