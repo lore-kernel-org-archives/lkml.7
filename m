@@ -2,129 +2,196 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E2C79DDD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1B1C7CFE1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5210247D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CPSsmHNV"
+	by mail.kernel.org (Postfix) with ESMTP id 5BEE2247FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfLMRSf (ORCPT
+        id S1728571AbfLMRrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:18:35 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:35396 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfLMRSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:18:34 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 60C0C20B7189;
-        Fri, 13 Dec 2019 09:18:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 60C0C20B7189
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576257513;
-        bh=HUR/7PIaBPEifHrzxR+iFv6S9OSSul8DqgbDSwazjJc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CPSsmHNV+rTClvxrnjSWPSbuViuYkM9SA3ik3FbVEUoR6PSBOGgFcfQEtLdJxssBP
-         PQuZVrUoK93I9vNCqbpXe7nduyEh59KMKMcZo6LIumR4Y09LBNxo5BmKdIpqjPgi4n
-         QvfMEPnphyYFNJ/GebLgdlWXaL8fdorqoBMZ89HU=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v4 0/2] IMA: Deferred measurement of keys
-Date:   Fri, 13 Dec 2019 09:18:25 -0800
-Message-Id: <20191213171827.28657-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Dec 2019 12:47:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:29572 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfLMRrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 12:47:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 09:47:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="296989821"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 13 Dec 2019 09:47:02 -0800
+Date:   Fri, 13 Dec 2019 09:47:02 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Barret Rhoden <brho@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+Subject: Re: [PATCH v5 1/2] mm: make dev_pagemap_mapping_shift() externally
+ visible
+Message-ID: <20191213174702.GB31552@linux.intel.com>
+References: <20191212182238.46535-1-brho@google.com>
+ <20191212182238.46535-2-brho@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212182238.46535-2-brho@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset extends the previous version[1] by adding support for
-deferred processing of keys.
+On Thu, Dec 12, 2019 at 01:22:37PM -0500, Barret Rhoden wrote:
+> KVM has a use case for determining the size of a dax mapping.
+> 
+> The KVM code has easy access to the address and the mm, and
+> dev_pagemap_mapping_shift() needs only those parameters.  It was
+> deriving them from page and vma.  This commit changes those parameters
+> from (page, vma) to (address, mm).
+> 
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/mm.h  |  3 +++
+>  mm/memory-failure.c | 38 +++-----------------------------------
+>  mm/util.c           | 34 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 40 insertions(+), 35 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index a2adf95b3f9c..bfd1882dd5c6 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1013,6 +1013,9 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
+>  #define page_ref_zero_or_close_to_overflow(page) \
+>  	((unsigned int) page_ref_count(page) + 127u <= 127u)
+>  
+> +unsigned long dev_pagemap_mapping_shift(unsigned long address,
+> +					struct mm_struct *mm);
+> +
+>  static inline void get_page(struct page *page)
+>  {
+>  	page = compound_head(page);
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 3151c87dff73..bafa464c8290 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -261,40 +261,6 @@ void shake_page(struct page *p, int access)
+>  }
+>  EXPORT_SYMBOL_GPL(shake_page);
+>  
+> -static unsigned long dev_pagemap_mapping_shift(struct page *page,
+> -		struct vm_area_struct *vma)
+> -{
+> -	unsigned long address = vma_address(page, vma);
+> -	pgd_t *pgd;
+> -	p4d_t *p4d;
+> -	pud_t *pud;
+> -	pmd_t *pmd;
+> -	pte_t *pte;
+> -
+> -	pgd = pgd_offset(vma->vm_mm, address);
+> -	if (!pgd_present(*pgd))
+> -		return 0;
+> -	p4d = p4d_offset(pgd, address);
+> -	if (!p4d_present(*p4d))
+> -		return 0;
+> -	pud = pud_offset(p4d, address);
+> -	if (!pud_present(*pud))
+> -		return 0;
+> -	if (pud_devmap(*pud))
+> -		return PUD_SHIFT;
+> -	pmd = pmd_offset(pud, address);
+> -	if (!pmd_present(*pmd))
+> -		return 0;
+> -	if (pmd_devmap(*pmd))
+> -		return PMD_SHIFT;
+> -	pte = pte_offset_map(pmd, address);
+> -	if (!pte_present(*pte))
+> -		return 0;
+> -	if (pte_devmap(*pte))
+> -		return PAGE_SHIFT;
+> -	return 0;
+> -}
+> -
+>  /*
+>   * Failure handling: if we can't find or can't kill a process there's
+>   * not much we can do.	We just print a message and ignore otherwise.
+> @@ -324,7 +290,9 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+>  	}
+>  	tk->addr = page_address_in_vma(p, vma);
+>  	if (is_zone_device_page(p))
+> -		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+> +		tk->size_shift =
+> +			dev_pagemap_mapping_shift(vma_address(page, vma),
+> +						  vma->vm_mm);
+>  	else
+>  		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+>  
+> diff --git a/mm/util.c b/mm/util.c
+> index 3ad6db9a722e..59984e6b40ab 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -901,3 +901,37 @@ int memcmp_pages(struct page *page1, struct page *page2)
+>  	kunmap_atomic(addr1);
+>  	return ret;
+>  }
+> +
+> +unsigned long dev_pagemap_mapping_shift(unsigned long address,
+> +					struct mm_struct *mm)
+> +{
+> +	pgd_t *pgd;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	pmd_t *pmd;
+> +	pte_t *pte;
+> +
+> +	pgd = pgd_offset(mm, address);
+> +	if (!pgd_present(*pgd))
+> +		return 0;
+> +	p4d = p4d_offset(pgd, address);
+> +	if (!p4d_present(*p4d))
+> +		return 0;
+> +	pud = pud_offset(p4d, address);
+> +	if (!pud_present(*pud))
+> +		return 0;
+> +	if (pud_devmap(*pud))
+> +		return PUD_SHIFT;
+> +	pmd = pmd_offset(pud, address);
+> +	if (!pmd_present(*pmd))
+> +		return 0;
+> +	if (pmd_devmap(*pmd))
+> +		return PMD_SHIFT;
+> +	pte = pte_offset_map(pmd, address);
+> +	if (!pte_present(*pte))
+> +		return 0;
+> +	if (pte_devmap(*pte))
+> +		return PAGE_SHIFT;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pagemap_mapping_shift);
 
-With the patchset referenced above, the IMA subsystem supports
-measuring asymmetric keys when the key is created or updated.
-But keys created or updated before a custom IMA policy is loaded
-are currently not measured. This includes keys added to, for instance,
-.builtin_trusted_keys which happens early in the boot process.
+This is basically a rehash of lookup_address_in_pgd(), and doesn't provide
+exactly what KVM needs.  E.g. KVM works with levels instead of shifts, and
+it would be nice to provide the pte so that KVM can sanity check that the
+pfn from this walk matches the pfn it plans on mapping.
 
-This change adds support for queuing keys created or updated before
-a custom IMA policy is loaded. The queued keys are processed when
-a custom policy is loaded. Keys created or updated after a custom policy
-is loaded are measured immediately (not queued).
+Instead of exporting dev_pagemap_mapping_shift(), what about relacing it
+with a patch to introduce lookup_address_mm() and export that?
 
-If the kernel is built with both CONFIG_IMA and
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
-must be applied as a custom policy. Not providing a custom policy
-in the above configuration would result in asymmeteric keys being queued
-until a custom policy is loaded. This is by design.
-
-[1] https://lore.kernel.org/linux-integrity/20191211164707.4698-1-nramas@linux.microsoft.com/
-
-Testing performed:
-
-  * Booted the kernel with this change.
-  * Added .builtin_trusted_keys in "keyrings=" option in
-    the IMA policy and verified the keys added to this
-    keyring are measured.
-  * Specified only func=KEY_CHECK and not "keyrings=" option,
-    and verified the keys added to builtin_trusted_keys keyring
-    are processed.
-  * Added keys at runtime and verified they are measured
-    if the IMA policy permitted.
-      => For example, added keys to .ima keyring and verified.
-
-Changelog:
-
-  v4
-
-  => Check and set ima_process_keys flag with mutex held.
-
-  v3
-
-  => Defined ima_process_keys flag to be static.
-  => Set ima_process_keys with ima_keys_mutex held.
-  => Added a comment in ima_process_queued_keys() function
-     to state the use of temporary list for keys.
-
-  v2
-
-  => Rebased the changes to v5.5-rc1
-  => Updated function names, variable names, and code comments
-     to be less verbose.
-
-  v1
-
-  => Code cleanup
-
-  v0
-
-  => Based changes on v5.4-rc8
-  => The following patchsets should be applied in that order
-     https://lore.kernel.org/linux-integrity/1572492694-6520-1-git-send-email-zohar@linux.ibm.com
-     https://lore.kernel.org/linux-integrity/20191204224131.3384-1-nramas@linux.microsoft.com/
-  => Added functions to queue and dequeue keys, and process
-     the queued keys when custom IMA policies are applied.
-
-Lakshmi Ramasubramanian (2):
-  IMA: Define workqueue for early boot key measurements
-  IMA: Call workqueue functions to measure queued keys
-
- security/integrity/ima/ima.h                 |  15 ++
- security/integrity/ima/ima_asymmetric_keys.c | 136 +++++++++++++++++++
- security/integrity/ima/ima_policy.c          |   3 +
- 3 files changed, 154 insertions(+)
-
--- 
-2.17.1
-
+dev_pagemap_mapping_shift() could then wrap the new helper (if you want),
+and KVM could do lookup_address_mm() for querying the size of ZONE_DEVICE
+pages.
