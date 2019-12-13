@@ -2,163 +2,237 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19BC79DCC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62711C341DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF5E246B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9776B2475F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOVvorSh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Roo+Teyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfLMRMD (ORCPT
+        id S1728532AbfLMRSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:12:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36212 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbfLMRMD (ORCPT
+        Fri, 13 Dec 2019 12:18:39 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:35414 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbfLMRSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:12:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so361892wma.1;
-        Fri, 13 Dec 2019 09:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=oONWFSnEmppU5WkvOUIZSunVfuRDSeXJRgxaN4+F1B8=;
-        b=eOVvorSh6PzP1gVTIiv/kUdPIkLtH9Mg+PwB/vCkTQLl+XUrC/c3b/b5yx24S04wdH
-         N1UFFXd30YQB55l6z4ZcO8iYInRIBStYQjNELP2n7MtwNM6ARQxWQdOzndUHuSOdxkJq
-         p1Rus+TEaRt99hDwAzZxHX7M0dif0BeWLojqhnCguRYnSyzQ9NwxrLcBSKXZLQBrvuIb
-         izUFmQFGv0sLs2DFyrgxbLoGg5Svd5QFPFT8jBNv5dPrSgqBTY++LlUksOUAC4SUqSo6
-         M0dEaweI+5a2iUTpLeCUuimSebxjOzN1Cr5asIvX7UI9NqIDfHcET8IYOFxun3yvRUWG
-         I76A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oONWFSnEmppU5WkvOUIZSunVfuRDSeXJRgxaN4+F1B8=;
-        b=brDWOGapuz9O958KwVqXoFkwkUODOZ0pSxn0fhwdVWvk50wir3kurc+kYFiUQkm/Bz
-         RjZJ0ba5cJnm7xKZ+U7p34djtAiRVHQ15LuufARciCv958x8W0aR/lxbXg//BQrCV9MP
-         /mQyjDLt4WbPQAnF2JiGtxFbOVu0dn4MgHQOhqdnn4Ph/yIta0Zx26lbxlQhb0NI0D1V
-         wKwAeGgEyag7/Vo3wiwww/YYa5/IZ8/l3bGLYMpBh7SbR3JIZUYU9vlnERo7468/9XCB
-         2IRH+gx3SwfOVr+SA0PBskMbVBhiIR/xfVQoYv1DuvnKuFN/oCqV58lO7FUmimsKEM/G
-         b37g==
-X-Gm-Message-State: APjAAAUQe1OHn4qE8rv797KxDidG/75TotzEY4qlxgTJ7QGxj0UeVYin
-        NOUt7TBfGoJvEqKDH8/BIHbNtFDv
-X-Google-Smtp-Source: APXvYqxRKKH8jyEOW8ZQENkfmTbVlbRk+C0royRPuGNGNKgEE+mAphI3RpeWCIQlfrK9hSWb8lMhXQ==
-X-Received: by 2002:a1c:407:: with SMTP id 7mr14180821wme.29.1576257120865;
-        Fri, 13 Dec 2019 09:12:00 -0800 (PST)
-Received: from localhost.localdomain ([109.126.143.152])
-        by smtp.gmail.com with ESMTPSA id v188sm10963924wma.10.2019.12.13.09.11.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 09:12:00 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 liburing] Test wait after under-consuming
-Date:   Fri, 13 Dec 2019 20:11:22 +0300
-Message-Id: <512741aa9160cc9648780a21a4bf4aa10a47193f.1576256964.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
-References: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Dec 2019 12:18:35 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8ADF220B718B;
+        Fri, 13 Dec 2019 09:18:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8ADF220B718B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576257513;
+        bh=jADnlL0dScM/cB5nRhiad/MPIa+FT5l8gEeKADfdnb4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Roo+Teyi617ejW1JVRHXXJdpY+Z+jgXiTXymOVcrQrSdtqUTyrigFPq27pAcIqJx6
+         nb9R/1/6IwJVIiZ1PRZVkgRgQV0dOc2JXkX40lQptSws+Cq+C/RuoNpNLW3YVmqci/
+         UUMixaeRzwWagPG4x2IL3fesSzBG8Zpb2HlAj4HE=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH v4 1/2] IMA: Define workqueue for early boot "key" measurements
+Date:   Fri, 13 Dec 2019 09:18:26 -0800
+Message-Id: <20191213171827.28657-2-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213171827.28657-1-nramas@linux.microsoft.com>
+References: <20191213171827.28657-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of an error submission won't consume all sqes. This tests that
-it will get back to the userspace even if (to_submit == to_wait)
+Measuring keys requires a custom IMA policy to be loaded.
+Keys created or updated before a custom IMA policy is loaded should
+be queued and the keys should be processed after a custom policy
+is loaded.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+This patch defines workqueue for queuing keys when a custom IMA policy
+has not yet been loaded.
+
+A flag namely ima_process_keys is used to check if the key should be
+queued or should be processed immediately.
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
+ security/integrity/ima/ima.h                 |  15 +++
+ security/integrity/ima/ima_asymmetric_keys.c | 128 +++++++++++++++++++
+ 2 files changed, 143 insertions(+)
 
-since v1: don't leave ring dirty, as it will fail following tests
-
- test/link.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/test/link.c b/test/link.c
-index 8ec1649..6c8ae09 100644
---- a/test/link.c
-+++ b/test/link.c
-@@ -384,6 +384,50 @@ err:
- 	return 1;
- }
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index f06238e41a7c..97f8a4078483 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -205,6 +205,21 @@ extern const char *const func_tokens[];
  
-+static int test_early_fail_and_wait(void)
+ struct modsig;
+ 
++#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
++/*
++ * To track keys that need to be measured.
++ */
++struct ima_key_entry {
++	struct list_head list;
++	void *payload;
++	size_t payload_len;
++	char *keyring_name;
++};
++void ima_process_queued_keys(void);
++#else
++static inline void ima_process_queued_keys(void) {}
++#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
++
+ /* LIM API function definitions */
+ int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+ 		   int mask, enum ima_hooks func, int *pcr,
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index fea2e7dd3b09..ae6de1bb2e79 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -14,6 +14,134 @@
+ #include <keys/asymmetric-type.h>
+ #include "ima.h"
+ 
++/*
++ * Flag to indicate whether a key can be processed
++ * right away or should be queued for processing later.
++ */
++static bool ima_process_keys;
++
++/*
++ * To synchronize access to the list of keys that need to be measured
++ */
++static DEFINE_MUTEX(ima_keys_mutex);
++static LIST_HEAD(ima_keys);
++
++static void ima_free_key_entry(struct ima_key_entry *entry)
 +{
-+	struct io_uring ring;
-+	struct io_uring_sqe *sqe;
-+	int ret, invalid_fd = 42;
-+	struct iovec iov = { .iov_base = NULL, .iov_len = 0 };
-+
-+	/* create a new ring as it leaves it dirty */
-+	ret = io_uring_queue_init(8, &ring, 0);
-+	if (ret) {
-+		printf("ring setup failed\n");
-+		return 1;
++	if (entry) {
++		kfree(entry->payload);
++		kfree(entry->keyring_name);
++		kfree(entry);
 +	}
-+
-+	sqe = io_uring_get_sqe(&ring);
-+	if (!sqe) {
-+		printf("get sqe failed\n");
-+		goto err;
-+	}
-+
-+	io_uring_prep_readv(sqe, invalid_fd, &iov, 1, 0);
-+	sqe->flags |= IOSQE_IO_LINK;
-+
-+	sqe = io_uring_get_sqe(&ring);
-+	if (!sqe) {
-+		printf("get sqe failed\n");
-+		goto err;
-+	}
-+
-+	io_uring_prep_nop(sqe);
-+
-+	ret = io_uring_submit_and_wait(&ring, 2);
-+	if (ret <= 0 && ret != -EAGAIN) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	io_uring_queue_exit(&ring);
-+	return 0;
-+err:
-+	io_uring_queue_exit(&ring);
-+	return 1;
 +}
 +
- int main(int argc, char *argv[])
- {
- 	struct io_uring ring, poll_ring;
-@@ -400,7 +444,6 @@ int main(int argc, char *argv[])
- 	if (ret) {
- 		printf("poll_ring setup failed\n");
- 		return 1;
--
- 	}
- 
- 	ret = test_single_link(&ring);
-@@ -439,5 +482,11 @@ int main(int argc, char *argv[])
- 		return ret;
- 	}
- 
-+	ret = test_early_fail_and_wait();
-+	if (ret) {
-+		fprintf(stderr, "test_early_fail_and_wait\n");
-+		return ret;
++static struct ima_key_entry *ima_alloc_key_entry(
++	struct key *keyring,
++	const void *payload, size_t payload_len)
++{
++	int rc = 0;
++	struct ima_key_entry *entry;
++
++	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
++	if (entry) {
++		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
++		entry->keyring_name = kstrdup(keyring->description,
++					      GFP_KERNEL);
++		entry->payload_len = payload_len;
 +	}
 +
- 	return 0;
- }
++	if ((entry == NULL) || (entry->payload == NULL) ||
++	    (entry->keyring_name == NULL)) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	INIT_LIST_HEAD(&entry->list);
++
++out:
++	if (rc) {
++		ima_free_key_entry(entry);
++		entry = NULL;
++	}
++
++	return entry;
++}
++
++bool ima_queue_key(struct key *keyring, const void *payload,
++		   size_t payload_len)
++{
++	bool queued = false;
++	struct ima_key_entry *entry;
++
++	entry = ima_alloc_key_entry(keyring, payload, payload_len);
++	if (!entry)
++		return false;
++
++	mutex_lock(&ima_keys_mutex);
++	if (!ima_process_keys) {
++		list_add_tail(&entry->list, &ima_keys);
++		queued = true;
++	}
++	mutex_unlock(&ima_keys_mutex);
++
++	if (!queued)
++		ima_free_key_entry(entry);
++
++	return queued;
++}
++
++/*
++ * ima_process_queued_keys() - process keys queued for measurement
++ *
++ * This function sets ima_process_keys to true and processes queued keys.
++ * From here on keys will be processed right away (not queued).
++ */
++void ima_process_queued_keys(void)
++{
++	struct ima_key_entry *entry, *tmp;
++	LIST_HEAD(temp_ima_keys);
++	bool process = false;
++
++	if (ima_process_keys)
++		return;
++
++	/*
++	 * To avoid holding the mutex when processing queued keys,
++	 * transfer the queued keys with the mutex held to a temp list,
++	 * release the mutex, and then process the queued keys from
++	 * the temp list.
++	 *
++	 * Since ima_process_keys is set to true, any new key will be
++	 * processed immediately and not be queued.
++	 */
++	INIT_LIST_HEAD(&temp_ima_keys);
++
++	mutex_lock(&ima_keys_mutex);
++
++	if (!ima_process_keys) {
++		ima_process_keys = true;
++
++		if (!list_empty(&ima_keys)) {
++			list_for_each_entry_safe(entry, tmp, &ima_keys, list)
++				list_move_tail(&entry->list, &temp_ima_keys);
++			process = true;
++		}
++	}
++
++	mutex_unlock(&ima_keys_mutex);
++
++	if (!process)
++		return;
++
++	list_for_each_entry_safe(entry, tmp, &temp_ima_keys, list) {
++		process_buffer_measurement(entry->payload, entry->payload_len,
++					   entry->keyring_name, KEY_CHECK, 0,
++					   entry->keyring_name);
++		list_del(&entry->list);
++		ima_free_key_entry(entry);
++	}
++}
++
+ /**
+  * ima_post_key_create_or_update - measure asymmetric keys
+  * @keyring: keyring to which the key is linked to
 -- 
-2.24.0
+2.17.1
 
