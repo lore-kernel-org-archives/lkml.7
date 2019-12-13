@@ -2,88 +2,175 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CEEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05FDC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6C6206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31E52253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDI74twS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfLMIl3 (ORCPT
+        id S1726592AbfLMIlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:41:29 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:40868 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfLMIl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:41:29 -0500
-X-Greylist: delayed 547 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 03:41:28 EST
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 541DBDF383;
-        Fri, 13 Dec 2019 08:32:22 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UZXf3XBqoR-G; Fri, 13 Dec 2019 08:32:21 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 918A9DFB07;
-        Fri, 13 Dec 2019 08:32:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4I-m5DADgw5t; Fri, 13 Dec 2019 08:32:21 +0000 (UTC)
-Received: from nedofet.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 3B4CDDFB03;
-        Fri, 13 Dec 2019 08:32:21 +0000 (UTC)
-Message-ID: <71a8139e603f697c734134faedfb3ce87067918f.camel@v3.sk>
-Subject: Re: [PATCH] ARM: mmp: include the correct cputype.h
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Fri, 13 Dec 2019 03:41:39 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42110 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMIlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:41:39 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so1327132lfl.9;
+        Fri, 13 Dec 2019 00:41:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=rLQ5m+u1dvrjSizT1sS4iO+rnO5Zjh0/I2TBX2IdsrQ=;
+        b=lDI74twSnmzAP+UZ3bIAiF1+NnttuW0yfFKA2pCdFYGcb8nOdOD5Vd+1JeMr/xk5lt
+         MLayFIEEIaFktMbOiqEry4oYOO7QfBohbaDmto24P1Lg+sQHGf/jx4RS2PYdFeA8ZPRT
+         LbuRXKXmvnnThVDivXkbbGoKQOwRJWyWeRh6YgdKx5NqZGX0V5GLBOFEgRvPQWhdGZ67
+         wBjphQDcaVIzS8YuPPvW9vO7Ne6stVJ7eZy+N4VeU3C2343su9FQOS5eqCsIUqF0lA86
+         Ml/AemxALKi+ka01i5yoPCpFbgrkVZ069SgRuOgJ/do8G+sBAWpx7yrhOa7Q+vqhkpHk
+         0ooQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rLQ5m+u1dvrjSizT1sS4iO+rnO5Zjh0/I2TBX2IdsrQ=;
+        b=BD/6RzGwC/1dKTKZ6cXQiD9lxdTQnMs2hLfSivcB4BI4YL1mqWbfsFZQPw1kVcOgWv
+         QWx4ayt6F8nr1OhBjD+9aaQi+wvLEvjPlo9zTZ1nbGl/3BAdh7JBAMLLQYwUlPKgEMiO
+         AKUHCuZhvr5WpOx9np9+ooBjx86mvFcYQ/JgIHFA5yreNj451NgmYuQUp+C6lIHrU9mi
+         yA9Sp+gU0g1d/p5rJql4t+c9UfK4oY5W5FRuSEykFmUsFCl3+geg3nFecAu6PrkBd5Hq
+         Y+bqbTxvKsPtyVgoVQGcA9ppZOf2Xwec0NR1BNx/3sO2hrUxu6YT/POGy3sqU7eaUrhb
+         wS2w==
+X-Gm-Message-State: APjAAAXIasKEyDFy24LhMwiSIXwrjlFv4u1nQqtRydBjizwwOoPg2BNp
+        7oHQiYncuk4W1dMCSJuUBxOeUDLOIKI=
+X-Google-Smtp-Source: APXvYqyySNePGf8Iw3wiWo/O7Kxs5ALek69lfyC5bZcw4C/Hicer9vtPstNSq6i9zEGJM7PBaabGXQ==
+X-Received: by 2002:a19:5212:: with SMTP id m18mr8153947lfb.7.1576226496826;
+        Fri, 13 Dec 2019 00:41:36 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id h19sm4356381ljl.57.2019.12.13.00.41.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Dec 2019 00:41:36 -0800 (PST)
+Subject: Re: [PATCH liburing] Test wait after under-consuming
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Fri, 13 Dec 2019 09:32:19 +0100
-In-Reply-To: <20191210203409.2875880-1-arnd@arndb.de>
-References: <20191210203409.2875880-1-arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+References: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
+Message-ID: <688ff2e6-0bb3-908f-5b5f-af894ed9f0c5@gmail.com>
+Date:   Fri, 13 Dec 2019 11:41:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-10 at 21:34 +0100, Arnd Bergmann wrote:
-> The file was moved, causing a build error:
+On 12/13/2019 11:06 AM, Pavel Begunkov wrote:
+> In case of an error submission won't consume all sqes. This tests that
+> it will get back to the userspace even if (to_submit == to_wait)
 > 
-> In file included from /git/arm-soc/arch/arm/mach-mmp/pxa168.c:28:
-> arch/arm/mach-mmp/pxa168.h:22:10: fatal error: cputype.h: No such file or directory
-> 
-> Include it from the new location.
-> 
-> Fixes: 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 > ---
->  arch/arm/mach-mmp/pxa168.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  test/link.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 55 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/mach-mmp/pxa168.h b/arch/arm/mach-mmp/pxa168.h
-> index 6dd17986e360..34f907cd165a 100644
-> --- a/arch/arm/mach-mmp/pxa168.h
-> +++ b/arch/arm/mach-mmp/pxa168.h
-> @@ -17,9 +17,9 @@ extern void pxa168_clear_keypad_wakeup(void);
->  #include <linux/platform_data/keypad-pxa27x.h>
->  #include <linux/pxa168_eth.h>
->  #include <linux/platform_data/mv_usb.h>
-> +#include <linux/soc/mmp/cputype.h>
+> diff --git a/test/link.c b/test/link.c
+> index 8ec1649..93653f3 100644
+> --- a/test/link.c
+> +++ b/test/link.c
+> @@ -384,6 +384,55 @@ err:
+>  	return 1;
+>  }
 >  
->  #include "devices.h"
-> -#include "cputype.h"
->  
->  extern struct mmp_device_desc pxa168_device_uart1;
->  extern struct mmp_device_desc pxa168_device_uart2;
+> +static int test_early_fail_and_wait(struct io_uring *ring)
+> +{
+> +	struct io_uring_cqe *cqe;
+> +	struct io_uring_sqe *sqe;
+> +	int ret, submitted, i;
+> +	const int invalid_fd = 42;
+> +	struct iovec iov = { .iov_base = NULL, .iov_len = 0 };
+> +
+> +	sqe = io_uring_get_sqe(ring);
+> +	if (!sqe) {
+> +		printf("get sqe failed\n");
+> +		goto err;
+> +	}
+> +
+> +	io_uring_prep_readv(sqe, invalid_fd, &iov, 1, 0);
+> +	sqe->user_data = 1;
+> +	sqe->flags |= IOSQE_IO_LINK;
+> +
+> +	sqe = io_uring_get_sqe(ring);
+> +	if (!sqe) {
+> +		printf("get sqe failed\n");
+> +		goto err;
+> +	}
+> +
+> +	io_uring_prep_nop(sqe);
+> +	sqe->user_data = 2;
+> +
+> +	submitted = io_uring_submit_and_wait(ring, 2);
+> +	if (submitted == -EAGAIN)
+> +		return 0;
 
+As io_uring isn't recreated for each test case, I need to complete all
+cqes in any case. I'll resend
+
+> +	if (submitted <= 0) {
+> +		printf("sqe submit failed: %d\n", submitted);
+> +		goto err;
+> +	}
+> +
+> +	for (i = 0; i < 2; i++) {
+> +		ret = io_uring_wait_cqe(ring, &cqe);
+> +		if (ret < 0) {
+> +			printf("wait completion %d\n", ret);
+> +			goto err;
+> +		}
+> +		io_uring_cqe_seen(ring, cqe);
+> +	}
+> +
+> +	return 0;
+> +err:
+> +	return 1;
+> +}
+> +
+>  int main(int argc, char *argv[])
+>  {
+>  	struct io_uring ring, poll_ring;
+> @@ -400,7 +449,6 @@ int main(int argc, char *argv[])
+>  	if (ret) {
+>  		printf("poll_ring setup failed\n");
+>  		return 1;
+> -
+>  	}
+>  
+>  	ret = test_single_link(&ring);
+> @@ -439,5 +487,11 @@ int main(int argc, char *argv[])
+>  		return ret;
+>  	}
+>  
+> +	ret = test_early_fail_and_wait(&ring);
+> +	if (ret) {
+> +		fprintf(stderr, "test_early_fail_and_wait\n");
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+> 
+
+-- 
+Pavel Begunkov
