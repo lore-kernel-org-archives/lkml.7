@@ -2,222 +2,197 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD7CC00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05064C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F202253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576273160;
-	bh=cHQvTn7neSGVb/pJAX+zht/iZ9hKdS3WgUrR8EtAfe4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=brt4cs7ua8qrjr/4jmPS95PGKGtRPbomi/QXtI9WHRE6TCbotyA/0Ga8gSpFoYO9g
-	 Rk39t7wVUKzY2WjhAX483jmvpZuyu9J+6ZPTtWaESsSAC/rNM2SwaKBhAOpo8GE1tU
-	 +57CWs1CDLj1roIXX8X3SV4gSg4l8eb1B57EspCo=
+	by mail.kernel.org (Postfix) with ESMTP id 9C7CC20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fa5MdWSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLMVjT (ORCPT
+        id S1726744AbfLMVkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:39:19 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33232 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMVjT (ORCPT
+        Fri, 13 Dec 2019 16:40:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36499 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726382AbfLMVkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:39:19 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v140so1984217oie.0;
-        Fri, 13 Dec 2019 13:39:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SCYACv29dkJEimAeryd7NAUvfts7axPZD4KOPwPhHhU=;
-        b=aTWpmwKqhBUnLQu2km7LZQxuOu2yuIaXgQSu5KILl0YOPDx2Sm5YzbmC+VVT/RsTpZ
-         YM4/Y/bMDrYUs1uwRpkoEJtRlWSKCEJ4K428T0UCCPCH0Qgs0VjQfeP0Dj1S5G1q+Wxf
-         zk0mvic5kEw2G2RGueoddkJTthMrmlimcz4p5d0PikzmxRCfivpILIFYHYpCSTP0V9do
-         k24JNPl1fe/fwzNly/FMPlsl/nhVN2c+aCwB67MwrcSpomQ0vd2itAbYuHWHgXmJoCYU
-         kHyAMh6OmsTJ6P8bLKDnQIF5oNSW9FTHfa+nBwhR7kQL9/Bd+m3pNPMScHieoPPc38QW
-         HfTQ==
-X-Gm-Message-State: APjAAAWmQRdIiKsfZMc3dDbym9QE+VXc1iAWK5QzYP2uIm5XU+KemkzZ
-        5UF7WEwFGz4osN9vqvkz+P2+TvE=
-X-Google-Smtp-Source: APXvYqx8lp9CVw+D5kPH+eRXIzKkrTm4GjWilZZXwORT3uNCoTfc2EDpKa5QD1/v0PHo3VOao+xSTg==
-X-Received: by 2002:aca:d706:: with SMTP id o6mr8416194oig.19.1576273158143;
-        Fri, 13 Dec 2019 13:39:18 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b3sm3687774oie.25.2019.12.13.13.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 13:39:17 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:39:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>
-Subject: Re: [PATCH] dt-bindings: stm32: convert mlahb to json-schema
-Message-ID: <20191213213916.GA1292@bogus>
-References: <20191128154603.6911-1-arnaud.pouliquen@st.com>
+        Fri, 13 Dec 2019 16:40:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576273204;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WgOXIag/oVgErX13K0wlqJ230VPf+71NlCt27NFhOC8=;
+        b=fa5MdWSE+yr0QbII1ZjOkAwPlUZ0EiOxvOB0mlcU7x7do3fn1CmSkRh4xlmVtvh4Nqf+h/
+        FBcVLfFdsl6cL8wyDU36s6nM1lTqm/BKZRm5oPrDNm3xVuZHfdKg93l2QWmdzErnr9h9fM
+        EbwJ7dojO7FJZ7u1twsb6IkLv9Smjck=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-j09TGu7gOzS_Le1gjjpMpA-1; Fri, 13 Dec 2019 16:40:01 -0500
+X-MC-Unique: j09TGu7gOzS_Le1gjjpMpA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68993593A4;
+        Fri, 13 Dec 2019 21:39:59 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB63C5D9CA;
+        Fri, 13 Dec 2019 21:39:58 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 6505E20694; Fri, 13 Dec 2019 16:39:58 -0500 (EST)
+Date:   Fri, 13 Dec 2019 16:39:58 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Subject: Re: [PATCH v6 00/27] nfs: Mount API conversion
+Message-ID: <20191213213958.GY4276@coeurl.usersys.redhat.com>
+References: <20191210123115.1655-1-smayhew@redhat.com>
+ <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191128154603.6911-1-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 04:46:03PM +0100, Arnaud Pouliquen wrote:
-> Convert the ML-AHB bus bindings to DT schema format using json-schema
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
-> Notice that this patch requests an update of the simple-bus schema to add
-> the support of the "dma-ranges" property.
-> A Pull request has been sent in parallel to the dt-schema github repo:
-> https://github.com/devicetree-org/dt-schema/pull/30
-> 
-> To remind the topic around the use of "dma-ranges" please
-> refer to following discussion: https://lkml.org/lkml/2019/4/3/1261
-> ---
->  .../devicetree/bindings/arm/stm32/mlahb.txt   | 37 ----------
->  .../bindings/arm/stm32/st,mlahb.yaml          | 69 +++++++++++++++++++
->  2 files changed, 69 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> deleted file mode 100644
-> index 25307aa1eb9b..000000000000
-> --- a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -ML-AHB interconnect bindings
-> -
-> -These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> -a Cortex-M subsystem with dedicated memories.
-> -The MCU SRAM and RETRAM memory parts can be accessed through different addresses
-> -(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
-> -Cortex-M firmware accesses among those ports allows to tune the system
-> -performance.
-> -
-> -[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> -[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-> -
-> -Required properties:
-> -- compatible: should be "simple-bus"
-> -- dma-ranges: describes memory addresses translation between the local CPU and
-> -	   the remote Cortex-M processor. Each memory region, is declared with
-> -	   3 parameters:
-> -		 - param 1: device base address (Cortex-M processor address)
-> -		 - param 2: physical base address (local CPU address)
-> -		 - param 3: size of the memory region.
-> -
-> -The Cortex-M remote processor accessed via the mlahb interconnect is described
-> -by a child node.
-> -
-> -Example:
-> -mlahb {
-> -	compatible = "simple-bus";
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -	dma-ranges = <0x00000000 0x38000000 0x10000>,
-> -		     <0x10000000 0x10000000 0x60000>,
-> -		     <0x30000000 0x30000000 0x60000>;
-> -
-> -	m4_rproc: m4@10000000 {
-> -		...
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> new file mode 100644
-> index 000000000000..8ad3f7c7f9ab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/arm/stm32/st,mlahb.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: STMicroelectronics STM32 ML-AHB interconnect bindings
-> +
-> +maintainers:
-> +  - Fabien Dessenne <fabien.dessenne@st.com>
-> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> +
-> +description: |
-> +  These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> +  a Cortex-M subsystem with dedicated memories. The MCU SRAM and RETRAM memory
-> +  parts can be accessed through different addresses (see "RAM aliases" in [1])
-> +  using different buses (see [2]): balancing the Cortex-M firmware accesses
-> +  among those ports allows to tune the system performance.
-> +  [1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> +  [2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-> +
-> +allOf:
-> + - $ref: /schemas/simple-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      enum:
-> +        - st,mlahb
-> +
-> +  dma-ranges:
-> +    description: |
-> +      Describe memory addresses translation between the local CPU and the
-> +      remote Cortex-M processor. Each memory region, is declared with
-> +      3 parameters:
-> +      - param 1: device base address (Cortex-M processor address)
-> +      - param 2: physical base address (local CPU address)
-> +      - param 3: size of the memory region.
-> +    maxItems: 3
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - dma-ranges
-> +
-> +examples:
-> +  - |
-> +    mlahb: ahb {
-> +      compatible = "st,mlahb", "simple-bus";
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      reg = <0x10000000 0x40000>;
-> +      dma-ranges = <0x00000000 0x38000000 0x10000>,
-> +                   <0x10000000 0x10000000 0x60000>,
-> +                   <0x30000000 0x30000000 0x60000>;
-> +
+On Tue, 10 Dec 2019, Schumaker, Anna wrote:
 
-Fails to build:
-
-builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/stm32/st,mlahb.example.dt.yaml: 
-ahb: 'ranges' is a required property
-
-Run 'make dt_binding_check'
-
-> +      m4_rproc: m4@10000000 {
-> +       reg = <0x10000000 0x40000>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
+> Hi Scott,
 > 
+> On Tue, 2019-12-10 at 07:30 -0500, Scott Mayhew wrote:
+> > Hi Anna, Trond,
+> > 
+> > Here's a set of patches that converts NFS to use the mount API.  Note that
+> > there are a lot of preliminary patches, some from David and some from Al.
+> > The final patch (the one that does the actual conversion) from the David's
+> > initial posting has been split into 5 separate patches, and the entire set
+> > has been rebased on top of v5.5-rc1.
+> 
+> Thanks for the updated patches! Everything looks okay to me, but I've only
+> tested with the legacy mount command. I'm curious if you've tested it using the
+> new system?
+
+I've hacked up mount.nfs for testing the new syscalls (for mounting... I
+haven't quite figured out remounting yet) here:
+https://github.com/scottmayhew/nfs-utils/tree/fscontext
+
+It seems to be working okay, with one exception.  If I mount the same
+NFS export with the same mount options multiple times, then I get
+multiple mounts:
+
+[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
+[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
+[root@fedora30 ~]# grep /mnt/t /proc/mounts
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+
+That doesn't happen with the mount() syscall:
+
+[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
+[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
+[root@fedora30 ~]# grep /mnt/t /proc/mounts
+nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
+
+-Scott
+
+> 
+> Thanks,
+> Anna
+> 
+> > 
+> > Changes since v5:
+> > - fixed possible derefence of error pointer in nfs4_validate_fspath()
+> >   reported by Dan Carpenter
+> > - rebased on top of v5.5-rc1
+> > Changes since v4:
+> > - further split the original "NFS: Add fs_context support" patch (new
+> >   patch is about 25% smaller than the v4 patch)
+> > - fixed NFSv4 referral mounts (broken in the original patch)
+> > - fixed leak of nfs_fattr when fs_context is freed
+> > Changes since v3:
+> > - changed license and copyright text in fs/nfs/fs_context.c
+> > Changes since v2:
+> > - fixed the conversion of the nconnect= option
+> > - added '#if IS_ENABLED(CONFIG_NFS_V4)' around nfs4_parse_monolithic()
+> >   to avoid unused-function warning when compiling with v4 disabled
+> > Chagnes since v1:
+> > - split up patch 23 into 4 separate patches
+> > 
+> > -Scott
+> > 
+> > Al Viro (15):
+> >   saner calling conventions for nfs_fs_mount_common()
+> >   nfs: stash server into struct nfs_mount_info
+> >   nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+> >   nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+> >   nfs: don't bother setting/restoring export_path around
+> >     do_nfs_root_mount()
+> >   nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+> >   nfs: lift setting mount_info from nfs_xdev_mount()
+> >   nfs: stash nfs_subversion reference into nfs_mount_info
+> >   nfs: don't bother passing nfs_subversion to ->try_mount() and
+> >     nfs_fs_mount_common()
+> >   nfs: merge xdev and remote file_system_type
+> >   nfs: unexport nfs_fs_mount_common()
+> >   nfs: don't pass nfs_subversion to ->create_server()
+> >   nfs: get rid of mount_info ->fill_super()
+> >   nfs_clone_sb_security(): simplify the check for server bogosity
+> >   nfs: get rid of ->set_security()
+> > 
+> > David Howells (8):
+> >   NFS: Move mount parameterisation bits into their own file
+> >   NFS: Constify mount argument match tables
+> >   NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+> >   NFS: Split nfs_parse_mount_options()
+> >   NFS: Deindent nfs_fs_context_parse_option()
+> >   NFS: Add a small buffer in nfs_fs_context to avoid string dup
+> >   NFS: Do some tidying of the parsing code
+> >   NFS: Add fs_context support.
+> > 
+> > Scott Mayhew (4):
+> >   NFS: rename nfs_fs_context pointer arg in a few functions
+> >   NFS: Convert mount option parsing to use functionality from
+> >     fs_parser.h
+> >   NFS: Additional refactoring for fs_context conversion
+> >   NFS: Attach supplementary error information to fs_context.
+> > 
+> >  fs/nfs/Makefile         |    2 +-
+> >  fs/nfs/client.c         |   80 +-
+> >  fs/nfs/fs_context.c     | 1424 +++++++++++++++++++++++++
+> >  fs/nfs/fscache.c        |    2 +-
+> >  fs/nfs/getroot.c        |   73 +-
+> >  fs/nfs/internal.h       |  132 +--
+> >  fs/nfs/namespace.c      |  146 ++-
+> >  fs/nfs/nfs3_fs.h        |    2 +-
+> >  fs/nfs/nfs3client.c     |    6 +-
+> >  fs/nfs/nfs3proc.c       |    2 +-
+> >  fs/nfs/nfs4_fs.h        |    9 +-
+> >  fs/nfs/nfs4client.c     |   99 +-
+> >  fs/nfs/nfs4file.c       |    1 +
+> >  fs/nfs/nfs4namespace.c  |  292 +++---
+> >  fs/nfs/nfs4proc.c       |    2 +-
+> >  fs/nfs/nfs4super.c      |  257 ++---
+> >  fs/nfs/proc.c           |    2 +-
+> >  fs/nfs/super.c          | 2217 +++++----------------------------------
+> >  include/linux/nfs_xdr.h |    9 +-
+> >  19 files changed, 2287 insertions(+), 2470 deletions(-)
+> >  create mode 100644 fs/nfs/fs_context.c
+> > 
+
