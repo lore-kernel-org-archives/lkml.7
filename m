@@ -2,86 +2,123 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D75FC00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC25C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AAF24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576272263;
-	bh=W3AOarlRoMNMCAbhrI5bz1eU9Cp/AwpFySYwtlMmWCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1ZnWTq5459oYnnaPSh3R2jvaHyx0s0lwfCirjz6XRWJYIPd/MZrZokwz5Mp6wzjy/
-	 pFV482X1uYpTlPsD2CoB+yk3ccP/NIf52hDSTmDw0shrq2szWHx/SbS3xSG5ODfx5v
-	 U/S/krA4FEedWbF3wlYBJA6GEOTZwI3pT19rTpSc=
+	by mail.kernel.org (Postfix) with ESMTP id 270382465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ACUakujh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLMVYW (ORCPT
+        id S1726743AbfLMVYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:24:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38698 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMVYW (ORCPT
+        Fri, 13 Dec 2019 16:24:48 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46460 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfLMVYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:24:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b8so1931087oiy.5;
-        Fri, 13 Dec 2019 13:24:21 -0800 (PST)
+        Fri, 13 Dec 2019 16:24:48 -0500
+Received: by mail-il1-f195.google.com with SMTP id t17so569125ilm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 13:24:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VWRSxey7el74QZ+Ei/DzotdKJzpYoB0015GuoC7vpOI=;
+        b=ACUakujhnGW2MtAPIdsq2dzxITzFJAyUw4n1m3wvSShsTuvSKj9O0/gmzx3CgPtOwJ
+         /eSBPWw/gKFFBq3gV59Y2CnL9oIMb+Qy8DQEF/evgpiCnhodb+DWZhYu9YoZWCtfaJfM
+         Unlrkn4OCs3BQ9uXhVmzB7oePCKL2PI8t38qnQX1vwmogdlGEYVYpLLs9oJH+HNpNewa
+         sXu6oO8tje/uQ2WAgXBQcCzI9PYrsgkF3Tp6NHdg1/JmUieGZ+k4gLTixIGhGZkvuXQM
+         AUkAWstF8CZ9+uj0Onthy4T6UgUgqMxnv3uVM8/RAJBFUrPdrdr24+6KZqnZS6CBhe18
+         Xc/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ydBGATu/G6BCa2T8zgoKRGxjtzBRIPiwmZUK6g3t6E=;
-        b=PhLx/Rx2brwF6UONvsvCn+pC3kq2loPfNNfYIOh0l5VLLZ1C0xxzOuhKRBCbIjKTim
-         4NK7chovqJPzsHToDaB0wpZQOnfpSjQJ8Tb1RFEknSPMvYJ9IJjlbXvr44uFKQSZxCQg
-         +w+k3J+T/cmOMU9eyyWLexeDj5FnMTlDRAMe54w0kFGv45UblBiOcIYtR54AYrkVJWdV
-         vTMFMOp2S4by0POH0vyLvW5JHKHDe7wAlMwN5cSGmXZTnQYrZONq7ALg6BqcC6x4vFHM
-         IvoKdMs9AEXGPPHHndfv9OgLT+/UZrc4rf7FktX67cJemylLdzVj11h1F5hgTldSUD6O
-         Am/A==
-X-Gm-Message-State: APjAAAUlOInfWGCkX/j7+mkgZRA6EOva99Y2wl47qXT1TABFXvIP2dAG
-        iUVy+xvqEtVxUB3plB2CyQ==
-X-Google-Smtp-Source: APXvYqwo0Jh4yTE66y4sJn/aUtkBVXHXEHpW/fP2/UJ9cY5JA7W+Bm1CecnsxiD40w3KgM5ypQ2u7A==
-X-Received: by 2002:a05:6808:56:: with SMTP id v22mr7510316oic.37.1576272261119;
-        Fri, 13 Dec 2019 13:24:21 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 47sm3835989otf.54.2019.12.13.13.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 13:24:20 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:24:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: usb: qcom,dwc3: Add compatible for
- SC7180
-Message-ID: <20191213212420.GA17181@bogus>
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
- <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VWRSxey7el74QZ+Ei/DzotdKJzpYoB0015GuoC7vpOI=;
+        b=jMr2OCMg8oQMqcN+SnX8HBs5M2rZJ6E0l7jqJdBCzyxdg3+Iz9BFZkc4MpXePOWUyt
+         kA4pFIDBZ74TQhDFM8yTR73HDnEWbVlnAyfdlTCN6AOWHrESaNsnN1I4Cw4Vo/B/q6NY
+         9AUFQK+JiCs+Shf5op/RRWkboMNpc/PbBtQSIqfk04g6QeglRgXo3zGic7stlhbzfSqk
+         SfEBX3RsqjfkkmUU+WXFv/5H+2VixbLEpEMa9MdhjTKonYJQ0R5BSNPrjX4MOSZhpMxs
+         KihdqOWiMaxBIFWKSRN3+wdNuQp+pbxZQ8p7EVsLd1gDUDmSZiI7TMMUuGeWNZa5W2gk
+         SLbw==
+X-Gm-Message-State: APjAAAUMP6OWpxabiaIEggqxQNXl2FJWnbtWTfKVKPMlBq1ljPKBd2jg
+        LTrZkLEHU83XFsQGeAeKwwDh/eulNGf1p+emSAteew==
+X-Google-Smtp-Source: APXvYqwIzVeukD8LzwUl8iMfZRpFwMOjy7QmLdnsIausShWO+cioF/FIl85yMZH7DvrWp85eraNEnoTLGmn7uA9aBs4=
+X-Received: by 2002:a92:3bc7:: with SMTP id n68mr1443685ilh.84.1576272287148;
+ Fri, 13 Dec 2019 13:24:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191203004043.174977-1-matthewgarrett@google.com>
+ <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
+ <CACdnJuv50s61WPMpHtrF6_=q3sCXD_Tm=30mtLnR_apjV=gjQg@mail.gmail.com>
+ <CALCETrWZwN-R=He2s1DLet8iOxB_AbuSGOJ3y7zW=qUmx33C=A@mail.gmail.com>
+ <CACdnJuvTR2r_myJX2bQ8XTDw_HxM-EgqhVLaUJVCa+VQS+6Qrg@mail.gmail.com> <CAKv+Gu-7H7AmMGk8_safU83KZZiJJpQ4X+o7V9Pv24AOh3g5ug@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-7H7AmMGk8_safU83KZZiJJpQ4X+o7V9Pv24AOh3g5ug@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Fri, 13 Dec 2019 13:24:35 -0800
+Message-ID: <CACdnJusMV4k0mjQ=gtdgFHR82tr2QBomoSa6Ca3LoMHzD3r7iQ@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 17:03:07 +0530, Sandeep Maheswaram wrote:
-> Add compatible for SC7180 in usb dwc3 bindings.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Thu, Dec 12, 2019 at 7:46 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Wed, 4 Dec 2019 at 20:56, Matthew Garrett <mjg59@google.com> wrote:
+> > We already handle this case - the kernel doesn't activate busmastering
+> > until after it does IOMMU setup.
+>
+> Build issues aside (which we already handled off list), I think we
+> should consider the following concerns I have about this patch:
+> - make it work on ARM (already done)
+> - make the cmdline option an efi=xxx one, this makes it obvious which
+> context this is active in
 
-Acked-by: Rob Herring <robh@kernel.org>
+Ok.
+
+> - I would prefer it if we could make it more obvious that this affects
+> PCI DMA only, other masters are unaffected by any of this.
+
+Ok - in terms of naming, or in terms of documentation?
+
+> - What about integrated masters? On the systems I have access to,
+> there are a lot of DMA capable endpoints that sit on bus 0 without any
+> root port or PCI bridge in between
+
+There's not really anything we can do about those. My gut feeling is
+that if you're in a situation where you can't trust your integrated
+chipset then you're going to have trouble building any real trust in
+the platform.
+
+> - Should we treat GOP producers differently? Or perhaps only if the
+> efifb address is known to be carved out of system memory?
+
+Hm, good question. Video cards are one of the most complicated devices
+on the system, so I'd prefer not to leave us vulnerable to them. Maybe
+try this as an opt-in thing for a while and see whether people find
+graphics-related breakage?
+
+> If we come up with a good story here in terms of policy, we may be
+> able to enable this by default, which would be a win imo.
+
+I'm pretty sure we're going to have some hardware that this just
+breaks on, unfortunately - Apple's EFI driver for Broadcom wifi used
+to continue DMAing over ExitBootServices(), and the "easy" fix of
+disabling BME on it beforehand resulted in the card wedging on driver
+load, so I think we'll see other devices that have similar behaviour.
+
+(We "fixed" the Apple case by putting the card into S3)
