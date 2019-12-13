@@ -2,111 +2,152 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF72C34018
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF42C341A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2F3246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A4F2471D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+y5apdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfLMPFc (ORCPT
+        id S1727866AbfLMOzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:05:32 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:27610 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfLMPFc (ORCPT
+        Fri, 13 Dec 2019 09:55:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41901 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727673AbfLMOzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:05:32 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: uVgVIoFgv+zyn1mJy1jOhCKRps55X6Y6NgJE8SfUWl3kBhO6VnIuWvpsYtL13bwGZNVImA46RC
- ZMaK5iC9085AHVu8/PRhZ9zkjSKe6SB6vzZfrFLbiVijEJM+0w/3N54uclq0VODX/ZKWrNSvJa
- 6XZX8c9WT0MGwh3zaLi8Sew7XwbGmzX4nTFxMbNuiEdUbl0XaiieAMrn/MhWUyiVihAy9rNMxU
- 4Jzn+4niayQ6QncYPkViuqy4gVpYQy9GZ5WjuDZ0HEW12aPHzlZ/jGCVfOD4tNYB1EuSv3rrr/
- Pb8=
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="61647016"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 08:05:30 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Dec 2019 08:05:30 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 08:05:25 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <lee.jones@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 5/6] drm: atmel-hlcdc: prefer a lower pixel-clock than requested
-Date:   Fri, 13 Dec 2019 17:04:55 +0200
-Message-ID: <1576249496-4849-6-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 13 Dec 2019 09:55:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so2169210lfp.8;
+        Fri, 13 Dec 2019 06:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2opFr/klQK1oObZvRIZa9Uwbm+rqJyT65CDiKOERf+U=;
+        b=Y+y5apdGrHSiwkctdVgYNHSe8GOEeduItT5VyjHaRwFq59Sm8SpifY0r94mYG73ClT
+         26dO/MXkfrUDu5hQHJ+CL+ZnoTgfp+6o40FvU7aKpgpJ8m0Lb0byz5PadhrpEvkX8/KW
+         PMEpDDr+WiifDLTE9f1z5hIfLkEVc52ncORBs72g+3N18QXtSiVcsmHrSWcagz9AwKbQ
+         E1UkMz9J44RN+zOFLaT33UWrfjzev4DakQRhc4Kx25TXI9r4q/gwXsLyfUXugumtfywb
+         jwbA/U8SA3Kn4cxRJs1/0Ch1CeZ2AZVROkj0vT4RDDd53topZmfFzawvyHh7fPUm1KEO
+         XFjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2opFr/klQK1oObZvRIZa9Uwbm+rqJyT65CDiKOERf+U=;
+        b=cNxTnusMz9mN133pKaZOTYdqMCRP9FPv90TZrBNiEE/PBTMOy80FsEcKPDg6ocZ7O1
+         OqpbVhMrcy/a+FAAKEee6FFvoXSS3CpgxHEhZFzsdO+7AtHyzg/o7k185GgDnN5FrROB
+         kTcN9lqwAXhFub7txv2Z6aSfYXCgMHfwqxn9G02RS2SgvTc/3PMRuK6kcKhSiN8Il/Dl
+         o9J5pix611nED65lI2Wubphga0SiUieW0jKTNuIh1k/c85n9IMVozqfigndJIC/K4W/3
+         k1z/i/X0frF0VVlG2jGLOL0PzZ0DicKRc77dlHq17K3qZ/iaLE4a4qAKbI6/zqvnkAID
+         BwmQ==
+X-Gm-Message-State: APjAAAU+MUCHgP9Yerc35+VWwDIOAwtbcOedBh087n1gnf6nYL7HwLuo
+        BLoT6CVkKBMFwyNhBueQYlA=
+X-Google-Smtp-Source: APXvYqzt/isFtrQIYcmnKxu+sYyMAJCKFYN/difz6VDeRNIWwYULjo+2bqyLCma+CrJDpzaPayDdfw==
+X-Received: by 2002:ac2:53a8:: with SMTP id j8mr9517976lfh.28.1576248912919;
+        Fri, 13 Dec 2019 06:55:12 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p12sm4696695lfc.43.2019.12.13.06.55.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 06:55:12 -0800 (PST)
+Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
+ state
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mikko Perttunen <cyndis@kapsi.fi>
+References: <20191212233428.14648-1-digetx@gmail.com>
+ <20191212233428.14648-4-digetx@gmail.com>
+ <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
+Message-ID: <ec7e11f6-2695-29c8-c9ed-98dc229b8aac@gmail.com>
+Date:   Fri, 13 Dec 2019 17:55:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+13.12.2019 17:29, Dmitry Osipenko пишет:
+> 13.12.2019 02:34, Dmitry Osipenko пишет:
+>> I noticed that sometime I2C clock is kept enabled during suspend-resume.
+>> This happens because runtime PM defers dynamic suspension and thus it may
+>> happen that runtime PM is in active state when system enters into suspend.
+>> In particular I2C controller that is used for CPU's DVFS is often kept ON
+>> during suspend because CPU's voltage scaling happens quite often.
+>>
+>> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
+>> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
+>> suspend/resume in the NOIRQ phase which is used for the system-level
+>> suspend/resume of the driver.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>> index b3ecdd87e91f..d309a314f4d6 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+>>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+>>  {
+>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>> +	int err;
+>>  
+>>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+> 
+> I'm now in a doubt that it is correct to use NOIRQ level at all for the
+> suspend because i2c_mark_adapter_suspended() uses mutex, thus I'm
+> wondering what will happen if there is an asynchronous transfer
+> happening during suspend..
+> 
+> The i2c_mark_adapter_suspended() will try to block and will never return?
 
-The intention was to only select a higher pixel-clock rate than the
-requested, if a slight overclocking would result in a rate significantly
-closer to the requested rate than if the conservative lower pixel-clock
-rate is selected. The fixed patch has the logic the other way around and
-actually prefers the higher frequency. Fix that.
+Moreover, the I2C interrupt should be disabled during the NOIRQ phase.
+So, yes.. looks like making use of NOIRQ level wasn't a correct
+decision. On the other hand, I don't think that any I2C client driver
+used by Tegra SoCs in the upstream kernel could cause the problem at the
+moment, so it shouldn't be critical.
 
-Fixes: f6f7ad323461 ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
-Reported-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+BTW: Jon, please CC me next time ;) [I'll try to find a better solution
+for the PCIE problem]
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index 721fa88bf71d..10985134ce0b 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -121,8 +121,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 		int div_low = prate / mode_rate;
- 
- 		if (div_low >= 2 &&
--		    ((prate / div_low - mode_rate) <
--		     10 * (mode_rate - prate / div)))
-+		    (10 * (prate / div_low - mode_rate) <
-+		     (mode_rate - prate / div)))
- 			/*
- 			 * At least 10 times better when using a higher
- 			 * frequency than requested, instead of a lower.
--- 
-2.7.4
+>> +	err = pm_runtime_force_suspend(dev);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+>>  	if (err)
+>>  		return err;
+>>  
+>> +	err = pm_runtime_force_resume(dev);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+>>  
+>>  	return 0;
+>>
+> 
 
