@@ -2,195 +2,125 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4D7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685C8C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AB5206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332822465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkAc2x2o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUrsMEMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLMJHQ (ORCPT
+        id S1726646AbfLMJId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:07:16 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54326 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfLMJHQ (ORCPT
+        Fri, 13 Dec 2019 04:08:33 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42493 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMJId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:07:16 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so1261140wmj.4;
-        Fri, 13 Dec 2019 01:07:14 -0800 (PST)
+        Fri, 13 Dec 2019 04:08:33 -0500
+Received: by mail-pg1-f196.google.com with SMTP id s64so1229296pgb.9;
+        Fri, 13 Dec 2019 01:08:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ecy3+9YwiUy4ysqR8X7NcmLf801I05PLIwbX/oPr26s=;
-        b=XkAc2x2o+tefBO4kVz3F8NQ9qvVTyK2MAz1DB/DG7jNoFAesqZlsNb38mnj3cfaQ5c
-         YAtDC51yuUabVRd2CIoPZDLAAqAooy+q7ZoGlM9IDxqywz9SzxCerh7SIHsEaJ1szl26
-         XAidsIjH4vDc0ll6q1HRU2+r+kud0ZvWPUyorvYzmImIkANbLz5ISwbJdvlbYZ8eAkE1
-         KMf5W3wLD6MJVVP8VCEIHFKpC/+fPW758MpUGyz5CWQRadeCQ7CglNDHo++DwPGD10LH
-         4dILzJfCXPCmIvVmsN7aQnNCIB282yafaWg2VaEySqQ7Ihkj3zuL81L9Mq+8pDzTanYi
-         atwA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RxPqLVLahzfTFPSjd2lbJPuyMQNKnrepmPG6ocYBcx4=;
+        b=SUrsMEMb5l0PWA8gLMCZ1Chtvg3jnhwK2/vgh7F9R9In+qm04qH8UaVIXa50MCqpVK
+         dnt7pnwdnNTCUOACxo9GxwGBfj7c6IRCGWMufFXGS1S2Ixgxe2tCl05gtQpMXclq3Q7/
+         tGC7HF8nj8qtD/gejuVIjf28O6u3iYTCh2B9qZ0bLAzW82Puhx2GXsdjsGBSUeqwe1pn
+         tuDg66dObvKLPKFwx1mV8T2MWzGWjSYShGj7U6cxllJlJbihWHbnfxqJAeIDpIfqOEMn
+         A65cCdjjhsJOUldvAIpNcMeERAwRluWMptbaeEF3UiJq6qwZNR9kDDlfSNG8z6PdMxxi
+         ATwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ecy3+9YwiUy4ysqR8X7NcmLf801I05PLIwbX/oPr26s=;
-        b=rkATi69uYjLJTKMdbNGjDEoQrmWqszstO9k8PwMWjfnBbDWxwiu2kTLVlD7fH27Lnb
-         xh8dGbjO3IdgYH5hg4ZmalY6Y0n06G2Iine8jdQgmvwzjWJfiWS+cwjNISE0eMAW7aWc
-         TG/RUdVB5tQq/7suPwLiG9BVzYjoiwJJBM+W2LF+oZR7H689hCsKSrpsrUnIa4U4af8t
-         mEb050ZvvgBZvNk7pcdJymVCrzkk+e8mcaMDd+EypP10gkq9rgj/gD3MEoLS9dMnfjxh
-         gTKmpLP4tTM5xBpDLm0+0NTn+kC6SF662yHjXwORUchtikTGz34pLfJpOu+cNPHNw8ii
-         qtNA==
-X-Gm-Message-State: APjAAAW6WR84U3ka9TjAZ0mV9wSvmQSeFDByOZxeQg95ap+Q28fEBQpB
-        x3iIpJ2tfKeLi/IVRjrdCNg=
-X-Google-Smtp-Source: APXvYqwlZcqxB9Y7iFgT0DNE48hTNMDUeas/Nc+2IXbcisCCpQ02eylNO0Ik+vdAIHa7Vi8+TfnUBQ==
-X-Received: by 2002:a1c:7310:: with SMTP id d16mr11676218wmb.165.1576228033939;
-        Fri, 13 Dec 2019 01:07:13 -0800 (PST)
-Received: from linux-691t.suse.de ([124.11.22.254])
-        by smtp.gmail.com with ESMTPSA id y6sm9079094wrl.17.2019.12.13.01.07.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Dec 2019 01:07:13 -0800 (PST)
-From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-efi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
-Subject: [PATCH 2/2] efi: show error messages only when loading certificates is failed
-Date:   Fri, 13 Dec 2019 17:06:46 +0800
-Message-Id: <20191213090646.12329-3-jlee@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191213090646.12329-1-jlee@suse.com>
-References: <20191213090646.12329-1-jlee@suse.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RxPqLVLahzfTFPSjd2lbJPuyMQNKnrepmPG6ocYBcx4=;
+        b=FcSZ1snUKqOp7PYRhKxygVEBRhEHM+ajYxF22L/umXSZqzGCa6QLVjc5N5hsNYfd3j
+         eB2UwUiwxZfCcokhMh4Fe+FULlWy0fXjdbku8U/jqnozd/Af+yJJisKIoBweWX1ymIOF
+         VwwVZ70QqPnh0JD36UCPc/OENTpWzzY3m/IP08FC37sHgFDwHGxEUw79P3IMZaPJppSK
+         MHhshzlQtJSa2XUcGhB9AV7mc9xBeQu+u7cLyQefnXIf46vwPFBPALFzh9RECFOU4PIC
+         FTu44sELEpvfZF46uE7OPhW7D8k5qNuVotjUdPqyt+HKRNLT2CvBZlHmjvRpDBPEEg/T
+         m7yA==
+X-Gm-Message-State: APjAAAWNJhmOoT0+U8zskfQoyR1CdS+lvRHjL7SyQgEqMFdlO4R8EHZk
+        XUUXLORVQ+4IZsTa5SIjarLE3+yaJv+2ngyPnrs=
+X-Google-Smtp-Source: APXvYqy7AOFT9gacPFy8fva2qjxrkgVB2Bc8boyHgJDbZ7PTWw6lUx6ECBqGHWTyq1Okaig8E2i7/9mXsCoNAO75THE=
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr15392101pgk.74.1576228112226;
+ Fri, 13 Dec 2019 01:08:32 -0800 (PST)
+MIME-Version: 1.0
+References: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
+ <1576075099-3441-3-git-send-email-akinobu.mita@gmail.com> <CAHp75Vfq4KqNAGY4ivveR7D0Z1fA1EOFT+oL9+f+Ak2jikCTVg@mail.gmail.com>
+ <CAC5umyiMZLM6rObaKc25+5nFg2rug69zJMF-jPUH6NAgX8-qPw@mail.gmail.com>
+In-Reply-To: <CAC5umyiMZLM6rObaKc25+5nFg2rug69zJMF-jPUH6NAgX8-qPw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 13 Dec 2019 11:08:22 +0200
+Message-ID: <CAHp75VdhOgUt6rCMyJdM+NpweJbS7=Lrxf+KA+goiaj+xmNu-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 02/12] ACPI: thermal: switch to use <linux/units.h> helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When loading certificates list from EFI variables, the error
-message and efi status code always be emitted to dmesg. It looks
-ugly:
+On Fri, Dec 13, 2019 at 6:03 AM Akinobu Mita <akinobu.mita@gmail.com> wrote=
+:
+> 2019=E5=B9=B412=E6=9C=8812=E6=97=A5(=E6=9C=A8) 0:29 Andy Shevchenko <andy=
+.shevchenko@gmail.com>:
+> > On Wed, Dec 11, 2019 at 4:39 PM Akinobu Mita <akinobu.mita@gmail.com> w=
+rote:
 
-[    2.335031] Couldn't get size: 0x800000000000000e
-[    2.335032] Couldn't get UEFI MokListRT
-[    2.339985] Couldn't get size: 0x800000000000000e
-[    2.339987] Couldn't get UEFI dbx list
+> > >                         } else if (crt > 0) {
+> > > -                               unsigned long crt_k =3D CELSIUS_TO_DE=
+CI_KELVIN(crt);
+> > > +                               unsigned long crt_k =3D
+> > > +                                       celsius_to_deci_kelvin(crt);
+> >
+> > It used to be one line, why do two?
+>
+> Because this line over 80 characters.  This patch doesn't make this line
+> longer, but checkpatch.pl complains about it.
 
-This cosmetic patch moved the messages to the error handling code
-path. And, it also shows the corresponding status string of status
-code.
+I'm not a maintainer here, but as it was before why not to leave as is
+(in terms of line length)?
+Supposedly maintainers are okay with it.
 
-Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
----
- security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++++-------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+> > >         pr_info(PREFIX "%s [%s] (%ld C)\n", acpi_device_name(device),
+> > > -               acpi_device_bid(device), DECI_KELVIN_TO_CELSIUS(tz->t=
+emperature));
+> > > +               acpi_device_bid(device),
+> > > +               deci_kelvin_to_celsius(tz->temperature));
+> >
+> > Ditto.
+>
+> Same as above, checkpatch.pl complains about line over 80 characters.
 
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-index 81b19c52832b..b6c60fb3fb6c 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/kernel.h>
- #include <linux/sched.h>
-@@ -39,7 +40,7 @@ static __init bool uefi_check_ignore_db(void)
-  * Get a certificate list blob from the named EFI variable.
-  */
- static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
--				  unsigned long *size)
-+				  unsigned long *size, const char *source)
- {
- 	efi_status_t status;
- 	unsigned long lsize = 4;
-@@ -48,23 +49,30 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
- 
- 	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
- 	if (status != EFI_BUFFER_TOO_SMALL) {
--		pr_err("Couldn't get size: 0x%lx\n", status);
--		return NULL;
-+		if (status == EFI_NOT_FOUND) {
-+			pr_debug("%s list was not found\n", source);
-+			return NULL;
-+		}
-+		goto err;
- 	}
- 
- 	db = kmalloc(lsize, GFP_KERNEL);
--	if (!db)
--		return NULL;
-+	if (!db) {
-+		status = EFI_OUT_OF_RESOURCES;
-+		goto err;
-+	}
- 
- 	status = efi.get_variable(name, guid, NULL, &lsize, db);
- 	if (status != EFI_SUCCESS) {
- 		kfree(db);
--		pr_err("Error reading db var: 0x%lx\n", status);
--		return NULL;
-+		goto err;
- 	}
- 
- 	*size = lsize;
- 	return db;
-+err:
-+	pr_err("Couldn't get %s list: %s\n", source, efi_status_to_str(status));
-+	return NULL;
- }
- 
- /*
-@@ -153,10 +161,8 @@ static int __init load_uefi_certs(void)
- 	 * an error if we can't get them.
- 	 */
- 	if (!uefi_check_ignore_db()) {
--		db = get_cert_list(L"db", &secure_var, &dbsize);
--		if (!db) {
--			pr_err("MODSIGN: Couldn't get UEFI db list\n");
--		} else {
-+		db = get_cert_list(L"db", &secure_var, &dbsize, "UEFI:db");
-+		if (db) {
- 			rc = parse_efi_signature_list("UEFI:db",
- 					db, dbsize, get_handler_for_db);
- 			if (rc)
-@@ -166,10 +172,8 @@ static int __init load_uefi_certs(void)
- 		}
- 	}
- 
--	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
--	if (!mok) {
--		pr_info("Couldn't get UEFI MokListRT\n");
--	} else {
-+	mok = get_cert_list(L"MokListRT", &mok_var, &moksize, "UEFI:MokListRT");
-+	if (mok) {
- 		rc = parse_efi_signature_list("UEFI:MokListRT",
- 					      mok, moksize, get_handler_for_db);
- 		if (rc)
-@@ -177,10 +181,8 @@ static int __init load_uefi_certs(void)
- 		kfree(mok);
- 	}
- 
--	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
--	if (!dbx) {
--		pr_info("Couldn't get UEFI dbx list\n");
--	} else {
-+	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, "UEFI:dbx");
-+	if (dbx) {
- 		rc = parse_efi_signature_list("UEFI:dbx",
- 					      dbx, dbxsize,
- 					      get_handler_for_dbx);
--- 
-2.16.4
+Same as above.
 
+P.S. checkpatch is recommendation, and not something one must follow.
+
+--=20
+With Best Regards,
+Andy Shevchenko
