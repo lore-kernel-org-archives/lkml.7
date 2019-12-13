@@ -2,112 +2,147 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AB9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D889C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9D724671
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="k23J/zLd"
+	by mail.kernel.org (Postfix) with ESMTP id 71C482467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576271231;
+	bh=+Kbq946pLpBFZ/ZRLDIAH/9uhSYYVh8GR73ctHhEEIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=L/rUBxN4DMPhi7py8H+prlfaB+8UAdAdOgCQfAZxQLj/TXOiUOUZHb59F0Y4GajFi
+	 EWpjsXDgyEMz4zbYh7CPLMeuIYsIhIIqgEICVZigu3N1ygaDGgvFXio/EauH7PvUjb
+	 lE6ZUnjeyd3gNzq2N1GB0t/tkkxuLzR2bjX+Je60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLMVGz (ORCPT
+        id S1726925AbfLMVHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:06:55 -0500
-Received: from ozlabs.org ([203.11.71.1]:53267 "EHLO ozlabs.org"
+        Fri, 13 Dec 2019 16:07:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfLMVGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:06:55 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725937AbfLMVHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:07:10 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ZNWw2BJjz9sP6;
-        Sat, 14 Dec 2019 08:06:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576271213;
-        bh=MGInI7+F0s7HGbUV0Xqx0TPozxlo/Am/To6UDohXxq4=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=k23J/zLdvtKqBunmy1ixSs+42bGbHDuGSQCB6Ke7L4Uq+z+ldveUzevFgLwdpKq0d
-         mkr6DDnR7H0smvCQcN+BM6T37JbnmqHD4/L9a/NkSKrjRcYPT2yHYyhdPyiEXPyrMB
-         Efjh7qR7zHjSZA5mgVn0XUYlFLdEhavQXa026DnFJi45/5Ez7taLlBYjyOaBMxyE/b
-         7GJ80E1SaCmTKU2aBFLDMNx1yGZX4v2RQz2d9xbDgYEA2gziROONKrvnz6W/pFOCgL
-         jX4iWoccqf6+gYa3ICv0po4aLuXfa8qENKOix+W7EG9numuE+zbXEzjMmrCD9q6b2x
-         GpuH9UJg8ssSA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-In-Reply-To: <20191213135353.GN3152@gate.crashing.org>
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net> <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net> <87pngso2ck.fsf@mpe.ellerman.id.au> <20191213135353.GN3152@gate.crashing.org>
-Date:   Sat, 14 Dec 2019 08:06:49 +1100
-Message-ID: <87mubwndee.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 66C7B24671;
+        Fri, 13 Dec 2019 21:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576271228;
+        bh=+Kbq946pLpBFZ/ZRLDIAH/9uhSYYVh8GR73ctHhEEIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cfL67DjS188dqDBrbIjTGxh0OEx4ZaWEyJ1x1nOpkCkeFPncNCj7pVekbVRMuvWTf
+         +1jk0dF9FupZsVS0G0LbpXYfdD8/Bc9J6We0kJThpgRPTuP/uct1DZckkUcC7shiHC
+         Z1K7jBQSUg4CKyGjnGrBHaf+WlR74KXIi+olHx0g=
+Date:   Fri, 13 Dec 2019 15:07:07 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191213150031.GA229369@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Segher Boessenkool <segher@kernel.crashing.org> writes:
-> Hi!
->
-> On Fri, Dec 13, 2019 at 11:07:55PM +1100, Michael Ellerman wrote:
->> I tried this:
->> 
->> > @@ -295,6 +296,23 @@ void __write_once_size(volatile void *p, void *res, int size)
->> >   */
->> >  #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
->> >  
->> > +#else /* GCC_VERSION < 40800 */
->> > +
->> > +#define READ_ONCE_NOCHECK(x)						\
->> > +({									\
->> > +	typeof(x) __x = *(volatile typeof(x))&(x);			\
->> 
->> Didn't compile, needed:
->> 
->> 	typeof(x) __x = *(volatile typeof(&x))&(x);			\
->> 
->> 
->> > +	smp_read_barrier_depends();					\
->> > +	__x;
->> > +})
->> 
->> 
->> And that works for me. No extra stack check stuff.
->> 
->> I guess the question is does that version of READ_ONCE() implement the
->> read once semantics. Do we have a good way to test that?
->> 
->> The only differences are because of the early return in the generic
->> test_and_set_bit_lock():
->
-> No, there is another difference:
->
->>   30         ld      r10,560(r9)
->>   31         std     r10,104(r1)
->>   32         ld      r10,104(r1)
->>   33         andi.   r10,r10,1
->>   34         bne     <ext4_resize_begin_generic+0xd0>       29         bne     <ext4_resize_begin_ppc+0xd0>
->
-> The stack var is volatile, so it is read back immediately after writing
-> it, here.  This is a bad idea for performance, in general.
+On Thu, Dec 12, 2019 at 11:05:31AM +0000, Andre Przywara wrote:
+> On 11/12/2019 20:17, Bjorn Helgaas wrote:
+> > On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
+> >> On Tue, 10 Dec 2019 08:41:15 -0600
+> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+> >>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
+> >>>>
+> >>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> >>>> prominently config space accesses to not existing BDFs being answered
+> >>>> with a bus abort, resulting in an SError.  
+> >>>
+> >>> Can we tease this apart a little more?  Linux doesn't program all the
+> >>> bits that control error signaling, so even on hardware that works
+> >>> perfectly, much of this behavior is determined by what firmware did.
+> >>> I wonder if Linux could be more careful about this.
+> >>>
+> >>> "Bus abort" is not a term used in PCIe.
+> >>
+> >> Yes, sorry, that was my sloppy term, also aiming more at the CPU
+> >> side of the bus, between the cores and the RC.
+> >>
+> >>>  IIUC, a config read to a
+> >>> device that doesn't exist should terminate with an Unsupported Request
+> >>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+> >>
+> >> Yes, that's what Lorenzo mentioned as well.
+> >>
+> >>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
+> >>> Figures 6-2 and 6-3 show how it should be handled and when it should
+> >>> be signaled as a system error.  In case you don't have a copy of the
+> >>> spec, I extracted those two figures and put them at [1].
+> >>
+> >> Thanks for that.
+> >> So in the last few months we tossed several ideas around how to
+> >> work-around this without kernel intervention, all of them turned out
+> >> to be not working. There are indeed registers in the RC that
+> >> influence error reporting to the CPU side, but even if we could
+> >> suppress (or catch) the SError, we can't recover and fixup the read
+> >> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
+> >> understood this, there are gates missing which are supposed to
+> >> translate this specific UR into a valid "all-1s" response.
+> > 
+> > But the commit log says firmware scanned the bus (catching the
+> > SErrors).  Shouldn't Linux be able to catch them the same way?
+> 
+> Not really. The scanning is done by the SCP management processor,
+> which is a Cortex-M class core on the same bus. So it's a simple,
+> single core running very early after power-on, when the actual AP
+> cores are still off. The SError handler is set to just increase a
+> value, then to return. This value is then checked before and after a
+> config space access for a given BDF:
+> https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
+> 
+> On the AP cores that run Linux later on this is quite different: The
+> SError is asynchronous, imprecise (inexact) and has no syndrome
+> information. That means we can't attribute this anymore to the
+> faulting instruction, we don't even know if it happened due to this
+> config space access. The CPU might have executed later instructions
+> already, so the state is broken at this point. SError basically
+> means: the system is screwed up.  Because this is quite common for
+> SErrors, we don't even allow to register SError handlers in arm64
+> Linux.
+> 
+> So even if we could somehow handle this is in Linux, it would be a
+> much greater and intrusive hack, so I'd rather stick with this
+> version.
 
-Argh, yuck. Thanks, I shouldn't try to read asm listings at 11pm.
+The problem is that from a PCIe point of view, UR is something we
+should be able to tolerate.  It happens during enumeration and also
+during hotplug.  It definitely does not mean "the system is screwed up
+and must be rebooted."
 
-So that just confirms what Will was saying further up the thread about
-the volatile pointer, rather than READ_ONCE() per se.
+To go back to Figure 6-3, I'm getting the impression that the "System
+Error" shown at the top is *not* the "SError" you're referring to.  If
+they were the same, the Root Control enable bits should gate it, but
+according to your lspci, those enable bits are cleared, yet you still
+take SErrors.
 
-cheers
+SError is asynchronous and imprecise.  Is there no way to do the
+config access in a way that makes it precise, by adding some kind of
+sync?  There's no reason we can't single-thread config accesses and
+maybe even MMIO/IO port accesses as well if necessary.
+
+Bjorn
