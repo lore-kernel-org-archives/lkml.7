@@ -2,255 +2,134 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE82FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F30C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9869D2465B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576279525;
-	bh=UxpEYNlmfXbBII6OkR9lpwYqtNu+t9IJybV+jFimYH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nCpP1RPd3AhlIWX/uHKNgTGD/bgqbuVIcoXctBsTxRFie/pMGjT0rayMaRtGEKdGO
-	 /ogcgHcuiKcL1b2edfI5u9U34RHU1C5Kk2SfxYjAkSeU4ljFrWIlt6IvPNOpRK3/FL
-	 wnUpBq4KaCJVWBtxHL/yHEAY2ATvpdSANjhklPa4=
+	by mail.kernel.org (Postfix) with ESMTP id 6BDE0205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLMXZY (ORCPT
+        id S1726781AbfLMXZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:25:24 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39879 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfLMXZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:25:24 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a67so2075424oib.6;
-        Fri, 13 Dec 2019 15:25:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dLfBlRiHKWoew0reabXfa/MbAeC9Mc4ikeTkPhntb9g=;
-        b=eDKWVU/bMyFbkGbT+ctHZ2p4R79oCo2q5vuBAegVEEH4BUx1EbBJvedqh6USdzdV6Q
-         jGfkDz6BW80ELHG54V3s2/ZwE0VZpnJR5FWoF6s4MPVrcBjn1GxAQDbjRiDQBfEF6xEd
-         P8OYvzLtAblJ5JVsSyOFzwRH8hd10nqrqWo1lstNq0YBvGEv3mp6FdnZse5EiiZOw67s
-         UNLaQnb8UNTN230uhJ+Tof7mFFMOy+n4+d3CY7jTz+fSbKyJXpKIxY2JERqKgY4PwGIO
-         RyDyK2qcL5PHhPY9rtuNVByeEUPNGDJKOi2zOEK5awJPcenVmKLfZpq8MT8xD+8796QS
-         WESw==
-X-Gm-Message-State: APjAAAUFTY9Tcimall73qMm+tsdEtu2Mvp+Vapvor7qarT9/SjQI9q8I
-        UEWi9XTb5v4s+TiTFfzeaw==
-X-Google-Smtp-Source: APXvYqwoHMOiga8bgQ2raABQGFJaX4uqduovQEJFvsdi+ExC6o+PYKI9rlCu3Kwb/ygG5liYl0HTJQ==
-X-Received: by 2002:aca:4eca:: with SMTP id c193mr7743827oib.37.1576279522531;
-        Fri, 13 Dec 2019 15:25:22 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n15sm3855369otr.67.2019.12.13.15.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:25:21 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:25:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        mark.rutland@arm.com, alexandre.torgue@st.com,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: rtc: Convert stm32 rtc bindings to
- json-schema
-Message-ID: <20191213232521.GA20953@bogus>
-References: <20191202145740.29123-1-benjamin.gaignard@st.com>
+        Fri, 13 Dec 2019 18:25:29 -0500
+Received: from mga02.intel.com ([134.134.136.20]:18076 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfLMXZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 18:25:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 15:25:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="239441460"
+Received: from dmjacob-mobl2.amr.corp.intel.com (HELO [10.252.129.36]) ([10.252.129.36])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Dec 2019 15:25:24 -0800
+Subject: Re: [alsa-devel] [PATCH v4 08/15] soundwire: add initial definitions
+ for sdw_master_device
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
+ <20191213050409.12776-9-pierre-louis.bossart@linux.intel.com>
+ <20191213072844.GF1750354@kroah.com>
+ <7431d8cf-4a09-42af-14f5-01ab3b15b47b@linux.intel.com>
+ <20191213161046.GA2653074@kroah.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <20728848-e0ae-01f6-1c45-c8eef6a6a1f4@linux.intel.com>
+Date:   Fri, 13 Dec 2019 17:25:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202145740.29123-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213161046.GA2653074@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:57:40PM +0100, Benjamin Gaignard wrote:
-> Convert the STM32 RTC binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  61 ---------
->  .../devicetree/bindings/rtc/st,stm32-rtc.yaml      | 152 +++++++++++++++++++++
->  2 files changed, 152 insertions(+), 61 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+
+> No, I mean the new MODULE_NAMESPACE() support that is in the kernel.
+> I'll move the greybus code to use it too, but when you are adding new
+> apis, it just makes sense to use it then as well.
+
+Greg, would the patch below be what you had in mind?
+Thanks
+-Pierre
 
 
-> diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
-> new file mode 100644
-> index 000000000000..80c445005bfb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
-> @@ -0,0 +1,152 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/st,stm32-rtc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 Real Time Clock Bindings
-> +
-> +maintainers:
-> +  - Gabriel Fernandez <gabriel.fernandez@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32-rtc
-> +      - st,stm32h7-rtc
-> +      - st,stm32mp1-rtc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: rtc_ck
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - st,stm32-rtc
-> +              - st,stm32h7-rtc
-> +    then:
-> +      properties:
-> +        st,syscfg:
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +            - items:
-> +                minItems: 3
-> +                maxItems: 3
-> +          description: |
-> +            Phandle/offset/mask triplet. The phandle to pwrcfg used to
-> +            access control register at offset, and change the dbp (Disable Backup
-> +            Protection) bit represented by the mask, mandatory to disable/enable backup
-> +            domain (RTC registers) write protection.
-> +
-> +        assigned-clocks:
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+index 76a5c52b12b4..5bad8422887e 100644
+--- a/drivers/soundwire/Makefile
++++ b/drivers/soundwire/Makefile
+@@ -7,9 +7,11 @@ ccflags-y += -DDEBUG
+  #Bus Objs
+  soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o 
+stream.o
+  obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
++ccflags-$(CONFIG_SOUNDWIRE) += -DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
 
-Already has a type, so drop this.
+  soundwire-generic-allocation-objs := generic_bandwidth_allocation.o
+  obj-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) += 
+soundwire-generic-allocation.o
++ccflags-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) += 
+-DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
 
-> +          description: |
-> +            override default rtc_ck parent clock reference to the rtc_ck clock entry
-> +          maxItems: 1
-> +
-> +        assigned-clock-parents:
-> +          allOf:
-> +           - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+  ifdef CONFIG_DEBUG_FS
+  soundwire-bus-objs += debugfs.o
+@@ -18,6 +20,7 @@ endif
+  #Cadence Objs
+  soundwire-cadence-objs := cadence_master.o
+  obj-$(CONFIG_SOUNDWIRE_CADENCE) += soundwire-cadence.o
++ccflags-$(CONFIG_SOUNDWIRE_CADENCE) += 
+-DDEFAULT_SYMBOL_NAMESPACE=SDW_CADENCE
 
-Same here.
+  #Intel driver
+  soundwire-intel-objs :=        intel.o
+@@ -25,3 +28,4 @@ obj-$(CONFIG_SOUNDWIRE_INTEL) += soundwire-intel.o
 
-Since you have the false schema below, I think these can go in base 
-schema rather than under the if.
+  soundwire-intel-init-objs := intel_init.o
+  obj-$(CONFIG_SOUNDWIRE_INTEL) += soundwire-intel-init.o
++ccflags-$(CONFIG_SOUNDWIRE_INTEL) += -DDEFAULT_SYMBOL_NAMESPACE=SDW_INTEL
+diff --git a/drivers/soundwire/cadence_master.c 
+b/drivers/soundwire/cadence_master.c
+index cf96532b0a8e..89ed97e303b9 100644
+--- a/drivers/soundwire/cadence_master.c
++++ b/drivers/soundwire/cadence_master.c
+@@ -1517,3 +1517,4 @@ EXPORT_SYMBOL(sdw_cdns_alloc_pdi);
 
-> +          description: |
-> +            override default rtc_ck parent clock phandle of the new parent clock of rtc_ck
-> +          maxItems: 1
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32-rtc
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 1
-> +
-> +        clock-names: false
-> +
-> +      required:
-> +        - st,syscfg
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32h7-rtc
-> +
-> +    then:
-> +       properties:
-> +         clocks:
-> +           minItems: 2
-> +           maxItems: 2
-> +
-> +       required:
-> +         - clock-names
-> +         - st,syscfg
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32mp1-rtc
-> +
-> +    then:
-> +       properties:
-> +         clocks:
-> +           minItems: 2
-> +           maxItems: 2
-> +
-> +         assigned-clocks: false
-> +         assigned-clock-parents: false
-> +
-> +       required:
-> +         - clock-names
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/mfd/stm32f4-rcc.h>
-> +    #include <dt-bindings/clock/stm32fx-clock.h>
-> +    rtc@40002800 {
-> +      compatible = "st,stm32-rtc";
-> +      reg = <0x40002800 0x400>;
-> +      clocks = <&rcc 1 CLK_RTC>;
-> +      assigned-clocks = <&rcc 1 CLK_RTC>;
-> +      assigned-clock-parents = <&rcc 1 CLK_LSE>;
-> +      interrupt-parent = <&exti>;
-> +      interrupts = <17 1>;
-> +      st,syscfg = <&pwrcfg 0x00 0x100>;
-> +    };
-> +
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    rtc@5c004000 {
-> +      compatible = "st,stm32mp1-rtc";
-> +      reg = <0x5c004000 0x400>;
-> +      clocks = <&rcc RTCAPB>, <&rcc RTC>;
-> +      clock-names = "pclk", "rtc_ck";
-> +      interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> -- 
-> 2.15.0
-> 
+  MODULE_LICENSE("Dual BSD/GPL");
+  MODULE_DESCRIPTION("Cadence Soundwire Library");
++MODULE_IMPORT_NS(SDW_CORE);
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 0b510e198928..2be9c365d342 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -1823,3 +1823,5 @@ EXPORT_SYMBOL(intel_sdw_driver);
+  MODULE_LICENSE("Dual BSD/GPL");
+  MODULE_ALIAS("platform:int-sdw");
+  MODULE_DESCRIPTION("Intel Soundwire Master Driver");
++MODULE_IMPORT_NS(SDW_CADENCE);
++MODULE_IMPORT_NS(SDW_CORE);
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index 834a09bafdcc..0685be32012d 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -432,3 +432,5 @@ EXPORT_SYMBOL(sdw_intel_exit);
+
+  MODULE_LICENSE("Dual BSD/GPL");
+  MODULE_DESCRIPTION("Intel Soundwire Init Library");
++MODULE_IMPORT_NS(SDW_CADENCE);
++MODULE_IMPORT_NS(SDW_CORE);
+
