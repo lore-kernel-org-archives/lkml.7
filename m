@@ -7,89 +7,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A473C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC2AC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28831205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56D4205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576279598;
-	bh=eSCH3/y/JW3xCU+ymbXlZgBpU6wy/YQlq7+3c6LUUhI=;
+	s=default; t=1576279625;
+	bh=+rkDFwuE6m9Dy2wMFwA/ww2Ki3MclrFlWvnP2CEUPus=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O3oi5RbwzjU32OE8Sp655ZLtzlItAaeswZS9/M4qggC8pyon31+e7UX7fIXB2aqrl
-	 6qznWr4XpytZ0JnRtvJpoE1fAGxoD9DKeapAsm/IwnCE+gcux4M7hGPkqTchzFS3XN
-	 NpSSZ3PhPZJ0eQ2GTbLaM7ZQGZa+Wmhg5MDE4R1Y=
+	b=JZa8uucNRB137c29HbOKMCWV56ROD4C0Ix3a3Rh0pXZIWwhOdpkCsmbkzR2FujC9l
+	 SQtw+gQ6WXG8e+WsMGWSO++ez31VnQBa/VPv+GNHDHEI+DgI9OIErO7I9pE3i7A0cm
+	 BmRZMq04uA4oFOIIDhK4vPxlIqwGx1IaHcx3QGiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLMX0h (ORCPT
+        id S1726836AbfLMX1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:26:37 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41941 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMX0g (ORCPT
+        Fri, 13 Dec 2019 18:27:05 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35194 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfLMX1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:26:36 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so2069616oie.8;
-        Fri, 13 Dec 2019 15:26:36 -0800 (PST)
+        Fri, 13 Dec 2019 18:27:04 -0500
+Received: by mail-ot1-f67.google.com with SMTP id o9so1068765ote.2;
+        Fri, 13 Dec 2019 15:27:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9tBcNOCxqPdqixtTHmzQKgwSJzOr34ZtfeLXIY6339k=;
-        b=khVneIrKmjIAtmnIrM+drJeKx9TkuhUDIKXE67ML5R5AtyD9WEOMH65pfxpdznRvcT
-         APK1x3EbjQJmVA3l9Feu7Rnvx1l+UdvYKnoPN2wbWsIAO0SQHcxVbbM7R7Gt2D+jI2n2
-         51BD4jrykrWutXbpSnCxFBC9rwvZ+Uhko3Ey4P7L0aRQvrsvg3MlgxCD1dmZuvNigEeB
-         ujmrcF37JuBf53ylRpAIMqC1aECmhMAbIoQ2qeoQWtAVpowKCd0O36zevmoUNMjJnw9Y
-         wj7mpQ669qHXIwnVMmDa7TqP+ChIrC++HEi+iQc2ZUiNbeyUb2hFOPtNVc0Y5z+fKcfA
-         MPVg==
-X-Gm-Message-State: APjAAAVuknYfRwxHpvUZE5wZ6shmLmjbrWAxXYeTtu46+CvknbkHDSnH
-        afFxHh8xs1QQEuHhtq4UZA==
-X-Google-Smtp-Source: APXvYqwNYGgD2lL8HkWOAPYgLrNju3VL3N1vf+LrHhWb+bLnt1opXtXZP9zsrWmQ8iKm2ZyeU5xyfQ==
-X-Received: by 2002:a05:6808:102:: with SMTP id b2mr8248272oie.127.1576279595637;
-        Fri, 13 Dec 2019 15:26:35 -0800 (PST)
+        bh=TYp5sqcfkiifjsMp1o5uJlv1/2yExoosYWzgSPwTvDU=;
+        b=MG6NmJueQ9BrjuZSQKM5uT7eb8YEXEHru3L2FCsctgotN7tteTy8gF0XwoM0O85jmI
+         qBh2R2hCmy8pS3t1F3+LyCaanYUjyd/hHC8zrrfQft2ASozZBImGBvpi92x+ISdvU1FP
+         sln1MxL1u3wlY+tSxdTHdMP/wNWFCUKCRobVQ7XRGU4ao2zxHCzTMsDs4swcGZBB+MT2
+         gok4aSR/vlF6yXrLx8Xgqz9Z49NWX83m1cxBcSYhl0SuXZMEE+C/9bDe5JBVXIvS34y7
+         i7iMHxMv1zDBzSMxZvEXtAQSugfQhpN5ZLEan69vfsPIFvkA2VfW34L4eSiZSMsUF0JC
+         QNLQ==
+X-Gm-Message-State: APjAAAWfVZkUAyoId5WUoMl3PdP7nkdSs/+r0w76OpQQL1gmMoG1GCcq
+        9PtcUhbzeFovZXk/sjeLeg==
+X-Google-Smtp-Source: APXvYqyGpF5zXlBMXF7YOJcUxQgwuziR4mu9FJxfXVqud5UO3DL8TXG5Inzr2scO0w0CkanlhM/Lxw==
+X-Received: by 2002:a9d:768b:: with SMTP id j11mr17480041otl.116.1576279623911;
+        Fri, 13 Dec 2019 15:27:03 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l128sm3844610oif.55.2019.12.13.15.26.34
+        by smtp.gmail.com with ESMTPSA id r24sm3881140ota.61.2019.12.13.15.27.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:26:35 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:26:34 -0600
+        Fri, 13 Dec 2019 15:27:03 -0800 (PST)
+Date:   Fri, 13 Dec 2019 17:27:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     gabriel.fernandez@st.com
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH] dt-bindings: rcc: Convert stm32mp1 rcc bindings to
- json-schema
-Message-ID: <20191213232634.GA21711@bogus>
-References: <20191202150343.27854-1-gabriel.fernandez@st.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: Re: [PATCH 2/2] dts: bindings: max17042_battery: add all of the
+ compatible strings
+Message-ID: <20191213232702.GA22495@bogus>
+References: <20191202152520.27558-1-angus@akkea.ca>
+ <20191202152520.27558-3-angus@akkea.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202150343.27854-1-gabriel.fernandez@st.com>
+In-Reply-To: <20191202152520.27558-3-angus@akkea.ca>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Dec 2019 16:03:43 +0100, <gabriel.fernandez@st.com> wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Mon,  2 Dec 2019 08:25:20 -0700, "Angus Ainslie (Purism)" wrote:
+> The bindings are missing documentation for some of the compatible
+> strings.
 > 
-> Convert the STM32MP1 RCC binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  .../bindings/clock/st,stm32mp1-rcc.txt        | 60 --------------
->  .../bindings/clock/st,stm32mp1-rcc.yaml       | 79 +++++++++++++++++++
->  2 files changed, 79 insertions(+), 60 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
+>  .../devicetree/bindings/power/supply/max17042_battery.txt   | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
