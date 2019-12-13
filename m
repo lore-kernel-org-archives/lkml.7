@@ -2,96 +2,93 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368B4C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEAC34995
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77934246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25552473F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfLMMGs (ORCPT
+        id S1726866AbfLMLum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:06:48 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:39706 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfLMMGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:06:47 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 06875200804;
-        Fri, 13 Dec 2019 13:06:43 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E9D5A200761;
-        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
-Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 234F6203B1;
-        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
-        robh+dt@kernel.org
-Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com,
-        Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: [PATCH v3 0/6] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-Date:   Fri, 13 Dec 2019 14:06:15 +0200
-Message-Id: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 13 Dec 2019 06:50:42 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42526 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfLMLum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:50:42 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1579D1C25B1; Fri, 13 Dec 2019 12:50:40 +0100 (CET)
+Date:   Fri, 13 Dec 2019 12:50:39 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device
+ node
+Message-ID: <20191213115039.GB31336@duo.ucw.cz>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150351.658072828@linuxfoundation.org>
+ <20191212133132.GA13171@amd>
+ <20191212140241.GA1595136@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
+Content-Disposition: inline
+In-Reply-To: <20191212140241.GA1595136@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v3:
-Add a 6th patch to update the MAINTAINERS file with an entry for this driver.
 
-This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
-and it's dependencies.
-The driver was tested on i.MX8QXP, using a unit test application and
-the v4l2-compliance tool, including the  streaming tests for encoder.
+--uQr8t48UFsdbeI+V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Mirela Rabulea (6):
-  media: v4l: Add packed YUV444 24bpp pixel format
-  firmware: imx: scu-pd: Add power domains for imx-jpeg
-  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
-  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
-  Add maintainer for IMX jpeg v4l2 driver
+On Thu 2019-12-12 15:02:41, Greg Kroah-Hartman wrote:
+> On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > The RTC module on the A23 was claimed to be the same as on the A31, w=
+hen
+> > > in fact it is not. The A31 does not have an RTC external clock output,
+> > > and its internal RC oscillator's average clock rate is not in the same
+> > > range. The A33's RTC is the same as the A23.
+> > >=20
+> > > This patch fixes the compatible string and clock properties to conform
+> > > to the updated bindings. The register range is also fixed.
+> >=20
+> > No, this is not okay for v4.19. New compatible is not in
+> > ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
+>=20
+> Good catch, I would have thought both of those would happen at the same
+> time.
 
- .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
- Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
- MAINTAINERS                                        |    8 +
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
- drivers/firmware/imx/scu-pd.c                      |    6 +
- drivers/media/platform/Kconfig                     |    2 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/imx-jpeg/Kconfig            |   10 +
- drivers/media/platform/imx-jpeg/Makefile           |    3 +
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2293 ++++++++++++++++++++
- drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  188 ++
- drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
- include/uapi/linux/videodev2.h                     |    1 +
- 16 files changed, 2985 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
- create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
- create mode 100644 drivers/media/platform/imx-jpeg/Makefile
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
+That's not normally how it works for dts changes. Drivers and dts very
+often have different maintainers, so there is preference for them to
+go in separately.
 
--- 
-2.7.4
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
+--uQr8t48UFsdbeI+V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXfN7DwAKCRAw5/Bqldv6
+8ibFAJ4pxy30IvcxHFjCBJCU15Pdj8quWwCfeIuo5fW4RKucTDuAB+Q4aUsc+wk=
+=msQO
+-----END PGP SIGNATURE-----
+
+--uQr8t48UFsdbeI+V--
