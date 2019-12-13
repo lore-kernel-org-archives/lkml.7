@@ -2,123 +2,121 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90052C341A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A1AC3400C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB771246F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75A324776
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc3mmhRF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ciqbZ/Ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfLMPMa (ORCPT
+        id S1727847AbfLMOzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:12:30 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34701 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfLMPM3 (ORCPT
+        Fri, 13 Dec 2019 09:55:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46653 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727673AbfLMOzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:12:29 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f4so6209690wmj.1;
-        Fri, 13 Dec 2019 07:12:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tX5Wv/+UhrHaxE6+OU6uNpOsiYcHwXYxk1ZdJgWmWa0=;
-        b=Rc3mmhRF1ng+AN7Ut+/an+d2y7DQn267Ww/7O7WMm2QHg0cjjBiT/tGaScLooUCoe3
-         lNq+rX8ENFIDZJGK5c3VM7ihpkptkiahaJgd1ia5rgmKtaO/qyDION3EHoxWlbGf5DC+
-         ObNgH9D09PVYq08lzQx5ZJ9TIrUkppG37WIpQK6ivd30xlkJ9b89fmWGjkcEUayH9B9/
-         hR+Lzc/Zqq2aMKD3SeG7wiGanNzdINWzHKliZFOsfyL3zlgLXCRdULaMHZHuwOScilKh
-         Tw7/e/HDPWaKkfsH0P6cRNRjxJhIKANGL8+fX7OgKj9iY7G6H+pgMQTp9WvQHneFaJZf
-         JYgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tX5Wv/+UhrHaxE6+OU6uNpOsiYcHwXYxk1ZdJgWmWa0=;
-        b=R/FFsP/UC8BhbKQwg8ozsplB4U3O9QhLIFkVPQdmxABes7sl279YeiatfzTd16fxhe
-         MrwqpNTv2pb9qnZqUdA2qP/pPctGAd7B5qyTDjSP1aLK/iBL8nmwWDVDYueIGST7jmEr
-         FhGhW8psQ6dmQy4jjkzLs0BdXrxUYMWumCwhCY59pEmUvEq29OSHzZOlAnEbTsp3coHA
-         m9So+MnY7ugegzyXS823IoEwRXlbu6KHzvHpblIdgBpfTn7C3fa2a8/bHFWifxgnkBis
-         qIqBil9QwjHz7T6uDwbZSb9CzxMf0s5lbvrVj9LPq1ppISN/Q0FquugszfPAouz/gqnZ
-         FLNw==
-X-Gm-Message-State: APjAAAXYAz46gmcxPi6PwPjmobOqoMd8QzTGY8KUjLiUn1hdOFNiMNQe
-        dvKqQOKobYkNe7yvi1awhGY=
-X-Google-Smtp-Source: APXvYqxpxnTmWAzw3dEdWjYZ1elcKuHlD5m7+duOEacbw6evKDacTYOiF+lcoem8fY5VhWQNSWG8nQ==
-X-Received: by 2002:a1c:4e10:: with SMTP id g16mr13741309wmh.94.1576249947079;
-        Fri, 13 Dec 2019 07:12:27 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id e18sm10274572wrr.95.2019.12.13.07.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:12:25 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:12:24 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to
- I2C_PIO_MODE_PREFERRED_LEN
-Message-ID: <20191213151224.GD222809@ulmo>
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-3-digetx@gmail.com>
+        Fri, 13 Dec 2019 09:55:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576248899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gntSwDNDnzHe3/thZbUD4KWSDrrpcmgp8bqbLa8CMa0=;
+        b=ciqbZ/Ru+IADPhb+B4Jkhk0zMVadryQZlVHzrRP6JTgwnJC7NXmuk3HpjCLdff7K13R07g
+        o+XhvEHOrTgm6mUya6fHTx3bKEMEJBaANDqNmqYSe2d4v4L89jznmZsgZkVMM/RwjEOat1
+        Du8XsJSJD2nUjV8POy+ezirCAgzQhW8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-n5LdeNYkMJyouqVkjHcDAA-1; Fri, 13 Dec 2019 09:54:56 -0500
+X-MC-Unique: n5LdeNYkMJyouqVkjHcDAA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7B998017DF;
+        Fri, 13 Dec 2019 14:54:53 +0000 (UTC)
+Received: from localhost (ovpn-12-63.pek2.redhat.com [10.72.12.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5132C5C219;
+        Fri, 13 Dec 2019 14:54:53 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 22:54:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
+ direct mapping.
+Message-ID: <20191213145448.GH28917@MiWiFi-R3L-srv>
+References: <20191115144917.28469-1-msys.mizuma@gmail.com>
+ <20191115144917.28469-5-msys.mizuma@gmail.com>
+ <20191212201916.GL4991@zn.tnic>
+ <20191213132850.GG28917@MiWiFi-R3L-srv>
+ <20191213141543.GA25899@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="F8dlzb82+Fcn6AgP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212233428.14648-3-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191213141543.GA25899@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/13/19 at 03:15pm, Borislav Petkov wrote:
+> On Fri, Dec 13, 2019 at 09:28:50PM +0800, Baoquan He wrote:
+> > In Documentation/x86/x86_64/mm.rst, the physical memory regions mapping
+> > with page_offset is called as the direct mapping of physical memory.
+> 
+> The fact that it happens to compute the *first* region's size, which
+> *happens* to be the direct mapping of all physical memory is immaterial
+> here.
+> 
+> It is actually causing more confusion in an already complex piece of
+> code. You can call this function just as well
+> 
+>   calc_region_size()
+> 
+> which won't confuse readers. Because all you care about here is the
+> region's size - not which region it is.
 
---F8dlzb82+Fcn6AgP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Won't calc_region_size be too generic? We also have vmalloc and vmemmap,
+and here we are specifically calculating the direct mapping of physical
+memory. 
 
-On Fri, Dec 13, 2019 at 02:34:27AM +0300, Dmitry Osipenko wrote:
-> DMA is preferred for a larger transfers, while PIO is preferred for a
-> smaller transfers to avoid unnecessary DMA overhead. There is no strict
-> size limitations for the PIO-mode transfers, so let's rename the constant
-> for clarity.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> > kernel_randomize_memory() is invoked much earlier than
+> > acpi_table_parse_srat().
+> 
+> And? What are we going to do about that?
 
-I ran this on the test farm and the results are all green, so:
 
-Tested-by: Thierry Reding <treding@nvidia.com>
+void __init setup_arch(char **cmdline_p)
+{
+...
+	kernel_randomize_memory();
+...
+	init_mem_mapping();
+...
+	initmem_init();
+...
+}
 
---F8dlzb82+Fcn6AgP
-Content-Type: application/pgp-signature; name="signature.asc"
+In kernel_randomize_memory(), KASLR builds the layout of these regions,
+including their starting address and the gap between them. Once
+finished, __PAGE_OFFSET, VMALLOC_START, VMEMMAP_START are settled. 
+If not knowing the max address to cover all the possible hotplugged
+memory, later memory hotplug will fail.
 
------BEGIN PGP SIGNATURE-----
+Thanks
+Baoquan
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3zqlgACgkQ3SOs138+
-s6HWYQ/+Pixr7HSMd237gQrljywWaHn5qJa8HcAhiW/UKmZKDZNHsYSpYCeN8JGe
-qHizf5L5PLPgin43IOjvAXd0QzdVUqGNSoZEr/UjoskZTYCLe/KiUvXLa8gTp498
-kUEPzgmXC2z8ifixzDpS8cELWl+Qh+ihwXqiGjf223RUlzDzN5m/fpbPqNIBFF9a
-YvzcNDzOY8P0xm74UR3aO7B4TsYgUEVJttWbZRjJwHAbG3A0eY1K1CFT5SRGT5O+
-vms6FfGwPpw9xNFHV0qfdGDedR6FVC3HxYQ6/dH0j0pqOt9L1kIhNsrlz02SaZbK
-/pPBpotoXoqO2Zxzy+izHR/ziTi9lLVs4EFLR9Uoa0JMDnM35dxWn6QA3KtEoXBm
-ncPCoOsIzm90QErx5/AO9A2Ny0k85ykogHBWFh3Kl33uG8SjYZHnuHplHGwSRlKv
-gYcoxcuQW9ONd/EDpJn0XVCcHsEqdPejYXWL1J7iq2DjvJHvE2S9iefg2aIN68JD
-646Hztb7idQVBvdAE+TgL7A3WThw9JfkpexyiQrxbZjoVOoBzCduCouq6us4H5Ry
-hNU33u/r9mnsPbR6YBCs78j2pdedu46fPVjmZFEEuwUIX3SDTWtr0e9XtG3U658u
-GCBvXxSUIaMUSq0g+NFuj9UN6C/CVuty4f7A8kJf5X0axafkxds=
-=0Y5T
------END PGP SIGNATURE-----
-
---F8dlzb82+Fcn6AgP--
