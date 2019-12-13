@@ -2,134 +2,87 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C43C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77964C34965
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF5DF247A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4Em0CQg"
+	by mail.kernel.org (Postfix) with ESMTP id B744124712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfLMO2x (ORCPT
+        id S1727761AbfLMOdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:28:53 -0500
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:36828 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMO2w (ORCPT
+        Fri, 13 Dec 2019 09:33:10 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61020 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727610AbfLMOdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:28:52 -0500
-Received: by mail-wm1-f42.google.com with SMTP id p17so6778474wma.1;
-        Fri, 13 Dec 2019 06:28:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6QLZHSUqVyecs2iharIBnV+waYycsRrF0PppbO8VMdc=;
-        b=X4Em0CQg7XPS3z8XGXcRnzQcQadSqmHsHNxwILAXvTkGF1A0285lgDVyCcfmeLJMPj
-         +Tk9WJ2x/6XiFUCTHg0b8xn10ROMgVaTjQnbg+3qy3Gv3aep3BkV8hyVg4Rj0h75Z/oD
-         35XebvEWDrOknx7OGqgYUi4qMIv+qa9zC1voRXNBH6drGXWrKcVy9HlcS2r/HuYmNAI9
-         OLcCG+k1GSnn6YvMkJcBCrtfY6FidTIooBhHPKYhYtE5D3BJoBZLsrfJHapK+8InoSks
-         f0UPKA4o/9sHfTcTLWVTfcOsu/7MQOC8y9flklApuHnQ61tarND+8sgZ2yf0UyGiQP7W
-         Yp+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6QLZHSUqVyecs2iharIBnV+waYycsRrF0PppbO8VMdc=;
-        b=e1PsduVgWWPPq+XS6OML6AgiNG0pHqizZ+fMSp4k4x5E0WYtf7Q4+spsaIyGb1itu9
-         BCDr4EpFN+e9OhOIP7KcYBDMP125frdK+ZBn1ozDVFWXnjhltDagnwJj00kQoJImNiON
-         sOnhBEJwbaDR5neVPbqOI+010URVGFCCCJv6x+zo6/We+W3GKpWNU+wQ5oRZwOpzsUzv
-         dJ0Q1gruUC+Rf64ORXL0FM9uuIoddNFZT+gi+2ociGtaU4dcnrUindfy5i8X7xSCGgX9
-         E8oXwvhnsnxFedLtInHdCoQf36oIsfnUBHH0uZ5l//sCM6grbvMf989H2eg0O1ViAUa/
-         /SxA==
-X-Gm-Message-State: APjAAAWSCpmOfllyRJxWc+a3ghTwJo5zJ8B5ATF/LQFep4/rQic+dylm
-        7bDnAG8hK+EA58J+rPKBXb8=
-X-Google-Smtp-Source: APXvYqwcogMDfRsO+0kr7L/xFj6Up/8vQMcepDErEiyPT73ffpPLdwealTjrhoiMySzSoGv/hvLbhQ==
-X-Received: by 2002:a1c:980e:: with SMTP id a14mr9520966wme.76.1576247330116;
-        Fri, 13 Dec 2019 06:28:50 -0800 (PST)
-Received: from ltop.local ([2a02:a03f:40f6:4600:60b0:6ca6:1eae:3b06])
-        by smtp.gmail.com with ESMTPSA id h127sm11148048wme.31.2019.12.13.06.28.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 06:28:49 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:28:46 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191213142846.ki2t2fwljnql66lt@ltop.local>
-References: <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <20191212202157.GD11457@worktop.programming.kicks-ass.net>
- <20191212205338.GB11802@worktop.programming.kicks-ass.net>
- <20191213104706.xnpqaehmtean3mkd@ltop.local>
- <20191213125618.GD2844@hirez.programming.kicks-ass.net>
+        Fri, 13 Dec 2019 09:33:10 -0500
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBDEV8Eb079029;
+        Fri, 13 Dec 2019 23:31:09 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
+ Fri, 13 Dec 2019 23:31:08 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xBDEV807079026
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 13 Dec 2019 23:31:08 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ mem_serial_out
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
+        Jiri Slaby <jslaby@suse.com>,
+        kai heng feng <kai.heng.feng@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
+        paulburton@kernel.org, sr@denx.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yegorslists@googlemail.com
+References: <00000000000053539a0599173973@google.com>
+ <20191212105701.GB1476206@kroah.com>
+ <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
+ <20191213093357.GB2135612@kroah.com>
+ <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <74859736-478a-6ad7-f0be-cfe87ec40ff5@i-love.sakura.ne.jp>
+Date:   Fri, 13 Dec 2019 23:31:08 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213125618.GD2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 01:56:18PM +0100, Peter Zijlstra wrote:
-> 
-> Excellent! I had to change it to something like:
-> 
-> #define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
-> 
-> but that does indeed work!
-> 
-> Now I suppose we should wrap that in a symbol that indicates our
-> compiler does indeed support _Atomic, otherwise things will come apart.
-> 
-> That is, my gcc-4.6 doesn't seem to have it, while gcc-4.8 does, which
-> is exactly the range that needs the daft READ_ONCE() construct, how
-> convenient :/
-> 
-> Something a little like this perhaps?
+On 2019/12/13 19:00, Dmitry Vyukov wrote:
+> Easier said than done. "normal user of the serial port" is not really
+> a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
+> not per-device...
+> As far as I remember +Tetsuo proposed a config along the lines of
+> "restrict only things that legitimately cause damage under a fuzzer
+> workload", e.g. freezing filesystems, disabling console output, etc.
+> This may be another candidate. But I can't find where that proposal is
+> now.
 
-Yes, this looks good to me.
-Just a small nit here below.
+That suggestion got no response for two months.
 
-> ---
-> 
-> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-> index 7d9cc5ec4971..c389af602da8 100644
-> --- a/arch/arm64/include/asm/barrier.h
-> +++ b/arch/arm64/include/asm/barrier.h
-> @@ -75,9 +75,9 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
->  
->  #define __smp_store_release(p, v)					\
->  do {									\
-> -	typeof(p) __p = (p);						\
-> -	union { typeof(*p) __val; char __c[1]; } __u =			\
-> -		{ .__val = (__force typeof(*p)) (v) };			\
-> +	unqual_typeof(p) __p = (p);					\
-> +	union { unqual_typeof(*p) __val; char __c[1]; } __u =	\
-> +		{ .__val = (__force unqual_typeof(*p)) (v) };	\
+  https://lkml.kernel.org/r/3e4e2b6b-7828-54ab-cf28-db1a396d7e20@i-love.sakura.ne.jp
 
-The 2 two trailing backslashes are now off by one tab.
-
--- Luc 
+Unless we add such kernel config option to upstream kernels, it will become
+a whack-a-mole game.
