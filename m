@@ -2,223 +2,94 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C324C751CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38705C751D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB20524796
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE842479D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RJNQ/wp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfLMQEs (ORCPT
+        id S1728328AbfLMQFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:04:48 -0500
-Received: from mailoutvs54.siol.net ([185.57.226.245]:56576 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728215AbfLMQEq (ORCPT
+        Fri, 13 Dec 2019 11:05:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57029 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728049AbfLMQFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:04:46 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 63D6052454D;
-        Fri, 13 Dec 2019 17:04:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Y-bJ71l0u6-E; Fri, 13 Dec 2019 17:04:42 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id CE91452454E;
-        Fri, 13 Dec 2019 17:04:42 +0100 (CET)
-Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 829F6524558;
-        Fri, 13 Dec 2019 17:04:40 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mchehab@kernel.org, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, hverkuil@xs4all.nl
-Cc:     gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling matrix
-Date:   Fri, 13 Dec 2019 17:04:26 +0100
-Message-Id: <20191213160428.54303-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191213160428.54303-1-jernej.skrabec@siol.net>
-References: <20191213160428.54303-1-jernej.skrabec@siol.net>
+        Fri, 13 Dec 2019 11:05:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576253117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cc7ICVZb+s4e7ChsQ+cDBzumwFBBlF0+3dl2VlDWCJs=;
+        b=RJNQ/wp8f1ctg/kUjfASoIYXkEeoJGHVe+GlK+i45wk6tIu5MEC2HLO1u1ygPAQTGtKGVr
+        +xPlNjzxBcbbvIrt+SlakwkcPUe9wXOGRHMw3nfg2GzeNNbsH88ADfwgI50mOuidUVYFnG
+        onzJEPH0gKgrTe1icXiQ4EsYGm/f19k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-UHE-uBOXM8uEy4Qkn4d-ug-1; Fri, 13 Dec 2019 11:05:14 -0500
+X-MC-Unique: UHE-uBOXM8uEy4Qkn4d-ug-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79D27DB65;
+        Fri, 13 Dec 2019 16:05:13 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-140.rdu2.redhat.com [10.10.122.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E823060569;
+        Fri, 13 Dec 2019 16:05:12 +0000 (UTC)
+Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191212223525.1652-1-longman@redhat.com>
+ <20191212223525.1652-5-longman@redhat.com>
+ <20191213102525.GA2844@hirez.programming.kicks-ass.net>
+ <20191213105042.GJ2871@hirez.programming.kicks-ass.net>
+ <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
+Organization: Red Hat
+Message-ID: <dab58211-8d31-3b16-c1f1-51badfa8e210@redhat.com>
+Date:   Fri, 13 Dec 2019 11:05:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HEVC frames may use scaling list feature. Add support for it.
+On 12/13/19 11:02 AM, Waiman Long wrote:
+> That is an interesting idea. It will eliminate the need of a separate
+> array to track the free chain_hlocks. However, if there are n chains
+> available, it will waste about 3n bytes of storage, on average.
+>
+> I have a slightly different idea. I will enforce a minimum allocation
+> size of 2. For a free block, the first 2 hlocks for each allocation
+> block will store a 32-bit integer (hlock[0] << 16)|hlock[1]:
+>
+> Bit 31: always 1
+> Bits 24-30: block size
+> Bits 0-23: index to the next free block.
+>
+> In this way, the wasted space will be k bytes where k is the number of
+The wasted space should be 2k bytes. My mistake.
+> 1-entry chains. I don't think merging adjacent blocks will be that
+> useful at this point. We can always add this capability later on if it
+> is found to be useful.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
- drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
- .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
- .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
- .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
- 5 files changed, 81 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.c
-index c6ddd46eff82..bf68bc6b20c8 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[]=
- =3D {
- 		.codec		=3D CEDRUS_CODEC_H265,
- 		.required	=3D true,
- 	},
-+	{
-+		.cfg =3D {
-+			.id	=3D V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
-+		},
-+		.codec		=3D CEDRUS_CODEC_H265,
-+		.required	=3D true,
-+	},
- 	{
- 		.cfg =3D {
- 			.id	=3D V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.h
-index 96765555ab8a..d945f4f0ff2d 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -73,6 +73,7 @@ struct cedrus_h265_run {
- 	const struct v4l2_ctrl_hevc_sps			*sps;
- 	const struct v4l2_ctrl_hevc_pps			*pps;
- 	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
-+	const struct v4l2_ctrl_hevc_scaling_matrix	*scaling_matrix;
- };
-=20
- struct cedrus_run {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/st=
-aging/media/sunxi/cedrus/cedrus_dec.c
-index 4a2fc33a1d79..327ed6c264dc 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-@@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
- 			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
- 		run.h265.slice_params =3D cedrus_find_control_data(ctx,
- 			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
-+		run.h265.scaling_matrix =3D cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
- 		break;
-=20
- 	default:
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h265.c
-index 6945dc74e1d7..888bfd5ca224 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-@@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct ced=
-rus_dev *dev,
- 	}
- }
-=20
-+static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
-+					   struct cedrus_run *run)
-+{
-+	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
-+	struct cedrus_dev *dev =3D ctx->dev;
-+	u32 i, j, k, val;
-+
-+	scaling =3D run->h265.scaling_matrix;
-+
-+	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
-+		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
-+		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
-+		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
-+		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
-+
-+	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
-+		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
-+		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
-+		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
-+		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
-+
-+	cedrus_h265_sram_write_offset(dev, VE_DEC_H265_SRAM_OFFSET_SCALING_LIST=
-S);
-+
-+	for (i =3D 0; i < 6; i++)
-+		for (j =3D 0; j < 8; j++)
-+			for (k =3D 0; k < 8; k +=3D 4) {
-+				val =3D ((u32)scaling->scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
-+				      ((u32)scaling->scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
-+				      ((u32)scaling->scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
-+				      scaling->scaling_list_8x8[i][j + k * 8];
-+				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-+			}
-+
-+	for (i =3D 0; i < 2; i++)
-+		for (j =3D 0; j < 8; j++)
-+			for (k =3D 0; k < 8; k +=3D 4) {
-+				val =3D ((u32)scaling->scaling_list_32x32[i][j + (k + 3) * 8] << 24)=
- |
-+				      ((u32)scaling->scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
-+				      ((u32)scaling->scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
-+				      scaling->scaling_list_32x32[i][j + k * 8];
-+				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-+			}
-+
-+	for (i =3D 0; i < 6; i++)
-+		for (j =3D 0; j < 8; j++)
-+			for (k =3D 0; k < 8; k +=3D 4) {
-+				val =3D ((u32)scaling->scaling_list_16x16[i][j + (k + 3) * 8] << 24)=
- |
-+				      ((u32)scaling->scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
-+				      ((u32)scaling->scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
-+				      scaling->scaling_list_16x16[i][j + k * 8];
-+				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-+			}
-+
-+	for (i =3D 0; i < 6; i++)
-+		for (j =3D 0; j < 4; j++) {
-+			val =3D ((u32)scaling->scaling_list_4x4[i][j + 12] << 24) |
-+			      ((u32)scaling->scaling_list_4x4[i][j + 8] << 16) |
-+			      ((u32)scaling->scaling_list_4x4[i][j + 4] << 8) |
-+			      scaling->scaling_list_4x4[i][j];
-+			cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-+		}
-+}
-+
- static void cedrus_h265_setup(struct cedrus_ctx *ctx,
- 			      struct cedrus_run *run)
- {
-@@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx=
-,
-=20
- 	/* Scaling list. */
-=20
--	reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
-+	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
-+		cedrus_h265_write_scaling_list(ctx, run);
-+		reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
-+	} else {
-+		reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
-+	}
- 	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
-=20
- 	/* Neightbor information address. */
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_regs.h
-index 7beb03d3bb39..0d9449fe2b28 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-@@ -492,6 +492,8 @@
- #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 0x64)
- #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 0x68)
- #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 0x6c)
-+#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 + 0x78)
-+#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 + 0x7c)
-=20
- #define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 0x80)
-=20
---=20
-2.24.0
+Cheers,
+Longman
 
