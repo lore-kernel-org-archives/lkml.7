@@ -2,104 +2,112 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42495C4BA1C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F295BC4BA2C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77623246F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="iDxyPlsf"
+	by mail.kernel.org (Postfix) with ESMTP id 32AAF2470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfLMQ0X (ORCPT
+        id S1728347AbfLMQdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:26:23 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53038 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbfLMQ0X (ORCPT
+        Fri, 13 Dec 2019 11:33:36 -0500
+Received: from smtprelay0038.hostedemail.com ([216.40.44.38]:39117 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727480AbfLMQdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:26:23 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so200560wmc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:26:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=51qjue+Lhz7PmDgRPAGTCZbzojtbIVXyxCeZE2aMNjE=;
-        b=iDxyPlsfMu31u66hSyVq5/bWBnE7w3FIEEQNFRIns/gD+2id91qJulDC35PNWGQW4M
-         z15Av5sU9HBPXQkZIi0XTiOwMRCAnvKFQI8CQUibQ9lR8fRJutqnU0J2l0CaDTPsvuU2
-         VahVlDApeiudV1fsYUDYuISFHXK15w/eB582g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=51qjue+Lhz7PmDgRPAGTCZbzojtbIVXyxCeZE2aMNjE=;
-        b=Nzzl7T0V3tE5H2mB7fx5Q7RDu8ckLd6xQ2Ncjs1YWJvAza49CKh6DQbhvzaec6Yiql
-         TFm0G50Xf0cDtjkj1FZcV493bl6mWyHFRjrpzcewg+IMkpALtVydnFeiQsMaVe3QfSfw
-         vZiKJqOc/r/C7+nVnKfwlkL/RLVNug0rzKQl9YOiqk9GFmHNRfqmHy5msoweyKIiDTz2
-         wbzBI1Mo/8xZ6q/N4PiZNwMaB0Ir5fnOlvFQ6bd8QjMZ44BZB4Y/G/Y5bHnSnXru37jA
-         PoVD1rBnrwXNcjbcf19EtOPUO+gOHo0ljtzpulmKLpum0zhQIWXZffvZ6QP56xE8WmKV
-         g+XQ==
-X-Gm-Message-State: APjAAAUUcz0HAr4Znp9vnjt527g9WeySuFUmLH4M5NnSjgkZvqJ4zCNR
-        ZElJXtdcw3wKuEoDYMDO7/j4Qw==
-X-Google-Smtp-Source: APXvYqzEJhQMLHR7HkP0qIFqLDe3n+JnIup+iSc+paWffU2Gi1zxfwx8kUgouUgm/GEu8xXHbSQkQg==
-X-Received: by 2002:a7b:c246:: with SMTP id b6mr14182508wmj.75.1576254380923;
-        Fri, 13 Dec 2019 08:26:20 -0800 (PST)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id a184sm11056008wmf.29.2019.12.13.08.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 08:26:20 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:26:12 +0100
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
-Subject: [GIT PULL] overlayfs fixes for 5.5-rc2
-Message-ID: <20191213162612.GA5081@miu.piliscsaba.redhat.com>
+        Fri, 13 Dec 2019 11:33:35 -0500
+X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 11:33:34 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 8CD3F180458E1;
+        Fri, 13 Dec 2019 16:27:27 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 78640101297A2;
+        Fri, 13 Dec 2019 16:27:26 +0000 (UTC)
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-HE-Tag: sand41_40a358540413f
+X-Filterd-Recvd-Size: 3128
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (Authenticated sender: nevets@goodmis.org)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 13 Dec 2019 16:27:24 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 11:25:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct
+ ring_buffer
+Message-ID: <20191213112438.773dff35@gandalf.local.home>
+In-Reply-To: <20191213153553.GE20583@krava>
+References: <20191213153553.GE20583@krava>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 13 Dec 2019 16:35:53 +0100
+Jiri Olsa <jolsa@redhat.com> wrote:
 
-Please pull from:
+> I don't think dedup algorithm can handle this and I'm not sure if there's
+> some way in pahole to detect/prevent this.
+> 
+> I only found that if I rename the ring_buffer objects to have distinct
+> names, it will help:
+> 
+>   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep task_struct
+>   [150] STRUCT 'task_struct' size=11008 vlen=205
+> 
+>   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'perf_event'"
+>   [1665] STRUCT 'perf_event' size=1160 vlen=70
+> 
+> also the BTF data get smaller ;-) before:
+> 
+>   $ ll /sys/kernel/btf/vmlinux
+>   -r--r--r--. 1 root root 2067432 Dec 13 22:56 /sys/kernel/btf/vmlinux
+> 
+> after:
+>   $ ll /sys/kernel/btf/vmlinux
+>   -r--r--r--. 1 root root 1984345 Dec 13 23:02 /sys/kernel/btf/vmlinux
+> 
+> 
+> Peter, Steven,
+> if above is correct and there's no other better solution, would it be possible
+> to straighten up the namespace and user some distinct names for perf and ftrace
+> ring buffers?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.5-rc2
+Now, the ring buffer that ftrace uses is not specific for ftrace or
+even tracing for that matter. It is a stand alone ring buffer (oprofile
+uses it), and can be used by anyone else.
 
-Fix some bugs and documentation.
+As the perf ring buffer is very coupled with perf (or perf events), and
+unless something changed, I was never able to pull the perf ring
+buffer out as a stand alone ring buffer.
 
-Thanks,
-Miklos
+As the ring buffer in the tracing directory is more generic, and not to
+mention around longer, if one is to change the name, I would suggest it
+be the perf ring buffer.
 
-----------------------------------------------------------------
-Amir Goldstein (7):
-      ovl: fix lookup failure on multi lower squashfs
-      ovl: make sure that real fid is 32bit aligned in memory
-      ovl: don't use a temp buf for encoding real fh
-      ovl: fix corner case of non-unique st_dev;st_ino
-      ovl: relax WARN_ON() on rename to self
-      docs: filesystems: overlayfs: Rename overlayfs.txt to .rst
-      docs: filesystems: overlayfs: Fix restview warnings
-
----
- .../filesystems/{overlayfs.txt => overlayfs.rst}   | 10 +--
- MAINTAINERS                                        |  2 +-
- fs/overlayfs/copy_up.c                             | 53 +++++++-------
- fs/overlayfs/dir.c                                 |  2 +-
- fs/overlayfs/export.c                              | 80 +++++++++++++---------
- fs/overlayfs/inode.c                               |  8 ++-
- fs/overlayfs/namei.c                               | 52 ++++++++------
- fs/overlayfs/overlayfs.h                           | 34 +++++++--
- fs/overlayfs/ovl_entry.h                           |  2 +
- fs/overlayfs/super.c                               | 24 +++++--
- 10 files changed, 166 insertions(+), 101 deletions(-)
- rename Documentation/filesystems/{overlayfs.txt => overlayfs.rst} (99%)
+-- Steve
