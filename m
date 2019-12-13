@@ -6,179 +6,172 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF2FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C2D2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A22B246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLMU7B (ORCPT
+        id S1726828AbfLMU7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:59:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:59065 "EHLO
+        Fri, 13 Dec 2019 15:59:18 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:54913 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMU7B (ORCPT
+        with ESMTP id S1725937AbfLMU7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:59:01 -0500
+        Fri, 13 Dec 2019 15:59:17 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MsZBb-1hqEMw1io7-00u5gf; Fri, 13 Dec 2019 21:58:37 +0100
+ 1N1x6X-1hhwsx45CD-012Isl; Fri, 13 Dec 2019 21:58:47 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        linux-api@vger.kernel.org
-Subject: [PATCH v2 23/24] y2038: rename itimerval to __kernel_old_itimerval
-Date:   Fri, 13 Dec 2019 21:53:51 +0100
-Message-Id: <20191213205417.3871055-14-arnd@arndb.de>
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        sparclinux@vger.kernel.org
+Subject: [PATCH v2 24/24] y2038: sparc: remove use of struct timex
+Date:   Fri, 13 Dec 2019 21:53:52 +0100
+Message-Id: <20191213205417.3871055-15-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
 References: <20191213204936.3643476-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TqEgrqVYKBUXuLUugtmSXz5Jp0XWvxFbL1EF+DOHK3fjEd6Fk++
- cRocth6aVdmtqKW7gyyAItEa53K8m1Gj+h/gCmRCJQ9zcX1JYTHfDh/mFaEreuJDcAKCAZT
- /V9BL4c/fgg/VV2hxw/J3nff8wTDToWlulMn4wWP2yM+Dmfi6/N/FbZBS6ov0rwtgjxVJtk
- c8qGaN7z75Bvc1ShlL9ZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+nujEEc8rtU=:gcuncyiULxaR/b5DAOMBO4
- oR6U8INsRH3MZPCNpISnel4mn+Th5CEnjPhMuYbhPA4rqvNI08Q1scKBLZNct5p3rcFjDwIbz
- UQoWffQ5d+Vj2Jn8UKlSYJQXU52k2xvazBuG4p0PjLQoH4j0q6O/LJ205v5nPBWeoz8rj7kI8
- HqaAhvKSpkQiSwJoZUjs9m3r4zxOXPmS1EkaaUwWgeEH0OJLXMXs1+u0f4lUPqkCGws7ijvic
- 3ApO1TPXrmsIno6Q79YNWvQ1fCrQiJlRC0uXjPfCiDwGY5eTqkPfT18zvl62gsf/Np4eAiidp
- IGZIE9Lhfthids1bllMSSx8JVmG+LSI/HCAQ4dKeZBqJ8ttA8rcfvMQVPkogWclTTyxGldeLZ
- rnd2wX0yS9MZ+jAUnbFJ/LcIpdx3w72hz666SrW9hMBDOHLcscDx34uZKFsoWDCkTifyCjl7z
- AypDolytB3UPMJQAnj9tFLm5K+dp0srYZaXb7GwUVp6i8MpI210/zVJFOhq5aPOfWkCvjRHNb
- rZPp4nxsnppchEXbWmFkSdPqGCbEEoVljg7H6Ep2RB6ATD5Hx2iSRTRiUguyYgSmAgzfsJsCU
- cRE6ctY6cBBcpuOw7F5+k2og4/8z1HI5a/aM5l7Xd4kEuGkqIC7Kaswp7zS0wixJx41Jk3ole
- SRIW0zvRsp17fOmCXbHpUT+yik5W7XTAZd4JlNg+3cSmlIJLGyomTzFN/UGD0uvocGaO165rp
- qhOoRT5Vq6DsCmyglMiyfsTiwYjF83UA0eGSzww+ca9Tpqs9epkhVvRNhvCAmu2Ce+9EsSHwc
- SdUS4EMmf/Sbp/RB91XuBjZ/nSkpgqUyVRZIbhlf2rU/cClbeahuKr/QL3qvA45DahX1lHSjI
- g8WIW7F2WBR4mn4nyMTg==
+X-Provags-ID: V03:K1:A7e9/MVVT8BzRCfImaCg9M4jUKmhpwO6crIaNymrEDwlQZeltNw
+ ofdOA22H+2CteR63M/zW7/QJ9xk/xm5IFVcZUCEHHr0oqqYjO2F8BCaw7M36GDA1ouTCTdL
+ XZuuvO73Er8lopAUQzkNngA9tNTZDinleHYow3Tyi+PYH/pzhVVO6ZyLKW/gM0r5NukKCve
+ ucLS2WBHfH5TBH6bwkJlg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:elooNoLl0os=:wJwvhFEbWlK180NJ0akjSc
+ IwQ5iLJjeglZh0liN9JFPCnp0HP2SWD6SDJJ5dLDCQbHYYueqnXerizC/HI9HgURy2945Ym+e
+ PM6PPU3k9wcvKwJVMCS2WBVFEQLDj3xjsKA597uZY2j1O4iNej+KtCgNla7T5EY/cXwJqh8yM
+ tQ8JhxM4qHJezU0J7TI/AFMSDZQ7+LJXkjGLRypSzXhkJCa+XmWXGizlDiOKI7H5Y1cvYlmPr
+ grNp1+Cb7FQeUwPxUofvsVCx7Jr0/ux3M3omtgiUzFqEamULFm2BdG1l1Ee+LRqs3+nuR5Y17
+ 0Es32GbadsSt665oJa61Q56UhPWbZaHCjMjwFBFbx0pQF5PR398evp8kkMCHrBdKXhEZ1moVG
+ IE5yRTE/w6L43ko1QeqCkgYYUB4uEZULTnlLanp5LZyrsRHIDl+/3wvRgDOq62hK+SQT9R7LN
+ o6uZU7XT1ifzYCob6rtsswqrbs7Gxx7h7h6D6mvVXzsYMBaHRseiIxkyQfdnpTvJCNBrJMxow
+ wD7ZVP9yyDTJvzG51Q1Qv38SI2sSrB5TpHzV1eRqeA12bKmO6i0Ck5Ej1kEJrOBDwxea5BZLC
+ H55xBxTLXhAV73IaWkgY7JQWaqYVQ9LSet/er0Pprh8ZkogvymsbLhc5zEYAMZhWFwVSWZ1w/
+ eXAS9UBJnJVc/Pci+emwQcd8K9slTndz3hYmhZ1xADVoIQ7Iz8wMLRk3+Idz6hpSQg0SIJklt
+ xY2V7xhOOGXlxK904sUolNvMcvCSNNvld7821PQK4/jM/PfsgTlaufqF0BDehwnShertppsWu
+ usrFlmZ4CLcZ9qVJPm1zxMcSX6En/quVRVGCJhFFCL/ZtLaly7rEq7IHU6wkkQ3naAnlgv3gD
+ rSp6ogSKRmbENOUzUb5w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take the renaming of timeval and timespec one level further,
-also renaming itimerval to __kernel_old_itimerval, to avoid
-namespace conflicts with the user-space structure that may
-use 64-bit time_t members.
+'struct timex' is one of the last users of 'struct timeval' and is
+only referenced in one place in the kernel any more, to convert the
+user space timex into the kernel-internal version on sparc64, with a
+different tv_usec member type.
+
+As a preparation for hiding the time_t definition and everything
+using that in the kernel, change the implementation once more
+to only convert the timeval member, and then enclose the
+struct definition in an #ifdef.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/syscalls.h        |  9 ++++-----
- include/uapi/linux/time_types.h |  5 +++++
- kernel/time/itimer.c            | 18 +++++++++---------
- 3 files changed, 18 insertions(+), 14 deletions(-)
+ arch/sparc/kernel/sys_sparc_64.c | 29 +++++++++++++++--------------
+ include/uapi/linux/timex.h       |  2 ++
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index d0391cc2dae9..27245fec2a8a 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -16,8 +16,7 @@ struct inode;
- struct iocb;
- struct io_event;
- struct iovec;
--struct itimerspec;
--struct itimerval;
-+struct __kernel_old_itimerval;
- struct kexec_segment;
- struct linux_dirent;
- struct linux_dirent64;
-@@ -591,10 +590,10 @@ asmlinkage long sys_nanosleep_time32(struct old_timespec32 __user *rqtp,
- 				     struct old_timespec32 __user *rmtp);
- 
- /* kernel/itimer.c */
--asmlinkage long sys_getitimer(int which, struct itimerval __user *value);
-+asmlinkage long sys_getitimer(int which, struct __kernel_old_itimerval __user *value);
- asmlinkage long sys_setitimer(int which,
--				struct itimerval __user *value,
--				struct itimerval __user *ovalue);
-+				struct __kernel_old_itimerval __user *value,
-+				struct __kernel_old_itimerval __user *ovalue);
- 
- /* kernel/kexec.c */
- asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
-diff --git a/include/uapi/linux/time_types.h b/include/uapi/linux/time_types.h
-index 074e391d73a1..bcc0002115d3 100644
---- a/include/uapi/linux/time_types.h
-+++ b/include/uapi/linux/time_types.h
-@@ -33,6 +33,11 @@ struct __kernel_old_timespec {
- 	long			tv_nsec;	/* nanoseconds */
- };
- 
-+struct __kernel_old_itimerval {
-+	struct __kernel_old_timeval it_interval;/* timer interval */
-+	struct __kernel_old_timeval it_value;	/* current value */
-+};
-+
- struct __kernel_sock_timeval {
- 	__s64 tv_sec;
- 	__s64 tv_usec;
-diff --git a/kernel/time/itimer.c b/kernel/time/itimer.c
-index 9e59c9ea92aa..ca4e6d57d68b 100644
---- a/kernel/time/itimer.c
-+++ b/kernel/time/itimer.c
-@@ -97,20 +97,20 @@ static int do_getitimer(int which, struct itimerspec64 *value)
- 	return 0;
+diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+index 9f41a6f5a032..1c85b0af4dfd 100644
+--- a/arch/sparc/kernel/sys_sparc_64.c
++++ b/arch/sparc/kernel/sys_sparc_64.c
+@@ -548,34 +548,35 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
+ 	return err;
  }
  
--static int put_itimerval(struct itimerval __user *o,
-+static int put_itimerval(struct __kernel_old_itimerval __user *o,
- 			 const struct itimerspec64 *i)
+-SYSCALL_DEFINE1(sparc_adjtimex, struct timex __user *, txc_p)
++SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
  {
--	struct itimerval v;
-+	struct __kernel_old_itimerval v;
+-	struct timex txc;		/* Local copy of parameter */
+-	struct __kernel_timex *kt = (void *)&txc;
++	struct __kernel_timex txc;
++	__kernel_old_timeval *tv = (void *)&txc->time;
+ 	int ret;
  
- 	v.it_interval.tv_sec = i->it_interval.tv_sec;
- 	v.it_interval.tv_usec = i->it_interval.tv_nsec / NSEC_PER_USEC;
- 	v.it_value.tv_sec = i->it_value.tv_sec;
- 	v.it_value.tv_usec = i->it_value.tv_nsec / NSEC_PER_USEC;
--	return copy_to_user(o, &v, sizeof(struct itimerval)) ? -EFAULT : 0;
-+	return copy_to_user(o, &v, sizeof(struct __kernel_old_itimerval)) ? -EFAULT : 0;
- }
- 
- 
--SYSCALL_DEFINE2(getitimer, int, which, struct itimerval __user *, value)
-+SYSCALL_DEFINE2(getitimer, int, which, struct __kernel_old_itimerval __user *, value)
- {
- 	struct itimerspec64 get_buffer;
- 	int error = do_getitimer(which, &get_buffer);
-@@ -314,11 +314,11 @@ SYSCALL_DEFINE1(alarm, unsigned int, seconds)
- 
- #endif
- 
--static int get_itimerval(struct itimerspec64 *o, const struct itimerval __user *i)
-+static int get_itimerval(struct itimerspec64 *o, const struct __kernel_old_itimerval __user *i)
- {
--	struct itimerval v;
-+	struct __kernel_old_itimerval v;
- 
--	if (copy_from_user(&v, i, sizeof(struct itimerval)))
-+	if (copy_from_user(&v, i, sizeof(struct __kernel_old_itimerval)))
+ 	/* Copy the user data space into the kernel copy
+ 	 * structure. But bear in mind that the structures
+ 	 * may change
+ 	 */
+-	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
++	if (copy_from_user(&txc, txc_p, sizeof(txc)))
  		return -EFAULT;
  
- 	/* Validate the timevals in value. */
-@@ -333,8 +333,8 @@ static int get_itimerval(struct itimerspec64 *o, const struct itimerval __user *
- 	return 0;
+ 	/*
+ 	 * override for sparc64 specific timeval type: tv_usec
+ 	 * is 32 bit wide instead of 64-bit in __kernel_timex
+ 	 */
+-	kt->time.tv_usec = txc.time.tv_usec;
++	kt->time.tv_usec = tv->tv_usec;
+ 	ret = do_adjtimex(kt);
+-	txc.time.tv_usec = kt->time.tv_usec;
++	tv->tv_usec = kt->time.tv_usec;
+ 
+-	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
++	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
  }
  
--SYSCALL_DEFINE3(setitimer, int, which, struct itimerval __user *, value,
--		struct itimerval __user *, ovalue)
-+SYSCALL_DEFINE3(setitimer, int, which, struct __kernel_old_itimerval __user *, value,
-+		struct __kernel_old_itimerval __user *, ovalue)
+-SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex __user *, txc_p)
++SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,
++		struct __kernel_timex __user *, txc_p)
  {
- 	struct itimerspec64 set_buffer, get_buffer;
- 	int error;
+-	struct timex txc;		/* Local copy of parameter */
+-	struct __kernel_timex *kt = (void *)&txc;
++	struct __kernel_timex txc;
++	__kernel_old_timeval *tv = (void *)&txc->time;
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_POSIX_TIMERS)) {
+@@ -590,18 +591,18 @@ SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex _
+ 	 * structure. But bear in mind that the structures
+ 	 * may change
+ 	 */
+-	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
++	if (copy_from_user(&txc, txc_p, sizeof(txc)))
+ 		return -EFAULT;
+ 
+ 	/*
+ 	 * override for sparc64 specific timeval type: tv_usec
+ 	 * is 32 bit wide instead of 64-bit in __kernel_timex
+ 	 */
+-	kt->time.tv_usec = txc.time.tv_usec;
++	kt->time.tv_usec = tv->tv_usec;
+ 	ret = do_clock_adjtime(which_clock, kt);
+-	txc.time.tv_usec = kt->time.tv_usec;
++	tv->tv_usec = kt->time.tv_usec;
+ 
+-	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
++	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
+ }
+ 
+ SYSCALL_DEFINE5(utrap_install, utrap_entry_t, type,
+diff --git a/include/uapi/linux/timex.h b/include/uapi/linux/timex.h
+index 9f517f9010bb..bd627c368d09 100644
+--- a/include/uapi/linux/timex.h
++++ b/include/uapi/linux/timex.h
+@@ -57,6 +57,7 @@
+ 
+ #define NTP_API		4	/* NTP API version */
+ 
++#ifndef __KERNEL__
+ /*
+  * syscall interface - used (mainly by NTP daemon)
+  * to discipline kernel clock oscillator
+@@ -91,6 +92,7 @@ struct timex {
+ 	int  :32; int  :32; int  :32; int  :32;
+ 	int  :32; int  :32; int  :32;
+ };
++#endif
+ 
+ struct __kernel_timex_timeval {
+ 	__kernel_time64_t       tv_sec;
 -- 
 2.20.0
 
