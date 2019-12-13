@@ -2,219 +2,124 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC32C50718
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689A0C50712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF2524712
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1732470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBrpArr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfLMNzl (ORCPT
+        id S1727535AbfLMNys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:55:41 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43724 "EHLO
-        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727628AbfLMNzk (ORCPT
+        Fri, 13 Dec 2019 08:54:48 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43141 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfLMNyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:55:40 -0500
-Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [131.188.30.136])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id F066D2417CD;
-        Fri, 13 Dec 2019 14:55:38 +0100 (CET)
-Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id E2833C20BC7; Fri, 13 Dec 2019 14:55:38 +0100 (CET)
-From:   Simon Geis <simon.geis@fau.de>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Simon Geis <simon.geis@fau.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: [PATCH v3 05/10] PCMCIA/i82092: change code indentation
-Date:   Fri, 13 Dec 2019 14:53:09 +0100
-Message-Id: <20191213135311.9111-6-simon.geis@fau.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213135311.9111-1-simon.geis@fau.de>
-References: <20191213135311.9111-1-simon.geis@fau.de>
+        Fri, 13 Dec 2019 08:54:47 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a13so2710525ljm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 05:54:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RdSTB5NQwjOoYrj/2BgnJiFXxkWUYSC7knKRCi5Mjio=;
+        b=PBrpArr9B3u6JbYnLb66q7dKmEGL2MtvGbWr/C+TjOKxAEIUfpOMogcjHNKobdOupn
+         ti3jniJZ/GhhfpTfZcUV9yKZcNGGA3smXcs3/rs/Gr221XP/DSC5c6FrNNJKrqvwRb9e
+         OCI/jZiHF1Z6USxpdsQ1rJK2siLGFyXAmzqG8EToVo7+VbF9Rb7vQTWNx5dw6KEs4lvz
+         2CQpj3uTWh5Sti8hI6DUESBXD1Dk2UPfUDYXqCroccZNuzycyNVZLdUseJkDx4lpE66n
+         KOkN4NZXnKZa0l8wvPlsEzPVbQjKJpbccoQdmuLKJFntwWO/NdDDXVoK87H0dl1Yfuc+
+         RSLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RdSTB5NQwjOoYrj/2BgnJiFXxkWUYSC7knKRCi5Mjio=;
+        b=hmpNxX7mf2ylClb0oOzD6WrY+C5xCfevGoO8IeWoMKYeeq/giTGwkhygQKoDv9fvTD
+         LUctMpbonFsSsHSS0GGLch0p3IjRoz+NCXQRoSGccu67n8zMbJxSCLZ8cnOr2VNdIUTo
+         aq1t4bIkiyMXM2RIQjzjlTGfoBb9M1eojVKaK9PW366hFaqA9r78ELpPJ5BJ/SvP0oAI
+         NF/GiRQ7hUUzwotdpsjdzzQ9JUoqJO8m51YAoDF/p7a1pW3AxGvEjiTCBAnCijuUHkFd
+         tPJMaG3AGnE7sjweUPY1+WJhpfvwnMEB7jXGUp3k2WQMq/QWlcTee4GhnOUT7NkDqmNg
+         HOTg==
+X-Gm-Message-State: APjAAAViMKwu1L4YjQD7hdPciGPdO1Ml4sOWKkLFD7HD859fOowUJuBi
+        3yJV1/E9hm9fvVGDVkI9l+Y1/8oSChuEyOYa8BE=
+X-Google-Smtp-Source: APXvYqzqvCk1kwftFb654uEcSobrO2skRbkphlZl1DN3n8ilpPs7nU3A24nx5rjZqGjRILC0iVulzf1o9GdPy/5pADs=
+X-Received: by 2002:a2e:93d5:: with SMTP id p21mr10049365ljh.50.1576245285476;
+ Fri, 13 Dec 2019 05:54:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
+ <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
+ <20191213024935.GD9271@lenovo> <20191213082336.GD3468@dell>
+In-Reply-To: <20191213082336.GD3468@dell>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Fri, 13 Dec 2019 21:54:33 +0800
+Message-ID: <CA+H2tpH7QW-KG4pPXp7=_9J_yvXiL9O-2mCEP19HnRpM+QRqJA@mail.gmail.com>
+Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon reference
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Orson Zhai <orson.zhai@spreadtrum.com>,
+        Rob Herring <robh@kernel.org>,
+        Orson Zhai <orson.zhai@unisoc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        baolin.wang@unisoc.com, Kevin Tang <kevin.tang@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        liangcai.fan@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align switch and case labels in order to improve readability.
-For the same reason, change the indentation of an if-statement.
+On Fri, Dec 13, 2019 at 4:23 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Fri, 13 Dec 2019, Orson Zhai wrote:
+>
+> > Hi Lee and Rob,
+> >
+> > On Wed, Dec 11, 2019 at 02:55:39PM +0100, Arnd Bergmann wrote:
+> > > On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wr=
+ote:
+> > > >
+> > > > There are a lot of similar global registers being used across multi=
+ple SoCs
+> > > > from Unisoc. But most of these registers are assigned with differen=
+t offset
+> > > > for different SoCs. It is hard to handle all of them in an all-in-o=
+ne
+> > > > kernel image.
+> > > >
+> > > > Add a helper function to get regmap with arguments where we could p=
+ut some
+> > > > extra information such as the offset value.
+> > > >
+> > > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > > > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+> > >
+> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Does this patch look good to be applied?
+> >
+> > Or if any comments please feel free to send to me.
+>
+> If it looks good to Arnd, it looks good to me.
+>
+> I have quite a number of reviews to get through first though, please
+> bear with me and resist the urge to nag.
 
-Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Simon Geis <simon.geis@fau.de>
+Got it.
+Thanks for your kind reply!
 
----
- drivers/pcmcia/i82092.c | 122 ++++++++++++++++++++--------------------
- 1 file changed, 61 insertions(+), 61 deletions(-)
-
-diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index 16431b48fd9e..6b39750db282 100644
---- a/drivers/pcmcia/i82092.c
-+++ b/drivers/pcmcia/i82092.c
-@@ -82,22 +82,22 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 
- 	pci_read_config_byte(dev, 0x40, &configbyte);  /* PCI Configuration Control */
- 	switch (configbyte&6) {
--		case 0:
--			socket_count = 2;
--			break;
--		case 2:
--			socket_count = 1;
--			break;
--		case 4:
--		case 6:
--			socket_count = 4;
--			break;
--
--		default:
--			dev_err(&dev->dev,
--				"Oops, you did something we didn't think of.\n");
--			ret = -EIO;
--			goto err_out_disable;
-+	case 0:
-+		socket_count = 2;
-+		break;
-+	case 2:
-+		socket_count = 1;
-+		break;
-+	case 4:
-+	case 6:
-+		socket_count = 4;
-+		break;
-+
-+	default:
-+		dev_err(&dev->dev,
-+			"Oops, you did something we didn't think of.\n");
-+		ret = -EIO;
-+		goto err_out_disable;
- 	}
- 	dev_info(&dev->dev, "configured as a %d socket device.\n",
- 		 socket_count);
-@@ -501,42 +501,42 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
- 	}
- 
- 	switch (state->Vcc) {
--		case 0:
--			break;
--		case 50:
--			dev_info(&sock_info->dev->dev,
--				 "setting voltage to Vcc to 5V on socket %i\n",
--				 sock);
--			reg |= I365_VCC_5V;
--			break;
--		default:
--			dev_err(&sock_info->dev->dev,
--				"%s called with invalid VCC power value: %i",
--				__func__, state->Vcc);
--			leave("i82092aa_set_socket");
--			return -EINVAL;
-+	case 0:
-+		break;
-+	case 50:
-+		dev_info(&sock_info->dev->dev,
-+			 "setting voltage to Vcc to 5V on socket %i\n",
-+			 sock);
-+		reg |= I365_VCC_5V;
-+		break;
-+	default:
-+		dev_err(&sock_info->dev->dev,
-+			"%s called with invalid VCC power value: %i",
-+			__func__, state->Vcc);
-+		leave("i82092aa_set_socket");
-+		return -EINVAL;
- 	}
- 
- 	switch (state->Vpp) {
--		case 0:
--			dev_info(&sock_info->dev->dev,
--				 "not setting Vpp on socket %i\n", sock);
--			break;
--		case 50:
--			dev_info(&sock_info->dev->dev,
--				 "setting Vpp to 5.0 for socket %i\n", sock);
--			reg |= I365_VPP1_5V | I365_VPP2_5V;
--			break;
--		case 120:
--			dev_info(&sock_info->dev->dev, "setting Vpp to 12.0\n");
--			reg |= I365_VPP1_12V | I365_VPP2_12V;
--			break;
--		default:
--			dev_err(&sock_info->dev->dev,
--				"%s called with invalid VPP power value: %i",
--				__func__, state->Vcc);
--			leave("i82092aa_set_socket");
--			return -EINVAL;
-+	case 0:
-+		dev_info(&sock_info->dev->dev,
-+			 "not setting Vpp on socket %i\n", sock);
-+		break;
-+	case 50:
-+		dev_info(&sock_info->dev->dev,
-+			 "setting Vpp to 5.0 for socket %i\n", sock);
-+		reg |= I365_VPP1_5V | I365_VPP2_5V;
-+		break;
-+	case 120:
-+		dev_info(&sock_info->dev->dev, "setting Vpp to 12.0\n");
-+		reg |= I365_VPP1_12V | I365_VPP2_12V;
-+		break;
-+	default:
-+		dev_err(&sock_info->dev->dev,
-+			"%s called with invalid VPP power value: %i",
-+			__func__, state->Vcc);
-+		leave("i82092aa_set_socket");
-+		return -EINVAL;
- 	}
- 
- 	if (reg != indirect_read(sock, I365_POWER)) /* only write if changed */
-@@ -662,17 +662,17 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_
- 
- 	i = (region.end >> 12) & 0x0fff;
- 	switch (to_cycles(mem->speed)) {
--		case 0:
--			break;
--		case 1:
--			i |= I365_MEM_WS0;
--			break;
--		case 2:
--			i |= I365_MEM_WS1;
--			break;
--		default:
--			i |= I365_MEM_WS1 | I365_MEM_WS0;
--			break;
-+	case 0:
-+		break;
-+	case 1:
-+		i |= I365_MEM_WS0;
-+		break;
-+	case 2:
-+		i |= I365_MEM_WS1;
-+		break;
-+	default:
-+		i |= I365_MEM_WS1 | I365_MEM_WS0;
-+		break;
- 	}
- 
- 	indirect_write16(sock, base+I365_W_STOP, i);
-@@ -704,7 +704,7 @@ static void i82092aa_module_exit(void)
- 	enter("i82092aa_module_exit");
- 	pci_unregister_driver(&i82092aa_pci_driver);
- 	if (sockets[0].io_base > 0)
--			 release_region(sockets[0].io_base, 2);
-+		release_region(sockets[0].io_base, 2);
- 	leave("i82092aa_module_exit");
- }
- 
--- 
-2.20.1
-
+-Orson
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
