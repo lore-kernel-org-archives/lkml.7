@@ -2,182 +2,151 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71DBC34984
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAED9C352A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CF3246F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="akI56QVW"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2C324721
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLMMsC (ORCPT
+        id S1726932AbfLMMHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:48:02 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:60463 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfLMMsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:48:01 -0500
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191213124759epoutp02858226226f2d8d8757ae562b6dd31445~f7xeMJTyy1107011070epoutp02u
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 12:47:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191213124759epoutp02858226226f2d8d8757ae562b6dd31445~f7xeMJTyy1107011070epoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576241279;
-        bh=dF+joeRXr35w+KD/l41FVim/VsNsTXNOaCTaNQOGVFQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=akI56QVWu6ta9fk/XapZnx4fk5JSYdCDcc4bdMZsAL6gLr7PIEuRMq5MQ7QMbIL2x
-         XVzWg4CC3Di97pfICctKDXq2Z94uwePy4zYDC0UYkjq7K7eByoaKQZWqWBZ0LbQNvd
-         t3HB1UoUudVQm6l2YHb+Gmj0EDMgJxaJLUSpexUc=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191213124758epcas5p325b8c0b96bc9adf40f3586d711c941b6~f7xdvrJmU1050310503epcas5p35;
-        Fri, 13 Dec 2019 12:47:58 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        77.17.19629.E7883FD5; Fri, 13 Dec 2019 21:47:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191213124758epcas5p1dd57ce8a5940b81ec6988228e0db8cb9~f7xdeQjES3254632546epcas5p1i;
-        Fri, 13 Dec 2019 12:47:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191213124758epsmtrp2d5dd8aee37da48ad51454feb3e40e19b~f7xddmP-p2430824308epsmtrp2I;
-        Fri, 13 Dec 2019 12:47:58 +0000 (GMT)
-X-AuditID: b6c32a4b-32dff70000014cad-17-5df3887ee951
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0D.BC.10238.E7883FD5; Fri, 13 Dec 2019 21:47:58 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191213124756epsmtip2826c13f340ef5e2ddc8639a257fef612~f7xbtC3rk0678306783epsmtip27;
-        Fri, 13 Dec 2019 12:47:56 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     kishon@ti.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        bhelgaas@google.com, pankaj.dubey@samsung.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v5 1/2] phy: core: add phy_property_present method
-Date:   Fri, 13 Dec 2019 18:17:42 +0530
-Message-Id: <1576241263-23817-2-git-send-email-anvesh.s@samsung.com>
+        Fri, 13 Dec 2019 07:07:02 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39872 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbfLMMHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:07:01 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C241200761;
+        Fri, 13 Dec 2019 13:06:58 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 80094200151;
+        Fri, 13 Dec 2019 13:06:58 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B12E5203B1;
+        Fri, 13 Dec 2019 13:06:57 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH v3 1/6] media: v4l: Add packed YUV444 24bpp pixel format
+Date:   Fri, 13 Dec 2019 14:06:16 +0200
+Message-Id: <1576238781-5911-2-git-send-email-mirela.rabulea@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576241263-23817-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSbUhTYRTHeXa3e6/D5dMUOhkZjkJUnIkJFxSNMLhQ9PItSqmbXpykc2xq
-        ahFmqVdJKR3idJiagi1fcJkvs5H40uqDpmmY0Kgo6QUTdcMwy+p2J337/f/nnOd/ODw0oRYU
-        wXSmPpc36rksDamU94+FR0RdEzypB18KIcyN3wMKZtLRomDaSnSMwy1QTIfXQjHTi7dIZtZh
-        JZnJJhfJLG1+ppj2+RkZ0/rISzGlznHqsD/b2dSJ2KEGN8U22/NYu62CZKv7bIjte+JBrOv1
-        gIz12ENO0WeVCel8VmY+b4xOvKDUmb+rDUJggXdZW4zeBFQiPxrwIZh9aCErkZJW42EE5vUa
-        mSTWEDTP2X1iHUHvSAfaHvnS0oKkghPBnQnBJ27KoLV2TiZ2kTgSNiaclMhBOB7GyvtIkQm8
-        heCDtUDkQHwEnj5e/evTtBwfgHrLSdFW4WSwvbP6wkJgYaqCENkPH4XxHz0KMQvwPAmDL2oV
-        UlMy/OoWfBwIX119lMTB4Fl2khLnQJW73edfBbNb8AUkwcicVS7uQOBw6HFES2vugKrNjzLR
-        BqwCoUwtoQbKLFekQYB7dxcIiVl4vjxDSFeoRzD2wEPeRnsb/j/ajJAN7eYNpuwM3hRniNXz
-        l7UmLtuUp8/QpuVk29G//xFxbBDZp46PIkwjjb+qg1tLVSu4fFNh9igCmtAEqfhIT6palc4V
-        FvHGnPPGvCzeNIr20HLNLlWN4lWKGmdwufwlnjfwxu2qjPYLLkZEXX/vGSEiKar0k80eu9i6
-        n1qKWd4IOJ3SVVmGcPxEVTU/5Xl2zmXoDo3rWVhxDDliw7pSrp9YLDd6O904sbZ/iWval9Ay
-        bJXba7rikrEneTU0YUlbkvStIK1ttWnF/L5xZ93P6tQwR7xOUdTueuscL1+bzr/fELR1Mbyu
-        USM36biYCMJo4v4AkOZW0hsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOLMWRmVeSWpSXmKPExsWy7bCSvG5dx+dYg6m/uCya/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
-        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
-        S+DKmPJdqKBDuOLLO70Gxjv8XYycHBICJhIvFy5kBLGFBHYzSjz9lgURl5D4svcrG4QtLLHy
-        33P2LkYuoJomJond05ewgCTYBLQlfh7dyw5iiwjYStx/NJkVpIhZoItJ4syv+8wgCWEBJ4lj
-        ez4CTeLgYBFQlZgx0x8kzCvgIrHqwRxGiAVyEjfPdYKVcwq4Shz5tZ4V4iAXiWftL9knMPIt
-        YGRYxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHLxamjsYLy+JP8QowMGoxMPLkPIp
-        Vog1say4MvcQowQHs5IIb6r251gh3pTEyqrUovz4otKc1OJDjNIcLErivE/zjkUKCaQnlqRm
-        p6YWpBbBZJk4OKUaGLXb0juymP/dss4V2BPmeDdky68dtbVrlHrzxK087Je3XGrVWMJzbJ3Z
-        PxdlhkDh2jivb7qd1QobdCYHvruZ976ORc94aZRj3pzCgz4vizi+rJzhfYjt/22Feetj16eK
-        9Pyz2qtc+ezNoenOuo2f/nttYdf9qcz2JIlZV11eWGXF+hOm9fv2KLEUZyQaajEXFScCAIcs
-        jidaAgAA
-X-CMS-MailID: 20191213124758epcas5p1dd57ce8a5940b81ec6988228e0db8cb9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191213124758epcas5p1dd57ce8a5940b81ec6988228e0db8cb9
-References: <1576241263-23817-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191213124758epcas5p1dd57ce8a5940b81ec6988228e0db8cb9@epcas5p1.samsung.com>
+In-Reply-To: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some platforms, we need information of phy properties in
-the controller drivers. This patch adds a new phy_property_present()
-method which can be used to check if some property exists in PHY
-or not.
+The added format is V4L2_PIX_FMT_YUV24, this is a packed
+YUV 4:4:4 format, with 8 bits for each component, 24 bits
+per sample.
 
-In case of DesignWare PCIe controller, we need to write into controller
-register to specify about ZRX-DC compliance property of the PHY, which
-reduces the power consumption during lower power states.
+This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
+JPEG encoder/decoder.
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 ---
-Changes w.r.t v4:
- - Addressed review comments from Andrew Murray
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
+ include/uapi/linux/videodev2.h                     |  1 +
+ 3 files changed, 38 insertions(+), 1 deletion(-)
 
- drivers/phy/phy-core.c  | 17 +++++++++++++++++
- include/linux/phy/phy.h |  6 ++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index b04f4fe..f3ec28f 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -420,6 +420,23 @@ int phy_calibrate(struct phy *phy)
- EXPORT_SYMBOL_GPL(phy_calibrate);
+diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+index 41b60fa..5750ff6 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+@@ -17,7 +17,8 @@ Description
+ ===========
  
- /**
-+ * phy_property_present() - checks if the property is present in PHY
-+ * @phy: the phy returned by phy_get()
-+ * @property: name of the property to check
-+ *
-+ * Used to check if the given property is present in PHY.
-+ * Searches for the given property in the phy device tree
-+ * node.
-+ *
-+ * Returns: true if property exists, false otherwise
-+ */
-+bool phy_property_present(struct phy *phy, const char *property)
-+{
-+	return of_property_read_bool(phy->dev.of_node, property);
-+}
-+EXPORT_SYMBOL_GPL(phy_property_present);
-+
-+/**
-  * phy_configure() - Changes the phy parameters
-  * @phy: the phy returned by phy_get()
-  * @opts: New configuration to apply
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 56d3a10..9d8240d 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -218,6 +218,7 @@ static inline enum phy_mode phy_get_mode(struct phy *phy)
- }
- int phy_reset(struct phy *phy);
- int phy_calibrate(struct phy *phy);
-+bool phy_property_present(struct phy *phy, const char *property);
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return phy->attrs.bus_width;
-@@ -355,6 +356,11 @@ static inline int phy_calibrate(struct phy *phy)
- 	return -ENOSYS;
- }
+ Similar to the packed RGB formats these formats store the Y, Cb and Cr
+-component of each pixel in one 16 or 32 bit word.
++component of each pixel next to each other in memory. They occupy 16, 24 or 32
++bits per pixel.
  
-+static inline bool phy_property_present(struct phy *phy, const char *property)
-+{
-+	return false;
-+}
+ 
+ .. raw:: latex
+@@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
+ 
+       -  :cspan:`15`
+ 
++    * .. _V4L2-PIX-FMT-YUV24:
 +
- static inline int phy_configure(struct phy *phy,
- 				union phy_configure_opts *opts)
- {
++      - ``V4L2_PIX_FMT_YUV24``
++      - 'YUV3'
++
++      - Y'\ :sub:`7`
++      - Y'\ :sub:`6`
++      - Y'\ :sub:`5`
++      - Y'\ :sub:`4`
++      - Y'\ :sub:`3`
++      - Y'\ :sub:`2`
++      - Y'\ :sub:`1`
++      - Y'\ :sub:`0`
++
++      - Cb\ :sub:`7`
++      - Cb\ :sub:`6`
++      - Cb\ :sub:`5`
++      - Cb\ :sub:`4`
++      - Cb\ :sub:`3`
++      - Cb\ :sub:`2`
++      - Cb\ :sub:`1`
++      - Cb\ :sub:`0`
++
++      - Cr\ :sub:`7`
++      - Cr\ :sub:`6`
++      - Cr\ :sub:`5`
++      - Cr\ :sub:`4`
++      - Cr\ :sub:`3`
++      - Cr\ :sub:`2`
++      - Cr\ :sub:`1`
++      - Cr\ :sub:`0`
++
++      -  :cspan:`7`
++
+     * .. _V4L2-PIX-FMT-YUV32:
+ 
+       - ``V4L2_PIX_FMT_YUV32``
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 003b742..182eabe 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1246,6 +1246,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
+ 	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
+ 	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
++	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
+ 	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
+ 	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
+ 	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 04481c7..cb52044 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -588,6 +588,7 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
+ #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
+ #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
++#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
+ #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
+ #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
+ #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
 -- 
 2.7.4
 
