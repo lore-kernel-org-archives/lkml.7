@@ -2,119 +2,107 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966AAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F181C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F682073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712E12073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576231371;
+	bh=LW5WdpoU5T8k2xF6anf5UIkLVp12kg/2OP1pycAx9LI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gRD/vctGo9KV4sq4oB1bMNG6vGsvOXYaaw0nnVBhR+kcgh2kk43z77pGb6+mAyrLb
+	 VToypgJ6wFCeBv+sUY7l2g9Pe+IdXehOxVn8FQjYXCNE/pUzC/ezy5tOdKcR0t2OVs
+	 WG+KN/aRD2qW16ueRGX8LzAW6MWhXbJaTsmXnwvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLMKCL (ORCPT
+        id S1726678AbfLMKCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:02:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54082 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfLMKCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:02:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 81C2FB291;
-        Fri, 13 Dec 2019 10:02:08 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
- related code
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        David Miller <davem@davemloft.net>
-Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20191212135406.26229-1-pdurrant@amazon.com>
- <20191212.110513.1770889236741616001.davem@davemloft.net>
- <cefcf3a4-fc10-d62a-cac9-81f0e47710a8@suse.com>
- <9f6d296e94744ce48d3f72fe4d3fd136@EX13D32EUC003.ant.amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <39762aba-7c47-6b79-b931-771bc16195a2@suse.com>
-Date:   Fri, 13 Dec 2019 11:02:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 13 Dec 2019 05:02:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38302 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfLMKCt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:02:49 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so895918wmc.3;
+        Fri, 13 Dec 2019 02:02:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=heH4dTiMUIFooIBwaQ6i3JzjaVeq4HwrKlA/mTsplxw=;
+        b=Jm5yq2Itp4/ZeHmuxdzZvHbSZ3YG7F4690gjxj4AzA72Zh/1ofkI3g/3ya8TJbJYaR
+         Pp/vTUgbCtdC56b/ADygMA3rv797YDBUNTUlq9mRWNHru1BTDJQBXOSUFYD9sbTCmuYX
+         eT1SnuZ5pQgn/jqtPC0HCQgq5VgjrwbvdaiwvJb1hGtiA0tBJbTf7bwLbfjvot2iwc96
+         asYkjor8KMLad5V1f268yV+Xaq251plC7i9yX+ERKYfFWE0Jc+QgytoYmZqySM5bzDIE
+         MafrxRk+x7lF9k+ld2gHyu4SUyj1ncRPhGzx7UxOYOvRZs2iF7IJ5Qna9QVUdL1LKjhe
+         yswQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=heH4dTiMUIFooIBwaQ6i3JzjaVeq4HwrKlA/mTsplxw=;
+        b=oZV6JKwyCEmseRyWb9sIClVIZ+KJA5c2SxQ1eJYWCIKamyirvGMwdafuLd/m6AHXlY
+         4qJTCcOXT8+XbEwiaacUwZ3V5Jtcaltz6tiPXWk8XfZQgDT/K4XOR8iMfNfuD3wn90MG
+         V7sQEyyCNR/lanaWZyDk6QuCTCGXdAjHcqXeyWpu/1fSJHdjU9DjvHlf/14VLMccyah4
+         9LY+rBplfASWi2Fv7XG9UFj+J/rASmUzd3zm7HXtG21DJghzEm0LavktQoD4GutT5A/T
+         PPCEU7ClAEic8jOSNXOxWbhHbuutQRjtA++LyEIbkzQSGLIkV3gjsJcY6+8peU/JGj11
+         UunQ==
+X-Gm-Message-State: APjAAAXqCCzO5LgHqsxlvgzsIzeUBP2amIH2VwzBZ+8OC4EDctPirH+o
+        RPsy5GvR2fGQEQ6QN9kPuWs=
+X-Google-Smtp-Source: APXvYqxZeF+YTn/qxypgmq5Iun03Cc2jLm0jlGtv3L2kyb4EOrVqqwrxdaKFTA+sRVn2Qyzk26yLwA==
+X-Received: by 2002:a1c:9cce:: with SMTP id f197mr11699117wme.133.1576231367445;
+        Fri, 13 Dec 2019 02:02:47 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id r68sm4508488wmr.43.2019.12.13.02.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 02:02:46 -0800 (PST)
+Date:   Fri, 13 Dec 2019 11:02:44 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH v6 0/7] Speed booting by sorting ORC unwind tables at
+ build time
+Message-ID: <20191213100244.GB113121@gmail.com>
+References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <9f6d296e94744ce48d3f72fe4d3fd136@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.12.19 10:24, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Jürgen Groß <jgross@suse.com>
->> Sent: 13 December 2019 05:41
->> To: David Miller <davem@davemloft.net>; Durrant, Paul
->> <pdurrant@amazon.com>
->> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->> kernel@vger.kernel.org; netdev@vger.kernel.org
->> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
->> related code
->>
->> On 12.12.19 20:05, David Miller wrote:
->>> From: Paul Durrant <pdurrant@amazon.com>
->>> Date: Thu, 12 Dec 2019 13:54:06 +0000
->>>
->>>> In the past it used to be the case that the Xen toolstack relied upon
->>>> udev to execute backend hotplug scripts. However this has not been the
->>>> case for many releases now and removal of the associated code in
->>>> xen-netback shortens the source by more than 100 lines, and removes
->> much
->>>> complexity in the interaction with the xenstore backend state.
->>>>
->>>> NOTE: xen-netback is the only xenbus driver to have a functional
->> uevent()
->>>>         method. The only other driver to have a method at all is
->>>>         pvcalls-back, and currently pvcalls_back_uevent() simply returns
->> 0.
->>>>         Hence this patch also facilitates further cleanup.
->>>>
->>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
->>>
->>> If userspace ever used this stuff, I seriously doubt you can remove this
->>> even if it hasn't been used in 5+ years.
->>
->> Hmm, depends.
->>
->> This has been used by Xen tools in dom0 only. If the last usage has been
->> in a Xen version which is no longer able to run with current Linux in
->> dom0 it could be removed. But I guess this would have to be a rather old
->> version of Xen (like 3.x?).
->>
->> Paul, can you give a hint since which Xen version the toolstack no
->> longer relies on udev to start the hotplug scripts?
->>
+
+* Shile Zhang <shile.zhang@linux.alibaba.com> wrote:
+
+> Hi,
 > 
-> The udev rules were in a file called tools/hotplug/Linux/xen-backend.rules (in xen.git), and a commit from Roger removed the NIC rules in 2012:
-> 
-> commit 57ad6afe2a08a03c40bcd336bfb27e008e1d3e53
+> Sorry, update for compile error fix, reported by Intel's kbuild test robot.
+> Any comments or suggestions are welcome!
 
-Xen 4.2
+Could you please send a delta patch to fix these new build warnings on 
+64-bit allnoconfig kernels:
 
-> The last commit I could find to that file modified its name to xen-backend.rules.in, and this was finally removed by George in 2015:
-> 
-> commit 2ba368d13893402b2f1fb3c283ddcc714659dd9b
+  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
+  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
 
-Xen 4.6
+Thanks,
 
-> So, I think this means anyone using a version of the Xen tools within recent memory will be having their hotplug scripts called directly by libxl (and having udev rules present would actually be counter-productive, as George's commit states and as I discovered the hard way when the change was originally made).
-
-The problem are systems with either old Xen versions (before Xen 4.2) or
-with other toolstacks (e.g. Xen 4.4 with xend) which want to use a new
-dom0 kernel.
-
-And I'm not sure there aren't such systems (especially in case someone
-wants to stick with xend).
-
-
-Juergen
+	Ingo
