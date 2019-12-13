@@ -2,113 +2,101 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C1AC34019
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DCDC34022
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244BC2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D213246B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="li4F/Ar7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfLMPFO (ORCPT
+        id S1727909AbfLMPG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:05:14 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:49333 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfLMPFO (ORCPT
+        Fri, 13 Dec 2019 10:06:28 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33999 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfLMPG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:05:14 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 3s87HGeRyJ3cdUsyo8jIMOXNtMXWUzz+OrDdM/5jAbKKxZbcSJcw/zIsfLUHU74W4cfgeXDWiP
- 1VxMcupZbkqszZX7Ha8ysXN/1gKrqqDyU7yim0hOoZPKYrxsQBZrBbvHLopRsNzWks+jgmAcwK
- f6p2+zx7GpKGm7tKHlaiwQ1ki0hQVkQC8gYFk/sYyT4UriRrzClVGCD12kTo7vh7uegYdC0xjY
- Psn4/Jd4Kael0JBtw1A4GpmVu6ziynoHnhcEaS58gL5MFoUcRNt/ajIoWKzK1disdEP51XOCLb
- 7SA=
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="59718051"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 08:05:12 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Dec 2019 08:05:11 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 08:05:07 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <lee.jones@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 1/6] drm: atmel-hlcdc: use double rate for pixel clock only if supported
-Date:   Fri, 13 Dec 2019 17:04:51 +0200
-Message-ID: <1576249496-4849-2-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 13 Dec 2019 10:06:26 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so7022582wrr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 07:06:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=BLezIInJ8uihWacc2bBVtj+SQZPMxnvC7DifZIbQJvE=;
+        b=li4F/Ar7hR4Q/kwvgVzAkZj81JWDpZPSeYWgtmGLQyGyHmlYgzfrLxgz/NI3gwhVIP
+         4QxLbL6h+hoDwWodW3fbNd0y2uUjb9hTRcJcCIohjAbgA1OdKviFMjWl1Pw8Pv/jM7ap
+         whMYptpChW7ElPPSE+7vFM8lBhSjLPIpZSy7mBVn5Uwd5+hHxT6EZ2KFfqHszGcYgg/b
+         /iVxfUY/Vbqgu6nuoevdbgS2oGjzfjAAMtoqJkIHI14kiVVNhNDSwoDyjyWPAaToLzZe
+         378GS97d+sLDFXkfHVe9l8Hjs98bGOgUuZlVzdCPTxKUqapIVvqEAJe3o1dGdS6H0NrO
+         3rfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BLezIInJ8uihWacc2bBVtj+SQZPMxnvC7DifZIbQJvE=;
+        b=NO4+zAOPWDOVHsRAQH2XBOkQsrkeP4vvusnCMMySJNFcueMphzFpUZAqyhRu4w5yXa
+         50/ww+6yvRUKiIzSZ4721tjVBR9kOcU/RjgOSud3/+b+xhkqEAXpUqJtc+itVYmBM2t7
+         rP3HrVqmDE19Mx/d4wm02Idih5Qz2gqc8QP2nIkkVBgdEUNB/s4n2IiO/OJ3/YtEbAE1
+         j9LXCVGBfGl7+5xANX1sFKyFUAaGzlPCSskoZaVZf1ZsGnDiFUTDHVUgxEyIsRVWKm6z
+         RoXqtkEdUTT9OEfh5Ek2wtDQy8+O1Mng1A+bb9ir1T1bv7jveSunSjL5fBbr+0QaJXaR
+         fdfw==
+X-Gm-Message-State: APjAAAWtsNvFnX5LmK2iI6xiCotpAhcvPk5ZlLGIZjvMmWDYnQUYEB5j
+        wOhQDITCoM5HaNKCh5rW/x+pnw==
+X-Google-Smtp-Source: APXvYqzg+b2CkdS8n/yj9VSv6f3ya2EGjcaZxBnKs6Cpom4oRUIi7LBjJxlP5jrDHrDNMu6fpKbSYQ==
+X-Received: by 2002:adf:f581:: with SMTP id f1mr13743624wro.264.1576249584196;
+        Fri, 13 Dec 2019 07:06:24 -0800 (PST)
+Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id x16sm10449403wmk.35.2019.12.13.07.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 07:06:23 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     netdev@vger.kernel.org, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, khilman@baylibre.com
+Subject: [PATCH v5 0/2] add support of interrupt for host wakeup from devicetree in BCM HCI driver
+Date:   Fri, 13 Dec 2019 16:06:20 +0100
+Message-Id: <20191213150622.14162-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doubled system clock should be used as pixel cock source only if this
-is supported. This is emphasized by the value of
-atmel_hlcdc_crtc::dc::desc::fixed_clksrc.
+add interrupts and interrupt-names properties to set host wakeup IRQ.
+actually driver find this IRQ from host-wakeup-gpios propety
+but some platforms are not supported gpiod_to_irq function.
+so to have possibility to use interrupt mode we need to add interrupts
+field in devicetree and support it in driver.
 
-Fixes: a6eca2abdd42 ("drm: atmel-hlcdc: add config option for clock selection")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+change sinve v4 [1]:
+- add patch to update Documentation
+- use of_irq_get_byname to be more clear and move call in bcm_of_probe
+- update commit message
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index f2e73e6d46b8..5040ed8d0871 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -95,14 +95,14 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 		     (adj->crtc_hdisplay - 1) |
- 		     ((adj->crtc_vdisplay - 1) << 16));
- 
-+	prate = clk_get_rate(crtc->dc->hlcdc->sys_clk);
-+	mode_rate = adj->crtc_clock * 1000;
- 	if (!crtc->dc->desc->fixed_clksrc) {
-+		prate *= 2;
- 		cfg |= ATMEL_HLCDC_CLKSEL;
- 		mask |= ATMEL_HLCDC_CLKSEL;
- 	}
- 
--	prate = 2 * clk_get_rate(crtc->dc->hlcdc->sys_clk);
--	mode_rate = adj->crtc_clock * 1000;
--
- 	div = DIV_ROUND_UP(prate, mode_rate);
- 	if (div < 2) {
- 		div = 2;
+change since v3:
+- move on of_irq instead of platform_get_irq
+
+change since v2:
+- fix commit message
+
+change since v1:
+- rebase patch
+
+[1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
+
+Guillaume La Roque (2):
+  dt-bindings: net: bluetooth: add interrupts properties
+  bluetooth: hci_bcm: enable IRQ capability from devicetree
+
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
+ drivers/bluetooth/hci_bcm.c                                  | 3 +++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+2.17.1
 
