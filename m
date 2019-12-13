@@ -2,170 +2,78 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E8EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC534C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABDE2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576197790;
-	bh=yEBoIw88FggbZ6XjmcnyG9MA49laclpbOvEXS7yvEvA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AR+TCI3w426qAyCvB1w1lEnsVM2q3/Vt65+ZUA4T2Wr077Pxl0Oz5PrRCnAL6GP91
-	 aTHdjYYxCfzehC4/h4oCEXYZjWpBxW6fN8IrIPfd0rEKKWEvHX7WIlCU0Jp31NvnLs
-	 dpiQ8kVZL2gxkPi8Xxqm99yNXHxc5QDzvMB+bj6o=
+	by mail.kernel.org (Postfix) with ESMTP id 819442173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfLMAnJ (ORCPT
+        id S1731701AbfLMAnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Thu, 12 Dec 2019 19:43:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:19840 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731519AbfLMAnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:43:05 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A794F21655;
-        Fri, 13 Dec 2019 00:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576197784;
-        bh=yEBoIw88FggbZ6XjmcnyG9MA49laclpbOvEXS7yvEvA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qkjdHU0hvi2ydGohhuiIKDCARrVNQ26UA2BeURxOTdF8TMn+F6Wfi9N0vJSaM+ss6
-         2AO1Npvmp4ou/1Oj9SxpTspQeM9gGiTzGzO3EMOn4NWqqpikn755x8ZI+8x3qN9Zly
-         IawariT3DqY851GLiebMIcL2tPJLAGFFmGOKRAAs=
-Date:   Thu, 12 Dec 2019 16:43:03 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
-        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
-        axboe@kernel.dk, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Subject: Re: [PATCH RFC v2 04/14] mm: create common code from request
- allocation based from blk-mq code
-Message-Id: <20191212164303.7fb6e91c20ffe125f87bda57@linux-foundation.org>
-In-Reply-To: <157617507410.42350.16156693139630931510.stgit@djiang5-desk3.ch.intel.com>
-References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-        <157617507410.42350.16156693139630931510.stgit@djiang5-desk3.ch.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1731593AbfLMAn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 19:43:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 16:43:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
+   d="scan'208";a="216472424"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2019 16:43:26 -0800
+Date:   Fri, 13 Dec 2019 08:44:45 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 0/7] Introduce support for guest CET feature
+Message-ID: <20191213004445.GA2822@local-michael-cet-test>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191212160345.GA13420@char.us.oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212160345.GA13420@char.us.oracle.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 11:24:34 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
-
-> Move the allocation of requests from compound pages to a common function
-> to allow usages by other callers.
-
-What other callers are expected?
-
-> Since the routine has more to do with
-> memory allocation and management, it is moved to be exported by the
-> mempool.h and be part of mm subsystem.
+On Thu, Dec 12, 2019 at 11:03:45AM -0500, Konrad Rzeszutek Wilk wrote:
+> On Fri, Nov 01, 2019 at 04:52:15PM +0800, Yang Weijiang wrote:
+> > Control-flow Enforcement Technology (CET) provides protection against
+> > Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
+> > sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+> > 
+> > KVM change is required to support guest CET feature.
+> > This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
+> > and vmentry/vmexit configuration etc.so that guest kernel can setup CET
+> > runtime infrastructure based on them. Some CET MSRs and related feature
+> > flags used reference the definitions in kernel patchset.
+> > 
+> > CET kernel patches is here:
+> > https://lkml.org/lkml/2019/8/13/1110
+> > https://lkml.org/lkml/2019/8/13/1109
 > 
+> Is there a git tree with all of them against v5.5-rc1 (so all three series)?
+> I tried your github tree: https://github.com/yyu168/linux_cet.git #cet
+> but sadly that does not apply against 5.5-rc1 :-(
+> 
+> Thanks!
+Hi, 
+The CET patch includes two parts: one from kernel side the other from KVM,
+the kernel patch in github is maintained by my peer, he'll rebase
+it to the latest kernel tree shortly after resolve some issues.
+Thank you for having interest!
 
-Hm, this move doesn't seem to fit very well.  But perhaps it's close
-enough.
-
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -42,7 +42,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
->  			   mm_init.o mmu_context.o percpu.o slab_common.o \
->  			   compaction.o vmacache.o \
->  			   interval_tree.o list_lru.o workingset.o \
-> -			   debug.o gup.o $(mmu-y)
-> +			   debug.o gup.o request_alloc.o $(mmu-y)
-
-Now there's a regression.  We're adding a bunch of unused code to a
-CONFIG_BLOCK=n kernel.
-
->
-> ...
->
-> +void request_from_pages_free(struct list_head *page_list)
->
-> ...
->
-> +int request_from_pages_alloc(void *ctx, unsigned int depth, size_t rq_size,
-> +			     struct list_head *page_list, int max_order,
-> +			     int node,
-> +			     void (*assign)(void *ctx, void *req, int idx))
-
-I find these function names hard to understand.  Are they well chosen?
-
-Some documentation would help.  These are global, exported-to-modules
-API functions and they really should be fully documented.
-
-> +{
-> +	size_t left;
-> +	unsigned int i, j, entries_per_page;
-> +
-> +	left = rq_size * depth;
-> +
-> +	for (i = 0; i < depth; ) {
-
-"depth" of what?
-
-> +		int this_order = max_order;
-> +		struct page *page;
-> +		int to_do;
-> +		void *p;
-> +
-> +		while (this_order && left < order_to_size(this_order - 1))
-> +			this_order--;
-> +
-> +		do {
-> +			page = alloc_pages_node(node,
-> +						GFP_NOIO | __GFP_NOWARN |
-> +						__GFP_NORETRY | __GFP_ZERO,
-> +						this_order);
-> +			if (page)
-> +				break;
-> +			if (!this_order--)
-> +				break;
-> +			if (order_to_size(this_order) < rq_size)
-> +				break;
-> +		} while (1);
-
-What the heck is all the above trying to do?  Some explanatory comments
-are needed, methinks.
-
-> +		if (!page)
-> +			goto fail;
-> +
-> +		page->private = this_order;
-> +		list_add_tail(&page->lru, page_list);
-> +
-> +		p = page_address(page);
-> +		/*
-> +		 * Allow kmemleak to scan these pages as they contain pointers
-> +		 * to additional allocations like via ops->init_request().
-> +		 */
-> +		kmemleak_alloc(p, order_to_size(this_order), 1, GFP_NOIO);
-> +		entries_per_page = order_to_size(this_order) / rq_size;
-> +		to_do = min(entries_per_page, depth - i);
-> +		left -= to_do * rq_size;
-> +		for (j = 0; j < to_do; j++) {
-> +			assign((void *)ctx, p, i);
-> +			p += rq_size;
-> +			i++;
-> +		}
-> +	}
-> +
-> +	return i;
-> +
-> +fail:
-> +	request_from_pages_free(page_list);
-> +	return -ENOMEM;
-> +}
-> +EXPORT_SYMBOL_GPL(request_from_pages_alloc);
