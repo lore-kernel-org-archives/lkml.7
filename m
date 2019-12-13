@@ -2,154 +2,88 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75AC7CFE2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F9C7CFCF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C113C2474A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1bgwUcAZ"
+	by mail.kernel.org (Postfix) with ESMTP id D41DF24741
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfLMRrR (ORCPT
+        id S1728535AbfLMRfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:47:17 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46036 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLMRrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:47:17 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d20so3540696ljc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 09:47:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=eoAJedssCRtORBBwXDIR4/QT9NuQsdzJ4Ntg4pSM5cY=;
-        b=1bgwUcAZ78xCTIqaqNviEKuMJb97CygulYIPlFUqxsRkcRsnof435hIi2Xo9UN6RIc
-         AZYzu5lldy7TGNkcuuLDtmbqA1CDS4B8+QWKjQIUCcDOGvfan9LAwAD5e4SGX5E4fWZ8
-         PXr8h/WLRIBnR5CSWvuAyIOKbY3V1te0Yx+wzlK6CRWEW1gFd8vpWsNfyjUJWPWCOmfv
-         MUC3EwO12smFILAg7MrScMAH0IE4qq/4k65nNGoDEWhlbyWO1MQ6X5wlg7AQ/TmO0+oK
-         uVCG6N9DC/fHP5UGuJFkKhRSC/pUrkPeWc06iatwR9gPJUnsjrur6Nrv/Sbm2NM0Hqat
-         RGTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=eoAJedssCRtORBBwXDIR4/QT9NuQsdzJ4Ntg4pSM5cY=;
-        b=MPoAk/66RoIC1DoCtmOIfTRyU8TEJii3xcbR+i+DIIdDDbZOsL8ZAK7wjDA868Ztfd
-         3hbo+NdATMS2DfjJtaVnBUIRDV5eVGB/8hanh74/CW7fwf8kfaJkyYLT7+PC9TI4cHuV
-         e5Gjez9VZUjHHVnCc4qkK9gjbz59wpEyJB2RDOw5+DuH67twe6MB8n7FRkHcNzdNBARt
-         Bv252reRBVWETJ3CAcSqtGtLxh0rDrg1xoT2i61s3RiX34/9Zdvw9LGTeB9FzMEf6O66
-         QZAzX0WVt113eKTSZU2CafZilvxLPtNLisQPz7gJy1RXdHsSaA9G2H4frTQp3UYFLePP
-         gQjQ==
-X-Gm-Message-State: APjAAAWWUxGzqH/vozvVYQxnA29HaRzkVqQLPq/sa++pGRbwBFfs+tKO
-        HjPQGtUrjq1uvUT2PYKADcxpjg==
-X-Google-Smtp-Source: APXvYqyrL4fP/y35voKQ93uhJQCdlErk3H7h25gfob2xBThYWvN+CbLHJ+UN7VZf7cdxBzpPbR1YQg==
-X-Received: by 2002:a2e:868c:: with SMTP id l12mr9458337lji.194.1576259234756;
-        Fri, 13 Dec 2019 09:47:14 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id j19sm5555628lfb.90.2019.12.13.09.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 09:47:14 -0800 (PST)
-Date:   Fri, 13 Dec 2019 09:47:05 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-Message-ID: <20191213094705.486101a0@cakuba.netronome.com>
-In-Reply-To: <CAEf4BzaG95dxgSBSm7m8c3gJ-XeL97=N4srS5fR7JRfcjaMwTw@mail.gmail.com>
-References: <CAEf4Bzb+3b-ypP8YJVA=ogQgp1KXx2xPConOswA0EiGXsmfJow@mail.gmail.com>
-        <20191211191518.GD3105713@mini-arch>
-        <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
-        <20191211200924.GE3105713@mini-arch>
-        <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
-        <20191212025735.GK3105713@mini-arch>
-        <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
-        <20191212162953.GM3105713@mini-arch>
-        <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
-        <20191212104334.222552a1@cakuba.netronome.com>
-        <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
-        <20191212122115.612bb13b@cakuba.netronome.com>
-        <CAEf4BzaG95dxgSBSm7m8c3gJ-XeL97=N4srS5fR7JRfcjaMwTw@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        Fri, 13 Dec 2019 12:35:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43882 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728109AbfLMRfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 12:35:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EF350AF2B;
+        Fri, 13 Dec 2019 17:35:28 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id D9995DA82A; Fri, 13 Dec 2019 18:35:27 +0100 (CET)
+Date:   Fri, 13 Dec 2019 18:35:27 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+Message-ID: <20191213173526.GC3929@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191209152948.37080-1-zaslonko@linux.ibm.com>
+ <20191209152948.37080-7-zaslonko@linux.ibm.com>
+ <97b3a11d-2e52-c710-ee25-157e562eb3d0@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97b3a11d-2e52-c710-ee25-157e562eb3d0@linux.ibm.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 22:48:10 -0800, Andrii Nakryiko wrote:
-> > improve and hack on it. Baking it into as system tool is counter
-> > productive. Users should be able to grab the skel tool single-file
-> > source and adjust for their project's needs. Distributing your own copy
-> > of bpftool because you want to adjust skel is a heavy lift.  
+On Fri, Dec 13, 2019 at 05:10:10PM +0100, Zaslonko Mikhail wrote:
+> Hello,
 > 
-> Skeleton is auto-generated code, it's not supposed to be tweaked or
-> "adjusted" by hand. 
-
-Obviously not, I said adjusting the codegen tool, not the output.
-
-> Because next time you do tiny change to your BPF
-> source code (just swap order of two global variables), skeleton
-> changes. If someone is not satisfied with the way skeleton generation
-> looks like, they should propose changes and contribute to common
-> algorithm. Or, of course, they can just go and re-implement it on
-> their own, if struct bpf_object_skeleton suits them still (which is
-> what libbpf works with). Then they can do it in Python, Go, Scala,
-> Java, Perl, whatnot. But somehow I doubt anyone would want to do that.
+> Could you please review the patch for btrfs below.
 > 
-> > And maybe one day we do have Python/Go/whatever bindings, and we can
-> > convert the skel tool to a higher level language with modern templating.  
+> Apart from falling back to 1 page, I have set the condition to allocate 
+> 4-pages zlib workspace buffer only if s390 Deflate-Conversion facility
+> is installed and enabled. Thus, it will take effect on s390 architecture
+> only.
 > 
-> Because high-level implementation is going to be so much simpler and
-> shorter, really? Is it that complicated in C right now? What's the
-> real benefit of waiting to be able to do it in "higher level" language
-> beyond being the contrarian? 
+> Currently in zlib_compress_pages() I always copy input pages to the workspace
+> buffer prior to zlib_deflate call. Would that make sense, to pass the page
+> itself, as before, based on the workspace buf_size (for 1-page buffer)?
 
-I did not say wait, I said do C and convert to something else once easy.
-You really gotta read responses more carefully :/
+Doesn't the copy back and forth kill the improvements brought by the
+hw supported decompression?
 
-> Apart from \n\ (which is mostly hidden
-> from view), I don't think high-level templates are going to be much
-> more clean.
-> 
-> > > We cannot and should not adopt kernel-like ABI guarantees to user space
-> > > code. It will paralyze the development.  
-> >
-> > Discussion for another time :)  
-> 
-> If this "experimental" disclaimer is a real blocker for all of this, I
-> don't mind making it a public API right now. bpf_object_skeleton is
-> already designed to be backward/forward compatible with size of struct
-> itself and all the sub-structs recorded during initialization. I
-> didn't mean to create impression like this whole approach is so raw
-> and untried that it will most certainly break and we are still unsure
-> about it. It's not and it certainly improves set up code for
-> real-world applications. We might need to add some extra option here
-> and there, but the stuff that's there already will stay as is.
+> As for calling zlib_deflate with Z_FINISH flush parameter in a loop until
+> Z_STREAM_END is returned, that comes in agreement with the zlib manual.
 
-As explained the experimental disclaimer is fairly useless and it gives
-people precedent for maybe not caring as hard as they should about
-ironing the details out before sending code upstream.
-
-I think we can just add a switch or option for improved generation when
-needed. You already check there are not extra trailing arguments so we
-should be good.
-
-> Would moving all the skeleton-related stuff into libbpf.h and
-> "stabilizing" it make all this more tolerable for you?
-
-I think I'm too tired if this to have an option any more.
+The concerns are about zlib stream that take 4 pages on input and on the
+decompression side only 1 page is available for the output. Ie. as if
+the filesystem was created on s390 with dflcc then opened on x86 host.
+The zlib_deflate(Z_FINISH) happens on the compresission side.
