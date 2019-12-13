@@ -2,101 +2,90 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA52C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92141C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763D42077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576229335;
-	bh=z085srnn3eTmF1mwhBfbPVedeQToZQE/o5DkKGsSR08=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Lmqk5RtLIV5Q8GwaBou/9Mk93m9ZhDoWjRUx7KkNOAGntimjQgNDMRKrDd7WuC5im
-	 hfTJF2SkcvxGURLccTusBWrA2Za2KD9koylmbhmRa5cDdLz1zseQaMp7z4OdlFOBlt
-	 TYTIP01wdLwmoAot1c1eMG3AndQ8CWnZBWKN+zVQ=
+	by mail.kernel.org (Postfix) with ESMTP id A5CC32077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="AZz89pad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLMJ2y (ORCPT
+        id S1726646AbfLMJa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:28:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfLMJ2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:28:54 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF792077B;
-        Fri, 13 Dec 2019 09:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576229333;
-        bh=z085srnn3eTmF1mwhBfbPVedeQToZQE/o5DkKGsSR08=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=IeJvapsUVcA8uVcYv5Kqitdr29GDDro0ZX5vgTAm8nlrNJMFOwfHEINqU5/07nins
-         iZT3KIv033pIQW7UJDWTl6HtXUN0QwcpfUfDre+wNu2XLF9+BPpUJGbYJLB9jh4TyU
-         yx3wg+JU4X8cmI8IRYPPtGFex/90Cjx3t2Yz2+OM=
-Date:   Fri, 13 Dec 2019 10:28:50 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] HID: hid-input: clear unmapped usages
-In-Reply-To: <20191207210518.GA181006@dtor-ws>
-Message-ID: <nycvar.YFH.7.76.1912131027560.4603@cbobk.fhfr.pm>
-References: <20191207210518.GA181006@dtor-ws>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 13 Dec 2019 04:30:26 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43638 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfLMJa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:30:26 -0500
+Received: by mail-io1-f68.google.com with SMTP id s2so1676219iog.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 01:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VbLwtEEii+eZr02TAunYp0r9vwXzyFh2PvhryUpIvu0=;
+        b=AZz89padS3ilULxI3+ozr300rmWfzzY1kN8fVffLYF4fQ5tWQXv8YlmkSnJ48Xmya4
+         45uwmFCQHFOSWHVRCRVGXS90qtIHSfbfPZF/PIMUQwY6QJnniGpn3Smza5HPBVWcvGje
+         9yz7fNP6u3GFZji5pYEWMCuwskl2FiPYRj0+Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VbLwtEEii+eZr02TAunYp0r9vwXzyFh2PvhryUpIvu0=;
+        b=F5W0scpT9xuBk2gbk+3R+4lfjhI9gQB3T0ibYxufawR/0fNf5G10uv2r752qSAxA5t
+         kgG7VSjCzHXpjIx5FgHzIQmWgUsUN+k7RCkxMSeQ8vAVVF/lUUeEPzBvd8484zYUpiFy
+         jX6hp3XOdXFp/ttfhbqsBQSzZq0636ffxdWMmSHVNJ6hWAbJCjwES8L+lnDFwfbJxPX4
+         n+CbpMyM+1wyBOjmp6T4tRerbzuqqEg8zJ1Qnns+OjBua9y2qV8BqjpazhUbjTkVekPI
+         QFXcs44+MSi7DyZqeuCxx8H22jcM9pUr0T43sqRuSPBanU7dCzDQq8Pa1D60puPy3zqd
+         GTTw==
+X-Gm-Message-State: APjAAAVt765osYcoss13pUYixIh0+0qHt1y+HNIZkCTBeWgw68cm7St/
+        65gSV5G/UQaqAmpqtDcYqlAZdt5d9SWjZuPmhojUlg==
+X-Google-Smtp-Source: APXvYqzwM8OVdjfc6nPVJOOHNFpeyNvYtMcf+cL5pDaYSQBuwa61eiV16PuC1ggtwJieCU4wJrSqxFkFc28L62I7NLM=
+X-Received: by 2002:a5d:8846:: with SMTP id t6mr5453453ios.63.1576229425684;
+ Fri, 13 Dec 2019 01:30:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191212145042.12694-1-labbott@redhat.com> <CAOi1vP9E2yLeFptg7o99usEi=x3kf=NnHYdURXPhX4vTXKCTCQ@mail.gmail.com>
+ <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com> <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
+ <cf4c9634-1503-d182-cb12-810fb969bc96@redhat.com> <20191212213609.GK4203@ZenIV.linux.org.uk>
+ <CAJfpegv_zY6w6=pOL0x=sjuQmGae0ymOafZXjyAdNEHj+EKyNA@mail.gmail.com>
+In-Reply-To: <CAJfpegv_zY6w6=pOL0x=sjuQmGae0ymOafZXjyAdNEHj+EKyNA@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 13 Dec 2019 10:30:14 +0100
+Message-ID: <CAJfpegu+mMVm8vNMZhUVveWKRz4VgcMip7vC4iBhZahWbk=qPw@mail.gmail.com>
+Subject: Re: [PATCH] vfs: Don't reject unknown parameters
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Dec 2019, Dmitry Torokhov wrote:
+On Fri, Dec 13, 2019 at 10:15 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-> We should not be leaving half-mapped usages with potentially invalid
-> keycodes, as that may confuse hidinput_find_key() when the key is located
-> by index, which may end up feeding way too large keycode into the VT
-> keyboard handler and cause OOB write there:
-> 
-> BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-> BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-> BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-> Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-> ...
->  kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
->  kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
->  input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
->  input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
->  input_pass_values drivers/input/input.c:949 [inline]
->  input_set_keycode+0x290/0x320 drivers/input/input.c:954
->  evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
->  evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
-> 
-> Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> 
-> v2: fixed up interaction with hid-multitouch according to Benjamin's
-> feedback
-> 
-> Please consider tagging for stable.
+> I have sent patches for the above numerous times, all been ignored by
+> DavidH and Al.  While this seems minor now, I think getting this
+> interface into a better shape as early as possible may save lots more
+> headaches later...
 
-I'd like to push this for 5.5 (and tag for stable), but would prefer this 
-to have gone through the full battery of Benjamin's testing infrastructure 
-first.
+Refs:
 
-Benjamin, did you have chance to run Dmitry's patch through your 
-machinery?
+https://lore.kernel.org/linux-fsdevel/20191128155940.17530-12-mszeredi@redhat.com/
+https://lore.kernel.org/linux-fsdevel/20191128155940.17530-13-mszeredi@redhat.com/
+https://lore.kernel.org/linux-fsdevel/20190619123019.30032-7-mszeredi@redhat.com/
+etc...
 
 Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Miklos
