@@ -2,118 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2CFC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AF6C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E75822527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQx+FVJ7"
+	by mail.kernel.org (Postfix) with ESMTP id 0A9862253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576221475;
+	bh=TcV73ux/rT14foW4JR+jEOy6K1C56V5DPpX3f3yf/2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lp/8shC2s9B/SzViB9RfluqgJTasBGqLAT0R79jAwhmtcdtGam055Sr8K3iAekVsP
+	 fKJOwkf7tgocNeRWT5N3UAO1QqYjZSJIZ1ZOfj4EllIwSi9na+bI0Vgt/7+AkfG0Uc
+	 s5Rt6EGgdfOCOuCyWQ+Qru9Fnf/Ih2da+jzekASc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfLMHPi (ORCPT
+        id S1726170AbfLMHRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:15:38 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36643 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMHPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:15:37 -0500
-Received: by mail-pj1-f65.google.com with SMTP id n96so820639pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 23:15:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mHQ0q3g+tRg8eVn0qW80HuKuE2LjVhRlKO13OPMy4+Y=;
-        b=aQx+FVJ730/G66jiW0rfYPuqoQg7TX1LUPRcRHlfbgyXEgO7uKvAIHOnQCbmkWGnOP
-         nGHoPie3hCjTBUatu8ebhpHQO9BqdUNAV0xvFsjKJ8RrEl1d7wXt/jNunRKwfLDG0+5r
-         oq/gnJ+LH79x3kRyCsnpJsDsNAeLHkmCfHNvEPRD4GELzribJintbTTevtB8T9MrEHS7
-         ooCe/agLWX2umyWLGGfecYB5OfGV9q7gN9AZT+6f2TJOtTp++c0de0VmbMT6tUqm36cv
-         eP1+qq0p1ukgiHi96LKj67mNns0Y2wuEhdGSlSIvXcUDf1alpavYr44mReDvg92YFtcM
-         RFyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mHQ0q3g+tRg8eVn0qW80HuKuE2LjVhRlKO13OPMy4+Y=;
-        b=LTAI+zRds1CYBELwZVGU2s8D/yAafDxoHRsO59FPB5ucge5is6m54CfatLt4T9xVwU
-         mSLZwRvoPGOJ+lovU4hxf+KJh9STH/5jXBtYBxpndt7FE/VPsn6QB1EkidNdo/0nEpOu
-         nD8G+jyfIkH/BU4BKgIQ17VzeKZ56lL4JB/1ZKtxjwKMiVthlG4pPK2gWSge92bkxTL+
-         wzyG9PoqPLtk+t2HZ3w6u3o3xMytuBMyiAJ277ej/MYwQYNiZ2vpnsam6h1O23DCu9lH
-         xS17JBAvDXikjqP4mKsol06cpYmmPnhOKIkkF65A8ha14sDMDAaw7JdCBsiyRRhVlJKM
-         8Dcw==
-X-Gm-Message-State: APjAAAUyDvLitS/Gas8R78NM6UjoQT5YW1ehINwVW/XJ/Ck00ZQ8EU3/
-        0DYpvJueggZ2v2XFYn6O5oPQaQ==
-X-Google-Smtp-Source: APXvYqzq74VMCuqzGB3Kj7gGVNIA4Ijzqq7PocCemaMG3g6FBuTGD0W9nmO37l+ydi3SA9McM2UACQ==
-X-Received: by 2002:a17:90a:8c02:: with SMTP id a2mr14893150pjo.79.1576221337047;
-        Thu, 12 Dec 2019 23:15:37 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o12sm10404288pfg.152.2019.12.12.23.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 23:15:36 -0800 (PST)
-Date:   Thu, 12 Dec 2019 23:15:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-watchdog@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] watchdog: qcom: Use platform_get_irq_optional() for bark
- irq
-Message-ID: <20191213071533.GG415177@yoga>
-References: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
+        Fri, 13 Dec 2019 02:17:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfLMHRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:17:53 -0500
+Received: from localhost (unknown [84.241.199.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535B222527;
+        Fri, 13 Dec 2019 07:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576221472;
+        bh=TcV73ux/rT14foW4JR+jEOy6K1C56V5DPpX3f3yf/2E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z/c2byN9k7PIZtxcbGAj8x46Fc78ertWq5pFnimXr01IT8VqnHLIyLTvD7LQ2dvPr
+         NsjS4XTTlB2ZOwrx/i4cd1LJeyB4xS3E1WoOiQtaO2ggCkrFNKv4lrI11mAt2S68Fl
+         sIL3UFagZmJMKcxf/KVRspd4bPGfNRtkwdfwo7jI=
+Date:   Fri, 13 Dec 2019 08:17:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 02/58] serial: Move sysrq members above
+Message-ID: <20191213071749.GA1750354@kroah.com>
+References: <20191213000657.931618-1-dima@arista.com>
+ <20191213000657.931618-3-dima@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191213000657.931618-3-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Dec 22:49 PST 2019, Sai Prakash Ranjan wrote:
-
-> platform_get_irq() prints an error message when the interrupt
-> is not available. So on platforms where bark interrupt is
-> not specified, following error message is observed on SDM845.
+On Fri, Dec 13, 2019 at 12:06:01AM +0000, Dmitry Safonov wrote:
+> At the current place members those follow are:
+> :	upf_t			flags;
+> :	upstat_t		status;
+> :	int			hw_stopped;
+> :	unsigned int		mctrl;
+> :	unsigned int		timeout;
+> :	unsigned int		type;
+> :	const struct uart_ops	*ops;
 > 
-> [    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
+> Together, they give (*ops) 8-byte align on 64-bit platforms.
+> And `sysrq_ch` introduces 4-byte padding.
 > 
-> This is also seen on SC7180, SM8150 SoCs as well.
-> Fix this by using platform_get_irq_optional() instead.
+> On the other side, above:
+> :	struct device		*dev;
+> :	unsigned char		hub6;
+> :	unsigned char		suspended;
+> :	unsigned char		unused[2];
+> :	const char		*name;
 > 
-> Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+> Adds another 4-byte padding.
+> 
+> Moving sysrq members just before `hub6` allows to save 8 bytes
+> per-uart_port on 64-bit platforms:
+> On my gcc, x86_64 sizeof(struct uart_port) goes from 528 to 520.
+> 
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 > ---
->  drivers/watchdog/qcom-wdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/serial_core.h | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index a494543d3ae1..eb47fe5ed280 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->  	}
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 2b78cc734719..bbbe57bf5163 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -161,11 +161,6 @@ struct uart_port {
+>  	struct uart_icount	icount;			/* statistics */
 >  
->  	/* check if there is pretimeout support */
-> -	irq = platform_get_irq(pdev, 0);
-> +	irq = platform_get_irq_optional(pdev, 0);
->  	if (irq > 0) {
->  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
->  				       IRQF_TRIGGER_RISING,
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+>  	struct console		*cons;			/* struct console, if any */
+> -#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(SUPPORT_SYSRQ)
+> -	unsigned long		sysrq;			/* sysrq timeout */
+> -	unsigned int		sysrq_ch;		/* char for sysrq */
+> -#endif
+> -
+>  	/* flags must be updated while holding port mutex */
+>  	upf_t			flags;
+>  
+> @@ -244,6 +239,12 @@ struct uart_port {
+>  	resource_size_t		mapbase;		/* for ioremap */
+>  	resource_size_t		mapsize;
+>  	struct device		*dev;			/* parent device */
+> +
+> +#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(SUPPORT_SYSRQ)
+> +	unsigned long		sysrq;			/* sysrq timeout */
+> +	unsigned int		sysrq_ch;		/* char for sysrq */
+> +#endif
+
+Let's just always have these 2 fields in the structure, no need for a
+#ifdef at all, right?  There is no real "savings" from removing them (8
+bytes for a structure that is maybe created 2-4 times per machine?)
+
+That way it would keep any of this mess of if the SUPPORT_SYSRQ is
+enabled or not to keep everything in sync.
+
+thanks,
+
+greg k-h
