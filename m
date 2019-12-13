@@ -2,164 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07574C34355
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC207C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B8A2474C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F216C24715
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6i0hqkB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HjPktfS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfLMNCd (ORCPT
+        id S1727459AbfLMN3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:02:33 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34279 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfLMNCd (ORCPT
+        Fri, 13 Dec 2019 08:29:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38599 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726674AbfLMN3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:02:33 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l127so1457673pfl.1;
-        Fri, 13 Dec 2019 05:02:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZPc8DBX2ZfbjwaEgLInVI3S8HFj/56kByg4DfIObTMc=;
-        b=N6i0hqkBEVIM+jlUwMzon0U9mzngTnFvijSsH1izi82SQgmncvfMlOQRxxSCyeRErs
-         WL56byCPvCe56fFydeRT2Ia4b/SzfWT2nd2PyfZ8vUpQ8onIG/VXPCnOIRrdUdSwtG63
-         ch7UzZhNMp0ZTyzc0uONuiAZkgDnVOJF3coeex5qeyFLx1wEhvsqQt9hZY585vTPGgXK
-         FiakZ3BYj4Xz43/FfNyprjLZut5G0uv1r90pWwxn2PrmhrU878wZcyYE3R/Nk3Xz4Ckk
-         1VCU4LgCDj5ZlW7cKLFKT67YYsfp7cu4VgRy3/23ZycJBD8ly5bH5maHZuQspiTHJMfS
-         OCBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZPc8DBX2ZfbjwaEgLInVI3S8HFj/56kByg4DfIObTMc=;
-        b=YXDdXkeaJnF/9SfzeE40XbvoWrnVzZl0+eJeTn8r2G953JKO8agILLYRkOpIHq6mh7
-         +dYOAhe8uJE4biO7saUP8O651DwkLafeWs3UgsLL50gX5Ie9VGLUI7mAYMbvbrLUs2Tz
-         StKGHARneNDsEJXGAOSyY09zzHQ6P5CxWJEcR6yZoB6BbxSntvlOHbw90A1vdbPiro1L
-         Q5fA9BVHV0GZFl2jUYtCJQPgzlGdRqNVAJBLY7xF+AIyWKK5Vgsr74S2mSzr6W7RAUBo
-         Kp06a1Zh8gOaRWPZQ5V1TbxqpYjR/hf6j0WhGxc4uEHY/zO+1fxim6OjAUlnzDEKY749
-         oIlg==
-X-Gm-Message-State: APjAAAX5vBeXRidGGcVRuMX+KpFw+9EbadPRVWtRjMIfmeY7/Kwkyydf
-        F/9fcu+UPd2FhD4EXeyKoCo=
-X-Google-Smtp-Source: APXvYqwwGYLLtINm/TP+G8Tba8uazrIqTPMf1a8m0SsSyI2D6fxD3WkOSpHXI4F9WCaxEyvwPl52lg==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr16113067pfl.32.1576242152522;
-        Fri, 13 Dec 2019 05:02:32 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:02:31 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        Fri, 13 Dec 2019 08:29:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576243739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7n8SWaJivUQ/2/eU9591KEOF2V8zoo8DFt7lnv7IRQc=;
+        b=HjPktfS4jU/q9zkbzxqbho8tJcnEdbxTa9AE5Z/hhRpB2IRgiNv7ydRpfW2LuMAMUU/oHt
+        r0MmiiiWg1CfVq7mgv3U8lH5R9R+J0SnFPKjrmwFRckQZ7ZaJSFMCZ/eURSuIKrAEkAUEi
+        BT3nnAb9fVBPY0bp9tekdJZUtcX0Zx0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-Z8aowBMIOpSGuo1ww6FrxA-1; Fri, 13 Dec 2019 08:28:55 -0500
+X-MC-Unique: Z8aowBMIOpSGuo1ww6FrxA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 447C71883521;
+        Fri, 13 Dec 2019 13:28:54 +0000 (UTC)
+Received: from localhost (ovpn-12-63.pek2.redhat.com [10.72.12.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52A051CB;
+        Fri, 13 Dec 2019 13:28:52 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 21:28:50 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 0/3] xenbus/backend: Add a memory pressure handler callback
-Date:   Fri, 13 Dec 2019 13:02:08 +0000
-Message-Id: <20191213130211.24011-1-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
+ direct mapping.
+Message-ID: <20191213132850.GG28917@MiWiFi-R3L-srv>
+References: <20191115144917.28469-1-msys.mizuma@gmail.com>
+ <20191115144917.28469-5-msys.mizuma@gmail.com>
+ <20191212201916.GL4991@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212201916.GL4991@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Granting pages consumes backend system memory.  In systems configured
-with insufficient spare memory for those pages, it can cause a memory
-pressure situation.  However, finding the optimal amount of the spare
-memory is challenging for large systems having dynamic resource
-utilization patterns.  Also, such a static configuration might lack
-flexibility.
+On 12/12/19 at 09:19pm, Borislav Petkov wrote:
+> > + * direct mapping area to the size of actual physical memory plus the
+> > + * configured padding CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING.
+> > + * The left part will be taken out to join memory randomization.
+> > + */
+> > +static inline unsigned long calc_direct_mapping_size(void)
+> 
+> What direct mapping?!
+> 
+> The code is computing the physical memory regions base address and
+> sizes.
 
-To mitigate such problems, this patchset adds a memory reclaim callback
-to 'xenbus_driver' (patch 1) and use it to mitigate the problem in
-'xen-blkback' (patch 2).  The third patch is a trivial cleanup of
-variable names.
+In Documentation/x86/x86_64/mm.rst, the physical memory regions mapping
+with page_offset is called as the direct mapping of physical memory.
+Seems both is used in kernel and document. 
 
-Base Version
-------------
+> 
+> > +{
+> > +	unsigned long size_tb, memory_tb;
+> > +
+> > +	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
+> > +		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
+> > +
+> > +#ifdef CONFIG_MEMORY_HOTPLUG
+> > +	if (boot_params.max_addr) {
+> > +		unsigned long maximum_tb;
+> > +
+> > +		maximum_tb = DIV_ROUND_UP(boot_params.max_addr,
+> > +				1UL << TB_SHIFT);
+> 
+> All that jumping through hoops and adding a member to boot_params which
+> is useless on !hot-add systems - basically the majority out there - just
+> so that you can use that max address here?!
+> 
+> Did you not find acpi_table_parse_srat()?
 
-This patch is based on v5.4.  A complete tree is also available at my
-public git repo:
-https://github.com/sjp38/linux/tree/blkback_squeezing_v8
+kernel_randomize_memory() is invoked much earlier than
+acpi_table_parse_srat(). KASLR need know the max address to reserve
+space for the direct mapping region (or the physical memory region)
+so that it can cover later possible hotplugged memory.
 
-
-Patch History
--------------
-
-Changes from v7
-(https://lore.kernel.org/xen-devel/20191211181016.14366-1-sjpark@amazon.de/)
- - Update sysfs-driver-xen-blkback for new parameter
-   (suggested by Roger Pau Monné)
- - Use per-xen_blkif buffer_squeeze_end instead of global variable
-   (suggested by Roger Pau Monné)
-
-Changes from v6
-(https://lore.kernel.org/linux-block/20191211042428.5961-1-sjpark@amazon.de/)
- - Remove more unnecessary prefixes (suggested by Roger Pau Monné)
- - Constify a variable (suggested by Roger Pau Monné)
- - Rename 'reclaim' into 'reclaim_memory' (suggested by Roger Pau Monné)
- - More wordsmith of the commit message (suggested by Roger Pau Monné)
-
-Changes from v5
-(https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
- - Wordsmith the commit messages (suggested by Roger Pau Monné)
- - Change the reclaim callback return type (suggested by Roger Pau Monné)
- - Change the type of the blkback squeeze duration variable
-   (suggested by Roger Pau Monné)
- - Add a patch for removal of unnecessary static variable name prefixes
-   (suggested by Roger Pau Monné)
- - Fix checkpatch.pl warnings
-
-Changes from v4
-(https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
- - Remove domain id parameter from the callback (suggested by Juergen Gross)
- - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
-
-Changes from v3
-(https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
- - Add general callback in xen_driver and use it (suggested by Juergen Gross)
-
-Changes from v2
-(https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
- - Rename the module parameter and variables for brevity
-   (aggressive shrinking -> squeezing)
-
-Changes from v1
-(https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
- - Adjust the description to not use the term, `arbitrarily`
-   (suggested by Paul Durrant)
- - Specify time unit of the duration in the parameter description,
-   (suggested by Maximilian Heyne)
- - Change default aggressive shrinking duration from 1ms to 10ms
- - Merge two patches into one single patch
-
-SeongJae Park (3):
-  xenbus/backend: Add memory pressure handler callback
-  xen/blkback: Squeeze page pools if a memory pressure is detected
-  xen/blkback: Remove unnecessary static variable name prefixes
-
- .../ABI/testing/sysfs-driver-xen-blkback      |  9 +++
- drivers/block/xen-blkback/blkback.c           | 57 ++++++++++++-------
- drivers/block/xen-blkback/common.h            |  2 +
- drivers/block/xen-blkback/xenbus.c            | 11 +++-
- drivers/xen/xenbus/xenbus_probe_backend.c     | 32 +++++++++++
- include/xen/xenbus.h                          |  1 +
- 6 files changed, 90 insertions(+), 22 deletions(-)
-
--- 
-2.17.1
+Thanks
+Baoquan
 
