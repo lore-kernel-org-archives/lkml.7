@@ -2,166 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C805C5072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED77EC50724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EC724718
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4182470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrlC/LA7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcZHnLR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfLMOEZ (ORCPT
+        id S1727626AbfLMN5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:04:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35125 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfLMOEZ (ORCPT
+        Fri, 13 Dec 2019 08:57:32 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37506 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbfLMN5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:04:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 15so2062720lfr.2;
-        Fri, 13 Dec 2019 06:04:23 -0800 (PST)
+        Fri, 13 Dec 2019 08:57:32 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so1525139pfn.4;
+        Fri, 13 Dec 2019 05:57:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EJN5usP49z7Srwila2lujFsYr5oyfLHmZgw8q7qI+YA=;
-        b=UrlC/LA7yk8ZKL+9Uvf5eRfmLSg5EQ/bCF4pN2HoiFQHgZERx+mzYdGabzzcc+rlOj
-         j2Ig0/H7VlJLjd478P3XOEAMrN6G2c6Rzji6TR3p/lfSNtp/wPQcKWHtZqX3tUalHDpR
-         ZaM8IjKTKvTdGmWkd86clase5thRA62Hxcc08LuQN29lMk9ryT9q6ij+ZkSQ9vjoGUIz
-         3azNoWARzSTzSyhKRvs8QPhOZxWGgjGVE+JfY3I/5eUPqycfhHnMFuhvJs5t5DiEF+o5
-         LWQaAOAJii6fpinbA1hJcVy/9S8e0IUwatm7TBSXVFVcBWaLcwODYleaTaMeueHqF8i+
-         V7aQ==
+        bh=DPtsk1xekHf4rFompFbK+++ywQG55As5vK9YXX25XMc=;
+        b=HcZHnLR1V2y0vLHORQuWaZK6tD618ijiTm+wMIWqy5ttOW+N7ncHscgh5Rpe5dPZrT
+         DN5TbwDanXx3zF0C1n1Isg76VQZ9LDjiHkDa9ChFahhR03hwRxOX5qjlIMnwJY7/uprQ
+         hBNvephzkogku4C0RQC7Vy3L8GIc/hwxtd98zpioMw+5rUen0Tug4tiV5k/Fa5t15Jjn
+         7Fs+HcXsvfjoYjVmXDvoFRweQ45pZCMTvoFyqekuW0+koykZiDBQxAN0cAFFN5RDNFFp
+         HLnYWZjtmfd1Jb6pQCJW0pWLCpogjw39HKPu8CakppP7DsK2nKsethsuR5wstovhgp1+
+         1qjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EJN5usP49z7Srwila2lujFsYr5oyfLHmZgw8q7qI+YA=;
-        b=BKm2YX6RnCeXIImd0Wy0DsKZyowPEvnT3CbZYA5uCwStrA9MaO6XoK9X0IQ8k/X1VL
-         iCZMWEqCIEIsOGJ/sp/c22cQOGo3ggwMXK2EXHB/ZTmZXSPRNVJvVadzldICcoMREF9l
-         kgexiTdbFtPBYoi7PQLI0fsYvXk3QEUyLxLe5orA8hH6nY5q8KLCsmlpXgfr7JI2fIbH
-         ztk3E632lnQktLrDxuQSheslJbMRh1QjCIcNJyvlv/DAb0+Srq0kT3N/XWTiyz2Hz8PC
-         sfz1ZlOjygOm9heTN89vwWxZ45ZvCPCctpBfbeQXIQhxBcpZzxRukO2GZiAhiPJQJZ/R
-         zmWg==
-X-Gm-Message-State: APjAAAXy1vkUMI2/B9hzShQD8aQhDlnTJZrnDwKlR+ITBdYCD3308oM1
-        4lrR/aJt/P3c7LFosYZ6XDEHKSw2
-X-Google-Smtp-Source: APXvYqy7Z6+29dcJJofXj8gxnf0Iy4iSG/HP37qWMq1zezJovy4ZVstC2vzl8IPB0eid7kd6ZBpskA==
-X-Received: by 2002:ac2:47e6:: with SMTP id b6mr8966913lfp.96.1576245862403;
-        Fri, 13 Dec 2019 06:04:22 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e8sm5545215ljb.45.2019.12.13.06.04.21
+        bh=DPtsk1xekHf4rFompFbK+++ywQG55As5vK9YXX25XMc=;
+        b=DuL5wvfASUAWTfBaZMTr02jeA1XiRFTVp9UmdxTPucQaWsseHh5Xoaa89GpvHCgozh
+         uL0hH0xXxh/5wiAgMmnNRCbNFSn7wUrIUIx/NeiOc1twlUyZ96gGDCr5nO+XEN4R+YvP
+         Jmd9aCll5PXz2rGoGCnnAfEjlVQ2Ce17at9jQzodpdAIJyu+xuudx0lgYTet0x++Ins5
+         FwBS5Whrtfc8xSFvI5uxpwA+K3/9RNEM624mvbTc2/h2HgCJu60D5iuAQ1U/Izm5j+M2
+         IUH8DjpCht9JV3htoHTVBkQG1/kQgxP1Xe2axoe91KvRcIOKoAtwnKWmHtxV2Un9zkX3
+         oQwQ==
+X-Gm-Message-State: APjAAAVexmV0DslrUpVt/TKMcnW/ZTuRNmS1DSQne62Lbw/sAwsZwWbn
+        RmfaGb+FTnDszluG3E2NsFrAhKfh
+X-Google-Smtp-Source: APXvYqy9k2eDNK1J3IVJhR+gbK0hX/ItjAIfIbZD9dhbfVa/+PROIoCleTD5Ir8Ui3woBnQNkNMGYg==
+X-Received: by 2002:a63:de08:: with SMTP id f8mr16905639pgg.107.1576245451363;
+        Fri, 13 Dec 2019 05:57:31 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r68sm12605687pfr.78.2019.12.13.05.57.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 06:04:21 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
- state
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-4-digetx@gmail.com> <20191213134746.GA222809@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3c2b16c0-3e66-d809-b263-f27cf925e203@gmail.com>
-Date:   Fri, 13 Dec 2019 17:04:20 +0300
+        Fri, 13 Dec 2019 05:57:30 -0800 (PST)
+Subject: Re: [PATCH v2] usb: typec: fusb302: Fix an undefined reference to
+ 'extcon_get_state'
+To:     zhong jiang <zhongjiang@huawei.com>,
+        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191212122053.GA1541203@kroah.com>
+ <1576239378-50795-1-git-send-email-zhongjiang@huawei.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3dbe90ae-d1df-0714-f797-c6c279bf620c@roeck-us.net>
+Date:   Fri, 13 Dec 2019 05:57:29 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191213134746.GA222809@ulmo>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1576239378-50795-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 16:47, Thierry Reding пишет:
-> On Fri, Dec 13, 2019 at 02:34:28AM +0300, Dmitry Osipenko wrote:
->> I noticed that sometime I2C clock is kept enabled during suspend-resume.
->> This happens because runtime PM defers dynamic suspension and thus it may
->> happen that runtime PM is in active state when system enters into suspend.
->> In particular I2C controller that is used for CPU's DVFS is often kept ON
->> during suspend because CPU's voltage scaling happens quite often.
->>
->> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
->> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
->> suspend/resume in the NOIRQ phase which is used for the system-level
->> suspend/resume of the driver.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
+On 12/13/19 4:16 AM, zhong jiang wrote:
+> Fixes the following compile error:
 > 
-> I've recently discussed this with Rafael in the context of runtime PM
-> support in the Tegra DRM driver and my understanding is that you're not
-> supposed to force runtime PM suspension like this.
+> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
+> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
+> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
+> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
+> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
+> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
+> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
+> make: *** [vmlinux] Error 1
 > 
-> I had meant to send out an alternative patch to fix this, which I've
-> done now:
+> It is because EXTCON is build as a module, but FUSB302 is not.
 > 
-> 	http://patchwork.ozlabs.org/patch/1209148/
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>   drivers/usb/typec/tcpm/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> That's more in line with what Rafael and I had discussed in the other
-> thread and should address the issue that you're seeing as well.
-
-Well, either me or you are still having some misunderstanding of the
-runtime PM :) To my knowledge there are a lot of drivers that enforce
-suspension of the runtime PM during system's suspend, it should be a
-right thing to do especially in a context of the Tegra I2C driver
-because we're using asynchronous pm_runtime_put() and thus at the time
-of system's suspending, the runtime PM could be ON (as I wrote in the
-commit message) and then Terga's I2C driver manually disables the clock
-on resume (woopsie).
-
-By invoking pm_runtime_force_suspend() on systems's suspend, the runtime
-PM executes tegra_i2c_runtime_suspend() if device is in active state. On
-system resume, pm_runtime_force_resume() either keeps device in a
-suspended state or resumes it, say if for userspace disabled the runtime
-PM for the I2C controller.
-
-Rafael, could you please clarify whether my patch is doing a wrong thing?
-
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->> index b3ecdd87e91f..d309a314f4d6 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->>  {
->>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->> +	int err;
->>  
->>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
->>  
->> +	err = pm_runtime_force_suspend(dev);
->> +	if (err < 0)
->> +		return err;
->> +
->>  	return 0;
->>  }
->>  
->> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->>  	if (err)
->>  		return err;
->>  
->> +	err = pm_runtime_force_resume(dev);
->> +	if (err < 0)
->> +		return err;
->> +
->>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->>  
->>  	return 0;
->> -- 
->> 2.24.0
->>
+> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+> index 72481bb..5b986d6 100644
+> --- a/drivers/usb/typec/tcpm/Kconfig
+> +++ b/drivers/usb/typec/tcpm/Kconfig
+> @@ -32,6 +32,7 @@ endif # TYPEC_TCPCI
+>   config TYPEC_FUSB302
+>   	tristate "Fairchild FUSB302 Type-C chip driver"
+>   	depends on I2C
+> +	depends on EXTCON || !EXTCON
+>   	help
+>   	  The Fairchild FUSB302 Type-C chip driver that works with
+>   	  Type-C Port Controller Manager to provide USB PD and USB
+> 
 
