@@ -2,136 +2,140 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8694BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AA4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E1822527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsX91WyJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4028A21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731976AbfLMCbu (ORCPT
+        id S1731720AbfLMCdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:31:50 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34834 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfLMCbu (ORCPT
+        Thu, 12 Dec 2019 21:33:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52956 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731311AbfLMCdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 21:31:50 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so636663pfo.2;
-        Thu, 12 Dec 2019 18:31:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VU8W+29VAE6jFbK7qOuEkNtChestID0TQVv19tl4TzA=;
-        b=BsX91WyJ3Nk1wK5jIB4BZeo+UIaW3MvOPtwkDUqOsQ7lBFFvKxxAEngBlmSfQoZNLa
-         5tTxwd2JMnKzYHwFt5RLW5YLKoKtPful9Qjbf56CnidI3ksFOI6obT2UrvLw1d1hI1nr
-         w4AXDGo/hKt9EIswYATHIDAdg/2asKTWA5TMiaWYYW8Nd8Rwjq5alAj1ggM7TIMCK/+0
-         TYSuNCnEnbad767SJtJTjEdwbmAffLWOozv+D93+zwhkdsDXf31KdF1HvesQ0o7o57Qo
-         c9v5DGmWj3rURVqZwESr+6hDCSFDM5+73ZoZTSyaBHM49GcBVtZlS8LVMELxVR2wKIf3
-         UKyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VU8W+29VAE6jFbK7qOuEkNtChestID0TQVv19tl4TzA=;
-        b=WpbBA7mrdLgp5w70+13p1XFDYB/s6VwsRxCcZYRYIWnzjKOoVj3X21gDBtFJDyxa57
-         ReIabrjtKEKiO73iEoSXcK0XQcK2Mqz2v0gAF9JmKgBuHMV+r2qwhqvY/kFQDh6pORxd
-         4PJLOH0XMecoqV9Ph6rLnBwW8u+siY/uUs+g1cRTYJO9i0qxLTlu0Quk6rsKsEJn1jHV
-         QMZ9P0lI78J8sSB8BuUCFb0iNr+Nj99WUa6RQcPHdxm6PFX1LJC8gI6YMkbjBfK00JIO
-         Eawx6gHVgKmIm5yNM2W4HBFMHplvY30KZbCECa8ihiOL3ZeNOok9Aj4tN/fqremF9oaD
-         mP7Q==
-X-Gm-Message-State: APjAAAX8+ME4kTYCRj27/NYNlFdrQtPqr9TFIhttC/KXykY6h8YZ2L96
-        TMTkav/Fs7B6RRFR3L+kjGk=
-X-Google-Smtp-Source: APXvYqyoiXE9viROKrRyaoUenVpkWigIxRGvBXQmBt4YZeDe6PYpB+c5VJh2QMBypaRwwP6UG/4r+g==
-X-Received: by 2002:aa7:8007:: with SMTP id j7mr13594737pfi.73.1576204309272;
-        Thu, 12 Dec 2019 18:31:49 -0800 (PST)
-Received: from localhost.localdomain ([163.152.162.99])
-        by smtp.gmail.com with ESMTPSA id h68sm9443654pfe.162.2019.12.12.18.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 18:31:48 -0800 (PST)
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah@kernel.org, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, marmarek@invisiblethingslab.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, stern@rowland.harvard.edu,
-        Suwan Kim <suwan.kim027@gmail.com>
-Subject: [PATCH v2 2/2] usbip: Fix error path of vhci_recv_ret_submit()
-Date:   Fri, 13 Dec 2019 11:30:55 +0900
-Message-Id: <20191213023055.19933-3-suwan.kim027@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213023055.19933-1-suwan.kim027@gmail.com>
-References: <20191213023055.19933-1-suwan.kim027@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 12 Dec 2019 21:33:06 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBD2WPQZ076880
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 21:33:05 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wuq3wv2kc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 21:33:05 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 13 Dec 2019 02:33:03 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Dec 2019 02:33:00 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBD2Wxjf50528344
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 02:32:59 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 248064C044;
+        Fri, 13 Dec 2019 02:32:59 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F04E34C040;
+        Fri, 13 Dec 2019 02:32:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.206.100])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Dec 2019 02:32:57 +0000 (GMT)
+Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
+ measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Thu, 12 Dec 2019 21:32:57 -0500
+In-Reply-To: <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
+References: <20191213004250.21132-1-nramas@linux.microsoft.com>
+         <20191213004250.21132-2-nramas@linux.microsoft.com>
+         <1576202134.4579.189.camel@linux.ibm.com>
+         <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121302-0020-0000-0000-00000397A111
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121302-0021-0000-0000-000021EEACE1
+Message-Id: <1576204377.4579.206.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_08:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=999 impostorscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a transaction error happens in vhci_recv_ret_submit(), event
-handler closes connection and changes port status to kick hub_event.
-Then hub tries to flush the endpoint URBs, but that causes infinite
-loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
-"vhci_priv" in vhci_urb_dequeue() was already released by
-vhci_recv_ret_submit() before a transmission error occurred. Thus,
-vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
-continuously calls vhci_urb_dequeue().
+On Thu, 2019-12-12 at 17:59 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/12/19 5:55 PM, Mimi Zohar wrote:
+> >> +/*
+> >> + * ima_process_queued_keys() - process keys queued for measurement
+> >> + *
+> >> + * This function sets ima_process_keys to true and processes queued keys.
+> >> + * From here on keys will be processed right away (not queued).
+> >> + */
+> >> +void ima_process_queued_keys(void)
+> >> +{
+> >> +	struct ima_key_entry *entry, *tmp;
+> >> +	LIST_HEAD(temp_ima_keys);
+> >> +
+> >> +	if (ima_process_keys)
+> >> +		return;
+> >> +
+> >> +	/*
+> >> +	 * To avoid holding the mutex when processing queued keys,
+> >> +	 * transfer the queued keys with the mutex held to a temp list,
+> >> +	 * release the mutex, and then process the queued keys from
+> >> +	 * the temp list.
+> >> +	 *
+> >> +	 * Since ima_process_keys is set to true, any new key will be
+> >> +	 * processed immediately and not be queued.
+> >> +	 */
+> >> +	INIT_LIST_HEAD(&temp_ima_keys);
+> >> +
+> >> +	mutex_lock(&ima_keys_mutex);
+> > 
+> > Don't you need a test here, before setting ima_process_keys?
+> > 
+> > 	if (ima_process_keys)
+> > 		return;
+> > 
+> > Mimi
+> 
+> That check is done before the comment - at the start of 
+> ima_process_queued_keys().
 
-The root cause of this issue is that vhci_recv_ret_submit()
-terminates early without giving back URB when transaction error
-occurs in vhci_recv_ret_submit(). That causes the error URB to still
-be linked at endpoint list without “vhci_priv".
+The first test prevents taking the mutex unnecessarily.
 
-So, in the case of transaction error in vhci_recv_ret_submit(),
-unlink URB from the endpoint, insert proper error code in
-urb->status and give back URB.
+Mimi
 
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
----
- drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
-index 33f8972ba842..00fc98741c5d 100644
---- a/drivers/usb/usbip/vhci_rx.c
-+++ b/drivers/usb/usbip/vhci_rx.c
-@@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
- 	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
- 
- 	/* recv transfer buffer */
--	if (usbip_recv_xbuff(ud, urb) < 0)
--		return;
-+	if (usbip_recv_xbuff(ud, urb) < 0) {
-+		urb->status = -EPROTO;
-+		goto error;
-+	}
- 
- 	/* recv iso_packet_descriptor */
--	if (usbip_recv_iso(ud, urb) < 0)
--		return;
-+	if (usbip_recv_iso(ud, urb) < 0) {
-+		urb->status = -EPROTO;
-+		goto error;
-+	}
- 
- 	/* restore the padding in iso packets */
- 	usbip_pad_iso(ud, urb);
- 
-+error:
- 	if (usbip_dbg_flag_vhci_rx)
- 		usbip_dump_urb(urb);
- 
--- 
-2.20.1
+> +void ima_process_queued_keys(void)
+> +{
+> +	struct ima_key_entry *entry, *tmp;
+> +	LIST_HEAD(temp_ima_keys);
+> +
+> +	if (ima_process_keys)
+> +		return;
+> 
+> thanks,
+>   -lakshmi
 
