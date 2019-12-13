@@ -2,174 +2,109 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0681BC7D62B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A6C7D62E
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B01B2476B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109B024741
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DM0300Zk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eTetltOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfLMSBm (ORCPT
+        id S1728652AbfLMSDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:01:42 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33015 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLMSBl (ORCPT
+        Fri, 13 Dec 2019 13:03:00 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51106 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMSC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:01:41 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n25so182309lfl.0;
-        Fri, 13 Dec 2019 10:01:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P2fLhpKaXrNbLsGuII7YB7/yEJSelZ85p6b5L7lTKzs=;
-        b=DM0300Zk/3f1Zlhsj3gyk4qYp3WfTYEXzuNgPSY8fPT8wfSXtI3MH1Xlnpmq9mkz8R
-         JN+bfY3fU8TuoLdWsQVbyco4vPUXXnXlSG9NgnRxPr7709AomAiDz4d29Ne9Vyjhszj7
-         wk8dbzATX0g/F6/9tSVNV/Mwg+TooHOHF6rJRDkXHdiFvrNIiaqwdcBR8ya+Q3+1ybNv
-         Y6g9JIzr8S8zMpWwOUPugzDsKJ1uTrR0SZwdGrizDP+4kS7w1umgCOX528AV3xzLj3Kk
-         Tacr8benfbFFHooYnk3Fi6+xZwG48Fa90Lp+fxx6Z5Ch4y+xrHXAiI3bAS1rlIDXNebs
-         IbXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P2fLhpKaXrNbLsGuII7YB7/yEJSelZ85p6b5L7lTKzs=;
-        b=daQYP2u2aihLJOoYwdeumYtLysa1gcagpsuNhCcOBqjXQiKAW++K3zjSkZuVV+Uzmk
-         cID6fjVJNrIMRpkQ970/GIts30rasR3yoPsA69xWBf/0rs5wD8KDp9fRvAcQpjbNpNgL
-         MkzL8NrLYIFFynXDVgAj+F5DtoWCPGqLuAQCYnXAqdFdCQteC1iVsPezmX4z34WWveAM
-         BcuTgtMnLHMGOMnKstflySMIcuuA4uB9OqQ/GX9+fZHzLcHhprEOWhKjr5lJR+I70mEP
-         lljZQp2862bLKBfJnvVm5jG5CxUnubsc46DcFNQWJWJr/9PQQsqkHxiBKc/nM5RNqs9Q
-         YAkw==
-X-Gm-Message-State: APjAAAW7txKWoRK9l/hm1GqTSItZF9n0DvdaHfjZz6KhvHumcN8fFHtl
-        KWghilBq1shkqLpo8YKr1HLrgr49
-X-Google-Smtp-Source: APXvYqwO8brRkhwwl/lTHbp5OPCmIMztJP1+CZgCIWJ8N6W3wkUM8eXcLmrSlqTMAt4HJykxaUewgQ==
-X-Received: by 2002:ac2:498e:: with SMTP id f14mr9755035lfl.172.1576260098015;
-        Fri, 13 Dec 2019 10:01:38 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id l28sm4877916lfk.21.2019.12.13.10.01.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 10:01:37 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
- state
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-4-digetx@gmail.com> <20191213134746.GA222809@ulmo>
- <3c2b16c0-3e66-d809-b263-f27cf925e203@gmail.com>
-Message-ID: <1ed725c9-361b-c920-d532-dd640c3ca59f@gmail.com>
-Date:   Fri, 13 Dec 2019 21:01:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 13:02:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kstcnju99/4uTkeBULCR49gexo2kDQXxkPqHdnoayrQ=; b=eTetltOhOvd8GfMlH1WcvAmkA
+        1vfDGo/w2yy4HK1O09ym7FJxwYu03Vb0s/Cu44ECIFWxVFBe3ifBBAOWhmQced+aIPH7VCotHimx/
+        Gjyg0vfIGklWdGNkB/xiYYkT44RzTIGw6yKxGH55ciFOzr2GKklPtibKo2PNNVIa4plprFmVx8Yv0
+        AoBeBrU2ELaCMHLsjM7W/xi94xm8IydD9vtqfuwLYwCvcKP/aBrDswX5qM5u3Hnlsr2fxH/HE4y+s
+        WBojoeF9OfXQQFTki8bEWfUH5UrnncdSZkRs3ZJ+rsjHX/XqFicFtJGQjFtDaHjSTCvcffsAVNSul
+        wXdefbkww==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifpGk-0000Mj-V7; Fri, 13 Dec 2019 18:02:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C39ED304D2B;
+        Fri, 13 Dec 2019 19:01:02 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7E68920427392; Fri, 13 Dec 2019 19:02:23 +0100 (CET)
+Date:   Fri, 13 Dec 2019 19:02:23 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
+Message-ID: <20191213180223.GE2844@hirez.programming.kicks-ass.net>
+References: <20191213153553.GE20583@krava>
+ <20191213112438.773dff35@gandalf.local.home>
+ <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
+ <20191213121118.236f55b8@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <3c2b16c0-3e66-d809-b263-f27cf925e203@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213121118.236f55b8@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 17:04, Dmitry Osipenko пишет:
-> 13.12.2019 16:47, Thierry Reding пишет:
->> On Fri, Dec 13, 2019 at 02:34:28AM +0300, Dmitry Osipenko wrote:
->>> I noticed that sometime I2C clock is kept enabled during suspend-resume.
->>> This happens because runtime PM defers dynamic suspension and thus it may
->>> happen that runtime PM is in active state when system enters into suspend.
->>> In particular I2C controller that is used for CPU's DVFS is often kept ON
->>> during suspend because CPU's voltage scaling happens quite often.
->>>
->>> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
->>> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
->>> suspend/resume in the NOIRQ phase which is used for the system-level
->>> suspend/resume of the driver.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>
->> I've recently discussed this with Rafael in the context of runtime PM
->> support in the Tegra DRM driver and my understanding is that you're not
->> supposed to force runtime PM suspension like this.
->>
->> I had meant to send out an alternative patch to fix this, which I've
->> done now:
->>
->> 	http://patchwork.ozlabs.org/patch/1209148/
->>
->> That's more in line with what Rafael and I had discussed in the other
->> thread and should address the issue that you're seeing as well.
+On Fri, Dec 13, 2019 at 12:11:18PM -0500, Steven Rostedt wrote:
+> On Fri, 13 Dec 2019 08:51:57 -0800
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 > 
-> Well, either me or you are still having some misunderstanding of the
-> runtime PM :) To my knowledge there are a lot of drivers that enforce
-> suspension of the runtime PM during system's suspend, it should be a
-> right thing to do especially in a context of the Tegra I2C driver
-> because we're using asynchronous pm_runtime_put() and thus at the time
-> of system's suspending, the runtime PM could be ON (as I wrote in the
-> commit message) and then Terga's I2C driver manually disables the clock
-> on resume (woopsie).
+> > It had two choices. Both valid. I don't know why gdb picked this one.
+> > So yeah I think renaming 'ring_buffer' either in ftrace or in perf would be
+> > good. I think renaming ftrace one would be better, since gdb picked perf one
+> > for whatever reason.
+> 
+> Because of the sort algorithm. But from a technical perspective, the
+> ring buffer that ftrace uses is generic, where the perf ring buffer can
+> only be used for perf. Call it "event_ring_buffer" or whatever, but
+> it's not generic and should not have a generic name.
 
-Actually, looks like it's not the asynchronous pm_runtime_put() is the
-cause of suspending in active state. I see that only one of three I2C
-controllers is suspended in the enabled state, maybe some child (I2C
-client) device keeps it awake, will try to find out.
+Your ring buffer was so generic that I gave up trying to use it after
+trying for days :-( (the fundamental problem was that it was impossible
+to have a single cpu buffer; afaik that is still true today)
 
-> By invoking pm_runtime_force_suspend() on systems's suspend, the runtime
-> PM executes tegra_i2c_runtime_suspend() if device is in active state. On
-> system resume, pm_runtime_force_resume() either keeps device in a
-> suspended state or resumes it, say if for userspace disabled the runtime
-> PM for the I2C controller.
-> 
-> Rafael, could you please clarify whether my patch is doing a wrong thing?
-> 
->>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->>> index b3ecdd87e91f..d309a314f4d6 100644
->>> --- a/drivers/i2c/busses/i2c-tegra.c
->>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->>>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->>>  {
->>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->>> +	int err;
->>>  
->>>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
->>>  
->>> +	err = pm_runtime_force_suspend(dev);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>>  	return 0;
->>>  }
->>>  
->>> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->>>  	if (err)
->>>  		return err;
->>>  
->>> +	err = pm_runtime_force_resume(dev);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->>>  
->>>  	return 0;
->>> -- 
->>> 2.24.0
->>>
-> 
+Nor is the perf buffer fundamentally specific to perf, but there not
+being another user means there has been very little effort to remove
+perf specific things from it.
 
+There are major design differences between them, which is
+unquestionably, but I don't think it is fair to say one is more or less
+generic.
+
+How about we rename both? I'm a bit adverse to long names, so how about
+we rename the perf one to perf_buffer and the trace one to trace_buffer?
