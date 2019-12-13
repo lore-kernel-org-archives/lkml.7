@@ -2,112 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22604C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC80C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98E72253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="qrtwEar6"
+	by mail.kernel.org (Postfix) with ESMTP id D405724685
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576230838;
+	bh=jKIh3iYUlWtz83Qxczyg8PVQYY3+Pnl8BOzN1kt4UHA=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=SCxHar7YSkVs6xj8VskOAQUOSSg8P7dD4QD2Rt+5ZQvyTuPCIEY2ebZn4q1PaLt3N
+	 2jELZtwW6yb5nLSn0J4bBfEYlcscu8K860JBdMoq04eypPoRuyyggaOB/3y9FFQ+m2
+	 Mk9sddxeD48wtyt/E4qsXjwmtyFo+xFJpK2EH4UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfLMJtJ (ORCPT
+        id S1726313AbfLMJx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:49:09 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:50171 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725793AbfLMJtI (ORCPT
+        Fri, 13 Dec 2019 04:53:57 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34266 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLMJx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:49:08 -0500
-Received: from [IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478]
- ([IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id fhZHikfHdapzpfhZJidXpZ; Fri, 13 Dec 2019 10:49:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1576230546; bh=HUc3zKeJW9H6Hm1khB5tQ7L7YcRWJSdTYofpoPX9qAU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=qrtwEar6LLIeIHZPS8llpzRQ4IFlFWKm7fDx4dVA083IYnMltc0DxwLDb/ifmJdDP
-         i1Q7S/g1T8Q8MU908X/f2pSvGmeTFwr1bqeL7ye92+GsZpZdpqFwPf1mMeDqz9dODv
-         0pY9U5w4pErerP+P+CUhYxMVeSfZRIL3h3uqtgig/BWToH+QF66sWFVHGPI0a7EFxQ
-         9dRgYXItZdcpS8taNUPhgRkhruKnd605CMBxUEnZ1IHOf6RzHIE5fc+hrvpogq2KiE
-         FI3dW/eGXj5JZYsUH8UXvtAH8QB7Wd6d7E11RjGdyxyPDylC9gm39Ze+MuPWYuLu1y
-         pOb/pw45GRL/w==
-Subject: Re: [PATCH 2/5] firmware: imx: scu-pd: Add power domains for imx-jpeg
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org
-Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
- <1573053633-21437-3-git-send-email-mirela.rabulea@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <64ac7dca-9834-6a33-aa3e-9b7e2156dedc@xs4all.nl>
-Date:   Fri, 13 Dec 2019 10:49:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Dec 2019 04:53:57 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a15so5794274otf.1;
+        Fri, 13 Dec 2019 01:53:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=kQXMOkKLQBuzsUmvhlFsweud8OIK7QsHH7RggCqtmtM=;
+        b=ZT4tK+3ACxlVp+ZkROCmgagZqkWnGXiBITNjKoJBRUgfVnCJ6NRLwjTokcRuvhpRCK
+         ylS5plvgBIH2GyCF38cjKWcg3+Jh8Bh7BHlBwSL3yPe3TNLz+/GhQ3piREgBYvshmnyi
+         jxGsgvKKo0shp3rjbf6oy0Vlc5XWAOLWx7tC790yD+8VEsphREz8EhA3zlIaw5simVuT
+         Vu8J+zKX+NfOOg3PuMkQoqAkAvY+48CcpUVDXF/rnfQoIJFkyDZoWolMsdC2gEX+V+Sz
+         JQlKYjlk3KEzCFbqgRD/AXWStWWQSbo4Wd+LtElNkuivVfpJeGVXXD1mpeUc4rqOGIIB
+         4Q8Q==
+X-Gm-Message-State: APjAAAWsW6hy3NRqrtLk0JFcfvYGysvL5P4sbuS0Pfu9HoNj17w16zjl
+        ddudbTioRf7cXKIDB87xUMJEmnYhacgA2CIOOhlVBoXM
+X-Google-Smtp-Source: APXvYqycFbChVrFtM0/G5UhaTCn0IsrJkn0qmL3txvpHumg1p3pXeX7Yx1NDMUDXiQsmNM2Jza76bAJY2XM3A/HAAb0=
+X-Received: by 2002:a05:6830:95:: with SMTP id a21mr12964851oto.167.1576230836441;
+ Fri, 13 Dec 2019 01:53:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573053633-21437-3-git-send-email-mirela.rabulea@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEMmp7oYIkbgEM7D6JgjinsovQizeZ+jRSdBDf1vn0wC2EIYBFDFO/ELj/7QhrS6c06/ToBIh61C33SRbks5i1KBmmYommhaMesvVAMMjpUREU0IOlpK
- 4M/pYYUTI4ljknncmFtHR6S4/v85G/BmurDo7T52UK1i8sSV08Wa9USny4W8nKedNVUIwYJQOHH1JuhbtTD6HxUNtYdVWIMSNoSfvTu/dHT55KCNgCS6zDW2
- dNWACg8zftn2Nh+oSub47k1eokMC+N0fdxqnWO2WEaXcl26ryl/qFGUOykoXBhzPcsjSDwj4VqAybi/gKJ0+4xVor7jRNVLkodO/z+oZVPZXOvSKbUaQL5ab
- SM0IoushwIL6rVNCuzecZzZhq3YlR6qfsydSw+87qoamWkjHmgeiA4O2XRYSte9iM5wm5utflNaXtpEIuyXh2nGO/j2hu7uLaiK2Eyn5TMTSLVyLe4Mi6uZJ
- Bri+HPAAFr2KeLp9ThP3W8KoiTpVhNboHWsQ1fMDOxOtM/VjBr4xjAeop0dqLEMjQxJpXq2A9CXwd9b2i1lD5/1LADFGrOyw1rPiQe1XxkdRNl/c1SB73+6D
- YS7Ica2uJSGYK21tZKPOszhw8/SUj/irp40JgoC9NC2syv/R5ZHrAi4Vp1ayTVQrFrCjyiEETm4htr1kvFx8LLxVd+e1/SKshXjk9P/ajGe7PBZELiQY5zC7
- DOTBJRw1SkBCPbgNYZsvoN+gjNkDW83njqFgfLYuC/ibN3hRuSjhGm/aoyZqrQlGzg3WBg3tZq2z6FKM60uJMF9Fo/s29zitJgBmTdXbIPhsVzCNj59IJFl/
- LFya9Mfe4y5e4Ak1zY87rGyStzpcc0sEGtrtJABgDP/ZKeU5TbStYbjRKFB56Z17r3OOM3wI59ZiwC4+TxaGeAmVOTHFXzJ2AMqvLKup2cO2PpAcRSmDBxfH
- xfp4hYHvGVhw1cmhExq0KssjLs4WjVGhVBYIPbt5qQ8JHx7t
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 13 Dec 2019 10:53:45 +0100
+Message-ID: <CAJZ5v0g-xo1f2yPWGzFnrGQKFuHV=aDk_nV6s7hpWNnhnqyv5g@mail.gmail.com>
+Subject: [GIT PULL] Power management updates for v5.5-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 4:20 PM, Mirela Rabulea wrote:
-> The power domains are for imx8qxp/imx8qm JPEG encoder & decoder.
-> Each has 4 slots and a wrapper.
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+Hi Linus,
 
-Shawn, Daniel, can I have an Ack from you? It probably makes sense that
-this patch gets merged via the media subsystem.
+Please pull from the tag
 
-Regards,
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.5-rc2
 
-	Hans
+with top-most commit 4c84515da8099f4bab5d9312a0ffaf40f14aa87b
 
-> ---
->  drivers/firmware/imx/scu-pd.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-> index b556612..e7bf48a 100644
-> --- a/drivers/firmware/imx/scu-pd.c
-> +++ b/drivers/firmware/imx/scu-pd.c
-> @@ -158,6 +158,12 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
->  	/* DC SS */
->  	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
->  	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
-> +
-> +	/* IMAGE SS */
-> +	{ "img-jpegdec-mp", IMX_SC_R_MJPEG_DEC_MP, 1, false, 0 },
-> +	{ "img-jpegdec-s0", IMX_SC_R_MJPEG_DEC_S0, 4, true, 0 },
-> +	{ "img-jpegenc-mp", IMX_SC_R_MJPEG_ENC_MP, 1, false, 0 },
-> +	{ "img-jpegenc-s0", IMX_SC_R_MJPEG_ENC_S0, 4, true, 0 },
->  };
->  
->  static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
-> 
+ Merge branches 'pm-cpuidle' and 'acpi-pm'
 
+on top of commit e42617b825f8073569da76dc4510bfa019b1c35a
+
+ Linux 5.5-rc1
+
+to receive power management updates for 5.5-rc2.
+
+These add PM QoS support to devfreq and fix a few issues in that
+subsystem, fix two cpuidle issues and do one minor cleanup in there,
+and address an ACPI power management problem related to devices with
+special power management requirements, like fans.
+
+Specifics:
+
+ - Add PM QoS support, based on the frequency QoS introduced during
+   the 5.4 cycle, to devfreq (Leonard Crestez).
+
+ - Fix some assorted devfreq issues (Leonard Crestez).
+
+ - Fix an unintentional cpuidle behavior change (introduced during
+   the 5.4 cycle) related to the active polling time limit (Marcelo
+   Tosatti).
+
+ - Fix a recently introduced cpuidle helper function and do a minor
+   cleanup in the cpuidle core (Rafael Wysocki).
+
+ - Avoid adding devices with special power management requirements,
+   like fans, to the generic ACPI PM domain (Rafael Wysocki).
+
+Thanks!
+
+
+---------------
+
+Leonard Crestez (6):
+      PM / devfreq: Fix devfreq_notifier_call returning errno
+      PM / devfreq: Set scaling_max_freq to max on OPP notifier error
+      PM / devfreq: Introduce get_freq_range helper
+      PM / devfreq: Don't fail devfreq_dev_release if not in list
+      PM / devfreq: Add PM QoS support
+      PM / devfreq: Use PM QoS for sysfs min/max_freq
+
+Marcelo Tosatti (1):
+      cpuidle: use first valid target residency as poll time
+
+Rafael J. Wysocki (3):
+      ACPI: PM: Avoid attaching ACPI PM domain to certain devices
+      cpuidle: Fix cpuidle_driver_state_disabled()
+      cpuidle: Drop unnecessary type cast in cpuidle_poll_time()
+
+---------------
+
+ drivers/acpi/device_pm.c  |  12 +-
+ drivers/cpuidle/cpuidle.c |   3 +-
+ drivers/cpuidle/driver.c  |  10 ++
+ drivers/devfreq/devfreq.c | 273 ++++++++++++++++++++++++++++++++++------------
+ include/linux/devfreq.h   |  14 ++-
+ 5 files changed, 235 insertions(+), 77 deletions(-)
