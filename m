@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0826BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D944CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C389D24658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40C9206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLMKEX (ORCPT
+        id S1726962AbfLMKEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:04:23 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:60914 "EHLO gloria.sntech.de"
+        Fri, 13 Dec 2019 05:04:48 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60956 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfLMKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:04:21 -0500
+        id S1725937AbfLMKEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:04:48 -0500
 Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1ifhny-0000yI-M1; Fri, 13 Dec 2019 11:04:14 +0100
+        id 1ifhoC-0000yW-Aw; Fri, 13 Dec 2019 11:04:28 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Remove always-on properties from regulator nodes on rk3399-roc-pc.
-Date:   Fri, 13 Dec 2019 11:04:14 +0100
-Message-ID: <6226306.W37etdpfGF@phil>
-In-Reply-To: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
-References: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
+To:     Jack Chen <redchenjs@foxmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jack Chen <redchenjs@live.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for rk3288-tinker
+Date:   Fri, 13 Dec 2019 11:04:27 +0100
+Message-ID: <47785260.740ClddZN9@phil>
+In-Reply-To: <20191202153540.26143-1-redchenjs@foxmail.com>
+References: <20191202153540.26143-1-redchenjs@foxmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -44,18 +43,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-Am Dienstag, 10. Dezember 2019, 13:44:38 CET schrieb Markus Reichl:
-> Some regulators don't need the always-on property, remove it.
+Am Montag, 2. Dezember 2019, 16:35:40 CET schrieb Jack Chen:
+> From: Jack Chen <redchenjs@live.com>
 > 
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> The Tinker Board / S devices use a special chip variant called rk3288-c
+> and use different operating points with a higher max frequency.
+> 
+> So add the missing operating points for Tinker Board / S devices, also
+> increase the vdd_cpu regulator-max-microvolt to 1400000 uV so that the
+> cpu can operate at 1.8 GHz.
+> 
+> Signed-off-by: Jack Chen <redchenjs@live.com>
 
-applied for 5.6, but please check your mail client as "git am" was quite
-unhappy about it, which I fixed up in the patch itself.
-Maybe just switch to "git send-email" instead of using Thunderbird.
+applied for 5.6
 
+Thanks
 Heiko
-
 
 
