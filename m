@@ -2,64 +2,171 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C612C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC92C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A1E2465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A1E2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="U7l68pvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfLMKIg (ORCPT
+        id S1726592AbfLMKJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:08:36 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:32806 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfLMKIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:08:35 -0500
-Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ifhrt-000106-VL; Fri, 13 Dec 2019 11:08:17 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
-Cc:     tom@radxa.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Akash Gajjar <akash@openedev.com>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        matwey.kornilov@gmail.com
-Subject: Re: [PATCH] arm64: dts: rockchip: Add regulators for PCIe for Radxa Rock Pi 4 board
-Date:   Fri, 13 Dec 2019 11:08:17 +0100
-Message-ID: <2621713.C5CYpBeeQa@phil>
-In-Reply-To: <20191120161302.5157-1-matwey@sai.msu.ru>
-References: <CAFjve-AT6c-yweF0mOPea-caG3n43nZzVPcwef-qp+n35JN9ig@mail.gmail.com> <20191120161302.5157-1-matwey@sai.msu.ru>
+        Fri, 13 Dec 2019 05:09:52 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:54313 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbfLMKJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:09:52 -0500
+Received: from [IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478]
+ ([IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id fhtMiknqAapzpfhtNidg1R; Fri, 13 Dec 2019 11:09:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1576231789; bh=hJ/t9NURuHq3BdeEoIZyQoRCl+yW29RTpxiZQmkLv/A=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=U7l68pvO0DPIIaiqz0qm6xPnntPTqIbfBkkfMIyMDzwL0PN+Z6JrXV27TjrIC4DQT
+         mFfSgnWZrW5t/EvnNU8xcQpPOMfhHG34TirED+yblFtP0KmAq3I95ItdhtJvujw8Rm
+         rajFX+iaRfdfk2sABnkhXVl6ah/BbTHwMUuXMxJ+OzcNrobJ4jvykgfAZydha6MSB8
+         S2PAS9/coTeBAmHDOOMVHdHVXTKrXBzyL+FcPdGKwlBblOdgy/YQHe6zxF5iyw5JrD
+         msLnzsPprosdR9CGZ32J6cRW6txB0JdMpceWNSzb41u06UXenngbpHkESjVqBsZotV
+         7nqYHt68ULF4A==
+Subject: Re: [PATCH] media: vimc: get pixformat info from v4l2_format_info to
+ avoid code repetition
+To:     "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+References: <20191015225258.6923-1-carlosecb@tutanota.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1a5b1c17-639e-7c40-e439-35acb3042e9e@xs4all.nl>
+Date:   Fri, 13 Dec 2019 11:09:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191015225258.6923-1-carlosecb@tutanota.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJ89Hb5T+Fogr8J0Szd8KhhPbGJPS31Agb8VidOX5uPNCsnuwaX4NfMal3klzNhcrK8TIGMhrqgAhwMcLkYbplShqcf2EppAKCRyo8G84/lBrB5EYVGk
+ BeTDFg9HK1YkMdR1Ks3wJ3nt7JFWLzZ8x4EgEfyU4KrNz2xQN26nxXFDyaPs/gwNDoiG81u9mvmqc4ywzyac6yLZcedB6ESw8v8gWMPKJ2H5l4MZ0+wIULkb
+ +3VKKZYkykjOrR/odOZ20xQsSINzgfYjEOB0RPT5/EPcc+ikeIgJEKb/gf4oIB3JRZ+hxQRPpjbF8TrLMF1qMhR11I5bQYTaqtmJdjqnfJUfuctKgliB9/AF
+ 4ckkGj7Gg0j2n5f4XgWUTae78Si/2TQtRk/xfeX2BKcgCz4bVbZZ5mXHnXcYoU7jzmHPz3DnNa7Wy1UKdwM0PQi3ZjgSy+uzeX9jDXNpYhLBnDwc3+4IfVPp
+ fGfhPfUotM/c55o1/B/IRiW+V3r3J7tboPNANk5EQuG+48/g4PkNhYzo2v8RD+1agLJ5ZEtNOLPetOyi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 20. November 2019, 17:12:54 CET schrieb Matwey V. Kornilov:
-> Add 0.9V and 1.8V voltage regulators for Radxa Rock Pi 4 board PCIe.
+On 10/16/19 12:52 AM, Carlos E. C. Barbosa wrote:
+> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
 > 
-> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> There is overlapping code over two distinct lists. This repurposes one
+> of vimc_pix_map for strictly mapping formats and remaps other calls to
+> the matching v4l2_format_info.
+> 
+> ---
+> 
+> Change in v2:
+> - Change commit message
+> - Remove struct with mbus code and pointer to v4l2_format_info
+> - The map and info are directly called when strictly needed
+> 
+> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
+> ---
+>  drivers/media/platform/vimc/vimc-capture.c | 14 ++--
+>  drivers/media/platform/vimc/vimc-common.c  | 78 ++++++----------------
+>  drivers/media/platform/vimc/vimc-common.h  |  9 +--
+>  drivers/media/platform/vimc/vimc-debayer.c |  9 ++-
+>  drivers/media/platform/vimc/vimc-scaler.c  | 39 +++++++++--
+>  drivers/media/platform/vimc/vimc-sensor.c  | 26 +++++---
+>  6 files changed, 89 insertions(+), 86 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+> index 602f80323031..65282d4d8a1e 100644
+> --- a/drivers/media/platform/vimc/vimc-capture.c
+> +++ b/drivers/media/platform/vimc/vimc-capture.c
+> @@ -85,7 +85,8 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>  				    struct v4l2_format *f)
+>  {
+>  	struct v4l2_pix_format *format = &f->fmt.pix;
+> -	const struct vimc_pix_map *vpix;
+> +	struct vimc_pix_map *vpix;
+> +	struct v4l2_format_info *vinfo;
 
-applied for 5.6
+No const here,
 
-Thanks
-Heiko
+>  
+>  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+>  				VIMC_FRAME_MAX_WIDTH) & ~1;
+> @@ -99,7 +100,8 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>  		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+>  	}
+>  	/* TODO: Add support for custom bytesperline values */
+> -	format->bytesperline = format->width * vpix->bpp;
+> +	vinfo = v4l2_format_info(vpix->pixelformat);
 
+but v4l2_format_info returns a const pointer. Does this patch even
+compile without compiler warnings?
 
+> +	format->bytesperline = format->width * vinfo->bpp[0];
+>  	format->sizeimage = format->bytesperline * format->height;
+>  
+>  	if (format->field == V4L2_FIELD_ANY)
+> @@ -159,7 +161,7 @@ static int vimc_cap_enum_fmt_vid_cap(struct file *file, void *priv,
+>  static int vimc_cap_enum_framesizes(struct file *file, void *fh,
+>  				    struct v4l2_frmsizeenum *fsize)
+>  {
+> -	const struct vimc_pix_map *vpix;
+> +	struct vimc_pix_map *vpix;
+>  
+>  	if (fsize->index)
+>  		return -EINVAL;
+> @@ -387,7 +389,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>  				     const char *vcfg_name)
+>  {
+>  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+> -	const struct vimc_pix_map *vpix;
+> +	struct vimc_pix_map *vpix;
+> +	struct v4l2_format_info *vinfo;
+>  	struct vimc_cap_device *vcap;
+>  	struct video_device *vdev;
+>  	struct vb2_queue *q;
+> @@ -443,7 +446,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>  	/* Set default frame format */
+>  	vcap->format = fmt_default;
+>  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
+> +	vinfo = v4l2_format_info(vpix->pixelformat);
+> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
+>  	vcap->format.sizeimage = vcap->format.bytesperline *
+>  				 vcap->format.height;
+>  
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index a3120f4f7a90..73feea089921 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -14,185 +14,151 @@
+>   * NOTE: non-bayer formats need to come first (necessary for enum_mbus_code
+>   * in the scaler)
+>   */
+> -static const struct vimc_pix_map vimc_pix_map_list[] = {
+> +static struct vimc_pix_map vimc_pix_map_list[] = {
+
+Why was const removed here?
+
+This patch also needs to be rebased, so I stop reviewing here and
+wait for a v2.
+
+Regards,
+
+	Hans
