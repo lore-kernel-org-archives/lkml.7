@@ -2,123 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D8C3B181
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E0AC3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00B246BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8E7246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Dz5wO7vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLMLIU (ORCPT
+        id S1726744AbfLMLMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:08:20 -0500
-Received: from outbound-smtp36.blacknight.com ([46.22.139.219]:54814 "EHLO
-        outbound-smtp36.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbfLMLIU (ORCPT
+        Fri, 13 Dec 2019 06:12:06 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16232 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726608AbfLMLMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:08:20 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.26])
-        by outbound-smtp36.blacknight.com (Postfix) with ESMTPS id BB7F6CF9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:08:17 +0000 (GMT)
-Received: (qmail 3412 invoked from network); 13 Dec 2019 11:08:17 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Dec 2019 11:08:17 -0000
-Date:   Fri, 13 Dec 2019 11:08:06 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
-        konrad.wilk@oracle.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Subject: Re: [PATCH v15 0/7] mm / virtio: Provide support for free page
- reporting
-Message-ID: <20191213110806.GA3178@techsingularity.net>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
- <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
+        Fri, 13 Dec 2019 06:12:06 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDB9en6024382;
+        Fri, 13 Dec 2019 12:09:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=kn47bweEcRXjNdyx35wkLzXPiXE55ZWSwCRUAHvHXbA=;
+ b=Dz5wO7vZTR3jxun7AaF48i5y0oFQ2pc7iZZlcyCCMeEoJin3Bpr6/iMy3UkCYKt/ZWhQ
+ FnZweSWH/7Z+75WlrB0Nv/PaYOaTctPY/lJeJK7XWfivA3LkclQTOj0XdVWBVEoG8kqg
+ Hu5En5eAQ443ZWw24bS3/KmdLOnlMX2xdv+Jscv6hMMc6aDrHjHGXm8zt4SUx8fl56Y+
+ k5LGLR/wSWPEfXHBoIAouty4/WnpjAucLQXa1OYl2PH5Aoud0m63qvG61hMwRjXFIqZR
+ kXp3fj/NXokm2BmWU4zdAm02br9XtEkBSQl1VqzBi0Q45nZDkXOJm5NRjnTQyS0+Jbcj 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfvrut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Dec 2019 12:09:57 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0406A100034;
+        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BDC572AB94E;
+        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Dec
+ 2019 12:09:52 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 13 Dec 2019 12:09:51 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
+Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
+Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oCAALXMAIABDOQA
+Date:   Fri, 13 Dec 2019 11:09:51 +0000
+Message-ID: <7b0167ca-6797-b89a-dd61-fa6db30022f7@st.com>
+References: <20191211150021.20125-1-benjamin.gaignard@st.com>
+ <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
+ <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
+ <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD768ADD1075174EBB9969B3FA46AC4C@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_03:2019-12-13,2019-12-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 11:00:42AM +0100, David Hildenbrand wrote:
-> > A brief history on the background of free page reporting can be found at:
-> > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
-> > 
-> > Changes from v13:
-> > https://lore.kernel.org/lkml/20191105215940.15144.65968.stgit@localhost.localdomain/
-> > Rewrote core reporting functionality
-> >   Merged patches 3 & 4
-> >   Dropped boundary list and related code
-> >   Folded get_reported_page into page_reporting_fill
-> >   Folded page_reporting_fill into page_reporting_cycle
-> > Pulled reporting functionality out of free_reported_page
-> >   Renamed it to __free_isolated_page
-> >   Moved page reporting specific bits to page_reporting_drain
-> > Renamed phdev to prdev since we aren't "hinting" we are "reporting"
-> > Added documentation to describe the usage of unused page reporting
-> > Updated cover page and patch descriptions to avoid mention of boundary
-> > 
-> > Changes from v14:
-> > https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
-> > Renamed "unused page reporting" to "free page reporting"
-> >   Updated code, kconfig, and patch descriptions
-> > Split out patch for __free_isolated_page
-> >   Renamed function to __putback_isolated_page
-> > Rewrote core reporting functionality
-> >   Added logic to reschedule worker in 2 seconds instead of run to completion
-> >   Removed reported_pages statistics
-> >   Removed REPORTING_REQUESTED bit used in zone flags
-> >   Replaced page_reporting_dev_info refcount with state variable
-> >   Removed scatterlist from page_reporting_dev_info
-> >   Removed capacity from page reporting device
-> >   Added dynamic scatterlist allocation/free at start/end of reporting process
-> >   Updated __free_one_page so that reported pages are not always added to tail
-> >   Added logic to handle error from report function
-> > Updated virtio-balloon patch that adds support for page reporting
-> >   Updated patch description to try and highlight differences in approaches
-> >   Updated logic to reflect that we cannot limit the scatterlist from device
-> 
-> Last time Mel said
-> 
-> "Ok, I'm ok with how this hooks into the allocator as the overhead is
-> minimal. However, the patch itself still includes a number of
-> optimisations instead of being a bare-boned implementation of the
-> feature with optimisations layered on top."
-> 
-
-I didn't get the chance to take a close look as I'm trying to clear as
-much as possible from my table on the run-up to Christmas so I don't come
-back to a disaster inbox. I also noted that the Acks for earlier patches
-were not included so I was uncertain if doing a full review would still
-be a good use of time when time was tight.
-
-That said, some optimisations are still included but much reduced. For
-example, list rotations are still there but it's very straight-forward.
-The refcount is gone which is good and replaced by a state, which could be
-be better documented, but is more straight forward and the zone->lock is
-back protecting the free lists primarily and not zone metadata or prdev
-metadata (at least not obviously). I didn't put in the time to see if
-the atomic_set in page_reporting_process() is ok or whether state could
-be lost but I *think* it's ok because it should be called from just one
-workqueue request and they shouldn't be stacked. A comment there explaining
-why atomic_set is definitely correct would be helpful.
-
-I'm inclined to decide that yes, this version is potentially ok as a
-bare minimum but didn't put in the time to be 100% sure.
- 
--- 
-Mel Gorman
-SUSE Labs
+DQpPbiAxMi8xMi8xOSA4OjA3IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBEZWMg
+MTIsIDIwMTkgYXQgMjoxNiBBTSBCZW5qYW1pbiBHQUlHTkFSRA0KPiA8YmVuamFtaW4uZ2FpZ25h
+cmRAc3QuY29tPiB3cm90ZToNCj4+DQo+PiBPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmlu
+ZyB3cm90ZToNCj4+PiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCA5OjAwIEFNIEJlbmphbWluIEdh
+aWduYXJkDQo+Pj4gPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4gd3JvdGU6DQo+Pj4+IFR5cGlj
+YWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBwd21AeHh4Lg0KPj4+PiBUaGUgcGF0dGVybiBz
+aG91bGRuJ3QgbWF0Y2ggbm9kZXMgbmFtZWQgcHdtLXh4eCB0byBhdm9pZA0KPj4+PiBjb25mbGlj
+dHMgd2l0aCBwaW5tdXggb3IgcHdtLWZhbiBub2Rlcy4NCj4+PiBJdCBvbmx5IG1hdGNoZXMgcHdt
+LSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNvIHRoYXQgc2hvdWxkbid0DQo+Pj4g
+YmUgYSBwcm9ibGVtLiBUaGlzIGlzIG5lZWRlZCBmb3IgdGhpbmdzIGxpa2UgR1BJTyBiYXNlZCBk
+ZXZpY2VzIChub3QNCj4+PiBqdXN0IFBXTXMpIHdoaWNoIGRvbid0IGhhdmUgYW55IGFkZHJlc3Mu
+DQo+Pj4NCj4+PiBQaW5tdXggbm9kZXMgYXJlIGdvaW5nIHRvIG5lZWQgdG8gYWRvcHQgc29tZSBz
+b3J0IG9mIHN0YW5kYXJkIHBhdHRlcm4NCj4+PiB3ZSBjYW4gbWF0Y2ggb24uDQo+PiBJIGhhdmUg
+cHVzaCBhIHBhdGNoIHRvIHN0b3AgdXNpbmcgJ0AnIGFuZCAnXycgaW4gcGlubXV4IGdyb3VwcyBu
+YW1lczoNCj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMTYyNTkx
+Lw0KPj4gSXQgcmVtb3ZlIHRoZSB3YXJuaW5ncyB3aGVuIGNvbXBpbGluZyB0aGUgZGV2aWNldHJl
+IHdpdGggVz0xMiBidXQgcHdtLnlhbWwNCj4+IGNvbXBsYWluIGJlY2F1c2UgcHdtIHBpbm11eCBp
+cyBuYW1lZCBwd20tMS4NCj4+DQo+PiBIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRo
+ZSBzYW1lIHRpbWUgPw0KPiBOYW1lIHRoZSBub2RlcyAqLXBpbnMgb3IgKi1waW5zLVswLTldLiBZ
+b3UncmUgcHJvYmFibHkgZ29pbmcgdG8gbmVlZA0KPiBzb21lIHBhdHRlcm4gYW55d2F5cyB3aGVu
+IHlvdSBkbyBhIHBpbm11eCBzY2hlbWEuDQorIEFsZXggYmVjYXVzZSB0aGF0IGltcGFjdCBwaW4g
+bm9kZSBwYXR0ZXJuIGluIHN0LHN0bTMyLXBpbmN0cmwueWFtbA0KDQpCZW5qYW1pbg0KDQo+IFJv
+Yg==
