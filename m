@@ -2,89 +2,143 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B3DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7D6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7707824658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D262253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+daNgiQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RtuBqCyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLMImY (ORCPT
+        id S1726427AbfLMIqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:42:24 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41177 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfLMImX (ORCPT
+        Fri, 13 Dec 2019 03:46:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52590 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfLMIqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:42:23 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m30so1333074lfp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:42:22 -0800 (PST)
+        Fri, 13 Dec 2019 03:46:11 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so5389972wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:46:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=a+daNgiQiCYJ8MM6UhnHVrWdoGUXOn3GJH0VpgdC9SpDGXCOkLoPmTrlEqRvbWJSWy
-         scJgeIUaLdduo9o91tDrNbzuthgAPOM+aFslD2C8TAcTn1tMXB+WFmtOrTcyb+iujSMm
-         7oUPcMGhQBLpN99Q5fopI9AB5FHtDFFgTs4hShQap/ML5xXW3jaBZ0I1lvhSAhM1jDPv
-         ujjyEpNoH383Drw+a2PgfQ3Yo6URBxeqlRWSJygP0NQJUkP0r2uCOw88AmCK3y5gPvfc
-         4JPfg+gDEUV27h+riy/0uIHzNAKSe1b2pC1GVrN+eAOOp5FrGij5sffNU2QagZHee+tA
-         xU6w==
+        bh=JQX7IoRzayvPcwiznKH/C/tA7zz363CN9vLxnqOgif4=;
+        b=RtuBqCypClYu4hSNRut649Y51ufh+CnNakb7XqMkMFIN45kBOypKcc0SrEPZapbUbZ
+         eGg52U92PP1gqW1CoH4n51jEblXko9+57A6YbpfFOJcICyD581ZbJqNd0VEuQT0nAX5B
+         cn7crY7bStV7Saiewszg6Ep4d0SDj18MngTI0bsygFQzD0jAKc8C5XixQy36gHQJV/3E
+         76jPf8YHLHgIJlBNDA4l11qbN2nyVcCxCwU8uu5pmbKeoOL5Zyk6LgfwlXBAerKgcKk3
+         RUB59+7PjnyMB2peBy4GD9vZjdp6Bzir/FSPvwZteLuhBtr0NE5Y3HvOESE5mRW1SLsL
+         nFaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=Cr3F3IS1kQbbgPY29ziIZl1cpUjY8aZcML5fFFOIkeJWVBw+OfjtLFc/hwJlbWiMLr
-         exHGqSMw3mxW6GIG7aDXII8YMcbTa4LxdxTApOrPHYVpTic++28ZS1MwoNi34XaJ6gc+
-         7FE2izb8qVN+JiBdDisfu6FqnKwRlKz4EBw2LXHv8UDzzrnFqNWutRrvGxwDgT7N4ZXE
-         l26Zf8PvrET9amtjrzxVTyV7swnpYYvbz+kKa+8xvAcOhXwRXqkiDtnqiCTPHGss2Wuk
-         bGbXBXIiLbqLtnE+m67jmCvvvHdbtJOEk7MJrLKg7bMoDXrIyYkUnXhHw219fqzRtnR1
-         vZbQ==
-X-Gm-Message-State: APjAAAUPhdMr8whbtqlYUQdBuVeU1RELxg+xNd53QjHMXw7kNBBMMlQY
-        bBUfGJ+JayMrpnUjY/UJOnLmQYpDulL/gphlOpXhtQ==
-X-Google-Smtp-Source: APXvYqz79bn/tRSB6q2MlLzPdVGXKAD3lMBgrE6UtCaOD5iDixhhmHkxpkSan8geCglyFBt3hCB+ZaEC8V1y5zn49yA=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8062235lfp.133.1576226541430;
- Fri, 13 Dec 2019 00:42:21 -0800 (PST)
+        bh=JQX7IoRzayvPcwiznKH/C/tA7zz363CN9vLxnqOgif4=;
+        b=ccVXlymt+jr3GhPRUILFzaNK1jGjOUbHecdo5E2TVeEfGakG4v3Hj33iQ7/g0V+m57
+         LS0qvwNScVlB9VU8bFVtpTZgOT2g+oE2t44gtt+oNU085lbXjnDuZo8oc95gEEP3PsC4
+         ox1+ZawiUiDo8uKJo+Gmuc+7bGUFyOaBuiqDlBp9lkWjQ7ZI8DBROUwrdW9xUSb8z9Lt
+         1HuSofaA/TOlOJ+eNsyTUaODA67sXWrYSANnOS4wcE39VwFoo1TPB3+lbdXh8nYk2C5e
+         sDJQrNG4s+rqiTLu42vPIw6eNXj9wyJSiYy8xfDOM5otShxUDblmWmyGkGrhA5L9BNHF
+         6UGg==
+X-Gm-Message-State: APjAAAXbl9KuI9x8mXw5Q2A92uGIeuC6Gz9NzOvvJVUdLkZq8koncA1i
+        qrzzbXaCp7l62va0KK0dwElR5oPLZG606ruuBK/E/g==
+X-Google-Smtp-Source: APXvYqzVK+sD9PVDSQiL44xPU80qjBmQ9NCFE47b46tkM0il75eFivEkftfSrJz/xM3MOjuAMjye6IiNhlm60k4K7L4=
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr12309700wmc.9.1576226768892;
+ Fri, 13 Dec 2019 00:46:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20191202061432.3996-1-andrew@aj.id.au>
-In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 Dec 2019 09:42:10 +0100
-Message-ID: <CACRpkdZVdP+rfnhF8Dfk+jLsqTEvm_tqv6to2s4nnJh8diaM+A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191212103158.4958-1-hdegoede@redhat.com> <20191212103158.4958-3-hdegoede@redhat.com>
+ <CAKv+Gu9AjYVvLot9+enuwSWfyfzqgCWSuW3ioccm3FJ7KFA8eA@mail.gmail.com>
+ <82c65f05-1140-e10e-ba2f-0c4c5c85bbc8@redhat.com> <CAKv+Gu9StgwBs=y6KU2Pb_P499SfH8po978gHoAbXVL8mB722A@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9StgwBs=y6KU2Pb_P499SfH8po978gHoAbXVL8mB722A@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 13 Dec 2019 08:46:07 +0000
+Message-ID: <CAKv+Gu8UjvLO=Y9LDTOTzx+xt9xJZJBw+4wt8m49FAvzC8iB8A@mail.gmail.com>
+Subject: Re: [PATCH 5.5 regression fix 2/2] efi/libstub/helper: Initialize
+ pointer variables to zero for mixed mode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 7:12 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Thu, 12 Dec 2019 at 15:02, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On Thu, 12 Dec 2019 at 13:45, Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> > On 12-12-2019 12:29, Ard Biesheuvel wrote:
+> > > On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
+> > >>
+> > >> When running in EFI mixed mode (running a 64 bit kernel on 32 bit EFI
+> > >> firmware), we _must_ initialize any pointers which are returned by
+> > >> reference by an EFI call to NULL before making the EFI call.
+> > >>
+> > >> In mixed mode pointers are 64 bit, but when running on a 32 bit firmware,
+> > >> EFI calls which return a pointer value by reference only fill the lower
+> > >> 32 bits of the passed pointer, leaving the upper 32 bits uninitialized
+> > >> unless we explicitly set them to 0 before the call.
+> > >>
+> > >> We have had this bug in the efi-stub-helper.c file reading code for
+> > >> a while now, but this has likely not been noticed sofar because
+> > >> this code only gets triggered when LILO style file=... arguments are
+> > >> present on the kernel cmdline.
+> > >>
+> > >> Cc: stable@vger.kernel.org
+> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > >> ---
+> > >>   drivers/firmware/efi/libstub/efi-stub-helper.c | 4 ++--
+> > >>   1 file changed, 2 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > >> index e02579907f2e..6ca7d86743af 100644
+> > >> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > >> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > >> @@ -365,7 +365,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+> > >>                                    u64 *file_sz)
+> > >>   {
+> > >>          efi_file_handle_t *h, *fh = __fh;
+> > >
+> > > What about h? Doesn't it suffer from the same problem?
+> > >
+> > >> -       efi_file_info_t *info;
+> > >> +       efi_file_info_t *info = NULL;
+> > >>          efi_status_t status;
+> > >>          efi_guid_t info_guid = EFI_FILE_INFO_ID;
+> > >>          unsigned long info_sz;
+> > >
+> > > And info_sz?
+> >
+> > And "efi_file_io_interface_t *io" and "efi_file_handle_t *fh"
+> > in efi_open_volume().
+> >
+> > I think that is all of them.
+> >
+>
+> OK.
+>
+> I'll fix it up locally.
 
-> This series adds USB and pinconf support to the AST2600 pincontrol driver. The
-> patches have largely been developed by Johnny Huang from ASPEED and have been
-> used for bringup and verification of the chip. The were developed around the
-> time of the 5.4 merge window but I got distracted for a while and haven't had
-> an opportunity to send them until now. They've had a run in the OpenBMC kernel
-> tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
-> getting them in early for 5.6 so we don't miss another release.
-
-All 7 patches applied!
-
-Yours,
-Linus Walleij
+Actually, I am going to drop this patch, and disable file loading
+entirely for mixed mode. Your findings here prove it is unlikely that
+it works on mixed mode systems today, and the
+efi_file_handle_t::open() prototype is actually incompatible with
+mixed mode, since it takes u64 arguments, which are marshalled
+incorrectly by the thunking code (each function arg gets a 32-bit
+stack slot for the 32-bit calling convention, which works fine for
+pointers and smaller types, but it breaks for u64 since they require
+two stack slots)
