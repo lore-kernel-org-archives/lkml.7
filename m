@@ -2,149 +2,123 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6432AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A28C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F622465B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76AC52465B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfLMIeP (ORCPT
+        id S1726676AbfLMIe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:34:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35322 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbfLMIeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:34:15 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3DE0DAB9B;
-        Fri, 13 Dec 2019 08:34:12 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 09:34:11 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
-        joe.lawrence@redhat.com, shuah@kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Fri, 13 Dec 2019 03:34:58 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:34782 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfLMIe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:34:58 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0429A2007E7;
+        Fri, 13 Dec 2019 09:34:56 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BDAC200342;
+        Fri, 13 Dec 2019 09:34:51 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4A465402EE;
+        Fri, 13 Dec 2019 16:34:45 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: livepatch: Fix it to do root uid check and
- skip
-Message-ID: <20191213083411.delrxditrpcdm7az@pathway.suse.cz>
-References: <20191213015617.23110-1-skhan@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213015617.23110-1-skhan@linuxfoundation.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Cc:     Wen He <wen.he_1@nxp.com>
+Subject: [v12 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
+Date:   Fri, 13 Dec 2019 16:34:01 +0800
+Message-Id: <20191213083402.35678-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-12-12 18:56:17, Shuah Khan wrote:
-> livepatch test configures the system and debug environment to run
-> tests. Some of these actions fail without root access and test
-> dumps several permission denied messages before it exits.
-> 
-> Fix it to check root uid and exit with skip code instead.
+LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+output interface. Add a YAML schema for this.
 
-It works when I run the tests directly, e.g.
-
-$> cd tools/testing/selftests/livepatch
-$> ./test-livepatch.sh
-
-But I still get an error from the selftest framework when running
-make run_tests:
-
-$> make run_tests
-TAP version 13
-1..5
-# selftests: livepatch: test-livepatch.sh
-/mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-not ok 1 selftests: livepatch: test-livepatch.sh # exit=1
-# selftests: livepatch: test-callbacks.sh
-/mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-not ok 2 selftests: livepatch: test-callbacks.sh # exit=1
-# selftests: livepatch: test-shadow-vars.sh
-/mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-not ok 3 selftests: livepatch: test-shadow-vars.sh # exit=1
-# selftests: livepatch: test-state.sh
-/mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-not ok 4 selftests: livepatch: test-state.sh # exit=1
-# selftests: livepatch: test-ftrace.sh
-/mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-not ok 5 selftests: livepatch: test-ftrace.sh # exit=1
-
-The same problem is also in linux-next. Is this a know problem, please?
-
-
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  tools/testing/selftests/livepatch/functions.sh | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-> index 31eb09e38729..014b587692f0 100644
-> --- a/tools/testing/selftests/livepatch/functions.sh
-> +++ b/tools/testing/selftests/livepatch/functions.sh
-> @@ -45,6 +57,7 @@ function pop_config() {
->  }
->  
->  function set_dynamic_debug() {
-> +	is_root
->          cat <<-EOF > /sys/kernel/debug/dynamic_debug/control
->  		file kernel/livepatch/* +p
->  		func klp_try_switch_task -p
-
-This test is superfluous.
-
-I guess that it was added because of test-state.sh. But it calls
-set_dynamic_debug() instead of config_setup() by mistake.
-Please, use the patch below instead of the above hunk.
-
-Otherwise, this patch looks good. Thanks for fixing this.
-Without the hunk above, and with the patch below, feel free to use:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-
-Here is the fix of test-state.sh:
-
-From 01ca8fd71fc964b892e54aea198537d007d33b4f Mon Sep 17 00:00:00 2001
-From: Petr Mladek <pmladek@suse.com>
-Date: Fri, 13 Dec 2019 09:26:45 +0100
-Subject: [PATCH] selftests/livepatch: Use setup_config() also in test-state.sh
-
-The commit 35c9e74cff4c798d0 ("selftests/livepatch: Make dynamic debug
-setup and restore generic") introduced setup_config() to prepare
-the testing environment. All selftests should call it instead
-of set_dynamic_debug().
-
-test-state.sh has been developed in parallel and was not converted
-by mistake.
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- tools/testing/selftests/livepatch/test-state.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/clock/fsl,plldig.yaml | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
 
-diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
-index dc2908c22c26..5c80e51fca55 100755
---- a/tools/testing/selftests/livepatch/test-state.sh
-+++ b/tools/testing/selftests/livepatch/test-state.sh
-@@ -8,7 +8,7 @@ MOD_LIVEPATCH=test_klp_state
- MOD_LIVEPATCH2=test_klp_state2
- MOD_LIVEPATCH3=test_klp_state3
- 
--set_dynamic_debug
-+setup_config
- 
- 
- # TEST: Loading and removing a module that modifies the system state
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+new file mode 100644
+index 000000000000..ad37d3273229
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
++
++maintainers:
++  - Wen He <wen.he_1@nxp.com>
++
++description: |
++  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
++  interface in the display core, as implemented in TSMC CLN28HPM PLL.
++  which generate and offers pixel clocks to Display.
++
++properties:
++  compatible:
++    const: fsl,ls1028a-plldig
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++  fsl,vco-hz:
++     description: Optional for VCO frequency of the PLL in Hertz.
++        The VCO frequency of this PLL cannot be changed during runtime
++        only at startup. Therefore, the output frequencies are very
++        limited and might not even closely match the requested frequency.
++        To work around this restriction the user may specify its own
++        desired VCO frequency for the PLL.
++     minimum: 650000000
++     maximum: 1300000000
++     default: 1188000000
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  # Display PIXEL Clock node:
++  - |
++    dpclk: clock-display@f1f0000 {
++        compatible = "fsl,ls1028a-plldig";
++        reg = <0x0 0xf1f0000 0x0 0xffff>;
++        #clock-cells = <0>;
++        clocks = <&osc_27m>;
++    };
++
++...
 -- 
-2.16.4
+2.17.1
 
