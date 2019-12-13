@@ -4,79 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16657C341AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C17C341BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5467B24723
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEDB24759
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfLMMLP (ORCPT
+        id S1726962AbfLMMUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:11:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47600 "EHLO huawei.com"
+        Fri, 13 Dec 2019 07:20:48 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7233 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfLMMLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:11:14 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 95267D7B149C30DAA05A;
-        Fri, 13 Dec 2019 20:11:12 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
- 20:11:03 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <rrichter@marvell.com>
-CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>, <linux-edac@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] EDAC: remove set but not used variable 'ecc_loc'
-Date:   Fri, 13 Dec 2019 20:10:36 +0800
-Message-ID: <20191213121036.8886-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        id S1726345AbfLMMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:20:47 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9C2E1B4B746459A57554;
+        Fri, 13 Dec 2019 20:20:45 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 13 Dec 2019 20:20:39 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <heikki.krogerus@linux.intel.com>, <linux@roeck-us.net>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhongjiang@huawei.com>
+Subject: [PATCH v2] usb: typec: fusb302: Fix an undefined reference to 'extcon_get_state'
+Date:   Fri, 13 Dec 2019 20:16:18 +0800
+Message-ID: <1576239378-50795-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <20191212122053.GA1541203@kroah.com>
+References: <20191212122053.GA1541203@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Fixes the following compile error:
 
-drivers/edac/i5100_edac.c: In function ‘i5100_read_log’:
-drivers/edac/i5100_edac.c:489:11: warning: variable ‘ecc_loc’
-set but not used [-Wunused-but-set-variable]
+drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
+fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
+fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
+fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
+fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
+drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
+fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
+make: *** [vmlinux] Error 1
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
+It is because EXTCON is build as a module, but FUSB302 is not.
+
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- drivers/edac/i5100_edac.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/typec/tcpm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
-index 0ddc41e47a96..a7ccf7b13619 100644
---- a/drivers/edac/i5100_edac.c
-+++ b/drivers/edac/i5100_edac.c
-@@ -486,7 +486,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
- 	u32 dw;
- 	u32 dw2;
- 	unsigned syndrome = 0;
--	unsigned ecc_loc = 0;
- 	unsigned merr;
- 	unsigned bank;
- 	unsigned rank;
-@@ -499,7 +498,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
- 		pci_read_config_dword(pdev, I5100_REDMEMA, &dw2);
- 		syndrome = dw2;
- 		pci_read_config_dword(pdev, I5100_REDMEMB, &dw2);
--		ecc_loc = i5100_redmemb_ecc_locator(dw2);
- 	}
- 
- 	if (i5100_validlog_recmemvalid(dw)) {
+diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+index 72481bb..5b986d6 100644
+--- a/drivers/usb/typec/tcpm/Kconfig
++++ b/drivers/usb/typec/tcpm/Kconfig
+@@ -32,6 +32,7 @@ endif # TYPEC_TCPCI
+ config TYPEC_FUSB302
+ 	tristate "Fairchild FUSB302 Type-C chip driver"
+ 	depends on I2C
++	depends on EXTCON || !EXTCON
+ 	help
+ 	  The Fairchild FUSB302 Type-C chip driver that works with
+ 	  Type-C Port Controller Manager to provide USB PD and USB
 -- 
-2.17.2
+1.7.12.4
 
