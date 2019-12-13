@@ -2,227 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F91C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6EBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AE32173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1602206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbfLMDlH (ORCPT
+        id S1731598AbfLMDqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:41:07 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7230 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731357AbfLMDlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 22:41:06 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 30D258930D18FE1C2229;
-        Fri, 13 Dec 2019 11:41:04 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
- 11:40:58 +0800
-Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     Saeed Mahameed <saeedm@mellanox.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        Li Rongqing <lirongqing@baidu.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        <mhocko@kernel.org>, <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
- <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
- <20191211194933.15b53c11@carbon>
- <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
- <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
- <20191212111831.2a9f05d3@carbon>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
-Date:   Fri, 13 Dec 2019 11:40:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191212111831.2a9f05d3@carbon>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        Thu, 12 Dec 2019 22:46:03 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39756 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731357AbfLMDqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 22:46:03 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=rocking@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TklN2C6_1576208759;
+Received: from localhost(mailfrom:rocking@linux.alibaba.com fp:SMTPD_---0TklN2C6_1576208759)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 13 Dec 2019 11:45:59 +0800
+From:   Peng Wang <rocking@linux.alibaba.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@linux.alibaba.com>
+Subject: [PATCH v2] schied/fair: Skip calculating @contrib without load
+Date:   Fri, 13 Dec 2019 11:45:40 +0800
+Message-Id: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com>
+References: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/12 18:18, Jesper Dangaard Brouer wrote:
-> On Thu, 12 Dec 2019 09:34:14 +0800
-> Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> 
->> +CC Michal, Peter, Greg and Bjorn
->> Because there has been disscusion about where and how the NUMA_NO_NODE
->> should be handled before.
->>
->> On 2019/12/12 5:24, Saeed Mahameed wrote:
->>> On Wed, 2019-12-11 at 19:49 +0100, Jesper Dangaard Brouer wrote:  
->>>> On Sat, 7 Dec 2019 03:52:41 +0000
->>>> Saeed Mahameed <saeedm@mellanox.com> wrote:
->>>>  
->>>>> I don't think it is correct to check that the page nid is same as
->>>>> numa_mem_id() if pool is NUMA_NO_NODE. In such case we should allow
->>>>> all  pages to recycle, because you can't assume where pages are
->>>>> allocated from and where they are being handled.  
->>>>
->>>> I agree, using numa_mem_id() is not valid, because it takes the numa
->>>> node id from the executing CPU and the call to __page_pool_put_page()
->>>> can happen on a remote CPU (e.g. cpumap redirect, and in future
->>>> SKBs).
->>>>
->>>>  
->>>>> I suggest the following:
->>>>>
->>>>> return !page_pfmemalloc() && 
->>>>> ( page_to_nid(page) == pool->p.nid || pool->p.nid == NUMA_NO_NODE );  
->>>>
->>>> Above code doesn't generate optimal ASM code, I suggest:
->>>>
->>>>  static bool pool_page_reusable(struct page_pool *pool, struct page *page)
->>>>  {
->>>> 	return !page_is_pfmemalloc(page) &&
->>>> 		pool->p.nid != NUMA_NO_NODE &&
->>>> 		page_to_nid(page) == pool->p.nid;
->>>>  }
->>>>  
->>>
->>> this is not equivalent to the above. Here in case pool->p.nid is
->>> NUMA_NO_NODE, pool_page_reusable() will always be false.
->>>
->>> We can avoid the extra check in data path.
->>> How about avoiding NUMA_NO_NODE in page_pool altogether, and force
->>> numa_mem_id() as pool->p.nid when user requests NUMA_NO_NODE at page
->>> pool init, as already done in alloc_pages_node().   
->>
->> That means we will not support page reuse mitigation for NUMA_NO_NODE,
->> which is not same semantic that alloc_pages_node() handle NUMA_NO_NODE,
->> because alloc_pages_node() will allocate the page based on the node
->> of the current running cpu.
-> 
-> True, as I wrote (below) my code defines semantics as: that a page_pool
-> configured with NUMA_NO_NODE means skip NUMA checks, and allow recycle
-> regardless of NUMA node page belong to.  It seems that you want another
-> semantics.
+Because of the:
 
-For driver that does not have page pool support yet, the semantics seems
-to be: always allocate and recycle local page(excpet pfmemalloc one). Page
-reuse migration moves when the rx interrupt affinity moves(the NAPI polling
-context moves accordingly) regardless of the dev_to_node().
+	if (!load)
+		runnable = running = 0;
 
-It would be good to maintain the above semantics. And rx data page seems
-to be close to the cpu that doing the rx cleaning, which means the cpu
-can process the buffer quicker?
+clause in ___update_load_sum(), all the actual users of @contrib in
+accumulate_sum():
 
-> 
-> I'm open to other semantics. My main concern is performance.  The
-> page_pool fast-path for driver recycling use-case of XDP_DROP, have
-> extreme performance requirements, as it needs to compete with driver
-> local recycle tricks (else we cannot use page_pool to simplify drivers).
-> The extreme performance target is 100Gbit/s = 148Mpps = 6.72ns, and
-> in practice I'm measuring 25Mpps = 40ns with Mlx5 driver (single q),
-> and Bjørn is showing 30 Mpps = 33.3ns with i40e.  At this level every
-> cycle/instruction counts.
+	if (load)
+		sa->load_sum += load * contrib;
+	if (runnable)
+		sa->runnable_load_sum += runnable * contrib;
+	if (running)
+		sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
 
-Yes, the performance is a concern too.
-But if the rx page is closer to the cpu, maybe the time taken to process
-the buffer can be reduced?
+don't happen, and therefore we don't care what @contrib actually is and
+calculating it is pointless.
 
-It is good to allocate the rx page close to both cpu and device, but if
-both goal can not be reached, maybe we choose to allocate page that close
-to cpu?
+If we count the times when @load equals zero and not as below:
 
-> 
->  
->> Also, There seems to be a wild guessing of the node id here, which has
->> been disscussed before and has not reached a agreement yet.
->>
->>>
->>> which will imply recycling without adding any extra condition to the
->>> data path.
-> 
-> I love code that moves thing out of our fast-path.
-> 
->>>
->>> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
->>> index a6aefe989043..00c99282a306 100644
->>> --- a/net/core/page_pool.c
->>> +++ b/net/core/page_pool.c
->>> @@ -28,6 +28,9 @@ static int page_pool_init(struct page_pool *pool,
->>>  
->>>         memcpy(&pool->p, params, sizeof(pool->p));
->>>  
->>> +	/* overwrite to allow recycling.. */
->>> +       if (pool->p.nid == NUMA_NO_NODE) 
->>> +               pool->p.nid = numa_mem_id(); 
->>> +
-> 
-> The problem is that page_pool_init() is can be initiated from a random
-> CPU, first at driver setup/bringup, and later at other queue changes
-> that can be started via ethtool or XDP attach. (numa_mem_id() picks
-> from running CPU).
+	if (load) {
+		load_is_not_zero_count++;
+		contrib = __accumulate_pelt_segments(periods,
+				1024 - sa->period_contrib,delta);
+	} else
+		load_is_zero_count++;
 
-Yes, changing ring num or ring depth releases and allocates rx data page,
-so using NUMA_NO_NODE to allocate page and alway recycle those page may
-has different performance noticable to user.
+As we can see, load_is_zero_count is much bigger than
+load_is_zero_count, and the gap is gradually widening:
 
-> 
-> As Yunsheng mentioned elsewhere, there is also a dev_to_node() function.
-> Isn't that what we want in a place like this?
-> 
-> 
-> One issue with dev_to_node() is that in case of !CONFIG_NUMA it returns
-> NUMA_NO_NODE (-1).  (And device_initialize() also set it to -1).  Thus,
-> in that case we set pool->p.nid = 0, as page_to_nid() will also return
-> zero in that case (as far as I follow the code).
-> 
-> 
->>> After a quick look, i don't see any reason why to keep NUMA_NO_NODE in
->>> pool->p.nid.. 
->>>
->>>   
->>>> I have compiled different variants and looked at the ASM code
->>>> generated by GCC.  This seems to give the best result.
->>>>
->>>>  
->>>>> 1) never recycle emergency pages, regardless of pool nid.
->>>>> 2) always recycle if pool is NUMA_NO_NODE.  
->>>>
->>>> Yes, this defines the semantics, that a page_pool configured with
->>>> NUMA_NO_NODE means skip NUMA checks.  I think that sounds okay...
->>>>
->>>>  
->>>>> the above change should not add any overhead, a modest branch
->>>>> predictor will handle this with no effort.  
->>>>
->>>> It still annoys me that we keep adding instructions to this code
->>>> hot-path (I counted 34 bytes and 11 instructions in my proposed
->>>> function).
->>>>
->>>> I think that it might be possible to move these NUMA checks to
->>>> alloc-side (instead of return/recycles side as today), and perhaps
->>>> only on slow-path when dequeuing from ptr_ring (as recycles that
->>>> call __page_pool_recycle_direct() will be pinned during NAPI).
->>>> But lets focus on a smaller fix for the immediate issue...
->>>>  
->>>
->>> I know. It annoys me too, but we need recycling to work in
->>> production : where rings/napi can migrate and numa nodes can be
->>> NUMA_NO_NODE :-(.
->>>
->>>   
-> 
+	load_is_zero_count:            6016044 times
+	load_is_not_zero_count:         244316 times
+	19:50:43 up 1 min,  1 user,  load average: 0.09, 0.06, 0.02
+
+	load_is_zero_count:            7956168 times
+	load_is_not_zero_count:         261472 times
+	19:51:42 up 2 min,  1 user,  load average: 0.03, 0.05, 0.01
+
+	load_is_zero_count:           10199896 times
+	load_is_not_zero_count:         278364 times
+	19:52:51 up 3 min,  1 user,  load average: 0.06, 0.05, 0.01
+
+	load_is_zero_count:           14333700 times
+	load_is_not_zero_count:         318424 times
+	19:54:53 up 5 min,  1 user,  load average: 0.01, 0.03, 0.00
+
+Perhaps we can gain some performance advantage by saving these
+unnecessary calculation.
+
+Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+---
+ kernel/sched/pelt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index a96db50..4392953 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -129,8 +129,9 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
+ 		 * Step 2
+ 		 */
+ 		delta %= 1024;
+-		contrib = __accumulate_pelt_segments(periods,
+-				1024 - sa->period_contrib, delta);
++		if (load)
++			contrib = __accumulate_pelt_segments(periods,
++					1024 - sa->period_contrib, delta);
+ 	}
+ 	sa->period_contrib = delta;
+ 
+-- 
+1.8.3.1
 
