@@ -2,88 +2,66 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258DBC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C0A2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Je3d2YUo"
+	by mail.kernel.org (Postfix) with ESMTP id A202E2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfLMKVb (ORCPT
+        id S1726386AbfLMKXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:21:31 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:41700 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMKVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:21:30 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ca19so1006874pjb.8;
-        Fri, 13 Dec 2019 02:21:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RrrU8ejlgbPQjfrKRpVho4T9Efm+u5wYss2r64N1VDY=;
-        b=Je3d2YUo41n5r0ub0WvZJMfsnD5hRfE9csnHnl9RdWO887RJNZAVRgFZ+Kygl9+F2v
-         +Nje0YXAMoAC12KLe9fHVJmHH0RDRrruyYoYdIERHAUsAmy3at952+x2duAtmvD9ZLHU
-         /Uaw8dnjVFj9Javhqxj3N2DmKfgpLE49YH+YrutBiqAwRITyq0kPE/ODKjbuRq7z94d/
-         it3/E1bgwHkjJAxEwEbSs5tcb0/+2GoeOogcUsbbSgp7WG/xLs6dxGRT4+rEHmBi+mso
-         AonTF3R8bCi2nV9UYDH4GkpEB0dFGQOaWYXN5jR2AV5cnLuXfh+AsWpe/srzA/CXYBTT
-         fq2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RrrU8ejlgbPQjfrKRpVho4T9Efm+u5wYss2r64N1VDY=;
-        b=Z6ZRjcfAfgBWhfho7RN9CgcXHksnUBffzNotMmsnwoOjc8aMoaT7b3gDjWfocktZnP
-         ksMvyrE3W0BRDsdzqRPPuhPjmYQs1SOAI/SirP+68mKhvqYicMq8OJaKEB44hrg04RON
-         hs4vYQjRVu5EXRDZDYnAYzmFhJLM1mBCwWdnt42qT3t8NJhTJatInH6d0Yse47dHV4Ux
-         gUE9gzDfwceVZ4jnqQZ04ijA1pznObRlBRsmgngYK9QXR/C844Am2jMV/Kc0T6ZXR0CR
-         shQ1Avm5UZzf0ref3RXLymRactlf1GugaTNTEwYt9RlYqfP2X7gtqzgeCiltSY1fIxXh
-         /u3Q==
-X-Gm-Message-State: APjAAAXfLpaYQAhbHB555fIzAedcFLJDV1m9pgSkE72w4nSV84cF39ON
-        lEOJAG3gM7GRRGfIBoS3skBXO1dHKu6BflN693Y=
-X-Google-Smtp-Source: APXvYqw0EhM9QTiW9VIiW4p7ueTzJr8zMOVW9Y3qcoyyEcfCPsH9YTA+mvtAi9nP/KzhA+QPhM/TYqXsC1TkWGu9O+k=
-X-Received: by 2002:a17:902:aa08:: with SMTP id be8mr14812726plb.255.1576232489641;
- Fri, 13 Dec 2019 02:21:29 -0800 (PST)
+        Fri, 13 Dec 2019 05:23:43 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29421 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfLMKXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:23:43 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBDANWAD002207;
+        Fri, 13 Dec 2019 11:23:32 +0100
+Date:   Fri, 13 Dec 2019 11:23:32 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        ebiederm@xmission.com, linux-arch@vger.kernel.org,
+        security@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
+Message-ID: <20191213102332.GA2196@1wt.eu>
+References: <20191208171918.GC19716@avx2>
+ <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
+ <20191211072225.GB3700@avx2>
+ <20191211095937.GB31670@1wt.eu>
+ <20191211181933.GA3919@avx2>
+ <20191211182401.GF31670@1wt.eu>
+ <20191212212520.GA9682@avx2>
+ <20191213095634.GB2407@kadam>
 MIME-Version: 1.0
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
-In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 13 Dec 2019 12:21:20 +0200
-Message-ID: <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
-To:     Liming Sun <lsun@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213095634.GB2407@kadam>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 9:24 PM Liming Sun <lsun@mellanox.com> wrote:
->
-> This is a follow-up commit for the sysfs attributes to change
-> from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-> In such case, it's better to point the sysfs path to the device
-> itself instead of the driver. This commit adds the missing
-> sysfs_create_group() so the attributes can be created under the
-> device. The ABI document is also updated.
->
+On Fri, Dec 13, 2019 at 12:56:34PM +0300, Dan Carpenter wrote:
+> On Fri, Dec 13, 2019 at 12:25:20AM +0300, Alexey Dobriyan wrote:
+> > "Complain to linux-kernel" is meaningless, kernel is not responsible.
+> > 
+> > What the message is even supposed to say?
+> > 
+> 
+> You could direct people to a website and then update the instructions
+> as needed.
 
-Fixes tag, please.
+Another possibility is to just log this as a debug message, and in this
+case the user can feel free to ignore it. But a warning is something that
+needs to be addressed and without instructions it's hard.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Willy
