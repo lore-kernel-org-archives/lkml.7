@@ -2,184 +2,209 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECD9C80D4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93DC80D23
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16A92477D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3xjo6Gg"
+	by mail.kernel.org (Postfix) with ESMTP id 165E824718
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfLMTZ5 (ORCPT
+        id S1728811AbfLMTCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:25:57 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44675 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbfLMTZ4 (ORCPT
+        Fri, 13 Dec 2019 14:02:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728455AbfLMTCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:25:56 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cm12so366578edb.11;
-        Fri, 13 Dec 2019 11:25:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/+Pf3FRJ46P/YXMaPoPohv4rWPl/O0X724GzNKVLDoA=;
-        b=T3xjo6GgOBEJ8cCXdXzw13znTZYWGMvXQTW9T+APXTH4KwqJaaBg+vqAAC7uY0Krcf
-         I7R32HPw+jtg8o/o89oUO2vvgfV6BHvealku/PApTdWhrW29Df0H54NsLpPVfGx8db3m
-         jbDkG/QdomAK6S2woZqktrmiTYuZjaG0mtR/q78H/sa3AmEvpvYrI29EPefUkf26nedk
-         mmb9IwP9v6dstjQ06tT3KVmVbNPFmsytpZ41mn0M/AUtPEZOQpv79Hc3CxWFWINxsbRi
-         0jrNni2Ts66uissiF05qyUcs0JGjj0VVpjQTxOz0fCLfmKzS/y+bGLCpRCvnXpQVpSwy
-         q/Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/+Pf3FRJ46P/YXMaPoPohv4rWPl/O0X724GzNKVLDoA=;
-        b=uZTbPsr3qGA5jfyZbGAapg6Xxe75IfvEKl5CuFJW/NsbXRZjci6FYc01tKxnbcsWA3
-         s/01bOF5J1aHKc8QYM8dbT6wbQtLOo6RGBbEr8KTIZfaFXu7s8oR/INpibNP+Fp3llbW
-         /oCkB2nxFv3SBtHrP+1yjCUhDEa833v7YjHgLY3VlWZeryTcGZYry8YcyVe93BPVuSW+
-         TK4P8PNpeC8mGihu9kLIGqWGT1Zuy5KLLfx2XFSQZMpONETduJifhtxPbw7CqB52yfc7
-         2o44Jux1y7I6EDw9eT31YFqSKz0ZdiQ0zKPZdcjp+m4igSttq6Zgew1TJZ+oNYsIC8ZT
-         7FDg==
-X-Gm-Message-State: APjAAAVCKcUkAgj9A6X93qilQF/IKTS9aEZ/uK8IOr+UTWdsYHFACdpr
-        4jO47PBNithfZo73Q3IcRqs=
-X-Google-Smtp-Source: APXvYqwc7UsERW/A+zk+KNr2UyXjWePGW7FY5XO/Or9UNo5GoVQxod85WFoRW87nJ14J9300Ag3Dkg==
-X-Received: by 2002:a17:906:d8a4:: with SMTP id qc4mr18082362ejb.264.1576265153949;
-        Fri, 13 Dec 2019 11:25:53 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id ot12sm636447ejb.72.2019.12.13.11.25.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 11:25:53 -0800 (PST)
-Subject: Re: [PATCH v3 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
-To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-References: <20191210132132.41509-1-alcooperx@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <ec0e50c6-b226-70b4-0f1b-51d5cb0a71c5@gmail.com>
-Date:   Fri, 13 Dec 2019 11:25:49 -0800
+        Fri, 13 Dec 2019 14:02:40 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDIrfY7048799
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:02:38 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wusmm3ftp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:02:38 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Fri, 13 Dec 2019 19:02:36 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Dec 2019 19:02:35 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBDJ2XqZ42139826
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 19:02:34 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E20E1A405F;
+        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F628A405B;
+        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.49.79])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
+Subject: Re: [PATCH resend] s390/purgatory: Make sure we fail the build if
+ purgatory has missing symbols
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Philipp Rudo <prudo@linux.ibm.com>
+References: <20191212205304.191610-1-hdegoede@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Fri, 13 Dec 2019 20:02:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191210132132.41509-1-alcooperx@gmail.com>
+In-Reply-To: <20191212205304.191610-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121319-0028-0000-0000-000003C84756
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121319-0029-0000-0000-0000248B859A
+Message-Id: <31fd8562-7591-ccc0-f170-4f2d3d0eb25a@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_07:2019-12-13,2019-12-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ spamscore=0 adultscore=0 mlxscore=0 mlxlogscore=945 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 5:21 AM, Al Cooper wrote:
-> This patchset contains various updates to the Broadcom STB USB Driver.
-> The updates include:
-> - Add support for 7216 and 7211 Broadcom SoCs which use the new
->   Synopsis USB Controller.
-> - Add support for USB Wake
-> - Add various bug fixes.
-> 
-> v3 - Rebase to v5.5-rc1
-> 
-> v2 - Changes based on review feedback
-> - Add vendor prefix to DT property "syscon-piarbctl"
-> - Use standard "wakeup" instead of "wake" for DT "interrupt-names"
+Thanks applied.
 
-This entire series:
-
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> 
-> Al Cooper (13):
->   phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
->   phy: usb: Get all drivers that use USB clks using correct
->     enable/disable
->   phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
->   phy: usb: Add "wake on" functionality
->   phy: usb: Restructure in preparation for adding 7216 USB support
->   dt-bindings: Add Broadcom STB USB PHY binding document
->   phy: usb: Add support for new Synopsis USB controller on the 7216
->   phy: usb: Add support for new Synopsis USB controller on the 7211b0
->   phy: usb: fix driver to defer on clk_get defer
->   phy: usb: PHY's MDIO registers not accessible without device installed
->   phy: usb: bdc: Fix occasional failure with BDC on 7211
->   phy: usb: USB driver is crashing during S3 resume on 7216
->   phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
-> 
->  .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
->  drivers/phy/broadcom/Makefile                 |   2 +-
->  .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 414 ++++++++++++++++++
->  drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
->  drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
->  drivers/phy/broadcom/phy-brcm-usb.c           | 269 ++++++++++--
->  6 files changed, 943 insertions(+), 185 deletions(-)
->  create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-> 
+Now that the build fixes have been merged I do not see a reasons to
+defer this any longer.
+I also added a Tested-by: Philipp Rudo <prudo@linux.ibm.com>
+as he successfully tested v2 in October.
 
 
--- 
-Florian
+
+On 12.12.19 21:53, Hans de Goede wrote:
+> Since we link purgatory with -r aka we enable "incremental linking"
+> no checks for unresolved symbols are done while linking the purgatory.
+> 
+> This commit adds an extra check for unresolved symbols by calling ld
+> without -r before running objcopy to generate purgatory.ro.
+> 
+> This will help us catch missing symbols in the purgatory sooner.
+> 
+> Note this commit also removes --no-undefined from LDFLAGS_purgatory
+> as that has no effect.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Using 2 if_changed lines under a single rule does not work, then
+>   1 of the 2 will always execute each build.
+>   Instead add a new (unused) purgatory.chk intermediate which gets
+>   linked from purgatory.ro without -r to do the missing symbols check
+> - This also fixes the check generating an a.out file (oops)
+> ---
+>  arch/s390/purgatory/.gitignore |  1 +
+>  arch/s390/purgatory/Makefile   | 13 ++++++++++---
+>  2 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
+> index 04a03433c720..c82157f46b18 100644
+> --- a/arch/s390/purgatory/.gitignore
+> +++ b/arch/s390/purgatory/.gitignore
+> @@ -1,3 +1,4 @@
+>  purgatory
+> +purgatory.chk
+>  purgatory.lds
+>  purgatory.ro
+> diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+> index bc0d7a0d0394..13e9a5dc0a07 100644
+> --- a/arch/s390/purgatory/Makefile
+> +++ b/arch/s390/purgatory/Makefile
+> @@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD := y
+>  
+>  purgatory-y := head.o purgatory.o string.o sha256.o mem.o
+>  
+> -targets += $(purgatory-y) purgatory.lds purgatory purgatory.ro
+> +targets += $(purgatory-y) purgatory.lds purgatory purgatory.chk purgatory.ro
+>  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+>  
+>  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+> @@ -26,15 +26,22 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
+>  KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
+>  KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+>  
+> -LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
+> +# Since we link purgatory with -r unresolved symbols are not checked, so we
+> +# also link a purgatory.chk binary without -r to check for unresolved symbols.
+> +PURGATORY_LDFLAGS := -nostdlib -z nodefaultlib
+> +LDFLAGS_purgatory := -r $(PURGATORY_LDFLAGS) -T
+> +LDFLAGS_purgatory.chk := -e purgatory_start $(PURGATORY_LDFLAGS)
+>  $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
+>  		$(call if_changed,ld)
+>  
+> +$(obj)/purgatory.chk: $(obj)/purgatory FORCE
+> +		$(call if_changed,ld)
+> +
+>  OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
+>  OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
+>  OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
+>  OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
+> -$(obj)/purgatory.ro: $(obj)/purgatory FORCE
+> +$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
+>  		$(call if_changed,objcopy)
+>  
+>  $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
+> 
+
