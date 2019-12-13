@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC50C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8FCC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4EE227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9682173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="frhyqHYJ"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="LukXmycd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbfLMAIh (ORCPT
+        id S1731589AbfLMAIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:08:37 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35363 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731699AbfLMAIc (ORCPT
+        Thu, 12 Dec 2019 19:08:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37548 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbfLMAH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:08:32 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s10so397445plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:32 -0800 (PST)
+        Thu, 12 Dec 2019 19:07:56 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so390026plz.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:07:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uLaSb+04RH7uaNmurK2bND0CZp19b8gTSTxLObfuai8=;
-        b=frhyqHYJ9l7cWgiM4jYZNt73/j/pL2ztPi9n4Onm+5/RPj5dQEamFfPP+w3fhcB0n4
-         KjH5enTCM/ZrA1N4MGOGvEKO8MECNE1Sw2ytoWTl6JFFmsChiB3zKhbvTikolsouILnV
-         yYjbCN6UfLWbo4xNHunxDujkkNYHmoJRkefPc0TCCt/Rw8jA1oO6WlSp+76SUk/QeCdm
-         OBt3h9acwRkWGw6wuRQsVMGKrXj03ptIZZzQtew+1SCqajaOCIJK+/I/3PYfFVgAKtNO
-         rFBWOND0O9F5PSBLr/cjMWhAsktSukCfyjeoPBXF6UESeN/JR+uwvyFZBLPnMr7SUZLU
-         OB5g==
+        bh=a+sV5GoSJEiRZfmjrW1+1MwtZsdkaDLVuk2NRqNrH9Y=;
+        b=LukXmycdan+JrEsleQGB4m5qUwPFAgpUEG4ulZ/iKQnBL9RStn7Cp6kjSV+4MQl1dl
+         oE1jEaS75KVIjf4z+fWgjvfIzQd8TAVO3wv14/gI10gbHxdCXZbhlzyuNfDOSaM28uz1
+         4MczGTd3U5cbFMNQ3qRKf+iKJtfcOt5rBr7I5BmCUkgKCsAVdkyAvpG3G69fO/wt0y0I
+         2fcLvrn2wwPSqkHp5CaVVbRH7DgdkImmcUBrJUqn+i4Vdyr5+xb5VEyGMDuNxyDC0kxO
+         blZg4LtcnOFKuNXL1/sCwrSUuEo3Inlo9OHn34GAPMCYZ+uTABe9MRJagmu3KIQhPMmK
+         kvRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uLaSb+04RH7uaNmurK2bND0CZp19b8gTSTxLObfuai8=;
-        b=Jjk4T5Rz/nqLPRGuiTy3JvDlahEDJV2bNSIsDtYNVpE8snyq9oNJnmiCo4paE3RDth
-         3eePGy0ieRRVoiEzM6VHQYNuRmPBokHXLTMZFESTvb90sXOmS4+j8Iivvy6mBYAw+WR4
-         C74hHqihEvY5fF3vDtqizDCJR/rDspY3/0ZDLfYynhSeoZsjs5D6Gi0wBiz+WggpfEVV
-         Qw9kyglePDcgSIRsAs4p8tXvq05i3G1x02RHE3SzqYCSjAXdijbzT4dxTD0oKNPT81rE
-         eyMLDt9gKDlDkMERdYWrwk/d634KC6H96gqIA4LUeA8CbMyo91N3NDpBsRkvRMUjiUIt
-         VwYg==
-X-Gm-Message-State: APjAAAV+3Z5M4VO2FHF/RF3qRKVqLekDi4nCTYrfxH+zlVxl1wcjVS83
-        g0sl9zLNN8uMGjWFtNZLRKSjv15lI4k=
-X-Google-Smtp-Source: APXvYqxf/s+KfE+mWbXDwevNvIA11XGgWQIi4HzM+v3BtwcfvzlBYxpnYV9c9Z+0BLeRcMTXAJdlrg==
-X-Received: by 2002:a17:902:7b91:: with SMTP id w17mr12983685pll.158.1576195711016;
-        Thu, 12 Dec 2019 16:08:31 -0800 (PST)
+        bh=a+sV5GoSJEiRZfmjrW1+1MwtZsdkaDLVuk2NRqNrH9Y=;
+        b=WTDVl5LEwp7irFqMer1a/ctJ1yWNCFRrGJeMJ+0YOr1dCRWggqhwyKF9wo3QaiJ+fL
+         dtvcwh6SEfrQgcdcHGw8YgtVgf9YecxeFghEYcBWN/xDp++lspuXqi/KyecV32Oxcq3h
+         qn3nsZeSeTVK4BJSODlCKwjOZo6qkXAQXwXQosKQDdR2LAP+lO9apGu/jcP+D3aq4LJa
+         Suv+096n80nNc1D4Nyivn+UlUOvH8DUy2bCMI73Nh6HZ+oX8z/kmTbtl36dBnaQCUCs+
+         31USaAm3VCGQRd8rQPx8DEu7/YXiXY8UfZC3LxGRAPfmA39dhvXZNDMBeqtXKHFdyOyS
+         YtlQ==
+X-Gm-Message-State: APjAAAWtHFh9KX8nqebl+byQdhXtQNAiwxJcoZJfLi45R+qAa4s0UBnc
+        tLXGD6FsRSHj7tvuRGohVojXfD46Qas=
+X-Google-Smtp-Source: APXvYqw/W5ycRttQjCqpid9Ha6262vYFX2I8+5hsdzSjxZT4ZtOSRnkmyoJSW7ZXIymmA8NjgLKpTw==
+X-Received: by 2002:a17:902:bf47:: with SMTP id u7mr13112236pls.259.1576195674977;
+        Thu, 12 Dec 2019 16:07:54 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.28
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.07.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:08:30 -0800 (PST)
+        Thu, 12 Dec 2019 16:07:54 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
         linux-serial@vger.kernel.org
-Subject: [PATCH 26/58] tty/serial: Migrate mux to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:25 +0000
-Message-Id: <20191213000657.931618-27-dima@arista.com>
+Subject: [PATCH 14/58] tty/serial: Migrate cpm_uart to use has_sysrq
+Date:   Fri, 13 Dec 2019 00:06:13 +0000
+Message-Id: <20191213000657.931618-15-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -88,33 +88,44 @@ Initialise it in driver's probe and remove ifdeffery.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/mux.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/serial/mux.c b/drivers/tty/serial/mux.c
-index 00ce31e8d19a..2a9953211a2a 100644
---- a/drivers/tty/serial/mux.c
-+++ b/drivers/tty/serial/mux.c
-@@ -25,11 +25,7 @@
- #include <asm/irq.h>
- #include <asm/parisc-device.h>
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index de6d02f7abe2..19d5a4cf29a6 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -40,10 +40,6 @@
+ #include <asm/fs_pd.h>
+ #include <asm/udbg.h>
  
--#if defined(CONFIG_SERIAL_MUX_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
- #include <linux/sysrq.h>
+-#if defined(CONFIG_SERIAL_CPM_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 -#define SUPPORT_SYSRQ
 -#endif
 -
  #include <linux/serial_core.h>
+ #include <linux/kernel.h>
  
- #define MUX_OFFSET 0x800
-@@ -483,6 +479,7 @@ static int __init mux_probe(struct parisc_device *dev)
- 		port->ops	= &mux_pops;
- 		port->flags	= UPF_BOOT_AUTOCONF;
- 		port->line	= port_cnt;
-+		port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_MUX_CONSOLE);
+@@ -347,9 +343,7 @@ static void cpm_uart_int_rx(struct uart_port *port)
+ 		/* ASSUMPTION: it contains nothing valid */
+ 		i = 0;
+ 	}
+-#ifdef SUPPORT_SYSRQ
+ 	port->sysrq = 0;
+-#endif
+ 	goto error_return;
+ }
  
- 		/* The port->timeout needs to match what is present in
- 		 * uart_wait_until_sent in serial_core.c.  Otherwise
+@@ -1204,7 +1198,8 @@ static int cpm_uart_init_port(struct device_node *np,
+ 	pinfo->port.uartclk = ppc_proc_freq;
+ 	pinfo->port.mapbase = (unsigned long)mem;
+ 	pinfo->port.type = PORT_CPM;
+-	pinfo->port.ops = &cpm_uart_pops,
++	pinfo->port.ops = &cpm_uart_pops;
++	pinfo->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_CPM_CONSOLE);
+ 	pinfo->port.iotype = UPIO_MEM;
+ 	pinfo->port.fifosize = pinfo->tx_nrfifos * pinfo->tx_fifosize;
+ 	spin_lock_init(&pinfo->port.lock);
 -- 
 2.24.0
 
