@@ -2,95 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A552C79DD7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD47BC7CFDF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B680247E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0972247F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cUYdO6uu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOIaI7+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfLMRO7 (ORCPT
+        id S1728554AbfLMRq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:14:59 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:46400 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfLMRO7 (ORCPT
+        Fri, 13 Dec 2019 12:46:27 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34291 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbfLMRq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:14:59 -0500
-Received: by mail-pj1-f66.google.com with SMTP id z21so1448791pjq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 09:14:58 -0800 (PST)
+        Fri, 13 Dec 2019 12:46:27 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so176067pgf.1;
+        Fri, 13 Dec 2019 09:46:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=xGfkgHFOiwzu4bSfkgFVF67O8wpT6Z/ekwvnkfqDuzY=;
-        b=cUYdO6uuG/TiXeqwUvZcAm2hBzDMImTYy4ODdcn/fMcmh9JgLu1CLGGVX+KIvvSvO0
-         o8aWIqxEx/ptb+/MPjY/Yq579KsJr1o9RPqaiCllSSleXUTWrLmcI5RrEd+/Vrfu6Flu
-         CWYAgQa0ZlDt6LHKcaWNRNJjJC1lmY2DyL0S80riSCKaUdLoml+I2lmjv4MSWugYx9o5
-         s6JunedYMjjRe7k0maLrsIspTN1iGgwZbO2xjk7eeLOQ9oZ/D3yt0WyYvo0YErpvSsqV
-         QnY53A7SjfDhKpy53r4//AfCp08E65blD6Nm/gIFCLH23SXnz4k/U4az1r298eO7WUUq
-         FlCg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=dtBoagETXVh0V7/P97k4Rqz1E496kHkXGXKVFlW3Xbw=;
+        b=gOIaI7+2eAoluHDBShTOls5VEGdzNqNIBmdslR9DmyTjn7b/HUvrlp9zqHJktb8K4H
+         g2GvU2kReI0XtpANkg3fZnYLwn1z5bY+Q6oeI4/PjyJN3MmDz07/pZoPauqN4yKiptJj
+         VYXDf43PfNocaHKVJkYNYh6UAI4qibBIhVIj8m8Mg1aHTtUHBrrpRb3tJpJsUjNQL9tU
+         Xuy3pFkvxLDR1vPfGaFCVD0etxUdGPti5OKb1GcaPbweg99gwql+rHQCWVZ+gMKLu3W2
+         z50+tlMO7omgHqKjwcZhE3TcWakp2FddFqGhZTUjtKhuc0aXvQ8/CCtz2PUU5wY2Cxt3
+         X6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xGfkgHFOiwzu4bSfkgFVF67O8wpT6Z/ekwvnkfqDuzY=;
-        b=kPGPC+Izf7I63WyeZ45jpPsj9Nbq6+vJvN+70DxRlQimk7KLY9kkK2pB8bPZXmU2IX
-         lUKJnKrgNmLhjgIdhaDDhPqscM3P2Ft6jJnkX5oHvEwxA15UQ8RqsbbpLXJ9pAx3I0/u
-         SnETs6s2F5HAm8F5/hmUDw3s87OrG+Z4F24n14T4c4QObE0hYbipeZA5cHocaxYR7suF
-         P5iFjIxD2kL6gVbW/qbM+NpBqxjaJRWn4Rnkc1zu4nME0LwHO9cBwuhp65W/XLYuj4fs
-         elNBy6NF3w4oPOmEqWWac1cwfGc5qWZlT7IXJRjPdZ/Zb3SSK1jSnMFt/p76qe/e+QyD
-         K3hw==
-X-Gm-Message-State: APjAAAV4kXtobNqC0KeD0lXqxe3vRHKfQ3STLlID2kRcDMclbHgApLOS
-        JvGNUaAScbWCdj36NGt0MwUoOw==
-X-Google-Smtp-Source: APXvYqxNp9JqbsXiF34gHi5lFrYjYb8YF87UwVb6GpItvh6TUJ6QG94Jp9JFz8MrAz7ABEyxzH6tHA==
-X-Received: by 2002:a17:902:758c:: with SMTP id j12mr431734pll.14.1576257298141;
-        Fri, 13 Dec 2019 09:14:58 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id n188sm11426933pga.84.2019.12.13.09.14.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Dec 2019 09:14:57 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     netdev@vger.kernel.org, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] bluetooth: hci_bcm: enable IRQ capability from devicetree
-In-Reply-To: <20191213150622.14162-3-glaroque@baylibre.com>
-References: <20191213150622.14162-1-glaroque@baylibre.com> <20191213150622.14162-3-glaroque@baylibre.com>
-Date:   Fri, 13 Dec 2019 09:14:57 -0800
-Message-ID: <7ho8wc87vy.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=dtBoagETXVh0V7/P97k4Rqz1E496kHkXGXKVFlW3Xbw=;
+        b=Fyqld53eZTVCWtTEQTLgIHVfKvirlrfp4zSeiShiYcioYZsgmufHCIemVSlPE3EvYo
+         MDV8EytRmgxHAxMtDU1I+X+COji4CApeNMcvhcVW0lo6b4YIhdC6HeB2vPiaSmPvaVCF
+         Tq2sCGVBqDq+e5iIX/aJDSJDWbOErX77c1hqZGHy8B6UljjDn+ofwgm5jHfh66Db4D/E
+         WJk83r+KNB3zuZNrNwBIAzBaFSxAcT68zb5/nGvsTvGVYBmI4EBnFcEigJ+XQmLj9PzJ
+         AajBsJc43WMPlYADxvuN6gTjtKgBOWloQhlsjKW8fZJgqbWMQDFeG3J9rvKP6tWtCmuM
+         2nNw==
+X-Gm-Message-State: APjAAAW/0uLEPra3mOlRjSID0XD8QHrnIrv68BVeIl5CJ0V58wmgVT3a
+        yiLEJG1rawhoZiE9EEzex4g=
+X-Google-Smtp-Source: APXvYqyKV1E389RBA+UWrCbZt1ojc/ei0DHw5zlvBj3dEBxdxhbeQZ4NCwzp34jjtPT7agMXFqUBnA==
+X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr683869pfd.70.1576259186300;
+        Fri, 13 Dec 2019 09:46:26 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id f18sm12823124pfk.124.2019.12.13.09.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 09:46:25 -0800 (PST)
+Date:   Fri, 13 Dec 2019 09:46:23 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: use proper initializers for property entries
+Message-ID: <20191213174623.GA20267@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+We should not be reaching into property entries and initialize them by
+hand, but rather use proper initializer macros. This way we can alter
+internal representation of property entries with no visible changes to
+their users.
 
-> Actually IRQ can be found from GPIO but all platforms don't support
-> gpiod_to_irq, it's the case on amlogic chip.
-> so to have possibility to use interrupt mode we need to add interrupts
-> property in devicetree and support it in driver.
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
-I would reword this slightly (leaving out the amlogic specifics):
+It would be good if this could go through Rafael's tree as it is needed
+for the rest of my software_node/property_entry rework patch series
+which I would love not to delay till 5.6.
 
-"""
-Add support for getting IRQ directly from DT instead of relying on
-converting a GPIO to IRQ. This is needed for platforms with GPIO
-controllers that that do not support gpiod_to_irq().
-"""
+Thanks!
 
-Other than that, this looks good to me and now it's clear that it only
-affects the DT path.
+ drivers/usb/dwc3/host.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index 5567ed2cddbec..fa252870c926f 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+ 
+ 	if (dwc->usb3_lpm_capable)
+-		props[prop_idx++].name = "usb3-lpm-capable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
+ 
+ 	if (dwc->usb2_lpm_disable)
+-		props[prop_idx++].name = "usb2-lpm-disable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+ 
+ 	/**
+ 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	 * This following flag tells XHCI to do just that.
+ 	 */
+ 	if (dwc->revision <= DWC3_REVISION_300A)
+-		props[prop_idx++].name = "quirk-broken-port-ped";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+ 
+ 	if (prop_idx) {
+ 		ret = platform_device_add_properties(xhci, props);
+-- 
+2.24.1.735.g03f4e72817-goog
 
-Kevin
+
+-- 
+Dmitry
