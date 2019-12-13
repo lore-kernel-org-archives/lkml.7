@@ -2,91 +2,419 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A653C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77913C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D505D21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eIp0qYbQ"
+	by mail.kernel.org (Postfix) with ESMTP id 452972253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbfLMBtI (ORCPT
+        id S1731650AbfLMBtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:49:08 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54933 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbfLMBtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:49:08 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ytr13FGyz9sPT;
-        Fri, 13 Dec 2019 12:49:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576201745;
-        bh=Vq9r75kTrcGQj0IfaZDoNCuocae9mJfyEKqKph3OmCM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eIp0qYbQU7O8oscmSzM2cqy0xFBNCuzvFG29508QeEtKm5M+qZiXX9raP6CEwjbLq
-         Cdb6zhAof63h9a60IlORsQz/jlIdJrlkvtfOL+pGAIcAlJPX1o68Ii9grbCehJDVco
-         FVWe2fi9G5JEU5OYfyX+/aFL0P5wuWi8fJ8EaUJDY8HHGTm7iGoU0CjhJyU6tEMHAv
-         paXrx/KMScVoNl6WnsNKS/muh/vA9a7VwvsBG3FJSbUudKJdOEUZsofMybgcokqrDt
-         /SPwHAB5yDJkFSI4HIquXrfaNm6FBnckfYJUTmuu7Xtz0iBz9BF05Gl8ZeK7y3972w
-         huitWPCfSWo8A==
-Date:   Fri, 13 Dec 2019 12:49:04 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the devfreq tree
-Message-ID: <20191213124904.467443c1@canb.auug.org.au>
+        Thu, 12 Dec 2019 20:49:52 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:44053 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731568AbfLMBtv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:49:51 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TkkaSxO_1576201783;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TkkaSxO_1576201783)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 13 Dec 2019 09:49:44 +0800
+Subject: [PATCH v6 1/2] sched/numa: introduce per-cgroup NUMA locality info
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+ <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
+Message-ID: <275a98ed-35b8-b65f-3600-64ab722dd836@linux.alibaba.com>
+Date:   Fri, 13 Dec 2019 09:47:36 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/d2nyw.a._8NN8zVPn4uY9_E";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/d2nyw.a._8NN8zVPn4uY9_E
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Currently there are no good approach to monitoring the per-cgroup NUMA
+efficiency, this could be a trouble especially when groups are sharing
+CPUs, we don't know which one introduced remote-memory accessing.
 
-Hi all,
+Although the per-task NUMA accessing info from PMU is good for further
+debuging, but not light enough for daily monitoring, especial on a box
+with thousands of tasks.
 
-After merging the devfreq tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Fortunately, when NUMA Balancing enabled, it will periodly trigger page
+fault and try to increase the NUMA locality, by tracing the results we
+will be able to estimate the NUMA efficiency.
 
-ERROR: "__arm_smccc_smc" [drivers/devfreq/rk3399_dmc.ko] undefined!
+On each page fault of NUMA Balancing, when task's executing CPU is from
+the same node of pages, we call this a local page accessing, otherwise
+a remote page accessing.
 
-Caused by commit
+By updating task's accessing counter into it's cgroup on ticks, we get
+the per-cgroup numa locality info.
 
-  6c877bff8315 ("PM / devfreq: rk3399_dmc: Add COMPILE_TEST dependency")
+For example the new entry 'cpu.numa_stat' show:
+  page_access local=1231412 remote=53453
 
-I reverted that commit for today.
+Here we know the workloads in hierarchy have totally been traced 1284865
+times of page accessing, and 1231412 of them are local page access, which
+imply a good NUMA efficiency.
 
---=20
-Cheers,
-Stephen Rothwell
+By monitoring the increments, we will be able to locate the per-cgroup
+workload which NUMA Balancing can't helpwith (usually caused by wrong
+CPU and memory node bindings), then we got chance to fix that in time.
 
---Sig_/d2nyw.a._8NN8zVPn4uY9_E
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+---
+ include/linux/sched.h        | 15 +++++++++
+ include/linux/sched/sysctl.h |  6 ++++
+ init/Kconfig                 |  9 ++++++
+ kernel/sched/core.c          | 75 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 62 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/sched.h         | 12 +++++++
+ kernel/sysctl.c              | 11 +++++++
+ 7 files changed, 190 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 8f6607cd40ac..f73b3cf7d32a 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1125,6 +1125,21 @@ struct task_struct {
+ 	unsigned long			numa_pages_migrated;
+ #endif /* CONFIG_NUMA_BALANCING */
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3y7hAACgkQAVBC80lX
-0Gy9EAf+P+3ZT3IT/ku+xBAGRaooPdsXiCcJpe14/brCf9ipJEwud8B7SJBEbf+f
-7V5EBfjLt+wzo+Dht52W2t/7lBEgvOcIRyDyFhzIxNBYXRTWtY3yHMl89hIclE3F
-r7bkA1mIsTYj6lmZ7+QgacP77k/w04373dbtO0tIJ1FvJcsCUWxeLQc/5x0OO2On
-nyBxYYQ34Hzt2QosmasEHgh/nQa/K1JW90Q4FE7aOqz2K/hAywsY4E1TIQRPMovG
-XY/ncO0rFxS8ZSwKxivW8r23etLNEFWccj9NdkU2yAz6fhBG4gaG+l83JdDOqmGt
-S2UinyBBrNtCFKoI51JWp7OEhH/ubQ==
-=FJw0
------END PGP SIGNATURE-----
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	/*
++	 * Counter index stand for:
++	 * 0 -- remote page accessing
++	 * 1 -- local page accessing
++	 * 2 -- remote page accessing updated to cgroup
++	 * 3 -- local page accessing updated to cgroup
++	 *
++	 * We record the counter before the end of task_numa_fault(), this
++	 * is based on the fact that after page fault is handled, the task
++	 * will access the page on the CPU where it triggered the PF.
++	 */
++	unsigned long			numa_page_access[4];
++#endif
++
+ #ifdef CONFIG_RSEQ
+ 	struct rseq __user *rseq;
+ 	u32 rseq_sig;
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 89f55e914673..c7048119b8b5 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -102,4 +102,10 @@ extern int sched_energy_aware_handler(struct ctl_table *table, int write,
+ 				 loff_t *ppos);
+ #endif
 
---Sig_/d2nyw.a._8NN8zVPn4uY9_E--
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++extern int sysctl_numa_locality(struct ctl_table *table, int write,
++				 void __user *buffer, size_t *lenp,
++				 loff_t *ppos);
++#endif
++
+ #endif /* _LINUX_SCHED_SYSCTL_H */
+diff --git a/init/Kconfig b/init/Kconfig
+index 4d8d145c41d2..c614ba6bdcc2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -817,6 +817,15 @@ config NUMA_BALANCING_DEFAULT_ENABLED
+ 	  If set, automatic NUMA balancing will be enabled if running on a NUMA
+ 	  machine.
+
++config CGROUP_NUMA_LOCALITY
++	bool "per-cgroup NUMA Locality"
++	default n
++	depends on CGROUP_SCHED && NUMA_BALANCING
++	help
++	  This option enables the collection of per-cgroup NUMA locality info,
++	  to tell whether NUMA Balancing is working well for a particular
++	  workload, also imply the NUMA efficiency.
++
+ menuconfig CGROUPS
+ 	bool "Control Group support"
+ 	select KERNFS
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index aaa1740e6497..6a7850d94c55 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7657,6 +7657,68 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
+ }
+ #endif /* CONFIG_RT_GROUP_SCHED */
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++DEFINE_STATIC_KEY_FALSE(sched_numa_locality);
++
++#ifdef CONFIG_PROC_SYSCTL
++int sysctl_numa_locality(struct ctl_table *table, int write,
++			 void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table t;
++	int err;
++	int state = static_branch_likely(&sched_numa_locality);
++
++	if (write && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	t = *table;
++	t.data = &state;
++	err = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
++	if (err < 0 || !write)
++		return err;
++
++	if (state)
++		static_branch_enable(&sched_numa_locality);
++	else
++		static_branch_disable(&sched_numa_locality);
++
++	return err;
++}
++#endif
++
++static inline struct cfs_rq *tg_cfs_rq(struct task_group *tg, int cpu)
++{
++	return tg == &root_task_group ? &cpu_rq(cpu)->cfs : tg->cfs_rq[cpu];
++}
++
++static int cpu_numa_stat_show(struct seq_file *sf, void *v)
++{
++	int cpu;
++	u64 local = 0, remote = 0;
++	struct task_group *tg = css_tg(seq_css(sf));
++
++	if (!static_branch_likely(&sched_numa_locality))
++		return 0;
++
++	for_each_possible_cpu(cpu) {
++		local += tg_cfs_rq(tg, cpu)->local_page_access;
++		remote += tg_cfs_rq(tg, cpu)->remote_page_access;
++	}
++
++	seq_printf(sf, "page_access local=%llu remote=%llu\n", local, remote);
++
++	return 0;
++}
++
++static __init int numa_locality_setup(char *opt)
++{
++	static_branch_enable(&sched_numa_locality);
++
++	return 0;
++}
++__setup("numa_locality", numa_locality_setup);
++#endif
++
+ static struct cftype cpu_legacy_files[] = {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	{
+@@ -7706,6 +7768,12 @@ static struct cftype cpu_legacy_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.name = "numa_stat",
++		.seq_show = cpu_numa_stat_show,
++	},
+ #endif
+ 	{ }	/* Terminate */
+ };
+@@ -7887,6 +7955,13 @@ static struct cftype cpu_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.name = "numa_stat",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.seq_show = cpu_numa_stat_show,
++	},
+ #endif
+ 	{ }	/* terminate */
+ };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 81eba554db8d..b60f1bcdb6ae 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1049,7 +1049,63 @@ update_stats_curr_start(struct cfs_rq *cfs_rq, struct sched_entity *se)
+  * Scheduling class queueing methods:
+  */
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++/*
++ * We want to record the real local/remote page access statistic
++ * here, so 'pnid' should be pages's real residential node after
++ * migrate_misplaced_page(), and 'cnid' should be the node of CPU
++ * where triggered the PF.
++ */
++static inline void
++update_task_locality(struct task_struct *p, int pnid, int cnid, int pages)
++{
++	if (!static_branch_unlikely(&sched_numa_locality))
++		return;
++
++	/*
++	 * pnid != cnid --> remote idx 0
++	 * pnid == cnid --> local idx 1
++	 */
++	p->numa_page_access[!!(pnid == cnid)] += pages;
++}
++
++static inline void update_group_locality(struct cfs_rq *cfs_rq)
++{
++	unsigned long ldiff, rdiff;
++
++	if (!static_branch_unlikely(&sched_numa_locality))
++		return;
++
++	rdiff = current->numa_page_access[0] - current->numa_page_access[2];
++	ldiff = current->numa_page_access[1] - current->numa_page_access[3];
++	if (!ldiff && !rdiff)
++		return;
++
++	cfs_rq->local_page_access += ldiff;
++	cfs_rq->remote_page_access += rdiff;
++
++	/*
++	 * Consider updated when reach root cfs_rq, no NUMA Balancing PF
++	 * should happen on current task during the hierarchical updating.
++	 */
++	if (&cfs_rq->rq->cfs == cfs_rq) {
++		current->numa_page_access[2] = current->numa_page_access[0];
++		current->numa_page_access[3] = current->numa_page_access[1];
++	}
++}
++#else
++static inline void
++update_task_locality(struct task_struct *p, int pnid, int cnid, int pages)
++{
++}
++
++static inline void update_group_locality(struct cfs_rq *cfs_rq)
++{
++}
++#endif /* CONFIG_CGROUP_NUMA_LOCALITY */
++
+ #ifdef CONFIG_NUMA_BALANCING
++
+ /*
+  * Approximate time to scan a full NUMA task in ms. The task scan period is
+  * calculated based on the tasks virtual memory size and
+@@ -2465,6 +2521,8 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+ 	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
+ 	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
+ 	p->numa_faults_locality[local] += pages;
++
++	update_task_locality(p, mem_node, numa_node_id(), pages);
+ }
+
+ static void reset_ptenuma_scan(struct task_struct *p)
+@@ -2650,6 +2708,9 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 	p->last_sum_exec_runtime	= 0;
+
+ 	init_task_work(&p->numa_work, task_numa_work);
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	memset(p->numa_page_access, 0, sizeof(p->numa_page_access));
++#endif
+
+ 	/* New address space, reset the preferred nid */
+ 	if (!(clone_flags & CLONE_VM)) {
+@@ -4298,6 +4359,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+ 	 */
+ 	update_load_avg(cfs_rq, curr, UPDATE_TG);
+ 	update_cfs_group(curr);
++	update_group_locality(cfs_rq);
+
+ #ifdef CONFIG_SCHED_HRTICK
+ 	/*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 05c282775f21..33f5653d9d4c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -575,6 +575,14 @@ struct cfs_rq {
+ 	struct list_head	throttled_list;
+ #endif /* CONFIG_CFS_BANDWIDTH */
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	/*
++	 * The local/remote page access info collected from all
++	 * the tasks in hierarchy.
++	 */
++	u64			local_page_access;
++	u64			remote_page_access;
++#endif
+ };
+
+ static inline int rt_bandwidth_enabled(void)
+@@ -1601,6 +1609,10 @@ static const_debug __maybe_unused unsigned int sysctl_sched_features =
+ extern struct static_key_false sched_numa_balancing;
+ extern struct static_key_false sched_schedstats;
+
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++extern struct static_key_false sched_numa_locality;
++#endif
++
+ static inline u64 global_rt_period(void)
+ {
+ 	return (u64)sysctl_sched_rt_period * NSEC_PER_USEC;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 50373984a5e2..73cbb70940ac 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -428,6 +428,17 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+ #endif /* CONFIG_NUMA_BALANCING */
++#ifdef CONFIG_CGROUP_NUMA_LOCALITY
++	{
++		.procname	= "numa_locality",
++		.data		= NULL, /* filled in by handler */
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sysctl_numa_locality,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#endif /* CONFIG_CGROUP_NUMA_LOCALITY */
+ #endif /* CONFIG_SCHED_DEBUG */
+ 	{
+ 		.procname	= "sched_rt_period_us",
+-- 
+2.14.4.44.g2045bb6
+
