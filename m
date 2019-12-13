@@ -2,128 +2,104 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC80C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58240C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D405724685
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576230838;
-	bh=jKIh3iYUlWtz83Qxczyg8PVQYY3+Pnl8BOzN1kt4UHA=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=SCxHar7YSkVs6xj8VskOAQUOSSg8P7dD4QD2Rt+5ZQvyTuPCIEY2ebZn4q1PaLt3N
-	 2jELZtwW6yb5nLSn0J4bBfEYlcscu8K860JBdMoq04eypPoRuyyggaOB/3y9FFQ+m2
-	 Mk9sddxeD48wtyt/E4qsXjwmtyFo+xFJpK2EH4UQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2AFE42073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfLMJx5 (ORCPT
+        id S1726463AbfLMJzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:53:57 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34266 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMJx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:53:57 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so5794274otf.1;
-        Fri, 13 Dec 2019 01:53:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=kQXMOkKLQBuzsUmvhlFsweud8OIK7QsHH7RggCqtmtM=;
-        b=ZT4tK+3ACxlVp+ZkROCmgagZqkWnGXiBITNjKoJBRUgfVnCJ6NRLwjTokcRuvhpRCK
-         ylS5plvgBIH2GyCF38cjKWcg3+Jh8Bh7BHlBwSL3yPe3TNLz+/GhQ3piREgBYvshmnyi
-         jxGsgvKKo0shp3rjbf6oy0Vlc5XWAOLWx7tC790yD+8VEsphREz8EhA3zlIaw5simVuT
-         Vu8J+zKX+NfOOg3PuMkQoqAkAvY+48CcpUVDXF/rnfQoIJFkyDZoWolMsdC2gEX+V+Sz
-         JQlKYjlk3KEzCFbqgRD/AXWStWWQSbo4Wd+LtElNkuivVfpJeGVXXD1mpeUc4rqOGIIB
-         4Q8Q==
-X-Gm-Message-State: APjAAAWsW6hy3NRqrtLk0JFcfvYGysvL5P4sbuS0Pfu9HoNj17w16zjl
-        ddudbTioRf7cXKIDB87xUMJEmnYhacgA2CIOOhlVBoXM
-X-Google-Smtp-Source: APXvYqycFbChVrFtM0/G5UhaTCn0IsrJkn0qmL3txvpHumg1p3pXeX7Yx1NDMUDXiQsmNM2Jza76bAJY2XM3A/HAAb0=
-X-Received: by 2002:a05:6830:95:: with SMTP id a21mr12964851oto.167.1576230836441;
- Fri, 13 Dec 2019 01:53:56 -0800 (PST)
+        Fri, 13 Dec 2019 04:55:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50010 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLMJzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:55:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4FA82AFC2;
+        Fri, 13 Dec 2019 09:55:09 +0000 (UTC)
+Subject: Re: [PATCH] x86-64/entry: add instruction suffix to SYSRET
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <cbecab05-9e95-5dec-ef81-499617c153a6@suse.com>
+ <08B92B44-CCA9-4B83-B9CC-F1601D44B73F@amacapital.net>
+ <0053f606-f4f7-3951-f40b-b7bd08703590@suse.com>
+ <CALCETrWHNunMzP1xHmOhvHG20_baoeXhNbCcEJgCgm5xzGM5Tw@mail.gmail.com>
+From:   Jan Beulich <jbeulich@suse.com>
+Message-ID: <ed9d8df6-0fe7-ca15-bab2-4d9cbbfe62f0@suse.com>
+Date:   Fri, 13 Dec 2019 10:55:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 13 Dec 2019 10:53:45 +0100
-Message-ID: <CAJZ5v0g-xo1f2yPWGzFnrGQKFuHV=aDk_nV6s7hpWNnhnqyv5g@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v5.5-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALCETrWHNunMzP1xHmOhvHG20_baoeXhNbCcEJgCgm5xzGM5Tw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 12.12.2019 22:43, Andy Lutomirski wrote:
+> On Tue, Dec 10, 2019 at 7:40 AM Jan Beulich <jbeulich@suse.com> wrote:
+>>
+>> On 10.12.2019 16:29, Andy Lutomirski wrote:
+>>>> On Dec 10, 2019, at 2:48 AM, Jan Beulich <JBeulich@suse.com> wrote:
+>>>>
+>>>> ﻿Omitting suffixes from instructions in AT&T mode is bad practice when
+>>>> operand size cannot be determined by the assembler from register
+>>>> operands, and is likely going to be warned about by upstream gas in the
+>>>> future. Add the missing suffix here.
+>>>>
+>>>> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+>>>>
+>>>> --- a/arch/x86/entry/entry_64.S
+>>>> +++ b/arch/x86/entry/entry_64.S
+>>>> @@ -1728,7 +1728,7 @@ END(nmi)
+>>>> SYM_CODE_START(ignore_sysret)
+>>>>    UNWIND_HINT_EMPTY
+>>>>    mov    $-ENOSYS, %eax
+>>>> -    sysret
+>>>> +    sysretl
+>>>
+>>> Isn’t the default sysretq?  sysretl looks more correct, but that suggests
+>>> that your changelog is wrong.
+>>
+>> No, this is different from ret, and more like iret and lret.
+>>
+>>> Is this code even reachable?
+>>
+>> Yes afaict, supported by the comment ahead of the symbol. syscall_init()
+>> puts its address into MSR_CSTAR when !IA32_EMULATION.
+>>
+> 
+> What I meant was: can a program actually get itself into 32-bit mode
+> to execute a 32-bit SYSCALL instruction?
 
-Please pull from the tag
+Why not? It can set up a 32-bit code segment descriptor, far-branch
+into it, and then execute SYSCALL. I can't see anything preventing
+this in the logic involved in descriptor adjustment system calls. In
+fact it looks to be at least partly the opposite - fill_ldt()
+disallows creation of 64-bit code segments (oddly enough
+fill_user_desc() then still copies the bit back, despite there
+apparently being no way for it to get set).
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.5-rc2
+> Anyway, the change itself is Acked-by: Andy Lutomirski <luto@kernel.org>
+> 
+> But let's please clarify the changelog:
+> 
+> ignore_sysret contains an unsuffixed 'sysret' instruction.  gas
+> correctly interprets this as sysretl, but leaving it up to gas to
+> guess when there is no register operand that implies a size is bad
+> practice, and upstream gas is likely to warn about this in the future.
+> Use 'sysretl' explicitly.  This does not change the assembled output.
 
-with top-most commit 4c84515da8099f4bab5d9312a0ffaf40f14aa87b
+Fine with me, changed.
 
- Merge branches 'pm-cpuidle' and 'acpi-pm'
-
-on top of commit e42617b825f8073569da76dc4510bfa019b1c35a
-
- Linux 5.5-rc1
-
-to receive power management updates for 5.5-rc2.
-
-These add PM QoS support to devfreq and fix a few issues in that
-subsystem, fix two cpuidle issues and do one minor cleanup in there,
-and address an ACPI power management problem related to devices with
-special power management requirements, like fans.
-
-Specifics:
-
- - Add PM QoS support, based on the frequency QoS introduced during
-   the 5.4 cycle, to devfreq (Leonard Crestez).
-
- - Fix some assorted devfreq issues (Leonard Crestez).
-
- - Fix an unintentional cpuidle behavior change (introduced during
-   the 5.4 cycle) related to the active polling time limit (Marcelo
-   Tosatti).
-
- - Fix a recently introduced cpuidle helper function and do a minor
-   cleanup in the cpuidle core (Rafael Wysocki).
-
- - Avoid adding devices with special power management requirements,
-   like fans, to the generic ACPI PM domain (Rafael Wysocki).
-
-Thanks!
-
-
----------------
-
-Leonard Crestez (6):
-      PM / devfreq: Fix devfreq_notifier_call returning errno
-      PM / devfreq: Set scaling_max_freq to max on OPP notifier error
-      PM / devfreq: Introduce get_freq_range helper
-      PM / devfreq: Don't fail devfreq_dev_release if not in list
-      PM / devfreq: Add PM QoS support
-      PM / devfreq: Use PM QoS for sysfs min/max_freq
-
-Marcelo Tosatti (1):
-      cpuidle: use first valid target residency as poll time
-
-Rafael J. Wysocki (3):
-      ACPI: PM: Avoid attaching ACPI PM domain to certain devices
-      cpuidle: Fix cpuidle_driver_state_disabled()
-      cpuidle: Drop unnecessary type cast in cpuidle_poll_time()
-
----------------
-
- drivers/acpi/device_pm.c  |  12 +-
- drivers/cpuidle/cpuidle.c |   3 +-
- drivers/cpuidle/driver.c  |  10 ++
- drivers/devfreq/devfreq.c | 273 ++++++++++++++++++++++++++++++++++------------
- include/linux/devfreq.h   |  14 ++-
- 5 files changed, 235 insertions(+), 77 deletions(-)
+Jan
