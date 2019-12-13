@@ -2,118 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D93FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58F8C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0739E2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRoNRQRh"
+	by mail.kernel.org (Postfix) with ESMTP id 8EDB5206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLMWD0 (ORCPT
+        id S1726752AbfLMWEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:03:26 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45424 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMWDZ (ORCPT
+        Fri, 13 Dec 2019 17:04:10 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40765 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMWEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:03:25 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so2164986pfg.12;
-        Fri, 13 Dec 2019 14:03:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tC9e56OkB9iMx5UogC2mae0NvXUXXZ3j9VUfeJ/X5wk=;
-        b=tRoNRQRh+sJGD73mI4PDIDyRvkzBaNEx53l8oRH/Sn6LiwA5jhvcsHTHKt0UYjOfKD
-         hI8+MAPu3GAvso6itHVboQN17c5NMohOaIdXDa6aP8XILG0jThspeOMRlB1IUC3yIWCZ
-         swEyhbgSOV49JTywMJrODnCc7u4bYKMNWk/ZTtAn4jlE/qSBoeS6gnQhmOISmdYhsicT
-         hv+UQszp8avxtmsIrnninBVWrvPdjhm37eQU53sSaxYhTcKtZ0QgecyWFxjbi9uOTD96
-         HCfXiVXAKR3OXOiwCQKS/hI0lN37hSjKxmU3aTbHAd2fk7aMPw55CqanJVLyHSFl5OxB
-         QQyQ==
+        Fri, 13 Dec 2019 17:04:10 -0500
+Received: by mail-io1-f69.google.com with SMTP id q19so786495ion.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:04:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tC9e56OkB9iMx5UogC2mae0NvXUXXZ3j9VUfeJ/X5wk=;
-        b=axSnpFdcwMnUGm0hdnk7jdQaxBbNdQiz1kV+aS64ztk/JAHpAGKHpPU4DN1CVNvznv
-         vLijLiPbhhpVZYfUwkBcSReq2Tu+jrOsRvPG0vklBusQ7wyLUhOb8+LD/EyH130xasV/
-         Nzy8Uhuw1i2sRe+zsqe2vqxuBnS6GutdNetS+cMSZrPM3RnP099UHwivXPEBKV2/ejuk
-         A4A7pC21HNhSzaGKx4Xwf3CCfW9yzwjO4Kugb2vX4Z6TnyNQk9n29UEBiwd1Cc8m6Aju
-         bE7xbPqaRvpHNcseB8/ADNQKPHXukadwE68UIlKbpTwGFYS0OdzXn9pDHi/IWXberkRm
-         Cirg==
-X-Gm-Message-State: APjAAAV4kQ8T2OYNeGOM9kmtB5RQ0UCI0zlCWf6lyF2B1yDF1OQroqQt
-        rv8U6eNoOJ8u5S9+MSf6d9A=
-X-Google-Smtp-Source: APXvYqzBpAfl1hUow2NLUi+eXe/GatKLhViFfkqNuiWd45s78/xW4KFQIoMtOkjNEpVCqNgoFHYxSw==
-X-Received: by 2002:a63:d358:: with SMTP id u24mr1975871pgi.218.1576274604884;
-        Fri, 13 Dec 2019 14:03:24 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h7sm13693878pfq.36.2019.12.13.14.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:03:24 -0800 (PST)
-Date:   Fri, 13 Dec 2019 14:03:21 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, robh@kernel.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH] input: keyboard: imx_sc_key: Only take the valid data
- from SCU firmware as key state
-Message-ID: <20191213220321.GJ101194@dtor-ws>
-References: <1576202909-1661-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=74hTEiXuIBBuX+wNO/qGUSsAN9bF7EIfe65xbl5pH6Q=;
+        b=FY9X3ExTD9QHwXOi3klFIiZ1gWTp0/jrBpLcXgW+o6aA+61X4YWSNa5OIy91BDUV0u
+         GSptIhbxea/kFfj/XLtnYcr/rchxCaxjSjFDKe5r0zFis5etFuKeKCbEWz6ST6bU+zaG
+         4ho3/rOrLIkziuUcSNxH22A2ZLiUMBja8BrxcVqRfe5Mkl2ar86I1cCNWpPIwJvsoOJ2
+         Wtv0E2Bdu6M+mxqOdlImQcmuXAF6V7VEEBrmPWMhPYm5YUYpS/jMkWMlj+BvZkQ1jX5a
+         zktZbKo/K+juR7DvDQLTRkUhD7VXTw5plAYgg2w+anfxWTABNyjxNMcemV+6gCSoxzTT
+         pMbg==
+X-Gm-Message-State: APjAAAXtSiYYMeDYcVfDz3H7RoDzQTi/d0pJn9oCH5dxu423Xaum17hT
+        AfMy87IHrVgD50/xSMLm1fViaSP+hywqPpY7Z59fHz1Qu3lq
+X-Google-Smtp-Source: APXvYqylWovhWQKc0/OSlbOTvzYKwq+BpoogqE6aMhNXYZrjpf4XHIQPpeaF7X4uEOpf6jmbE5EW4FR4gGvLFvoFx1v+vhzcuBr8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576202909-1661-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:6310:: with SMTP id p16mr8895712iog.5.1576274648002;
+ Fri, 13 Dec 2019 14:04:08 -0800 (PST)
+Date:   Fri, 13 Dec 2019 14:04:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000076760205999d0a3b@google.com>
+Subject: KCSAN: data-race in link_path_walk.part.0 / page_get_link
+From:   syzbot <syzbot+57b6149668c34058041c@syzkaller.appspotmail.com>
+To:     elver@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:08:29AM +0800, Anson Huang wrote:
-> When reading key state from SCU, the response data from SCU firmware
-> is 4 bytes due to MU message protocol, but ONLY the first byte is the
-> key state, other 3 bytes could be some dirty data, so we should ONLY
-> take the first byte as key state to avoid reporting incorrect state.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hello,
 
-Applied, thank you.
+syzbot found the following crash on:
 
-> ---
->  drivers/input/keyboard/imx_sc_key.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
-> index 5379952..9f809ae 100644
-> --- a/drivers/input/keyboard/imx_sc_key.c
-> +++ b/drivers/input/keyboard/imx_sc_key.c
-> @@ -78,7 +78,13 @@ static void imx_sc_check_for_events(struct work_struct *work)
->  		return;
->  	}
->  
-> -	state = (bool)msg.state;
-> +	/*
-> +	 * The response data from SCU firmware is 4 bytes,
-> +	 * but ONLY the first byte is the key state, other
-> +	 * 3 bytes could be some dirty data, so we should
-> +	 * ONLY take the first byte as key state.
-> +	 */
-> +	state = (bool)(msg.state & 0xff);
->  
->  	if (state ^ priv->keystate) {
->  		priv->keystate = state;
-> -- 
-> 2.7.4
-> 
+HEAD commit:    5863cc79 x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=143b67cee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=186a3142a4cdd1db
+dashboard link: https://syzkaller.appspot.com/bug?extid=57b6149668c34058041c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
--- 
-Dmitry
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+57b6149668c34058041c@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in link_path_walk.part.0 / page_get_link
+
+read to 0xffff88809b36e056 of 1 bytes by task 8667 on cpu 0:
+  link_path_walk.part.0+0x2d7/0xa90 fs/namei.c:2109
+  link_path_walk fs/namei.c:2259 [inline]
+  path_lookupat.isra.0+0x77/0x5a0 fs/namei.c:2307
+  filename_lookup+0x145/0x2b0 fs/namei.c:2338
+  user_path_at_empty+0x4c/0x70 fs/namei.c:2598
+  user_path_at include/linux/namei.h:49 [inline]
+  do_mount+0xc8/0x1560 fs/namespace.c:3081
+  ksys_mount+0xe8/0x160 fs/namespace.c:3352
+  __do_sys_mount fs/namespace.c:3366 [inline]
+  __se_sys_mount fs/namespace.c:3363 [inline]
+  __x64_sys_mount+0x70/0x90 fs/namespace.c:3363
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff88809b36e056 of 1 bytes by task 8674 on cpu 1:
+  nd_terminate_link include/linux/namei.h:75 [inline]
+  page_get_link+0x115/0x280 fs/namei.c:4787
+  get_link fs/namei.c:1069 [inline]
+  trailing_symlink+0x505/0x5a0 fs/namei.c:2253
+  path_openat+0x6cc/0x36e0 fs/namei.c:3527
+  do_filp_open+0x11e/0x1b0 fs/namei.c:3555
+  do_sys_open+0x3b3/0x4f0 fs/open.c:1097
+  __do_sys_open fs/open.c:1115 [inline]
+  __se_sys_open fs/open.c:1110 [inline]
+  __x64_sys_open+0x55/0x70 fs/open.c:1110
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 8674 Comm: syz-executor.5 Not tainted 5.4.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
