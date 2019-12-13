@@ -2,129 +2,125 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC83AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAFC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07192465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VH7XmMTY"
+	by mail.kernel.org (Postfix) with ESMTP id 12B24206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576226266;
+	bh=hrUtcMROVbSj3bFQMrJtvcxKtecQ0YYWZGQ6UFEvpuE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=al15miIHEp+4YNIIVJUFE0xz4ByrOpNED1rCq+oYB/zF+KlESgukkWP4lDV/5NPZf
+	 uiE4di1zvsgLxgo2Nh39/o9rzeSDrrf+5kIamzg+wGxWVjTfglxhFj5NbBfiS7DNTv
+	 aW8cguBugKmqIjqOGuePiixaLDOB/pdWpW2+2wr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLMIhl (ORCPT
+        id S1726735AbfLMIhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:37:41 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35794 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfLMIhl (ORCPT
+        Fri, 13 Dec 2019 03:37:45 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39206 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfLMIhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:37:41 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 15so1350843lfr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:37:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IViYxUVtxhmy+DhoYbq41mJ5frzvzah03nv9ueXSwIM=;
-        b=VH7XmMTYa7gkUtI0dk0K3xQG+rHb2TE89MdDnwaMmu/omPIeRmBQT7R00hlMq46Vop
-         n/L7FWABeXBTjQHxUhlvc3iobGa8yZ3q34qp+H9FTf8HLq36L37n4C/BjbMXVEQsKxcH
-         qq8KUavWNUAneUOUX31KLR0ZjLlgFCKGPMRPHnhWbqNaY9cXTQjAYj50EF5ZRpZbmPpK
-         /4X2wO+R+/qBv5J0kAXLzlCOg5Afx6y6VmzNEIzBMLDGTFYbbrTZDcuFFACi/1dq7HE1
-         Vevyj4b4HzDEbN8cwGI2xILgLmVjGeKKFYPrA3BMNWgR08JCBFHnwcyUDYFATs1rjXn2
-         yL7A==
+        Fri, 13 Dec 2019 03:37:43 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so5492241oty.6;
+        Fri, 13 Dec 2019 00:37:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IViYxUVtxhmy+DhoYbq41mJ5frzvzah03nv9ueXSwIM=;
-        b=Pl2rlXGx1R4FRvyMOPZgty6xQNtVwT1Pw8FnaBuoWpCkzxMaKCffm236ejGxGtahY9
-         OTCqc/u0NTsM5+zv+0lYI1cMe/LjGICiNaC54UmyxNHST6XzcZdT69TjjYqfj41LLsfJ
-         I0RHW2yp0JYibaQr4XQxO5e2sNcvkSmxZMq/N2PS71pJ+HZIGO8i/93xwKe+tl1jkcvB
-         +49DzwMGYC4yrxBiQeJ6pm+rH3p2FNkcXST7KmzQVp2dVzIhVLYSGMFo3TaEHbj5Cye+
-         WvZuuwK/tWugrhduHvU4FoYuSjSFzb0poohYWVj4RyjE+dR8B2ede29spco14ps4Qz+g
-         tbqA==
-X-Gm-Message-State: APjAAAUK0AMD0sLQZtBE0pF3gcq+DYAYLDZiJdCf98Wwo5pj+ESiqzTj
-        6jSMtCShHLDHWNMTYCzq+BhCc8D7i4l4VZ7HXY4GOw==
-X-Google-Smtp-Source: APXvYqz6KzhzKX65oJt06EFCN7iEWegIfKRRv5k7uFFbbaYlDeM5+NLKuOtf+MEbqH6/PWvxcsi1B/JW7yfDPu2sQEk=
-X-Received: by 2002:ac2:43a7:: with SMTP id t7mr7603624lfl.125.1576226259104;
- Fri, 13 Dec 2019 00:37:39 -0800 (PST)
+        bh=hrUtcMROVbSj3bFQMrJtvcxKtecQ0YYWZGQ6UFEvpuE=;
+        b=H6lumRRZfMia/fXBlvj0yzat0cyD68UyCiANSvczQJxLyOq6oAfOgLap1jr9Tn2tsn
+         7TDLX5aWebiv9J3cfR3UZIOxiwzAEh/eCHW0KflOTdV3kXgIk88ehdvTCDru07C6498n
+         3eAPRFv1XtTf8oIU+ohratFwAKEB3L7RVXvUs1AOSGpUwZaWPdpCj6f6DLlqTbfVtah2
+         +2tTSGUcnETLd4fwfAgMg1sbheSd0wUpwj0MU9pfUKPtlndiuuHnS5Ko9OwgGBYus0H5
+         ryOVoXRAsqf75liyAIK4E8qBsZj9G178YYRl0gEWTKcCR7u7g0TYN9/WlU0jLQx/lCjF
+         idxg==
+X-Gm-Message-State: APjAAAV6QgQ3Sd8dH+lBVpVOcnplffXI+YMLKgyqvSjNReQSo5EwpYxF
+        8RLDFGmIqqpzeFCC4LAG03vr8JTVIHGDe6YsIzM=
+X-Google-Smtp-Source: APXvYqzwQuxqpAXr1PaoHa2ITEuOSiCxR6CYI4S0X2/CUhtNPf5jZ7bP1wxtc/TXNOR61beC6esoVnZKEDS8l3BlkTs=
+X-Received: by 2002:a05:6830:18cd:: with SMTP id v13mr12830287ote.118.1576226262292;
+ Fri, 13 Dec 2019 00:37:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213024530.28052-1-cj.chengjian@huawei.com>
-In-Reply-To: <20191213024530.28052-1-cj.chengjian@huawei.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 13 Dec 2019 09:37:27 +0100
-Message-ID: <CAKfTPtCQCQio=D3nRTRgbhthKWo752OeaM2X4UcNwr2jByvoNg@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: Optimize select_idle_cpu
-To:     Cheng Jian <cj.chengjian@huawei.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        chenwandun@huawei.com, Xie XiuQi <xiexiuqi@huawei.com>,
-        liwei391@huawei.com, huawei.libin@huawei.com,
-        bobo.shaobowang@huawei.com, Juri Lelli <juri.lelli@redhat.com>
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+ <20191108042225.45391-2-dmitry.torokhov@gmail.com> <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
+ <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com> <20191212112825.GK32742@smile.fi.intel.com>
+ <CAJZ5v0i3dSOSa37yWLM+zDVnMKVTkOxbyKD4vo0KVwj_uFB26Q@mail.gmail.com> <ef1eb8d9-92f3-a4e4-f8d2-a2e247737c97@samsung.com>
+In-Reply-To: <ef1eb8d9-92f3-a4e4-f8d2-a2e247737c97@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 13 Dec 2019 09:37:31 +0100
+Message-ID: <CAJZ5v0ggTeUURcBpdQfKHLCLCrBCVGn_uiBDMhb-GagySNBytQ@mail.gmail.com>
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 at 03:48, Cheng Jian <cj.chengjian@huawei.com> wrote:
+On Fri, Dec 13, 2019 at 7:47 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> select_idle_cpu() will scan the LLC domain for idle CPUs,
-> it's always expensive. so the next commit :
+> Hi Rafael,
 >
->         1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+> On 12.12.2019 17:41, Rafael J. Wysocki wrote:
+> > On Thu, Dec 12, 2019 at 12:28 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> >> On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
+> >>> On 08.11.2019 05:22, Dmitry Torokhov wrote:
+> >>>> We do not need a special flag to know if we are dealing with an array,
+> >>>> as we can get that data from ratio between element length and the data
+> >>>> size, however we do need a flag to know whether the data is stored
+> >>>> directly inside property_entry or separately.
+> >>>>
+> >>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >>> Today I've noticed that this patch got merged to linux-next as commit
+> >>> e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI
+> >>> driver operation on Samsung Exynos5 SoCs (and probably on other SoCs
+> >>> which use DWC3 in host mode too). I get the following errors during boot:
+> >>>
+> >>> dwc3 12000000.dwc3: failed to add properties to xHCI
+> >>> dwc3 12000000.dwc3: failed to initialize host
+> >>> dwc3: probe of 12000000.dwc3 failed with error -61
+> >>>
+> >>> Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
+> >>>
+> >>> https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
+> >>>
+> >>> (lack of 'ref' clk is not related nor fatal to the driver operation).
+> >>>
+> >>> The code which fails after this patch is located in
+> >>> drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
+> >> Thank you for report.
+> >>
+> >> I think we should not have that patch in the fist place... I used to have
+> >> a bad feeling about it and then forgot about it existence.
+> > Well, I think you mean the [2/6].
+> >
+> > The $subject one really shouldn't change functionality, we must have
+> > missed something here.
 >
-> introduces a way to limit how many CPUs we scan.
->
-> But it consume some CPUs out of 'nr' that are not allowed
-> for the task and thus waste our attempts. The function
-> always return nr_cpumask_bits, and we can't find a CPU
-> which our task is allowed to run.
->
-> Cpumask may be too big, similar to select_idle_core(), use
-> per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
->
-> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
-> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+> Nope, I was really talking about [1/6]. It looks that it revealed an
+> issue in the DWC3 driver pointed by Dmitry.
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Right, but I was referring to the Andy's comment.
 
-> ---
->  kernel/sched/fair.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..d48244388ce9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5828,6 +5828,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
->   */
->  static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
->  {
-> +       struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
->         struct sched_domain *this_sd;
->         u64 avg_cost, avg_idle;
->         u64 time, cost;
-> @@ -5859,11 +5860,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->
->         time = cpu_clock(this);
->
-> -       for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-> +       cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-> +
-> +       for_each_cpu_wrap(cpu, cpus, target) {
->                 if (!--nr)
->                         return si_cpu;
-> -               if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> -                       continue;
->                 if (available_idle_cpu(cpu))
->                         break;
->                 if (si_cpu == -1 && sched_idle_cpu(cpu))
-> --
-> 2.20.1
->
+Cheers!
