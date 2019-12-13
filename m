@@ -2,126 +2,340 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D62C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540D02077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E03822527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMkbyHim"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BTdqc75X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfLMWiR (ORCPT
+        id S1726708AbfLMWi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:38:17 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36267 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMWiQ (ORCPT
+        Fri, 13 Dec 2019 17:38:29 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59960 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMWi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:38:16 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so767541iln.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=05pwc1cDq1D/DICCYWl1LBEP7b2TGkJ4T9jlAojcSw4=;
-        b=AMkbyHim27QPrfH+SFbUq5K6UtLpL5hRLHJ2gT/tiB/okhD6H760a3eNBadZXZ3USZ
-         9IqwEe874ONRzJUPePaY7+ZFBY/7Jw4a8qNUz2Lwb2Cwe0AYa3Dr2ScyeuHIoT9QOopz
-         4WEjiIH+qRYgL3U4gHwl41xMXGF3CsjNG0ICD0D4HRgm3c9LHj2d9e0a9Oh5NzglgwDA
-         mKC2Zxb13JloprCzr+lr9Lgtg7CSK+ywVxFJ0L0bjf9FrOr3cu6Z1k7Eg1QTc17SVaM6
-         CoQrQ7YCAZAomYu7mxI0jRh+fZOtxyUbc5NVxGYImZTDO09mOhcam4wxIml9YPeUX8eI
-         ouZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=05pwc1cDq1D/DICCYWl1LBEP7b2TGkJ4T9jlAojcSw4=;
-        b=YeKDOGiNyJtvNyrfRK7wSFQKqJS4QzhcT1UuQ8yw9SE9/yNBluQKQde/LbKD6kZ4EG
-         ixJbQLXfMDKvK03jvx4UCyShXm60qZQsWZmMoGOEAOXrwTjaw/cPwBn7uUuNWJ+g1Knz
-         4AVSg/BDeqh9D3RcMXfwFIOt4/CpRrPpgBqgVblTMRrUC41yIKXmhbbadThtS+qC1a8V
-         2AB+89KJZHqSgoqj+7h5O5nxqw0y54uYixQSukRamMtHepHkqr9VswRYoxCoPON1/4XA
-         SJpHH+AFli3bBc3C9KEe7YmAyXQzqMyl9TTn8/zsmZH0idjePilEJaDkXAyq9TNergEB
-         xRGA==
-X-Gm-Message-State: APjAAAVg0BpBOnywB+a/xwgi5RbAPPi7o6yTwoXHc6ExEW05yTcz3ntg
-        z0kDuZ+zAseApPDb/X17PTY=
-X-Google-Smtp-Source: APXvYqx0uEsIvwLyNJN7RXSIIglVZGUqy7rs3mqi+4ZkWl+6KLFw6vmUQBxc/SD9Aaiscam/6CaC1g==
-X-Received: by 2002:a92:9107:: with SMTP id t7mr1701040ild.51.1576276695976;
-        Fri, 13 Dec 2019 14:38:15 -0800 (PST)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id f7sm2396743ioo.27.2019.12.13.14.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:38:15 -0800 (PST)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, jhubbard@nvidia.com,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH v2] mm/gup: Fix memory leak in __gup_benchmark_ioctl
-Date:   Fri, 13 Dec 2019 16:37:41 -0600
-Message-Id: <20191213223751.4089-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
-References: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
+        Fri, 13 Dec 2019 17:38:29 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 09B119D6;
+        Fri, 13 Dec 2019 23:38:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576276706;
+        bh=cIsowKdPJVy94nZ4lShtlxeLckbMS92Jb70sTXUXaoU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BTdqc75XYO2Pf0QZf1ofGCz6vcXqc8hbAzJuCIuSUuaRSygRjLFXAe/EKsTyR5+WS
+         95Mz7wlNqDq/myAPZLn1hGQV5bIU6jjn7oCVsKQqNYh67hJJ84FkMQ1QhjGUiDRO2w
+         Ed/WTGS6RSXnmpkiR4g9H22mUA6dI6ynGL5UEQFQ=
+Date:   Sat, 14 Dec 2019 00:38:16 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        p.zabel@pengutronix.de,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: Re: [PATCH RESEND 2/4] drm: bridge: anx7688: Add anx7688 bridge
+ driver support.
+Message-ID: <20191213223816.GS4860@pendragon.ideasonboard.com>
+References: <20191211061911.238393-1-hsinyi@chromium.org>
+ <20191211061911.238393-3-hsinyi@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191211061911.238393-3-hsinyi@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of __gup_benchmark_ioctl() the allocated pages
-should be released before returning in case of an invalid cmd. Release
-pages via kvfree() by goto done.
+Hi Hsin-Yi and Nicolas,
 
-Fixes: 714a3a1ebafe ("mm/gup_benchmark.c: add additional pinning methods")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v2:
-	-- added goto and ret value instead of return -1.
----
- mm/gup_benchmark.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Thank you for the patch.
 
-diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-index b160638f647e..b773b2568544 100644
---- a/mm/gup_benchmark.c
-+++ b/mm/gup_benchmark.c
-@@ -24,7 +24,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
- {
- 	ktime_t start_time, end_time;
- 	unsigned long i, nr_pages, addr, next;
--	int nr;
-+	int nr, ret = 0;
- 	struct page **pages;
- 
- 	if (gup->size > ULONG_MAX)
-@@ -63,8 +63,8 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
- 					    NULL);
- 			break;
- 		default:
--			kvfree(pages);
--			return -1;
-+			ret = -EINVAL;
-+			goto done;
- 		}
- 
- 		if (nr <= 0)
-@@ -85,8 +85,9 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
- 	end_time = ktime_get();
- 	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
- 
-+done:
- 	kvfree(pages);
--	return 0;
-+	return ret;
- }
- 
- static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
+On Wed, Dec 11, 2019 at 02:19:09PM +0800, Hsin-Yi Wang wrote:
+> From: Nicolas Boichat <drinkcat@chromium.org>
+> 
+> ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
+> that has an internal microcontroller.
+> 
+> The only reason a Linux kernel driver is necessary is to reject
+> resolutions that require more bandwidth than what is available on
+> the DP side. DP bandwidth and lane count are reported by the bridge
+> via 2 registers on I2C.
+
+How about power, doesn't this chip have power supplies that potentially
+need to be controlled ?
+
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig            |   9 +
+>  drivers/gpu/drm/bridge/Makefile           |   1 +
+>  drivers/gpu/drm/bridge/analogix-anx7688.c | 202 ++++++++++++++++++++++
+>  3 files changed, 212 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 34362976cd6f..1f3fc6bec842 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -16,6 +16,15 @@ config DRM_PANEL_BRIDGE
+>  menu "Display Interface Bridges"
+>  	depends on DRM && DRM_BRIDGE
+>  
+> +config DRM_ANALOGIX_ANX7688
+> +	tristate "Analogix ANX7688 bridge"
+> +	select DRM_KMS_HELPER
+> +	select REGMAP_I2C
+> +	---help---
+> +	  ANX7688 is a transmitter to support DisplayPort over USB-C for
+> +	  smartphone and tablets.
+> +	  This driver only supports the HDMI to DP component of the chip.
+> +
+>  config DRM_ANALOGIX_ANX78XX
+>  	tristate "Analogix ANX78XX bridge"
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 4934fcf5a6f8..7a1e0ec032e6 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+>  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+>  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+>  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
+> new file mode 100644
+> index 000000000000..baaed48d6201
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
+> @@ -0,0 +1,202 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * ANX7688 HDMI->DP bridge driver
+> + *
+> + * Copyright 2016 Google LLC
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <drm/drm_bridge.h>
+> +
+> +/* Register addresses */
+> +#define VENDOR_ID_REG 0x00
+> +#define DEVICE_ID_REG 0x02
+> +
+> +#define FW_VERSION_REG 0x80
+> +
+> +#define DP_BANDWIDTH_REG 0x85
+> +#define DP_LANE_COUNT_REG 0x86
+
+Are these registers defined by the ANX7688 hardware, or by the firmware
+running on the chip (and, I assume, developed by Google) ?
+
+> +
+> +#define VENDOR_ID 0x1f29
+> +#define DEVICE_ID 0x7688
+> +
+> +/* First supported firmware version (0.85) */
+> +#define MINIMUM_FW_VERSION 0x0085
+> +
+> +struct anx7688 {
+> +	struct drm_bridge bridge;
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +
+> +	bool filter;
+> +};
+> +
+> +static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
+> +{
+> +	return container_of(bridge, struct anx7688, bridge);
+> +}
+> +
+> +static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
+> +				      const struct drm_display_mode *mode,
+> +				      struct drm_display_mode *adjusted_mode)
+> +{
+> +	struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
+> +	u8 regs[2];
+> +	u8 dpbw, lanecount;
+> +	int totalbw, requiredbw;
+> +	int ret;
+> +
+> +	if (!anx7688->filter)
+> +		return true;
+> +
+> +	/* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
+> +	ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
+> +	if (ret < 0) {
+> +		dev_err(&anx7688->client->dev,
+> +			"Failed to read bandwidth/lane count\n");
+> +		return false;
+> +	}
+> +	dpbw = regs[0];
+> +	lanecount = regs[1];
+> +
+> +	/* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
+> +	if (dpbw > 0x19 || lanecount > 2) {
+> +		dev_err(&anx7688->client->dev,
+> +			"Invalid bandwidth/lane count (%02x/%d)\n",
+> +			dpbw, lanecount);
+> +		return false;
+> +	}
+> +
+> +	/* Compute available bandwidth (kHz) */
+> +	totalbw = dpbw * lanecount * 270000 * 8 / 10;
+> +
+> +	/* Required bandwidth (8 bpc, kHz) */
+> +	requiredbw = mode->clock * 8 * 3;
+> +
+> +	dev_dbg(&anx7688->client->dev,
+> +		"DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
+> +		totalbw, dpbw, lanecount, requiredbw);
+> +
+> +	if (totalbw == 0) {
+> +		dev_warn(&anx7688->client->dev,
+> +			 "Bandwidth/lane count are 0, not rejecting modes\n");
+> +		return true;
+> +	}
+> +
+> +	return totalbw >= requiredbw;
+> +}
+> +
+> +static const struct drm_bridge_funcs anx7688_bridge_funcs = {
+> +	.mode_fixup	= anx7688_bridge_mode_fixup,
+> +};
+> +
+> +static const struct regmap_config anx7688_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static int anx7688_i2c_probe(struct i2c_client *client,
+> +			     const struct i2c_device_id *id)
+> +{
+> +	struct anx7688 *anx7688;
+> +	struct device *dev = &client->dev;
+> +	int ret;
+> +	u8 buffer[4];
+> +	u16 vendor, device, fwversion;
+> +
+> +	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
+> +	if (!anx7688)
+> +		return -ENOMEM;
+> +
+> +#if IS_ENABLED(CONFIG_OF)
+> +	anx7688->bridge.of_node = client->dev.of_node;
+> +#endif
+> +
+> +	anx7688->client = client;
+> +	i2c_set_clientdata(client, anx7688);
+> +
+> +	anx7688->regmap =
+> +		devm_regmap_init_i2c(client, &anx7688_regmap_config);
+> +
+> +	/* Read both vendor and device id (4 bytes). */
+> +	ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to read chip vendor/device id\n");
+> +		return ret;
+> +	}
+> +
+> +	vendor = (u16)buffer[1] << 8 | buffer[0];
+> +	device = (u16)buffer[3] << 8 | buffer[2];
+> +	if (vendor != VENDOR_ID || device != DEVICE_ID) {
+> +		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
+> +			vendor, device);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Failed to read firmware version\n");
+> +		return ret;
+> +	}
+> +
+> +	fwversion = (u16)buffer[0] << 8 | buffer[1];
+> +	dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
+> +		 buffer[0], buffer[1]);
+> +
+> +	/* FW version >= 0.85 supports bandwidth/lane count registers */
+> +	if (fwversion >= MINIMUM_FW_VERSION) {
+> +		anx7688->filter = true;
+> +	} else {
+> +		/* Warn, but not fail, for backwards compatibility. */
+> +		dev_warn(dev,
+> +			 "Old ANX7688 FW version (%02x.%02x), not filtering\n",
+> +			 buffer[0], buffer[1]);
+> +	}
+> +
+> +	anx7688->bridge.funcs = &anx7688_bridge_funcs;
+> +	drm_bridge_add(&anx7688->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static int anx7688_i2c_remove(struct i2c_client *client)
+> +{
+> +	struct anx7688 *anx7688 = i2c_get_clientdata(client);
+> +
+> +	drm_bridge_remove(&anx7688->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id anx7688_id[] = {
+> +	{ "anx7688", 0 },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, anx7688_id);
+> +
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id anx7688_match_table[] = {
+> +	{ .compatible = "analogix,anx7688", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, anx7688_match_table);
+> +#endif
+> +
+> +static struct i2c_driver anx7688_driver = {
+> +	.driver = {
+> +		   .name = "anx7688",
+> +		   .of_match_table = of_match_ptr(anx7688_match_table),
+> +		  },
+> +	.probe = anx7688_i2c_probe,
+> +	.remove = anx7688_i2c_remove,
+> +	.id_table = anx7688_id,
+> +};
+> +
+> +module_i2c_driver(anx7688_driver);
+> +
+> +MODULE_DESCRIPTION("ANX7688 SlimPort Transmitter driver");
+> +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
+> +MODULE_LICENSE("GPL v2");
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
