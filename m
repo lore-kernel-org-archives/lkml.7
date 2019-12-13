@@ -2,125 +2,224 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE507C7DBA7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A3C7DBA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D92524715
+	by mail.kernel.org (Postfix) with ESMTP id 9CAFD246EF
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VoZOlw8a"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Z37IwFua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfLMSMD (ORCPT
+        id S1728732AbfLMSNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:12:03 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35539 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728667AbfLMSMC (ORCPT
+        Fri, 13 Dec 2019 13:13:25 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40918 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728693AbfLMSNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:12:02 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z76so341220qka.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:12:02 -0800 (PST)
+        Fri, 13 Dec 2019 13:13:24 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 6so1574092oix.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:13:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zYPYNQC53+CxeOZMSLaSXNleC2alunHbsG33GQacSz4=;
-        b=VoZOlw8aTRJ5130OpGd/2QPPeJVLXlpFsO6lMnt0ZVol+swiG2OufkT5eZ5bZNX1t7
-         6uq3Wh9ztEg6X4u9wTAPnozLL7VzKAPoXn1vpSn2db+we4rYrwIknRm5sY6suY68VX6z
-         qT12MybJIwhfdsNBRT2iKWvDh8hJH5RCDmfsI=
+        bh=w1cqQGOHLxt9WnlMRPGWtbihZqq/TPUJMIUsmupkqQc=;
+        b=Z37IwFuamUtHj2UGycAzTlRIcOH/54EKCkDpaxP7Qp3MLa22kc/Usl9HnTrRe+y3QV
+         jmlzBiBcgKWz0AkFOWkABdgtG4hYJTy1l4UIT6yWZWyPw9dRV6jw8VgbCyBLWLKiWGEX
+         vM6Poow6sLwsq/ysxLVntPEkC62ExQjZKQkH6702/0HtxVqhTzpHmVb6lnPrLaCqpsEL
+         zgjoMLNDG4MeH71UbAFhH4TqD4PJMpQDpjWWrZvQirUHWydeRNzmnynyQH4+Xkyz7ims
+         L+1U3HsYxKKlN5qI/Ha+t6ww7rmUaJZ9hBlYoQDd0mpeknpPM1bHMMTuLHN+KJ75i+eW
+         EFZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zYPYNQC53+CxeOZMSLaSXNleC2alunHbsG33GQacSz4=;
-        b=WRXhgA3DcG5HMBB4aKa1nSMCDfts00ZQNbvtZBCsX9ybjs1yA3weIuwjN5gzQMuDYd
-         YJSE8ki4QSQdPPVnsQhsxReCRmVhMBXY51vQM8RxxC56zoVAU01MI4soUbU0iVmAkd2l
-         xCxxPWBIi0mpclSYeO+3wWeV2Gm/KZu6Xk7olYVJd/3DZkApqpwW367IeufO0T6p1/OI
-         os0Kjp5VYUhpdTa8cuLCzBHYUCuYxi2nZ/hE0C/s14nFZAapRqhZ2gbVGut/tOouGVsV
-         hF9nksiJNacb41fqU3DyfabkPOX2fawjbi5NAfwGNa8LRF+f8YJ5dtMOAW0ztQFAYkdg
-         i0Hg==
-X-Gm-Message-State: APjAAAUFkykyPPz/PvRU6vJyO3lynNNvCUAmqUtSBSsmmkhuVberSRw8
-        0IvbgPhGKNvWkbuI9UfBPB6wJclrUIo7wNb9nwTfFg==
-X-Google-Smtp-Source: APXvYqyenKHhwGviYc0bhj1kkNQB0iXKYg0CMjzjCOLDKyeheouOTpWir748zTNRkxFY2sr98wCfcLVq/vHGlgYTv1g=
-X-Received: by 2002:a37:514:: with SMTP id 20mr14328531qkf.321.1576260721379;
- Fri, 13 Dec 2019 10:12:01 -0800 (PST)
+        bh=w1cqQGOHLxt9WnlMRPGWtbihZqq/TPUJMIUsmupkqQc=;
+        b=pI0xoRSRIdQ6C9PBnpUMOzVgyCatkR+5ew+Q3qEnWOSKtxi1WUPCT8uBICA42E68vj
+         T4tSi9ZV60keHKYCbATLEJhY4YHYQyyZrhXSFPSP46MYoOU3b/x1IN1Pjq8qJf3lLQlF
+         4uwsVQbKeZq2GTXu00jJvFP/DrklsXcRopINO6EXkqtIq+RHw5Wugo6IjcGFHW588MKB
+         GWAthTlDndhEkK6H1JZGe64R3LqakRMS+E2g9oK0qPXX+UWUT8opEdLut8of2FzfZ+R6
+         qvbpBkieZ+GYLnMQx/g9hCYw1L7BxdAcOTGnNL9GOMur4egfUhgUvzX9pLUjeRDm14LK
+         Dwgg==
+X-Gm-Message-State: APjAAAUiLwYoW/oXxJJvuolNaJbZvguTecCXuDhe+C8qAhK7SyuufeJg
+        OrCFTHg3KsUbhbOM2kuq03CbVvOoEjNPpVul5jFzAw==
+X-Google-Smtp-Source: APXvYqxZoubPWEAIaOvxFMZ9FPSoIReuNH6FLAi59sGYLvNzO+lWknFm2sHcIblMBoPXq/5GgUFCfD2MPq696t8Tmuc=
+X-Received: by 2002:aca:4c9:: with SMTP id 192mr7971550oie.105.1576260803989;
+ Fri, 13 Dec 2019 10:13:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213113510.GG15474@quack2.suse.cz> <20191213153306.30744-1-tranmanphong@gmail.com>
-In-Reply-To: <20191213153306.30744-1-tranmanphong@gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Fri, 13 Dec 2019 10:11:50 -0800
-Message-ID: <CAEXW_YQwrM6=u1gsij-5SL5+2n9Pk9HFEYdF_JWYjitLvr7Dcg@mail.gmail.com>
-Subject: Re: [PATCH V2] ext4: use rcu API in debug_print_tree
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        adilger.kernel@dilger.ca, "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu <rcu@vger.kernel.org>, stable <stable@vger.kernel.org>
+References: <20191212182238.46535-1-brho@google.com> <20191212182238.46535-2-brho@google.com>
+ <20191213174702.GB31552@linux.intel.com>
+In-Reply-To: <20191213174702.GB31552@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 13 Dec 2019 10:13:13 -0800
+Message-ID: <CAPcyv4ia3mp9d24fBiSXh2m_T4sLHnJHeg6VLw2AZmk8DAD7qQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] mm: make dev_pagemap_mapping_shift() externally visible
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Barret Rhoden <brho@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Zeng, Jason" <jason.zeng@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 7:39 AM Phong Tran <tranmanphong@gmail.com> wrote:
+On Fri, Dec 13, 2019 at 9:47 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> struct ext4_sb_info.system_blks was marked __rcu.
-> But access the pointer without using RCU lock and dereference.
-> Sparse warning with __rcu notation:
+> On Thu, Dec 12, 2019 at 01:22:37PM -0500, Barret Rhoden wrote:
+> > KVM has a use case for determining the size of a dax mapping.
+> >
+> > The KVM code has easy access to the address and the mm, and
+> > dev_pagemap_mapping_shift() needs only those parameters.  It was
+> > deriving them from page and vma.  This commit changes those parameters
+> > from (page, vma) to (address, mm).
+> >
+> > Signed-off-by: Barret Rhoden <brho@google.com>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  include/linux/mm.h  |  3 +++
+> >  mm/memory-failure.c | 38 +++-----------------------------------
+> >  mm/util.c           | 34 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 40 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index a2adf95b3f9c..bfd1882dd5c6 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -1013,6 +1013,9 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
+> >  #define page_ref_zero_or_close_to_overflow(page) \
+> >       ((unsigned int) page_ref_count(page) + 127u <= 127u)
+> >
+> > +unsigned long dev_pagemap_mapping_shift(unsigned long address,
+> > +                                     struct mm_struct *mm);
+> > +
+> >  static inline void get_page(struct page *page)
+> >  {
+> >       page = compound_head(page);
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> > index 3151c87dff73..bafa464c8290 100644
+> > --- a/mm/memory-failure.c
+> > +++ b/mm/memory-failure.c
+> > @@ -261,40 +261,6 @@ void shake_page(struct page *p, int access)
+> >  }
+> >  EXPORT_SYMBOL_GPL(shake_page);
+> >
+> > -static unsigned long dev_pagemap_mapping_shift(struct page *page,
+> > -             struct vm_area_struct *vma)
+> > -{
+> > -     unsigned long address = vma_address(page, vma);
+> > -     pgd_t *pgd;
+> > -     p4d_t *p4d;
+> > -     pud_t *pud;
+> > -     pmd_t *pmd;
+> > -     pte_t *pte;
+> > -
+> > -     pgd = pgd_offset(vma->vm_mm, address);
+> > -     if (!pgd_present(*pgd))
+> > -             return 0;
+> > -     p4d = p4d_offset(pgd, address);
+> > -     if (!p4d_present(*p4d))
+> > -             return 0;
+> > -     pud = pud_offset(p4d, address);
+> > -     if (!pud_present(*pud))
+> > -             return 0;
+> > -     if (pud_devmap(*pud))
+> > -             return PUD_SHIFT;
+> > -     pmd = pmd_offset(pud, address);
+> > -     if (!pmd_present(*pmd))
+> > -             return 0;
+> > -     if (pmd_devmap(*pmd))
+> > -             return PMD_SHIFT;
+> > -     pte = pte_offset_map(pmd, address);
+> > -     if (!pte_present(*pte))
+> > -             return 0;
+> > -     if (pte_devmap(*pte))
+> > -             return PAGE_SHIFT;
+> > -     return 0;
+> > -}
+> > -
+> >  /*
+> >   * Failure handling: if we can't find or can't kill a process there's
+> >   * not much we can do.       We just print a message and ignore otherwise.
+> > @@ -324,7 +290,9 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+> >       }
+> >       tk->addr = page_address_in_vma(p, vma);
+> >       if (is_zone_device_page(p))
+> > -             tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+> > +             tk->size_shift =
+> > +                     dev_pagemap_mapping_shift(vma_address(page, vma),
+> > +                                               vma->vm_mm);
+> >       else
+> >               tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+> >
+> > diff --git a/mm/util.c b/mm/util.c
+> > index 3ad6db9a722e..59984e6b40ab 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -901,3 +901,37 @@ int memcmp_pages(struct page *page1, struct page *page2)
+> >       kunmap_atomic(addr1);
+> >       return ret;
+> >  }
+> > +
+> > +unsigned long dev_pagemap_mapping_shift(unsigned long address,
+> > +                                     struct mm_struct *mm)
+> > +{
+> > +     pgd_t *pgd;
+> > +     p4d_t *p4d;
+> > +     pud_t *pud;
+> > +     pmd_t *pmd;
+> > +     pte_t *pte;
+> > +
+> > +     pgd = pgd_offset(mm, address);
+> > +     if (!pgd_present(*pgd))
+> > +             return 0;
+> > +     p4d = p4d_offset(pgd, address);
+> > +     if (!p4d_present(*p4d))
+> > +             return 0;
+> > +     pud = pud_offset(p4d, address);
+> > +     if (!pud_present(*pud))
+> > +             return 0;
+> > +     if (pud_devmap(*pud))
+> > +             return PUD_SHIFT;
+> > +     pmd = pmd_offset(pud, address);
+> > +     if (!pmd_present(*pmd))
+> > +             return 0;
+> > +     if (pmd_devmap(*pmd))
+> > +             return PMD_SHIFT;
+> > +     pte = pte_offset_map(pmd, address);
+> > +     if (!pte_present(*pte))
+> > +             return 0;
+> > +     if (pte_devmap(*pte))
+> > +             return PAGE_SHIFT;
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dev_pagemap_mapping_shift);
 >
-> block_validity.c:139:29: warning: incorrect type in argument 1 (different address spaces)
-> block_validity.c:139:29:    expected struct rb_root const *
-> block_validity.c:139:29:    got struct rb_root [noderef] <asn:4> *
+> This is basically a rehash of lookup_address_in_pgd(), and doesn't provide
+> exactly what KVM needs.  E.g. KVM works with levels instead of shifts, and
+> it would be nice to provide the pte so that KVM can sanity check that the
+> pfn from this walk matches the pfn it plans on mapping.
 >
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> Instead of exporting dev_pagemap_mapping_shift(), what about relacing it
+> with a patch to introduce lookup_address_mm() and export that?
+>
+> dev_pagemap_mapping_shift() could then wrap the new helper (if you want),
+> and KVM could do lookup_address_mm() for querying the size of ZONE_DEVICE
+> pages.
 
-Thanks Phong! Looks like a real bug fix caught thanks to Sparse. So
-let us mark for stable as well?
-
-- Joel
-
-> ---
->  fs/ext4/block_validity.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> ---
-> change log:
-> V2: Add Reviewed-by: Jan Kara <jack@suse.cz>
->
-> diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-> index d4d4fdfac1a6..1ee04e76bbe0 100644
-> --- a/fs/ext4/block_validity.c
-> +++ b/fs/ext4/block_validity.c
-> @@ -133,10 +133,13 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
->  {
->         struct rb_node *node;
->         struct ext4_system_zone *entry;
-> +       struct ext4_system_blocks *system_blks;
->         int first = 1;
->
->         printk(KERN_INFO "System zones: ");
-> -       node = rb_first(&sbi->system_blks->root);
-> +       rcu_read_lock();
-> +       system_blks = rcu_dereference(sbi->system_blks);
-> +       node = rb_first(&system_blks->root);
->         while (node) {
->                 entry = rb_entry(node, struct ext4_system_zone, node);
->                 printk(KERN_CONT "%s%llu-%llu", first ? "" : ", ",
-> @@ -144,6 +147,7 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
->                 first = 0;
->                 node = rb_next(node);
->         }
-> +       rcu_read_unlock();
->         printk(KERN_CONT "\n");
->  }
->
-> --
-> 2.20.1
->
+All of the above sounds great to me. Should have looked that much
+harder when implementing dev_pagemap_mapping_shift() originally.
