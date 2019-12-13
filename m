@@ -2,278 +2,208 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D58C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7941C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCB42077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24862077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SwHSo1ZT"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AlbyAYli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfLMGLK (ORCPT
+        id S1732114AbfLMGNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:11:10 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50782 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfLMGLK (ORCPT
+        Fri, 13 Dec 2019 01:13:31 -0500
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:44714 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfLMGNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:11:10 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD6B4dh052061;
-        Fri, 13 Dec 2019 00:11:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576217464;
-        bh=R7se8/t9MflGkAXnSQai3sRXG4U4CFURFyo8zcdiJF8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SwHSo1ZTOEpNgriyoaMYi7V6PrSfQPcgbtDfIiIRrFaaze4d+9fkapYuqyHM1kuGW
-         Jm2L7wfeQ4yp7u0+UuZxowPB/xXVErmeaIxnn1PLgdaqP+LbUrd0bIDGSjS1znmmgk
-         maiNClbXvaYmmEuDd+QjhvK+xvdaW+v3MfnxnE6k=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD6B4Jd051660;
-        Fri, 13 Dec 2019 00:11:04 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 00:11:04 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 00:11:04 -0600
-Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD6Ax07082936;
-        Fri, 13 Dec 2019 00:11:00 -0600
-Subject: Re: [PATCH] bus: ti-sysc: Fix missing reset delay handling
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191211185901.9879-1-tony@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <3ffb7088-8a10-c75a-1ad5-27701fad18e0@ti.com>
-Date:   Fri, 13 Dec 2019 11:41:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191211185901.9879-1-tony@atomide.com>
-Content-Type: multipart/mixed;
-        boundary="------------950C312003D33B2A83474718"
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 13 Dec 2019 01:13:31 -0500
+Received: by mail-qt1-f176.google.com with SMTP id g17so1363413qtp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 22:13:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=U4epWknYOkPQuP+2qdxVVLW7k5oIO9qVFJAm3JoMVjA=;
+        b=AlbyAYliz1asJXCOtRdcor9SnwWikurekHoYmELGtyM1ahnwQrjvOfiPdbMww1DKNE
+         9FgZiOUtQThP4XtdCjt+o92y9h72V+TV8OBPdyqELWXX0tH0COkW3dFPsIH2JS5/JaZF
+         4dQWL0wVDMUNaAp/FWnC9oZsti4JvY1SkwvBse9NM63RbVFt6ufPVhT6NgR7yvlM9JBU
+         eZs1HRorcGNHf4QKmlF42zWzhG0QMWeZ/Gzv8aROuL3w14qSoTMIUNjIiKZf5gbGCxvd
+         cNFA1GHiMnaN1ALYXr2+8nhCh+Zk/V16nqKaluxSnmzq8xIyGNW+ABG7nY1LdH/nz03s
+         ndFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=U4epWknYOkPQuP+2qdxVVLW7k5oIO9qVFJAm3JoMVjA=;
+        b=jl61du2/tY4Lt2eB9o4syN0aLg7CtyQl+M6oxgwpmzjtk/QLF12LgD+XqQWeIAYv34
+         ISvCy9RTJ0H0T89zKzV17ikIabjKHsEgMZaV9kvmnflvtYkQbUTF6UWtm5IffeaQht+H
+         R76sTnVdH4zboPkUrhCLVEcp5VF045MkinLFjYHpywGcJRBvyaXhF9Yce3hIKbZK2sYS
+         7lot2XlVPPWSgzWHdeLquXbh+YDsEKbqh7I9b9bSP4dVqqNdusY31Ao8qa7wrvNtRISF
+         E9c6q6/K5gvue6ibprtYebBrXqZ2qB5C5Tc14blZPXvtFvETm/CSqblq+MVHCXw8ZPLQ
+         TyRA==
+X-Gm-Message-State: APjAAAX3jNliEGbrut3dTRl8RwnC5BuDvgr5U+wqWWNPIJKjMxt1k7Cp
+        mQPPR4hmJ1COuo+ougjKLdigxGVPpTI=
+X-Google-Smtp-Source: APXvYqxejny3nPyjxVmCK8WVlMUjqv8c0YXU2iyxYc/c6hbCZyLZsUMp4X7ilyCUfHq+24QonoUr7A==
+X-Received: by 2002:ac8:745a:: with SMTP id h26mr10783615qtr.318.1576217609714;
+        Thu, 12 Dec 2019 22:13:29 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l20sm795556qtj.60.2019.12.12.22.13.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 22:13:29 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: "rcu: React to callback overload by aggressively seeking quiescent
+ states" hangs on boot
+Message-Id: <3DAA2B11-682B-43B4-94F3-A4706D3179F6@lca.pw>
+Date:   Fri, 13 Dec 2019 01:13:27 -0500
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Tejun Heo <tj@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------950C312003D33B2A83474718
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The linux-next commit 82150cb53dcb ("rcu: React to callback overload by =
+aggressively seeking quiescent states=E2=80=9D)
+causes hangs on boot on almost all arches. Reverted it fixed the issue.
 
+=3D=3D=3D x86_64 (Intel) =3D=3D=3D
 
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
 
-On 12/12/19 12:29 am, Tony Lindgren wrote:
-> We have dts property for "ti,sysc-delay-us", and we're using it, but th=
-e
-> wait after OCP softreset only happens if devices are probed in legacy m=
-ode.
->=20
-> Let's add a delay after writing the OCP softreset when specified.
+[   29.130611][    T0] mce: CPU0: Thermal monitoring enabled (TM1)
+[   29.136598][    T0] process: using mwait in idle threads
+[   29.140582][    T0] Last level iTLB entries: 4KB 64, 2MB 8, 4MB 8
+[   29.146704][    T0] Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0, =
+1GB 4
+[   29.150570][    T0] Spectre V1 : Mitigation: usercopy/swapgs barriers =
+and __user pointer sanitization
+[   29.160584][    T0] Spectre V2 : Mitigation: Full generic retpoline
+[   29.166881][    T0] Spectre V2 : Spectre v2 / SpectreRSB mitigation: =
+Filling RSB on context switch
+[   29.170567][    T0] Spectre V2 : Enabling Restricted Speculation for =
+firmware calls
+[   29.180569][    T0] Spectre V2 : mitigation: Enabling conditional =
+Indirect Branch Prediction Barrier
+[   29.190567][    T0] Spectre V2 : User space: Mitigation: STIBP via =
+seccomp and prctl
+[   29.200569][    T0] Speculative Store Bypass: Mitigation: Speculative =
+Store Bypass disabled via prctl and seccomp
+[   29.210570][    T0] TAA: Vulnerable: Clear CPU buffers attempted, no =
+microcode
+[   28.995181][    T0] MDS: Vulnerable: Clear CPU buffers attempted, no =
+microcode
+[   29.005929][    T0] debug: unmapping init [mem =
+0xffffffffb50ec000-0xffffffffb50f0fff]
+[   29.035681][    T1] smpboot: CPU0: Intel(R) Xeon(R)=20
+<hang =E2=80=A6.>
 
+=3D=3D=3D arm64 =3D=3D=3D
 
-Hi Tony,
+https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
 
-Boot tested on DRA72 & DRA76.
+[    0.000000][    T0] ITS [mem 0x440100000-0x44011ffff]
+[    0.000000][    T0] ITS@0x0000000440100000: allocated 65536 Devices =
+@8bfd080000 (flat, esz 8, psz 64K, shr 0)
+[    0.000000][    T0] ITS@0x0000000440100000: allocated 32768 Interrupt =
+Collections @8bfd020000 (flat, esz 2, psz 16K, shr 0)
+[    0.000000][    T0] ITS: using cache flushing for cmd queue
+[    0.000000][    T0] GICv3: using LPI property table =
+@0x0000000880db0000
+[    0.000000][    T0] GIC: using cache flushing for LPI property table
+[    0.000000][    T0] GICv3: CPU0: using allocated LPI pending table =
+@0x0000000880dd0000
+[    0.000000][    T0] arch_timer: cp15 timer(s) running at 200.00MHz =
+(phys).
+[    0.000000][    T0] clocksource: arch_sys_counter: mask: =
+0xffffffffffffff max_cycles: 0x2e2049d3e8, max_idle_ns: 440795210634 ns
+[    0.000005][    T0] sched_clock: 56 bits at 200MHz, resolution 5ns, =
+wraps every 4398046511102ns
+[    0.061872][    T0] Lock dependency validator: Copyright (c) 2006 Red =
+Hat, Inc., Ingo Molnar
+[    0.070420][    T0] ... MAX_LOCKDEP_SUBCLASSES:  8
+[    0.075298][    T0] ... MAX_LOCK_DEPTH:          48
+[    0.080240][    T0] ... MAX_LOCKDEP_KEYS:        8192
+[    0.085379][    T0] ... CLASSHASH_SIZE:          4096
+[    0.090496][    T0] ... MAX_LOCKDEP_ENTRIES:     32768
+[    0.095722][    T0] ... MAX_LOCKDEP_CHAINS:      65536
+[    0.100926][    T0] ... CHAINHASH_SIZE:          32768
+[    0.106153][    T0]  memory used by lock dependency info: 6237 kB
+[    0.112324][    T0]  memory used for stack traces: 4224 kB
+[    0.117902][    T0]  per task-struct memory footprint: 1920 bytes
+[    0.158652][    T0] ACPI: Core revision 20191018
+[    0.194716][    T0] Calibrating delay loop (skipped), value =
+calculated using timer frequency.. 400.00 BogoMIPS (lpj=3D2000000)
+[    0.206116][    T0] pid_max: default: 262144 minimum: 2048
+[    0.355206][    T0] Dentry cache hash table entries: 8388608 (order: =
+10, 67108864 bytes, vmalloc)
+[    0.396920][    T0] Inode-cache hash table entries: 4194304 (order: =
+9, 33554432 bytes, vmalloc)
+[    0.422261][    T0] Mount-cache hash table entries: 131072 (order: 4, =
+1048576 bytes, vmalloc)
+[    0.431925][    T0] Mountpoint-cache hash table entries: 131072 =
+(order: 4, 1048576 bytes, vmalloc)
+[    0.736297][    T1] ASID allocator initialised with 32768 entries
+[    0.743932][    T1] rcu: Hierarchical SRCU implementation.
+[    0.759898][    T1] Platform MSI: ITS@0x400100000 domain created
+[    0.766249][    T1] Platform MSI: ITS@0x440100000 domain created
+[    0.772602][    T1] PCI/MSI: ITS@0x400100000 domain created
+[    0.778561][    T1] PCI/MSI: ITS@0x440100000 domain created
+[    0.784292][    T1] Remapping and enabling EFI services.
+<hang =E2=80=A6>
 
-Tested for RTC+DDR mode and DS0 mode on AM437x.
-Tested for DS0 on am335x-evm & am335x-beagle-bone-black.
+=3D=3D=3D powerpc =3D=3D=3D
 
-FWIW
+https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
 
-Tested-by: Keerthy <j-keerthy@ti.com>
-
-- Keerthy
-
-
->=20
-> Fixes: e0db94fe87da ("bus: ti-sysc: Make OCP reset work for sysstatus a=
-nd sysconfig reset bits")
-> Cc: Keerthy <j-keerthy@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/bus/ti-sysc.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -1590,6 +1590,10 @@ static int sysc_reset(struct sysc *ddata)
->  	sysc_val |=3D sysc_mask;
->  	sysc_write(ddata, sysc_offset, sysc_val);
-> =20
-> +	if (ddata->cfg.srst_udelay)
-> +		usleep_range(ddata->cfg.srst_udelay,
-> +			     ddata->cfg.srst_udelay * 2);
-> +
->  	if (ddata->clk_enable_quirk)
->  		ddata->clk_enable_quirk(ddata);
-> =20
->=20
-
---------------950C312003D33B2A83474718
-Content-Type: application/pgp-keys; name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-Xpo=3D
-=3DNfsW
------END PGP PUBLIC KEY BLOCK-----
-
---------------950C312003D33B2A83474718--
+[    0.000000][    T0] SLUB: HWalign=3D128, Order=3D0-0, MinObjects=3D0, =
+CPUs=3D128, Nodes=3D256
+[    0.000000][    T0] ODEBUG: selftest passed
+[    0.000000][    T0] ftrace: allocating 19886 entries in 8 pages
+[    0.000000][    T0] ftrace: allocated 8 pages with 1 groups
+[    0.000000][    T0] Running RCU self tests
+[    0.000000][    T0] rcu: Hierarchical RCU implementation.
+[    0.000000][    T0] rcu: 	RCU lockdep checking is enabled.
+[    0.000000][    T0] rcu: 	RCU restricting CPUs from NR_CPUS=3D256 =
+to nr_cpu_ids=3D128.
+[    0.000000][    T0] rcu: 	RCU callback double-/use-after-free =
+debug enabled.
+[    0.000000][    T0] rcu: RCU calculated value of scheduler-enlistment =
+delay is 10 jiffies.
+[    0.000000][    T0] rcu: Adjusting geometry for rcu_fanout_leaf=3D16, =
+nr_cpu_ids=3D128
+[    0.000000][    T0] NR_IRQS: 512, nr_irqs: 512, preallocated irqs: 16
+[    0.000000][    T0] xive: Interrupt handling initialized with native =
+backend
+[    0.000000][    T0] xive: Using priority 7 for all interrupts
+[    0.000000][    T0] xive: Using 64kB queues
+[    0.000007][    T0] time_init: 56 bit decrementer (max: =
+7fffffffffffff)
+[    0.003188][    T0] clocksource: timebase: mask: 0xffffffffffffffff =
+max_cycles: 0x761537d007, max_idle_ns: 440795202126 ns
+[    0.011496][    T0] clocksource: timebase mult[1f40000] shift[24] =
+registered
+[    0.029470][    T0] printk: console [hvc0] enabled
+[    0.029470][    T0] printk: console [hvc0] enabled
+[    0.035652][    T0] printk: bootconsole [udbg0] disabled
+[    0.035652][    T0] printk: bootconsole [udbg0] disabled
+[    0.040864][    T0] Lock dependency validator: Copyright (c) 2006 Red =
+Hat, Inc., Ingo Molnar
+[    0.040892][    T0] ... MAX_LOCKDEP_SUBCLASSES:  8
+[    0.040918][    T0] ... MAX_LOCK_DEPTH:          48
+[    0.040944][    T0] ... MAX_LOCKDEP_KEYS:        8192
+[    0.040969][    T0] ... CLASSHASH_SIZE:    =20
+<hang ...>=
