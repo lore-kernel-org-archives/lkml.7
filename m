@@ -2,115 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F801C34978
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016B5C751D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C6624720
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269552;
-	bh=RBVHAY+CJ2XeDspL1l3fObDb/ux4BAnVyu3PtEsXzhY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zDvoSOEkHLIHdiWhJZPH7s+Q5+0R2YDLgcoegJbgi0h54MhwJ/u0zyhjU7I3CT5VB
-	 A1C5NKbFnKykZk9oVaULhUhVcdAtJTTAJZ/Ci6ouh6p2p+4rv3oJyVr1Vt0WbW2X7U
-	 DCoU35BPE/TdrAOo6s7Z17OtI2TVZ0Y4w/iYXQ2s=
+	by mail.kernel.org (Postfix) with ESMTP id 3599E24796
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymPQwlgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfLMQTF (ORCPT
+        id S1728319AbfLMQFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:19:05 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37299 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbfLMQTE (ORCPT
+        Fri, 13 Dec 2019 11:05:06 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40468 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728302AbfLMQFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:19:04 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so2374429lfc.4;
-        Fri, 13 Dec 2019 08:19:02 -0800 (PST)
+        Fri, 13 Dec 2019 11:05:05 -0500
+Received: by mail-lj1-f195.google.com with SMTP id s22so3205155ljs.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:05:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gbf8k5yJ19A5wSZeXVRUlCPqOm3eyldLxkULlc81AFU=;
+        b=ymPQwlgoBu3AuxXxyAS8Pqr3jk0WyzPrXO0bCPOwIOGjnvgBRrGXil4Wbr2ayNyVg0
+         5oHwBqXWHlNYU4H4t0AGAUVusSZhkfHiNJjIj3uc5bx4NxoOqz31/r1rWdCvix34S3ZY
+         2LTTNgxyQ1bi8H8MZq9m+SG3t+rgn5AEU+AoO5VKhdPwcr7tzMRGFhdW9/jc9cvU1N9p
+         yEh3vCXdHeINwcTyiFYrKgZxEzP6mSe5+H8dC7GEWci+dHT6he+jJOMaqoKrHvuaroER
+         O8H3WuM0RCU6HzU+YAsXHI4yTGfj4+7zOW1wJoyn1ns5KWkT3b+TjkHMoaPRnN7i7Mnt
+         wJ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Spg0GfwWFlnRUw0lvoa6ReBLhxIzcCxpK224qhBQrwk=;
-        b=fS2w9fx2/qyRZCSQ7ld1Lck5W9YGKEyko/GaYYX6zDuKFTKxUOCu6aHpYPM6/ts8A1
-         ul7fUEDNoCcdtsiQ973+hkTLseRh5wv2ZkeDw8YIXdSXWuuYuZUSAMJhvzUzuOO/zsLm
-         Akr89PDzpaRXp4ZB1mtf9yAGE6gi4vmouWVNWufSAfxFI0BqZYx7ogKVR85I3YL6MNWQ
-         b35KglaacnJtkFnNl0XKLp6wHNfQ7L51T5Q3TuleAMkidmYaAl+ytGgw/SsI+FUWRcrX
-         he4K41jJPHcdEfOP4sC404HHTi8VyA7hAAqGyxelvVh2yGjivw4B051wGzzM2refoJKd
-         E+RQ==
-X-Gm-Message-State: APjAAAW3GMI8WnEDkOixPA7WoyKNLgiX4I2MXt8cYeJ72Eb69awT/SEL
-        3qZojReauFarRlyqmFXAOn8=
-X-Google-Smtp-Source: APXvYqxnVkGEyfViuTjx4mMxFXlrRlIx6//9d0OuQRcfhBx2KniHpTnXbEebHTcjKF/40vT+3FGIaw==
-X-Received: by 2002:a05:6512:21d:: with SMTP id a29mr9741453lfo.186.1576253941800;
-        Fri, 13 Dec 2019 08:19:01 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id x13sm4778590lfe.48.2019.12.13.08.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 08:19:00 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ifnef-0000iF-Bd; Fri, 13 Dec 2019 17:19:01 +0100
-Date:   Fri, 13 Dec 2019 17:19:01 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, khilman@baylibre.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: add interrupts
- properties
-Message-ID: <20191213161901.GZ10631@localhost>
-References: <20191213150622.14162-1-glaroque@baylibre.com>
- <20191213150622.14162-2-glaroque@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gbf8k5yJ19A5wSZeXVRUlCPqOm3eyldLxkULlc81AFU=;
+        b=LgWG7AAbmZ48vtVmxviE+0G8hdVpYVAPE7/www0WhLE0Dfan7F2Lv7cLQM/SB/siBq
+         rzq1QEtsho4VgAOppC1hDogn6Lve8pGdP8wG/zpfL3Tl7Kf9luepjgJmfyNYYJLTwWDb
+         zKx2wd9DHjjrV7qMsRy5YkuRmomGkV6BSCqUICtCIkdgvY5FLEh0WwtnWo8VWfLEHCBP
+         Bb86xcXnlWw1OS2Y2GjmDJq0TUT8Pct6LPKde5nnzSp2b/yxZ98fJkG2Nib3yZZ9/C/H
+         TwEvRUdmKHG7yJ4jmjukWhl3/PlJP+7vllEer/OR56S9wbJdLdRXSyCOFOhmMrwup++Y
+         HO/Q==
+X-Gm-Message-State: APjAAAWGjEW7Upojrr/pdLGxwXwcC0RvJqja2B5AeBaM3l/P+4Bexx3y
+        9jApHyxAod//zplgl0TIF+aQBQvmv6ZHgNZfYsUTug==
+X-Google-Smtp-Source: APXvYqwqvR2JGdbH6+gDLiMiftLZwqMCeGYmrtZEZ9p/3pwbALJms19uoBQteKErH11ha+LVboridg4Lm1ql8BrOASI=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr9963179ljm.233.1576253102887;
+ Fri, 13 Dec 2019 08:05:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213150622.14162-2-glaroque@baylibre.com>
+References: <CGME20191211145104eucas1p1ce04a26eebcd4c22d72f204e7ae0aa5a@eucas1p1.samsung.com>
+ <20191211145054.24835-1-m.szyprowski@samsung.com>
+In-Reply-To: <20191211145054.24835-1-m.szyprowski@samsung.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 17:04:51 +0100
+Message-ID: <CACRpkdbBBjXxftu1fw7H9N+hAe_MfkUPJErN6MPJ8Mxirh1w5A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4 RESEND] USB3503: correct GPIOs polarity and update
+ the driver
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 04:06:21PM +0100, Guillaume La Roque wrote:
-> add interrupts and interrupt-names as optional properties
-> to support host-wakeup by interrupt properties instead of
-> host-wakeup-gpios.
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> index b5eadee4a9a7..95912d979239 100644
-> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> @@ -36,7 +36,9 @@ Optional properties:
->      - pcm-frame-type: short, long
->      - pcm-sync-mode: slave, master
->      - pcm-clock-mode: slave, master
-> -
-> + - interrupts: must be one, used to wakeup the host processor if
-> +   gpiod_to_irq function not supported
+On Wed, Dec 11, 2019 at 3:51 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 
-This is a Linux implementation detail which therefore doesn't belong in
-the binding.
+> Marek Szyprowski (3):
+>   ARM: dts: exynos: Correct USB3503 GPIOs polarity
+>   ARM: dts: qcom: Correct USB3503 GPIOs polarity
+>   ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
 
-I think the general rule is to prefer interrupts over gpios where we
-have a choice, but here the current binding already has a
-host-wakeup-gpios.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Not sure how best to handle that, maybe Rob knows.
+for all these three.
 
-> + - interrupt-names: must be "host-wakeup"
->  
->  Example:
-
-Oh, and please keep people commenting on your patches on CC when you
-submit new versions.
-
-Johan
+Yours,
+Linus Walleij
