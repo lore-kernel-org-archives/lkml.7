@@ -2,121 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0204C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FEF24671
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B7824671
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7V/LJBA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLJp+lxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfLMVIV (ORCPT
+        id S1726704AbfLMVJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:08:21 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38748 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMVIU (ORCPT
+        Fri, 13 Dec 2019 16:09:15 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32782 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMVJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:08:20 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so74983pgm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 13:08:20 -0800 (PST)
+        Fri, 13 Dec 2019 16:09:15 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y206so2126993pfb.0;
+        Fri, 13 Dec 2019 13:09:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Aur/Px0pwmfL3LzajV1sOTCWH1iRm6As8lK2q+00Kvk=;
-        b=D7V/LJBAAvbi9quTcVnP/sUE97WgYXBhfFwHfKAwvCJ7Mnte3NFSQ2PwU4zKbWGwYs
-         hpOQtYKpnWyUVMDEYTt0aU1agAgiGQsc8lFhsNtnJyW9uKQwSGfCDf/HJMmuFLNp/ovu
-         KheVolmc4OUFCpCOvox+x3LAcvUulj9JPhazxFn5VMgoOx/ALU7FEquTym5anvDUevzQ
-         pxL0LWf9kMd665fQfalNafdE+QJZEk+9m3E2fawui0ThRVGLKpFj7ZKQFSbMKes0obgp
-         VM/p1TCB8CUEoiOTlLLiDYSBEbzl0tubmbzb3ydzypbamxgob6tUnZ5tLMoLnJnc3/wd
-         SxKQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+TUXztuga5A213JEcA90cIY8cUeQjO98uwNxtYgKoO8=;
+        b=mLJp+lxyIcMsmoIvnTbdtwhTuQvxnR8TdvxTGzjjbmUrccq6DJRh5SWY1xpS5EM5di
+         AkCfdblv+SiB/aFMCNQezSHMhRxtEqt/TbQcqaAn8m9jqTLVhsDZd9ZqE62oTpIZS7wu
+         slOalUrRlRgSuiFAI8eQBeMKZ13Zt2AqK4X5PqNtudyo6tXyvHLRjkI4QdLBbddsKQUu
+         HrXjhDOIIdWTgyiDNfH8ZS8wg4RMp5R8BREPmnObGj21VHK1wtJ7+IFYbLknQIzkBjJ0
+         sBp6cy3QB04fpx1i0QusXBNGRBaI49AvyMYjsG6ri5dYmcXOJ3+Q7EB+gG3+RL9wjE1u
+         EOSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Aur/Px0pwmfL3LzajV1sOTCWH1iRm6As8lK2q+00Kvk=;
-        b=L8+6AvkScEOh5ESKDggkiWZJyVRdqVHjeq4mkq3RFgTUQU0HDGu++X8NoU3OfjSWb6
-         cQBKptuPZPeHQz02Y/1bdQhxQkz923XF7ruqreD1w/01FINcYdwckZdBB0LyzakIKNyv
-         KaZUpldIwraiy/cURTfoUqVQuL2/h034YbeCQh6IsqtPVjyCfleZQK78MOKi7BP9CZT2
-         dS2b7ne7DQYGAtsBpmFB25eyKaxKHobd4BCVIJMdu8+YAcAYiPD3V5iAuGo9qTy0S1rw
-         j6aPdBUV9brMmWGfHFTxK4QZVVCYxwElhoW/e3Ps5WYp1juFAlBg5O2946T4+pCF6Irr
-         71VA==
-X-Gm-Message-State: APjAAAUKYc+ZHdsf/WHm7XqEdMzOy+Nd39L7QAZJ5zxyOhCv7lHVe6S0
-        XCSzgNUvacac6WXKocZYd6q5AvmgIldTZNKet8s=
-X-Google-Smtp-Source: APXvYqxSkjKFoBVv7Ad12ZCq/bsvrWkPd42fTjHxdDc3ENs++tJHZ7K+wilKZt1FDx0auoBCVdQOAkEh57V4XaKi45g=
-X-Received: by 2002:a63:5062:: with SMTP id q34mr1679417pgl.378.1576271299928;
- Fri, 13 Dec 2019 13:08:19 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+TUXztuga5A213JEcA90cIY8cUeQjO98uwNxtYgKoO8=;
+        b=F7LWKFlxUf4Jgy6NulzCNRh60apZWSTGDt/3KYpRKfW0eZoX7OgyjKsAi/r2ouWlpr
+         l5Mg4EhqiPmPHdfRQr/9jiv6jn6//pVLLFU9SKsXU7T9DID7r14TAJbGhOLRKDnF/bMC
+         MJVAiD6tLpDKu3bBzYnJDdaEofrM6kNoL67oA98/eMK1AzIImCQEygrnp0YiPX0Y0BD+
+         W9xy2MHGwBt4O219ABbMmy26zvnxxkCsUn+5RPLsNP4XZ3/hnfwo04SoCP30leMZWAmZ
+         40Kd+G7H2MYoGaHQu0lKrw7QSaWbfbPwW/QPxKBQO5K2HEAs0t/X3aogBaQtSJX7AHD7
+         45Hw==
+X-Gm-Message-State: APjAAAWwWQgSLpl7LUiawjiBjIHyxjc7XLQJ9ePByZ99e8reV12ic9lU
+        igbdZWC6jDhnp97EfH+Szkw=
+X-Google-Smtp-Source: APXvYqwFhi12CyNeIQATqxuF18VfgmCL0rKmVR00cSNIPV42aOKU0GavMtROxRmKjJVamRecUlmk1g==
+X-Received: by 2002:a62:486:: with SMTP id 128mr1674843pfe.236.1576271354411;
+        Fri, 13 Dec 2019 13:09:14 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id t11sm10884949pjf.30.2019.12.13.13.09.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 13:09:13 -0800 (PST)
+Subject: Re: [PATCH bpf v2] bpf: clear skb->tstamp in bpf_redirect when
+ necessary
+To:     Lorenz Bauer <lmb@cloudflare.com>, ast@kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@cloudflare.com
+References: <20191213154634.27338-1-lmb@cloudflare.com>
+ <20191213180817.2510-1-lmb@cloudflare.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <5e7ccc2c-cb6b-0154-15bf-fa93d374266e@gmail.com>
+Date:   Fri, 13 Dec 2019 13:09:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <201912100401.fDYi5lhU%lkp@intel.com> <20191213111649.GU32742@smile.fi.intel.com>
-In-Reply-To: <20191213111649.GU32742@smile.fi.intel.com>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Fri, 13 Dec 2019 13:08:08 -0800
-Message-ID: <CAMo8BfKhSkHapX=mDhauZz8pAwR+1DtDNL=oE_RNhmaSQ9V_Zw@mail.gmail.com>
-Subject: Re: WARNING: lib/test_bitmap.o(.text.unlikely+0x5c): Section mismatch
- in reference from the function bitmap_copy_clear_tail() to the variable .init.rodata:clump_exp
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191213180817.2510-1-lmb@cloudflare.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-On Fri, Dec 13, 2019 at 3:16 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Tue, Dec 10, 2019 at 04:17:03AM +0800, kbuild test robot wrote:
->
-> +Cc: Max for xtensa matters, perhaps he has an idea.
->
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   e42617b825f8073569da76dc4510bfa019b1c35a
-> > commit: 30544ed5de431fe25d3793e4dd5a058d877c4d77 lib/bitmap: introduce bitmap_replace() helper
-> > date:   5 days ago
-> > config: xtensa-randconfig-a001-20191209 (attached as .config)
-> > compiler: xtensa-linux-gcc (GCC) 7.5.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout 30544ed5de431fe25d3793e4dd5a058d877c4d77
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.5.0 make.cross ARCH=xtensa
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All warnings (new ones prefixed by >>):
->
-> I'm not sure I got this (esp. relation to my patch).
-> The mentioned code definitely compiled for 32-bit (since only then mentioned
-> bitmap API is in use). I have tried to reproduce on i386 compilation (gcc 9.x),
-> but can't.
 
-I was able to reproduce it on xtensa with gcc-9.
-The issue comes from the test "test_replace", specifically
-from the following call:
-  bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
+On 12/13/19 10:08 AM, Lorenz Bauer wrote:
+> Redirecting a packet from ingress to egress by using bpf_redirect
+> breaks if the egress interface has an fq qdisc installed. This is the same
+> problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
+> 
+> Clear skb->tstamp when redirecting into the egress path.
+> 
+> Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
+> Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  net/core/filter.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index f1e703eed3d2..d914257763b5 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -2055,6 +2055,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
+>  	}
+>  
+>  	skb->dev = dev;
+> +	skb->tstamp = 0;
+>  
+>  	dev_xmit_recursion_inc();
+>  	ret = dev_queue_xmit(skb);
+> 
 
-An invariable part of the call sequence used here is instantiated in
-the section .text.unlikely with a reference to exp2_to_exp3_mask built
-into it and it's called from the test_replace. It looks like a compiler bug
-to me, I'd expect this code to be emitted to the .init.text, i.e the same
-section where the function it was hoisted from resides.
-And why "unlikely"? This code is definitely executed.
+Thanks !
 
-I'll file a bug against gcc.
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
--- 
-Thanks.
--- Max
