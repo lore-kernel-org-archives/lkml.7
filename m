@@ -2,437 +2,140 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83967C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405C6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18ED24776
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746FB24784
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeZKPMZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfLMOXw (ORCPT
+        id S1727743AbfLMO3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:23:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:32826 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfLMOXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:23:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15EEC13D5;
-        Fri, 13 Dec 2019 06:23:50 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8BC3F52E;
-        Fri, 13 Dec 2019 06:23:48 -0800 (PST)
-Date:   Fri, 13 Dec 2019 14:23:34 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-Message-ID: <20191213142334.1631e3db@donnerap.cambridge.arm.com>
-In-Reply-To: <20191212123748.GF24359@e119886-lin.cambridge.arm.com>
-References: <20191209160638.141431-1-andre.przywara@arm.com>
-        <20191212123748.GF24359@e119886-lin.cambridge.arm.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Fri, 13 Dec 2019 09:29:46 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39740 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMO3q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:29:46 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e10so2853197ljj.6;
+        Fri, 13 Dec 2019 06:29:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dzOJoViZyzmlBce2YvVe0rRd6r7H8bV+TzqfDck3oOc=;
+        b=KeZKPMZoIO7wUHMwZsZ9W3IjN9Ys8z+dw72Qio7PWqWDLsiGiXE6Gx4VBuCcdUIByX
+         CNU/eGA9oqca9M7zJJmDuUM+ucvK+riOiqhaAD3ffHNre7hvMzW1OYecExBRHEwN/yh3
+         3QZuPMyP/5a0mI/QRKUbImIx7XbjXJB1dRXB5hB1ZmhajpJnpJ2EDR2eclAnMCOlyQlb
+         0oHO4Y/kG4JGU4tEEamirI4zhDATVisSs2JxgAzaD0KHb7qYW9KW5tvK+uwWUchN6yTk
+         tX/D6xXYZsJCQ5LiHPXT9wPCgnVAHdjylnimxacw9WRhqLX4SHjw9NDSDaLspfDaVW5Z
+         h3dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dzOJoViZyzmlBce2YvVe0rRd6r7H8bV+TzqfDck3oOc=;
+        b=LdWzxMmQOJJ3+B+bV446vf4gbId5HhingHxrBDDYCmrN6EE2VIKrfjUkzkSJ8P4hOh
+         JQQtEjOMDDmKy+7BnMZQyX65HO1E1g3eTW+rw0z+s747Ep4ARglN7t3Jg+jvwCDJKDWu
+         cs6d7SLi1IGns6H5m7EzXJXeowN38+ndExUHRJwgrnZUWvFrohFIo48ugJmicAfslloO
+         5PCe2n5a5lWN/T35OTk4TROogcZ0PpsONxYxXmIE6NG39vjuXuZP0zf45uxBOc5z0u7Z
+         HZ7vJ+f526+YDNWxhS4bk8YFfqLOQtvNOhznt7Q/npnXnRkImXbUYUUCVDuMgJ29Xxk5
+         GQrQ==
+X-Gm-Message-State: APjAAAUTBv37sXnfUz9bm8ulAQ6Y9vspkUUJVg4UplnrKOENIuJWZiEF
+        mQZ3BhmhGRg26jAZCfIr8qk=
+X-Google-Smtp-Source: APXvYqzUIRA/6pr6C1HZPn0ryqhh2qLm3J/HEId13QznHjQsMIPsZR5tkA+XSTfT1loN4SwUMkt3GQ==
+X-Received: by 2002:a2e:810d:: with SMTP id d13mr9909467ljg.113.1576247383751;
+        Fri, 13 Dec 2019 06:29:43 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i13sm4874011ljg.89.2019.12.13.06.29.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 06:29:43 -0800 (PST)
+Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
+ state
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mikko Perttunen <cyndis@kapsi.fi>
+References: <20191212233428.14648-1-digetx@gmail.com>
+ <20191212233428.14648-4-digetx@gmail.com>
+Message-ID: <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
+Date:   Fri, 13 Dec 2019 17:29:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191212233428.14648-4-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 12:37:48 +0000
-Andrew Murray <andrew.murray@arm.com> wrote:
-
-Hi Andrew,
-
-> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
-> > From: Deepak Pandey <Deepak.Pandey@arm.com>
-> > 
-> > The Arm N1SDP SoC suffers from some PCIe integration issues, most
-> > prominently config space accesses to not existing BDFs being answered
-> > with a bus abort, resulting in an SError.  
+13.12.2019 02:34, Dmitry Osipenko пишет:
+> I noticed that sometime I2C clock is kept enabled during suspend-resume.
+> This happens because runtime PM defers dynamic suspension and thus it may
+> happen that runtime PM is in active state when system enters into suspend.
+> In particular I2C controller that is used for CPU's DVFS is often kept ON
+> during suspend because CPU's voltage scaling happens quite often.
 > 
-> It wouldn't be a surprise if the host controller handled UR completions
-> differently depending on if they were in response to a Type 0 configuration
-> request or a Type 1 configuration request. (I think I've seen this before).
-
-Yeah, that rings a bell here as well, I remember something with the RK3399 PCIe RC.
- 
-> Have you verified that you still get a bus abort when you attempt to
-> perform a config read of a non-existent device downstream of the PCIe switch?
-> (and thus as a response to a Type 1 request).
-
-I think I have checked this (please confirm if my experiment is valid): I get SErrors for both probing non-existent devices on bus 0 and other busses.
-
-> I ask because if this is the case, and knowing that the PCIe switch is
-> fixed, then it would be possible to simplify this quirk (by just making
-> assumptions of the presence of devices in bus 0 rather than all the busses).
-
-Yeah, thanks for trying, but no luck here ;-)
-
-> > To mitigate this, the firmware scans the bus before boot (catching the
-> > SErrors) and creates a table with valid BDFs, which acts as a filter for
-> > Linux' config space accesses.
-> > 
-> > Add code consulting the table as an ACPI PCIe quirk, also register the
-> > corresponding device tree based description of the host controller.
-> > Also fix the other two minor issues on the way, namely not being fully
-> > ECAM compliant and config space accesses being restricted to 32-bit
-> > accesses only.
-> > 
-> > This allows the Arm Neoverse N1SDP board to boot Linux without crashing
-> > and to access *any* devices (there are no platform devices except UART).  
+> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
+> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
+> suspend/resume in the NOIRQ phase which is used for the system-level
+> suspend/resume of the driver.
 > 
-> This implies that this quirk has no side-effects and everything will work
-> as expected - but this is only true for the simple case. For example hot
-> plug won't work, SR-IOV, and others won't work.
-
-Yeah, good point, I should have mentioned this. This is really a best effort hack^Wworkaround to make the system work as best as possible.
-Yes, SR-IOV won't work. We are about to evaluate our options here, but for now it's just not supported on this system.
-
-I don't think hot plug is of a particular concern here, since the hardware doesn't support physical hot plug. I am not sure if a Thunderbolt add-in card would trigger this problem, but in the worst case it just wouldn't work.
-
-> Also what happens for devices that return CRS? - does this also result in an
-> abort?
-
-I haven't tried, and it looks like it's hard to trigger? But chances are indeed that it could generate SErrors.
-
-> Does that mean that the firmware will consider these devices as not
-> present instead of not ready yet? If this is an issue, then FLR of devices
-> will also create issues (resulting in SErrors for users).
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> I think it would be helpful to update this commit message to indicate that
-> this makes it work better, but it may be broken in certain ways.
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index b3ecdd87e91f..d309a314f4d6 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+>  {
+>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +	int err;
+>  
+>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
 
-Good point. This is really a pragmatic patch to make the system usable at all.
+I'm now in a doubt that it is correct to use NOIRQ level at all for the
+suspend because i2c_mark_adapter_suspended() uses mutex, thus I'm
+wondering what will happen if there is an asynchronous transfer
+happening during suspend..
 
-> > Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
-> > [Sudipto: extend to cover the CCIX root port as well]
-> > Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
-> > [Andre: fix coding style issues, rewrite some parts, add DT support]
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >  arch/arm64/configs/defconfig        |   1 +
-> >  drivers/acpi/pci_mcfg.c             |   7 +
-> >  drivers/pci/controller/Kconfig      |  11 ++
-> >  drivers/pci/controller/Makefile     |   1 +
-> >  drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
-> >  include/linux/pci-ecam.h            |   2 +
-> >  6 files changed, 218 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pcie-n1sdp.c
-> > 
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 6a83ba2aea3e..58124ef5070b 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -177,6 +177,7 @@ CONFIG_NET_9P=y
-> >  CONFIG_NET_9P_VIRTIO=y
-> >  CONFIG_PCI=y
-> >  CONFIG_PCIEPORTBUS=y
-> > +CONFIG_PCI_QUIRKS=y
-> >  CONFIG_PCI_IOV=y
-> >  CONFIG_HOTPLUG_PCI=y
-> >  CONFIG_HOTPLUG_PCI_ACPI=y
-> > diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> > index 6b347d9920cc..7a2b41b9ab57 100644
-> > --- a/drivers/acpi/pci_mcfg.c
-> > +++ b/drivers/acpi/pci_mcfg.c
-> > @@ -142,6 +142,13 @@ static struct mcfg_fixup mcfg_quirks[] = {
-> >  	XGENE_V2_ECAM_MCFG(4, 0),
-> >  	XGENE_V2_ECAM_MCFG(4, 1),
-> >  	XGENE_V2_ECAM_MCFG(4, 2),
-> > +
-> > +#define N1SDP_ECAM_MCFG(rev, seg, ops) \
-> > +	{"ARMLTD", "ARMN1SDP", rev, seg, MCFG_BUS_ANY, ops }
-> > +
-> > +	/* N1SDP SoC with v1 PCIe controller */
-> > +	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
-> > +	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
-> >  };
-> >  
-> >  static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > index c77069c8ee5d..45700d32f02e 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -37,6 +37,17 @@ config PCI_FTPCI100
-> >  	depends on OF
-> >  	default ARCH_GEMINI
-> >  
-> > +config PCIE_HOST_N1SDP_ECAM
-> > +	bool "ARM N1SDP PCIe Controller"
-> > +	depends on ARM64
-> > +	depends on OF || (ACPI && PCI_QUIRKS)
-> > +	select PCI_HOST_COMMON
-> > +	default y if ARCH_VEXPRESS
-> > +	help
-> > +	  Say Y here if you want PCIe support for the Arm N1SDP platform.
-> > +	  The controller is ECAM compliant, but needs a quirk to workaround
-> > +	  an integration issue.  
-> 
-> Again - please indicate the scope of support provided.
-> 
-> > +
-> >  config PCI_TEGRA
-> >  	bool "NVIDIA Tegra PCIe controller"
-> >  	depends on ARCH_TEGRA || COMPILE_TEST
-> > diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> > index 3d4f597f15ce..5f47fefbd67d 100644
-> > --- a/drivers/pci/controller/Makefile
-> > +++ b/drivers/pci/controller/Makefile
-> > @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
-> >  obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
-> >  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
-> >  obj-$(CONFIG_VMD) += vmd.o
-> > +obj-$(CONFIG_PCIE_HOST_N1SDP_ECAM) += pcie-n1sdp.o
-> >  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-> >  obj-y				+= dwc/
-> >  
-> > diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
-> > new file mode 100644
-> > index 000000000000..620ab221466c
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/pcie-n1sdp.c
-> > @@ -0,0 +1,196 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2018/2019 ARM Ltd.
-> > + *
-> > + * This quirk is to mask the following issues:
-> > + * - PCIE SLVERR: config space accesses to invalid PCIe BDFs cause a bus
-> > + *		  error (signalled as an asynchronous SError)
-> > + * - MCFG BDF mapping: the root complex is mapped separately from the device
-> > + *		       config space
-> > + * - Non 32-bit accesses to config space are not supported.
-> > + *
-> > + * At boot time the SCP board firmware creates a discovery table with
-> > + * the root complex' base address and the valid BDF values, discovered while
-> > + * scanning the config space and catching the SErrors.
-> > + * Linux responds only to the EPs listed in this table, returning NULL  
-> 
-> NIT: it will respond to the switch devices which aren't EPs.
-> 
-> 
-> > + * for the rest.
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/init.h>
-> > +#include <linux/ioport.h>
-> > +#include <linux/sizes.h>
-> > +#include <linux/of_pci.h>
-> > +#include <linux/of.h>
-> > +#include <linux/pci-ecam.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +
-> > +/* Platform specific values as hardcoded in the firmware. */
-> > +#define AP_NS_SHARED_MEM_BASE	0x06000000
-> > +#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
-> > +#define BDF_TABLE_SIZE		SZ_16K
-> > +
-> > +/*
-> > + * Shared memory layout as written by the SCP upon boot time:
-> > + *  ----
-> > + *  Discover data header --> RC base address
-> > + *                       \-> BDF Count
-> > + *  Discover data        --> BDF 0...n
-> > + *  ----
-> > + */
-> > +struct pcie_discovery_data {
-> > +	u32 rc_base_addr;
-> > +	u32 nr_bdfs;
-> > +	u32 valid_bdfs[0];
-> > +} *pcie_discovery_data[MAX_SEGMENTS];
-> > +
-> > +void __iomem *rc_remapped_addr[MAX_SEGMENTS];
-> > +
-> > +/*
-> > + * map_bus() is called before we do a config space access for a certain
-> > + * device. We use this to check whether this device is valid, avoiding
-> > + * config space accesses which would result in an SError otherwise.
-> > + */
-> > +static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
-> > +				       int where)
-> > +{
-> > +	struct pci_config_window *cfg = bus->sysdata;
-> > +	unsigned int devfn_shift = cfg->ops->bus_shift - 8;
-> > +	unsigned int busn = bus->number;
-> > +	unsigned int segment = bus->domain_nr;
-> > +	unsigned int bdf_addr;
-> > +	unsigned int table_count, i;
-> > +
-> > +	if (segment >= MAX_SEGMENTS ||
-> > +	    busn < cfg->busr.start || busn > cfg->busr.end)
-> > +		return NULL;
-> > +
-> > +	/* The PCIe root complex has a separate config space mapping. */
-> > +	if (busn == 0 && devfn == 0)
-> > +		return rc_remapped_addr[segment] + where;
-> > +
-> > +	busn -= cfg->busr.start;
-> > +	bdf_addr = (busn << cfg->ops->bus_shift) + (devfn << devfn_shift);
-> > +	table_count = pcie_discovery_data[segment]->nr_bdfs;
-> > +	for (i = 0; i < table_count; i++) {
-> > +		if (bdf_addr == pcie_discovery_data[segment]->valid_bdfs[i])
-> > +			return pci_ecam_map_bus(bus, devfn, where);
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> > +static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
-> > +{
-> > +	phys_addr_t table_base;
-> > +	struct device *dev = cfg->parent;
-> > +	struct pcie_discovery_data *shared_data;
-> > +	size_t bdfs_size;
-> > +
-> > +	if (segment >= MAX_SEGMENTS)
-> > +		return -ENODEV;
-> > +
-> > +	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;  
-> 
-> How can you be sure that this table is populated and isn't junk? I.e. using an older
-> SCP version?
+The i2c_mark_adapter_suspended() will try to block and will never return?
 
-This is just (and always was) part of the firmware. If not, it won't work. Technically we tie this to the DT compatible or the ACPI signature.
-
-> > +
-> > +	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
-> > +				"PCIe valid BDFs")) {
-> > +		dev_err(dev, "PCIe BDF shared region request failed\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	shared_data = devm_ioremap(dev,
-> > +				   table_base, BDF_TABLE_SIZE);
-> > +	if (!shared_data)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Copy the valid BDFs structure to allocated normal memory. */
-> > +	bdfs_size = sizeof(struct pcie_discovery_data) +
-> > +		    sizeof(u32) * shared_data->nr_bdfs;
-> > +	pcie_discovery_data[segment] = devm_kmalloc(dev, bdfs_size, GFP_KERNEL);
-> > +	if (!pcie_discovery_data[segment])
-> > +		return -ENOMEM;
-> > +
-> > +	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
-> > +
-> > +	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
-> > +						shared_data->rc_base_addr,
-> > +						PCI_CFG_SPACE_EXP_SIZE);
-> > +	if (!rc_remapped_addr[segment]) {
-> > +		dev_err(dev, "Cannot remap root port base\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	devm_iounmap(dev, shared_data);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_n1sdp_pcie_init(struct pci_config_window *cfg)
-> > +{
-> > +	return pci_n1sdp_init(cfg, 0);
-> > +}
-> > +
-> > +static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
-> > +{
-> > +	return pci_n1sdp_init(cfg, 1);
-> > +}
-> > +
-> > +struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
-> > +	.bus_shift	= 20,
-> > +	.init		= pci_n1sdp_pcie_init,
-> > +	.pci_ops	= {
-> > +		.map_bus        = pci_n1sdp_map_bus,
-> > +		.read           = pci_generic_config_read32,
-> > +		.write          = pci_generic_config_write32,
-> > +	}
-> > +};
-> > +
-> > +struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
-> > +	.bus_shift	= 20,
-> > +	.init		= pci_n1sdp_ccix_init,
-> > +	.pci_ops	= {
-> > +		.map_bus        = pci_n1sdp_map_bus,
-> > +		.read           = pci_generic_config_read32,
-> > +		.write          = pci_generic_config_write32,
-> > +	}
-> > +};
-> > +
-> > +static const struct of_device_id n1sdp_pcie_of_match[] = {
-> > +	{ .compatible = "arm,n1sdp-pcie" },
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, n1sdp_pcie_of_match);
-> > +
-> > +static int n1sdp_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	const struct device_node *of_node = pdev->dev.of_node;
-> > +	u32 segment;
-> > +
-> > +	if (of_property_read_u32(of_node, "linux,pci-domain", &segment)) {
-> > +		dev_err(&pdev->dev, "N1SDP PCI controllers require linux,pci-domain property\n");
-> > +		return -EINVAL;
-> > +	}  
+> +	err = pm_runtime_force_suspend(dev);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+>  	if (err)
+>  		return err;
+>  
+> +	err = pm_runtime_force_resume(dev);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+>  
+>  	return 0;
 > 
-> Can you use of_get_pci_domain_nr here?
-
-Ah, indeed. There seems to be an of_... function for everything ;-)
-
-Cheers,
-Andre.
-
-> > +
-> > +	switch (segment) {
-> > +	case 0:
-> > +		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
-> > +	case 1:
-> > +		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
-> > +	}
-> > +
-> > +	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
-> > +		MAX_SEGMENTS);
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static struct platform_driver n1sdp_pcie_driver = {
-> > +	.driver = {
-> > +		.name = KBUILD_MODNAME,
-> > +		.of_match_table = n1sdp_pcie_of_match,
-> > +		.suppress_bind_attrs = true,
-> > +	},
-> > +	.probe = n1sdp_pcie_probe,
-> > +};
-> > +builtin_platform_driver(n1sdp_pcie_driver);
-> > diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> > index a73164c85e78..03cdea69f4e8 100644
-> > --- a/include/linux/pci-ecam.h
-> > +++ b/include/linux/pci-ecam.h
-> > @@ -57,6 +57,8 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
-> >  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
-> >  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-> >  extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
-> > +extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
-> > +extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
-> >  #endif
-> >  
-> >  #ifdef CONFIG_PCI_HOST_COMMON
-> > -- 
-> > 2.17.1
-> >   
 
