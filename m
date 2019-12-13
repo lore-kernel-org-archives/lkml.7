@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C34BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EAAC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD172253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE04E2253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="O0pwB2uu"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Vov9+2yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfLMAIC (ORCPT
+        id S1731607AbfLMAIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:08:02 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36640 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731573AbfLMAH6 (ORCPT
+        Thu, 12 Dec 2019 19:08:04 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38988 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731412AbfLMAIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:07:58 -0500
-Received: by mail-pj1-f65.google.com with SMTP id n96so345939pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:07:58 -0800 (PST)
+        Thu, 12 Dec 2019 19:08:02 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b137so535517pga.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zxx/HRHL6kjWjxkGDaGwGWZ/6AVYaJNa85HBD92o/lM=;
-        b=O0pwB2uuaJIoMx5Hj0eQnZ5uh3n3bDklfwUjHwIMqdbZZ3fHbmNl1iqmqJSlpryRO2
-         YIZy1T2tmjVvvgwOCKOqck2p3o6WvqTmgsTBvNhnAXKo+GXKmHllndUAmhIoLT+zTTOq
-         b+NuFqv9SquAq2CzlPTcE6pGHnd7/QBtqd+7xLnSktuU2SNBOoNpBQbuEPOxPJbaNkqE
-         EdatrGQPNq5Es0t0w37x8URXMcjITkkMbtAEWY3w0kuCeVZc4EHiKePPcyUptrKDAubv
-         jxYsYVD2dxj3yVxvebmhJvoEZAj1V+qH4IF410bk3LLvfbwl+RqvVPPp0mvrnMi5Qr2M
-         4VKw==
+        bh=Euik8RhSRJjHmC28+StnihMZD1d4qJRUDgdRlDVUqg8=;
+        b=Vov9+2yB9/3J2+7DANI/wPjle8KZwVg0d5zBvN5FnKFK2vBdtzOq7YcpV9aNTO2UVi
+         J+2z+NpVo3Ei+Pl4+oggYNrBLDvL/eMxREVg6SLUIyyiHBghtCgmfaXVT57XltyKauc3
+         OzAv3XL2UKiRaOikeC7iTvhrIzspRT8CUNWLLjzmuYT+nYNmZaGi5qcUtIqcam0H124e
+         RbclY+ExjONTJH6cmIEhDq6bmEYd9/EAFkqIp/bZq9PKYiVdFbNKprQM4q9hbaC3RKqk
+         IGMkNo2fkuWmlu2mT7mfqbIin7ri/Vc8aIKwHHOOpF2FCjzTecK7E3S40SISqeuGnlox
+         bD6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zxx/HRHL6kjWjxkGDaGwGWZ/6AVYaJNa85HBD92o/lM=;
-        b=pMeXC/1H9H/LgJKPWBqsjbX0U1lonYuZjJeQh5rVsWMRoEc+S/83KzKvc9k+q4GUWV
-         NSgGz3+9coBwiloQ9cGqSr7M3wXSaQmSn97tb7ONbsPTkQYUNKrs9L+KShEDLttuB2FK
-         +zEyiEke10aoWd1QD3odbHtrLgAm3kCHIsOu4KtssBivEZDh5k02WnLouesg5o/xnVEX
-         tknZuP7TbDdoMwQwAa/ErT7q6pAASnPpgTdlIK7jslOJDw0m+JxN+j9VdMmoDtuL2KTk
-         db0mDOQp39uma+0qjJW49FOzhWXjvFH+oFkk0zZ/5xRW1lY1Lx0rYUJgcL78VB1PNg1X
-         YXuA==
-X-Gm-Message-State: APjAAAXXDgNcOgFR70ZS86rwzis7/UWgUPna6rvy/RxhTOMN4aJZCiGN
-        eh6gXXbPv75q5Rd8wObIGCXFEjIw82c=
-X-Google-Smtp-Source: APXvYqxJAMj6b+gRXMvs56fGQZqyz8wB4ICEEZaUhOEliFjrIdFM1hNV0AKbBv3XVTo5qVQMWh3sOQ==
-X-Received: by 2002:a17:902:b598:: with SMTP id a24mr12416703pls.247.1576195677874;
-        Thu, 12 Dec 2019 16:07:57 -0800 (PST)
+        bh=Euik8RhSRJjHmC28+StnihMZD1d4qJRUDgdRlDVUqg8=;
+        b=oZ7FXu2fuxTW9g8oDQw8Zkv2HzmvZQB0ykrDZW6rs957wFDlbwajc3kjA6UGA3WJLG
+         vbqWpXBxTRMaj+MD2DMNrQBN07tu1SyPfSU77BCOKIuRC+jzlqVmr/qcCKHozhOXy73x
+         pTiYRiQ5WCch94/PsuRzmFtdAaMJH92+SsYWqiv8C7tsB/21iPckdwK0IB9dXyUh0aug
+         MZHI9coHOwLqfnP9IPKgIYlsuOtcZqjeg9jUnA8q1rscdm6+ETFvP0M4EZgmoeQbbTFT
+         PpDGRZUF8wjHpZXwwTTZ48NRZzNWsQ7b1yRCgzC4m45soz0StPGvCOdqlExtv3AUnPRZ
+         MbpQ==
+X-Gm-Message-State: APjAAAXATL3hPZqEnw75cbBvyYPZ/T3DeKrAjpC0b9Jkq2hqo01CCbIy
+        OQR8RhWSH8MLmyEk/TXu5irnucrwQWg=
+X-Google-Smtp-Source: APXvYqzY6lLiNfLcAT2CBNRvssxZ7MTePv1pHo5Z9zzhPNEs2I5saW4nMcezRwTRhfTnTCpuHM6CLA==
+X-Received: by 2002:aa7:95a9:: with SMTP id a9mr12656949pfk.15.1576195681400;
+        Thu, 12 Dec 2019 16:08:01 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.07.55
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.07.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:07:57 -0800 (PST)
+        Thu, 12 Dec 2019 16:08:00 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -64,14 +64,18 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
         linux-serial@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: [PATCH 15/58] tty/serial: Migrate dz to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:14 +0000
-Message-Id: <20191213000657.931618-16-dima@arista.com>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 16/58] tty/serial: Migrate efm32-uart to use has_sysrq
+Date:   Fri, 13 Dec 2019 00:06:15 +0000
+Message-Id: <20191213000657.931618-17-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,34 +91,34 @@ The SUPPORT_SYSRQ ifdeffery is not nice as:
 In order to remove SUPPORT_SYSRQ, has_sysrq variable has been added.
 Initialise it in driver's probe and remove ifdeffery.
 
-Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/dz.c | 5 +----
+ drivers/tty/serial/efm32-uart.c | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
-index 7b57e840e255..6192ed011bc3 100644
---- a/drivers/tty/serial/dz.c
-+++ b/drivers/tty/serial/dz.c
-@@ -29,10 +29,6 @@
- 
- #undef DEBUG_DZ
- 
--#if defined(CONFIG_SERIAL_DZ_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
+diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32-uart.c
+index d6b5e5463746..2ac87128d7fd 100644
+--- a/drivers/tty/serial/efm32-uart.c
++++ b/drivers/tty/serial/efm32-uart.c
+@@ -1,8 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#if defined(CONFIG_SERIAL_EFM32_UART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 -#define SUPPORT_SYSRQ
 -#endif
 -
- #include <linux/bitops.h>
- #include <linux/compiler.h>
- #include <linux/console.h>
-@@ -787,6 +783,7 @@ static void __init dz_init_ports(void)
- 		uport->ops	= &dz_ops;
- 		uport->line	= line;
- 		uport->mapbase	= base;
-+		uport->has_sysrq = IS_ENABLED(CONFIG_SERIAL_DZ_CONSOLE);
- 	}
- }
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/io.h>
+@@ -748,6 +744,7 @@ static int efm32_uart_probe(struct platform_device *pdev)
+ 	efm_port->port.type = PORT_EFMUART;
+ 	efm_port->port.iotype = UPIO_MEM32;
+ 	efm_port->port.fifosize = 2;
++	efm_port->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_EFM32_UART_CONSOLE);
+ 	efm_port->port.ops = &efm32_uart_pops;
+ 	efm_port->port.flags = UPF_BOOT_AUTOCONF;
  
 -- 
 2.24.0
