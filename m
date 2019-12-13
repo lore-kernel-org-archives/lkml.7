@@ -2,106 +2,219 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02606C341B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96176C50703
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C95724689
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C4C24712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ecWral3D";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ECWM3DJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLMUvZ (ORCPT
+        id S1726263AbfLMUks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:51:25 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:59363 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMUvY (ORCPT
+        Fri, 13 Dec 2019 15:40:48 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46426 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbfLMUks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:51:24 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MyseC-1hjtrs3ojy-00vwQi; Fri, 13 Dec 2019 21:51:15 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, cluster-devel@redhat.com
-Subject: [PATCH v2 03/24] dlm: use SO_SNDTIMEO_NEW instead of SO_SNDTIMEO_OLD
-Date:   Fri, 13 Dec 2019 21:49:12 +0100
-Message-Id: <20191213204936.3643476-4-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
-References: <20191213204936.3643476-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 15:40:48 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDKeSkf014539;
+        Fri, 13 Dec 2019 12:40:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=xmhSo78XG/Xh/3Beki0lQpTIQHBa0peK1JipYU3Zz9o=;
+ b=ecWral3DjDCBZbn9g66ixPrC3ajoxhAv4kOacNlPnzng346HpehKv9B7y2sYE3kA8g2q
+ wnUY5gAZcsiKGWNet0QZA/0NMI2m6MyxJXwrd4UwfkhsFZr7uUvQ1P/+5DRyDnLG2+cQ
+ a4PsVgu6fsbLV1T9/H/KJ5j4xF60RZgv6xI= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2wv2mekrmc-13
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 13 Dec 2019 12:40:37 -0800
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 13 Dec 2019 12:40:32 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 13 Dec 2019 12:40:32 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PK8xT4tujbyrEYcZ4v+1a2Cw9vJl8NeWTzYeGQNN5CaoIO8HGkxQmRa+fHnv2ntRyfT1cCN+GlRnnYJiHq5SQc9hAyHOsNBSjDPxXHgyhCDBbR1Gq8TuX2Rb9H3kJgQZT/It7iKNIBTipAcvl/AK1i3+sRgDoD6PNFff9jTX/0yUOm59ZVxXIpbS1vnfcTVEQ3iQLxoypa4FAoHxwNYIiOzFFTIzFDS8aw0wDNkBTEl3MhOk+Q8yClyXk4wnaLRPUySNzXruS3sMPxjHnq9RCh3yWi+/rFp5LTkARqaINbBcpaclhNU9gEseWpYpOFj/SRJ8cq/rE0/Uuki18DOg9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xmhSo78XG/Xh/3Beki0lQpTIQHBa0peK1JipYU3Zz9o=;
+ b=R98HGWeP9mQGU5fQSf5WjVgG/udANl6dFxovN/c5Uv0mC13a/QCQpBQYxkc6VCgj8fzCBPQr+8BV7w7szESGJx+fMqmwx/CdfvJlxujd4HmGC2MSoQ+iYopvhpH7BuzDvbmWvgOj356qNG+by5dBiRjHT5k5sYaoNzx+EUCz6yFEFIpaKwQJDxqprn6ARPK5NTQmB64vB2SB+hHbTcC99B+ZSFejrFTG2WLK2oLptFxDpN4uj5TN8e+Qa5JMrkuhYZBT7GFRlSr2Lz6SEwAbsYQz5bGStXR1gjZYGsEbHqQySbGThUJ0WkfDrSXuN1bFwT8YtgCiKnTq3uNwDrcekw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xmhSo78XG/Xh/3Beki0lQpTIQHBa0peK1JipYU3Zz9o=;
+ b=ECWM3DJ2pEfZxWLuhSE09uOp8iQQu+FAHM7v9GD2PgSJ3OC/JfqwKyPKFiphVEcSFSPTIDUs5yk/xpeECMb+iDeJc8J3YhqH+kiRQYCATy9gI7YvODkwkTmvFfXOw9Y5P3VHcBSOk2ed1Bap5UomDQpXjpqsLhoFybLEJCj7kYM=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
+ BYAPR15MB3432.namprd15.prod.outlook.com (20.179.59.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Fri, 13 Dec 2019 20:40:31 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::8cc8:bdb1:a9c7:7f60]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::8cc8:bdb1:a9c7:7f60%3]) with mapi id 15.20.2538.017; Fri, 13 Dec 2019
+ 20:40:31 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 1/3] mm: memcontrol: fix memory.low proportional
+ distribution
+Thread-Topic: [PATCH 1/3] mm: memcontrol: fix memory.low proportional
+ distribution
+Thread-Index: AQHVserY3s483dI4qU6ldrdPHHXyO6e4h0MA
+Date:   Fri, 13 Dec 2019 20:40:31 +0000
+Message-ID: <20191213204026.GA6830@localhost.localdomain>
+References: <20191213192158.188939-1-hannes@cmpxchg.org>
+ <20191213192158.188939-2-hannes@cmpxchg.org>
+In-Reply-To: <20191213192158.188939-2-hannes@cmpxchg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR22CA0070.namprd22.prod.outlook.com
+ (2603:10b6:300:12a::32) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:150::19)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::c4c4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93310a76-f699-484c-5fdb-08d7800cb1e3
+x-ms-traffictypediagnostic: BYAPR15MB3432:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB34324D3A52C1F2FD922415DBBE540@BYAPR15MB3432.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(346002)(366004)(136003)(199004)(189003)(54906003)(6486002)(6512007)(9686003)(81156014)(8676002)(316002)(8936002)(6916009)(81166006)(186003)(33656002)(66446008)(6506007)(52116002)(1076003)(86362001)(66556008)(71200400001)(2906002)(478600001)(64756008)(66946007)(66476007)(4326008)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3432;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gspUfuUvtfPJTiKxraToS6PMGMsNvoBjECHpi1vKQUW1u9MpPh4LM+i8U1zoSO88o2bHiMZ1mU6ze/NPQN5Z5VOtuiM2sasy8W8a7oA30hxT3+p6CC2KNoHo6S40qmOz2R8PZ5pCg8zZtpDVv0WG5bEw7YsGFeHqF5KrztEcyQN8pFBncV4xVdxIN+ZFguVTjc52FgIbpggUJPeYEO8O1qQKNXURtDTh457oPx/WWEgyxfZf9D4GMA0IwqXGgkUW2PALpXWvgJlYy+e3GXc3A0eRyJTqeq2cHXF88fyKoXDgrkaLl7Tl/IdHVuvBF8PSJf/e5O8EvIvyocjoMwY2gNgPfA2KwicWpxG+m0NCU+BHOoWW3XEeBIw46LbuyW0aehKRDz25fx1A2EWAs2ftUp9aOjeklc5se4a1DGOUaoMoq6DBVGV7vNZAn9Qcorts
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <026E6C99126A814AA2697837C6CF363B@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JgGd8/iX9DERj/M5iCtB2a26MaoOZ9mjFnqSnunVh+f26nRMB2x
- LJwHidIBih58zaeiqD+QWZvmjmJvr5LBgkn4Oc8KHhhUGMhjVldx6278u3WX2GeGR9jv0pY
- CNJhdcI6Y0D76LueyfFCHDEKlSN3sWitDbT8Z4iI2W7uq7ARkybx5Zp6VhwMbIjrgBJzTxZ
- WQkKtr7kPtxyMi9vGaZdg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tYDJc1dkaTc=:tLbuj+9nUfY1i2EKGWn7GZ
- asfdqauWEzm2ka5/EYjlY0E9PbE8iOKaSbLg2BFxOKsfiJQIGvd7X+Z/6Qvnf+wqY4oVBdYK8
- iTCFvER5Xc3h/QTte16lPmsHKvV6H/U3Psa1A/kdDQhwIsxA0Yf1vzGIIa0Ykyy3uqwat+spS
- IlFK1EExs+ln1uqESiCFvCQz1a73wVOpOCTFtIoPjfgfE57XOtJ9WVXHD0KSLuhMAUDb6aYJu
- GI+/JftgWouszmdndBdpapd6kQM5r4QwqMR22GQH5gdaKNQFogidIwfofy8Abc3xU0gDnK3RW
- kM5bacedZQiRpjSy8qX5U7VQGJkk8RtVIpmqB5YDmF9T148xPhkuFfYaB5nrhNM6wiunjhiQi
- 9L7iAC42YiZGX8O2UbYN+TYJD6hxF561Qthbs/RG0g3u1gibbhfmsg0TH7wgzQo88kTtVIyws
- nNS9SXYeBYMZQRZkmIJrOAwY4ltzBqXZx6/meGWXhGtNTh7A3HYnJbLXa7vR5asmcJkzY+utF
- 9mwmZndOfA0HZ+UnZR0P1hrTJ31aUgHKcDanBJNVWEjH9wQgUkhiqBMDNeKGWHaguGGp4vxJY
- slemB5GF87BacNA4Au6ltVXAUEcpiivAJDR1G1xCjD63y80AoES2khvMsM6u7K65nV6e4psNy
- +y70+iddiCoC39+SN3p8e8vjpa2gn6H7NDAjjT+lMolE40SVsJHsyxsxwgYid1qe7vkDQpBtF
- QOxn5+ej3Olx0Hp2eLz+P2K0ROVJYA/yYmm9RilFnS+XX31lIcQpaTCuOP2Lt5vd+RR0b61a8
- Z72PP6//0lRcQpMqV0qf4c+yhrdi3u7SNe8WGRKWjeZuOwFdfwaI8/Qapw1NfoZLLHEHjH2RY
- hb59rbY0ZGX73P63fWuQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93310a76-f699-484c-5fdb-08d7800cb1e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 20:40:31.0774
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GIdTawk70wwfgE5hX0NY2nvhbp3PVW+fJAMsJLsgrUCn5HSCRd9JyyZR+frSvqi4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3432
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_07:2019-12-13,2019-12-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 suspectscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130152
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eliminate one more use of 'struct timeval' from the kernel so
-we can eventually remove the definition as well.
+On Fri, Dec 13, 2019 at 02:21:56PM -0500, Johannes Weiner wrote:
+> When memory.low is overcommitted - i.e. the children claim more
+> protection than their shared ancestor grants them - the allowance is
+> distributed in proportion to each siblings's utilized protection:
+>=20
+> 	low_usage =3D min(low, usage)
+> 	elow =3D parent_elow * (low_usage / siblings_low_usage)
+>=20
+> However, siblings_low_usage is not the sum of all low_usages. It sums
+> up the usages of *only those cgroups that are within their memory.low*
+> That means that low_usage can be *bigger* than siblings_low_usage, and
+> consequently the total protection afforded to the children can be
+> bigger than what the ancestor grants the subtree.
+>=20
+> Consider three groups where two are in excess of their protection:
+>=20
+>   A/memory.low =3D 10G
+>   A/A1/memory.low =3D 10G, A/memory.current =3D 20G
+>   A/A2/memory.low =3D 10G, B/memory.current =3D 20G
+>   A/A3/memory.low =3D 10G, C/memory.current =3D  8G
+>=20
+>   siblings_low_usage =3D 8G (only A3 contributes)
+>   A1/elow =3D parent_elow(10G) * low_usage(20G) / siblings_low_usage(8G) =
+=3D 25G
+>=20
+> The 25G are then capped to A1's own memory.low setting, i.e. 10G. The
+> same is true for A2. And A3 would also receive 10G. The combined
+> protection of A1, A2 and A3 is 30G, when A limits the tree to 10G.
+>=20
+> What does this mean in practice? A1 and A2 would still be in excess of
+> their 10G allowance and would be reclaimed, whereas A3 would not. As
+> they eventually drop below their protection setting, they would be
+> counted in siblings_low_usage again and the error would right itself.
+>=20
+> When reclaim is applied in a binary fashion - cgroup is reclaimed when
+> it's above its protection, otherwise it's skipped - this could work
+> actually work out just fine - although it's not quite clear to me why
+> we'd introduce this error in the first place.
 
-The kernel supports the new format with a 64-bit time_t version
-of timeval here, so use that instead of the old timeval.
+This complication is not simple an error, it protects cgroups under
+their low limits if there is unprotected memory.
 
-Acked-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/dlm/lowcomms.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+So, here is an example:
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index 3951d39b9b75..cdfaf4f0e11a 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -1035,7 +1035,7 @@ static void sctp_connect_to_sock(struct connection *con)
- 	int result;
- 	int addr_len;
- 	struct socket *sock;
--	struct timeval tv = { .tv_sec = 5, .tv_usec = 0 };
-+	struct __kernel_sock_timeval tv = { .tv_sec = 5, .tv_usec = 0 };
- 
- 	if (con->nodeid == 0) {
- 		log_print("attempt to connect sock 0 foiled");
-@@ -1087,12 +1087,12 @@ static void sctp_connect_to_sock(struct connection *con)
- 	 * since O_NONBLOCK argument in connect() function does not work here,
- 	 * then, we should restore the default value of this attribute.
- 	 */
--	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_OLD, (char *)&tv,
-+	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_NEW, (char *)&tv,
- 			  sizeof(tv));
- 	result = sock->ops->connect(sock, (struct sockaddr *)&daddr, addr_len,
- 				   0);
- 	memset(&tv, 0, sizeof(tv));
--	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_OLD, (char *)&tv,
-+	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_NEW, (char *)&tv,
- 			  sizeof(tv));
- 
- 	if (result == -EINPROGRESS)
--- 
-2.20.0
+      A      A/memory.low =3D 2G, A/memory.current =3D 4G
+     / \
+    B   C    B/memory.low =3D 3G  B/memory.current =3D 2G
+             C/memory.low =3D 1G  C/memory.current =3D 2G
 
+as now:
+
+B/elow =3D 2G * 2G / 2G =3D 2G =3D=3D B/memory.current
+C/elow =3D 2G * 1G / 2G =3D 1G < C/memory.current
+
+with this fix:
+
+B/elow =3D 2G * 2G / 3G =3D 4/3 G < B/memory.current
+C/elow =3D 2G * 1G / 3G =3D 2/3 G < C/memory.current
+
+So in other words, currently B won't be scanned at all, because
+there is 1G of unprotected memory in C. With your patch both B and C
+will be scanned.
+
+> However, since
+> 1bc63fb1272b ("mm, memcg: make scan aggression always exclude
+> protection"), reclaim pressure is scaled to how much a cgroup is above
+> its protection. As a result this calculation error unduly skews
+> pressure away from A1 and A2 toward the rest of the system.
+
+It could be that with 1bc63fb1272b the target memory distribution
+will be fine. However the patch will change the memory pressure in B and C
+(in the example above). Maybe it's ok, but at least it should be discussed
+and documented.
+
+>=20
+> Fix this by by making siblings_low_usage the sum of all protected
+> memory among siblings, including those that are in excess of their
+> protection.
+
+So I'm afraid the fix need to be more complex. I need to think a bit more a=
+bout
+it.
+
+Thanks!
