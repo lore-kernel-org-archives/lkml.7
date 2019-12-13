@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867B1C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74295C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4A62173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DD32253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="LaFrKk11"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="GKyPG04u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbfLMAII (ORCPT
+        id S1731627AbfLMAIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:08:08 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40893 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731412AbfLMAIF (ORCPT
+        Thu, 12 Dec 2019 19:08:11 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37565 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731387AbfLMAII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:08:05 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q8so384413pfh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:04 -0800 (PST)
+        Thu, 12 Dec 2019 19:08:08 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so390429plz.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v2REjU/wwnolNmgskeGgLHtzvyMo6gxfjQO8hwRD4+s=;
-        b=LaFrKk11y/qrDvhQLpcH/tMn+AtEjidQ/S7Bwoxt39T5iq+B30U8Mc+eOfD0LfH360
-         lfASYZ/X7dlq46kHk+mMuhSN4KnTA+vjMRNULdxAO63sm4G6zrJd+LhX8NDkwdN1F8/o
-         q49Gcv/HMMMZEFLQwKm7mssNJD/s0CBhMCGxDKQvGuFqMx0l11wT/btdwjESZslbvPhy
-         dG4uu64q5dMA1sEF8iBFz3hXZMOyV/2hplSD20Addim7ZTuvfHqFhNpOPqZv3H0M1RJ1
-         iI18523qhABfn5eXBRRQq5ll+lyLxBGLKnBy/0nQn/swzNkGcac3fE3CSJxK2VcN9Y+4
-         Z8uw==
+        bh=FHHmkEl4SpR4ivIudHsXj+xUr9cWriV3GCavBgAuZTs=;
+        b=GKyPG04uIaq+p8lC1GSMtA4ysgCMpPhqhJt0hRkCS/dSXJUg8Mq/cz4mYTTvt1Mj5C
+         sgk4+YyllI2M1plKsEoURSfrh7o3i3E5Kw63LDCyDtZccMWS9WdoZB1JGvBOWJZhKoU3
+         DPlx/tDcCQs0W37+UWQjm3Nq5jwxzCvrVMcibMJpEceROwbcd+UH/MfnXlVALblW4c8H
+         n6WLjNOhznj9tYPwpVGTz3cwarLa2i/GWH1E0Tjt++KPOJQmOIRP0/w4jEFU+iSsle4C
+         fKDnJwkLWGnEOSqOlBSfX+sT3oejnYLPlUhj+Uz/Z2sfdYO05PORyfLzR4apZ/PR3LPw
+         pcTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v2REjU/wwnolNmgskeGgLHtzvyMo6gxfjQO8hwRD4+s=;
-        b=Zj33iZc/L/3zf691nZgm/5Cn7Cgiz9T8EojZeNE7ITrODYGhKtFZKma7tSsYt0pm8h
-         BZvfaeJAxBcwQlzKJ0CpdnSfZ3mF9YM/SiNIV4ZD7bpLDIMgFyP9RQYQ/Hp/bzWe7qO+
-         4NxyILI2z42EF4YlNvk0nhWrtTG56CMSLFq68qd3ODzWnJtwiqtQ0GwsNINTlM8ksAjP
-         5D2b02CipwGdo6VowAxi0rKUUdptd2Y//1yG7199LUDzUT1+w+fc8LB8cx5YvoQamSaP
-         Qjltg4NGzXNBHhBuTuVcapSCF16mtL0yQpi6SC5+OliXuhunpqfItlerKLe6xPkiDVf0
-         W8Iw==
-X-Gm-Message-State: APjAAAXRZ7zq8h1TUTCivY8Jv1T6QGFkJdL6QtQCObbckk61XP5e+5w6
-        dnKeselrlcyIHu5G+lvCrSKv3Hnwuo4=
-X-Google-Smtp-Source: APXvYqxZ1ecBMRbAkQc7ypC+wk6mb+prHBAmlYnfp/H0DqnpcVDElYmDMsrtZg5kggM4Ju6hJKzJgw==
-X-Received: by 2002:a62:aa13:: with SMTP id e19mr12821823pff.36.1576195684100;
-        Thu, 12 Dec 2019 16:08:04 -0800 (PST)
+        bh=FHHmkEl4SpR4ivIudHsXj+xUr9cWriV3GCavBgAuZTs=;
+        b=ZkDAr7JR6kJpfigUDsjiJwb3fGeicUrwSAduh+2p8bjZXIIJsHYAC4X/AR+DlMxBRV
+         LhOjdssGE9nkHqXk0/DAqSB8X0q2O6nD7T4qNdULplEltbiEcIddO98tWy9Xnm+yrrhh
+         hcAxcgYbapd3l2v8fvjHSb3xiuP1gGBwfhQdQXANUkrZi4XtJsUvrkJeT7L9X+HpGINj
+         jc4guqyPvCfx6igZUTJRgfbv2Q+sCZXi86j6p02q7WITjnd0nJDFEe5ulcrYecclWodz
+         lVMe9G1/j/IFOGeR3VFPqOZGYPD5zdSY3MEuAuI+ZTUARs+WEvpYCFyWTlo+8NX/5NLY
+         ODoQ==
+X-Gm-Message-State: APjAAAW0PgDEYL+vS71gOgzqjyIhktQ/hFP/cv8Uvu7Wk1JDyK0b2Cbj
+        mcbbR2qdn1WAhWdsPx+HGB3lNftVNUQ=
+X-Google-Smtp-Source: APXvYqzpjPu4dvRRLM1GayX0PxOdEk6fFvVgEaWtqh+n01buttVx3B7NKOP7RlJqvfCFFpB1p86ulQ==
+X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr13284014pjv.78.1576195686920;
+        Thu, 12 Dec 2019 16:08:06 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.01
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:08:03 -0800 (PST)
+        Thu, 12 Dec 2019 16:08:05 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
         linux-serial@vger.kernel.org
-Subject: [PATCH 17/58] tty/serial: Migrate fsl_linflexuart to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:16 +0000
-Message-Id: <20191213000657.931618-18-dima@arista.com>
+Subject: [PATCH 18/58] tty/serial: Migrate fsl_lpuart to use has_sysrq
+Date:   Fri, 13 Dec 2019 00:06:17 +0000
+Message-Id: <20191213000657.931618-19-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -88,44 +88,52 @@ Initialise it in driver's probe and remove ifdeffery.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/fsl_linflexuart.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/tty/serial/fsl_linflexuart.c b/drivers/tty/serial/fsl_linflexuart.c
-index 205c31a61684..3e28be402aef 100644
---- a/drivers/tty/serial/fsl_linflexuart.c
-+++ b/drivers/tty/serial/fsl_linflexuart.c
-@@ -6,11 +6,6 @@
-  * Copyright 2017-2019 NXP
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 4e128d19e0ad..76c69d255d92 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -5,10 +5,6 @@
+  *  Copyright 2012-2014 Freescale Semiconductor, Inc.
   */
  
--#if defined(CONFIG_SERIAL_FSL_LINFLEXUART_CONSOLE) && \
--	defined(CONFIG_MAGIC_SYSRQ)
+-#if defined(CONFIG_SERIAL_FSL_LPUART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 -#define SUPPORT_SYSRQ
 -#endif
 -
+ #include <linux/clk.h>
  #include <linux/console.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-@@ -279,10 +274,8 @@ static irqreturn_t linflex_rxint(int irq, void *dev_id)
- 		if (brk) {
- 			uart_handle_break(sport);
- 		} else {
+ #include <linux/dma-mapping.h>
+@@ -864,9 +860,7 @@ static void lpuart_rxint(struct lpuart_port *sport)
+ 			if (sr & UARTSR1_OR)
+ 				flg = TTY_OVERRUN;
+ 
 -#ifdef SUPPORT_SYSRQ
- 			if (uart_handle_sysrq_char(sport, (unsigned char)rx))
- 				continue;
+ 			sport->port.sysrq = 0;
 -#endif
- 			tty_insert_flip_char(port, rx, flg);
  		}
- 	}
-@@ -863,6 +856,7 @@ static int linflex_probe(struct platform_device *pdev)
- 	sport->irq = platform_get_irq(pdev, 0);
- 	sport->ops = &linflex_pops;
- 	sport->flags = UPF_BOOT_AUTOCONF;
-+	sport->has_sysrq = IS_ENABLED(CONFIG_SERIAL_FSL_LINFLEXUART_CONSOLE);
  
- 	linflex_ports[sport->line] = sport;
+ 		tty_insert_flip_char(port, rx, flg);
+@@ -946,9 +940,7 @@ static void lpuart32_rxint(struct lpuart_port *sport)
+ 			if (sr & UARTSTAT_OR)
+ 				flg = TTY_OVERRUN;
  
+-#ifdef SUPPORT_SYSRQ
+ 			sport->port.sysrq = 0;
+-#endif
+ 		}
+ 
+ 		tty_insert_flip_char(port, rx, flg);
+@@ -2461,6 +2453,7 @@ static int lpuart_probe(struct platform_device *pdev)
+ 		sport->port.ops = &lpuart32_pops;
+ 	else
+ 		sport->port.ops = &lpuart_pops;
++	sport->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_FSL_LPUART_CONSOLE);
+ 	sport->port.flags = UPF_BOOT_AUTOCONF;
+ 
+ 	if (lpuart_is_32(sport))
 -- 
 2.24.0
 
