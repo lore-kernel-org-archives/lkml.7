@@ -2,147 +2,206 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2B9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1E324658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217AB2465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VzLXSu8V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZu/Wv0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLMIYx (ORCPT
+        id S1726141AbfLMI1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:24:53 -0500
-Received: from mga03.intel.com ([134.134.136.65]:57091 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfLMIYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:24:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 00:24:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="239226103"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Dec 2019 00:24:51 -0800
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 13 Dec 2019 00:24:51 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Fri, 13 Dec 2019 00:24:51 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OmAn/6/x5VPXqoUHfnFpT9xcruHWT1/RuD8atKtYK0mUIUGvOUwFap1QgO1osW+PNF/MaaQOMPmOc30g4d//PygbutwXt1EwPkgZgWchm/LUOq+AVLE6x0t6ENgmb4q0fSYwtuOfsRj013KNQVCtku+dstMvOQzYsjRL1PbvGhlck6ghcUn2tGlqKWqbPeXGQz7/wtFurfyU5MO3CuOqdRfP6pglQfThQ15JdBXNk4MMiXKQUwlNuH6yx4htn/2OrI12PaYuKGR+getJld2BCEEUcRt2CZAVCBz8AwfKpL04pLOwlO3Rv9S+V0QdFa7QUEf1eHCsKeB8gTlXMGbH7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gEIhJFh1YQwaWlCinWTM95lIrC6elA0l2H46jhhMOFE=;
- b=ma+pOW0zPuPPoojYE29fdJ6mliMJ46mo85oGLw26EVZ2CykKWyzJZlZ7tVSB/tVTFD0heBlC4tNyvpcT8Bff2yoWJA0WyqG3N3gS5watjjwiX9/UkC/jPy+09mXO58ZKAKgNMu0rgOTvXLG4ld7ecPDS2jSChY0t2ZVa7h8VYvHk101pXe+eEI3pmEq6r4J6MqihtjDOwtbw2wowqMEwsOsz4OdDpc0/0r0nm29A+oQ1CnpoD8aIBFbOjtXUS7J5ES7/Iy5aSfw1NbUCnUpHdcRTLS8kHADB9cJJZuQIxUDBLjpFl+eOO4+K2A5Yuyc7qqjfJNyhL4kP4ejhQ4VQtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gEIhJFh1YQwaWlCinWTM95lIrC6elA0l2H46jhhMOFE=;
- b=VzLXSu8VrJHfl7b+73HlN5cPs2dXzFnL2x7B7IS03/OE/x8g6pwLMWuTuvDco0dL3V8TD8eTTrqgu36Lz9p/IAVQdQpgozSCFVYF2S6/p9C242LOuHUejkCzAsi/fVtaKWyGSUqoLcOwpuEGop6cccldD7EPhp8nZ2PCntiQZ0M=
-Received: from MN2PR11MB4509.namprd11.prod.outlook.com (52.135.39.90) by
- MN2PR11MB4143.namprd11.prod.outlook.com (20.179.150.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.14; Fri, 13 Dec 2019 08:24:50 +0000
-Received: from MN2PR11MB4509.namprd11.prod.outlook.com
- ([fe80::bd81:f020:90e3:a12d]) by MN2PR11MB4509.namprd11.prod.outlook.com
- ([fe80::bd81:f020:90e3:a12d%7]) with mapi id 15.20.2538.017; Fri, 13 Dec 2019
- 08:24:49 +0000
-From:   "Tan, Ley Foon" <ley.foon.tan@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "'lftan.linux@gmail.com'" <lftan.linux@gmail.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [GIT PULL] arch/nios2 fix for v5.5-rc2
-Thread-Topic: [GIT PULL] arch/nios2 fix for v5.5-rc2
-Thread-Index: AdWxjlsJIo35b10gQX6XFgISDbGgDQ==
-Date:   Fri, 13 Dec 2019 08:24:49 +0000
-Message-ID: <MN2PR11MB4509EB06FE5B942083D9E097CC540@MN2PR11MB4509.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2NiMGExMmYtY2IwYi00ZGI2LWEwNGItNWU2MGE1ODk1YmZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNlVBZm00bWtWU2FNYWZhWm5zMWhTYUlGVzJzVGYxWkVDQzZuM0F2aTNycFBhN3BHVlBkc25sTkVYeWFhc0ZCSiJ9
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ley.foon.tan@intel.com; 
-x-originating-ip: [192.198.147.221]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cab0a825-69c9-4b7d-6ff4-08d77fa5ebde
-x-ms-traffictypediagnostic: MN2PR11MB4143:
-x-microsoft-antispam-prvs: <MN2PR11MB41433BEAFC84151958FA2450CC540@MN2PR11MB4143.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 0250B840C1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(39860400002)(366004)(189003)(199004)(81156014)(81166006)(66556008)(66476007)(2906002)(76116006)(52536014)(4001150100001)(186003)(6916009)(64756008)(33656002)(8936002)(8676002)(71200400001)(55016002)(316002)(66946007)(54906003)(66446008)(6506007)(5660300002)(4744005)(86362001)(7696005)(9686003)(4326008)(26005)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR11MB4143;H:MN2PR11MB4509.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CKIjVhOs5kO5pK+eo/ZrDc8mkEgAJ3wJSsLrfd+PExb8uLC+Qz2SIj5JC1OOqU+NliRVhqxh3GWxAlW1Vu5nPby6la2Tofwaa6zsYWDyKq1FGU+KBfy0BJY1Fdfide2YwrG+w1mzs8T3TrKH9hotwenw/VNsNrEwdsk+qUnpzQCxezzY7N0ox1Y/eCHBb2rMTPCnGUJi/hT2v3kTDi6sA2jLrQJ7icVJpEk9CQyrN8/SWyUZtOjY6wXuUijBNyWF6ZDaUQErrL6aZECvJTn3DxYZk6j4hSfz2EUX8NNK91bj4e70FZl+1dePobVr3+mIr9BBRVvA2BnK2xT/qOFOwUbvQPyhRhwybJh+T5yy7XWrSmJ+PqagMFwrfqc3dHoQSz2ph6Msnwi6IjO+mlL4Q3ssJg5prp3GMPdWr1kWvyZkESDbwl7Gu0GtgOiT/qtu
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Dec 2019 03:27:48 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51226 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMI1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:27:47 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d73so5331072wmd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:27:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=JwuoHfqD4FyIs4KF1Ipmu8G5TBEwPS2a5x2rk/31xck=;
+        b=RZu/Wv0m4HqQgb7kZHHwyZiV72yCDHClDTjqRYig6G327C22KOVE23Gl4QlWIk4J9g
+         /mTwG/EcWHHf9sYXXpPtTpllj8NvhWZ9k5SsV4jgWzE2uqeHWssPggXoaT2gjyI8wre+
+         VqxL2RAU5YTssHRWil1Gz4l8a8O18PLMhlz0Fd0EfGvTrga/wRtXo8/VzsNwEzcaJc2o
+         kCgWLQL7844S7BROBTksqLxNyH5Y12iS0O9bHQi+v4QV3BqAKqGVjvm8V1yufjNHj3vI
+         SyFI8XHa40wO7C8ZTiULcUMVsX8duH9Oq530Z+8L5UrJXOxugLt6sFTO3yrlOsl2a4f/
+         pvOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=JwuoHfqD4FyIs4KF1Ipmu8G5TBEwPS2a5x2rk/31xck=;
+        b=hug8WZSBSHf1qnJqhuMTGkV7z66zmbTWq9KiEe/Yrh1QYF1zS5jqJxb4c7Pw+Izq9E
+         VggOZNkwunkLTN7NqvJTkY631s2c9sdfbutV+OCkyJBY9xqbBXPUiesVxLjDzThhCa7m
+         DiJVlRxPAdGXNj8nhWN1VkkTwX4TDG15Iu8Hcc6Ghjrq8awCga5atN0opjlKGRZSczIY
+         ugIo38WvqhHhIzrHoNsIDxYgUtBVNCKRoRPdOMIN1KpIZEBFxQK6bHJUKpXPbACg1n/m
+         1G3N5LMj9R5e9ghsyxYGBUKSJ4IwoPfaKwY+TQFo7QMqbJVVHTanoDrn6bvx94AFfEuY
+         Ygzw==
+X-Gm-Message-State: APjAAAUQk+ZtqolXzvwPvNpiJPYyxC67rpoxLu0vBv414sobvjUvP2yC
+        DdQSphd3l3G2peu6GnqMtlP1I5DQIeI=
+X-Google-Smtp-Source: APXvYqw9NFR6SJCU7qpurkLNw/ZkJfL008Kue/7hzmCvNYuR/i+XEHjDwK63wFSkZZdj2Cmg0QgOSw==
+X-Received: by 2002:a1c:7918:: with SMTP id l24mr12505169wme.125.1576225664505;
+        Fri, 13 Dec 2019 00:27:44 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id a133sm225770wme.29.2019.12.13.00.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 00:27:43 -0800 (PST)
+Date:   Fri, 13 Dec 2019 08:27:34 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
+ to pwm_pmic_backlight
+Message-ID: <20191213082734.GE3468@dell>
+References: <20191119151818.67531-1-hdegoede@redhat.com>
+ <20191119151818.67531-3-hdegoede@redhat.com>
+ <20191210085111.GQ3468@dell>
+ <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
+ <20191212084546.GA3468@dell>
+ <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
+ <20191212155209.GC3468@dell>
+ <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cab0a825-69c9-4b7d-6ff4-08d77fa5ebde
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 08:24:49.8560
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xr3LfWrSy2F01Ts+1dkAPwxvNiUKdj8ZfF1S+VsQ9ekJ8dz0NYbILGDbDNiKGsikU4GudrJEGsVTC6U9L+vzJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4143
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Dec 2019, Hans de Goede wrote:
 
-Hi Linus
+> Hi,
+> 
+> On 12-12-2019 16:52, Lee Jones wrote:
+> > On Thu, 12 Dec 2019, Hans de Goede wrote:
+> > 
+> > > Hi,
+> > > 
+> > > On 12-12-2019 09:45, Lee Jones wrote:
+> > > > On Wed, 11 Dec 2019, Hans de Goede wrote:
+> > > > 
+> > > > > Hi Lee,
+> > > > > 
+> > > > > On 10-12-2019 09:51, Lee Jones wrote:
+> > > > > > On Tue, 19 Nov 2019, Hans de Goede wrote:
+> > > > > > 
+> > > > > > > At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
+> > > > > > > different PWM controllers for controlling the LCD's backlight brightness.
+> > > > > > > 
+> > > > > > > Either the one integrated into the PMIC or the one integrated into the
+> > > > > > > SoC (the 1st LPSS PWM controller).
+> > > > > > > 
+> > > > > > > So far in the LPSS code on BYT we have skipped registering the LPSS PWM
+> > > > > > > controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
+> > > > > > > present, assuming that in this case the PMIC PWM controller will be used.
+> > > > > > > 
+> > > > > > > On CHT we have been relying on only 1 of the 2 PWM controllers being
+> > > > > > > enabled in the DSDT at the same time; and always registered the lookup.
+> > > > > > > 
+> > > > > > > So far this has been working, but the correct way to determine which PWM
+> > > > > > > controller needs to be used is by checking a bit in the VBT table and
+> > > > > > > recently I've learned about 2 different BYT devices:
+> > > > > > > Point of View MOBII TAB-P800W
+> > > > > > > Acer Switch 10 SW5-012
+> > > > > > > 
+> > > > > > > Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
+> > > > > > > PWM controller (and the VBT correctly indicates this), so here our old
+> > > > > > > heuristics fail.
+> > > > > > > 
+> > > > > > > Since only the i915 driver has access to the VBT, this commit renames
+> > > > > > > the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
+> > > > > > > controller to "pwm_pmic_backlight" so that the i915 driver can do a
+> > > > > > > pwm_get() for the right controller depending on the VBT bit, instead of
+> > > > > > > the i915 driver relying on a "pwm_backlight" lookup getting registered
+> > > > > > > which magically points to the right controller.
+> > > > > > > 
+> > > > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > > > > > > ---
+> > > > > > >     drivers/mfd/intel_soc_pmic_core.c | 2 +-
+> > > > > > >     1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > 
+> > > > > > For my own reference:
+> > > > > >      Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > > > > 
+> > > > > As mentioned in the cover-letter, to avoid breaking bi-sectability
+> > > > > as well as to avoid breaking the intel-gfx CI we need to merge this series
+> > > > > in one go through one tree. Specifically through the drm-intel tree.
+> > > > > Is that ok with you ?
+> > > > > 
+> > > > > If this is ok with you, then you do not have to do anything, I will just push
+> > > > > the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
+> > > > > does not see much changes so I do not expect this to lead to any conflicts.
+> > > > 
+> > > > It's fine, so long as a minimal immutable pull-request is provided.
+> > > > Whether it's pulled or not will depend on a number of factors, but it
+> > > > needs to be an option.
+> > > 
+> > > The way the drm subsys works that is not really a readily available
+> > > option. The struct definition which this patch changes a single line in
+> > > has not been touched since 2015-06-26 so I really doubt we will get a
+> > > conflict from this.
+> > 
+> > Always with the exceptions ...
+> > 
+> > OOI, why does this *have* to go through the DRM tree?
+> 
+> This patch renames the name used to lookup the pwm controller from
+> "pwm_backlight" to "pwm_pmic_backlight" because there are 2 possible
+> pwm controllers which may be used, one in the SoC itself and one
+> in the PMIC. Which controller should be used is described in a table
+> in the Video BIOS, so another part of this series adds this code to
+> the i915 driver:
+> 
+> -	panel->backlight.pwm = pwm_get(dev->dev, "pwm_backlight");
+> +	/* Get the right PWM chip for DSI backlight according to VBT */
+> +	if (dev_priv->vbt.dsi.config->pwm_blc == PPS_BLC_PMIC) {
+> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_pmic_backlight");
+> +		desc = "PMIC";
+> +	} else {
+> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_soc_backlight");
+> +		desc = "SoC";
+> +	}
+> 
+> So both not to break bisectability, but also so as to not break the extensive
+> CI system which is used to test the i915 driver we need the MFD change doing
+> the rename to go upstrream through the same tree as the i915 change.
+> 
+> I have even considered just squashing the 2 commits together as having only 1
+> present, but not the other breaks stuff left and right.
 
-Please pull the arch/nios2 fix for v5.5-rc2.
+That doesn't answer the question.
 
-Thanks.
+Why do they all *have* to go in via the DRM tree specifically?
 
-Regards
-Ley Foon
-
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a=
-:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git tags/nios2-=
-v5.5-rc2
-
-for you to fetch changes up to e32ea127d81c12882f39c2783d78634597ff21a2:
-
-  nios2: Fix ioremap (2019-12-12 16:34:33 +0800)
-
-----------------------------------------------------------------
-nios2 update for v5.2-rc2
-
-nios2: Fix ioremap
-
-----------------------------------------------------------------
-Guenter Roeck (1):
-      nios2: Fix ioremap
-
- arch/nios2/mm/ioremap.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
