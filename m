@@ -2,171 +2,229 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC92C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DFEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A1E2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="U7l68pvO"
+	by mail.kernel.org (Postfix) with ESMTP id 7C1A72077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576231827;
+	bh=kb9bZosj/pzSB/IuIy2lfBXZ3yEjys07MNYtDVMjZBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AtD7kAbxwS9uA9lQzxQ9TlbhbDrMCEG/2hVX/wDPQg93uwA/d9ZFMdFoi/vNF4I5I
+	 F6IJ9PqMC0lTxxpn2Jq0HhR6MUsoMuAhn0Ze0P20/Czse9LRDA8T9ZFl2u8X68EhaS
+	 W/7KaNKpUvGWiCwLxOx0oH2SoCMtGZEzL9+Owh30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLMKJw (ORCPT
+        id S1726676AbfLMKK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:09:52 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:54313 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbfLMKJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:09:52 -0500
-Received: from [IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478]
- ([IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id fhtMiknqAapzpfhtNidg1R; Fri, 13 Dec 2019 11:09:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1576231789; bh=hJ/t9NURuHq3BdeEoIZyQoRCl+yW29RTpxiZQmkLv/A=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=U7l68pvO0DPIIaiqz0qm6xPnntPTqIbfBkkfMIyMDzwL0PN+Z6JrXV27TjrIC4DQT
-         mFfSgnWZrW5t/EvnNU8xcQpPOMfhHG34TirED+yblFtP0KmAq3I95ItdhtJvujw8Rm
-         rajFX+iaRfdfk2sABnkhXVl6ah/BbTHwMUuXMxJ+OzcNrobJ4jvykgfAZydha6MSB8
-         S2PAS9/coTeBAmHDOOMVHdHVXTKrXBzyL+FcPdGKwlBblOdgy/YQHe6zxF5iyw5JrD
-         msLnzsPprosdR9CGZ32J6cRW6txB0JdMpceWNSzb41u06UXenngbpHkESjVqBsZotV
-         7nqYHt68ULF4A==
-Subject: Re: [PATCH] media: vimc: get pixformat info from v4l2_format_info to
- avoid code repetition
-To:     "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
-References: <20191015225258.6923-1-carlosecb@tutanota.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1a5b1c17-639e-7c40-e439-35acb3042e9e@xs4all.nl>
-Date:   Fri, 13 Dec 2019 11:09:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Dec 2019 05:10:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfLMKK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:10:26 -0500
+Received: from localhost (unknown [84.241.199.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB3592073D;
+        Fri, 13 Dec 2019 10:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576231824;
+        bh=kb9bZosj/pzSB/IuIy2lfBXZ3yEjys07MNYtDVMjZBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0nfkCg4z/HW894QDIO9BopJqKJrOIrLacMGV/Z9Jcuzqi7LqbQTttFs4mtdEDzivI
+         6nXez/2UUQwJOxBPGNnuHbJXuUfIeSDGt+vQWOjAII05T573CTPQe/hLMxXDxXuS+x
+         vzq/I0oDWU2UgzBkHqsoscTMMfZ6lSdlpB6oKrmg=
+Date:   Fri, 13 Dec 2019 11:10:21 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
+        Jiri Slaby <jslaby@suse.com>,
+        kai heng feng <kai.heng.feng@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
+        paulburton@kernel.org, sr@denx.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yegorslists@googlemail.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ mem_serial_out
+Message-ID: <20191213101021.GA2141429@kroah.com>
+References: <00000000000053539a0599173973@google.com>
+ <20191212105701.GB1476206@kroah.com>
+ <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
+ <20191213093357.GB2135612@kroah.com>
+ <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015225258.6923-1-carlosecb@tutanota.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJ89Hb5T+Fogr8J0Szd8KhhPbGJPS31Agb8VidOX5uPNCsnuwaX4NfMal3klzNhcrK8TIGMhrqgAhwMcLkYbplShqcf2EppAKCRyo8G84/lBrB5EYVGk
- BeTDFg9HK1YkMdR1Ks3wJ3nt7JFWLzZ8x4EgEfyU4KrNz2xQN26nxXFDyaPs/gwNDoiG81u9mvmqc4ywzyac6yLZcedB6ESw8v8gWMPKJ2H5l4MZ0+wIULkb
- +3VKKZYkykjOrR/odOZ20xQsSINzgfYjEOB0RPT5/EPcc+ikeIgJEKb/gf4oIB3JRZ+hxQRPpjbF8TrLMF1qMhR11I5bQYTaqtmJdjqnfJUfuctKgliB9/AF
- 4ckkGj7Gg0j2n5f4XgWUTae78Si/2TQtRk/xfeX2BKcgCz4bVbZZ5mXHnXcYoU7jzmHPz3DnNa7Wy1UKdwM0PQi3ZjgSy+uzeX9jDXNpYhLBnDwc3+4IfVPp
- fGfhPfUotM/c55o1/B/IRiW+V3r3J7tboPNANk5EQuG+48/g4PkNhYzo2v8RD+1agLJ5ZEtNOLPetOyi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 12:52 AM, Carlos E. C. Barbosa wrote:
-> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+On Fri, Dec 13, 2019 at 11:00:35AM +0100, Dmitry Vyukov wrote:
+> On Fri, Dec 13, 2019 at 10:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Dec 13, 2019 at 10:02:33AM +0100, Dmitry Vyukov wrote:
+> > > On Thu, Dec 12, 2019 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Fri, Dec 06, 2019 at 10:25:08PM -0800, syzbot wrote:
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following crash on:
+> > > > >
+> > > > > HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
+> > > > > git tree:       upstream
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=123ec282e00000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f4f1e871965064ae689e
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab090ee00000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f127f2e00000
+> > > > >
+> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com
+> > > > >
+> > > > > BUG: kernel NULL pointer dereference, address: 0000000000000002
+> > > > > #PF: supervisor write access in kernel mode
+> > > > > #PF: error_code(0x0002) - not-present page
+> > > > > PGD 9764a067 P4D 9764a067 PUD 9f995067 PMD 0
+> > > > > Oops: 0002 [#1] PREEMPT SMP KASAN
+> > > > > CPU: 0 PID: 9687 Comm: syz-executor433 Not tainted 5.4.0-syzkaller #0
+> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > > Google 01/01/2011
+> > > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+> > > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+> > > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+> > > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
+> > > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+> > > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+> > > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+> > > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+> > > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+> > > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+> > > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+> > > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > Call Trace:
+> > > > >  serial_out drivers/tty/serial/8250/8250.h:118 [inline]
+> > > > >  serial8250_clear_fifos.part.0+0x3a/0xb0
+> > > > > drivers/tty/serial/8250/8250_port.c:557
+> > > > >  serial8250_clear_fifos drivers/tty/serial/8250/8250_port.c:556 [inline]
+> > > > >  serial8250_do_startup+0x426/0x1cf0 drivers/tty/serial/8250/8250_port.c:2121
+> > > > >  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
+> > > > >  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
+> > > > >  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
+> > > > >  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
+> > > > >  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
+> > > > >  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
+> > > > >  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
+> > > > >  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
+> > > > >  vfs_ioctl fs/ioctl.c:47 [inline]
+> > > > >  file_ioctl fs/ioctl.c:545 [inline]
+> > > > >  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+> > > > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+> > > > >  __do_sys_ioctl fs/ioctl.c:756 [inline]
+> > > > >  __se_sys_ioctl fs/ioctl.c:754 [inline]
+> > > > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+> > > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > > RIP: 0033:0x440219
+> > > > > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> > > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> > > > > 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > > > RSP: 002b:00007ffced648c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> > > > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+> > > > > RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
+> > > > > RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> > > > > R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
+> > > > > R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
+> > > > > Modules linked in:
+> > > > > CR2: 0000000000000002
+> > > > > ---[ end trace eaa11ffe82f3a763 ]---
+> > > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+> > > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+> > > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+> > > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
+> > > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+> > > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+> > > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+> > > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+> > > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+> > > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+> > > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+> > > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > >
+> > > >
+> > > > You set up a dubious memory base for your uart and then get upset when
+> > > > you write to that location.
+> > > >
+> > > > I don't know what to really do about this, this is a root-only operation
+> > > > and you are expected to know what you are doing when you attempt this.
+> > >
+> > > Hi Greg,
+> > >
+> > > Thanks for looking into this!
+> > > Should we restrict the fuzzer from accessing /dev/ttyS* entirely?
+> >
+> > No, not at all.
+> >
+> > > Or only restrict TIOCSSERIAL on them? Something else?
+> >
+> > Try running not as root.  if you have CAP_SYS_ADMIN you can do a lot of
+> > pretty bad things with tty ports, as you see here.  There's a reason the
+> > LOCKDOWN_TIOCSSERIAL "security lockdown" check was added :)
+> >
+> > The TIOCSSERIAL ioctl is a nice one for a lot of things that are able to
+> > be done as a normal user (baud rate changes, etc.), but there are also
+> > things like setting io port memory locations that can cause random
+> > hardware accesses and kernel crashes, as you instantly found out here :)
+> >
+> > So restrict the fuzzer to only run as a "normal" user of the serial
+> > port, and if you find problems there, I'll be glad to look at them.
 > 
-> There is overlapping code over two distinct lists. This repurposes one
-> of vimc_pix_map for strictly mapping formats and remaps other calls to
-> the matching v4l2_format_info.
+> Easier said than done. "normal user of the serial port" is not really
+> a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
+> not per-device...
+
+Not true, there's lots of users of serial port devices that do not have
+CAP_SYS_ADMIN set.  That's why we have groups :)
+
+You can change the baud rate of your usb-serial device without root
+permissions, right?  That's a "normal" user right there.
+
+> As far as I remember +Tetsuo proposed a config along the lines of
+> "restrict only things that legitimately cause damage under a fuzzer
+> workload", e.g. freezing filesystems, disabling console output, etc.
+> This may be another candidate. But I can't find where that proposal is
+> now.
 > 
-> ---
-> 
-> Change in v2:
-> - Change commit message
-> - Remove struct with mbus code and pointer to v4l2_format_info
-> - The map and info are directly called when strictly needed
-> 
-> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
-> ---
->  drivers/media/platform/vimc/vimc-capture.c | 14 ++--
->  drivers/media/platform/vimc/vimc-common.c  | 78 ++++++----------------
->  drivers/media/platform/vimc/vimc-common.h  |  9 +--
->  drivers/media/platform/vimc/vimc-debayer.c |  9 ++-
->  drivers/media/platform/vimc/vimc-scaler.c  | 39 +++++++++--
->  drivers/media/platform/vimc/vimc-sensor.c  | 26 +++++---
->  6 files changed, 89 insertions(+), 86 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 602f80323031..65282d4d8a1e 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -85,7 +85,8 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  				    struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format *format = &f->fmt.pix;
-> -	const struct vimc_pix_map *vpix;
-> +	struct vimc_pix_map *vpix;
-> +	struct v4l2_format_info *vinfo;
+> A simpler option that I see is as follows. syzkaller has several
+> sandboxing modes, one of them is "namespace" which uses a user ns, in
+> that more fuzzer is still uid=0 in the init namespace, so has access
+> to all /dev nodes, but it does not have CAP_SYS_ADMIN in the init
+> namespace. We could enable /dev/ttyS* only on instance that use
+> sandbox=namesace, and disable on the rest. Does it make sense?
 
-No const here,
+Maybe, I don't know.  Why do you have to run the fuzzer with uid=0 in
+the first place?
 
->  
->  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
->  				VIMC_FRAME_MAX_WIDTH) & ~1;
-> @@ -99,7 +100,8 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
->  	}
->  	/* TODO: Add support for custom bytesperline values */
-> -	format->bytesperline = format->width * vpix->bpp;
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
+thanks,
 
-but v4l2_format_info returns a const pointer. Does this patch even
-compile without compiler warnings?
-
-> +	format->bytesperline = format->width * vinfo->bpp[0];
->  	format->sizeimage = format->bytesperline * format->height;
->  
->  	if (format->field == V4L2_FIELD_ANY)
-> @@ -159,7 +161,7 @@ static int vimc_cap_enum_fmt_vid_cap(struct file *file, void *priv,
->  static int vimc_cap_enum_framesizes(struct file *file, void *fh,
->  				    struct v4l2_frmsizeenum *fsize)
->  {
-> -	const struct vimc_pix_map *vpix;
-> +	struct vimc_pix_map *vpix;
->  
->  	if (fsize->index)
->  		return -EINVAL;
-> @@ -387,7 +389,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  				     const char *vcfg_name)
->  {
->  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-> -	const struct vimc_pix_map *vpix;
-> +	struct vimc_pix_map *vpix;
-> +	struct v4l2_format_info *vinfo;
->  	struct vimc_cap_device *vcap;
->  	struct video_device *vdev;
->  	struct vb2_queue *q;
-> @@ -443,7 +446,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  	/* Set default frame format */
->  	vcap->format = fmt_default;
->  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
-> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
-> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
->  	vcap->format.sizeimage = vcap->format.bytesperline *
->  				 vcap->format.height;
->  
-> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-> index a3120f4f7a90..73feea089921 100644
-> --- a/drivers/media/platform/vimc/vimc-common.c
-> +++ b/drivers/media/platform/vimc/vimc-common.c
-> @@ -14,185 +14,151 @@
->   * NOTE: non-bayer formats need to come first (necessary for enum_mbus_code
->   * in the scaler)
->   */
-> -static const struct vimc_pix_map vimc_pix_map_list[] = {
-> +static struct vimc_pix_map vimc_pix_map_list[] = {
-
-Why was const removed here?
-
-This patch also needs to be rebased, so I stop reviewing here and
-wait for a v2.
-
-Regards,
-
-	Hans
+greg k-h
