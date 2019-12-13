@@ -2,121 +2,86 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053F1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74098C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09DC214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+R1Eb+0"
+	by mail.kernel.org (Postfix) with ESMTP id 4E0AA206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfLMGoa (ORCPT
+        id S1726676AbfLMGoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:44:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35031 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725785AbfLMGoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:44:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576219468;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FSniXaU8d0X4ng5pUQdaI4FU5VEWvHsezQeckgr3lXI=;
-        b=A+R1Eb+0Q9xbwbnpnScu1rORCE+JDPcNoKZWfwiHSs5EJc5UR726e0QE3UdY8TxVmpVdW+
-        Qa1nyKDiUwA70V5r4BoT0QShe2wcf9bnvYhr2e07dmjAzJzYwMrTlqEzbV3nPWh6JEJnGm
-        oHjej+IQHkvd00LNVkSExLWNRkgI3L4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52--IuKHJLdMkOuetLA-hBeLA-1; Fri, 13 Dec 2019 01:44:25 -0500
-X-MC-Unique: -IuKHJLdMkOuetLA-hBeLA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8257593A3;
-        Fri, 13 Dec 2019 06:44:23 +0000 (UTC)
-Received: from ovpn-116-192.phx2.redhat.com (ovpn-116-192.phx2.redhat.com [10.3.116.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 510E019756;
-        Fri, 13 Dec 2019 06:44:23 +0000 (UTC)
-Message-ID: <30ab713901ef0e1f23c1ca387373788a4a73639f.camel@redhat.com>
-Subject: Re: [PATCH RT] sched: migrate_enable: Busy loop until the migration
- request is completed
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Date:   Fri, 13 Dec 2019 00:44:22 -0600
-In-Reply-To: <20191212112717.2tzoqbe3xeknoyvs@linutronix.de>
-References: <20191212112717.2tzoqbe3xeknoyvs@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 13 Dec 2019 01:44:39 -0500
+Received: from mx22.baidu.com ([220.181.50.185]:34890 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725770AbfLMGoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 01:44:38 -0500
+X-Greylist: delayed 975 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 01:44:37 EST
+Received: from BC-Mail-Ex30.internal.baidu.com (unknown [172.31.51.24])
+        by Forcepoint Email with ESMTPS id 1B2BE1EAD4B5A1E08CF9;
+        Fri, 13 Dec 2019 14:27:29 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BC-Mail-Ex30.internal.baidu.com (172.31.51.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Fri, 13 Dec 2019 14:27:28 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Fri, 13 Dec 2019 14:27:28 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+CC:     Saeed Mahameed <saeedm@mellanox.com>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3YyXSBwYWdlX3Bvb2w6IGhhbmRsZSBwYWdlIHJl?=
+ =?utf-8?B?Y3ljbGUgZm9yIE5VTUFfTk9fTk9ERSBjb25kaXRpb24=?=
+Thread-Topic: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+Thread-Index: AQHVrBgioGDhH/MP9UuNcNvu7zNf3aeuC1gAgAa9z4CAACtDgIAARc8AgACSe4CAASNCAIAArxmA
+Date:   Fri, 13 Dec 2019 06:27:28 +0000
+Message-ID: <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
+References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
+ <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
+ <20191211194933.15b53c11@carbon>
+ <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
+ <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
+ <20191212111831.2a9f05d3@carbon>
+ <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
+In-Reply-To: <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.17]
+x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex30_2019-12-13 14:27:29:041
+x-baidu-bdmsfe-viruscheck: BC-Mail-Ex30_GRAY_Inside_WithoutAtta_2019-12-13
+ 14:27:29:010
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-12 at 12:27 +0100, Sebastian Andrzej Siewior wrote:
-> If user task changes the CPU affinity mask of a running task it will
-> dispatch migration request if the current CPU is no longer allowed. This
-> might happen shortly before a task enters a migrate_disable() section.
-> Upon leaving the migrate_disable() section, the task will notice that
-> the current CPU is no longer allowed and will will dispatch its own
-> migration request to move it off the current CPU.
-> While invoking __schedule() the first migration request will be
-> processed and the task returns on the "new" CPU with "arg.done = 0". Its
-> own migration request will be processed shortly after and will result in
-> memory corruption if the stack memory, designed for request, was used
-> otherwise in the meantime.
-
-Ugh.
-
-> Spin until the migration request has been processed if it was accepted.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/sched/core.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 8bea013b2baf5..5c7be96ca68c4 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -8227,7 +8227,7 @@ void migrate_enable(void)
->  
->  	WARN_ON(smp_processor_id() != cpu);
->  	if (!is_cpu_allowed(p, cpu)) {
-> -		struct migration_arg arg = { p };
-> +		struct migration_arg arg = { .task = p };
->  		struct cpu_stop_work work;
->  		struct rq_flags rf;
->  
-> @@ -8239,7 +8239,10 @@ void migrate_enable(void)
->  		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
->  				    &arg, &work);
->  		__schedule(true);
-> -		WARN_ON_ONCE(!arg.done && !work.disabled);
-> +		if (!work.disabled) {
-> +			while (!arg.done)
-> +				cpu_relax();
-> +		}
-
-We should enable preemption while spinning -- besides the general badness
-of spinning with it disabled, there could be deadlock scenarios if
-multiple CPUs are spinning in such a loop.  Long term maybe have a way to
-dequeue the no-longer-needed work instead of waiting.
-
--Scott
-
+PiANCj4gSXQgaXMgZ29vZCB0byBhbGxvY2F0ZSB0aGUgcnggcGFnZSBjbG9zZSB0byBib3RoIGNw
+dSBhbmQgZGV2aWNlLCBidXQgaWYNCj4gYm90aCBnb2FsIGNhbiBub3QgYmUgcmVhY2hlZCwgbWF5
+YmUgd2UgY2hvb3NlIHRvIGFsbG9jYXRlIHBhZ2UgdGhhdCBjbG9zZQ0KPiB0byBjcHU/DQo+IA0K
+SSB0aGluayBpdCBpcyB0cnVlDQoNCklmIGl0IGlzIHRydWUsICwgd2UgY2FuIHJlbW92ZSBwb29s
+LT5wLm5pZCwgYW5kIHJlcGxhY2UgYWxsb2NfcGFnZXNfbm9kZSB3aXRoDQphbGxvY19wYWdlcyBp
+biBfX3BhZ2VfcG9vbF9hbGxvY19wYWdlc19zbG93LCBhbmQgY2hhbmdlIHBvb2xfcGFnZV9yZXVz
+YWJsZSBhcw0KdGhhdCBwYWdlX3RvX25pZChwYWdlKSBpcyBjaGVja2VkIHdpdGggbnVtYV9tZW1f
+aWQoKSAgDQoNCnNpbmNlIGFsbG9jX3BhZ2VzIGhpbnQgdG8gdXNlIHRoZSBjdXJyZW50IG5vZGUg
+cGFnZSwgYW5kIF9fcGFnZV9wb29sX2FsbG9jX3BhZ2VzX3Nsb3cgDQp3aWxsIGJlIGNhbGxlZCBp
+biBOQVBJIHBvbGxpbmcgb2Z0ZW4gaWYgcmVjeWNsZSBmYWlsZWQsIGFmdGVyIHNvbWUgY3ljbGUs
+IHRoZSBwYWdlIHdpbGwgYmUgZnJvbQ0KbG9jYWwgbWVtb3J5IG5vZGUuDQoNCi1MaQ0KDQo=
