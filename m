@@ -2,237 +2,210 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6020C00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C757C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F80222527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oQWxXcWE"
+	by mail.kernel.org (Postfix) with ESMTP id 5194B2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576275479;
+	bh=tlc6zX/LTEyF5wczNgFfQrREIesmdwXR+IfQ/HzAsqI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VB9bxBLkibiW5Hn87f1/5EftdJLdE8XQpXUk5o4EfiBjg1d1sSGXAHOQnTKnCGJuA
+	 8tJyqcdwYnVNlzDbLKgY9mMXdTNKTX/ijGCEzO4jVj2PNsdyzZ1151I+xUUHYSl7sj
+	 DPk6+nqP5VZ/7Pf1f6z1lIQSKG2qA2sGpnmrUjgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLMWQX (ORCPT
+        id S1726642AbfLMWR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:16:23 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59772 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLMWQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:16:22 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 38ACE9D6;
-        Fri, 13 Dec 2019 23:16:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576275379;
-        bh=8v3Vl0tRhEDBVMWaZdlqz6AcZcOhfQ9YhCMTb9iBmwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oQWxXcWE90vCVxgDF+U72Gqq2+42SshQcvP3fFEf5WDeZJJi8naumeXS49K0B6DW0
-         1bvCFOLfCNk0lziXFIYvkIUkm2Df+Ogk51OWQVRS3jUJA01UKePXQ+i83OoKQctPF0
-         lJ02QwifFj4P9lvpAA9zvdZuEBUt1HUeCiRLQNbA=
-Date:   Sat, 14 Dec 2019 00:16:09 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Fri, 13 Dec 2019 17:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfLMWR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:17:58 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F9192073D;
+        Fri, 13 Dec 2019 22:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576275477;
+        bh=tlc6zX/LTEyF5wczNgFfQrREIesmdwXR+IfQ/HzAsqI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BkxSAcqVhR0pEES5vqzaja2g/RZ4Zz1iwoK5Yo4PncyYac7iZxStJ+xuU3nPxDrh6
+         0YmTwFqmA3/uqTdAVhcCtFaEYOoHGCVhgQnhIQIGiCKp7TOkX/sEQSHtgccpwHM3NJ
+         mWxS5sjFZZ9cUhKehXAcDrTfxjqDjsOZE9wb9aMo=
+Received: by mail-qk1-f174.google.com with SMTP id z76so538668qka.2;
+        Fri, 13 Dec 2019 14:17:57 -0800 (PST)
+X-Gm-Message-State: APjAAAWvc023vKK6GfR8jcmsz3cunA4YJ50GWLodEn8WB2xoJIH/Rry1
+        EmLmuGZmagLy3/uG1oaQ5Slntji76Rw5eYcLBQ==
+X-Google-Smtp-Source: APXvYqyLVGyr/ou6/zCUSR6nbqEvM4qZSGd5lkUZviadNs7lGm/zXP4dZkMOJJThzBpo59gYWshwpV/gf0X0NWtCe7c=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr1536497qkl.119.1576245251094;
+ Fri, 13 Dec 2019 05:54:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20191211061911.238393-1-hsinyi@chromium.org> <20191211061911.238393-4-hsinyi@chromium.org>
+In-Reply-To: <20191211061911.238393-4-hsinyi@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 13 Dec 2019 07:53:59 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
+Message-ID: <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
+Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: Add GPIO display mux binding
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v4 6/7] dt-bindings: display: Add idk-2121wr binding
-Message-ID: <20191213221609.GQ4860@pendragon.ideasonboard.com>
-References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1575649974-31472-7-git-send-email-fabrizio.castro@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1575649974-31472-7-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Dec 06, 2019 at 04:32:53PM +0000, Fabrizio Castro wrote:
-> Add binding for the idk-2121wr LVDS panel from Advantech.
-> 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+On Wed, Dec 11, 2019 at 12:19 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> From: Nicolas Boichat <drinkcat@chromium.org>
+>
+> Add bindings for Generic GPIO mux driver.
+>
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
-> v3->v4:
-> * Absorbed patch "dt-bindings: display: Add bindings for LVDS
->   bus-timings"
-> * Big restructuring after Rob's and Laurent's comments
-> 
-> v2->v3:
-> * new patch
+> Change from RFC to v1:
+> - txt to yaml
 > ---
->  .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+>  .../bindings/display/bridge/gpio-mux.yaml     | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
 > new file mode 100644
-> index 0000000..24cd38b
+> index 000000000000..cef098749066
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> @@ -0,0 +1,128 @@
+> +++ b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+> @@ -0,0 +1,89 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
+> +$id: http://devicetree.org/schemas/display/bridge/gpio-mux.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
+> +title: Generic display mux (1 input, 2 outputs)
+
+What makes it generic? Doesn't the mux chip have power supply,
+possibly a reset line or not, etc.? What about a mux where the GPIO
+controls the mux?
+
+Generally, we avoid 'generic' bindings because h/w is rarely generic.
+You can have a generic driver which works on multiple devices.
+
 > +
 > +maintainers:
-> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Nicolas Boichat <drinkcat@chromium.org>
 > +
 > +description: |
-> +  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
-> +  A dual-LVDS interface is a dual-link connection with even pixels traveling
-> +  on one link, and with odd pixels traveling on the other link.
-> +
-> +  The panel expects odd pixels on the first port, and even pixels on the
-> +  second port, therefore the ports must be marked accordingly (with either
-> +  dual-lvds-odd-pixels or dual-lvds-even-pixels).
+> +  This bindings describes a simple display (e.g. HDMI) mux, that has 1
+> +  input, and 2 outputs. The mux status is controlled by hardware, and
+> +  its status is read back using a GPIO.
 > +
 > +properties:
 > +  compatible:
-> +    items:
-> +      - const: advantech,idk-2121wr
-> +      - {} # panel-lvds, but not listed here to avoid false select
+> +    const: gpio-display-mux
 > +
-> +  width-mm:
-> +    const: 476
-> +
-> +  height-mm:
-> +    const: 268
-> +
-> +  data-mapping:
-> +    const: vesa-24
+> +  detect-gpios:
+> +    maxItems: 1
+> +    description: GPIO that indicates the active output
 > +
 > +  ports:
 > +    type: object
+> +
 > +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
 > +      port@0:
 > +        type: object
-> +        description: The sink for odd pixels.
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +          dual-lvds-odd-pixels: true
-> +
-> +        required:
-> +          - reg
-> +          - dual-lvds-odd-pixels
+> +        description: |
+> +          Video port for input.
 > +
 > +      port@1:
 > +        type: object
-> +        description: The sink for even pixels.
-> +        properties:
-> +          reg:
-> +            const: 1
+> +        description: |
+> +          2 video ports for output.
+> +          The reg value in the endpoints matches the GPIO status: when
+> +          GPIO is asserted, endpoint with reg value <1> is selected.
+
+You should describe 'endpoint@0' and 'endpoint@1' here too.
+
 > +
-> +          dual-lvds-even-pixels: true
-> +
-> +        required:
-> +          - reg
-> +          - dual-lvds-even-pixels
-> +
-> +  panel-timing: true
-> +
-> +additionalProperties: false
+> +    required:
+> +      - port@0
+> +      - port@1
 > +
 > +required:
 > +  - compatible
-> +  - width-mm
-> +  - height-mm
-> +  - data-mapping
-> +  - panel-timing
+> +  - detect-gpios
 > +  - ports
 > +
 > +examples:
-> +  - |+
-> +    panel-lvds {
-> +      compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +      width-mm = <476>;
-> +      height-mm = <268>;
-> +
-> +      data-mapping = "vesa-24";
-> +
-> +      panel-timing {
-> +        clock-frequency = <148500000>;
-> +        hactive = <1920>;
-> +        vactive = <1080>;
-> +        hsync-len = <44>;
-> +        hfront-porch = <88>;
-> +        hback-porch = <148>;
-> +        vfront-porch = <4>;
-> +        vback-porch = <36>;
-> +        vsync-len = <5>;
-> +      };
+> +  - |
+> +    hdmi_mux: hdmi_mux {
+> +      compatible = "gpio-display-mux";
+> +      status = "okay";
+
+Don't show status in examples.
+
+> +      detect-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&hdmi_mux_pins>;
+> +      ddc-i2c-bus = <&hdmiddc0>;
+
+Not documented. Is the i2c bus muxed too? If not, then this is in the
+wrong place.
+
 > +
 > +      ports {
 > +        #address-cells = <1>;
 > +        #size-cells = <0>;
 > +
-> +        port@0 {
+> +        port@0 { /* input */
 > +          reg = <0>;
-> +          dual-lvds-odd-pixels;
-> +          panel_in0: endpoint {
-> +            remote-endpoint = <&lvds0_out>;
+> +
+> +          hdmi_mux_in: endpoint {
+> +            remote-endpoint = <&hdmi0_out>;
 > +          };
 > +        };
 > +
-> +        port@1 {
+> +        port@1 { /* output */
 > +          reg = <1>;
-> +          dual-lvds-even-pixels;
-> +          panel_in1: endpoint {
-> +            remote-endpoint = <&lvds1_out>;
+> +
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          hdmi_mux_out_anx: endpoint@0 {
+> +            reg = <0>;
+> +            remote-endpoint = <&anx7688_in>;
+> +          };
+> +
+> +          hdmi_mux_out_hdmi: endpoint@1 {
+> +            reg = <1>;
+> +            remote-endpoint = <&hdmi_connector_in>;
 > +          };
 > +        };
 > +      };
 > +    };
-> +
-> +...
-
--- 
-Regards,
-
-Laurent Pinchart
+> --
+> 2.24.0.525.g8f36a354ae-goog
+>
