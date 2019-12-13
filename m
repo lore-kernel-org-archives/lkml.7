@@ -2,115 +2,91 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5352EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A653C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3191821655
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D505D21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eIp0qYbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfLMBp0 (ORCPT
+        id S1731565AbfLMBtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:45:26 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:36134 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727084AbfLMBpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:45:25 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tkka4D._1576201519;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tkka4D._1576201519)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 13 Dec 2019 09:45:20 +0800
-Subject: [PATCH v6 0/2] sched/numa: introduce numa locality
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
-Message-ID: <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
-Date:   Fri, 13 Dec 2019 09:43:13 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 12 Dec 2019 20:49:08 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54933 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727084AbfLMBtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:49:08 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ytr13FGyz9sPT;
+        Fri, 13 Dec 2019 12:49:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576201745;
+        bh=Vq9r75kTrcGQj0IfaZDoNCuocae9mJfyEKqKph3OmCM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eIp0qYbQU7O8oscmSzM2cqy0xFBNCuzvFG29508QeEtKm5M+qZiXX9raP6CEwjbLq
+         Cdb6zhAof63h9a60IlORsQz/jlIdJrlkvtfOL+pGAIcAlJPX1o68Ii9grbCehJDVco
+         FVWe2fi9G5JEU5OYfyX+/aFL0P5wuWi8fJ8EaUJDY8HHGTm7iGoU0CjhJyU6tEMHAv
+         paXrx/KMScVoNl6WnsNKS/muh/vA9a7VwvsBG3FJSbUudKJdOEUZsofMybgcokqrDt
+         /SPwHAB5yDJkFSI4HIquXrfaNm6FBnckfYJUTmuu7Xtz0iBz9BF05Gl8ZeK7y3972w
+         huitWPCfSWo8A==
+Date:   Fri, 13 Dec 2019 12:49:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the devfreq tree
+Message-ID: <20191213124904.467443c1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/d2nyw.a._8NN8zVPn4uY9_E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since v5:
-  * fix compile failure when NUMA disabled
-Since v4:
-  * improved documentation
-Since v3:
-  * fix comments and improved documentation
-Since v2:
-  * simplified the locality concept & implementation
-Since v1:
-  * improved documentation
+--Sig_/d2nyw.a._8NN8zVPn4uY9_E
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Modern production environment could use hundreds of cgroup to control
-the resources for different workloads, along with the complicated
-resource binding.
+Hi all,
 
-On NUMA platforms where we have multiple nodes, things become even more
-complicated, we hope there are more local memory access to improve the
-performance, and NUMA Balancing keep working hard to achieve that,
-however, wrong memory policy or node binding could easily waste the
-effort, result a lot of remote page accessing.
+After merging the devfreq tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-We need to notice such problems, then we got chance to fix it before
-there are too much damages, however, there are no good monitoring
-approach yet to help catch the mouse who introduced the remote access.
+ERROR: "__arm_smccc_smc" [drivers/devfreq/rk3399_dmc.ko] undefined!
 
-This patch set is trying to fill in the missing pieces， by introduce
-the per-cgroup NUMA locality info, with this new statistics, we could
-achieve the daily monitoring on NUMA efficiency, to give warning when
-things going too wrong.
+Caused by commit
 
-Please check the second patch for more details.
+  6c877bff8315 ("PM / devfreq: rk3399_dmc: Add COMPILE_TEST dependency")
 
-Michael Wang (2):
-  sched/numa: introduce per-cgroup NUMA locality info
-  sched/numa: documentation for per-cgroup numa statistics
+I reverted that commit for today.
 
- Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- include/linux/sched.h                           |  15 ++
- include/linux/sched/sysctl.h                    |   6 +
- init/Kconfig                                    |  11 ++
- kernel/sched/core.c                             |  75 ++++++++++
- kernel/sched/fair.c                             |  62 +++++++++
- kernel/sched/sched.h                            |  12 ++
- kernel/sysctl.c                                 |  11 ++
- 11 files changed, 384 insertions(+)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-2.14.4.44.g2045bb6
+--Sig_/d2nyw.a._8NN8zVPn4uY9_E
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3y7hAACgkQAVBC80lX
+0Gy9EAf+P+3ZT3IT/ku+xBAGRaooPdsXiCcJpe14/brCf9ipJEwud8B7SJBEbf+f
+7V5EBfjLt+wzo+Dht52W2t/7lBEgvOcIRyDyFhzIxNBYXRTWtY3yHMl89hIclE3F
+r7bkA1mIsTYj6lmZ7+QgacP77k/w04373dbtO0tIJ1FvJcsCUWxeLQc/5x0OO2On
+nyBxYYQ34Hzt2QosmasEHgh/nQa/K1JW90Q4FE7aOqz2K/hAywsY4E1TIQRPMovG
+XY/ncO0rFxS8ZSwKxivW8r23etLNEFWccj9NdkU2yAz6fhBG4gaG+l83JdDOqmGt
+S2UinyBBrNtCFKoI51JWp7OEhH/ubQ==
+=FJw0
+-----END PGP SIGNATURE-----
+
+--Sig_/d2nyw.a._8NN8zVPn4uY9_E--
