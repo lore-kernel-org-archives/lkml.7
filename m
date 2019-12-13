@@ -2,148 +2,125 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA2FC7DBA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE507C7DBA7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1B02476A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D92524715
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CFCEeP59"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VoZOlw8a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfLMSLP (ORCPT
+        id S1728727AbfLMSMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:11:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:52376 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfLMSLO (ORCPT
+        Fri, 13 Dec 2019 13:12:03 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35539 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728667AbfLMSMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:11:14 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDHsZSq145297;
-        Fri, 13 Dec 2019 18:09:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=53hxqoMlf8QDJ3jq3QCCM+0wlUtK9bJy534B+kQRWZ8=;
- b=CFCEeP59ftNzKHEjMdPdb+z5y8cPC0j29595ainF8r4ydRLWPiqvjHP/bL9FFwe4XLF1
- PbS1uslrlTy2u5lHVxGJU9nxGGLN2nhvNAUV0IDvMrbOGttliHlxDLTbz9oIyAosfXLi
- sQ3AO9Ybpqx3Ww4gRCr280fQ23NZ3r/zYhJc/0JUdB9YosdRMNE/QZlsTkZL7o35Lz2E
- yZfG/74A5Ue7C+0nzGvLwR3l5Ek4fO6AgT5XdIyu6lFYsyTdsatLESL1nC+G40VJRnAb
- Yv2NHp/daBXpFmg3EvCSI247OXar4cguohOorUrsKUiTAOsGRSUGg5DViN5idJiTN7QR WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2wr4qs2g8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 18:09:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDHsWP8049398;
-        Fri, 13 Dec 2019 18:09:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2wvdwq33d8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 18:09:05 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBDI94mN002972;
-        Fri, 13 Dec 2019 18:09:04 GMT
-Received: from [192.168.14.112] (/109.65.223.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Dec 2019 10:09:04 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20191213175031.GC31552@linux.intel.com>
-Date:   Fri, 13 Dec 2019 20:08:59 +0200
-Cc:     Barret Rhoden <brho@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jason.zeng@intel.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <08D4A158-617C-4043-AA85-B12EE8F062B9@oracle.com>
-References: <20191212182238.46535-1-brho@google.com>
- <20191212182238.46535-3-brho@google.com>
- <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
- <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
- <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
- <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
- <20191213171950.GA31552@linux.intel.com>
- <4A5E026D-53E6-4F30-A80D-B5E6AA07A786@oracle.com>
- <20191213175031.GC31552@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912130142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912130142
+        Fri, 13 Dec 2019 13:12:02 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z76so341220qka.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:12:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zYPYNQC53+CxeOZMSLaSXNleC2alunHbsG33GQacSz4=;
+        b=VoZOlw8aTRJ5130OpGd/2QPPeJVLXlpFsO6lMnt0ZVol+swiG2OufkT5eZ5bZNX1t7
+         6uq3Wh9ztEg6X4u9wTAPnozLL7VzKAPoXn1vpSn2db+we4rYrwIknRm5sY6suY68VX6z
+         qT12MybJIwhfdsNBRT2iKWvDh8hJH5RCDmfsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zYPYNQC53+CxeOZMSLaSXNleC2alunHbsG33GQacSz4=;
+        b=WRXhgA3DcG5HMBB4aKa1nSMCDfts00ZQNbvtZBCsX9ybjs1yA3weIuwjN5gzQMuDYd
+         YJSE8ki4QSQdPPVnsQhsxReCRmVhMBXY51vQM8RxxC56zoVAU01MI4soUbU0iVmAkd2l
+         xCxxPWBIi0mpclSYeO+3wWeV2Gm/KZu6Xk7olYVJd/3DZkApqpwW367IeufO0T6p1/OI
+         os0Kjp5VYUhpdTa8cuLCzBHYUCuYxi2nZ/hE0C/s14nFZAapRqhZ2gbVGut/tOouGVsV
+         hF9nksiJNacb41fqU3DyfabkPOX2fawjbi5NAfwGNa8LRF+f8YJ5dtMOAW0ztQFAYkdg
+         i0Hg==
+X-Gm-Message-State: APjAAAUFkykyPPz/PvRU6vJyO3lynNNvCUAmqUtSBSsmmkhuVberSRw8
+        0IvbgPhGKNvWkbuI9UfBPB6wJclrUIo7wNb9nwTfFg==
+X-Google-Smtp-Source: APXvYqyenKHhwGviYc0bhj1kkNQB0iXKYg0CMjzjCOLDKyeheouOTpWir748zTNRkxFY2sr98wCfcLVq/vHGlgYTv1g=
+X-Received: by 2002:a37:514:: with SMTP id 20mr14328531qkf.321.1576260721379;
+ Fri, 13 Dec 2019 10:12:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213113510.GG15474@quack2.suse.cz> <20191213153306.30744-1-tranmanphong@gmail.com>
+In-Reply-To: <20191213153306.30744-1-tranmanphong@gmail.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 13 Dec 2019 10:11:50 -0800
+Message-ID: <CAEXW_YQwrM6=u1gsij-5SL5+2n9Pk9HFEYdF_JWYjitLvr7Dcg@mail.gmail.com>
+Subject: Re: [PATCH V2] ext4: use rcu API in debug_print_tree
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        adilger.kernel@dilger.ca, "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu <rcu@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 13, 2019 at 7:39 AM Phong Tran <tranmanphong@gmail.com> wrote:
+>
+> struct ext4_sb_info.system_blks was marked __rcu.
+> But access the pointer without using RCU lock and dereference.
+> Sparse warning with __rcu notation:
+>
+> block_validity.c:139:29: warning: incorrect type in argument 1 (different address spaces)
+> block_validity.c:139:29:    expected struct rb_root const *
+> block_validity.c:139:29:    got struct rb_root [noderef] <asn:4> *
+>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 
+Thanks Phong! Looks like a real bug fix caught thanks to Sparse. So
+let us mark for stable as well?
 
-> On 13 Dec 2019, at 19:50, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->=20
-> On Fri, Dec 13, 2019 at 07:31:55PM +0200, Liran Alon wrote:
->>=20
->>> On 13 Dec 2019, at 19:19, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->>>=20
->>> Then allowed_hugepage_adjust() would look something like:
->>>=20
->>> static void allowed_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t =
-gfn,
->>> 				    kvm_pfn_t *pfnp, int *levelp, int =
-max_level)
->>> {
->>> 	kvm_pfn_t pfn =3D *pfnp;
->>> 	int level =3D *levelp;=09
->>> 	unsigned long mask;
->>>=20
->>> 	if (is_error_noslot_pfn(pfn) || !kvm_is_reserved_pfn(pfn) ||
->>> 	    level =3D=3D PT_PAGE_TABLE_LEVEL)
->>> 		return;
->>>=20
->>> 	/*
->>> 	 * mmu_notifier_retry() was successful and mmu_lock is held, so
->>> 	 * the pmd/pud can't be split from under us.
->>> 	 */
->>> 	level =3D host_pfn_mapping_level(vcpu->kvm, gfn, pfn);
->>>=20
->>> 	*levelp =3D level =3D min(level, max_level);
->>> 	mask =3D KVM_PAGES_PER_HPAGE(level) - 1;
->>> 	VM_BUG_ON((gfn & mask) !=3D (pfn & mask));
->>> 	*pfnp =3D pfn & ~mask;
->>=20
->> Why don=E2=80=99t you still need to kvm_release_pfn_clean() for =
-original pfn and
->> kvm_get_pfn() for new huge-page start pfn?
->=20
-> That code is gone in kvm/queue.  thp_adjust() is now called from
-> __direct_map() and FNAME(fetch), and so its pfn adjustment doesn't =
-bleed
-> back to the page fault handlers.  The only reason the put/get pfn code
-> existed was because the page fault handlers called =
-kvm_release_pfn_clean()
-> on the pfn, i.e. they would have put the wrong pfn.
+- Joel
 
-Ack. Thanks for the explaining this.
-
-
+> ---
+>  fs/ext4/block_validity.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> ---
+> change log:
+> V2: Add Reviewed-by: Jan Kara <jack@suse.cz>
+>
+> diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+> index d4d4fdfac1a6..1ee04e76bbe0 100644
+> --- a/fs/ext4/block_validity.c
+> +++ b/fs/ext4/block_validity.c
+> @@ -133,10 +133,13 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
+>  {
+>         struct rb_node *node;
+>         struct ext4_system_zone *entry;
+> +       struct ext4_system_blocks *system_blks;
+>         int first = 1;
+>
+>         printk(KERN_INFO "System zones: ");
+> -       node = rb_first(&sbi->system_blks->root);
+> +       rcu_read_lock();
+> +       system_blks = rcu_dereference(sbi->system_blks);
+> +       node = rb_first(&system_blks->root);
+>         while (node) {
+>                 entry = rb_entry(node, struct ext4_system_zone, node);
+>                 printk(KERN_CONT "%s%llu-%llu", first ? "" : ", ",
+> @@ -144,6 +147,7 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
+>                 first = 0;
+>                 node = rb_next(node);
+>         }
+> +       rcu_read_unlock();
+>         printk(KERN_CONT "\n");
+>  }
+>
+> --
+> 2.20.1
+>
