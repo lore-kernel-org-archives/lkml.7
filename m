@@ -2,180 +2,106 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273EBC7E0A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC78BC7E09E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3AB247FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEE6247F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aq6fOJkm";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hgPyl3/D"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Ohgf2p7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfLMSnV (ORCPT
+        id S1728912AbfLMShS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:43:21 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53756 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728473AbfLMSnU (ORCPT
+        Fri, 13 Dec 2019 13:37:18 -0500
+Received: from mail-io1-f47.google.com ([209.85.166.47]:37973 "EHLO
+        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbfLMShS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:43:20 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDIdmU2027933;
-        Fri, 13 Dec 2019 10:41:04 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=XOhp5m9nMlio3HXQ/APyC9XL3pUgpzPt3TEEkRndYh4=;
- b=aq6fOJkmVG2g5ECsRom2yBEjneUBEXNX2FtKU8Ev7tYfS48Gs+8f/DflyBkrXriMqyhv
- 8zFDF8z5Y+bxgi3yBJd7NUzOH0e0/lXE2jm0I3HP7RD8iekNfW3ab8FTLO8c5eibtdwF
- Z6HlhK33U5PAPUYJ2S4fPPiQpjzNKeu5qv0= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wuuxkd2ja-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 13 Dec 2019 10:41:03 -0800
-Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 13 Dec 2019 10:40:50 -0800
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 13 Dec 2019 10:40:49 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 13 Dec 2019 10:40:49 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nmVime1Ky/miPGQiPgQtImYBZe5o9vOaE1I2McEYi3QvN4HFxqxRTr6YwTgkRmdKcsCNMswhpvIwHXp0G5fth8N78qO9JU0GTh2f75hqLZaZ5M4iCzIsqy1Novil5y5N0/5Bn4Y25h0vYadQ1Vi8uGozVfGODZtiglU2rpkwrxJ3CDSPhqfGYKzQaIUedxH4w+zKKvtaodNDSDbe9g9+5PzdDE5Q4+W730NMtLZ9WYP8i8sUofgwzn6myyrKsPJCSdaFHHcFr+Um/Bk2bl1TJseb1QXl3Ot2r8j0V03DeGQ3nDSUQBg39O5vkuZiZn5HZhqtfOt+ouFoiVFe+T9+QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XOhp5m9nMlio3HXQ/APyC9XL3pUgpzPt3TEEkRndYh4=;
- b=JNySVexw2Nf3BW1+NXpXIrHDn1GH2A6/O3uX2KutG5zjo5SAnoVE+neRVLPkaAeQCjPj24Vn/jUGxRX+Wxga/YvK7iVMfORhQEfRS/ahVzR8xCYcWxlXRrDo7uYC75IpuFFjEJMmFwNAlQht6yISm/qpW5PO+06tPGL6xmhlt71W/w82MNZJItup5U7DuBBnddteswHz+fQalr6gQZ0Qw0LvVApZNqRqMFYvJzcJdHDsVEjUgT6ns0b/CnrAS4zvOEp7ugKyXwlhGEoDodp+7Lopzp5haEjLEk9sKtcgqowZta8CxSKs1+lqG9DbDgZZ8Gg5hh13fznYYlXIUmof9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XOhp5m9nMlio3HXQ/APyC9XL3pUgpzPt3TEEkRndYh4=;
- b=hgPyl3/Dob62MGSxoiPPbXZmzpmMi24TbQT7jX9ya3wWzlq6+GkYA8EX7GLUlMvMPlMKJEgsXDcj5G1py/yQe7n991bOVN7RhlgIAMLqf79sqthVOaK55iuDI+b/5ARMZ48yrda9jiGI6x4oFhl1JxCamjvqamgqHqN1ordA6uo=
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com (10.175.107.145) by
- DM5PR15MB1130.namprd15.prod.outlook.com (10.173.208.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Fri, 13 Dec 2019 18:40:48 +0000
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23]) by DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23%8]) with mapi id 15.20.2516.018; Fri, 13 Dec 2019
- 18:40:48 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH v3 bpf-next 09/11] selftests/bpf: add batch ops testing
- for htab and htab_percpu map
-Thread-Topic: [PATCH v3 bpf-next 09/11] selftests/bpf: add batch ops testing
- for htab and htab_percpu map
-Thread-Index: AQHVsHM7yfbqfNzkC0GsbvFzTjuF76e4aMKA
-Date:   Fri, 13 Dec 2019 18:40:48 +0000
-Message-ID: <c8944148-1f66-f367-04d8-93d30997d123@fb.com>
-References: <20191211223344.165549-1-brianvv@google.com>
- <20191211223344.165549-10-brianvv@google.com>
-In-Reply-To: <20191211223344.165549-10-brianvv@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0014.namprd19.prod.outlook.com
- (2603:10b6:300:d4::24) To DM5PR15MB1675.namprd15.prod.outlook.com
- (2603:10b6:3:11f::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:e8f1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fb2b207d-3928-4db7-6103-08d77ffbf8d7
-x-ms-traffictypediagnostic: DM5PR15MB1130:
-x-microsoft-antispam-prvs: <DM5PR15MB1130C16823940607A9510779D3540@DM5PR15MB1130.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0250B840C1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(54906003)(81166006)(8676002)(5660300002)(110136005)(31686004)(7416002)(36756003)(64756008)(81156014)(8936002)(316002)(66556008)(66446008)(6506007)(53546011)(66476007)(4326008)(66946007)(71200400001)(31696002)(6512007)(2906002)(2616005)(478600001)(52116002)(186003)(86362001)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1130;H:DM5PR15MB1675.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4+YgiNm/8+nYzfcmQnW0WlbHI8MLCeH2cS7UdBNQF4y1JaIL+LLf75MUK5ypzihezGpDWBXAitF1OCYc1gJ3Daif2mlzo7zijF4ZJw5H1qtuqkxCvYvBmom1M0JQhEIATqyDjyKwbZV0hTX3FDikehrHbwYscIaG3gKzw//bG3HqbayxY31EpJumV5kzVES2Vka7+jR+sSroOBPEoNnHN+EnfToSY0w9sU1XBDIKDJ8ktWytmAVbPUCdj2TIlZL/JKeWGRMKYAATkrz7de8bjjP+LjYtDN20WK06OpNDokzsMTKzx4aVvqjWpe+o5dNaOC88RYh+JSRIhnkb3Z3m345CUQODfqlbN57pdKylBgIEKNa2WuL5Nl0daZYKJjZgU4ouqrS2NR0Q2EkcU9VsvBDWaM7MrmK8BnGmmflt0lpwYoqOJ0rb7AaB/iDWC6Sh
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <69089D21ACA76B44AA3FB4C2AD5A88B3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 13 Dec 2019 13:37:18 -0500
+Received: by mail-io1-f47.google.com with SMTP id v3so648513ioj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8rSTbx4+Xnp8FvEJgiPQ5fFPbX8PvFRdBprtRWfCWCQ=;
+        b=Ohgf2p7RcDyAO9x+7hqrHkTxJ+a7kT8vOKByrsrMwlsQyfiqsofPMz6dlNEaH2kFr/
+         30OXQgmqBqqpNadNXtss0bPV2ZVcHODsCXvhDzcMWmbv1s3KgrYiRRQusO6bkbFDRp5r
+         LKvKMn4BTmDY7od/XhpsXT23xIipONjzb6tpmba5Yg7opdrxn9JbPVo+73idK9kGsIF2
+         nxFDLQAEjalQhqtduuADtXitKUuXf7FWRkHCJElsAxtG+37Ox7MhGWEh9v8dKVoLChhH
+         vtTC4mmQqcAXBoutRncx9v8ysca09wIVNJ/BhTFVjArRy8gBLIIC18A4DbY6RDDKDnlb
+         wsYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8rSTbx4+Xnp8FvEJgiPQ5fFPbX8PvFRdBprtRWfCWCQ=;
+        b=V9v5vLExcqeadgGh3gpmrFmLDjEZ5VtZNMRAYnYRQzlIeMNbDxuaqFbZ62P6jc2Yg0
+         j9xudaKNOLXe5GOt0Eyxm1mRspxQPMFfpjJHKK1mIW0TSwoEmMQYl7g8ZcICq9toxmsR
+         wwH6xfhq9d3e0ZImYvzcDuGdzZe8LILVLqw6DYR/A/PIx08G1dxBxEbbedhdhU2uo5Wl
+         Zudl3ccZUiXxk+UVV4Vnm7QyZlpx5YMno/yhluNrJ3nUccHJGq5knfRHQfhgNMKnd/Ka
+         B2FnHN3LwQoZ2iSet6PgL/EXNpNF52jzlkELaEmdfTLjQrYSIhbnS8zvJIA7grejDiFz
+         9Cvg==
+X-Gm-Message-State: APjAAAVrrRHOoTbv8rVsS0FbgMc6bGkVgtjMw6u4ZgIq+wgxZ/NXKRrB
+        jMVnavMEblIOLf2JYOU6qgL7/ZBoxG9AHzzHeJO4Pw==
+X-Google-Smtp-Source: APXvYqwmEGW+SCoK781R1wHEyeHBJdMspwk5PrOmp57kqjQ+5c6ggfMA1Zq5gVwxNfGgc4rjMK4/bvTYtO3f/Xhf1Jc=
+X-Received: by 2002:a5e:da0d:: with SMTP id x13mr7973581ioj.123.1576262237318;
+ Fri, 13 Dec 2019 10:37:17 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb2b207d-3928-4db7-6103-08d77ffbf8d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 18:40:48.5637
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0F4puXslxsRXO6NtFy/znPbKf2fqvqbHB58OUR/mu6kO/dMlWAlwv281EnYVlhDX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1130
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-13_05:2019-12-13,2019-12-13 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912130144
-X-FB-Internal: deliver
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 13 Dec 2019 10:37:06 -0800
+Message-ID: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEyLzExLzE5IDI6MzMgUE0sIEJyaWFuIFZhenF1ZXogd3JvdGU6DQo+IEZyb206IFlv
-bmdob25nIFNvbmcgPHloc0BmYi5jb20+DQo+IA0KPiBUZXN0ZWQgYnBmX21hcF9sb29rdXBfYmF0
-Y2goKSwgYnBmX21hcF9sb29rdXBfYW5kX2RlbGV0ZV9iYXRjaCgpLA0KPiBicGZfbWFwX3VwZGF0
-ZV9iYXRjaCgpLCBhbmQgYnBmX21hcF9kZWxldGVfYmF0Y2goKSBmdW5jdGlvbmFsaXR5Lg0KPiAg
-ICAkIC4vdGVzdF9tYXBzDQo+ICAgICAgLi4uDQo+ICAgICAgICB0ZXN0X2h0YWJfbWFwX2JhdGNo
-X29wczpQQVNTDQo+ICAgICAgICB0ZXN0X2h0YWJfcGVyY3B1X21hcF9iYXRjaF9vcHM6UEFTUw0K
-PiAgICAgIC4uLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWW9uZ2hvbmcgU29uZyA8eWhzQGZiLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogQnJpYW4gVmF6cXVleiA8YnJpYW52dkBnb29nbGUuY29tPg0K
-PiAtLS0NCj4gICAuLi4vYnBmL21hcF90ZXN0cy9odGFiX21hcF9iYXRjaF9vcHMuYyAgICAgICAg
-fCAyNjkgKysrKysrKysrKysrKysrKysrDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDI2OSBpbnNlcnRp
-b25zKCspDQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2Jw
-Zi9tYXBfdGVzdHMvaHRhYl9tYXBfYmF0Y2hfb3BzLmMNCj4gDQo+IGRpZmYgLS1naXQgYS90b29s
-cy90ZXN0aW5nL3NlbGZ0ZXN0cy9icGYvbWFwX3Rlc3RzL2h0YWJfbWFwX2JhdGNoX29wcy5jIGIv
-dG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvYnBmL21hcF90ZXN0cy9odGFiX21hcF9iYXRjaF9vcHMu
-Yw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAwLi5kYWJjNGQ0
-MjBhMTBlDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMv
-YnBmL21hcF90ZXN0cy9odGFiX21hcF9iYXRjaF9vcHMuYw0KPiBAQCAtMCwwICsxLDI2OSBAQA0K
-PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKy8qIENvcHlyaWdodCAo
-YykgMjAxOSBGYWNlYm9vayAgKi8NCj4gKyNpbmNsdWRlIDxzdGRpby5oPg0KPiArI2luY2x1ZGUg
-PGVycm5vLmg+DQo+ICsjaW5jbHVkZSA8c3RyaW5nLmg+DQo+ICsNCj4gKyNpbmNsdWRlIDxicGYv
-YnBmLmg+DQo+ICsjaW5jbHVkZSA8YnBmL2xpYmJwZi5oPg0KPiArDQo+ICsjaW5jbHVkZSA8YnBm
-X3V0aWwuaD4NCj4gKyNpbmNsdWRlIDx0ZXN0X21hcHMuaD4NCj4gKw0KPiArc3RhdGljIHZvaWQg
-bWFwX2JhdGNoX3VwZGF0ZShpbnQgbWFwX2ZkLCBfX3UzMiBtYXhfZW50cmllcywgaW50ICprZXlz
-LA0KPiArCQkJICAgICB2b2lkICp2YWx1ZXMsIGJvb2wgaXNfcGNwdSkNCj4gK3sNCj4gKwl0eXBl
-ZGVmIEJQRl9ERUNMQVJFX1BFUkNQVShpbnQsIHZhbHVlKTsNCj4gKwlpbnQgaSwgaiwgZXJyOw0K
-PiArCXZhbHVlICp2Ow0KDQpXZSBjYW4gaW5pdGlhbGl6ZSB0aGUgYWJvdmUgJ3YnIHRvICd2ID0g
-TlVMTCcuDQpTb21lIGNvbXBpbGVyIG1heSBub3QgYmUgc21hcnQgZW5vdWdoIHRvIGZpbmQgb3V0
-ICd2JyBpcyBhbHdheXMgaW5pdGlhbGl6ZWQuDQoNCj4gKw0KPiArCWlmIChpc19wY3B1KQ0KPiAr
-CQl2ID0gKHZhbHVlICopdmFsdWVzOw0KPiArDQo+ICsJZm9yIChpID0gMDsgaSA8IG1heF9lbnRy
-aWVzOyBpKyspIHsNCj4gKwkJa2V5c1tpXSA9IGkgKyAxOw0KPiArCQlpZiAoaXNfcGNwdSkNCj4g
-KwkJCWZvciAoaiA9IDA7IGogPCBicGZfbnVtX3Bvc3NpYmxlX2NwdXMoKTsgaisrKQ0KPiArCQkJ
-CWJwZl9wZXJjcHUodltpXSwgaikgPSBpICsgMiArIGo7DQo+ICsJCWVsc2UNCj4gKwkJCSgoaW50
-ICopdmFsdWVzKVtpXSA9IGkgKyAyOw0KPiArCX0NCj4gKw0KPiArCWVyciA9IGJwZl9tYXBfdXBk
-YXRlX2JhdGNoKG1hcF9mZCwga2V5cywgdmFsdWVzLCAmbWF4X2VudHJpZXMsIDAsIDApOw0KPiAr
-CUNIRUNLKGVyciwgImJwZl9tYXBfdXBkYXRlX2JhdGNoKCkiLCAiZXJyb3I6JXNcbiIsIHN0cmVy
-cm9yKGVycm5vKSk7DQo+ICt9DQo+ICsNClsuLi5dDQo=
+Hi!
+
+On Tue, Nov 19, 2019 at 7:45 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+>
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>
+> This patch set is to recode the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated
+> Mobiveil's PCIe Gen4 controller.
+
+Can we get a respin for this on top of the 5.5 merge window material?
+Given that it's a bunch of refactorings, many of them don't apply on
+top of the material that was merged.
+
+I'd love to see these go in sooner rather than later so I can start
+getting -next running on ls2160a here.
+
+
+-Olof
