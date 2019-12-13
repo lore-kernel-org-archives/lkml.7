@@ -2,197 +2,109 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05064C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5583CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7CC20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fa5MdWSE"
+	by mail.kernel.org (Postfix) with ESMTP id 052B4214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576273213;
+	bh=plP+cUX4HTiuvtFUm8ppZpU3p/w0AOIJhc+vg6yUdw4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ynBUKTd1pOont3BBNGEDyx+FrphVpglZqnpiteYugj3zIgc72n4nExdtQMOg7Pf5W
+	 mj5cbrRuF4ZapLI3WYvb3ArlJ7yfwlucmOMR/joA3GqMl1XrJm/MCUltzjeg20B2MT
+	 7hs3R+ZLiX9r7sXOn8EI1wy8egVHyTVms6PgNehc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLMVkI (ORCPT
+        id S1726772AbfLMVkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:40:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36499 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726382AbfLMVkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:40:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576273204;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WgOXIag/oVgErX13K0wlqJ230VPf+71NlCt27NFhOC8=;
-        b=fa5MdWSE+yr0QbII1ZjOkAwPlUZ0EiOxvOB0mlcU7x7do3fn1CmSkRh4xlmVtvh4Nqf+h/
-        FBcVLfFdsl6cL8wyDU36s6nM1lTqm/BKZRm5oPrDNm3xVuZHfdKg93l2QWmdzErnr9h9fM
-        EbwJ7dojO7FJZ7u1twsb6IkLv9Smjck=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-j09TGu7gOzS_Le1gjjpMpA-1; Fri, 13 Dec 2019 16:40:01 -0500
-X-MC-Unique: j09TGu7gOzS_Le1gjjpMpA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 13 Dec 2019 16:40:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfLMVkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:40:11 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68993593A4;
-        Fri, 13 Dec 2019 21:39:59 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB63C5D9CA;
-        Fri, 13 Dec 2019 21:39:58 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 6505E20694; Fri, 13 Dec 2019 16:39:58 -0500 (EST)
-Date:   Fri, 13 Dec 2019 16:39:58 -0500
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
-Subject: Re: [PATCH v6 00/27] nfs: Mount API conversion
-Message-ID: <20191213213958.GY4276@coeurl.usersys.redhat.com>
-References: <20191210123115.1655-1-smayhew@redhat.com>
- <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 976F8206D8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 21:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576273209;
+        bh=plP+cUX4HTiuvtFUm8ppZpU3p/w0AOIJhc+vg6yUdw4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1w21m685KVvJSvaGQcZJbnwK4/0OvE1pOWVV2uAAM6ju+JvUfqS2/fx8KZlHuDzqa
+         jTGjgTmR5iQz9vig6qNyE+hTTBmR63dSJCOfQq6bCUPtBVFqPDWJghZAnZ/6B1yrLW
+         1DNEIQsbbF4HSb6FDQGddUxwO1oCwEfCiEuM4MvY=
+Received: by mail-qt1-f174.google.com with SMTP id 5so297876qtz.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 13:40:09 -0800 (PST)
+X-Gm-Message-State: APjAAAUF6xlun4uP31Ai+KoXfCN6minz2BNONvSyC/RAS8oegu69jJO9
+        rEBs+Ac0psAKrMShPyJofiWEF21v2m1CaTvYw0M=
+X-Google-Smtp-Source: APXvYqwNhqXPixqQdvIZREeb21DXE+SjKxGOu2cNW/TosxXn5AtNHbCRC9DPlCZGp4YcZ04oF4pl/2wulLtt3SPnPOs=
+X-Received: by 2002:ac8:21ae:: with SMTP id 43mr13411822qty.223.1576257197339;
+ Fri, 13 Dec 2019 09:13:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <MWHPR12MB13438C0C72FA5811B29FD00FCB5A0@MWHPR12MB1343.namprd12.prod.outlook.com>
+In-Reply-To: <MWHPR12MB13438C0C72FA5811B29FD00FCB5A0@MWHPR12MB1343.namprd12.prod.outlook.com>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Fri, 13 Dec 2019 12:13:05 -0500
+X-Gmail-Original-Message-ID: <CA+5PVA4T5NBwv01W06MNH06De7BW86_vjhrQxjAD-TscjgdNGg@mail.gmail.com>
+Message-ID: <CA+5PVA4T5NBwv01W06MNH06De7BW86_vjhrQxjAD-TscjgdNGg@mail.gmail.com>
+Subject: Re: pull request: Linux-firmware: Update cxgb4 firmware to 1.24.11.0
+To:     Vishal Kulkarni <vishal@chelsio.com>
+Cc:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>,
+        Nirranjan Kirubaharan <nirranjan@chelsio.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019, Schumaker, Anna wrote:
-
-> Hi Scott,
-> 
-> On Tue, 2019-12-10 at 07:30 -0500, Scott Mayhew wrote:
-> > Hi Anna, Trond,
-> > 
-> > Here's a set of patches that converts NFS to use the mount API.  Note that
-> > there are a lot of preliminary patches, some from David and some from Al.
-> > The final patch (the one that does the actual conversion) from the David's
-> > initial posting has been split into 5 separate patches, and the entire set
-> > has been rebased on top of v5.5-rc1.
-> 
-> Thanks for the updated patches! Everything looks okay to me, but I've only
-> tested with the legacy mount command. I'm curious if you've tested it using the
-> new system?
-
-I've hacked up mount.nfs for testing the new syscalls (for mounting... I
-haven't quite figured out remounting yet) here:
-https://github.com/scottmayhew/nfs-utils/tree/fscontext
-
-It seems to be working okay, with one exception.  If I mount the same
-NFS export with the same mount options multiple times, then I get
-multiple mounts:
-
-[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
-[root@fedora30 ~]# mount.nfs nfs:/export /mnt/t
-[root@fedora30 ~]# grep /mnt/t /proc/mounts
-nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
-nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
-
-That doesn't happen with the mount() syscall:
-
-[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
-[root@fedora30 ~]# mount.nfs.old nfs:/export /mnt/t
-[root@fedora30 ~]# grep /mnt/t /proc/mounts
-nfs:/export /mnt/t nfs rw,seclabel,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5,clientaddr=192.168.122.239,local_lock=none,addr=192.168.122.3 0 0
-
--Scott
-
-> 
+On Wed, Dec 11, 2019 at 12:36 AM Vishal Kulkarni <vishal@chelsio.com> wrote:
+>
+> Hi,
+>
+> Kindly pull the new firmware from the following URL:
+> git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
+>
 > Thanks,
-> Anna
-> 
-> > 
-> > Changes since v5:
-> > - fixed possible derefence of error pointer in nfs4_validate_fspath()
-> >   reported by Dan Carpenter
-> > - rebased on top of v5.5-rc1
-> > Changes since v4:
-> > - further split the original "NFS: Add fs_context support" patch (new
-> >   patch is about 25% smaller than the v4 patch)
-> > - fixed NFSv4 referral mounts (broken in the original patch)
-> > - fixed leak of nfs_fattr when fs_context is freed
-> > Changes since v3:
-> > - changed license and copyright text in fs/nfs/fs_context.c
-> > Changes since v2:
-> > - fixed the conversion of the nconnect= option
-> > - added '#if IS_ENABLED(CONFIG_NFS_V4)' around nfs4_parse_monolithic()
-> >   to avoid unused-function warning when compiling with v4 disabled
-> > Chagnes since v1:
-> > - split up patch 23 into 4 separate patches
-> > 
-> > -Scott
-> > 
-> > Al Viro (15):
-> >   saner calling conventions for nfs_fs_mount_common()
-> >   nfs: stash server into struct nfs_mount_info
-> >   nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
-> >   nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
-> >   nfs: don't bother setting/restoring export_path around
-> >     do_nfs_root_mount()
-> >   nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
-> >   nfs: lift setting mount_info from nfs_xdev_mount()
-> >   nfs: stash nfs_subversion reference into nfs_mount_info
-> >   nfs: don't bother passing nfs_subversion to ->try_mount() and
-> >     nfs_fs_mount_common()
-> >   nfs: merge xdev and remote file_system_type
-> >   nfs: unexport nfs_fs_mount_common()
-> >   nfs: don't pass nfs_subversion to ->create_server()
-> >   nfs: get rid of mount_info ->fill_super()
-> >   nfs_clone_sb_security(): simplify the check for server bogosity
-> >   nfs: get rid of ->set_security()
-> > 
-> > David Howells (8):
-> >   NFS: Move mount parameterisation bits into their own file
-> >   NFS: Constify mount argument match tables
-> >   NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
-> >   NFS: Split nfs_parse_mount_options()
-> >   NFS: Deindent nfs_fs_context_parse_option()
-> >   NFS: Add a small buffer in nfs_fs_context to avoid string dup
-> >   NFS: Do some tidying of the parsing code
-> >   NFS: Add fs_context support.
-> > 
-> > Scott Mayhew (4):
-> >   NFS: rename nfs_fs_context pointer arg in a few functions
-> >   NFS: Convert mount option parsing to use functionality from
-> >     fs_parser.h
-> >   NFS: Additional refactoring for fs_context conversion
-> >   NFS: Attach supplementary error information to fs_context.
-> > 
-> >  fs/nfs/Makefile         |    2 +-
-> >  fs/nfs/client.c         |   80 +-
-> >  fs/nfs/fs_context.c     | 1424 +++++++++++++++++++++++++
-> >  fs/nfs/fscache.c        |    2 +-
-> >  fs/nfs/getroot.c        |   73 +-
-> >  fs/nfs/internal.h       |  132 +--
-> >  fs/nfs/namespace.c      |  146 ++-
-> >  fs/nfs/nfs3_fs.h        |    2 +-
-> >  fs/nfs/nfs3client.c     |    6 +-
-> >  fs/nfs/nfs3proc.c       |    2 +-
-> >  fs/nfs/nfs4_fs.h        |    9 +-
-> >  fs/nfs/nfs4client.c     |   99 +-
-> >  fs/nfs/nfs4file.c       |    1 +
-> >  fs/nfs/nfs4namespace.c  |  292 +++---
-> >  fs/nfs/nfs4proc.c       |    2 +-
-> >  fs/nfs/nfs4super.c      |  257 ++---
-> >  fs/nfs/proc.c           |    2 +-
-> >  fs/nfs/super.c          | 2217 +++++----------------------------------
-> >  include/linux/nfs_xdr.h |    9 +-
-> >  19 files changed, 2287 insertions(+), 2470 deletions(-)
-> >  create mode 100644 fs/nfs/fs_context.c
-> > 
+> Vishal
+>
+> The following changes since commit e8a0f4c9314754d8b2cbe9840357d88a861c438a:
+>
+>   rtl_nic: add firmware rtl8168fp-3 (2019-11-18 16:16:01 -0500)
+>
+> are available in the git repository at:
+>
+>   git://git.chelsio.net/pub/git/linux-firmware.git master
+>
+> for you to fetch changes up to af4c4be392494418ecf25279bfd4135eb7db69e3:
+>
+>   cxgb4: Update firmware to revision 1.24.11.0 (2019-12-10 21:22:17 -0800)
+>
+> ----------------------------------------------------------------
+> Vishal Kulkarni (1):
+>       cxgb4: Update firmware to revision 1.24.11.0
+>
+>  WHENCE                   |  12 ++++++------
+>  cxgb4/t4fw-1.24.11.0.bin | Bin 0 -> 568832 bytes
+>  cxgb4/t4fw-1.24.3.0.bin  | Bin 571904 -> 0 bytes
+>  cxgb4/t5fw-1.24.11.0.bin | Bin 0 -> 673280 bytes
+>  cxgb4/t5fw-1.24.3.0.bin  | Bin 662016 -> 0 bytes
+>  cxgb4/t6fw-1.24.11.0.bin | Bin 0 -> 727552 bytes
+>  cxgb4/t6fw-1.24.3.0.bin  | Bin 714240 -> 0 bytes
+>  7 files changed, 6 insertions(+), 6 deletions(-)
+>  create mode 100644 cxgb4/t4fw-1.24.11.0.bin
+>  delete mode 100644 cxgb4/t4fw-1.24.3.0.bin
+>  create mode 100644 cxgb4/t5fw-1.24.11.0.bin
+>  delete mode 100644 cxgb4/t5fw-1.24.3.0.bin
+>  create mode 100644 cxgb4/t6fw-1.24.11.0.bin
+>  delete mode 100644 cxgb4/t6fw-1.24.3.0.bin
 
+Pulled.  kernel.org is down right now, but I'll push it out when it's back up.
+
+josh
