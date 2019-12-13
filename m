@@ -2,121 +2,139 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A67C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47653C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7B8214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D40A214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qv/jt8f4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKY8h0Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731943AbfLMFPb (ORCPT
+        id S1732005AbfLMFQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 00:15:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33755 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMFPb (ORCPT
+        Fri, 13 Dec 2019 00:16:19 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40848 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfLMFQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 00:15:31 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so1007198pgk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 21:15:30 -0800 (PST)
+        Fri, 13 Dec 2019 00:16:18 -0500
+Received: by mail-lj1-f193.google.com with SMTP id s22so1202824ljs.7;
+        Thu, 12 Dec 2019 21:16:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sbtRF5Z/ahvzn5o3IzEj07oxQoWzK/KEBcmikz1JbyE=;
-        b=qv/jt8f43rEwLuK1BFTbLJ6+7o81AFjtWlf+XZM7xlZwBjU9EBUULp3DRdj9EJK9Z9
-         06ikCa5UM08SQuYnvHmK3+sw7A3H0LV3O/tK+l1pt8qZJYECSb/CVB0NMhXu0LpRjges
-         Hcp/zUrZbNDCpH6zzp9K09QekhnyybPQDiFpT7araq+kSEDdK8EOM88EGRVpRJ3Hesgj
-         /UqtSjB+11wk8uJHnMWKAemhrN7TRxTO7LFDtAGjgcKmfKAo3MM2wmue9hj1BJiZJSX0
-         UZ43UUdDl5X5zkpgXboMTGLHNoI6D2jxZqAyPltbbrdmSsghbopCvYRSdYaII7uzpAk1
-         brfQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HtHQdkqH4Es+ZIp2yRzZr6MYlrLXYfg6ekbWUN18b2I=;
+        b=dKY8h0JxXJUHhuimUVKzcifoLuMESUOhE3YvAPT8Ed5P2LVpjnb+wPesvekwYVMmWV
+         lca2b8ADEDpVm1j+LeOZ85ut0u+mF5kg9HH373P6xW0ER/wgAMcP1nBoXykldHdkpNVs
+         L/hVfZRvSsd/C+yFANp4lnHZM1DWlrg2m2xhgHcOfe+GtiGyCDmncFLAkta4uRtOoqXG
+         j1zkrdQwjmMP7lcK7k5mrp/velI5fdsv+vni2NA24IwondxJkD3lDLHEehbXgR3V7Mac
+         g5b/zU1kBwtJuhb4ANeK7drT7FZZGA2TT7LRDg0SmGbQTwL6sk2UVsfpFoz41tGrx2s4
+         ZuqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sbtRF5Z/ahvzn5o3IzEj07oxQoWzK/KEBcmikz1JbyE=;
-        b=dOqxntP7873PxCTjmweLjKMNmGaH9aMHnKI9F7IsBJaeEqSNGYYEzVGQ+MUDSKrhLA
-         ZodNJH2Ju2xNQvvMrf3NpYPC38tAytLgmSM4v6STIwAkK2IMterERItBSV7UFILA6nK4
-         0D4XSilhiuPWCZXIw7aKpoayzdq+ryejjr6C3Tnu2KA0fXEjYL4B+PTRs9qPZ7oU7gu3
-         /f+oIYmjToGSfg7RcetQDZae+2m45SbAoxaavFaJaIwlWdAT2HFzhaEhjZfkbEspzN1d
-         sswWmzUw4PQoJzDgXTu4FGGQer1ZYlnSrOcKVfNwoRyeCCMd3KOXt7j96i+jTSXb0HgP
-         VM0Q==
-X-Gm-Message-State: APjAAAU3iRMYBADQoYwK793tvscrT8TlWd5DLaqtC9EfGiy1Ef6Gc+uZ
-        gdMrMqNMETvxooTV2FaXohxgJA==
-X-Google-Smtp-Source: APXvYqz4mcMJPzEzQy+4uDs1ARiJPCs9zpMbJF88wbt3IB15kjw36q8O8qDdJCEoFMY3p8+32Lw/iQ==
-X-Received: by 2002:a63:134e:: with SMTP id 14mr15121570pgt.115.1576214130322;
-        Thu, 12 Dec 2019 21:15:30 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s15sm8475987pgq.4.2019.12.12.21.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 21:15:29 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: qcom: mdt_loader: Support firmware without hash segment
-Date:   Thu, 12 Dec 2019 21:15:25 -0800
-Message-Id: <20191213051525.3688682-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HtHQdkqH4Es+ZIp2yRzZr6MYlrLXYfg6ekbWUN18b2I=;
+        b=XG1RkbNZUskXWvRIOumOqPl9JKM5oxYE0+4AId96k324NYKcGe91iFfMXqBt/RXI8x
+         TEILoWChx8/Pi54t18pl/t3xnuyNplJ8MmvEc8yQtQEhCLkTnwEtsN/fjn3s1njNGnS9
+         hII8+rLUubFYg9DAobrMWr+qRdV3j1T8QUFW7Ff5bN7A0ffw80thvP8mboJlzfhdxklN
+         SV8FW4ej4EYh1MEy5a7rmUcSPlIm6j7pSIWHOIhpd9fPMyQSMZTyf4JVx/JORyAfiBJ5
+         IzGQYLzs0qEH3rVRVK6W23Btcd32nERzLLjRlpNLq4FEHzErEdyHkbCxx6FDC3sDttAA
+         8rOA==
+X-Gm-Message-State: APjAAAWixFd9mNKVNbLuo6SBsHm1DEPDtbv2FHg2R+mPIg8NLzsHOL6t
+        /ga4y2Uh9Hkk6CsBkN5XIhKgn/S+yv+y2dzZoFtyWA==
+X-Google-Smtp-Source: APXvYqyWRWJccgtT72Yhl/J/B/P0l3E36sc6NcKyV2MDZoPUaxbtjRI7VSdtxF23LHwJL/UQ7tlYfya4Xg4uhs7RWfk=
+X-Received: by 2002:a2e:99cd:: with SMTP id l13mr8235977ljj.243.1576214175764;
+ Thu, 12 Dec 2019 21:16:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191211223344.165549-1-brianvv@google.com>
+In-Reply-To: <20191211223344.165549-1-brianvv@google.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 12 Dec 2019 21:16:04 -0800
+Message-ID: <CAADnVQLh9Dz82YUMCR7P0sHed9W+bkcGXw098E3dwO5rHTmZ2g@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 00/11] add bpf batch ops to process more than
+ 1 elem
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least some of the firmware found on 8974 does not follow the typical
-scheme of having a non-loadable hash segment directly following the ELF
-header, in the modem mdt.
+On Wed, Dec 11, 2019 at 2:34 PM Brian Vazquez <brianvv@google.com> wrote:
+>
+> This patch series introduce batch ops that can be added to bpf maps to
+> lookup/lookup_and_delete/update/delete more than 1 element at the time,
+> this is specially useful when syscall overhead is a problem and in case
+> of hmap it will provide a reliable way of traversing them.
+>
+> The implementation inclues a generic approach that could potentially be
+> used by any bpf map and adds it to arraymap, it also includes the specific
+> implementation of hashmaps which are traversed using buckets instead
+> of keys.
+>
+> The bpf syscall subcommands introduced are:
+>
+>   BPF_MAP_LOOKUP_BATCH
+>   BPF_MAP_LOOKUP_AND_DELETE_BATCH
+>   BPF_MAP_UPDATE_BATCH
+>   BPF_MAP_DELETE_BATCH
+>
+> The UAPI attribute is:
+>
+>   struct { /* struct used by BPF_MAP_*_BATCH commands */
+>          __aligned_u64   in_batch;       /* start batch,
+>                                           * NULL to start from beginning
+>                                           */
+>          __aligned_u64   out_batch;      /* output: next start batch */
+>          __aligned_u64   keys;
+>          __aligned_u64   values;
+>          __u32           count;          /* input/output:
+>                                           * input: # of key/value
+>                                           * elements
+>                                           * output: # of filled elements
+>                                           */
+>          __u32           map_fd;
+>          __u64           elem_flags;
+>          __u64           flags;
+>   } batch;
+>
+>
+> in_batch and out_batch are only used for lookup and lookup_and_delete since
+> those are the only two operations that attempt to traverse the map.
+>
+> update/delete batch ops should provide the keys/values that user wants
+> to modify.
+>
+> Here are the previous discussions on the batch processing:
+>  - https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+>  - https://lore.kernel.org/bpf/20190829064502.2750303-1-yhs@fb.com/
+>  - https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+>
+> Changelog sinve v2:
+>  - Add generic batch support for lpm_trie and test it (Yonghong Song)
+>  - Use define MAP_LOOKUP_RETRIES for retries (John Fastabend)
+>  - Return errors directly and remove labels (Yonghong Song)
+>  - Insert new API functions into libbpf alphabetically (Yonghong Song)
+>  - Change hlist_nulls_for_each_entry_rcu to
+>    hlist_nulls_for_each_entry_safe in htab batch ops (Yonghong Song)
 
-Rather than failing the read of metadata, fall back to passing back a
-copy of the full first firmware file and let the metadata validator do
-its job.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/soc/qcom/mdt_loader.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-index 24cd193dec55..dd8a27f866db 100644
---- a/drivers/soc/qcom/mdt_loader.c
-+++ b/drivers/soc/qcom/mdt_loader.c
-@@ -99,7 +99,7 @@ void *qcom_mdt_read_metadata(const struct firmware *fw, size_t *data_len)
- 		return ERR_PTR(-EINVAL);
- 
- 	if (phdrs[0].p_type == PT_LOAD || phdrs[1].p_type == PT_LOAD)
--		return ERR_PTR(-EINVAL);
-+		goto return_fw_copy;
- 
- 	if ((phdrs[1].p_flags & QCOM_MDT_TYPE_MASK) != QCOM_MDT_TYPE_HASH)
- 		return ERR_PTR(-EINVAL);
-@@ -123,6 +123,18 @@ void *qcom_mdt_read_metadata(const struct firmware *fw, size_t *data_len)
- 	*data_len = ehdr_size + hash_size;
- 
- 	return data;
-+
-+return_fw_copy:
-+	/*
-+	 * Some older firmware (e.g. on 8974) doesn't have a hash segment
-+	 * following the ELF header, just return a verbatim copy of the
-+	 * fw->data and let the metadata authenticator consume what it needs.
-+	 */
-+	data = kmemdup(fw->data, fw->size, GFP_KERNEL);
-+	if (!data)
-+		return ERR_PTR(-ENOMEM);
-+	*data_len = fw->size;
-+	return data;
- }
- EXPORT_SYMBOL_GPL(qcom_mdt_read_metadata);
- 
--- 
-2.23.0
-
+Yonghong,
+please review.
