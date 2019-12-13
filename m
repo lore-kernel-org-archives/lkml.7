@@ -2,175 +2,183 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5A1C80D47
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681E3C80D21
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1946924785
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="cUlOaDnZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9C75224718
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269650;
+	bh=/EvEh1E9wFwFKbgrjOrVViLZY6/9YL7B+khY7dBrn/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ynqkR/ieqwZ2iG+LYprqS3EOBJx56LVWIcPTN7Fzsur2+kN0rqrRFBz2tPLpj+Mbc
+	 g5w7EfEU7DG0dvcEU6ieSMIXVa9V9i4gpSZqJpwZn6Psr8FQ5v5nezF0vViLXCKlsM
+	 WZ7tB7OzKVtN5+INzuuMUSxW9xlFqH61Nr2xgJ9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfLMTWK (ORCPT
+        id S1728702AbfLMTCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:22:10 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39710 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbfLMTWJ (ORCPT
+        Fri, 13 Dec 2019 14:02:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33254 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbfLMTCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:22:09 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c16so125038qko.6
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:22:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kIHxBHZ5brpnLBIeYRR4Zy+JYAJhZx+hc+o8DfZr+/0=;
-        b=cUlOaDnZdkeZLanKU3aLP1Zk7P6+nUwqXpUXG5Wy4VV4OTMlkGpuWWEqfSVH12ocLM
-         XW/RSAmDIh0aicHiA8TCP7oJWIdm3BjV+PjXtnjLEv4Vx+gYKi6UT6j4Y+TFZ6kttAjQ
-         rOcwCQitZxXydHocsR8D8uK1qftqZfS7jmgt7MiTq8B6zQX4FN1IhGpfxiU1u3TzvqNQ
-         N43RE+El1Y3SQlyrZ1fToTNWVetgMWKvIwiYNQa9mtwM//ebyVkeUgfcEIY3Ce4Gn07A
-         58t78H8dkSNt6+9GZ1L6E7IJTa06q+H2BxoPjPzdh+VqBMfV1yqxOnDyUZKjtJop8ZG3
-         51Ew==
+        Fri, 13 Dec 2019 14:02:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v140so1673847oie.0;
+        Fri, 13 Dec 2019 11:02:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kIHxBHZ5brpnLBIeYRR4Zy+JYAJhZx+hc+o8DfZr+/0=;
-        b=qntacG+twUlAWxIDqYH06SPY3HgsftGzEZbmL9H3KY2Y4NHaVxXMlBL8c5tidINGcC
-         gXWOXJTN0Zc02+HHDOvdzqXDOoLCkBjND/baXNYz7x2L0AsAlGiukdSQ2iu0++xgBXJX
-         kLiN0VFhNCpWDgiTzEm5tbxqcFc4GZm/0ZMXlxdJw4F9xpqAwIeubTZDTYKVvHrY8Zw+
-         BOwGw5S4RsdvD3OE+z64wlR81vOsPCAyJK/DE8cxIMPLVBys+Y92jMqG8cAUuYIoABKL
-         Hb9uzJ6TkHSwdF/MHhq8EShV135nRqDUtGfZiipR1yZmlByco483q2DTx1rsvpJM0QT9
-         /vZQ==
-X-Gm-Message-State: APjAAAVVkZMrwgTRaZYTJkGG4ZhH7D8Y1/lN28hEPnbZBhBg2gYN9o88
-        HY9ojyCUzzHYY5QqGT6MxFtMTg==
-X-Google-Smtp-Source: APXvYqzIQGv+yc5JGtSvpf6UidQoCll4ofJa937AnUTHgdo7FLBJIiUjkYn94LuuO96ZkGf3sxfGAA==
-X-Received: by 2002:a05:620a:3cf:: with SMTP id r15mr15267665qkm.12.1576264928301;
-        Fri, 13 Dec 2019 11:22:08 -0800 (PST)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id q126sm3074257qkd.21.2019.12.13.11.22.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2XdeKtI0YQlIdxephxhveyyskN7+C9/UjeBuKo3UXnA=;
+        b=ihrbPpTpwm9ABq5vgD5GK0bTAJXNLa3wdV2xdJrQgduGnQhnBNoiLx3Nu3QNtVKLET
+         zJM3pJ/lktGafG6SdbUt0GgN1XnQPdIxmleRDJ6KXsxh63HrdvzyHokupKFTZzvvDXzD
+         j3QDnNewtHchha7Gh2n2BYNUxzmXAtPFQ2VC7K0qE9LOnQkwN4uruaN/gRXTAhnUKM2L
+         6W9VgAYJdHyXvDZJTpqCPE9yVK/ZtaOgxc2IrzSGOJTatrOBJoAO+VadohhIp/rjiVYe
+         SZw7M8seGvCd2/EwnVsdiG8ZqnAeHkM8Nv2oOX5DacTbW9s6yiJgbd3tPFYZTrgqpL/Y
+         krIw==
+X-Gm-Message-State: APjAAAVk7x5YR8+pYP15JzxpWVlPHj3XAwmVTWUA9xtO65/+nX21jjfV
+        9YX6GPgdhOmSQm7cFDIWHit9YoU=
+X-Google-Smtp-Source: APXvYqw8UMim545Km3t4cYb2yWB3l/jkydMfF9IZ1540YOrSblxxasMA+XzaDkAFtvgcqL4kI0gBlg==
+X-Received: by 2002:a05:6808:6c5:: with SMTP id m5mr7214700oih.143.1576263722041;
+        Fri, 13 Dec 2019 11:02:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b3sm3542692oie.25.2019.12.13.11.02.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:22:07 -0800 (PST)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 1/3] mm: memcontrol: fix memory.low proportional distribution
-Date:   Fri, 13 Dec 2019 14:21:56 -0500
-Message-Id: <20191213192158.188939-2-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191213192158.188939-1-hannes@cmpxchg.org>
-References: <20191213192158.188939-1-hannes@cmpxchg.org>
+        Fri, 13 Dec 2019 11:02:01 -0800 (PST)
+Date:   Fri, 13 Dec 2019 13:02:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: Document JZ47xx VPU auxiliary
+ processor
+Message-ID: <20191213190200.GA11267@bogus>
+References: <20191210164014.50739-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210164014.50739-1-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When memory.low is overcommitted - i.e. the children claim more
-protection than their shared ancestor grants them - the allowance is
-distributed in proportion to each siblings's utilized protection:
+On Tue, Dec 10, 2019 at 05:40:10PM +0100, Paul Cercueil wrote:
+> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+> Ingenic is a second Xburst MIPS CPU very similar to the main core.
+> This document describes the devicetree bindings for this auxiliary
+> processor.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: Update TCSM0 address in example
+>     v3: Change node name to 'video-decoder'
+>     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
+> 
+>  .../bindings/remoteproc/ingenic,vpu.yaml      | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+> new file mode 100644
+> index 000000000000..9f876d16a5a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/remoteproc/ingenic,vpu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Ingenic Video Processing Unit bindings
+> +
+> +description:
+> +  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+> +  Ingenic is a second Xburst MIPS CPU very similar to the main core.
+> +  This document describes the devicetree bindings for this auxiliary
+> +  processor.
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  compatible:
+> +    const: ingenic,jz4770-vpu-rproc
+> +
+> +  reg:
+> +    items:
+> +      - description: aux registers
+> +      - description: tcsm0 registers
+> +      - description: tcsm1 registers
+> +      - description: sram registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: aux
+> +      - const: tcsm0
+> +      - const: tcsm1
+> +      - const: sram
+> +
+> +  clocks:
+> +    items:
+> +      - description: aux clock
+> +      - description: vpu clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aux
+> +      - const: vpu
+> +
+> +  interrupts:
+> +    description: VPU hardware interrupt
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    vpu: video-decoder@132a0000 {
+> +      compatible = "ingenic,jz4770-vpu-rproc";
+> +
+> +      reg = <0x132a0000 0x20 /* AUX */
+> +           0x132b0000 0x4000 /* TCSM0 */
+> +           0x132c0000 0xc000 /* TCSM1 */
+> +           0x132f0000 0x7000 /* SRAM */
+> +      >;
+> +      reg-names = "aux", "tcsm0", "tcsm1", "sram";
+> +
+> +      clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
 
-	low_usage = min(low, usage)
-	elow = parent_elow * (low_usage / siblings_low_usage)
+Examples are built now by 'make dt_binding_check' and this fails. You 
+need to add the include for these defines.
 
-However, siblings_low_usage is not the sum of all low_usages. It sums
-up the usages of *only those cgroups that are within their memory.low*
-That means that low_usage can be *bigger* than siblings_low_usage, and
-consequently the total protection afforded to the children can be
-bigger than what the ancestor grants the subtree.
+Also, the schema should complain after that on 'reg'. You need to <> 
+each entry (addr and size).
 
-Consider three groups where two are in excess of their protection:
-
-  A/memory.low = 10G
-  A/A1/memory.low = 10G, A/memory.current = 20G
-  A/A2/memory.low = 10G, B/memory.current = 20G
-  A/A3/memory.low = 10G, C/memory.current =  8G
-
-  siblings_low_usage = 8G (only A3 contributes)
-  A1/elow = parent_elow(10G) * low_usage(20G) / siblings_low_usage(8G) = 25G
-
-The 25G are then capped to A1's own memory.low setting, i.e. 10G. The
-same is true for A2. And A3 would also receive 10G. The combined
-protection of A1, A2 and A3 is 30G, when A limits the tree to 10G.
-
-What does this mean in practice? A1 and A2 would still be in excess of
-their 10G allowance and would be reclaimed, whereas A3 would not. As
-they eventually drop below their protection setting, they would be
-counted in siblings_low_usage again and the error would right itself.
-
-When reclaim is applied in a binary fashion - cgroup is reclaimed when
-it's above its protection, otherwise it's skipped - this could work
-actually work out just fine - although it's not quite clear to me why
-we'd introduce this error in the first place. However, since
-1bc63fb1272b ("mm, memcg: make scan aggression always exclude
-protection"), reclaim pressure is scaled to how much a cgroup is above
-its protection. As a result this calculation error unduly skews
-pressure away from A1 and A2 toward the rest of the system.
-
-Fix this by by making siblings_low_usage the sum of all protected
-memory among siblings, including those that are in excess of their
-protection.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c   |  4 +---
- mm/page_counter.c | 12 ++----------
- 2 files changed, 3 insertions(+), 13 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c5b5f74cfd4d..874a0b00f89b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6236,9 +6236,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
-  * elow = min( memory.low, parent->elow * ------------------ ),
-  *                                        siblings_low_usage
-  *
-- *             | memory.current, if memory.current < memory.low
-- * low_usage = |
-- *	       | 0, otherwise.
-+ * low_usage = min(memory.low, memory.current)
-  *
-  *
-  * Such definition of the effective memory.low provides the expected
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index de31470655f6..75d53f15f040 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -23,11 +23,7 @@ static void propagate_protected_usage(struct page_counter *c,
- 		return;
- 
- 	if (c->min || atomic_long_read(&c->min_usage)) {
--		if (usage <= c->min)
--			protected = usage;
--		else
--			protected = 0;
--
-+		protected = min(usage, c->min);
- 		old_protected = atomic_long_xchg(&c->min_usage, protected);
- 		delta = protected - old_protected;
- 		if (delta)
-@@ -35,11 +31,7 @@ static void propagate_protected_usage(struct page_counter *c,
- 	}
- 
- 	if (c->low || atomic_long_read(&c->low_usage)) {
--		if (usage <= c->low)
--			protected = usage;
--		else
--			protected = 0;
--
-+		protected = min(usage, c->low);
- 		old_protected = atomic_long_xchg(&c->low_usage, protected);
- 		delta = protected - old_protected;
- 		if (delta)
--- 
-2.24.0
-
+> +      clock-names = "aux", "vpu";
+> +
+> +      interrupt-parent = <&cpuintc>;
+> +      interrupts = <3>;
+> +    };
+> -- 
+> 2.24.0
+> 
