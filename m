@@ -2,132 +2,138 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1620C34035
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B1BC3402F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2C7246D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FAF8246D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrG1R127"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfLMPVf (ORCPT
+        id S1727738AbfLMPPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:35 -0500
-Received: from out28-172.mail.aliyun.com ([115.124.28.172]:39288 "EHLO
-        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfLMPVf (ORCPT
+        Fri, 13 Dec 2019 10:15:17 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37686 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbfLMPPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:21:35 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4287215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0376297-0.00652272-0.955848;DS=CONTINUE|ham_regular_dialog|0.00548571-0.000451498-0.994063;FP=17206493567010594298|1|1|1|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
-          by smtp.aliyun-inc.com(10.147.40.233);
-          Fri, 13 Dec 2019 23:21:26 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 3/5] dt-bindings: clock: Add X1830 bindings.
-Date:   Fri, 13 Dec 2019 23:21:10 +0800
-Message-Id: <1576250472-124315-5-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 13 Dec 2019 10:15:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so2226734lfc.4;
+        Fri, 13 Dec 2019 07:15:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UlHDKsmoe+826B5v7eIvOR/a1j2zmQgZj5YuW8X/n7g=;
+        b=XrG1R127W1w52k9bE/5s2TuntEnJwd2TcVRnrwI/HzdVApaV5zuGvPyUSa3yeu+DqT
+         fsaCW7H5NRD44igN30Jnnrg5Q5cp2nZwMsU9CFDCpTM2HG76sdTnnNBoEX6EuvICJ02M
+         eqN+/5oWObfAKufa4LOwNX+LefA3E9N+6HKfSuvnYeD0b85w2xhZcNqJ5R7jAbETunYY
+         92SaCcRSq8JPJQNL+NB5lXM7VeXkbI9BSMuH+ByWdrpCx2DIAFZGYk8mfy5SWDPc7P3C
+         R8/ZhWievymdG8QfVwrlQWqp6zlE4Eb6/h0kE6MHmp3MgmxagOcbhT+PH4NB20XunZu1
+         LHrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UlHDKsmoe+826B5v7eIvOR/a1j2zmQgZj5YuW8X/n7g=;
+        b=nPypL3q44kgjNa3L+HMttA+UOcCNz8PuddDTta4L7sJisbf1gzCG4oWgC0HfE3Dt6j
+         lVWAcWztU7en1o4E42UBCCQREk4LMhYX3r7Ny59OfhOouJmSJBJVXyuEBPe7SokbmS9y
+         dAAD1jFc0Wk/nGN5djIWxVnj56w7j9ghV5H7uf7l3+96yd3RS85n6WuXVx4dDuFFwiJB
+         ptdaG1qFEq8MEFyohMLeHcBU3U3IsaYgYfly4xuggJPWR6wSnX/fcFNYZsr6ZATO7yWY
+         S0Wj2BvUDjHGVMiuPQAANIq7dzWYB5FQJzGvGbPNPz+9NLHIlzM7oWRedYzv5ZC9AFAW
+         UBOg==
+X-Gm-Message-State: APjAAAXu1tfwmCXTUJVSsdptlDUTXP7nXp7jgkcmN6d3mpWZ8CJdUAH9
+        vzVFSURS4jz3Eon8XpkXY/HDKAN0
+X-Google-Smtp-Source: APXvYqyc4aURS7fBO//VAwrteDvwHVi18UODR6SJD1pTyv03WId0aF0I3CFQgT1s4d+FG8JHDOh/sg==
+X-Received: by 2002:a05:6512:c7:: with SMTP id c7mr9799063lfp.120.1576250113583;
+        Fri, 13 Dec 2019 07:15:13 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t1sm4901890lji.98.2019.12.13.07.15.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 07:15:13 -0800 (PST)
+Subject: Re: [PATCH v1 1/3] i2c: tegra: Support atomic transfers
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191212233428.14648-1-digetx@gmail.com>
+ <20191212233428.14648-2-digetx@gmail.com> <20191213151208.GC222809@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5a2a9cef-f4ed-c5a4-1f35-c89c3b5106a6@gmail.com>
+Date:   Fri, 13 Dec 2019 18:15:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191213151208.GC222809@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the clock bindings for the X1830 Soc from Ingenic.
+13.12.2019 18:12, Thierry Reding пишет:
+> On Fri, Dec 13, 2019 at 02:34:26AM +0300, Dmitry Osipenko wrote:
+>> System shutdown may happen with interrupts being disabled and in this case
+>> I2C core rejects transfers if atomic transfer isn't supported by driver.
+>>
+>> There were several occurrences where I found my Nexus 7 completely
+>> discharged despite of being turned off and then one day I spotted this in
+>> the log:
+>>
+>>  reboot: Power down
+>>  ------------[ cut here ]------------
+>>  WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40 i2c_transfer+0x95/0x9c
+>>  No atomic I2C transfer handler for 'i2c-1'
+>>  Modules linked in: tegra30_devfreq
+>>  CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.4.0-next-20191202-00120-gf7ecd80fb803-dirty #3195
+>>  Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>>  [<c010e4b5>] (unwind_backtrace) from [<c010a0fd>] (show_stack+0x11/0x14)
+>>  [<c010a0fd>] (show_stack) from [<c09995e5>] (dump_stack+0x85/0x94)
+>>  [<c09995e5>] (dump_stack) from [<c011f3d1>] (__warn+0xc1/0xc4)
+>>  [<c011f3d1>] (__warn) from [<c011f691>] (warn_slowpath_fmt+0x61/0x78)
+>>  [<c011f691>] (warn_slowpath_fmt) from [<c069a8dd>] (i2c_transfer+0x95/0x9c)
+>>  [<c069a8dd>] (i2c_transfer) from [<c05667f1>] (regmap_i2c_read+0x4d/0x6c)
+>>  [<c05667f1>] (regmap_i2c_read) from [<c0563601>] (_regmap_raw_read+0x99/0x1cc)
+>>  [<c0563601>] (_regmap_raw_read) from [<c0563757>] (_regmap_bus_read+0x23/0x38)
+>>  [<c0563757>] (_regmap_bus_read) from [<c056293d>] (_regmap_read+0x3d/0xfc)
+>>  [<c056293d>] (_regmap_read) from [<c0562d3b>] (_regmap_update_bits+0x87/0xc4)
+>>  [<c0562d3b>] (_regmap_update_bits) from [<c0563add>] (regmap_update_bits_base+0x39/0x50)
+>>  [<c0563add>] (regmap_update_bits_base) from [<c056fd39>] (max77620_pm_power_off+0x29/0x2c)
+>>  [<c056fd39>] (max77620_pm_power_off) from [<c013bbdd>] (__do_sys_reboot+0xe9/0x170)
+>>  [<c013bbdd>] (__do_sys_reboot) from [<c0101001>] (ret_fast_syscall+0x1/0x28)
+>>  Exception stack(0xde907fa8 to 0xde907ff0)
+>>  7fa0:                   00000000 00000000 fee1dead 28121969 4321fedc 00000000
+>>  7fc0: 00000000 00000000 00000000 00000058 00000000 00000000 00000000 00000000
+>>  7fe0: 0045adf0 bed9abb8 004444a0 b6c666d0
+>>  ---[ end trace bdd18f87595b1a5e ]---
+>>
+>> The atomic transferring is implemented by enforcing PIO mode for the
+>> transfer and by polling interrupt status until transfer is completed or
+>> failed.
+>>
+>> Now system shuts down properly every time.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/i2c/busses/i2c-tegra.c | 95 +++++++++++++++++++++++++++++++---
+>>  1 file changed, 88 insertions(+), 7 deletions(-)
+> 
+> I ran this on the test farm and the results are all green, so:
+> 
+> Tested-by: Thierry Reding <treding@nvidia.com>
+> 
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+Thanks!
 
-Notes:
-    v1->v2:
-    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-    the old mailbox is in an unstable state.
-
- .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
- include/dt-bindings/clock/x1830-cgu.h              | 46 ++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
-
-diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-index 75598e6..74bfc57 100644
---- a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-+++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
-@@ -12,6 +12,7 @@ Required properties:
-   * ingenic,jz4770-cgu
-   * ingenic,jz4780-cgu
-   * ingenic,x1000-cgu
-+  * ingenic,x1830-cgu
- - reg : The address & length of the CGU registers.
- - clocks : List of phandle & clock specifiers for clocks external to the CGU.
-   Two such external clocks should be specified - first the external crystal
-diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
-new file mode 100644
-index 00000000..6499170
---- /dev/null
-+++ b/include/dt-bindings/clock/x1830-cgu.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
-+ *
-+ * They are roughly ordered as:
-+ *   - external clocks
-+ *   - PLLs
-+ *   - muxes/dividers in the order they appear in the x1830 programmers manual
-+ *   - gates in order of their bit in the CLKGR* registers
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
-+#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
-+
-+#define X1830_CLK_EXCLK		0
-+#define X1830_CLK_RTCLK		1
-+#define X1830_CLK_APLL		2
-+#define X1830_CLK_MPLL		3
-+#define X1830_CLK_EPLL		4
-+#define X1830_CLK_VPLL		5
-+#define X1830_CLK_SCLKA		6
-+#define X1830_CLK_CPUMUX	7
-+#define X1830_CLK_CPU		8
-+#define X1830_CLK_L2CACHE	9
-+#define X1830_CLK_AHB0		10
-+#define X1830_CLK_AHB2PMUX	11
-+#define X1830_CLK_AHB2		12
-+#define X1830_CLK_PCLK		13
-+#define X1830_CLK_DDR		14
-+#define X1830_CLK_MAC		15
-+#define X1830_CLK_MSCMUX	16
-+#define X1830_CLK_MSC0		17
-+#define X1830_CLK_MSC1		18
-+#define X1830_CLK_SSIPLL	19
-+#define X1830_CLK_SSIMUX	20
-+#define X1830_CLK_SSI0		21
-+#define X1830_CLK_SMB0		22
-+#define X1830_CLK_SMB1		23
-+#define X1830_CLK_SMB2		24
-+#define X1830_CLK_UART0		25
-+#define X1830_CLK_UART1		26
-+#define X1830_CLK_SSI1		27
-+#define X1830_CLK_SFC		28
-+#define X1830_CLK_PDMA		29
-+
-+#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
--- 
-2.7.4
-
+Does the farm test board's shut down by verifying the
+hardware's power state?
