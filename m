@@ -2,264 +2,391 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B9C34375
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98087C80D29
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B7A24722
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE7224773
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aaQkWNMY";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CXEZySRl"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="sfrIjqAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfLMS67 (ORCPT
+        id S1728917AbfLMTEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:58:59 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:38948 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728473AbfLMS67 (ORCPT
+        Fri, 13 Dec 2019 14:04:04 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40438 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbfLMTEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:58:59 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDIq1ap025606;
-        Fri, 13 Dec 2019 10:58:39 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Kx6MqbG6kl+atUNNQbwoiDYmpXrpG8746xcS8N3lV5I=;
- b=aaQkWNMY8iVcOLR9SPFAKtRZIOwE7ka2jkE+kG6NPrSZEHfiXf9fqXvnEHb67WFlrRP7
- fl+B+266bqVnZ1cWm+C2ZsbmFTdOLPlUQhNU4Nd1FkGvfLBFyk8tr+jeeppEMTJ4tiC/
- Sg7daR5e9q9sG4XTLs7wrj9YkRXJIMTNSUc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wuuxkd4vm-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 13 Dec 2019 10:58:39 -0800
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Dec 2019 10:58:38 -0800
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 13 Dec 2019 10:58:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dz40aJPX9gCdReFRku80GE+sdBJrSSzdHGpDnpvlbDNWufIlWo3btfMDrihpLBlRA9OuLLK4Dly2YWzDdHb1XncYCahvhGKTI3pK/914Mk3fOJXgt6YtC9+ksVo3vKUSUlZj5NJ5yYknmiAgesY6BP2d+YXH5eqmyhUBHe7JHiZOcx2m5b2lS65j4fXwP6rvA7mQ1Jx1KBtBxTRAp+S3NMiU79xFLA68noMOUEH81tkGZ88LeIoxgOJU3JArx4XuPxsD2dR/1L0LGK5JMusQXA8zQ/p6Hup/DnUJPX2DJgyBZQ9k1o60Z/CaPWor8U6FzlecEz83QqSepbLR7CBJIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kx6MqbG6kl+atUNNQbwoiDYmpXrpG8746xcS8N3lV5I=;
- b=ZbW6c6ir+C/STHdf9SkxClNkKMFLBnp9NOCZtG4qpERUf/IRgY0JICiwhH9jR+Nibbn658Om7IYc7xwqTCK4RXyMF7XI9+4AqDDYHVAkMdJcmAHtPcop2b5WhIQX8YF4qQdgYArnx18aD84ryKB1+A91bEGcqzg1HJixhT6gR0Yz6jdr7DEijxOYOUeIWjOD5ZODao1e8f+PlWJTRjET6C39JAzPUrXzUek1iW76xNwwJiq1hmwvEt64wLHkrPLROP1KLts96cOAwR67NskrK/piQcIOHUpBRhJ7pqx/3SlKUUDsCHeMFG6Aa5hY1+rYWiZ6eIWMqR8apPiDOnlncg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kx6MqbG6kl+atUNNQbwoiDYmpXrpG8746xcS8N3lV5I=;
- b=CXEZySRlxhF6iWe8ebcDiU7MCiIuC22VRCGJUh0WGkbV2iRigkARn4VLn819O/jUKnyai0UefrLyQwhf+kVuLZAN1B28al8c4UhEljNwuas6kEmlt52aG8pADKQdWKxPaip3d6IqsRQA0ImoZ36rkezAizmY8eZuA2xO4HK+/30=
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com (10.175.107.145) by
- DM5PR15MB1546.namprd15.prod.outlook.com (10.173.223.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Fri, 13 Dec 2019 18:58:36 +0000
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23]) by DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23%8]) with mapi id 15.20.2516.018; Fri, 13 Dec 2019
- 18:58:36 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH v3 bpf-next 06/11] bpf: add batch ops to all htab bpf map
-Thread-Topic: [PATCH v3 bpf-next 06/11] bpf: add batch ops to all htab bpf map
-Thread-Index: AQHVsHMuYMDKZmq21kWyUxx3YJSoMae4bbuA
-Date:   Fri, 13 Dec 2019 18:58:36 +0000
-Message-ID: <a33dab7b-0f46-c29f-0db1-a5539c433b3d@fb.com>
-References: <20191211223344.165549-1-brianvv@google.com>
- <20191211223344.165549-7-brianvv@google.com>
-In-Reply-To: <20191211223344.165549-7-brianvv@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0053.namprd14.prod.outlook.com
- (2603:10b6:300:81::15) To DM5PR15MB1675.namprd15.prod.outlook.com
- (2603:10b6:3:11f::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:e8f1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e31cf9bd-53c6-461f-daf0-08d77ffe7576
-x-ms-traffictypediagnostic: DM5PR15MB1546:
-x-microsoft-antispam-prvs: <DM5PR15MB1546019442AAB70AC910EAEED3540@DM5PR15MB1546.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 0250B840C1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(376002)(346002)(189003)(199004)(52116002)(478600001)(966005)(4326008)(6506007)(53546011)(186003)(5660300002)(316002)(8936002)(36756003)(54906003)(86362001)(31696002)(110136005)(8676002)(81156014)(66946007)(64756008)(2616005)(71200400001)(66556008)(66476007)(66446008)(7416002)(81166006)(6486002)(31686004)(6512007)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1546;H:DM5PR15MB1675.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ddtfvaFMULg+iEWRaKBi60gmM+UNvsX2ZJGs/+Usq1dgTFxKJJmF2M8rjcpZPE5gbarJRZpOnGXNlT/H+BTjvnlnY80pNW2mdFdvAEekiex06/uiSG78BI/4fl99lUBrIxPutrE3QEk6yb+sfHlBeSBmav5/c6okApGhS/gbynbSowwM+JROiOWgmDl/fD73lq6GGdgjk0PSvHqRRzs0m0ccfj5yGB3UUbEcyx1854pXZTwwvd82p4bGuTteibJxnpciR2TAEnPDLVkJFfpecRbp3mtsq/P0F81Nq11AlQV0oMS5g/oL6u3Xr0QNyAW9L6rjt0ZJP+nFsNiH3GbaxxklZBWfz0cCwalJxW7RgOpqbGLWFw0MXK12Zu1tsF8PGaInfF0pcNkhTk/E/hTJLPAlfzzc75xuxAxp/8slQYvdWNMSziQsHtReoHKsFIOkAJpIzyOxQueC3bLxv2Fev9iVaREwsgOdU+2sZ5KqvDM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <33DAEE067798FD42979FA2D430DA6EE6@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 13 Dec 2019 14:04:02 -0500
+Received: by mail-qt1-f195.google.com with SMTP id t17so680730qtr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=PFm3oartBQfM+YdDwauwRoJMeKeiL0La1p3TM1SvP3k=;
+        b=sfrIjqAAruqLRkXX4aO+Fp3r9ck6k5EHZbJyyPCzL1BbC8g7covFSICzPfFMlGLwWk
+         eqPt3gejCnMLCcOsZJ/2j3KHoxcmBuSqA7QAgL6Bz1p8o2rtV1U6t9EN5T4IYtzmNx/7
+         y3dbxkQ1jssnsGXgQSWmsVNbzk3AbTwWLiWRcbBqBLSZ7i0dq7mwppKcq91G3VyCbJkV
+         nFwtw2PS8oQWDsPLJyk/A7Mt/HzOYGEHTlhd8AFYmGL+1/BOEJlTyx/P+70399r8ANLQ
+         kW7QADPm+dv1U/H4XMmNuOKiATvhuR04cmrfxeBsfHjqIosSLzfTqeOS+MmHpCCpmDjJ
+         Q71g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=PFm3oartBQfM+YdDwauwRoJMeKeiL0La1p3TM1SvP3k=;
+        b=knIZ9yg9vBGOLeV9AYU7bb6DpukWvYdO2VxWTs12axVZCVL28v+z/ohthJl2Z7mn7N
+         MiDiukU2ZdYe9MEGq4ZJPVMHFt9W9kl1svPgY5FOIkSsg13Vnzc7wsu8tRfg4rMlDoyA
+         tPgspV91w23POYmgbXAKvSMgwouqRLyHRU3NMJM1qGabMnN64vLT6lvBi76pcASzu90N
+         flmaK+XJbYVc0Ygcza5MdNNnT99Ko3KGyZY6XoqUNALzw9WImpOZA9KtdX9eOcQCmzy4
+         HpYCCW9Nq/pCLcOlURL/o+a06gRwk26rYmI1xGDUcSMh9JSH41obXOFdCKDzG7OWNFZ/
+         zCtw==
+X-Gm-Message-State: APjAAAVGEOebYRvkc5mTeWFE2ttXkcRZPeb1sof73k7y39XXSRfo5ukQ
+        TuEcF2hdmRJdpPTRJmMSQZR7iw==
+X-Google-Smtp-Source: APXvYqxefrIy4i25kRQOHzAwqvcQ7MGCBODeGnIKl33hyeUJgjMpVuDpY0/D3SlgcKrz7K3uqGQxbA==
+X-Received: by 2002:aed:238f:: with SMTP id j15mr2262107qtc.240.1576263840702;
+        Fri, 13 Dec 2019 11:04:00 -0800 (PST)
+Received: from tpx230-nicolas ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id 24sm3115651qka.32.2019.12.13.11.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 11:03:59 -0800 (PST)
+Message-ID: <c10a3d9e53109010be894438ae8bb0be6cc68a69.camel@ndufresne.ca>
+Subject: Re: [PATCH 0/5] media: meson: vdec: Add VP9 decoding support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Date:   Fri, 13 Dec 2019 14:03:57 -0500
+In-Reply-To: <ba2cefa3-1ab8-6eb9-8e69-93d6a3ef68d9@baylibre.com>
+References: <20191205092454.26075-1-narmstrong@baylibre.com>
+         <4ee20fdf5182b7bfe338e9ae044424b6125fed15.camel@ndufresne.ca>
+         <60fa8f55-de40-13fa-b584-ad9f020cde12@baylibre.com>
+         <1a570c6e07fcd0d0ddc401a3640dfca07f22304d.camel@ndufresne.ca>
+         <ba2cefa3-1ab8-6eb9-8e69-93d6a3ef68d9@baylibre.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-BLYE2OIbj7nYRjVQ3ora"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e31cf9bd-53c6-461f-daf0-08d77ffe7576
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 18:58:36.6398
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cABoCw8CuGVzTtkCrNYph6kmzc7rR4WTxqba3gS7YI55fIXoElBwSxnL2k1drdDk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1546
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-13_05:2019-12-13,2019-12-13 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912130145
-X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEyLzExLzE5IDI6MzMgUE0sIEJyaWFuIFZhenF1ZXogd3JvdGU6DQo+IEZyb206IFlv
-bmdob25nIFNvbmcgPHloc0BmYi5jb20+DQo+IA0KPiBodGFiIGNhbid0IHVzZSBnZW5lcmljIGJh
-dGNoIHN1cHBvcnQgZHVlIHNvbWUgcHJvYmxlbWF0aWMgYmVoYXZpb3Vycw0KPiBpbmhlcmVudCB0
-byB0aGUgZGF0YSBzdHJ1Y3RyZSwgaS5lLiB3aGlsZSBpdGVyYXRpbmcgdGhlIGJwZiBtYXAgIGEN
-Cj4gY29uY3VycmVudCBwcm9ncmFtIG1pZ2h0IGRlbGV0ZSB0aGUgbmV4dCBlbnRyeSB0aGF0IGJh
-dGNoIHdhcyBhYm91dCB0bw0KPiB1c2UsIGluIHRoYXQgY2FzZSB0aGVyZSdzIG5vIGVhc3kgc29s
-dXRpb24gdG8gcmV0cmlldmUgdGhlIG5leHQgZW50cnksDQo+IHRoZSBpc3N1ZSBoYXMgYmVlbiBk
-aXNjdXNzZWQgbXVsdGlwbGUgdGltZXMgKHNlZSBbMV0gYW5kIFsyXSkuDQo+IA0KPiBUaGUgb25s
-eSB3YXkgaG1hcCBjYW4gYmUgdHJhdmVyc2VkIHdpdGhvdXQgdGhlIHByb2JsZW0gcHJldmlvdXNs
-eQ0KPiBleHBvc2VkIGlzIGJ5IG1ha2luZyBzdXJlIHRoYXQgdGhlIG1hcCBpcyB0cmF2ZXJzaW5n
-IGVudGlyZSBidWNrZXRzLg0KPiBUaGlzIGNvbW1pdCBpbXBsZW1lbnRzIHRob3NlIHN0cmljdCBy
-ZXF1aXJlbWVudHMgZm9yIGhtYXAsIHRoZQ0KPiBpbXBsZW1lbnRhdGlvbiBmb2xsb3dzIHRoZSBz
-YW1lIGludGVyYWN0aW9uIHRoYXQgZ2VuZXJpYyBzdXBwb3J0IHdpdGgNCj4gc29tZSBleGNlcHRp
-b25zOg0KPiANCj4gICAtIElmIGtleXMvdmFsdWVzIGJ1ZmZlciBhcmUgbm90IGJpZyBlbm91Z2gg
-dG8gdHJhdmVyc2UgYSBidWNrZXQsDQo+ICAgICBFTk9TUEMgd2lsbCBiZSByZXR1cm5lZC4NCj4g
-ICAtIG91dF9iYXRjaCBjb250YWlucyB0aGUgdmFsdWUgb2YgdGhlIG5leHQgYnVja2V0IGluIHRo
-ZSBpdGVyYXRpb24sIG5vdA0KPiAgICAgdGhlIG5leHQga2V5LCBidXQgdGhpcyBpcyB0cmFuc3Bh
-cmVudCBmb3IgdGhlIHVzZXIgc2luY2UgdGhlIHVzZXINCj4gICAgIHNob3VsZCBuZXZlciB1c2Ug
-b3V0X2JhdGNoIGZvciBvdGhlciB0aGFuIGJwZiBiYXRjaCBzeXNjYWxscy4NCj4gDQo+IE5vdGUg
-dGhhdCBvbmx5IGxvb2t1cCBhbmQgbG9va3VwX2FuZF9kZWxldGUgYmF0Y2ggb3BzIHJlcXVpcmUg
-dGhlIGhtYXANCj4gc3BlY2lmaWMgaW1wbGVtZW50YXRpb24sIHVwZGF0ZS9kZWxldGUgYmF0Y2gg
-b3BzIGNhbiBiZSB0aGUgZ2VuZXJpYw0KPiBvbmVzLg0KPiANCj4gWzFdIGh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2JwZi8yMDE5MDcyNDE2NTgwMy44NzQ3MC0xLWJyaWFudnZAZ29vZ2xlLmNvbS8N
-Cj4gWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2JwZi8yMDE5MDkwNjIyNTQzNC4zNjM1NDIx
-LTEteWhzQGZiLmNvbS8NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFlvbmdob25nIFNvbmcgPHloc0Bm
-Yi5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIFZhenF1ZXogPGJyaWFudnZAZ29vZ2xlLmNv
-bT4NCj4gLS0tDQo+ICAga2VybmVsL2JwZi9oYXNodGFiLmMgfCAyNDIgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyNDIgaW5z
-ZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9icGYvaGFzaHRhYi5jIGIva2Vy
-bmVsL2JwZi9oYXNodGFiLmMNCj4gaW5kZXggMjIwNjZhNjJjOGM5Ny4uZmFjMTA3YmRhZjllYyAx
-MDA2NDQNCj4gLS0tIGEva2VybmVsL2JwZi9oYXNodGFiLmMNCj4gKysrIGIva2VybmVsL2JwZi9o
-YXNodGFiLmMNCj4gQEAgLTE3LDYgKzE3LDE3IEBADQo+ICAgCShCUEZfRl9OT19QUkVBTExPQyB8
-IEJQRl9GX05PX0NPTU1PTl9MUlUgfCBCUEZfRl9OVU1BX05PREUgfAlcDQo+ICAgCSBCUEZfRl9B
-Q0NFU1NfTUFTSyB8IEJQRl9GX1pFUk9fU0VFRCkNCj4gICANCj4gKyNkZWZpbmUgQkFUQ0hfT1BT
-KF9uYW1lKQkJCVwNCj4gKwkubWFwX2xvb2t1cF9iYXRjaCA9CQkJXA0KPiArCV9uYW1lIyNfbWFw
-X2xvb2t1cF9iYXRjaCwJCVwNCj4gKwkubWFwX2xvb2t1cF9hbmRfZGVsZXRlX2JhdGNoID0JCVwN
-Cj4gKwlfbmFtZSMjX21hcF9sb29rdXBfYW5kX2RlbGV0ZV9iYXRjaCwJXA0KPiArCS5tYXBfdXBk
-YXRlX2JhdGNoID0JCQlcDQo+ICsJZ2VuZXJpY19tYXBfdXBkYXRlX2JhdGNoLAkJXA0KPiArCS5t
-YXBfZGVsZXRlX2JhdGNoID0JCQlcDQo+ICsJZ2VuZXJpY19tYXBfZGVsZXRlX2JhdGNoDQo+ICsN
-Cj4gKw0KPiAgIHN0cnVjdCBidWNrZXQgew0KPiAgIAlzdHJ1Y3QgaGxpc3RfbnVsbHNfaGVhZCBo
-ZWFkOw0KPiAgIAlyYXdfc3BpbmxvY2tfdCBsb2NrOw0KPiBAQCAtMTIzMiw2ICsxMjQzLDIzMyBA
-QCBzdGF0aWMgdm9pZCBodGFiX21hcF9zZXFfc2hvd19lbGVtKHN0cnVjdCBicGZfbWFwICptYXAs
-IHZvaWQgKmtleSwNCj4gICAJcmN1X3JlYWRfdW5sb2NrKCk7DQo+ICAgfQ0KPiAgIA0KPiArc3Rh
-dGljIGludA0KPiArX19odGFiX21hcF9sb29rdXBfYW5kX2RlbGV0ZV9iYXRjaChzdHJ1Y3QgYnBm
-X21hcCAqbWFwLA0KPiArCQkJCSAgIGNvbnN0IHVuaW9uIGJwZl9hdHRyICphdHRyLA0KPiArCQkJ
-CSAgIHVuaW9uIGJwZl9hdHRyIF9fdXNlciAqdWF0dHIsDQo+ICsJCQkJICAgYm9vbCBkb19kZWxl
-dGUsIGJvb2wgaXNfbHJ1X21hcCwNCj4gKwkJCQkgICBib29sIGlzX3BlcmNwdSkNCj4gK3sNCj4g
-KwlzdHJ1Y3QgYnBmX2h0YWIgKmh0YWIgPSBjb250YWluZXJfb2YobWFwLCBzdHJ1Y3QgYnBmX2h0
-YWIsIG1hcCk7DQo+ICsJdTMyIGJ1Y2tldF9jbnQsIHRvdGFsLCBrZXlfc2l6ZSwgdmFsdWVfc2l6
-ZSwgcm91bmR1cF9rZXlfc2l6ZTsNCj4gKwl2b2lkICprZXlzID0gTlVMTCwgKnZhbHVlcyA9IE5V
-TEwsICp2YWx1ZSwgKmRzdF9rZXksICpkc3RfdmFsOw0KPiArCXZvaWQgX191c2VyICp1dmFsdWVz
-ID0gdTY0X3RvX3VzZXJfcHRyKGF0dHItPmJhdGNoLnZhbHVlcyk7DQo+ICsJdm9pZCBfX3VzZXIg
-KnVrZXlzID0gdTY0X3RvX3VzZXJfcHRyKGF0dHItPmJhdGNoLmtleXMpOw0KPiArCXZvaWQgKnVi
-YXRjaCA9IHU2NF90b191c2VyX3B0cihhdHRyLT5iYXRjaC5pbl9iYXRjaCk7DQo+ICsJdTY0IGVs
-ZW1fbWFwX2ZsYWdzLCBtYXBfZmxhZ3M7DQo+ICsJc3RydWN0IGhsaXN0X251bGxzX2hlYWQgKmhl
-YWQ7DQo+ICsJdTMyIGJhdGNoLCBtYXhfY291bnQsIHNpemU7DQo+ICsJc3RydWN0IGhsaXN0X251
-bGxzX25vZGUgKm47DQo+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gKwlzdHJ1Y3QgaHRhYl9l
-bGVtICpsOw0KPiArCXN0cnVjdCBidWNrZXQgKmI7DQo+ICsJaW50IHJldCA9IDA7DQo+ICsNCj4g
-KwltYXhfY291bnQgPSBhdHRyLT5iYXRjaC5jb3VudDsNCj4gKwlpZiAoIW1heF9jb3VudCkNCj4g
-KwkJcmV0dXJuIDA7DQo+ICsNCj4gKwllbGVtX21hcF9mbGFncyA9IGF0dHItPmJhdGNoLmVsZW1f
-ZmxhZ3M7DQo+ICsJaWYgKChlbGVtX21hcF9mbGFncyAmIH5CUEZfRl9MT0NLKSB8fA0KPiArCSAg
-ICAoKGVsZW1fbWFwX2ZsYWdzICYgQlBGX0ZfTE9DSykgJiYgIW1hcF92YWx1ZV9oYXNfc3Bpbl9s
-b2NrKG1hcCkpKQ0KPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gKw0KPiArCW1hcF9mbGFncyA9IGF0
-dHItPmJhdGNoLmZsYWdzOw0KPiArCWlmIChtYXBfZmxhZ3MpDQo+ICsJCXJldHVybiAtRUlOVkFM
-Ow0KPiArDQo+ICsJYmF0Y2ggPSAwOw0KPiArCWlmICh1YmF0Y2ggJiYgY29weV9mcm9tX3VzZXIo
-JmJhdGNoLCB1YmF0Y2gsIHNpemVvZihiYXRjaCkpKQ0KPiArCQlyZXR1cm4gLUVGQVVMVDsNCj4g
-Kw0KPiArCWlmIChiYXRjaCA+PSBodGFiLT5uX2J1Y2tldHMpDQo+ICsJCXJldHVybiAtRU5PRU5U
-Ow0KPiArDQo+ICsJLyogV2UgY2Fubm90IGRvIGNvcHlfZnJvbV91c2VyIG9yIGNvcHlfdG9fdXNl
-ciBpbnNpZGUNCj4gKwkgKiB0aGUgcmN1X3JlYWRfbG9jay4gQWxsb2NhdGUgZW5vdWdoIHNwYWNl
-IGhlcmUuDQo+ICsJICovDQo+ICsJa2V5X3NpemUgPSBodGFiLT5tYXAua2V5X3NpemU7DQo+ICsJ
-cm91bmR1cF9rZXlfc2l6ZSA9IHJvdW5kX3VwKGh0YWItPm1hcC5rZXlfc2l6ZSwgOCk7DQo+ICsJ
-dmFsdWVfc2l6ZSA9IGh0YWItPm1hcC52YWx1ZV9zaXplOw0KPiArCXNpemUgPSByb3VuZF91cCh2
-YWx1ZV9zaXplLCA4KTsNCj4gKwlpZiAoaXNfcGVyY3B1KQ0KPiArCQl2YWx1ZV9zaXplID0gc2l6
-ZSAqIG51bV9wb3NzaWJsZV9jcHVzKCk7DQo+ICsJa2V5cyA9IGt2bWFsbG9jKGtleV9zaXplLCBH
-RlBfVVNFUiB8IF9fR0ZQX05PV0FSTik7DQo+ICsJdmFsdWVzID0ga3ZtYWxsb2ModmFsdWVfc2l6
-ZSwgR0ZQX1VTRVIgfCBfX0dGUF9OT1dBUk4pOw0KPiArCWlmICgha2V5cyB8fCAhdmFsdWVzKSB7
-DQo+ICsJCXJldCA9IC1FTk9NRU07DQo+ICsJCWdvdG8gb3V0Ow0KPiArCX0NCj4gKw0KPiArCWRz
-dF9rZXkgPSBrZXlzOw0KPiArCWRzdF92YWwgPSB2YWx1ZXM7DQo+ICsJdG90YWwgPSAwOw0KPiAr
-DQo+ICsJcHJlZW1wdF9kaXNhYmxlKCk7DQo+ICsJdGhpc19jcHVfaW5jKGJwZl9wcm9nX2FjdGl2
-ZSk7DQo+ICsJcmN1X3JlYWRfbG9jaygpOw0KPiArDQo+ICthZ2FpbjoNCj4gKwliID0gJmh0YWIt
-PmJ1Y2tldHNbYmF0Y2hdOw0KPiArCWhlYWQgPSAmYi0+aGVhZDsNCj4gKwlyYXdfc3Bpbl9sb2Nr
-X2lycXNhdmUoJmItPmxvY2ssIGZsYWdzKTsNCj4gKw0KPiArCWJ1Y2tldF9jbnQgPSAwOw0KPiAr
-CWhsaXN0X251bGxzX2Zvcl9lYWNoX2VudHJ5X3JjdShsLCBuLCBoZWFkLCBoYXNoX25vZGUpDQo+
-ICsJCWJ1Y2tldF9jbnQrKzsNCj4gKw0KPiArCWlmIChidWNrZXRfY250ID4gKG1heF9jb3VudCAt
-IHRvdGFsKSkgew0KPiArCQlpZiAodG90YWwgPT0gMCkNCj4gKwkJCXJldCA9IC1FTk9TUEM7DQo+
-ICsJCWdvdG8gYWZ0ZXJfbG9vcDsNCj4gKwl9DQo+ICsNCj4gKwlobGlzdF9udWxsc19mb3JfZWFj
-aF9lbnRyeV9zYWZlKGwsIG4sIGhlYWQsIGhhc2hfbm9kZSkgew0KPiArCQltZW1jcHkoZHN0X2tl
-eSwgbC0+a2V5LCBrZXlfc2l6ZSk7DQo+ICsNCj4gKwkJaWYgKGlzX3BlcmNwdSkgew0KPiArCQkJ
-aW50IG9mZiA9IDAsIGNwdTsNCj4gKwkJCXZvaWQgX19wZXJjcHUgKnBwdHI7DQo+ICsNCj4gKwkJ
-CXBwdHIgPSBodGFiX2VsZW1fZ2V0X3B0cihsLCBtYXAtPmtleV9zaXplKTsNCj4gKwkJCWZvcl9l
-YWNoX3Bvc3NpYmxlX2NwdShjcHUpIHsNCj4gKwkJCQlicGZfbG9uZ19tZW1jcHkoZHN0X3ZhbCAr
-IG9mZiwNCj4gKwkJCQkJCXBlcl9jcHVfcHRyKHBwdHIsIGNwdSksIHNpemUpOw0KPiArCQkJCW9m
-ZiArPSBzaXplOw0KPiArCQkJfQ0KPiArCQl9IGVsc2Ugew0KPiArCQkJdmFsdWUgPSBsLT5rZXkg
-KyByb3VuZHVwX2tleV9zaXplOw0KPiArCQkJaWYgKGVsZW1fbWFwX2ZsYWdzICYgQlBGX0ZfTE9D
-SykNCj4gKwkJCQljb3B5X21hcF92YWx1ZV9sb2NrZWQobWFwLCBkc3RfdmFsLCB2YWx1ZSwNCj4g
-KwkJCQkJCSAgICAgIHRydWUpOw0KPiArCQkJZWxzZQ0KPiArCQkJCWNvcHlfbWFwX3ZhbHVlKG1h
-cCwgZHN0X3ZhbCwgdmFsdWUpOw0KPiArCQkJY2hlY2tfYW5kX2luaXRfbWFwX2xvY2sobWFwLCBk
-c3RfdmFsKTsNCj4gKwkJfQ0KPiArCQlpZiAoZG9fZGVsZXRlKSB7DQo+ICsJCQlobGlzdF9udWxs
-c19kZWxfcmN1KCZsLT5oYXNoX25vZGUpOw0KPiArCQkJaWYgKGlzX2xydV9tYXApDQo+ICsJCQkJ
-YnBmX2xydV9wdXNoX2ZyZWUoJmh0YWItPmxydSwgJmwtPmxydV9ub2RlKTsNCj4gKwkJCWVsc2UN
-Cj4gKwkJCQlmcmVlX2h0YWJfZWxlbShodGFiLCBsKTsNCj4gKwkJfQ0KPiArCQlpZiAoY29weV90
-b191c2VyKHVrZXlzICsgdG90YWwgKiBrZXlfc2l6ZSwga2V5cywga2V5X3NpemUpIHx8DQo+ICsJ
-CSAgIGNvcHlfdG9fdXNlcih1dmFsdWVzICsgdG90YWwgKiB2YWx1ZV9zaXplLCB2YWx1ZXMsDQo+
-ICsJCSAgIHZhbHVlX3NpemUpKSB7DQoNCldlIGNhbm5vdCBkbyBjb3B5X3RvX3VzZXIgaW5zaWRl
-IGF0b21pYyByZWdpb24gd2hlcmUgaXJxIGlzIGRpc2FibGVkDQp3aXRoIHJhd19zcGluX2xvY2tf
-aXJxc2F2ZSgpLiBXZSBjb3VsZCBkbyB0aGUgZm9sbG93aW5nOg0KICAgIC4gd2Uga2FsbG9jIG1l
-bW9yeSBiZWZvcmUgcHJlZW1wdF9kaXNhYmxlKCkgd2l0aCB0aGUgY3VycmVudCBjb3VudA0KICAg
-ICAgb2YgYnVja2V0IHNpemUuDQogICAgLiBpbnNpZGUgdGhlIHJhd19zcGluX2xvY2tfaXJxc2F2
-ZSgpIHJlZ2lvbiwgd2UgY2FuIGRvIGNvcHkgdG8ga2VybmVsDQogICAgICBtZW1vcnkuDQogICAg
-LiBpbnNpZGUgdGhlIHJhd19zcGluX2xvY2tfaXJxc2F2ZSgpIHJlZ2lvbiwgaWYgdGhlIGJ1Y2tl
-dCBzaXplDQogICAgICBjaGFuZ2VzLCB3ZSBjYW4gaGF2ZSBhIGZldyByZXRyaWVzIHRvIGluY3Jl
-YXNlIGFsbG9jYXRpb24gc2l6ZQ0KICAgICAgYmVmb3JlIGdpdmluZyB1cC4NCkRvIHlvdSB0aGlu
-ayB0aGlzIG1heSB3b3JrPw0KDQo+ICsJCQlyZXQgPSAtRUZBVUxUOw0KPiArCQkJZ290byBhZnRl
-cl9sb29wOw0KPiArCQl9DQo+ICsJCXRvdGFsKys7DQo+ICsJfQ0KPiArDQo+ICsJYmF0Y2grKzsN
-Cj4gKwlpZiAoYmF0Y2ggPj0gaHRhYi0+bl9idWNrZXRzKSB7DQo+ICsJCXJldCA9IC1FTk9FTlQ7
-DQo+ICsJCWdvdG8gYWZ0ZXJfbG9vcDsNCj4gKwl9DQo+ICsNCj4gKwlyYXdfc3Bpbl91bmxvY2tf
-aXJxcmVzdG9yZSgmYi0+bG9jaywgZmxhZ3MpOw0KPiArCWdvdG8gYWdhaW47DQo+ICsNCj4gK2Fm
-dGVyX2xvb3A6DQo+ICsJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmItPmxvY2ssIGZsYWdz
-KTsNCj4gKw0KPiArCXJjdV9yZWFkX3VubG9jaygpOw0KPiArCXRoaXNfY3B1X2RlYyhicGZfcHJv
-Z19hY3RpdmUpOw0KPiArCXByZWVtcHRfZW5hYmxlKCk7DQo+ICsNCj4gKwlpZiAocmV0ICYmIHJl
-dCAhPSAtRU5PRU5UKQ0KPiArCQlnb3RvIG91dDsNCj4gKw0KPiArCS8qIGNvcHkgZGF0YSBiYWNr
-IHRvIHVzZXIgKi8NCj4gKwl1YmF0Y2ggPSB1NjRfdG9fdXNlcl9wdHIoYXR0ci0+YmF0Y2gub3V0
-X2JhdGNoKTsNCj4gKwlpZiAoY29weV90b191c2VyKHViYXRjaCwgJmJhdGNoLCBzaXplb2YoYmF0
-Y2gpKSB8fA0KPiArCSAgICBwdXRfdXNlcih0b3RhbCwgJnVhdHRyLT5iYXRjaC5jb3VudCkpDQo+
-ICsJCXJldCA9IC1FRkFVTFQ7DQo+ICsNCj4gK291dDoNCj4gKwlrdmZyZWUoa2V5cyk7DQo+ICsJ
-a3ZmcmVlKHZhbHVlcyk7DQo+ICsJcmV0dXJuIHJldDsNCj4gK30NCj4gKw0KWy4uLl0NCg==
+
+--=-BLYE2OIbj7nYRjVQ3ora
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le vendredi 13 d=C3=A9cembre 2019 =C3=A0 10:12 +0100, Neil Armstrong a =C3=
+=A9crit :
+> On 05/12/2019 19:46, Nicolas Dufresne wrote:
+> > Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 16:49 +0100, Neil Armstrong a =C3=
+=A9crit :
+> > > On 05/12/2019 16:42, Nicolas Dufresne wrote:
+> > > > Hi Neil,
+> > > >=20
+> > > > Le jeudi 05 d=C3=A9cembre 2019 =C3=A0 10:24 +0100, Neil Armstrong a=
+ =C3=A9crit :
+> > > > > Hello,
+> > > > >=20
+> > > > > This patchset aims to bring VP9 decoding support to Amlogic GXL, =
+G12A & SM1
+> > > > > platforms for the amlogic stateful video decoder driver.
+> > > > >=20
+> > > > > With this, it passes v4l2-compliance with streaming on Amlogic G1=
+2A and
+> > > > > Amlogic SM1 SoCs successfully using the stream at [1] with a fixe=
+d
+> > > > > pyv4l2compliance script for VP9 at [2].
+> > > > >=20
+> > > > > The original script kept the IVF headers in the stream, confusing=
+ the
+> > > > > decoder. The fixed script only extracts the payload from the IVF =
+container.
+> > > > >=20
+> > > > > The decoder has been tested using the Google CTS TestVectorsIttia=
+m VP9 yuv420
+> > > > > samples, passing 82 resolutions test streams, with 13 fails by pi=
+xel
+> > > > > differences and 3 timeouts.
+> > > >=20
+> > > > How do you handle resolution changes on delta frames ? It's a bit o=
+f a
+> > > > challenge since the reference frames are not at the same resolution=
+ as
+> > > > the frames to be decoded. This breaks the assumption for the resolu=
+tion
+> > > > changes mechanism as described in the spec.
+> > >=20
+> > > I don't have a lot of experience on the subject, but in the vendor im=
+plementation,
+> > > they store the resolution along the reference frames and when loading=
+ all the
+> > > reference frames to the HW, the original resolution is also loaded.
+> > > But we don't handle it.
+> > >=20
+> > > > On stateless side, Boris is introducing DESTROY_BUFS, so we can fre=
+e
+> > > > the references when they are not used anymore. But the reference ar=
+e
+> > > > managed by userspace and are not queued. While on stateful side so =
+far,
+> > > > it was assumed that references are queued, and the semantic of S_FM=
+T is
+> > > > that it must apply to the entire set of queued buffer.
+> > >=20
+> > > yes
+> > >=20
+> > > > I think most streams will work and won't use this feature, but I'm
+> > > > worried that writing a compliant VP9 decoder is currently not possi=
+ble.
+> > >=20
+> > > Indeed, but I don't have a clear enough view on the subject, and it d=
+oesn't seem
+> > > I have any test stream with such feature.
+> >=20
+> > https://www.webmproject.org/vp9/levels/
+> >=20
+> > I believe in the performance suite, the FRM_RESIZE sample is what
+> > should exercise this.
+>=20
+> Thanks for pointing this test suite... all samples were failing :-p
+>=20
+> Now we added the probability handling and all samples works (except the u=
+nsupported level).
+> The ref handling was tricky aswell, anyway it's all fixed except FRM_RESI=
+ZE which will
+> be a hell of hacking to tackle.
+>=20
+> The hack would be to keep the refs buffers we still need after frame resi=
+zing on drain,
+> then use the max(old_frame_size, new_frame_size) as capture buffer size, =
+then copy back
+> the old refs buffers into the newly queued buffers and continue.
+
+It's interesting, does VP8/9 indicate how long a reference frame can be
+held. My concern is that for truly zero-copy cases, you cannot push out
+a buffer until they are no longer referenced, and that's why we have
+large queues. The use case I know came from STM a long time ago, they
+would burn in software the subtitles into the video frames. So as soon
+as a buffer is release from the decoder, it's being dirtied, and cannot
+be used as reference anymore.
+
+In this case, on resolution changed, you have let say a reference of
+resolution X, that you haven't pushed yet, because you have to keep it
+clean. And you want to decode the next buffer of size Y. Because you
+receive a request to drain, X will be pushed, and current userspace may
+just dirty it before it actually re-queue the buffers.
+
+Wouldn't the appropriate hack would be to have internal allocation and
+do copies of the reference frames before you actually emit the
+resolution change event ? It's in any case just a hack, since in 4K
+it's unlikely to be seamless (real-time).
+
+Another option is to force RO for VP9, for most cases it makes no
+difference. And then we could just keep a ref on the buffer (like we do
+for stateless) regardless if it's queued or not. As we can trust it
+won't be dirtied.
+
+The third option, you don't care about all this, because you have a
+third queue of buffers, and use a special IP to transfer the decoded
+images to CAPTURE buffer (e.g. could be detiling). That's the case for
+CODA, and I think it can be the case for Amlogic since on S805 the
+output format is unusable, not sure what's the status of the CODEC
+there.
+
+p.s. we could have a different semantic depending if the DMABuf are  RO
+or RW exported. But I think most userspace today uses RW exportation,
+hence we cannot trust the buffer out to stay clean. That is different
+with stateless, since this is managed by userspace.
+
+>=20
+> It's a ugly hack, but won't break the drain + S_FMT semantic.
+> But I will fix this _after_ the v2 of this serie is merged.
+>=20
+> Neil
+>=20
+> > > Neil
+> > >=20
+> > > > > This patchset depends on :
+> > > > > - G12A enablement at [3]
+> > > > > - SM1 enablement at [4]
+> > > > > - H.264 and compliance at [5]
+> > > > >=20
+> > > > > [1] https://github.com/superna9999/pyv4l2compliance/raw/tests/out=
+put/Jellyfish_1080_10s_5MB.vp9.hdr
+> > > > > [2] https://github.com/superna9999/pyv4l2compliance
+> > > > > [3] https://lore.kernel.org/linux-media/20191120111430.29552-1-na=
+rmstrong@baylibre.com
+> > > > > [4] https://lore.kernel.org/linux-media/20191121101429.23831-1-na=
+rmstrong@baylibre.com
+> > > > > [5] https://lore.kernel.org/linux-media/20191126093733.32404-1-na=
+rmstrong@baylibre.com
+> > > > >=20
+> > > > > The compliance log is:
+> > > > > # v4l2-compliance --stream-from-hdr Jellyfish_1080_10s_5MB.vp9.hd=
+r -s 200
+> > > > > v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64=
+ bits
+> > > > >=20
+> > > > > Compliance test for meson-vdec device /dev/video0:
+> > > > >=20
+> > > > > Driver Info:
+> > > > > 	Driver name      : meson-vdec
+> > > > > 	Card type        : Amlogic Video Decoder
+> > > > > 	Bus info         : platform:meson-vdec
+> > > > > 	Driver version   : 5.4.0
+> > > > > 	Capabilities     : 0x84204000
+> > > > > 		Video Memory-to-Memory Multiplanar
+> > > > > 		Streaming
+> > > > > 		Extended Pix Format
+> > > > > 		Device Capabilities
+> > > > > 	Device Caps      : 0x04204000
+> > > > > 		Video Memory-to-Memory Multiplanar
+> > > > > 		Streaming
+> > > > > 		Extended Pix Format
+> > > > > 	Detected Stateful Decoder
+> > > > >=20
+> > > > > Required ioctls:
+> > > > > 	test VIDIOC_QUERYCAP: OK
+> > > > >=20
+> > > > > Allow for multiple opens:
+> > > > > 	test second /dev/video0 open: OK
+> > > > > 	test VIDIOC_QUERYCAP: OK
+> > > > > 	test VIDIOC_G/S_PRIORITY: OK
+> > > > > 	test for unlimited opens: OK
+> > > > >=20
+> > > > > Debug ioctls:
+> > > > > 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> > > > > 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+> > > > >=20
+> > > > > Input ioctls:
+> > > > > 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> > > > > 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> > > > > 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> > > > > 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+> > > > >=20
+> > > > > Output ioctls:
+> > > > > 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> > > > > 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> > > > > 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+> > > > >=20
+> > > > > Input/Output configuration ioctls:
+> > > > > 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> > > > > 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> > > > > 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> > > > > 	test VIDIOC_G/S_EDID: OK (Not Supported)
+> > > > >=20
+> > > > > Control ioctls:
+> > > > > 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+> > > > > 	test VIDIOC_QUERYCTRL: OK
+> > > > > 	test VIDIOC_G/S_CTRL: OK
+> > > > > 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+> > > > > 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+> > > > > 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> > > > > 	Standard Controls: 2 Private Controls: 0
+> > > > >=20
+> > > > > Format ioctls:
+> > > > > 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> > > > > 	test VIDIOC_G/S_PARM: OK (Not Supported)
+> > > > > 	test VIDIOC_G_FBUF: OK (Not Supported)
+> > > > > 	test VIDIOC_G_FMT: OK
+> > > > > 	test VIDIOC_TRY_FMT: OK
+> > > > > 	test VIDIOC_S_FMT: OK
+> > > > > 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> > > > > 	test Cropping: OK (Not Supported)
+> > > > > 	test Composing: OK (Not Supported)
+> > > > > 	test Scaling: OK (Not Supported)
+> > > > >=20
+> > > > > Codec ioctls:
+> > > > > 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> > > > > 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> > > > > 	test VIDIOC_(TRY_)DECODER_CMD: OK
+> > > > >=20
+> > > > > Buffer ioctls:
+> > > > > 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> > > > > 	test VIDIOC_EXPBUF: OK
+> > > > > 	test Requests: OK (Not Supported)
+> > > > >=20
+> > > > > Test input 0:
+> > > > >=20
+> > > > > Streaming ioctls:
+> > > > > 	test read/write: OK (Not Supported)
+> > > > > 	test blocking wait: OK
+> > > > > 	Video Capture Multiplanar: Captured 200 buffers  =20
+> > > > > 	test MMAP (select): OK
+> > > > > 	Video Capture Multiplanar: Captured 200 buffers  =20
+> > > > > 	test MMAP (epoll): OK
+> > > > > 	test USERPTR (select): OK (Not Supported)
+> > > > > 	test DMABUF: Cannot test, specify --expbuf-device
+> > > > >=20
+> > > > > Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Faile=
+d: 0, Warnings: 0
+> > > > >=20
+> > > > > Maxime Jourdan (4):
+> > > > >   media: meson: vdec: add helpers for lossless framebuffer compre=
+ssion
+> > > > >     buffers
+> > > > >   media: meson: vdec: add common HEVC decoder support
+> > > > >   media: meson: vdec: add VP9 input support
+> > > > >   media: meson: vdec: add VP9 decoder support
+> > > > >=20
+> > > > > Neil Armstrong (1):
+> > > > >   media: meson: vdec: align stride on 32 bytes
+> > > > >=20
+> > > > >  drivers/staging/media/meson/vdec/Makefile     |    4 +-
+> > > > >  .../media/meson/vdec/codec_hevc_common.c      |  285 ++++
+> > > > >  .../media/meson/vdec/codec_hevc_common.h      |   77 ++
+> > > > >  drivers/staging/media/meson/vdec/codec_vp9.c  | 1192 +++++++++++=
+++++++
+> > > > >  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
+> > > > >  drivers/staging/media/meson/vdec/esparser.c   |  142 +-
+> > > > >  drivers/staging/media/meson/vdec/hevc_regs.h  |  218 +++
+> > > > >  drivers/staging/media/meson/vdec/vdec.c       |   10 +-
+> > > > >  .../staging/media/meson/vdec/vdec_helpers.c   |   31 +-
+> > > > >  .../staging/media/meson/vdec/vdec_helpers.h   |    4 +
+> > > > >  drivers/staging/media/meson/vdec/vdec_hevc.c  |  231 ++++
+> > > > >  drivers/staging/media/meson/vdec/vdec_hevc.h  |   13 +
+> > > > >  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
+> > > > >  13 files changed, 2245 insertions(+), 13 deletions(-)
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_c=
+ommon.c
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_c=
+ommon.h
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
+> > > > >  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
+> > > > >=20
+>=20
+>=20
+
+--=-BLYE2OIbj7nYRjVQ3ora
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXfPgnQAKCRBxUwItrAao
+HFSCAKCVMCo+IJ5+LZKokgrOxsO/0S84qACeISPG04hd4xC9AqF5XJfyi1DsYD0=
+=POaY
+-----END PGP SIGNATURE-----
+
+--=-BLYE2OIbj7nYRjVQ3ora--
+
