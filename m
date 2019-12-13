@@ -2,112 +2,135 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F295BC4BA2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9C5C4BA2E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AAF2470A
+	by mail.kernel.org (Postfix) with ESMTP id 695DD2475C
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfLMQdg (ORCPT
+        id S1728225AbfLMQfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:33:36 -0500
-Received: from smtprelay0038.hostedemail.com ([216.40.44.38]:39117 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727480AbfLMQdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:33:35 -0500
-X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 11:33:34 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 8CD3F180458E1;
-        Fri, 13 Dec 2019 16:27:27 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 78640101297A2;
-        Fri, 13 Dec 2019 16:27:26 +0000 (UTC)
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-HE-Tag: sand41_40a358540413f
-X-Filterd-Recvd-Size: 3128
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (Authenticated sender: nevets@goodmis.org)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 13 Dec 2019 16:27:24 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 11:25:00 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [RFC] btf: Some structs are doubled because of struct
- ring_buffer
-Message-ID: <20191213112438.773dff35@gandalf.local.home>
-In-Reply-To: <20191213153553.GE20583@krava>
-References: <20191213153553.GE20583@krava>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 13 Dec 2019 11:35:14 -0500
+Received: from mga02.intel.com ([134.134.136.20]:55846 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727480AbfLMQfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:35:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:35:13 -0800
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="364346319"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:35:13 -0800
+Message-ID: <de779bcc6ccae238dbdedcc61db88abbdb8f291e.camel@linux.intel.com>
+Subject: Re: [PATCH v15 6/7] virtio-balloon: Add support for providing free
+ page reports to host
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
+        konrad.wilk@oracle.com, david@redhat.com, pagupta@redhat.com,
+        riel@surriel.com, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, osalvador@suse.de
+Date:   Fri, 13 Dec 2019 08:35:13 -0800
+In-Reply-To: <20191213020553-mutt-send-email-mst@kernel.org>
+References: <20191205161928.19548.41654.stgit@localhost.localdomain>
+         <20191205162255.19548.63866.stgit@localhost.localdomain>
+         <20191213020553-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 16:35:53 +0100
-Jiri Olsa <jolsa@redhat.com> wrote:
+On Fri, 2019-12-13 at 02:08 -0500, Michael S. Tsirkin wrote:
+> On Thu, Dec 05, 2019 at 08:22:55AM -0800, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Add support for the page reporting feature provided by virtio-balloon.
+> > Reporting differs from the regular balloon functionality in that is is
+> > much less durable than a standard memory balloon. Instead of creating a
+> > list of pages that cannot be accessed the pages are only inaccessible
+> > while they are being indicated to the virtio interface. Once the
+> > interface has acknowledged them they are placed back into their respective
+> > free lists and are once again accessible by the guest system.
+> > 
+> > Unlike a standard balloon we don't inflate and deflate the pages. Instead
+> > we perform the reporting, and once the reporting is completed it is
+> > assumed that the page has been dropped from the guest and will be faulted
+> > back in the next time the page is accessed.
+> > 
+> > For this reason when I had originally introduced the patch set I referred
+> > to this behavior as a "bubble" instead of a "balloon" since the duration
+> > is short lived, and when the page is touched the "bubble" is popped and
+> > the page is faulted back in.
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> virtio POV is fine here:
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+> However please copy virtio-comment on UAPI changes.
 
-> I don't think dedup algorithm can handle this and I'm not sure if there's
-> some way in pahole to detect/prevent this.
-> 
-> I only found that if I rename the ring_buffer objects to have distinct
-> names, it will help:
-> 
->   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep task_struct
->   [150] STRUCT 'task_struct' size=11008 vlen=205
-> 
->   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'perf_event'"
->   [1665] STRUCT 'perf_event' size=1160 vlen=70
-> 
-> also the BTF data get smaller ;-) before:
-> 
->   $ ll /sys/kernel/btf/vmlinux
->   -r--r--r--. 1 root root 2067432 Dec 13 22:56 /sys/kernel/btf/vmlinux
-> 
-> after:
->   $ ll /sys/kernel/btf/vmlinux
->   -r--r--r--. 1 root root 1984345 Dec 13 23:02 /sys/kernel/btf/vmlinux
-> 
-> 
-> Peter, Steven,
-> if above is correct and there's no other better solution, would it be possible
-> to straighten up the namespace and user some distinct names for perf and ftrace
-> ring buffers?
+So I have been avoiding copying virtio-dev on the kernel changes as I had
+gotten feedback that it was annoying some people as they were getting
+bounces since they were not subscribed. Will the same type of thing happen
+with virtio-comment?
 
-Now, the ring buffer that ftrace uses is not specific for ftrace or
-even tracing for that matter. It is a stand alone ring buffer (oprofile
-uses it), and can be used by anyone else.
+> If possible isolate the last chunk in a patch by itself
+> to make it easier for non-kernel developers to review.
 
-As the perf ring buffer is very coupled with perf (or perf events), and
-unless something changed, I was never able to pull the perf ring
-buffer out as a stand alone ring buffer.
+Are you talking about the change in "include/uapi/linux/virtio_balloon.h"?
 
-As the ring buffer in the tracing directory is more generic, and not to
-mention around longer, if one is to change the name, I would suggest it
-be the perf ring buffer.
+I have it as a standalone patch in the QEMU set, and for the QEMU set I
+had included virtio-dev. Would you prefer I include virtio-comment instead
+or in addition to virtio-dev? My thought is that I would prefer to keep
+the virtio people focused on the QEMU code since they are probably more
+comfortable with that, and the kernel people focused on the kernel code.
 
--- Steve
+> > ---
+> >  drivers/virtio/Kconfig              |    1 +
+> >  drivers/virtio/virtio_balloon.c     |   64 +++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/virtio_balloon.h |    1 +
+> >  3 files changed, 66 insertions(+)
+
+<snip>
+
+> > 
+> > diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> > index a1966cd7b677..19974392d324 100644
+> > --- a/include/uapi/linux/virtio_balloon.h
+> > +++ b/include/uapi/linux/virtio_balloon.h
+> > @@ -36,6 +36,7 @@
+> >  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+> >  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+> >  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
+> > +#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
+> >  
+> >  /* Size of a PFN in the balloon interface. */
+> >  #define VIRTIO_BALLOON_PFN_SHIFT 12
+
+If this is the bit we are talking about I have it split out already into a
+QEMU specific patch as well, it can be found here:
+https://lore.kernel.org/lkml/20191205162422.19737.57728.stgit@localhost.localdomain/
+
+If needed I could probably add a cover page and/or update the comments in
+that patch if that is needed to better explain the change.
+
+Thanks.
+
+- Alex
+
