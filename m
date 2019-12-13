@@ -2,138 +2,222 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BBBC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484F52073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CF62073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YsQksu/c"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHMS49Gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLMKAF (ORCPT
+        id S1726687AbfLMKAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:00:05 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36946 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMKAE (ORCPT
+        Fri, 13 Dec 2019 05:00:48 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39032 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfLMKAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:00:04 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so5891858wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:00:02 -0800 (PST)
+        Fri, 13 Dec 2019 05:00:48 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i12so1801984qtp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:00:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wNP4rI1DOEGJNKJHekEUoF6Vehge/dTvDIo4/5mFf6E=;
-        b=YsQksu/cONoPVHsqBo+Ol3YlvExGinuQQnGqL/9wnK6ssNjv2acpOzR/mF/5xjb0JC
-         lLz2XwymDkMLftIpGSrkhlMGozPL55W9NaqX4oKer3AnYFXzByRAb9+fmwOtw3+Oqi0Q
-         sRod9k8H6GnE0c2uXvhE2BaddqdnXk2tHRlqw=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uDnoQFiNcIXTIxHbcNpUuK6sYJRqWkNb6sXGeigfu8g=;
+        b=uHMS49GvtGGG4FgGbKEBueR+ZVUzQ1FTg7hriLgYv5ms0Q32Fn6zoDjNSxHFJpOMxu
+         rvjmAX8BRcNm2RNOb7Yf3IuCSmyQjFIdCcTygIu1mf+7un/0pc0A3dyzhrt22/uHtkKs
+         SdzdT1CMaImYFcewAooinY9rqgu3w0lR8zz/hC1RtUif52O9Bzl1/+Lq5j1mkM97RC4+
+         kIh3XK0kJKkMNLOqeLU+SLc1mnmDlPH371UjQ8AX4dv/HG+32rVLw4bNoADjmWRp9qh0
+         ncC8Qn3uUHd4EX0/1LN86ny4mQ8C7WB7WbfUlwWgmEiFSu6yqWZ7Kp1o3dELkmD4VcLf
+         PYTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=wNP4rI1DOEGJNKJHekEUoF6Vehge/dTvDIo4/5mFf6E=;
-        b=qAGfB8BJp1Y8ifDV898898INWlCwhuhI3NyKztmdS9/P1xUY8kRahooCGubQRUEKri
-         Tq6geTbCr0/qkCXDUSpuNs1xhKAYvpGd5LlEF9YWsjqThVAuxIeKURmw0vKsshAb4mNA
-         EZcfUMirit++W0ITl5zI8wZxHIp+fJGZ0qZZr/nbt+98g9tc/J0m2v1dCjD9f6Xh/pyg
-         QFzS8GmZT09KhLiPHyDYmN7Ww1ctzNhmaeDt02I9KBYX0dH9SLtMqKNlJ/aDGiMDJhCV
-         EAWNA1wuxH2UoYXNG1XEpzq8SMNX06iMdHOAyg3cJXs8Fwg5KQvmfjrHreLDBhogX9tN
-         4ODA==
-X-Gm-Message-State: APjAAAW0puIpPTWQvuDBeLGpLHWSeUfXzOTxhrBFvyMS0kz3kiIlVqn6
-        fZPeTc8Vv9djlRSd/3x7hI3lBA==
-X-Google-Smtp-Source: APXvYqzHj5Vgx4Q+eg2SkNOJ4kzSiCtnnqAp5kkKYacZ9gRqcN7iTxNesueCnGqcTcvmU+NnrlE1Zw==
-X-Received: by 2002:a1c:8116:: with SMTP id c22mr11985885wmd.27.1576231202109;
-        Fri, 13 Dec 2019 02:00:02 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id n67sm3084493wmf.46.2019.12.13.02.00.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 02:00:01 -0800 (PST)
-Date:   Fri, 13 Dec 2019 10:59:59 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        gurchetansingh@chromium.org
-Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
- attributes
-Message-ID: <20191213095959.GA624164@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        gurchetansingh@chromium.org
-References: <20191211081810.20079-1-kraxel@redhat.com>
- <20191211081810.20079-2-kraxel@redhat.com>
- <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
- <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
- <20191211123635.GY624164@phenom.ffwll.local>
- <20191211131830.iz3a2o4xzmmkjsp7@sirius.home.kraxel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uDnoQFiNcIXTIxHbcNpUuK6sYJRqWkNb6sXGeigfu8g=;
+        b=pPNtlOPQX12D3WMXyNqU3SnJHCNvOftnOETzptqLBd+NT5xctUnzW9b4si1oWCwxrA
+         D5SnqX0u6VCTGrI8N08DYZSXsd2f0/EczXlAJaay3cMrz2uCkdRUqUkU8Yfg+N2Dor7r
+         mR1Wdn/4TTYjSnxXffs20c5mobzP2epM+VICFrOvA/QFpY4IrMS8PAWVu3u9DFr9Vop0
+         4Ra1XvgiPFzy4c4hkWUws5Hu2YKBuxmd/jg6pZmeAxVKDhruK+fCMzw6zkcAKw0zpcRZ
+         px3EprG+pg44ON06n/Px+PYGqUUQrhMfuSKFgUAdKppNpfNJmbKNvken4Ru4HgQsHGwA
+         +bFg==
+X-Gm-Message-State: APjAAAUQX30varQwqfUa0K+cdhkVJ5uB8aW0pubf3CILHZ599DjIEGjN
+        kFfDHvRT0EZ/EfgUWg4XqL34Wxj7G+erPA7KnESpFs6pvCU=
+X-Google-Smtp-Source: APXvYqz/5HshPauRxsoXwqbIW9gblIe26shnfQMuCY107xnTQMSDA3NKBRWFAwanTHaCGDt+4Jh7c/UcCW5r3vEPyJA=
+X-Received: by 2002:ac8:71d7:: with SMTP id i23mr11731950qtp.50.1576231246791;
+ Fri, 13 Dec 2019 02:00:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211131830.iz3a2o4xzmmkjsp7@sirius.home.kraxel.org>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <00000000000053539a0599173973@google.com> <20191212105701.GB1476206@kroah.com>
+ <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com> <20191213093357.GB2135612@kroah.com>
+In-Reply-To: <20191213093357.GB2135612@kroah.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 13 Dec 2019 11:00:35 +0100
+Message-ID: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in mem_serial_out
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
+        Jiri Slaby <jslaby@suse.com>,
+        kai heng feng <kai.heng.feng@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
+        paulburton@kernel.org, sr@denx.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yegorslists@googlemail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:18:30PM +0100, Gerd Hoffmann wrote:
->   Hi,
-> 
-> > btw on why udl does this: Imported bo are usually rendered by real hw, and
-> > reading it uncached/wc is the more defensive setting. It would be kinda
-> > nice if dma-buf would expose this, but I fear dma-api maintainers would
-> > murder us if we even just propose that ... so it's a mess right now.
-> 
-> I suspect for imported dma-bufs we should leave the mmap() to the
-> exporter instead of pulling the pages out of the sgt and map them
-> ourself.
+On Fri, Dec 13, 2019 at 10:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 10:02:33AM +0100, Dmitry Vyukov wrote:
+> > On Thu, Dec 12, 2019 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Fri, Dec 06, 2019 at 10:25:08PM -0800, syzbot wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=123ec282e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f4f1e871965064ae689e
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab090ee00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f127f2e00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com
+> > > >
+> > > > BUG: kernel NULL pointer dereference, address: 0000000000000002
+> > > > #PF: supervisor write access in kernel mode
+> > > > #PF: error_code(0x0002) - not-present page
+> > > > PGD 9764a067 P4D 9764a067 PUD 9f995067 PMD 0
+> > > > Oops: 0002 [#1] PREEMPT SMP KASAN
+> > > > CPU: 0 PID: 9687 Comm: syz-executor433 Not tainted 5.4.0-syzkaller #0
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+> > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+> > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+> > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
+> > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+> > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+> > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+> > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+> > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+> > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+> > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+> > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > Call Trace:
+> > > >  serial_out drivers/tty/serial/8250/8250.h:118 [inline]
+> > > >  serial8250_clear_fifos.part.0+0x3a/0xb0
+> > > > drivers/tty/serial/8250/8250_port.c:557
+> > > >  serial8250_clear_fifos drivers/tty/serial/8250/8250_port.c:556 [inline]
+> > > >  serial8250_do_startup+0x426/0x1cf0 drivers/tty/serial/8250/8250_port.c:2121
+> > > >  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
+> > > >  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
+> > > >  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
+> > > >  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
+> > > >  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
+> > > >  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
+> > > >  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
+> > > >  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
+> > > >  vfs_ioctl fs/ioctl.c:47 [inline]
+> > > >  file_ioctl fs/ioctl.c:545 [inline]
+> > > >  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+> > > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+> > > >  __do_sys_ioctl fs/ioctl.c:756 [inline]
+> > > >  __se_sys_ioctl fs/ioctl.c:754 [inline]
+> > > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+> > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > RIP: 0033:0x440219
+> > > > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> > > > 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > > RSP: 002b:00007ffced648c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> > > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+> > > > RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
+> > > > RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> > > > R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
+> > > > R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
+> > > > Modules linked in:
+> > > > CR2: 0000000000000002
+> > > > ---[ end trace eaa11ffe82f3a763 ]---
+> > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+> > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
+> > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+> > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
+> > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
+> > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
+> > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
+> > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
+> > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
+> > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
+> > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
+> > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > >
+> > >
+> > > You set up a dubious memory base for your uart and then get upset when
+> > > you write to that location.
+> > >
+> > > I don't know what to really do about this, this is a root-only operation
+> > > and you are expected to know what you are doing when you attempt this.
+> >
+> > Hi Greg,
+> >
+> > Thanks for looking into this!
+> > Should we restrict the fuzzer from accessing /dev/ttyS* entirely?
+>
+> No, not at all.
+>
+> > Or only restrict TIOCSSERIAL on them? Something else?
+>
+> Try running not as root.  if you have CAP_SYS_ADMIN you can do a lot of
+> pretty bad things with tty ports, as you see here.  There's a reason the
+> LOCKDOWN_TIOCSSERIAL "security lockdown" check was added :)
+>
+> The TIOCSSERIAL ioctl is a nice one for a lot of things that are able to
+> be done as a normal user (baud rate changes, etc.), but there are also
+> things like setting io port memory locations that can cause random
+> hardware accesses and kernel crashes, as you instantly found out here :)
+>
+> So restrict the fuzzer to only run as a "normal" user of the serial
+> port, and if you find problems there, I'll be glad to look at them.
 
-Uh yes. If we still do that, then yes very much we shouldn't. Even better
-would be to just not do that, because the semantics of dumb gem mmap and
-dma-buf mmap differ (the latter has the begin/end access ioctl).
+Easier said than done. "normal user of the serial port" is not really
+a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
+not per-device...
+As far as I remember +Tetsuo proposed a config along the lines of
+"restrict only things that legitimately cause damage under a fuzzer
+workload", e.g. freezing filesystems, disabling console output, etc.
+This may be another candidate. But I can't find where that proposal is
+now.
 
-If we can't ditch the mmap I think we should at least improve the helpers
-to do the redirect to dma_buf_mmap directly and stop drivers from doing
-silly stuff.
-
-> > btw the issue extends to dma access by devices too, e.g. both i915 and
-> > amdgpu can select the coherency mode at runtime (using e.g. the pcie
-> > no-snoop transaction mode), and we have similar uncoordinated hacks in
-> > there too, like in udl.
-> 
-> Hmm.  Ok.  I guess I'm not going to try solve all that properly just for
-> the little virtio fix.
-> 
-> Just curious:  How do you tell your hardware?  Are there bits for that
-> in the gtt, simliar to the caching bits in the x86 page tables?
-
-Brace for contact ...
-
-- on amdgpu it's a bit in the gpu pagetable. I think (but not sure, not an
-  expert on these chips) that's the only way.
-
-- on i915 it's a also a bit in the gpu pagetables, but userspace can
-  override the caching/coherency mode on a per-texture/render target/*BO
-  level in the command stream.
-
-This is why gpus and dma-api don't mix well, since dma-api's goal is to
-hide all this even from the driver. gpus otoh leak it all the way to
-userspace. The trouble is as old as AGP from 1999 or so, I've become
-somewhat cynic at trying to fix this for real and not just with hacks. The
-disconnect between what we need and what dma-api kernel people want to
-give us is too big to bridge it seems.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+A simpler option that I see is as follows. syzkaller has several
+sandboxing modes, one of them is "namespace" which uses a user ns, in
+that more fuzzer is still uid=0 in the init namespace, so has access
+to all /dev nodes, but it does not have CAP_SYS_ADMIN in the init
+namespace. We could enable /dev/ttyS* only on instance that use
+sandbox=namesace, and disable on the rest. Does it make sense?
