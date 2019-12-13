@@ -2,122 +2,178 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F20C00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84D5C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FFE2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97E42073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfTTzL4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLMWIE convert rfc822-to-8bit (ORCPT
+        id S1726774AbfLMWIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:08:04 -0500
-Received: from mga01.intel.com ([192.55.52.88]:6005 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfLMWIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:08:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 14:08:04 -0800
-X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
-   d="scan'208";a="204451135"
-Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.12.201])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 14:08:03 -0800
-Content-Type: text/plain; charset="utf-8"
+        Fri, 13 Dec 2019 17:08:34 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:43102 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMWIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:08:34 -0500
+Received: by mail-pj1-f67.google.com with SMTP id g4so292309pjs.10;
+        Fri, 13 Dec 2019 14:08:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7dzeTGvEWaXwCU0pEGUFfZrs2Lez7D5h842KFDNW1lY=;
+        b=AfTTzL4+Pfly5/oyA+zs0bpgNWCC+IfQnj7pVlLHTGYHfsphcN/66SjHPiqJighlRE
+         +R7fcOJsOI5p/d7EnMl8DuINrzOavP6ivjoxZcuSD0jnGa+LvOQBSOqdDkrq5QcNIC8F
+         2iAjkDrXtl4pU7MrBdltfMxBiKVV5sUSm1icEPhWjzJcP7UEWFSa7d0x/D4Z0PJawLGy
+         zHNSJZpWCZsrRxS2JyLh4WRm6VuuHYQ5iFnlS+eMfpUPldUrkekGjCB5UvHiFyxHcieb
+         1rLTL9saeJ6ee+cTsFq8nxJJtE2k8bN0qexVO9uPb1OD5bdG/Ae9vQVVdOFsGecxKRrD
+         lOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7dzeTGvEWaXwCU0pEGUFfZrs2Lez7D5h842KFDNW1lY=;
+        b=UIKTbpKYyBX3xWjQOb+9QXK2jiOYIZmSZW06eWVRqkiMo58myvwodB+MullO99/OHJ
+         CLl8KbFwuzHWolFyrRShrlmfjNcFMz5WKInFXBYzRclxjeG9YAmkwvk3LFPTN3CibhQv
+         nBGhpio3mxlaSEYQ8tHUvE3nDoI6hpT4FrFFs4s4nDyw4TL5nAEYsHeSirXsq73Yyh8d
+         WC7fA+3MkZC86ThQzJcZFHPMQX/dXHFMbU6VxJ9NbI10cu9XRQk3h5GosHyeZJ9in/5p
+         vP13gEzsQqbCMJsmJYOOPmD9iEmOyqQUxjD6cdcEvRTvnjuhk19EOXSP9UZPLNdCTXkV
+         bzcQ==
+X-Gm-Message-State: APjAAAVMeJYRTMfrZl3xhcApug81qlwDjoas2x2ylAOEEu9O8RTCjdfQ
+        erXpnfl0znwmMIGNe+rmcY8=
+X-Google-Smtp-Source: APXvYqyufZ9wIZF7dBSTY7R7BxUMfmNLG0jNaqfyjVA7RjnVzIW1aX6yFfHII9/k4TPLH5FZrUb1yQ==
+X-Received: by 2002:a17:90a:3702:: with SMTP id u2mr1869026pjb.112.1576274913259;
+        Fri, 13 Dec 2019 14:08:33 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id e1sm12984954pfl.98.2019.12.13.14.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 14:08:32 -0800 (PST)
+Date:   Fri, 13 Dec 2019 14:08:30 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        sparclinux@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 01/24] Input: input_event: fix struct padding on
+ sparc64
+Message-ID: <20191213220830.GK101194@dtor-ws>
+References: <20191213204936.3643476-1-arnd@arndb.de>
+ <20191213204936.3643476-2-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191127094517.6255-1-Po.Liu@nxp.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com>
-Cc:     "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Po Liu <po.liu@nxp.com>
-From:   Andre Guedes <andre.guedes@linux.intel.com>
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-To:     "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>, Po Liu <po.liu@nxp.com>
-Message-ID: <157603276975.18462.4638422874481955289@pipeline>
-User-Agent: alot/0.8.1
-Date:   Tue, 10 Dec 2019 18:52:49 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213204936.3643476-2-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Po,
-
-Quoting Po Liu (2019-11-27 01:59:18)
-> IEEE Std 802.1Qbu standard defined the frame preemption of port
-> traffic classes. This patch introduce a method to set traffic
-> classes preemption. Add a parameter 'preemption' in struct
-> ethtool_link_settings. The value will be translated to a binary,
-> each bit represent a traffic class. Bit "1" means preemptable
-> traffic class. Bit "0" means express traffic class.  MSB represent
-> high number traffic class.
+On Fri, Dec 13, 2019 at 09:49:10PM +0100, Arnd Bergmann wrote:
+> Going through all uses of timeval, I noticed that we screwed up
+> input_event in the previous attempts to fix it:
 > 
-> If hardware support the frame preemption, driver could set the
-> ethernet device with hw_features and features with NETIF_F_PREEMPTION
-> when initializing the port driver.
+> The time fields now match between kernel and user space, but
+> all following fields are in the wrong place.
 > 
-> User can check the feature 'tx-preemption' by command 'ethtool -k
-> devname'. If hareware set preemption feature. The property would
-> be a fixed value 'on' if hardware support the frame preemption.
-> Feature would show a fixed value 'off' if hardware don't support
-> the frame preemption.
+> Add the required padding that is implied by the glibc timeval
+> definition to fix the layout, and use a struct initializer
+> to avoid leaking kernel stack data.
 > 
-> Command 'ethtool devname' and 'ethtool -s devname preemption N'
-> would show/set which traffic classes are frame preemptable.
+> Cc: sparclinux@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Fixes: 141e5dcaa735 ("Input: input_event - fix the CONFIG_SPARC64 mixup")
+> Fixes: 2e746942ebac ("Input: input_event - provide override for sparc64")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/evdev.c       | 14 +++++++-------
+>  drivers/input/misc/uinput.c | 14 +++++++++-----
+>  include/uapi/linux/input.h  |  1 +
+>  3 files changed, 17 insertions(+), 12 deletions(-)
 > 
-> Port driver would implement the frame preemption in the function
-> get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
+> diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+> index d7dd6fcf2db0..f918fca9ada3 100644
+> --- a/drivers/input/evdev.c
+> +++ b/drivers/input/evdev.c
+> @@ -224,13 +224,13 @@ static void __pass_event(struct evdev_client *client,
+>  		 */
+>  		client->tail = (client->head - 2) & (client->bufsize - 1);
+>  
+> -		client->buffer[client->tail].input_event_sec =
+> -						event->input_event_sec;
+> -		client->buffer[client->tail].input_event_usec =
+> -						event->input_event_usec;
+> -		client->buffer[client->tail].type = EV_SYN;
+> -		client->buffer[client->tail].code = SYN_DROPPED;
+> -		client->buffer[client->tail].value = 0;
+> +		client->buffer[client->tail] = (struct input_event) {
+> +			.input_event_sec = event->input_event_sec,
+> +			.input_event_usec = event->input_event_usec,
+> +			.type = EV_SYN,
+> +			.code = SYN_DROPPED,
+> +			.value = 0,
+> +		};
+>  
+>  		client->packet_head = client->tail;
+>  	}
+> diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+> index fd253781be71..2dabbe47d43e 100644
+> --- a/drivers/input/misc/uinput.c
+> +++ b/drivers/input/misc/uinput.c
+> @@ -74,12 +74,16 @@ static int uinput_dev_event(struct input_dev *dev,
+>  	struct uinput_device	*udev = input_get_drvdata(dev);
+>  	struct timespec64	ts;
+>  
+> -	udev->buff[udev->head].type = type;
+> -	udev->buff[udev->head].code = code;
+> -	udev->buff[udev->head].value = value;
+>  	ktime_get_ts64(&ts);
+> -	udev->buff[udev->head].input_event_sec = ts.tv_sec;
+> -	udev->buff[udev->head].input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
+> +
+> +	udev->buff[udev->head] = (struct input_event) {
+> +		.input_event_sec = ts.tv_sec,
+> +		.input_event_usec = ts.tv_nsec / NSEC_PER_USEC,
+> +		.type = type,
+> +		.code = code,
+> +		.value = value,
+> +	};
+> +
+>  	udev->head = (udev->head + 1) % UINPUT_BUFFER_SIZE;
+>  
+>  	wake_up_interruptible(&udev->waitq);
+> diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
+> index f056b2a00d5c..9a61c28ed3ae 100644
+> --- a/include/uapi/linux/input.h
+> +++ b/include/uapi/linux/input.h
+> @@ -34,6 +34,7 @@ struct input_event {
+>  	__kernel_ulong_t __sec;
+>  #if defined(__sparc__) && defined(__arch64__)
+>  	unsigned int __usec;
+> +	unsigned int __pad;
+>  #else
+>  	__kernel_ulong_t __usec;
+>  #endif
+> -- 
+> 2.20.0
+> 
 
-In an early RFC series [1], we proposed a way to support frame preemption. I'm not
-sure if you have considered it before implementing this other proposal based on
-ethtool interface so I thought it would be a good idea to bring that up to your
-attention, just in case.
-
-In that initial proposal, Frame Preemption feature is configured via taprio
-qdisc. For example:
-
-$ tc qdisc add dev IFACE parent root handle 100 taprio \
-      num_tc 3 \
-      map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-      queues 1@0 1@1 2@2 \
-      preemption 0 1 1 1 \
-      base-time 10000000 \
-      sched-entry S 01 300000 \
-      sched-entry S 02 300000 \
-      sched-entry S 04 400000 \
-      clockid CLOCK_TAI
-
-It also aligns with the gate control operations Set-And-Hold-MAC and
-Set-And-Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
-802.1Q-2018 for further details.
-
-Please share your thoughts on this.
-
-Regards,
-
-Andre
+-- 
+Dmitry
