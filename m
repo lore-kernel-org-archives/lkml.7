@@ -4,151 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C250C341B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90328C4D2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97BA24689
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27A02465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLMUvI (ORCPT
+        id S1726851AbfLMUzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:51:08 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:41421 "EHLO
+        Fri, 13 Dec 2019 15:55:17 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:42775 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMUvI (ORCPT
+        with ESMTP id S1725747AbfLMUzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:51:08 -0500
+        Fri, 13 Dec 2019 15:55:16 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N2m7O-1hjKJl2E7I-0132dq; Fri, 13 Dec 2019 21:50:53 +0100
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MGQWr-1iVdkq2Ao9-00GmsB; Fri, 13 Dec 2019 21:54:57 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, sparclinux@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Joe Perches <joe@perches.com>,
+        "Kristian H. Kristensen" <hoegsberg@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-input@vger.kernel.org
-Subject: [PATCH v2 01/24] Input: input_event: fix struct padding on sparc64
-Date:   Fri, 13 Dec 2019 21:49:10 +0100
-Message-Id: <20191213204936.3643476-2-arnd@arndb.de>
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+Subject: [PATCH v2 12/24] drm/msm: avoid using 'timespec'
+Date:   Fri, 13 Dec 2019 21:53:40 +0100
+Message-Id: <20191213205417.3871055-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
 References: <20191213204936.3643476-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:b8gCujveRfENF93qhn+QoZv/ckKyXm1BIFaTvxXniIUqRp+b6PR
- 3VSHWZW1SQzZk8GlNQpYeUFnSdkbDpGEpUozYthsO7HpZiAKH3XYDHJcXFjjxf1Xn91Ch+s
- d37azDmn1CwgETn8euOshiFS2oUw9MuYpYmhu4tm/a1iwNWERIkO3OEYl1dsNDQfqxG7TYm
- fURnjI/jbKO29eu5hdNRw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iIbuBbbotM0=:qlSem9fmmr21xU4JKbUkwr
- 2jwTBbOAuCE4GVBIZFL0TrE/kDGXnz2zZkeJWYbvGhf+HZcfLqu65WFtRkkx228BcNZwOKIuh
- m0vU7lTquEbBCKwj68bhb6jg52BeQS62G3gR7WtmaOG52gnMGQ7W9iI1b+2CPLzB/kJqfjRUk
- iDa20EOw/qK/icA36YWIJQ+d5sEL1cQgFIfmGlwltdAj1t67KpOG9oVbzTAPVjb8EQZMqjnRb
- 6n5Qt1hKLWA3v+lZcc5SWtgzNzDDO283oCyYzbjuCtd5h8mLYN6I5J3x2PZAP0qKyogu7VcFd
- HB1zgOJJhV8/WHRkK/EWdtBnJc/ESEqPoEtK7MfK71LPTdw0v3voVoAHsAVJX1pm0Fk+s0rR3
- cYSUuppiTTS5dtk/Ax653eDoLYwd5IksUWHIi6xidTr1GLuNGXco5sYWCDzMXHhp4o6ep1BTP
- 9zQOWWG132l95PNjSlfAR+4Og26QjT5jl5vnixgkx3Xy4jmEcCqFBQZZ3OtT+ghGZjzbdiSC0
- Q96LFa3Ok8s1OF2cYR4NceiklpMC1gL3SMx9J6VL3WwaWZaRL2HrteTd1g0+P+6z1ZSoih2X0
- 8FDcLDf7AZiGd9EZshJ2pgTMVdvla3OEsdKZtBBszML+XDxoHjZ/Z/siWJZRVVn7Bi6zSudWi
- FhePVLTxrdj9pmsSHjNYgfz3mjhMOGn0wSWLlRojj3pa6ro9WcB5IPOKUzO9nDkG+lDEL7t4s
- 6NeUbkktu6PAykWYIEkirix4f1fhKC98FsS63bdTHP5mkguDUvDk82s6Z8cEkdOlToy00NEZz
- SvEOR0X0odwBLMSr130fEcLaibcRh0+p5Yyt7FIfuEYhWpzlaT9WI+Eg+Mqp/hfvRZqc/VKLj
- 3QYw1ddrTu8UT6Yy+YIg==
+X-Provags-ID: V03:K1:SMQNgPIVRwQmcTY5DRfiQVqW9b6fdavzYJig6CP6LZtweyjRbiD
+ 6mCGxP1rZR5pga+x9KqlX9c6PXDBBgTUGKDJ0BZKNHZin6AxQJIq0jYcnvNfnUsFc79qM/e
+ q8qmecpfokP3hq7bAPt5LDfnxYTuvoKmrPS0nS2HU9pnuvh+0wbVT234k8D5E087sBGJcmP
+ i4yEHD4KCli0umxh9A3ww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DbQaztQtI+A=:gxrodGEeRggtiphssUm9Us
+ Jq/wlDutot4qEvgTcu7kfZQQQ3iQeN6l/jwOUlHw1Ybnq3VPgMPcTl9strNMqMIzw9JBvSljD
+ C2jPPtCwvmIl6PByLxcmzD+QyHErVxvkZOmoIegYpuQhUqJIzfhj3Kg6RZVgHW4bz1CqibKR6
+ Ft+KVdpngmtt8UlvfyoTGNfYmprA9eW5mMVLEvqNmCPx0H24nj3frUkSFibwdnsTjWZZz63di
+ tZABpibKZpy0u8d75dZczso0jUzTi7eQxK68axCwzreJDWLNLzMYomhhBrRb0z+C4Bh7wMREh
+ IqmDvEY1RvYXwj0XALqnYz7FFUInslWTRCWa2S3qkZcg0DSj7/GN6q0MEx3pG4szda+yfMRmK
+ J+8eQam1TInOwvydZdgspJK76t8NiIyLnWBR73tNZXBFkwWoljvI7oQwLHLMzuf7IjJQfvbod
+ 6/+GSDtKOqO9r1irukoe/vUnyVZuxagYtaHgrd/VK2u1ToWu05PY1fGxC+WOCC9dmpwvf4Smo
+ Vje6psV+nHPjQ2LbyeSJYMu8+Vyrfb59oJPpTsfY/ssvaM4JnnlPfgIUn4jSfRDwYrToDgzQJ
+ eNDAO7A/aC8WX3IrDLKrEb4NpEi6wEZO59Ax1mICG/9qQMRhieTT0sii3o27R8skBPFa0BThe
+ S3nKTK699n9ObLvefDUa/onIL6mlTOLQ4MG/dwG5bPq1dlUl/NohuJ6Snj3AKNhp0g10qPDEV
+ RQLRhD98PZpi9F6xvPJMoiLcmvHmOz8gK8ZSNJ7ApEvDJzQ6poZfwqLwx8qK+dGt8k0lrFdqS
+ HZ9OGCvIK91CYt69M0Soyrm7cJpKtZhVe4DJdxYaOiRvfLeff/cHHaLOcnwvnj2Q9MNLlsCJS
+ hyaeD68zOSQ+8Ex8yWDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Going through all uses of timeval, I noticed that we screwed up
-input_event in the previous attempts to fix it:
+The timespec structure and associated interfaces are deprecated and will
+be removed in the future because of the y2038 overflow.
 
-The time fields now match between kernel and user space, but
-all following fields are in the wrong place.
+The use of ktime_to_timespec() in timeout_to_jiffies() does not
+suffer from that overflow, but is easy to avoid by just converting
+the ktime_t into jiffies directly.
 
-Add the required padding that is implied by the glibc timeval
-definition to fix the layout, and use a struct initializer
-to avoid leaking kernel stack data.
-
-Cc: sparclinux@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Fixes: 141e5dcaa735 ("Input: input_event - fix the CONFIG_SPARC64 mixup")
-Fixes: 2e746942ebac ("Input: input_event - provide override for sparc64")
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/input/evdev.c       | 14 +++++++-------
- drivers/input/misc/uinput.c | 14 +++++++++-----
- include/uapi/linux/input.h  |  1 +
- 3 files changed, 17 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-index d7dd6fcf2db0..f918fca9ada3 100644
---- a/drivers/input/evdev.c
-+++ b/drivers/input/evdev.c
-@@ -224,13 +224,13 @@ static void __pass_event(struct evdev_client *client,
- 		 */
- 		client->tail = (client->head - 2) & (client->bufsize - 1);
- 
--		client->buffer[client->tail].input_event_sec =
--						event->input_event_sec;
--		client->buffer[client->tail].input_event_usec =
--						event->input_event_usec;
--		client->buffer[client->tail].type = EV_SYN;
--		client->buffer[client->tail].code = SYN_DROPPED;
--		client->buffer[client->tail].value = 0;
-+		client->buffer[client->tail] = (struct input_event) {
-+			.input_event_sec = event->input_event_sec,
-+			.input_event_usec = event->input_event_usec,
-+			.type = EV_SYN,
-+			.code = SYN_DROPPED,
-+			.value = 0,
-+		};
- 
- 		client->packet_head = client->tail;
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index 71547e756e29..740bf7c70d8f 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -454,8 +454,7 @@ static inline unsigned long timeout_to_jiffies(const ktime_t *timeout)
+ 		remaining_jiffies = 0;
+ 	} else {
+ 		ktime_t rem = ktime_sub(*timeout, now);
+-		struct timespec ts = ktime_to_timespec(rem);
+-		remaining_jiffies = timespec_to_jiffies(&ts);
++		remaining_jiffies = ktime_divns(rem, NSEC_PER_SEC / HZ);
  	}
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index fd253781be71..2dabbe47d43e 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -74,12 +74,16 @@ static int uinput_dev_event(struct input_dev *dev,
- 	struct uinput_device	*udev = input_get_drvdata(dev);
- 	struct timespec64	ts;
  
--	udev->buff[udev->head].type = type;
--	udev->buff[udev->head].code = code;
--	udev->buff[udev->head].value = value;
- 	ktime_get_ts64(&ts);
--	udev->buff[udev->head].input_event_sec = ts.tv_sec;
--	udev->buff[udev->head].input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
-+
-+	udev->buff[udev->head] = (struct input_event) {
-+		.input_event_sec = ts.tv_sec,
-+		.input_event_usec = ts.tv_nsec / NSEC_PER_USEC,
-+		.type = type,
-+		.code = code,
-+		.value = value,
-+	};
-+
- 	udev->head = (udev->head + 1) % UINPUT_BUFFER_SIZE;
- 
- 	wake_up_interruptible(&udev->waitq);
-diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
-index f056b2a00d5c..9a61c28ed3ae 100644
---- a/include/uapi/linux/input.h
-+++ b/include/uapi/linux/input.h
-@@ -34,6 +34,7 @@ struct input_event {
- 	__kernel_ulong_t __sec;
- #if defined(__sparc__) && defined(__arch64__)
- 	unsigned int __usec;
-+	unsigned int __pad;
- #else
- 	__kernel_ulong_t __usec;
- #endif
+ 	return remaining_jiffies;
 -- 
 2.20.0
 
