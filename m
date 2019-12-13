@@ -2,45 +2,69 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60C2C5ED5E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68179C341C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2197424731
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0E9246C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="EwfZKJpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfLMPvA (ORCPT
+        id S1727982AbfLMPrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:51:00 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56059 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbfLMPu2 (ORCPT
+        Fri, 13 Dec 2019 10:47:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37858 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbfLMPrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:50:28 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2D2E91C0004;
-        Fri, 13 Dec 2019 15:50:26 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next v3 13/15] net: add a reference to MACsec ops in net_device
-Date:   Fri, 13 Dec 2019 16:48:42 +0100
-Message-Id: <20191213154844.635389-14-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+        Fri, 13 Dec 2019 10:47:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so7175165wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 07:47:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zy/1vxmK7IESgZ5MufAb5lMH5M1hrx2tBtD49AP8IGg=;
+        b=EwfZKJpHgTZfq2oP7jePrJKUK8ZNAm4PsQGN32QF3UGr1NkO0kMWQMhpx3xpKJd4k2
+         qCENKuKt9VkU+QR6qzO73xgYJPkZkW515/0DMsa4G85AiuMp+AxljrIpsZKE+TY8ngmk
+         /8dv3fPgl/f9PgecfmougTtKhSdBMssa8PEsw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zy/1vxmK7IESgZ5MufAb5lMH5M1hrx2tBtD49AP8IGg=;
+        b=r7wPOeYwgPrFqzae2EMM5mtaryuTN6zXsbWdLi4pFtgZardb5bOEQPpkf+d1kR3Ol7
+         hp+5leibEdzfDXWI2aP/2fV8kUxdowNIw+hxAhaAfSfVNhwtVqtemU/zUJmb6tz2C0xv
+         OWBcthbEabjqvOgPlfjyu0odjQQlc6LmL5sYg6qWLNXFm4hxmEbVkXKYliaZmZhfgAEy
+         /PptvoiOp0PjMql/TveKq5qBYqYGfmxS8Na5u8eILL0EjWvf6frxCfMpSArZ0Gtz3C85
+         uOGbQU2jG2yjR1zOxXEkNzQ7WE8D8mwXgt9kEQMUT72iu3oF90Eh1cSD7D3ZsvHKgfCm
+         H0sg==
+X-Gm-Message-State: APjAAAXTz9RHw80H/7zKV25edaLTJhdAfx8cXpwOeAOtPXhm3f+i/ocL
+        86V6pnQvhaug3P8DhBAEtuYCbw==
+X-Google-Smtp-Source: APXvYqxDDCsPNF553NwXAaiIZEZtJCqKHvMMr8OTf4QdQlkxPgrUbkSbZGoxyJoE0pe94MnpErfvJQ==
+X-Received: by 2002:adf:f3d0:: with SMTP id g16mr14079175wrp.2.1576252064539;
+        Fri, 13 Dec 2019 07:47:44 -0800 (PST)
+Received: from localhost.localdomain ([2a06:98c0:1000:8250:3da5:43ec:24b:e240])
+        by smtp.gmail.com with ESMTPSA id s8sm10140295wrt.57.2019.12.13.07.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 07:47:43 -0800 (PST)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     ast@kernel.org, daniel@iogearbox.net,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesus Sanchez-Palencia <jesus.sanchez-palencia@intel.com>,
+        Richard Cochran <rcochran@linutronix.de>,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>
+Subject: [PATCH bpf] bpf: clear skb->tstamp in bpf_redirect when necessary
+Date:   Fri, 13 Dec 2019 15:46:34 +0000
+Message-Id: <20191213154634.27338-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,49 +72,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a reference to MACsec ops to the net_device structure,
-allowing net device drivers to implement offloading operations for
-MACsec.
+Redirecting a packet from ingress to egress by using bpf_redirect
+breaks if the egress interface has an fq qdisc installed. This is the same
+problem as fixed in 8203e2d8 ("net: clear skb->tstamp in forwarding paths").
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Clear skb->tstamp when redirecting into the egress path.
+
+Fixes: 80b14de ("net: Add a new socket option for a future transmit time.")
+Fixes: fb420d5 ("tcp/fq: move back to CLOCK_MONOTONIC")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 ---
- include/linux/netdevice.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/core/filter.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 30745068fb39..01c672ed9754 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -53,6 +53,8 @@ struct netpoll_info;
- struct device;
- struct phy_device;
- struct dsa_port;
-+struct macsec_context;
-+struct macsec_ops;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index f1e703eed3d2..d914257763b5 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2055,6 +2055,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
+ 	}
  
- struct sfp_bus;
- /* 802.11 specific */
-@@ -1789,6 +1791,8 @@ enum netdev_priv_flags {
-  *
-  *	@wol_enabled:	Wake-on-LAN is enabled
-  *
-+ *	@macsec_ops:    MACsec offloading ops
-+ *
-  *	FIXME: cleanup struct net_device such that network protocol info
-  *	moves out.
-  */
-@@ -2079,6 +2083,11 @@ struct net_device {
- 	struct lock_class_key	addr_list_lock_key;
- 	bool			proto_down;
- 	unsigned		wol_enabled:1;
-+
-+#if IS_ENABLED(CONFIG_MACSEC)
-+	/* MACsec management functions */
-+	const struct macsec_ops *macsec_ops;
-+#endif
- };
- #define to_net_dev(d) container_of(d, struct net_device, dev)
+ 	skb->dev = dev;
++	skb->tstamp = 0;
  
+ 	dev_xmit_recursion_inc();
+ 	ret = dev_queue_xmit(skb);
 -- 
-2.23.0
+2.20.1
 
