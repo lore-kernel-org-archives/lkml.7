@@ -2,101 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C93DC4BA39
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B5C4BA24
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6612470A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583522470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfLMQk7 (ORCPT
+        id S1728325AbfLMQ3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:40:59 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:57001 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbfLMQk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:40:58 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MuUrM-1hoOAF0LYo-00rV9X; Fri, 13 Dec 2019 17:40:57 +0100
-Received: by mail-qk1-f180.google.com with SMTP id z76so98914qka.2;
-        Fri, 13 Dec 2019 08:40:56 -0800 (PST)
-X-Gm-Message-State: APjAAAWoS0U0GNvBrpx4FO4Z767v7goXk114etyG00wNVxJxB7w6KGwj
-        rVC2hlaLZt6d+5r/iY7AWGBZ1DxhbWp7k6Yh7Ig=
-X-Google-Smtp-Source: APXvYqw5u1orJc/a+i3My5cWS10VAbPb8wFPnJLEObrgY4XMCNLfXeYS18RvOE3gtWInw4m44JEidx73ZCZBJjkLuTw=
-X-Received: by 2002:a37:5b45:: with SMTP id p66mr14335919qkb.394.1576255255850;
- Fri, 13 Dec 2019 08:40:55 -0800 (PST)
+        Fri, 13 Dec 2019 11:29:16 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29440 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728032AbfLMQ3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:29:16 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBDGPxKt002386;
+        Fri, 13 Dec 2019 17:25:59 +0100
+Date:   Fri, 13 Dec 2019 17:25:59 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "William J. Tolley" <william@breakpointingbad.com>,
+        "Jason A. Donenfeld" <zx2c4@kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [RFC] tcp: implement new per-interface sysctl "auto_dev_bind"
+Message-ID: <20191213162559.GE2209@1wt.eu>
+References: <20191213100730.2153-1-w@1wt.eu>
+ <d40a3670-e983-d9fc-0a06-4f62bafe96b2@gmail.com>
 MIME-Version: 1.0
-References: <20191213141046.1770441-1-arnd@arndb.de> <20191213141046.1770441-11-arnd@arndb.de>
- <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com>
-In-Reply-To: <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Dec 2019 17:40:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
-Message-ID: <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
-Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:wAw4Wi6VZUHfEEGkMBUqSjMEdjXoZgnhYkmoeo226Z8fiMwLwrn
- e+FiZgw2B64glMViYcoywnnndOtaJRWXgA+K4RprdKHttefgT3roLNNjjW+a+gyZpY+bHqk
- zvjhrwIqjZfFCSJWWriCqYxnN0Q4a3rif5mNS5Y5GbTsrXMH3w4q3pNqCvk6AV4OZMN33tQ
- pD1kLrJwrcpWbHm27ZVGg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:z5uKNK97r58=:gjhYy2fzJmWJLKHBZ4fv5W
- NTpJ7HZEtn03HGZqGzkW32yUs77UdOfYrGPIPIuH7/Fo+nyEaU14NJHxalUxjIXSRJnrmwnAx
- GIn4PxJrmF5gBeJlee5E5o/VftRICudQCP2RLFSWS5LfU+Z/je3paDQjHwLfdxNKuM4OF1GiX
- H67SVOmz4ZctgCkyui+Jqi7YcclFb3eZXltSoSVPo6bGRy7A06TFxmpD0JStQIskRu+EQ48E7
- V5z30XfWJ2S4StU2WomVStVZFjKNxrr0y5zCSwcRvOhYyInir3bgKRix5Fci8hmR6HMQWJMOi
- 859clQQ0/w+YrC/35KC/5OwNjk5ZbH+svcIFV/FwloCqvnmbb+lLwHLNf2pISciBNVIGI/xQa
- e6idsW0l23k0rQeKMX4gANTpzdfvhJCQybA1Q57t//3OmNmqrKSBrc+N4Li/hhXotIueSmzVY
- neRY5AQUTjk5yzqnBN5mJStlQ7VBd8l24dUpfdPqDnfdO6GF1FuWYXPI3pfo3alScS2DgpvGY
- u6X9DMb6TDk1yjTMsvDTxstu7YWADS4uhkMXOocDJslJvL86bowoNBrA1t0ExqCwiyOdGFOxI
- KdQPfy7FhRNgXdm+8lfxblLDfe0X81aZMwdZ+GTqnlZpLPAxb+iJnqG8/hpX/NM23sbuTukb7
- QXdBEEBjfeTzIZxOQNeJZtf4/rE1+CihnogHzsF2htmfTDDlXzo/HAdHePzi7FOexVS4ck5Bp
- mJpOlkt3vCiK0W57VYPh3XV7hpCA8SXwDUgbfjUepfIb2/ef+z9E21M8LHLZYCRUzBK43/PB2
- LRaSO5wFHLNEqaMNGZmxPm8Aj9tart/gMGrAtOwHopDLA65wCQ1BjQ10LCmFCx6p47tgYc+pA
- 6pAizvX1MXLNaIAgLsMg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d40a3670-e983-d9fc-0a06-4f62bafe96b2@gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> > On Dec 13, 2019, at 9:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Eric,
 
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index 24534db87e86..508d7c6c00b5 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -823,7 +823,12 @@ static const struct rpc_program cb_program = {
-> > static int max_cb_time(struct net *net)
-> > {
-> >       struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> > -     return max(nn->nfsd4_lease/10, (time_t)1) * HZ;
-> > +
-> > +     /* nfsd4_lease is set to at most one hour */
-> > +     if (WARN_ON_ONCE(nn->nfsd4_lease > 3600))
-> > +             return 360 * HZ;
->
-> Why is the WARN_ON_ONCE added here? Is it really necessary?
+On Fri, Dec 13, 2019 at 08:03:52AM -0800, Eric Dumazet wrote:
+> Hi Willy, thanks for working on this.
 
-This is to ensure the kernel doesn't change to a larger limit that
-requires a 64-bit division on a 32-bit architecture.
+Thanks for reviewing :-)
 
-With the old code, dividing by 10 was always fast as
-nn->nfsd4_lease was the size of an integer register. Now it
-is 64 bit wide, and I check that truncating it to 32 bit again
-is safe.
+> Could you check if your patch works with syncookies mode ?
+> 
+> echo 2 >/proc/sys/net/ipv4/tcp_syncookies
 
-> (Otherwise these all LGTM).
+Good catch:
 
-Thanks for taking a look.
+[19401.670076] Call trace:
+[19401.672494]  tcp_v4_syn_recv_sock+0x168/0x250
+[19401.676807]  tcp_get_cookie_sock+0x4c/0xe4
+[19401.680858]  cookie_v4_check+0x470/0x4a8
+[19401.684740]  tcp_v4_do_rcv+0xf4/0x1c8
+[19401.688362]  tcp_v4_rcv+0x410/0x790
+[19401.691815]  ip_protocol_deliver_rcu+0x8c/0x128
+[19401.696298]  ip_local_deliver_finish+0x64/0x78
+[19401.700696]  ip_local_deliver+0x90/0x94
+[19401.704491]  ip_rcv_finish+0x3c/0x50
+[19401.708027]  ip_rcv+0x5c/0x74
+[19401.710961]  __netif_receive_skb_one_core+0x54/0x7c
+[19401.715790]  __netif_receive_skb+0x5c/0x64
+[19401.719843]  netif_receive_skb_internal+0x68/0xcc
+[19401.724501]  napi_gro_receive+0x70/0xa0
+[19401.728298]  gro_cell_poll+0x74/0x88
+[19401.731832]  net_rx_action+0x134/0x2c8
+[19401.735543]  __do_softirq+0x1bc/0x1fc
+[19401.739165]  irq_exit+0x60/0xb0
+[19401.742270]  __handle_domain_irq+0x6c/0x98
+[19401.746322]  gic_handle_irq+0x70/0xac
+[19401.749945]  el1_irq+0xb8/0x180
+[19401.753052]  arch_cpu_idle+0x10/0x18
+[19401.756588]  do_idle+0x134/0x22c
+[19401.759778]  cpu_startup_entry+0x20/0x3c
+[19401.763660]  rest_init+0xd0/0xdc
+[19401.766852]  arch_call_rest_init+0xc/0x14
+[19401.770818]  start_kernel+0x41c/0x448
+[19401.774444] Code: 790bd261 aa1303e0 97ffbdd1 f9400ac0 (f9416000) 
+[19401.780485] ---[ end trace e08862982660f052 ]---
+[19401.785049] Kernel panic - not syncing: Fatal exception in interrupt
 
-      Arnd
+> I wonder if your patch could be simpler if you were plugging the logic for passive
+> flows in inet_request_bound_dev_if() ?
+
+I'm not sure yet. For having had a quick lookk and tried to move the
+code there, I feel like I'll need to distinguish the protocols (v4/v6)
+in order to look at the per-interface configuration, while it's already
+done in the caller. Or maybe there are some ipv4 settings that also
+apply to ipv6 and we could do the same by having a single one for the
+two maybe ?
+
+Willy
