@@ -2,120 +2,168 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7B2C50709
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE4C50729
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E021F2477E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/RYUMmY"
+	by mail.kernel.org (Postfix) with ESMTP id 917CB24735
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfLMNvg (ORCPT
+        id S1727671AbfLMN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:51:36 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33928 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMNvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:51:36 -0500
-Received: by mail-pf1-f196.google.com with SMTP id l127so1524712pfl.1;
-        Fri, 13 Dec 2019 05:51:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IkiWlzBXeVbd3pSPzmXC9ZHVKdjut2jmY51Fm29xZAs=;
-        b=i/RYUMmYOGOZ/VZKkxvFNK+7sCFzdMrMs6TAwG7vkLPleEc1/ItLPOymgcWVSS5G/U
-         iMTxLpR/JsuQAOk5Ca8XHmU+ijB8RhElFbU9PNj/sOkgaNdwhbIY7f0X89f/+5qWquZf
-         OtkK3OnWpS1/K0bgqrJas+gJAr2HyAlg7i0aOZUrTqRBOXGHGfG2M0LgwRrQfoJbYLRt
-         kuBrwTLuAk9JI6agmzxTGL1XXgDWpLVXQOMl38OUyMrqFLmKz8DqyrwHOjMfMelCqsLP
-         uBvsHhpOLHDtp7Rp1yPzGUozjOK/VHm8n3vgIa1+3i5y7GvZGnUd5IRJPWFIvrHtY58R
-         mylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IkiWlzBXeVbd3pSPzmXC9ZHVKdjut2jmY51Fm29xZAs=;
-        b=NVFnHVKGp4D+6cl7mzivNR2s7fKzO0hda9Km5S54Y6lXCUVuRc5LjeiVBZuXCfV6ti
-         pbtoy8Yh5M/SicInhNAxltdyYTX4zwjidFHpYvgR98AX11mWr2sLrdsHvVHCUjwPrjZS
-         JEF9p9eltc2mhnNjLUYSpERnjv+VjGv5ZyaSzpvvaT1+CYlhsa1xHCLfQ6DZ4c+f5ZIv
-         tu272uXdHrdHQ2ouPEIYUiC8VCLNN8sbbbx7yJTTPd8kPzKRAfGz3xTiGljjZAp8BMmC
-         1QXx2SwR11DplJBZNdb+0s7LcSGNwrpr1zDHjOmR9mCGfsnWA1szxx9wr4oVu1/8glHy
-         jlLA==
-X-Gm-Message-State: APjAAAUsi0P6kuKpkqhA+qWUYJsgTnVHovnz94Z+8YjBus3F4a/S6CEl
-        +pnxKF4Mte7iRT+zRkRVAjiSNAxh
-X-Google-Smtp-Source: APXvYqzZcDPfj1DX9SnGHIm18wsz2wIAlsgXAU/nTMByZURxs8UdspDbhjZ639wV1GPUt6rYXKjOjw==
-X-Received: by 2002:a62:e40e:: with SMTP id r14mr15971357pfh.115.1576245095471;
-        Fri, 13 Dec 2019 05:51:35 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f30sm11194840pga.20.2019.12.13.05.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 05:51:34 -0800 (PST)
-Subject: Re: [PATCH] watchdog: qcom: Use platform_get_irq_optional() for bark
- irq
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        linux-watchdog@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b5b1d073-832b-e7bf-90b0-0cd4167ca3dc@roeck-us.net>
-Date:   Fri, 13 Dec 2019 05:51:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 08:58:09 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7687 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727531AbfLMN6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:58:08 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 28D915C864E049F2EFC2;
+        Fri, 13 Dec 2019 21:58:01 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 13 Dec 2019 21:57:50 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] perf tools: Add arm64 version of get_cpuid()
+Date:   Fri, 13 Dec 2019 21:54:15 +0800
+Message-ID: <1576245255-210926-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 10:49 PM, Sai Prakash Ranjan wrote:
-> platform_get_irq() prints an error message when the interrupt
-> is not available. So on platforms where bark interrupt is
-> not specified, following error message is observed on SDM845.
-> 
-> [    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
-> 
-> This is also seen on SC7180, SM8150 SoCs as well.
-> Fix this by using platform_get_irq_optional() instead.
-> 
-> Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Add an arm64 version of get_cpuid(), which is used for various annotation
+and headers - for example, I now get the CPUID in "perf report --header",
+as shown in this snippet:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+# hostname : ubuntu
+# os release : 5.5.0-rc1-dirty
+# perf version : 5.5.rc1.gbf8a13dc9851
+# arch : aarch64
+# nrcpus online : 96
+# nrcpus avail : 96
+# cpuid : 0x00000000480fd010
 
-> ---
->   drivers/watchdog/qcom-wdt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index a494543d3ae1..eb47fe5ed280 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->   	}
->   
->   	/* check if there is pretimeout support */
-> -	irq = platform_get_irq(pdev, 0);
-> +	irq = platform_get_irq_optional(pdev, 0);
->   	if (irq > 0) {
->   		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
->   				       IRQF_TRIGGER_RISING,
-> 
+Since much of the code to read the MIDR is already in get_cpuid_str(),
+factor out this code.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
+index a32e4b72a98f..d730666ab95d 100644
+--- a/tools/perf/arch/arm64/util/header.c
++++ b/tools/perf/arch/arm64/util/header.c
+@@ -1,8 +1,10 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <perf/cpumap.h>
++#include <util/cpumap.h>
+ #include <internal/cpumap.h>
+ #include <api/fs/fs.h>
++#include <errno.h>
+ #include "debug.h"
+ #include "header.h"
+ 
+@@ -12,26 +14,21 @@
+ #define MIDR_VARIANT_SHIFT      20
+ #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+ 
+-char *get_cpuid_str(struct perf_pmu *pmu)
++static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
+ {
+-	char *buf = NULL;
+-	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+-	int cpu;
+ 	u64 midr = 0;
+-	struct perf_cpu_map *cpus;
+-	FILE *file;
++	int cpu;
+ 
+-	if (!sysfs || !pmu || !pmu->cpus)
+-		return NULL;
++	if (!sysfs || sz < MIDR_SIZE)
++		return EINVAL;
+ 
+-	buf = malloc(MIDR_SIZE);
+-	if (!buf)
+-		return NULL;
++	cpus = perf_cpu_map__get(cpus);
+ 
+-	/* read midr from list of cpus mapped to this pmu */
+-	cpus = perf_cpu_map__get(pmu->cpus);
+ 	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
++		char path[PATH_MAX];
++		FILE *file;
++
+ 		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
+ 				sysfs, cpus->map[cpu]);
+ 
+@@ -57,12 +54,48 @@ char *get_cpuid_str(struct perf_pmu *pmu)
+ 		break;
+ 	}
+ 
+-	if (!midr) {
++	perf_cpu_map__put(cpus);
++
++	if (!midr)
++		return EINVAL;
++
++	return 0;
++}
++
++int get_cpuid(char *buf, size_t sz)
++{
++	struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
++	int ret;
++
++	if (!cpus)
++		return EINVAL;
++
++	ret = _get_cpuid(buf, sz, cpus);
++
++	perf_cpu_map__put(cpus);
++
++	return ret;
++}
++
++char *get_cpuid_str(struct perf_pmu *pmu)
++{
++	char *buf = NULL;
++	int res;
++
++	if (!pmu || !pmu->cpus)
++		return NULL;
++
++	buf = malloc(MIDR_SIZE);
++	if (!buf)
++		return NULL;
++
++	/* read midr from list of cpus mapped to this pmu */
++	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
++	if (res) {
+ 		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
+ 		free(buf);
+ 		buf = NULL;
+ 	}
+ 
+-	perf_cpu_map__put(cpus);
+ 	return buf;
+ }
+-- 
+2.17.1
 
