@@ -2,133 +2,149 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382A2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38DFC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0051B214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gu8Vs9E+"
+	by mail.kernel.org (Postfix) with ESMTP id C442B2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLMJdj (ORCPT
+        id S1726760AbfLMJdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:33:39 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33006 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMJdi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:33:38 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c13so1018254pls.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 01:33:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=KY94rQv5/loJQD4i0BZGc7jhqbYj6PtDGEFoVjzh9zM=;
-        b=Gu8Vs9E+vFF8vFlZQHcm1Yilp0uo8ZYeY6s7APVwLAVv5v7A2KXo3Kxip03kVC8Qkj
-         O6PwgC2GHF+SKubgVvhFvfGrBl+qy6z0udspUM2ac4H/mev6Y16cSo19BM5izD2spoip
-         CTi0RjECdgrDGROEss9lxv5N0Z4RQgv8fnpmnHedCtGzypL7egdRd5P8NPkY7cvwB6eC
-         iV71N7KxJhG81qEhh9VYzoVv1gEo9U6MXwLuKDzocT6jKASm+eULMERULn8xU390DPZ/
-         GYR6LXfSyJLJ1IWjHcKALyk/0phkNfS6aLbfPIehzQEPOZvIXPv/pQ7oUfRTqc0zYEmk
-         2b3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=KY94rQv5/loJQD4i0BZGc7jhqbYj6PtDGEFoVjzh9zM=;
-        b=otU4AP6b396ZotweoJoGnPV+0PK607dX2UwGDxA+3asAU6XcAYGdlf+7y9PyE4h5TP
-         tqP6eu6bHzJ+WoHASDD6+LsrIJ+pHw8xVYnLHFnvKqgguiYJOrnd8rHG+ORD8dvIY3nE
-         J+byC6LQeCXvUx8NNbsOaRQxAT91LwqTpda/VQOVu7V39Uo4Qvg9SlWOXsiKalkzgIXq
-         V9rDRe92oxR2XE4Mq9FwM/ZhcJ4pbDoyXGgaLka8/mdm7VUWOrvocRLAlg00yC0IAGd5
-         fD7jZJGdmjxnVb1N/1ICxTt/GvP1QpyY05L/sjWGgiIM4r6Wdb7vGuznNMmG7w2kLKUv
-         WIYQ==
-X-Gm-Message-State: APjAAAVWuA+/B3g+rpJk52lYf5Bck/GkFYRRZnBjpG5Rd5XPjhSaFuVm
-        npeFNR7hxTvUA9lZwGLDykN7ng==
-X-Google-Smtp-Source: APXvYqzb/2sdxXklFn5oYYxrkweQPjFaA8rYmyPMWm55R8sUbiLqH6XoQbqXDLTUeCKbBETB0Sy8Ow==
-X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr14893672pjx.13.1576229617625;
-        Fri, 13 Dec 2019 01:33:37 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id w12sm10425259pfd.58.2019.12.13.01.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 01:33:36 -0800 (PST)
-Date:   Fri, 13 Dec 2019 01:33:35 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Peter Gonda <pgonda@google.com>,
-        Jianxiong Gao <jxgao@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [bug] __blk_mq_run_hw_queue suspicious rcu usage
-In-Reply-To: <alpine.DEB.2.21.1912121550230.148507@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.1912130121500.215313@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041434580.160038@chino.kir.corp.google.com> <20190905060627.GA1753@lst.de> <alpine.DEB.2.21.1909051534050.245316@chino.kir.corp.google.com> <alpine.DEB.2.21.1909161641320.9200@chino.kir.corp.google.com>
- <alpine.DEB.2.21.1909171121300.151243@chino.kir.corp.google.com> <1d74607e-37f7-56ca-aba3-5a3bd7a68561@amd.com> <20190918132242.GA16133@lst.de> <alpine.DEB.2.21.1911271359000.135363@chino.kir.corp.google.com> <20191128064056.GA19822@lst.de>
- <alpine.DEB.2.21.1912121550230.148507@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 13 Dec 2019 04:33:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38784 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLMJdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:33:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 477BBAD3B;
+        Fri, 13 Dec 2019 09:33:47 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH v7 2/3] xen/blkback: Squeeze page pools if a
+ memory pressure is detected
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        SeongJae Park <sj38.park@gmail.com>
+Cc:     axboe@kernel.dk, sjpark@amazon.com, konrad.wilk@oracle.com,
+        pdurrant@amazon.com, SeongJae Park <sjpark@amazon.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20191212152757.GF11756@Air-de-Roger>
+ <20191212160658.10466-1-sj38.park@gmail.com>
+ <20191213092742.GG11756@Air-de-Roger>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <8425d77b-37cf-d959-9466-7bc1d4d99642@suse.com>
+Date:   Fri, 13 Dec 2019 10:33:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191213092742.GG11756@Air-de-Roger>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, David Rientjes wrote:
-
-> Since all DMA must be unencrypted in this case, what happens if all 
-> dma_direct_alloc_pages() calls go through the DMA pool in 
-> kernel/dma/remap.c when force_dma_unencrypted(dev) == true since 
-> __PAGE_ENC is cleared for these ptes?  (Ignoring for a moment that this 
-> special pool should likely be a separate dma pool.)
+On 13.12.19 10:27, Roger Pau Monné wrote:
+> On Thu, Dec 12, 2019 at 05:06:58PM +0100, SeongJae Park wrote:
+>> On Thu, 12 Dec 2019 16:27:57 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+>>
+>>>> diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+>>>> index fd1e19f1a49f..98823d150905 100644
+>>>> --- a/drivers/block/xen-blkback/blkback.c
+>>>> +++ b/drivers/block/xen-blkback/blkback.c
+>>>> @@ -142,6 +142,21 @@ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
+>>>>   		HZ * xen_blkif_pgrant_timeout);
+>>>>   }
+>>>>   
+>>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
+>>>> +static unsigned int buffer_squeeze_duration_ms = 10;
+>>>> +module_param_named(buffer_squeeze_duration_ms,
+>>>> +		buffer_squeeze_duration_ms, int, 0644);
+>>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
+>>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
+>>>> +
+>>>> +static unsigned long buffer_squeeze_end;
+>>>> +
+>>>> +void xen_blkbk_reclaim_memory(struct xenbus_device *dev)
+>>>> +{
+>>>> +	buffer_squeeze_end = jiffies +
+>>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+>>>
+>>> I'm not sure this is fully correct. This function will be called for
+>>> each blkback instance, but the timeout is stored in a global variable
+>>> that's shared between all blkback instances. Shouldn't this timeout be
+>>> stored in xen_blkif so each instance has it's own local variable?
+>>>
+>>> Or else in the case you have 1k blkback instances the timeout is
+>>> certainly going to be longer than expected, because each call to
+>>> xen_blkbk_reclaim_memory will move it forward.
+>>
+>> Agreed that.  I think the extended timeout would not make a visible
+>> performance, though, because the time that 1k-loop take would be short enough
+>> to be ignored compared to the millisecond-scope duration.
+>>
+>> I took this way because I wanted to minimize such structural changes as far as
+>> I can, as this is just a point-fix rather than ultimate solution.  That said,
+>> it is not fully correct and very confusing.  My another colleague also pointed
+>> out it in internal review.  Correct solution would be to adding a variable in
+>> the struct as you suggested or avoiding duplicated update of the variable by
+>> initializing the variable once the squeezing duration passes.  I would prefer
+>> the later way, as it is more straightforward and still not introducing
+>> structural change.  For example, it might be like below:
+>>
+>> diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+>> index f41c698dd854..6856c8ef88de 100644
+>> --- a/drivers/block/xen-blkback/blkback.c
+>> +++ b/drivers/block/xen-blkback/blkback.c
+>> @@ -152,8 +152,9 @@ static unsigned long buffer_squeeze_end;
+>>   
+>>   void xen_blkbk_reclaim_memory(struct xenbus_device *dev)
+>>   {
+>> -       buffer_squeeze_end = jiffies +
+>> -               msecs_to_jiffies(buffer_squeeze_duration_ms);
+>> +       if (!buffer_squeeze_end)
+>> +               buffer_squeeze_end = jiffies +
+>> +                       msecs_to_jiffies(buffer_squeeze_duration_ms);
+>>   }
+>>   
+>>   static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
+>> @@ -669,10 +670,13 @@ int xen_blkif_schedule(void *arg)
+>>                  }
+>>   
+>>                  /* Shrink the free pages pool if it is too large. */
+>> -               if (time_before(jiffies, buffer_squeeze_end))
+>> +               if (time_before(jiffies, buffer_squeeze_end)) {
+>>                          shrink_free_pagepool(ring, 0);
+>> -               else
+>> +               } else {
+>> +                       if (unlikely(buffer_squeeze_end))
+>> +                               buffer_squeeze_end = 0;
+>>                          shrink_free_pagepool(ring, max_buffer_pages);
+>> +               }
+>>   
+>>                  if (log_stats && time_after(jiffies, ring->st_print))
+>>                          print_stats(ring);
+>>
+>> May I ask you what way would you prefer?
 > 
-> I assume a general depletion of that atomic pool so 
-> DEFAULT_DMA_COHERENT_POOL_SIZE becomes insufficient.  I'm not sure what 
-> size any DMA pool wired up for this specific purpose would need to be 
-> sized at, so I assume dynamic resizing is required.
+> I'm not particularly found of this approach, as I think it's racy. Ie:
+> you would have to add some kind of lock to make sure the contents of
+> buffer_squeeze_end stay unmodified during the read and set cycle, or
+> else xen_blkif_schedule will race with xen_blkbk_reclaim_memory.
 > 
-> It shouldn't be *that* difficult to supplement kernel/dma/remap.c with the 
-> ability to do background expansion of the atomic pool when nearing its 
-> capacity for this purpose?  I imagine that if we just can't allocate pages 
-> within the DMA mask that it's the only blocker to dynamic expansion and we 
-> don't oom kill for lowmem.  But perhaps vm.lowmem_reserve_ratio is good 
-> enough protection?
-> 
-> Beyond that, I'm not sure what sizing would be appropriate if this is to 
-> be a generic solution in the DMA API for all devices that may require 
-> unecrypted memory.
-> 
+> This is likely not a big deal ATM since the code will work as
+> expected in most cases AFAICT, but I would still prefer to have a
+> per-instance buffer_squeeze_end added to xen_blkif, given that the
+> callback is per-instance. I wouldn't call it a structural change, it's
+> just adding a variable to a struct instead of having a shared one, but
+> the code is almost the same as the current version.
 
-Secondly, I'm wondering about how the DMA pool for atomic allocations 
-compares with lowmem reserve for both ZONE_DMA and ZONE_DMA32.  For 
-allocations where the classzone index is one of these zones, the lowmem 
-reserve is static, we don't account the amount of lowmem allocated and 
-adjust this for future watermark checks in the page allocator.  We always 
-guarantee that reserve is free (absent the depletion of the zone due to 
-GFP_ATOMIC allocations where we fall below the min watermarks).
+FWIW, I agree.
 
-If all DMA memory needs to have _PAGE_ENC cleared when the guest is SEV 
-encrypted, I'm wondering if the entire lowmem reserve could be designed as 
-a pool of lowmem pages rather than a watermark check.  If implemented as a 
-pool of pages in the page allocator itself, and today's reserve is static, 
-maybe we could get away with a dynamic resizing based on that static 
-amount?  We could offload the handling of this reserve to kswapd such that 
-when the pool falls below today's reserve amount, we dynamically expand, 
-do the necessary unencryption in blockable context, and add to the pool.  
-Bonus is that this provides high-order lowmem reserve if implemented as 
-per-order freelists rather than the current watermark check that provides 
-no guarantees for any high-order lowmem.
 
-I don't want to distract from the first set of questions in my previous 
-email because I need an understanding of that anyway, but I'm hoping 
-Christoph can guide me on why the above wouldn't be an improvement even 
-for non encrypted guests.
+Juergen
