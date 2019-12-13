@@ -2,205 +2,344 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C78C341AD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F522C4D2E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688802468B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N3yH+STX"
+	by mail.kernel.org (Postfix) with ESMTP id 4FE13246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfLMUus (ORCPT
+        id S1726784AbfLMU5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:50:48 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:42732 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMUus (ORCPT
+        Fri, 13 Dec 2019 15:57:15 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:47911 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMU5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:50:48 -0500
-Received: by mail-wr1-f73.google.com with SMTP id k18so55612wrw.9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 12:50:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=a1jdZmOtDq0rK4AdE9X1BQB4Chvj4FuBPej3mFQLPjk=;
-        b=N3yH+STXKEmVZwOd8g92yfolGIDrXCUyvbYfRMPZAV0cqzMv3RzlbLUjECmezVwRE1
-         TD+cFnEv+q8T/zR17M5igH56fL8AqDcsV28wwcIxsRznFEFT01x+ZcHiDFQQ0zjk5Kcx
-         ao0cRmV1K0FDKyhEFCyHHOMpRHDb4DunZ07J8LbfW2977dqimTRh9W7ODoEqHrBINtXA
-         gvkh7ehEfkOWdr21Fich8iBDtuuJbUsPdlEXLMNVQmIYqVZQWZw9u8u3S51mNFy2xjgy
-         dawByM65FGUp4mSHxHXgXS8YKaD+1UCjeBryVaBRLckUwjSalnXNce9aVaDdwjS89CTs
-         s7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=a1jdZmOtDq0rK4AdE9X1BQB4Chvj4FuBPej3mFQLPjk=;
-        b=Wy/yZFODmX0GRUR5hFATtWYhTm/yACY39/UTjo38e5QH2noRc84819pvjkhp2erQPe
-         4dYqywnG+InK+MwVTEpd6SvlWRqDwCeGSnBkdydukXOFVZhc2g6fNVxXOJw2WRJ8TjPB
-         BUrIuxgczyRtSp/jmK3zAzfFnH/0NxWnrs8pIqsgrIqFSKRqfVbHqO9tcIL8VhUud6Su
-         bobgfwG012OnS0YrDs8F9310OrGyqqwK2OuKsQDPwRN2wY70rRN8WZ6YtXzYrFPdlBRu
-         svUkmw1/BwNwAjDxhmd4E1ktEHyWaZfvSspw+pxu/K9mclFm5w03j7CKPX3IOeQlDh8M
-         bOvw==
-X-Gm-Message-State: APjAAAVXLyGvIaPBvcjAuloou1WfJ5qd0UyvEqGRJKyK7NuL13znWIQH
-        skJuONcoe1ECbqsgKsuBuni6xu8d6Q==
-X-Google-Smtp-Source: APXvYqx27WCKFTuvpfsjZF17stOqrA2yK5nhL5kWsOcoNR7csS9CTHDYdUWqRHLRphrvfYDI7THqdFSD/w==
-X-Received: by 2002:adf:dc86:: with SMTP id r6mr15819986wrj.68.1576270243820;
- Fri, 13 Dec 2019 12:50:43 -0800 (PST)
-Date:   Fri, 13 Dec 2019 21:49:46 +0100
-Message-Id: <20191213204946.251125-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH RESEND -rcu/kcsan] kcsan: Prefer __always_inline for fast-path
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Dec 2019 15:57:14 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Macf4-1i8Ard27AI-00c9CC; Fri, 13 Dec 2019 21:56:47 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeff Layton <jeff.layton@primarydata.com>,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2 16/24] nfs: use time64_t internally
+Date:   Fri, 13 Dec 2019 21:53:44 +0100
+Message-Id: <20191213205417.3871055-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
+References: <20191213204936.3643476-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zU579cGLtM2BwOX2L6/aBNJm2mG2LNJX5rJZryF/qIu0irH6BiF
+ ZY/JjteGsij9vQsWk3Dj+aew3UprVZlgGfztwzz6xul+TAEV6K79wojrGUoIE8ZCzm5WE6j
+ 8KBq0afuO2eCyU1AwnwovRQvXboZv/LEA8qVC0DirLx+zt/KcYbbbSL8JVLt6310oGaM2Kk
+ wTDJ99kbGOJq5qwuAogxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EWtUItQVyk0=:EOA+z3Iv+IOZwyevr7KVIP
+ jXwQMOg+cf5aR7Jh0dtXDGqvIqvAiYH42nbT4N3oC7mHEoSEXLoQFNTdMufsa4OIewrZoMCh2
+ z14/rjfPVlV7A76zSvP2NU+ifgLGFT4RtGHITc9KGom0dLiYiFVhj1LXcTNUbZGo3jnbDQfyF
+ lhmR1Pd5Yarq/LR56qFXgJ+TtWEiiCK1ZO9FT9gQaAGzJ6erSY2mgrgIiPQ2cbUAS0gXAofRu
+ tlHCJXgIviZNGo2EqYzHEEIfpDAwf4BFarVXnPd1Z56HzTMbnREo3yws4u5+3hXPntj7EVOKp
+ /PGwgcytxz55P/iDOI7hPx8PB6F/GMe1gcFESzrTAu+ExTDcGCRiIyMP6ziYU/IfmZ4YsHAeE
+ Fx9Z2P10MxSAZ/gqLW+zoKnMG/9t5Jwz7y1tVCUtRM4eHE0tT1bk45QT5+0EgLuCWAZrIxeBX
+ Ohe3yU0QyP7OVGZ0PnSbd8jUENV5oImZlviqvOFv4oFtGA3O7DqSprNeWiogEpn2KMkyL+nB+
+ cyPWeOYbj6ZzvtMEPiQTL3/+OtPBXQQxAZEoUIKe2FJgrdCJYT7db9MwpT6KJ9JU2RHxpfvBk
+ D/M18UAr3iZKTtWBuXwO75l46mCt8+lOFuu+9Yzh7L8pKgWEt5gLasRYxuHCfa5axA4Z8fR9W
+ 9h/ibWkPpGhTROhXarsgmgq5Su2Jz10DR01iRLwEIlKT9pCr/qLoHDLc6Y7XZwtaLTFB3Pfpz
+ 6ZXkXkvXy8c4da0vU093frsZO8cbMF/DZwjvYozTkWnRr5fF9JTK2gOmONFEMf8ifaSrgiecN
+ fapJ4Wkjez2Pjkn25MwYRSnoKzJCaA2lUEOwHtMsf9ks8XSU4VhqPVDcR82w3vEhdBGlHp3Mq
+ /Ap8N6uIIZ8R3+xZbJ9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prefer __always_inline for fast-path functions that are called outside
-of user_access_save, to avoid generating UACCESS warnings when
-optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
-surprises with compiler versions that change the inlining heuristic even
-when optimizing for performance.
+The timestamps for the cache are all in boottime seconds, so they
+don't overflow 32-bit values, but the use of time_t is deprecated
+because it generally does overflow when used with wall-clock time.
 
-Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Signed-off-by: Marco Elver <elver@google.com>
+There are multiple possible ways of avoiding it:
+
+- leave time_t, which is safe here, but forces others to
+  look into this code to determine that it is over and over.
+
+- use a more generic type, like 'int' or 'long', which is known
+  to be sufficient here but loses the documentation of referring
+  to timestamps
+
+- use ktime_t everywhere, and convert into seconds in the few
+  places where we want realtime-seconds. The conversion is
+  sometimes expensive, but not more so than the conversion we
+  do today.
+
+- use time64_t to clarify that this code is safe. Nothing would
+  change for 64-bit architectures, but it is slightly less
+  efficient on 32-bit architectures.
+
+Without a clear winner of the three approaches above, this picks
+the last one, favouring readability over a small performance
+loss on 32-bit architectures.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Version rebased on -rcu/kcsan.
+ include/linux/sunrpc/cache.h      | 42 +++++++++++++++++--------------
+ net/sunrpc/auth_gss/svcauth_gss.c |  2 +-
+ net/sunrpc/cache.c                | 16 ++++++------
+ net/sunrpc/svcauth_unix.c         | 10 ++++----
+ 4 files changed, 37 insertions(+), 33 deletions(-)
 
-There are 3 locations that would conflict with the style cleanup in
--tip/locking/kcsan:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=locking/kcsan&id=5cbaefe9743bf14c9d3106db0cc19f8cb0a3ca22
-
-For the conflicting locations the better style is carried over, so that
-upon eventual merge the resolution should be trivial.
----
- kernel/kcsan/atomic.h   |  2 +-
- kernel/kcsan/core.c     | 17 ++++++++---------
- kernel/kcsan/encoding.h | 11 +++++------
- 3 files changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
-index c9c3fe628011..466e6777533e 100644
---- a/kernel/kcsan/atomic.h
-+++ b/kernel/kcsan/atomic.h
-@@ -18,7 +18,7 @@
-  * than cast to volatile. Eventually, we hope to be able to remove this
-  * function.
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index f8603724fbee..0f64de7caa39 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -45,8 +45,8 @@
   */
--static inline bool kcsan_is_atomic(const volatile void *ptr)
-+static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
- {
- 	/* only jiffies for now */
- 	return ptr == &jiffies;
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index d9410d58c93e..69870645b631 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -78,9 +78,8 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS - 1];
+ struct cache_head {
+ 	struct hlist_node	cache_list;
+-	time_t		expiry_time;	/* After time time, don't use the data */
+-	time_t		last_refresh;   /* If CACHE_PENDING, this is when upcall was
++	time64_t	expiry_time;	/* After time time, don't use the data */
++	time64_t	last_refresh;   /* If CACHE_PENDING, this is when upcall was
+ 					 * sent, else this is when update was
+ 					 * received, though it is alway set to
+ 					 * be *after* ->flush_time.
+@@ -95,22 +95,22 @@ struct cache_detail {
+ 	/* fields below this comment are for internal use
+ 	 * and should not be touched by cache owners
+ 	 */
+-	time_t			flush_time;		/* flush all cache items with
++	time64_t		flush_time;		/* flush all cache items with
+ 							 * last_refresh at or earlier
+ 							 * than this.  last_refresh
+ 							 * is never set at or earlier
+ 							 * than this.
+ 							 */
+ 	struct list_head	others;
+-	time_t			nextcheck;
++	time64_t		nextcheck;
+ 	int			entries;
+ 
+ 	/* fields for communication over channel */
+ 	struct list_head	queue;
+ 
+ 	atomic_t		writers;		/* how many time is /channel open */
+-	time_t			last_close;		/* if no writers, when did last close */
+-	time_t			last_warn;		/* when we last warned about no writers */
++	time64_t		last_close;		/* if no writers, when did last close */
++	time64_t		last_warn;		/* when we last warned about no writers */
+ 
+ 	union {
+ 		struct proc_dir_entry	*procfs;
+@@ -147,18 +147,22 @@ struct cache_deferred_req {
+  * timestamps kept in the cache are expressed in seconds
+  * since boot.  This is the best for measuring differences in
+  * real time.
++ * This reimplemnts ktime_get_boottime_seconds() in a slightly
++ * faster but less accurate way. When we end up converting
++ * back to wallclock (CLOCK_REALTIME), that error often
++ * cancels out during the reverse operation.
   */
- static DEFINE_PER_CPU(long, kcsan_skip);
- 
--static inline atomic_long_t *find_watchpoint(unsigned long addr, size_t size,
--					     bool expect_write,
--					     long *encoded_watchpoint)
-+static __always_inline atomic_long_t *
-+find_watchpoint(unsigned long addr, size_t size, bool expect_write, long *encoded_watchpoint)
+-static inline time_t seconds_since_boot(void)
++static inline time64_t seconds_since_boot(void)
  {
- 	const int slot = watchpoint_slot(addr);
- 	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
-@@ -150,8 +149,8 @@ static inline atomic_long_t *insert_watchpoint(unsigned long addr, size_t size,
-  *	2. the thread that set up the watchpoint already removed it;
-  *	3. the watchpoint was removed and then re-used.
-  */
--static inline bool try_consume_watchpoint(atomic_long_t *watchpoint,
--					  long encoded_watchpoint)
-+static __always_inline bool
-+try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
- {
- 	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint,
- 					       CONSUMED_WATCHPOINT);
-@@ -166,7 +165,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
- 	       CONSUMED_WATCHPOINT;
+-	struct timespec boot;
+-	getboottime(&boot);
+-	return get_seconds() - boot.tv_sec;
++	struct timespec64 boot;
++	getboottime64(&boot);
++	return ktime_get_real_seconds() - boot.tv_sec;
  }
  
--static inline struct kcsan_ctx *get_ctx(void)
-+static __always_inline struct kcsan_ctx *get_ctx(void)
+-static inline time_t convert_to_wallclock(time_t sinceboot)
++static inline time64_t convert_to_wallclock(time64_t sinceboot)
  {
- 	/*
- 	 * In interrupt, use raw_cpu_ptr to avoid unnecessary checks, that would
-@@ -175,7 +174,7 @@ static inline struct kcsan_ctx *get_ctx(void)
- 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+-	struct timespec boot;
+-	getboottime(&boot);
++	struct timespec64 boot;
++	getboottime64(&boot);
+ 	return boot.tv_sec + sinceboot;
  }
  
--static inline bool is_atomic(const volatile void *ptr)
-+static __always_inline bool is_atomic(const volatile void *ptr)
- {
- 	struct kcsan_ctx *ctx = get_ctx();
- 
-@@ -199,7 +198,7 @@ static inline bool is_atomic(const volatile void *ptr)
- 	return kcsan_is_atomic(ptr);
+@@ -273,7 +277,7 @@ static inline int get_uint(char **bpp, unsigned int *anint)
+ 	return 0;
  }
  
--static inline bool should_watch(const volatile void *ptr, int type)
-+static __always_inline bool should_watch(const volatile void *ptr, int type)
+-static inline int get_time(char **bpp, time_t *time)
++static inline int get_time(char **bpp, time64_t *time)
  {
- 	/*
- 	 * Never set up watchpoints when memory operations are atomic.
-@@ -232,7 +231,7 @@ static inline void reset_kcsan_skip(void)
- 	this_cpu_write(kcsan_skip, skip_count);
+ 	char buf[50];
+ 	long long ll;
+@@ -287,20 +291,20 @@ static inline int get_time(char **bpp, time_t *time)
+ 	if (kstrtoll(buf, 0, &ll))
+ 		return -EINVAL;
+ 
+-	*time = (time_t)ll;
++	*time = ll;
+ 	return 0;
  }
  
--static inline bool kcsan_is_enabled(void)
-+static __always_inline bool kcsan_is_enabled(void)
+-static inline time_t get_expiry(char **bpp)
++static inline time64_t get_expiry(char **bpp)
  {
- 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
- }
-diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
-index e17bdac0e54b..e527e83ce825 100644
---- a/kernel/kcsan/encoding.h
-+++ b/kernel/kcsan/encoding.h
-@@ -58,9 +58,8 @@ static inline long encode_watchpoint(unsigned long addr, size_t size,
- 		      (addr & WATCHPOINT_ADDR_MASK));
+-	time_t rv;
+-	struct timespec boot;
++	time64_t rv;
++	struct timespec64 boot;
+ 
+ 	if (get_time(bpp, &rv))
+ 		return 0;
+ 	if (rv < 0)
+ 		return 0;
+-	getboottime(&boot);
++	getboottime64(&boot);
+ 	return rv - boot.tv_sec;
  }
  
--static inline bool decode_watchpoint(long watchpoint,
--				     unsigned long *addr_masked, size_t *size,
--				     bool *is_write)
-+static __always_inline bool
-+decode_watchpoint(long watchpoint, unsigned long *addr_masked, size_t *size, bool *is_write)
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 0c3e22838ddf..311181720d79 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -203,7 +203,7 @@ static int rsi_parse(struct cache_detail *cd,
+ 	char *ep;
+ 	int len;
+ 	struct rsi rsii, *rsip = NULL;
+-	time_t expiry;
++	time64_t expiry;
+ 	int status = -EINVAL;
+ 
+ 	memset(&rsii, 0, sizeof(rsii));
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index f740cb51802a..d996bf872a7c 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -42,7 +42,7 @@ static bool cache_listeners_exist(struct cache_detail *detail);
+ 
+ static void cache_init(struct cache_head *h, struct cache_detail *detail)
  {
- 	if (watchpoint == INVALID_WATCHPOINT ||
- 	    watchpoint == CONSUMED_WATCHPOINT)
-@@ -77,13 +76,13 @@ static inline bool decode_watchpoint(long watchpoint,
- /*
-  * Return watchpoint slot for an address.
-  */
--static inline int watchpoint_slot(unsigned long addr)
-+static __always_inline int watchpoint_slot(unsigned long addr)
+-	time_t now = seconds_since_boot();
++	time64_t now = seconds_since_boot();
+ 	INIT_HLIST_NODE(&h->cache_list);
+ 	h->flags = 0;
+ 	kref_init(&h->ref);
+@@ -139,10 +139,10 @@ EXPORT_SYMBOL_GPL(sunrpc_cache_lookup_rcu);
+ 
+ static void cache_dequeue(struct cache_detail *detail, struct cache_head *ch);
+ 
+-static void cache_fresh_locked(struct cache_head *head, time_t expiry,
++static void cache_fresh_locked(struct cache_head *head, time64_t expiry,
+ 			       struct cache_detail *detail)
  {
- 	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
+-	time_t now = seconds_since_boot();
++	time64_t now = seconds_since_boot();
+ 	if (now <= detail->flush_time)
+ 		/* ensure it isn't immediately treated as expired */
+ 		now = detail->flush_time + 1;
+@@ -274,7 +274,7 @@ int cache_check(struct cache_detail *detail,
+ 		    struct cache_head *h, struct cache_req *rqstp)
+ {
+ 	int rv;
+-	long refresh_age, age;
++	time64_t refresh_age, age;
+ 
+ 	/* First decide return status as best we can */
+ 	rv = cache_is_valid(h);
+@@ -288,7 +288,7 @@ int cache_check(struct cache_detail *detail,
+ 			rv = -ENOENT;
+ 	} else if (rv == -EAGAIN ||
+ 		   (h->expiry_time != 0 && age > refresh_age/2)) {
+-		dprintk("RPC:       Want update, refage=%ld, age=%ld\n",
++		dprintk("RPC:       Want update, refage=%lld, age=%lld\n",
+ 				refresh_age, age);
+ 		if (!test_and_set_bit(CACHE_PENDING, &h->flags)) {
+ 			switch (cache_make_upcall(detail, h)) {
+@@ -1404,7 +1404,7 @@ static int c_show(struct seq_file *m, void *p)
+ 		return cd->cache_show(m, cd, NULL);
+ 
+ 	ifdebug(CACHE)
+-		seq_printf(m, "# expiry=%ld refcnt=%d flags=%lx\n",
++		seq_printf(m, "# expiry=%lld refcnt=%d flags=%lx\n",
+ 			   convert_to_wallclock(cp->expiry_time),
+ 			   kref_read(&cp->ref), cp->flags);
+ 	cache_get(cp);
+@@ -1477,7 +1477,7 @@ static ssize_t read_flush(struct file *file, char __user *buf,
+ 	char tbuf[22];
+ 	size_t len;
+ 
+-	len = snprintf(tbuf, sizeof(tbuf), "%lu\n",
++	len = snprintf(tbuf, sizeof(tbuf), "%llu\n",
+ 			convert_to_wallclock(cd->flush_time));
+ 	return simple_read_from_buffer(buf, count, ppos, tbuf, len);
+ }
+@@ -1488,7 +1488,7 @@ static ssize_t write_flush(struct file *file, const char __user *buf,
+ {
+ 	char tbuf[20];
+ 	char *ep;
+-	time_t now;
++	time64_t now;
+ 
+ 	if (*ppos || count > sizeof(tbuf)-1)
+ 		return -EINVAL;
+diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
+index 5c04ba7d456b..04aa80a2d752 100644
+--- a/net/sunrpc/svcauth_unix.c
++++ b/net/sunrpc/svcauth_unix.c
+@@ -166,7 +166,7 @@ static void ip_map_request(struct cache_detail *cd,
  }
  
--static inline bool matching_access(unsigned long addr1, size_t size1,
--				   unsigned long addr2, size_t size2)
-+static __always_inline bool matching_access(unsigned long addr1, size_t size1,
-+					    unsigned long addr2, size_t size2)
+ static struct ip_map *__ip_map_lookup(struct cache_detail *cd, char *class, struct in6_addr *addr);
+-static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm, struct unix_domain *udom, time_t expiry);
++static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm, struct unix_domain *udom, time64_t expiry);
+ 
+ static int ip_map_parse(struct cache_detail *cd,
+ 			  char *mesg, int mlen)
+@@ -187,7 +187,7 @@ static int ip_map_parse(struct cache_detail *cd,
+ 
+ 	struct ip_map *ipmp;
+ 	struct auth_domain *dom;
+-	time_t expiry;
++	time64_t expiry;
+ 
+ 	if (mesg[mlen-1] != '\n')
+ 		return -EINVAL;
+@@ -308,7 +308,7 @@ static inline struct ip_map *ip_map_lookup(struct net *net, char *class,
+ }
+ 
+ static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
+-		struct unix_domain *udom, time_t expiry)
++		struct unix_domain *udom, time64_t expiry)
  {
- 	unsigned long end_range1 = addr1 + size1 - 1;
- 	unsigned long end_range2 = addr2 + size2 - 1;
+ 	struct ip_map ip;
+ 	struct cache_head *ch;
+@@ -328,7 +328,7 @@ static int __ip_map_update(struct cache_detail *cd, struct ip_map *ipm,
+ }
+ 
+ static inline int ip_map_update(struct net *net, struct ip_map *ipm,
+-		struct unix_domain *udom, time_t expiry)
++		struct unix_domain *udom, time64_t expiry)
+ {
+ 	struct sunrpc_net *sn;
+ 
+@@ -491,7 +491,7 @@ static int unix_gid_parse(struct cache_detail *cd,
+ 	int rv;
+ 	int i;
+ 	int err;
+-	time_t expiry;
++	time64_t expiry;
+ 	struct unix_gid ug, *ugp;
+ 
+ 	if (mesg[mlen - 1] != '\n')
 -- 
-2.24.1.735.g03f4e72817-goog
+2.20.0
 
