@@ -2,130 +2,158 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2504BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DAEC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2FE22527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576275816;
-	bh=4iChmOKy+iWyzBUqX73EkorUxBHm0c/M19HO10x0in0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Br13Il9NiY4dEbQJ+ihggU6VH7jMjaKhMnlOQ/HGZQqrCW/qwa2SBa+6LJh+qyetl
-	 JtPOcnZlBQJ1KZuNDoQKJ/ReUN6Pmt0n0BOL62p46lYwjUdIqM2DwpZF/GMAm4Evw4
-	 v2KNwL2VwrGoYrgcca7F79ueQsP4Iy59TfXlNU24=
+	by mail.kernel.org (Postfix) with ESMTP id B9ACA22527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F9NeOTKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfLMWXf (ORCPT
+        id S1726757AbfLMWY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:23:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfLMWXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:23:34 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C55E20706;
-        Fri, 13 Dec 2019 22:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576275813;
-        bh=4iChmOKy+iWyzBUqX73EkorUxBHm0c/M19HO10x0in0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i4KM7W9Nv9QULJGh6tsFLMg6kACWSO3TPSt+iFvi0Lmz60OcH9UvQYZkapZjopQ6L
-         bOgaiNRrN7wdN5Mmbr2wp6ipHtOVbzipeY8UqU1PrQLF0EPQmZFQ4R45mFjBf38I8E
-         uhU1UDTTCEr1/BijD37EO8cG4BCMHJkEZpIVroA0=
-Date:   Fri, 13 Dec 2019 14:23:32 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <emamd001@umn.edu>
-Subject: Re: [PATCH] mm/gup: Fix memory leak in __gup_benchmark_ioctl
-Message-Id: <20191213142332.d7fafc243291eac302375c32@linux-foundation.org>
-In-Reply-To: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
-References: <20191211174653.4102-1-navid.emamdoost@gmail.com>
-        <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Dec 2019 17:24:27 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35498 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLMWY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:24:27 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDMOO28155344;
+        Fri, 13 Dec 2019 22:24:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=QUIXsOoy+ec+JNrRBMR7QrIHAGWn0KFprylci6Z6A0U=;
+ b=F9NeOTKwf7Hz2yjtNi/QZXhCH3jMbEZGTH1RR1lom6OmoPuOrBhofOtm2T5IITwJgFKS
+ nZLiXtW5ApPPbbgWlJdovxw3zHEjo6kYkBcXQrYsSHMdd24uQrorm/tGsTgs+Ez7o+Lw
+ KQM16Tk4AnyZxwkL49B9ekJC8R/EfwTrQuYz/uDvuv7l1s7Sphm/FHDRpWfgYC9AOWRK
+ brgSMamQf7rHCAGxKRAIWg5j8L+UyLjNvXEWH5SyW3ogYfaF8B3JqzDxhASfYDgO+X4X
+ tTUUHJe+8wmZD+6KSCmnBLuqVg3hJiJGKYWEsVmP9MHo+0cXtyA7tZGdbro0cdLS4jWy UQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wr41qum4d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 22:24:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDMNa9C077548;
+        Fri, 13 Dec 2019 22:24:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2wvdwr9hhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 22:24:22 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBDMOMNs013254;
+        Fri, 13 Dec 2019 22:24:22 GMT
+Received: from jubi-laptop.us.oracle.com (/10.211.46.28)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Dec 2019 14:24:22 -0800
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     viro@zeniv.linux.org.uk
+Subject: [PATCH] vfs: stop shrinker while fs is freezed
+Date:   Fri, 13 Dec 2019 14:24:40 -0800
+Message-Id: <20191213222440.11519-1-junxiao.bi@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=976
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912130158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912130158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 13:40:15 -0800 John Hubbard <jhubbard@nvidia.com> wrote:
+Shrinker could be blocked by freeze while dropping the last reference of
+some inode that had been removed. As "s_umount" lock was acquired by the
+Shrinker before blocked, the thaw will hung by this lock. This caused a
+deadlock.
 
-> On 12/11/19 9:46 AM, Navid Emamdoost wrote:
-> > In the implementation of __gup_benchmark_ioctl() the allocated pages
-> > should be released before returning in case of an invalid cmd. Release
-> > pages via kvfree().
-> > 
-> > Fixes: 714a3a1ebafe ("mm/gup_benchmark.c: add additional pinning methods")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  mm/gup_benchmark.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> > index 7dd602d7f8db..b160638f647e 100644
-> > --- a/mm/gup_benchmark.c
-> > +++ b/mm/gup_benchmark.c
-> > @@ -63,6 +63,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
-> >  					    NULL);
-> >  			break;
-> >  		default:
-> > +			kvfree(pages);
-> >  			return -1;
-> >  		}
-> >  
-> 
-> Hi,
-> 
-> The patch is correct, but I would like to second Ira's request for a ret value,
-> and a "goto done" to use a single place to kvfree, if you don't mind. 
-> 
+ crash7latest> set 132
+     PID: 132
+ COMMAND: "kswapd0:0"
+    TASK: ffff9cdc9dfb5f00  [THREAD_INFO: ffff9cdc9dfb5f00]
+     CPU: 6
+   STATE: TASK_UNINTERRUPTIBLE
+ crash7latest> bt
+ PID: 132    TASK: ffff9cdc9dfb5f00  CPU: 6   COMMAND: "kswapd0:0"
+  #0 [ffffaa5d075bf900] __schedule at ffffffff8186487c
+  #1 [ffffaa5d075bf998] schedule at ffffffff81864e96
+  #2 [ffffaa5d075bf9b0] rwsem_down_read_failed at ffffffff818689ee
+  #3 [ffffaa5d075bfa40] call_rwsem_down_read_failed at ffffffff81859308
+  #4 [ffffaa5d075bfa90] __percpu_down_read at ffffffff810ebd38
+  #5 [ffffaa5d075bfab0] __sb_start_write at ffffffff812859ef
+  #6 [ffffaa5d075bfad0] xfs_trans_alloc at ffffffffc07ebe9c [xfs]
+  #7 [ffffaa5d075bfb18] xfs_free_eofblocks at ffffffffc07c39d1 [xfs]
+  #8 [ffffaa5d075bfb80] xfs_inactive at ffffffffc07de878 [xfs]
+  #9 [ffffaa5d075bfba0] __dta_xfs_fs_destroy_inode_3543 at ffffffffc07e885e [xfs]
+ #10 [ffffaa5d075bfbd0] destroy_inode at ffffffff812a25de
+ #11 [ffffaa5d075bfbe8] evict at ffffffff812a2b73
+ #12 [ffffaa5d075bfc10] dispose_list at ffffffff812a2c1d
+ #13 [ffffaa5d075bfc38] prune_icache_sb at ffffffff812a421a
+ #14 [ffffaa5d075bfc70] super_cache_scan at ffffffff812870a1
+ #15 [ffffaa5d075bfcc8] shrink_slab at ffffffff811eebb3
+ #16 [ffffaa5d075bfdb0] shrink_node at ffffffff811f4788
+ #17 [ffffaa5d075bfe38] kswapd at ffffffff811f58c3
+ #18 [ffffaa5d075bff08] kthread at ffffffff810b75d5
+ #19 [ffffaa5d075bff50] ret_from_fork at ffffffff81a0035e
+ crash7latest> set 31060
+     PID: 31060
+ COMMAND: "safefreeze"
+    TASK: ffff9cd292868000  [THREAD_INFO: ffff9cd292868000]
+     CPU: 2
+   STATE: TASK_UNINTERRUPTIBLE
+ crash7latest> bt
+ PID: 31060  TASK: ffff9cd292868000  CPU: 2   COMMAND: "safefreeze"
+  #0 [ffffaa5d10047c90] __schedule at ffffffff8186487c
+  #1 [ffffaa5d10047d28] schedule at ffffffff81864e96
+  #2 [ffffaa5d10047d40] rwsem_down_write_failed at ffffffff81868f18
+  #3 [ffffaa5d10047dd8] call_rwsem_down_write_failed at ffffffff81859367
+  #4 [ffffaa5d10047e20] down_write at ffffffff81867cfd
+  #5 [ffffaa5d10047e38] thaw_super at ffffffff81285d2d
+  #6 [ffffaa5d10047e60] do_vfs_ioctl at ffffffff81299566
+  #7 [ffffaa5d10047ee8] sys_ioctl at ffffffff81299709
+  #8 [ffffaa5d10047f28] do_syscall_64 at ffffffff81003949
+  #9 [ffffaa5d10047f50] entry_SYSCALL_64_after_hwframe at ffffffff81a001ad
+     RIP: 0000000000453d67  RSP: 00007ffff9c1ce78  RFLAGS: 00000206
+     RAX: ffffffffffffffda  RBX: 0000000001cbe92c  RCX: 0000000000453d67
+     RDX: 0000000000000000  RSI: 00000000c0045878  RDI: 0000000000000014
+     RBP: 00007ffff9c1cf80   R8: 0000000000000000   R9: 0000000000000012
+     R10: 0000000000000008  R11: 0000000000000206  R12: 0000000000401fb0
+     R13: 0000000000402040  R14: 0000000000000000  R15: 0000000000000000
+     ORIG_RAX: 0000000000000010  CS: 0033  SS: 002b
 
-Fair enough.
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+---
+ fs/super.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-And let's make it return -EINVAL rather than -1, which appears to be
--EPERM.
-
---- a/mm/gup_benchmark.c~mm-gup-fix-memory-leak-in-__gup_benchmark_ioctl-fix
-+++ a/mm/gup_benchmark.c
-@@ -26,6 +26,7 @@ static int __gup_benchmark_ioctl(unsigne
- 	unsigned long i, nr_pages, addr, next;
- 	int nr;
- 	struct page **pages;
-+	int ret = 0;
+diff --git a/fs/super.c b/fs/super.c
+index cfadab2cbf35..adc18652302b 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -80,6 +80,11 @@ static unsigned long super_cache_scan(struct shrinker *shrink,
+ 	if (!trylock_super(sb))
+ 		return SHRINK_STOP;
  
- 	if (gup->size > ULONG_MAX)
- 		return -EINVAL;
-@@ -64,7 +65,8 @@ static int __gup_benchmark_ioctl(unsigne
- 			break;
- 		default:
- 			kvfree(pages);
--			return -1;
-+			ret = -EINVAL;
-+			goto out;
- 		}
++	if (sb->s_writers.frozen != SB_UNFROZEN) {
++		up_read(&sb->s_umount);
++		return SHRINK_STOP;
++	}
++
+ 	if (sb->s_op->nr_cached_objects)
+ 		fs_objects = sb->s_op->nr_cached_objects(sb, sc);
  
- 		if (nr <= 0)
-@@ -86,7 +88,8 @@ static int __gup_benchmark_ioctl(unsigne
- 	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
- 
- 	kvfree(pages);
--	return 0;
-+out:
-+	return ret;
- }
- 
- static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
-_
+-- 
+2.17.1
 
