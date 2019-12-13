@@ -2,27 +2,27 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFEAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40EFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCD32465B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4939214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLMJ1g (ORCPT
+        id S1726828AbfLMJ1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:27:36 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43689 "EHLO
+        Fri, 13 Dec 2019 04:27:39 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45277 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMJ1d (ORCPT
+        with ESMTP id S1726750AbfLMJ1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:27:33 -0500
+        Fri, 13 Dec 2019 04:27:36 -0500
 Received: from 79.184.255.82.ipv4.supernova.orange.pl (79.184.255.82) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 8de01d217efb030e; Fri, 13 Dec 2019 10:27:28 +0100
+ id dd2c8e29df03ce37; Fri, 13 Dec 2019 10:27:33 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -30,9 +30,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Len Brown <len.brown@intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Len Brown <lenb@kernel.org>
-Subject: [PATCH v1 10/10] intel_idle: Use ACPI _CST on server systems
-Date:   Fri, 13 Dec 2019 10:27:07 +0100
-Message-ID: <3728343.TGOlGdFZx8@kreacher>
+Subject: [PATCH v1 03/10] ACPI: processor: Clean up acpi_processor_evaluate_cst()
+Date:   Fri, 13 Dec 2019 10:14:46 +0100
+Message-ID: <2158277.Sk0T0YLvXj@kreacher>
 In-Reply-To: <3950312.2WmFeOdZGY@kreacher>
 References: <3950312.2WmFeOdZGY@kreacher>
 MIME-Version: 1.0
@@ -45,268 +45,229 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-In many cases, especially on server systems, it is desirable to avoid
-enabling C-states that have been disabled in the platform firmware
-(BIOS) setup, except for C1E.
+Clean up acpi_processor_evaluate_cst() in multiple ways:
 
-As a rule, the C-states disabled this way are not listed by ACPI
-_CST, so if that is used by intel_idle along with the specific
-table of C-states that it has for the given processor, the C-states
-disabled through the platform firmware will not be enabled by default
-by intel_idle.
+ * Rename current_count to last_index which matches the purpose of
+   the variable better.
 
-Accordingly, set the use_acpi flag (introduced previously) in all
-server processor profiles defined in intel_idle (so as to make it use
-ACPI _CST to decide which C-states to enable by default) and set
-the CPUIDLE_FLAG_ALWAYS_ENABLE flag (also introduced previously)
-for C1E in all C-states tables in intel_idle that contain C1 too
-(so that C1E is enabled regardless of whether or not it is listed
-by ACPI _CST).
+ * Consistently use acpi_handle_*() for printing messages and make
+   the messages cleaner.
+
+ * Drop redundant parens and braces.
+
+ * Rewrite and clarify comments.
+
+ * Rearrange checks and drop the redundant ones.
+
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
-New patch, not present in the RFC.
+No changes from the RFC version.
 
 ---
- drivers/idle/intel_idle.c | 70 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 50 insertions(+), 20 deletions(-)
+ drivers/acpi/processor_idle.c | 114 +++++++++++++++++++-----------------------
+ 1 file changed, 52 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 26fe383bb921..1467490adfc3 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -131,7 +131,7 @@ static struct cpuidle_state nehalem_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -168,7 +168,7 @@ static struct cpuidle_state snb_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -303,7 +303,7 @@ static struct cpuidle_state ivb_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -348,7 +348,7 @@ static struct cpuidle_state ivt_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 80,
- 		.enter = &intel_idle,
-@@ -385,7 +385,7 @@ static struct cpuidle_state ivt_cstates_4s[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 250,
- 		.enter = &intel_idle,
-@@ -422,7 +422,7 @@ static struct cpuidle_state ivt_cstates_8s[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 500,
- 		.enter = &intel_idle,
-@@ -459,7 +459,7 @@ static struct cpuidle_state hsw_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -527,7 +527,7 @@ static struct cpuidle_state bdw_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -596,7 +596,7 @@ static struct cpuidle_state skl_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -665,7 +665,7 @@ static struct cpuidle_state skx_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -815,7 +815,7 @@ static struct cpuidle_state bxt_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -876,7 +876,7 @@ static struct cpuidle_state dnv_cstates[] = {
- 	{
- 		.name = "C1E",
- 		.desc = "MWAIT 0x01",
--		.flags = MWAIT2flg(0x01),
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
- 		.exit_latency = 10,
- 		.target_residency = 20,
- 		.enter = &intel_idle,
-@@ -998,6 +998,13 @@ static const struct idle_cpu idle_cpu_nehalem = {
- 	.disable_promotion_to_c1e = true,
- };
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index e92d0e6d4cd1..7c2fe3b2ec31 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -304,29 +304,29 @@ static int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 	union acpi_object *cst;
+ 	acpi_status status;
+ 	u64 count;
+-	int current_count = 0;
++	int last_index = 0;
+ 	int i, ret = 0;
  
-+static const struct idle_cpu idle_cpu_nhx = {
-+	.state_table = nehalem_cstates,
-+	.auto_demotion_disable_flags = NHM_C1_AUTO_DEMOTE | NHM_C3_AUTO_DEMOTE,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
+ 	status = acpi_evaluate_object(handle, "_CST", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+-		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "No _CST, giving up\n"));
++		acpi_handle_debug(handle, "No _CST\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	cst = buffer.pointer;
+ 
+-	/* There must be at least 2 elements */
+-	if (!cst || (cst->type != ACPI_TYPE_PACKAGE) || cst->package.count < 2) {
+-		pr_err("not enough elements in _CST\n");
++	/* There must be at least 2 elements. */
++	if (!cst || cst->type != ACPI_TYPE_PACKAGE || cst->package.count < 2) {
++		acpi_handle_warn(handle, "Invalid _CST output\n");
+ 		ret = -EFAULT;
+ 		goto end;
+ 	}
+ 
+ 	count = cst->package.elements[0].integer.value;
+ 
+-	/* Validate number of power states. */
++	/* Validate the number of C-states. */
+ 	if (count < 1 || count != cst->package.count - 1) {
+-		pr_err("count given by _CST is not valid\n");
++		acpi_handle_warn(handle, "Inconsistent _CST data\n");
+ 		ret = -EFAULT;
+ 		goto end;
+ 	}
+@@ -337,111 +337,101 @@ static int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 		struct acpi_power_register *reg;
+ 		struct acpi_processor_cx cx;
+ 
++		/*
++		 * If there is not enough space for all C-states, skip the
++		 * excess ones and log a warning.
++		 */
++		if (last_index >= ACPI_PROCESSOR_MAX_POWER - 1) {
++			acpi_handle_warn(handle,
++					 "No room for more idle states (limit: %d)\n",
++					 ACPI_PROCESSOR_MAX_POWER - 1);
++			break;
++		}
 +
- static const struct idle_cpu idle_cpu_atom = {
- 	.state_table = atom_cstates,
- };
-@@ -1016,6 +1023,12 @@ static const struct idle_cpu idle_cpu_snb = {
- 	.disable_promotion_to_c1e = true,
- };
+ 		memset(&cx, 0, sizeof(cx));
  
-+static const struct idle_cpu idle_cpu_snx = {
-+	.state_table = snb_cstates,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
-+
- static const struct idle_cpu idle_cpu_byt = {
- 	.state_table = byt_cstates,
- 	.disable_promotion_to_c1e = true,
-@@ -1036,6 +1049,7 @@ static const struct idle_cpu idle_cpu_ivb = {
- static const struct idle_cpu idle_cpu_ivt = {
- 	.state_table = ivt_cstates,
- 	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
- };
+-		element = &(cst->package.elements[i]);
++		element = &cst->package.elements[i];
+ 		if (element->type != ACPI_TYPE_PACKAGE)
+ 			continue;
  
- static const struct idle_cpu idle_cpu_hsw = {
-@@ -1043,11 +1057,23 @@ static const struct idle_cpu idle_cpu_hsw = {
- 	.disable_promotion_to_c1e = true,
- };
+ 		if (element->package.count != 4)
+ 			continue;
  
-+static const struct idle_cpu idle_cpu_hsx = {
-+	.state_table = hsw_cstates,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
-+
- static const struct idle_cpu idle_cpu_bdw = {
- 	.state_table = bdw_cstates,
- 	.disable_promotion_to_c1e = true,
- };
+-		obj = &(element->package.elements[0]);
++		obj = &element->package.elements[0];
  
-+static const struct idle_cpu idle_cpu_bdx = {
-+	.state_table = bdw_cstates,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
-+
- static const struct idle_cpu idle_cpu_skl = {
- 	.state_table = skl_cstates,
- 	.disable_promotion_to_c1e = true,
-@@ -1056,15 +1082,18 @@ static const struct idle_cpu idle_cpu_skl = {
- static const struct idle_cpu idle_cpu_skx = {
- 	.state_table = skx_cstates,
- 	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
- };
+ 		if (obj->type != ACPI_TYPE_BUFFER)
+ 			continue;
  
- static const struct idle_cpu idle_cpu_avn = {
- 	.state_table = avn_cstates,
- 	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
- };
+ 		reg = (struct acpi_power_register *)obj->buffer.pointer;
  
- static const struct idle_cpu idle_cpu_knl = {
- 	.state_table = knl_cstates,
-+	.use_acpi = true,
- };
+-		if (reg->space_id != ACPI_ADR_SPACE_SYSTEM_IO &&
+-		    (reg->space_id != ACPI_ADR_SPACE_FIXED_HARDWARE))
+-			continue;
+-
+-		/* There should be an easy way to extract an integer... */
+-		obj = &(element->package.elements[1]);
++		obj = &element->package.elements[1];
+ 		if (obj->type != ACPI_TYPE_INTEGER)
+ 			continue;
  
- static const struct idle_cpu idle_cpu_bxt = {
-@@ -1075,20 +1104,21 @@ static const struct idle_cpu idle_cpu_bxt = {
- static const struct idle_cpu idle_cpu_dnv = {
- 	.state_table = dnv_cstates,
- 	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
- };
+ 		cx.type = obj->integer.value;
+ 		/*
+-		 * Some buggy BIOSes won't list C1 in _CST -
+-		 * Let acpi_processor_get_power_info_default() handle them later
++		 * There are known cases in which the _CST output does not
++		 * contain C1, so if the type of the first state found is not
++		 * C1, leave an empty slot for C1 to be filled in later.
+ 		 */
+ 		if (i == 1 && cx.type != ACPI_STATE_C1)
+-			current_count++;
++			last_index = 1;
  
- static const struct x86_cpu_id intel_idle_ids[] __initconst = {
--	INTEL_CPU_FAM6(NEHALEM_EP,		idle_cpu_nehalem),
-+	INTEL_CPU_FAM6(NEHALEM_EP,		idle_cpu_nhx),
- 	INTEL_CPU_FAM6(NEHALEM,			idle_cpu_nehalem),
- 	INTEL_CPU_FAM6(NEHALEM_G,		idle_cpu_nehalem),
- 	INTEL_CPU_FAM6(WESTMERE,		idle_cpu_nehalem),
--	INTEL_CPU_FAM6(WESTMERE_EP,		idle_cpu_nehalem),
--	INTEL_CPU_FAM6(NEHALEM_EX,		idle_cpu_nehalem),
-+	INTEL_CPU_FAM6(WESTMERE_EP,		idle_cpu_nhx),
-+	INTEL_CPU_FAM6(NEHALEM_EX,		idle_cpu_nhx),
- 	INTEL_CPU_FAM6(ATOM_BONNELL,		idle_cpu_atom),
- 	INTEL_CPU_FAM6(ATOM_BONNELL_MID,	idle_cpu_lincroft),
--	INTEL_CPU_FAM6(WESTMERE_EX,		idle_cpu_nehalem),
-+	INTEL_CPU_FAM6(WESTMERE_EX,		idle_cpu_nhx),
- 	INTEL_CPU_FAM6(SANDYBRIDGE,		idle_cpu_snb),
--	INTEL_CPU_FAM6(SANDYBRIDGE_X,		idle_cpu_snb),
-+	INTEL_CPU_FAM6(SANDYBRIDGE_X,		idle_cpu_snx),
- 	INTEL_CPU_FAM6(ATOM_SALTWELL,		idle_cpu_atom),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT,		idle_cpu_byt),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,	idle_cpu_tangier),
-@@ -1096,14 +1126,14 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	INTEL_CPU_FAM6(IVYBRIDGE,		idle_cpu_ivb),
- 	INTEL_CPU_FAM6(IVYBRIDGE_X,		idle_cpu_ivt),
- 	INTEL_CPU_FAM6(HASWELL,			idle_cpu_hsw),
--	INTEL_CPU_FAM6(HASWELL_X,		idle_cpu_hsw),
-+	INTEL_CPU_FAM6(HASWELL_X,		idle_cpu_hsx),
- 	INTEL_CPU_FAM6(HASWELL_L,		idle_cpu_hsw),
- 	INTEL_CPU_FAM6(HASWELL_G,		idle_cpu_hsw),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_D,	idle_cpu_avn),
- 	INTEL_CPU_FAM6(BROADWELL,		idle_cpu_bdw),
- 	INTEL_CPU_FAM6(BROADWELL_G,		idle_cpu_bdw),
--	INTEL_CPU_FAM6(BROADWELL_X,		idle_cpu_bdw),
--	INTEL_CPU_FAM6(BROADWELL_D,		idle_cpu_bdw),
-+	INTEL_CPU_FAM6(BROADWELL_X,		idle_cpu_bdx),
-+	INTEL_CPU_FAM6(BROADWELL_D,		idle_cpu_bdx),
- 	INTEL_CPU_FAM6(SKYLAKE_L,		idle_cpu_skl),
- 	INTEL_CPU_FAM6(SKYLAKE,			idle_cpu_skl),
- 	INTEL_CPU_FAM6(KABYLAKE_L,		idle_cpu_skl),
+ 		cx.address = reg->address;
+-		cx.index = current_count + 1;
++		cx.index = last_index + 1;
+ 
+-		cx.entry_method = ACPI_CSTATE_SYSTEMIO;
+ 		if (reg->space_id == ACPI_ADR_SPACE_FIXED_HARDWARE) {
+-			if (acpi_processor_ffh_cstate_probe
+-					(cpu, &cx, reg) == 0) {
+-				cx.entry_method = ACPI_CSTATE_FFH;
++			if (!acpi_processor_ffh_cstate_probe(cpu, &cx, reg)) {
++				/*
++				 * In the majority of cases _CST describes C1 as
++				 * a FIXED_HARDWARE C-state, but if the command
++				 * line forbids using MWAIT, use CSTATE_HALT for
++				 * C1 regardless.
++				 */
++				if (cx.type == ACPI_STATE_C1 &&
++				    boot_option_idle_override == IDLE_NOMWAIT) {
++					cx.entry_method = ACPI_CSTATE_HALT;
++					snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
++				} else {
++					cx.entry_method = ACPI_CSTATE_FFH;
++				}
+ 			} else if (cx.type == ACPI_STATE_C1) {
+ 				/*
+-				 * C1 is a special case where FIXED_HARDWARE
+-				 * can be handled in non-MWAIT way as well.
+-				 * In that case, save this _CST entry info.
+-				 * Otherwise, ignore this info and continue.
++				 * In the special case of C1, FIXED_HARDWARE can
++				 * be handled by executing the HLT instruction.
+ 				 */
+ 				cx.entry_method = ACPI_CSTATE_HALT;
+ 				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
+ 			} else {
+ 				continue;
+ 			}
+-			if (cx.type == ACPI_STATE_C1 &&
+-			    (boot_option_idle_override == IDLE_NOMWAIT)) {
+-				/*
+-				 * In most cases the C1 space_id obtained from
+-				 * _CST object is FIXED_HARDWARE access mode.
+-				 * But when the option of idle=halt is added,
+-				 * the entry_method type should be changed from
+-				 * CSTATE_FFH to CSTATE_HALT.
+-				 * When the option of idle=nomwait is added,
+-				 * the C1 entry_method type should be
+-				 * CSTATE_HALT.
+-				 */
+-				cx.entry_method = ACPI_CSTATE_HALT;
+-				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
+-			}
+-		} else {
++		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
++			cx.entry_method = ACPI_CSTATE_SYSTEMIO;
+ 			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
+ 				 cx.address);
++		} else {
++			continue;
+ 		}
+ 
+-		if (cx.type == ACPI_STATE_C1) {
++		if (cx.type == ACPI_STATE_C1)
+ 			cx.valid = 1;
+-		}
+ 
+-		obj = &(element->package.elements[2]);
++		obj = &element->package.elements[2];
+ 		if (obj->type != ACPI_TYPE_INTEGER)
+ 			continue;
+ 
+ 		cx.latency = obj->integer.value;
+ 
+-		obj = &(element->package.elements[3]);
++		obj = &element->package.elements[3];
+ 		if (obj->type != ACPI_TYPE_INTEGER)
+ 			continue;
+ 
+-		current_count++;
+-		memcpy(&info->states[current_count], &cx, sizeof(cx));
+-
+-		/*
+-		 * We support total ACPI_PROCESSOR_MAX_POWER - 1
+-		 * (From 1 through ACPI_PROCESSOR_MAX_POWER - 1)
+-		 */
+-		if (current_count >= (ACPI_PROCESSOR_MAX_POWER - 1)) {
+-			pr_warn("Limiting number of power states to max (%d)\n",
+-				ACPI_PROCESSOR_MAX_POWER);
+-			pr_warn("Please increase ACPI_PROCESSOR_MAX_POWER if needed.\n");
+-			break;
+-		}
++		memcpy(&info->states[++last_index], &cx, sizeof(cx));
+ 	}
+ 
+-	acpi_handle_info(handle, "Found %d idle states\n", current_count);
++	acpi_handle_info(handle, "Found %d idle states\n", last_index);
+ 
+-	info->count = current_count;
++	info->count = last_index;
+ 
+       end:
+ 	kfree(buffer.pointer);
 -- 
 2.16.4
 
