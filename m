@@ -2,81 +2,112 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FDC50713
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B11C32763
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D592E24722
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DB42474C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLMNyx (ORCPT
+        id S1727697AbfLMOLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:54:53 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43638 "EHLO
-        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727335AbfLMNyw (ORCPT
+        Fri, 13 Dec 2019 09:11:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:45377 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfLMOLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:54:52 -0500
-Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:136])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 8A1D72417DD;
-        Fri, 13 Dec 2019 14:54:49 +0100 (CET)
-Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id 72116C20BC7; Fri, 13 Dec 2019 14:54:49 +0100 (CET)
-From:   Simon Geis <simon.geis@fau.de>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Simon Geis <simon.geis@fau.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: [PATCH v3 00/10] PCMCIA/i82092: Fix style issues in i82092.c
-Date:   Fri, 13 Dec 2019 14:53:02 +0100
-Message-Id: <20191213135311.9111-1-simon.geis@fau.de>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Dec 2019 09:11:02 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MAwPZ-1iYuxC2l69-00BMTf; Fri, 13 Dec 2019 15:10:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 02/12] nfsd: print 64-bit timestamps in client_info_show
+Date:   Fri, 13 Dec 2019 15:10:36 +0100
+Message-Id: <20191213141046.1770441-3-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9SKRS2jmAK5+hO6gAt+vF42FOBN1KpKLDxwzePH1lowj6foByry
+ CIqvaRNhyDSGJgY3FraE0vEHhTpHpKrfa5lHsX29Shlb19GnvHhdffNyJS9o65dK9xFXSJr
+ VKgO8AZg+Kqw+0tZkdVajeAJdnfFut49Q4DZ37HCEbXLwKg+6rqPXt1x3sWo/ARw4hOVUmd
+ faFRZtD73I0oGQl1pWE5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HeR70z0Cop8=:StWF7PVMsAoCw2qyISGuhu
+ dNC8WNZENQ17lNI7XUyUGADy6d+lWRK155FM3ImDhMxQFl2nBjLZaz162IzL9C5BHKUDjw0/T
+ rUKeBzoUb7w37fiK+9Sm74zlZUb6BZEQGrUha0fBw0DuIwvOrnyVcrfQSpfaleBw31MANU0pn
+ q31FBoAyCfPDL3VLNgX1L9n2ERQEUtEFOUy4B2eaWoMPOtPChMM6rL5nrJ9pKKR8uq4/7xaaS
+ Y8MZJ6f8xP3ZVvkVHlv1Obvoc8gzGGIH2NAlEkcCQigu4TCOcjl04VrcUYY9mgx6tzZ77oOf1
+ xTLEw+Uq2f2r2woveSUrNj4rin5VeKQecXorR/RlsaPUI4bl6VDdu9dO2K/+Id5ysiMg0Q6+p
+ 2Goyo6sSRBYmz42XtoQEQeHdgZa+vQtmkX+lpDIW4hXMfsIM74RkoArDBZc27A90Vpmk9VlB8
+ QyPec46dZyYO0jecL26YhuYIfr24WZIMwCm2Hjb2RdDtNqVqUuAhxgGqC4pK7IzyU/0rrbiNU
+ rcFAA1nfLt8KSt3rllpNwcaMLkX4eu0hcr673dbNv1X5KUVeeHshvdxxD78G8ikyD3rEk7qI7
+ eKgj+gbm1dDXQmCVAUy+75xpatHG5DGjd6nl/vcA8eIoesPToBAiM6WfP4lTTccKeZ5aSsVvp
+ yI3P1RG9uKU332bbRHWfNgR6YOr8DD+N8p2Y+j+6V6HS4z8yES0d5oh/cfXJQ95762peAnpAe
+ YLZqgjREekQECvmx1HBR+8BYfFf8gdFCBC5HX55pMG0efBAiFQ6u+qFiht8/ETmkoEF3GYkB4
+ azWS5rk+p1lYbE33IxJxVgH4p/A9A8oOSiSmJA5mjJqW2kHaOEOS8n909p20y6/tArVaFkqDm
+ +D+kjTJ0zwlmcGvnIzxg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series removes all style issues in i82092.c
-detected by checkpatch.pl.
+The nii_time field gets truncated to 'time_t' on 32-bit architectures
+before printing.
 
-Version 3 changes:
-- patch 1: remove 'i82092aa' out of dev_<level> output
-- patch 7: merge comments
-- patch 9: remove enter/leave entirely
-- changes in commit descriptions
+Remove the use of 'struct timespec' to product the correct output
+beyond 2038.
 
-Version 2 changes:
-- merge whitespace patches into a single patch
-- convert ?-operator to if statement (patch 7)
-- rewrite commit messages
-- add i82092 to subject
-- modify enter/leave macro
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs4state.c | 5 ++---
+ fs/nfsd/state.h     | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Simon Geis (10):
-  PCMCIA/i82092: use dev_<level> instead of printk
-  PCMCIA/i82092: add/remove spaces to improve readability
-  PCMCIA/i82092: remove braces around single statement blocks
-  PCMCIA/i82092: insert blank line after declarations
-  PCMCIA/i82092: change code indentation
-  PCMCIA/i82092: move assignment out of if condition
-  PCMCIA/i82092: shorten the lines with over 80 characters
-  PCMCIA/i82092: include <linux/io.h> instead of <asm/io.h>
-  PCMCIA/i82092: delete enter/leave macro
-  PCMCIA/i82092: remove #if 0 block
-
- drivers/pcmcia/i82092.c   | 639 ++++++++++++++++++--------------------
- drivers/pcmcia/i82092aa.h |  11 -
- 2 files changed, 307 insertions(+), 343 deletions(-)
-
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index bfdb3366239c..27a629cc5a46 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2292,7 +2292,7 @@ static int client_info_show(struct seq_file *m, void *v)
+ 					clp->cl_nii_domain.len);
+ 		seq_printf(m, "\nImplementation name: ");
+ 		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
+-		seq_printf(m, "\nImplementation time: [%ld, %ld]\n",
++		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
+ 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+ 	}
+ 	drop_client(clp);
+@@ -2946,8 +2946,7 @@ static __be32 copy_impl_id(struct nfs4_client *clp,
+ 	xdr_netobj_dup(&clp->cl_nii_name, &exid->nii_name, GFP_KERNEL);
+ 	if (!clp->cl_nii_name.data)
+ 		return nfserr_jukebox;
+-	clp->cl_nii_time.tv_sec = exid->nii_time.tv_sec;
+-	clp->cl_nii_time.tv_nsec = exid->nii_time.tv_nsec;
++	clp->cl_nii_time = exid->nii_time;
+ 	return 0;
+ }
+ 
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index d61b83b9654c..2b4165cd1d3e 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -320,7 +320,7 @@ struct nfs4_client {
+ 	/* NFSv4.1 client implementation id: */
+ 	struct xdr_netobj	cl_nii_domain;
+ 	struct xdr_netobj	cl_nii_name;
+-	struct timespec		cl_nii_time;
++	struct timespec64	cl_nii_time;
+ 
+ 	/* for v4.0 and v4.1 callbacks: */
+ 	struct nfs4_cb_conn	cl_cb_conn;
 -- 
-2.20.1
+2.20.0
 
