@@ -2,90 +2,82 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4835EC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18F2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1564024676
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576276200;
-	bh=TD/ZMgIPVOiVwgGikb8afALnKADJb6+TWS+5U394Lzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QRJqgXLYcFoNbGht3NxCZKmPnYYQhftypmJHDHXDPmsJgwo9ZaCP458yoOdjSBLyR
-	 xxF9p7q7eHm2HoSibQqJPkDjoVh0XpKR8akBR+mxtLJcmr9d0SFjnAlFdPcEtTF4gu
-	 Yz8X71ueRZqeqxuIEzyU7hYj1Yq/JM3IxhbBrDak=
+	by mail.kernel.org (Postfix) with ESMTP id 7B69A2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hU1x7VCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLMW37 (ORCPT
+        id S1726691AbfLMWbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:29:59 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34515 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfLMW37 (ORCPT
+        Fri, 13 Dec 2019 17:31:10 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34287 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMWbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:29:59 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so918539otf.1;
-        Fri, 13 Dec 2019 14:29:58 -0800 (PST)
+        Fri, 13 Dec 2019 17:31:10 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so184750pgf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:31:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=LHoIae2XNCa3AukmEzpCJ7hn/t0mtHhIaNOkcRhKOG0=;
+        b=hU1x7VCUvKIt7Cg/eg0wfaKvqD1IFsyIilDpGwxLmedBHlc57jIwuVRLykhhgnlF15
+         pXEkRXNiVOnpris7PSvO4SXDdYoV/4r8PjVjg6Psp0jjSJ5GMbZxPdiRxp/XIC3yEoTy
+         YAD7RaGTrmZ8z5dcM6+C2shxjzlAlTg6AR7UXN0NQOCsPrlrlqWFM76RrkaBPHzC4H3Z
+         TvBQac9a39iOdD2lH8sPVrC6VaYGk+hcXZmeVhO0QXzLnGhwzPn3udyxehROqh7l9dm3
+         XPGbp1iz/h/771ZHP2xIedtVK7140ipS2BNzCSzNH3b05Bufl4E1cAfIkdG2mMfsBMcL
+         cqmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rR+gZbOwT0EsEu0FOYdJuiAybFzLvdlDbKJo+AcjvAY=;
-        b=C+U1C0tE55TCA8ZuEv9mz8dY7gaSC3q/Si3knElFZo1eq6sB4xHIobqpJaQxcgp4rA
-         7Ur99e2pOyDLXquhyTIMci2XoPAN2je31Pm3iIukKbUf2C8zD0Oi3/5YRuxGE1htVmwP
-         B1YJ5pwaYvTQp15zadZTxPbKw3fgj4LfMFUR58bUhP/zq5mVN6Xjg/nvjt963EZ0oZh5
-         PHNrPuyQ9klTT48ukhNnlWrTjtc6yioo2C5Y6//nyQNU7xXeLd7XXhqDmsTzJuiUaRif
-         +uUnGRuClkLXHJyLJdRVmheN/Mk9nFn6593TTYibRUa+iqwKK7JoohjD8SN44SwOKSJK
-         b0Sw==
-X-Gm-Message-State: APjAAAU95cILOtq4atSnI14+lr1PTT3jQwh8xT5aNugnncmMOvTA6ZYK
-        FPCzt53SjqFA925UkjrTuxU8AW4=
-X-Google-Smtp-Source: APXvYqz/BOJnsfjRa1QIsTdoyon+mgLtBUzCEcJlYdRndVcChgXQfvNXFKkQfnQ7B8mLoWutEbZ+oQ==
-X-Received: by 2002:a05:6830:2006:: with SMTP id e6mr16336398otp.367.1576276198049;
-        Fri, 13 Dec 2019 14:29:58 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g25sm3807433otr.8.2019.12.13.14.29.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LHoIae2XNCa3AukmEzpCJ7hn/t0mtHhIaNOkcRhKOG0=;
+        b=HLstZo5hVDXA4JskcVACt3WlxHXE9UAZczcDC7EHNkbHZ3WDjCHH5SPiarH9ibHrYh
+         9zflkVxaKSRtnZvDxl30n3yKGRifC4gC2RrpCs9gEE1jLTpWdAmwjTRFcymsClqBT9pt
+         CxFnqb+SJppriOQpWIJBn5JreXAzjjx/WIbaJJys0TuJvcaWctIYdAq72C82O9wNBEpc
+         ClH8nRRzGKhGP78LWqPAkKJFVLLRD8AaPWmdIpQ67N16hAKvIvxw1KzjFooq37YnZ/c6
+         hRsfMrZwVRJxI0kuqcOXvJFuHOcv4FSu6CPcNTEiLfXr4FAeSYUuVicn0q3wSwI9bwbY
+         eyBQ==
+X-Gm-Message-State: APjAAAVyZgWjYhE3BxhcM6QK14ppktPLwAI1898CzjP4PaumF8pIHRmZ
+        3/zyHZDhilPBJS16OsN2+zlpCErNc48=
+X-Google-Smtp-Source: APXvYqxjGsOY8wNPiQWZLO7QyfMd7NVagT5u/0KddkS/aD8uWQT99Tud+8ZE/aeIyFzf4UG2IRosGA==
+X-Received: by 2002:a63:5442:: with SMTP id e2mr2058808pgm.18.1576276269733;
+        Fri, 13 Dec 2019 14:31:09 -0800 (PST)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d26sm11556782pgv.66.2019.12.13.14.31.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:29:57 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:29:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        tejas.patel@xilinx.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: power: reset: xilinx: Add bindings
- for ipi mailbox
-Message-ID: <20191213222956.GA10172@bogus>
-References: <1574412258-17988-1-git-send-email-rajan.vaja@xilinx.com>
- <1575283131-9339-1-git-send-email-rajan.vaja@xilinx.com>
- <1575283131-9339-2-git-send-email-rajan.vaja@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575283131-9339-2-git-send-email-rajan.vaja@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Dec 2019 14:31:09 -0800 (PST)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] coresight: Fix for v5.5-rc2 
+Date:   Fri, 13 Dec 2019 15:31:06 -0700
+Message-Id: <20191213223107.1484-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Dec 2019 02:38:50 -0800, Rajan Vaja wrote:
-> Add IPI mailbox property and its example in xilinx zynqmp-power
-> documentation.
-> 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> ---
-> Changes in v2:
->  - Correct order of tx and rx in mbox-names property.
->  - Add interrupts property in example.
-> ---
->  .../bindings/power/reset/xlnx,zynqmp-power.txt     | 43 ++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 3 deletions(-)
-> 
+Hi Greg,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please consider this fix for the current cycle.
+
+Thanks,
+Mathieu
+
+Arnd Bergmann (1):
+  coresight: etm4x: Fix unused function warning
+
+ drivers/hwtracing/coresight/coresight-etm4x.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+-- 
+2.17.1
+
