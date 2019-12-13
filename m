@@ -2,156 +2,125 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE107C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6747FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A489D2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JykxmuTS"
+	by mail.kernel.org (Postfix) with ESMTP id 4403D2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLMKDc (ORCPT
+        id S1726771AbfLMKDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:03:32 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37047 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfLMKDc (ORCPT
+        Fri, 13 Dec 2019 05:03:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47770 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfLMKDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:03:32 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so5993183wru.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YBwjg8KYKl96mggL33baldfDiIMn3TQvg81waFm29R8=;
-        b=JykxmuTSac6P2wO4GXkGPNQbDUE55BBEP7c50jnvheyrIuu3lWGD6GCp44IcvxKn8B
-         S/CVdePKbtsCHh4N6FFLXn1yUPBp23AEpQNyM1sPTX3EkgSXCl4Sokt82rCrbDJVHXaD
-         NkgCv6OQPk80QtppE8DNTdx7lBldxB/mLorjsto7Ud3yCbCs7S2tf4d2gb4BfG47sHBU
-         UroOxPh2v8SS1Eoh+rF8O0lcSRntWkqf9KRaKOj61rBslxKk5esR2TPQwt3iKuHua/WY
-         EOpU+YQ3T/a9uk20vmcFOlxxTSyTGZyggmBruWsKjrNtLlYrcZAQ95tS81RE4KGQD3gB
-         ulTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YBwjg8KYKl96mggL33baldfDiIMn3TQvg81waFm29R8=;
-        b=udKLaf77iJQ9qVajMTfAdhjuBwMxHLMXljBdqAB5y6vbeK+d9m9B8Vvk0Mx30MEBBk
-         pi5kYZnfh9SXuZVpHml6BdS973YNYTnROFIyMi/x5hQRUy8G6iJ6B6tMtu+PRPLeu8RS
-         DrxbX1yJekETDieo+T84jQwQpTzzk8d9AJDZlyf95yKdFP4RO6NhGvnskREV/I+e8bRb
-         2b4loEEbiHRNwuI5YRvq8d54fa2VbPPsIhTRH324z4/Uerq79hiTQrxEc0Ln0MItIDhk
-         dGTPVG1RlbFzhHCvSf4EAmo7sMJ+WJyfhEyR53AnscX5R79ijqvebSKcpFpLzejgRXkC
-         U2/g==
-X-Gm-Message-State: APjAAAVvlkoKvoWrWridCs7nFdZ3zUeW8pbaHU8M4Zb/KCqN5K5iVIjH
-        H0W7SqTAcG56MFW779ytJ4F4i0FClpfzYztbJbAWzg==
-X-Google-Smtp-Source: APXvYqw+nd3Vhgsl1yc4y1cF3SkuvyXwLF9EsVoYDFKi4jhRyQjzp899ocHgHzIk5ZAgkqFb6bhFwbkq0tIaVnWig2w=
-X-Received: by 2002:adf:cf0a:: with SMTP id o10mr11220760wrj.325.1576231409604;
- Fri, 13 Dec 2019 02:03:29 -0800 (PST)
+        Fri, 13 Dec 2019 05:03:53 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ifhnN-0008KJ-MA; Fri, 13 Dec 2019 11:03:37 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 340CA1C0051;
+        Fri, 13 Dec 2019 11:03:37 +0100 (CET)
+Date:   Fri, 13 Dec 2019 10:03:37 -0000
+From:   "tip-bot2 for Shile Zhang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/objtool] x86/unwind/orc: Remove boot-time ORC unwind
+ tables sorting
+Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191204004633.88660-8-shile.zhang@linux.alibaba.com>
+References: <20191204004633.88660-8-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191213090646.12329-1-jlee@suse.com> <20191213090646.12329-2-jlee@suse.com>
-In-Reply-To: <20191213090646.12329-2-jlee@suse.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Dec 2019 10:03:27 +0000
-Message-ID: <CAKv+Gu8sGku8e1q9ku_wXfcXTGQ5W8Lt_q5KEK9WycgHw15TgA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v2] efi: add a function to convert the status code to
- a string
-To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Lee, Chun-Yi" <jlee@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157623141704.30329.9522840249744393883.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 at 10:07, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
->
-> This function can be used to convert EFI status code to a string
-> to improve the readability of log.
->
-> v2:
-> Moved the convert function to efi.c
->
+The following commit has been merged into the core/objtool branch of tip:
 
-Please put the patch series revision log below the ---
+Commit-ID:     f14bf6a350dfd6613dbf91be5b423bc7eab690da
+Gitweb:        https://git.kernel.org/tip/f14bf6a350dfd6613dbf91be5b423bc7eab690da
+Author:        Shile Zhang <shile.zhang@linux.alibaba.com>
+AuthorDate:    Wed, 04 Dec 2019 08:46:33 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 13 Dec 2019 10:47:58 +01:00
 
-> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+x86/unwind/orc: Remove boot-time ORC unwind tables sorting
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Now that the orc_unwind and orc_unwind_ip tables are sorted at build time,
+remove the boot time sorting pass.
 
-> ---
->  drivers/firmware/efi/efi.c | 32 ++++++++++++++++++++++++++++++++
->  include/linux/efi.h        |  1 +
->  2 files changed, 33 insertions(+)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index e98bbf8e56d9..8bdc1c17eb5d 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -954,6 +954,38 @@ int efi_status_to_err(efi_status_t status)
->         return err;
->  }
->
-> +#define EFI_STATUS_STR(_status) \
-> +       EFI_##_status : return "EFI_" __stringify(_status)
-> +
-> +const char *efi_status_to_str(efi_status_t status)
-> +{
-> +       switch (status) {
-> +       case EFI_STATUS_STR(SUCCESS);
-> +       case EFI_STATUS_STR(LOAD_ERROR);
-> +       case EFI_STATUS_STR(INVALID_PARAMETER);
-> +       case EFI_STATUS_STR(UNSUPPORTED);
-> +       case EFI_STATUS_STR(BAD_BUFFER_SIZE);
-> +       case EFI_STATUS_STR(BUFFER_TOO_SMALL);
-> +       case EFI_STATUS_STR(NOT_READY);
-> +       case EFI_STATUS_STR(DEVICE_ERROR);
-> +       case EFI_STATUS_STR(WRITE_PROTECTED);
-> +       case EFI_STATUS_STR(OUT_OF_RESOURCES);
-> +       case EFI_STATUS_STR(NOT_FOUND);
-> +       case EFI_STATUS_STR(ABORTED);
-> +       case EFI_STATUS_STR(SECURITY_VIOLATION);
-> +       }
-> +       /*
-> +        * There are two possibilities for this message to be exposed:
-> +        * - Caller feeds a unknown status code from firmware.
-> +        * - A new status code be defined in efi.h but we forgot to update
-> +        *   this function.
-> +        */
-> +       pr_warn("Unknown efi status: 0x%lx\n", status);
-> +
-> +       return "Unknown efi status";
-> +}
-> +EXPORT_SYMBOL(efi_status_to_str);
-> +
->  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
->  static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
->
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index d87acf62958e..2c6848d2b112 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1228,6 +1228,7 @@ efi_capsule_pending(int *reset_type)
->  #endif
->
->  extern int efi_status_to_err(efi_status_t status);
-> +extern const char *efi_status_to_str(efi_status_t status);
->
->  /*
->   * Variable Attributes
-> --
-> 2.16.4
->
+No change in functionality.
+
+[ mingo: Rewrote the changelog and code comments. ]
+
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kbuild@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191204004633.88660-8-shile.zhang@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/unwind_orc.c | 8 +++++---
+ scripts/link-vmlinux.sh      | 5 ++++-
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 332ae65..abdf891 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -273,9 +273,11 @@ void __init unwind_init(void)
+ 		return;
+ 	}
+ 
+-	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
+-	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
+-	     orc_sort_swap);
++	/*
++	 * Note, the orc_unwind and orc_unwind_ip tables were already
++	 * sorted at build time via the 'sorttable' tool.
++	 * It's ready for binary search straight away, no need to sort it.
++	 */
+ 
+ 	/* Initialize the fast lookup table: */
+ 	lookup_num_blocks = orc_lookup_end - orc_lookup;
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index a81aa76..c287ad9 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -306,7 +306,10 @@ vmlinux_link vmlinux "${kallsymso}" ${btf_vmlinux_bin_o}
+ 
+ if [ -n "${CONFIG_BUILDTIME_TABLE_SORT}" ]; then
+ 	info SORTTAB vmlinux
+-	sorttable vmlinux
++	if ! sorttable vmlinux; then
++		echo >&2 Failed to sort kernel tables
++		exit 1
++	fi
+ fi
+ 
+ info SYSMAP System.map
