@@ -2,71 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BDEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867E2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B514824125
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576278646;
-	bh=pspnKMIlXdhQZxbYs6m+K1waGcUhbbyoUHB0cwr6S5A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Z8Wd3CbMUzHfz6jL3boxuDs9PbFSppDLU6Uhz4fLCfFGS8Mu771/TkXHWRQ1kFtSX
-	 QW175DnZ+h5QWxCmIXmOgJEo5MaEzKi+qkWuCvq10f6kUufQF30yigGMGpMslEQ7A9
-	 nHi0KO6bkWFA1EaiELGYiapzRP6ac6ld4pl0P1Bg=
+	by mail.kernel.org (Postfix) with ESMTP id 6427E2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JHoUOo20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLMXKp (ORCPT
+        id S1726793AbfLMXLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:10:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfLMXKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:10:11 -0500
-Subject: Re: [git pull] drm fixes for 5.5-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576278611;
-        bh=pspnKMIlXdhQZxbYs6m+K1waGcUhbbyoUHB0cwr6S5A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=F2xKFAGc2VQwggfbn1pCnWkoZ99BK15Wi+/PD+5Dhebj0nR4kf30/tD+EoNDCtZ1p
-         jddWCl8GlEK4j7CpqCu8Y0WPkMwFsS8qrHyCpw72qh5qjkAKAA62DqIHuYxRLzigiC
-         oKnTYcWtwrrVTMZQTrKP4jUW7na6DIm6rPNhG1S0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9ty-Cn1SRGkXWkYN9L8F2oe-mwA77cvpSz3iJUutQQcrwA@mail.gmail.com>
-References: <CAPM=9ty-Cn1SRGkXWkYN9L8F2oe-mwA77cvpSz3iJUutQQcrwA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9ty-Cn1SRGkXWkYN9L8F2oe-mwA77cvpSz3iJUutQQcrwA@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2019-12-13
-X-PR-Tracked-Commit-Id: d16f0f61400074dbc75797ca5ef5c3d50f6c0ddf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b2cb931d724b08def6e833541a37b08ebd59ab43
-Message-Id: <157627861136.1837.10096094016374191745.pr-tracker-bot@kernel.org>
-Date:   Fri, 13 Dec 2019 23:10:11 +0000
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Fri, 13 Dec 2019 18:11:19 -0500
+Received: from mail-qk1-f180.google.com ([209.85.222.180]:41480 "EHLO
+        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMXLS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 18:11:18 -0500
+Received: by mail-qk1-f180.google.com with SMTP id l124so604032qkf.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 15:11:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Ej/qAZBSr6NQ77IrGs2L5rthjaD3OKf9wUGrXR2R3yQ=;
+        b=JHoUOo20+BKAuo3SzAXPD6L11pYowHqduZ3bk37Q/sY/e5JkIY/HXw0rULLdkFVfrz
+         ElxQcEaNT/Y17uC4YiCTpzIzGeliIuj5hZwQL9zyNMtnA/M4RAEIey6tcseRuh0maby6
+         ewQDsbptrKdrcKMZ/e2x/ZOhu6tH4GR/c0/zvB+t7Rqg/lVtewrEOdsyvRKgJajO8cTw
+         8MOmS/b3x1+2jBx3Yin8BT/R4/3EZ6n1mQyNAVOKWDzNKA2x3zFx+u3msG5dwf2Jv7Sr
+         EathoKfJOpqHDQLf1NKlblv/MBVGKCOnk7JNCkOG7CiKoohlFe8r61SNSivUDRkILLxB
+         83FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Ej/qAZBSr6NQ77IrGs2L5rthjaD3OKf9wUGrXR2R3yQ=;
+        b=XWdYQnd9Xvmm+suCF8f9Eah5bBq5pFJAMV+RhESNc6nY9afGFmH0uyzjAhjGAEU0Pw
+         bcZMZCFFm8yJutXkjJFSFqNYBKriFRW0uSSHdLY7Qz56Cp6QaYsLSTGSJ/khZHTDS51A
+         kXi7mtVbANxf1/r3ENGj3LLi/+VRIGy4XioGlWr+eZI2tLQXAEdcjFHUFhObfzv+0BJS
+         FIWHUCNMvlofB2ZtXQwoiQrNyShQVgE0ZCVC6+canDHE1zYsC0SqmOH6LONF6DOQRpP8
+         iqmZHkfNLFycdaYIUT3NzVjkg+qS6TmbeNNz0Utoh0OQBcTOlJG8ZYBphNFfAsMclVmo
+         R3DQ==
+X-Gm-Message-State: APjAAAV7aZ2KpGdxd3KV8hUyBgVvlOZHjvKTMKMiZ+30SPGj3esKTthT
+        vbHyBy60jRQd8ax79E4eIdm1VasSdVA=
+X-Google-Smtp-Source: APXvYqx+G6/SIZn77gZIHKi7EvT9I0S93illSNqw45DT3vElev9VkgOkgSzyyn0+vw7ohoTMkOKiEA==
+X-Received: by 2002:a37:2f47:: with SMTP id v68mr16236849qkh.217.1576278677753;
+        Fri, 13 Dec 2019 15:11:17 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g4sm881579qtg.35.2019.12.13.15.11.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 15:11:17 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: "rcu: React to callback overload by aggressively seeking quiescent states" hangs on boot
+Date:   Fri, 13 Dec 2019 18:11:16 -0500
+Message-Id: <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
+References: <20191213224646.GH2889@paulmck-ThinkPad-P72>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Tejun Heo <tj@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191213224646.GH2889@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 13 Dec 2019 17:04:44 +1000:
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-12-13
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b2cb931d724b08def6e833541a37b08ebd59ab43
+> On Dec 13, 2019, at 5:46 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+>=20
+> I am running this on a number of x86 systems, but will try it on a
 
-Thank you!
+The config to reproduce includes several debugging options that might requir=
+ed to recreate.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> wider variety.  If I cannot reproduce it, would you be willing to
+> run diagnostics?
+
+Yes.
+
+>=20
+> Just to double-check...  Are you running rcutorture built into the kernel?=
+
+> (My guess is "no", but figured that I should ask.)
+
+No as you can see from the config I linked in the original email.=
