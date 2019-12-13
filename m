@@ -2,188 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86160C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D00C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6B024656
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rM73wQzI"
+	by mail.kernel.org (Postfix) with ESMTP id DA625214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbfLMGXW (ORCPT
+        id S1726004AbfLMGnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:23:22 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37674 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfLMGXV (ORCPT
+        Fri, 13 Dec 2019 01:43:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:43887 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfLMGnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:23:21 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w47so1415115qtk.4;
-        Thu, 12 Dec 2019 22:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fqaOUzgKRCQS6i8M72Lp+GqkFLfAFdGSpItK/jP+Zjc=;
-        b=rM73wQzIGk4vzF0CQQGRsdTJxT+OuVYzRWwGF9WjrrBaidBUUeWHOFYrgLOXG2vrMU
-         nTYtmjeAw4YweeNlh5OkTFT6QB7cCDhL1lGo+83wmInuHgRduE9m/SHO0KifzKrPKpA/
-         lHo4KwVGmjk2nFJ6WVbVancHVEjU8SHTZq1oT2ZvAuBLycmWviZSfNRiTAWcFDIg7ANu
-         pWTdziPYY//X67azzaXbzQeTFhUfEcIVWquFMm1J69u3VRj4WeuPfOgshySPUXcvuK02
-         TJGT7UNKW4kZoD9Qw38IF+7rnF2BIsFOikCK+neBortNo9XLWRjKS1qo5WNEWKa5m25P
-         +52A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fqaOUzgKRCQS6i8M72Lp+GqkFLfAFdGSpItK/jP+Zjc=;
-        b=I5801gVkI+tj2ctra6WWN5ruxgcA8S8Mtq/SXRyoPSKl+R/bx/1By+Gr04EfofKtXw
-         RJk0j02vOogH5J3Oe//k5FLgoM5Dfz2HKF06xDFCsJQuJZgkJ21bADBYszXpsX+VoBrg
-         68KabSb2CmB64m0sxGPHDP6nmkY1I1w0ou9WaxU0Me8nixI8mhHwfx99O5xXoIiyRZ3g
-         +mCAuaT+0kLZAWp0tfWGPdMaCK+mZ+J/ZFnzipxED+ou8YgKYDvxGBNmQrQ5ySj6v1ti
-         Ffn7tYid4k29CNlKhZWONIZc+lToUGCtlz/68iEqpJRShra1bb+81DAfDHtwJ5nN7MVC
-         N+yg==
-X-Gm-Message-State: APjAAAVUYcyW75xn343xKzCu8BfTzl5lnHY5pnS/uD223OYsfFnYhwbm
-        K6Ca5cBWRAUzHoLd3vliwHbO1/6XoN9Ke/KMiYM=
-X-Google-Smtp-Source: APXvYqyyWbpl6DwJ5gcq27sRwPe2NgMD72gqKki3YCWdrlUQvVvveYK8V0qaCBn3p86DTWUkRKw6Kpw7U8tKZQIHZd0=
-X-Received: by 2002:ac8:4050:: with SMTP id j16mr10963192qtl.171.1576218199688;
- Thu, 12 Dec 2019 22:23:19 -0800 (PST)
+        Fri, 13 Dec 2019 01:43:02 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MCska-1iWoxY3YJM-008vea; Fri, 13 Dec 2019 07:43:01 +0100
+Received: by mail-qk1-f174.google.com with SMTP id z14so889619qkg.9;
+        Thu, 12 Dec 2019 22:43:00 -0800 (PST)
+X-Gm-Message-State: APjAAAUUF72Tq10G7S60O2ZAGl9Rzlxbu7FtY5CzS7lSVjDNIY8Q7sFB
+        IkEW5t37aIQvOv1ApZrbUrfsei7GxYtS0WvH1tU=
+X-Google-Smtp-Source: APXvYqwHyIjH4VLQFxLMz1S1d7sFNTr1dHj2eC4zrzxLpZcvGQkCa/gHpActn9wF7EYJ0RiDspowztRBpqmdKYRtruI=
+X-Received: by 2002:a37:4e4e:: with SMTP id c75mr11775015qkb.3.1576219379648;
+ Thu, 12 Dec 2019 22:42:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211191518.GD3105713@mini-arch> <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
- <20191211200924.GE3105713@mini-arch> <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
- <20191212025735.GK3105713@mini-arch> <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
- <20191212162953.GM3105713@mini-arch> <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
- <20191212104334.222552a1@cakuba.netronome.com> <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
- <20191212214557.GO3105713@mini-arch>
-In-Reply-To: <20191212214557.GO3105713@mini-arch>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 12 Dec 2019 22:23:08 -0800
-Message-ID: <CAEf4Bzav-hhbM35n7B+xx0Ybhq50k5ZMhgpeO0YOi4QN0dq5pQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>
+References: <1576217705-2634-1-git-send-email-sunguoyun@loongson.cn>
+In-Reply-To: <1576217705-2634-1-git-send-email-sunguoyun@loongson.cn>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 07:42:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2Nz10L2pQPE3L5-d0wKGD6BBKCT5HMc4Nyo-56ORSheg@mail.gmail.com>
+Message-ID: <CAK8P3a2Nz10L2pQPE3L5-d0wKGD6BBKCT5HMc4Nyo-56ORSheg@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Add get_thread_area syscall
+To:     Guoyun Sun <sunguoyun@loongson.cn>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:kKOcqBvTequokhAvitowVT4xVP+Ot/8nUOIZAFUQD3r/V70Fowq
+ q3d81o+TIpRBAMt58xZX5rWyxOgvbdljKRaXPetyyuNaCgUBchmqfgfkCZn4XOgaYa9ljt0
+ 7iis7JMrYP+NR4kxqVzphE0HeeKqXSyXlOYwqe4aOEyExWGukpaMuZVVTv5LpWVCI8WKoQI
+ BAUt7IC6f0m0ymteqfVhQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L900IOD6uTI=:5cwsRAuLtwoNqjJDDsxAF6
+ G2oSk7XPNfNegT6Wn/6XTRRhDKq3306AJuQsvpzk35Us91UVf46gC3lsLJaOYZvsVEM6YZkXA
+ GCRW907gIDqUVbJBrwAb4U+WNrCIrpHZ0hk3ChYPbPhW/RedigfgxXx+/V/V1fUmrauC6SCix
+ TiBlx5Jj+1EVkogoX5egrkJCcB4+OvjLKq9fd0Y2cADgWBUxVRlFvvOjImVgOZqzogYKwl0vK
+ lw6lSYETEGdgL3F2bP1fVmdOkenQ8QCvDaikw5iDhaZhF/DlU1mIo/diASUDall49rlt0268g
+ Pl1hm6CFn4CvL+ZZPu3HWapWnQJuSSz+ANBMKDN3Uh59V5veFYvkT19otvdfCn0vvw3tdscFG
+ pd7q0KeWf48i6OGfvyAvNopxdfZrAi9aKHbz2HYGVpV4fodmRziPdsEcUmZTZ+ZEr7uMc6Wnx
+ e00pNUY/AUpOQudjax4/+oyo2MRZc62xg85Ij+7SqHbkXSkcJzplTDt89wuUOyafYiJCv2PHD
+ CuxZB39VUH5kcwF0ihLKHw0wY9QR3Uo2TWOjIqsrJbjoRtx/FUg1M9Asl4388nKsmMJubK8pN
+ bjBtmCQDC14Itg/OEWBsrUUAsE/BItMR8V6s5iKlHpGw1e5rhvkhpmJuzpIwv9JJsGTjrSZKv
+ 3DUXCbs0o/7FUhJvyyywUhE2ciTqo1Mcihf+luc9uWdcp3eBLNdNxHnHUaURkwuBU6RgfDZNL
+ DkK+uqb0UtCZsA/RaOlw5ABy/KrejbQPwfLxbkchX6/uP16Q6MTXE+U+gX+mXpyMfM2v71ewC
+ 3iYSrct4Aa9Zi4dlv15nie81Qv1e41oUFi1IlvOduUvB/TTBb6AnjnMPG5puENigN0g6LT/Q8
+ jzOOmU1X+FSGP2H4EYJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 1:46 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+On Fri, Dec 13, 2019 at 7:15 AM Guoyun Sun <sunguoyun@loongson.cn> wrote:
 >
-> On 12/12, Alexei Starovoitov wrote:
-> > On Thu, Dec 12, 2019 at 10:43:34AM -0800, Jakub Kicinski wrote:
-> > One more point from Stan's email:
-> >
-> > > You can replace "our build system" with some other project you care about,
-> > > like systemd. They'd have the same problem with vendoring in recent enough
-> >
-> > we've been working with systemd folks for ~8 month to integrate libbpf into
-> > their build that is using meson build system and their CI that is github based.
-> > So we're well aware about systemd requirements for libbpf and friends.
-> Just curious (searching on systemd github for bpftool/libbpf doesn't
-> show up any code/issues): are you saying that there will be another ~8 months
-> to bring in bpftool or that it's already being worked on as part of
-> libbpf integration?
+> CRIU(https://criu.org/) tools will dump TLS(Thread Local Storage) by
+> get_thread_area during checkpoint and restore TLS by set_thread_area during
+> restore. without syscall get_thread_area, criu restore will fail on MIPS
+> platform.because a variable with GCC __thread is invalid.
 >
-> > > bpftool or waiting for every distro to do it. And all this work is
-> > > because you think that doing:
-> > >
-> > >        my_obj->rodata->my_var = 123;
-> > >
-> > > Is easier / more type safe than doing:
-> > >        int *my_var = bpf_object__rodata_lookup(obj, "my_var");
-> > >        *my_var = 123;
-> >
-> > Stan, you conveniently skipped error checking. It should have been:
-> >     int *my_var = bpf_object__rodata_lookup(obj, "my_var");
-> >     if (IS_ERROR_NULL(my_var))
-> >         goto out_cleanup;
-> >      *my_var = 123;
-> Yeah, but you have a choice, right? You can choose to check the error
-> and support old programs that don't export some global var and a new
-> program that has it. Or you can skip the error checks and rely on null
-> deref crash which is sometimes an option.
+> The following function will be called when criu restore
 
-So your point is that between
+> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> index e7c5ab3..7da83d0 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> @@ -374,3 +374,4 @@
+>  433    n32     fspick                          sys_fspick
+>  434    n32     pidfd_open                      sys_pidfd_open
+>  435    n32     clone3                          __sys_clone3
+> +436    n32     get_thread_area                 sys_get_thread_area
 
-A. Skeleton way:
+Please use a number in the arch-specific range below 393. The numbers
+at the bottom are meant for syscalls that are common for all
+architectures.
 
-my_obj->rodata->my_var = 123;
-
-and
-
-B. look up way:
-
-int *my_var = bpf_object__rodata_lookup(obj, "my_var");
-*my_var = 123;
-
-B is **better**, because **if you drop error checking** (which
-apparently is a choice within "Google distro") then it comes really
-close to succinctness of skeleton, is that right?
-
-Let's follow this through to the end with two pretty typical situations.
-
-1. Someone renames my_var into my_var1.
-  A. Skeleton: compilation error.
-  B. Lookup: NULL deref, core dump. If there is helpful in-program
-infra, it will dump stack trace and it should be pretty easy to
-pinpoint which variable look up failed (provided binary is built with
-debug info). If not - gdb is your friend, you'll figure this out
-pretty quickly.
-
-2. Someone changes the type of my_var from u64 to u32.
-  A. Skeleton: compiler will warn on too large constant assignment,
-but otherwise it's C, baby. But at least we are only going to write
-(potentially truncated) 4 bytes.
-  B. Lookup: we are happily overwriting 4 bytes of some other variable
-(best case -- just padding), without anyone realizing this. Good if we
-have exhaustive correctness testing for program logic.
-
-I do think there is a clear winner, it just seems like we disagree which one.
-
->
-> (might be not relevant with the introduction of EMBED_FILE which you
-> seem to be using more and more; ideally, we still would like to be able to
-> distribute bpf.o and userspace binary separately).
-
-I don't even know what BPF_EMBED_OBJ has to do with skeleton, tbh.
-BPF_EMBED_OBJ is just one of the ways to get contents of BPF object
-file. You can just as well instantiate skeleton from separate .o file,
-if you read its content in memory and create struct bpf_embed_data
-with pointer to it (or just mmap() it, which would be even easier). If
-this is typical case, we can generate an extra function to instantiate
-skeleton from file, of course.
-
->
-> > Take a look at Andrii's patch 13/15:
-> > 5 files changed, 149 insertions(+), 249 deletions(-)
-> > Those are simple selftests, yet code removal is huge. Bigger project benefits
-> > even more.
-> Excluding fentry/fexit tests (where new find_program_by_title+attach
-> helper and mmap might help), it looks like the majority of those gains come
-> from the fact that the patch in question doesn't do any error checking.
-> You can drop all the CHECK() stuff for existing
-> find_map_by_name/find_prog_by_name instead and get the same gains.
-
-See above. The fact we are not doing error checking with skeleton is
-because it can't fail. If programmer screwed up name of variable,
-program, or variable -- that's compilation error! That's the reason we
-don't check errors, not because it's a cowboy-style "You can choose to
-check the error" approach.
-
->
-> [as usual, feel free to ignore me, I don't want to keep flaming about
-> it, but it's hard not to reply]
-
-likewise
+        Arnd
