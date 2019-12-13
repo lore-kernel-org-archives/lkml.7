@@ -2,125 +2,111 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1571C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE86C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E2B214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AEB2214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bbL6Rm5k"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FygEFXPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLMHmm (ORCPT
+        id S1726029AbfLMHrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:42:42 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48892 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMHml (ORCPT
+        Fri, 13 Dec 2019 02:47:39 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36830 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfLMHrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:42:41 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gbqu051326;
-        Fri, 13 Dec 2019 01:42:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576222957;
-        bh=pfosKWY+DPLN2snhBDjr+kFJG45sxdEpRrJaIyk+4yw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bbL6Rm5keRegYLGlwMIpi6/23iadkdBBo8P8Mg8irbEZr6TXOvJZQKM21yu5eKt6L
-         0nlVDZG8zJlkLXjhpXTuWEkBUATpo0UGRq+zuAo7UhmrwxpMMGgN+6oH7OTodYecuj
-         KV/DSlc8LyiJ/51g7vxHlIRglEhkOK0yM7A5yymw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gb2J061928;
-        Fri, 13 Dec 2019 01:42:37 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 01:42:35 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 01:42:34 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gWJu119926;
-        Fri, 13 Dec 2019 01:42:33 -0600
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-To:     Tony Lindgren <tony@atomide.com>, Benoit Parrot <bparrot@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
-Date:   Fri, 13 Dec 2019 09:42:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 13 Dec 2019 02:47:39 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so5476711wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 23:47:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vTSxvUqfa6FoEiQTgKaCRKQ961VVqjF3zVcNDPTqeUQ=;
+        b=FygEFXPkvDTEqQFNc95GmEPQFaOALol3FJZVABII8mgatRtgdG31UxBB+q2f85tioV
+         YaDq76YgKg19kavCxLDGCXYdqM9e4pt1+h8vMM1af+h493sGTqtu8x0x0Y7pDZ9rZODl
+         D0Tmu44OHSSAi7XTfiw3ezo4lLtG/fvqKXr9UP1I7ioXEwEcTuWWl+MwWhGJYbEnMq+w
+         ALx7B4du4u7jUwnaaQoo9t+S3X/fO96NeqeTQ28Ffuy5wSsYUMg78UyAtuMEUmLPhSNZ
+         lUUoOAhyKE5fSjw0CUYEi+vy/hxr1Eua69Uhw+w3KzjGJP3OD8JUBE+JCzVqCd/mRebH
+         8ZnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vTSxvUqfa6FoEiQTgKaCRKQ961VVqjF3zVcNDPTqeUQ=;
+        b=q5FGEKOhJPe8PqT638iUJNimqoMVvF1Z6gzviu4dwLUcjNsce9rHg5GS5obivplELS
+         yRHrVC0U+3sZ94pH60KjZo7DecVjziTD/RZXH8Nz+HsWcw5LtpazcxcOrFI7uAkv3AAU
+         ySKAWtCJEJjLC44qMirCLSt/P5r49Wv7vNbKeRzy325jU65l7zFuDa3D3jYs6EgPPyX/
+         fPOEwpgqHzpohQmyyVbr27uX/hW3WETCIT6W/ZBEEg0wKV5O/xVBeSDPelGn4OfDkXjV
+         8DebeuUFyfkVcsGlsR7VmlDl4RaKBrH9eDUz+feEeusgfwvI5prqrkv/OBuURFCERjlB
+         29NQ==
+X-Gm-Message-State: APjAAAXVOu6GA56Eh7JR4lNedV1DBSQ2XPYzyMwTjrN7WlLdoz39xN4T
+        bjikJu6/tP8juor+BT6MGsaPUmZN5LdBqHdi8Me+8Q==
+X-Google-Smtp-Source: APXvYqwNVH+CrxZcMnxSwclo0S3v7qgeIyd4KN1mrRn3wdEhUWxce27y0yPjv6LZIAM/PDIfAV+2naYwlAPl2eY/5zg=
+X-Received: by 2002:a7b:cd84:: with SMTP id y4mr1059323wmj.57.1576223256882;
+ Thu, 12 Dec 2019 23:47:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212174123.GF35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191204141159.1432387-1-colin.king@canonical.com> <20191205080611.GY93017@google.com>
+In-Reply-To: <20191205080611.GY93017@google.com>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Fri, 13 Dec 2019 08:47:26 +0100
+Message-ID: <CAMO6naxT0syj74xvcectWXyVGmHfOU341A+15tC+GW4hsq+yJQ@mail.gmail.com>
+Subject: Re: [PATCH] media: meson: add missing allocation failure check on new_buf
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 19:41, Tony Lindgren wrote:
-> * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
->> This patch series adds the missing camera endpoint (ov2659) as well as
->> the required source clocks nodes for the sensor.
->>
->> On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
->> clock nodes/tree was removed as it was unsed at the time, we are
->> re-adding the needed clock nodes here.
-> 
-> Tero, it seems I can already pick this series?
+On Thu, Dec 5, 2019 at 9:06 AM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+>
+> On (19/12/04 14:11), Colin King wrote:
+> [..]
+> > diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
+> > index 0a1a04fd5d13..8dd1396909d7 100644
+> > --- a/drivers/staging/media/meson/vdec/vdec.c
+> > +++ b/drivers/staging/media/meson/vdec/vdec.c
+> > @@ -133,6 +133,8 @@ vdec_queue_recycle(struct amvdec_session *sess, struct vb2_buffer *vb)
+> >       struct amvdec_buffer *new_buf;
+> >
+> >       new_buf = kmalloc(sizeof(*new_buf), GFP_KERNEL);
+> > +     if (!new_buf)
+> > +             return;
+> >       new_buf->vb = vb;
 
-I believe it is ready if you approve the clkout1 clock patch.
+Thanks for the patch Colin.
 
-> Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-> your other clock patches?
+>
+> So the buffer is not getting recycled? IOW is leaked?
+>
+>         -ss
 
-Well, I have actually never queued any omap2+ dts patches myself, and I 
-don't think there would be too many of those coming for next merge either.
+The "recycle" mechanism in the meson vdec is a way to tell the
+firmware that "hey, both userspace and kernel are done using this
+buffer, you can start using it again".
 
--Tero
+Not queuing it for recycling means that the firmware won't use this
+buffer again, it's not desirable of course, but if there is no memory
+left to allocate a simple list element then there are bigger problems
+at hand.
 
-> 
-> Regards,
-> 
-> Tony
-> 
->   
->> Changes since v2:
->> - Fixed/added Tony's ack
->>
->> Changes since v1:
->> - Fix clock name to make it generic
->> - Add non-standard clock node naming to commit message as per Tony's
->>    comment
->> - Rename all clock nodes to use '-' instead of '_'
->>
->> Benoit Parrot (2):
->>    ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
->>    ARM: dts: am43x-epos-evm: Add VPFE and OV2659 entries
->>
->> Tero Kristo (1):
->>    ARM: dts: am43xx: add support for clkout1 clock
->>
->>   arch/arm/boot/dts/am437x-sk-evm.dts  | 27 +++++++++++++-
->>   arch/arm/boot/dts/am43x-epos-evm.dts | 23 +++++++++++-
->>   arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
->>   3 files changed, 102 insertions(+), 2 deletions(-)
->>
->> -- 
->> 2.17.1
->>
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Either way, failing this allocation and returning instantly doesn't
+leak anything or do any damage kernel-side.
