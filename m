@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EF9C00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C34BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D78B227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD172253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UAGjR5Lw"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="O0pwB2uu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbfLMAH4 (ORCPT
+        id S1731578AbfLMAIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:07:56 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40011 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731554AbfLMAHx (ORCPT
+        Thu, 12 Dec 2019 19:08:02 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36640 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731573AbfLMAH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:07:53 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so380603plp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:07:53 -0800 (PST)
+        Thu, 12 Dec 2019 19:07:58 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so345939pjc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1lzeOKE7E2xm2Pt7osPxOs8CjOGmgq2Y6YA5myrIRwI=;
-        b=UAGjR5Lwhlk2Ldz8b3cTLehatxJ/23uzY+Ob377pN0apnlpA770tNf4dQhE0OtCW+S
-         L/QyIj6i2JC/neA9LoyfQmluxjAFkAcgszhlqfHmyDmHOlom6m3rRD1AvK2WraW9al61
-         +iTX8p0wkbUv84baDL/YqJX2paQPCuceH4dmb8uMHS83muaLzVYaj6xTSassG8mmh4E8
-         /u1z4oMQmA03jFhf/icDV8SAhnxBTKqNv5SiNq0FEyMdIdVPWm+mrzos74CwWVUzCXC8
-         S45FAbDm+7QtukDSwo73q4zwfwMRmH8aVTECzWx4T3AaPfQRYMdqcrYcYSZJ55o7+exF
-         AGuw==
+        bh=zxx/HRHL6kjWjxkGDaGwGWZ/6AVYaJNa85HBD92o/lM=;
+        b=O0pwB2uuaJIoMx5Hj0eQnZ5uh3n3bDklfwUjHwIMqdbZZ3fHbmNl1iqmqJSlpryRO2
+         YIZy1T2tmjVvvgwOCKOqck2p3o6WvqTmgsTBvNhnAXKo+GXKmHllndUAmhIoLT+zTTOq
+         b+NuFqv9SquAq2CzlPTcE6pGHnd7/QBtqd+7xLnSktuU2SNBOoNpBQbuEPOxPJbaNkqE
+         EdatrGQPNq5Es0t0w37x8URXMcjITkkMbtAEWY3w0kuCeVZc4EHiKePPcyUptrKDAubv
+         jxYsYVD2dxj3yVxvebmhJvoEZAj1V+qH4IF410bk3LLvfbwl+RqvVPPp0mvrnMi5Qr2M
+         4VKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1lzeOKE7E2xm2Pt7osPxOs8CjOGmgq2Y6YA5myrIRwI=;
-        b=uJJUdaUIPS+hum6/NfccNZ07r2eb8lnWfH8kLdH3zwtud33jqSG+1BLu1sWxaIaeou
-         E7ravGfnVrPC5LevP4Jz2v7mM3+EUtk0nOWYPmI8a+Oz5ztEstFQ71Wwhpk7T5g/mduB
-         OCbIiGRdo+gQcJWhGrA8k1paV2Mb9GvZg6iTAUD2R0vnCzUudUxcnEh8E+UDgigWCFXF
-         XdW/8RL5ktIF40RovU4MN4tRS5m/AoINeY+Rx0XBYrkUamIOQv6+coKAG/4SRXW5BjPO
-         W4sfQobAOmY4pPAp4vPOGUoP+/ox5THQGYxVAyeurIYzzl4VkodIY5fIbK1ffsFcn87g
-         1gLw==
-X-Gm-Message-State: APjAAAVFlZLLn/1ihzqRagN9d5vFBlY9ILP9FJUrr9eO5bFICmBPCsgx
-        g5gQFD8ukduDgLtSg7yJSu088hCHgHQ=
-X-Google-Smtp-Source: APXvYqwojedrKhxZAq5cumleNwwcoSZ1lEw0FeB3H5QkX03T5VYZcpLlDknvC/Jx8tVgNaDLXobTIg==
-X-Received: by 2002:a17:902:6b:: with SMTP id 98mr13070692pla.128.1576195672261;
-        Thu, 12 Dec 2019 16:07:52 -0800 (PST)
+        bh=zxx/HRHL6kjWjxkGDaGwGWZ/6AVYaJNa85HBD92o/lM=;
+        b=pMeXC/1H9H/LgJKPWBqsjbX0U1lonYuZjJeQh5rVsWMRoEc+S/83KzKvc9k+q4GUWV
+         NSgGz3+9coBwiloQ9cGqSr7M3wXSaQmSn97tb7ONbsPTkQYUNKrs9L+KShEDLttuB2FK
+         +zEyiEke10aoWd1QD3odbHtrLgAm3kCHIsOu4KtssBivEZDh5k02WnLouesg5o/xnVEX
+         tknZuP7TbDdoMwQwAa/ErT7q6pAASnPpgTdlIK7jslOJDw0m+JxN+j9VdMmoDtuL2KTk
+         db0mDOQp39uma+0qjJW49FOzhWXjvFH+oFkk0zZ/5xRW1lY1Lx0rYUJgcL78VB1PNg1X
+         YXuA==
+X-Gm-Message-State: APjAAAXXDgNcOgFR70ZS86rwzis7/UWgUPna6rvy/RxhTOMN4aJZCiGN
+        eh6gXXbPv75q5Rd8wObIGCXFEjIw82c=
+X-Google-Smtp-Source: APXvYqxJAMj6b+gRXMvs56fGQZqyz8wB4ICEEZaUhOEliFjrIdFM1hNV0AKbBv3XVTo5qVQMWh3sOQ==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24mr12416703pls.247.1576195677874;
+        Thu, 12 Dec 2019 16:07:57 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.07.49
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.07.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:07:51 -0800 (PST)
+        Thu, 12 Dec 2019 16:07:57 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -63,11 +63,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 13/58] tty/serial: Migrate clps711x to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:12 +0000
-Message-Id: <20191213000657.931618-14-dima@arista.com>
+        linux-serial@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: [PATCH 15/58] tty/serial: Migrate dz to use has_sysrq
+Date:   Fri, 13 Dec 2019 00:06:14 +0000
+Message-Id: <20191213000657.931618-16-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -87,36 +87,35 @@ The SUPPORT_SYSRQ ifdeffery is not nice as:
 In order to remove SUPPORT_SYSRQ, has_sysrq variable has been added.
 Initialise it in driver's probe and remove ifdeffery.
 
-Cc: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/clps711x.c | 5 +----
+ drivers/tty/serial/dz.c | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/clps711x.c b/drivers/tty/serial/clps711x.c
-index 061590795680..95abc6faa3d5 100644
---- a/drivers/tty/serial/clps711x.c
-+++ b/drivers/tty/serial/clps711x.c
-@@ -8,10 +8,6 @@
-  *  Copyright (C) 2000 Deep Blue Solutions Ltd.
-  */
+diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
+index 7b57e840e255..6192ed011bc3 100644
+--- a/drivers/tty/serial/dz.c
++++ b/drivers/tty/serial/dz.c
+@@ -29,10 +29,6 @@
  
--#if defined(CONFIG_SERIAL_CLPS711X_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
+ #undef DEBUG_DZ
+ 
+-#if defined(CONFIG_SERIAL_DZ_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 -#define SUPPORT_SYSRQ
 -#endif
 -
- #include <linux/module.h>
- #include <linux/device.h>
+ #include <linux/bitops.h>
+ #include <linux/compiler.h>
  #include <linux/console.h>
-@@ -479,6 +475,7 @@ static int uart_clps711x_probe(struct platform_device *pdev)
- 	s->port.mapbase		= res->start;
- 	s->port.type		= PORT_CLPS711X;
- 	s->port.fifosize	= 16;
-+	s->port.has_sysrq	= IS_ENABLED(CONFIG_SERIAL_CLPS711X_CONSOLE);
- 	s->port.flags		= UPF_SKIP_TEST | UPF_FIXED_TYPE;
- 	s->port.uartclk		= clk_get_rate(uart_clk);
- 	s->port.ops		= &uart_clps711x_ops;
+@@ -787,6 +783,7 @@ static void __init dz_init_ports(void)
+ 		uport->ops	= &dz_ops;
+ 		uport->line	= line;
+ 		uport->mapbase	= base;
++		uport->has_sysrq = IS_ENABLED(CONFIG_SERIAL_DZ_CONSOLE);
+ 	}
+ }
+ 
 -- 
 2.24.0
 
