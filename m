@@ -2,97 +2,121 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95C4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC75C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C20206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576233805;
-	bh=W4SdFHdJwGiobQTSQvnsXmfXmHNoWBrpVpIWEOjtFRc=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=GXC5Z/ivEHoQAsJy8CVtbQ3pVoe9gtCneuEiMczNe2rZcIRakf4GM9vw7Q8OMi6GX
-	 1waLi5Hxli1wsLWnd2ymbgdRfGZcz68Bzy6s1ZIbC35R6LmRWyFx+whAHII1ye43oa
-	 wkpjUCpDr7Yo0dAMJFNNm4QcSR4R6jA+IXNdICGo=
+	by mail.kernel.org (Postfix) with ESMTP id 1AF63206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2toVqK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLMKnY (ORCPT
+        id S1726524AbfLMKrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:43:24 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:54434 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbfLMKnY (ORCPT
+        Fri, 13 Dec 2019 05:47:11 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38310 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfLMKrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:43:24 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ifiPq-0003kl-75; Fri, 13 Dec 2019 11:43:22 +0100
-To:     Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH] KVM: arm/arm64: vgic-its: Fix restoration of unmapped  collections
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 13 Dec 2019 05:47:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so1047731wmc.3;
+        Fri, 13 Dec 2019 02:47:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aaItiTBk+e/R7wwZriBm1tDINaCLpM0u6e3njFKqqz8=;
+        b=k2toVqK3xMpoQjPSunK5wQX2k/4FJdeWG6RMkZAOfcidd8oWAypdSfZVmj7VqJPARt
+         D9jsVNfdnktzLM9kafptKzLf/MBDUHACylS71VvxJt7joO/PueWSlwl2tfrDfs/OB3A5
+         9nCBlOpxsQ7z9OaxavDF50HpmkILhzxJAg+/RavBVin1voVF96sfcYcSpKx9j8YSDsMK
+         wtD9Q3zk7/sQHPjUfcqEUXsoym55yhSOs0arrNE7BUzb5IeSai+o9nINSC8MklBR2Xeo
+         ArjWDcuB4XqhR8P1+e5GcvXGXXYJj2Xlvr5AGErgkBbdrVFbwWjMdHUGWWmahvHJnBx1
+         5wig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aaItiTBk+e/R7wwZriBm1tDINaCLpM0u6e3njFKqqz8=;
+        b=lEutt7d66XMEm0FwfLzfHsMToMup5/6p3AtfL58ns9R4q6vWV+uJpLYPE5p+BnTMpC
+         QyeKSxm57ORtafaGkoJVPaprm8JFtnKmYFufhIR6zgTgeuE9qVx8NeDAB8SvBjmX5mAk
+         ZwESjPzHU5yo89neTyh4/AtTQtv2jO8qQM0RK2ejKxaaLQmzcmAcNfyhmzifWvPnXUiR
+         ihn2c2A09vpstDgZT25xH5sXogcuL3vqtYGV4lo58rfHXt+NMpiN4tbwH6Tmo2KQV9/R
+         foXpE0t7itNotMlR1Yw8ABF13mlCk/RQaD0XNlvkUfTUtQWxcnHu713wdzqEtKm6N1Z/
+         JQ+g==
+X-Gm-Message-State: APjAAAW514bEMvFLC4H+CsJugVESz0aIFxBCTi3JY+VkhxgW0LuYMMXG
+        5XRQM+jmERgFMBFBgRSr281ulbKI
+X-Google-Smtp-Source: APXvYqyfTI8+XVU3RlrvIfXGdBG0oWSlgTPqBGikvSD/heK932h0ralSPKkMiJh26I6zh+Fs+wYfXg==
+X-Received: by 2002:a1c:e90e:: with SMTP id q14mr12593233wmc.108.1576234029069;
+        Fri, 13 Dec 2019 02:47:09 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40f6:4600:c498:c79c:5e:9634])
+        by smtp.gmail.com with ESMTPSA id x17sm8764911wrt.74.2019.12.13.02.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 02:47:08 -0800 (PST)
+Date:   Fri, 13 Dec 2019 11:47:06 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191213104706.xnpqaehmtean3mkd@ltop.local>
+References: <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
+ <20191212202157.GD11457@worktop.programming.kicks-ass.net>
+ <20191212205338.GB11802@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Dec 2019 10:43:22 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <eric.auger.pro@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>
-In-Reply-To: <20191213094237.19627-1-eric.auger@redhat.com>
-References: <20191213094237.19627-1-eric.auger@redhat.com>
-Message-ID: <2634d1361ac3d5518b3bea62dc40ab06@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: eric.auger@redhat.com, eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212205338.GB11802@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On Thu, Dec 12, 2019 at 09:53:38PM +0100, Peter Zijlstra wrote:
+> Now, looking at the current GCC source:
+> 
+>   https://github.com/gcc-mirror/gcc/blob/97d7270f894395e513667a031a0c309d1819d05e/gcc/c/c-parser.c#L3707
+> 
+> it seems that __typeof__() is supposed to strip all qualifiers from
+> _Atomic types. That lead me to try:
+> 
+> 	typeof(_Atomic typeof(p)) __p = (p);
+> 
+> But alas, I still get the same junk you got for ool_store_release() :/
 
-On 2019-12-13 09:42, Eric Auger wrote:
-> Saving/restoring an unmapped collection is a valid scenario. For
-> example this happens if a MAPTI command was sent, featuring an
-> unmapped collection. At the moment the CTE fails to be restored.
-> Only compare against the number of online vcpus if the rdist
-> base is set.
->
-> Cc: stable@vger.kernel.org # v4.11+
-> Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table 
-> save/restore")
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  virt/kvm/arm/vgic/vgic-its.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/virt/kvm/arm/vgic/vgic-its.c 
-> b/virt/kvm/arm/vgic/vgic-its.c
-> index 98c7360d9fb7..17920d1b350a 100644
-> --- a/virt/kvm/arm/vgic/vgic-its.c
-> +++ b/virt/kvm/arm/vgic/vgic-its.c
-> @@ -2475,7 +2475,8 @@ static int vgic_its_restore_cte(struct vgic_its
-> *its, gpa_t gpa, int esz)
->  	target_addr = (u32)(val >> KVM_ITS_CTE_RDBASE_SHIFT);
->  	coll_id = val & KVM_ITS_CTE_ICID_MASK;
->
-> -	if (target_addr >= atomic_read(&kvm->online_vcpus))
-> +	if (target_addr != COLLECTION_NOT_MAPPED &&
-> +	    target_addr >= atomic_read(&kvm->online_vcpus))
->  		return -EINVAL;
->
->  	collection = find_collection(its, coll_id);
+I was checking this to see if Sparse was ready to support this.
+I was a bit surprised because at first sigth GCC was doing as
+it claims (typeof striping const & volatile on _Atomic types)
+but your exampe wasn't working. But it's working if an
+intermediate var is used:
+	_Atomic typeof(p) tmp;
+	typeof(tmp) __p = (p);
+or, uglier but probably more practical:
+	typeof(({_Atomic typeof(p) tmp; })) __p = (p);
 
-Looks good to me. Out of curiosity, how was this spotted?
+Go figure!
 
-Thanks,
+OTOH, at least on GCC 8.3, it seems to always do the same with
+volatiles than it does with consts.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+-- Luc Van Oostenryck
