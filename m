@@ -2,158 +2,89 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A2C80D4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CBC80D5E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045442477E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Z7EiXKi7";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ArSoiCfr"
+	by mail.kernel.org (Postfix) with ESMTP id 9395D2477D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269664;
+	bh=irQB7XfqVcrHTID7Hl74AzsdoIFGThig7okTIO1hY1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0O1tmYs3XTbohNbyvTK543QkoZQyCcwnoNjRJIOxIp82B+2lasZANniOdxMnXUivY
+	 gxMo0X8d80cvYjqsZPBozD3zHe5unTploJmP41PJPKdSqBdokztnUy0EmZEVTza6fZ
+	 h6qsH+ZfgfKhSWdPeCYLMgiIB66i9+0HpTqdFPGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfLMTYT (ORCPT
+        id S1728940AbfLMTtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:24:19 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:46856 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728631AbfLMTYT (ORCPT
+        Fri, 13 Dec 2019 14:49:22 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45627 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728767AbfLMTtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:24:19 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9D26F4060D;
-        Fri, 13 Dec 2019 19:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576265058; bh=2HCRCMT0lnlcQv2rNYIM7SDUCX0x+USzVcUkgTa4nGE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=Z7EiXKi7bboj2NlcwZDEgkcjnexg8nY8/doTgIDuILWTJ7pgVMFtPVLmKjLIU1xxE
-         LHMhcWtWoNBvydVQABaBVBYQFjzzbHM7dQ/NkTVv4H7XkGOyCGXE9YY90QSWfh+FzX
-         WPRlkkMUQcPc7w8jEEyZs42AdxuyRjRo3KlQkd9H7EMyudZm8PjtbaSqDuxYabOl6b
-         tIfFJpLNedSdRULgE6/pdcyEqqAwmDxEBCRDkDpmZMY9XZpYCFqklBVtnDdRZ24xgZ
-         ZUGbCGZE+q+3V6vAK3y/VwJJaBAXiMxFF3SCtFIgQI0Z86jMA/3vOal5jJM172vQmY
-         Q8SqVHgdfY7Ww==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B7D2A0083;
-        Fri, 13 Dec 2019 19:24:15 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Dec 2019 11:23:14 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 13 Dec 2019 11:23:14 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ob7ctWhJJR6BP+Npxbd1qCVwkabbwmxgiRf16OBQ19DW9QSFbSJdeXHrfGPH23iryQ50G4oI2S+5I53mBHQbHMs50TiYne/sc7VccFBICSAspeeEtXLe8LZkfkD3ukmqQAhXJrVvQJGReHEAISoHQxo8gGvbNBrW+8rSrxeH38MuzrNYi1a5fiEK0JwRpVl81IJ9ZnTnfYbKVJlmGofBoL16zAHMGepFW+6046iz+0RzZmd+BMaG4KbRkZHVTVCh7Qk1n6tE90CV66kYIYw6fuIlQBi2TxW+4fQwdpD3sS7DijBOtSz8OhhyZmea967ywJeOb27qe56S7fIuBxC+yA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNw5wB0KY74oDpB/om061AlnENyOa34FNMdaWiNhm+w=;
- b=fxxj/+m3sAju4g0IOvXxZfkTdMH5FzTPJiGL0RqQc+lW0AQ8xIxKqfKLJC02tsl3VQsiTfN6bMOsIRSa5VfLadPqbPmrLG4tanj6IJpafwqsRalHpQ9U83mAin05X09hoURN38WAeqJJ/z1WD5Mbz8T6alTDkyQVQRFDgblBieVFmrom7pk+Ii+3fYGY4niF+CaDF6hx/rerCVUuY4H4r77WR985KNKOm7J6DpmFG0LMMM80Bs2cO66D63x0Tu5BwOtlaXwVcmqCY9ESPJ73KdeihbNuZEBioFFqyy8sLPHsi6HQyK1UGJSIKBs+Wh7TfaeZ8DN8Tg2ZiRW0sgktjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNw5wB0KY74oDpB/om061AlnENyOa34FNMdaWiNhm+w=;
- b=ArSoiCfr046loQDvc3lexM1bJLqL0q3yHl8iaEgZVsYUiiOSQ4J8+wDwdWau+8altH/lir7WMY0uazjfdn3sQNjRYeEheg4DoJalgBH0sctGyFkfNCvnhTphZoep030sZDk12zISeMcH42eMmJWVJnVJWuSwXi0YSlu3x1SK5ds=
-Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
- CY4PR1201MB2485.namprd12.prod.outlook.com (10.172.117.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Fri, 13 Dec 2019 19:23:12 +0000
-Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
- ([fe80::5d88:202f:2fff:24b4]) by CY4PR1201MB0037.namprd12.prod.outlook.com
- ([fe80::5d88:202f:2fff:24b4%8]) with mapi id 15.20.2516.018; Fri, 13 Dec 2019
- 19:23:12 +0000
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
- state for HS
-Thread-Topic: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
- state for HS
-Thread-Index: AQHVsDaLtpPSN5OMLk2Tn5J854A5uKe30MGAgACkVYA=
-Date:   Fri, 13 Dec 2019 19:23:12 +0000
-Message-ID: <f3c4d47c-ae00-1b5a-1894-d48da26ed5fd@synopsys.com>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150345.799359877@linuxfoundation.org> <20191213093501.GA27976@amd>
-In-Reply-To: <20191213093501.GA27976@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thinhn@synopsys.com; 
-x-originating-ip: [149.117.75.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 71f00fef-6d6b-4503-189f-08d78001e547
-x-ms-traffictypediagnostic: CY4PR1201MB2485:
-x-microsoft-antispam-prvs: <CY4PR1201MB2485AEBC2E60ECD5B950BA2CAA540@CY4PR1201MB2485.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 0250B840C1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(36756003)(4744005)(81166006)(8676002)(4001150100001)(31696002)(478600001)(86362001)(8936002)(4326008)(31686004)(5660300002)(81156014)(26005)(6486002)(76116006)(66446008)(186003)(54906003)(2616005)(2906002)(64756008)(71200400001)(66556008)(6506007)(66476007)(6512007)(110136005)(66946007)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB2485;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vEgq3T7HcI1Y5agguSDf3y5T57jfhMsPEFlvJ90JWg0b/02MnWkrVfgyzdHHCxBnXePBvfg6JlE1m2UzFrmISt8PjNWwYqhCx2Ygqcd/+K/t6YCzOunn9SSK2bRO62VJ/qeAojtEmAR+3BPZKYGBphKPBTk7BRsdnDVL8EVMBNGkWVNW4brwq8XJxONJo0w07FlHsyN7ZnbksumILSH0SDcH1dLmyH77Vvlm6OhXbyz1pFt++8e8JY5OdksdMAMKNl0pobQGt1q+42otOzhiBlkyUkaQSyfxRg3lom8HIw8StVlhh/WJSX8KxHp5vZDJ8d8tOFUn/ytQPcrd/+oAaVqm3x8ooB1B/S2ZKxkxQvhWpll21mDCPBIvOZ1x146b+s1zAMDFlQB+JAnA/Ev5/yFNdAxk51NVr4dGRsKIqwufg3DQUA+jObGChQl1/t/x
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <081814DAFDBAA84CB1F8929E6A500D21@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Dec 2019 14:49:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v10so1726626oiv.12;
+        Fri, 13 Dec 2019 11:49:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=puPqkib5wW1ufDZCsroCWU8Z4B1OBGBUiK23E46Afz4=;
+        b=KNPJ+NEkbAYAtH2YP5ecMo23dU1OAPH53alMBJ/ExXs5qY/KcukrxcrQrb+Bkrolas
+         +jxbPooZVJk0gpYd7Vazpg78RswM1k9VY5DIbUtV/Km6eqjOVFYJyR8xbN1cGPs8yqF2
+         BUZV70ykp7f7E0m80Y4mfAsEtDxtgSPC0kgQo73EAnu8a8P3inKsAb3ehsUtSsg2sXWJ
+         NgT172gi6WbKOJc7mHuudjc2MqkdOuMDhMThStr0cpkfZdiIoXFIOf3F3Mmyg6esiPcq
+         UjpIp2Xuxmm2NaYU0MWysBfRjoyP/aN67E50sxSgSMIRD7QNSEk5+Asv+fffL34GMmSs
+         22GA==
+X-Gm-Message-State: APjAAAV5oJRLwhV4HZFnuxnzzroFwC5WYqv+pLVNJzQv0/SHyL0Z4hXQ
+        mMaX8cv5HgrsxL2nfHUeNg==
+X-Google-Smtp-Source: APXvYqy9I8IPN8N57ObqYrugXpghM9TdPjB6AiccNCqXdBpXYtudSo6lvGrpH79nOj6dlId4HooUgQ==
+X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr7980503oij.2.1576266560907;
+        Fri, 13 Dec 2019 11:49:20 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j130sm3633161oia.34.2019.12.13.11.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 11:49:19 -0800 (PST)
+Date:   Fri, 13 Dec 2019 13:49:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, soren.brinkmann@xilinx.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH v3 02/10] clk: clock-wizard: Move the clockwizard to clk
+Message-ID: <20191213194918.GA13693@bogus>
+References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com>
+ <610b14b71d4c3c4c28cbedc340f6a92f15e25241.1574922435.git.shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71f00fef-6d6b-4503-189f-08d78001e547
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 19:23:12.5099
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E5ZXhiiJDGwv9q/mdKDwSMCzgFyi/16LvmQRnand2LO/BdzoawGlttscfWc1Hgd6ABIUHLIpVotc29JKIU9xWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2485
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <610b14b71d4c3c4c28cbedc340f6a92f15e25241.1574922435.git.shubhrajyoti.datta@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Nov 28, 2019 at 12:06:09PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Move the clocking wizard driver from staging to clk.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  drivers/clk/Kconfig                 |   6 +
+>  drivers/clk/Makefile                |   1 +
+>  drivers/clk/clk-xlnx-clock-wizard.c | 335 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 342 insertions(+)
+>  create mode 100644 drivers/clk/clk-xlnx-clock-wizard.c
 
-Pavel Machek wrote:
-> On Wed 2019-12-11 16:04:21, Greg Kroah-Hartman wrote:
->> From: Thinh Nguyen <thinh.nguyen@synopsys.com>
->>
->> [ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
->>
->> Highspeed device and below has different state names than superspeed and
->> higher. Add proper checks and printouts of link states for highspeed and
->> below.
-> This is debugfs, so I don't believe it was suitable for stable in the
-> first place, but....
->
->
->> +	case DWC3_LINK_STATE_RESUME:
->> +		return "Resume";
->> +	default:
->> +		return "UNKNOWN link state\n";
->> +	}
-> You may want to delete \n here, it will be duplicated if this ever
-> triggers.
+I don't see anything moved here.
 
-We already fixed it upstream:
-038761ce68c2 ("usb: dwc3: debug: Remove newline printout")
-
-> Best regards,
-> 								Pavel
-
-BR
-Thinh
+Rob
