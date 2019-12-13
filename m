@@ -2,206 +2,219 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB59C3435B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC32C50718
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934992473E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPQK3qsk"
+	by mail.kernel.org (Postfix) with ESMTP id 4CF2524712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLMNC6 (ORCPT
+        id S1727644AbfLMNzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:02:58 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42296 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfLMNC5 (ORCPT
+        Fri, 13 Dec 2019 08:55:41 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43724 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727628AbfLMNzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:02:57 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so1437694pfz.9;
-        Fri, 13 Dec 2019 05:02:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uEiwYwG2ib2Yeq5P9ACEefY7MIinaV0AW/8h9n1+N1Q=;
-        b=gPQK3qskrW2gOr2veuLvf3gAx9ng3L/VHZJ7mjG7Sk5Snik2Gdpm4PiVQRTPy8jyMD
-         0pn0MpgBCOy4m0xbDoG3lG2ws4voo87ZmXeWEIWxdrnmdf+h6UdUexqPOHE27GIYfOu7
-         dYbRwrNRkbApSAfXC5UtRr5A8euEdeWOOGWTGgdpDhLF1hWuwNJISZwaEz/x3lRZmpqr
-         OQ9bnyjBNR5dYnu2g2t8hsQ3gST0M32svalZmf8VLJWyccpz52Dh1H5GzWBP0zzN+r5L
-         2FCClYGdKGhx8BvcHCa/yvk3Kenf83R6/UT+CsgF5v04H3sCb9iUkphjcrAqHEkpfb7h
-         13nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uEiwYwG2ib2Yeq5P9ACEefY7MIinaV0AW/8h9n1+N1Q=;
-        b=Dk28sXf3AYMCkPa9weGBqI5U8ZDZDouZ9oDaqOd6+NXuF+ztR7YPISuinvHPlmR310
-         kbceA90wfsAGkWSnJS5K0lfmSfWP8cXfsdtb2LJDxP1ELb3yQ/oNw5wEOrd1J4xLcM8m
-         AotPV4X5JBBNJZDtiNwIJR2msZp2EpHdWwdq2UxQKoX8k7MeUf40ca99+uKxXI736XrX
-         q2AOPa3PqYSZ5sRZ38xCHMUhlaNKGkIWoaGhvZM9Ky9fzca62FsXUPlnO8R482BM85zy
-         PiqF4BnZeFABDf0vkwk4g+gx/5HnJoU2Sf69CKTFh1DxHK4b43HgSuG0ghG1kdC0WSpV
-         lP8g==
-X-Gm-Message-State: APjAAAXBb1jtsTRzzmsRr3Ai/Gq1GBGE0ynGM9l972J2kYQcOZUQU+oh
-        TY883rN1yfRbbEu+kamitTI=
-X-Google-Smtp-Source: APXvYqweIDheQHOiqrv3fPYFpeQWsnwFO9Q+ZKi9VcsDSHxaFOZMz0N8weNLFTTFp6v9m/m8d0pPvw==
-X-Received: by 2002:a63:1e5c:: with SMTP id p28mr17037963pgm.235.1576242176233;
-        Fri, 13 Dec 2019 05:02:56 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:02:55 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 3/3] xen/blkback: Remove unnecessary static variable name prefixes
-Date:   Fri, 13 Dec 2019 13:02:11 +0000
-Message-Id: <20191213130211.24011-4-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213130211.24011-1-sjpark@amazon.de>
-References: <20191213130211.24011-1-sjpark@amazon.de>
+        Fri, 13 Dec 2019 08:55:40 -0500
+Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [131.188.30.136])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id F066D2417CD;
+        Fri, 13 Dec 2019 14:55:38 +0100 (CET)
+Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
+        id E2833C20BC7; Fri, 13 Dec 2019 14:55:38 +0100 (CET)
+From:   Simon Geis <simon.geis@fau.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Simon Geis <simon.geis@fau.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        Lukas Panzer <lukas.panzer@fau.de>
+Subject: [PATCH v3 05/10] PCMCIA/i82092: change code indentation
+Date:   Fri, 13 Dec 2019 14:53:09 +0100
+Message-Id: <20191213135311.9111-6-simon.geis@fau.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191213135311.9111-1-simon.geis@fau.de>
+References: <20191213135311.9111-1-simon.geis@fau.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few of static variables in blkback have 'xen_blkif_' prefix, though it
-is unnecessary for static variables.  This commit removes such prefixes.
+Align switch and case labels in order to improve readability.
+For the same reason, change the indentation of an if-statement.
 
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
+Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
+Signed-off-by: Simon Geis <simon.geis@fau.de>
+
 ---
- drivers/block/xen-blkback/blkback.c | 37 +++++++++++++----------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ drivers/pcmcia/i82092.c | 122 ++++++++++++++++++++--------------------
+ 1 file changed, 61 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index 26606c4896fd..85ff629a7546 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -62,8 +62,8 @@
-  * IO workloads.
-  */
+diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
+index 16431b48fd9e..6b39750db282 100644
+--- a/drivers/pcmcia/i82092.c
++++ b/drivers/pcmcia/i82092.c
+@@ -82,22 +82,22 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
  
--static int xen_blkif_max_buffer_pages = 1024;
--module_param_named(max_buffer_pages, xen_blkif_max_buffer_pages, int, 0644);
-+static int max_buffer_pages = 1024;
-+module_param_named(max_buffer_pages, max_buffer_pages, int, 0644);
- MODULE_PARM_DESC(max_buffer_pages,
- "Maximum number of free pages to keep in each block backend buffer");
- 
-@@ -78,8 +78,8 @@ MODULE_PARM_DESC(max_buffer_pages,
-  * algorithm.
-  */
- 
--static int xen_blkif_max_pgrants = 1056;
--module_param_named(max_persistent_grants, xen_blkif_max_pgrants, int, 0644);
-+static int max_pgrants = 1056;
-+module_param_named(max_persistent_grants, max_pgrants, int, 0644);
- MODULE_PARM_DESC(max_persistent_grants,
-                  "Maximum number of grants to map persistently");
- 
-@@ -88,8 +88,8 @@ MODULE_PARM_DESC(max_persistent_grants,
-  * use. The time is in seconds, 0 means indefinitely long.
-  */
- 
--static unsigned int xen_blkif_pgrant_timeout = 60;
--module_param_named(persistent_grant_unused_seconds, xen_blkif_pgrant_timeout,
-+static unsigned int pgrant_timeout = 60;
-+module_param_named(persistent_grant_unused_seconds, pgrant_timeout,
- 		   uint, 0644);
- MODULE_PARM_DESC(persistent_grant_unused_seconds,
- 		 "Time in seconds an unused persistent grant is allowed to "
-@@ -137,9 +137,8 @@ module_param(log_stats, int, 0644);
- 
- static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
- {
--	return xen_blkif_pgrant_timeout &&
--	       (jiffies - persistent_gnt->last_used >=
--		HZ * xen_blkif_pgrant_timeout);
-+	return pgrant_timeout && (jiffies - persistent_gnt->last_used >=
-+			HZ * pgrant_timeout);
- }
- 
- /* Once a memory pressure is detected, squeeze free page pools for a while. */
-@@ -249,7 +248,7 @@ static int add_persistent_gnt(struct xen_blkif_ring *ring,
- 	struct persistent_gnt *this;
- 	struct xen_blkif *blkif = ring->blkif;
- 
--	if (ring->persistent_gnt_c >= xen_blkif_max_pgrants) {
-+	if (ring->persistent_gnt_c >= max_pgrants) {
- 		if (!blkif->vbd.overflow_max_grants)
- 			blkif->vbd.overflow_max_grants = 1;
- 		return -EBUSY;
-@@ -412,14 +411,13 @@ static void purge_persistent_gnt(struct xen_blkif_ring *ring)
- 		goto out;
+ 	pci_read_config_byte(dev, 0x40, &configbyte);  /* PCI Configuration Control */
+ 	switch (configbyte&6) {
+-		case 0:
+-			socket_count = 2;
+-			break;
+-		case 2:
+-			socket_count = 1;
+-			break;
+-		case 4:
+-		case 6:
+-			socket_count = 4;
+-			break;
+-
+-		default:
+-			dev_err(&dev->dev,
+-				"Oops, you did something we didn't think of.\n");
+-			ret = -EIO;
+-			goto err_out_disable;
++	case 0:
++		socket_count = 2;
++		break;
++	case 2:
++		socket_count = 1;
++		break;
++	case 4:
++	case 6:
++		socket_count = 4;
++		break;
++
++	default:
++		dev_err(&dev->dev,
++			"Oops, you did something we didn't think of.\n");
++		ret = -EIO;
++		goto err_out_disable;
+ 	}
+ 	dev_info(&dev->dev, "configured as a %d socket device.\n",
+ 		 socket_count);
+@@ -501,42 +501,42 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
  	}
  
--	if (ring->persistent_gnt_c < xen_blkif_max_pgrants ||
--	    (ring->persistent_gnt_c == xen_blkif_max_pgrants &&
-+	if (ring->persistent_gnt_c < max_pgrants ||
-+	    (ring->persistent_gnt_c == max_pgrants &&
- 	    !ring->blkif->vbd.overflow_max_grants)) {
- 		num_clean = 0;
- 	} else {
--		num_clean = (xen_blkif_max_pgrants / 100) * LRU_PERCENT_CLEAN;
--		num_clean = ring->persistent_gnt_c - xen_blkif_max_pgrants +
--			    num_clean;
-+		num_clean = (max_pgrants / 100) * LRU_PERCENT_CLEAN;
-+		num_clean = ring->persistent_gnt_c - max_pgrants + num_clean;
- 		num_clean = min(ring->persistent_gnt_c, num_clean);
- 		pr_debug("Going to purge at least %u persistent grants\n",
- 			 num_clean);
-@@ -614,8 +612,7 @@ static void print_stats(struct xen_blkif_ring *ring)
- 		 current->comm, ring->st_oo_req,
- 		 ring->st_rd_req, ring->st_wr_req,
- 		 ring->st_f_req, ring->st_ds_req,
--		 ring->persistent_gnt_c,
--		 xen_blkif_max_pgrants);
-+		 ring->persistent_gnt_c, max_pgrants);
- 	ring->st_print = jiffies + msecs_to_jiffies(10 * 1000);
- 	ring->st_rd_req = 0;
- 	ring->st_wr_req = 0;
-@@ -675,7 +672,7 @@ int xen_blkif_schedule(void *arg)
- 		if (time_before(jiffies, buffer_squeeze_end))
- 			shrink_free_pagepool(ring, 0);
- 		else
--			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
-+			shrink_free_pagepool(ring, max_buffer_pages);
+ 	switch (state->Vcc) {
+-		case 0:
+-			break;
+-		case 50:
+-			dev_info(&sock_info->dev->dev,
+-				 "setting voltage to Vcc to 5V on socket %i\n",
+-				 sock);
+-			reg |= I365_VCC_5V;
+-			break;
+-		default:
+-			dev_err(&sock_info->dev->dev,
+-				"%s called with invalid VCC power value: %i",
+-				__func__, state->Vcc);
+-			leave("i82092aa_set_socket");
+-			return -EINVAL;
++	case 0:
++		break;
++	case 50:
++		dev_info(&sock_info->dev->dev,
++			 "setting voltage to Vcc to 5V on socket %i\n",
++			 sock);
++		reg |= I365_VCC_5V;
++		break;
++	default:
++		dev_err(&sock_info->dev->dev,
++			"%s called with invalid VCC power value: %i",
++			__func__, state->Vcc);
++		leave("i82092aa_set_socket");
++		return -EINVAL;
+ 	}
  
- 		if (log_stats && time_after(jiffies, ring->st_print))
- 			print_stats(ring);
-@@ -902,7 +899,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			continue;
- 		}
- 		if (use_persistent_gnts &&
--		    ring->persistent_gnt_c < xen_blkif_max_pgrants) {
-+		    ring->persistent_gnt_c < max_pgrants) {
- 			/*
- 			 * We are using persistent grants, the grant is
- 			 * not mapped but we might have room for it.
-@@ -929,7 +926,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			pages[seg_idx]->persistent_gnt = persistent_gnt;
- 			pr_debug("grant %u added to the tree of persistent grants, using %u/%u\n",
- 				 persistent_gnt->gnt, ring->persistent_gnt_c,
--				 xen_blkif_max_pgrants);
-+				 max_pgrants);
- 			goto next;
- 		}
- 		if (use_persistent_gnts && !blkif->vbd.overflow_max_grants) {
+ 	switch (state->Vpp) {
+-		case 0:
+-			dev_info(&sock_info->dev->dev,
+-				 "not setting Vpp on socket %i\n", sock);
+-			break;
+-		case 50:
+-			dev_info(&sock_info->dev->dev,
+-				 "setting Vpp to 5.0 for socket %i\n", sock);
+-			reg |= I365_VPP1_5V | I365_VPP2_5V;
+-			break;
+-		case 120:
+-			dev_info(&sock_info->dev->dev, "setting Vpp to 12.0\n");
+-			reg |= I365_VPP1_12V | I365_VPP2_12V;
+-			break;
+-		default:
+-			dev_err(&sock_info->dev->dev,
+-				"%s called with invalid VPP power value: %i",
+-				__func__, state->Vcc);
+-			leave("i82092aa_set_socket");
+-			return -EINVAL;
++	case 0:
++		dev_info(&sock_info->dev->dev,
++			 "not setting Vpp on socket %i\n", sock);
++		break;
++	case 50:
++		dev_info(&sock_info->dev->dev,
++			 "setting Vpp to 5.0 for socket %i\n", sock);
++		reg |= I365_VPP1_5V | I365_VPP2_5V;
++		break;
++	case 120:
++		dev_info(&sock_info->dev->dev, "setting Vpp to 12.0\n");
++		reg |= I365_VPP1_12V | I365_VPP2_12V;
++		break;
++	default:
++		dev_err(&sock_info->dev->dev,
++			"%s called with invalid VPP power value: %i",
++			__func__, state->Vcc);
++		leave("i82092aa_set_socket");
++		return -EINVAL;
+ 	}
+ 
+ 	if (reg != indirect_read(sock, I365_POWER)) /* only write if changed */
+@@ -662,17 +662,17 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_
+ 
+ 	i = (region.end >> 12) & 0x0fff;
+ 	switch (to_cycles(mem->speed)) {
+-		case 0:
+-			break;
+-		case 1:
+-			i |= I365_MEM_WS0;
+-			break;
+-		case 2:
+-			i |= I365_MEM_WS1;
+-			break;
+-		default:
+-			i |= I365_MEM_WS1 | I365_MEM_WS0;
+-			break;
++	case 0:
++		break;
++	case 1:
++		i |= I365_MEM_WS0;
++		break;
++	case 2:
++		i |= I365_MEM_WS1;
++		break;
++	default:
++		i |= I365_MEM_WS1 | I365_MEM_WS0;
++		break;
+ 	}
+ 
+ 	indirect_write16(sock, base+I365_W_STOP, i);
+@@ -704,7 +704,7 @@ static void i82092aa_module_exit(void)
+ 	enter("i82092aa_module_exit");
+ 	pci_unregister_driver(&i82092aa_pci_driver);
+ 	if (sockets[0].io_base > 0)
+-			 release_region(sockets[0].io_base, 2);
++		release_region(sockets[0].io_base, 2);
+ 	leave("i82092aa_module_exit");
+ }
+ 
 -- 
-2.17.1
+2.20.1
 
