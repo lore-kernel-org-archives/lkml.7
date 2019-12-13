@@ -2,124 +2,94 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68399C32765
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981A3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A458924735
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83862470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfLMOgg convert rfc822-to-8bit (ORCPT
+        id S1727834AbfLMOLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:36:36 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40462 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfLMOgg (ORCPT
+        Fri, 13 Dec 2019 09:11:48 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:53621 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbfLMOLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:36:36 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so6698860oto.7;
-        Fri, 13 Dec 2019 06:36:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GGDHCjU3MM6dIoUZbPeaqvOt8azxG8D7bJ42yMYhguQ=;
-        b=Fg68g20DS9J34weDnrWGHF/e32qZHaPKuqqvTc5id+1NwJ8EhouTc3Sf5tDMNjnnY6
-         SqQa4qIVZqeLiYz9B5rO5FMd51FlHFwY1JMgj0K+BhdT1V9epD8WwlMWnyf56xe6qeqV
-         qtDhx3Lc4/+sNcFyLjAxnsIyQrqOaGSf1+EEb/qrGvKObeP2TnFYG0q+bi2ALBnd2gZz
-         04rZ79DmSzgBfSHIjkOYSPqFtxM5Br/Uz4emFiZN5CYUPReMTar0yFkYKcpjvjWgPNst
-         1ENDf3Fds4LmZ6vE1oAXSNaazzPtAN8jCYtfe+47tRQYQW5cH9oTN3bOJVXsxXA+ZVMO
-         2iNQ==
-X-Gm-Message-State: APjAAAUnN0pkrsHwA1bpmgIGHR0UBwkkOpB9uLf6PLVkKBpOBoVCgn5V
-        P58Gs8CdSrgYjbnrXx16OHRguMn9WoIYwiQZtH4=
-X-Google-Smtp-Source: APXvYqwKdL1VCGK4Oe8rL01hvhyHoDgd/HFUlME0PAelLe/cixzON7bfU2Iq4k7pCixPL7UT2s6qDca45N2N5QcrkBo=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr15219004otm.297.1576247795212;
- Fri, 13 Dec 2019 06:36:35 -0800 (PST)
+        Fri, 13 Dec 2019 09:11:02 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MDyoW-1iY6g00PeG-00A05y; Fri, 13 Dec 2019 15:10:56 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 04/12] nfsd: use timespec64 in encode_time_delta
+Date:   Fri, 13 Dec 2019 15:10:38 +0100
+Message-Id: <20191213141046.1770441-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20191212033952.5967-1-afaerber@suse.de> <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
- <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de> <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-In-Reply-To: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Dec 2019 15:36:24 +0100
-Message-ID: <CAMuHMdXddQ4v8-by_SmcS09EYykoBZ2G2vcFUpqPadHFaasy7A@mail.gmail.com>
-Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
- TM1628/FD628/AiP1618 LED controllers
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        csd@princeton.com.tw,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, sales@fdhisi.com,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tZvyC8/MQsSdMybbn7ZBclcwu9BJ9OSnv+w2Y49XsSD5Al3PHeV
+ 1BpQWJ8CTGqYOrtPofdSkjDSiAe1FTqlMslMMcslfrQVwZo0TJcZsjeoV0vOa4OfOMwU94z
+ cpb4m99r8/SDq4g1TmCXRfhgN390wAf1G4f9P8sD559qT2taHWbpzKYkBd/SYTQnMD1KmaK
+ OUpuH4MSQDemrLltAdLrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AdmRwze8Z4E=:xF4d1Q1zbssKpYCKrZAehX
+ iOa2n27bjHhFhK+1X3q2tJsP23OQKx+mtiNF0JzO63D5wzhzioYCobJkMXY75MXI1p4YpauX/
+ 91nixKEqpV3FK7U9yX9/Ve4UVdTp/3UKEyVb0J1l4ctNmsQ+MtIlS8p0WCGPxfkcQKdATaqqQ
+ b5rzmP2ZuOozb52J2ySXyLl9GjHDAUWiTUwvJOqkK8eSMZXnNJ/seuwJXVMejhHasDdSiIUse
+ wWkn9pIyAUQsOE5WxOE8SU5Q3SA5XCM2O+7hWIJUHWvsCvylPAZCNeFpq1IsENaXZB4kjx5su
+ NuKATCHd4a9EtwWD74lkt4PPPsUgfI1tOaT8N7dwQH6Qo2IPi63dJQHQLmT5luY4En7SmwP41
+ W/vuVXK7zg3VWzGXk5e3OPpw1W0A1+bhygoX6f2+OgUMcd9L6qILvXmYsxjyO2aOC6Txg1J0r
+ KmEz2asupLeds71AnKt0VuxFlj4JEN7EtFwdPj8qzD+NOEzWb2V0NijcKf0TJk3dELj3HgGtF
+ nqefQE1umqOWr9WyPFNtgaugDhj4Xe0TYvrMb4CejcV86cXc6B9I5dDNJQVb4wIIcYmBRBNJD
+ z6M88crsThjQ/VzH5avisyxpG+HzRYYDIe3sb9YMIX0/dxGnB70sDA9FBlMeNtZ/VCd3sNJJh
+ aKHIT4xmXNN8idc4pUoUrYk3PWcVByde3cR0i6K5lRpZzlFAA7V0RnSS/3PNRS/+oGiPMG1w1
+ A3L2HPVvXNwsUOMUmASY9x8O+O03OZGvDb3TmVOcjjeIOt7td2Zaolo9hn0PDkEknveBBW9zW
+ AmRorA3LJfohba9VLRYd4NtsIFb6+yQecHEynYIXb1jKfa1CRBot2ykyVdzlrGHhjwJPJXeIy
+ vH3EdYL4Sl644kr5PE+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+The values in encode_time_delta are always small and don't
+overflow the range of 'struct timespec', so changing it has
+no effect.
 
-On Fri, Dec 13, 2019 at 3:08 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> On 12/12/2019 8:55 pm, Andreas Färber wrote:
-> > Am 12.12.19 um 14:14 schrieb Robin Murphy:
-> >> and as far as I
-> >> could tell the command set appears to derive from (or is at least common
-> >> to) some old Holtek VFD controllers.
-> >
-> > Hmm, HT16515 looks similar and has more lines, RAM and mode bits than I
-> > prepared here.
-> > https://www.holtek.com/productdetail/-/vg/ht16515
-> >
-> > So I'd need to make more numbers model-dependent and allocate the
-> > Display RAM buffer dynamically.
-> >
-> > Whereas HT16D35A seems incompatible command-wise, and HT16528 appears to
-> > be out of scope, for dot displays and with fancy embedded character map.
-> >
-> > No Holtek email alias that I can quickly spot.
-> >
-> > But given that I'm proposing vendor-specific compatibles just in case,
-> > the main decisions will be the Kconfig symbol and module name. The
-> > driver code itself we could always refactor after merging, and renaming
-> > the schema file (as opposed to compatible) should also be possible.
->
-> Yeah, I'm not sure that it really matters, as I doubt there are many
-> Linux-capable devices with a real VFD anyway; it just seemed like an
-> interesting datapoint that fell out of scouring the web trying to find
-> any evidence for which the "canonical" 1618 might be (and the Holtek
-> connection was actually a coincidence from a misidentification of the
-> ARTSCHIP part number).
+Change it to timespec64 as a prerequisite for removing the
+timespec definition later.
 
-My Sony Blu-Ray/Home Theatre has a nice one (14-segment!), also driven
-by an HT16515.  While the specific model predates the arrival of Linux
-in the next stepping of the hardware, it should be sufficiently powerful
-to run Linux.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs4xdr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Unfortunately it's in active use, so hacking experiments would be vetoed by
-the family ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index d2dc4c0e22e8..d95e9668eeff 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2024,11 +2024,11 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
+  */
+ static __be32 *encode_time_delta(__be32 *p, struct inode *inode)
+ {
+-	struct timespec ts;
++	struct timespec64 ts;
+ 	u32 ns;
+ 
+ 	ns = max_t(u32, NSEC_PER_SEC/HZ, inode->i_sb->s_time_gran);
+-	ts = ns_to_timespec(ns);
++	ts = ns_to_timespec64(ns);
+ 
+ 	p = xdr_encode_hyper(p, ts.tv_sec);
+ 	*p++ = cpu_to_be32(ts.tv_nsec);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
