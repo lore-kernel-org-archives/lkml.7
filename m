@@ -2,167 +2,221 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA433C3401B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2DDC341A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1575B246B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E039C2471D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eNsSuvgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfLMPFh (ORCPT
+        id S1727550AbfLMO7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:05:37 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:32964 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfLMPFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:05:36 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: oGwtiwfYvjjZREwj4sUA+zqOCDJsiGr6mTMDgf/guLFS7iQtfF1E8lv4yQo+jj9CZzN/rt1VQG
- sN2jYAElRxkItkzsoYd9LugIWwQlBjQVuxELGVGCxcGrJErh3HnPmvLjDrFuYP2uZnOInzSv3a
- 7kr5IrYd5P+qtG9q6nFKcRfAetEpIVphd8S8TE582layuQi2RTgxpPhL7m/6fYalfd1y7w0urK
- ukHNG8SP2vk3uRNzV3S9hyZRt8XlpiFrfyIQnh6saJrjqOE1vlk1zuKdLAMTdxqLL8kHDguN40
- aLI=
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="60293567"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 08:05:35 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Dec 2019 08:05:34 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 08:05:30 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <lee.jones@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Sandeep Sheriker Mallikarjun 
-        <sandeepsheriker.mallikarjun@microchip.com>
-Subject: [PATCH v2 6/6] Revert "drm: atmel-hlcdc: enable sys_clk during initalization."
-Date:   Fri, 13 Dec 2019 17:04:56 +0200
-Message-ID: <1576249496-4849-7-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 13 Dec 2019 09:59:40 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:12136 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727329AbfLMO7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:59:39 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47ZDN82bdGz9vBJg;
+        Fri, 13 Dec 2019 15:59:36 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eNsSuvgn; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id JbWyOEqSF5fS; Fri, 13 Dec 2019 15:59:36 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47ZDN81JZNz9vBJc;
+        Fri, 13 Dec 2019 15:59:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1576249176; bh=ciNClaFt4bgE8XImcN+vK2ienGGRWFLoOBnDEXiWkyo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=eNsSuvgnmZw1YmG5E/YgVg0KpuE+7i8abcfUzZwyBTaKGuDHrE70cwAEPxQTNKOGT
+         Qayr0Zwr419NfgU9KtjmPIPc7OybWEmftzlVvIHoBLETrhaD4SPnCawConqvQNt09V
+         u1zs90wHYjnVo4VE7sjygwG6OfO5s83Z38EsEt2s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A27798B8CE;
+        Fri, 13 Dec 2019 15:59:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gYnh7uNCBj0G; Fri, 13 Dec 2019 15:59:37 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 471608B8C4;
+        Fri, 13 Dec 2019 15:59:37 +0100 (CET)
+Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DDB6B63777; Fri, 13 Dec 2019 14:59:36 +0000 (UTC)
+Message-Id: <66a26ff96689f6f84b25ed11dcff6c3818801fe7.1576248635.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc/32: add support of KASAN_VMALLOC
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org
+Date:   Fri, 13 Dec 2019 14:59:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d2c755e66617620b729041c625a6396c81d1231c
-("drm: atmel-hlcdc: enable sys_clk during initalization."). With
-commit "drm: atmel-hlcdc: enable clock before configuring timing engine"
-there is no need for this patch. Code is also simpler.
+Add support of KASAN_VMALLOC on PPC32.
 
-Cc: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+To allow this, the early shadow covering the VMALLOC space
+need to be removed once high_memory var is set and before
+freeing memblock.
+
+And the VMALLOC area need to be aligned such that boundaries
+are covered by a full shadow page.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
 ---
+v2: rebased ; exclude specific module handling when CONFIG_KASAN_VMALLOC is set.
+---
+ arch/powerpc/Kconfig                         |  1 +
+ arch/powerpc/include/asm/book3s/32/pgtable.h |  5 +++++
+ arch/powerpc/include/asm/kasan.h             |  2 ++
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  5 +++++
+ arch/powerpc/mm/kasan/kasan_init_32.c        | 33 +++++++++++++++++++++++++++-
+ arch/powerpc/mm/mem.c                        |  3 +++
+ 6 files changed, 48 insertions(+), 1 deletion(-)
 
-Hi Sam,
-
-I still kept this as a patch as I didn't got any answer from you at my
-last email up to this moment.
-
-If you think it is better to squash this one with patch 2/6 in this seris
-let me know.
-
-Thank you,
-Claudiu Beznea
-
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 +------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
-
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-index 8dc917a1270b..112aa5066cee 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-@@ -721,18 +721,10 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
- 	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
- 	dev->dev_private = dc;
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1ec34e16ed65..a247bbfb03d4 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -173,6 +173,7 @@ config PPC
+ 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
+ 	select HAVE_ARCH_JUMP_LABEL
+ 	select HAVE_ARCH_KASAN			if PPC32
++	select HAVE_ARCH_KASAN_VMALLOC		if PPC32
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_MMAP_RND_BITS
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
+index 0796533d37dd..5b39c11e884a 100644
+--- a/arch/powerpc/include/asm/book3s/32/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
+@@ -193,7 +193,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+ #else
+ #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
+ #endif
++
++#ifdef CONFIG_KASAN_VMALLOC
++#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
++#else
+ #define VMALLOC_END	ioremap_bot
++#endif
  
--	if (dc->desc->fixed_clksrc) {
--		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
--		if (ret) {
--			dev_err(dev->dev, "failed to enable sys_clk\n");
--			goto err_destroy_wq;
--		}
--	}
--
- 	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
- 	if (ret) {
- 		dev_err(dev->dev, "failed to enable periph_clk\n");
--		goto err_sys_clk_disable;
-+		goto err_destroy_wq;
- 	}
+ #ifndef __ASSEMBLY__
+ #include <linux/sched.h>
+diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+index 296e51c2f066..fbff9ff9032e 100644
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -31,9 +31,11 @@
+ void kasan_early_init(void);
+ void kasan_mmu_init(void);
+ void kasan_init(void);
++void kasan_late_init(void);
+ #else
+ static inline void kasan_init(void) { }
+ static inline void kasan_mmu_init(void) { }
++static inline void kasan_late_init(void) { }
+ #endif
  
- 	pm_runtime_enable(dev->dev);
-@@ -768,9 +760,6 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
- err_periph_clk_disable:
- 	pm_runtime_disable(dev->dev);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--err_sys_clk_disable:
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
+ #endif /* __ASSEMBLY */
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index 552b96eef0c8..60c4d829152e 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -114,7 +114,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+ #else
+ #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
+ #endif
++
++#ifdef CONFIG_KASAN_VMALLOC
++#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
++#else
+ #define VMALLOC_END	ioremap_bot
++#endif
  
- err_destroy_wq:
- 	destroy_workqueue(dc->wq);
-@@ -795,8 +784,6 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
- 
- 	pm_runtime_disable(dev->dev);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
- 	destroy_workqueue(dc->wq);
+ /*
+  * Bits in a linux-style PTE.  These match the bits in the
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0e6ed4413eea..88036fb88350 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -129,6 +129,31 @@ static void __init kasan_remap_early_shadow_ro(void)
+ 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
  }
  
-@@ -910,8 +897,6 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
- 	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
- 	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
- 
- 	return 0;
++static void __init kasan_unmap_early_shadow_vmalloc(void)
++{
++	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
++	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
++	unsigned long k_cur;
++	phys_addr_t pa = __pa(kasan_early_shadow_page);
++
++	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
++		int ret = kasan_init_shadow_page_tables(k_start, k_end);
++
++		if (ret)
++			panic("kasan: kasan_init_shadow_page_tables() failed");
++	}
++	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
++		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
++
++		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
++			continue;
++
++		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
++	}
++	flush_tlb_kernel_range(k_start, k_end);
++}
++
+ void __init kasan_mmu_init(void)
+ {
+ 	int ret;
+@@ -165,7 +190,13 @@ void __init kasan_init(void)
+ 	pr_info("KASAN init done\n");
  }
-@@ -921,8 +906,6 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
- 	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
  
--	if (dc->desc->fixed_clksrc)
--		clk_prepare_enable(dc->hlcdc->sys_clk);
- 	clk_prepare_enable(dc->hlcdc->periph_clk);
- 	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
+-#ifdef CONFIG_MODULES
++void __init kasan_late_init(void)
++{
++	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
++		kasan_unmap_early_shadow_vmalloc();
++}
++
++#if defined(CONFIG_MODULES) && !defined(CONFIG_KASAN_VMALLOC)
+ void *module_alloc(unsigned long size)
+ {
+ 	void *base;
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 9488b63dfc87..3bb212c8ef2d 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -294,6 +294,9 @@ void __init mem_init(void)
  
+ 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+ 	set_max_mapnr(max_pfn);
++
++	kasan_late_init();
++
+ 	memblock_free_all();
+ 
+ #ifdef CONFIG_HIGHMEM
 -- 
-2.7.4
+2.13.3
 
