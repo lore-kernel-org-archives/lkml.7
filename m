@@ -2,102 +2,112 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F37BC00454
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AB9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9962467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576271204;
-	bh=hWUTsi+517PaE+0S0Vj4/AHhcznAaHtL9dM69acMjt0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0F8+hQ1eilkfD1xuNIW/PHZ5KP1XzTZRkBI/3TQrYnFJSQrP7m0KLkK/+Ku7/vOrU
-	 /d/7g3Zihe2aMm31aq5nofoZzfwsd03x6ETjlf0cFSVriyAO+gl6zKDeRvLLkxfdDW
-	 Mi9dX2qLcCiWi7X8j6QhmGmfPQLAI+Q3e5y7ziEI=
+	by mail.kernel.org (Postfix) with ESMTP id 3D9D724671
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:06:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="k23J/zLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfLMVGo (ORCPT
+        id S1726916AbfLMVGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:06:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
+        Fri, 13 Dec 2019 16:06:55 -0500
+Received: from ozlabs.org ([203.11.71.1]:53267 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfLMVGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:06:43 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725937AbfLMVGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:06:55 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6D72467A;
-        Fri, 13 Dec 2019 21:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576271202;
-        bh=hWUTsi+517PaE+0S0Vj4/AHhcznAaHtL9dM69acMjt0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cObaL2ydIExDh5FQfy04mYtNWg8OGAWhz8lGSbGtxeNyVZ2k16gCNohgzA/fV+IBS
-         9cFMAMDj4nGr6XQKqdmWTNDQRO5ykXoBKm9Ncektrv6hzd7/TEU83Mfl0rChSKJn7j
-         qY1XoccfsWjH7157hNnDcoweI7eFUjAByHwEYBgg=
-Date:   Fri, 13 Dec 2019 15:06:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ZNWw2BJjz9sP6;
+        Sat, 14 Dec 2019 08:06:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576271213;
+        bh=MGInI7+F0s7HGbUV0Xqx0TPozxlo/Am/To6UDohXxq4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=k23J/zLdvtKqBunmy1ixSs+42bGbHDuGSQCB6Ke7L4Uq+z+ldveUzevFgLwdpKq0d
+         mkr6DDnR7H0smvCQcN+BM6T37JbnmqHD4/L9a/NkSKrjRcYPT2yHYyhdPyiEXPyrMB
+         Efjh7qR7zHjSZA5mgVn0XUYlFLdEhavQXa026DnFJi45/5Ez7taLlBYjyOaBMxyE/b
+         7GJ80E1SaCmTKU2aBFLDMNx1yGZX4v2RQz2d9xbDgYEA2gziROONKrvnz6W/pFOCgL
+         jX4iWoccqf6+gYa3ICv0po4aLuXfa8qENKOix+W7EG9numuE+zbXEzjMmrCD9q6b2x
+         GpuH9UJg8ssSA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [v2 0/6] Add support for PCIe controller to work in endpoint
- mode on R-Car SoCs
-Message-ID: <20191213184627.GA169673@google.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+In-Reply-To: <20191213135353.GN3152@gate.crashing.org>
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net> <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net> <87pngso2ck.fsf@mpe.ellerman.id.au> <20191213135353.GN3152@gate.crashing.org>
+Date:   Sat, 14 Dec 2019 08:06:49 +1100
+Message-ID: <87mubwndee.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 08:47:42AM +0000, Lad Prabhakar wrote:
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> Hi!
+>
+> On Fri, Dec 13, 2019 at 11:07:55PM +1100, Michael Ellerman wrote:
+>> I tried this:
+>> 
+>> > @@ -295,6 +296,23 @@ void __write_once_size(volatile void *p, void *res, int size)
+>> >   */
+>> >  #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
+>> >  
+>> > +#else /* GCC_VERSION < 40800 */
+>> > +
+>> > +#define READ_ONCE_NOCHECK(x)						\
+>> > +({									\
+>> > +	typeof(x) __x = *(volatile typeof(x))&(x);			\
+>> 
+>> Didn't compile, needed:
+>> 
+>> 	typeof(x) __x = *(volatile typeof(&x))&(x);			\
+>> 
+>> 
+>> > +	smp_read_barrier_depends();					\
+>> > +	__x;
+>> > +})
+>> 
+>> 
+>> And that works for me. No extra stack check stuff.
+>> 
+>> I guess the question is does that version of READ_ONCE() implement the
+>> read once semantics. Do we have a good way to test that?
+>> 
+>> The only differences are because of the early return in the generic
+>> test_and_set_bit_lock():
+>
+> No, there is another difference:
+>
+>>   30         ld      r10,560(r9)
+>>   31         std     r10,104(r1)
+>>   32         ld      r10,104(r1)
+>>   33         andi.   r10,r10,1
+>>   34         bne     <ext4_resize_begin_generic+0xd0>       29         bne     <ext4_resize_begin_ppc+0xd0>
+>
+> The stack var is volatile, so it is read back immediately after writing
+> it, here.  This is a bad idea for performance, in general.
 
-> Lad, Prabhakar (6):
->   pci: pcie-rcar: preparation for adding endpoint support
->   pci: endpoint: add support to handle features of outbound memory
->   of: address: add support to parse PCI outbound-ranges
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   pci: rcar: add support for rcar pcie controller in endpoint mode
->   misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
+Argh, yuck. Thanks, I shouldn't try to read asm listings at 11pm.
 
-The next time you post this, please update the subject lines to match
-existing conventions (capitalize "PCI", description is a complete
-sentence starting with a capitalized verb, etc").  Run "git log
---online" on the file you're changing and make yours look the same.
+So that just confirms what Will was saying further up the thread about
+the volatile pointer, rather than READ_ONCE() per se.
 
-  s/pci: /PCI: /
-  s/pcie-rcar: /rcar: /
-  s/pcie/PCIe/
-  s/device-id/Device ID/
+cheers
