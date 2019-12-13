@@ -2,105 +2,152 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1A1C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1906AC79DA8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D68D246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493BE246B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Adt3PMoX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmHh92t2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfLMQZJ (ORCPT
+        id S1728426AbfLMQwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:25:09 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38584 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbfLMQZI (ORCPT
+        Fri, 13 Dec 2019 11:52:01 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34418 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfLMQwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:25:08 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so51196wrh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:25:07 -0800 (PST)
+        Fri, 13 Dec 2019 11:52:00 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j11so1446186pjs.1;
+        Fri, 13 Dec 2019 08:52:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DNUp596ZddGOax8pFd4t+4vyG8zhBsCGAZAw/KReX/E=;
-        b=Adt3PMoX5OBm6bSlz3GKd8g56Kg52X+ybqY1NTzIR6q1djD8cneBfVfzHtdsoHmiMl
-         EufFsQNT9xwDoLiyVXejbC+yTJzKqdFvKuVVa8GNB1NggGBssYR5ME0t2ImkiPtJC/bH
-         eIh9drLKzfFLPaIg367l6RZrPyxkzsovHQnyWAqzCz8yw0RwTgLAiB/Qw0bsd1b2PdQQ
-         BlP9GAZK2579VIQN2ofENJkpxwnYW7NnJ05lgZGushSPTsLOI3NIREkpkfcYVDmSQvY/
-         iG/Xije3sH3GawzNT8m5UCL/YR1aRogLCzAsoZdiO1cZQQ+lc1b6I0aJwWIsi2BO2ZD8
-         ispg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Qa1TSlB/YkLKGBzwqwvAAOSrVtrFdm5VNkLtw6aCthM=;
+        b=VmHh92t253uE8/jq/rUvxTevFPhYGFqrehEu5mrF+UuGZWF1bJNmdhtB3bzrsAdqcA
+         C5re+1+nqHXEfKTo7ZEttA4EjztT02D1cgMnniUnk0GZtOsazei96utNGioF0abC8qIA
+         sI6ozLVzlSrjyx9lHT6nXBlI+5p2vehNvtybyTDVwip716zCH08ALtsymJ9gcAfZJiu+
+         qe4eYb+GYPPXOh1kGOBiPIMnYFyTcoxUg9QXrkObPh2Yx83ZhTqegX09vaAKGfoqPqpC
+         gGG2IhRZjLibNxHcU6tB+0hJgrEaZqdXZS09Eh0dBUsmEzVJjcTX0T5e3zHKEFY4O6I+
+         MtZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DNUp596ZddGOax8pFd4t+4vyG8zhBsCGAZAw/KReX/E=;
-        b=kJCKRAhxdnvUSlarjXXIC1eq0lWrbedGWfNv9+vSzRDazQHKTouImvagHc+qQUA/iO
-         SWHRf0UFNxiRVssltm/oDjTMKBkaqqQJCVlgf8mn180gpdkpDR8QgOEELKHICqFvWE4P
-         jHmqVU1mYCzLysPGvuwNN6EhS8hs6zHyOoH0RKIgXFd/mKTsba1NXTXQrok3o9yBKswd
-         x4/rPuxpDNNRXmrhO/Qay3/uN+vq5HsM23uxgNoum3DK6qgActIKd5zzbXk5rkr7ARbu
-         QghQRBIv+iqk9W0tiRX+PWBFwIoS5Q5/d+36PZ86DNWHYmoDLqodslwS4X4jkMlKrkrU
-         psUg==
-X-Gm-Message-State: APjAAAUR0X9JJe62aXszDt36ua2wbXTPE5HlPbFW0xL93yzYj3CUHDJv
-        7Ht/XyMuCIn6X5QrG6a67I9AZg==
-X-Google-Smtp-Source: APXvYqyU6Z/dNDOhwWaYR15YpjIssxVYX/MERaSiGB29YqksLf4lDQ/uUhAvSDCJO7fTsU1N6F3JdA==
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr13658527wrr.116.1576254306335;
-        Fri, 13 Dec 2019 08:25:06 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:3d17:b245:8f4:3043])
-        by smtp.gmail.com with ESMTPSA id h8sm11139330wrx.63.2019.12.13.08.25.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 08:25:05 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>,
-        Kevin Hilman <khilman@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 0/3] ARM: davinci: convert dm365 to using the new clocksource driver
-Date:   Fri, 13 Dec 2019 17:24:50 +0100
-Message-Id: <20191213162453.15691-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qa1TSlB/YkLKGBzwqwvAAOSrVtrFdm5VNkLtw6aCthM=;
+        b=Wkxj9JUZlBbuFdEyOpHu/hwkGKb3v4ezAA6Azd/ecH4WXWybSjF0/Q9meddedH/R8H
+         caLbLmp1wnIYpO12oyPeY8RrSnFwjRTSSWTiWqEgFiRcXl5koozdkg9tmZHXjuMSqSfx
+         JKHmx7ZTg4hQddMttDlQZNogtoIAz2uCV8TU062BbPcvZyofxWyoosYzEM+/j3WSXWge
+         POqCCEcINJrC/xC26NiVbxOa38pcjQxOU68ZG3SALYsvfRdpciuJ7lubv6500bGq86wz
+         rc1FMZ0AhtoJqYu5XK3b4qTba2WUGtBSKfGP/IM04HfhLRoX3mxDd3GtDQyl0JjKXExP
+         9DFg==
+X-Gm-Message-State: APjAAAXPTCl/q8Gbr1h3CUJIdePno8rRZL+lp1VKmOGs5jEk8DInCA7F
+        1a0lCouvHxD4+EaoL/9uhJA=
+X-Google-Smtp-Source: APXvYqzY1Mjm7H6x1eBBxvX0UDJNwm0Lxe4yTUlBGBpwM2Qy6zcWxbWponVPWrG8iXzUTO3AzGlpIg==
+X-Received: by 2002:a17:90a:e98d:: with SMTP id v13mr288784pjy.107.1576255919702;
+        Fri, 13 Dec 2019 08:51:59 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::de66])
+        by smtp.gmail.com with ESMTPSA id m45sm10052854pje.32.2019.12.13.08.51.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Dec 2019 08:51:58 -0800 (PST)
+Date:   Fri, 13 Dec 2019 08:51:57 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
+Message-ID: <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
+References: <20191213153553.GE20583@krava>
+ <20191213112438.773dff35@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213112438.773dff35@gandalf.local.home>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Dec 13, 2019 at 11:25:00AM -0500, Steven Rostedt wrote:
+> On Fri, 13 Dec 2019 16:35:53 +0100
+> Jiri Olsa <jolsa@redhat.com> wrote:
+> 
+> > I don't think dedup algorithm can handle this and I'm not sure if there's
+> > some way in pahole to detect/prevent this.
+> > 
+> > I only found that if I rename the ring_buffer objects to have distinct
+> > names, it will help:
+> > 
+> >   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep task_struct
+> >   [150] STRUCT 'task_struct' size=11008 vlen=205
+> > 
+> >   $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'perf_event'"
+> >   [1665] STRUCT 'perf_event' size=1160 vlen=70
+> > 
+> > also the BTF data get smaller ;-) before:
+> > 
+> >   $ ll /sys/kernel/btf/vmlinux
+> >   -r--r--r--. 1 root root 2067432 Dec 13 22:56 /sys/kernel/btf/vmlinux
+> > 
+> > after:
+> >   $ ll /sys/kernel/btf/vmlinux
+> >   -r--r--r--. 1 root root 1984345 Dec 13 23:02 /sys/kernel/btf/vmlinux
+> > 
+> > 
+> > Peter, Steven,
+> > if above is correct and there's no other better solution, would it be possible
+> > to straighten up the namespace and user some distinct names for perf and ftrace
+> > ring buffers?
+> 
+> Now, the ring buffer that ftrace uses is not specific for ftrace or
+> even tracing for that matter. It is a stand alone ring buffer (oprofile
+> uses it), and can be used by anyone else.
+> 
+> As the perf ring buffer is very coupled with perf (or perf events), and
+> unless something changed, I was never able to pull the perf ring
+> buffer out as a stand alone ring buffer.
+> 
+> As the ring buffer in the tracing directory is more generic, and not to
+> mention around longer, if one is to change the name, I would suggest it
+> be the perf ring buffer.
 
-This is a follow-up to the big series converting DaVinci to using
-a proper clocksource driver. Last time we couldn't merge the entire
-series because of a bug that only appears on dm365 Soc when using
-ancient u-boot.
+Thanks Jiri to bring it up.
+Technically the kernel is written in valid C, but it's imo the case where C
+standard isn't doing that great.
 
-This series contains a workaround for this problem, a patch finally
-converting the platform as well as a removal of all obsolete code.
+To rephrase what Jiri said...
+If include/linux/perf_event.h instead of saying 'struct ring_buffer;'
+would have done #include <kernel/events/internal.h>
+the kernel/trace/ring_buffer.c would have had build error.
+Even now sizeof(*perf_event->rb) would return different values depending
+whether it's used in kernel/trace/ring_buffer.c or anywhere in kernel/events/.
+dwarf/btf and gcc cannot deal with it nicely. It's a valid C.
 
-Bartosz Golaszewski (3):
-  clocksource: davinci: work around a clocksource problem on dm365 SoC
-  ARM: davinci: dm365: switch to using the clocksource driver
-  ARM: davinci: remove legacy timer support
-
- arch/arm/mach-davinci/Makefile              |   3 +-
- arch/arm/mach-davinci/devices-da8xx.c       |   1 -
- arch/arm/mach-davinci/devices.c             |  19 -
- arch/arm/mach-davinci/dm365.c               |  22 +-
- arch/arm/mach-davinci/include/mach/common.h |  17 -
- arch/arm/mach-davinci/include/mach/time.h   |  33 --
- arch/arm/mach-davinci/time.c                | 400 --------------------
- drivers/clocksource/timer-davinci.c         |   8 +-
- 8 files changed, 22 insertions(+), 481 deletions(-)
- delete mode 100644 arch/arm/mach-davinci/include/mach/time.h
- delete mode 100644 arch/arm/mach-davinci/time.c
-
--- 
-2.23.0
+'gdb vmlinux' for sizeof(struct ring_buffer) will pick perf ring buffer.
+It had two choices. Both valid. I don't know why gdb picked this one.
+So yeah I think renaming 'ring_buffer' either in ftrace or in perf would be
+good. I think renaming ftrace one would be better, since gdb picked perf one
+for whatever reason.
 
