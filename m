@@ -2,432 +2,188 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8874C34348
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448AFC34986
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2584424720
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U5S6ES5F"
+	by mail.kernel.org (Postfix) with ESMTP id 793E3246B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLMM42 (ORCPT
+        id S1726846AbfLMLmn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:28 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48500 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLMM40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:26 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuOIJ069018;
-        Fri, 13 Dec 2019 06:56:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576241784;
-        bh=6XsJk+9x3ZrSbn1A1RAO7u2KMVus+jYHDI5MjRSWFWc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=U5S6ES5FSzQtCeix7QrwXOb+megz09x81UIkWZsLva/SFsQZzWzisqdgdivs4Kp2f
-         05tAbEmwg03MQtyWp18CovT7i7ezhYwRPknGxDXhjREUS5MV9i+JM3QSFsZot8Tlbj
-         zZ7nmNOGFv2+72SMhNZT5lu6Ck3gW/RNLe+o2XPk=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuO87009120;
-        Fri, 13 Dec 2019 06:56:24 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:56:24 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:56:24 -0600
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVQ127295;
-        Fri, 13 Dec 2019 06:56:22 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 11/15] remoteproc/omap: Request a timer(s) for remoteproc usage
-Date:   Fri, 13 Dec 2019 14:55:33 +0200
-Message-ID: <20191213125537.11509-12-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
-References: <20191213125537.11509-1-t-kristo@ti.com>
+        Fri, 13 Dec 2019 06:42:43 -0500
+Received: from mga03.intel.com ([134.134.136.65]:4505 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbfLMLmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:42:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 03:42:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="204302347"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga007.jf.intel.com with ESMTP; 13 Dec 2019 03:42:42 -0800
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 13 Dec 2019 03:42:41 -0800
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 13 Dec 2019 03:42:41 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.19]) with mapi id 14.03.0439.000;
+ Fri, 13 Dec 2019 19:42:39 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Topic: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Index: AQHVr8iiJX/bvAPmK0eIArQDcTD6yKe33K3Q
+Date:   Fri, 13 Dec 2019 11:42:38 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-6-baolu.lu@linux.intel.com>
+In-Reply-To: <20191211021219.8997-6-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDg4NzIyYWEtNjkzMy00ZTMyLTk5M2YtM2EwYWEyYmM4MzA1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTzVPakZYSkZyRW5KZE5ZZVQ2NVpvR0lEZUdmbklPTWhSbWVVMkFZMno4WnNNeFwvRGhwVFg5XC9zUW9weWpxYWFnIn0=
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Hi Allen,
 
-The remote processors in OMAP4+ SoCs are equipped with internal
-timers, like the internal SysTick timer in a Cortex M3/M4 NVIC or
-the CTM timer within Unicache in IPU & DSP. However, these timers
-are gated when the processor subsystem clock is gated, making
-them rather difficult to use as OS tick sources. They will not
-be able to wakeup the processor from any processor-sleep induced
-clock-gating states.
+> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On Behalf
+> Of Lu Baolu
+> Sent: Wednesday, December 11, 2019 10:12 AM
+> To: Joerg Roedel <joro@8bytes.org>; David Woodhouse <dwmw2@infradead.org>;
+> Subject: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova over first level
+> 
+> When software has changed first-level tables, it should invalidate
+> the affected IOTLB and the paging-structure-caches using the PASID-
+> based-IOTLB Invalidate Descriptor defined in spec 6.5.2.4.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/dmar.c        | 41 ++++++++++++++++++++++++++++++++++
+>  drivers/iommu/intel-iommu.c | 44 ++++++++++++++++++++++++-------------
+>  include/linux/intel-iommu.h |  2 ++
+>  3 files changed, 72 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index 3acfa6a25fa2..fb30d5053664 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -1371,6 +1371,47 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16
+> sid, u16 pfsid,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+> 
+> +/* PASID-based IOTLB invalidation */
+> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
+> +		     unsigned long npages, bool ih)
+> +{
+> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
+> +
+> +	/*
+> +	 * npages == -1 means a PASID-selective invalidation, otherwise,
+> +	 * a positive value for Page-selective-within-PASID invalidation.
+> +	 * 0 is not a valid input.
+> +	 */
+> +	if (WARN_ON(!npages)) {
+> +		pr_err("Invalid input npages = %ld\n", npages);
+> +		return;
+> +	}
+> +
+> +	if (npages == -1) {
+> +		desc.qw0 = QI_EIOTLB_PASID(pasid) |
+> +				QI_EIOTLB_DID(did) |
+> +				QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
+> +				QI_EIOTLB_TYPE;
+> +		desc.qw1 = 0;
+> +	} else {
+> +		int mask = ilog2(__roundup_pow_of_two(npages));
+> +		unsigned long align = (1ULL << (VTD_PAGE_SHIFT + mask));
+> +
+> +		if (WARN_ON_ONCE(!ALIGN(addr, align)))
+> +			addr &= ~(align - 1);
+> +
+> +		desc.qw0 = QI_EIOTLB_PASID(pasid) |
+> +				QI_EIOTLB_DID(did) |
+> +				QI_EIOTLB_GRAN(QI_GRAN_PSI_PASID) |
+> +				QI_EIOTLB_TYPE;
+> +		desc.qw1 = QI_EIOTLB_ADDR(addr) |
+> +				QI_EIOTLB_IH(ih) |
+> +				QI_EIOTLB_AM(mask);
+> +	}
+> +
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+>  /*
+>   * Disable Queued Invalidation interface.
+>   */
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 83a7abf0c4f0..e47f5fe37b59 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1520,18 +1520,24 @@ static void iommu_flush_iotlb_psi(struct intel_iommu
+> *iommu,
+> 
+>  	if (ih)
+>  		ih = 1 << 6;
+> -	/*
+> -	 * Fallback to domain selective flush if no PSI support or the size is
+> -	 * too big.
+> -	 * PSI requires page size to be 2 ^ x, and the base address is naturally
+> -	 * aligned to the size
+> -	 */
+> -	if (!cap_pgsel_inv(iommu->cap) || mask > cap_max_amask_val(iommu-
+> >cap))
+> -		iommu->flush.flush_iotlb(iommu, did, 0, 0,
+> -						DMA_TLB_DSI_FLUSH);
+> -	else
+> -		iommu->flush.flush_iotlb(iommu, did, addr | ih, mask,
+> -						DMA_TLB_PSI_FLUSH);
+> +
+> +	if (domain_use_first_level(domain)) {
+> +		qi_flush_piotlb(iommu, did, domain->default_pasid,
+> +				addr, pages, ih);
 
-This can be avoided by using an external timer as the tick source,
-which can be controlled independently by the OMAP remoteproc
-driver code, but still allowing the processor subsystem clock to
-be auto-gated when the remoteproc cores are idle.
+I'm not sure if my understanding is correct. But let me tell a story.
+Assuming we assign a mdev and a PF/VF to a single VM, then there
+will be p_iotlb tagged with PASID_RID2PASID and p_iotlb tagged with
+default_pasid. We may want to flush both... If this operation is
+invoked per-device, then need to pass in a hint to indicate whether
+to use PASID_RID2PASID or default_pasid, or you may just issue two
+flush with the two PASID values. Thoughts?
 
-This patch adds the support for OMAP remote processors to request
-timer(s) to be used by the remoteproc. The timers are enabled and
-disabled in line with the enabling/disabling of the remoteproc.
-The timer data is not mandatory if the advanced device management
-features are not required.
-
-The core timer functionality is provided by the OMAP DMTimer
-clocksource driver, which does not export any API. The logic is
-implemented through the timer device's platform data ops. The OMAP
-remoteproc driver mainly requires ops to request/free a dmtimer,
-and to start/stop a timer. The split ops helps in controlling the
-timer state without having to request and release a timer everytime
-it needs to use the timer.
-
-NOTE: If the gptimer is already in use by the time IPU and/or
-DSP are loaded, the processors will fail to boot.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/remoteproc/omap_remoteproc.c | 258 +++++++++++++++++++++++++++
- 1 file changed, 258 insertions(+)
-
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 841981c50d8d..9c750c2ab29d 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -26,6 +26,9 @@
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
- #include <linux/reset.h>
-+#include <clocksource/timer-ti-dm.h>
-+
-+#include <linux/platform_data/dmtimer-omap.h>
- 
- #include "omap_remoteproc.h"
- #include "remoteproc_internal.h"
-@@ -57,6 +60,16 @@ struct omap_rproc_mem {
- 	size_t size;
- };
- 
-+/**
-+ * struct omap_rproc_timer - data structure for a timer used by a omap rproc
-+ * @odt: timer pointer
-+ * @timer_ops: OMAP dmtimer ops for @odt timer
-+ */
-+struct omap_rproc_timer {
-+	struct omap_dm_timer *odt;
-+	const struct omap_dm_timer_ops *timer_ops;
-+};
-+
- /**
-  * struct omap_rproc - omap remote processor state
-  * @mbox: mailbox channel handle
-@@ -64,6 +77,8 @@ struct omap_rproc_mem {
-  * @boot_data: boot data structure for setting processor boot address
-  * @mem: internal memory regions data
-  * @num_mems: number of internal memory regions
-+ * @num_timers: number of rproc timer(s)
-+ * @timers: timer(s) info used by rproc
-  * @rproc: rproc handle
-  * @reset: reset handle
-  */
-@@ -73,6 +88,8 @@ struct omap_rproc {
- 	struct omap_rproc_boot_data *boot_data;
- 	struct omap_rproc_mem *mem;
- 	int num_mems;
-+	int num_timers;
-+	struct omap_rproc_timer *timers;
- 	struct rproc *rproc;
- 	struct reset_control *reset;
- };
-@@ -93,6 +110,213 @@ struct omap_rproc_dev_data {
- 	const u32 *dev_addrs;
- };
- 
-+/**
-+ * omap_rproc_request_timer() - request a timer for a remoteproc
-+ * @dev: device requesting the timer
-+ * @np: device node pointer to the desired timer
-+ * @timer: handle to a struct omap_rproc_timer to return the timer handle
-+ *
-+ * This helper function is used primarily to request a timer associated with
-+ * a remoteproc. The returned handle is stored in the .odt field of the
-+ * @timer structure passed in, and is used to invoke other timer specific
-+ * ops (like starting a timer either during device initialization or during
-+ * a resume operation, or for stopping/freeing a timer).
-+ *
-+ * Returns 0 on success, otherwise an appropriate failure
-+ */
-+static int omap_rproc_request_timer(struct device *dev, struct device_node *np,
-+				    struct omap_rproc_timer *timer)
-+{
-+	int ret;
-+
-+	timer->odt = timer->timer_ops->request_by_node(np);
-+	if (!timer->odt) {
-+		dev_err(dev, "request for timer node %p failed\n", np);
-+		return -EBUSY;
-+	}
-+
-+	ret = timer->timer_ops->set_source(timer->odt, OMAP_TIMER_SRC_SYS_CLK);
-+	if (ret) {
-+		dev_err(dev, "error setting OMAP_TIMER_SRC_SYS_CLK as source for timer node %p\n",
-+			np);
-+		timer->timer_ops->free(timer->odt);
-+		return ret;
-+	}
-+
-+	/* clean counter, remoteproc code will set the value */
-+	timer->timer_ops->set_load(timer->odt, 0, 0);
-+
-+	return 0;
-+}
-+
-+/**
-+ * omap_rproc_start_timer - start a timer for a remoteproc
-+ * @timer: handle to a OMAP rproc timer
-+ *
-+ * This helper function is used to start a timer associated with a remoteproc,
-+ * obtained using the request_timer ops. The helper function needs to be
-+ * invoked by the driver to start the timer (during device initialization)
-+ * or to just resume the timer.
-+ *
-+ * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-+ */
-+static inline int omap_rproc_start_timer(struct omap_rproc_timer *timer)
-+{
-+	return timer->timer_ops->start(timer->odt);
-+}
-+
-+/**
-+ * omap_rproc_stop_timer - stop a timer for a remoteproc
-+ * @timer: handle to a OMAP rproc timer
-+ *
-+ * This helper function is used to disable a timer associated with a
-+ * remoteproc, and needs to be called either during a device shutdown
-+ * or suspend operation. The separate helper function allows the driver
-+ * to just stop a timer without having to release the timer during a
-+ * suspend operation.
-+ *
-+ * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-+ */
-+static inline int omap_rproc_stop_timer(struct omap_rproc_timer *timer)
-+{
-+	return timer->timer_ops->stop(timer->odt);
-+}
-+
-+/**
-+ * omap_rproc_release_timer - release a timer for a remoteproc
-+ * @timer: handle to a OMAP rproc timer
-+ *
-+ * This helper function is used primarily to release a timer associated
-+ * with a remoteproc. The dmtimer will be available for other clients to
-+ * use once released.
-+ *
-+ * Returns 0 on success, otherwise a failure as returned by DMTimer ops
-+ */
-+static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
-+{
-+	return timer->timer_ops->free(timer->odt);
-+}
-+
-+/**
-+ * omap_rproc_enable_timers - enable the timers for a remoteproc
-+ * @rproc: handle of a remote processor
-+ * @configure: boolean flag used to acquire and configure the timer handle
-+ *
-+ * This function is used primarily to enable the timers associated with
-+ * a remoteproc. The configure flag is provided to allow the driver to
-+ * to either acquire and start a timer (during device initialization) or
-+ * to just start a timer (during a resume operation).
-+ */
-+static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
-+{
-+	int i;
-+	int ret = 0;
-+	struct platform_device *tpdev;
-+	struct dmtimer_platform_data *tpdata;
-+	const struct omap_dm_timer_ops *timer_ops;
-+	struct omap_rproc *oproc = rproc->priv;
-+	struct omap_rproc_timer *timers = oproc->timers;
-+	struct device *dev = rproc->dev.parent;
-+	struct device_node *np = NULL;
-+
-+	if (oproc->num_timers <= 0)
-+		return 0;
-+
-+	if (!configure)
-+		goto start_timers;
-+
-+	for (i = 0; i < oproc->num_timers; i++) {
-+		np = of_parse_phandle(dev->of_node, "ti,timers", i);
-+		if (!np) {
-+			ret = -ENXIO;
-+			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
-+				i, ret);
-+			goto free_timers;
-+		}
-+
-+		tpdev = of_find_device_by_node(np);
-+		if (!tpdev) {
-+			ret = -ENODEV;
-+			dev_err(dev, "could not get timer platform device\n");
-+			goto put_node;
-+		}
-+
-+		tpdata = dev_get_platdata(&tpdev->dev);
-+		put_device(&tpdev->dev);
-+		if (!tpdata) {
-+			ret = -EINVAL;
-+			dev_err(dev, "dmtimer pdata structure NULL\n");
-+			goto put_node;
-+		}
-+
-+		timer_ops = tpdata->timer_ops;
-+		if (!timer_ops || !timer_ops->request_by_node ||
-+		    !timer_ops->set_source || !timer_ops->set_load ||
-+		    !timer_ops->free || !timer_ops->start ||
-+		    !timer_ops->stop) {
-+			ret = -EINVAL;
-+			dev_err(dev, "device does not have required timer ops\n");
-+			goto put_node;
-+		}
-+
-+		timers[i].timer_ops = timer_ops;
-+		ret = omap_rproc_request_timer(dev, np, &timers[i]);
-+		if (ret) {
-+			dev_err(dev, "request for timer %p failed: %d\n", np,
-+				ret);
-+			goto put_node;
-+		}
-+		of_node_put(np);
-+	}
-+
-+start_timers:
-+	for (i = 0; i < oproc->num_timers; i++)
-+		omap_rproc_start_timer(&timers[i]);
-+	return 0;
-+
-+put_node:
-+	of_node_put(np);
-+free_timers:
-+	while (i--) {
-+		omap_rproc_release_timer(&timers[i]);
-+		timers[i].odt = NULL;
-+		timers[i].timer_ops = NULL;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * omap_rproc_disable_timers - disable the timers for a remoteproc
-+ * @rproc: handle of a remote processor
-+ * @configure: boolean flag used to release the timer handle
-+ *
-+ * This function is used primarily to disable the timers associated with
-+ * a remoteproc. The configure flag is provided to allow the driver to
-+ * to either stop and release a timer (during device shutdown) or to just
-+ * stop a timer (during a suspend operation).
-+ */
-+static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
-+{
-+	int i;
-+	struct omap_rproc *oproc = rproc->priv;
-+	struct omap_rproc_timer *timers = oproc->timers;
-+
-+	if (oproc->num_timers <= 0)
-+		return 0;
-+
-+	for (i = 0; i < oproc->num_timers; i++) {
-+		omap_rproc_stop_timer(&timers[i]);
-+		if (configure) {
-+			omap_rproc_release_timer(&timers[i]);
-+			timers[i].odt = NULL;
-+			timers[i].timer_ops = NULL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * omap_rproc_mbox_callback() - inbound mailbox message handler
-  * @client: mailbox client pointer used for requesting the mailbox channel
-@@ -228,6 +452,12 @@ static int omap_rproc_start(struct rproc *rproc)
- 		goto put_mbox;
- 	}
- 
-+	ret = omap_rproc_enable_timers(rproc, true);
-+	if (ret) {
-+		dev_err(dev, "omap_rproc_enable_timers failed: %d\n", ret);
-+		goto put_mbox;
-+	}
-+
- 	reset_control_deassert(oproc->reset);
- 
- 	return 0;
-@@ -241,9 +471,14 @@ static int omap_rproc_start(struct rproc *rproc)
- static int omap_rproc_stop(struct rproc *rproc)
- {
- 	struct omap_rproc *oproc = rproc->priv;
-+	int ret;
- 
- 	reset_control_assert(oproc->reset);
- 
-+	ret = omap_rproc_disable_timers(rproc, true);
-+	if (ret)
-+		return ret;
-+
- 	mbox_free_channel(oproc->mbox);
- 
- 	return 0;
-@@ -528,6 +763,29 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
-+	/*
-+	 * Timer nodes are directly used in client nodes as phandles, so
-+	 * retrieve the count using appropriate size
-+	 */
-+	oproc->num_timers = of_count_phandle_with_args(np, "ti,timers", NULL);
-+	if (oproc->num_timers <= 0) {
-+		dev_dbg(&pdev->dev, "device does not have timers, status = %d\n",
-+			oproc->num_timers);
-+		oproc->num_timers = 0;
-+	}
-+
-+	if (oproc->num_timers) {
-+		oproc->timers = devm_kzalloc(&pdev->dev, sizeof(*oproc->timers)
-+					     * oproc->num_timers, GFP_KERNEL);
-+		if (!oproc->timers) {
-+			ret = -ENOMEM;
-+			goto free_rproc;
-+		}
-+
-+		dev_dbg(&pdev->dev, "device has %d tick timers\n",
-+			oproc->num_timers);
-+	}
-+
- 	ret = of_reserved_mem_device_init(&pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
--- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Regards,
+Yi Liu
