@@ -2,143 +2,88 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A0CC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1E522527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iJas9yV+"
+	by mail.kernel.org (Postfix) with ESMTP id 54D612073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576198492;
+	bh=j8D+jY9fdqeL/Py33OYokgdHf7s0IVkY5v+nvBAEJos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=My+lDvTeGXLpSh6FqGp1W6FKKyqYQc+WWM6ZO0dimkQgYeFrJGmhyGfSxnGC4qbIB
+	 PfBQJOywVIqw3OHp6bgaNfDc5bPq77rdWjRcqt7F8r+2O9FQYzb4LGcV8jQvBCgXaq
+	 opGzy3za2PvQMQ3dVH5qsyZSfMZcPwIcnCytUFWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLMAvV (ORCPT
+        id S1727766AbfLMAyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:51:21 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38554 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfLMAvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:51:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U/yCdrBeS8qawSt8fr5/pTCJsSZppXePjAIJbFodjBQ=; b=iJas9yV+XFfPNDfDe0uRBgXIk
-        5852wR2mDlLu5V3p4b3Qd+Up1xJUaxRvzW6vXlAd+do+YglPFoDxk8vSlh6EDK59S6nKviQWbK5Lc
-        yxjqInJezBx2k1i5Zon1Vf/5r6q+oIvDx/OFCegSTYnzy/AODOI4UuwTNYE2nAEPGLvTc5WPEfE/2
-        rc1gkljsvGP62aDUII1iUft3deErCXCNL7W6EoM1L6MWkFPqy+2oh5yOD5G7QOJf8uIMvNU2ZILYM
-        qGvqL4bGRwACIYcyEsrZmc4PhP1srYqu8Vp6UEECku4SNqhkWMCY/uhjYl4TuWu4W2SMK/Ghy1dD3
-        gSud7uyDA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52224)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ifZAl-0001dm-EJ; Fri, 13 Dec 2019 00:51:11 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ifZAj-0007Ls-Bb; Fri, 13 Dec 2019 00:51:09 +0000
-Date:   Fri, 13 Dec 2019 00:51:09 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Murali Karicheri <m-karicheri2@ti.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: imx6 and keystone PCIe abort handling
-Message-ID: <20191213005109.GP25745@shell.armlinux.org.uk>
-References: <20191213003236.GA43783@google.com>
+        Thu, 12 Dec 2019 19:54:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbfLMAyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 19:54:51 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B835205C9;
+        Fri, 13 Dec 2019 00:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576198490;
+        bh=j8D+jY9fdqeL/Py33OYokgdHf7s0IVkY5v+nvBAEJos=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pufP1U08vwhmlXcMMrITJdIdTAfP7bWtp8132PxG22nlfgLomU0yp8xOL8VGGAD/7
+         SuUmv/98B4MEfBWnSkYUCOBvJRzTocYhdIaAdzVpyxi0wlHbHj4XxhGRcwKDP9FPvK
+         EoEZHwqWh6VnL0J7D8lDo+J6GIdmB/VDUr/66CKg=
+Date:   Thu, 12 Dec 2019 19:54:49 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.4 27/37] ext4: work around deleting a file with
+ i_nlink == 0 safely
+Message-ID: <20191213005449.GG12996@sasha-vm>
+References: <20191211153813.24126-1-sashal@kernel.org>
+ <20191211153813.24126-27-sashal@kernel.org>
+ <20191211161959.GB129186@mit.edu>
+ <20191211200454.GF12996@sasha-vm>
+ <20191212151706.GA204354@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191213003236.GA43783@google.com>
+In-Reply-To: <20191212151706.GA204354@mit.edu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 06:32:36PM -0600, Bjorn Helgaas wrote:
-> Hi folks,
-> 
-> Why are ks_pcie_fault() and imx6q_pcie_abort_handler() different?  I
-> think they're doing the same thing, and the "instr & 0x0e100090" part
-> is the same, but only imx6 has the "instr & 0x0c100000" part.  And the
-> return values are different in some cases.
+On Thu, Dec 12, 2019 at 10:17:06AM -0500, Theodore Y. Ts'o wrote:
+>On Wed, Dec 11, 2019 at 03:04:54PM -0500, Sasha Levin wrote:
+>> > I'm confused; this was explicitly cc'ed to stable@kernel.org, so why
+>> > is your AUTOSEL picking this up?  I would have thought this would get
+>> > picked up via the normal stable kernel processes.
+>>
+>> My mistake, appologies.
+>
+>No worries; the intent was that it be backported to stable, and I
+>don't really care with path it takes.
+>
+>I just wanted to make sure there wouldn't be confusion if you
+>backported it to stable, and then Greg tried and then got a merge
+>conflict.  (Or worse, if the patch was one of the ones where it can be
+>successfully applied *twice* w/o a patch conflict; I'm not sure if git
+>cherry-pick is smarter than patch in this regard, but I don't think it
+>is?)
 
-Here's the opcodes for the three different types of loads that would
-be interesting.
-
-   0:   e5910000        ldr     r0, [r1] ; 32-bit
-   4:   e5d10000        ldrb    r0, [r1] ; 8-bit
-   8:   e1d100b0        ldrh    r0, [r1] ; 16-bit
-
-So, (instr & 0x0e100090) == 0x00100090 is trie for the ldrh case.
-(instr & 0x0c100000) == 0x04100000 is true for the ldr and ldrb case.
-
-So, the keystone version only traps ldrh instructions, whereas the
-imx6 traps them all.
-
-> Could/should these be shared somehow?  They're both under #ifdef
-> CONFIG_ARM, so maybe it could be provided by arch/arm?
-> 
->   static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
-> 			   struct pt_regs *regs)
->   {
-> 	  unsigned long instr = *(unsigned long *) instruction_pointer(regs);
-> 
-> 	  if ((instr & 0x0e100090) == 0x00100090) {
-> 		  int reg = (instr >> 12) & 15;
-> 
-> 		  regs->uregs[reg] = -1;
-> 		  regs->ARM_pc += 4;
-> 	  }
-> 
-> 	  return 0;
->   }
-> 
->   static int imx6q_pcie_abort_handler(unsigned long addr,
-> 		  unsigned int fsr, struct pt_regs *regs)
->   {
-> 	  unsigned long pc = instruction_pointer(regs);
-> 	  unsigned long instr = *(unsigned long *)pc;
-> 	  int reg = (instr >> 12) & 15;
-> 
-> 	  /*
-> 	   * If the instruction being executed was a read,
-> 	   * make it look like it read all-ones.
-> 	   */
-> 	  if ((instr & 0x0c100000) == 0x04100000) {
-> 		  unsigned long val;
-> 
-> 		  if (instr & 0x00400000)
-> 			  val = 255;
-> 		  else
-> 			  val = -1;
-> 
-> 		  regs->uregs[reg] = val;
-> 		  regs->ARM_pc += 4;
-> 		  return 0;
-> 	  }
-> 
-> 	  if ((instr & 0x0e100090) == 0x00100090) {
-> 		  regs->uregs[reg] = -1;
-> 		  regs->ARM_pc += 4;
-> 		  return 0;
-> 	  }
-> 
-> 	  return 1;
->   }
-> 
-> 
+This one was just due to me running a bit faster then usual. I generally
+don't filter out stable tagged commits and Greg just gets to them faster
+than me (the delay on AUTOSEL is bigger than stable tagged commits).
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thanks,
+Sasha
