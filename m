@@ -2,168 +2,80 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC7FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9161C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C63724676
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D5224676
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576225887;
+	bh=myyxeypyHriSKbglxnLcS2I3B1e+64R7xW7PX38Q1o0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xOQ0UYh0uTc8LNF+qf2NPi+mxJ9JOH8bPYprepyELejF4KhMY8R8cNQIby3EKdimn
+	 Lr9IMHsrqsDb6c3INMR92cL7nROXLkgCk+6KKoQdokvmx9KDwW5wtWPZnA/v5v4zwc
+	 JjBW6HbPyrP/u2uIMEROr6fQU7/T0ixox80UJ7Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLMIbK (ORCPT
+        id S1726678AbfLMIb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:31:10 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:36384 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725980AbfLMIbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:31:10 -0500
-Received: from localhost.loongson.cn (unknown [10.40.23.36])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxOtEqTPNdV2IKAA--.179S2;
-        Fri, 13 Dec 2019 16:30:35 +0800 (CST)
-From:   Guoyun Sun <sunguoyun@loongson.cn>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Guoyun Sun <sunguoyun@loongson.cn>
-Subject: [PATCH V2] MIPS: Add get_thread_area syscall
-Date:   Fri, 13 Dec 2019 16:30:34 +0800
-Message-Id: <1576225834-16389-1-git-send-email-sunguoyun@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9AxOtEqTPNdV2IKAA--.179S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW5urykXw18Gr43KFW3ZFb_yoW5tw47pr
-        WUAw1kKw4rury8Aa4fWFykWrWxJr1kXrWjgFs7trZ5Z3W8Xry5tr1Sga4rXFya9ryIkay0
-        qF4F9ry5t3yvvFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUHnQUUUUUU=
-X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
+        Fri, 13 Dec 2019 03:31:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfLMIb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:31:26 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED03D2465B;
+        Fri, 13 Dec 2019 08:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576225885;
+        bh=myyxeypyHriSKbglxnLcS2I3B1e+64R7xW7PX38Q1o0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=L8veSFtJD+zdDXJsLGDVe4LMCieF8IqYxpfAm+xeOhN/J+8LpWroYBbSh1ypSDU3Y
+         /Uldl2uWaGNKlvqoUpqCApNOuHGYj89amLsGm1cUDrw1osCnxbGTVjgKG9fYCC/RUl
+         leAT3QH0aZmqDRHiasQcI39kM9IuF+lxZo9lTa4A=
+Date:   Fri, 13 Dec 2019 09:31:21 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH RFC 2/2] HID: usbhid: kcov: add annotations for coverage
+ collection
+In-Reply-To: <6b4b598d012d981c0c45fcc9f121ba210bd222f9.1576170740.git.andreyknvl@google.com>
+Message-ID: <nycvar.YFH.7.76.1912130930220.4603@cbobk.fhfr.pm>
+References: <cover.1576170740.git.andreyknvl@google.com> <6b4b598d012d981c0c45fcc9f121ba210bd222f9.1576170740.git.andreyknvl@google.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CRIU(https://criu.org/) tools will dump TLS(Thread Local Storage) by
-get_thread_area during checkpoint and restore TLS by set_thread_area during
-restore. without syscall get_thread_area, criu restore will fail on MIPS
-platform.because a variable with GCC __thread is invalid.
+On Thu, 12 Dec 2019, Andrey Konovalov wrote:
 
-The following function will be called when criu restore
+> This patch adds kcov_remote_start/stop() callbacks into usbhid code that
+> is executed in interrupt context. As the result, kcov can be used to
+> collect coverage from those parts of the code, which is used to facilitate
+> coverage-guided fuzzing with syzkaller.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-static inline void restore_tls(tls_t *ptls) {
-        asm volatile(
-                     "move $4, %0                                   \n"
-                     "li $2,  "__stringify(__NR_set_thread_area)"  \n"
-                     "syscall                                       \n"
-                     :
-                     : "r"(*ptls)
-                     : "$4","$2","memory");
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 
-With this patch, the *ptls can be obtained by get_thread_area on MIPS
-platform when criu checkpoint. just like this:
-
-static inline void arch_get_tls(tls_t *ptls)
-{
-	asm volatile(
-		     "move $4, %0				    \n"
-		     "li $2,  "__stringify(__NR_get_thread_area)"  \n"
-		     "syscall					    \n"
-		     :
-		     : "r"(ptls)
-		     : "$4","$2","memory");
-
-}
-
-Signed-off-by: Guoyun Sun <sunguoyun@loongson.cn>
----
- arch/mips/kernel/syscall.c                | 10 ++++++++++
- arch/mips/kernel/syscalls/syscall_n32.tbl |  2 ++
- arch/mips/kernel/syscalls/syscall_n64.tbl |  2 ++
- arch/mips/kernel/syscalls/syscall_o32.tbl |  2 ++
- 4 files changed, 16 insertions(+)
-
-diff --git a/arch/mips/kernel/syscall.c b/arch/mips/kernel/syscall.c
-index c333e57..20bf4c5 100644
---- a/arch/mips/kernel/syscall.c
-+++ b/arch/mips/kernel/syscall.c
-@@ -94,6 +94,16 @@ SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
- 	return 0;
- }
- 
-+SYSCALL_DEFINE1(get_thread_area, unsigned long __user *, u_info)
-+{
-+	struct thread_info *ti = task_thread_info(current);
-+
-+	if (copy_to_user(u_info, &(ti->tp_value), sizeof(ti->tp_value)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- static inline int mips_atomic_set(unsigned long addr, unsigned long new)
- {
- 	unsigned long old, tmp;
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index e7c5ab3..3aa4858 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -341,6 +341,8 @@
- 330	n32	statx				sys_statx
- 331	n32	rseq				sys_rseq
- 332	n32	io_pgetevents			compat_sys_io_pgetevents
-+333	n32	get_thread_area			sys_get_thread_area
-+
- # 333 through 402 are unassigned to sync up with generic numbers
- 403	n32	clock_gettime64			sys_clock_gettime
- 404	n32	clock_settime64			sys_clock_settime
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 13cd665..14b6796 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -337,6 +337,8 @@
- 326	n64	statx				sys_statx
- 327	n64	rseq				sys_rseq
- 328	n64	io_pgetevents			sys_io_pgetevents
-+329	n64	get_thread_area			sys_get_thread_area
-+
- # 329 through 423 are reserved to sync up with other architectures
- 424	n64	pidfd_send_signal		sys_pidfd_send_signal
- 425	n64	io_uring_setup			sys_io_uring_setup
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 353539e..bb4e050 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -380,6 +380,8 @@
- 366	o32	statx				sys_statx
- 367	o32	rseq				sys_rseq
- 368	o32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
-+369	o32	get_thread_area			sys_get_thread_area
-+
- # room for arch specific calls
- 393	o32	semget				sys_semget
- 394	o32	semctl				sys_semctl			compat_sys_semctl
 -- 
-2.1.0
+Jiri Kosina
+SUSE Labs
 
