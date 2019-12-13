@@ -2,43 +2,44 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B881BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D556A205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946BB2253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbfLMHyh (ORCPT
+        id S1726004AbfLMH4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:54:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48828 "EHLO mx1.suse.de"
+        Fri, 13 Dec 2019 02:56:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49068 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725468AbfLMHyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:54:37 -0500
+        id S1725468AbfLMH4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:56:19 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A01A0AC4D;
-        Fri, 13 Dec 2019 07:54:35 +0000 (UTC)
-Message-ID: <0949d65cf38c6c21f7b1565765dfc34def0b825a.camel@suse.de>
-Subject: Re: [PATCH] spi: bcm2835: don't print error on clk_get() DEFER
+        by mx1.suse.de (Postfix) with ESMTP id 278DFAC4D;
+        Fri, 13 Dec 2019 07:56:17 +0000 (UTC)
+Message-ID: <8b5f4ed5fd341d279a25e4ad94b751c61cd3a4de.camel@suse.de>
+Subject: Re: [PATCH v3] bluetooth: hci_bcm: enable IRQ capability from node
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>, linux-spi@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Ray Jui <ray.jui@broadcom.com>
-Date:   Fri, 13 Dec 2019 08:54:33 +0100
-In-Reply-To: <20191212231213.29061-1-jquinlan@broadcom.com>
-References: <20191212231213.29061-1-jquinlan@broadcom.com>
+To:     guillaume La Roque <glaroque@baylibre.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, khilman@baylibre.com,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+Date:   Fri, 13 Dec 2019 08:56:16 +0100
+In-Reply-To: <3f4aaa42-59fb-b7d2-0e5d-d799d90cab0a@baylibre.com>
+References: <20191211094923.20220-1-glaroque@baylibre.com>
+         <cf77eec5df92b1845f0bf7cc8eb53edd4af9e1bf.camel@suse.de>
+         <0CF02341-CF69-4680-B61F-DC5C0702F1A2@holtmann.org>
+         <3f4aaa42-59fb-b7d2-0e5d-d799d90cab0a@baylibre.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-5DTumPm2OHpOqZWUQ8Si"
+        protocol="application/pgp-signature"; boundary="=-2Fr8xhQBje9kaHYBFIhM"
 User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,36 +48,67 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-5DTumPm2OHpOqZWUQ8Si
+--=-2Fr8xhQBje9kaHYBFIhM
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-12-12 at 18:12 -0500, Jim Quinlan wrote:
-> Otherwise one may get multiple error messages for normal
-> operation of a clock provider.
+> > > > diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bc=
+m.c
+> > > > index f8f5c593a05c..9f52d57c56de 100644
+> > > > --- a/drivers/bluetooth/hci_bcm.c
+> > > > +++ b/drivers/bluetooth/hci_bcm.c
+> > > > @@ -1409,6 +1409,7 @@ static int bcm_serdev_probe(struct serdev_dev=
+ice
+> > > > *serdev)
+> > > > {
+> > > > 	struct bcm_device *bcmdev;
+> > > > 	const struct bcm_device_data *data;
+> > > > +	struct platform_device *pdev;
+> > > > 	int err;
+> > > >=20
+> > > > 	bcmdev =3D devm_kzalloc(&serdev->dev, sizeof(*bcmdev),
+> > > > GFP_KERNEL);
+> > > > @@ -1421,6 +1422,8 @@ static int bcm_serdev_probe(struct serdev_dev=
+ice
+> > > > *serdev)
+> > > > #endif
+> > > > 	bcmdev->serdev_hu.serdev =3D serdev;
+> > > > 	serdev_device_set_drvdata(serdev, bcmdev);
+> > > > +	pdev =3D to_platform_device(bcmdev->dev);
+> > > Ultimately bcmdev->dev here comes from a serdev device not a platform
+> > > device,
+> > > right?
+> > I was afraid of this, but then nobody spoke up. Can we fix this or shou=
+ld I
+> > just revert the patch?
 >=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
+> sorry about that, i will provide a fix as soon as possible but i have no =
+pi4
+> to validate on it so i will add no in cc nicolas and if you can give me a
+> feedback i will appreciate .
 
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Thanks, I will :)
+
+Regards,
+Nicolas
 
 
---=-5DTumPm2OHpOqZWUQ8Si
+--=-2Fr8xhQBje9kaHYBFIhM
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3zQ7kACgkQlfZmHno8
-x/4fZgf9HkEjWQ+/PYekVxrIAJOea8gNqwD85mc8QG9VlGdic6z/NE8T30Ss9f5O
-SEco4JkgPJKnLX4iJmoKNSo451iXLDCe330twWilQDs5HWu06OKuSmb9X96gJQHb
-jJGB2unP+owneVegqK/xAv07qBzgsZiINyyjv9jtdv5Ox7P7ttY54vVww1reUPkt
-rsX+Di6zUZGFpTO6vODp4P9XhB52Lc9TE0/NaDuPuF3+4SUlqBLKYGcHpKv90RVm
-jT6nf9gPvyd09xeYzWg9G1ulMlGayFDzlKSDKj71cRVKKtpL35WBk1SzxGVMz4Um
-KXBFtci2hzFOribpHa1c2tSM6aQOJw==
-=7+Aj
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3zRCAACgkQlfZmHno8
+x/4O5wf/S3T5ZtghqcIHN9ZUNBqo4r2BMbKhz5gQKmqgnQYQzvnkZ6j4o267rTD2
+JVT5KeL91NHcqlw/SOFG4x7JbChz8uX6JjDQ1djXG4K4vOi1KssJKMKb8x3RmCWJ
+QUOzLwPSSlT9ZkTRp/b0rOyeLDVrT3ZwCcU4U0QVl9F/M5D53i0oDc9/beEZuNWG
+4yqMsSN5uGkI0rjw/iv/Tg8ZI+kmCNID7cbi0WzkYtjDvQmrNDBnaZqp/e7vKGRn
+lM4PMkzGCEAd8EO9PJ4Ur2NA7unX08m0bFUFhV7/srAQAmf8kzwA5TonU5J+mKMS
+patEbFtwpznGBM8QFnXji1deXIqqtQ==
+=efmf
 -----END PGP SIGNATURE-----
 
---=-5DTumPm2OHpOqZWUQ8Si--
+--=-2Fr8xhQBje9kaHYBFIhM--
 
