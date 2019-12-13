@@ -2,231 +2,205 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D1BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58488C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7962077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmIngwNx"
+	by mail.kernel.org (Postfix) with ESMTP id 2515B2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbfLMDQt (ORCPT
+        id S1731631AbfLMDUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:16:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30396 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726631AbfLMDQt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 22:16:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576207007;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OF6N4wqiULHnhkx+2DOIL/HDlPx6E4fjY6FKxous7Io=;
-        b=KmIngwNx7y5eukhj5esJEmug/dT9/NMmRW7Vi0eDE4EO+jFQkT5LQWO1KU3BRRN70Cmeb1
-        R12TIvG+CPa9fBbXeAjWvDn/YYsiy9T4tMQo3clZ01keF2Sh7NMTN9UfSMfSzlAImZFaCK
-        vhdAzMmtNXU+tIRUQ+/ve4pnBXQifMI=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-pdlFFkkRN56H6Qf44scdZA-1; Thu, 12 Dec 2019 22:16:43 -0500
-X-MC-Unique: pdlFFkkRN56H6Qf44scdZA-1
-Received: by mail-yb1-f200.google.com with SMTP id b5so879453ybq.23
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 19:16:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=OF6N4wqiULHnhkx+2DOIL/HDlPx6E4fjY6FKxous7Io=;
-        b=fdzpTcX2LkXVea8vjmZIKWk+U9FfYDo4Obq1j14sgx28Vn1jDPyx8hpKdi2grWGOgb
-         GW473FTwxYHqh9rMYpL/KbF3xlqRwpfftq0lnAvVWuTQPxD5JTUD6dLFXW6qyzLza8B5
-         LL0XcSeeJ0OG/HRKFUJXHWF084wuVgUOl5wBmOF6DMS4YoOgwAXZg7ZUhCtqJBl/PSsM
-         hSApfUO1Aabo5zArA2svAoKAGGfRZneOxAOtt0LKGnHl61g4fFVnMNgv2tUUWEcYPKa3
-         U44sx+8FDa7kawcSTawfBkpfsPuluQbel8aJGmAevuPrx4qmJJYyhtH01eflQhX/bH0p
-         wkKg==
-X-Gm-Message-State: APjAAAUUL71ScIW4HOrSjmW7uOilkssyNTnNK5Buh8XiE7/w872RWkfw
-        N4KiqP96oOahPW4f//a63wjvIU+wncLPlj8GjKJ8HVGLOLIZ8bYqoZeIIfTpLDivzU2qWtmaV4u
-        H3kvNBq5I/sbr7HbUHx+fLC2B
-X-Received: by 2002:a81:550c:: with SMTP id j12mr6975269ywb.38.1576207002595;
-        Thu, 12 Dec 2019 19:16:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw4yUmpywtUmKkrwEdg58T33LVtLlFVUkyGqlU+wk4uepLmvOkbc5t04OHTCnhGMELRjb1LzA==
-X-Received: by 2002:a81:550c:: with SMTP id j12mr6975255ywb.38.1576207002317;
-        Thu, 12 Dec 2019 19:16:42 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id j129sm3468145ywf.99.2019.12.12.19.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 19:16:41 -0800 (PST)
-Date:   Thu, 12 Dec 2019 20:16:33 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
-Message-ID: <20191213031633.zxccz5t5yyillxsb@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
- <20191212014952.vlrmxrk2cebwxjnp@cantor>
- <6f3bcad9-b9b3-b349-fdad-ce53a79a665b@linux.intel.com>
- <20191213003013.gc3zg3fpzpjntnzg@cantor>
- <7d58da5b-3f55-72b2-0638-ae561446d207@linux.intel.com>
- <20191213025159.kwf6f6zjmcjecamp@cantor>
+        Thu, 12 Dec 2019 22:20:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:41964 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731459AbfLMDUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 22:20:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1A6C30E;
+        Thu, 12 Dec 2019 19:20:14 -0800 (PST)
+Received: from [192.168.0.10] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A11FE3F52E;
+        Thu, 12 Dec 2019 19:20:12 -0800 (PST)
+Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
+ <bdb9e0149de9d2a5020ddbdd8a4033b3@www.loen.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <e9e0a133-ccde-8893-d165-15c831ca37b5@arm.com>
+Date:   Fri, 13 Dec 2019 08:50:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
+In-Reply-To: <bdb9e0149de9d2a5020ddbdd8a4033b3@www.loen.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191213025159.kwf6f6zjmcjecamp@cantor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu Dec 12 19, Jerry Snitselaar wrote:
->On Fri Dec 13 19, Lu Baolu wrote:
->>Hi,
+
+
+On 12/12/2019 05:13 PM, Marc Zyngier wrote:
+> On 2019-12-12 10:14, Anshuman Khandual wrote:
+>> This adds basic building blocks required for ISAR6 CPU ID register which
+>> identifies support for various instruction implementation on AArch32 state.
+> 
+> nit: the register name is ID_ISAR6.
+
+Sure, will change.
+
+> 
 >>
->>On 12/13/19 8:30 AM, Jerry Snitselaar wrote:
->>>On Thu Dec 12 19, Lu Baolu wrote:
->>>>Hi,
->>>>
->>>>On 12/12/19 9:49 AM, Jerry Snitselaar wrote:
->>>>>On Wed Dec 11 19, Lu Baolu wrote:
->>>>>>If the default DMA domain of a group doesn't fit a device, it
->>>>>>will still sit in the group but use a private identity domain.
->>>>>>When map/unmap/iova_to_phys come through iommu API, the driver
->>>>>>should still serve them, otherwise, other devices in the same
->>>>>>group will be impacted. Since identity domain has been mapped
->>>>>>with the whole available memory space and RMRRs, we don't need
->>>>>>to worry about the impact on it.
->>>>>>
->>>>>>Link: https://www.spinics.net/lists/iommu/msg40416.html
->>>>>>Cc: Jerry Snitselaar <jsnitsel@redhat.com>
->>>>>>Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
->>>>>>Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains 
->>>>>>replaced with private")
->>>>>>Cc: stable@vger.kernel.org # v5.3+
->>>>>>Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>>>>
->>>>>Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
->>>>
->>>>Can you please try this fix and check whether it can fix your problem?
->>>>If it helps, do you mind adding a Tested-by?
->>>>
->>>>Best regards,
->>>>baolu
->>>>
->>>
->>>I'm testing with this patch, my patch that moves the direct mapping call,
->>>and Alex's patch for the ISA bridge. It solved the 2 iommu mapping errors
->>>I was seeing with default passthrough, I no longer see all the dmar pte
->>>read access errors, and the system boots allowing me to login. I'm tracking
->>>down 2 issues at the moment. With passthrough I see a problem with 01:00.4
->>>that I mentioned in the earlier email:
->>>
->>>[   78.978573] uhci_hcd: USB Universal Host Controller Interface driver
->>>[   78.980842] uhci_hcd 0000:01:00.4: UHCI Host Controller
->>>[   78.982738] uhci_hcd 0000:01:00.4: new USB bus registered, 
->>>assigned bus number 3
->>>[   78.985222] uhci_hcd 0000:01:00.4: detected 8 ports
->>>[   78.986907] uhci_hcd 0000:01:00.4: port count misdetected? 
->>>forcing to 2 ports
->>>[   78.989316] uhci_hcd 0000:01:00.4: irq 16, io base 0x00003c00
->>>[   78.994634] uhci_hcd 0000:01:00.4: DMAR: 32bit DMA uses 
->>>non-identity mapping
->>>[   7 0000:01:00.4: unable to allocate consistent memory for frame list
->>>[   79.499891] uhci_hcd 0000:01:00.4: startup error -16
->>>[   79.501588] uhci_hcd 0000:01:00.4: USB bus 3 deregistered
->>>[   79.503494] uhci_hcd 0000:01:00.4: init 0000:01:00.4 fail, -16
->>>[   79.505497] uhci_hcd: probe of 0000:01:00.4 failed with error -16
->>>
->>>If I boot the system with iommu=nopt I see an iommu map failure due to
->>>the prot check in __domain_mapping:
->>>
->>>[   40.940589] pci 0000:00:1f.0: iommu_group_add_device: calling 
->>>iommu_group_create_direct_mappings
->>>[   40.943558] pci 0000:00:1f.0: 
->>>iommu_group_create_direct_mappings: iterating through mappings
->>>[   40.946402] pci 0000:00:1f.0: 
->>>iommu_group_create_direct_mappings: calling apply_resv_region
->>>[   40.949184] pci 0000:00:1f.0: 
->>>iommu_group_create_direct_mappings: entry type is direct
->>>[   40.951819] DMAR: intel_iommu_map: enter
->>>[   40.953128] DMAR: __domain_mapping: prot & 
->>>(DMA_PTE_READ|DMA_PTE_WRITE) == 0
->>>[   40.955486] DMAR: domain_mapping: __domain_mapping failed
->>>[   40.957348] DMAR: intel_iommu_map: domain_pfn_mapping returned -22
->>>[   40.959466] DMAR: intel_iommu_map: leave
->>>[   40.959468] iommu: iommu_map: ops->map failed iova 0x0 pa 
->>>0x0000000000000000 pgsize 0x1000
->>>[   40.963511] pci 0000:00:1f.0: 
->>>iommu_group_create_direct_mappings: iommu_map failed
->>>[   40.966026] pci 0000:00:1f.0: 
->>>iommu_group_create_direct_mappings: leaving func
->>>[   40.968487] pci 0000:00:1f.0: iommu_group_add_device: calling 
->>>__iommu_attach_device
->>>[   40.971016] pci 0000:00:1f.0: Adding to iommu group 19
->>>[   40.972731] pci 0000:00:1f.0: DMAR: domain->type is dma
->>>
->>>/sys/kernel/iommu_groups/19
->>>[root@hp-dl388g8-07 19]# cat reserved_regions 0x0000000000000000 
->>>0x0000000000ffffff direct
->>>0x00000000bdf6e000 0x00000000bdf84fff direct
->>>0x00000000fee00000 0x00000000feefffff msi
->>>
->>>00:1f.0 ISA bridge: Intel Corporation C600/X79 series chipset LPC 
->>>Controller
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/cpu.h    | 1 +
+>>  arch/arm64/include/asm/sysreg.h | 9 +++++++++
+>>  arch/arm64/kernel/cpufeature.c  | 7 ++++++-
+>>  arch/arm64/kernel/cpuinfo.c     | 1 +
+>>  arch/arm64/kvm/sys_regs.c       | 2 +-
+>>  5 files changed, 18 insertions(+), 2 deletions(-)
 >>
->>This seems to be another issue?
+>> diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
+>> index d72d995..b4a4053 100644
+>> --- a/arch/arm64/include/asm/cpu.h
+>> +++ b/arch/arm64/include/asm/cpu.h
+>> @@ -39,6 +39,7 @@ struct cpuinfo_arm64 {
+>>      u32        reg_id_isar3;
+>>      u32        reg_id_isar4;
+>>      u32        reg_id_isar5;
+>> +    u32        reg_id_isar6;
+>>      u32        reg_id_mmfr0;
+>>      u32        reg_id_mmfr1;
+>>      u32        reg_id_mmfr2;
+>> diff --git a/arch/arm64/include/asm/sysreg.h
+>> b/arch/arm64/include/asm/sysreg.h
+>> index 6db3a9b..4fd3327 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -146,6 +146,7 @@
+>>  #define SYS_ID_ISAR4_EL1        sys_reg(3, 0, 0, 2, 4)
+>>  #define SYS_ID_ISAR5_EL1        sys_reg(3, 0, 0, 2, 5)
+>>  #define SYS_ID_MMFR4_EL1        sys_reg(3, 0, 0, 2, 6)
+>> +#define SYS_ID_ISAR6_EL1        sys_reg(3, 0, 0, 2, 7)
 >>
->>Best regards,
->>baolu
->
->In intel_iommu_get_resv_regions this iommu_alloc_resv_region is called
->with prot set to 0:
->
->                if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
->                        reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
->                                                      IOMMU_RESV_DIRECT_RELAXABLE);
->                        if (reg)
->
+>>  #define SYS_MVFR0_EL1            sys_reg(3, 0, 0, 3, 0)
+>>  #define SYS_MVFR1_EL1            sys_reg(3, 0, 0, 3, 1)
+>> @@ -683,6 +684,14 @@
+>>  #define ID_ISAR5_AES_SHIFT        4
+>>  #define ID_ISAR5_SEVL_SHIFT        0
+>>
+>> +#define ID_ISAR6_JSCVT_SHIFT        0
+>> +#define ID_ISAR6_DP_SHIFT        4
+>> +#define ID_ISAR6_FHM_SHIFT        8
+>> +#define ID_ISAR6_SB_SHIFT        12
+>> +#define ID_ISAR6_SPECRES_SHIFT        16
+>> +#define ID_ISAR6_BF16_SHIFT        20
+>> +#define ID_ISAR6_I8MM_SHIFT        24
+> 
+> I couldn't find the last two items in the E.a revision of the ARMv8 ARM.
+> I guess they are for post 8.5 revisions of the architecture?
 
-Looking at the older code for the ISA bridge it looks like it called
-iommu_prepare_identity_map -> domain_prepare_identity_map ->
-iommu_domain_identity_map -> and finally __domain_mapping with DMA_PTE_READ|DMA_PTE_WRITE?
+Yes.
 
->I wonder if this is an issue with the region starting at 0x0 and this
->bit in iommu_group_create_mappings:
->
->			phys_addr = iommu_iova_to_phys(domain, addr);
->			if (phys_addr)
->				continue;
-
-Disregard this
-
->
->Off to stick in some more debugging statements.
->
->Regards,
->Jerry
->
->>_______________________________________________
->>iommu mailing list
->>iommu@lists.linux-foundation.org
->>https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
+> 
+>> +
+>>  #define MVFR0_FPROUND_SHIFT        28
+>>  #define MVFR0_FPSHVEC_SHIFT        24
+>>  #define MVFR0_FPSQRT_SHIFT        20
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index f344cea..3b9ac8b 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -346,7 +346,7 @@ static const struct arm64_ftr_bits ftr_zcr[] = {
+>>   * Common ftr bits for a 32bit register with all hidden, strict
+>>   * attributes, with 4bit feature fields and a default safe value of
+>>   * 0. Covers the following 32bit registers:
+>> - * id_isar[0-4], id_mmfr[1-3], id_pfr1, mvfr[0-1]
+>> + * id_isar[0-4, 6], id_mmfr[1-3], id_pfr1, mvfr[0-1]
+>>   */
+>>  static const struct arm64_ftr_bits ftr_generic_32bits[] = {
+>>      ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
+>> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
+>>      ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
+>>      ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
+>>      ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
+>> +    ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
+>>
+>>      /* Op1 = 0, CRn = 0, CRm = 3 */
+>>      ARM64_FTR_REG(SYS_MVFR0_EL1, ftr_generic_32bits),
+>> @@ -603,6 +604,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+>>          init_cpu_ftr_reg(SYS_ID_ISAR3_EL1, info->reg_id_isar3);
+>>          init_cpu_ftr_reg(SYS_ID_ISAR4_EL1, info->reg_id_isar4);
+>>          init_cpu_ftr_reg(SYS_ID_ISAR5_EL1, info->reg_id_isar5);
+>> +        init_cpu_ftr_reg(SYS_ID_ISAR6_EL1, info->reg_id_isar6);
+>>          init_cpu_ftr_reg(SYS_ID_MMFR0_EL1, info->reg_id_mmfr0);
+>>          init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
+>>          init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
+>> @@ -756,6 +758,8 @@ void update_cpu_features(int cpu,
+>>                      info->reg_id_isar4, boot->reg_id_isar4);
+>>          taint |= check_update_ftr_reg(SYS_ID_ISAR5_EL1, cpu,
+>>                      info->reg_id_isar5, boot->reg_id_isar5);
+>> +        taint |= check_update_ftr_reg(SYS_ID_ISAR6_EL1, cpu,
+>> +                    info->reg_id_isar6, boot->reg_id_isar6);
+>>
+>>          /*
+>>           * Regardless of the value of the AuxReg field, the AIFSR, ADFSR, and
+>> @@ -834,6 +838,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
+>>      read_sysreg_case(SYS_ID_ISAR3_EL1);
+>>      read_sysreg_case(SYS_ID_ISAR4_EL1);
+>>      read_sysreg_case(SYS_ID_ISAR5_EL1);
+>> +    read_sysreg_case(SYS_ID_ISAR6_EL1);
+>>      read_sysreg_case(SYS_MVFR0_EL1);
+>>      read_sysreg_case(SYS_MVFR1_EL1);
+>>      read_sysreg_case(SYS_MVFR2_EL1);
+>> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+>> index 10121f5..6005d38 100644
+>> --- a/arch/arm64/kernel/cpuinfo.c
+>> +++ b/arch/arm64/kernel/cpuinfo.c
+>> @@ -362,6 +362,7 @@ static void __cpuinfo_store_cpu(struct
+>> cpuinfo_arm64 *info)
+>>          info->reg_id_isar3 = read_cpuid(ID_ISAR3_EL1);
+>>          info->reg_id_isar4 = read_cpuid(ID_ISAR4_EL1);
+>>          info->reg_id_isar5 = read_cpuid(ID_ISAR5_EL1);
+>> +        info->reg_id_isar6 = read_cpuid(ID_ISAR6_EL1);
+>>          info->reg_id_mmfr0 = read_cpuid(ID_MMFR0_EL1);
+>>          info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
+>>          info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 7dadd24..a6b8ca1 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -1424,7 +1424,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>      ID_SANITISED(ID_ISAR4_EL1),
+>>      ID_SANITISED(ID_ISAR5_EL1),
+>>      ID_SANITISED(ID_MMFR4_EL1),
+>> -    ID_UNALLOCATED(2,7),
+>> +    ID_SANITISED(ID_ISAR6_EL1),
+>>
+>>      /* CRm=3 */
+>>      ID_SANITISED(MVFR0_EL1),
+> 
+> Otherwise,
+> 
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> 
+>         M.
