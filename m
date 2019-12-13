@@ -2,100 +2,164 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD66C3496C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07574C34355
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35EC24769
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B8A2474C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vOOpviAx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6i0hqkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfLMNaE (ORCPT
+        id S1727274AbfLMNCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:30:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37962 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727415AbfLMNaB (ORCPT
+        Fri, 13 Dec 2019 08:02:33 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34279 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLMNCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:30:01 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so1572863wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 05:30:00 -0800 (PST)
+        Fri, 13 Dec 2019 08:02:33 -0500
+Received: by mail-pf1-f195.google.com with SMTP id l127so1457673pfl.1;
+        Fri, 13 Dec 2019 05:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CgnEiw//WJHGzufAg0EVPn2uPGD0ymse5mrY0tAd6l4=;
-        b=vOOpviAxpLRGWbDnsRDeW/Z1cMyneMze+jcUF80fZMjE8m6MgW1/3+1igyAiE8jaQZ
-         sd0ebigH6c+U2qkc0FI8CrJdSX8t/BFyvVanWL+z/ZwFmiq8KMr6hU04tpRbTrysoWaa
-         yoPfSR4+yq0vvpWheb1LEqa6KrqxM4/w1DHAbcWu6R2h7cUrw86N2hRISkX0Sqf11C5/
-         tomV/QGS/iS3FPhs4Qvi1TeuZWNaa5y1JuD7iZ079m1bD5Zbm6JGMM/bbeJrhG+RBg4J
-         V4ST4UPBQEhdvtiaiIlEFYgjErWwFvWkj9ry2CB3q4X2skuv5zdQMWGc0Xopg/dgE4z+
-         fPxg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPc8DBX2ZfbjwaEgLInVI3S8HFj/56kByg4DfIObTMc=;
+        b=N6i0hqkBEVIM+jlUwMzon0U9mzngTnFvijSsH1izi82SQgmncvfMlOQRxxSCyeRErs
+         WL56byCPvCe56fFydeRT2Ia4b/SzfWT2nd2PyfZ8vUpQ8onIG/VXPCnOIRrdUdSwtG63
+         ch7UzZhNMp0ZTyzc0uONuiAZkgDnVOJF3coeex5qeyFLx1wEhvsqQt9hZY585vTPGgXK
+         FiakZ3BYj4Xz43/FfNyprjLZut5G0uv1r90pWwxn2PrmhrU878wZcyYE3R/Nk3Xz4Ckk
+         1VCU4LgCDj5ZlW7cKLFKT67YYsfp7cu4VgRy3/23ZycJBD8ly5bH5maHZuQspiTHJMfS
+         OCBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CgnEiw//WJHGzufAg0EVPn2uPGD0ymse5mrY0tAd6l4=;
-        b=EhaeHqnXCc8I0qi9aOB7fNYKyy3owKfMkTZqCtN0lK8rK9sfIoQIyytt8Tpih5z3o1
-         ID0RJ39h+Y8ZWOcrAVyavVuIb0JhdBXaHSJc1VaW1RiEIyLAsfH2d2v5lFqfbDrwuum1
-         3sz8m26v/UichJmwvBstPJhf1FGRvMVc8gLHiIRbPS6MftNpbkxP4bgo08df6tVz0bpv
-         R0bQ/Ifvcgj7MKVVb5YdFk+iXd0U38wWnzxCeDRe/Zp8Zd2J3RNhUlNVjEz5cwq7zTiq
-         Gt1rFjALFsQ/tF2ZVW/3EAUV2pBHj9455+34GfK+v1Vm9wF10gPkTW78gz/ES2GRcqKT
-         qx0g==
-X-Gm-Message-State: APjAAAUMPG/A1Hh2z9T/Y037P+wx3TTUM+ZOQX9iJSEz8VwfLehMbe7j
-        wFKfQ66wA+iVYTLMhAZTfHNJzA==
-X-Google-Smtp-Source: APXvYqys8/RNfak7NGL62z6NcWptRE36wV1YR+wvRxs1Ya8mDCpWIYIyNly0sr/UON3XlfgQlSltTw==
-X-Received: by 2002:a05:600c:149:: with SMTP id w9mr12997218wmm.132.1576243799677;
-        Fri, 13 Dec 2019 05:29:59 -0800 (PST)
-Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPc8DBX2ZfbjwaEgLInVI3S8HFj/56kByg4DfIObTMc=;
+        b=YXDdXkeaJnF/9SfzeE40XbvoWrnVzZl0+eJeTn8r2G953JKO8agILLYRkOpIHq6mh7
+         +dYOAhe8uJE4biO7saUP8O651DwkLafeWs3UgsLL50gX5Ie9VGLUI7mAYMbvbrLUs2Tz
+         StKGHARneNDsEJXGAOSyY09zzHQ6P5CxWJEcR6yZoB6BbxSntvlOHbw90A1vdbPiro1L
+         Q5fA9BVHV0GZFl2jUYtCJQPgzlGdRqNVAJBLY7xF+AIyWKK5Vgsr74S2mSzr6W7RAUBo
+         Kp06a1Zh8gOaRWPZQ5V1TbxqpYjR/hf6j0WhGxc4uEHY/zO+1fxim6OjAUlnzDEKY749
+         oIlg==
+X-Gm-Message-State: APjAAAX5vBeXRidGGcVRuMX+KpFw+9EbadPRVWtRjMIfmeY7/Kwkyydf
+        F/9fcu+UPd2FhD4EXeyKoCo=
+X-Google-Smtp-Source: APXvYqwwGYLLtINm/TP+G8Tba8uazrIqTPMf1a8m0SsSyI2D6fxD3WkOSpHXI4F9WCaxEyvwPl52lg==
+X-Received: by 2002:aa7:9808:: with SMTP id e8mr16113067pfl.32.1576242152522;
+        Fri, 13 Dec 2019 05:02:32 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:29:59 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     narmstrong@baylibre.com, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
-        devicetree@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] media: dt-bindings: media: meson-ao-cec: Add support of ao-sysctrl syscon
-Date:   Fri, 13 Dec 2019 14:29:54 +0100
-Message-Id: <20191213132956.11074-2-glaroque@baylibre.com>
+        Fri, 13 Dec 2019 05:02:31 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        roger.pau@citrix.com
+Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
+        sjpark@amazon.com, sj38.park@gmail.com,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/3] xenbus/backend: Add a memory pressure handler callback
+Date:   Fri, 13 Dec 2019 13:02:08 +0000
+Message-Id: <20191213130211.24011-1-sjpark@amazon.de>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213132956.11074-1-glaroque@baylibre.com>
-References: <20191213132956.11074-1-glaroque@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ao-sysctrl syscon phandle property is needed for CEC wakeup support.
-This property is optional.
+Granting pages consumes backend system memory.  In systems configured
+with insufficient spare memory for those pages, it can cause a memory
+pressure situation.  However, finding the optimal amount of the spare
+memory is challenging for large systems having dynamic resource
+utilization patterns.  Also, such a static configuration might lack
+flexibility.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- .../devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
+To mitigate such problems, this patchset adds a memory reclaim callback
+to 'xenbus_driver' (patch 1) and use it to mitigate the problem in
+'xen-blkback' (patch 2).  The third patch is a trivial cleanup of
+variable names.
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-index 41197578f19a..1f721498d249 100644
---- a/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-+++ b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-@@ -32,6 +32,10 @@ properties:
-     allOf:
-       - $ref: /schemas/types.yaml#/definitions/phandle
- 
-+  amlogic,ao-sysctrl:
-+    description: phandle to the ao-sysctrl syscon
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
- allOf:
-   - if:
-       properties:
+Base Version
+------------
+
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/blkback_squeezing_v8
+
+
+Patch History
+-------------
+
+Changes from v7
+(https://lore.kernel.org/xen-devel/20191211181016.14366-1-sjpark@amazon.de/)
+ - Update sysfs-driver-xen-blkback for new parameter
+   (suggested by Roger Pau Monné)
+ - Use per-xen_blkif buffer_squeeze_end instead of global variable
+   (suggested by Roger Pau Monné)
+
+Changes from v6
+(https://lore.kernel.org/linux-block/20191211042428.5961-1-sjpark@amazon.de/)
+ - Remove more unnecessary prefixes (suggested by Roger Pau Monné)
+ - Constify a variable (suggested by Roger Pau Monné)
+ - Rename 'reclaim' into 'reclaim_memory' (suggested by Roger Pau Monné)
+ - More wordsmith of the commit message (suggested by Roger Pau Monné)
+
+Changes from v5
+(https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
+ - Wordsmith the commit messages (suggested by Roger Pau Monné)
+ - Change the reclaim callback return type (suggested by Roger Pau Monné)
+ - Change the type of the blkback squeeze duration variable
+   (suggested by Roger Pau Monné)
+ - Add a patch for removal of unnecessary static variable name prefixes
+   (suggested by Roger Pau Monné)
+ - Fix checkpatch.pl warnings
+
+Changes from v4
+(https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
+ - Remove domain id parameter from the callback (suggested by Juergen Gross)
+ - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
+
+Changes from v3
+(https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
+ - Add general callback in xen_driver and use it (suggested by Juergen Gross)
+
+Changes from v2
+(https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity
+   (aggressive shrinking -> squeezing)
+
+Changes from v1
+(https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily`
+   (suggested by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+SeongJae Park (3):
+  xenbus/backend: Add memory pressure handler callback
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+  xen/blkback: Remove unnecessary static variable name prefixes
+
+ .../ABI/testing/sysfs-driver-xen-blkback      |  9 +++
+ drivers/block/xen-blkback/blkback.c           | 57 ++++++++++++-------
+ drivers/block/xen-blkback/common.h            |  2 +
+ drivers/block/xen-blkback/xenbus.c            | 11 +++-
+ drivers/xen/xenbus/xenbus_probe_backend.c     | 32 +++++++++++
+ include/xen/xenbus.h                          |  1 +
+ 6 files changed, 90 insertions(+), 22 deletions(-)
+
 -- 
 2.17.1
 
