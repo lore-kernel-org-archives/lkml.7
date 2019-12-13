@@ -7,240 +7,162 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C064DC4D2D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8515CC4D2EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01442468C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE742469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfLMUz4 (ORCPT
+        id S1726818AbfLMU5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:55:56 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:53841 "EHLO
+        Fri, 13 Dec 2019 15:57:32 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:33731 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMUz4 (ORCPT
+        with ESMTP id S1725747AbfLMU5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:55:56 -0500
+        Fri, 13 Dec 2019 15:57:31 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N4hj5-1hgJJF1jsd-011keL; Fri, 13 Dec 2019 21:55:46 +0100
+ 1MCbZL-1iWCwj47Xf-009dzd; Fri, 13 Dec 2019 21:57:15 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 14/24] drm/etnaviv: avoid deprecated timespec
-Date:   Fri, 13 Dec 2019 21:53:42 +0100
-Message-Id: <20191213205417.3871055-5-arnd@arndb.de>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-nfs@vger.kernel.org
+Subject: [PATCH v2 18/24] nfs: fscache: use timespec64 in inode auxdata
+Date:   Fri, 13 Dec 2019 21:53:46 +0100
+Message-Id: <20191213205417.3871055-9-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
 References: <20191213204936.3643476-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:r92YBRaBXy3/JX2J+fT8urQ4Y2VslJu3D8eS/ONhWKD9Siyihuq
- Va1xbokFXv2qOaAwItkQRBTmAt9Mtv9Edg61oZmK2gLLe4KX1n5P3BZmg2rpZFDFi3+ll+X
- 8j5V2WM4hCp4k+jAT8aMWyzVqXgbkVeN17h/AqalSR3FXTwajsbf+Cds6FDfOHGnAHFIwSo
- bTNgGAsMKAunGLjYutquQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2jP1BHDr7cA=:vhxlyfV4om5CS/jeHhc0C1
- KZYrfq+zNX3qsIiiNpKVotB/gyjO2fRJmDf1bkSp1e7gFhUswzYySChge0HKYGXphuF0JqHUZ
- MXcUI70hl0r4t9l7RyTsFld25zoDk6vl9vcFZjphw0ZJGcVy+Mv8C4/mj0xlLngI1gG85e5W/
- zco3XMTdG0CTLig9n13IUUepWTq7dQDWr+XBhqTh2Y6ZqntyjEWa29WaYG3xqdTXFau/emPmh
- nEz8BWyg+ZoMlAGA8FOFH/RC+CWV+BjKf8+jly10+21Kx1LEqV+9A+CLrNnMmKYQ64/VEtPOX
- HD5B32FXs/n0YdExhOJbjp4yoJnKAMvus01Id75Srjj3alYilPple+Wuh7/W5CB9JYch4lXYR
- v+H0K3ivkMCIOWlE5oN3+ZzGSlQ8jnDcMnKuDh+nRdqGBMWCdYIM1c6rn5EWX5KXVYziYPica
- tYETi5O2YDcibs3SorxG0jwUNbBoHIXPMW2iKLIMmUU2Vor2zZAeVep1IIUoDC6I+Zh8GJZXB
- Nfqtgnr489otQw4Y7JfqenPe9t++//acpA7wqYxft0+pd38H8UaVv7qZtQAsOypFfq5UP4qjF
- LGiFsFvnykYyLWignGLjwCvUduS+9LB1ebnPHsctoR0AaGbcqjMn+dAIiXSeS+DNVGJ9e4pbE
- irTcavMIn22tdZUNoBcoJYgqYeolhEJIO03xkv/+YSM5cPfb7/0EX3gDBME/47TAO2/xIYfbk
- q7dpVKOYA6iIBmI05qWN87g2hmTPggYb3Eb3/WLQqqGXjsGpI4byV6tXJpA1dnp+vOyqnoBJv
- 5o+r6ZsX8EaknnewrlyKWfI8aH5GV0736kIY6M43oouzmbqvmdOdUdNP5JCpZ0zOrPBEJziU6
- AF1Y7WCqiGEXQicSrwXQ==
+X-Provags-ID: V03:K1:eSpA+PeGzcN5/q+tSCYMNqYwum00xsr3wrwDajwhj/LcbNxeqj3
+ xpZEUffRgySY5dIEMfYLZyJqNTCruiE0MMz9YpW+jOORPjSIStKzr+8z+H6mQz25URpuODB
+ e223MW7cvFYZ6dCuCXKvbkvrQb1nYpoztuLlysTOh0wDCnrfnvi2ilsZvdfcRnKOXXny7wU
+ mDag+0g9ojpjFZcDv7n6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yxdt9MqnWt4=:OBts36wUuwCQus2XQkhzGl
+ pKenNFFAD2FTUrYDyhA0zUblisj/ayGPpSpIezzv4UghyEyenxubcoF0Y3RWMPxVm9ySafB4x
+ vLpZl2UwLbcB0u7S/rlBsatGDaEfLaHuA7bDb3u423+pcTA5dNV489y+mISiNaQk6HxstKYdG
+ VlN+/20BwC7KlJJnK2esD7qWzG//1shkBYOfcUAgvkRcaTUnHZIDK56Kqh0YzZLkGE/A3p98/
+ mK4QWPy4in+qxK0hMjPw10Jo0doBm9saNK8iWLVlEGURKFkfRRY+Oz55hEfEpv/pi1Pey71zZ
+ e3D1hYzUbTM2TO3i99t586jcPyPnbdarRFopA++nL3W3wfuSSal+pPUoToKJR3Bj0s2GrjmCF
+ yA48A/vJhhaqUdPnCKaeJrbo/Zy7ZyJb+x9kvA29zpWzr2Zm6qX71hjujr73DjD0Y1BtzUF3P
+ FvfSAr1TfJj19qQFr2SJ6UTPapu8emgETmyNB7ryIecNwXa+zaWaBUoCB9XUrRXGPYnQC3gnw
+ B7204zKLOcSD1ByV/Y9xXZwsXYGWPdupyrbr9UVcTRy9c3YrwXJOtF9dAizbBAjslO+p3HMfu
+ kymi02S/6REd3ikGqh6oF15QgH01KDrb1/yCBAovM4WMXHh/a1jBS1vDr4bKzd7oS0IV+fkBJ
+ MH0vtZdstx/2/Syy+IVtpy1+n2En+Yk8upOzPQQIil5SVafifFqbP9uGh1hEiQZhAy3MKu9df
+ lSPWgHbQ80g8idvOlDQXWx9TL8R0Mp8HUAqxudJRd7p9VXbEw9aeZXtZfx6myuY8ZYLryhhne
+ spgQXL7f0P/FfsWb7otpMXRbNmt0e9zc5KvAsS10NNdkM+6CEhQvuZWu9JxZFEpDGD4lfigiW
+ s8q1TGli8fGxZvftiCZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct timespec is being removed from the kernel because it often leads
-to code that is not y2038-safe.
+nfs currently behaves differently on 32-bit and 64-bit kernels regarding
+the on-disk format of nfs_fscache_inode_auxdata.
 
-In the etnaviv driver, monotonic timestamps are used, which do not suffer
-from overflow, but the usage of timespec here gets in the way of removing
-the interface completely.
+That format should really be the same on any kernel, and we should avoid
+the 'timespec' type in order to remove that from the kernel later on.
 
-Pass down the user-supplied 64-bit value here rather than converting
-it to an intermediate timespec to avoid the conversion.
+Using plain 'timespec64' would not be good here, since that includes
+implied padding and would possibly leak kernel stack data to the on-disk
+format on 32-bit architectures.
 
-The conversion is transparent for all regular CLOCK_MONOTONIC values,
-but is a small change in behavior for excessively large values: the
-existing code would treat e.g. tv_sec=0x100000000 the same as tv_sec=0
-and not block, while the new code it would block for up to 2^31
-seconds. The new behavior is more logical here, but if it causes problems,
-the truncation can be put back.
+struct __kernel_timespec would work as a replacement, but open-coding
+the two struct members in nfs_fscache_inode_auxdata makes it more
+obvious what's going on here, and keeps the current format for 64-bit
+architectures.
 
+Cc: David Howells <dhowells@redhat.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 11 +++--------
- drivers/gpu/drm/etnaviv/etnaviv_drv.h | 11 ++++++-----
- drivers/gpu/drm/etnaviv/etnaviv_gem.c |  4 ++--
- drivers/gpu/drm/etnaviv/etnaviv_gem.h |  2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c |  5 +++--
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  5 +++--
- 6 files changed, 18 insertions(+), 20 deletions(-)
+ fs/nfs/fscache-index.c |  6 ++++--
+ fs/nfs/fscache.c       | 18 ++++++++++++------
+ fs/nfs/fscache.h       |  8 +++++---
+ 3 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 95d72dc00280..3eb0f9223bea 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -282,11 +282,6 @@ static int etnaviv_ioctl_gem_new(struct drm_device *dev, void *data,
- 			args->flags, &args->handle);
+diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
+index 15f271401dcc..573b1da9342c 100644
+--- a/fs/nfs/fscache-index.c
++++ b/fs/nfs/fscache-index.c
+@@ -84,8 +84,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
+ 		return FSCACHE_CHECKAUX_OBSOLETE;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 3800ab6f08fa..7def925d3af5 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -238,8 +238,10 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+@@ -263,8 +265,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
  }
+@@ -305,8 +309,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 		return;
  
--#define TS(t) ((struct timespec){ \
--	.tv_sec = (t).tv_sec, \
--	.tv_nsec = (t).tv_nsec \
--})
--
- static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 		struct drm_file *file)
- {
-@@ -304,7 +299,7 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
- 	if (!obj)
- 		return -ENOENT;
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
  
--	ret = etnaviv_gem_cpu_prep(obj, args->op, &TS(args->timeout));
-+	ret = etnaviv_gem_cpu_prep(obj, args->op, &args->timeout);
- 
- 	drm_gem_object_put_unlocked(obj);
- 
-@@ -357,7 +352,7 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
- {
- 	struct drm_etnaviv_wait_fence *args = data;
- 	struct etnaviv_drm_private *priv = dev->dev_private;
--	struct timespec *timeout = &TS(args->timeout);
-+	struct drm_etnaviv_timespec *timeout = &args->timeout;
- 	struct etnaviv_gpu *gpu;
- 
- 	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
-@@ -409,7 +404,7 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
- {
- 	struct etnaviv_drm_private *priv = dev->dev_private;
- 	struct drm_etnaviv_gem_wait *args = data;
--	struct timespec *timeout = &TS(args->timeout);
-+	struct drm_etnaviv_timespec *timeout = &args->timeout;
- 	struct drm_gem_object *obj;
- 	struct etnaviv_gpu *gpu;
- 	int ret;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index 32cfa5a48d42..efc656efeb0f 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -61,7 +61,7 @@ int etnaviv_gem_prime_pin(struct drm_gem_object *obj);
- void etnaviv_gem_prime_unpin(struct drm_gem_object *obj);
- void *etnaviv_gem_vmap(struct drm_gem_object *obj);
- int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout);
-+		struct drm_etnaviv_timespec *timeout);
- int etnaviv_gem_cpu_fini(struct drm_gem_object *obj);
- void etnaviv_gem_free_object(struct drm_gem_object *obj);
- int etnaviv_gem_new_handle(struct drm_device *dev, struct drm_file *file,
-@@ -107,11 +107,12 @@ static inline size_t size_vstruct(size_t nelem, size_t elem_size, size_t base)
-  * between the specified timeout and the current CLOCK_MONOTONIC time.
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
+diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
+index ad041cfbf9ec..6754c8607230 100644
+--- a/fs/nfs/fscache.h
++++ b/fs/nfs/fscache.h
+@@ -62,9 +62,11 @@ struct nfs_fscache_key {
+  * cache object.
   */
- static inline unsigned long etnaviv_timeout_to_jiffies(
--	const struct timespec *timeout)
-+	const struct drm_etnaviv_timespec *timeout)
- {
--	struct timespec64 ts, to;
--
--	to = timespec_to_timespec64(*timeout);
-+	struct timespec64 ts, to = {
-+		.tv_sec = timeout->tv_sec,
-+		.tv_nsec = timeout->tv_nsec,
-+	};
+ struct nfs_fscache_inode_auxdata {
+-	struct timespec	mtime;
+-	struct timespec	ctime;
+-	u64		change_attr;
++	s64	mtime_sec;
++	s64	mtime_nsec;
++	s64	ctime_sec;
++	s64	ctime_nsec;
++	u64	change_attr;
+ };
  
- 	ktime_get_ts64(&ts);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-index cb1faaac380a..6adea180d629 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-@@ -373,7 +373,7 @@ static inline enum dma_data_direction etnaviv_op_to_dma_dir(u32 op)
- }
- 
- int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
--		struct timespec *timeout)
-+		struct drm_etnaviv_timespec *timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 	struct drm_device *dev = obj->dev;
-@@ -431,7 +431,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
- }
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout)
-+	struct drm_etnaviv_timespec *timeout)
- {
- 	struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.h b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-index d6270acce619..6b68fe16041b 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-@@ -112,7 +112,7 @@ struct etnaviv_gem_submit {
- void etnaviv_submit_put(struct etnaviv_gem_submit * submit);
- 
- int etnaviv_gem_wait_bo(struct etnaviv_gpu *gpu, struct drm_gem_object *obj,
--	struct timespec *timeout);
-+	struct drm_etnaviv_timespec *timeout);
- int etnaviv_gem_new_private(struct drm_device *dev, size_t size, u32 flags,
- 	const struct etnaviv_gem_ops *ops, struct etnaviv_gem_object **res);
- void etnaviv_gem_obj_add(struct drm_device *dev, struct drm_gem_object *obj);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index d47d1a8e0219..799ec20b267d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1132,7 +1132,7 @@ static void event_free(struct etnaviv_gpu *gpu, unsigned int event)
-  * Cmdstream submission/retirement:
-  */
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 id, struct timespec *timeout)
-+	u32 id, struct drm_etnaviv_timespec *timeout)
- {
- 	struct dma_fence *fence;
- 	int ret;
-@@ -1179,7 +1179,8 @@ int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
-  * that lock in this function while waiting.
-  */
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout)
-+	struct etnaviv_gem_object *etnaviv_obj,
-+	struct drm_etnaviv_timespec *timeout)
- {
- 	unsigned long remaining;
- 	long ret;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-index 8f9bd4edc96a..97bb48042b4d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -169,9 +169,10 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m);
- void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_retire(struct etnaviv_gpu *gpu);
- int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
--	u32 fence, struct timespec *timeout);
-+	u32 fence, struct drm_etnaviv_timespec *timeout);
- int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
--	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout);
-+	struct etnaviv_gem_object *etnaviv_obj,
-+	struct drm_etnaviv_timespec *timeout);
- struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit);
- int etnaviv_gpu_pm_get_sync(struct etnaviv_gpu *gpu);
- void etnaviv_gpu_pm_put(struct etnaviv_gpu *gpu);
+ /*
 -- 
 2.20.0
 
