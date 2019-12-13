@@ -2,177 +2,177 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1863EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FDBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3393206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF5522527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZydEJMcq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q3KzZJ4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbfLMEt5 (ORCPT
+        id S1731932AbfLMExj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 23:49:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44729 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731631AbfLMEt4 (ORCPT
+        Thu, 12 Dec 2019 23:53:39 -0500
+Received: from m228-4.mailgun.net ([159.135.228.4]:64277 "EHLO
+        m228-4.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731743AbfLMExi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 23:49:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id c19so1131773lji.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 20:49:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RjqECYszcPzuiZt/L0AxRI8ssRwksFUZbqaKQV1bL6Y=;
-        b=ZydEJMcq/6d5EfUHgWKsFIDKFkXYlKfsy5uX9HkifdQOWLixUPRgMmqJap+/j6s+Iq
-         iB3TJaHb5mggMmLkgpgCeOBUQIWOzZBg54ZTLJJLIH819bKi+N3jR1j/OdcgJ3C6CuAT
-         8RAZLhtARApYBNTzvPtCO8RJVQDrmUc9U9IBHO57bWEJ2wDJCfI8DPdyKA9jDSfIHjeY
-         VAyBVfBwpRmCUT1KAfoC074lW4gPQOQyOP3L7iSOtMbmJK1L8/1YpXv8dAJjs+qODEzz
-         Ij/5pe/GXGy41wa2SXBXKzpabbrREpAYeaJA3XXlz9gnrJZsS5qkohPYYUV+jS530zKE
-         3FlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RjqECYszcPzuiZt/L0AxRI8ssRwksFUZbqaKQV1bL6Y=;
-        b=rgK5GUqjN7TZ02z13Co5gIeX2LxIRdfbr0rC37YgfKRDUbU9DGS+orqzL/ATzJ+mF0
-         3IhWJ78vRC2ik5zowR6y9GtbghzB8otK518vTR3puHpBZIL6tPBqY3Q6bo7DbooJ916b
-         E/Cpvr4L0gxnen3vmzrXo9QVCJP4xU4Ve93VWiYuUd6Aw9PJObmgNw+MWIpyZsoir0fU
-         uVKOzLzwk1jb83OLtNFXHpkQOpCRcWD/nXxHHTUJv1oLEtpooNl7QHSxRgUwrkB7uN59
-         ft8tr9K8Evqsc0E5tDIxVOG8UiYvXQeOZXNJRgs/E+tbSa/Fpf5E9pNk6ZUBBeC7es/s
-         Tv1g==
-X-Gm-Message-State: APjAAAVzksv+a4nzDxHi8h7CGPuOBBRJhEvIvVTeeqGJGZ9/mjqfxmvY
-        Mlf7weeesJo7+N7dVe+iJcRrLhHj1ujCQbPWUI7Alg==
-X-Google-Smtp-Source: APXvYqzVZfwrAib+MkL2lbePl8L3T2AXPOH//B1Omcrvm7leLvsZEiXrbp2C9tVSKznw/eQFjmXBtLvjjknv9+i3fPU=
-X-Received: by 2002:a2e:854c:: with SMTP id u12mr7853870ljj.135.1576212594365;
- Thu, 12 Dec 2019 20:49:54 -0800 (PST)
+        Thu, 12 Dec 2019 23:53:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576212817; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=No4NrS8RZKo/+qzd4kS2FzUPDmPkdbcL6unu08f9QF0=; b=q3KzZJ4qVcpgIneez99eqgVcytkKdDbGpcYLmZUyr+9bHYFA/DOY9Qhf6xktCWMcX5YMO+jX
+ gvqGgBic//g5Q9oJPpDWlZT0+0bZs7/QpSoBuKOJFf5Ld2IomEDWSsQuFKKyhSQ1ZiE+C14J
+ oY03OgN1nV5Q0f0wAXlx+EhBrJY=
+X-Mailgun-Sending-Ip: 159.135.228.4
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df31950.7f659ef9dd50-smtp-out-n02;
+ Fri, 13 Dec 2019 04:53:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C9FE4C433CB; Fri, 13 Dec 2019 04:53:36 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88E18C43383;
+        Fri, 13 Dec 2019 04:53:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 88E18C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 1/3] dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
+Date:   Fri, 13 Dec 2019 10:23:18 +0530
+Message-Id: <0b095b65496073a2ddf9de120f7809619b42cd1c.1576211720.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-References: <20191211150221.977775294@linuxfoundation.org> <20191212100433.GA1470066@kroah.com>
-In-Reply-To: <20191212100433.GA1470066@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 13 Dec 2019 10:19:43 +0530
-Message-ID: <CA+G9fYsWs8feJ5uJZ_Jx-SR__zJZHwZhdVPWa+QOGMHVjBBsPw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/92] 5.4.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 15:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Dec 11, 2019 at 04:04:51PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.3 release.
-> > There are 92 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >       https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.3-rc1.gz
-> > or in the git tree and branch at:
-> >       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> > and the diffstat can be found below.
->
-> I have pushed out -rc2 with a number of additional fixes:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.3-rc2.gz
+Convert QCOM watchdog timer bindings to DT schema format using
+json-schema.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
+ .../bindings/watchdog/qcom-wdt.yaml           | 47 +++++++++++++++++++
+ 2 files changed, 47 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 
-Summary
-------------------------------------------------------------------------
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+deleted file mode 100644
+index 41aeaa2ff0f8..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Krait Processor Sub-system (KPSS) Watchdog
+----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,kpss-wdt-msm8960"
+-			"qcom,kpss-wdt-apq8064"
+-			"qcom,kpss-wdt-ipq8064"
+-			"qcom,kpss-wdt-ipq4019"
+-			"qcom,kpss-timer"
+-			"qcom,scss-timer"
+-			"qcom,kpss-wdt"
+-
+-- reg : shall contain base register location and length
+-- clocks : shall contain the input clock
+-
+-Optional properties :
+-- timeout-sec : shall contain the default watchdog timeout in seconds,
+-                if unset, the default timeout is 30 seconds
+-
+-Example:
+-	watchdog@208a038 {
+-		compatible = "qcom,kpss-wdt-ipq8064";
+-		reg = <0x0208a038 0x40>;
+-		clocks = <&sleep_clk>;
+-		timeout-sec = <10>;
+-	};
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+new file mode 100644
+index 000000000000..4a42f4261322
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/watchdog/qcom-wdt.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
++
++maintainers:
++  - Andy Gross <agross@kernel.org>
++
++properties:
++  compatible:
++    oneOf:
++      - const: qcom,kpss-timer
++      - const: qcom,kpss-wdt
++      - const: qcom,kpss-wdt-apq8064
++      - const: qcom,kpss-wdt-ipq4019
++      - const: qcom,kpss-wdt-ipq8064
++      - const: qcom,kpss-wdt-msm8960
++      - const: qcom,scss-timer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  timeout-sec:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Contains the watchdog timeout in seconds. If unset, the
++      default timeout is 30 seconds.
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++    watchdog@208a038 {
++      compatible = "qcom,kpss-wdt-ipq8064";
++      reg = <0x0208a038 0x40>;
++      clocks = <&sleep_clk>;
++      timeout-sec = <10>;
++    };
+---
 
-kernel: 5.4.3-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 2d52a20a4c407f36814e9ebf0a64d73f74a690f6
-git describe: v5.4.2-102-g2d52a20a4c40
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.2-102-g2d52a20a4c40
+I have added Andy as the maintainer here since the get_maintainer script
+showed him. If he is not happy, then I can change it to Bjorn probably and
+again if he is not happy ;-) then I will add myself or whoever they suggest.
 
-No regressions (compared to build v5.4.2)
-
-No fixes (compared to build v5.4.2)
-
-Ran 24491 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* spectre-meltdown-checker-test
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
