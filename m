@@ -2,107 +2,156 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F181C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE107C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712E12073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576231371;
-	bh=LW5WdpoU5T8k2xF6anf5UIkLVp12kg/2OP1pycAx9LI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gRD/vctGo9KV4sq4oB1bMNG6vGsvOXYaaw0nnVBhR+kcgh2kk43z77pGb6+mAyrLb
-	 VToypgJ6wFCeBv+sUY7l2g9Pe+IdXehOxVn8FQjYXCNE/pUzC/ezy5tOdKcR0t2OVs
-	 WG+KN/aRD2qW16ueRGX8LzAW6MWhXbJaTsmXnwvE=
+	by mail.kernel.org (Postfix) with ESMTP id A489D2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JykxmuTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLMKCu (ORCPT
+        id S1726705AbfLMKDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:02:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38302 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfLMKCt (ORCPT
+        Fri, 13 Dec 2019 05:03:32 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37047 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfLMKDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:02:49 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so895918wmc.3;
-        Fri, 13 Dec 2019 02:02:48 -0800 (PST)
+        Fri, 13 Dec 2019 05:03:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so5993183wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:03:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=heH4dTiMUIFooIBwaQ6i3JzjaVeq4HwrKlA/mTsplxw=;
-        b=Jm5yq2Itp4/ZeHmuxdzZvHbSZ3YG7F4690gjxj4AzA72Zh/1ofkI3g/3ya8TJbJYaR
-         Pp/vTUgbCtdC56b/ADygMA3rv797YDBUNTUlq9mRWNHru1BTDJQBXOSUFYD9sbTCmuYX
-         eT1SnuZ5pQgn/jqtPC0HCQgq5VgjrwbvdaiwvJb1hGtiA0tBJbTf7bwLbfjvot2iwc96
-         asYkjor8KMLad5V1f268yV+Xaq251plC7i9yX+ERKYfFWE0Jc+QgytoYmZqySM5bzDIE
-         MafrxRk+x7lF9k+ld2gHyu4SUyj1ncRPhGzx7UxOYOvRZs2iF7IJ5Qna9QVUdL1LKjhe
-         yswQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YBwjg8KYKl96mggL33baldfDiIMn3TQvg81waFm29R8=;
+        b=JykxmuTSac6P2wO4GXkGPNQbDUE55BBEP7c50jnvheyrIuu3lWGD6GCp44IcvxKn8B
+         S/CVdePKbtsCHh4N6FFLXn1yUPBp23AEpQNyM1sPTX3EkgSXCl4Sokt82rCrbDJVHXaD
+         NkgCv6OQPk80QtppE8DNTdx7lBldxB/mLorjsto7Ud3yCbCs7S2tf4d2gb4BfG47sHBU
+         UroOxPh2v8SS1Eoh+rF8O0lcSRntWkqf9KRaKOj61rBslxKk5esR2TPQwt3iKuHua/WY
+         EOpU+YQ3T/a9uk20vmcFOlxxTSyTGZyggmBruWsKjrNtLlYrcZAQ95tS81RE4KGQD3gB
+         ulTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=heH4dTiMUIFooIBwaQ6i3JzjaVeq4HwrKlA/mTsplxw=;
-        b=oZV6JKwyCEmseRyWb9sIClVIZ+KJA5c2SxQ1eJYWCIKamyirvGMwdafuLd/m6AHXlY
-         4qJTCcOXT8+XbEwiaacUwZ3V5Jtcaltz6tiPXWk8XfZQgDT/K4XOR8iMfNfuD3wn90MG
-         V7sQEyyCNR/lanaWZyDk6QuCTCGXdAjHcqXeyWpu/1fSJHdjU9DjvHlf/14VLMccyah4
-         9LY+rBplfASWi2Fv7XG9UFj+J/rASmUzd3zm7HXtG21DJghzEm0LavktQoD4GutT5A/T
-         PPCEU7ClAEic8jOSNXOxWbhHbuutQRjtA++LyEIbkzQSGLIkV3gjsJcY6+8peU/JGj11
-         UunQ==
-X-Gm-Message-State: APjAAAXqCCzO5LgHqsxlvgzsIzeUBP2amIH2VwzBZ+8OC4EDctPirH+o
-        RPsy5GvR2fGQEQ6QN9kPuWs=
-X-Google-Smtp-Source: APXvYqxZeF+YTn/qxypgmq5Iun03Cc2jLm0jlGtv3L2kyb4EOrVqqwrxdaKFTA+sRVn2Qyzk26yLwA==
-X-Received: by 2002:a1c:9cce:: with SMTP id f197mr11699117wme.133.1576231367445;
-        Fri, 13 Dec 2019 02:02:47 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id r68sm4508488wmr.43.2019.12.13.02.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 02:02:46 -0800 (PST)
-Date:   Fri, 13 Dec 2019 11:02:44 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH v6 0/7] Speed booting by sorting ORC unwind tables at
- build time
-Message-ID: <20191213100244.GB113121@gmail.com>
-References: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YBwjg8KYKl96mggL33baldfDiIMn3TQvg81waFm29R8=;
+        b=udKLaf77iJQ9qVajMTfAdhjuBwMxHLMXljBdqAB5y6vbeK+d9m9B8Vvk0Mx30MEBBk
+         pi5kYZnfh9SXuZVpHml6BdS973YNYTnROFIyMi/x5hQRUy8G6iJ6B6tMtu+PRPLeu8RS
+         DrxbX1yJekETDieo+T84jQwQpTzzk8d9AJDZlyf95yKdFP4RO6NhGvnskREV/I+e8bRb
+         2b4loEEbiHRNwuI5YRvq8d54fa2VbPPsIhTRH324z4/Uerq79hiTQrxEc0Ln0MItIDhk
+         dGTPVG1RlbFzhHCvSf4EAmo7sMJ+WJyfhEyR53AnscX5R79ijqvebSKcpFpLzejgRXkC
+         U2/g==
+X-Gm-Message-State: APjAAAVvlkoKvoWrWridCs7nFdZ3zUeW8pbaHU8M4Zb/KCqN5K5iVIjH
+        H0W7SqTAcG56MFW779ytJ4F4i0FClpfzYztbJbAWzg==
+X-Google-Smtp-Source: APXvYqw+nd3Vhgsl1yc4y1cF3SkuvyXwLF9EsVoYDFKi4jhRyQjzp899ocHgHzIk5ZAgkqFb6bhFwbkq0tIaVnWig2w=
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr11220760wrj.325.1576231409604;
+ Fri, 13 Dec 2019 02:03:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191204004633.88660-1-shile.zhang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191213090646.12329-1-jlee@suse.com> <20191213090646.12329-2-jlee@suse.com>
+In-Reply-To: <20191213090646.12329-2-jlee@suse.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 13 Dec 2019 10:03:27 +0000
+Message-ID: <CAKv+Gu8sGku8e1q9ku_wXfcXTGQ5W8Lt_q5KEK9WycgHw15TgA@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v2] efi: add a function to convert the status code to
+ a string
+To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 13 Dec 2019 at 10:07, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+>
+> This function can be used to convert EFI status code to a string
+> to improve the readability of log.
+>
+> v2:
+> Moved the convert function to efi.c
+>
 
-* Shile Zhang <shile.zhang@linux.alibaba.com> wrote:
+Please put the patch series revision log below the ---
 
-> Hi,
-> 
-> Sorry, update for compile error fix, reported by Intel's kbuild test robot.
-> Any comments or suggestions are welcome!
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 
-Could you please send a delta patch to fix these new build warnings on 
-64-bit allnoconfig kernels:
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
-  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
-
-Thanks,
-
-	Ingo
+> ---
+>  drivers/firmware/efi/efi.c | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/efi.h        |  1 +
+>  2 files changed, 33 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index e98bbf8e56d9..8bdc1c17eb5d 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -954,6 +954,38 @@ int efi_status_to_err(efi_status_t status)
+>         return err;
+>  }
+>
+> +#define EFI_STATUS_STR(_status) \
+> +       EFI_##_status : return "EFI_" __stringify(_status)
+> +
+> +const char *efi_status_to_str(efi_status_t status)
+> +{
+> +       switch (status) {
+> +       case EFI_STATUS_STR(SUCCESS);
+> +       case EFI_STATUS_STR(LOAD_ERROR);
+> +       case EFI_STATUS_STR(INVALID_PARAMETER);
+> +       case EFI_STATUS_STR(UNSUPPORTED);
+> +       case EFI_STATUS_STR(BAD_BUFFER_SIZE);
+> +       case EFI_STATUS_STR(BUFFER_TOO_SMALL);
+> +       case EFI_STATUS_STR(NOT_READY);
+> +       case EFI_STATUS_STR(DEVICE_ERROR);
+> +       case EFI_STATUS_STR(WRITE_PROTECTED);
+> +       case EFI_STATUS_STR(OUT_OF_RESOURCES);
+> +       case EFI_STATUS_STR(NOT_FOUND);
+> +       case EFI_STATUS_STR(ABORTED);
+> +       case EFI_STATUS_STR(SECURITY_VIOLATION);
+> +       }
+> +       /*
+> +        * There are two possibilities for this message to be exposed:
+> +        * - Caller feeds a unknown status code from firmware.
+> +        * - A new status code be defined in efi.h but we forgot to update
+> +        *   this function.
+> +        */
+> +       pr_warn("Unknown efi status: 0x%lx\n", status);
+> +
+> +       return "Unknown efi status";
+> +}
+> +EXPORT_SYMBOL(efi_status_to_str);
+> +
+>  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
+>  static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+>
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index d87acf62958e..2c6848d2b112 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -1228,6 +1228,7 @@ efi_capsule_pending(int *reset_type)
+>  #endif
+>
+>  extern int efi_status_to_err(efi_status_t status);
+> +extern const char *efi_status_to_str(efi_status_t status);
+>
+>  /*
+>   * Variable Attributes
+> --
+> 2.16.4
+>
