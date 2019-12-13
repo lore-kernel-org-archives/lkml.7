@@ -2,183 +2,207 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB84C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0730BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C46F2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14EA206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfLMKgH (ORCPT
+        id S1726740AbfLMKgn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:36:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:54082 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfLMKgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:36:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03CAB1FB;
-        Fri, 13 Dec 2019 02:36:06 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F3DC3F718;
-        Fri, 13 Dec 2019 02:36:05 -0800 (PST)
-Date:   Fri, 13 Dec 2019 10:36:03 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH 1/1] PCI: dwc: intel: fix nitpicks
-Message-ID: <20191213103602.GL24359@e119886-lin.cambridge.arm.com>
-References: <457c714ba7a73075291778b3436fd96feca7c532.1576144419.git.eswara.kota@linux.intel.com>
+        Fri, 13 Dec 2019 05:36:43 -0500
+Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:39213 "EHLO
+        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfLMKgm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:36:42 -0500
+Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.191) BY m9a0013g.houston.softwaregrp.com WITH ESMTP;
+ Fri, 13 Dec 2019 10:35:33 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 13 Dec 2019 10:33:08 +0000
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (15.124.72.10) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 13 Dec 2019 10:33:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jCWAzDALm7I7z2oiWxgsTsvZbuuDr6ivKq72GSlNJWqcywgHmu8w6/6rUHgvD41FMcg4ydLYyoVyzlAlXxMNHYlPH5pr1/ehK9S1p1mRH7mNzesQ6BU96Si6dM0UWJAPon+Xy5Yu3SG+028Jvmb8MJVeJPx4QbJmQkYmzz0270ji4UJwisldbEFTVyiPzjAmMa0lAcQ123Km1yhr9bBpd0eedS8BHowzOkYzPWmhJUf8zTYxqPx1RSzTnb5Olzw4DD9wURL/7GdhJCyKT862FY63/s5USGPyct7yfK1otAijEjMG4ulteKRnHerEwU6upaTJ8bvnHK6pH5/ZvlastQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmtsLqEKdOsCPv3Pfm6yBBef/UA0dNIhpxtV6sQWh4U=;
+ b=Gsyy+W/eJbPZpXsqWa6+/u/hCvr5iAQfzsMYH3vz76VtCSnNB2lLvrY9mXCP5xybSKnQkCfFCNjLIMiLGlJvQRENoAA3Gp1OiO4KkU9mNpot3OvwEBqZ0vB/FkGqBzwe5PF32U5pkmWob3ZFCZZouhtyXMhLIqjkPa89gZUPhPMP7XkyMWWNgZvnlGz3BJhTQ5i3SmLCn8gqIRAXvvwh84N1athXla+uD+W5+CRBkCdipLxA7uYSJjBgdLVlxPEzxfeXMjzSvKI1gKZYrn634cEKgUF1E0+EEnF9T5hxXMDRoGfRcIKapXYd12+zyWcPs/PGdVoqOuUOjYpZqVawog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Received: from MWHPR1801MB1919.namprd18.prod.outlook.com (10.164.204.162) by
+ MWHPR1801MB1823.namprd18.prod.outlook.com (10.164.206.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.18; Fri, 13 Dec 2019 10:33:07 +0000
+Received: from MWHPR1801MB1919.namprd18.prod.outlook.com
+ ([fe80::1c16:ffc:c341:ebbc]) by MWHPR1801MB1919.namprd18.prod.outlook.com
+ ([fe80::1c16:ffc:c341:ebbc%6]) with mapi id 15.20.2538.016; Fri, 13 Dec 2019
+ 10:33:07 +0000
+From:   Joey Lee <JLee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2 v2] efi: add a function to convert the status code to
+ a string
+Thread-Topic: [PATCH 1/2 v2] efi: add a function to convert the status code to
+ a string
+Thread-Index: AQHVsZyj5qs/M6p/ZE6QTjf9u49o3Ke33iWA
+Date:   Fri, 13 Dec 2019 10:33:06 +0000
+Message-ID: <20191213103257.GZ22409@linux-l9pv.suse>
+References: <20191213090646.12329-1-jlee@suse.com>
+ <20191213090646.12329-2-jlee@suse.com>
+ <CAKv+Gu8sGku8e1q9ku_wXfcXTGQ5W8Lt_q5KEK9WycgHw15TgA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8sGku8e1q9ku_wXfcXTGQ5W8Lt_q5KEK9WycgHw15TgA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR03CA0047.apcprd03.prod.outlook.com
+ (2603:1096:202:17::17) To MWHPR1801MB1919.namprd18.prod.outlook.com
+ (2603:10b6:301:68::34)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=JLee@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [60.251.47.115]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36da4c1b-66cb-4556-1b8a-08d77fb7d794
+x-ms-traffictypediagnostic: MWHPR1801MB1823:
+x-microsoft-antispam-prvs: <MWHPR1801MB1823CFDD6CAE49BC63E83044A3540@MWHPR1801MB1823.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(346002)(39850400004)(396003)(366004)(199004)(189003)(186003)(81166006)(8676002)(4326008)(81156014)(316002)(66556008)(66946007)(6486002)(64756008)(66476007)(66446008)(8936002)(54906003)(2906002)(6916009)(36756003)(52116002)(86362001)(478600001)(6512007)(9686003)(26005)(33656002)(55236004)(1076003)(5660300002)(71200400001)(7416002)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR1801MB1823;H:MWHPR1801MB1919.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c4y+iGCTNAYi9jDZLqNHDGoEFfLHnmR3aYGihYu3NYo+28mYTmQNiXdAPmeTqfMuihV96i3Ezhdy3I6mKkSeMuhYCXOt24IMX3ZMQlN/YI0v95gtBP12BuvnXARewPq3FStFeDFnLXGFIb1osuBSffmcXXQDVFSujAAUd8w2rU3tShsEpfY09TelRXFOImwBDGW8hv83eDmWe+HCeuDJXB0jOcTwkANaoocx4ck9Y4oIM4z5Rnizjm7aqZeoBQjv3WhUkWkSyazpRlns7yeNlxBLfA4r1yzACBuS8FQw7Orp8FuT81iIs13JWA1ZecX3y9S3uDFDkf4Vjg7R3BwNviRoRGjO7FJeYxZly0PyYqHUpwajzQoefxwrKeJ4DxzJIK+wrJT8qx040jxjdJ94Mxft1rc7UBen795JfcvKkTcux9XyFrZmHuiCsmfvYshc
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <99E0293FC8DCC9458A013C3B0A0E92A7@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <457c714ba7a73075291778b3436fd96feca7c532.1576144419.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36da4c1b-66cb-4556-1b8a-08d77fb7d794
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 10:33:06.9794
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YWS9EypBOFqadQMP6zQB1XbH0uTkrmwMPJ7R+Cy7/IpWDs9N9ULKLjsqLZ/g4ukZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1801MB1823
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 01:19:43PM +0800, Dilip Kota wrote:
-> Fix the minor nits pointed in review of
-> Intel PCIe driver and PCIe DesignWare core.
-> No functional change expected.
+On Fri, Dec 13, 2019 at 10:03:27AM +0000, Ard Biesheuvel wrote:
+> On Fri, 13 Dec 2019 at 10:07, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> >
+> > This function can be used to convert EFI status code to a string
+> > to improve the readability of log.
+> >
+> > v2:
+> > Moved the convert function to efi.c
+> >
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c |  3 +--
->  drivers/pci/controller/dwc/pcie-intel-gw.c   | 30 ++++++++++++++--------------
->  2 files changed, 16 insertions(+), 17 deletions(-)
+> Please put the patch series revision log below the ---
+
+OK! I will move to below the --- next time.
+
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 479e250695a0..681548c88282 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -12,10 +12,9 @@
->  #include <linux/of.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
-> -extern const unsigned char pcie_link_speed[];
-> -
->  /*
->   * These interfaces resemble the pci_find_*capability() interfaces, but these
->   * are for configuring host controllers, which are bridges *to* PCI devices but
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index 8eada8f027bb..fc2a12212dec 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -57,9 +57,9 @@
->  #define RESET_INTERVAL_MS		100
->  
->  struct intel_pcie_soc {
-> -	unsigned int pcie_ver;
-> -	unsigned int pcie_atu_offset;
-> -	u32 num_viewport;
-> +	unsigned int	pcie_ver;
-> +	unsigned int	pcie_atu_offset;
-> +	u32		num_viewport;
->  };
->  
->  struct intel_pcie_port {
-> @@ -192,7 +192,7 @@ static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
->  	if (IS_ERR(lpp->reset_gpio)) {
->  		ret = PTR_ERR(lpp->reset_gpio);
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
-> +			dev_err(dev, "Failed to request PCIe GPIO: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -265,7 +265,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
->  	if (IS_ERR(lpp->core_clk)) {
->  		ret = PTR_ERR(lpp->core_clk);
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "failed to get clks: %d\n", ret);
-> +			dev_err(dev, "Failed to get clks: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -273,13 +273,13 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
->  	if (IS_ERR(lpp->core_rst)) {
->  		ret = PTR_ERR(lpp->core_rst);
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "failed to get resets: %d\n", ret);
-> +			dev_err(dev, "Failed to get resets: %d\n", ret);
->  		return ret;
->  	}
->  
->  	ret = device_property_match_string(dev, "device_type", "pci");
->  	if (ret) {
-> -		dev_err(dev, "failed to find pci device type: %d\n", ret);
-> +		dev_err(dev, "Failed to find pci device type: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -300,7 +300,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
->  	if (IS_ERR(lpp->phy)) {
->  		ret = PTR_ERR(lpp->phy);
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "couldn't get pcie-phy: %d\n", ret);
-> +			dev_err(dev, "Couldn't get pcie-phy: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -445,9 +445,11 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
->  	return intel_pcie_host_setup(lpp);
->  }
->  
-> -int intel_pcie_msi_init(struct pcie_port *pp)
-> +/*
-> + * Dummy function so that DW core doesn't configure MSI
-> + */
-> +static int intel_pcie_msi_init(struct pcie_port *pp)
->  {
-> -	/* PCIe MSI/MSIx is handled by MSI in x86 processor */
->  	return 0;
->  }
->  
-> @@ -508,19 +510,17 @@ static int intel_pcie_probe(struct platform_device *pdev)
->  
->  	ret = dw_pcie_host_init(pp);
->  	if (ret) {
-> -		dev_err(dev, "cannot initialize host\n");
-> +		dev_err(dev, "Cannot initialize host\n");
->  		return ret;
->  	}
->  
->  	/*
->  	 * Intel PCIe doesn't configure IO region, so set viewport
-> -	 * to not to perform IO region access.
-> +	 * to not perform IO region access.
->  	 */
->  	pci->num_viewport = data->num_viewport;
->  
-> -	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
-> -
-> -	return ret;
-> +	return 0;
->  }
-
-I'll ask Lorenzo to squash this in when he returns.
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-Thanks,
-
-Andrew Murray
-
->  
->  static const struct dev_pm_ops intel_pcie_pm_ops = {
-> -- 
-> 2.11.0
+> > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 > 
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>
+
+Thanks for your review!
+ 
+> > ---
+v2:
+Moved the convert function to efi.c
+> >  drivers/firmware/efi/efi.c | 32 ++++++++++++++++++++++++++++++++
+> >  include/linux/efi.h        |  1 +
+> >  2 files changed, 33 insertions(+)
+
+Do you mean move the revision log to here like the above?
+
+Thanks a lot!
+Joey Lee
+
+> >
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index e98bbf8e56d9..8bdc1c17eb5d 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -954,6 +954,38 @@ int efi_status_to_err(efi_status_t status)
+> >         return err;
+> >  }
+> >
+> > +#define EFI_STATUS_STR(_status) \
+> > +       EFI_##_status : return "EFI_" __stringify(_status)
+> > +
+> > +const char *efi_status_to_str(efi_status_t status)
+> > +{
+> > +       switch (status) {
+> > +       case EFI_STATUS_STR(SUCCESS);
+> > +       case EFI_STATUS_STR(LOAD_ERROR);
+> > +       case EFI_STATUS_STR(INVALID_PARAMETER);
+> > +       case EFI_STATUS_STR(UNSUPPORTED);
+> > +       case EFI_STATUS_STR(BAD_BUFFER_SIZE);
+> > +       case EFI_STATUS_STR(BUFFER_TOO_SMALL);
+> > +       case EFI_STATUS_STR(NOT_READY);
+> > +       case EFI_STATUS_STR(DEVICE_ERROR);
+> > +       case EFI_STATUS_STR(WRITE_PROTECTED);
+> > +       case EFI_STATUS_STR(OUT_OF_RESOURCES);
+> > +       case EFI_STATUS_STR(NOT_FOUND);
+> > +       case EFI_STATUS_STR(ABORTED);
+> > +       case EFI_STATUS_STR(SECURITY_VIOLATION);
+> > +       }
+> > +       /*
+> > +        * There are two possibilities for this message to be exposed:
+> > +        * - Caller feeds a unknown status code from firmware.
+> > +        * - A new status code be defined in efi.h but we forgot to update
+> > +        *   this function.
+> > +        */
+> > +       pr_warn("Unknown efi status: 0x%lx\n", status);
+> > +
+> > +       return "Unknown efi status";
+> > +}
+> > +EXPORT_SYMBOL(efi_status_to_str);
+> > +
+> >  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
+> >  static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+> >
+> > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > index d87acf62958e..2c6848d2b112 100644
+> > --- a/include/linux/efi.h
+> > +++ b/include/linux/efi.h
+> > @@ -1228,6 +1228,7 @@ efi_capsule_pending(int *reset_type)
+> >  #endif
+> >
+> >  extern int efi_status_to_err(efi_status_t status);
+> > +extern const char *efi_status_to_str(efi_status_t status);
+> >
+> >  /*
+> >   * Variable Attributes
+> > --
+> > 2.16.4
+> >
