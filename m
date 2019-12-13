@@ -2,172 +2,131 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787C2C34356
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC18C3435D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A6224720
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPQHCu78"
+	by mail.kernel.org (Postfix) with ESMTP id CAD5724743
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfLMNCn (ORCPT
+        id S1727297AbfLMNG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:02:43 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35125 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfLMNCm (ORCPT
+        Fri, 13 Dec 2019 08:06:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727205AbfLMNG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:02:42 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w23so1188661pjd.2;
-        Fri, 13 Dec 2019 05:02:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pxUD+VmkH1xxeAkPK92Cf10G5edui36/X8Za7R/dfvU=;
-        b=GPQHCu78Xrr1/A8JC4eIZflNvkPhPoIpyCbA1lUi7KEIi1tX/nXbPhKYzB1/tgT5dg
-         hF7my/P3XQxI4B5TBnhiJeW5kYzjZlYY7dIHuGFzSFNT/IS6D0q51CCfCPROtMjzqoTw
-         lHMCvZizgR+oxSHhMS0mu3DDiScOWpHwCevJ8qafgtsvOtf3+vACj5c7CCDNSWXjagSa
-         bGJPMaGjJcjpupr9TXJEIJIReyOD6rY06JeczCa4RahX6gyimSg+H6+1fjLbhQJ2QQNd
-         cRKEhUDEpDnW0ii97I+uPvLdgbvF74dwb6iQj83dofqtrbEfQ2IeiFzS9EwxANNEdNJa
-         PsnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pxUD+VmkH1xxeAkPK92Cf10G5edui36/X8Za7R/dfvU=;
-        b=Lf632yMXaSHMMc9UneBOp47dT6WBdQev0lJav1RBw0SxlGQv5DBjhxIaSXKS4IVNNP
-         J5COWQvsNPxIKpRux3vaUgFDq7QXresQVIhRr5vmNIVIuf+K2lHjSW3sNShZPD20qVvC
-         v4hklg4twXOa2Uavu0guvCk0lCFnmf7+bvwR+ygiDEYmAABQ+cwtiW1uMvvQWE51ibcI
-         RWSLAD/2Okcyod7b83vmCV7/2haygSBwEDBtIOq4E4Kgp3TdHr3QF5/jyTadwN3mzGRe
-         11/G0qR60h6ZPfwP+H+JKzbtJHMFM/fwoakhGGG/5mIFOpu6JH35+KPRvGYCyOOfEBWa
-         09rQ==
-X-Gm-Message-State: APjAAAUrtVDW1NCS3QAA1uOIIlO77vDB+8tmlsAM2b7xFL4TbtuDStgo
-        cJwn617zHyCsLKhiUpqoJrM=
-X-Google-Smtp-Source: APXvYqxE/Ac2824bFf20oZ8b1DfKFM1E4WD0jgI8CVJA/sd5exSlCoqpGrIsLq6AGBPaXEwcjeHpxw==
-X-Received: by 2002:a17:902:bd98:: with SMTP id q24mr13563102pls.78.1576242161936;
-        Fri, 13 Dec 2019 05:02:41 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:02:41 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/3] xenbus/backend: Add memory pressure handler callback
-Date:   Fri, 13 Dec 2019 13:02:09 +0000
-Message-Id: <20191213130211.24011-2-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213130211.24011-1-sjpark@amazon.de>
-References: <20191213130211.24011-1-sjpark@amazon.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Fri, 13 Dec 2019 08:06:56 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDD5N3k024259
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:06:55 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wusvhx6wm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:06:55 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 13 Dec 2019 13:06:53 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Dec 2019 13:06:49 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBDD66Yh22282504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 13:06:06 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E840A4066;
+        Fri, 13 Dec 2019 13:06:48 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 596ABA4054;
+        Fri, 13 Dec 2019 13:06:47 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.131.45])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Dec 2019 13:06:47 +0000 (GMT)
+Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
+ measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 13 Dec 2019 08:06:46 -0500
+In-Reply-To: <c60341a3-2329-cd92-c76c-6f8249a57b43@linux.microsoft.com>
+References: <20191213004250.21132-1-nramas@linux.microsoft.com>
+         <20191213004250.21132-2-nramas@linux.microsoft.com>
+         <1576202134.4579.189.camel@linux.ibm.com>
+         <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
+         <1576204377.4579.206.camel@linux.ibm.com>
+         <c60341a3-2329-cd92-c76c-6f8249a57b43@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121313-0028-0000-0000-000003C82E99
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121313-0029-0000-0000-0000248B6C03
+Message-Id: <1576242406.4579.239.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_03:2019-12-13,2019-12-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 suspectscore=0 adultscore=0 mlxlogscore=999 phishscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Granting pages consumes backend system memory.  In systems configured
-with insufficient spare memory for those pages, it can cause a memory
-pressure situation.  However, finding the optimal amount of the spare
-memory is challenging for large systems having dynamic resource
-utilization patterns.  Also, such a static configuration might lack
-flexibility.
+On Thu, 2019-12-12 at 18:59 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/12/2019 6:32 PM, Mimi Zohar wrote:
+> 
+> >>>
+> >>> Don't you need a test here, before setting ima_process_keys?
+> >>>
+> >>> 	if (ima_process_keys)
+> >>> 		return;
 
-To mitigate such problems, this commit adds a memory reclaim callback to
-'xenbus_driver'.  If a memory pressure is detected, 'xenbus' requests
-every backend driver to volunarily release its memory.
+> >> That check is done before the comment - at the start of
+> >> ima_process_queued_keys().
+> > 
+> > The first test prevents taking the mutex unnecessarily.
+> > 
+> 
+> I am trying to understand your concern here. Could you please clarify?
+> 
+>   => If ima_process_keys is false
+>        -> With the mutex held, should check ima_process_keys again 
+> before setting?
+> 
+> Let's say 2 or more threads are racing in calling ima_process_queued_keys():
+> 
+> The 1st one will set ima_process_keys and process queued keys.
+> 
+> The 2nd and subsequent ones - even if they have gone past the initial 
+> check, will find an empty list of keys (the list "ima_keys") when they 
+> take the mutex. So they'll not process any keys.
 
-Note that it would be able to improve the callback facility for more
-sophisticated handlings of general pressures.  For example, it would be
-possible to monitor the memory consumption of each device and issue the
-release requests to only devices which causing the pressure.  Also, the
-callback could be extended to handle not only memory, but general
-resources.  Nevertheless, this version of the implementation defers such
-sophisticated goals as a future work.
+I just need to convince myself that this is correct.  Normally before
+reading and writing a flag, there is some sort of locking.  With
+taking the mutex before setting the flag, there is now only a lock
+around the single writer.
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- drivers/xen/xenbus/xenbus_probe_backend.c | 32 +++++++++++++++++++++++
- include/xen/xenbus.h                      |  1 +
- 2 files changed, 33 insertions(+)
+Without taking a lock before reading the flag, will the queue always
+be empty is the question.  If it is, then the comment is correct, but
+the code assumes not and processes the list again.  Testing the flag
+after taking the mutex just re-enforces the comment.
 
-diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-index b0bed4faf44c..7e78ebef7c54 100644
---- a/drivers/xen/xenbus/xenbus_probe_backend.c
-+++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-@@ -248,6 +248,35 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
- 	return NOTIFY_DONE;
- }
- 
-+static int backend_reclaim_memory(struct device *dev, void *data)
-+{
-+	const struct xenbus_driver *drv;
-+
-+	if (!dev->driver)
-+		return 0;
-+	drv = to_xenbus_driver(dev->driver);
-+	if (drv && drv->reclaim_memory)
-+		drv->reclaim_memory(to_xenbus_device(dev));
-+	return 0;
-+}
-+
-+/*
-+ * Returns 0 always because we are using shrinker to only detect memory
-+ * pressure.
-+ */
-+static unsigned long backend_shrink_memory_count(struct shrinker *shrinker,
-+				struct shrink_control *sc)
-+{
-+	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
-+			backend_reclaim_memory);
-+	return 0;
-+}
-+
-+static struct shrinker backend_memory_shrinker = {
-+	.count_objects = backend_shrink_memory_count,
-+	.seeks = DEFAULT_SEEKS,
-+};
-+
- static int __init xenbus_probe_backend_init(void)
- {
- 	static struct notifier_block xenstore_notifier = {
-@@ -264,6 +293,9 @@ static int __init xenbus_probe_backend_init(void)
- 
- 	register_xenstore_notifier(&xenstore_notifier);
- 
-+	if (register_shrinker(&backend_memory_shrinker))
-+		pr_warn("shrinker registration failed\n");
-+
- 	return 0;
- }
- subsys_initcall(xenbus_probe_backend_init);
-diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-index 869c816d5f8c..c861cfb6f720 100644
---- a/include/xen/xenbus.h
-+++ b/include/xen/xenbus.h
-@@ -104,6 +104,7 @@ struct xenbus_driver {
- 	struct device_driver driver;
- 	int (*read_otherend_details)(struct xenbus_device *dev);
- 	int (*is_ready)(struct xenbus_device *dev);
-+	void (*reclaim_memory)(struct xenbus_device *dev);
- };
- 
- static inline struct xenbus_driver *to_xenbus_driver(struct device_driver *drv)
--- 
-2.17.1
+Bottom line, does reading the flag need to be lock protected?
+
+Mimi
+
 
