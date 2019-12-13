@@ -2,108 +2,78 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF9CC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA257C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070FD22527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576222286;
-	bh=0F8E162DkAWc/zBDQj4WVQCnjIhvDR7U2JWM3qSA8Gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VMk3GZbm+lgXzGVqnGISrR92zsVJyeRwFD/U4ot35TniWonBhAKU+Jt+vN5Uws/pw
-	 hXuk4k11h7hhrfQpgtq3bQeon7dAT2S2pSy9GqDgFNzp1WADzB77KTSZc9KepA9Uv3
-	 p8GMbB+ZyD4ByjvazafPFT/fvY2Iy9hYqBVs+ND4=
+	by mail.kernel.org (Postfix) with ESMTP id A06C124656
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbfLMHbZ (ORCPT
+        id S1725980AbfLMHhU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:31:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfLMHbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:31:24 -0500
-Received: from localhost (unknown [84.241.199.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8AE22527;
-        Fri, 13 Dec 2019 07:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576222284;
-        bh=0F8E162DkAWc/zBDQj4WVQCnjIhvDR7U2JWM3qSA8Gk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1+/UVeWVO2Wrn7jAbXlNXC7NhAymCnGCkhK2IQpdzv5XP+YLF0tJZiAMRBvMAmOi0
-         +Ddexmj9YWSYX9Mua3F5jFu7vYOCcS6ZFP0g+zUTUE5//EMjGEkGAm/qMavRIYReHi
-         o9IU/c4ucTsbMlIDDgYin8wHACA9vcyXqcStx3j0=
-Date:   Fri, 13 Dec 2019 08:31:21 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     shuah@kernel.org, mcgrof@kernel.org, scott.branden@broadcom.com,
-        tiwai@suse.de, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: firmware: Fix it to do root uid check and skip
-Message-ID: <20191213073121.GH1750354@kroah.com>
-References: <20191213015606.23058-1-skhan@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213015606.23058-1-skhan@linuxfoundation.org>
+        Fri, 13 Dec 2019 02:37:20 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:59816 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfLMHhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:37:20 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id F13FBCECF0;
+        Fri, 13 Dec 2019 08:46:28 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QCA6390
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <ab0557bcacdae61027b775f440145b05@codeaurora.org>
+Date:   Fri, 13 Dec 2019 08:37:17 +0100
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        linux-bluetooth-owner@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5F24A10B-D0DB-4FE7-8EB1-1028671599FB@holtmann.org>
+References: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
+ <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
+ <ab0557bcacdae61027b775f440145b05@codeaurora.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 06:56:06PM -0700, Shuah Khan wrote:
-> firmware attempts to load test modules that require root access
-> and fail. Fix it to check for root uid and exit with skip code
-> instead.
-> 
-> Before this fix:
-> 
-> selftests: firmware: fw_run_tests.sh
-> modprobe: ERROR: could not insert 'test_firmware': Operation not permitted
-> You must have the following enabled in your kernel:
-> CONFIG_TEST_FIRMWARE=y
-> CONFIG_FW_LOADER=y
-> CONFIG_FW_LOADER_USER_HELPER=y
-> CONFIG_IKCONFIG=y
-> CONFIG_IKCONFIG_PROC=y
-> not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
-> 
-> With this fix:
-> 
-> selftests: firmware: fw_run_tests.sh
-> skip all tests: must be run as root
-> not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
-> 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  tools/testing/selftests/firmware/fw_lib.sh | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-> index b879305a766d..5b8c0fedee76 100755
-> --- a/tools/testing/selftests/firmware/fw_lib.sh
-> +++ b/tools/testing/selftests/firmware/fw_lib.sh
-> @@ -34,6 +34,12 @@ test_modprobe()
->  
->  check_mods()
->  {
-> +	local uid=$(id -u)
-> +	if [ $uid -ne 0 ]; then
-> +		echo "skip all tests: must be run as root" >&2
-> +		exit $ksft_skip
-> +	fi
-> +
->  	trap "test_modprobe" EXIT
->  	if [ ! -d $DIR ]; then
->  		modprobe test_firmware
-> -- 
-> 2.20.1
-> 
+Hi Rocky,
 
-Reviwed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
+>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>>> ---
+>>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>> index 68b67d9db63a..87b7f9d22414 100644
+>>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>> @@ -10,6 +10,7 @@ device the slave device is attached to.
+>>> Required properties:
+>>> - compatible: should contain one of the following:
+>>>   * "qcom,qca6174-bt"
+>>> +   * "qcom,qca6390-bt"
+>>>   * "qcom,wcn3990-bt"
+>>>   * "qcom,wcn3998-bt"
+>> now I am confused. Is this a DT platform or ACPI or both?
+> We need to support both, should I update ACPI part in this doc as well?
+
+this patch is fine the, but the other one would be better if you split it in DT and ACPI support.
+
+Regards
+
+Marcel
+
