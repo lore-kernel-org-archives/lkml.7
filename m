@@ -2,222 +2,309 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B3EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CF62073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318BC24658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHMS49Gv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErjWMT1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfLMKAs (ORCPT
+        id S1726740AbfLMKBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:00:48 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39032 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMKAs (ORCPT
+        Fri, 13 Dec 2019 05:01:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58868 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725937AbfLMKBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:00:48 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i12so1801984qtp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:00:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uDnoQFiNcIXTIxHbcNpUuK6sYJRqWkNb6sXGeigfu8g=;
-        b=uHMS49GvtGGG4FgGbKEBueR+ZVUzQ1FTg7hriLgYv5ms0Q32Fn6zoDjNSxHFJpOMxu
-         rvjmAX8BRcNm2RNOb7Yf3IuCSmyQjFIdCcTygIu1mf+7un/0pc0A3dyzhrt22/uHtkKs
-         SdzdT1CMaImYFcewAooinY9rqgu3w0lR8zz/hC1RtUif52O9Bzl1/+Lq5j1mkM97RC4+
-         kIh3XK0kJKkMNLOqeLU+SLc1mnmDlPH371UjQ8AX4dv/HG+32rVLw4bNoADjmWRp9qh0
-         ncC8Qn3uUHd4EX0/1LN86ny4mQ8C7WB7WbfUlwWgmEiFSu6yqWZ7Kp1o3dELkmD4VcLf
-         PYTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uDnoQFiNcIXTIxHbcNpUuK6sYJRqWkNb6sXGeigfu8g=;
-        b=pPNtlOPQX12D3WMXyNqU3SnJHCNvOftnOETzptqLBd+NT5xctUnzW9b4si1oWCwxrA
-         D5SnqX0u6VCTGrI8N08DYZSXsd2f0/EczXlAJaay3cMrz2uCkdRUqUkU8Yfg+N2Dor7r
-         mR1Wdn/4TTYjSnxXffs20c5mobzP2epM+VICFrOvA/QFpY4IrMS8PAWVu3u9DFr9Vop0
-         4Ra1XvgiPFzy4c4hkWUws5Hu2YKBuxmd/jg6pZmeAxVKDhruK+fCMzw6zkcAKw0zpcRZ
-         px3EprG+pg44ON06n/Px+PYGqUUQrhMfuSKFgUAdKppNpfNJmbKNvken4Ru4HgQsHGwA
-         +bFg==
-X-Gm-Message-State: APjAAAUQX30varQwqfUa0K+cdhkVJ5uB8aW0pubf3CILHZ599DjIEGjN
-        kFfDHvRT0EZ/EfgUWg4XqL34Wxj7G+erPA7KnESpFs6pvCU=
-X-Google-Smtp-Source: APXvYqz/5HshPauRxsoXwqbIW9gblIe26shnfQMuCY107xnTQMSDA3NKBRWFAwanTHaCGDt+4Jh7c/UcCW5r3vEPyJA=
-X-Received: by 2002:ac8:71d7:: with SMTP id i23mr11731950qtp.50.1576231246791;
- Fri, 13 Dec 2019 02:00:46 -0800 (PST)
+        Fri, 13 Dec 2019 05:01:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576231259;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=sDfkzegf+YvU6Y6VD7ofOSD/W9ZKRpULuRJ7odfg5Qk=;
+        b=ErjWMT1oAUxs6f/EXs2eWbJn5ZVruktT2CsjZHm3ZzgRf+qOAeupVCYDsCQDRPG8O2DrPP
+        k6ryOHDqQCV4N+JTKOqcaFoae99xFLYcsCGf20rnR+WDE6/+biysz0aOilyJQSqe/ZmvLr
+        SvlwYd0Xw0Rh5kdWpyxhIFFA7Xwdsk0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-BtdW1kXHN1m_wH_pGN9QnA-1; Fri, 13 Dec 2019 05:00:57 -0500
+X-MC-Unique: BtdW1kXHN1m_wH_pGN9QnA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 423FE1005510;
+        Fri, 13 Dec 2019 10:00:55 +0000 (UTC)
+Received: from [10.36.117.150] (ovpn-117-150.ams2.redhat.com [10.36.117.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 232B2601B6;
+        Fri, 13 Dec 2019 10:00:42 +0000 (UTC)
+Subject: Re: [PATCH v15 0/7] mm / virtio: Provide support for free page
+ reporting
+To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+References: <20191205161928.19548.41654.stgit@localhost.localdomain>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
+Date:   Fri, 13 Dec 2019 11:00:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <00000000000053539a0599173973@google.com> <20191212105701.GB1476206@kroah.com>
- <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com> <20191213093357.GB2135612@kroah.com>
-In-Reply-To: <20191213093357.GB2135612@kroah.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 13 Dec 2019 11:00:35 +0100
-Message-ID: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in mem_serial_out
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205161928.19548.41654.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Dec 13, 2019 at 10:02:33AM +0100, Dmitry Vyukov wrote:
-> > On Thu, Dec 12, 2019 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Dec 06, 2019 at 10:25:08PM -0800, syzbot wrote:
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
-> > > > git tree:       upstream
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=123ec282e00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f4f1e871965064ae689e
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab090ee00000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f127f2e00000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com
-> > > >
-> > > > BUG: kernel NULL pointer dereference, address: 0000000000000002
-> > > > #PF: supervisor write access in kernel mode
-> > > > #PF: error_code(0x0002) - not-present page
-> > > > PGD 9764a067 P4D 9764a067 PUD 9f995067 PMD 0
-> > > > Oops: 0002 [#1] PREEMPT SMP KASAN
-> > > > CPU: 0 PID: 9687 Comm: syz-executor433 Not tainted 5.4.0-syzkaller #0
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
-> > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
-> > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-> > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
-> > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
-> > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
-> > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-> > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
-> > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
-> > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
-> > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
-> > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > Call Trace:
-> > > >  serial_out drivers/tty/serial/8250/8250.h:118 [inline]
-> > > >  serial8250_clear_fifos.part.0+0x3a/0xb0
-> > > > drivers/tty/serial/8250/8250_port.c:557
-> > > >  serial8250_clear_fifos drivers/tty/serial/8250/8250_port.c:556 [inline]
-> > > >  serial8250_do_startup+0x426/0x1cf0 drivers/tty/serial/8250/8250_port.c:2121
-> > > >  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
-> > > >  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
-> > > >  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
-> > > >  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
-> > > >  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
-> > > >  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
-> > > >  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
-> > > >  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
-> > > >  vfs_ioctl fs/ioctl.c:47 [inline]
-> > > >  file_ioctl fs/ioctl.c:545 [inline]
-> > > >  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-> > > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-> > > >  __do_sys_ioctl fs/ioctl.c:756 [inline]
-> > > >  __se_sys_ioctl fs/ioctl.c:754 [inline]
-> > > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-> > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > RIP: 0033:0x440219
-> > > > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-> > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > > > 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > > > RSP: 002b:00007ffced648c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
-> > > > RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
-> > > > RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-> > > > R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
-> > > > R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
-> > > > Modules linked in:
-> > > > CR2: 0000000000000002
-> > > > ---[ end trace eaa11ffe82f3a763 ]---
-> > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
-> > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
-> > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-> > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
-> > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
-> > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
-> > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-> > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
-> > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
-> > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
-> > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
-> > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > >
-> > >
-> > > You set up a dubious memory base for your uart and then get upset when
-> > > you write to that location.
-> > >
-> > > I don't know what to really do about this, this is a root-only operation
-> > > and you are expected to know what you are doing when you attempt this.
-> >
-> > Hi Greg,
-> >
-> > Thanks for looking into this!
-> > Should we restrict the fuzzer from accessing /dev/ttyS* entirely?
->
-> No, not at all.
->
-> > Or only restrict TIOCSSERIAL on them? Something else?
->
-> Try running not as root.  if you have CAP_SYS_ADMIN you can do a lot of
-> pretty bad things with tty ports, as you see here.  There's a reason the
-> LOCKDOWN_TIOCSSERIAL "security lockdown" check was added :)
->
-> The TIOCSSERIAL ioctl is a nice one for a lot of things that are able to
-> be done as a normal user (baud rate changes, etc.), but there are also
-> things like setting io port memory locations that can cause random
-> hardware accesses and kernel crashes, as you instantly found out here :)
->
-> So restrict the fuzzer to only run as a "normal" user of the serial
-> port, and if you find problems there, I'll be glad to look at them.
+On 05.12.19 17:22, Alexander Duyck wrote:
+> This series provides an asynchronous means of reporting free guest page=
+s
+> to a hypervisor so that the memory associated with those pages can be
+> dropped and reused by other processes and/or guests on the host. Using
+> this it is possible to avoid unnecessary I/O to disk and greatly improv=
+e
+> performance in the case of memory overcommit on the host.
+>=20
+> When enabled we will be performing a scan of free memory every 2 second=
+s
+> while pages of sufficiently high order are being freed. Currently the o=
+rder
+> used is pageblock_order so that this feature will not interfere with th=
+e
+> use of Transparent Huge Pages in the case of virtualization.
+>=20
+> Currently this is only in use by virtio-balloon however there is the ho=
+pe
+> that at some point in the future other hypervisors might be able to mak=
+e
+> use of it. In the virtio-balloon/QEMU implementation the hypervisor is
+> currently using MADV_DONTNEED to indicate to the host kernel that the p=
+age
+> is currently free. It will be zeroed and faulted back into the guest th=
+e
+> next time the page is accessed.
+>=20
+> To track if a page is reported or not the Uptodate flag was repurposed =
+and
+> used as a Reported flag for Buddy pages. We walk though the free list
+> isolating pages and adding them to the scatterlist until we either
+> encounter the end of the list, processed as many pages as were listed i=
+n
+> nr_free prior to us starting, or have filled the scatterlist with pages=
+ to
+> be reported. If we fill the scatterlist before we reach the end of the
+> list we rotate the list so that the first unreported page we encounter =
+is
+> moved to the head of the list as that is where we will resume after we
+> have freed the reported pages back into the tail of the list.
+>=20
+> Below are the results from various benchmarks. I primarily focused on t=
+wo
+> tests. The first is the will-it-scale/page_fault2 test, and the other i=
+s
+> a modified version of will-it-scale/page_fault1 that was enabled to use
+> THP. I did this as it allows for better visibility into different parts
+> of the memory subsystem. The guest is running with 32G for RAM on one
+> node of a E5-2630 v3. The host has had some power saving features disab=
+led
+> by setting the /dev/cpu_dma_latency value to 10ms.
+>=20
+> Test                   page_fault1 (THP)    page_fault2
+> Name            tasks  Process Iter  STDEV  Process Iter  STDEV
+> Baseline            1    1208307.25  0.10%     408596.00  0.19%
+>                    16    8865204.75  0.16%    3344169.00  0.60%
+>=20
+> Patches applied     1    1206809.00  0.26%     412558.25  0.32%
+>                    16    8814350.50  0.78%    3420102.00  1.16%
+>=20
+> Patches enabled     1    1201386.25  0.21%     407903.75  0.32%
+>                    16    8880178.00  0.08%    3396700.50  0.54%
+>=20
+> Patches enabled     1    1173529.00  1.04%     409006.50  0.45%
+>  page shuffle      16    8384540.25  0.74%    3288289.25  0.41%
+>=20
+> Patches enabled     1    1193411.00  0.33%     406333.50  0.09%
+>  shuffle w/ RFC    16    8812639.75  0.73%    3321706.25  0.53%
+>=20
+> The results above are for a baseline with a linux-next-20191203 kernel,
+> that kernel with this patch set applied but page reporting disabled in
+> virtio-balloon, the patches applied and page reporting fully enabled, t=
+he
+> patches enabled with page shuffling enabled, and the patches applied wi=
+th
+> page shuffling enabled and an RFC patch that makes used of MADV_FREE in
+> QEMU. These results include the deviation seen between the average valu=
+e
+> reported here versus the high and/or low value. I observed that during =
+the
+> test memory usage for the first three tests never dropped whereas with =
+the
+> patches fully enabled the VM would drop to using only a few GB of the
+> host's memory when switching from memhog to page fault tests.
+>=20
+> Any of the overhead visible with this patch set enabled seems due to pa=
+ge
+> faults caused by accessing the reported pages and the host zeroing the =
+page
+> before giving it back to the guest. This overhead is much more visible =
+when
+> using THP than with standard 4K pages. In addition page shuffling seeme=
+d to
+> increase the amount of faults generated due to an increase in memory ch=
+urn.
+> As seen in the data above, using MADV_FREE in QEMU mostly eliminates th=
+is
+> overhead.
+>=20
+> The overall guest size is kept fairly small to only a few GB while the =
+test
+> is running. If the host memory were oversubscribed this patch set shoul=
+d
+> result in a performance improvement as swapping memory in the host can =
+be
+> avoided.
+>=20
+> A brief history on the background of free page reporting can be found a=
+t:
+> https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.c=
+amel@linux.intel.com/
+>=20
+> Changes from v13:
+> https://lore.kernel.org/lkml/20191105215940.15144.65968.stgit@localhost=
+.localdomain/
+> Rewrote core reporting functionality
+>   Merged patches 3 & 4
+>   Dropped boundary list and related code
+>   Folded get_reported_page into page_reporting_fill
+>   Folded page_reporting_fill into page_reporting_cycle
+> Pulled reporting functionality out of free_reported_page
+>   Renamed it to __free_isolated_page
+>   Moved page reporting specific bits to page_reporting_drain
+> Renamed phdev to prdev since we aren't "hinting" we are "reporting"
+> Added documentation to describe the usage of unused page reporting
+> Updated cover page and patch descriptions to avoid mention of boundary
+>=20
+> Changes from v14:
+> https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost=
+.localdomain/
+> Renamed "unused page reporting" to "free page reporting"
+>   Updated code, kconfig, and patch descriptions
+> Split out patch for __free_isolated_page
+>   Renamed function to __putback_isolated_page
+> Rewrote core reporting functionality
+>   Added logic to reschedule worker in 2 seconds instead of run to compl=
+etion
+>   Removed reported_pages statistics
+>   Removed REPORTING_REQUESTED bit used in zone flags
+>   Replaced page_reporting_dev_info refcount with state variable
+>   Removed scatterlist from page_reporting_dev_info
+>   Removed capacity from page reporting device
+>   Added dynamic scatterlist allocation/free at start/end of reporting p=
+rocess
+>   Updated __free_one_page so that reported pages are not always added t=
+o tail
+>   Added logic to handle error from report function
+> Updated virtio-balloon patch that adds support for page reporting
+>   Updated patch description to try and highlight differences in approac=
+hes
+>   Updated logic to reflect that we cannot limit the scatterlist from de=
+vice
 
-Easier said than done. "normal user of the serial port" is not really
-a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
-not per-device...
-As far as I remember +Tetsuo proposed a config along the lines of
-"restrict only things that legitimately cause damage under a fuzzer
-workload", e.g. freezing filesystems, disabling console output, etc.
-This may be another candidate. But I can't find where that proposal is
-now.
+Last time Mel said
 
-A simpler option that I see is as follows. syzkaller has several
-sandboxing modes, one of them is "namespace" which uses a user ns, in
-that more fuzzer is still uid=0 in the init namespace, so has access
-to all /dev nodes, but it does not have CAP_SYS_ADMIN in the init
-namespace. We could enable /dev/ttyS* only on instance that use
-sandbox=namesace, and disable on the rest. Does it make sense?
+"Ok, I'm ok with how this hooks into the allocator as the overhead is
+minimal. However, the patch itself still includes a number of
+optimisations instead of being a bare-boned implementation of the
+feature with optimisations layered on top."
+
+and
+
+"Either way, the separate patch could have supporting data on how much
+it improves the speed of reporting pages so it can be compared to any
+other optimisation that may be proposed. Supporting data would also help
+make the case that any complexity introduced by the optimisation is
+worthwhile."
+
+But I was only partially following that discussion.
+
+I can see that there is only one additional patch (before the reporting
+one) compared to the previous series on the MM side. Does that comment
+no longer apply (I can see e.g., "Removed REPORTING_REQUESTED bit used
+in zone flags" in the changelog) - IOW, did you drop all the
+optimizations in question for now? If so, can you share some performance
+differences with and without the previous optimizations? (just out of
+personal interest :) )
+
+Christmas is getting closer, and at least in Europe/Germany that usually
+means that things will slow down ... or however you want to call that.
+So I wouldn't expect too much review happening before next year (but I
+might be wrong of course).
+
+Cheers!
+
+--=20
+Thanks,
+
+David / dhildenb
+
