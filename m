@@ -2,91 +2,134 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25192C3435C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD3C34356
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5915524765
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F154F24718
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NnxJs1r1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+RNfMxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfLMSbo (ORCPT
+        id S1728904AbfLMSsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:31:44 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41313 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfLMSbo (ORCPT
+        Fri, 13 Dec 2019 13:48:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52625 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728686AbfLMSsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:31:44 -0500
-Received: by mail-il1-f196.google.com with SMTP id f10so214718ils.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tpB/xeUDM1+yO8SMRMjK9hxdyXvy8qn++zhfg+M4I6Q=;
-        b=NnxJs1r1KqtlMmXaKnm83wZSyJ65551miQeW3U3EvBC1r1sQrTLC+QIbM050I8w2r/
-         vgTCCNig/abM137ibwuQw+92bAx1Sfh3A+DspSFTewAoheB3YfSKANcubKFg6zVLAFu9
-         u0NO1SaGNb4GEsOWy5T7umHFtXhDaqCUBW5tub+wE/L+9mVw9wPsgoPejjGa9Z0VsHDz
-         boHMaxoYdmjrKEUHUd5ziYLGbTDJXe8CCDdbV3CbOi728N93DApHwWAGb78JDsRu3vOb
-         xIH5CzdSOY2lVnqCWyGYfNjOcQ+8uonNmPNy0WHLvNH+8R9FlFpCtxeX61Q8OZBiL+2H
-         OGwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tpB/xeUDM1+yO8SMRMjK9hxdyXvy8qn++zhfg+M4I6Q=;
-        b=pOYdU+dT8xsRGqS2yl8PnnE5BRZZdCw+MgCvMu3zqDwgnd9dUraXRrWDYZFSLt8Vpg
-         GvrRWsfI/ZTI8YPQhHFWtkW0aSUK6gCPg5BGkYFJphK4T6ql8PpG749GjFtC86ddjSmA
-         Tf0WKEi0gvUZQ8xXJsjYlN86Lshl3eKWdJkaPHwDu/pQ26TV1xvj3WawtyQoHzcVOS+L
-         m7Yat2DUmUAS5VTZs2FrXi+UFuYzR99HMEQBmQ/7VgNv88FDI/OvglQeh8v//HiIY8kc
-         ywbrFAn6Sxa15P6G/AxCkgxh8zp3u7r0b0NGLiEqOxCloGyrW3fnqxwRxz14EdOetjWh
-         Na7g==
-X-Gm-Message-State: APjAAAU+bTenquGB+M7xhoFUmrmYni2wnrNKtjMqRf/SpvK8WfpaYfhE
-        Pa/ncjzDUnIQ5yi3gVOTTUMpHILDLFm4Bt1XJ05qvQ==
-X-Google-Smtp-Source: APXvYqwqKI1k9m7CKtca2pmdvVz5aHQxyrvRxqEo2nHabNcDV3oy5nCgJHZVFEPpvds+l9dkkylLJBJz+HgYesKXjvA=
-X-Received: by 2002:a92:1655:: with SMTP id r82mr707357ill.72.1576261903292;
- Fri, 13 Dec 2019 10:31:43 -0800 (PST)
+        Fri, 13 Dec 2019 13:48:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576262894;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VSDDjKTdNjIjYY9lNEGudZN4ZxbNPvX2QUzIT/T3/bU=;
+        b=H+RNfMxdNvTysBCOEmbPOGorcnkdQWR0n9YwUpYf65m+E0ejY7abgtQ04kHLSiM0UHU2Az
+        BWCe4hrJHp904ycXffWHXpDCVGBoLFmMWifQXPHMZYB9ZUI3ZUjE5r6bEQvZko5mrr7fTa
+        QDe+Owf7cMPRb/BLYrOL/nrCTXYhrwI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-arex5kL_PveUSWwTT-l1-A-1; Fri, 13 Dec 2019 13:48:12 -0500
+X-MC-Unique: arex5kL_PveUSWwTT-l1-A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 657F1107ACC4;
+        Fri, 13 Dec 2019 18:48:11 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-123.ams2.redhat.com [10.36.117.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDC1460474;
+        Fri, 13 Dec 2019 18:48:09 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [PATCH net 2/2] vsock/virtio: add WARN_ON check on virtio_transport_get_ops()
+Date:   Fri, 13 Dec 2019 19:48:01 +0100
+Message-Id: <20191213184801.486675-3-sgarzare@redhat.com>
+In-Reply-To: <20191213184801.486675-1-sgarzare@redhat.com>
+References: <20191213184801.486675-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-References: <20191210203409.2875880-1-arnd@arndb.de> <71a8139e603f697c734134faedfb3ce87067918f.camel@v3.sk>
-In-Reply-To: <71a8139e603f697c734134faedfb3ce87067918f.camel@v3.sk>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 13 Dec 2019 10:31:32 -0800
-Message-ID: <CAOesGMgVcoHp7W5QPu=ZXTMe1BcPOXOS+6vQOasXAZRyj_nC9g@mail.gmail.com>
-Subject: Re: [PATCH] ARM: mmp: include the correct cputype.h
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, SoC Team <soc@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:41 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> On Tue, 2019-12-10 at 21:34 +0100, Arnd Bergmann wrote:
-> > The file was moved, causing a build error:
-> >
-> > In file included from /git/arm-soc/arch/arm/mach-mmp/pxa168.c:28:
-> > arch/arm/mach-mmp/pxa168.h:22:10: fatal error: cputype.h: No such file or directory
-> >
-> > Include it from the new location.
-> >
-> > Fixes: 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+virtio_transport_get_ops() and virtio_transport_send_pkt_info()
+can only be used on connecting/connected sockets, since a socket
+assigned to a transport is required.
 
-For some reason patchwork didn't reply to this, but I applied it a
-couple of days ago.
+This patch adds a WARN_ON() on virtio_transport_get_ops() to check
+this requirement, a comment and a returned error on
+virtio_transport_send_pkt_info(),
 
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-Thanks!
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virt=
+io_transport_common.c
+index f5991006190e..6abec3fc81d1 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -34,6 +34,9 @@ virtio_transport_get_ops(struct vsock_sock *vsk)
+ {
+ 	const struct vsock_transport *t =3D vsock_core_get_transport(vsk);
+=20
++	if (WARN_ON(!t))
++		return NULL;
++
+ 	return container_of(t, struct virtio_transport, transport);
+ }
+=20
+@@ -161,15 +164,25 @@ void virtio_transport_deliver_tap_pkt(struct virtio=
+_vsock_pkt *pkt)
+ }
+ EXPORT_SYMBOL_GPL(virtio_transport_deliver_tap_pkt);
+=20
++/* This function can only be used on connecting/connected sockets,
++ * since a socket assigned to a transport is required.
++ *
++ * Do not use on listener sockets!
++ */
+ static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
+ 					  struct virtio_vsock_pkt_info *info)
+ {
+ 	u32 src_cid, src_port, dst_cid, dst_port;
++	const struct virtio_transport *t_ops;
+ 	struct virtio_vsock_sock *vvs;
+ 	struct virtio_vsock_pkt *pkt;
+ 	u32 pkt_len =3D info->pkt_len;
+=20
+-	src_cid =3D virtio_transport_get_ops(vsk)->transport.get_local_cid();
++	t_ops =3D virtio_transport_get_ops(vsk);
++	if (unlikely(!t_ops))
++		return -EFAULT;
++
++	src_cid =3D t_ops->transport.get_local_cid();
+ 	src_port =3D vsk->local_addr.svm_port;
+ 	if (!info->remote_cid) {
+ 		dst_cid	=3D vsk->remote_addr.svm_cid;
+@@ -202,7 +215,7 @@ static int virtio_transport_send_pkt_info(struct vsoc=
+k_sock *vsk,
+=20
+ 	virtio_transport_inc_tx_pkt(vvs, pkt);
+=20
+-	return virtio_transport_get_ops(vsk)->send_pkt(pkt);
++	return t_ops->send_pkt(pkt);
+ }
+=20
+ static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
+--=20
+2.23.0
 
--Olof
