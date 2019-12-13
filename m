@@ -2,191 +2,134 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7EDC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C43C33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFB92470C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5DF247A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4Em0CQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfLMOLb (ORCPT
+        id S1727702AbfLMO2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:11:31 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:57525 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfLMOLD (ORCPT
+        Fri, 13 Dec 2019 09:28:53 -0500
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:36828 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMO2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:11:03 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MFbeI-1iVKSE1XmY-00H7do; Fri, 13 Dec 2019 15:10:56 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 05/12] nfsd: make 'boot_time' 64-bit wide
-Date:   Fri, 13 Dec 2019 15:10:39 +0100
-Message-Id: <20191213141046.1770441-6-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
-References: <20191213141046.1770441-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 09:28:52 -0500
+Received: by mail-wm1-f42.google.com with SMTP id p17so6778474wma.1;
+        Fri, 13 Dec 2019 06:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6QLZHSUqVyecs2iharIBnV+waYycsRrF0PppbO8VMdc=;
+        b=X4Em0CQg7XPS3z8XGXcRnzQcQadSqmHsHNxwILAXvTkGF1A0285lgDVyCcfmeLJMPj
+         +Tk9WJ2x/6XiFUCTHg0b8xn10ROMgVaTjQnbg+3qy3Gv3aep3BkV8hyVg4Rj0h75Z/oD
+         35XebvEWDrOknx7OGqgYUi4qMIv+qa9zC1voRXNBH6drGXWrKcVy9HlcS2r/HuYmNAI9
+         OLcCG+k1GSnn6YvMkJcBCrtfY6FidTIooBhHPKYhYtE5D3BJoBZLsrfJHapK+8InoSks
+         f0UPKA4o/9sHfTcTLWVTfcOsu/7MQOC8y9flklApuHnQ61tarND+8sgZ2yf0UyGiQP7W
+         Yp+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6QLZHSUqVyecs2iharIBnV+waYycsRrF0PppbO8VMdc=;
+        b=e1PsduVgWWPPq+XS6OML6AgiNG0pHqizZ+fMSp4k4x5E0WYtf7Q4+spsaIyGb1itu9
+         BCDr4EpFN+e9OhOIP7KcYBDMP125frdK+ZBn1ozDVFWXnjhltDagnwJj00kQoJImNiON
+         sOnhBEJwbaDR5neVPbqOI+010URVGFCCCJv6x+zo6/We+W3GKpWNU+wQ5oRZwOpzsUzv
+         dJ0Q1gruUC+Rf64ORXL0FM9uuIoddNFZT+gi+2ociGtaU4dcnrUindfy5i8X7xSCGgX9
+         E8oXwvhnsnxFedLtInHdCoQf36oIsfnUBHH0uZ5l//sCM6grbvMf989H2eg0O1ViAUa/
+         /SxA==
+X-Gm-Message-State: APjAAAWSCpmOfllyRJxWc+a3ghTwJo5zJ8B5ATF/LQFep4/rQic+dylm
+        7bDnAG8hK+EA58J+rPKBXb8=
+X-Google-Smtp-Source: APXvYqwcogMDfRsO+0kr7L/xFj6Up/8vQMcepDErEiyPT73ffpPLdwealTjrhoiMySzSoGv/hvLbhQ==
+X-Received: by 2002:a1c:980e:: with SMTP id a14mr9520966wme.76.1576247330116;
+        Fri, 13 Dec 2019 06:28:50 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40f6:4600:60b0:6ca6:1eae:3b06])
+        by smtp.gmail.com with ESMTPSA id h127sm11148048wme.31.2019.12.13.06.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 06:28:49 -0800 (PST)
+Date:   Fri, 13 Dec 2019 15:28:46 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191213142846.ki2t2fwljnql66lt@ltop.local>
+References: <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
+ <20191212202157.GD11457@worktop.programming.kicks-ass.net>
+ <20191212205338.GB11802@worktop.programming.kicks-ass.net>
+ <20191213104706.xnpqaehmtean3mkd@ltop.local>
+ <20191213125618.GD2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ulRRllI5JAoz0buK11S43JXVc/eMQFrIawurypLyW+N7TiEk0dp
- sYPiQy6yvK8EGQIpnFN2TTwvGPPXkdo/AQIl7S/SrZCuD2WGshTS2C4G8EUX49W4DwNDUtD
- L88/4+GwzL6UsguMBy6RERpwuy6IQumqGgXy6L+iDb2UHPXPwa2X8rChSWR1KTjzHVNkC34
- OvnVT8pX39Yg9x925DqbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NcumhT8wISM=:JBOSCdGfsCAdWOIW+bnrHA
- QA4UJlzwE2vocoKnX7UialKPo/que+qGW7+EHoXxQ3MzakMVSf3MRYQW+Zlmh0kCKxlHkkV7d
- Hsewp+K2GVG9yoCqQEdlG0WETcBZNX16d1xB/y/0Y8/2AJc03sSMK7pkikjEkHmIbHitedOJQ
- EKABeWyDYp2cY+0uZLzplYYk/1tD3AnlejEyRaRqXOxLorSlGseUIXdMv+IHto94Zrv5mE3/h
- KDxq/7bWkpGoaZbQZa3yv2htZBQ9sAPIQYJBuOAY/FpDtQaWxVKCb9nF2PiCzc4lm2jbQjYKs
- jimwDA6j11Wa7kHmY8okBNaxsHNH+0wJZr9+BulTs2I1cHCGCL+Rzi/l6nYfTqAmbQEcKDZMf
- 809SjF50j+Xt9lsK3xhP4QfmwJDThcv2i+zhkmzoxxOyqiZV9/AdU5CVF3C6MeUa6EfZtt68d
- fBPyd9O/BOWiIX8br0c0LGWNStaj5Azfprth2wX+7ikjC9Ws8cOWYQMHxFUUzVCtPcwIFb6A/
- 83a/4ae5n/RVimEcQW+iGZKvzSaxRxjNYXPUtj45wNuhIpP/YTozGnuDVpGrvIV1Wsd0NAfL4
- 3n2xbxp4Vnqjq73aC7aoVn94SFKdcZtjg/JblwQQn4BHE4bj17s/xFYeuiQ4h/lMouLFm5BMo
- kYOM3Ckbfj9wjCq9yzLCUDtFuzj1GGcqVeM4i3JLAzR71Ox5HzLU/xK3jCD/3J8hDmjyw+hvS
- ysxVWEPsEW+RnFBu5Yvw9ANGOES60kgcfd+lh89NUBlF+fDtKB3bg97+5ElTjpdPze2sN9LaK
- Bni5z1+PV0BVYjZ4U2olawi3BAss6zIQudiitpcdSo/23lXCtKNY2xjswb6JP+J40Jn41eufB
- i1sS34VdQdTMvRMNDSgg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213125618.GD2844@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local boot time variable gets truncated to time_t at the moment,
-which can lead to slightly odd behavior on 32-bit architectures.
+On Fri, Dec 13, 2019 at 01:56:18PM +0100, Peter Zijlstra wrote:
+> 
+> Excellent! I had to change it to something like:
+> 
+> #define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
+> 
+> but that does indeed work!
+> 
+> Now I suppose we should wrap that in a symbol that indicates our
+> compiler does indeed support _Atomic, otherwise things will come apart.
+> 
+> That is, my gcc-4.6 doesn't seem to have it, while gcc-4.8 does, which
+> is exactly the range that needs the daft READ_ONCE() construct, how
+> convenient :/
+> 
+> Something a little like this perhaps?
 
-Use ktime_get_real_seconds() instead of get_seconds() to always
-get a 64-bit result, and keep it that way wherever possible.
+Yes, this looks good to me.
+Just a small nit here below.
 
-It still gets truncated in a few places:
+> ---
+> 
+> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+> index 7d9cc5ec4971..c389af602da8 100644
+> --- a/arch/arm64/include/asm/barrier.h
+> +++ b/arch/arm64/include/asm/barrier.h
+> @@ -75,9 +75,9 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
+>  
+>  #define __smp_store_release(p, v)					\
+>  do {									\
+> -	typeof(p) __p = (p);						\
+> -	union { typeof(*p) __val; char __c[1]; } __u =			\
+> -		{ .__val = (__force typeof(*p)) (v) };			\
+> +	unqual_typeof(p) __p = (p);					\
+> +	union { unqual_typeof(*p) __val; char __c[1]; } __u =	\
+> +		{ .__val = (__force unqual_typeof(*p)) (v) };	\
 
-- When assigning to cl_clientid.cl_boot, this is already documented
-  and is only used as a unique identifier.
+The 2 two trailing backslashes are now off by one tab.
 
-- In clients_still_reclaiming(), the truncation is to 'unsigned long'
-  in order to use the 'time_before() helper.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfsd/netns.h       |  2 +-
- fs/nfsd/nfs4recover.c |  8 ++++----
- fs/nfsd/nfs4state.c   | 14 +++++++-------
- 3 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 9a4ef815fb8c..29bbe28eda53 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -40,7 +40,7 @@ struct nfsd_net {
- 
- 	struct lock_manager nfsd4_manager;
- 	bool grace_ended;
--	time_t boot_time;
-+	time64_t boot_time;
- 
- 	/* internal mount of the "nfsd" pseudofilesystem: */
- 	struct vfsmount *nfsd_mnt;
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index 2481e7662128..a8fb18609146 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -1445,7 +1445,7 @@ nfsd4_cld_grace_done_v0(struct nfsd_net *nn)
- 	}
- 
- 	cup->cu_u.cu_msg.cm_cmd = Cld_GraceDone;
--	cup->cu_u.cu_msg.cm_u.cm_gracetime = (int64_t)nn->boot_time;
-+	cup->cu_u.cu_msg.cm_u.cm_gracetime = nn->boot_time;
- 	ret = cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
- 	if (!ret)
- 		ret = cup->cu_u.cu_msg.cm_status;
-@@ -1782,7 +1782,7 @@ nfsd4_cltrack_client_has_session(struct nfs4_client *clp)
- }
- 
- static char *
--nfsd4_cltrack_grace_start(time_t grace_start)
-+nfsd4_cltrack_grace_start(time64_t grace_start)
- {
- 	int copied;
- 	size_t len;
-@@ -1795,7 +1795,7 @@ nfsd4_cltrack_grace_start(time_t grace_start)
- 	if (!result)
- 		return result;
- 
--	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%ld",
-+	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%lld",
- 				grace_start);
- 	if (copied >= len) {
- 		/* just return nothing if output was truncated */
-@@ -2004,7 +2004,7 @@ nfsd4_umh_cltrack_grace_done(struct nfsd_net *nn)
- 	char *legacy;
- 	char timestr[22]; /* FIXME: better way to determine max size? */
- 
--	sprintf(timestr, "%ld", nn->boot_time);
-+	sprintf(timestr, "%lld", nn->boot_time);
- 	legacy = nfsd4_cltrack_legacy_topdir();
- 	nfsd4_umh_cltrack_upcall("gracedone", timestr, legacy, NULL);
- 	kfree(legacy);
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 27a629cc5a46..1ac431aa29c4 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -753,7 +753,7 @@ int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
- 	if (new_id < 0)
- 		return 0;
- 	copy->cp_stateid.si_opaque.so_id = new_id;
--	copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
-+	copy->cp_stateid.si_opaque.so_clid.cl_boot = (u32)nn->boot_time;
- 	copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
- 	return 1;
- }
-@@ -1862,7 +1862,7 @@ STALE_CLIENTID(clientid_t *clid, struct nfsd_net *nn)
- 	 */
- 	if (clid->cl_boot == (u32)nn->boot_time)
- 		return 0;
--	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08lx\n",
-+	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08llx\n",
- 		clid->cl_boot, clid->cl_id, nn->boot_time);
- 	return 1;
- }
-@@ -2222,7 +2222,7 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
- 
- static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
- {
--	clp->cl_clientid.cl_boot = nn->boot_time;
-+	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
- 	clp->cl_clientid.cl_id = nn->clientid_counter++;
- 	gen_confirm(clp, nn);
- }
-@@ -5183,9 +5183,9 @@ nfsd4_end_grace(struct nfsd_net *nn)
-  */
- static bool clients_still_reclaiming(struct nfsd_net *nn)
- {
--	unsigned long now = get_seconds();
--	unsigned long double_grace_period_end = nn->boot_time +
--						2 * nn->nfsd4_lease;
-+	unsigned long now = (unsigned long) ktime_get_real_seconds();
-+	unsigned long double_grace_period_end = (unsigned long)nn->boot_time +
-+					   2 * (unsigned long)nn->nfsd4_lease;
- 
- 	if (nn->track_reclaim_completes &&
- 			atomic_read(&nn->nr_reclaim_complete) ==
-@@ -7640,7 +7640,7 @@ static int nfs4_state_create_net(struct net *net)
- 		INIT_LIST_HEAD(&nn->sessionid_hashtbl[i]);
- 	nn->conf_name_tree = RB_ROOT;
- 	nn->unconf_name_tree = RB_ROOT;
--	nn->boot_time = get_seconds();
-+	nn->boot_time = ktime_get_real_seconds();
- 	nn->grace_ended = false;
- 	nn->nfsd4_manager.block_opens = true;
- 	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
--- 
-2.20.0
-
+-- Luc 
