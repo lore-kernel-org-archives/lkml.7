@@ -4,76 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E196C761A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1956C3403A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF78246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DB6247BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLMPq2 (ORCPT
+        id S1727905AbfLMPVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:46:28 -0500
-Received: from mx2.freebsd.org ([96.47.72.81]:54510 "EHLO mx2.freebsd.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbfLMPq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:46:28 -0500
-Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 1A5088C6E8;
-        Fri, 13 Dec 2019 15:46:27 +0000 (UTC)
-        (envelope-from emaste@freebsd.org)
-Received: from freefall.freebsd.org (freefall.freebsd.org [IPv6:2610:1c1:1:6074::16:84])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "freefall.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 47ZFQB5z05z497Q;
-        Fri, 13 Dec 2019 15:46:26 +0000 (UTC)
-        (envelope-from emaste@freebsd.org)
-Received: by freefall.freebsd.org (Postfix, from userid 1079)
-        id A3963303F; Fri, 13 Dec 2019 15:46:26 +0000 (UTC)
-From:   emaste@FreeBSD.org
-To:     linux-kernel@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ed Maste <emaste@freebsd.org>
-Subject: [PATCH v2] perf tools: correct license on jsmn json parser
-Date:   Fri, 13 Dec 2019 15:46:25 +0000
-Message-Id: <20191213154625.41064-1-emaste@FreeBSD.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191212151244.26324-1-emaste@freefall.freebsd.org>
-References: <20191212151244.26324-1-emaste@freefall.freebsd.org>
+        Fri, 13 Dec 2019 10:21:40 -0500
+Received: from out28-52.mail.aliyun.com ([115.124.28.52]:42509 "EHLO
+        out28-52.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbfLMPVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 10:21:38 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07670759|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.826969-0.0200583-0.152973;DS=CONTINUE|ham_system_inform|0.423128-0.00153908-0.575333;FP=12401601434723292222|1|1|1|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 13 Dec 2019 23:21:29 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 5/5] clk: Ingenic: Remove unnecessary spinlock when reading registers.
+Date:   Fri, 13 Dec 2019 23:21:12 +0800
+Message-Id: <1576250472-124315-7-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ed Maste <emaste@freebsd.org>
+It is not necessary to use spinlock when reading registers,
+so remove it from cgu.c.
 
-This header is part of the jsmn json parser, introduced in 867a979a83.
-Correct the SPDX tag to indicate that it is under the MIT license.
-
-Signed-off-by: Ed Maste <emaste@freebsd.org>
-Acked-by: Andi Kleen <ak@linux.intel.com>
+Suggested-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Paul Burton <paulburton@kernel.org>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- tools/perf/pmu-events/jsmn.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jsmn.h b/tools/perf/pmu-events/jsmn.h
-index c7b0f6ea2a31..1bdfd55fff30 100644
---- a/tools/perf/pmu-events/jsmn.h
-+++ b/tools/perf/pmu-events/jsmn.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: MIT */
- #ifndef __JSMN_H_
- #define __JSMN_H_
+Notes:
+    v2:
+    New Patch.
+
+ drivers/clk/ingenic/cgu.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index ae1ddcb..3c95451 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	const struct ingenic_cgu_pll_info *pll_info;
+ 	unsigned m, n, od_enc, od;
+ 	bool bypass;
+-	unsigned long flags;
+ 	u32 ctl;
  
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 	pll_info = &clk_info->pll;
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->pll_reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+ 	m += pll_info->m_offset;
+@@ -94,9 +91,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->bypass_reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	bypass = !pll_info->no_bypass_bit &&
+ 		 !!(ctl & BIT(pll_info->bypass_bit));
+@@ -269,12 +264,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+-	unsigned long flags;
+ 	u32 ctl;
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->pll_reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return !!(ctl & BIT(pll_info->enable_bit));
+ }
 -- 
-2.24.0
+2.7.4
 
