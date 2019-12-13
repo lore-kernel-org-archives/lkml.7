@@ -2,133 +2,156 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EED3C3434B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A224AC34361
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E7A246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D985524715
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ys1e1lHs"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TXsZUe9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfLMM4e (ORCPT
+        id S1727367AbfLMNNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41724 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfLMM4X (ORCPT
+        Fri, 13 Dec 2019 08:13:34 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:53060 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfLMNNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:23 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuMCp018534;
-        Fri, 13 Dec 2019 06:56:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576241782;
-        bh=iNbjq4C34pR6QNWDK9+NrPFMsPQVY+YacZkcNLYf6FE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ys1e1lHsWA+eHLVC79t34J7h8IfYtipG+cgrMr0dldi79xcjTnHPZYm+m76ixgzBs
-         DgsxQUyxNssk/n9gqy6dWFbE/O3/hF22UqOFMFjlpP5mVwkOIRLP7p769FjlfZY09D
-         lNgHu6NG+3A1yVY9RvD8A4ciP2AX0vhFZV06BImU=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuMNK009092;
-        Fri, 13 Dec 2019 06:56:22 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:56:22 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:56:22 -0600
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVP127295;
-        Fri, 13 Dec 2019 06:56:20 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 10/15] remoteproc/omap: Check for undefined mailbox messages
-Date:   Fri, 13 Dec 2019 14:55:32 +0200
-Message-ID: <20191213125537.11509-11-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
-References: <20191213125537.11509-1-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 13 Dec 2019 08:13:33 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191213131330epoutp0107ac0e3b7a9d425aca88ff7f14753ea7~f8HwdLlI91037910379epoutp01c
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 13:13:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191213131330epoutp0107ac0e3b7a9d425aca88ff7f14753ea7~f8HwdLlI91037910379epoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576242810;
+        bh=96KPzqH2k/XmIwhACmbQJCz/M1oFW9+Tap5Aw04fJ84=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=TXsZUe9E77tl14nV6kp41apWKGWUdU7y+ssSA0RfFJbINchWG/N+TV/fzTQ0AB7pt
+         QdtLWd2d0tGyQNBJYNULe3rzoiwWb6yzUH4CTQfBu3BnWWQgCgexzhMiaT+9WwAyFR
+         4kE02DWe8SDZ7QmvYYkly6rhUefRm3YxvoEvdWfE=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20191213131329epcas5p231ece6e7556e3bdfb52cb8cd994ccfd5~f8HvJ2d1n0792807928epcas5p2p;
+        Fri, 13 Dec 2019 13:13:29 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B8.BB.20197.87E83FD5; Fri, 13 Dec 2019 22:13:29 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad~f8Hull8Xf2315123151epcas5p1l;
+        Fri, 13 Dec 2019 13:13:28 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191213131328epsmtrp1a092948ad0c864f5d7450406b9ce2b10~f8HukHDWq0753107531epsmtrp1L;
+        Fri, 13 Dec 2019 13:13:28 +0000 (GMT)
+X-AuditID: b6c32a4a-769ff70000014ee5-89-5df38e785690
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B2.5D.10238.87E83FD5; Fri, 13 Dec 2019 22:13:28 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191213131326epsmtip2e2a2d51a39eb729b631e6401314dc7e1~f8Hs4nT6H1546215462epsmtip2A;
+        Fri, 13 Dec 2019 13:13:26 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     kishon@ti.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        bhelgaas@google.com, pankaj.dubey@samsung.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v6 0/2] Add support to handle ZRX-DC Compliant PHYs
+Date:   Fri, 13 Dec 2019 18:43:18 +0530
+Message-Id: <1576242800-23969-1-git-send-email-anvesh.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDIsWRmVeSWpSXmKPExsWy7bCmpm5l3+dYg3UTGC2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DKmLu4l71gN1/F4o1LWRsYz3N3MXJySAiYSDStPMbexcjFISSwm1Hi3pFjTBDOJ0aJjU/m
+        Q2W+MUr8nbSdrYuRA6zlwBQ7iPheRokdrT2MEE4Lk8SfxncsIHPZBLQlfh7dyw5iiwhYSxxu
+        38IGYjML/GOUeDynAsQWFnCWeNE0jRHEZhFQlZjXt4oZxOYVcJGYvXcDC8R9chI3z3UygyyQ
+        EDjAJnFpei8LxBUuEo8eyEPUCEu8Or6FHcKWknjZ3wZl50v03l0KZddITLnbwQhh20scuDIH
+        bAyzgKbE+l36EKfxSfT+fsIEMZ1XoqNNCMJUkmibWQ3RKCGxeP5NZgjbQ+LBswtMILaQQKxE
+        57Y1zBMYZWYhzFzAyLiKUTK1oDg3PbXYtMAoL7Vcrzgxt7g0L10vOT93EyM4TWh57WBcds7n
+        EKMAB6MSDy9DyqdYIdbEsuLK3EOMEhzMSiK8qdqfY4V4UxIrq1KL8uOLSnNSiw8xSnOwKInz
+        TmK9GiMkkJ5YkpqdmlqQWgSTZeLglGpgbJiqnSiQETPRnOeO4KkJ8fmBRjeZHgbvl3miGXNS
+        Pyh3V/+DLd763EyuwSkXRa0LNV/edLRjURDlWt3tXhsleHjr3ooTWgfzDs+/ZC4TNuvf8lmf
+        X0YZLfd9+Xur01fGDSdZlRX+Rd0OTj4TUzdjyr5Hm6/au6s8XqtzN0HiReLCCXffs+6JV2Ip
+        zkg01GIuKk4EAPLI9qEPAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSvG5F3+dYg3cNghbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
+        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
+        JXBlzF3cy16wm69i8calrA2M57m7GDk4JARMJA5Mseti5OIQEtjNKLF17k22LkZOoLiExJe9
+        X6FsYYmV/56zQxQ1MUlcOf+HGSTBJqAt8fPoXnYQW0TAVuL+o8msIEXMAl1MEmd+3QcrEhZw
+        lnjRNI0RxGYRUJWY17cKLM4r4CIxe+8GFogNchI3z3UyT2DkWcDIsIpRMrWgODc9t9iwwDAv
+        tVyvODG3uDQvXS85P3cTIzgktTR3MF5eEn+IUYCDUYmHlyHlU6wQa2JZcWXuIUYJDmYlEd5U
+        7c+xQrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAq7zl2
+        3H0T72SHt06bZZZlhVayecX/eFvzwmdpeuYLXsUq5k3xsc1hettXLHO++XZnhsOXe7sfip2T
+        /fZIJyaV74btPs9l664knp9wLu5tOzuvwU7vFxErtmtssf4/Mf2H68sQjmSRMt6P7nM19nwP
+        mbto6cTXrPO+BR/xWvD3ZLZajfYPLx87JZbijERDLeai4kQA3Y6tHEUCAAA=
+X-CMS-MailID: 20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad
+References: <CGME20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+According the PCI Express base specification when PHY does not meet
+ZRX-DC specification, after every 100ms timeout the link should
+transition to recovery state when the link is in low power states. 
 
-Add some checks in the mailbox callback function to limit
-any processing in the mailbox callback function to only
-certain currently valid messages, and drop all the remaining
-messages. A debug message is added to print any such invalid
-messages when the appropriate trace control is enabled.
+Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
+L1.Idle state and are therefore not required to implement the 100 ms
+timeout and transition to Recovery should avoid implementing it, since
+it will reduce the power savings expected from the L1 state.
 
-Co-developed-by: Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
-Signed-off-by: Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/omap_remoteproc.c | 6 ++++++
- drivers/remoteproc/omap_remoteproc.h | 7 +++++++
- 2 files changed, 13 insertions(+)
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 6cf7f0a9ba9a..841981c50d8d 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -126,6 +126,12 @@ static void omap_rproc_mbox_callback(struct mbox_client *client, void *data)
- 		dev_info(dev, "received echo reply from %s\n", name);
- 		break;
- 	default:
-+		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
-+			return;
-+		if (msg > oproc->rproc->max_notifyid) {
-+			dev_dbg(dev, "dropping unknown message 0x%x", msg);
-+			return;
-+		}
- 		/* msg contains the index of the triggered vring */
- 		if (rproc_vq_interrupt(oproc->rproc, msg) == IRQ_NONE)
- 			dev_dbg(dev, "no message was found in vqid %d\n", msg);
-diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
-index f6d2036d383d..72f656c93caa 100644
---- a/drivers/remoteproc/omap_remoteproc.h
-+++ b/drivers/remoteproc/omap_remoteproc.h
-@@ -56,6 +56,12 @@
-  *
-  * @RP_MBOX_ABORT_REQUEST: a "please crash" request, used for testing the
-  * recovery mechanism (to some extent).
-+ *
-+ * Introduce new message definitions if any here.
-+ *
-+ * @RP_MBOX_END_MSG: Indicates end of known/defined messages from remote core
-+ * This should be the last definition.
-+ *
-  */
- enum omap_rp_mbox_messages {
- 	RP_MBOX_READY		= 0xFFFFFF00,
-@@ -64,6 +70,7 @@ enum omap_rp_mbox_messages {
- 	RP_MBOX_ECHO_REQUEST	= 0xFFFFFF03,
- 	RP_MBOX_ECHO_REPLY	= 0xFFFFFF04,
- 	RP_MBOX_ABORT_REQUEST	= 0xFFFFFF05,
-+	RP_MBOX_END_MSG		= 0xFFFFFF06,
- };
- 
- #endif /* _OMAP_RPMSG_H */
+We need to get the PHY property in controller driver. So, we are
+proposing a new method phy_property_present() in the phy driver.
+
+PCIe controller platform drivers should populate the phy_zrxdc_compliant
+flag, which will be used by generic DesignWare driver.
+
+pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
+
+Patchset v2 can be found at:
+ - 1/2: https://lkml.org/lkml/2019/11/11/672
+ - 2/2: https://lkml.org/lkml/2019/10/28/285
+
+Changes w.r.t v2:
+ - Addressed review comments
+ - Rebased on latest linus/master
+
+Changes w.r.t v3:
+ - Added linux-pci@vger.kernel.org as pointed by Gustavo, Sorry for annoying.
+
+Changes w.r.t v4:
+ - Addressed review comments from Andrew Murray
+ - Rebased on latest linus/master
+
+Changes w.r.t v5:
+ - Added check for NULL pointer
+
+Anvesh Salveru (2):
+  phy: core: add phy_property_present method
+  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
+
+ drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+ drivers/phy/phy-core.c                       | 20 ++++++++++++++++++++
+ include/linux/phy/phy.h                      |  6 ++++++
+ 4 files changed, 36 insertions(+)
+
 -- 
-2.17.1
+2.7.4
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
