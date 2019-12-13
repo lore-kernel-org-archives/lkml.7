@@ -2,127 +2,170 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2133C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B1124658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576228692;
-	bh=YDi2nL2pdMzIcbUQOsNhCRGTKAEMJ8JNqoS0JxCQt50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G/0EtC5CDSI+yT1qptflqf5iIQpaiS1hPPZa7FMoR8jWRMazg5Se3NnSavG79uf+a
-	 0eAL3Xfywxw8DUxZlwQ16Cpt+2HKoXpiRfLZcq51jk5nt6x/lxiNh+1zXNaDhku1zs
-	 UAJx3ocpONjwd+r5cFSvJ041MLYp10GkWoqXQDqE=
+	by mail.kernel.org (Postfix) with ESMTP id 0164F214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:22:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KF2Cvyk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLMJSL (ORCPT
+        id S1726345AbfLMJWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:18:11 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36767 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfLMJSL (ORCPT
+        Fri, 13 Dec 2019 04:22:08 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37071 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMJWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:18:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so1853074ljg.3;
-        Fri, 13 Dec 2019 01:18:09 -0800 (PST)
+        Fri, 13 Dec 2019 04:22:07 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so1427809lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 01:22:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZwmaUZJnMZMjAykwzuMYq1+U7baQKDrVjVyjfWLNTpw=;
+        b=KF2Cvyk+um/v+kxXqA2S5wHAkj8D6+AhKHlmdTVTCbha2Go4osgSNgw4BUNQFXQoDg
+         P0GyScEVl0N4NFlb/b9/x4kz+6JbSUIwpvjNerr8IDahYkRxoRa25OtqjbzKGupwkVny
+         qOgGjvMy41bDFgRQVetDMtkYOeO5K+6++Tc6LXxiSsP7b1kJmVqR8kBl3yukcYQYeQBR
+         6iFMa7q3heLX6iJilsN8ZEsbqwhPGMxX/c8RAvEXJaVHTa2kMU46it/oaCEOVOwimAuI
+         gjrOODSkF3rNwVwsDQ9RlHNbiirhCbTk+iMCBO9gCdFVtSE8OLYkPAMIeFSqmcmk+CE5
+         au+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RZ51uRTlJcv6c8enjZTOzifIqw0cVu1vMI6dvmNCekw=;
-        b=B9gNUvtBEcd5FIuqBENpVyMAb01UBNBoM0kwj6htPtJ2jNXH7qwC/qvRs8Kes3/UR8
-         cNnR7lPY0YGmgjC2GjkgrK+ncBrqPDz1uS7IdrNBb20iVTMyJ9ORbRANTGp1LewtsnhB
-         iIOV4NJWzwmIE5qJJmXd0t7m0wC6rAhqpOEgv2N29clLpB78A0g5AWyjInv1cXsM1swB
-         lXYVFUfcerhUHHVhalLYYsfGbJ3WppoW04/MyWQNJWqjkwjoRuShD32bmM+Hb0KreZDw
-         WunR1E3Z514HmiW2dmIHfehb8tJFPNiexO0fWLEBt9XXG/34pbl1c06OGYj70GzwuIYb
-         wMzQ==
-X-Gm-Message-State: APjAAAWtfA1e6ku2DSbwWyQjRw5EW1pW8RGuTsm9yL7dZQugH+xj0Ssj
-        9NLh1ITZ+91Zi1hzBW5p5hI=
-X-Google-Smtp-Source: APXvYqwVxJbJvkmBpoQ44DVZmfkrX2ABY2jSL5V+LsTOqfrT61h5h4UZeIEkOUyzz6Rbwv1HTfRiaA==
-X-Received: by 2002:a2e:850f:: with SMTP id j15mr8768401lji.91.1576228688991;
-        Fri, 13 Dec 2019 01:18:08 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id l21sm4223245lfh.74.2019.12.13.01.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 01:18:08 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ifh5N-0007ZJ-0d; Fri, 13 Dec 2019 10:18:09 +0100
-Date:   Fri, 13 Dec 2019 10:18:09 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, khilman@baylibre.com,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] bluetooth: hci_bcm: enable IRQ capability from node
-Message-ID: <20191213091809.GW10631@localhost>
-References: <20191211094923.20220-1-glaroque@baylibre.com>
- <cf77eec5df92b1845f0bf7cc8eb53edd4af9e1bf.camel@suse.de>
- <0CF02341-CF69-4680-B61F-DC5C0702F1A2@holtmann.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZwmaUZJnMZMjAykwzuMYq1+U7baQKDrVjVyjfWLNTpw=;
+        b=M58q77m+3y9dg04sAsnjqPqJ0sZHJPOKx91k7MqT2HEMQ7aRo+hnD/HTOZD4RURAgD
+         MOfE/qLw4lwVH9glIWKK4B0L2SGrBSRNdZ3nvrr0byoLJuLhcRvaQomXJujbzLIROnnK
+         TB/AwsKRdnGq5Ce4e4jtiAKxq8wNVzPPfO1Q7CkX3H+mxvR+qtlyxX7+QpedLhhT17uL
+         wozzj7N73GVeZUIm5UCIYGjHYMzNnCCOZE3v7uXM7S4nsjJMlM8tYgWbGlp1MoAcvb8M
+         1VACHCQu990X4oY4buiEs/kDGILh2pOO9/FdVVO9pkv/Nm7BYR616yAA98N/bvL3prU7
+         06lQ==
+X-Gm-Message-State: APjAAAXNCTpJWwnIU43w7g6cnn5Gd0bo4DRfFmRY2vut96TQm2ZQp98h
+        /wyjFIWb64Nt9wkg43YKpb4X5eOk0cklCq+iF2oGbFM9
+X-Google-Smtp-Source: APXvYqwnTZgiMyv3JP0dy+CwLfGllw+etRelCx/iggNKJJ3sbGD+uMKyUHfVkxjMVSuOOgwd4aJFMbhKQCc+kRtsVkg=
+X-Received: by 2002:a19:6b0e:: with SMTP id d14mr8059708lfa.151.1576228925551;
+ Fri, 13 Dec 2019 01:22:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0CF02341-CF69-4680-B61F-DC5C0702F1A2@holtmann.org>
+References: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com> <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
+In-Reply-To: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 13 Dec 2019 10:21:54 +0100
+Message-ID: <CAKfTPtC-iAewnR3QV1BJNWq-hJQphjs_eUwy=PxBrw-NuU3g_w@mail.gmail.com>
+Subject: Re: [PATCH v2] schied/fair: Skip calculating @contrib without load
+To:     Peng Wang <rocking@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:46:32PM +0100, Marcel Holtmann wrote:
-> Hi Nicolas,
-> 
-> >> Actually IRQ can be found from GPIO but all platforms don't support
-> >> gpiod_to_irq, it's the case on amlogic chip.
-> >> so to have possibility to use interrupt mode we need to add interrupts
-> >> field in node and support it in driver.
-> >> 
-> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> >> ---
-> >> drivers/bluetooth/hci_bcm.c | 3 +++
-> >> 1 file changed, 3 insertions(+)
-> > 
-> > This triggers the following panic on Raspberry Pi 4:
-> > 
-> > [    6.634507] Unable to handle kernel NULL pointer dereference at virtual
-> > address 0000000000000018
+Hi Peng,
 
-> >> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> >> index f8f5c593a05c..9f52d57c56de 100644
-> >> --- a/drivers/bluetooth/hci_bcm.c
-> >> +++ b/drivers/bluetooth/hci_bcm.c
-> >> @@ -1409,6 +1409,7 @@ static int bcm_serdev_probe(struct serdev_device
-> >> *serdev)
-> >> {
-> >> 	struct bcm_device *bcmdev;
-> >> 	const struct bcm_device_data *data;
-> >> +	struct platform_device *pdev;
-> >> 	int err;
-> >> 
-> >> 	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-> >> @@ -1421,6 +1422,8 @@ static int bcm_serdev_probe(struct serdev_device
-> >> *serdev)
-> >> #endif
-> >> 	bcmdev->serdev_hu.serdev = serdev;
-> >> 	serdev_device_set_drvdata(serdev, bcmdev);
-> >> +	pdev = to_platform_device(bcmdev->dev);
-> > 
-> > Ultimately bcmdev->dev here comes from a serdev device not a platform device,
-> > right?
-> 
-> I was afraid of this, but then nobody spoke up. Can we fix this or
-> should I just revert the patch?
+minor typo on the subject s/schied/sched/
 
-Just revert it, the patch is plain broken and makes no sense.
+On Fri, 13 Dec 2019 at 04:46, Peng Wang <rocking@linux.alibaba.com> wrote:
+>
+> Because of the:
+>
+>         if (!load)
+>                 runnable = running = 0;
+>
+> clause in ___update_load_sum(), all the actual users of @contrib in
+> accumulate_sum():
+>
+>         if (load)
+>                 sa->load_sum += load * contrib;
+>         if (runnable)
+>                 sa->runnable_load_sum += runnable * contrib;
+>         if (running)
+>                 sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
+>
+> don't happen, and therefore we don't care what @contrib actually is and
+> calculating it is pointless.
+>
+> If we count the times when @load equals zero and not as below:
+>
+>         if (load) {
+>                 load_is_not_zero_count++;
+>                 contrib = __accumulate_pelt_segments(periods,
+>                                 1024 - sa->period_contrib,delta);
+>         } else
+>                 load_is_zero_count++;
+>
+> As we can see, load_is_zero_count is much bigger than
+> load_is_zero_count, and the gap is gradually widening:
+>
+>         load_is_zero_count:            6016044 times
+>         load_is_not_zero_count:         244316 times
+>         19:50:43 up 1 min,  1 user,  load average: 0.09, 0.06, 0.02
+>
+>         load_is_zero_count:            7956168 times
+>         load_is_not_zero_count:         261472 times
+>         19:51:42 up 2 min,  1 user,  load average: 0.03, 0.05, 0.01
+>
+>         load_is_zero_count:           10199896 times
+>         load_is_not_zero_count:         278364 times
+>         19:52:51 up 3 min,  1 user,  load average: 0.06, 0.05, 0.01
+>
+>         load_is_zero_count:           14333700 times
+>         load_is_not_zero_count:         318424 times
+>         19:54:53 up 5 min,  1 user,  load average: 0.01, 0.03, 0.00
 
-As Nicolas pointed out, bcmdev->dev is a member of struct serdev_device
-so cannot be cast to a platform device.
+your system looks pretty idle so i'm not sure to see a benefit of your
+patch in such situation
 
-Johan
+>
+> Perhaps we can gain some performance advantage by saving these
+> unnecessary calculation.
+
+load == 0 when
+- system is idle and we updates blocked load but we don't really care
+about performance in this case and we will stop the trigger the update
+once the load_avg reach null value
+- a rt/dl/cfs rq or a sched_entity wakes up. In this case, skipping
+the calculation of the contribution should fasten the wake up path
+although i'm not sure about the amount
+
+Nevertheless, this change makes sense
+
+Reviewed-by: Vincent Guittot < vincent.guittot@linaro.org>
+
+>
+> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+> ---
+>  kernel/sched/pelt.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index a96db50..4392953 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -129,8 +129,9 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
+>                  * Step 2
+>                  */
+>                 delta %= 1024;
+> -               contrib = __accumulate_pelt_segments(periods,
+> -                               1024 - sa->period_contrib, delta);
+> +               if (load)
+> +                       contrib = __accumulate_pelt_segments(periods,
+> +                                       1024 - sa->period_contrib, delta);
+>         }
+>         sa->period_contrib = delta;
+>
+> --
+> 1.8.3.1
+>
