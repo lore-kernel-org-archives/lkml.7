@@ -2,105 +2,237 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1605BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6020C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D762073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F80222527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oQWxXcWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLMWQT (ORCPT
+        id S1726777AbfLMWQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:16:19 -0500
-Received: from mga11.intel.com ([192.55.52.93]:47588 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfLMWQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:16:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 14:16:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
-   d="scan'208";a="239424482"
-Received: from dmjacob-mobl2.amr.corp.intel.com (HELO [10.252.129.36]) ([10.252.129.36])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Dec 2019 14:16:15 -0800
-Subject: Re: [alsa-devel] [PATCH v4 07/15] soundwire: slave: move uevent
- handling to slave
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-8-pierre-louis.bossart@linux.intel.com>
- <20191213072231.GE1750354@kroah.com>
- <032e6505-22b6-45bb-ff04-87db1f8d8be9@linux.intel.com>
- <20191213161122.GB2653074@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <e05f0b2a-e9c5-3fb7-6459-f3388c305ac8@linux.intel.com>
-Date:   Fri, 13 Dec 2019 16:15:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 17:16:23 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59772 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfLMWQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:16:22 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 38ACE9D6;
+        Fri, 13 Dec 2019 23:16:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576275379;
+        bh=8v3Vl0tRhEDBVMWaZdlqz6AcZcOhfQ9YhCMTb9iBmwU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oQWxXcWE90vCVxgDF+U72Gqq2+42SshQcvP3fFEf5WDeZJJi8naumeXS49K0B6DW0
+         1bvCFOLfCNk0lziXFIYvkIUkm2Df+Ogk51OWQVRS3jUJA01UKePXQ+i83OoKQctPF0
+         lJ02QwifFj4P9lvpAA9zvdZuEBUt1HUeCiRLQNbA=
+Date:   Sat, 14 Dec 2019 00:16:09 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: Re: [PATCH v4 6/7] dt-bindings: display: Add idk-2121wr binding
+Message-ID: <20191213221609.GQ4860@pendragon.ideasonboard.com>
+References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1575649974-31472-7-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20191213161122.GB2653074@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1575649974-31472-7-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Fabrizio,
 
+Thank you for the patch.
 
-On 12/13/19 10:11 AM, Greg KH wrote:
-> On Fri, Dec 13, 2019 at 09:11:27AM -0600, Pierre-Louis Bossart wrote:
->> On 12/13/19 1:22 AM, Greg KH wrote:
->>> On Thu, Dec 12, 2019 at 11:04:01PM -0600, Pierre-Louis Bossart wrote:
->>>> Currently the code deals with uevents at the bus level, but we only care
->>>> for Slave events
->>>
->>> What does this mean?  I can't understand it, can you please provide more
->>> information on what you are doing here?
->>
->> In the earlier versions of the patch, the code looks like this and there was
->> an open on what to do with a master-specific event.
->>
->>   static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
->>   {
->> +	struct sdw_master_device *md;
->>   	struct sdw_slave *slave;
->>   	char modalias[32];
->>
->> -	if (is_sdw_slave(dev)) {
->> +	if (is_sdw_md(dev)) {
->> +		md = to_sdw_master_device(dev);
->> +		/* TODO: do we need to call add_uevent_var() ? */
->> +	} else if (is_sdw_slave(dev)) {
->>   		slave = to_sdw_slave_device(dev);
->> +
->> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
->> +
->> +		if (add_uevent_var(env, "MODALIAS=%s", modalias))
->> +			return -ENOMEM;
->>   	} else {
->>   		dev_warn(dev, "uevent for unknown Soundwire type\n");
->>   		return -EINVAL;
->>   	}
->>
->> Vinod suggested this was not needed and suggested the code for uevents be
->> moved to be slave-specific, which is what this patch does.
+On Fri, Dec 06, 2019 at 04:32:53PM +0000, Fabrizio Castro wrote:
+> Add binding for the idk-2121wr LVDS panel from Advantech.
 > 
-> Then describe it really really well in the changelog text.  We have no
-> rememberance of prior conversations when looking at commits in the tree
-> in the future.
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-ok, will do.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> v3->v4:
+> * Absorbed patch "dt-bindings: display: Add bindings for LVDS
+>   bus-timings"
+> * Big restructuring after Rob's and Laurent's comments
+> 
+> v2->v3:
+> * new patch
+> ---
+>  .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> new file mode 100644
+> index 0000000..24cd38b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> @@ -0,0 +1,128 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
+> +
+> +maintainers:
+> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +
+> +description: |
+> +  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
+> +  A dual-LVDS interface is a dual-link connection with even pixels traveling
+> +  on one link, and with odd pixels traveling on the other link.
+> +
+> +  The panel expects odd pixels on the first port, and even pixels on the
+> +  second port, therefore the ports must be marked accordingly (with either
+> +  dual-lvds-odd-pixels or dual-lvds-even-pixels).
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: advantech,idk-2121wr
+> +      - {} # panel-lvds, but not listed here to avoid false select
+> +
+> +  width-mm:
+> +    const: 476
+> +
+> +  height-mm:
+> +    const: 268
+> +
+> +  data-mapping:
+> +    const: vesa-24
+> +
+> +  ports:
+> +    type: object
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: The sink for odd pixels.
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          dual-lvds-odd-pixels: true
+> +
+> +        required:
+> +          - reg
+> +          - dual-lvds-odd-pixels
+> +
+> +      port@1:
+> +        type: object
+> +        description: The sink for even pixels.
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +          dual-lvds-even-pixels: true
+> +
+> +        required:
+> +          - reg
+> +          - dual-lvds-even-pixels
+> +
+> +  panel-timing: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - width-mm
+> +  - height-mm
+> +  - data-mapping
+> +  - panel-timing
+> +  - ports
+> +
+> +examples:
+> +  - |+
+> +    panel-lvds {
+> +      compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +      width-mm = <476>;
+> +      height-mm = <268>;
+> +
+> +      data-mapping = "vesa-24";
+> +
+> +      panel-timing {
+> +        clock-frequency = <148500000>;
+> +        hactive = <1920>;
+> +        vactive = <1080>;
+> +        hsync-len = <44>;
+> +        hfront-porch = <88>;
+> +        hback-porch = <148>;
+> +        vfront-porch = <4>;
+> +        vback-porch = <36>;
+> +        vsync-len = <5>;
+> +      };
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          dual-lvds-odd-pixels;
+> +          panel_in0: endpoint {
+> +            remote-endpoint = <&lvds0_out>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +          dual-lvds-even-pixels;
+> +          panel_in1: endpoint {
+> +            remote-endpoint = <&lvds1_out>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
