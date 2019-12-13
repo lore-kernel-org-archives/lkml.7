@@ -2,141 +2,123 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB4DC34344
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5254CC5071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D24246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E14424712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F3slO1yc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a7VtdNfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLMM4T (ORCPT
+        id S1727683AbfLMN4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:19 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48492 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbfLMM4R (ORCPT
+        Fri, 13 Dec 2019 08:56:44 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44703 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfLMN4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:17 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuFOX068982;
-        Fri, 13 Dec 2019 06:56:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576241775;
-        bh=AQ0B5jw9HQqxEfttQOLTZY4PnRmM6mThulC0kGIUZ/o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F3slO1ycN6mDAw+uzCVOzkJ5muFgZ/kCfNfbw4U9pyP50RMifio1ORoqz4qqtworG
-         Bzpl1Z8e8ZkFdqiJFR/wvRcQzkpKMze1C4EIf4ueXSSFD3i4zTTQnGGyA7kSVKEia6
-         W5145Z47eLmTMQBbR2CDNEEAmGyGmauZMP7SFvSo=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuFS8071018
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 06:56:15 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:56:13 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:56:13 -0600
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVL127295;
-        Fri, 13 Dec 2019 06:56:11 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 06/15] remoteproc/omap: Initialize and assign reserved memory node
-Date:   Fri, 13 Dec 2019 14:55:28 +0200
-Message-ID: <20191213125537.11509-7-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
-References: <20191213125537.11509-1-t-kristo@ti.com>
+        Fri, 13 Dec 2019 08:56:43 -0500
+Received: by mail-lj1-f196.google.com with SMTP id c19so2705316lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 05:56:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ng0J7VT6q7et93hoQowYvQqzLfb9VIPnBEUDJ7gqlTQ=;
+        b=a7VtdNfHIVILhuTWgjDaH90Fod1yB199ZL5r5mn6i4THtWtQEmPH/80tBhAvFb2KbB
+         yIdi/QHqtBtrv8HC1b3iZZ1tPyZjOfk/FQIjWMiX2h688sfN4AXvyKc5nzSFeTYvBSKE
+         7JlvVL8AGXd7X4Lpz8QGLCSGmZKW9577YuwJvHYfKT9afQZu4Wx/L55yqoShjOmsAjTk
+         4j/BN4Whchk2P92Zep2kex1nqoloN3cLNLkBhpQgfZFknQ3NmneYmojRpBhR+20laW4F
+         P70/2ApsdcbiKLhVM13ta3Z0O1KKYVhkyhZ0fYXtmEgAu0629c6/T/AT4aHX82ooblbb
+         VmjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ng0J7VT6q7et93hoQowYvQqzLfb9VIPnBEUDJ7gqlTQ=;
+        b=s2VZH/vlOh0Ik8aydPLbrAS80a3KkLUOVCWTXkih91s1QNM45SPGlL+j4WIYSgaNPe
+         700iy4enM1hrrRjmmkhHXJka91pqTb8fa3Yfo+aOcjpduBe+nTDU2f80cXdS7xWG0vcz
+         NVbnX5jK94haG+JJ1REyBtYtR2JC0Nag//AnNoZrwq+bZOS+bsna6jPJv7CF/+Nn8zZE
+         frqaRopxZIDYzyA1UfSQhf3AFSd0hOIm0DWYFXueii6AhC7+5xYrogUhkdoxFx7OKRL0
+         i2gJYJRlSjthLjpRc5SC8Go1hkzSf31zu+wwIGVKUwLyX8Ch97OJ54HEigCrrB44FmZi
+         VQqA==
+X-Gm-Message-State: APjAAAWFRUQNirAHEB9Zv3SeC+JXPDwfZrLPTkt0dxNj4d0t7XXC7BcU
+        KWTcPv37XMXbQJU6O5MO0tjE27EBzYvsi4GDutzEDg==
+X-Google-Smtp-Source: APXvYqy0vWEsCjDFZyfSN/Lrm144Do0DBoodpv0T4Wt1uLstCAlXzPsbmrt/BMig0xLpHmCvNRunXlxDBV860t28M7A=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr9521183ljm.233.1576245401607;
+ Fri, 13 Dec 2019 05:56:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-2-masneyb@onstation.org>
+ <0101016eee224b50-8a5545e2-837f-41c2-9574-b385e111a6b3-000000@us-west-2.amazonses.com>
+ <20191210115153.GA10298@onstation.org>
+In-Reply-To: <20191210115153.GA10298@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 14:56:30 +0100
+Message-ID: <CACRpkdY+yP6-MyFw1tFvVN_FjNfPBGYZxiK5rZiS5Yyp7eainw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] clk: qcom: add support for setting the duty cycle
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Taniya Das <tdas@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+On Tue, Dec 10, 2019 at 12:52 PM Brian Masney <masneyb@onstation.org> wrote:
+> On Tue, Dec 10, 2019 at 04:47:35AM +0000, Taniya Das wrote:
+> > On 12/5/2019 5:54 AM, Brian Masney wrote:
 
-The reserved memory nodes are not assigned to platform devices by
-default in the driver core to avoid the lookup for every platform
-device and incur a penalty as the real users are expected to be
-only a few devices.
+> > > I'm not sure about the relationship of the m, n, and d values,
+> > > especially how the 50% duty cycle is calculated by inverting the n
+> > > value, so that's why I'm saving the duty cycle ratio for
+> > > get_duty_cycle().
+(...)
+> > > +static int clk_rcg2_set_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
+> > > +{
+> > > +   struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+> > > +   int ret, d_reg_val, mask;
+> > > +
+> > > +   mask = BIT(rcg->mnd_width - 1) - 1;
+> > > +   d_reg_val = mask - (((mask - 17) * duty->num) / duty->den);
+> > > +   ret = __clk_rcg2_configure_with_duty_cycle(rcg, rcg->freq_tbl,
+> > > +                                              d_reg_val, duty->num,
+> > > +                                              duty->den);
+> >
+> > The duty-cycle calculation is not accurate.
+> > There is already a plan to submit the duty-cycle changes from my side.
+>
+> OK... I assume that the m and n values need to be changed as well. I
+> couldn't find any docs online about the meaning of the m, n, and d
+> values and how they relate to each other.
 
-OMAP remoteproc devices fall into the above category and the OMAP
-remoteproc driver _requires_ specific CMA pools to be assigned
-for each device at the moment to align on the location of the
-vrings and vring buffers in the RTOS-side firmware images. So,
-use the of_reserved_mem_device_init/release() API appropriately
-to assign the corresponding reserved memory region to the OMAP
-remoteproc device. Note that only one region per device is
-allowed by the framework.
+I have also at times struggled to understand this.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+If someone could just in a very concise form describe how these
+rcg[2] clock dividers work and how m,n,d work that'd be GREAT.
+ASCII art etc would be a bonus :)
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 28f14e24b389..3ad74c4b4071 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/err.h>
- #include <linux/of_device.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/dma-mapping.h>
- #include <linux/remoteproc.h>
-@@ -479,14 +480,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
-+	ret = of_reserved_mem_device_init(&pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
-+		goto free_rproc;
-+	}
-+
- 	platform_set_drvdata(pdev, rproc);
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
--		goto free_rproc;
-+		goto release_mem;
- 
- 	return 0;
- 
-+release_mem:
-+	of_reserved_mem_device_release(&pdev->dev);
- free_rproc:
- 	rproc_free(rproc);
- 	return ret;
-@@ -498,6 +507,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
- 
- 	rproc_del(rproc);
- 	rproc_free(rproc);
-+	of_reserved_mem_device_release(&pdev->dev);
- 
- 	return 0;
- }
--- 
-2.17.1
+Like with a patch with a big comment in
+drivers/clk/qcom/clk-rcg.h
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+As these tend to be quite regularly reused and incarnated in
+ever new silicon a complete picture for developers would be
+much appreciated.
+
+Yours,
+Linus Walleij
