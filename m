@@ -2,194 +2,163 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65375C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA78C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450C8206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BA024656
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:06:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSaDFdOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLMIF3 (ORCPT
+        id S1726263AbfLMIGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:05:29 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60261 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfLMIF2 (ORCPT
+        Fri, 13 Dec 2019 03:06:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38361 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMIGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:05:28 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iffx1-0002LI-3f; Fri, 13 Dec 2019 09:05:27 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iffx0-0008Nd-Qn; Fri, 13 Dec 2019 09:05:26 +0100
-Date:   Fri, 13 Dec 2019 09:05:26 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] libata: Fix retrieving of active qcs
-Message-ID: <20191213080526.7xfbzlagiaom5qx6@pengutronix.de>
-References: <20191212141656.11439-1-s.hauer@pengutronix.de>
- <20191212142314.pcp662fb22pjidaw@pengutronix.de>
- <3edd5096-e824-1e83-8c91-43d1183c73e3@kernel.dk>
+        Fri, 13 Dec 2019 03:06:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u2so521525wmc.3;
+        Fri, 13 Dec 2019 00:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I5SL/bqlSvsdjamq/iP/6SdZILW/1fqCxzt8/ezc6Ds=;
+        b=FSaDFdOe0ChenS0PyUuFKuMvHGFpVkkaeYMZMoWGXoGP0eaH7/btljc+cpo9/peq7u
+         yYEnh0FTcKl4iEulozbOXg9oOYgeTcGE2kfuvb19UJALwpjiKtqMP0zrehgNG017YD6l
+         5jtowULgNh5hsAbxJS/ZVLPEnZQi+KO5dMWM8EtaxUIm5tH7+uQNb4pmNJhvChCqUQVO
+         RfKIiBv9WysIfE5O/YwCEU/Eocff59XhcffeYJrWXgyCUotZIczQzvEJ5tnsakZLqyh4
+         1GFk2A1prQeQhkMfLrCkpfVKkTsUoOY5atVwuyMOP+kIMloYCplqYF0/Egam3Tjft0y4
+         eUwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I5SL/bqlSvsdjamq/iP/6SdZILW/1fqCxzt8/ezc6Ds=;
+        b=l4PrdOAQiDM1Se40pGFXEuxi4BQOABBNGPM+djnAwpWruehOIA4X+xneYAilHgCSBs
+         u7W4gHZzqp9tzjCZAEPVMqiCRAvmSkfnnbVCZVKHJRVYcANYzs0wopeouktURD4Sa4qe
+         eFW8JC2FywrXGD/ratwsgASXd9prqKCTC1EUO2Fbg6SYYffPMo3keHxl2xvHjP1zodND
+         0CoeJwWk/1G8Dhn9AyZLvWZagwJpXTNweskvjQ1o2LPFWLcgV13Qh5REsHNOnyxQPu8z
+         FBqT3QObXfVB6kHOQo3wkT2C0wOIe+XM4HdZK46G0U6fbFNd3qNUFRgxsYGVFwvc+V0O
+         dSbw==
+X-Gm-Message-State: APjAAAWJ9KBUxpmgbR2hzYfgGwC3Ve3OINJjrq0o6ACoB2XC7lHb+GmX
+        7JIpMxpkBPKH0GsaauRf0PuoJmEW
+X-Google-Smtp-Source: APXvYqxCVon0+7wO1tLZGEvbxLmbmoy4quP8LE9xN1sLkAGhR3hrnCJXyNKJzlIlInDZvzRSLbKrHw==
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr11969896wmj.47.1576224413108;
+        Fri, 13 Dec 2019 00:06:53 -0800 (PST)
+Received: from localhost.localdomain ([109.126.149.210])
+        by smtp.gmail.com with ESMTPSA id y7sm955828wmd.1.2019.12.13.00.06.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 00:06:52 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH liburing] Test wait after under-consuming
+Date:   Fri, 13 Dec 2019 11:06:17 +0300
+Message-Id: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3edd5096-e824-1e83-8c91-43d1183c73e3@kernel.dk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:03:39 up 158 days, 14:13, 54 users,  load average: 0.23, 0.30,
- 0.18
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:12:27AM -0700, Jens Axboe wrote:
-> On 12/12/19 7:23 AM, Sascha Hauer wrote:
-> > On Thu, Dec 12, 2019 at 03:16:56PM +0100, Sascha Hauer wrote:
-> >> ata_qc_complete_multiple() is called with a mask of the still active
-> >> tags.
-> >>
-> >> mv_sata doesn't have this information directly and instead calculates
-> >> the still active tags from the started tags (ap->qc_active) and the
-> >> finished tags as (ap->qc_active ^ done_mask)
-> >>
-> >> Since 28361c40368 the hw_tag and tag are no longer the same and the
-> >> equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
-> >> initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
-> >> started and this will be in done_mask on completion. ap->qc_active ^
-> >> done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
-> >> the internal tag will never be reported as completed.
-> >>
-> >> This is fixed by introducing ata_qc_get_active() which returns the
-> >> active hardware tags and calling it where appropriate.
-> >>
-> >> This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
-> >> problem. There is another case in sata_nv that most likely needs fixing
-> >> as well, but this looks a little different, so I wasn't confident enough
-> >> to change that.
-> >>
-> >> Fixes: 28361c403683 ("libata: add extra internal command")
-> >> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> >> ---
-> >>  drivers/ata/libata-core.c | 23 +++++++++++++++++++++++
-> >>  drivers/ata/sata_fsl.c    |  2 +-
-> >>  drivers/ata/sata_mv.c     |  2 +-
-> >>  drivers/ata/sata_nv.c     |  2 +-
-> >>  include/linux/libata.h    |  1 +
-> >>  5 files changed, 27 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-> >> index 28c492be0a57..d73bec933892 100644
-> >> --- a/drivers/ata/libata-core.c
-> >> +++ b/drivers/ata/libata-core.c
-> >> @@ -5325,6 +5325,29 @@ void ata_qc_complete(struct ata_queued_cmd *qc)
-> >>  	}
-> >>  }
-> >>  
-> >> +/**
-> >> + *	ata_qc_get_active - get bitmask of active qcs
-> >> + *	@ap: port in question
-> >> + *
-> >> + *	LOCKING:
-> >> + *	spin_lock_irqsave(host lock)
-> >> + *
-> >> + *	RETURNS:
-> >> + *	Bitmask of active qcs
-> >> + */
-> >> +u64 ata_qc_get_active(struct ata_port *ap)
-> >> +{
-> >> +	u64 qc_active = ap->qc_active;
-> >> +
-> >> +	/* ATA_TAG_INTERNAL is sent to hw as tag 0 */
-> >> +	if (qc_active & (1ULL << ATA_TAG_INTERNAL)) {
-> >> +		qc_active |= (1 << 0);
-> >> +		qc_active &= ~(1ULL << ATA_TAG_INTERNAL);
-> >> +	}
-> >> +
-> >> +	return qc_active;
-> >> +}
-> >> +
-> >>  /**
-> >>   *	ata_qc_complete_multiple - Complete multiple qcs successfully
-> >>   *	@ap: port in question
-> >> diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
-> >> index 8e9cb198fcd1..ca6c706e9c25 100644
-> >> --- a/drivers/ata/sata_fsl.c
-> >> +++ b/drivers/ata/sata_fsl.c
-> >> @@ -1278,7 +1278,7 @@ static void sata_fsl_host_intr(struct ata_port *ap)
-> >>  				     i, ioread32(hcr_base + CC),
-> >>  				     ioread32(hcr_base + CA));
-> >>  		}
-> >> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> >> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
-> >>  		return;
-> >>  
-> >>  	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {
-> >> diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-> >> index ad385a113391..bde695a32097 100644
-> >> --- a/drivers/ata/sata_mv.c
-> >> +++ b/drivers/ata/sata_mv.c
-> >> @@ -2827,7 +2827,7 @@ static void mv_process_crpb_entries(struct ata_port *ap, struct mv_port_priv *pp
-> >>  	}
-> >>  
-> >>  	if (work_done) {
-> >> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> >> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
-> >>  
-> >>  		/* Update the software queue position index in hardware */
-> >>  		writelfl((pp->crpb_dma & EDMA_RSP_Q_BASE_LO_MASK) |
-> >> diff --git a/drivers/ata/sata_nv.c b/drivers/ata/sata_nv.c
-> >> index 56946012d113..7510303111fa 100644
-> >> --- a/drivers/ata/sata_nv.c
-> >> +++ b/drivers/ata/sata_nv.c
-> >> @@ -984,7 +984,7 @@ static irqreturn_t nv_adma_interrupt(int irq, void *dev_instance)
-> >>  					check_commands = 0;
-> >>  				check_commands &= ~(1 << pos);
-> >>  			}
-> >> -			ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> >> +			ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
-> >>  		}
-> >>  	}
-> >>  
-> >> diff --git a/include/linux/libata.h b/include/linux/libata.h
-> >> index 207e7ee764ce..f4c045b56e6c 100644
-> >> --- a/include/linux/libata.h
-> >> +++ b/include/linux/libata.h
-> >> @@ -1174,6 +1174,7 @@ extern unsigned int ata_do_dev_read_id(struct ata_device *dev,
-> >>  					struct ata_taskfile *tf, u16 *id);
-> >>  extern void ata_qc_complete(struct ata_queued_cmd *qc);
-> >>  extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
-> >> +extern u64 ata_qc_get_started(struct ata_port *ap);
-> > 
-> > s/ata_qc_get_started/ata_qc_get_active/ obviously.
-> 
-> Last minute edit? Please send a v2.
+In case of an error submission won't consume all sqes. This tests that
+it will get back to the userspace even if (to_submit == to_wait)
 
-Just did that
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ test/link.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
-Thanks,
- Sascha
-
-
+diff --git a/test/link.c b/test/link.c
+index 8ec1649..93653f3 100644
+--- a/test/link.c
++++ b/test/link.c
+@@ -384,6 +384,55 @@ err:
+ 	return 1;
+ }
+ 
++static int test_early_fail_and_wait(struct io_uring *ring)
++{
++	struct io_uring_cqe *cqe;
++	struct io_uring_sqe *sqe;
++	int ret, submitted, i;
++	const int invalid_fd = 42;
++	struct iovec iov = { .iov_base = NULL, .iov_len = 0 };
++
++	sqe = io_uring_get_sqe(ring);
++	if (!sqe) {
++		printf("get sqe failed\n");
++		goto err;
++	}
++
++	io_uring_prep_readv(sqe, invalid_fd, &iov, 1, 0);
++	sqe->user_data = 1;
++	sqe->flags |= IOSQE_IO_LINK;
++
++	sqe = io_uring_get_sqe(ring);
++	if (!sqe) {
++		printf("get sqe failed\n");
++		goto err;
++	}
++
++	io_uring_prep_nop(sqe);
++	sqe->user_data = 2;
++
++	submitted = io_uring_submit_and_wait(ring, 2);
++	if (submitted == -EAGAIN)
++		return 0;
++	if (submitted <= 0) {
++		printf("sqe submit failed: %d\n", submitted);
++		goto err;
++	}
++
++	for (i = 0; i < 2; i++) {
++		ret = io_uring_wait_cqe(ring, &cqe);
++		if (ret < 0) {
++			printf("wait completion %d\n", ret);
++			goto err;
++		}
++		io_uring_cqe_seen(ring, cqe);
++	}
++
++	return 0;
++err:
++	return 1;
++}
++
+ int main(int argc, char *argv[])
+ {
+ 	struct io_uring ring, poll_ring;
+@@ -400,7 +449,6 @@ int main(int argc, char *argv[])
+ 	if (ret) {
+ 		printf("poll_ring setup failed\n");
+ 		return 1;
+-
+ 	}
+ 
+ 	ret = test_single_link(&ring);
+@@ -439,5 +487,11 @@ int main(int argc, char *argv[])
+ 		return ret;
+ 	}
+ 
++	ret = test_early_fail_and_wait(&ring);
++	if (ret) {
++		fprintf(stderr, "test_early_fail_and_wait\n");
++		return ret;
++	}
++
+ 	return 0;
+ }
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.24.0
+
