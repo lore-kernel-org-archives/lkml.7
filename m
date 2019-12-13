@@ -2,123 +2,148 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6EEC677FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F568C7619F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AC3246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpwWQTBz"
+	by mail.kernel.org (Postfix) with ESMTP id 4C197246C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfLMPjX (ORCPT
+        id S1728009AbfLMPjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:39:23 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:36378 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbfLMPjV (ORCPT
+        Fri, 13 Dec 2019 10:39:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:40648 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727796AbfLMPjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:39:21 -0500
-Received: by mail-yw1-f68.google.com with SMTP id n184so6054ywc.3;
-        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
-        b=IpwWQTBzg9+efmz6zpdHlpW7WO6Qb2rzpNyjAvojL6elJWNgpVqmZyQ+VOA2jRdCEh
-         jGyplAdiIPO/JftjYxUO7sovgTvepNOw0lWV1MT9dznUOuusPMO+j+Z13oroUaaD5bil
-         1piYhqNdzEdfXdqhnE+7U5kCEFqfJ8zhu7wceeOYtYpgS0QKCQ+RML/u0oe6npp2nIWC
-         Cc9nOT5KsyorY2X5unKnHKTIQ8r9XxZZz4ec1HolS6nH5SjuT5MeeuFP3YXKRzxK52KC
-         2LdZ8O6EEN/aQaZn8ExiHvWWt6aJrAMgVOeJJTI1AxGZbbtQSCpn6u9Ib/Kn3pQul97X
-         ebAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
-        b=paGbHfPminizg1T70Pj3QKYWFmDEp+RQKlsesNVFmI0ad/wLdWJoqyw3ePIWcG8mq+
-         T8vwmv2qTpe57wTHAJ0Sgtlb6+kuNP/7MvthGaWk5HuQwAaJ+kbNTW/J+7DBh5LDn/w4
-         RweWhsi1/HhI7pZFiM+m+7rErHnr9UO7q5wSO8GGRQZy9G5my9yx0H4epRqvrw0/OxJz
-         E4h3lkCHlAMgLgmBwCrHSO+ax2GGU8RDfqwIof7KS+XUcOcV48txEUieTlayZbIWih4K
-         IzZNeLmcHqea3wZVEwN5ELIGdSxgQDrmOK2hWWpAiMmTv5eDnCcPrNM+EJIDp9kvF0aZ
-         Xd+Q==
-X-Gm-Message-State: APjAAAXc0cPpi8bqXwwoMbGK57GYdN/EQWAC0gejCnbz4v1W0LvvpW9F
-        SkzM6ng/EkhNeSZxT7om7A8=
-X-Google-Smtp-Source: APXvYqzO7cb72G93h6pc42x43nIgubOr0x06bTe3Kej8fCH2doIKLJGdJ8weE8MbHkaf+/uMF//KeA==
-X-Received: by 2002:a25:b007:: with SMTP id q7mr7626962ybf.193.1576251560130;
-        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id i17sm4300474ywg.66.2019.12.13.07.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:39:19 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     horia.geanta@nxp.com, Adam Ford <aford173@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
-Date:   Fri, 13 Dec 2019 09:39:08 -0600
-Message-Id: <20191213153910.11235-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Dec 2019 10:39:54 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ifn2Y-0001FZ-DR; Fri, 13 Dec 2019 15:39:38 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC7)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ifn2X-00056v-9m; Fri, 13 Dec 2019 15:39:37 +0000
+Message-ID: <784d8f924612b91310baca25f2b0acc7ba78b83b.camel@decadent.org.uk>
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
+ recent binutils
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Justin Forbes <jmforbes@linuxtx.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org, Nick Clifton <nickc@redhat.com>
+Date:   Fri, 13 Dec 2019 15:39:32 +0000
+In-Reply-To: <87a77ypdno.fsf@mpe.ellerman.id.au>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+         <87zhgbe0ix.fsf@mpe.ellerman.id.au>
+         <20191202093752.GA1535@localhost.localdomain>
+         <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
+         <20191210222553.GA4580@calabresa>
+         <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+         <20191211160133.GB4580@calabresa> <87a77ypdno.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-XTuTpKbXj3nCdOipqGDS"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
-the driver is restricting the check to just the i.MX8MQ.
 
-This patch expands the check for either i.MX8MQ or i.MX8MM.
+--=-XTuTpKbXj3nCdOipqGDS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On Thu, 2019-12-12 at 11:53 +1100, Michael Ellerman wrote:
+> Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
+[...]
+> > This is a patch on binutils carried by Fedora:
+> >=20
+> > https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee830=
+6fbaaeacba83bf8
+> >=20
+> > " b8265c Have readelf display extra symbol information at the end of th=
+e line. "
+> >=20
+> > It has the following comment:
+> >=20
+> > # FIXME:    The proper fix would be to update the scripts that are expe=
+cting
+> > #           a fixed output from readelf.  But it seems that some of the=
+m are
+> > #           no longer being maintained.
+> >=20
+> > This commit is from 2017, had it been on binutils upstream, maybe the s=
+ituation
+> > right now would be different.
+>=20
+> Bleeping bleep.
+>=20
+> Looks like it was actually ruby that was the original problem:
+>=20
+>   https://bugzilla.redhat.com/show_bug.cgi?id=3D1479302
+>=20
+>=20
+> Why it wasn't hacked around in the ruby package I don't know, doing it in
+> the distro binutils package is not ideal.
 
----
-V2:  Expand the check that forces the setting on imx8mq to also be true for imx8mm
-     Explictly state imx8mm compatiblity instead of making it generic to all imx8m*
-      this is mostly due to lack of other hardware to test
+That wouldn't help people building Ruby from upstream.
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index d7c3c3805693..c01dda692ecc 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -102,7 +102,8 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
- 	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
- 	     * and the following steps should be performed regardless
- 	     */
--	    of_machine_is_compatible("fsl,imx8mq")) {
-+	    of_machine_is_compatible("fsl,imx8mq") ||
-+	    of_machine_is_compatible("fsl,imx8mm")) {
- 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
- 
- 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
-@@ -509,6 +510,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
- 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
- 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
- 	{ .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
-+	{ .soc_id = "i.MX8MM", .data = &caam_imx7_data },
- 	{ .family = "Freescale i.MX" },
- 	{ /* sentinel */ }
- };
--- 
-2.20.1
+Any tool generating tabular output like this should add new fields at
+the end (or show them only if requested), since there are bound to be
+scripts that parse the output like this.  So I think Fedora's change to
+readelf was reasonable, but should have been pushed upstream as soon as
+possible.
 
+Now everyone is going to have to deal with both formats.
+
+Ben.
+
+--=20
+Ben Hutchings
+Horngren's Observation:
+              Among economists, the real world is often a special case.
+
+
+
+--=-XTuTpKbXj3nCdOipqGDS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3zsLQACgkQ57/I7JWG
+EQn2Yg//TXyohEOZzCVyllfhvYlZubQmABin7AvKKCrohI86PUkKZzydMPKW7wjF
+KSi+xCi62Q52OwskMvIaWjiBzvhijZaFWHB8EPGqRMeJtnbjjwGTTta0ZzPYBBEa
+ngKWvU50Vjqlt8uF7qNXQk3M/mJloOXmqhjPjwuX2Yqa/aWz20NAzV2WQQ9OzNMn
+8HQzX5jHN76CWmMwkqblKqO0yRpb8Cw08bpn42zkVYlIZapxAeBIY4DQP2A+TWPs
+3ElgHxlL3Rgg4qvYqnhIzD7Jr/jOCFIcdD/j5SaNMJV6HzLK5/vUQs0NEA0y6M7I
+91T2k3hhd6pJPpCn4eP0Vc2JQWZQl4P+x0FMlYiXfBiOjdy2cOqDiez0g3i3SqyQ
+6i29+SUSriP5QvPHK8Pg2L4MRuelBoNyuP55IZWonDYpQx1qDoI8ycXgEtPpuP1s
+B41ClX9UNrozPrEuDEcC7tbw+ak+xsJy+PqEF9RYnIJcJ8bJRI2YTR1h8ysWZyOI
+13zEPyAZG2b34rBmUaqA2fBFTG98qPuEV6Amcq4rpdqsdbzTkD1PYCpEtXnqiok/
+C0o/6Wsey1BpfcXsag7xX824BvJkgsWzQnFJ1cto4zmsHxUyLvLh+X5VXilsRgTd
+ongG67DAwcznlANn9XjPGeN3qjDErgSWwXPdUecrKm0+xgMNPo0=
+=ttgq
+-----END PGP SIGNATURE-----
+
+--=-XTuTpKbXj3nCdOipqGDS--
