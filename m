@@ -2,117 +2,340 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78940C7E0AD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D042C80D48
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC05324819
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5104424785
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YkA/V1Sr"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="lZ9bjJS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfLMSqu (ORCPT
+        id S1728949AbfLMTWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:46:50 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51506 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbfLMSqu (ORCPT
+        Fri, 13 Dec 2019 14:22:13 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39527 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbfLMTWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:46:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k6bX98yPAK/DWwqLyqs0Jt4qhMgt0hIUQCq2lotOApw=; b=YkA/V1SrXrgr0WXo9DcHht8QV
-        TqqvJGWVNJ6H22xf5/TmBH5JgYQ+V8YnsfttRvffykjeXO/T0IJaOx6TfbpGuJmbI20AShiBsLviH
-        Bx+S36f+y68qo6Gtjin0PdmZCwQwIafgVKXbpaChYxWwD7Kypcwa/WBmNgNq6Tm5lEU2xDq5US6wi
-        RhYQnyNqDrFfqXBY9Akut+5Wcg4IoqT2d4eKWwvWy+vpOzwMNJCJ6l3au5yMxCWC3JR2tgQcD/dE1
-        rjVZ65tfajlnPupA8sseaU5pKyx+UtyJVZDZ+pL4RdH9iVO/BvHjnp5H/rnJq3lZ666WrEuCYCMk1
-        Ei24SjF4w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifpxG-000125-Ir; Fri, 13 Dec 2019 18:46:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E5C03058B4;
-        Fri, 13 Dec 2019 19:45:00 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 232B829D73AB4; Fri, 13 Dec 2019 19:46:21 +0100 (CET)
-Date:   Fri, 13 Dec 2019 19:46:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
-Message-ID: <20191213184621.GG2844@hirez.programming.kicks-ass.net>
-References: <20191213153553.GE20583@krava>
- <20191213112438.773dff35@gandalf.local.home>
- <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
- <20191213121118.236f55b8@gandalf.local.home>
- <20191213180223.GE2844@hirez.programming.kicks-ass.net>
- <20191213132941.6fa2d1bd@gandalf.local.home>
+        Fri, 13 Dec 2019 14:22:12 -0500
+Received: by mail-qt1-f193.google.com with SMTP id i12so3164468qtp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:22:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ls8wrlESclxVq3FWZo1eL09b2RRlMQtABmUSobhX+h4=;
+        b=lZ9bjJS5Z8k4/MLIlRP/BYAnRVGwWQQ3CgZMTx0IRCiXdLNyvaEG0mUPyHZoCXDVqR
+         7l3k5fqaJC4ezU1alx/DqAD3PlK+3vxqGvA6A/3XaHSkScWEp8gn0ktcS31ZGjn4nh69
+         GXINwN6Q3qLPvv6WdLQGvfHD6BAMUQh3nVsze6hH7daRqyCS/bY5us0iGTOkO3KXVjfd
+         FxZgf3rxLhc1JXfcOC83ZkinubQ4iuzMKVr42zoHrKV0gQR2479UnJ7S6dtEpE4ppblA
+         pwjjtNHtW5vRpcJwQK80kGz1o29UYS4WMtpvY4AnvVCKI8nHQS1yawAv32umi9PnGTy5
+         CgQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ls8wrlESclxVq3FWZo1eL09b2RRlMQtABmUSobhX+h4=;
+        b=A6iY5XzTxaUW2lkjCnWU6qhyN5YnodW0FBB7cuTC9N9MqgA6FCKzcN/NgDj1MQwdY+
+         Tqrc58/Fndb3nc5dPzaw0hBbuRxNraDG4VU0nklKIRC286FUjpRvC1ihgIQLPXvccZwN
+         0JvAOrzVo943Dh9dFKrR/ExQNy5yFcHpBflJPuYLW9xGA66zIwFzlzFGQQG/6PsnqONT
+         wU9ussflWaJbp/W2+PxNEpUm5cZ865j6eEy2wgGzEef6HJqJGrpl/OU9/V2gCb0dCVxj
+         dA3cOqquwXbzXl6jemgzCZ95yiuDDRWsqBFFujSTvR8DjYAlvx4QguC0PCZsFkqxCpCV
+         6ZSQ==
+X-Gm-Message-State: APjAAAUYlNP4GEWdxZivcT+K8eXjS13mGo7xe6I4DENox2//a4P9NgDv
+        iq6Fx24Oaj+oyepyoV4WorTVMA==
+X-Google-Smtp-Source: APXvYqxZPysoe/Ql2LS4dKybRud0DpE+4jKywCpSWQlSa/OzILw6xdHPTOPaswqi6BLyV5dhF7vBiw==
+X-Received: by 2002:aed:2b02:: with SMTP id p2mr8383977qtd.225.1576264929972;
+        Fri, 13 Dec 2019 11:22:09 -0800 (PST)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id x65sm3092605qkd.15.2019.12.13.11.22.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 11:22:09 -0800 (PST)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH 2/3] mm: memcontrol: clean up and document effective low/min calculations
+Date:   Fri, 13 Dec 2019 14:21:57 -0500
+Message-Id: <20191213192158.188939-3-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191213192158.188939-1-hannes@cmpxchg.org>
+References: <20191213192158.188939-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213132941.6fa2d1bd@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 01:29:41PM -0500, Steven Rostedt wrote:
-> On Fri, 13 Dec 2019 19:02:23 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+The effective protection of any given cgroup is a somewhat complicated
+construct that depends on the ancestor's configuration, siblings'
+configurations, as well as current memory utilization in all these
+groups. It's done this way to satisfy hierarchical delegation
+requirements while also making the configuration semantics flexible
+and expressive in complex real life scenarios.
 
-> > Your ring buffer was so generic that I gave up trying to use it after
-> > trying for days :-( (the fundamental problem was that it was impossible
-> > to have a single cpu buffer; afaik that is still true today)
-> 
-> Yeah, but that could have been fixed, and the only reason it's not
-> today, is because it requires more overhead to do so.
-> 
-> IIRC, the main reason that you didn't use it then, is because it wasn't
-> fully lockless at the time (it is today), and you couldn't use it from
-> NMI context.
+Unfortunately, all the rules and requirements are sparsely documented,
+and the code is a little too clever in merging different scenarios
+into a single min() expression. This makes it hard to reason about the
+implementation and avoid breaking semantics when making changes to it.
 
-What I remember is that I couldn't get a single cpu buffer, the whole
-per-cpu stuff was mangled in at the wrong layer. But who knows, my
-memory is faulty.
+This patch documents each semantic rule individually and splits out
+the handling of the overcommit case from the regular case.
 
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c | 191 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 105 insertions(+), 86 deletions(-)
 
-> > How about we rename both? I'm a bit adverse to long names, so how about
-> > we rename the perf one to perf_buffer and the trace one to trace_buffer?
-> 
-> I'm fine with this idea! Now what do we call the ring buffer that
-> tracing uses, as it is not specific for tracing, it was optimized for
-> splicing. But sure, I can rename it to trace_buffer. I just finished
-> renaming perf's...
-> 
-> Thinking about this, perhaps we should remove the word "ring" from
-> both. That is:
-> 
->   perf_buffer and trace_buffer ?
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 874a0b00f89b..ac9a3a170bec 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6204,65 +6204,55 @@ struct cgroup_subsys memory_cgrp_subsys = {
+ 	.early_init = 0,
+ };
+ 
+-/**
+- * mem_cgroup_protected - check if memory consumption is in the normal range
+- * @root: the top ancestor of the sub-tree being checked
+- * @memcg: the memory cgroup to check
+- *
+- * WARNING: This function is not stateless! It can only be used as part
+- *          of a top-down tree iteration, not for isolated queries.
+- *
+- * Returns one of the following:
+- *   MEMCG_PROT_NONE: cgroup memory is not protected
+- *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
+- *     an unprotected supply of reclaimable memory from other cgroups.
+- *   MEMCG_PROT_MIN: cgroup memory is protected
+- *
+- * @root is exclusive; it is never protected when looked at directly
++/*
++ * This function calculates an individual cgroup's effective
++ * protection which is derived from its own memory.min/low, its
++ * parent's and siblings' settings, as well as the actual memory
++ * distribution in the tree.
+  *
+- * To provide a proper hierarchical behavior, effective memory.min/low values
+- * are used. Below is the description of how effective memory.low is calculated.
+- * Effective memory.min values is calculated in the same way.
++ * The following rules apply to the effective protection values:
+  *
+- * Effective memory.low is always equal or less than the original memory.low.
+- * If there is no memory.low overcommittment (which is always true for
+- * top-level memory cgroups), these two values are equal.
+- * Otherwise, it's a part of parent's effective memory.low,
+- * calculated as a cgroup's memory.low usage divided by sum of sibling's
+- * memory.low usages, where memory.low usage is the size of actually
+- * protected memory.
++ * 1. At the first level of reclaim, effective protection is equal to
++ *    the declared protection in memory.min and memory.low.
+  *
+- *                                             low_usage
+- * elow = min( memory.low, parent->elow * ------------------ ),
+- *                                        siblings_low_usage
++ * 2. To enable safe delegation of the protection configuration, at
++ *    subsequent levels the effective protection is capped to the
++ *    parent's effective protection.
+  *
+- * low_usage = min(memory.low, memory.current)
++ * 3. To make complex and dynamic subtrees easier to configure, the
++ *    user is allowed to overcommit the declared protection at a given
++ *    level. If that is the case, the parent's effective protection is
++ *    distributed to the children in proportion to how much protection
++ *    they have declared and how much of it they are utilizing.
+  *
++ *    This makes distribution proportional, but also work-conserving:
++ *    if one cgroup claims much more protection than it uses memory,
++ *    the unused remainder is available to its siblings.
+  *
+- * Such definition of the effective memory.low provides the expected
+- * hierarchical behavior: parent's memory.low value is limiting
+- * children, unprotected memory is reclaimed first and cgroups,
+- * which are not using their guarantee do not affect actual memory
+- * distribution.
++ *    Consider the following example tree:
+  *
+- * For example, if there are memcgs A, A/B, A/C, A/D and A/E:
++ *        A      A/memory.low = 2G, A/memory.current = 6G
++ *       //\\
++ *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
++ *               C/memory.low = 1G  C/memory.current = 2G
++ *               D/memory.low = 0   D/memory.current = 2G
++ *               E/memory.low = 10G E/memory.current = 0
+  *
+- *     A      A/memory.low = 2G, A/memory.current = 6G
+- *    //\\
+- *   BC  DE   B/memory.low = 3G  B/memory.current = 2G
+- *            C/memory.low = 1G  C/memory.current = 2G
+- *            D/memory.low = 0   D/memory.current = 2G
+- *            E/memory.low = 10G E/memory.current = 0
++ *    and memory pressure is applied, the following memory
++ *    distribution is expected (approximately*):
+  *
+- * and the memory pressure is applied, the following memory distribution
+- * is expected (approximately):
++ *      A/memory.current = 2G
++ *      B/memory.current = 1.3G
++ *      C/memory.current = 0.6G
++ *      D/memory.current = 0
++ *      E/memory.current = 0
+  *
+- *     A/memory.current = 2G
++ *    *assuming equal allocation rate and reclaimability
+  *
+- *     B/memory.current = 1.3G
+- *     C/memory.current = 0.6G
+- *     D/memory.current = 0
+- *     E/memory.current = 0
++ * 4. Conversely, when the declared protection is undercommitted at a
++ *    given level, the distribution of the larger parental protection
++ *    budget is NOT proportional. A cgroup's protection from a sibling
++ *    is capped to its own memory.min/low setting.
+  *
+  * These calculations require constant tracking of the actual low usages
+  * (see propagate_protected_usage()), as well as recursive calculation of
+@@ -6272,12 +6262,64 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  * for next usage. This part is intentionally racy, but it's ok,
+  * as memory.low is a best-effort mechanism.
+  */
++static unsigned long effective_protection(unsigned long usage,
++					  unsigned long setting,
++					  unsigned long parent_effective,
++					  unsigned long siblings_protected)
++{
++	unsigned long protected;
++
++	protected = min(usage, setting);
++	/*
++	 * If all cgroups at this level combined claim and use more
++	 * protection then what the parent affords them, distribute
++	 * shares in proportion to utilization.
++	 *
++	 * We are using actual utilization rather than the statically
++	 * claimed protection in order to be work-conserving: claimed
++	 * but unused protection is available to siblings that would
++	 * otherwise get a smaller chunk than what they claimed.
++	 */
++	if (siblings_protected > parent_effective)
++		return protected * parent_effective / siblings_protected;
++
++	/*
++	 * Ok, utilized protection of all children is within what the
++	 * parent affords them, so we know whatever this child claims
++	 * and utilizes is effectively protected.
++	 *
++	 * If there is unprotected usage beyond this value, reclaim
++	 * will apply pressure in proportion to that amount.
++	 *
++	 * If there is unutilized protection, the cgroup will be fully
++	 * shielded from reclaim, but we do return a smaller value for
++	 * protection than what the group could enjoy in theory. This
++	 * is okay. With the overcommit distribution above, effective
++	 * protection is always dependent on how memory is actually
++	 * consumed among the siblings anyway.
++	 */
++	return protected;
++}
++
++/**
++ * mem_cgroup_protected - check if memory consumption is in the normal range
++ * @root: the top ancestor of the sub-tree being checked
++ * @memcg: the memory cgroup to check
++ *
++ * WARNING: This function is not stateless! It can only be used as part
++ *          of a top-down tree iteration, not for isolated queries.
++ *
++ * Returns one of the following:
++ *   MEMCG_PROT_NONE: cgroup memory is not protected
++ *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
++ *     an unprotected supply of reclaimable memory from other cgroups.
++ *   MEMCG_PROT_MIN: cgroup memory is protected
++ */
+ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 						struct mem_cgroup *memcg)
+ {
+ 	struct mem_cgroup *parent;
+-	unsigned long emin, parent_emin;
+-	unsigned long elow, parent_elow;
++	unsigned long emin, elow;
+ 	unsigned long usage;
+ 
+ 	if (mem_cgroup_disabled())
+@@ -6292,52 +6334,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 	if (!usage)
+ 		return MEMCG_PROT_NONE;
+ 
+-	emin = memcg->memory.min;
+-	elow = memcg->memory.low;
+-
+ 	parent = parent_mem_cgroup(memcg);
+ 	/* No parent means a non-hierarchical mode on v1 memcg */
+ 	if (!parent)
+ 		return MEMCG_PROT_NONE;
+ 
+-	if (parent == root)
+-		goto exit;
+-
+-	parent_emin = READ_ONCE(parent->memory.emin);
+-	emin = min(emin, parent_emin);
+-	if (emin && parent_emin) {
+-		unsigned long min_usage, siblings_min_usage;
+-
+-		min_usage = min(usage, memcg->memory.min);
+-		siblings_min_usage = atomic_long_read(
+-			&parent->memory.children_min_usage);
+-
+-		if (min_usage && siblings_min_usage)
+-			emin = min(emin, parent_emin * min_usage /
+-				   siblings_min_usage);
++	if (parent == root) {
++		memcg->memory.emin = memcg->memory.min;
++		memcg->memory.elow = memcg->memory.low;
++		goto out;
+ 	}
+ 
+-	parent_elow = READ_ONCE(parent->memory.elow);
+-	elow = min(elow, parent_elow);
+-	if (elow && parent_elow) {
+-		unsigned long low_usage, siblings_low_usage;
+-
+-		low_usage = min(usage, memcg->memory.low);
+-		siblings_low_usage = atomic_long_read(
+-			&parent->memory.children_low_usage);
++	memcg->memory.emin = effective_protection(usage,
++			memcg->memory.min, READ_ONCE(parent->memory.emin),
++			atomic_long_read(&parent->memory.children_min_usage));
+ 
+-		if (low_usage && siblings_low_usage)
+-			elow = min(elow, parent_elow * low_usage /
+-				   siblings_low_usage);
+-	}
+-
+-exit:
+-	memcg->memory.emin = emin;
+-	memcg->memory.elow = elow;
++	memcg->memory.elow = effective_protection(usage,
++			memcg->memory.low, READ_ONCE(parent->memory.elow),
++			atomic_long_read(&parent->memory.children_low_usage));
+ 
+-	if (usage <= emin)
++out:
++	if (usage <= memcg->memory.emin)
+ 		return MEMCG_PROT_MIN;
+-	else if (usage <= elow)
++	else if (usage <= memcg->memory.elow)
+ 		return MEMCG_PROT_LOW;
+ 	else
+ 		return MEMCG_PROT_NONE;
+-- 
+2.24.0
 
-That's what I just proposed, right? So ACK on that ;-)
