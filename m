@@ -2,100 +2,98 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D00C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF824C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA625214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD0B214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbfLMGnD (ORCPT
+        id S1726382AbfLMGnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:43:03 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:43887 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfLMGnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:43:02 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MCska-1iWoxY3YJM-008vea; Fri, 13 Dec 2019 07:43:01 +0100
-Received: by mail-qk1-f174.google.com with SMTP id z14so889619qkg.9;
-        Thu, 12 Dec 2019 22:43:00 -0800 (PST)
-X-Gm-Message-State: APjAAAUUF72Tq10G7S60O2ZAGl9Rzlxbu7FtY5CzS7lSVjDNIY8Q7sFB
-        IkEW5t37aIQvOv1ApZrbUrfsei7GxYtS0WvH1tU=
-X-Google-Smtp-Source: APXvYqwHyIjH4VLQFxLMz1S1d7sFNTr1dHj2eC4zrzxLpZcvGQkCa/gHpActn9wF7EYJ0RiDspowztRBpqmdKYRtruI=
-X-Received: by 2002:a37:4e4e:: with SMTP id c75mr11775015qkb.3.1576219379648;
- Thu, 12 Dec 2019 22:42:59 -0800 (PST)
+        Fri, 13 Dec 2019 01:43:46 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7683 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725535AbfLMGnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 01:43:46 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B40A7448E9CDB00B5F6A;
+        Fri, 13 Dec 2019 14:43:39 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 13 Dec 2019 14:43:30 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <mikecyr@linux.ibm.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH] scsi: ibmvscsi_tgt: remove set but not used variables 'iue' and 'sd'
+Date:   Fri, 13 Dec 2019 14:40:42 +0800
+Message-ID: <20191213064042.161840-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1576217705-2634-1-git-send-email-sunguoyun@loongson.cn>
-In-Reply-To: <1576217705-2634-1-git-send-email-sunguoyun@loongson.cn>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Dec 2019 07:42:43 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2Nz10L2pQPE3L5-d0wKGD6BBKCT5HMc4Nyo-56ORSheg@mail.gmail.com>
-Message-ID: <CAK8P3a2Nz10L2pQPE3L5-d0wKGD6BBKCT5HMc4Nyo-56ORSheg@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Add get_thread_area syscall
-To:     Guoyun Sun <sunguoyun@loongson.cn>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:kKOcqBvTequokhAvitowVT4xVP+Ot/8nUOIZAFUQD3r/V70Fowq
- q3d81o+TIpRBAMt58xZX5rWyxOgvbdljKRaXPetyyuNaCgUBchmqfgfkCZn4XOgaYa9ljt0
- 7iis7JMrYP+NR4kxqVzphE0HeeKqXSyXlOYwqe4aOEyExWGukpaMuZVVTv5LpWVCI8WKoQI
- BAUt7IC6f0m0ymteqfVhQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:L900IOD6uTI=:5cwsRAuLtwoNqjJDDsxAF6
- G2oSk7XPNfNegT6Wn/6XTRRhDKq3306AJuQsvpzk35Us91UVf46gC3lsLJaOYZvsVEM6YZkXA
- GCRW907gIDqUVbJBrwAb4U+WNrCIrpHZ0hk3ChYPbPhW/RedigfgxXx+/V/V1fUmrauC6SCix
- TiBlx5Jj+1EVkogoX5egrkJCcB4+OvjLKq9fd0Y2cADgWBUxVRlFvvOjImVgOZqzogYKwl0vK
- lw6lSYETEGdgL3F2bP1fVmdOkenQ8QCvDaikw5iDhaZhF/DlU1mIo/diASUDall49rlt0268g
- Pl1hm6CFn4CvL+ZZPu3HWapWnQJuSSz+ANBMKDN3Uh59V5veFYvkT19otvdfCn0vvw3tdscFG
- pd7q0KeWf48i6OGfvyAvNopxdfZrAi9aKHbz2HYGVpV4fodmRziPdsEcUmZTZ+ZEr7uMc6Wnx
- e00pNUY/AUpOQudjax4/+oyo2MRZc62xg85Ij+7SqHbkXSkcJzplTDt89wuUOyafYiJCv2PHD
- CuxZB39VUH5kcwF0ihLKHw0wY9QR3Uo2TWOjIqsrJbjoRtx/FUg1M9Asl4388nKsmMJubK8pN
- bjBtmCQDC14Itg/OEWBsrUUAsE/BItMR8V6s5iKlHpGw1e5rhvkhpmJuzpIwv9JJsGTjrSZKv
- 3DUXCbs0o/7FUhJvyyywUhE2ciTqo1Mcihf+luc9uWdcp3eBLNdNxHnHUaURkwuBU6RgfDZNL
- DkK+uqb0UtCZsA/RaOlw5ABy/KrejbQPwfLxbkchX6/uP16Q6MTXE+U+gX+mXpyMfM2v71ewC
- 3iYSrct4Aa9Zi4dlv15nie81Qv1e41oUFi1IlvOduUvB/TTBb6AnjnMPG5puENigN0g6LT/Q8
- jzOOmU1X+FSGP2H4EYJw==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 7:15 AM Guoyun Sun <sunguoyun@loongson.cn> wrote:
->
-> CRIU(https://criu.org/) tools will dump TLS(Thread Local Storage) by
-> get_thread_area during checkpoint and restore TLS by set_thread_area during
-> restore. without syscall get_thread_area, criu restore will fail on MIPS
-> platform.because a variable with GCC __thread is invalid.
->
-> The following function will be called when criu restore
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> index e7c5ab3..7da83d0 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> @@ -374,3 +374,4 @@
->  433    n32     fspick                          sys_fspick
->  434    n32     pidfd_open                      sys_pidfd_open
->  435    n32     clone3                          __sys_clone3
-> +436    n32     get_thread_area                 sys_get_thread_area
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_send_messages:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1888:19: warning: variable iue set but not used [-Wunused-but-set-variable]
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_queue_data_in:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3806:8: warning: variable sd set but not used [-Wunused-but-set-variable]
 
-Please use a number in the arch-specific range below 393. The numbers
-at the bottom are meant for syscalls that are common for all
-architectures.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-        Arnd
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index 54b8c6f..d9e94e8 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -1877,7 +1877,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 	 */
+ 	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
+ 	struct ibmvscsis_cmd *cmd, *nxt;
+-	struct iu_entry *iue;
+ 	long rc = ADAPT_SUCCESS;
+ 	bool retry = false;
+ 
+@@ -1931,8 +1930,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 					 */
+ 					vscsi->credit += 1;
+ 				} else {
+-					iue = cmd->iue;
+-
+ 					crq->valid = VALID_CMD_RESP_EL;
+ 					crq->format = cmd->rsp.format;
+ 
+@@ -3796,7 +3793,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 						 se_cmd);
+ 	struct iu_entry *iue = cmd->iue;
+ 	struct scsi_info *vscsi = cmd->adapter;
+-	char *sd;
+ 	uint len = 0;
+ 	int rc;
+ 
+@@ -3804,7 +3800,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 			       1);
+ 	if (rc) {
+ 		dev_err(&vscsi->dev, "srp_transfer_data failed: %d\n", rc);
+-		sd = se_cmd->sense_buffer;
+ 		se_cmd->scsi_sense_length = 18;
+ 		memset(se_cmd->sense_buffer, 0, se_cmd->scsi_sense_length);
+ 		/* Logical Unit Communication Time-out asc/ascq = 0x0801 */
+-- 
+2.7.4
+
