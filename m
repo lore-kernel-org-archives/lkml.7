@@ -2,164 +2,92 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5FDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D7C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901222253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4A2206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw4MC9tJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sK4ZgQ3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfLMIs7 (ORCPT
+        id S1726524AbfLMIto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:48:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27596 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725793AbfLMIs7 (ORCPT
+        Fri, 13 Dec 2019 03:49:44 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34258 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLMItn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:48:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576226938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f1sU8L67ldoVATnqCmyBu0614LHoOQga3GZ5zDAlGKw=;
-        b=Bw4MC9tJZqRL0ZsDlHjrEFRqEzzFFQ1efkojpCAZFM3fL3icdsvnWierBHDJSItLnvzpnQ
-        cDx9e97I1Cdl8GNTNdO6vR7LBR96JVIaJdB/6rELGDFXFrv628KqzmZ39+EI0Y41vkkfo0
-        XE/LlOPNvmlmSKTaoPdqCHCHAZOYHxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-JQVY3WICNuaxPUj_6vBMFQ-1; Fri, 13 Dec 2019 03:48:55 -0500
-X-MC-Unique: JQVY3WICNuaxPUj_6vBMFQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95BF6107ACC4;
-        Fri, 13 Dec 2019 08:48:53 +0000 (UTC)
-Received: from carbon (ovpn-200-20.brq.redhat.com [10.40.200.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 642595D6BE;
-        Fri, 13 Dec 2019 08:48:46 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 09:48:45 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     "Li,Rongqing" <lirongqing@baidu.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        brouer@redhat.com
-Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-Message-ID: <20191213094845.56fb42a4@carbon>
-In-Reply-To: <079a0315-efea-9221-8538-47decf263684@huawei.com>
-References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
-        <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
-        <20191211194933.15b53c11@carbon>
-        <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
-        <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
-        <20191212111831.2a9f05d3@carbon>
-        <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
-        <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
-        <079a0315-efea-9221-8538-47decf263684@huawei.com>
+        Fri, 13 Dec 2019 03:49:43 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m6so1687997ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:49:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E1JOZKU3xEudJiyZSdDJXezSL1VMnF9zJ7hQY77MyhE=;
+        b=sK4ZgQ3I1MDMt1BJme+WWnKfSQHo54j1ZoLoWor4/ASvWr1mjNT7v7g0/BhdIeVyph
+         Xm0WWDGOKCsOnB+Vb7zo5dqwk2cFqH5L5CMH9KG2WudlbpEhRAEFJM4l5AmOQFIwhq4e
+         Z0PaSE44DFQmm1KxgwogrNgfaWXfE93iwQBGxWpqK7+/41s1D/oQ5Kw1ddlzVoq19xJs
+         CW2LGsZI5i0XOQuL13yhuYRQj34gZrDOJmPs6ba4/LL6UTo+OeLdCBYkHdzy5xT9vmko
+         MH9bMeGD8aZ/tVNSxW/yeEfjEo1kl2FDBmp5lHja+RYQz11gS1d/CkRiBmco5JvpKfCm
+         J+cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E1JOZKU3xEudJiyZSdDJXezSL1VMnF9zJ7hQY77MyhE=;
+        b=lEYT73nIGauUGH9VajyeSe1908LH4ryO+3qn8y6Ybrckx5nWdhb6Ov5bSwWZ/DxIRd
+         XFGLaN9yIwiyQVCYrdb0IahYKr9UdsB1OVWugMaHghU4zOdhJmsmjAaF3suGoGrdDlGN
+         lCoJkZocgao+1Yy+7ajgN0LAZZ4M3bgzmKsjcmv1Y2GCKZicLwTR2HtTwQwwxaro5/Al
+         z9dXfHkvfLtTZIaY+E+P0UzJiIFLspYYEyFWHXHnOahJiEFw9ly4PaXmjz/XLP6BsVar
+         1mJoxOiRw0DxjzZVO86akDRdkPMZMY1/Rdb7MXiMr9ntuu7vjulQ+YPtGTBm1PU+qjAJ
+         C5mw==
+X-Gm-Message-State: APjAAAUJHv9CnFzU+HoXnrsYihKHJ/ZEdomEx/FPnq0TYM7S7yp/p5gC
+        OLRP+J4Pwt1DIvUpzXQZTR5a3RApl/nQGBwX/3yXzw==
+X-Google-Smtp-Source: APXvYqw8R3tVL7YcPB1QUWAfPaywn/OZ8gj8e1LzTXq3Fsdndmc67+vCT3PwvhB0ehsJ2ot7As+6b33BkV5z0TC0TKk=
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr8785712ljh.183.1576226981672;
+ Fri, 13 Dec 2019 00:49:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20191203141243.251058-1-paul.kocialkowski@bootlin.com> <20191203141243.251058-3-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20191203141243.251058-3-paul.kocialkowski@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 09:49:30 +0100
+Message-ID: <CACRpkda-hDbC4bVihPO8RUogkFkPfsxVS13d_JJoFZLaPLQYcg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 14:53:37 +0800
-Yunsheng Lin <linyunsheng@huawei.com> wrote:
+On Tue, Dec 3, 2019 at 3:13 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-> On 2019/12/13 14:27, Li,Rongqing wrote:
-> >>
-> >> It is good to allocate the rx page close to both cpu and device,
-> >> but if both goal can not be reached, maybe we choose to allocate
-> >> page that close to cpu?
-> >>  
-> > I think it is true
-> > 
-> > If it is true, , we can remove pool->p.nid, and replace
-> > alloc_pages_node with alloc_pages in __page_pool_alloc_pages_slow,
-> > and change pool_page_reusable as that page_to_nid(page) is checked
-> > with numa_mem_id()  
+> The LogiCVC is a display engine which also exposes GPIO functionality.
+> For this reason, it is described as a multi-function device that is expected
+> to provide register access to its children nodes for gpio and display.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-No, as I explained before, you cannot use numa_mem_id() in pool_page_reusable,
-because recycle call can happen from/on a remote CPU (and numa_mem_id()
-uses the local CPU to determine the NUMA id).
+Patch applied to the GPIO tree unless Lee has objections.
 
-Today we already have XDP cpumap redirect.  And we are working on
-extending this to SKBs, which will increase the likelihood even more.
-
-I don't think we want to not-recycle if a remote NUMA node CPU happened
-to touch the packet?
-
-(Based on the optimizations done for Facebook (the reason we added this))
-What seems to matter is the NUMA node of CPU that runs RX NAPI-polling,
-this is the first CPU that touch the packet memory and struct-page
-memory.  For these drivers, it is also the same "RX-CPU" that does the
-allocation of new pages (to refill the RX-ring), and these "new" pages
-can come from the page_pool.
-
-With this in mind, it does seem strange that we are doing the check on
-the "free"/recycles code path, that can run on remote CPUs...
-
-
-> > since alloc_pages hint to use the current node page, and
-> > __page_pool_alloc_pages_slow will be called in NAPI polling often
-> > if recycle failed, after some cycle, the page will be from local
-> > memory node.  
-
-You are basically saying that the NUMA check should be moved to
-allocation time, as it is running the RX-CPU (NAPI).  And eventually
-after some time the pages will come from correct NUMA node.
-
-I think we can do that, and only affect the semi-fast-path.
-We just need to handle that pages in the ptr_ring that are recycled can
-be from the wrong NUMA node.  In __page_pool_get_cached() when
-consuming pages from the ptr_ring (__ptr_ring_consume_batched), then we
-can evict pages from wrong NUMA node.
-
-For the pool->alloc.cache we either accept, that it will eventually
-after some time be emptied (it is only in a 100% XDP_DROP workload that
-it will continue to reuse same pages).   Or we simply clear the
-pool->alloc.cache when calling page_pool_update_nid().
-
-
-> Yes if allocation and recycling are in the same NAPI polling context.
-
-Which is a false assumption.
-
-> As pointed out by Saeed and Ilias, the allocation and recycling seems
-> to may not be happening in the same NAPI polling context, see:
-> 
-> "In the current code base if they are only called under NAPI this
-> might be true. On the page_pool skb recycling patches though (yes
-> we'll eventually send those :)) this is called from kfree_skb()."
-> 
-> So there may need some additionl attention.
-
-Yes, as explained above.
-
-
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Yours,
+Linus Walleij
