@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CE7C7619C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:35 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE24D246D0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6EEC677FC
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:34 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 51AC3246C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXNQSHd8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpwWQTBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfLMPj3 (ORCPT
+        id S1728051AbfLMPjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:39:29 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43265 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbfLMPjZ (ORCPT
+        Fri, 13 Dec 2019 10:39:23 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36378 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbfLMPjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:39:25 -0500
-Received: by mail-yw1-f67.google.com with SMTP id s187so1402463ywe.10;
-        Fri, 13 Dec 2019 07:39:25 -0800 (PST)
+        Fri, 13 Dec 2019 10:39:21 -0500
+Received: by mail-yw1-f68.google.com with SMTP id n184so6054ywc.3;
+        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=faL4fxrbC05HIHUTwDCWI1dvLvUSDjG03Flb8SzrLH8=;
-        b=oXNQSHd86d/tmceWqTGR558AlsJ2egWE0oMQLzhFX0wG7k0h+k9pXRqUYYj7t4UunF
-         lZOxKiHajcdSdXfGeeRutpYG7l1gzbqwHtjC18Md6l0UosyyLe/AJo2llVEDmSs2Apcy
-         SNmmVA1GdJK7f5M76159d0DmCAhIbSDZgYWkafNPJ//AZTokA9Weix/2ESFYo2KydViq
-         fzecdysxqcPIyfBwJE5kuDHgV18C48xN8ZRHAJO05dJDndAMCTCF8h+AUoFuOVVDE+4G
-         1si2SWR7YqiRPYBWCSYbPrevK1F6kzJmIhnjYaiUtwgslszzxjDTteePwt8KdViaRlnD
-         96Eg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
+        b=IpwWQTBzg9+efmz6zpdHlpW7WO6Qb2rzpNyjAvojL6elJWNgpVqmZyQ+VOA2jRdCEh
+         jGyplAdiIPO/JftjYxUO7sovgTvepNOw0lWV1MT9dznUOuusPMO+j+Z13oroUaaD5bil
+         1piYhqNdzEdfXdqhnE+7U5kCEFqfJ8zhu7wceeOYtYpgS0QKCQ+RML/u0oe6npp2nIWC
+         Cc9nOT5KsyorY2X5unKnHKTIQ8r9XxZZz4ec1HolS6nH5SjuT5MeeuFP3YXKRzxK52KC
+         2LdZ8O6EEN/aQaZn8ExiHvWWt6aJrAMgVOeJJTI1AxGZbbtQSCpn6u9Ib/Kn3pQul97X
+         ebAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=faL4fxrbC05HIHUTwDCWI1dvLvUSDjG03Flb8SzrLH8=;
-        b=kqi12hb+mB5MPa5LuyoGzPRmuTIZuw3+rQz29JGSAxZA+Z5uIC5l2JaEaAOQFnoeEv
-         E59XpF9Er++am2nnQV79Ff5rmmOFgcu5uRMaFdV5d/s3giaaSnHbYcLj+qqn5P/iNzcV
-         ive/VN/06g5hIaNT301S+du1BomNczPMjXio40U2ik4jIjxtrEsnpNM2TA6XdSMFK2sQ
-         cNQVPXd74IJ0BoWi4w4T6u8gFtNIamkYEt9P8vRtLupeI0Tr+1WzCxVjkHy4GCI372Vo
-         3OKIlbbrlE2NCzrkXR3BT2Qu1b86okj7Yi5xaBSnhkFOwIF36Ai2euI8UXOtREWXKoJG
-         f8ew==
-X-Gm-Message-State: APjAAAXrVDB8SVMdcWg/KnztUfKovPowP23COuJNh+JlG80Ig9uZ10q7
-        QKtHUXu2KEngxhIeieMFlaM=
-X-Google-Smtp-Source: APXvYqzsMZhR+ug4aRPHSvjvIJVkEj72cpT+DpcfyV3rG/uXTykso2NKhi2h4s4rMHV1FhFPykZ4pg==
-X-Received: by 2002:a25:6c86:: with SMTP id h128mr8532669ybc.53.1576251564652;
-        Fri, 13 Dec 2019 07:39:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
+        b=paGbHfPminizg1T70Pj3QKYWFmDEp+RQKlsesNVFmI0ad/wLdWJoqyw3ePIWcG8mq+
+         T8vwmv2qTpe57wTHAJ0Sgtlb6+kuNP/7MvthGaWk5HuQwAaJ+kbNTW/J+7DBh5LDn/w4
+         RweWhsi1/HhI7pZFiM+m+7rErHnr9UO7q5wSO8GGRQZy9G5my9yx0H4epRqvrw0/OxJz
+         E4h3lkCHlAMgLgmBwCrHSO+ax2GGU8RDfqwIof7KS+XUcOcV48txEUieTlayZbIWih4K
+         IzZNeLmcHqea3wZVEwN5ELIGdSxgQDrmOK2hWWpAiMmTv5eDnCcPrNM+EJIDp9kvF0aZ
+         Xd+Q==
+X-Gm-Message-State: APjAAAXc0cPpi8bqXwwoMbGK57GYdN/EQWAC0gejCnbz4v1W0LvvpW9F
+        SkzM6ng/EkhNeSZxT7om7A8=
+X-Google-Smtp-Source: APXvYqzO7cb72G93h6pc42x43nIgubOr0x06bTe3Kej8fCH2doIKLJGdJ8weE8MbHkaf+/uMF//KeA==
+X-Received: by 2002:a25:b007:: with SMTP id q7mr7626962ybf.193.1576251560130;
+        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id i17sm4300474ywg.66.2019.12.13.07.39.22
+        by smtp.gmail.com with ESMTPSA id i17sm4300474ywg.66.2019.12.13.07.39.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:39:24 -0800 (PST)
+        Fri, 13 Dec 2019 07:39:19 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     horia.geanta@nxp.com, Adam Ford <aford173@gmail.com>,
@@ -74,12 +74,10 @@ Cc:     horia.geanta@nxp.com, Adam Ford <aford173@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-crypto@vger.kernel.org
-Subject: [PATCH V2 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Date:   Fri, 13 Dec 2019 09:39:10 -0600
-Message-Id: <20191213153910.11235-3-aford173@gmail.com>
+Subject: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Date:   Fri, 13 Dec 2019 09:39:08 -0600
+Message-Id: <20191213153910.11235-1-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213153910.11235-1-aford173@gmail.com>
-References: <20191213153910.11235-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,27 +85,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both the i.MX8MQ and i.MX8M Mini support the CAAM driver, but it
-is currently not enabled by default.
+The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
+the driver is restricting the check to just the i.MX8MQ.
 
-This patch enables this driver by default.
+This patch expands the check for either i.MX8MQ or i.MX8MM.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
----
-V2:  New to series
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6a83ba2aea3e..0212975b908b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -845,6 +845,7 @@ CONFIG_SECURITY=y
- CONFIG_CRYPTO_ECHAINIV=y
- CONFIG_CRYPTO_ANSI_CPRNG=y
- CONFIG_CRYPTO_DEV_SUN8I_CE=m
-+CONFIG_CRYPTO_DEV_FSL_CAAM=y
- CONFIG_CRYPTO_DEV_HISI_ZIP=m
- CONFIG_CMA_SIZE_MBYTES=32
- CONFIG_PRINTK_TIME=y
+---
+V2:  Expand the check that forces the setting on imx8mq to also be true for imx8mm
+     Explictly state imx8mm compatiblity instead of making it generic to all imx8m*
+      this is mostly due to lack of other hardware to test
+
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index d7c3c3805693..c01dda692ecc 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -102,7 +102,8 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
+ 	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
+ 	     * and the following steps should be performed regardless
+ 	     */
+-	    of_machine_is_compatible("fsl,imx8mq")) {
++	    of_machine_is_compatible("fsl,imx8mq") ||
++	    of_machine_is_compatible("fsl,imx8mm")) {
+ 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
+ 
+ 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
+@@ -509,6 +510,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
+ 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
+ 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
+ 	{ .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
++	{ .soc_id = "i.MX8MM", .data = &caam_imx7_data },
+ 	{ .family = "Freescale i.MX" },
+ 	{ /* sentinel */ }
+ };
 -- 
 2.20.1
 
