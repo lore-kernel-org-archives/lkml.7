@@ -2,126 +2,139 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB589C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D01C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913152077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:40:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="Xd8DQt15"
+	by mail.kernel.org (Postfix) with ESMTP id 67FD52077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfLMEkC (ORCPT
+        id S1731940AbfLMEla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 23:40:02 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33880 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731720AbfLMEkB (ORCPT
+        Thu, 12 Dec 2019 23:41:30 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:14605 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731720AbfLMEla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 23:40:01 -0500
-Received: by mail-vs1-f67.google.com with SMTP id g15so714501vsf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 20:40:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CxeVqN7WWZohGfBayl/KWuS+nYYVkIE8W26755ehKCA=;
-        b=Xd8DQt15TEBmxWpqEeFCaZoe21s55+mSfnHvGFbeg9bLiJ4j2h7SwH/XTEnp71SZ73
-         ZycLWokcoyu6sa1FpY+Cp/3bpEv6zhBoxym148EovHuBbxuNKgMQ3HWQ4/pGAW/uLys1
-         EjlFXNvx268C+i6hj8eUxzu6EhiaZpm2FXPGeQisLNs1x9n9fA+S4tIy/K9NHr8HqDul
-         i+xP23j6KawDG6n3PHOzmU5XCvlvLmK+bI73YmqPxIqiqX2mHYKcgr5vWMpd4/8+P5kD
-         QBDviVVz2Bm3DBv/4SWXC7IX0nsU58spJx/zGps/ni5b++qgOVZ8QyJDKph5jCvl/hXk
-         VqiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CxeVqN7WWZohGfBayl/KWuS+nYYVkIE8W26755ehKCA=;
-        b=OSvZm5dHeSgBcdmmlp8Dl/C0L6FmQjfWao2Jm3o3nVcVhdjn+NSHiJGN54P0GCUtAC
-         Qx+xGrjTrDNZRdYuVa+kYlgk1OB0m/oUFsR94PU+0cQYfK7fyTS/ZLsniBjC9hSX6PiK
-         qnV5G+rE4BRkl5UO7A75dUZLWnhyn61Be/Zh619wMjdOdIzOQeV6UhcC7nXy+7TGRfbl
-         O8XzrwCDCqMTxnu1rYf4lBO9/4ptDwZ5+V9H7pIdnr63f/t7G7PDr8BAsprbx4KgbTyo
-         sUd64asV9ZqWqDcyNc0++t/t8kxKZgdBHsLJP2ZruDUN/YitILCvObFc6iE5wL18UTEA
-         tztw==
-X-Gm-Message-State: APjAAAWbUUUTuM+T9MuAfhY9+KYodUmg6s2aNqG/G9fh3AYr++3rTXJ4
-        TtHv8f8NKcefcVx/v3Qt7SxfU+uKehrXw6Ogzbwgbg==
-X-Google-Smtp-Source: APXvYqxUYboYxgAx3u/cwl+SWhpsV25Tto1uX65RitUNLoAbztqqRzfRir+y4ljY/5uoG9B0ULKQhDBoKIKecfbYkX0=
-X-Received: by 2002:a67:fb41:: with SMTP id e1mr9415848vsr.159.1576212000836;
- Thu, 12 Dec 2019 20:40:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20191212061702.BFE2D6E85603@corona.crabdance.com>
- <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
- <20191212232859.E09FC6E85603@corona.crabdance.com> <CAHLCerN9jc94ydKKoaDZPoTy=LmVZti6UUpND5aK3FMzTkCmoA@mail.gmail.com>
-In-Reply-To: <CAHLCerN9jc94ydKKoaDZPoTy=LmVZti6UUpND5aK3FMzTkCmoA@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 13 Dec 2019 10:09:49 +0530
-Message-ID: <CAHLCerMf1nbuxjZz81QnE6jXeQ5UvB=R18SDu69cE9Q6rQp8+w@mail.gmail.com>
-Subject: Re: [RESEND PATCH] thermal: rockchip: enable hwmon
-To:     schaecsn@gmx.net, jdelvare@suse.com, linux@roeck-us.net
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        lakml <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Dec 2019 23:41:30 -0500
+Date:   13 Dec 2019 13:41:27 +0900
+X-IronPort-AV: E=Sophos;i="5.69,308,1571670000"; 
+   d="scan'208";a="34307335"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 13 Dec 2019 13:41:27 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4C22F4186681;
+        Fri, 13 Dec 2019 13:41:27 +0900 (JST)
+Message-ID: <87wob04z2g.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CONFIG_COMMON_CLK vs CONFIG_HAVE_CLK
+In-Reply-To: <20191212215114.1F84B21556@mail.kernel.org>
+References: <871rtae1m5.wl-kuninori.morimoto.gx@renesas.com>
+        <741ff2c5-56b3-5ba0-3d52-39f77d468739@metux.net>
+        <20191212215114.1F84B21556@mail.kernel.org>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Guenter's email.
 
-On Fri, Dec 13, 2019 at 10:08 AM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
->
-> Hi Stefan,
->
-> On Fri, Dec 13, 2019 at 4:59 AM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
-> >
-> > Hello Amit,
-> >
-> > > On Thu, Dec 12, 2019 at 11:47 AM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
-> > > >
-> > > > By default, of-based thermal drivers do not enable hwmon.
-> > > > Explicitly enable hwmon for both, the soc and gpu temperature
-> > > > sensor.
-> > >
-> > > Is there any reason you need to expose this in hwmon?
-> >
-> > Why hwmon:
-> >
-> > The soc embedds temperature sensors and hwmon is the standard way to expose
-> > sensors.
->
-> Let me rephrase - is there something in the hwmon subsystem that is
-> needed that isn't provided by the thermal subsystem inside
-> /sys/class/thermal?
->
-> > Sensors exposed by hwmon are automagically found by userland clients. Users
-> > want to run sensors(1) and expect them to show up.
-> >
->
-> That is a good point. In which case, I wonder if we should just fix
-> this in of-thermal.c instead of requiring individual drivers to do
-> write boilerplate code. I'm thinking of a flag that the driver could
-> set to enable the thermal_hwmon interface for of-thermal drivers.
->
-> > Why in rockchip_thermal.c:
-> >
-> > drivers/thermal/ provides a high-level hwmon api in thermal_hwmon.[hc] which is
-> > used by at least these thermal drivers: rcar_gen3_thermal.c, rcar_thermal.c,
-> > st/stm_thermal.c, and broadcom/bcm2835_thermal.c. I want to hook up
-> > rockchip_thermal.c exactly the same way.
-> >
-> > Apparently, other architectures hook up the cpu temperature sensors to hwmon
-> > elsewhere. Most seem to do this in hwmon/, e.g. hwmon/coretemp.c. These drivers
-> > are written from scratch. Utilizing thermal_hwmon.[ch] for chips which have
-> > already drivers in drivers/thermal/ seems to be more elegant.
-> >
-> >  Stefan
+Hi
+
+> > >       --- clk.h ---
+> > > =>    #ifdef CONFIG_HAVE_CLK
+> > >       ...
+> > >       int clk_set_min_rate(struct clk *clk, unsigned long rate);
+> > >       ...
+> > >       #else /* !CONFIG_HAVE_CLK */
+> > >       static inline int clk_set_min_rate(struct clk *clk, unsigned long rate)
+> > >       ...
+> > >       -------------
+(snip)
+> > >       --- Makefile ---
+> > >       ...
+> > > =>    obj-$(CONFIG_COMMON_CLK)        += clk.o
+> > 
+> > You've got CONFIG_HAVE_CLK enabled, but CONFIG_COMMON_CLK disabled ?
+> > 
+> > hmm, the whole CONFIG_HAVE_CLK looks a bit weird to me. I wonder what's
+> > the actual purpose of having this arch-specific.
+> > 
+> > IMHO, we should sort out whether there are some things that some arch
+> > really *needs*, and what could be optional - then split that into
+> > separate modules along this line.
+> > 
+> > It seems that clk_set_min_rate() belongs to CONFIG_COMMON_CLK, and
+> > tegra30-devfreq.c needds to depend on CONFIG_COMMON_CLK.
+> > 
+> 
+> Years ago there wasn't a common clk framework. Just CONFIG_HAVE_CLK and
+> architectures implementing the API defined in the clk.h header file.
+> Then the common clk framework was created and we got CONFIG_COMMON_CLK.
+> When new clk API features are added to the common clk framework, we
+> typically limit their implementation and scope to CONFIG_COMMON_CLK so
+> that architectures are encouraged to migrate to the common clk
+> framework. I'm not really tracking the other implementations of the clk
+> API, but I thought we were down to a handful of implementations that
+> haven't migrated. I suppose SH is one of the big ones.
+
+I investigated about SH / HAVE_CLK / COMMON_CLK.
+
+In clk.h, some functions are defined under HAVE_CLK.
+For example clk_enable().
+
+	--- include/linux/clk.h ---
+	...
+=>	#ifdef CONFIG_HAVE_CLK
+	...
+	int clk_set_rate(struct clk *clk, unsigned long rate);
+	...
+	---------------------------
+
+But, it is implementated under COMMON_CLK.
+
+	--- drivers/clk/clk.c ---
+	...
+	int clk_set_rate(struct clk *clk, unsigned long rate)
+	...
+	--- drivers/clk/Makefiles ---
+	...
+=>	obj-$(CONFIG_COMMON_CLK)	+= clk.o
+	...
+	-----------------------------
+
+OTOH, SH has HAVE_CLK, but not have COMMON_CLK.
+And, it has own clock implementation at drivers/sh/clk/core.c.
+
+	--- drivers/sh/clk/core.c ---
+	...
+	int clk_set_rate(struct clk *clk, unsigned long rate)
+	...
+	--- drivers/sh/clk/Makefile ---
+	...
+=>	obj-y	:= core.o
+	...
+	-------------------------------
+
+These mean, HAVE_CLK vs COMMON_CLK mismatch under clk.h
+is very matching to SH own clock.
+In other words, if we correct clk.h HAVE_CLK vs COMMON_CLK,
+It breaks SH clk.
+It is very confusable for me.
+But difficult to solve it.
+
+So far, I will add "depends on COMMON_CLK" to driver side.
+
+Thank you for your help !!
+Best regards
+---
+Kuninori Morimoto
