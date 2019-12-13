@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D12C3434A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:06 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D609424708
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03173C34340
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 3AFF6246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o7i5cebK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ELvSmVfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLMM4g (ORCPT
+        id S1727391AbfLMM4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41740 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfLMM4f (ORCPT
+        Fri, 13 Dec 2019 07:56:15 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48470 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbfLMM4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:35 -0500
+        Fri, 13 Dec 2019 07:56:11 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuXxN018575;
-        Fri, 13 Dec 2019 06:56:33 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCu9Rf068942;
+        Fri, 13 Dec 2019 06:56:09 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576241793;
-        bh=JfMmU4nNY9BoyeQwnZZ/LpQqxDfSJiNqtm5apVe+NBI=;
+        s=ti-com-17Q1; t=1576241769;
+        bh=Z0UZgul79dMd1dzpnJXaYuVp++fe7lVa0f6QkAu6WoM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=o7i5cebKWwkpEZpTAazHk7Bf8lJQMWzWTaweyCQzADg1x8huy88U/lJ5Zp20Xe2qT
-         PgE1WrDt8dmZ+2URmOWynvh64MqREqSkFZBKD7yiMPpqbueOKWQU2v9/4X+jaXej3F
-         IjFWKdy4C2RLElX+MOS2y1JbnbwlK1rEtSjjxPCY=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuXeL085564
+        b=ELvSmVfIvfUP4ruJa3uExx4dfjpZVc2qEeghidpkdSYjYTOC/7CCYrJLJWouClECK
+         Qp6Dhs4FSkv4Par4vTel+CBlDeGIGd7RwBEkEgKRQ6GYsg8J2X4YGrANJ250uXobk6
+         c5AfzmXnV7ERMtOB+C4AtQuotyDi5HkMz1f+Ffp0=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCu9JR085116
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 06:56:33 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 13 Dec 2019 06:56:09 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:56:33 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 06:56:07 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:56:33 -0600
+ Frontend Transport; Fri, 13 Dec 2019 06:56:06 -0600
 Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVU127295;
-        Fri, 13 Dec 2019 06:56:31 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVI127295;
+        Fri, 13 Dec 2019 06:56:05 -0600
 From:   Tero Kristo <t-kristo@ti.com>
 To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
         <linux-remoteproc@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
         <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
         Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 15/15] remoteproc/omap: add watchdog functionality for remote processors
-Date:   Fri, 13 Dec 2019 14:55:37 +0200
-Message-ID: <20191213125537.11509-16-t-kristo@ti.com>
+Subject: [PATCHv3 03/15] remoteproc/omap: Add a sanity check for DSP boot address alignment
+Date:   Fri, 13 Dec 2019 14:55:25 +0200
+Message-ID: <20191213125537.11509-4-t-kristo@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
 References: <20191213125537.11509-1-t-kristo@ti.com>
@@ -70,332 +70,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suman Anna <s-anna@ti.com>
 
-Remote processors can be stuck in a loop, and may not be recoverable
-if they do not have a built-in watchdog. The watchdog implementation
-for OMAP remote processors uses external gptimers that can be used
-to interrupt both the Linux host as well as the remote processor.
-
-Each remote processor is responsible for refreshing the timer during
-normal behavior - during OS task scheduling or entering the idle loop
-properly. During a watchdog condition (executing a tight loop causing
-no scheduling), the host processor gets interrupts and schedules a
-recovery for the corresponding remote processor. The remote processor
-may also get interrupted to be able to print a back trace.
-
-A menuconfig option has also been added to enable/disable the Watchdog
-functionality, with the default as disabled.
+The DSP remote processors on OMAP SoCs require a boot register to
+be programmed with a boot address, and this boot address needs to
+be on a 1KB boundary. The current code is simply masking the boot
+address appropriately without performing any sanity checks before
+releasing the resets. An unaligned boot address results in an
+undefined execution behavior and can result in various bus errors
+like MMU Faults or L3 NoC errors. Such errors are hard to debug and
+can be easily avoided by adding a sanity check for the alignment
+before booting a DSP remote processor.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/remoteproc/Kconfig           |  12 +++
- drivers/remoteproc/omap_remoteproc.c | 155 ++++++++++++++++++++++++---
- 2 files changed, 155 insertions(+), 12 deletions(-)
+ drivers/remoteproc/omap_remoteproc.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index d6450d7fcf92..b2eaa18ad503 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -42,6 +42,18 @@ config OMAP_REMOTEPROC
- 	  It's safe to say N here if you're not interested in multimedia
- 	  offloading or just want a bare minimum kernel.
- 
-+config OMAP_REMOTEPROC_WATCHDOG
-+	bool "OMAP remoteproc watchdog timer"
-+	depends on OMAP_REMOTEPROC
-+	default n
-+	help
-+	  Say Y here to enable watchdog timer for remote processors.
-+
-+	  This option controls the watchdog functionality for the remote
-+	  processors in OMAP. Dedicated OMAP DMTimers are used by the remote
-+	  processors and triggers the timer interrupt upon a watchdog
-+	  detection.
-+
- config WKUP_M3_RPROC
- 	tristate "AMx3xx Wakeup M3 remoteproc support"
- 	depends on SOC_AM33XX || SOC_AM43XX
 diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 02599278263f..6b2f46f5a0e2 100644
+index 558634624590..d80f5d7b5931 100644
 --- a/drivers/remoteproc/omap_remoteproc.c
 +++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/dma-mapping.h>
-+#include <linux/interrupt.h>
- #include <linux/remoteproc.h>
- #include <linux/mailbox_client.h>
- #include <linux/omap-mailbox.h>
-@@ -72,10 +73,12 @@ struct omap_rproc_mem {
-  * struct omap_rproc_timer - data structure for a timer used by a omap rproc
-  * @odt: timer pointer
-  * @timer_ops: OMAP dmtimer ops for @odt timer
-+ * @irq: timer irq
+@@ -124,13 +124,22 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+  *
+  * Set boot address for a supported DSP remote processor.
   */
- struct omap_rproc_timer {
- 	struct omap_dm_timer *odt;
- 	const struct omap_dm_timer_ops *timer_ops;
-+	int irq;
- };
+-static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
++static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+ {
++	struct device *dev = rproc->dev.parent;
+ 	struct omap_rproc *oproc = rproc->priv;
+ 	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+ 	u32 offset = bdata->boot_reg;
  
- /**
-@@ -86,6 +89,7 @@ struct omap_rproc_timer {
-  * @mem: internal memory regions data
-  * @num_mems: number of internal memory regions
-  * @num_timers: number of rproc timer(s)
-+ * @num_wd_timers: number of rproc watchdog timers
-  * @timers: timer(s) info used by rproc
-  * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
-  * @need_resume: if true a resume is needed in the system resume callback
-@@ -102,6 +106,7 @@ struct omap_rproc {
- 	struct omap_rproc_mem *mem;
- 	int num_mems;
- 	int num_timers;
-+	int num_wd_timers;
- 	struct omap_rproc_timer *timers;
- 	int autosuspend_delay;
- 	bool need_resume;
-@@ -217,6 +222,81 @@ static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
- 	return timer->timer_ops->free(timer->odt);
++	if (rproc->bootaddr & (SZ_1K - 1)) {
++		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
++			rproc->bootaddr);
++		return -EINVAL;
++	}
++
+ 	regmap_write(bdata->syscon, offset, rproc->bootaddr);
++
++	return 0;
  }
  
-+/**
-+ * omap_rproc_get_timer_irq - get the irq for a timer
-+ * @timer - handle to a OMAP rproc timer
-+ *
-+ * This function is used to get the irq associated with a watchdog timer. The
-+ * function is called by the OMAP remoteproc driver to register a interrupt
-+ * handler to handle watchdog events on the remote processor.
-+ *
-+ * Returns the irq id on success, otherwise a failure as returned by DMTimer ops
-+ */
-+static inline int omap_rproc_get_timer_irq(struct omap_rproc_timer *timer)
-+{
-+	return timer->timer_ops->get_irq(timer->odt);
-+}
-+
-+/**
-+ * omap_rproc_ack_timer_irq - acknowledge a timer irq
-+ * @timer: handle to a OMAP rproc timer
-+ *
-+ * This function is used to clear the irq associated with a watchdog timer. The
-+ * The function is called by the OMAP remoteproc upon a watchdog event on the
-+ * remote processor to clear the interrupt status of the watchdog timer.
-+ *
-+ * Returns the irq id on success, otherwise a failure as returned by DMTimer ops
-+ */
-+static inline void omap_rproc_ack_timer_irq(struct omap_rproc_timer *timer)
-+{
-+	timer->timer_ops->write_status(timer->odt, OMAP_TIMER_INT_OVERFLOW);
-+}
-+
-+/**
-+ * omap_rproc_watchdog_isr - Watchdog ISR handler for remoteproc device
-+ * @irq: IRQ number associated with a watchdog timer
-+ * @data: IRQ handler data
-+ *
-+ * This ISR routine executes the required necessary low-level code to
-+ * acknowledge a watchdog timer interrupt. There can be multiple watchdog
-+ * timers associated with a rproc (like IPUs which have 2 watchdog timers,
-+ * one per Cortex M3/M4 core), so a lookup has to be performed to identify
-+ * the timer to acknowledge its interrupt.
-+ *
-+ * The function also invokes rproc_report_crash to report the watchdog event
-+ * to the remoteproc driver core, to trigger a recovery.
-+ *
-+ * Return: IRQ_HANDLED or IRQ_NONE
-+ */
-+static irqreturn_t omap_rproc_watchdog_isr(int irq, void *data)
-+{
-+	struct rproc *rproc = data;
-+	struct omap_rproc *oproc = rproc->priv;
-+	struct device *dev = rproc->dev.parent;
-+	struct omap_rproc_timer *timers = oproc->timers;
-+	struct omap_rproc_timer *wd_timer = NULL;
-+	int num_timers = oproc->num_timers + oproc->num_wd_timers;
-+	int i;
-+
-+	for (i = oproc->num_timers; i < num_timers; i++) {
-+		if (timers[i].irq > 0 && irq == timers[i].irq) {
-+			wd_timer = &timers[i];
-+			break;
-+		}
-+	}
-+
-+	if (!wd_timer) {
-+		dev_err(dev, "invalid timer\n");
-+		return IRQ_NONE;
-+	}
-+
-+	omap_rproc_ack_timer_irq(wd_timer);
-+
-+	rproc_report_crash(rproc, RPROC_WATCHDOG);
-+
-+	return IRQ_HANDLED;
-+}
-+
- /**
-  * omap_rproc_enable_timers - enable the timers for a remoteproc
-  * @rproc: handle of a remote processor
-@@ -238,19 +318,26 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
- 	struct omap_rproc_timer *timers = oproc->timers;
- 	struct device *dev = rproc->dev.parent;
- 	struct device_node *np = NULL;
-+	int num_timers = oproc->num_timers + oproc->num_wd_timers;
- 
--	if (oproc->num_timers <= 0)
-+	if (num_timers <= 0)
- 		return 0;
- 
- 	if (!configure)
- 		goto start_timers;
- 
--	for (i = 0; i < oproc->num_timers; i++) {
--		np = of_parse_phandle(dev->of_node, "ti,timers", i);
-+	for (i = 0; i < num_timers; i++) {
-+		if (i < oproc->num_timers)
-+			np = of_parse_phandle(dev->of_node, "ti,timers", i);
-+		else
-+			np = of_parse_phandle(dev->of_node,
-+					      "ti,watchdog-timers",
-+					      (i - oproc->num_timers));
- 		if (!np) {
- 			ret = -ENXIO;
- 			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
--				i, ret);
-+				i < oproc->num_timers ? i :
-+				i - oproc->num_timers, ret);
- 			goto free_timers;
- 		}
- 
-@@ -273,12 +360,14 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
- 		if (!timer_ops || !timer_ops->request_by_node ||
- 		    !timer_ops->set_source || !timer_ops->set_load ||
- 		    !timer_ops->free || !timer_ops->start ||
--		    !timer_ops->stop) {
-+		    !timer_ops->stop || !timer_ops->get_irq ||
-+		    !timer_ops->write_status) {
- 			ret = -EINVAL;
- 			dev_err(dev, "device does not have required timer ops\n");
- 			goto put_node;
- 		}
- 
-+		timers[i].irq = -1;
- 		timers[i].timer_ops = timer_ops;
- 		ret = omap_rproc_request_timer(dev, np, &timers[i]);
- 		if (ret) {
-@@ -287,10 +376,33 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
- 			goto put_node;
- 		}
- 		of_node_put(np);
-+
-+		if (i >= oproc->num_timers) {
-+			timers[i].irq = omap_rproc_get_timer_irq(&timers[i]);
-+			if (timers[i].irq < 0) {
-+				dev_err(dev, "get_irq for timer %p failed: %d\n",
-+					np, timers[i].irq);
-+				ret = -EBUSY;
-+				goto free_timers;
-+			}
-+
-+			ret = request_irq(timers[i].irq,
-+					  omap_rproc_watchdog_isr, IRQF_SHARED,
-+					  "rproc-wdt", rproc);
-+			if (ret) {
-+				dev_err(dev, "error requesting irq for timer %p\n",
-+					np);
-+				omap_rproc_release_timer(&timers[i]);
-+				timers[i].odt = NULL;
-+				timers[i].timer_ops = NULL;
-+				timers[i].irq = -1;
-+				goto free_timers;
-+			}
-+		}
- 	}
- 
- start_timers:
--	for (i = 0; i < oproc->num_timers; i++)
-+	for (i = 0; i < num_timers; i++)
- 		omap_rproc_start_timer(&timers[i]);
- 	return 0;
- 
-@@ -298,9 +410,12 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
- 	of_node_put(np);
- free_timers:
- 	while (i--) {
-+		if (i >= oproc->num_timers)
-+			free_irq(timers[i].irq, rproc);
- 		omap_rproc_release_timer(&timers[i]);
- 		timers[i].odt = NULL;
- 		timers[i].timer_ops = NULL;
-+		timers[i].irq = -1;
- 	}
- 
- 	return ret;
-@@ -321,16 +436,20 @@ static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
- 	int i;
- 	struct omap_rproc *oproc = rproc->priv;
- 	struct omap_rproc_timer *timers = oproc->timers;
-+	int num_timers = oproc->num_timers + oproc->num_wd_timers;
- 
--	if (oproc->num_timers <= 0)
-+	if (num_timers <= 0)
- 		return 0;
- 
--	for (i = 0; i < oproc->num_timers; i++) {
-+	for (i = 0; i < num_timers; i++) {
- 		omap_rproc_stop_timer(&timers[i]);
- 		if (configure) {
-+			if (i >= oproc->num_timers)
-+				free_irq(timers[i].irq, rproc);
- 			omap_rproc_release_timer(&timers[i]);
- 			timers[i].odt = NULL;
- 			timers[i].timer_ops = NULL;
-+			timers[i].irq = -1;
- 		}
- 	}
- 
-@@ -1093,6 +1212,7 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 	struct omap_rproc *oproc;
- 	struct rproc *rproc;
- 	const char *firmware;
-+	int num_timers;
+ /*
+@@ -147,8 +156,11 @@ static int omap_rproc_start(struct rproc *rproc)
  	int ret;
- 	struct reset_control *reset;
+ 	struct mbox_client *client = &oproc->client;
  
-@@ -1145,16 +1265,27 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 		oproc->num_timers = 0;
- 	}
- 
--	if (oproc->num_timers) {
-+#ifdef CONFIG_OMAP_REMOTEPROC_WATCHDOG
-+	oproc->num_wd_timers =
-+		of_count_phandle_with_args(np, "ti,watchdog-timers", NULL);
-+	if (oproc->num_wd_timers <= 0) {
-+		dev_dbg(&pdev->dev, "device does not have watchdog timers, status = %d\n",
-+			oproc->num_wd_timers);
-+		oproc->num_wd_timers = 0;
+-	if (oproc->boot_data)
+-		omap_rproc_write_dsp_boot_addr(rproc);
++	if (oproc->boot_data) {
++		ret = omap_rproc_write_dsp_boot_addr(rproc);
++		if (ret)
++			return ret;
 +	}
-+#endif
-+
-+	if (oproc->num_timers || oproc->num_wd_timers) {
-+		num_timers = oproc->num_timers + oproc->num_wd_timers;
- 		oproc->timers = devm_kzalloc(&pdev->dev, sizeof(*oproc->timers)
--					     * oproc->num_timers, GFP_KERNEL);
-+					     * num_timers, GFP_KERNEL);
- 		if (!oproc->timers) {
- 			ret = -ENOMEM;
- 			goto free_rproc;
- 		}
  
--		dev_dbg(&pdev->dev, "device has %d tick timers\n",
--			oproc->num_timers);
-+		dev_dbg(&pdev->dev, "device has %d tick timers and %d watchdog timers\n",
-+			oproc->num_timers, oproc->num_wd_timers);
- 	}
- 
- 	init_completion(&oproc->pm_comp);
+ 	client->dev = dev;
+ 	client->tx_done = NULL;
 -- 
 2.17.1
 
