@@ -2,90 +2,110 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7B9C4D2D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8037EC4D2DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE44524784
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="R6Jl2cP4";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="L+2p7Icj"
+	by mail.kernel.org (Postfix) with ESMTP id BC39124804
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfLMT7o (ORCPT
+        id S1728992AbfLMUBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:59:44 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:44550 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728696AbfLMT7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:59:44 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 7C98D8EE1E0;
-        Fri, 13 Dec 2019 11:59:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576267182;
-        bh=vWQDrFNBRvPHrpYiw15uNPAvoQF6Hmi1ReSpXrsHKmM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=R6Jl2cP46Dt/doNyUbZYQ0nMg6/WS+m3P2m2g1ghU1uvp1CQ5tFU1cWBjIajdBixd
-         IeI8SbzWuq9nbNKI3yJve1NI+7qDuVFkgXglwPteylYSZMYsnR0tDmov2M+bteyeqQ
-         0Do3quDEJ1Y3ttBnncgH+Z8ZjJV/jMAYaunBO6pg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3QzNzn626Lyl; Fri, 13 Dec 2019 11:59:40 -0800 (PST)
-Received: from [172.20.40.112] (unknown [206.121.240.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B4A078EE0E0;
-        Fri, 13 Dec 2019 11:59:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576267179;
-        bh=vWQDrFNBRvPHrpYiw15uNPAvoQF6Hmi1ReSpXrsHKmM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=L+2p7IcjaMeH3psLlUT8aYowCyyHNXyuebIK2ohBWvuDyYaKTV6vGoxrmqJAqpsgD
-         uN1cvwl9T1yjmIpTv2lDq2SvWVHJRsCXg6myuI4FdhK4M1y53nK6AmWYIu36J+aUgu
-         bUEEkyIemlotbxEI6H3Bm7jynqcOVYWJYg9dCEp8=
-Message-ID: <1576267177.4060.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Henning Schild <henning.schild@siemens.com>,
-        Laurent Vivier <laurent@vivier.eu>
-Cc:     linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        linux-fsdevel@vger.kernel.org,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-api@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
-        containers@lists.linux-foundation.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Date:   Fri, 13 Dec 2019 14:59:37 -0500
-In-Reply-To: <20191213185110.06b52cf4@md1za8fc.ad001.siemens.net>
-References: <20191107140304.8426-1-laurent@vivier.eu>
-         <20191107140304.8426-2-laurent@vivier.eu>
-         <7cb245ed-f738-7991-a09b-b27152274b9f@vivier.eu>
-         <20191213185110.06b52cf4@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Dec 2019 15:01:52 -0500
+Received: from mga09.intel.com ([134.134.136.24]:62763 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728736AbfLMUBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 15:01:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 12:01:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="208563026"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 13 Dec 2019 12:01:51 -0800
+Date:   Fri, 13 Dec 2019 12:01:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH v3 00/15] KVM: Dynamically size memslot arrays
+Message-ID: <20191213200151.GF31552@linux.intel.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+ <20191203221433.GK19877@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203221433.GK19877@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-13 at 18:51 +0100, Henning Schild wrote:
-> Hi all,
+On Tue, Dec 03, 2019 at 02:14:33PM -0800, Sean Christopherson wrote:
+> On Thu, Oct 24, 2019 at 04:07:29PM -0700, Sean Christopherson wrote:
+> > The end goal of this series is to dynamically size the memslot array so
+> > that KVM allocates memory based on the number of memslots in use, as
+> > opposed to unconditionally allocating memory for the maximum number of
+> > memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
+> > spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+> > E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
+> > the memory footprint from 90k to ~2.6k bytes.
+> > 
+> > The changes required to support dynamic sizing are relatively small,
+> > e.g. are essentially contained in patches 14/15 and 15/15.  Patches 1-13
+> > clean up the memslot code, which has gotten quite crusty, especially
+> > __kvm_set_memory_region().  The clean up is likely not strictly necessary
+> > to switch to dynamic sizing, but I didn't have a remotely reasonable
+> > level of confidence in the correctness of the dynamic sizing without first
+> > doing the clean up.
+> > 
+> > Christoffer, I added your Tested-by to the patches that I was confident
+> > would be fully tested based on the desription of what you tested.  Let me
+> > know if you disagree with any of 'em.
+> > 
+> > v3:
+> >   - Fix build errors on PPC and MIPS due to missed params during
+> >     refactoring [kbuild test robot].
+> >   - Rename the helpers for update_memslots() and add comments describing
+> >     the new algorithm and how it interacts with searching [Paolo].
+> >   - Remove the unnecessary and obnoxious warning regarding memslots being
+> >     a flexible array [Paolo].
+> >   - Fix typos in the changelog of patch 09/15 [Christoffer].
+> >   - Collect tags [Christoffer].
+> > 
+> > v2:
+> >   - Split "Drop kvm_arch_create_memslot()" into three patches to move
+> >     minor functional changes to standalone patches [Janosch].
+> >   - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
+> >   - Collect an Acked-by and a Reviewed-by
 > 
-> that is a very useful contribution, which will hopefully be
-> considered.
+> Paolo, do you want me to rebase this to the latest kvm/queue?
 
-I'm technically the maintainer on the you touched it last you own it
-basis, so if Christian's concerns get addressed I'll shepherd it
-upstream.
+Ping.
 
-James
-
+Applies cleanly on the current kvm/queue and nothing caught fire in
+testing (though I only re-tested the series as a whole).
