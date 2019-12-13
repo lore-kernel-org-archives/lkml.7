@@ -2,157 +2,161 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BD4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D041C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3A02173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFD9206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGpdExK4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5c0q9mL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbfLMCFT (ORCPT
+        id S1731906AbfLMCJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:05:19 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53513 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLMCFT (ORCPT
+        Thu, 12 Dec 2019 21:09:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37917 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbfLMCJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 21:05:19 -0500
-Received: by mail-wm1-f66.google.com with SMTP id w8so1319920wmd.3;
-        Thu, 12 Dec 2019 18:05:17 -0800 (PST)
+        Thu, 12 Dec 2019 21:09:31 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h20so4330019otn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 18:09:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4KHnlSOE+u7gVwbfHgyHTQo5E29XNhzxa8pc2Uz0sSQ=;
-        b=aGpdExK4CWD+ZFqM0use0gYjMn76UZwWr+c2NHqwZbnkLlkHzOQ3DPK9Ov5qdUnj5+
-         5XkaPpAJlELoFlHtLTFUOabW96QgYE6lBDAHYMtTSAXtk7IKYeOoKC0HnKVJ5ten1SYD
-         0R4TFyCfaQLLTzI6bqvJVAxR9kfSDCuuKbUQClOS1ew3nvhup6IVnGT6a2hJqU0I4HnE
-         qErauDVPA6nmfvr/MqinVjOVJhcP7unZeZV3U6ipkgJPU2VKc2IE9axD03IsNtqOlALB
-         K8AD9AEzf0rZbT/VRhP73Cl8YzHwCnZvnVJThMXcZgAlw9VrEjQ+S8RisIFpMNiGKQyd
-         8ZXw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vovJd+uHMVTrtqK/zCJZbzcPcP72DcTVR7QkhclYvEk=;
+        b=q5c0q9mLNmokamXfmx9MFWb207RUgzaDGN2UhqWgLavf9rRxkkfCqgzGTsqhgsrz8O
+         5lOWgoc0woysdcXfGOA4slOkpnZ67WEXrlZwCQis7QvIc+Wq+1uWrNoHvsrvRi/JVBul
+         SANe+fNbq4okVnp9H6txdmfA+6CQAkMbh/BH6GvPR1Y3XviozV3pm/4MZRYQaKXxws6f
+         5QzaGOq89tUTUQEtuMptuDInXjGssF0ST9Ua97ZpqN/ijGTG9Udnh8sK8rzvqtUSsB3r
+         /gzkQsyGCt2RHX7s0rVBuFEvlHa/5TQOOFZ1uHt7osOgLBt1cmOwEyvDBOnivoLi6Fk+
+         5/vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4KHnlSOE+u7gVwbfHgyHTQo5E29XNhzxa8pc2Uz0sSQ=;
-        b=WPTDVJMU+XHbmTJjcMkQoSkNUg/RRb+lM6eT1lrWW0pRTDwSRMka/82/nFacPzlfGm
-         u5P3Di51UjLjFTQjC1i+1Pr38W7UotPjVXepAPu/D28Kws1H8YfcVGIq6E9VHpFnhggf
-         9eZLApGVI/2adMXIfhaTYGDphN4m2Gu6DqcjGJ70SCdFChoBSaka6cgPBESNQUuNE1HJ
-         O6ZJUge2am+Ul9WjQuGD9N8A/T2j9tOYZD9P4Mr7DsbZytau7tqtVMuLpbbqKYatY5G+
-         Lf/WgfABRrXy65iHosSw/z06StHgBOpJzItv5IRunOctI7Nkvi6gflLbYb1bOGkHkavD
-         hosw==
-X-Gm-Message-State: APjAAAUhiQaH7OYkg0fXB2ef03ZOy/e8jq0T1DbAbqiIP/xw2thf4u+Z
-        Yg7GdGhGgh49tk4EFtIWr3tKGPL7
-X-Google-Smtp-Source: APXvYqw5cMIDLL9NgFGAlF/E0fKpuzAyyOpNrDp+ABiAIecGcepzvQBIHE1252bGWMaBHoLtILsc5w==
-X-Received: by 2002:a1c:a98e:: with SMTP id s136mr9717036wme.140.1576202716814;
-        Thu, 12 Dec 2019 18:05:16 -0800 (PST)
-Received: from [172.30.89.135] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id m10sm8224474wrx.19.2019.12.12.18.05.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 18:05:15 -0800 (PST)
-Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
- v4l2_async_notifier_cleanup in remove
-To:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>, devel@driverdev.osuosl.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <20191209085828.16183-1-hslester96@gmail.com>
- <20191212115134.GA1895@kadam>
- <20191212190858.nslwdcjpbjnrfvq2@arch-thunder.localdomain>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <def58acb-ae42-856a-f61d-645dcfbbe3f7@gmail.com>
-Date:   Thu, 12 Dec 2019 18:05:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vovJd+uHMVTrtqK/zCJZbzcPcP72DcTVR7QkhclYvEk=;
+        b=pdgNv9sdIYTqC+n84Sl0u4LSTx8z9sswyAmuTYptOir8lQPZI6YB6Bwzpz9P4p39GZ
+         tXzR7S1x+Nd1ofzcGOghxmUeS2/8WA+G8LTzOUnWf4Y/92TtvPa/OWvlPJTpC//Io7Ix
+         dU1lCc8NJzh5QU7SMLpbHeKkMANuowyFi4sm5MA7JTDXPpaeCvNO2+dkRLk7iq0E9QwH
+         CQE99egee4dqHzuNM1CfL5FHtWj7PpOGsHIsuQIWhGQL3EJZgTvh8NzIfGbq/u6ri6zp
+         1wZePaszCv5tRffmXayxXeKxNxKioYP+q6wdy/mg2Kj2yJBittOwKza64heX1nEu643B
+         qjdA==
+X-Gm-Message-State: APjAAAXqyGXoR4VGZSEkI1eseZu5eG9gi9yaR/sxYVH2I61BeFxN3eGB
+        jY5+KNjvPG2MvaW89u4iW4J6M0ipnuo2X6tO9lY=
+X-Google-Smtp-Source: APXvYqywZZkqxjGj7LWVTn+9w8E+MgzSO1+JJ6BWsL03agkEYsJDN3v5Fz0L0r0wcxi2IwDsnu1PGOUXGuL4jP7lTwk=
+X-Received: by 2002:a9d:6a8f:: with SMTP id l15mr11486859otq.59.1576202970718;
+ Thu, 12 Dec 2019 18:09:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212190858.nslwdcjpbjnrfvq2@arch-thunder.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1575976016-110900-1-git-send-email-chenwandun@huawei.com>
+In-Reply-To: <1575976016-110900-1-git-send-email-chenwandun@huawei.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Fri, 13 Dec 2019 04:09:03 +0200
+Message-ID: <CAFCwf13U7qcJEL=3qqtNSid7KBiviaJR-64+X5zsu-118-GODQ@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: remove variable 'val' set but not used
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Tomer Tayar <ttayar@habana.ai>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Dalit Ben Zoor <dbenzoor@habana.ai>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 10, 2019 at 1:00 PM Chen Wandun <chenwandun@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/misc/habanalabs/goya/goya.c: In function goya_pldm_init_cpu:
+> drivers/misc/habanalabs/goya/goya.c:2195:6: warning: variable val set but not used [-Wunused-but-set-variable]
+> drivers/misc/habanalabs/goya/goya.c: In function goya_hw_init:
+> drivers/misc/habanalabs/goya/goya.c:2505:6: warning: variable val set but not used [-Wunused-but-set-variable]
+>
+> Fixes: 9494a8dd8d22 ("habanalabs: add h/w queues module")
+> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+> ---
+>  drivers/misc/habanalabs/goya/goya.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+> index c8d16aa..7344e8a 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -2192,7 +2192,7 @@ static int goya_push_linux_to_device(struct hl_device *hdev)
+>
+>  static int goya_pldm_init_cpu(struct hl_device *hdev)
+>  {
+> -       u32 val, unit_rst_val;
+> +       u32 unit_rst_val;
+>         int rc;
+>
+>         /* Must initialize SRAM scrambler before pushing u-boot to SRAM */
+> @@ -2200,14 +2200,14 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
+>
+>         /* Put ARM cores into reset */
+>         WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL, CPU_RESET_ASSERT);
+> -       val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
+> +       RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
+>
+>         /* Reset the CA53 MACRO */
+>         unit_rst_val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+>         WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, CA53_RESET);
+> -       val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+> +       RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+>         WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, unit_rst_val);
+> -       val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+> +       RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+>
+>         rc = goya_push_uboot_to_device(hdev);
+>         if (rc)
+> @@ -2228,7 +2228,7 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
+>         /* Release ARM core 0 from reset */
+>         WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL,
+>                                         CPU_RESET_CORE0_DEASSERT);
+> -       val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
+> +       RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
+>
+>         return 0;
+>  }
+> @@ -2502,13 +2502,12 @@ int goya_mmu_init(struct hl_device *hdev)
+>  static int goya_hw_init(struct hl_device *hdev)
+>  {
+>         struct asic_fixed_properties *prop = &hdev->asic_prop;
+> -       u32 val;
+>         int rc;
+>
+>         dev_info(hdev->dev, "Starting initialization of H/W\n");
+>
+>         /* Perform read from the device to make sure device is up */
+> -       val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
+> +       RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
+>
+>         /*
+>          * Let's mark in the H/W that we have reached this point. We check
+> @@ -2560,7 +2559,7 @@ static int goya_hw_init(struct hl_device *hdev)
+>                 goto disable_queues;
+>
+>         /* Perform read from the device to flush all MSI-X configuration */
+> -       val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
+> +       RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
+>
+>         return 0;
+>
+> --
+> 2.7.4
+>
 
-
-On 12/12/19 11:08 AM, Rui Miguel Silva wrote:
-> Hi Dan,
-> Thanks for the inputs.
-> On Thu, Dec 12, 2019 at 02:51:34PM +0300, Dan Carpenter wrote:
->> On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
->>> All drivers in imx call v4l2_async_notifier_cleanup() after
->>> unregistering the notifier except this driver.  This should be a
->>> miss and we need to add the call to fix it.
->>>
->>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com> ---
->>> drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c
->>> b/drivers/staging/media/imx/imx7-mipi-csis.c index
->>> 99166afca071..2bfa85bb84e7 100644 ---
->>> a/drivers/staging/media/imx/imx7-mipi-csis.c +++
->>> b/drivers/staging/media/imx/imx7-mipi-csis.c @@ -1105,6 +1105,7 @@
->>> static int mipi_csis_remove(struct platform_device *pdev)
->>> mipi_csis_debugfs_exit(state);
->>> v4l2_async_unregister_subdev(&state->mipi_sd);
->>> v4l2_async_notifier_unregister(&state->subdev_notifier); +
->>> v4l2_async_notifier_cleanup(&state->subdev_notifier);
->>>   
->> In this case the "state->subdev_notifier" was never initialized or
->> used so both v4l2_async_notifier_unregister() and
->> v4l2_async_notifier_cleanup() are no-ops.
-> I have applied this patch on top of Steve's series [0], since by the
-> timeline I was expecting to be applied before this one, that series
-> adds a bound notifier, even though, it is not named the same, eheh.
->
-> That trigged me to think that this cleanup was correct since a
-> notifier was initialized in probe.
->
-> But as you say, it is a no-ops in the end.
->
-> @Steve, that said, it looks that in [0], you will need to add some
-> unregister and cleanup for the notifiers that you are adding in
-> several places.
-
-Well, turns out I had failed to notice that an async notifier was 
-already included in 'struct imx7_csi' as 'subdev_notifier', even though 
-it was unused. So I ended up creating a duplicate 'notifier'. I'll 
-cleaning that up in v3 of [0].
-
-Steve
-
-> A patch to fix this will follow.
->
-> ------
-> Cheers,
->       Rui
->
->
->
-> [0]: https://patchwork.kernel.org/project/linux-media/list/?series=207517
->
->> We should just delete "subdev_notifier".
->>
->> regards, dan carpenter
->>
->> _______________________________________________ devel mailing list
->> devel@linuxdriverproject.org
->> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
+Thanks!
+Applied to -fixes
+Oded
