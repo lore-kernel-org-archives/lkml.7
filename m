@@ -2,93 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2368C7D609
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B027BC7D619
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00FE247FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21072476B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b0T6JzCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfLMRuu (ORCPT
+        id S1728643AbfLMRw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:50:50 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2192 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728516AbfLMRuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:50:50 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id E551F4C557F52EF24B87;
-        Fri, 13 Dec 2019 17:50:48 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Dec 2019 17:50:48 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
- 2019 17:50:48 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>, "hare@suse.com" <hare@suse.com>,
-        "hch@lst.de" <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <0ad37515-c22d-6857-65a2-cc28256a8afa@huawei.com>
- <20191212223805.GA24463@ming.t460p>
- <d4b89ecf-7ced-d5d6-fc02-6d4257580465@huawei.com>
- <20191213131822.GA19876@ming.t460p>
- <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
- <20191213171222.GA17267@ming.t460p>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <a7ef3810-31af-013a-6d18-ceb6154aa2ef@huawei.com>
-Date:   Fri, 13 Dec 2019 17:50:47 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 13 Dec 2019 12:52:28 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46287 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728550AbfLMRw0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 12:52:26 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z17so3556471ljk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 09:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=BOTadHFmyQTuyfnwzSO5t/8LbI/7laK+kqej1EbG7+k=;
+        b=b0T6JzCxMhVY13DLGA2xcpsls2Z66ZtChJQ7elMsepKxbxoshw3HJbTwpry9VVoxOr
+         eBB9yEodODAt9/hYOjjtM0bB1EjKSZt5v/CVKTY4R41s+NG+sZv6E9GqQWkgbDuM9jGu
+         gM6UucCGu9jUQXJaF+0TnEz0TwSikILJB3HnSrZ4qS1rtC6O//j5AOzEvXPBT5KNM7Uq
+         hHF6u3W3K44574yMXNuYOtKKC9hkFWBROtVL1sk9B28Sz2AUMhcXRwBVAAhUiAYtBhrw
+         bfAz8few88T/ksVKihwLdlrjrNkE7QzvbMTZTnWjJ5cB8UrVpxrIeT6eQpXgweuJHoiY
+         ueFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=BOTadHFmyQTuyfnwzSO5t/8LbI/7laK+kqej1EbG7+k=;
+        b=iZWbrwgIPmPzUfBDVAboTkep+dhi06/j2dhoChXibrFpG/sERDRR2qmcFLY/z9ne4L
+         izBBp7s88CaGuz3Nf8WiOLnCMQ1z4xVadH8qOiMS/GCc8P6eKeaDQcvsyrsHcBNiQwac
+         yCWcYpHkJok2rtcJ96m7TpclWKIQJ5beOb4AVJEPDaldPE+i86/CD5LmMqGe+IcAes4p
+         ONm4iT4agRSngz/G8ZfF7Xsd4yVnPq41VxuoVKNdPD7GjleX+8B41yGC6gwlovpLT9bc
+         oCZN8lKz1BPnKMGF+dVZRCYoFB6L3Kuidosc3rljCRPfMQy36Qv2p+dNmjiWO7iVexGq
+         az8w==
+X-Gm-Message-State: APjAAAVT+4z0AcUqzbF2cwQQnSW7TkT9ORGclJCWgSyihVcm6fTJKaUj
+        NVwJl176lW5mSCrfmb7I8qvSlg==
+X-Google-Smtp-Source: APXvYqzNDAopUxd1xthpyicYmxDmbwcbiYO9ORSI/3KYNsxJbzSpz1Gg81uAjBuLDH9+jOSMfXWeKQ==
+X-Received: by 2002:a2e:995a:: with SMTP id r26mr10660526ljj.78.1576259545044;
+        Fri, 13 Dec 2019 09:52:25 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id m21sm4859062lfh.53.2019.12.13.09.52.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 09:52:24 -0800 (PST)
+Date:   Fri, 13 Dec 2019 09:52:17 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Paolo Pisati <paolo.pisati@canonical.com>
+Subject: Re: [PATCH] selftests: net: tls: remove recv_rcvbuf test
+Message-ID: <20191213095217.14588890@cakuba.netronome.com>
+In-Reply-To: <20191213103903.29777-1-cascardo@canonical.com>
+References: <20191213103903.29777-1-cascardo@canonical.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191213171222.GA17267@ming.t460p>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/12/2019 17:12, Ming Lei wrote:
->> pu list 80-83, effective list 81
->> irq 97, cpu list 84-87, effective list 86
->> irq 98, cpu list 88-91, effective list 89
->> irq 99, cpu list 92-95, effective list 93
->> john@ubuntu:~$
->>
->> I'm now thinking that we should just attempt this intelligent CPU affinity
->> assignment for managed interrupts.
-> Right, the rule is simple: distribute effective list among CPUs evenly,
-> meantime select the effective CPU from the irq's affinity mask.
+On Fri, 13 Dec 2019 07:39:02 -0300, Thadeu Lima de Souza Cascardo wrote:
+> This test only works when [1] is applied, which was rejected.
 > 
+> Basically, the errors are reported and cleared. In this particular case of
+> tls sockets, following reads will block.
+> 
+> The test case was originally submitted with the rejected patch, but, then,
+> was included as part of a different patchset, possibly by mistake.
+> 
+> [1] https://lore.kernel.org/netdev/20191007035323.4360-2-jakub.kicinski@netronome.com/#t
 
-Even if we fix that, there is still a potential to have a CPU handling 
-multiple nvme completion queues due to many factors, like cpu count, 
-probe ordering, other PCI endpoints in the system, etc, so this lockup 
-needs to be remedied.
+Ah, damn, you're right, sorry about that!
 
-Thanks,
-John
+> Thanks Paolo Pisati for pointing out the original patchset where this
+> appeared.
+> 
+> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Fixes: 65190f77424d (selftests/tls: add a test for fragmented messages)
+> Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
