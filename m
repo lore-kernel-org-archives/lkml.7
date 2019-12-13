@@ -3,82 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74C9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01E9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DB32253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836202077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLMJfK (ORCPT
+        id S1726683AbfLMJfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:35:10 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13644 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbfLMJfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:35:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 01:34:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="208406553"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 13 Dec 2019 01:34:37 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ifhLJ-00066h-JG; Fri, 13 Dec 2019 11:34:37 +0200
-Date:   Fri, 13 Dec 2019 11:34:37 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Gayatri Kammela <gayatri.kammela@intel.com>
-Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        alex.hung@canonical.com, linux-acpi@vger.kernel.org,
-        lenb@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        charles.d.prestopine@intel.com, dvhart@infradead.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Subject: Re: [PATCH v1 1/4] acpi: dptf: Add new Tiger Lake hardware IDs to
- support DPTF drivers in acpi
-Message-ID: <20191213093437.GO32742@smile.fi.intel.com>
-References: <cover.1576189376.git.gayatri.kammela@intel.com>
- <baaa3d7d1d1129a31c5a000578d1ad8198ca3881.1576189376.git.gayatri.kammela@intel.com>
+        Fri, 13 Dec 2019 04:35:04 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57596 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfLMJfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:35:04 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4A6B61C246E; Fri, 13 Dec 2019 10:35:02 +0100 (CET)
+Date:   Fri, 13 Dec 2019 10:35:01 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
+ state for HS
+Message-ID: <20191213093501.GA27976@amd>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150345.799359877@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
 Content-Disposition: inline
-In-Reply-To: <baaa3d7d1d1129a31c5a000578d1ad8198ca3881.1576189376.git.gayatri.kammela@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191211150345.799359877@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:37:17PM -0800, Gayatri Kammela wrote:
-> Tiger Lake has new unique hardware IDs that are needed to support
-> DPTF drivers. Hence, add them.
 
->  	{"INT3407", 0},
-> +	{"INT1047", 0},
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can we keep them in sorted order?
+On Wed 2019-12-11 16:04:21, Greg Kroah-Hartman wrote:
+> From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+>=20
+> [ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
+>=20
+> Highspeed device and below has different state names than superspeed and
+> higher. Add proper checks and printouts of link states for highspeed and
+> below.
 
->  	{"INT3409"},
->  	{"INT340A"},
->  	{"INT340B"},
-> +	{"INT1040"},
-> +	{"INT1043"},
-> +	{"INT1044"},
-> +	{"INT1047"},
-
-Ditto.
-
--- 
-With Best Regards,
-Andy Shevchenko
+This is debugfs, so I don't believe it was suitable for stable in the
+first place, but....
 
 
+> +	case DWC3_LINK_STATE_RESUME:
+> +		return "Resume";
+> +	default:
+> +		return "UNKNOWN link state\n";
+> +	}
+
+You may want to delete \n here, it will be duplicated if this ever
+triggers.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3zW0UACgkQMOfwapXb+vICpQCfQHzNyEi8pbT+Xw6OnRhG7h07
+jKIAnjd/cwx9RAtSs75/JPIETKGhNhwn
+=D5ZS
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
