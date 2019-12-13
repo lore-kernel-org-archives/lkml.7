@@ -2,229 +2,108 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DFEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C79C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1A72077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576231827;
-	bh=kb9bZosj/pzSB/IuIy2lfBXZ3yEjys07MNYtDVMjZBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AtD7kAbxwS9uA9lQzxQ9TlbhbDrMCEG/2hVX/wDPQg93uwA/d9ZFMdFoi/vNF4I5I
-	 F6IJ9PqMC0lTxxpn2Jq0HhR6MUsoMuAhn0Ze0P20/Czse9LRDA8T9ZFl2u8X68EhaS
-	 W/7KaNKpUvGWiCwLxOx0oH2SoCMtGZEzL9+Owh30=
+	by mail.kernel.org (Postfix) with ESMTP id 43D722073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLMKK0 (ORCPT
+        id S1726752AbfLMKLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:10:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfLMKK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:10:26 -0500
-Received: from localhost (unknown [84.241.199.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3592073D;
-        Fri, 13 Dec 2019 10:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576231824;
-        bh=kb9bZosj/pzSB/IuIy2lfBXZ3yEjys07MNYtDVMjZBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0nfkCg4z/HW894QDIO9BopJqKJrOIrLacMGV/Z9Jcuzqi7LqbQTttFs4mtdEDzivI
-         6nXez/2UUQwJOxBPGNnuHbJXuUfIeSDGt+vQWOjAII05T573CTPQe/hLMxXDxXuS+x
-         vzq/I0oDWU2UgzBkHqsoscTMMfZ6lSdlpB6oKrmg=
-Date:   Fri, 13 Dec 2019 11:10:21 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
+        Fri, 13 Dec 2019 05:11:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53834 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfLMKLd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:11:33 -0500
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1ifhuv-00075h-Mp; Fri, 13 Dec 2019 10:11:26 +0000
+Date:   Fri, 13 Dec 2019 07:11:14 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Justin Forbes <jmforbes@linuxtx.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- mem_serial_out
-Message-ID: <20191213101021.GA2141429@kroah.com>
-References: <00000000000053539a0599173973@google.com>
- <20191212105701.GB1476206@kroah.com>
- <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
- <20191213093357.GB2135612@kroah.com>
- <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org
+Subject: [PATCH] libbpf: Fix readelf output parsing for Fedora
+Message-ID: <20191213101114.GA3986@calabresa>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+ <87zhgbe0ix.fsf@mpe.ellerman.id.au>
+ <20191202093752.GA1535@localhost.localdomain>
+ <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
+ <20191210222553.GA4580@calabresa>
+ <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+ <20191211160133.GB4580@calabresa>
+ <CAFxkdAp9OGjJS1Sdny+TiG2+zU4n0Nj+ZVrZt5J6iVsS_zqqcw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+In-Reply-To: <CAFxkdAp9OGjJS1Sdny+TiG2+zU4n0Nj+ZVrZt5J6iVsS_zqqcw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 11:00:35AM +0100, Dmitry Vyukov wrote:
-> On Fri, Dec 13, 2019 at 10:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Dec 13, 2019 at 10:02:33AM +0100, Dmitry Vyukov wrote:
-> > > On Thu, Dec 12, 2019 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Fri, Dec 06, 2019 at 10:25:08PM -0800, syzbot wrote:
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following crash on:
-> > > > >
-> > > > > HEAD commit:    7ada90eb Merge tag 'drm-next-2019-12-06' of git://anongit...
-> > > > > git tree:       upstream
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=123ec282e00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f07a23020fd7d21a
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f4f1e871965064ae689e
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab090ee00000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f127f2e00000
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com
-> > > > >
-> > > > > BUG: kernel NULL pointer dereference, address: 0000000000000002
-> > > > > #PF: supervisor write access in kernel mode
-> > > > > #PF: error_code(0x0002) - not-present page
-> > > > > PGD 9764a067 P4D 9764a067 PUD 9f995067 PMD 0
-> > > > > Oops: 0002 [#1] PREEMPT SMP KASAN
-> > > > > CPU: 0 PID: 9687 Comm: syz-executor433 Not tainted 5.4.0-syzkaller #0
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
-> > > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
-> > > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-> > > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
-> > > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
-> > > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
-> > > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-> > > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
-> > > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
-> > > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
-> > > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
-> > > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
-> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > Call Trace:
-> > > > >  serial_out drivers/tty/serial/8250/8250.h:118 [inline]
-> > > > >  serial8250_clear_fifos.part.0+0x3a/0xb0
-> > > > > drivers/tty/serial/8250/8250_port.c:557
-> > > > >  serial8250_clear_fifos drivers/tty/serial/8250/8250_port.c:556 [inline]
-> > > > >  serial8250_do_startup+0x426/0x1cf0 drivers/tty/serial/8250/8250_port.c:2121
-> > > > >  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
-> > > > >  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
-> > > > >  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
-> > > > >  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
-> > > > >  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
-> > > > >  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
-> > > > >  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
-> > > > >  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
-> > > > >  vfs_ioctl fs/ioctl.c:47 [inline]
-> > > > >  file_ioctl fs/ioctl.c:545 [inline]
-> > > > >  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-> > > > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-> > > > >  __do_sys_ioctl fs/ioctl.c:756 [inline]
-> > > > >  __se_sys_ioctl fs/ioctl.c:754 [inline]
-> > > > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-> > > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > RIP: 0033:0x440219
-> > > > > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-> > > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > > > > 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > > > > RSP: 002b:00007ffced648c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > > > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
-> > > > > RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
-> > > > > RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-> > > > > R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
-> > > > > R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
-> > > > > Modules linked in:
-> > > > > CR2: 0000000000000002
-> > > > > ---[ end trace eaa11ffe82f3a763 ]---
-> > > > > RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
-> > > > > RIP: 0010:mem_serial_out+0x70/0x90 drivers/tty/serial/8250/8250_port.c:408
-> > > > > Code: e9 00 00 00 49 8d 7c 24 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-> > > > > c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5c 24 40 <44> 88 2b 5b 41 5c
-> > > > > 41 5d 5d c3 e8 81 ed cf fd eb c0 e8 da ed cf fd
-> > > > > RSP: 0018:ffffc90001de78e8 EFLAGS: 00010202
-> > > > > RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-> > > > > RDX: 1ffffffff181f40e RSI: ffffffff83e28776 RDI: ffffffff8c0fa070
-> > > > > RBP: ffffc90001de7900 R08: ffff8880919dc340 R09: ffffed10431ee1c6
-> > > > > R10: ffffed10431ee1c5 R11: ffff888218f70e2b R12: ffffffff8c0fa030
-> > > > > R13: 0000000000000001 R14: ffffc90001de7a40 R15: ffffffff8c0fa188
-> > > > > FS:  0000000001060880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > CR2: 0000000000000002 CR3: 000000009e6b8000 CR4: 00000000001406f0
-> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > >
-> > > >
-> > > > You set up a dubious memory base for your uart and then get upset when
-> > > > you write to that location.
-> > > >
-> > > > I don't know what to really do about this, this is a root-only operation
-> > > > and you are expected to know what you are doing when you attempt this.
-> > >
-> > > Hi Greg,
-> > >
-> > > Thanks for looking into this!
-> > > Should we restrict the fuzzer from accessing /dev/ttyS* entirely?
-> >
-> > No, not at all.
-> >
-> > > Or only restrict TIOCSSERIAL on them? Something else?
-> >
-> > Try running not as root.  if you have CAP_SYS_ADMIN you can do a lot of
-> > pretty bad things with tty ports, as you see here.  There's a reason the
-> > LOCKDOWN_TIOCSSERIAL "security lockdown" check was added :)
-> >
-> > The TIOCSSERIAL ioctl is a nice one for a lot of things that are able to
-> > be done as a normal user (baud rate changes, etc.), but there are also
-> > things like setting io port memory locations that can cause random
-> > hardware accesses and kernel crashes, as you instantly found out here :)
-> >
-> > So restrict the fuzzer to only run as a "normal" user of the serial
-> > port, and if you find problems there, I'll be glad to look at them.
-> 
-> Easier said than done. "normal user of the serial port" is not really
-> a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
-> not per-device...
+Fedora binutils has been patched to show "other info" for a symbol at the
+end of the line. This was done in order to support unmaintained scripts
+that would break with the extra info. [1]
 
-Not true, there's lots of users of serial port devices that do not have
-CAP_SYS_ADMIN set.  That's why we have groups :)
+[1] https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
 
-You can change the baud rate of your usb-serial device without root
-permissions, right?  That's a "normal" user right there.
+This in turn has been done to fix the build of ruby, because of checksec.
+[2] Thanks Michael Ellerman for the pointer.
 
-> As far as I remember +Tetsuo proposed a config along the lines of
-> "restrict only things that legitimately cause damage under a fuzzer
-> workload", e.g. freezing filesystems, disabling console output, etc.
-> This may be another candidate. But I can't find where that proposal is
-> now.
-> 
-> A simpler option that I see is as follows. syzkaller has several
-> sandboxing modes, one of them is "namespace" which uses a user ns, in
-> that more fuzzer is still uid=0 in the init namespace, so has access
-> to all /dev nodes, but it does not have CAP_SYS_ADMIN in the init
-> namespace. We could enable /dev/ttyS* only on instance that use
-> sandbox=namesace, and disable on the rest. Does it make sense?
+[2] https://bugzilla.redhat.com/show_bug.cgi?id=1479302
 
-Maybe, I don't know.  Why do you have to run the fuzzer with uid=0 in
-the first place?
+As libbpf Makefile is not unmaintained, we can simply deal with either
+output format, by just removing the "other info" field, as it always comes
+inside brackets.
 
-thanks,
+Cc: Aurelien Jarno <aurelien@aurel32.net>
+Fixes: 3464afdf11f9 (libbpf: Fix readelf output parsing on powerpc with recent binutils)
+Reported-by: Justin Forbes <jmforbes@linuxtx.org>
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+---
+ tools/lib/bpf/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-greg k-h
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index defae23a0169..23ae06c43d08 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -147,6 +147,7 @@ TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
+ 
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
++			   sed 's/\[.*\]//' | \
+ 			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+@@ -213,6 +214,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(BPF_IN_SHARED) |			 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
++		    sed 's/\[.*\]//' |					 \
+ 		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+-- 
+2.24.0
+
