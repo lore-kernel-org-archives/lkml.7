@@ -2,100 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D1C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9C3214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fytAK2IB"
+	by mail.kernel.org (Postfix) with ESMTP id 42021227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfLMGtr (ORCPT
+        id S1725989AbfLMGxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:49:47 -0500
-Received: from m228-5.mailgun.net ([159.135.228.5]:54515 "EHLO
-        m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfLMGtq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:49:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576219785; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=rsQgQXaQSRf07rNlF+2nEQlC5ph1o6pOgKqbbRi4Scw=; b=fytAK2IB8B26vFyoevdZZc/b6RZbnb1OSsmd/jRBLZsNAye6EurhQ9I/E4kmgeUSqEJ0G0SP
- N0QbderFdZCUfFwEVNisCihpZf+z97phY79cPhosvIHYJTZbs5Uv6ru8XKbTIl66922Cfv3z
- JvD7N33RJ73vNptADnDG+fTPi+U=
-X-Mailgun-Sending-Ip: 159.135.228.5
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df33488.7f19e803cb58-smtp-out-n01;
- Fri, 13 Dec 2019 06:49:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D643C447A0; Fri, 13 Dec 2019 06:49:44 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60FC6C433CB;
-        Fri, 13 Dec 2019 06:49:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60FC6C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        linux-watchdog@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] watchdog: qcom: Use platform_get_irq_optional() for bark irq
-Date:   Fri, 13 Dec 2019 12:19:34 +0530
-Message-Id: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Fri, 13 Dec 2019 01:53:44 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37208 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725385AbfLMGxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 01:53:43 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 72DC6644FC45965F575A;
+        Fri, 13 Dec 2019 14:53:40 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
+ 14:53:37 +0800
+Subject: =?UTF-8?Q?Re:_=e7=ad=94=e5=a4=8d:_[PATCH][v2]_page=5fpool:_handle_p?=
+ =?UTF-8?Q?age_recycle_for_NUMA=5fNO=5fNODE_condition?=
+To:     "Li,Rongqing" <lirongqing@baidu.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+CC:     Saeed Mahameed <saeedm@mellanox.com>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
+ <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
+ <20191211194933.15b53c11@carbon>
+ <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
+ <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
+ <20191212111831.2a9f05d3@carbon>
+ <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
+ <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <079a0315-efea-9221-8538-47decf263684@huawei.com>
+Date:   Fri, 13 Dec 2019 14:53:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_irq() prints an error message when the interrupt
-is not available. So on platforms where bark interrupt is
-not specified, following error message is observed on SDM845.
+On 2019/12/13 14:27, Li,Rongqing wrote:
+>>
+>> It is good to allocate the rx page close to both cpu and device, but if
+>> both goal can not be reached, maybe we choose to allocate page that close
+>> to cpu?
+>>
+> I think it is true
+> 
+> If it is true, , we can remove pool->p.nid, and replace alloc_pages_node with
+> alloc_pages in __page_pool_alloc_pages_slow, and change pool_page_reusable as
+> that page_to_nid(page) is checked with numa_mem_id()  
+> 
+> since alloc_pages hint to use the current node page, and __page_pool_alloc_pages_slow 
+> will be called in NAPI polling often if recycle failed, after some cycle, the page will be from
+> local memory node.
 
-[    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
+Yes if allocation and recycling are in the same NAPI polling context.
 
-This is also seen on SC7180, SM8150 SoCs as well.
-Fix this by using platform_get_irq_optional() instead.
+As pointed out by Saeed and Ilias, the allocation and recycling seems to
+may not be happening in the same NAPI polling context, see:
 
-Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/watchdog/qcom-wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+"In the current code base if they are only called under NAPI this might be true.
+On the page_pool skb recycling patches though (yes we'll eventually send those
+:)) this is called from kfree_skb()."
 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index a494543d3ae1..eb47fe5ed280 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	}
- 
- 	/* check if there is pretimeout support */
--	irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0) {
- 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
- 				       IRQF_TRIGGER_RISING,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+So there may need some additionl attention.
+
+
+> 
+> -Li
+> 
+
