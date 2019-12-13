@@ -2,262 +2,402 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3023DC34345
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:07 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6024224755
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D12C3434A
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:06 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id D609424708
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iQu8Ss5C"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o7i5cebK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfLMM4o (ORCPT
+        id S1727525AbfLMM4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46220 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfLMM4n (ORCPT
+        Fri, 13 Dec 2019 07:56:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41740 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfLMM4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fWjlDQlwIoBg7I4Z9XSj9pI9UUWfLrkzsxAziGh6H/M=; b=iQu8Ss5CvIW0fiJBxMLgkD1jm
-        yz+ajnmICV4TjIDDgyjd7PjqlmuUEvwzpxv4iI6JOc4i4t2KIec0epVoJTyvbUHEiqpxM6AJ+Xt05
-        sKMlHGiYwJk4ddTqnO404xiUWfpw8tXg1eqIYVKvSm4e0J/vOrP4MaT79qCHrwdyRKW34PUesKBVP
-        u/FrqqKsWXFJr9rj6glrIgaha27VGjLLX/VvZx6keNKxpAzE9YM5ANFtm2gDn8hL2KCBjRWD1jabQ
-        sRW9rFRq/ySsD5jIc8sZQIUccKV4JWAI1eusNTtWdFHf/Ti/SiaUpwv58KDQc+kuAmMRc9g/B9vAp
-        wYyfUNA/g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifkUX-0002Gq-OV; Fri, 13 Dec 2019 12:56:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 385E5305FFF;
-        Fri, 13 Dec 2019 13:54:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EC16A20121961; Fri, 13 Dec 2019 13:56:18 +0100 (CET)
-Date:   Fri, 13 Dec 2019 13:56:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191213125618.GD2844@hirez.programming.kicks-ass.net>
-References: <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <20191212202157.GD11457@worktop.programming.kicks-ass.net>
- <20191212205338.GB11802@worktop.programming.kicks-ass.net>
- <20191213104706.xnpqaehmtean3mkd@ltop.local>
+        Fri, 13 Dec 2019 07:56:35 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuXxN018575;
+        Fri, 13 Dec 2019 06:56:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576241793;
+        bh=JfMmU4nNY9BoyeQwnZZ/LpQqxDfSJiNqtm5apVe+NBI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=o7i5cebKWwkpEZpTAazHk7Bf8lJQMWzWTaweyCQzADg1x8huy88U/lJ5Zp20Xe2qT
+         PgE1WrDt8dmZ+2URmOWynvh64MqREqSkFZBKD7yiMPpqbueOKWQU2v9/4X+jaXej3F
+         IjFWKdy4C2RLElX+MOS2y1JbnbwlK1rEtSjjxPCY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuXeL085564
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 06:56:33 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Dec 2019 06:56:33 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Dec 2019 06:56:33 -0600
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVU127295;
+        Fri, 13 Dec 2019 06:56:31 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv3 15/15] remoteproc/omap: add watchdog functionality for remote processors
+Date:   Fri, 13 Dec 2019 14:55:37 +0200
+Message-ID: <20191213125537.11509-16-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213104706.xnpqaehmtean3mkd@ltop.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 11:47:06AM +0100, Luc Van Oostenryck wrote:
-> On Thu, Dec 12, 2019 at 09:53:38PM +0100, Peter Zijlstra wrote:
-> > Now, looking at the current GCC source:
-> > 
-> >   https://github.com/gcc-mirror/gcc/blob/97d7270f894395e513667a031a0c309d1819d05e/gcc/c/c-parser.c#L3707
-> > 
-> > it seems that __typeof__() is supposed to strip all qualifiers from
-> > _Atomic types. That lead me to try:
-> > 
-> > 	typeof(_Atomic typeof(p)) __p = (p);
-> > 
-> > But alas, I still get the same junk you got for ool_store_release() :/
-> 
-> I was checking this to see if Sparse was ready to support this.
-> I was a bit surprised because at first sigth GCC was doing as
-> it claims (typeof striping const & volatile on _Atomic types)
-> but your exampe wasn't working. But it's working if an
-> intermediate var is used:
-> 	_Atomic typeof(p) tmp;
-> 	typeof(tmp) __p = (p);
-> or, uglier but probably more practical:
-> 	typeof(({_Atomic typeof(p) tmp; })) __p = (p);
-> 
-> Go figure!
+From: Suman Anna <s-anna@ti.com>
 
-Excellent! I had to change it to something like:
+Remote processors can be stuck in a loop, and may not be recoverable
+if they do not have a built-in watchdog. The watchdog implementation
+for OMAP remote processors uses external gptimers that can be used
+to interrupt both the Linux host as well as the remote processor.
 
-#define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
+Each remote processor is responsible for refreshing the timer during
+normal behavior - during OS task scheduling or entering the idle loop
+properly. During a watchdog condition (executing a tight loop causing
+no scheduling), the host processor gets interrupts and schedules a
+recovery for the corresponding remote processor. The remote processor
+may also get interrupted to be able to print a back trace.
 
-but that does indeed work!
+A menuconfig option has also been added to enable/disable the Watchdog
+functionality, with the default as disabled.
 
-Now I suppose we should wrap that in a symbol that indicates our
-compiler does indeed support _Atomic, otherwise things will come apart.
-
-That is, my gcc-4.6 doesn't seem to have it, while gcc-4.8 does, which
-is exactly the range that needs the daft READ_ONCE() construct, how
-convenient :/
-
-Something a little like this perhaps?
-
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
+ drivers/remoteproc/Kconfig           |  12 +++
+ drivers/remoteproc/omap_remoteproc.c | 155 ++++++++++++++++++++++++---
+ 2 files changed, 155 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-index 7d9cc5ec4971..c389af602da8 100644
---- a/arch/arm64/include/asm/barrier.h
-+++ b/arch/arm64/include/asm/barrier.h
-@@ -75,9 +75,9 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index d6450d7fcf92..b2eaa18ad503 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -42,6 +42,18 @@ config OMAP_REMOTEPROC
+ 	  It's safe to say N here if you're not interested in multimedia
+ 	  offloading or just want a bare minimum kernel.
  
- #define __smp_store_release(p, v)					\
- do {									\
--	typeof(p) __p = (p);						\
--	union { typeof(*p) __val; char __c[1]; } __u =			\
--		{ .__val = (__force typeof(*p)) (v) };			\
-+	unqual_typeof(p) __p = (p);					\
-+	union { unqual_typeof(*p) __val; char __c[1]; } __u =	\
-+		{ .__val = (__force unqual_typeof(*p)) (v) };	\
- 	compiletime_assert_atomic_type(*p);				\
- 	kasan_check_write(__p, sizeof(*p));				\
- 	switch (sizeof(*p)) {						\
-@@ -110,8 +110,8 @@ do {									\
- 
- #define __smp_load_acquire(p)						\
- ({									\
--	union { typeof(*p) __val; char __c[1]; } __u;			\
--	typeof(p) __p = (p);						\
-+	union { unqual_typeof(*p) __val; char __c[1]; } __u;		\
-+	unqual_typeof(p) __p = (p);					\
- 	compiletime_assert_atomic_type(*p);				\
- 	kasan_check_read(__p, sizeof(*p));				\
- 	switch (sizeof(*p)) {						\
-@@ -141,8 +141,8 @@ do {									\
- 
- #define smp_cond_load_relaxed(ptr, cond_expr)				\
- ({									\
--	typeof(ptr) __PTR = (ptr);					\
--	typeof(*ptr) VAL;						\
-+	unqual_typeof(ptr) __PTR = (ptr);				\
-+	unqual_typeof(*ptr) VAL;					\
- 	for (;;) {							\
- 		VAL = READ_ONCE(*__PTR);				\
- 		if (cond_expr)						\
-@@ -154,8 +154,8 @@ do {									\
- 
- #define smp_cond_load_acquire(ptr, cond_expr)				\
- ({									\
--	typeof(ptr) __PTR = (ptr);					\
--	typeof(*ptr) VAL;						\
-+	unqual_typeof(ptr) __PTR = (ptr);				\
-+	unqual_typeof(*ptr) VAL;					\
- 	for (;;) {							\
- 		VAL = smp_load_acquire(__PTR);				\
- 		if (cond_expr)						\
-diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
-index 85b28eb80b11..dd5bb055f5ab 100644
---- a/include/asm-generic/barrier.h
-+++ b/include/asm-generic/barrier.h
-@@ -228,8 +228,8 @@ do {									\
-  */
- #ifndef smp_cond_load_relaxed
- #define smp_cond_load_relaxed(ptr, cond_expr) ({		\
--	typeof(ptr) __PTR = (ptr);				\
--	typeof(*ptr) VAL;					\
-+	unqual_typeof(ptr) __PTR = (ptr);			\
-+	unqual_typeof(*ptr) VAL;				\
- 	for (;;) {						\
- 		VAL = READ_ONCE(*__PTR);			\
- 		if (cond_expr)					\
-@@ -250,7 +250,7 @@ do {									\
-  */
- #ifndef smp_cond_load_acquire
- #define smp_cond_load_acquire(ptr, cond_expr) ({		\
--	typeof(*ptr) _val;					\
-+	unqual_typeof(*ptr) _val;				\
- 	_val = smp_cond_load_relaxed(ptr, cond_expr);		\
- 	smp_acquire__after_ctrl_dep();				\
- 	_val;							\
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index 0eb2a1cc411d..15fd7ea3882a 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -179,3 +179,10 @@
- #endif
- 
- #define __no_fgcse __attribute__((optimize("-fno-gcse")))
++config OMAP_REMOTEPROC_WATCHDOG
++	bool "OMAP remoteproc watchdog timer"
++	depends on OMAP_REMOTEPROC
++	default n
++	help
++	  Say Y here to enable watchdog timer for remote processors.
 +
-+#if GCC_VERSION < 40800
-+/*
-+ * GCC-4.6 doesn't support _Atomic, which is required to strip qualifiers.
-+ */
-+#define unqual_typeof(x)	typeof(x)
-+#endif
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index ad8c76144a3c..9736993f2ba1 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -279,7 +279,7 @@ void __write_once_size(volatile void *p, void *res, int size)
++	  This option controls the watchdog functionality for the remote
++	  processors in OMAP. Dedicated OMAP DMTimers are used by the remote
++	  processors and triggers the timer interrupt upon a watchdog
++	  detection.
++
+ config WKUP_M3_RPROC
+ 	tristate "AMx3xx Wakeup M3 remoteproc support"
+ 	depends on SOC_AM33XX || SOC_AM43XX
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 02599278263f..6b2f46f5a0e2 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -22,6 +22,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
+ #include <linux/remoteproc.h>
+ #include <linux/mailbox_client.h>
+ #include <linux/omap-mailbox.h>
+@@ -72,10 +73,12 @@ struct omap_rproc_mem {
+  * struct omap_rproc_timer - data structure for a timer used by a omap rproc
+  * @odt: timer pointer
+  * @timer_ops: OMAP dmtimer ops for @odt timer
++ * @irq: timer irq
+  */
+ struct omap_rproc_timer {
+ 	struct omap_dm_timer *odt;
+ 	const struct omap_dm_timer_ops *timer_ops;
++	int irq;
+ };
  
- #define __READ_ONCE(x, check)						\
- ({									\
--	union { typeof(x) __val; char __c[1]; } __u;			\
-+	union { unqual_typeof(x) __val; char __c[1]; } __u;		\
- 	if (check)							\
- 		__read_once_size(&(x), __u.__c, sizeof(x));		\
- 	else								\
-@@ -302,12 +302,12 @@ unsigned long read_word_at_a_time(const void *addr)
- 	return *(unsigned long *)addr;
+ /**
+@@ -86,6 +89,7 @@ struct omap_rproc_timer {
+  * @mem: internal memory regions data
+  * @num_mems: number of internal memory regions
+  * @num_timers: number of rproc timer(s)
++ * @num_wd_timers: number of rproc watchdog timers
+  * @timers: timer(s) info used by rproc
+  * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
+  * @need_resume: if true a resume is needed in the system resume callback
+@@ -102,6 +106,7 @@ struct omap_rproc {
+ 	struct omap_rproc_mem *mem;
+ 	int num_mems;
+ 	int num_timers;
++	int num_wd_timers;
+ 	struct omap_rproc_timer *timers;
+ 	int autosuspend_delay;
+ 	bool need_resume;
+@@ -217,6 +222,81 @@ static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
+ 	return timer->timer_ops->free(timer->odt);
  }
  
--#define WRITE_ONCE(x, val) \
--({							\
--	union { typeof(x) __val; char __c[1]; } __u =	\
--		{ .__val = (__force typeof(x)) (val) }; \
--	__write_once_size(&(x), __u.__c, sizeof(x));	\
--	__u.__val;					\
-+#define WRITE_ONCE(x, val)					\
-+({								\
-+	union { unqual_typeof(x) __val; char __c[1]; } __u =	\
-+		{ .__val = (__force unqual_typeof(x)) (val) };	\
-+	__write_once_size(&(x), __u.__c, sizeof(x));		\
-+	__u.__val;						\
- })
- 
- #include <linux/kcsan.h>
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 72393a8c1a6c..fe8012c54251 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -243,4 +243,11 @@ struct ftrace_likely_data {
- #define __diag_error(compiler, version, option, comment) \
- 	__diag_ ## compiler(version, error, option)
- 
-+#ifndef unqual_typeof
-+/*
-+ * GCC __typeof__() strips all qualifiers from _Atomic types.
++/**
++ * omap_rproc_get_timer_irq - get the irq for a timer
++ * @timer - handle to a OMAP rproc timer
++ *
++ * This function is used to get the irq associated with a watchdog timer. The
++ * function is called by the OMAP remoteproc driver to register a interrupt
++ * handler to handle watchdog events on the remote processor.
++ *
++ * Returns the irq id on success, otherwise a failure as returned by DMTimer ops
 + */
-+#define unqual_typeof(x)	typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
++static inline int omap_rproc_get_timer_irq(struct omap_rproc_timer *timer)
++{
++	return timer->timer_ops->get_irq(timer->odt);
++}
++
++/**
++ * omap_rproc_ack_timer_irq - acknowledge a timer irq
++ * @timer: handle to a OMAP rproc timer
++ *
++ * This function is used to clear the irq associated with a watchdog timer. The
++ * The function is called by the OMAP remoteproc upon a watchdog event on the
++ * remote processor to clear the interrupt status of the watchdog timer.
++ *
++ * Returns the irq id on success, otherwise a failure as returned by DMTimer ops
++ */
++static inline void omap_rproc_ack_timer_irq(struct omap_rproc_timer *timer)
++{
++	timer->timer_ops->write_status(timer->odt, OMAP_TIMER_INT_OVERFLOW);
++}
++
++/**
++ * omap_rproc_watchdog_isr - Watchdog ISR handler for remoteproc device
++ * @irq: IRQ number associated with a watchdog timer
++ * @data: IRQ handler data
++ *
++ * This ISR routine executes the required necessary low-level code to
++ * acknowledge a watchdog timer interrupt. There can be multiple watchdog
++ * timers associated with a rproc (like IPUs which have 2 watchdog timers,
++ * one per Cortex M3/M4 core), so a lookup has to be performed to identify
++ * the timer to acknowledge its interrupt.
++ *
++ * The function also invokes rproc_report_crash to report the watchdog event
++ * to the remoteproc driver core, to trigger a recovery.
++ *
++ * Return: IRQ_HANDLED or IRQ_NONE
++ */
++static irqreturn_t omap_rproc_watchdog_isr(int irq, void *data)
++{
++	struct rproc *rproc = data;
++	struct omap_rproc *oproc = rproc->priv;
++	struct device *dev = rproc->dev.parent;
++	struct omap_rproc_timer *timers = oproc->timers;
++	struct omap_rproc_timer *wd_timer = NULL;
++	int num_timers = oproc->num_timers + oproc->num_wd_timers;
++	int i;
++
++	for (i = oproc->num_timers; i < num_timers; i++) {
++		if (timers[i].irq > 0 && irq == timers[i].irq) {
++			wd_timer = &timers[i];
++			break;
++		}
++	}
++
++	if (!wd_timer) {
++		dev_err(dev, "invalid timer\n");
++		return IRQ_NONE;
++	}
++
++	omap_rproc_ack_timer_irq(wd_timer);
++
++	rproc_report_crash(rproc, RPROC_WATCHDOG);
++
++	return IRQ_HANDLED;
++}
++
+ /**
+  * omap_rproc_enable_timers - enable the timers for a remoteproc
+  * @rproc: handle of a remote processor
+@@ -238,19 +318,26 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
+ 	struct omap_rproc_timer *timers = oproc->timers;
+ 	struct device *dev = rproc->dev.parent;
+ 	struct device_node *np = NULL;
++	int num_timers = oproc->num_timers + oproc->num_wd_timers;
+ 
+-	if (oproc->num_timers <= 0)
++	if (num_timers <= 0)
+ 		return 0;
+ 
+ 	if (!configure)
+ 		goto start_timers;
+ 
+-	for (i = 0; i < oproc->num_timers; i++) {
+-		np = of_parse_phandle(dev->of_node, "ti,timers", i);
++	for (i = 0; i < num_timers; i++) {
++		if (i < oproc->num_timers)
++			np = of_parse_phandle(dev->of_node, "ti,timers", i);
++		else
++			np = of_parse_phandle(dev->of_node,
++					      "ti,watchdog-timers",
++					      (i - oproc->num_timers));
+ 		if (!np) {
+ 			ret = -ENXIO;
+ 			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
+-				i, ret);
++				i < oproc->num_timers ? i :
++				i - oproc->num_timers, ret);
+ 			goto free_timers;
+ 		}
+ 
+@@ -273,12 +360,14 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
+ 		if (!timer_ops || !timer_ops->request_by_node ||
+ 		    !timer_ops->set_source || !timer_ops->set_load ||
+ 		    !timer_ops->free || !timer_ops->start ||
+-		    !timer_ops->stop) {
++		    !timer_ops->stop || !timer_ops->get_irq ||
++		    !timer_ops->write_status) {
+ 			ret = -EINVAL;
+ 			dev_err(dev, "device does not have required timer ops\n");
+ 			goto put_node;
+ 		}
+ 
++		timers[i].irq = -1;
+ 		timers[i].timer_ops = timer_ops;
+ 		ret = omap_rproc_request_timer(dev, np, &timers[i]);
+ 		if (ret) {
+@@ -287,10 +376,33 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
+ 			goto put_node;
+ 		}
+ 		of_node_put(np);
++
++		if (i >= oproc->num_timers) {
++			timers[i].irq = omap_rproc_get_timer_irq(&timers[i]);
++			if (timers[i].irq < 0) {
++				dev_err(dev, "get_irq for timer %p failed: %d\n",
++					np, timers[i].irq);
++				ret = -EBUSY;
++				goto free_timers;
++			}
++
++			ret = request_irq(timers[i].irq,
++					  omap_rproc_watchdog_isr, IRQF_SHARED,
++					  "rproc-wdt", rproc);
++			if (ret) {
++				dev_err(dev, "error requesting irq for timer %p\n",
++					np);
++				omap_rproc_release_timer(&timers[i]);
++				timers[i].odt = NULL;
++				timers[i].timer_ops = NULL;
++				timers[i].irq = -1;
++				goto free_timers;
++			}
++		}
+ 	}
+ 
+ start_timers:
+-	for (i = 0; i < oproc->num_timers; i++)
++	for (i = 0; i < num_timers; i++)
+ 		omap_rproc_start_timer(&timers[i]);
+ 	return 0;
+ 
+@@ -298,9 +410,12 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
+ 	of_node_put(np);
+ free_timers:
+ 	while (i--) {
++		if (i >= oproc->num_timers)
++			free_irq(timers[i].irq, rproc);
+ 		omap_rproc_release_timer(&timers[i]);
+ 		timers[i].odt = NULL;
+ 		timers[i].timer_ops = NULL;
++		timers[i].irq = -1;
+ 	}
+ 
+ 	return ret;
+@@ -321,16 +436,20 @@ static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
+ 	int i;
+ 	struct omap_rproc *oproc = rproc->priv;
+ 	struct omap_rproc_timer *timers = oproc->timers;
++	int num_timers = oproc->num_timers + oproc->num_wd_timers;
+ 
+-	if (oproc->num_timers <= 0)
++	if (num_timers <= 0)
+ 		return 0;
+ 
+-	for (i = 0; i < oproc->num_timers; i++) {
++	for (i = 0; i < num_timers; i++) {
+ 		omap_rproc_stop_timer(&timers[i]);
+ 		if (configure) {
++			if (i >= oproc->num_timers)
++				free_irq(timers[i].irq, rproc);
+ 			omap_rproc_release_timer(&timers[i]);
+ 			timers[i].odt = NULL;
+ 			timers[i].timer_ops = NULL;
++			timers[i].irq = -1;
+ 		}
+ 	}
+ 
+@@ -1093,6 +1212,7 @@ static int omap_rproc_probe(struct platform_device *pdev)
+ 	struct omap_rproc *oproc;
+ 	struct rproc *rproc;
+ 	const char *firmware;
++	int num_timers;
+ 	int ret;
+ 	struct reset_control *reset;
+ 
+@@ -1145,16 +1265,27 @@ static int omap_rproc_probe(struct platform_device *pdev)
+ 		oproc->num_timers = 0;
+ 	}
+ 
+-	if (oproc->num_timers) {
++#ifdef CONFIG_OMAP_REMOTEPROC_WATCHDOG
++	oproc->num_wd_timers =
++		of_count_phandle_with_args(np, "ti,watchdog-timers", NULL);
++	if (oproc->num_wd_timers <= 0) {
++		dev_dbg(&pdev->dev, "device does not have watchdog timers, status = %d\n",
++			oproc->num_wd_timers);
++		oproc->num_wd_timers = 0;
++	}
 +#endif
 +
- #endif /* __LINUX_COMPILER_TYPES_H */
++	if (oproc->num_timers || oproc->num_wd_timers) {
++		num_timers = oproc->num_timers + oproc->num_wd_timers;
+ 		oproc->timers = devm_kzalloc(&pdev->dev, sizeof(*oproc->timers)
+-					     * oproc->num_timers, GFP_KERNEL);
++					     * num_timers, GFP_KERNEL);
+ 		if (!oproc->timers) {
+ 			ret = -ENOMEM;
+ 			goto free_rproc;
+ 		}
+ 
+-		dev_dbg(&pdev->dev, "device has %d tick timers\n",
+-			oproc->num_timers);
++		dev_dbg(&pdev->dev, "device has %d tick timers and %d watchdog timers\n",
++			oproc->num_timers, oproc->num_wd_timers);
+ 	}
+ 
+ 	init_completion(&oproc->pm_comp);
+-- 
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
