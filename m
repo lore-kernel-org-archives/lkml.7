@@ -2,130 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8899C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F3DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C4C22527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD342073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ni2xtTjM"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EUsDVSAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbfLMEGR (ORCPT
+        id S1731837AbfLMEGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 23:06:17 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34997 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfLMEGQ (ORCPT
+        Thu, 12 Dec 2019 23:06:37 -0500
+Received: from m228-4.mailgun.net ([159.135.228.4]:12524 "EHLO
+        m228-4.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731342AbfLMEGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 23:06:16 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so1098893lja.2;
-        Thu, 12 Dec 2019 20:06:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=URwD2kqbKtqHBmAr97llX1pKhl7DZxsGfB/7E5QLYGE=;
-        b=ni2xtTjM+9tiMdl0vEVZN6oCJYd5JkmqYneP9rmdFfxSNkEaRNTnpDtUAPxhg/WkG2
-         bkcQ+xCwU3likRm558tmzXfAvt+hvoTytoPU3MIOrbdLtLvmidkGbTvIm04/n6ZeT85X
-         3xEf/wk45HDrPEj5DMysxfiNMrEZYPAFSya2j9VTgoc0bJQdq+P2lCsPoSKFd01V881b
-         ooCAS1DF8X1cCO4GwWMohtH8hHF+7K4mJYFktzDdsPSii+EjZNaSc37bMgU6z0B9h8/g
-         opfpUHJgMg/y+kTWNMp4tMhMGLKNOljlpF9vXqLJUYmQZWhYxz+dEuOyH2zld1Xq3CeY
-         fzKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=URwD2kqbKtqHBmAr97llX1pKhl7DZxsGfB/7E5QLYGE=;
-        b=RI+RkoFoVwbWcolwHDsExSSkZkgyLgz3HSu8I6McYQQlhsFEMlGLQOEPBS86bVrcZE
-         nSPOc/iUPi9ZuM0gi23BwuGkJ2I3Y6oTnV+7R1OhCkG0ebVFesih3koyX4/Qo3CELqkD
-         PnHgbPteFwTC4SlgF1iN9OdSAFckEiX5+lJWkqxAzjFWP8UuK+QKAI7m7C2MlrqgQobi
-         AhDFv3MbUwfL+qJi98foh/jjxHPRE8WPU6eu203RKv7S5V0hXYtyXsumRwB7Yf4LLoVg
-         t/s7W4D0diu4/s3dvB415mMaDA1Ic6P/WGdKIv24/QzV1iICuuZ/LnUV1DK/1WWqoVUN
-         KtYA==
-X-Gm-Message-State: APjAAAXUQQTcD32/H+ewfWQ2jFvRs5msok1PZIN+7RGPPoCb0MqOH4Jk
-        G6IzZuskwsLQCLj2UPNd8rltaoLi07CkxCtOOiM=
-X-Google-Smtp-Source: APXvYqzu65JNr8Zns5VVeks/iQ8D6CeQ4H0T8PGRqqD+u82N39Gk52MLphGw89g9L21cri/7kJtnKuJByOQxugJm9Ls=
-X-Received: by 2002:a2e:6f19:: with SMTP id k25mr7997476ljc.84.1576209973389;
- Thu, 12 Dec 2019 20:06:13 -0800 (PST)
+        Thu, 12 Dec 2019 23:06:37 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576209996; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=t3WuJRdbhQpYuvgidbSiHcxucdQ22ZxkAD1DdKzZCFQ=; b=EUsDVSAsZJDpmWYySTAcYp4AE6lPdeSe4r2d/uUexVFBBb4KbCyTttVGwo+VYcrq5tNNTksZ
+ WNktCbTAKQA8aXKvBGxkwBywIPbA4cd4rX2pQzI18DcO3IgbfGTlKzsDI8CaQ5QsujTadYV4
+ xC4uquwlfWxOuD8joxUQKUbJn90=
+X-Mailgun-Sending-Ip: 159.135.228.4
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df30e4b.7f9bd3706ed8-smtp-out-n03;
+ Fri, 13 Dec 2019 04:06:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 02BB4C447A1; Fri, 13 Dec 2019 04:06:34 +0000 (UTC)
+Received: from [10.131.117.127] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F548C43383;
+        Fri, 13 Dec 2019 04:06:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F548C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 0/7] arm64: dts: sc7180: Make dtbs_check mostly happy
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        swboyd@chromium.org, mka@chromium.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20191212193544.80640-1-dianders@chromium.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <5bccad6f-748e-1024-acd0-04af0a4cb731@codeaurora.org>
+Date:   Fri, 13 Dec 2019 09:36:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
- <1576075099-3441-4-git-send-email-akinobu.mita@gmail.com> <CAHp75VfSUafrg82WcfUA4LhSFaNQSgZp39oVQGD=M124urC=xA@mail.gmail.com>
-In-Reply-To: <CAHp75VfSUafrg82WcfUA4LhSFaNQSgZp39oVQGD=M124urC=xA@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Fri, 13 Dec 2019 13:06:02 +0900
-Message-ID: <CAC5umygGZqWh2rRGMLvPhWFvD9Mv-5u6stY3c+5Z9_QC6OrNvA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/12] platform/x86: asus-wmi: switch to use
- <linux/units.h> helpers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B412=E6=9C=8812=E6=97=A5(=E6=9C=A8) 0:32 Andy Shevchenko <andy.s=
-hevchenko@gmail.com>:
 
->
-> On Wed, Dec 11, 2019 at 4:39 PM Akinobu Mita <akinobu.mita@gmail.com> wro=
-te:
-> >
-> > The asus-wmi driver doesn't implement the thermal device functionality
-> > directly, so including <linux/thermal.h> just for DECI_KELVIN_TO_CELSIU=
-S()
-> > is a bit odd.
-> >
-> > This switches the asus-wmi driver to use deci_kelvin_to_millicelsius() =
-in
-> > <linux/units.h>.
->
-> > @@ -33,7 +33,7 @@
-> >  #include <linux/seq_file.h>
-> >  #include <linux/platform_data/x86/asus-wmi.h>
-> >  #include <linux/platform_device.h>
-> > -#include <linux/thermal.h>
-> > +#include <linux/units.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/dmi.h>
->
-> Similar comment about ordering. Can we move it to the end after dmi.h?
+On 12/13/2019 1:05 AM, Douglas Anderson wrote:
+> This gets rid of all of the dtbs_check that showed up atop the current
+> qcom maintainer tree for sc7180-idp, except the errors in the
+> 'thermal-sensor' nodes.  I believe those are known / being dealt with
+> separately [1] [2].
+> 
+> I don't expect this series to have any functional changes, it just
+> makes the device tree cleaner.  I was able to boot after applying
+> these patches atop a working tree.
+> 
+> I have tried to sort the changes here, first including the "obviously
+> correct" changes and later changes I am less certain about.  There are
+> no known dependencies between the changes.
 
-OK.
+Thanks Doug for these cleanups, for the series
 
-> > -       return sprintf(buf, "%d\n", value);
->
-> > +       return sprintf(buf, "%ld\n",
->
-> %d -> %ld must be explained in the commit message (e.g. "due to
-> function returned type).
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-OK.
+> 
+> [1] https://lore.kernel.org/r/CAD=FV=UXC3UT78vGBr9rRuRxz=8iwH4tOkFx6NC-pSs+Z5+7Xw@mail.gmail.com
+> [2] https://lore.kernel.org/r/CAD=FV=UtHebABCpJo1QUc6C2v2iZq2rFL+pTMx=EHBL+7d=jTQ@mail.gmail.com
+> 
+> 
+> Douglas Anderson (7):
+>    arm64: dts: qcom: sc7180: Add SoC name to compatible
+>    arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
+>    arm64: dts: qcom: sc7180: Add "#clock-cells" property to usb_1_ssphy
+>    arm64: dts: qcom: pm6150: Remove macro from unit name of adc-chan
+>    arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory
+>      node
+>    arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+>    arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+> 
+>   arch/arm64/boot/dts/qcom/pm6150.dtsi    |  2 +-
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  2 +-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 45 +++++++++++++------------
+>   3 files changed, 25 insertions(+), 24 deletions(-)
+> 
 
-> > +                      deci_kelvin_to_millicelsius(value & 0xFFFF));
->
-> I prefer to have this in one line.
-
-It causes line over 80 characters.
-We had the same conversation in v1 :)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
