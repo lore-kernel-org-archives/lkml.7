@@ -2,131 +2,105 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5168C7DBC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22DAC34347
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E317724790
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1101E24778
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lbiw5D6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfLMSVI (ORCPT
+        id S1728842AbfLMS3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:21:08 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:52621 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLMSVH (ORCPT
+        Fri, 13 Dec 2019 13:29:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59171 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728775AbfLMS3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:21:07 -0500
-Received: by mail-io1-f71.google.com with SMTP id e124so335487iof.19
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:21:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=aQTVfoxwkQIhXdnX2QpUsvCJ5WDGzgU3J1q0OChbD38=;
-        b=e41/4pqFNKHZkYQHvj5q0yqGh+VGiuF/BJ2n85Sb/iOEB9k3Kjd4tPjMNiZ3Lgo8N0
-         YQY/wtxETtaAoztW5osySdml+sZuoffGMvkxBgDozji8HT0J5Bv8ewpxVezZNLoWZdUR
-         0wxqaK2BPHFGnrBglf0e5gnncE3XHH9kgL1NA7i1p4fm24lPsgY605setMdcI+odBMQU
-         n+v8EMmZuIvtDpk+aOawJCegIaJfy7cOdIUcof20rSVkazZyYannT0GrkXC6cmerCjzZ
-         wQd5QIvac2N81WFHWS2d63zLWTQnIWtGYSapLje6qI6aq+Np8xMDXe+Uf41EoP0wttAJ
-         dhrw==
-X-Gm-Message-State: APjAAAVI0HYpg22R3zomMioRn3wtwofdvDWyN4ZIvDmmO6be6jhmFoEQ
-        cNYxbJrPvX/7XyjH1xsllWz4I8pqUsBGZwEzTQW0VHTQNFS4
-X-Google-Smtp-Source: APXvYqwcooZ2pJuli9b4blpPIIw8Et1D/a/QbMVa68MwHnGqkCH8gMhbOKCMEZ26Uz5hs1cQ0HZxjF9ETacoFdd/55a81vWZX3GP
+        Fri, 13 Dec 2019 13:29:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576261744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EuipFtcR9CV/PUK4gZJD69/BC6ZNJnPtOUYxgz6hIYs=;
+        b=Lbiw5D6Ienk9rSXCuN6ilACSV5mCmYDnk5S+00GDAogIgLH7oqT4UQvN2IuA1kIPe2x44p
+        laaQigM+PiOlDVucAuh8KFrSKO9ksmn3o2PO325LQjQZOSwqGtmsQMLCPn0JZX3htva/Yy
+        BXu0vmgKook+rYFByH3Ek74qLVWID2k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-8BbtPYfgOsqEYAs5wK98og-1; Fri, 13 Dec 2019 13:29:02 -0500
+X-MC-Unique: 8BbtPYfgOsqEYAs5wK98og-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B880F107ACC5;
+        Fri, 13 Dec 2019 18:28:59 +0000 (UTC)
+Received: from krava (ovpn-204-48.brq.redhat.com [10.40.204.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74C2519C4F;
+        Fri, 13 Dec 2019 18:28:50 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 19:28:47 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
+Message-ID: <20191213182847.GA8994@krava>
+References: <20191213153553.GE20583@krava>
+ <20191213112438.773dff35@gandalf.local.home>
+ <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
+ <20191213121118.236f55b8@gandalf.local.home>
+ <20191213173016.posmo4pxjwjvv4bh@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3b54:: with SMTP id i81mr8293539ioa.249.1576261266965;
- Fri, 13 Dec 2019 10:21:06 -0800 (PST)
-Date:   Fri, 13 Dec 2019 10:21:06 -0800
-In-Reply-To: <000000000000c71dcf0579b0553f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e40d33059999ec21@google.com>
-Subject: Re: KASAN: use-after-free Read in ext4_xattr_set_entry (2)
-From:   syzbot <syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213173016.posmo4pxjwjvv4bh@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Fri, Dec 13, 2019 at 09:30:18AM -0800, Alexei Starovoitov wrote:
+> On Fri, Dec 13, 2019 at 12:11:18PM -0500, Steven Rostedt wrote:
+> > On Fri, 13 Dec 2019 08:51:57 -0800
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > 
+> > > It had two choices. Both valid. I don't know why gdb picked this one.
+> > > So yeah I think renaming 'ring_buffer' either in ftrace or in perf would be
+> > > good. I think renaming ftrace one would be better, since gdb picked perf one
+> > > for whatever reason.
+> > 
+> > Because of the sort algorithm. But from a technical perspective, the
+> > ring buffer that ftrace uses is generic, where the perf ring buffer can
+> > only be used for perf. Call it "event_ring_buffer" or whatever, but
+> > it's not generic and should not have a generic name.
+> 
+> I don't mind whichever way. Just saying it would be good to rename :)
+> 
 
-HEAD commit:    ae4b064e Merge tag 'afs-fixes-20191211' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=137f6499e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
-dashboard link: https://syzkaller.appspot.com/bug?extid=4a39a025912b265cacef
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ec1332e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163455dee00000
+Peter,
+any chance we could use the 'struct perf_buffer' for perf?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
-
-EXT4-fs error (device sda1): ext4_xattr_set_entry:1583: inode #2339: comm  
-syz-executor117: corrupted xattr entries
-==================================================================
-BUG: KASAN: use-after-free in ext4_xattr_set_entry+0x35de/0x3770  
-fs/ext4/xattr.c:1580
-Read of size 4 at addr ffff888093705283 by task syz-executor117/9665
-
-CPU: 0 PID: 9665 Comm: syz-executor117 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:134
-  ext4_xattr_set_entry+0x35de/0x3770 fs/ext4/xattr.c:1580
-  ext4_xattr_ibody_set+0x80/0x2d0 fs/ext4/xattr.c:2216
-  ext4_xattr_set_handle+0x933/0x1200 fs/ext4/xattr.c:2372
-  ext4_initxattrs+0xc0/0x130 fs/ext4/xattr_security.c:43
-  security_inode_init_security security/security.c:996 [inline]
-  security_inode_init_security+0x2c8/0x3b0 security/security.c:969
-  ext4_init_security+0x34/0x40 fs/ext4/xattr_security.c:57
-  __ext4_new_inode+0x4288/0x4f30 fs/ext4/ialloc.c:1155
-  ext4_mkdir+0x3d5/0xe20 fs/ext4/namei.c:2774
-  vfs_mkdir+0x42e/0x670 fs/namei.c:3819
-  do_mkdirat+0x234/0x2a0 fs/namei.c:3842
-  __do_sys_mkdir fs/namei.c:3858 [inline]
-  __se_sys_mkdir fs/namei.c:3856 [inline]
-  __x64_sys_mkdir+0x5c/0x80 fs/namei.c:3856
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44d177
-Code: 1f 40 00 b8 5a 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d d6 fb ff c3  
-66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 2d d6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5c9599fb18 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-RAX: ffffffffffffffda RBX: 00000000006e69c8 RCX: 000000000044d177
-RDX: 0000000000000003 RSI: 00000000000001ff RDI: 0000000020000000
-RBP: 00000000006e69c0 R08: 0000000000000000 R09: 000000000000000a
-R10: 0000000000000075 R11: 0000000000000246 R12: 00000000006e69cc
-R13: 00007ffd790837cf R14: 00007f5c959a09c0 R15: 0000000000000000
-
-The buggy address belongs to the page:
-page:ffffea00024dc140 refcount:0 mapcount:0 mapping:0000000000000000  
-index:0x1
-raw: 00fffe0000000000 ffffea0002183608 ffffea00027ef508 0000000000000000
-raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888093705180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ffff888093705200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> ffff888093705280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                    ^
-  ffff888093705300: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ffff888093705380: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+thanks,
+jirka
 
