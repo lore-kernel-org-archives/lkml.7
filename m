@@ -2,254 +2,181 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2964C34343
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21FCC34979
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE8824747
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FRomdMbj"
+	by mail.kernel.org (Postfix) with ESMTP id 3D4EB246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfLMM4O (ORCPT
+        id S1726771AbfLMLah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:56:14 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48478 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfLMM4L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:56:11 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuAKX068959;
-        Fri, 13 Dec 2019 06:56:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576241770;
-        bh=gjJgZ/gvhz42XpsAvvwIkYxWudIYQWVRay9+2h/Uz0w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FRomdMbjpZkvs9CHsjeFoNqcvShBUp/W4Q0jZtOy96WluFZMpN7dizyLsqdnV0eV3
-         bMGVXU2k4XyWgnd/K8lwxx/V5Tctm2gFwXPwYIRNx2aa4o+MNk/O2lIrYfYMd+SVnP
-         FRozdoRN4a6LM8n0GU6K6RliVOLqOY/7rX4bQg7s=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuA5X064259
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 06:56:10 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:56:09 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:56:09 -0600
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVJ127295;
-        Fri, 13 Dec 2019 06:56:07 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 04/15] remoteproc/omap: Add support to parse internal memories from DT
-Date:   Fri, 13 Dec 2019 14:55:26 +0200
-Message-ID: <20191213125537.11509-5-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
-References: <20191213125537.11509-1-t-kristo@ti.com>
+        Fri, 13 Dec 2019 06:30:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59540 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbfLMLag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:30:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2BDD9B001;
+        Fri, 13 Dec 2019 11:30:33 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BBF8C1E0CAF; Fri, 13 Dec 2019 12:30:30 +0100 (CET)
+Date:   Fri, 13 Dec 2019 12:30:30 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>,
+        darrick.wong@oracle.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-ext4@vger.kernel.org
+Subject: Re: KASAN: use-after-free Read in iov_iter_alignment
+Message-ID: <20191213113030.GE15474@quack2.suse.cz>
+References: <000000000000ad9f910598bbb867@google.com>
+ <20191202211037.GF2695@dread.disaster.area>
+ <20191202231118.GA7527@bobrowski.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202231118.GA7527@bobrowski.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+On Tue 03-12-19 10:11:20, Matthew Bobrowski wrote:
+> On Tue, Dec 03, 2019 at 08:10:37AM +1100, Dave Chinner wrote:
+> > [cc linux-ext4@vger.kernel.org - this is reported from the new ext4
+> > dio->iomap code]
+> > 
+> > On Mon, Dec 02, 2019 at 09:15:08AM -0800, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
+> > > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
+> > > 
+> > > ==================================================================
+> > > BUG: KASAN: use-after-free in iov_iter_alignment+0x6a1/0x7b0
+> > > lib/iov_iter.c:1225
+> > > Read of size 4 at addr ffff888098d40f54 by task loop0/8203
+> > > 
+> > > CPU: 0 PID: 8203 Comm: loop0 Not tainted 5.4.0-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Call Trace:
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+> > >  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
+> > >  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
+> > >  kasan_report+0x26/0x50 mm/kasan/common.c:634
+> > >  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+> > >  iov_iter_alignment+0x6a1/0x7b0 lib/iov_iter.c:1225
+> > >  iomap_dio_bio_actor+0x1a7/0x11e0 fs/iomap/direct-io.c:203
+> > >  iomap_dio_actor+0x2b4/0x4a0 fs/iomap/direct-io.c:375
+> > >  iomap_apply+0x370/0x490 fs/iomap/apply.c:80
+> > >  iomap_dio_rw+0x8ad/0x1010 fs/iomap/direct-io.c:493
+> > >  ext4_dio_read_iter fs/ext4/file.c:77 [inline]
+> > >  ext4_file_read_iter+0x834/0xc20 fs/ext4/file.c:128
+> > >  lo_rw_aio+0xcbb/0xea0 include/linux/fs.h:1889
+> > 
+> > loopback -> ext4 direct IO, bad access on iov passed to iomap DIO
+> > code.
+> > 
+> > >  do_req_filebacked drivers/block/loop.c:616 [inline]
+> > >  loop_handle_cmd drivers/block/loop.c:1952 [inline]
+> > >  loop_queue_work+0x13ab/0x2590 drivers/block/loop.c:1966
+> > >  kthread_worker_fn+0x449/0x700 kernel/kthread.c:671
+> > >  loop_kthread_worker_fn+0x40/0x60 drivers/block/loop.c:901
+> > >  kthread+0x332/0x350 kernel/kthread.c:255
+> > >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > > 
+> > > Allocated by task 4198:
+> > >  save_stack mm/kasan/common.c:69 [inline]
+> > >  set_track mm/kasan/common.c:77 [inline]
+> > >  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
+> > >  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
+> > >  slab_post_alloc_hook mm/slab.h:584 [inline]
+> > >  slab_alloc mm/slab.c:3319 [inline]
+> > >  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
+> > >  mempool_alloc_slab+0x4d/0x70 mm/mempool.c:513
+> > >  mempool_alloc+0x104/0x5e0 mm/mempool.c:393
+> > >  bio_alloc_bioset+0x1b0/0x5f0 block/bio.c:477
+> > >  bio_alloc include/linux/bio.h:400 [inline]
+> > >  mpage_alloc fs/mpage.c:79 [inline]
+> > >  do_mpage_readpage+0x1685/0x1d10 fs/mpage.c:306
+> > >  mpage_readpages+0x2a9/0x440 fs/mpage.c:404
+> > >  blkdev_readpages+0x2c/0x40 fs/block_dev.c:620
+> > >  read_pages+0xad/0x4d0 mm/readahead.c:126
+> > >  __do_page_cache_readahead+0x480/0x530 mm/readahead.c:212
+> > >  force_page_cache_readahead mm/readahead.c:243 [inline]
+> > >  page_cache_sync_readahead+0x329/0x3b0 mm/readahead.c:522
+> > >  generic_file_buffered_read+0x41d/0x2570 mm/filemap.c:2051
+> > >  generic_file_read_iter+0xa9/0x450 mm/filemap.c:2324
+> > >  blkdev_read_iter+0x12e/0x140 fs/block_dev.c:2039
+> > >  call_read_iter include/linux/fs.h:1889 [inline]
+> > >  new_sync_read fs/read_write.c:414 [inline]
+> > >  __vfs_read+0x59e/0x730 fs/read_write.c:427
+> > >  vfs_read+0x1dd/0x420 fs/read_write.c:461
+> > >  ksys_read+0x117/0x220 fs/read_write.c:587
+> > >  __do_sys_read fs/read_write.c:597 [inline]
+> > >  __se_sys_read fs/read_write.c:595 [inline]
+> > >  __x64_sys_read+0x7b/0x90 fs/read_write.c:595
+> > >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > 
+> > > Freed by task 4205:
+> > >  save_stack mm/kasan/common.c:69 [inline]
+> > >  set_track mm/kasan/common.c:77 [inline]
+> > >  kasan_set_free_info mm/kasan/common.c:332 [inline]
+> > >  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
+> > >  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+> > >  __cache_free mm/slab.c:3425 [inline]
+> > >  kmem_cache_free+0x81/0xf0 mm/slab.c:3693
+> > >  mempool_free_slab+0x1d/0x30 mm/mempool.c:520
+> > >  mempool_free+0xd5/0x350 mm/mempool.c:502
+> > >  bio_put+0x38b/0x460 block/bio.c:255
+> > >  mpage_end_io+0x2f5/0x330 fs/mpage.c:58
+> > >  bio_endio+0x4ff/0x570 block/bio.c:1818
+> > >  req_bio_endio block/blk-core.c:245 [inline]
+> > >  blk_update_request+0x438/0x10d0 block/blk-core.c:1464
+> > >  scsi_end_request+0x8c/0xa20 drivers/scsi/scsi_lib.c:579
+> > >  scsi_io_completion+0x17c/0x1b80 drivers/scsi/scsi_lib.c:963
+> > >  scsi_finish_command+0x3b3/0x560 drivers/scsi/scsi.c:228
+> > >  scsi_softirq_done+0x289/0x310 drivers/scsi/scsi_lib.c:1477
+> > >  blk_done_softirq+0x312/0x370 block/blk-softirq.c:37
+> > >  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:762
+> > 
+> > Looks like buffered read IO on a loopback device on an ext4 image
+> > file, and something is being tripped over in the new ext4 direct IO
+> > path.  Might be an iomap issue, might be an ext4 issue, but it looks
+> > like the buffered read bio completion is running while the iov is
+> > still being submitted...
+> 
+> Thanks Dave.
+> 
+> I will take a look at this when I get home this evening and see
+> whether I can pinpoint what's going on here...
 
-The OMAP remoteproc driver has been enhanced to parse and store
-the kernel mappings for different internal RAM memories that may
-be present within each remote processor IP subsystem. Different
-devices have varying memories present on current SoCs. The current
-support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
-DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
-L2 RAM memories.
+Any luck in diagnosing this Matthew?
 
-IPUs are expected to have the L2RAM at a fixed device address of
-0x20000000, based on the current limitations on Attribute MMU
-configurations.
-
-NOTE:
-The current logic doesn't handle the parsing of memories for DRA7
-remoteproc devices, and will be added alongside the DRA7 support.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
-[t-kristo: converted to parse mem names / device addresses from pdata]
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/remoteproc/omap_remoteproc.c | 86 ++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
-
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index d80f5d7b5931..844703507a74 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
- 	unsigned int boot_reg;
- };
- 
-+/*
-+ * struct omap_rproc_mem - internal memory structure
-+ * @cpu_addr: MPU virtual address of the memory region
-+ * @bus_addr: bus address used to access the memory region
-+ * @dev_addr: device address of the memory region from DSP view
-+ * @size: size of the memory region
-+ */
-+struct omap_rproc_mem {
-+	void __iomem *cpu_addr;
-+	phys_addr_t bus_addr;
-+	u32 dev_addr;
-+	size_t size;
-+};
-+
- /**
-  * struct omap_rproc - omap remote processor state
-  * @mbox: mailbox channel handle
-  * @client: mailbox client to request the mailbox channel
-  * @boot_data: boot data structure for setting processor boot address
-+ * @mem: internal memory regions data
-+ * @num_mems: number of internal memory regions
-  * @rproc: rproc handle
-  * @reset: reset handle
-  */
-@@ -51,6 +67,8 @@ struct omap_rproc {
- 	struct mbox_chan *mbox;
- 	struct mbox_client client;
- 	struct omap_rproc_boot_data *boot_data;
-+	struct omap_rproc_mem *mem;
-+	int num_mems;
- 	struct rproc *rproc;
- 	struct reset_control *reset;
- };
-@@ -59,10 +77,14 @@ struct omap_rproc {
-  * struct omap_rproc_dev_data - device data for the omap remote processor
-  * @device_name: device name of the remote processor
-  * @has_bootreg: true if this remote processor has boot register
-+ * @mem_names: memory names for this remote processor
-+ * @dev_addrs: device addresses corresponding to the memory names
-  */
- struct omap_rproc_dev_data {
- 	const char *device_name;
- 	bool has_bootreg;
-+	const char * const *mem_names;
-+	const u32 *dev_addrs;
- };
- 
- /**
-@@ -216,6 +238,14 @@ static const struct rproc_ops omap_rproc_ops = {
- 	.kick		= omap_rproc_kick,
- };
- 
-+static const char * const ipu_mem_names[] = {
-+	"l2ram", NULL
-+};
-+
-+static const u32 ipu_dev_addrs[] = {
-+	0x20000000,
-+};
-+
- static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
- 	.device_name	= "dsp",
- 	.has_bootreg	= true,
-@@ -223,6 +253,8 @@ static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
- 
- static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
- 	.device_name	= "ipu",
-+	.mem_names	= ipu_mem_names,
-+	.dev_addrs	= ipu_dev_addrs,
- };
- 
- static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
-@@ -232,6 +264,8 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
- 
- static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
- 	.device_name	= "ipu",
-+	.mem_names	= ipu_mem_names,
-+	.dev_addrs	= ipu_dev_addrs,
- };
- 
- static const struct of_device_id omap_rproc_of_match[] = {
-@@ -311,6 +345,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
-+					       struct rproc *rproc)
-+{
-+	struct omap_rproc *oproc = rproc->priv;
-+	struct device *dev = &pdev->dev;
-+	const struct omap_rproc_dev_data *data;
-+	struct resource *res;
-+	int num_mems;
-+	int i;
-+
-+	data = of_device_get_match_data(&pdev->dev);
-+	if (!data)
-+		return -ENODEV;
-+
-+	if (!data->mem_names)
-+		return 0;
-+
-+	for (num_mems = 0; data->mem_names[num_mems]; num_mems++)
-+		;
-+
-+	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
-+				  GFP_KERNEL);
-+	if (!oproc->mem)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_mems; i++) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   data->mem_names[i]);
-+		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(oproc->mem[i].cpu_addr)) {
-+			dev_err(dev, "failed to parse and map %s memory\n",
-+				data->mem_names[i]);
-+			return PTR_ERR(oproc->mem[i].cpu_addr);
-+		}
-+		oproc->mem[i].bus_addr = res->start;
-+		oproc->mem[i].dev_addr = data->dev_addrs[i];
-+		oproc->mem[i].size = resource_size(res);
-+
-+		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
-+			data->mem_names[i], &oproc->mem[i].bus_addr,
-+			oproc->mem[i].size, oproc->mem[i].cpu_addr,
-+			oproc->mem[i].dev_addr);
-+	}
-+	oproc->num_mems = num_mems;
-+
-+	return 0;
-+}
-+
- static int omap_rproc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-@@ -350,6 +432,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 	/* All existing OMAP IPU and DSP processors have an MMU */
- 	rproc->has_iommu = true;
- 
-+	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
-+	if (ret)
-+		goto free_rproc;
-+
- 	ret = omap_rproc_get_boot_data(pdev, rproc);
- 	if (ret)
- 		goto free_rproc;
+								Honza
 -- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
