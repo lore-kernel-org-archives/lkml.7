@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD36C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC14C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EB62253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919FD2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576278619;
-	bh=9Jqy57MnuS+7AL5Siub1FpBM4jXOJuv2RI7AfSUxAJU=;
+	s=default; t=1576278623;
+	bh=tLCLckygGkEJaSdG6BnREjScWOLvqw9T3znz+YP5cJU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=SWk0vgW1f/Qdxspk6To/L6PapUAryynh+GzBf6wwUVbHqy9PCCucJZpZcKJRd71qC
-	 /bITvLkUUThAfKY5zzBEtxJw8OXtlgKht3/IkyMp0DQ7d3GZ/kNVbRFS5dFlW0ueZN
-	 y1B4BmOj2R2D6gq0mb1q8H0XKJJGT56/w4uBkvrA=
+	b=bJE8ONjsebQtZkIridGegOwzwYDGbvz7V2Rp079eMnRZCoODbH07FUaTttRpCJdxU
+	 cPCi21maavoM0Tff/82gpf+27lnQt3JFqnG0TCfdZOKX4bwPqObshwQP/YaNIR/hVP
+	 dOvOWAkOz/7szHeQB7AHwZ6KQnqxAENHMjq/YRJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfLMXKR (ORCPT
+        id S1727109AbfLMXKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
+        Fri, 13 Dec 2019 18:10:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbfLMXKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726767AbfLMXKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Dec 2019 18:10:14 -0500
-Subject: Re: [GIT PULL] Devicetree fixes for v5.5
+Subject: Re: [PULL REQUEST] i2c for 5.5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576278614;
-        bh=9Jqy57MnuS+7AL5Siub1FpBM4jXOJuv2RI7AfSUxAJU=;
+        bh=tLCLckygGkEJaSdG6BnREjScWOLvqw9T3znz+YP5cJU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mNYzpgzF6EuTHz1J2kHjnedWo1fH9GpIaJwTa3G/5f2X7RV9Xt/+r6/I6UmG8zmm2
-         FFDYdSEsCIJ03iMcWmvpO7XJK2KCN1Iof155J/I3rHX29v8iJdFLWDe1uQCf1HXJo4
-         wE4j6kAOX9B9L0uUACwlgGrrl84GLGtMjiq2Qbdg=
+        b=Sqv/m2OOY+6yMduW/87DXOC7am0IzC3MBdwzQAkpQx+TC8X1XiMpEVThXdKThp1hT
+         ArDtfty/5WGEXOhESQiQOxvRD7peQosYvvk/p8vlIeIlYPCXCbJ/ydMfAtsZHvYkWA
+         0LsM2VPu2iGE9BHucANWVlTfUKsYW10daIQIewIk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191213153531.GA28973@bogus>
-References: <20191213153531.GA28973@bogus>
+In-Reply-To: <20191213153136.GA3396@kunai>
+References: <20191213153136.GA3396@kunai>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191213153531.GA28973@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.5
-X-PR-Tracked-Commit-Id: ee9b280e17dce51c44e1d04d11eb0a4acd0ee1a9
+X-PR-Tracked-Message-Id: <20191213153136.GA3396@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+X-PR-Tracked-Commit-Id: 8c9312a925ad859daefd0f443ef3b6dc7157d881
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1482e664fe353775c48d3f9d3e5059b9853d4d99
-Message-Id: <157627861412.1837.5586160503821764001.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 3b2ee614cb4accb75080f00586bd762b0eab219c
+Message-Id: <157627861440.1837.5378976398857101367.pr-tracker-bot@kernel.org>
 Date:   Fri, 13 Dec 2019 23:10:14 +0000
-To:     Rob Herring <robh@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 13 Dec 2019 09:35:31 -0600:
+The pull request you sent on Fri, 13 Dec 2019 16:31:39 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.5
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1482e664fe353775c48d3f9d3e5059b9853d4d99
+https://git.kernel.org/torvalds/c/3b2ee614cb4accb75080f00586bd762b0eab219c
 
 Thank you!
 
