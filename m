@@ -2,89 +2,84 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B219AC341BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283D6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E195324689
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5078B2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576270460;
+	bh=ogh41y9IiYOds95aX6Fxn8b8OAFFWz3+OTWKPVGzxkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TiP18JQ2AhBTnEuyxlGBjkjAhi1gGiOwJiCs5Tfz+2v2aN/X1XfoMjG4YGNI/hq1r
+	 41bclDHUCl3KdSZzo6RFTF7MEyR2o5SDZlQp3px29K2Ewi27zhGSmeMrWoM6KtymEf
+	 utjjcQSv+sMNQiPUKMATx9HnEicbASShjO9vgQ0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLMUwY (ORCPT
+        id S1726735AbfLMUyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:52:24 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:37891 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMUwY (ORCPT
+        Fri, 13 Dec 2019 15:54:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33949 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMUyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:52:24 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MKd92-1iRUrq0e6u-00L10R; Fri, 13 Dec 2019 21:52:22 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 04/24] xtensa: ISS: avoid struct timeval
-Date:   Fri, 13 Dec 2019 21:52:09 +0100
-Message-Id: <20191213205221.3787308-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
-References: <20191213204936.3643476-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 15:54:19 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a15so652390otf.1;
+        Fri, 13 Dec 2019 12:54:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KIIcKgZTADTDSwYU9GOa/p2g/0/rTYnBM6ztrQxNYsA=;
+        b=nPxoH3UeHn/URwo1q7n1eYc3GBA+4z6PGyqbUIaNxM/W1i4ocgxRXKtD4Rhb+sMZTA
+         DEcAnmaeiOzWx+Z4DFnIBhGoVWoxxSC/kETAw6nXoo5GLUljlFOzjTsfCnqgb1LpTpqR
+         /D+diQly+1bEyidrJg6AxZ8oYpFEfWh03lKYiqPr3qcPaY5BJ2iwP8mjBe/DaHnA8rtP
+         WKt0eAckjPs2NPf4x06b7nxfMlvBLMV55OfOK1Kz8r+yWLhrzR5G+bRJQdlzL+OFv9fr
+         XbM72Gew5sIt860wQo1wq5mhqaY/ZwmZgqgD3gJ48XA7yo8wYk5jOwmFOA+dIJTO0GHI
+         UbjA==
+X-Gm-Message-State: APjAAAUylxdecYuit4x2ACnFq0odwkCiqGsHxEu5zt4R778wu+fSVJ9H
+        ESrgSJTnsAgFTmp+towhku/oPTU=
+X-Google-Smtp-Source: APXvYqxBJilDDGyTaDxnBj9ynh4myRloS+dQ+fRGAJGegSEuz8ivs5D3EYHV6sgRP4EHkpn4SjlIrA==
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr15865869otr.1.1576270458920;
+        Fri, 13 Dec 2019 12:54:18 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m205sm3702145oif.10.2019.12.13.12.54.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 12:54:18 -0800 (PST)
+Date:   Fri, 13 Dec 2019 14:54:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Anil Varughese <aniljoy@cadence.com>,
+        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 01/14] dt-bindings: phy: Sierra: Add bindings for
+ Sierra in TI's J721E
+Message-ID: <20191213205417.GA8776@bogus>
+References: <20191128104648.21894-1-kishon@ti.com>
+ <20191128104648.21894-2-kishon@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bon56UreV7ovrfKYpDHiL+f5Nx8t/BUmHyHC4ZWrp+337QR6/Oz
- yoHrf8bFVdBTm9Bp70qtT3uw7YkdpJ1O1sZaXMcTsuhFb80yjFDETofLv7guWHf8SfX/SWi
- 7JtWqYDaB0F5EaXcZI7HYZKjKpI+VowaUgzdonJn2Ui6S8CD1Y+WjW+Wxq+qIFFqG2qZxFj
- DXk2Na2Jtl9aRnJx8qqpg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:riv8b/vecL0=:+5F8OSMdE+Zx+eykCFEhxO
- sXEloGk35kuwMQ5iC/TYfbSAB9sznLnwNrJXrWj7Jk5OzpKPT8u0ngy1jeraukSYsbRn0MMWK
- knR/CwJOpAFdJ2jBM7/cPpQoJZ9FE0LVEt4nDrJtlj//JFJmEhycdtBa966T40yleoVKHS0gL
- WgsAnqopPgNtPuRUjMSSgizIw+/EvEa9NAbNL/8trmoyMkvAq1CuclnjBcezPPwXSdUwu+NHP
- Sl3OWXCGrpLo0M0XOh7qnPS71vZO+yv0H+fo7tb69naKhHJkJKrbfqbYJ9oc+n4K/qyZbvcE7
- 237XU3QGoEQpSZmZsrZ4EiKudYtVipeMWxioOXuJr79Yvj249PXkrguIB0ixqifO1ibZRmdep
- SCjTdh5p0KtkMzpk8Lir2TjUSDKfT9CkU7vHDFOD9em1mhiDSpZb1AES9bCzYxoQKBrFgZo4/
- jsPLa+68w1XWS7kA1wOQZPAL61WrExikywTtsIH/g8WgBPG8Ruf8LMzWAmIO0WkYGANY4RXou
- qVOpwgkMRk2ICN4YXEQfRtUSh6JzB1x5rvU7aCGqnAynLrXepMcoaNqY2CyFh1RMy44xlG0of
- MJ5REbfwjWCRJuMnRTRk+j07qpGttYFTFRIxoM1SXZWyjgbVLS2iCLgHLglHC/EYjgTwARfHw
- H6wm/l1zWg4hJAB8GsG7Wk1LtL6KpAwJTkICE6JP9XOFRLELnHx3ivbuLW/rJmioKskrTGg1G
- EVWZfk7TxgGxu+B9CQ7s6gKbol+raNHwF6PBaPNM4HJ7YmAENLbZ0msg1x1DwtHrac69rYXsm
- Xn52pa6o2p14CdsOaj4VasNPaKIq/glJOv4vosws5YLCcACgZLVwOOxnXomzDp00KqQXxlRH0
- nsPGvv9AxjwGIPgElCtA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128104648.21894-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct timeval' will get removed from the kernel, change the one
-user in arch/xtensa to avoid referencing it, by using a fixed-length
-array instead.
+On Thu, 28 Nov 2019 16:16:35 +0530, Kishon Vijay Abraham I wrote:
+> Add DT binding documentation for Sierra PHY IP used in TI's J721E
+> SoC.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/phy/phy-cadence-sierra.txt  | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
 
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/xtensa/platforms/iss/include/platform/simcall.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/xtensa/platforms/iss/include/platform/simcall.h b/arch/xtensa/platforms/iss/include/platform/simcall.h
-index 2ba45858e50a..4e2a48380dbf 100644
---- a/arch/xtensa/platforms/iss/include/platform/simcall.h
-+++ b/arch/xtensa/platforms/iss/include/platform/simcall.h
-@@ -113,9 +113,9 @@ static inline int simc_write(int fd, const void *buf, size_t count)
- 
- static inline int simc_poll(int fd)
- {
--	struct timeval tv = { .tv_sec = 0, .tv_usec = 0 };
-+	long timeval[2] = { 0, 0 };
- 
--	return __simc(SYS_select_one, fd, XTISS_SELECT_ONE_READ, (int)&tv);
-+	return __simc(SYS_select_one, fd, XTISS_SELECT_ONE_READ, (int)&timeval);
- }
- 
- static inline int simc_lseek(int fd, uint32_t off, int whence)
--- 
-2.20.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
