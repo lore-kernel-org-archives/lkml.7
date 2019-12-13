@@ -2,169 +2,205 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86165C80D30
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE568C80D51
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DBD24773
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269654;
-	bh=fg7QJPewVvSWQeQMYgoaqZSHSqt6u5zynRDl8PJ15Gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mBXmyfJCgI6CbJCyzTg5hwKILLeIBOW9VqnObxJcl1bPuOi3S7UkC4F32gUeg5fLe
-	 4iz1/nyr/Xu97Bj/R83pRVwf8q2v2T/pEHBcaZREutqTQPTmNwC34Y84cq6d2dcsLM
-	 omPN8/EKCCAqrMuwrsIS0p59u5Bk1RYMzSs3ZKIA=
+	by mail.kernel.org (Postfix) with ESMTP id 1C9522477D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cgxp6mE5";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="BOMEYuaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfLMTIW (ORCPT
+        id S1728877AbfLMTgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:08:22 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38344 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfLMTIW (ORCPT
+        Fri, 13 Dec 2019 14:36:15 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:49420 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728686AbfLMTgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:08:22 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h20so318307otn.5;
-        Fri, 13 Dec 2019 11:08:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KJzuDD0sBx2lePcpDmxYWTvEn9GcdeWOo5ZChsyIqJU=;
-        b=JtbD4vZ107RusKFy+4BqIvwfX8/p9Vc2/Jj0ov29KfLElCM73EbcxI7d32PzZ2BISn
-         3w51Oy53hlEu4pO3KI3FHcvDNIGqYSAWTZjK5nZBI0X6clT925ePM8sZarVcg0NgHY7a
-         47o0YDIlqh3RIKplmVOrpEUyfmunqAk/puC3kDfqzEtafH5dNSrrpnEFbn6ep0JgJUyE
-         1w5pdC1n4TfrcAciL1bAIPOSmJPmiYoFY5+2iebCGbsLGt1x9Djr/360/qCNagA3krkN
-         cRtAku6qBZX3y1/58iOhRMr7M8NRsWfPGHpZav8TAZWcY2f8gLnppuSoM1zB4C1Lf1OX
-         2FMw==
-X-Gm-Message-State: APjAAAUA/UOuXMWlMcMm50x7k26+dQlbHknqN2o+LcDDwix0VNVhWzG9
-        D9R5R9wdy+eNI0KYDEFrlg==
-X-Google-Smtp-Source: APXvYqynI97aUq/1r02pZB3brO8e3XvOeNj9z63BQVINfUG5Q+t0EkTjDb9P5FatkhlZ1zLJW8if2g==
-X-Received: by 2002:a05:6830:2116:: with SMTP id i22mr17156164otc.0.1576264101295;
-        Fri, 13 Dec 2019 11:08:21 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f1sm3653214otq.4.2019.12.13.11.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:08:19 -0800 (PST)
-Date:   Fri, 13 Dec 2019 13:08:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-Subject: Re: [PATCH v8 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-Message-ID: <20191213190819.GA19560@bogus>
-References: <20191212015320.20969-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191212015320.20969-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Fri, 13 Dec 2019 14:36:15 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9F66CC00D3;
+        Fri, 13 Dec 2019 19:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576265773; bh=91uhqlB7RaaqneClcmiKcRkHuHygsCCGkz9eJw7RUzM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=cgxp6mE5V4owO6PKoGD3OHcpr2gi/jTNcQyAqe2xRrjO5SkLImo+rCsbPrqAS4PDC
+         uCPsiFa4O7Me1GXs97/PmwWWMrtU8YHLeYBtVRbCE24w5LHt8fExe5K9wXrbQzBFB+
+         Lvgk1EqeTc152PyjjUpprnqzAx2Bji2/WniPROuSNI9iZCngpcxPV3dRjsNPyzqry+
+         E9dB9IVEiSJR+VcNY28HjWmyV7dRSIi7tv9k8hfgB9mawkYgKOvMnSi3v88zhfmFk0
+         plwMEf95IgV2fcBSQc3daslb2nMEwY90UmwBSyCTAyGDi6ei4xTUI7+wSHEJfQXFXE
+         LRfuzWybU9hLA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B7D3FA0079;
+        Fri, 13 Dec 2019 19:36:12 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Dec 2019 11:36:01 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 13 Dec 2019 11:36:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O9X2oBW0BGwztGvyT7gAeJXhk5QjqouDaQb6JDSigJqvGYM7bbxgYU1xokPZOKD1isIzUORvkC+vh64YzX3P9mNjezb3nGAD07vJ1xCGfWAHhndVBjirjg/RmxgNYGF9QQFfVBrc5E9zM2ArVg8UGyzZQG4YXLeNGfLN3nA3YzODZpvjLKPRqnZQniz5tsYEf+OfrQBq+3nKhQPJqs+2oV8v91Mplv+4JrY6o0RU2KD1a6rcPMWwpbnvGKZjmkCeWA/ki34v7LqDx8i1t3maR2wHANtPTPlmBA9cBLZQGhSPNsOS3iEwssVDH2hBUwy5P5qHLGtbvTKLnjgOpX8cAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3oRPx208h6uSb/xkDEoqmPvf7SCZPApvt2xSHXcQhoM=;
+ b=fVGpuBPRY3MgSPdtJROgCz0t8ImaeaLhm7asD7oJ84BzsT6Fp5CWx7f+xWuUc1O/X1PKW4+DDQwlnxIC7c2OGOicdEaBZVTnP1XVvM27XFcxQtXvI7iwxGkzyI2efHhbhGBgqAyFVppYjnkBfSEJuTl4x+S193V+FV/rByS5MLL5gGjAsUix0hW+QrKs/HoZI47Lgow6zcHfLuudAry/EsVvHcOpb2a/AnybFZGFoFBDA/K2Lmv8kJPtxEIh5ANZKAi7i+e9Ls1Em/6Azk+f/lCB/9K+HnQdVduePbV6j5p2iX9Gbp38FzjPvMvMnUoqRHwFhiVAjkcKud3nOtZjVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3oRPx208h6uSb/xkDEoqmPvf7SCZPApvt2xSHXcQhoM=;
+ b=BOMEYuaC21x6fPyAEWzJqLf21nFewl32x5FoKV9VNvcGGxIeY0BDXVbwpvK8g3KZj1NROLimUoPuO8YJhqHTLf7DNIE6+IxR3/TQDUxjO7YDWkcTXLw3ZIOiqfqsm56RKat4/3iB2yOouCfazUHYBuWqJnPlBmJl2jUurmxjeG0=
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
+ CY4PR1201MB2470.namprd12.prod.outlook.com (10.172.116.144) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Fri, 13 Dec 2019 19:35:59 +0000
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4]) by CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4%8]) with mapi id 15.20.2516.018; Fri, 13 Dec 2019
+ 19:35:59 +0000
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
+ state for HS
+Thread-Topic: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
+ state for HS
+Thread-Index: AQHVsDaLtpPSN5OMLk2Tn5J854A5uKe30meAgACmQQA=
+Date:   Fri, 13 Dec 2019 19:35:59 +0000
+Message-ID: <a9710974-14d9-ecc0-ca48-f0690a8da124@synopsys.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150345.799359877@linuxfoundation.org> <20191213094055.GB27976@amd>
+In-Reply-To: <20191213094055.GB27976@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thinhn@synopsys.com; 
+x-originating-ip: [149.117.75.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b053b059-af69-4f48-bafc-08d78003ae58
+x-ms-traffictypediagnostic: CY4PR1201MB2470:
+x-microsoft-antispam-prvs: <CY4PR1201MB247021FD2F421819FDDF97DFAA540@CY4PR1201MB2470.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(366004)(39850400004)(376002)(396003)(54534003)(199004)(189003)(66946007)(31686004)(66476007)(2616005)(8676002)(66446008)(76116006)(64756008)(66556008)(5660300002)(54906003)(110136005)(6486002)(316002)(86362001)(186003)(6512007)(4326008)(26005)(36756003)(81166006)(2906002)(31696002)(81156014)(6506007)(478600001)(71200400001)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB2470;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 70vh28twNE8yyfx/kyEKAv/1+Q0LUK95aJ6b9wwTVD+wcgOxldugWDKgf2Cu9nDG8eD3i5yXlGYIC0vawWv6jPJ1GzgnDe9jbOuhY/MscL47rzdUKhYvYUogOm+q0pKuRUFpT+Asdb0c2Mljo3wrLZy6ua3TYNW6Prw/4st1igpi/3I/zZaPyMqNory6nOLOQIQBXXp2d0eBxbzBRMmgAvA11EX5d35aB5g1tsMaL09PYJwkf/N7OCxBb4ZBqePFr6332x2tCivIb2lLYiHrkKOmqsc0Ce3Po+c0a4gMBNxcolTtRylbSh+rWcwC60J0onjgI+EYFn4UsrGUKCxPczy8IwzkH7BvNWyw1m+d7HbvwBVyEkcnEvvSNXrT1JC1FcTe5scBkoCUWLVLtSdD6iUWwsLhhOh4vh50k6vN4LhjNTfg7+EthkF39gbsTWrBqQj9GkITe+YrIIzMWgpliwys1KKTsjUpE8+ma1EbRlzTCq8rwt3lf4l06D/M2AHw
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <65D8C2CA20E2D844B493128F226A45C3@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212015320.20969-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b053b059-af69-4f48-bafc-08d78003ae58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 19:35:59.3322
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LZgqUE9KWCCHXB7ol2hE/xkME68qKBbUmCnoFq9ufpT/++me2IanK/OJ7EFkGb/Dv617VpMQiq8v0O6LoiNBKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2470
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:53:19AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add a YAML schema to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..aed11258d96d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +description: |+
-> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
-> +  node is used to reference the base address of eMMC phy registers.
-> +
-> +  The eMMC PHY node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible:         Should be one of the following:
-> +                        "intel,lgm-syscon", "syscon"
-> +  - reg:
-> +      maxItems: 1
-> +
-> +properties:
-> +  compatible:
-> +    contains:
+Hi,
 
-You need to drop 'contains'. That implies other strings can also be 
-present.
+Pavel Machek wrote:
+> Hi!
+>
+>> From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+>>
+>> [ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
+>>
+>> Highspeed device and below has different state names than superspeed and
+>> higher. Add proper checks and printouts of link states for highspeed and
+>> below.
+> Just noticed some more oddity:
+>> +	case DWC3_LINK_STATE_RESUME:
+>> +		return "Resume";
+>> +	default:
+>> +		return "UNKNOWN link state\n";
+>> +	}
+> "UNKNOWN" would be consistent with the rest of the file.
 
-> +      const: intel,lgm-emmc-phy
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    maxItems: 1
+Leaving the "link state" there may be fine for now due to the way it's=20
+printed in the log making it clearer.
 
-Drop maxItems. It should be:
+>
+>> +++ b/drivers/usb/dwc3/debugfs.c
+>> @@ -433,13 +433,17 @@ static int dwc3_link_state_show(struct seq_file *s=
+, void *unused)
+>>   	unsigned long		flags;
+>>   	enum dwc3_link_state	state;
+>>   	u32			reg;
+>> +	u8			speed;
+>>  =20
+>>   	spin_lock_irqsave(&dwc->lock, flags);
+>>   	reg =3D dwc3_readl(dwc->regs, DWC3_DSTS);
+>>   	state =3D DWC3_DSTS_USBLNKST(reg);
+>> -	spin_unlock_irqrestore(&dwc->lock, flags);
+>> +	speed =3D reg & DWC3_DSTS_CONNECTSPD;
+>>  =20
+>> -	seq_printf(s, "%s\n", dwc3_gadget_link_string(state));
+>> +	seq_printf(s, "%s\n", (speed >=3D DWC3_DSTS_SUPERSPEED) ?
+>> +		   dwc3_gadget_link_string(state) :
+>> +		   dwc3_gadget_hs_link_string(state));
+>> +	spin_unlock_irqrestore(&dwc->lock, flags);
+>>  =20
+>>   	return 0;
+>>   }
+> The locking change is really wrong, right? There's no reason to do
+> seq_printfs under spinlock..
 
-const: emmcclk
+Yes, it can be unlocked earlier.
 
-Or just drop clock-names because you don't really need *-names when 
-there is only 1.
+>
+>> @@ -477,6 +483,15 @@ static ssize_t dwc3_link_state_write(struct
+> file *file,
+>>   		return -EINVAL;
+>>  =20
+>>   	spin_lock_irqsave(&dwc->lock, flags);
+>> +	reg =3D dwc3_readl(dwc->regs, DWC3_DSTS);
+>> +	speed =3D reg & DWC3_DSTS_CONNECTSPD;
+>> +
+>> +	if (speed < DWC3_DSTS_SUPERSPEED &&
+>> +	    state !=3D DWC3_LINK_STATE_RECOV) {
+>> +		spin_unlock_irqrestore(&dwc->lock, flags);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>>   	dwc3_gadget_set_link_state(dwc, state);
+>>   	spin_unlock_irqrestore(&dwc->lock, flags);
+>>  =20
+> This might be ok but is not mentioned in the changelog.
+>
 
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    sysconf: chiptop@e0200000 {
-> +      compatible = "intel,lgm-syscon", "syscon";
-> +      reg = <0xe0200000 0x100>;
-> +
-> +      emmc-phy: emmc-phy@a8 {
-> +        compatible = "intel,lgm-emmc-phy";
-> +        reg = <0x00a8 0x10>;
-> +        clocks = <&emmc>;
-> +        clock-names = "emmcclk";
-> +        #phy-cells = <0>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.11.0
-> 
+I'll spell it out next time when I mention "add proper checks" in the=20
+commit message as it obviously wasn't clear.
+
+Thanks,
+Thinh
+
