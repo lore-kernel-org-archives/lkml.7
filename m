@@ -2,104 +2,463 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CED1C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0F9C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898BD20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165BB20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SMe1PUaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfLMVTt (ORCPT
+        id S1726769AbfLMVVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:19:49 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:56469 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMVTt (ORCPT
+        Fri, 13 Dec 2019 16:21:15 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:49768 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfLMVVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:19:49 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MkpjD-1hzzY438Zj-00mLph; Fri, 13 Dec 2019 22:19:47 +0100
-Received: by mail-qt1-f180.google.com with SMTP id 38so202656qtb.13;
-        Fri, 13 Dec 2019 13:19:47 -0800 (PST)
-X-Gm-Message-State: APjAAAW0NoVylss35sFlxcdskVlkOogJY/m4KO8Xamz3TLcOUPLXB7TS
-        WWJIVDnIrYsmI2IolfUiHHWDG9T4q7b+knC26PQ=
-X-Google-Smtp-Source: APXvYqzRCmxSJ5M4TsF2GHTgNgs6xrFc14QenaNUrN3AwXjC24FO2Yu4D8N4fTZTe3LQsHdWTiNakaEj9qN7BIHzOuE=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr14136712qte.204.1576271986613;
- Fri, 13 Dec 2019 13:19:46 -0800 (PST)
+        Fri, 13 Dec 2019 16:21:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576272071; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TQ5AXrcH+um/2+vonSocgmKbSIlI6GCcg4rpAcGP4ck=;
+        b=SMe1PUaIUAw51SbqCvLyJJJpYX1cIA/FRB9b4tY/w1amTLZSHF7f5KDvrLxINCV8Yb81gq
+        DLdTo7rEBXwy3Ss4QElEJwkoMnEbewWb099dKMaJf5JjC2WGH51aHc0FQ2XutT/N1h1DGM
+        yHvt4bywa1LGDPz98YdHPsN4FTRSazc=
+Date:   Fri, 13 Dec 2019 22:21:05 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] I2C: JZ4780: Add support for the X1000.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, paul.burton@mips.com,
+        paulburton@kernel.org, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Message-Id: <1576272065.3.2@crapouillou.net>
+In-Reply-To: <1576165850-20727-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576165850-20727-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1576165850-20727-4-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20191213141046.1770441-1-arnd@arndb.de> <20191213141046.1770441-11-arnd@arndb.de>
- <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com> <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
- <BBB37836-D835-4EB7-8593-080BF60BDA38@oracle.com> <20191213211311.GA12391@fieldses.org>
-In-Reply-To: <20191213211311.GA12391@fieldses.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Dec 2019 22:19:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1E5pKJ2zbR8auBS5BUDg8LYbEEEJ7L1go7LC0djoxuKg@mail.gmail.com>
-Message-ID: <CAK8P3a1E5pKJ2zbR8auBS5BUDg8LYbEEEJ7L1go7LC0djoxuKg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
-To:     Bruce Fields <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JZ7nF3P96OXpKiBUNNwd0xMUJxZuz+Fh2eeyX5X+ZSw+b1gf+ci
- aW9Q2fPirsgOcs+7gfg8REPBUAH17cYQIsyQ5y3Xgf+WKxQr4Xpn24GeWLRa2Z7tqmMhMEG
- sbmlus23/ftfiF7DrjZbNugNlP0vQS7JZo4nVjUKzOxn1pF+jJIN0jf3TpcBuuXKyR1ABEr
- MlPfTB9KQvNr8SDU6F4Lw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Avq3HQGv51I=:KEnA+tswol0qWOKxKkWmyN
- VeMI8rB2wkA7+Iq4bNazJ1keOZ3uqvewIMW2uMz9rBrg+U6W5R6wE2xDI+z3Mn3gg7a6kfJzp
- DqPQThUX/PZpe3AOHbdkBriRQ32Y5I6dzhhy2wxW4vS/fUV0VDISd0PWuyArkDldePQfC+Dkv
- rrh2yjn78y4Bk61lQPW1YGt6mhA5QRsCBwopzSbFtvSWkLd5QDv1fkCccC5iX4DBesRzJvQnT
- 2TrPm8O1b6Ji6d9CRGoBrlUVj+JAmbod9GspYrigARECxtlph44whcc4U5nU8qaWiVEFsjcNk
- 9f8GxJkQmbATZZ8oMV8ZCpgLsXepJxkDrVFGOsrZuQ2wBpxUHruJtFj7R3QIGJjixuAJHvvN0
- lwx0nqBR8lg8a18LjF2o196l/CR9M3D+4/M9k89eqQsqJJzCSN7fiVUIQbmQYU/w3YYlZqGiz
- RbCDRZEs38/6tzseVc9/OEnKBRJUUw0YZFTZN3kuNAjcRdRPabB7/YaqBLuIl5vhp8As8T+t/
- Qycy0FegbMuk0gKWco/kKcwuHa4ivKuYXLgAWlq6kZtgRYdlaRboh8eDFyZOML3hrcZhAdiNG
- F/qyFKFXgszfg7URGx0ikO5r+GUT+ztyfCkgZvmJYUwl9X3UA6/EnCoYvbkpPrw56YSU4zOay
- rne3ieWbg0iZHYC8rpTqGAeBAmBRnOa70RXXXUKZQTzffRGf21zTsYo7+1y4eKZIQ/ApPxq12
- oUXtlf5MFhuTZ12EpiVx6kcZEvuIgCrPJ4WqYV8/QveMZv6FCnj4AsdIVgCOJaqfi0CNLCiGH
- 5yH+LhzblIOXvODUoXcg+anfYl9l/K2Zqul7elRPXSu/GSJ6fZUPjQJKkRt9aLMRT/Cod+6ml
- VpZSBdIhWCkrct46JUPw==
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:13 PM Bruce Fields <bfields@fieldses.org> wrote:
-> On Fri, Dec 13, 2019 at 01:23:08PM -0500, Chuck Lever wrote:
-> > > On Dec 13, 2019, at 11:40 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
-> > >>> +
-> > >>> +     /* nfsd4_lease is set to at most one hour */
-> > >>> +     if (WARN_ON_ONCE(nn->nfsd4_lease > 3600))
-> > >>> +             return 360 * HZ;
-> > >>
-> > >> Why is the WARN_ON_ONCE added here? Is it really necessary?
-> > >
-> > > This is to ensure the kernel doesn't change to a larger limit that
-> > > requires a 64-bit division on a 32-bit architecture.
-> > >
-> > > With the old code, dividing by 10 was always fast as
-> > > nn->nfsd4_lease was the size of an integer register. Now it
-> > > is 64 bit wide, and I check that truncating it to 32 bit again
-> > > is safe.
-> >
-> > OK. That comment should state this reason rather than just repeating
-> > what the code does. ;-)
->
-> Note that __nfsd4_write_time() already limits nfsd4_lease to 3600.
->
-> We could just use a smaller type for nfsd4_lease if that'd help.
+Hi Zhou,
 
-I think it's generally clearer to have only one type to store the lease
-time, and time64_t is the most sensible one, even if the range is a
-bit excessive.
 
-I've seen too many time related bugs from mixing integer types
-incorrectly.
+Le jeu., d=C3=A9c. 12, 2019 at 23:50, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
+jie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add support for probing i2c driver on the X1000 Soc from Ingenic.
+> call the corresponding fifo parameter according to the device
+> model obtained from the devicetree.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>  drivers/i2c/busses/i2c-jz4780.c | 159=20
+> +++++++++++++++++++++++++++++-----------
+>  1 file changed, 117 insertions(+), 42 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c=20
+> b/drivers/i2c/busses/i2c-jz4780.c
+> index 25dcd73..3b21896 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2006 - 2009 Ingenic Semiconductor Inc.
+>   * Copyright (C) 2015 Imagination Technologies
+> + * Copyright (C) 2019 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
+> <zhouyanjie@wanyeetech.com>
+>   */
+>=20
+>  #include <linux/bitops.h>
+> @@ -17,6 +18,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+> @@ -55,6 +57,7 @@
+>  #define JZ4780_I2C_ACKGC	0x98
+>  #define JZ4780_I2C_ENSTA	0x9C
+>  #define JZ4780_I2C_SDAHD	0xD0
+> +#define X1000_I2C_SDAHD		0x7C
+>=20
+>  #define JZ4780_I2C_CTRL_STPHLD		BIT(7)
+>  #define JZ4780_I2C_CTRL_SLVDIS		BIT(6)
+> @@ -73,6 +76,8 @@
+>  #define JZ4780_I2C_STA_TFNF		BIT(1)
+>  #define JZ4780_I2C_STA_ACT		BIT(0)
+>=20
+> +#define X1000_I2C_DC_STOP		BIT(9)
+> +
+>  static const char * const jz4780_i2c_abrt_src[] =3D {
+>  	"ABRT_7B_ADDR_NOACK",
+>  	"ABRT_10ADDR1_NOACK",
+> @@ -130,18 +135,32 @@ static const char * const jz4780_i2c_abrt_src[]=20
+> =3D {
+>  #define JZ4780_I2CFLCNT_ADJUST(n)	(((n) - 1) < 8 ? 8 : ((n) - 1))
+>=20
+>  #define JZ4780_I2C_FIFO_LEN	16
+> -#define TX_LEVEL		3
+> -#define RX_LEVEL		(JZ4780_I2C_FIFO_LEN - TX_LEVEL - 1)
+> +
+> +#define X1000_I2C_FIFO_LEN	64
+>=20
+>  #define JZ4780_I2C_TIMEOUT	300
+>=20
+>  #define BUFSIZE 200
+>=20
+> +enum ingenic_i2c_version {
+> +	ID_JZ4780,
+> +	ID_X1000,
+> +};
+> +
+> +/** ingenic_i2c_config: SOC specific config data. */
+> +struct ingenic_i2c_config {
+> +	int fifosize;
+> +	int tx_level;
+> +	int rx_level;
+> +};
+> +
+>  struct jz4780_i2c {
+>  	void __iomem		*iomem;
+>  	int			 irq;
+>  	struct clk		*clk;
+>  	struct i2c_adapter	 adap;
+> +	enum ingenic_i2c_version version;
+> +	const struct ingenic_i2c_config *cdata;
+>=20
+>  	/* lock to protect rbuf and wbuf between xfer_rd/wr and irq handler=20
+> */
+>  	spinlock_t		lock;
+> @@ -340,11 +359,18 @@ static int jz4780_i2c_set_speed(struct=20
+> jz4780_i2c *i2c)
+>=20
+>  	if (hold_time >=3D 0) {
+>  		/*i2c hold time enable */
+> -		hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		if (i2c->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, hold_time);
+> +		else {
+> +			hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		}
+>  	} else {
+>  		/* disable hold time */
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+> +		if (i2c->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, 0);
+> +		else
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+>  	}
+>=20
+>  	return 0;
+> @@ -359,9 +385,11 @@ static int jz4780_i2c_cleanup(struct jz4780_i2c=20
+> *i2c)
+>  	spin_lock_irqsave(&i2c->lock, flags);
+>=20
+>  	/* can send stop now if need */
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	/* disable all interrupts first */
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0);
+> @@ -399,11 +427,18 @@ static int jz4780_i2c_prepare(struct jz4780_i2c=20
+> *i2c)
+>  	return jz4780_i2c_enable(i2c);
+>  }
+>=20
+> -static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c, int=20
+> cmd_count)
+> +static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c,
+> +				       int cmd_count, int cmd_left)
+>  {
+>  	int i;
+>=20
+> -	for (i =3D 0; i < cmd_count; i++)
+> +	for (i =3D 0; i < cmd_count - 1; i++)
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+> +
+> +	if ((cmd_left =3D=3D 0) && (i2c->version >=3D ID_X1000))
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> +				JZ4780_I2C_DC_READ | X1000_I2C_DC_STOP);
+> +	else
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+>  }
+>=20
+> @@ -458,37 +493,40 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>=20
+>  		rd_left =3D i2c->rd_total_len - i2c->rd_data_xfered;
+>=20
+> -		if (rd_left <=3D JZ4780_I2C_FIFO_LEN)
+> +		if (rd_left <=3D i2c->cdata->fifosize)
+>  			jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, rd_left - 1);
+>  	}
+>=20
+>  	if (intst & JZ4780_I2C_INTST_TXEMP) {
+>  		if (i2c->is_write =3D=3D 0) {
+>  			int cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+> -			int max_send =3D (JZ4780_I2C_FIFO_LEN - 1)
+> +			int max_send =3D (i2c->cdata->fifosize - 1)
+>  					 - (i2c->rd_cmd_xfered
+>  					 - i2c->rd_data_xfered);
+>  			int cmd_to_send =3D min(cmd_left, max_send);
+>=20
+>  			if (i2c->rd_cmd_xfered !=3D 0)
+>  				cmd_to_send =3D min(cmd_to_send,
+> -						  JZ4780_I2C_FIFO_LEN
+> -						  - TX_LEVEL - 1);
+> +						  i2c->cdata->fifosize
+> +						  - i2c->cdata->tx_level - 1);
+>=20
+>  			if (cmd_to_send) {
+> -				jz4780_i2c_send_rcmd(i2c, cmd_to_send);
+>  				i2c->rd_cmd_xfered +=3D cmd_to_send;
+> +				cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+> +				jz4780_i2c_send_rcmd(i2c, cmd_to_send, cmd_left);
+> +
+>  			}
+>=20
+> -			cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+>  			if (cmd_left =3D=3D 0) {
+>  				intmsk =3D jz4780_i2c_readw(i2c, JZ4780_I2C_INTM);
+>  				intmsk &=3D ~JZ4780_I2C_INTM_MTXEMP;
+>  				jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, intmsk);
+>=20
+> -				tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -				tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +				if (i2c->version < ID_X1000) {
+> +					tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +				}
+>  			}
+>  		} else {
+>  			unsigned short data;
+> @@ -496,24 +534,22 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>=20
+>  			i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>=20
+> -			while ((i2c_sta & JZ4780_I2C_STA_TFNF) &&
+> -			       (i2c->wt_len > 0)) {
+> +			while ((i2c_sta & JZ4780_I2C_STA_TFNF) && (i2c->wt_len > 0)) {
+>  				i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>  				data =3D *i2c->wbuf;
+>  				data &=3D ~JZ4780_I2C_DC_READ;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> -						  data);
+> +				if ((!i2c->stop_hold) && (i2c->version >=3D ID_X1000))
+> +					data |=3D X1000_I2C_DC_STOP;
+> +				jz4780_i2c_writew(i2c, JZ4780_I2C_DC, data);
+>  				i2c->wbuf++;
+>  				i2c->wt_len--;
+>  			}
+>=20
+>  			if (i2c->wt_len =3D=3D 0) {
+> -				if (!i2c->stop_hold) {
+> -					tmp =3D jz4780_i2c_readw(i2c,
+> -							       JZ4780_I2C_CTRL);
+> +				if ((!i2c->stop_hold) && (i2c->version < ID_X1000)) {
+> +					tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>  					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL,
+> -							  tmp);
+> +					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>  				}
+>=20
+>  				jz4780_i2c_trans_done(i2c);
+> @@ -567,20 +603,22 @@ static inline int jz4780_i2c_xfer_read(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->rd_data_xfered =3D 0;
+>  	i2c->rd_cmd_xfered =3D 0;
+>=20
+> -	if (len <=3D JZ4780_I2C_FIFO_LEN)
+> +	if (len <=3D i2c->cdata->fifosize)
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, len - 1);
+>  	else
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, RX_LEVEL);
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, i2c->cdata->rx_level);
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM,
+>  			  JZ4780_I2C_INTM_MRXFL | JZ4780_I2C_INTM_MTXEMP
+>  			  | JZ4780_I2C_INTM_MTXABT | JZ4780_I2C_INTM_MRXOF);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -626,14 +664,16 @@ static inline int jz4780_i2c_xfer_write(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->wbuf =3D buf;
+>  	i2c->wt_len =3D len;
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, JZ4780_I2C_INTM_MTXEMP
+>  					| JZ4780_I2C_INTM_MTXABT);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -716,8 +756,21 @@ static const struct i2c_algorithm=20
+> jz4780_i2c_algorithm =3D {
+>  	.functionality	=3D jz4780_i2c_functionality,
+>  };
+>=20
+> +static const struct ingenic_i2c_config jz4780_i2c_config =3D {
+> +	.fifosize =3D JZ4780_I2C_FIFO_LEN,
+> +	.tx_level =3D JZ4780_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D JZ4780_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+> +static const struct ingenic_i2c_config x1000_i2c_config =3D {
+> +	.fifosize =3D X1000_I2C_FIFO_LEN,
+> +	.tx_level =3D X1000_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D X1000_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+>  static const struct of_device_id jz4780_i2c_of_matches[] =3D {
+> -	{ .compatible =3D "ingenic,jz4780-i2c", },
+> +	{ .compatible =3D "ingenic,jz4780-i2c", .data =3D (void *) ID_JZ4780 },
+> +	{ .compatible =3D "ingenic,x1000-i2c", .data =3D (void *) ID_X1000 },
 
-       Arnd
+I think in general you should pass pointers to your ingenic_i2c_config=20
+structures directly in .data here, and have a "version" field in your=20
+ingenic_i2c_config struct.
+
+
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, jz4780_i2c_of_matches);
+> @@ -729,11 +782,24 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>  	unsigned short tmp;
+>  	struct resource *r;
+>  	struct jz4780_i2c *i2c;
+> +	const struct platform_device_id *id =3D platform_get_device_id(pdev);
+> +	const struct of_device_id  *of_id =3D of_match_device(
+> +			jz4780_i2c_of_matches, &pdev->dev);
+>=20
+>  	i2c =3D devm_kzalloc(&pdev->dev, sizeof(struct jz4780_i2c),=20
+> GFP_KERNEL);
+>  	if (!i2c)
+>  		return -ENOMEM;
+>=20
+> +	if (of_id)
+> +		i2c->version =3D (enum ingenic_i2c_version)of_id->data;
+> +	else
+> +		i2c->version =3D (enum ingenic_i2c_version)id->driver_data;
+> +
+> +	if (i2c->version >=3D ID_X1000)
+> +		i2c->cdata =3D &x1000_i2c_config;
+> +	else
+> +		i2c->cdata =3D &jz4780_i2c_config;
+> +
+
+Then you can replace all these lines with:
+i2c->cdata =3D device_get_match_data(dev);
+
+And your checks on i2c->version become checks on i2c->cdata->version.
+
+
+>  	i2c->adap.owner		=3D THIS_MODULE;
+>  	i2c->adap.algo		=3D &jz4780_i2c_algorithm;
+>  	i2c->adap.algo_data	=3D i2c;
+> @@ -777,9 +843,11 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>=20
+>  	dev_info(&pdev->dev, "Bus frequency is %d KHz\n", i2c->speed);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
+>=20
+> @@ -809,6 +877,12 @@ static int jz4780_i2c_remove(struct=20
+> platform_device *pdev)
+>  	return 0;
+>  }
+>=20
+> +static const struct platform_device_id ingenic_i2c_ids[] =3D {
+> +	{ "jz4780-i2c", ID_JZ4780 },
+> +	{ "x1000-i2c", ID_X1000 },
+> +	{},
+
+I honestly think you can drop the platform ID table. It will never be=20
+used.
+
+Cheers,
+-Paul
+
+> +};
+> +
+>  static struct platform_driver jz4780_i2c_driver =3D {
+>  	.probe		=3D jz4780_i2c_probe,
+>  	.remove		=3D jz4780_i2c_remove,
+> @@ -816,6 +890,7 @@ static struct platform_driver jz4780_i2c_driver =3D=20
+> {
+>  		.name	=3D "jz4780-i2c",
+>  		.of_match_table =3D of_match_ptr(jz4780_i2c_of_matches),
+>  	},
+> +	.id_table =3D ingenic_i2c_ids,
+>  };
+>=20
+>  module_platform_driver(jz4780_i2c_driver);
+> --
+> 2.7.4
+>=20
+
+=
+
