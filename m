@@ -2,146 +2,107 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B8DC5ED44
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9700C5ED7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82A724753
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A85247AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RWONLY0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfLMPuJ (ORCPT
+        id S1728097AbfLMQAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:50:09 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33601 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfLMPuH (ORCPT
+        Fri, 13 Dec 2019 11:00:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45563 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbfLMQAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:50:07 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 77B6760006;
-        Fri, 13 Dec 2019 15:50:04 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next v3 02/15] net: macsec: introduce the macsec_context structure
-Date:   Fri, 13 Dec 2019 16:48:31 +0100
-Message-Id: <20191213154844.635389-3-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+        Fri, 13 Dec 2019 11:00:05 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so2298757lfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:00:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6d355onEMaQLbFzGsPL3qOJq28B0iID9uA32I/OH8KY=;
+        b=RWONLY0C20iDqzVgHJOMcG0CbIMsarnktxykVv3fzYeDcK6YbJdMcv6KZE7y0BCOlw
+         kLoWcGHRdoHmerJ3dVsBoOp4+zwDg69u2Io0/U/CLa1xJvkhFLD8LWAP0muL6aVREdlr
+         dq+PsPNZF/el3cTFU9c2TLiU19CHe1GqHUjhb9Ao2Js8Swj/6tWPBA7nCliYmQ2ENqoq
+         hV/HLAOs2jFe5nVBnbYC33Yl1pAlomhdJeOm3hDAhsk430Id7SWzriiZyxqxlmZ3qMta
+         g9H4lygWNPJQKBKl3RS5+yH5mlJUPdGNspRipjnSbgj5B4PwJcy9sof2EmJsR3mce3dI
+         IgIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6d355onEMaQLbFzGsPL3qOJq28B0iID9uA32I/OH8KY=;
+        b=hA5nFgYNJFmFv9FAyNI3AYwcGUQAEV6DGUw7prmCcqYX5LHe+PoJ6MMle4L0pg4JnM
+         QeF+C/VtxRbRvJKgsw7Em41RO74a2ZmmTm/hdvs5IgEShGw6Q4+utYJh/1bZ7AydrNmm
+         94iR1+cK47zmOSHB4RKwmLFJvdi6D907/wf6QSGYcvZ3hHuqKRK9RF6UYzDS9vJluYi1
+         hz6UlH8WJ75kssQweYBDxnT4QR1k1WC5bOK5e/DwaSz7noIvBLafMMNRXLkdja2tSJEU
+         y4pdDMJh7BswYfqXv8Rre2pRXa+3BoRHwR4NOo2Xpy0Ww5dvB3ssZRvl9US5mGjHOc0J
+         LWug==
+X-Gm-Message-State: APjAAAVoEoIPlqiCPdEHxYzTQTW7bnEMI+pu4ydATvuEylx30jmHaLzA
+        kPzgqjX3NsptI9Qghx8vI/mD7KEX1eWDdtS+xGiokg==
+X-Google-Smtp-Source: APXvYqyf9tBuza0aFqrtSUyxftprBtALJcGpe4oAZEEePdM+WgDYDegqUpqrrK70d4RPfcTRXsPPG2o1rKeoC2pjSzU=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr9309054lff.44.1576252802440;
+ Fri, 13 Dec 2019 08:00:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 16:59:50 +0100
+Message-ID: <CACRpkdaQZZcaPtDfieGSP9wSow11Xv3K_x89bq=QeYGb2BhpHw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency
+ on S3C24xx and S3C64xx
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces the macsec_context structure. It will be used
-in the kernel to exchange information between the common MACsec
-implementation (macsec.c) and the MACsec hardware offloading
-implementations. This structure contains pointers to MACsec specific
-structures which contain the actual MACsec configuration, and to the
-underlying device (phydev for now).
+On Fri, Dec 13, 2019 at 8:24 AM Krzysztof Kozlowski <krzk@kernel.org> wrote=
+:
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- include/linux/phy.h                |  2 ++
- include/net/macsec.h               | 21 +++++++++++++++++++++
- include/uapi/linux/if_link.h       |  7 +++++++
- tools/include/uapi/linux/if_link.h |  7 +++++++
- 4 files changed, 37 insertions(+)
+> All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which us=
+es
+> both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
+> therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
+> failed:
+>
+>     drivers/pinctrl/samsung/pinctrl-samsung.c: In function =E2=80=98samsu=
+ng_gpiolib_register=E2=80=99:
+>     drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: =E2=80=98stru=
+ct gpio_chip=E2=80=99 has no member named =E2=80=98of_node=E2=80=99
+>        gc->of_node =3D bank->of_node;
+>          ^
+>
+> Rework the dependencies so all Samsung drivers and common
+> PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
+> and OF are enabled).
+>
+> Reported-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5032d453ac66..f4116947a7d7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -327,6 +327,8 @@ struct phy_c45_device_ids {
- 	u32 device_ids[8];
- };
- 
-+struct macsec_context;
-+
- /* phy_device: An instance of a PHY
-  *
-  * drv: Pointer to the driver for this PHY instance
-diff --git a/include/net/macsec.h b/include/net/macsec.h
-index d18100ff2f57..8882379d68ac 100644
---- a/include/net/macsec.h
-+++ b/include/net/macsec.h
-@@ -175,4 +175,25 @@ struct macsec_secy {
- 	struct macsec_rx_sc __rcu *rx_sc;
- };
- 
-+/**
-+ * struct macsec_context - MACsec context for hardware offloading
-+ */
-+struct macsec_context {
-+	struct phy_device *phydev;
-+	enum macsec_offload offload;
-+
-+	struct macsec_secy *secy;
-+	struct macsec_rx_sc *rx_sc;
-+	struct {
-+		unsigned char assoc_num;
-+		u8 key[MACSEC_KEYID_LEN];
-+		union {
-+			struct macsec_rx_sa *rx_sa;
-+			struct macsec_tx_sa *tx_sa;
-+		};
-+	} sa;
-+
-+	u8 prepare:1;
-+};
-+
- #endif /* _NET_MACSEC_H_ */
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index 1d69f637c5d6..024af2d1d0af 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -486,6 +486,13 @@ enum macsec_validation_type {
- 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
- };
- 
-+enum macsec_offload {
-+	MACSEC_OFFLOAD_OFF = 0,
-+	MACSEC_OFFLOAD_PHY = 1,
-+	__MACSEC_OFFLOAD_END,
-+	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
-+};
-+
- /* IPVLAN section */
- enum {
- 	IFLA_IPVLAN_UNSPEC,
-diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-index 8aec8769d944..42efdb84d189 100644
---- a/tools/include/uapi/linux/if_link.h
-+++ b/tools/include/uapi/linux/if_link.h
-@@ -485,6 +485,13 @@ enum macsec_validation_type {
- 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
- };
- 
-+enum macsec_offload {
-+	MACSEC_OFFLOAD_OFF = 0,
-+	MACSEC_OFFLOAD_PHY = 1,
-+	__MACSEC_OFFLOAD_END,
-+	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
-+};
-+
- /* IPVLAN section */
- enum {
- 	IFLA_IPVLAN_UNSPEC,
--- 
-2.23.0
+What should this be applied on? It doesn't apply to my fixes
+branch which is close to v5.5-rc1. Please rebase and resend
+if this was not based on that.
 
+Should this have a Fixes: tag?
+
+Yours,
+Linus Walleij
