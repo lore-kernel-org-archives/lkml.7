@@ -2,81 +2,131 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6749C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4BFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD826227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576221531;
-	bh=SNoGhGHQqlnJ0YqCuKB0MMwQfW1ylbS1THlpD4JTQrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iEIFm9N9ytQhY+FJ1xLkM3dLaLGEFvjO549azRZwSxeT8eqboAECWT3NMPyYCh0r1
-	 gZQWClujnZ2nQSS4pgnHx+1+vsTltvMjIH9Zpk8jKXKUs3h4D7DnRnm8fbPlaCtjio
-	 4KW0ubD4l1+OisRQF4lUNSDvBkY+JWbpuesbUfHE=
+	by mail.kernel.org (Postfix) with ESMTP id 6FE9D24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLMHSu (ORCPT
+        id S1725890AbfLMHVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:18:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfLMHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:18:50 -0500
-Received: from localhost (unknown [84.241.199.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F2022527;
-        Fri, 13 Dec 2019 07:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576221530;
-        bh=SNoGhGHQqlnJ0YqCuKB0MMwQfW1ylbS1THlpD4JTQrg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ElDQf2nsGZl1rXjXDt50YCK2t3pOTND7sCLAPa0rkryOROHjT1WeZWoRBVdHMGpWA
-         lBSF6XH72LoimogbB8DjD0BQ6Cl1P2/u6d7wPKvZjhI5E36XKmri3CVnkuRlrWcnkw
-         M7a913AxoslxlFo5KNHKa/NYaOTKB10tQ1w1oXXk=
-Date:   Fri, 13 Dec 2019 08:18:45 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 03/58] serial_core: Un-ifdef sysrq SUPPORT_SYSRQ
-Message-ID: <20191213071845.GB1750354@kroah.com>
-References: <20191213000657.931618-1-dima@arista.com>
- <20191213000657.931618-4-dima@arista.com>
+        Fri, 13 Dec 2019 02:21:10 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:51294 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfLMHVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:21:09 -0500
+Received: by mail-il1-f200.google.com with SMTP id x2so1323600ilk.18
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 23:21:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UBhSC4Z1qFXXc2HUBCNu4A2Q6en5x0QfWiP2o1ZOWSQ=;
+        b=ezAozMyDwjq7iegYgLMt0kNOFvIzA+S5wlHl8gBvaw2eN/RAr6f35u9Pv/fPZeLulH
+         W5YqU4Dr+bywwWGHRU4ToIfpkG5/io429FLZEyPiKr5dTcEZ3C0ZqD2K9LTB6FSdOYC+
+         TSyOg0hCMwtt1MsHbbZTSMIbGz4EZNFXVCidlL8opVHrviaYFphJtvJ2BmAdkZUrT99z
+         G8+RwBRTqnWR1GpwuInCSH0xeIuPPovM7A0lPEtXbdIVJ6xLBO/4du971uiNxACOrSft
+         OobZjTv0tpaPKfD5SR+np1TdLkyytCDbuiXnPdgj1ATY0dqbrSL8GRWU95zIff6ptcdI
+         4mug==
+X-Gm-Message-State: APjAAAX0hLw3R0gjCE1sD6zDpY8QAq5r6S56fmtuJcxmcX5oZKTrASH6
+        EJ5AWj2en8kj71Eap6ruOhfD1eWvi99f8eUxZkLU8RwlT0he
+X-Google-Smtp-Source: APXvYqzKKDdtoK2MWqr9l+ar5eCKKhGAGTth0kWrsd/T2k0/rM0mMhIfPpKbRcWtAyxzqqBE7fE2iwHx91u+IqjiYLKFy4qHT1NU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213000657.931618-4-dima@arista.com>
+X-Received: by 2002:a92:902:: with SMTP id y2mr12186015ilg.196.1576221669031;
+ Thu, 12 Dec 2019 23:21:09 -0800 (PST)
+Date:   Thu, 12 Dec 2019 23:21:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab87b6059990b486@google.com>
+Subject: general protection fault in fbcon_cursor
+From:   syzbot <syzbot+6acf28c23c81badd89a7@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:06:02AM +0000, Dmitry Safonov wrote:
-> The SUPPORT_SYSRQ is messy: every .c source should define it before
-> including "serial_core.h" if sysrq is supported or struct uart_port will
-> differ in sizes. Also this prevents moving to serial_core.c functions:
-> uart_handle_sysrq_char(), uart_prepare_sysrq_char(),
-> uart_unlock_and_check_sysrq().
-> 
-> It doesn't save many bytes in the structure, and a better way to reduce
-> it's size would be making rs485 and iso7816 pointers.
-> 
-> Introduce `has_sysrq` member to be used by serial line drivers further.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+Hello,
 
-Ah, you did what I asked here in patch 3.  Nevermind on my comments on
-patch 2 :)
+syzbot found the following crash on:
 
-looks good, thanks!
+HEAD commit:    ae4b064e Merge tag 'afs-fixes-20191211' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1218c1dee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=6acf28c23c81badd89a7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-greg k-h
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6acf28c23c81badd89a7@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events console_callback
+RIP: 0010:fbcon_cursor+0x114/0x660 drivers/video/fbdev/core/fbcon.c:1380
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e6 04 00 00 4d 8b b4 24 a0 03  
+00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <0f> b6 14 02 4c  
+89 f0 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ba
+RSP: 0018:ffffc90000d8fb00 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff8880a4309400 RCX: ffffffff83e01590
+RDX: 000000001fffffe7 RSI: ffffffff83b2804c RDI: ffff8880a282b3a0
+RBP: ffffc90000d8fb40 R08: ffff8880a9a4a480 R09: ffffed10147a3e1c
+R10: ffffed10147a3e1b R11: ffff8880a3d1f0df R12: ffff8880a282b000
+R13: ffff888218c76000 R14: 00000000ffffff3a R15: ffff888218c76468
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004bf9b0 CR3: 000000008e75d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  set_cursor drivers/tty/vt/vt.c:908 [inline]
+  set_cursor+0x1fb/0x280 drivers/tty/vt/vt.c:899
+  redraw_screen+0x4e1/0x7d0 drivers/tty/vt/vt.c:1013
+  complete_change_console+0x105/0x3a0 drivers/tty/vt/vt_ioctl.c:1264
+  change_console+0x19b/0x2c0 drivers/tty/vt/vt_ioctl.c:1389
+  console_callback+0x3a1/0x400 drivers/tty/vt/vt.c:2824
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace a825343a1e8757e1 ]---
+RIP: 0010:fbcon_cursor+0x114/0x660 drivers/video/fbdev/core/fbcon.c:1380
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e6 04 00 00 4d 8b b4 24 a0 03  
+00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <0f> b6 14 02 4c  
+89 f0 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ba
+RSP: 0018:ffffc90000d8fb00 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff8880a4309400 RCX: ffffffff83e01590
+RDX: 000000001fffffe7 RSI: ffffffff83b2804c RDI: ffff8880a282b3a0
+RBP: ffffc90000d8fb40 R08: ffff8880a9a4a480 R09: ffffed10147a3e1c
+R10: ffffed10147a3e1b R11: ffff8880a3d1f0df R12: ffff8880a282b000
+R13: ffff888218c76000 R14: 00000000ffffff3a R15: ffff888218c76468
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004bf9b0 CR3: 000000008e75d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
