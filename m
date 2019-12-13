@@ -2,78 +2,152 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46022C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA7EC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27418206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA82206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfLMCLJ (ORCPT
+        id S1731925AbfLMCNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:11:09 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:54430 "EHLO inva020.nxp.com"
+        Thu, 12 Dec 2019 21:13:45 -0500
+Received: from mga05.intel.com ([192.55.52.43]:26956 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfLMCLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 21:11:09 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C9ED61A0149;
-        Fri, 13 Dec 2019 03:11:07 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E73F1A031E;
-        Fri, 13 Dec 2019 03:11:03 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7474640296;
-        Fri, 13 Dec 2019 10:10:57 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     dmitry.torokhov@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        robh@kernel.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] input: keyboard: imx_sc_key: Only take the valid data from SCU firmware as key state
-Date:   Fri, 13 Dec 2019 10:08:29 +0800
-Message-Id: <1576202909-1661-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727778AbfLMCNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 21:13:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 18:13:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,308,1571727600"; 
+   d="scan'208";a="226146129"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 12 Dec 2019 18:13:41 -0800
+Cc:     baolu.lu@linux.intel.com
+Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
+ <20191212014952.vlrmxrk2cebwxjnp@cantor>
+ <6f3bcad9-b9b3-b349-fdad-ce53a79a665b@linux.intel.com>
+ <20191213003013.gc3zg3fpzpjntnzg@cantor>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7d58da5b-3f55-72b2-0638-ae561446d207@linux.intel.com>
+Date:   Fri, 13 Dec 2019 10:12:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191213003013.gc3zg3fpzpjntnzg@cantor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When reading key state from SCU, the response data from SCU firmware
-is 4 bytes due to MU message protocol, but ONLY the first byte is the
-key state, other 3 bytes could be some dirty data, so we should ONLY
-take the first byte as key state to avoid reporting incorrect state.
+Hi,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/input/keyboard/imx_sc_key.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+On 12/13/19 8:30 AM, Jerry Snitselaar wrote:
+> On Thu Dec 12 19, Lu Baolu wrote:
+>> Hi,
+>>
+>> On 12/12/19 9:49 AM, Jerry Snitselaar wrote:
+>>> On Wed Dec 11 19, Lu Baolu wrote:
+>>>> If the default DMA domain of a group doesn't fit a device, it
+>>>> will still sit in the group but use a private identity domain.
+>>>> When map/unmap/iova_to_phys come through iommu API, the driver
+>>>> should still serve them, otherwise, other devices in the same
+>>>> group will be impacted. Since identity domain has been mapped
+>>>> with the whole available memory space and RMRRs, we don't need
+>>>> to worry about the impact on it.
+>>>>
+>>>> Link: https://www.spinics.net/lists/iommu/msg40416.html
+>>>> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>>>> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>>> Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced 
+>>>> with private")
+>>>> Cc: stable@vger.kernel.org # v5.3+
+>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>
+>>> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>
+>> Can you please try this fix and check whether it can fix your problem?
+>> If it helps, do you mind adding a Tested-by?
+>>
+>> Best regards,
+>> baolu
+>>
+> 
+> I'm testing with this patch, my patch that moves the direct mapping call,
+> and Alex's patch for the ISA bridge. It solved the 2 iommu mapping errors
+> I was seeing with default passthrough, I no longer see all the dmar pte
+> read access errors, and the system boots allowing me to login. I'm tracking
+> down 2 issues at the moment. With passthrough I see a problem with 01:00.4
+> that I mentioned in the earlier email:
+> 
+> [   78.978573] uhci_hcd: USB Universal Host Controller Interface driver
+> [   78.980842] uhci_hcd 0000:01:00.4: UHCI Host Controller
+> [   78.982738] uhci_hcd 0000:01:00.4: new USB bus registered, assigned 
+> bus number 3
+> [   78.985222] uhci_hcd 0000:01:00.4: detected 8 ports
+> [   78.986907] uhci_hcd 0000:01:00.4: port count misdetected? forcing to 
+> 2 ports
+> [   78.989316] uhci_hcd 0000:01:00.4: irq 16, io base 0x00003c00
+> [   78.994634] uhci_hcd 0000:01:00.4: DMAR: 32bit DMA uses non-identity 
+> mapping
+> [   7 0000:01:00.4: unable to allocate consistent memory for frame list
+> [   79.499891] uhci_hcd 0000:01:00.4: startup error -16
+> [   79.501588] uhci_hcd 0000:01:00.4: USB bus 3 deregistered
+> [   79.503494] uhci_hcd 0000:01:00.4: init 0000:01:00.4 fail, -16
+> [   79.505497] uhci_hcd: probe of 0000:01:00.4 failed with error -16
+> 
+> If I boot the system with iommu=nopt I see an iommu map failure due to
+> the prot check in __domain_mapping:
+> 
+> [   40.940589] pci 0000:00:1f.0: iommu_group_add_device: calling 
+> iommu_group_create_direct_mappings
+> [   40.943558] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+> iterating through mappings
+> [   40.946402] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+> calling apply_resv_region
+> [   40.949184] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+> entry type is direct
+> [   40.951819] DMAR: intel_iommu_map: enter
+> [   40.953128] DMAR: __domain_mapping: prot & 
+> (DMA_PTE_READ|DMA_PTE_WRITE) == 0
+> [   40.955486] DMAR: domain_mapping: __domain_mapping failed
+> [   40.957348] DMAR: intel_iommu_map: domain_pfn_mapping returned -22
+> [   40.959466] DMAR: intel_iommu_map: leave
+> [   40.959468] iommu: iommu_map: ops->map failed iova 0x0 pa 
+> 0x0000000000000000 pgsize 0x1000
+> [   40.963511] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+> iommu_map failed
+> [   40.966026] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+> leaving func
+> [   40.968487] pci 0000:00:1f.0: iommu_group_add_device: calling 
+> __iommu_attach_device
+> [   40.971016] pci 0000:00:1f.0: Adding to iommu group 19
+> [   40.972731] pci 0000:00:1f.0: DMAR: domain->type is dma
+> 
+> /sys/kernel/iommu_groups/19
+> [root@hp-dl388g8-07 19]# cat reserved_regions 0x0000000000000000 
+> 0x0000000000ffffff direct
+> 0x00000000bdf6e000 0x00000000bdf84fff direct
+> 0x00000000fee00000 0x00000000feefffff msi
+> 
+> 00:1f.0 ISA bridge: Intel Corporation C600/X79 series chipset LPC 
+> Controller
 
-diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
-index 5379952..9f809ae 100644
---- a/drivers/input/keyboard/imx_sc_key.c
-+++ b/drivers/input/keyboard/imx_sc_key.c
-@@ -78,7 +78,13 @@ static void imx_sc_check_for_events(struct work_struct *work)
- 		return;
- 	}
- 
--	state = (bool)msg.state;
-+	/*
-+	 * The response data from SCU firmware is 4 bytes,
-+	 * but ONLY the first byte is the key state, other
-+	 * 3 bytes could be some dirty data, so we should
-+	 * ONLY take the first byte as key state.
-+	 */
-+	state = (bool)(msg.state & 0xff);
- 
- 	if (state ^ priv->keystate) {
- 		priv->keystate = state;
--- 
-2.7.4
+This seems to be another issue?
 
+Best regards,
+baolu
