@@ -2,88 +2,122 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7CC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C71C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D612073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576198492;
-	bh=j8D+jY9fdqeL/Py33OYokgdHf7s0IVkY5v+nvBAEJos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=My+lDvTeGXLpSh6FqGp1W6FKKyqYQc+WWM6ZO0dimkQgYeFrJGmhyGfSxnGC4qbIB
-	 PfBQJOywVIqw3OHp6bgaNfDc5bPq77rdWjRcqt7F8r+2O9FQYzb4LGcV8jQvBCgXaq
-	 opGzy3za2PvQMQ3dVH5qsyZSfMZcPwIcnCytUFWU=
+	by mail.kernel.org (Postfix) with ESMTP id DE2DF21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfLMAyv (ORCPT
+        id S1731509AbfLMBBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:54:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfLMAyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:54:51 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B835205C9;
-        Fri, 13 Dec 2019 00:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576198490;
-        bh=j8D+jY9fdqeL/Py33OYokgdHf7s0IVkY5v+nvBAEJos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pufP1U08vwhmlXcMMrITJdIdTAfP7bWtp8132PxG22nlfgLomU0yp8xOL8VGGAD/7
-         SuUmv/98B4MEfBWnSkYUCOBvJRzTocYhdIaAdzVpyxi0wlHbHj4XxhGRcwKDP9FPvK
-         EoEZHwqWh6VnL0J7D8lDo+J6GIdmB/VDUr/66CKg=
-Date:   Thu, 12 Dec 2019 19:54:49 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.4 27/37] ext4: work around deleting a file with
- i_nlink == 0 safely
-Message-ID: <20191213005449.GG12996@sasha-vm>
-References: <20191211153813.24126-1-sashal@kernel.org>
- <20191211153813.24126-27-sashal@kernel.org>
- <20191211161959.GB129186@mit.edu>
- <20191211200454.GF12996@sasha-vm>
- <20191212151706.GA204354@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191212151706.GA204354@mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Dec 2019 20:01:51 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:59343 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727119AbfLMBBu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:01:50 -0500
+Date:   13 Dec 2019 10:01:49 +0900
+X-IronPort-AV: E=Sophos;i="5.69,307,1571670000"; 
+   d="scan'208";a="34283415"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 13 Dec 2019 10:01:49 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3E5ED4135A3F;
+        Fri, 13 Dec 2019 10:01:49 +0900 (JST)
+Message-ID: <87zhfx3uo2.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH v2] sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:17:06AM -0500, Theodore Y. Ts'o wrote:
->On Wed, Dec 11, 2019 at 03:04:54PM -0500, Sasha Levin wrote:
->> > I'm confused; this was explicitly cc'ed to stable@kernel.org, so why
->> > is your AUTOSEL picking this up?  I would have thought this would get
->> > picked up via the normal stable kernel processes.
->>
->> My mistake, appologies.
->
->No worries; the intent was that it be backported to stable, and I
->don't really care with path it takes.
->
->I just wanted to make sure there wouldn't be confusion if you
->backported it to stable, and then Greg tried and then got a merge
->conflict.  (Or worse, if the patch was one of the ones where it can be
->successfully applied *twice* w/o a patch conflict; I'm not sure if git
->cherry-pick is smarter than patch in this regard, but I don't think it
->is?)
 
-This one was just due to me running a bit faster then usual. I generally
-don't filter out stable tagged commits and Greg just gets to them faster
-than me (the delay on AUTOSEL is bigger than stable tagged commits).
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
+__ashiftrt_r4_xx might be used from kernel module.
+We need DECLARE_EXPORT() for them, otherwise we will get compile error.
+This patch adds missing DECLARE_EXPORT()
+
+ERROR: "__ashiftrt_r4_25" [drivers/iio/pressure/bmp280.ko] undefined!
+ERROR: "__ashiftrt_r4_26" [drivers/iio/dac/ad5764.ko] undefined!
+ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/mma7660.ko] undefined!
+ERROR: "__ashiftrt_r4_25" [drivers/iio/accel/dmard06.ko] undefined!
+ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/bma220_spi.ko] undefined!
+ERROR: "__ashiftrt_r4_25" [drivers/crypto/hisilicon/sec/hisi_sec.ko] undefined!
+ERROR: "__ashiftrt_r4_26" [drivers/rtc/rtc-x1205.ko] undefined!
+ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf85063.ko] undefined!
+ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf2123.ko] undefined!
+ERROR: "__ashiftrt_r4_25" [drivers/input/tablet/gtco.ko] undefined!
+ERROR: "__ashiftrt_r4_26" [drivers/input/mouse/psmouse.ko] undefined!
+ERROR: "__ashiftrt_r4_28" [drivers/input/mouse/psmouse.ko] undefined!
+ERROR: "__ashiftrt_r4_28" [drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko] undefined!
+ERROR: "__ashiftrt_r4_28" [fs/udf/udf.ko] undefined!
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v1 -> v2
+
+	- r4_0  - r4_5  are added
+	- r4_16 - r4_19 are added
+
+ arch/sh/kernel/sh_ksyms_32.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/sh/kernel/sh_ksyms_32.c b/arch/sh/kernel/sh_ksyms_32.c
+index 2827744..5858936 100644
+--- a/arch/sh/kernel/sh_ksyms_32.c
++++ b/arch/sh/kernel/sh_ksyms_32.c
+@@ -38,6 +38,13 @@ DECLARE_EXPORT(__ashlsi3);
+ DECLARE_EXPORT(__lshrsi3_r0);
+ DECLARE_EXPORT(__ashrsi3_r0);
+ DECLARE_EXPORT(__ashlsi3_r0);
++
++DECLARE_EXPORT(__ashiftrt_r4_0);
++DECLARE_EXPORT(__ashiftrt_r4_1);
++DECLARE_EXPORT(__ashiftrt_r4_2);
++DECLARE_EXPORT(__ashiftrt_r4_3);
++DECLARE_EXPORT(__ashiftrt_r4_4);
++DECLARE_EXPORT(__ashiftrt_r4_5);
+ DECLARE_EXPORT(__ashiftrt_r4_6);
+ DECLARE_EXPORT(__ashiftrt_r4_7);
+ DECLARE_EXPORT(__ashiftrt_r4_8);
+@@ -48,13 +55,23 @@ DECLARE_EXPORT(__ashiftrt_r4_12);
+ DECLARE_EXPORT(__ashiftrt_r4_13);
+ DECLARE_EXPORT(__ashiftrt_r4_14);
+ DECLARE_EXPORT(__ashiftrt_r4_15);
++DECLARE_EXPORT(__ashiftrt_r4_16);
++DECLARE_EXPORT(__ashiftrt_r4_17);
++DECLARE_EXPORT(__ashiftrt_r4_18);
++DECLARE_EXPORT(__ashiftrt_r4_19);
+ DECLARE_EXPORT(__ashiftrt_r4_20);
+ DECLARE_EXPORT(__ashiftrt_r4_21);
+ DECLARE_EXPORT(__ashiftrt_r4_22);
+ DECLARE_EXPORT(__ashiftrt_r4_23);
+ DECLARE_EXPORT(__ashiftrt_r4_24);
++DECLARE_EXPORT(__ashiftrt_r4_25);
++DECLARE_EXPORT(__ashiftrt_r4_26);
+ DECLARE_EXPORT(__ashiftrt_r4_27);
++DECLARE_EXPORT(__ashiftrt_r4_28);
++DECLARE_EXPORT(__ashiftrt_r4_29);
+ DECLARE_EXPORT(__ashiftrt_r4_30);
++DECLARE_EXPORT(__ashiftrt_r4_31);
++DECLARE_EXPORT(__ashiftrt_r4_32);
+ DECLARE_EXPORT(__movstr);
+ DECLARE_EXPORT(__movstrSI8);
+ DECLARE_EXPORT(__movstrSI12);
 -- 
-Thanks,
-Sasha
+2.7.4
+
