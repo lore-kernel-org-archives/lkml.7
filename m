@@ -2,123 +2,155 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C6DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF0C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B5A22527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576199773;
-	bh=41UXekEdF9kavlN11G4wL1lFhr5jX6Gv12aUkd97nZU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=woN0kwl7haX1/GdjJ94CI4Wn/qovW7oaTSh0BtubQf+qRKCDBw3symWholQEVbo1w
-	 kmmWhHb+6EkV2pyqDx9Gl6o+Z3TpkD87Pk3x2liw9lGFEfg2iAm0SkiOoPcFWOHfMv
-	 az3+hX+S2RdPTHQlQHCVyi0wiM5u0Kx0X1GeQS/o=
+	by mail.kernel.org (Postfix) with ESMTP id 5D8A021655
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9vmM3wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbfLMBQM (ORCPT
+        id S1731680AbfLMBYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:16:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbfLMBQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:16:11 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E864B2173E;
-        Fri, 13 Dec 2019 01:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576199770;
-        bh=41UXekEdF9kavlN11G4wL1lFhr5jX6Gv12aUkd97nZU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=CIHvI4iA5Eab4AxzB1ehbOKRX3V0VZqXs9o2dsLS3Ww31ZEIHy3ZaaTARQTO58q1/
-         O17lww/L0A4aA8YGeNLuEvIjGBbZGK2GbN6zm0mUTxj6a+r7w6OpHmobyrMj0/SQjg
-         zMEChoKxDLuJKMh3n9Gdo1Sb3arovX5qCJ22OKEE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7180835227E8; Thu, 12 Dec 2019 17:16:10 -0800 (PST)
-Date:   Thu, 12 Dec 2019 17:16:10 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
-        rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191213011610.GC2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
- <20191206160238.GE2889@paulmck-ThinkPad-P72>
- <20191212215534.GE129023@google.com>
+        Thu, 12 Dec 2019 20:24:17 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42022 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731288AbfLMBYR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:24:17 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so526236pfz.9;
+        Thu, 12 Dec 2019 17:24:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mVYnNLUWDZKpYLFTHOhdx5QMfZ/iaJU8SyrTIrnh1+U=;
+        b=C9vmM3wb6Ku+BwbrsiOw8sJcOapH9ak4S6OvvOJfkUVaVtflB03QO2A3IdCTuIPlw1
+         S0ecyAtDw8qd3a05aw/rdmjBr/xOrkoWb3NnVvNTm39DWW8P2ePVHV0BXKQlg6UNGRfi
+         L4f26CTJ71IIL8zgTDQNb9viGP8uNnLVRvIzmp0qqCS3J1HdUzIbZpXJsTsRAzcnmaDJ
+         gf5XOfBCm2jYtQryLN+pWkD/gTVVJztPbNTnmtbrTyFf//kGwyMRWcckgugnnxlXdu7I
+         tWoXUcQbMSdEng1Tda8UbAfvrXu5sAacDHgOHc3pq20si1CQFu8f1mIS3gKbwGyXw/zK
+         5YBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mVYnNLUWDZKpYLFTHOhdx5QMfZ/iaJU8SyrTIrnh1+U=;
+        b=PuXgIgYik+HTvvbw8ohhzAxLB+NJq5R+BqI3g6GEU6q/2ZteagsOFWhAXyCttPMzzD
+         pUnjeLeYKJj96aGF66nVFZM3YRCWkxX0k7T3xye8B9ZbSCWV21mk7XH9wxz17WuuBNNQ
+         9h/vzbAuFqCJbnyXT6xCu/1Dc2EIwR7MzdNI3Nu6UcE+UfAPQmgRFR3e+UvltVksXKcW
+         gwzdadHLt3144KqRjHBHs+2JEV/G1f0WoqCA97GKMCxvHJ5gwZCK/uzrZbKc+6Ikt/U7
+         QmfVNUQJNS7KXBsZuBajlMwAeesogaEfuRZrFkAz+KDRy8qWGcebQirkHmaZu0Ow7VIq
+         jxCA==
+X-Gm-Message-State: APjAAAVEiAicRacZAxlJEAsm5hbhfve0vBAIa632IdaprRIMWNB1I+1a
+        Fav5BKoHmcBhgBy7PertG1o=
+X-Google-Smtp-Source: APXvYqzslQWCGhhjC4AVQ3m239kr2s7F0YOheuzUQOjc5GF3xeZkaRbeg83aAHQgMnfEAhySOKU1Mg==
+X-Received: by 2002:a62:1883:: with SMTP id 125mr12979767pfy.166.1576200255999;
+        Thu, 12 Dec 2019 17:24:15 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c18sm8230295pgj.24.2019.12.12.17.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 17:24:14 -0800 (PST)
+Date:   Thu, 12 Dec 2019 17:24:08 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+Message-ID: <20191213012408.GH101194@dtor-ws>
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+ <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+ <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
+ <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212215534.GE129023@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 04:55:34PM -0500, Joel Fernandes wrote:
-> On Fri, Dec 06, 2019 at 08:02:38AM -0800, Paul E. McKenney wrote:
-> 
-> Thanks for fixing these issues and I caught up with all the patches.
-> 
-> > 
-> > o	Create a list that is safe for bidirectional RCU traversal.
-> > 	This can use list_head, and would need these functions,
-> > 	give or take the exact names:
-> 
-> On a related topic, I was trying to reason about how one could come up with
-> bidirectional traversal without ever getting rid of poisoning.
-> 
-> As you noted in another post, if during traversal, the node is deleted and
-> poisoned, then the traverser can access a poisoned pointer. If the list is
-> being traversed in reverse (by following prev), then poisioning could hurt
-> it.
-> 
-> Even with the below modifications, poisoning would still hurt it. No? Were
-> you suggesting to remove poisoning for such bidirectional RCU list?
+Hi Marek,
 
-Yes.  We removed forward poisoning from list_del_rcu(), and a
-list_del_rcuprev() or whatever name would need to avoid poisoning both
-pointers.
+On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
+> Dear All,
+> 
+> On 08.11.2019 05:22, Dmitry Torokhov wrote:
+> > We do not need a special flag to know if we are dealing with an array,
+> > as we can get that data from ratio between element length and the data
+> > size, however we do need a flag to know whether the data is stored
+> > directly inside property_entry or separately.
+> >
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> Today I've noticed that this patch got merged to linux-next as commit 
+> e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI 
+> driver operation on Samsung Exynos5 SoCs (and probably on other SoCs 
+> which use DWC3 in host mode too). I get the following errors during boot:
+> 
+> dwc3 12000000.dwc3: failed to add properties to xHCI
+> dwc3 12000000.dwc3: failed to initialize host
+> dwc3: probe of 12000000.dwc3 failed with error -61
+> 
+> Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
+> 
+> https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
+> 
+> (lack of 'ref' clk is not related nor fatal to the driver operation).
+> 
+> The code which fails after this patch is located in 
+> drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
 
-							Thanx, Paul
+Does the following help? If, as I expect, it does, I'll submit it
+formally.
 
-> Sorry if I missed something.
-> thanks,
-> 
->  - Joel
-> 
-> 
-> > 	list_add_tail_rcuprev():  This is like list_add_tail_rcu(),
-> > 	but also has smp_store_release() for ->prev.  (As in there is
-> > 	also a __list_add_rcuprev() helper that actually contains the
-> > 	additional smp_store_release().)
-> > 
-> > 	list_del_rcuprev():  This can be exactly __list_del_entry(),
-> > 	but with the assignment to ->prev in __list_del() becoming
-> > 	WRITE_ONCE().  And it looks like callers to __list_del_entry()
-> > 	and __list_del() might need some attention!  And these might
-> > 	result in additional users of *_rcuprev().
-> > 
-> > 	list_prev_rcu() as in your first patch, but with READ_ONCE().
-> > 	Otherwise DEC Alpha can fail.  And more subtle compiler issues
-> > 	can appear on other architectures.
-> > 
-> > 	Note that list_move_tail() will be OK give or take *_ONCE().
-> > 	It might be better to define a list_move_tail_rcuprev(), given
-> > 	the large number of users of list_move_tail() -- some of these
-> > 	users might not like even the possibility of added overhead due
-> > 	to volatile accesses.  ;-)
-> > 
-> > Or am I missing something subtle here?
-> > 
-> > 							Thanx, Paul
+---
+
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index 5567ed2cddbec..fa252870c926f 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+ 
+ 	if (dwc->usb3_lpm_capable)
+-		props[prop_idx++].name = "usb3-lpm-capable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
+ 
+ 	if (dwc->usb2_lpm_disable)
+-		props[prop_idx++].name = "usb2-lpm-disable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+ 
+ 	/**
+ 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	 * This following flag tells XHCI to do just that.
+ 	 */
+ 	if (dwc->revision <= DWC3_REVISION_300A)
+-		props[prop_idx++].name = "quirk-broken-port-ped";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+ 
+ 	if (prop_idx) {
+ 		ret = platform_device_add_properties(xhci, props);
+
+
+-- 
+Dmitry
