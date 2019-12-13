@@ -2,117 +2,134 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702ADC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346E7C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 11:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3948E2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059392077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 11:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UWC0CNBf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gf5bZUfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLMK5Z (ORCPT
+        id S1726676AbfLMLGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:57:25 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:60208 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbfLMK5Y (ORCPT
+        Fri, 13 Dec 2019 06:06:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39908 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbfLMLGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:57:24 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDApeV8018866;
-        Fri, 13 Dec 2019 04:57:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=b3XCO3g7n3HWcPlAKBzHSMbVpUVeYqKQIfE9XAkGT/g=;
- b=UWC0CNBfl57fq2VE2ZFB48b+gKVNeedw+x2/bSgHtaJ7uP6Rkg5i/sJQ9bAYCO80FLKk
- VwKKRcCK3mvjm9CsAfBGX4bZ8Mi6ori/WI2LuQ0YIfrRwwdaIj54YIQLop7uF1y0I9pM
- lBgQFLd5gTv2dsWJjYwOYXTNPB9/KokrFhjkCVvYpXojSLdBve4wT0ivN2pOt88Mi9tY
- LSRJAwrTe/RelqnRM1GNYdWHEY25W/XoVFAFRY7PxZJmfwaujOykZ3aBeQWkkcBYdd8K
- Vyma3C+RtOJuJTrrkmOu2hm6JwRXav/ep7TeT8k/NBhjh5XTHn3isfHdcRHJUrkXsr46 FQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2wr9cu00s5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 13 Dec 2019 04:57:01 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 13 Dec
- 2019 10:56:58 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 13 Dec 2019 10:56:58 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CD3192A1;
-        Fri, 13 Dec 2019 10:56:58 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 10:56:58 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-CC:     Mark Brown <broonie@kernel.org>, <kstewart@linuxfoundation.org>,
-        <guennadi.liakhovetski@linux.intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <patches@opensource.cirrus.com>, <tglx@linutronix.de>,
-        <allison@lohutok.net>
-Subject: Re: [alsa-devel] [PATCH] ASoC: wm8962: fix lambda value
-Message-ID: <20191213105658.GE10451@ediswmail.ad.cirrus.com>
-References: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
- <20191212164835.GD10451@ediswmail.ad.cirrus.com>
- <20191212165311.GK4310@sirena.org.uk>
- <CAA+D8AP4XNNmQ72xG6gNevtu8i8TJ7AaQMMgXJMCPmv2VO0_HA@mail.gmail.com>
+        Fri, 13 Dec 2019 06:06:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576235204;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Crmf5u8UvQ4Fiv2iDfiUjbDLUFVVvKN850I3N8dlMLg=;
+        b=gf5bZUfCKh2TE1I0UZmkYvlBnd9iNt3vlOcVRkhJ8nVWxsp++wfuaAGo+y/PH3jiAHzZJn
+        IMrbb84SZtV00f3KLQF/8adq5nlkrDfboqUNbyqn+moJQeYjnFEQmXP2YDmHVMcD2EiF+O
+        E71xYewy7yYCF7Dtqo2gDe7he7udonQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-12UsN48CPvy5oIC1W_oLig-1; Fri, 13 Dec 2019 06:06:41 -0500
+X-MC-Unique: 12UsN48CPvy5oIC1W_oLig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DAD218B5FA9;
+        Fri, 13 Dec 2019 11:06:39 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 494E560BE1;
+        Fri, 13 Dec 2019 11:06:37 +0000 (UTC)
+Subject: Re: [PATCH] KVM: arm/arm64: vgic-its: Fix restoration of unmapped
+ collections
+To:     Zenghui Yu <yuzenghui@huawei.com>, eric.auger.pro@gmail.com,
+        maz@kernel.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu
+References: <20191213094237.19627-1-eric.auger@redhat.com>
+ <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <604a28ab-3a4a-4b9f-a9fa-719edc915d0d@redhat.com>
+Date:   Fri, 13 Dec 2019 12:06:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAA+D8AP4XNNmQ72xG6gNevtu8i8TJ7AaQMMgXJMCPmv2VO0_HA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 phishscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- malwarescore=0 clxscore=1011 suspectscore=0 mlxscore=0 mlxlogscore=969
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912130087
+In-Reply-To: <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 11:09:09AM +0800, Shengjiu Wang wrote:
-> Hi
-> 
-> On Fri, Dec 13, 2019 at 12:54 AM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Thu, Dec 12, 2019 at 04:48:35PM +0000, Charles Keepax wrote:
-> > > On Wed, Dec 11, 2019 at 07:57:22PM +0800, Shengjiu Wang wrote:
-> > > > According to user manual, it is required that FLL_LAMBDA > 0
-> > > > in all cases (Integer and Franctional modes).
-> >
-> > > How well tested is this change, and is it addressing an issue you
-> > > have observed? I agree this does better fit the datasheet just a
-> > > little nervous as its an older part that has seen a lot of usage.
-> >
-> > I've got a feeling that requirement might've been added in later
-> > versions of the datasheet...
-> 
-> We encounter an issue that when Integer mode, the lambda=theta=0,
-> the output sound is slower than expected. After change lambda=1
-> the issue is gone.
-> 
+Hi Zenghui,
 
-Cool alright if there is a real issue here, then we should be
-getting it fixed.
+On 12/13/19 11:53 AM, Zenghui Yu wrote:
+> Hi Eric,
+>=20
+> On 2019/12/13 17:42, Eric Auger wrote:
+>> Saving/restoring an unmapped collection is a valid scenario. For
+>> example this happens if a MAPTI command was sent, featuring an
+>> unmapped collection. At the moment the CTE fails to be restored.
+>> Only compare against the number of online vcpus if the rdist
+>> base is set.
+>=20
+> Have you actually seen a problem and this patch fixed it?
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+It is not with a linux guest but with kvm-unit-test.
 
-Thanks,
-Charles
+ To be honest,
+> I'm surprised to find that we can map a LPI to an unmapped collection ;=
+)
+> (and prevent it to be delivered to vcpu with an INT_UNMAPPED_INTERRUPT
+> error, until someone had actually mapped the collection).
+> After a quick glance of spec (MAPTI), just as you said, this is valid.
+>=20
+> If Marc has no objection to this fix, please add
+>=20
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Thank you for the review.
+
+Eric
+>=20
+>=20
+> Thanks,
+> Zenghui
+>=20
+>>
+>> Cc: stable@vger.kernel.org # v4.11+
+>> Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table
+>> save/restore")
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> ---
+>> =C2=A0 virt/kvm/arm/vgic/vgic-its.c | 3 ++-
+>> =C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its=
+.c
+>> index 98c7360d9fb7..17920d1b350a 100644
+>> --- a/virt/kvm/arm/vgic/vgic-its.c
+>> +++ b/virt/kvm/arm/vgic/vgic-its.c
+>> @@ -2475,7 +2475,8 @@ static int vgic_its_restore_cte(struct vgic_its
+>> *its, gpa_t gpa, int esz)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 target_addr =3D (u32)(val >> KVM_ITS_CT=
+E_RDBASE_SHIFT);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 coll_id =3D val & KVM_ITS_CTE_ICID_MASK=
+;
+>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (target_addr >=3D atomic_read(&kvm->onli=
+ne_vcpus))
+>> +=C2=A0=C2=A0=C2=A0 if (target_addr !=3D COLLECTION_NOT_MAPPED &&
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 target_addr >=3D atomic_re=
+ad(&kvm->online_vcpus))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 collection =3D find_collection(i=
+ts, coll_id);
+>>
+>=20
+
