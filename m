@@ -2,110 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F829C4D2FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB83EC4D2E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17FB24700
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286692479F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="OQFfePJq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J5AXFuwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfLMUZm (ORCPT
+        id S1729003AbfLMUJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:25:42 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44602 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbfLMUZl (ORCPT
+        Fri, 13 Dec 2019 15:09:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58788 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728891AbfLMUI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:25:41 -0500
-Received: by mail-pf1-f193.google.com with SMTP id d199so2036908pfd.11
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 12:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nxSm7tgroROdEPl3eszZpyOKF7ZUt7YQNLaaQ2KtPDw=;
-        b=OQFfePJq98DdDPxVGMs0UExHWaeiLhsNPNd1HDpzx7sV4pEkG75/mn8H7G7vL7ieS/
-         Kq+v0ZhfAMjlvTBJ2RY2BFBd/bCzDLG36cwWKU7uYUx7SNBp56jhDlrCvnlJ3tp1CoLi
-         CL2H8puLOF31BHddE0g8KZ0ofCBJJf9YEdgFjrli+xlET9+GQNp/FWWt6rBuq2np1oK9
-         q1h9w1vufYkGpqJZ1Z9vvzSY0U2krn/yk3Yu74lZxKzxPFg57eafAyJ3eO7SJ4BSpM/9
-         I9VAZOeA5V44gkJ7Kj5sfO20zMHgujtOIhqH9UKN4ji7K2t/g9fItZVYZXh1H1LUoVj4
-         j/Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nxSm7tgroROdEPl3eszZpyOKF7ZUt7YQNLaaQ2KtPDw=;
-        b=JKvINJu6Ozk9YFGJt6voNiImTG6d8/tJUrUIT7qWw15e99Gug7JkAjR1vo/WLXkcqG
-         YOpBZTfv+eWmlwIFbCv+yHDMwFD8EkNX9pn5DPkPROkY2XqUUsEZ7YbVtMOg+sXHetUk
-         NbokDt+QhNtlblvBp/4ZM+oiU7bWZQl8oiAMUhXPkTHTyAHcGzczMVZMI9BPhXf5GVyu
-         45OBtsq39cQumgI0J4oJmQUdfWGVD8CP/4fIoJESG6rIPr7PUv7sEJiSOpbAf0upb5qF
-         PyiIDLHpdEoebwMWvZOMtZ7nXJEJM4pHu0Ib+usPpE0mr98USola9gRdNfo/KzxxmO/9
-         Kfww==
-X-Gm-Message-State: APjAAAVdaLasllehidnVxNOibrRnPihB6IG8AYfRiZZYBB8qZ+NgcfiT
-        zW4+hJN7P4AaktEJgdKqXUk0mw==
-X-Google-Smtp-Source: APXvYqyEIp81+z7sCimyY10euoklrxZVo2wYjhKcwH6l+idB4a450j9Hai/Lk8ptt120y5sfewwVig==
-X-Received: by 2002:a62:e519:: with SMTP id n25mr1468679pff.220.1576268741192;
-        Fri, 13 Dec 2019 12:25:41 -0800 (PST)
-Received: from ava-linux2.mtv.corp.google.com ([2620:15c:211:0:b2de:593e:a6f0:9b20])
-        by smtp.googlemail.com with ESMTPSA id d14sm13548720pfq.117.2019.12.13.12.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 12:25:40 -0800 (PST)
-From:   Todd Kjos <tkjos@android.com>
-X-Google-Original-From: Todd Kjos <tkjos@google.com>
-To:     tkjos@google.com, gregkh@linuxfoundation.org, arve@android.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        maco@google.com
-Cc:     joel@joelfernandes.org, kernel-team@android.com
-Subject: [PATCH] binder: fix incorrect calculation for num_valid
-Date:   Fri, 13 Dec 2019 12:25:31 -0800
-Message-Id: <20191213202531.55010-1-tkjos@google.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Fri, 13 Dec 2019 15:08:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576267738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/84os5q/0vcHvfh72M89AVayh59i0B6U/l5rjTal2t8=;
+        b=J5AXFuwuqPg8SCTBfY1FUuwgoJSPSu5nSB+rJmA9ERq65q0R37qMFSYs59iXgnHtOrToDW
+        m1UAMyocW3KoTwx6wqIlJ0rrmm1OgdNhuw8J/+YLJ/tRVlF/+CnxDtXgsZNOkomALNmbm7
+        gJuaMpQDFgFudSinfsMpiGD88t1dQj4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-TzBLTnOUOWm_n2yPNLd_Vg-1; Fri, 13 Dec 2019 15:08:55 -0500
+X-MC-Unique: TzBLTnOUOWm_n2yPNLd_Vg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBAE718A6EC2;
+        Fri, 13 Dec 2019 20:08:52 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-140.rdu2.redhat.com [10.10.122.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0402719C4F;
+        Fri, 13 Dec 2019 20:08:51 +0000 (UTC)
+Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191212223525.1652-1-longman@redhat.com>
+ <20191212223525.1652-5-longman@redhat.com>
+ <20191213102525.GA2844@hirez.programming.kicks-ass.net>
+ <20191213105042.GJ2871@hirez.programming.kicks-ass.net>
+ <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
+ <20191213181255.GF2844@hirez.programming.kicks-ass.net>
+ <7ca26a9a-003f-6f24-08e4-f01b80e3e962@redhat.com>
+ <20191213184759.GH2844@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2763959e-b0e9-a8cd-3468-232d128c8260@redhat.com>
+Date:   Fri, 13 Dec 2019 15:08:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191213184759.GH2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For BINDER_TYPE_PTR and BINDER_TYPE_FDA transactions, the
-num_valid local was calculated incorrectly causing the
-range check in binder_validate_ptr() to miss out-of-bounds
-offsets.
+On 12/13/19 1:47 PM, Peter Zijlstra wrote:
+> On Fri, Dec 13, 2019 at 01:35:05PM -0500, Waiman Long wrote:
+>> On 12/13/19 1:12 PM, Peter Zijlstra wrote:
+>>>> In this way, the wasted space will be k bytes where k is the number of
+>>>> 1-entry chains. I don't think merging adjacent blocks will be that
+>>>> useful at this point. We can always add this capability later on if it
+>>>> is found to be useful.
+>>> I'm thinking 1 entry isn't much of a chain. My brain is completely fried
+>>> atm, but are we really storing single entry 'chains' ? It seems to me we
+>>> could skip that.
+>>>
+>> Indeed, the current code can produce a 1-entry chain. I also thought
+>> that a chain had to be at least 2 entries. I got tripped up assuming
+>> that. It could be a bug somewhere that allow a 1-entry chain to happen,
+>> but I am not focusing on that right now.
+> If we need the minimum 2 entry granularity, it might make sense to spend
+> a little time on that. If we can get away with single entry markers,
+> then maybe write a comment so we'll not forget about it.
+>
+I will take a look at why an 1-entry chain happes and see if it is a bug
+that need to be fixed.
 
-Fixes: bde4a19fc04f ("binder: use userspace pointer as base of buffer space")
-Signed-off-by: Todd Kjos <tkjos@google.com>
----
- drivers/android/binder.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index e9bc9fcc7ea5..b2dad43dbf82 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -3310,7 +3310,7 @@ static void binder_transaction(struct binder_proc *proc,
- 			binder_size_t parent_offset;
- 			struct binder_fd_array_object *fda =
- 				to_binder_fd_array_object(hdr);
--			size_t num_valid = (buffer_offset - off_start_offset) *
-+			size_t num_valid = (buffer_offset - off_start_offset) /
- 						sizeof(binder_size_t);
- 			struct binder_buffer_object *parent =
- 				binder_validate_ptr(target_proc, t->buffer,
-@@ -3384,7 +3384,7 @@ static void binder_transaction(struct binder_proc *proc,
- 				t->buffer->user_data + sg_buf_offset;
- 			sg_buf_offset += ALIGN(bp->length, sizeof(u64));
- 
--			num_valid = (buffer_offset - off_start_offset) *
-+			num_valid = (buffer_offset - off_start_offset) /
- 					sizeof(binder_size_t);
- 			ret = binder_fixup_parent(t, thread, bp,
- 						  off_start_offset,
--- 
-2.24.1.735.g03f4e72817-goog
+Cheers,
+Longman
 
