@@ -2,125 +2,175 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED225C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABC2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10C9206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JuOGdNKU"
+	by mail.kernel.org (Postfix) with ESMTP id 61AB020706
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576273643;
+	bh=9i6xIA5vzXgs9RJ/iQ/KgzibPZiZRpUfLqwn+O7m4ic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oTOqNbs5ffJNYBs7cGYqBNxn8jD4PhndYlue7sPP5bvCzh3Zm3a7fyPwEtpYMxN8N
+	 Q0nKygtzOGBuPrTVZqFjUY2+FcatwRwiLs9PuWDw4lGfJV1qVfuVeArzYY3FW5MGZU
+	 qom+5N9DzAZFoIm6Lzidn1nk8+Ne5JgxHXLbKqk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLMVl6 (ORCPT
+        id S1726608AbfLMVrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:41:58 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59072 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfLMVl5 (ORCPT
+        Fri, 13 Dec 2019 16:47:22 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36545 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMVrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:41:57 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C548A9D6;
-        Fri, 13 Dec 2019 22:41:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576273316;
-        bh=t5bAuI7IPLlm5mpJ9LwRwRzISVV2tE9EKaG7gmQn18Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JuOGdNKUkqakSrplVGU8RiV4mAjbKWhN1ZHLip3jTHCcSt7+2GN2Q3CiY95S71itP
-         n4V35RY0bawu6dyICQUOm77xjaOMHEF2I/2yhMYNo9v8OCXdKvbQ+Jqx9TdCKyM799
-         HdfhShv2YMrR2WQLYxQhmBzO9YwdVoaSpqfvPfTM=
-Date:   Fri, 13 Dec 2019 23:41:46 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v4 5/7] drm: rcar-du: lvds: Fix mode for companion encoder
-Message-ID: <20191213214146.GP4860@pendragon.ideasonboard.com>
-References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1575649974-31472-6-git-send-email-fabrizio.castro@bp.renesas.com>
+        Fri, 13 Dec 2019 16:47:22 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so1216319oic.3;
+        Fri, 13 Dec 2019 13:47:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w5xdh98E7mr6+86lSxAaIdccaOQtAOZWUmlaUNXldZU=;
+        b=LKV8rcMOgKk7/VE8asb2OpaD2VK/TNgns1UMYe7+6aLIrEY61UenWbxEI0Jz+vY/WC
+         Vc+pipNBGqWTkX8it/xDgqelWIWoj4jB+6aEic4GqiUV2wOjk4UgAChhexqmL4sdI896
+         Hc1TNm2O1FUNQrOuugxmkCBS4sFgL9vgnqGsny5dFfJ6mV1XDst2o7EWRaO/CgE9FqDI
+         7p5SyFQtsz+XCYD5DT7nedfRA+1EnsWOHlp4by1iFOGl+rI/gjYFdE59jxSuUKyapCj1
+         a13mEc1tZYAfALKPBX2d3rlNl3A39g7+TWl4nK8PxUzPFlQmPOar7XNyLug9klivhlc/
+         W10Q==
+X-Gm-Message-State: APjAAAV896p3/T45VD7YaENvsXcc5Sz3ekFL6RECQpKZawcfr5r2jdHC
+        YKio3vin0PZhjkqLHnIgag==
+X-Google-Smtp-Source: APXvYqzm62Y9qN5g4QrstJ8YOMO5rKtfDZ1qoaPCIsVdFH1v/4Bxp+t6KiBbsCr+3sooAIymdRKrSg==
+X-Received: by 2002:aca:4a41:: with SMTP id x62mr7648394oia.148.1576273641167;
+        Fri, 13 Dec 2019 13:47:21 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p83sm1913240oia.51.2019.12.13.13.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 13:47:20 -0800 (PST)
+Date:   Fri, 13 Dec 2019 15:47:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: display: add sc7180 panel variant
+Message-ID: <20191213214719.GA11149@bogus>
+References: <1575010545-25971-1-git-send-email-harigovi@codeaurora.org>
+ <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575649974-31472-6-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Dec 06, 2019 at 04:32:52PM +0000, Fabrizio Castro wrote:
-> Primary and companion encoders need to set the same mode for
-> things to work properly.
+On Fri, Nov 29, 2019 at 12:25:44PM +0530, Harigovindan P wrote:
+> Add a compatible string to support sc7180 panel version.
 > 
-> rcar_lvds_mode_set gets called into for the primary encoder only,
-> therefore initialize the companion encoder mode while sorting
-> the primary encoder mode out.
-> 
-> Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Would you mind rebasing this on top of "drm: rcar-du: lvds: Get mode
-from state" ?
-
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
-> v3->v4:
-> * New patch extracted from patch:
->   "drm: rcar-du: lvds: Add dual-LVDS panels support"
-> ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  .../bindings/display/visionox,rm69299.txt          | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/display/visionox,rm69299.txt
+
+Source files should not have execute permission.
+
+New bindings should be in DT schema format.
+
+checkpatch.pl will tell you both of these things.
+
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index cb2147c..eed5611 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -614,6 +614,18 @@ static void rcar_lvds_mode_set(struct drm_bridge *bridge,
->  	lvds->display_mode = *adjusted_mode;
->  
->  	rcar_lvds_get_lvds_mode(lvds);
-> +	if (lvds->companion) {
-> +		struct rcar_lvds *companion_lvds = bridge_to_rcar_lvds(
-> +							lvds->companion);
+> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.txt b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> new file mode 100755
+> index 0000000..4622191
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> @@ -0,0 +1,68 @@
+> +Visionox model RM69299 DSI display driver
 > +
-> +		/*
-> +		 * FIXME: We should not be messing with the companion encoder
-> +		 * private data from the primary encoder, but since
-> +		 * rcar_lvds_mode_set gets called into for the primary encoder
-> +		 * only, we don't have much of a choice for now.
-> +		 */
-> +		companion_lvds->mode = lvds->mode;
-> +	}
->  }
->  
->  static int rcar_lvds_attach(struct drm_bridge *bridge)
+> +The Visionox RM69299 is a generic display driver, currently only configured
+> +for use in the 1080p display on the Qualcomm SC7180 MTP board.
+> +
+> +Required properties:
+> +- compatible: should be "visionox,rm69299-1080p-display"
 
--- 
-Regards,
+RM69299 may be generic, but 1080p sounds like a specific panel.
 
-Laurent Pinchart
+Is there anything besides a 'display'? If not, '-display' is redundant.
+
+> +- vdda-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- vdd3p3-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- reset-gpios: phandle of gpio for reset line
+> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
+> +  (active low)
+> +- mode-gpios: phandle of the gpio for choosing the mode of the display
+> +  for single DSI
+
+The modes are what?
+
+> +- ports: This device has one video port driven by one DSI. Their connections
+> +  are modeled using the OF graph bindings specified in
+> +  Documentation/devicetree/bindings/graph.txt.
+> +  - port@0: DSI input port driven by master DSI
+> +
+> +Example:
+> +
+> +	dsi@ae94000 {
+> +		panel@0 {
+> +			compatible = "visionox,rm69299-1080p-display";
+> +			reg = <0>;
+> +
+> +			vdda-supply = <&src_pp1800_l8c>;
+> +			vdd3p3-supply = <&src_pp2800_l18a>;
+> +
+> +			pinctrl-names = "default", "suspend";
+> +			pinctrl-0 = <&disp_pins_default>;
+> +			pinctrl-1 = <&disp_pins_default>;
+> +
+> +			reset-gpios = <&pm6150l_gpios 3 0>;
+> +
+> +			display-timings {
+> +				timing0: timing-0 {
+> +					/* originally
+> +					 * 268316160 Mhz,
+> +					 * but value below fits
+> +					 * better w/ downstream
+> +					 */
+> +					clock-frequency = <158695680>;
+> +					hactive = <1080>;
+> +					vactive = <2248>;
+> +					hfront-porch = <26>;
+> +					hback-porch = <36>;
+> +					hsync-len = <2>;
+> +					vfront-porch = <56>;
+> +					vback-porch = <4>;
+> +					vsync-len = <4>;
+> +				};
+> +			};
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				port@0 {
+> +					reg = <0>;
+> +					panel0_in: endpoint {
+> +						remote-endpoint = <&dsi0_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
