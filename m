@@ -2,113 +2,118 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649ADC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D93FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF74214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576274492;
-	bh=MVWYfCWCZF9XClnBZtJX/FHZfnBGhRYYzCAYDdp0yJM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2h5SvDxAmbzzsIlshAGC0U1pzPmz4JKWDocJgS7SfDqmShGSFGuafaeIg//KFtsSw
-	 IsEwMZsHgtZuRhrxDWAraWscH564jU1SBGD24HGKlJqgS9lENATZQmojPMhyOMmKVb
-	 K70mRPTo0/8LvxC4e0oyTvebl1IrEGlZzGSRyQzE=
+	by mail.kernel.org (Postfix) with ESMTP id 0739E2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:03:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRoNRQRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLMWBb (ORCPT
+        id S1726718AbfLMWD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:01:31 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46298 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfLMWBa (ORCPT
+        Fri, 13 Dec 2019 17:03:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45424 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMWDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:01:30 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z17so249462ljk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:01:29 -0800 (PST)
+        Fri, 13 Dec 2019 17:03:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so2164986pfg.12;
+        Fri, 13 Dec 2019 14:03:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zfICJ6KhaPZeol1tl5aqhZNB4nOYiiQp60xAzoCt3JU=;
-        b=OMLOqShWneJ3fe3UbyHRP01hVO4iIEtu+rKtip4uFYuny7eKWa9RVguRhdDXyGlazr
-         Vu8irtlqDqkjSxlpxcEnR/mPZqGnWrv40jn+8NdgbI7DAtOpxmVjJ6hnmrSN7O80Gy2B
-         6ZEjjOYm27LL3/V26Z0KJqLy5QPWKtyS57u7I=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tC9e56OkB9iMx5UogC2mae0NvXUXXZ3j9VUfeJ/X5wk=;
+        b=tRoNRQRh+sJGD73mI4PDIDyRvkzBaNEx53l8oRH/Sn6LiwA5jhvcsHTHKt0UYjOfKD
+         hI8+MAPu3GAvso6itHVboQN17c5NMohOaIdXDa6aP8XILG0jThspeOMRlB1IUC3yIWCZ
+         swEyhbgSOV49JTywMJrODnCc7u4bYKMNWk/ZTtAn4jlE/qSBoeS6gnQhmOISmdYhsicT
+         hv+UQszp8avxtmsIrnninBVWrvPdjhm37eQU53sSaxYhTcKtZ0QgecyWFxjbi9uOTD96
+         HCfXiVXAKR3OXOiwCQKS/hI0lN37hSjKxmU3aTbHAd2fk7aMPw55CqanJVLyHSFl5OxB
+         QQyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zfICJ6KhaPZeol1tl5aqhZNB4nOYiiQp60xAzoCt3JU=;
-        b=VJb0IP2wvO7QzJPwGjxK8bIEOL4fyeEXoUCzx0NjpXDMiDiRmO/j0XxV6pHsFTZxyl
-         hhg9HiIH/pvVGAw/BW2lf7e53O3wzvlTd3ykeP4AGhNIcabxn4FsXThdhdpQ6pH7+iWD
-         CM6Gqf3d98vUUEFtWAwJxg2XJiKjvLyCisdhmV6ELeeplkiL+cdIr78IwYym3ln16Qyw
-         m00WUm1+nz0uPxYHtsoKOpyBCZoUZoGnRLdG29Vd/8ZkCjJPP5qN0REo3YleXejMGISZ
-         QjuqUv1ExUELS+JYjDdNMOSZ130/sivcNe0U9Q0EMcUH4HsDNTOTZ3MK0cq8lI2txM4o
-         lLfA==
-X-Gm-Message-State: APjAAAUwBlB5CQy4OAd7XBkX81QbGKAnMmrikVHYWyokMLw7cU2/kckH
-        Rb8p9/1Mg8rxKZnlequGZqS/9rJbi0Q=
-X-Google-Smtp-Source: APXvYqwUE/kgOzfpgZm7tSyBoAwhXvlnJZ3xx0F7MItkL789qZaf8Uu7quP3kfFOujoIjgzbBxGI9g==
-X-Received: by 2002:a05:651c:112d:: with SMTP id e13mr9740546ljo.99.1576274488006;
-        Fri, 13 Dec 2019 14:01:28 -0800 (PST)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id q10sm5497456ljj.60.2019.12.13.14.01.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 14:01:27 -0800 (PST)
-Received: by mail-lf1-f41.google.com with SMTP id b15so366100lfc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:01:26 -0800 (PST)
-X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr10402310lfp.106.1576274486558;
- Fri, 13 Dec 2019 14:01:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tC9e56OkB9iMx5UogC2mae0NvXUXXZ3j9VUfeJ/X5wk=;
+        b=axSnpFdcwMnUGm0hdnk7jdQaxBbNdQiz1kV+aS64ztk/JAHpAGKHpPU4DN1CVNvznv
+         vLijLiPbhhpVZYfUwkBcSReq2Tu+jrOsRvPG0vklBusQ7wyLUhOb8+LD/EyH130xasV/
+         Nzy8Uhuw1i2sRe+zsqe2vqxuBnS6GutdNetS+cMSZrPM3RnP099UHwivXPEBKV2/ejuk
+         A4A7pC21HNhSzaGKx4Xwf3CCfW9yzwjO4Kugb2vX4Z6TnyNQk9n29UEBiwd1Cc8m6Aju
+         bE7xbPqaRvpHNcseB8/ADNQKPHXukadwE68UIlKbpTwGFYS0OdzXn9pDHi/IWXberkRm
+         Cirg==
+X-Gm-Message-State: APjAAAV4kQ8T2OYNeGOM9kmtB5RQ0UCI0zlCWf6lyF2B1yDF1OQroqQt
+        rv8U6eNoOJ8u5S9+MSf6d9A=
+X-Google-Smtp-Source: APXvYqzBpAfl1hUow2NLUi+eXe/GatKLhViFfkqNuiWd45s78/xW4KFQIoMtOkjNEpVCqNgoFHYxSw==
+X-Received: by 2002:a63:d358:: with SMTP id u24mr1975871pgi.218.1576274604884;
+        Fri, 13 Dec 2019 14:03:24 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h7sm13693878pfq.36.2019.12.13.14.03.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 14:03:24 -0800 (PST)
+Date:   Fri, 13 Dec 2019 14:03:21 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, robh@kernel.org, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] input: keyboard: imx_sc_key: Only take the valid data
+ from SCU firmware as key state
+Message-ID: <20191213220321.GJ101194@dtor-ws>
+References: <1576202909-1661-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck> <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck> <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
- <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com> <CAK8P3a014U76S+t3rKyPghepOT_fYHBExuMC27MoGMNffjczEw@mail.gmail.com>
-In-Reply-To: <CAK8P3a014U76S+t3rKyPghepOT_fYHBExuMC27MoGMNffjczEw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 13 Dec 2019 14:01:10 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgsN+0i8mF_1L8zDvY0XJEkZNumT1dH0NBiSbecZZ3+HA@mail.gmail.com>
-Message-ID: <CAHk-=wgsN+0i8mF_1L8zDvY0XJEkZNumT1dH0NBiSbecZZ3+HA@mail.gmail.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576202909-1661-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 1:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> A few hundred randconfig (x86, arm32 and arm64) builds later I
-> still only found one other instance:
+On Fri, Dec 13, 2019 at 10:08:29AM +0800, Anson Huang wrote:
+> When reading key state from SCU, the response data from SCU firmware
+> is 4 bytes due to MU message protocol, but ONLY the first byte is the
+> key state, other 3 bytes could be some dirty data, so we should ONLY
+> take the first byte as key state to avoid reporting incorrect state.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Just send me the pull request to READ_ONCE() and WRITE_ONCE() be
-arithmetic types, and your two trivial fixes, and let's get this over
-with.
+Applied, thank you.
 
-With that, you can remove the 'volatile' with my simple
-'typeof(0+*(p))' trick, and we're all good, and we don't need to worry
-about compiler versions either.
+> ---
+>  drivers/input/keyboard/imx_sc_key.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
+> index 5379952..9f809ae 100644
+> --- a/drivers/input/keyboard/imx_sc_key.c
+> +++ b/drivers/input/keyboard/imx_sc_key.c
+> @@ -78,7 +78,13 @@ static void imx_sc_check_for_events(struct work_struct *work)
+>  		return;
+>  	}
+>  
+> -	state = (bool)msg.state;
+> +	/*
+> +	 * The response data from SCU firmware is 4 bytes,
+> +	 * but ONLY the first byte is the key state, other
+> +	 * 3 bytes could be some dirty data, so we should
+> +	 * ONLY take the first byte as key state.
+> +	 */
+> +	state = (bool)(msg.state & 0xff);
+>  
+>  	if (state ^ priv->keystate) {
+>  		priv->keystate = state;
+> -- 
+> 2.7.4
+> 
 
-I'm willing to take that after the merge window as a "sanity fix".
-
-             Linus
+-- 
+Dmitry
