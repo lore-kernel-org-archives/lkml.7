@@ -2,111 +2,112 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90099C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22604C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BA52253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98E72253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="qrtwEar6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLMJsu (ORCPT
+        id S1726713AbfLMJtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:48:50 -0500
-Received: from smtp21.cstnet.cn ([159.226.251.21]:48106 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfLMJsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:48:50 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-01 (Coremail) with SMTP id qwCowADXx5RzXvNdeQexAw--.57S3;
-        Fri, 13 Dec 2019 17:48:35 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] extcon: sm5502: remove unneeded semicolon
-Date:   Fri, 13 Dec 2019 09:48:34 +0000
-Message-Id: <1576230514-5049-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: qwCowADXx5RzXvNdeQexAw--.57S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1xuF4rKFWfWFW5KFyrtFb_yoW8XF4xpF
-        Z8Xrnavr1rXw4S9rnYywsrAFyrArWft34UGrZFqa4fua15tF4kua1akFW0vFyrAFy0g3y7
-        Ar4jqFyqya40yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4fMxAIw28I
-        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-        IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8LjjDUUUUU==
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgMDA10TedGtvgAAsw
+        Fri, 13 Dec 2019 04:49:09 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:50171 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfLMJtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:49:08 -0500
+Received: from [IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478]
+ ([IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id fhZHikfHdapzpfhZJidXpZ; Fri, 13 Dec 2019 10:49:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1576230546; bh=HUc3zKeJW9H6Hm1khB5tQ7L7YcRWJSdTYofpoPX9qAU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=qrtwEar6LLIeIHZPS8llpzRQ4IFlFWKm7fDx4dVA083IYnMltc0DxwLDb/ifmJdDP
+         i1Q7S/g1T8Q8MU908X/f2pSvGmeTFwr1bqeL7ye92+GsZpZdpqFwPf1mMeDqz9dODv
+         0pY9U5w4pErerP+P+CUhYxMVeSfZRIL3h3uqtgig/BWToH+QF66sWFVHGPI0a7EFxQ
+         9dRgYXItZdcpS8taNUPhgRkhruKnd605CMBxUEnZ1IHOf6RzHIE5fc+hrvpogq2KiE
+         FI3dW/eGXj5JZYsUH8UXvtAH8QB7Wd6d7E11RjGdyxyPDylC9gm39Ze+MuPWYuLu1y
+         pOb/pw45GRL/w==
+Subject: Re: [PATCH 2/5] firmware: imx: scu-pd: Add power domains for imx-jpeg
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+ <1573053633-21437-3-git-send-email-mirela.rabulea@nxp.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <64ac7dca-9834-6a33-aa3e-9b7e2156dedc@xs4all.nl>
+Date:   Fri, 13 Dec 2019 10:49:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1573053633-21437-3-git-send-email-mirela.rabulea@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEMmp7oYIkbgEM7D6JgjinsovQizeZ+jRSdBDf1vn0wC2EIYBFDFO/ELj/7QhrS6c06/ToBIh61C33SRbks5i1KBmmYommhaMesvVAMMjpUREU0IOlpK
+ 4M/pYYUTI4ljknncmFtHR6S4/v85G/BmurDo7T52UK1i8sSV08Wa9USny4W8nKedNVUIwYJQOHH1JuhbtTD6HxUNtYdVWIMSNoSfvTu/dHT55KCNgCS6zDW2
+ dNWACg8zftn2Nh+oSub47k1eokMC+N0fdxqnWO2WEaXcl26ryl/qFGUOykoXBhzPcsjSDwj4VqAybi/gKJ0+4xVor7jRNVLkodO/z+oZVPZXOvSKbUaQL5ab
+ SM0IoushwIL6rVNCuzecZzZhq3YlR6qfsydSw+87qoamWkjHmgeiA4O2XRYSte9iM5wm5utflNaXtpEIuyXh2nGO/j2hu7uLaiK2Eyn5TMTSLVyLe4Mi6uZJ
+ Bri+HPAAFr2KeLp9ThP3W8KoiTpVhNboHWsQ1fMDOxOtM/VjBr4xjAeop0dqLEMjQxJpXq2A9CXwd9b2i1lD5/1LADFGrOyw1rPiQe1XxkdRNl/c1SB73+6D
+ YS7Ica2uJSGYK21tZKPOszhw8/SUj/irp40JgoC9NC2syv/R5ZHrAi4Vp1ayTVQrFrCjyiEETm4htr1kvFx8LLxVd+e1/SKshXjk9P/ajGe7PBZELiQY5zC7
+ DOTBJRw1SkBCPbgNYZsvoN+gjNkDW83njqFgfLYuC/ibN3hRuSjhGm/aoyZqrQlGzg3WBg3tZq2z6FKM60uJMF9Fo/s29zitJgBmTdXbIPhsVzCNj59IJFl/
+ LFya9Mfe4y5e4Ak1zY87rGyStzpcc0sEGtrtJABgDP/ZKeU5TbStYbjRKFB56Z17r3OOM3wI59ZiwC4+TxaGeAmVOTHFXzJ2AMqvLKup2cO2PpAcRSmDBxfH
+ xfp4hYHvGVhw1cmhExq0KssjLs4WjVGhVBYIPbt5qQ8JHx7t
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove unneeded semicolon
-This is detected by coccinelle.
+On 11/6/19 4:20 PM, Mirela Rabulea wrote:
+> The power domains are for imx8qxp/imx8qm JPEG encoder & decoder.
+> Each has 4 slots and a wrapper.
+> 
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/extcon/extcon-sm5502.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Shawn, Daniel, can I have an Ack from you? It probably makes sense that
+this patch gets merged via the media subsystem.
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index bcf65aa..106d4da 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -249,7 +249,7 @@ static int sm5502_muic_set_path(struct sm5502_muic_info *info,
- 		dev_err(info->dev, "Unknown DM_CON/DP_CON switch type (%d)\n",
- 				con_sw);
- 		return -EINVAL;
--	};
-+	}
- 
- 	switch (vbus_sw) {
- 	case VBUSIN_SWITCH_OPEN:
-@@ -268,7 +268,7 @@ static int sm5502_muic_set_path(struct sm5502_muic_info *info,
- 	default:
- 		dev_err(info->dev, "Unknown VBUS switch type (%d)\n", vbus_sw);
- 		return -EINVAL;
--	};
-+	}
- 
- 	return 0;
- }
-@@ -357,13 +357,13 @@ static unsigned int sm5502_muic_get_cable_type(struct sm5502_muic_info *info)
- 				"cannot identify the cable type: adc(0x%x)\n",
- 				adc);
- 			return -EINVAL;
--		};
-+		}
- 		break;
- 	default:
- 		dev_err(info->dev,
- 			"failed to identify the cable type: adc(0x%x)\n", adc);
- 		return -EINVAL;
--	};
-+	}
- 
- 	return cable_type;
- }
-@@ -405,7 +405,7 @@ static int sm5502_muic_cable_handler(struct sm5502_muic_info *info,
- 		dev_dbg(info->dev,
- 			"cannot handle this cable_type (0x%x)\n", cable_type);
- 		return 0;
--	};
-+	}
- 
- 	/* Change internal hardware path(DM_CON/DP_CON, VBUSIN) */
- 	ret = sm5502_muic_set_path(info, con_sw, vbus_sw, attached);
--- 
-2.7.4
+Regards,
+
+	Hans
+
+> ---
+>  drivers/firmware/imx/scu-pd.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
+> index b556612..e7bf48a 100644
+> --- a/drivers/firmware/imx/scu-pd.c
+> +++ b/drivers/firmware/imx/scu-pd.c
+> @@ -158,6 +158,12 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
+>  	/* DC SS */
+>  	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
+>  	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
+> +
+> +	/* IMAGE SS */
+> +	{ "img-jpegdec-mp", IMX_SC_R_MJPEG_DEC_MP, 1, false, 0 },
+> +	{ "img-jpegdec-s0", IMX_SC_R_MJPEG_DEC_S0, 4, true, 0 },
+> +	{ "img-jpegenc-mp", IMX_SC_R_MJPEG_ENC_MP, 1, false, 0 },
+> +	{ "img-jpegenc-s0", IMX_SC_R_MJPEG_ENC_S0, 4, true, 0 },
+>  };
+>  
+>  static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
+> 
 
