@@ -2,224 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A3C7DBA9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EBDC7DBA8
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAFD246EF
+	by mail.kernel.org (Postfix) with ESMTP id 64E4B246EF
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Z37IwFua"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LZc274Lq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbfLMSNZ (ORCPT
+        id S1728711AbfLMSNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:13:25 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40918 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbfLMSNY (ORCPT
+        Fri, 13 Dec 2019 13:13:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60116 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMSNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:13:24 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 6so1574092oix.7
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 10:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w1cqQGOHLxt9WnlMRPGWtbihZqq/TPUJMIUsmupkqQc=;
-        b=Z37IwFuamUtHj2UGycAzTlRIcOH/54EKCkDpaxP7Qp3MLa22kc/Usl9HnTrRe+y3QV
-         jmlzBiBcgKWz0AkFOWkABdgtG4hYJTy1l4UIT6yWZWyPw9dRV6jw8VgbCyBLWLKiWGEX
-         vM6Poow6sLwsq/ysxLVntPEkC62ExQjZKQkH6702/0HtxVqhTzpHmVb6lnPrLaCqpsEL
-         zgjoMLNDG4MeH71UbAFhH4TqD4PJMpQDpjWWrZvQirUHWydeRNzmnynyQH4+Xkyz7ims
-         L+1U3HsYxKKlN5qI/Ha+t6ww7rmUaJZ9hBlYoQDd0mpeknpPM1bHMMTuLHN+KJ75i+eW
-         EFZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w1cqQGOHLxt9WnlMRPGWtbihZqq/TPUJMIUsmupkqQc=;
-        b=pI0xoRSRIdQ6C9PBnpUMOzVgyCatkR+5ew+Q3qEnWOSKtxi1WUPCT8uBICA42E68vj
-         T4tSi9ZV60keHKYCbATLEJhY4YHYQyyZrhXSFPSP46MYoOU3b/x1IN1Pjq8qJf3lLQlF
-         4uwsVQbKeZq2GTXu00jJvFP/DrklsXcRopINO6EXkqtIq+RHw5Wugo6IjcGFHW588MKB
-         GWAthTlDndhEkK6H1JZGe64R3LqakRMS+E2g9oK0qPXX+UWUT8opEdLut8of2FzfZ+R6
-         qvbpBkieZ+GYLnMQx/g9hCYw1L7BxdAcOTGnNL9GOMur4egfUhgUvzX9pLUjeRDm14LK
-         Dwgg==
-X-Gm-Message-State: APjAAAUiLwYoW/oXxJJvuolNaJbZvguTecCXuDhe+C8qAhK7SyuufeJg
-        OrCFTHg3KsUbhbOM2kuq03CbVvOoEjNPpVul5jFzAw==
-X-Google-Smtp-Source: APXvYqxZoubPWEAIaOvxFMZ9FPSoIReuNH6FLAi59sGYLvNzO+lWknFm2sHcIblMBoPXq/5GgUFCfD2MPq696t8Tmuc=
-X-Received: by 2002:aca:4c9:: with SMTP id 192mr7971550oie.105.1576260803989;
- Fri, 13 Dec 2019 10:13:23 -0800 (PST)
+        Fri, 13 Dec 2019 13:13:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nvJKkuuUpA7IOdjgxThavLGGgjF1c2RnRQtKXoSXgV4=; b=LZc274LqerX9tszvjBBjF8Y7Q
+        2RrM5UKXVTCUhff2SxcdqgCjM5v+TvN1crMfU+2uMX7F23V2NhNxYcbtf4TKxD9pR9n14S/PSkuOx
+        PL1Ll3oHDe5uUx7o9v+9FWK4V9cEKEsBZaC0rbSHjzc4ebg3Qa2O8Nu+By8r7ZJCSufsiW7KouJSP
+        pMdxQEw2j2TT4wFguf0B8zIgSlMuYh8KMoZMTTNAvL2vzA1luosjrErc8wCXa7Dg2y6/8gfXTDKfp
+        fBXplDlDvPtBkKRDJtBst4btxtVygMHAhUeXmpMluaONRMu5CJzffHR8AlPX19YDQNAOXAGl/L39f
+        Fs2eQPsHg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifpQw-0001fI-4G; Fri, 13 Dec 2019 18:12:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A3DE5304637;
+        Fri, 13 Dec 2019 19:11:34 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7DD9029D73AA2; Fri, 13 Dec 2019 19:12:55 +0100 (CET)
+Date:   Fri, 13 Dec 2019 19:12:55 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
+Message-ID: <20191213181255.GF2844@hirez.programming.kicks-ass.net>
+References: <20191212223525.1652-1-longman@redhat.com>
+ <20191212223525.1652-5-longman@redhat.com>
+ <20191213102525.GA2844@hirez.programming.kicks-ass.net>
+ <20191213105042.GJ2871@hirez.programming.kicks-ass.net>
+ <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
 MIME-Version: 1.0
-References: <20191212182238.46535-1-brho@google.com> <20191212182238.46535-2-brho@google.com>
- <20191213174702.GB31552@linux.intel.com>
-In-Reply-To: <20191213174702.GB31552@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 13 Dec 2019 10:13:13 -0800
-Message-ID: <CAPcyv4ia3mp9d24fBiSXh2m_T4sLHnJHeg6VLw2AZmk8DAD7qQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] mm: make dev_pagemap_mapping_shift() externally visible
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Barret Rhoden <brho@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Zeng, Jason" <jason.zeng@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 9:47 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Thu, Dec 12, 2019 at 01:22:37PM -0500, Barret Rhoden wrote:
-> > KVM has a use case for determining the size of a dax mapping.
-> >
-> > The KVM code has easy access to the address and the mm, and
-> > dev_pagemap_mapping_shift() needs only those parameters.  It was
-> > deriving them from page and vma.  This commit changes those parameters
-> > from (page, vma) to (address, mm).
-> >
-> > Signed-off-by: Barret Rhoden <brho@google.com>
-> > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > Acked-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  include/linux/mm.h  |  3 +++
-> >  mm/memory-failure.c | 38 +++-----------------------------------
-> >  mm/util.c           | 34 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 40 insertions(+), 35 deletions(-)
-> >
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index a2adf95b3f9c..bfd1882dd5c6 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -1013,6 +1013,9 @@ static inline bool is_pci_p2pdma_page(const struct page *page)
-> >  #define page_ref_zero_or_close_to_overflow(page) \
-> >       ((unsigned int) page_ref_count(page) + 127u <= 127u)
-> >
-> > +unsigned long dev_pagemap_mapping_shift(unsigned long address,
-> > +                                     struct mm_struct *mm);
-> > +
-> >  static inline void get_page(struct page *page)
-> >  {
-> >       page = compound_head(page);
-> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> > index 3151c87dff73..bafa464c8290 100644
-> > --- a/mm/memory-failure.c
-> > +++ b/mm/memory-failure.c
-> > @@ -261,40 +261,6 @@ void shake_page(struct page *p, int access)
-> >  }
-> >  EXPORT_SYMBOL_GPL(shake_page);
-> >
-> > -static unsigned long dev_pagemap_mapping_shift(struct page *page,
-> > -             struct vm_area_struct *vma)
-> > -{
-> > -     unsigned long address = vma_address(page, vma);
-> > -     pgd_t *pgd;
-> > -     p4d_t *p4d;
-> > -     pud_t *pud;
-> > -     pmd_t *pmd;
-> > -     pte_t *pte;
-> > -
-> > -     pgd = pgd_offset(vma->vm_mm, address);
-> > -     if (!pgd_present(*pgd))
-> > -             return 0;
-> > -     p4d = p4d_offset(pgd, address);
-> > -     if (!p4d_present(*p4d))
-> > -             return 0;
-> > -     pud = pud_offset(p4d, address);
-> > -     if (!pud_present(*pud))
-> > -             return 0;
-> > -     if (pud_devmap(*pud))
-> > -             return PUD_SHIFT;
-> > -     pmd = pmd_offset(pud, address);
-> > -     if (!pmd_present(*pmd))
-> > -             return 0;
-> > -     if (pmd_devmap(*pmd))
-> > -             return PMD_SHIFT;
-> > -     pte = pte_offset_map(pmd, address);
-> > -     if (!pte_present(*pte))
-> > -             return 0;
-> > -     if (pte_devmap(*pte))
-> > -             return PAGE_SHIFT;
-> > -     return 0;
-> > -}
-> > -
-> >  /*
-> >   * Failure handling: if we can't find or can't kill a process there's
-> >   * not much we can do.       We just print a message and ignore otherwise.
-> > @@ -324,7 +290,9 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
-> >       }
-> >       tk->addr = page_address_in_vma(p, vma);
-> >       if (is_zone_device_page(p))
-> > -             tk->size_shift = dev_pagemap_mapping_shift(p, vma);
-> > +             tk->size_shift =
-> > +                     dev_pagemap_mapping_shift(vma_address(page, vma),
-> > +                                               vma->vm_mm);
-> >       else
-> >               tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
-> >
-> > diff --git a/mm/util.c b/mm/util.c
-> > index 3ad6db9a722e..59984e6b40ab 100644
-> > --- a/mm/util.c
-> > +++ b/mm/util.c
-> > @@ -901,3 +901,37 @@ int memcmp_pages(struct page *page1, struct page *page2)
-> >       kunmap_atomic(addr1);
-> >       return ret;
-> >  }
-> > +
-> > +unsigned long dev_pagemap_mapping_shift(unsigned long address,
-> > +                                     struct mm_struct *mm)
-> > +{
-> > +     pgd_t *pgd;
-> > +     p4d_t *p4d;
-> > +     pud_t *pud;
-> > +     pmd_t *pmd;
-> > +     pte_t *pte;
-> > +
-> > +     pgd = pgd_offset(mm, address);
-> > +     if (!pgd_present(*pgd))
-> > +             return 0;
-> > +     p4d = p4d_offset(pgd, address);
-> > +     if (!p4d_present(*p4d))
-> > +             return 0;
-> > +     pud = pud_offset(p4d, address);
-> > +     if (!pud_present(*pud))
-> > +             return 0;
-> > +     if (pud_devmap(*pud))
-> > +             return PUD_SHIFT;
-> > +     pmd = pmd_offset(pud, address);
-> > +     if (!pmd_present(*pmd))
-> > +             return 0;
-> > +     if (pmd_devmap(*pmd))
-> > +             return PMD_SHIFT;
-> > +     pte = pte_offset_map(pmd, address);
-> > +     if (!pte_present(*pte))
-> > +             return 0;
-> > +     if (pte_devmap(*pte))
-> > +             return PAGE_SHIFT;
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_pagemap_mapping_shift);
->
-> This is basically a rehash of lookup_address_in_pgd(), and doesn't provide
-> exactly what KVM needs.  E.g. KVM works with levels instead of shifts, and
-> it would be nice to provide the pte so that KVM can sanity check that the
-> pfn from this walk matches the pfn it plans on mapping.
->
-> Instead of exporting dev_pagemap_mapping_shift(), what about relacing it
-> with a patch to introduce lookup_address_mm() and export that?
->
-> dev_pagemap_mapping_shift() could then wrap the new helper (if you want),
-> and KVM could do lookup_address_mm() for querying the size of ZONE_DEVICE
-> pages.
+On Fri, Dec 13, 2019 at 11:02:46AM -0500, Waiman Long wrote:
 
-All of the above sounds great to me. Should have looked that much
-harder when implementing dev_pagemap_mapping_shift() originally.
+> That is an interesting idea. It will eliminate the need of a separate
+> array to track the free chain_hlocks. However, if there are n chains
+> available, it will waste about 3n bytes of storage, on average.
+> 
+> I have a slightly different idea. I will enforce a minimum allocation
+> size of 2. For a free block, the first 2 hlocks for each allocation
+> block will store a 32-bit integer (hlock[0] << 16)|hlock[1]:
+> 
+> Bit 31: always 1
+> Bits 24-30: block size
+> Bits 0-23: index to the next free block.
+
+If you look closely at the proposed allocator, my blocks can be much
+larger than 7 bit. In fact, it start with a single block of
+MAX_LOCKDEP_CHAIN_HLOCKS entries.
+
+That said; I don't think you need to encode the size at all. All we need
+to do is encode the chain_blocks[] index (and stick init_block in that
+array). That should maybe even fit in a single u16.
+
+Also, if we store that in the first and last 'word' of the free range,
+we can detect both before and after freespace.
+
+> In this way, the wasted space will be k bytes where k is the number of
+> 1-entry chains. I don't think merging adjacent blocks will be that
+> useful at this point. We can always add this capability later on if it
+> is found to be useful.
+
+I'm thinking 1 entry isn't much of a chain. My brain is completely fried
+atm, but are we really storing single entry 'chains' ? It seems to me we
+could skip that.
