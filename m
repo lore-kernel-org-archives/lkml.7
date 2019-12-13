@@ -2,85 +2,69 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B703CC3276F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AA3C2D0D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028E224712
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69A324712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfLMOLV (ORCPT
+        id S1727701AbfLMOQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:11:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:47387 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbfLMOLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:11:03 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MqatE-1htFXk3NMO-00mcAo; Fri, 13 Dec 2019 15:10:56 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 07/12] nfsd: use time64_t in nfsd_proc_setattr() check
-Date:   Fri, 13 Dec 2019 15:10:41 +0100
-Message-Id: <20191213141046.1770441-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
-References: <20191213141046.1770441-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 09:16:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:60830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727569AbfLMOQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:16:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ED0513A1;
+        Fri, 13 Dec 2019 06:16:20 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EBB63F52E;
+        Fri, 13 Dec 2019 06:16:19 -0800 (PST)
+Subject: Re: [PATCH] arm64/elf_hwcap: Add new flags for BFloat-16 extension
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1576145232-8311-1-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <7730f07d-8560-d354-875b-ee49bc000e64@arm.com>
+Date:   Fri, 13 Dec 2019 14:16:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sX4dzulNvI3GFKBUZrcox6lRFdAV/6K1BJ9TvA9ivOBNVK9j/Fq
- HRkqj1+KlXNIMOzBQU1Xwc0Zt8X512GFwS7+50tQv4ye+TTIUFaV+tPsdzIAz6k9IoK5zQv
- wLf5aSCwQeZZzhx0SN2yos9NOwz3b2R466i8u7lDzFbCYfMYmEXJmjelP1g3OleNKYHT+hX
- 7UqX81fHsFigibDLRpRHQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4hTU0Zhy3NQ=:bv7zUqTP1evs5iKvCSg0Lm
- PWh+T4mOdKNjNJstivcGtjiydc7IZ3gSqHcbbPsCuoTVP+xMTWkYehmIyu1DcBjRL+ecLJ0+X
- ZJD6hl3vEk7hFKMqESnHpTYmz3MumF2cGk7ddeNT2/utJtc4hBxS04XIUs/SV5xPYH2ZDvrAV
- V4Zk8YSoj+98aKd3X/MklOsAEb4JJFI726yWsSywMOsHuJXvoP/1cwHgYIxP5nbnQOSdqK1df
- MOOvxp02OsMTr4p7iiPxAQ5EOviTs30gNQO/csbivnWmSH4xhXWREApWXjdAN//PvilsYetGe
- OE1Yi1pwNhLl2uNkSCsuPrsvXIr26+yNj7ZFvS9hJ5TpiVqZdk6ckdGbYRUlW3p/zPxgk8m3N
- NbPovt9gt9IOGOgIKjIESqCbrHCMyqQ0yJl973vWPUzMkIV6mchAOSb5HYXU/RfRjtTP2JOAk
- 2D2zNcQuJYp9YKWJg3YOcwqcdXKbCRZb0YIM4Zq53XJiL5YJOCojmcW3nA3ZHiOgCkfX4QhVz
- BL7U0W/rjW6fdpVJDl3gVbiqiCDqV7SqOjYA9Yi15VTgUFwp9Mrd+ZtANRvyRlyiw+FPNqiWj
- +06/ZeRJE4dBtPz6MXkLEmoFBtCvvqqskQJXNqxuB3mHi8MXtVaiZoCwVYDvzaoN1j7xdJT8n
- qqheUol17GKV+sNz5q9/7lHGfQm3PAVf4WXIx1RcnTAUzQ9jc2MslG+dNEuRc7I0PZmp9h9Pu
- Q/0gMb+f+gZnJi+lrT+OXQKtOIYJV+5cvTPpmgrXSJvgWQ6TCSwgt8R9IColqV1Nz4otLJ3wv
- LERsNwtkT11JsIdZEaP6cb3hVo17GSdMJzzc89I2xRPmFDhBATDB/jplloCjXF3+bnBbhGk0I
- RypZQYndZrym8+J9LvqA==
+In-Reply-To: <1576145232-8311-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change to time64_t and ktime_get_real_seconds() to make the
-logic work correctly on 32-bit architectures beyond 2038.
+On 12/12/2019 10:07, Anshuman Khandual wrote:
+> Expose the availability of the BFloat16 (BF16) format support in the CPUs.
+> BF16 is a new 16-bit floating point format different from the half
+> precision format defined by the IEEE-754-2008.
+> 
+> BF16 extensions add support for new instructions for both FP/SIMD and SVE.
+> Advertise these features individually to the userspace via ELF HWCAP.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfsd/nfsproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index aa013b736073..b25c90be29fb 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -94,7 +94,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
- 		 * Solaris, at least, doesn't seem to care what the time
- 		 * request is.  We require it be within 30 minutes of now.
- 		 */
--		time_t delta = iap->ia_atime.tv_sec - get_seconds();
-+		time64_t delta = iap->ia_atime.tv_sec - ktime_get_real_seconds();
- 
- 		nfserr = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
- 		if (nfserr)
--- 
-2.20.0
+Looks good to me.
 
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
