@@ -2,268 +2,126 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED5C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA43C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7622253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C482073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="hxS+mB4B";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sp4hVZFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbfLMBlM convert rfc822-to-8bit (ORCPT
+        id S1731841AbfLMBlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:41:12 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:8673 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731591AbfLMBlL (ORCPT
+        Thu, 12 Dec 2019 20:41:11 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:55299 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731604AbfLMBlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 20:41:11 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33262030"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 13 Dec 2019 09:41:07 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71486:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 13 Dec 2019 09:41:07 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101175:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 13 Dec 2019 09:41:04 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        =?big5?B?J1NUUkQyLb2ytGa8YCc=?= <jennifer.tsai@emc.com.tw>,
-        <james.chen@emc.com.tw>,
-        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
-        "'jeff'" <jeff.chuang@emc.com.tw>
-References: <1575969632-18703-1-git-send-email-johnny.chuang@elan.corp-partner.google.com> <00a901d5af3c$193e9cd0$4bbbd670$@emc.com.tw> <20191212192220.GC101194@dtor-ws>
-In-Reply-To: <20191212192220.GC101194@dtor-ws>
-Subject: RE: [PATCH] Input: elants_i2c - Add Remark ID check flow in firmware update function
-Date:   Fri, 13 Dec 2019 09:41:03 +0800
-Message-ID: <003301d5b156$61da06c0$258e1440$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: zh-tw
-Thread-Index: AQKU6CCR3y2ZDKNDJHcdSmqZJZrY9wKTdKsnAt2xsxumDVHmIA==
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05ZjExY2MzZS0xZDQ5LTExZWEtOTg4My03YzVjZjg3NDk0NzhcYW1lLXRlc3RcOWYxMWNjNDAtMWQ0OS0xMWVhLTk4ODMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI2MTc4IiB0PSIxMzIyMDY3NDg2MzcwOTUyOTYiIGg9ImJlVGZPZ3V1TTUwRnMwcnFSTmhkYlJnNks4OD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C58B02798;
+        Thu, 12 Dec 2019 20:41:07 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 12 Dec 2019 20:41:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=9R1DF4M5Pmu5MeZeNHugx3+fZB4LUBd
+        c0AIWbpwNu0g=; b=hxS+mB4BUTJX804lzDTqDP4nZjPhAIWQ+Xo4jn58vmx7fs/
+        lrue5+5+lo+vSrGl8dIcmwtQL9IYY8iR0n2UHd+1pyCCOjfQ5V3oIgarQSlv5JNm
+        rSrGQgOETDdnjf5fsK0Nl/+zv2HTvppkFMEmdC/B0e3UGhua2d8fdg06qTgJOtjc
+        TzsHe9a0uRepyTJ/odkLf3vFy0XmyZLcSnwiP3kNbZFfjkU0pSEEwh7slw9XXpfq
+        /TnsAPSoYUCvH8H1FtWWGEMpGnedNv8EsHW/hHtYpgs51jSukMrwnzqwvhuq5Pig
+        sRy2WBzyrB2CE55DooY10eoijL8xrKUiAT5ToGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=9R1DF4
+        M5Pmu5MeZeNHugx3+fZB4LUBdc0AIWbpwNu0g=; b=Sp4hVZFfpci0lyVOFH7QzD
+        blP1G7YkXIeHsMlzNyjlN2sAzjkZ6rD0mVNbHAbfOR5QxUO+YrWb55rAa7jG8hpl
+        8lmmZX2B7m+tpAMYjYCIgupHVZ/TyENkjQyjkV+pCctw//hbsd/RsGsDDmppT2w2
+        3/+XELmpVdnYx4WMuGpjLnZzmaNazStDB7MQMUwlJim9EgVb5rQ10k6xHe9wawwp
+        qwwOZkxvO6zVuIyJUwq04LFpP2HBlwZXjb0ihDcMhnEzlU2FhiIFvxDIxvDmN3ua
+        kztSvJgd7SRLydLIxHhVaBYm+H94T2jTcu9xGRDgXe5140/EhSdtasYIhousIxeQ
+        ==
+X-ME-Sender: <xms:MuzyXfBgkU4UiZiso_eGpnA8h-iHD0yt5WANprvLJDuKIg3AcZNffw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelkedgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:MuzyXUsBCV5TOZ5prXltKNzixjwfeIhYBZnXV_xcOiA4SrvW8Pf8Fg>
+    <xmx:MuzyXdRZVBkvMoO0LcDGiBqHhuX5cOdoEQx6H1B91EyQXRL4k_4wrA>
+    <xmx:MuzyXbLwXwEV1EzZs8bKS6--C-jQo4vEs0yX2u3gyOsgZdwp6FrZYg>
+    <xmx:M-zyXXc-DzCftJLfsxXjTCGWD2GwDI6WyiQCteKNjYScHwuMYgJiXg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 87175E00A2; Thu, 12 Dec 2019 20:41:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-680-g58d4e90-fmstable-20191213v1
+Mime-Version: 1.0
+Message-Id: <601efc97-714b-40af-b3a0-e4687c43be46@www.fastmail.com>
+In-Reply-To: <bbe9045e-c5ca-541c-1ee9-0f5ef246a27b@linux.vnet.ibm.com>
+References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
+ <1575566112-11658-7-git-send-email-eajames@linux.ibm.com>
+ <de395d95-15f4-4df3-873d-ce89ae008ed3@www.fastmail.com>
+ <bffadb0a-aba7-d799-b2ef-a4adb3259c4b@linux.ibm.com>
+ <f597202e-0d5a-4b76-ba0a-a6f0a857b289@www.fastmail.com>
+ <bbe9045e-c5ca-541c-1ee9-0f5ef246a27b@linux.vnet.ibm.com>
+Date:   Fri, 13 Dec 2019 12:12:38 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.vnet.ibm.com>,
+        "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
+        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
+        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
+Subject: Re: [PATCH v2 06/12] drivers/soc: Add Aspeed XDMA Engine Driver
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
 
-Sorry for the inconvenience. Next time I will send patches via
-git-send-email or mutt.
 
-Many thanks,
-Johnny
------Original Message-----
-From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com] 
-Sent: Friday, December 13, 2019 3:22 AM
-To: Johnny.Chuang
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; STRD2-½²´f¼`;
-james.chen@emc.com.tw; '±ç³Õµ¾'; 'jeff'
-Subject: Re: [PATCH] Input: elants_i2c - Add Remark ID check flow in
-firmware update function
-
-Hi Johnny,
-
-On Tue, Dec 10, 2019 at 05:27:53PM +0800, Johnny.Chuang wrote:
-> This patch add Remark ID check flow to firmware update function of 
-> elan touchscreen driver.
+On Fri, 13 Dec 2019, at 05:46, Eddie James wrote:
 > 
-> It avoids firmware update with mismatched Remark ID.
+> On 12/11/19 10:52 PM, Andrew Jeffery wrote:
+> >
+> > On Thu, 12 Dec 2019, at 07:09, Eddie James wrote:
+> >> On 12/10/19 9:47 PM, Andrew Jeffery wrote:
+> >>> On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
+> >>>> +
+> >>>> +	regmap_update_bits(sdmc, SDMC_REMAP, ctx->chip->sdmc_remap,
+> >>>> +			   ctx->chip->sdmc_remap);
+> >>> I disagree with doing this. As mentioned on the bindings it should be up to
+> >>> the platform integrator to ensure that this is configured appropriately.
+> >>
+> >> Probably so, but then how does one actually configure that elsewhere? Do
+> >> you mean add code to the edac driver (and add support for the ast2600)
+> >> to read some dts properties to set it?
+> > Right. That's where I was going. I don't expect you to do that as part of this
+> > patch series, but if you could separate this code out into separate patches
+> > (dealing with the sdmc property in the devicetree binding as well) we can at
+> > least concentrate on getting the core XDMA driver in and work out how to
+> > move forward with configuring the memory controller later.
 > 
-> This function is supported by our latest version of boot code, but it 
-> cooperates well with earlier versions.
 > 
-> Our driver will decide if enable Remark ID check with boot code version.
-> 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> Yea... my concern is that then we end up with a driver upstream that 
+> doesn't actually work. Same concern with the reset thing you mentioned 
+> below.
 
-Applied, but please next time do not use outlook (or gmail for that
-matter) to send patches as I have to edit them manually to undo the
-line-wrapping damage done by the mailers. Please consider setting up "git
-send-email" or mutt for this.
+How would it not work? It would just be up to the platform integrator to make
+sure the stars align right? If they do then there should be no problem. Whacking
+the memory controller here is done out of convenience.
 
-Thanks!
+We can still carry the separate patches adding this and the reset behaviour in
+e.g. the openbmc kernel tree if necessary.
 
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 77
-> ++++++++++++++++++++++++++++++----
->  1 file changed, 69 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c
-> b/drivers/input/touchscreen/elants_i2c.c
-> index d4ad24e..4911799 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -59,8 +59,10 @@
->  #define CMD_HEADER_WRITE	0x54
->  #define CMD_HEADER_READ		0x53
->  #define CMD_HEADER_6B_READ	0x5B
-> +#define CMD_HEADER_ROM_READ	0x96
->  #define CMD_HEADER_RESP		0x52
->  #define CMD_HEADER_6B_RESP	0x9B
-> +#define CMD_HEADER_ROM_RESP	0x95
->  #define CMD_HEADER_HELLO	0x55
->  #define CMD_HEADER_REK		0x66
->  
-> @@ -200,6 +202,10 @@ static int elants_i2c_execute_command(struct 
-> i2c_client *client,
->  		expected_response = CMD_HEADER_6B_RESP;
->  		break;
->  
-> +	case CMD_HEADER_ROM_READ:
-> +		expected_response = CMD_HEADER_ROM_RESP;
-> +		break;
-> +
->  	default:
->  		dev_err(&client->dev, "%s: invalid command %*ph\n",
->  			__func__, (int)cmd_size, cmd);
-> @@ -556,6 +562,8 @@ static int elants_i2c_initialize(struct 
-> elants_data *ts)
->  
->  	/* hw version is available even if device in recovery state */
->  	error2 = elants_i2c_query_hw_version(ts);
-> +	if (!error2)
-> +		error2 = elants_i2c_query_bc_version(ts);
->  	if (!error)
->  		error = error2;
->  
-> @@ -564,8 +572,6 @@ static int elants_i2c_initialize(struct elants_data
-*ts)
->  	if (!error)
->  		error = elants_i2c_query_test_version(ts);
->  	if (!error)
-> -		error = elants_i2c_query_bc_version(ts);
-> -	if (!error)
->  		error = elants_i2c_query_ts_info(ts);
->  
->  	if (error)
-> @@ -613,39 +619,94 @@ static int elants_i2c_fw_write_page(struct 
-> i2c_client *client,
->  	return error;
->  }
->  
-> +static int elants_i2c_validate_remark_id(struct elants_data *ts,
-> +					 const struct firmware *fw)
-> +{
-> +	struct i2c_client *client = ts->client;
-> +	int error;
-> +	const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
-> };
-> +	u8 resp[6] = { 0 };
-> +	u16 ts_remark_id = 0;
-> +	u16 fw_remark_id = 0;
-> +
-> +	/* Compare TS Remark ID and FW Remark ID */
-> +	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> +					resp, sizeof(resp));
-> +	if (error) {
-> +		dev_err(&client->dev, "failed to query Remark ID: %d\n",
-> error);
-> +		return error;
-> +	}
-> +
-> +	ts_remark_id = get_unaligned_be16(&resp[3]);
-> +
-> +	fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
-> +
-> +	if (fw_remark_id != ts_remark_id) {
-> +		dev_err(&client->dev,
-> +			"Remark ID Mismatched: ts_remark_id=0x%04x,
-> fw_remark_id=0x%04x.\n",
-> +			ts_remark_id, fw_remark_id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int elants_i2c_do_update_firmware(struct i2c_client *client,
->  					 const struct firmware *fw,
->  					 bool force)
->  {
-> +	struct elants_data *ts = i2c_get_clientdata(client);
->  	const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
->  	const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
->  	const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
-> -	const u8 close_idle[] = {0x54, 0x2c, 0x01, 0x01};
-> +	const u8 close_idle[] = { 0x54, 0x2c, 0x01, 0x01 };
->  	u8 buf[HEADER_SIZE];
->  	u16 send_id;
->  	int page, n_fw_pages;
->  	int error;
-> +	bool check_remark_id = ts->iap_version >= 0x60;
->  
->  	/* Recovery mode detection! */
->  	if (force) {
->  		dev_dbg(&client->dev, "Recovery mode procedure\n");
-> +
-> +		if (check_remark_id) {
-> +			error = elants_i2c_validate_remark_id(ts, fw);
-> +			if (error)
-> +				return error;
-> +		}
-> +
->  		error = elants_i2c_send(client, enter_iap2,
-sizeof(enter_iap2));
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to enter IAP mode:
-> %d\n",
-> +				error);
-> +			return error;
-> +		}
->  	} else {
->  		/* Start IAP Procedure */
->  		dev_dbg(&client->dev, "Normal IAP procedure\n");
-> +
->  		/* Close idle mode */
->  		error = elants_i2c_send(client, close_idle,
-sizeof(close_idle));
->  		if (error)
->  			dev_err(&client->dev, "Failed close idle: %d\n",
-error);
->  		msleep(60);
-> +
->  		elants_i2c_sw_reset(client);
->  		msleep(20);
-> -		error = elants_i2c_send(client, enter_iap,
-> sizeof(enter_iap));
-> -	}
->  
-> -	if (error) {
-> -		dev_err(&client->dev, "failed to enter IAP mode: %d\n",
-> error);
-> -		return error;
-> +		if (check_remark_id) {
-> +			error = elants_i2c_validate_remark_id(ts, fw);
-> +			if (error)
-> +				return error;
-> +		}
-> +
-> +		error = elants_i2c_send(client, enter_iap,
-> sizeof(enter_iap));
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to enter IAP mode:
-> %d\n",
-> +				error);
-> +			return error;
-> +		}
->  	}
->  
->  	msleep(20);
-> --
-> 2.7.4
-> 
-
--- 
-Dmitry
-
+Andrew
