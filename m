@@ -2,116 +2,107 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E726AC34989
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D6EC3496E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256BE246B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntCYo4fm"
+	by mail.kernel.org (Postfix) with ESMTP id 09210246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269390;
+	bh=PYvRPNX/Qngmz1mGzU9X5yZkWXb1xrogAUUZ1twogYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GKA1vrGwdYPI1ykNIdhAPkgEol4o+1RD4uWCKagUYxHQqCcSuSge0bckQQr9fSq+z
+	 OCAo4lU1N+h6vbPKarCjhPPkItrvGW4XG8k/W5HIXSzEVfVYHI2ZgPtKYsLCoSZE93
+	 J9zmbD1LHJXvUwZnLHaK+YHZg+uXoE0YL6N+TQB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfLMLqk (ORCPT
+        id S1726818AbfLMLme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:46:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38350 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfLMLqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:46:39 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so6325048wrh.5;
-        Fri, 13 Dec 2019 03:46:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HCgiaWMI/x6U67hIPPycQp/x3zK3ZvfDXctut3Mj0H8=;
-        b=ntCYo4fm2d/zzZ4lTMIHE2k18++eeMkvDoPsZ2tVIeLuOwZKRH3Xl0/iqsxYzseV32
-         9JtOFz1k8zwhM7rcEfbl4Ul3T7p2HVGhxihyrWvvbKJ9c8Ti9MqToNwSmdA1M4cTmY4g
-         FE4K278750sNT48xziH/Hxs6RpB4M7bQuLqunBAH8s3sO8vnCqtvZeG+a+zC7r+HAqW2
-         KMRmPH93e5UhTfshDBVhWpsVneNuClqdHMb/bI1GEB4bmHsAed3iODeq1gPJxb+S2IfL
-         Xg7AzfAEQOGD6GGdnskwH/MkDQnpX1HilwhQvVmxk2Otg1pDMOCSx9jdIDda6roJYSko
-         TN4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HCgiaWMI/x6U67hIPPycQp/x3zK3ZvfDXctut3Mj0H8=;
-        b=srnIf4YEVAB/826wJhFwKBUkJ6HZLjlkdvI2EJo2hRt2fg/knN3lWA07ZCb+cbiDB6
-         l/eE4YpqtV46Wtv0AG5CEfoR2ri0ySz/69uMeEFQwAXjqER4N6etzF3aVmSjJd8vGZ3f
-         gIGEE2pLvdbqrBDLJGohrMUnWhUexMHoyKrlxc5gYgg61tVitOTBYoZyndsNN72q6gLF
-         yVqRYeZ0JPpJbabsIlvqcD9MJB9Bd3xeOeirENfubOtH11iOPYgZXrASeo/H98qZrEst
-         2VCNWsppQwtquvPX6f64fx68WRxfXbqoQRc9rIUia/ycu9643YQDejM1Sn8Qqkiny5UW
-         xrcw==
-X-Gm-Message-State: APjAAAUMZHxIoNsf7wIF63BUMZTpytENzQpEaHTLme08Z6K5hEIIr1kP
-        u66nbvkMc2kTI+EipK2sNB8xdvhB
-X-Google-Smtp-Source: APXvYqwijV//FwSD6ZdUbelYpMbehqqqYrxwCr2pcHvthrmHzwmG+JKUW2lWiTI9HuHu8NHjX/ZVbQ==
-X-Received: by 2002:adf:f6c1:: with SMTP id y1mr13203522wrp.17.1576237596862;
-        Fri, 13 Dec 2019 03:46:36 -0800 (PST)
-Received: from [192.168.178.26] (ipservice-092-219-207-064.092.219.pools.vodafone-ip.de. [92.219.207.64])
-        by smtp.gmail.com with ESMTPSA id a184sm10170022wmf.29.2019.12.13.03.46.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 03:46:36 -0800 (PST)
-Subject: Re: [PATCH 0/6] rtlwifi: convert rtl8192{ce,cu,de} to use generic
- functions
-To:     Pkshih <pkshih@realtek.com>
-Cc:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191211154755.15012-1-straube.linux@gmail.com>
- <1576115241.2733.1.camel@realtek.com>
-From:   Michael Straube <straube.linux@gmail.com>
-Message-ID: <84f3ec5e-eda7-c955-2705-482263eb1ee6@gmail.com>
-Date:   Fri, 13 Dec 2019 12:46:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 06:42:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:56110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbfLMLme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:42:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2F0C1045;
+        Fri, 13 Dec 2019 03:42:33 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 233043F718;
+        Fri, 13 Dec 2019 03:42:32 -0800 (PST)
+Date:   Fri, 13 Dec 2019 11:42:31 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [RFC 04/25] spi: gpio: Implement LSB First bitbang support
+Message-ID: <20191213114231.GC4644@sirena.org.uk>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <20191212033952.5967-5-afaerber@suse.de>
+ <CAMuHMdWdxJ9AaWhyCW-u8fCpXSDCPd-D6Dx129SF5nRssZsK=g@mail.gmail.com>
+ <9b4b6287-c1d9-1b41-88a8-7ac9fe222642@suse.de>
+ <20191212171922.GM4310@sirena.org.uk>
+ <70bf4954-d7ab-e300-017c-c743a40162a4@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <1576115241.2733.1.camel@realtek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
+Content-Disposition: inline
+In-Reply-To: <70bf4954-d7ab-e300-017c-c743a40162a4@suse.de>
+X-Cookie: Life exists for no known purpose.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 02:47, Pkshih wrote:
-> On Wed, 2019-12-11 at 16:47 +0100, Michael Straube wrote:
->> This series converts the drivers rtl8192{ce,cu,de} to use the generic
->> functions rtl_query_rxpwrpercentage and rtl_signal_scale_mapping.
->>
->> Michael Straube (6):
->>    rtlwifi: rtl8192ce: use generic rtl_query_rxpwrpercentage
->>    rtlwifi: rtl8192cu: use generic rtl_query_rxpwrpercentage
->>    rtlwifi: rtl8192de: use generic rtl_query_rxpwrpercentage
->>    rtlwifi: rtl8192ce: use generic rtl_signal_scale_mapping
->>    rtlwifi: rtl8192cu: use generic rtl_signal_scale_mapping
->>    rtlwifi: rtl8192de: use generic rtl_signal_scale_mapping
->>
->>   .../wireless/realtek/rtlwifi/rtl8192ce/trx.c  | 48 ++----------------
->>   .../wireless/realtek/rtlwifi/rtl8192cu/mac.c  | 49 ++-----------------
->>   .../wireless/realtek/rtlwifi/rtl8192de/trx.c  | 47 ++----------------
->>   3 files changed, 14 insertions(+), 130 deletions(-)
->>
-> 
-> For all patches:
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-> 
 
-Thanks.
+--OBd5C1Lgu00Gd/Tn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Curiously. How can you find these function are identical?
-> 
-While sending cleanup patches for some staging wifi drivers I noticed
-that these functions are used in many of the realtek drivers and all
-looked very similar. Then used grep and diff to verify.
+On Thu, Dec 12, 2019 at 10:08:24PM +0100, Andreas F=E4rber wrote:
+> Am 12.12.19 um 18:19 schrieb Mark Brown:
 
-Michael
+> >>>> Duplicate the inline helpers bitbang_txrx_be_cpha{0,1} as LE version=
+s.
+> >>>> Make checkpatch.pl happy by changing "unsigned" to "unsigned int".
 
+> > Separate patch for this?
+
+> For the checkpatch cleanup? Or helpers preparation vs. spi-gpio.c usage?
+
+At least the checkpatch cleanup.
+
+> > Yeah, I don't think there's any great options here with the potential
+> > performance issues - probably the nicest thing would be to autogenerate
+> > lots of variants but I think that's far more trouble than it's worth.
+
+> Maybe add another code comment to revisit that idea later then?
+
+Sure, if you like.
+
+--OBd5C1Lgu00Gd/Tn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3zeSYACgkQJNaLcl1U
+h9BeaQf9Gwa9v/4JBqlU2EYPQesdyqtMrKKm+f5AChrzJThgZFgCyrfqTR/3uWBy
+/SF8lSe7KY9OyztUKw5g+7WLB/oBrMXPlm40GKafsaKC0eEeb9is09ZCnxOkDKDU
+T2DQuGVbpQ15A+764B2O2YmoZ4MOoQft6BCv/eqFHtZ7PXrE/KkR9ZkBRbNGlZdg
+koWMA7InOnyM2jVONLQIkmicLLi2R/ADJjV3MMhRrfamY6xEvu7e7IrPUdFV2HHl
+dPj1nFNsrgQwPG4Ns4+ohrTwtjwOycakEMqD9CwhRp8mw1XE7Ru5no3LB/zxVbqd
+q00vWhYLcJ4R+sl55+bXCitUFEDGKg==
+=fXQg
+-----END PGP SIGNATURE-----
+
+--OBd5C1Lgu00Gd/Tn--
