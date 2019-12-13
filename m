@@ -2,136 +2,122 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2FFC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC5FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DC72173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323D722527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576202171;
+	bh=ZM6gv96Dv7my/juDicbQtwd6lHmLtjQAiKdk1tfL7Kw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rooY7myB1xv5AgZ6cAflcbFvkhXdVaHzc4kGOBsMirIphmZ8r9GiFu7n1aPRusqHo
+	 45lz98Pqlz46O1HYH218BpOBZLoTsVdLwE6jJ4UGHN6fwPIFhmHGQlWuS+BETRVCZb
+	 lG91Q3spNopm0OKque/I225CKkgfVeKpDvsG5XuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbfLMBzp (ORCPT
+        id S1731866AbfLMB4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:55:45 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17534 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727722AbfLMBzp (ORCPT
+        Thu, 12 Dec 2019 20:56:10 -0500
+Received: from mail-io1-f41.google.com ([209.85.166.41]:35976 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbfLMB4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:55:45 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBD1qCXR072856
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 20:55:44 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wuq3wu808-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 20:55:44 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 13 Dec 2019 01:55:41 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 13 Dec 2019 01:55:37 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBD1taO519267686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 01:55:36 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39C82AE05A;
-        Fri, 13 Dec 2019 01:55:36 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09B42AE045;
-        Fri, 13 Dec 2019 01:55:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.206.100])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Dec 2019 01:55:34 +0000 (GMT)
-Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
- measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Thu, 12 Dec 2019 20:55:34 -0500
-In-Reply-To: <20191213004250.21132-2-nramas@linux.microsoft.com>
-References: <20191213004250.21132-1-nramas@linux.microsoft.com>
-         <20191213004250.21132-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121301-0020-0000-0000-000003979F64
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121301-0021-0000-0000-000021EEAB24
-Message-Id: <1576202134.4579.189.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_08:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 impostorscore=0 suspectscore=2 bulkscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912130014
+        Thu, 12 Dec 2019 20:56:09 -0500
+Received: by mail-io1-f41.google.com with SMTP id a22so789220ios.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 17:56:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4jtyJn+jd2kldixpZrOSg8TBt8xCd0UBOBYu2Jdo4r4=;
+        b=Asyyq5D68W25BKzSzKQUkjSn2xDNWbOl7NxBXvOaVRGASH+aZlLweLJ81c2dVUbVuX
+         691irB/y5NxuVTJq1DFPC9N1qM0tunQjtKj3fF2PU7f8C21LLOa1WNPwqrpogyrCuzO0
+         UjghPv2S5Hig88Zee8w9gDaniimKxyK2/YkQo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4jtyJn+jd2kldixpZrOSg8TBt8xCd0UBOBYu2Jdo4r4=;
+        b=V3Q6aeA8m7tRzRrm8PQ7s9dk/qVTNjNPQBpZtdiCK8IB4MJaiyoOYE5lQ6WrR5n6B1
+         cfO2l/KRFsKmpQFvVHbDbCqBqX46QJcN/SNEQNrTjUQ02h/Zv3oELPPnhM2MsyXEEq8W
+         3/5UzzsMQRdJ5YO/aOYZ1e1umIwxgknBd0PKw46/8VaPlpW8IgE8Svw9B1DVQFvrFlwm
+         SA3/C3UxB5eBAI1N7DkjV3A5OWycL6f4ENnQiVuZs2oDiLEwDZ9GJLOQxsRZXKti7Oqr
+         tnD+U1W4Eg4yunX4TdS8tmjAAivgyk56wKanuaUNKZaDi9hO3jTNLikbavaDWzaWJHZm
+         pokw==
+X-Gm-Message-State: APjAAAUG3VaTFYGuvm5Vd879nAWrhp9zzVt1K1o0QVO/JcS5kNMB2QD+
+        f+yG/wwF3Jf7OZEAZpNawcYUbg==
+X-Google-Smtp-Source: APXvYqxBY8QCMBIOmrwYTxCxzMazQJTC3wK+Qsu5YVdlers+N/MkKK1lKh9v4m46m285ky2Sp8Jlqg==
+X-Received: by 2002:a5d:9d4a:: with SMTP id k10mr5969938iok.134.1576202168931;
+        Thu, 12 Dec 2019 17:56:08 -0800 (PST)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y11sm1684335iot.19.2019.12.12.17.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 17:56:08 -0800 (PST)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, gregkh@linuxfoundation.org, mcgrof@kernel.org,
+        scott.branden@broadcom.com, tiwai@suse.de
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: firmware: Fix it to do root uid check and skip
+Date:   Thu, 12 Dec 2019 18:56:06 -0700
+Message-Id: <20191213015606.23058-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +/*
-> + * ima_process_queued_keys() - process keys queued for measurement
-> + *
-> + * This function sets ima_process_keys to true and processes queued keys.
-> + * From here on keys will be processed right away (not queued).
-> + */
-> +void ima_process_queued_keys(void)
-> +{
-> +	struct ima_key_entry *entry, *tmp;
-> +	LIST_HEAD(temp_ima_keys);
-> +
-> +	if (ima_process_keys)
-> +		return;
-> +
-> +	/*
-> +	 * To avoid holding the mutex when processing queued keys,
-> +	 * transfer the queued keys with the mutex held to a temp list,
-> +	 * release the mutex, and then process the queued keys from
-> +	 * the temp list.
-> +	 *
-> +	 * Since ima_process_keys is set to true, any new key will be
-> +	 * processed immediately and not be queued.
-> +	 */
-> +	INIT_LIST_HEAD(&temp_ima_keys);
-> +
-> +	mutex_lock(&ima_keys_mutex);
+firmware attempts to load test modules that require root access
+and fail. Fix it to check for root uid and exit with skip code
+instead.
 
-Don't you need a test here, before setting ima_process_keys?
+Before this fix:
 
-	if (ima_process_keys)
-		return;
+selftests: firmware: fw_run_tests.sh
+modprobe: ERROR: could not insert 'test_firmware': Operation not permitted
+You must have the following enabled in your kernel:
+CONFIG_TEST_FIRMWARE=y
+CONFIG_FW_LOADER=y
+CONFIG_FW_LOADER_USER_HELPER=y
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
+not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
 
-Mimi
+With this fix:
 
-> +
-> +	ima_process_keys = true;
-> +
-> +	list_for_each_entry_safe(entry, tmp, &ima_keys, list)
-> +		list_move_tail(&entry->list, &temp_ima_keys);
-> +
-> +	mutex_unlock(&ima_keys_mutex);
-> +
-> +	list_for_each_entry_safe(entry, tmp, &temp_ima_keys, list) {
-> +		process_buffer_measurement(entry->payload, entry->payload_len,
-> +					   entry->keyring_name, KEY_CHECK, 0,
-> +					   entry->keyring_name);
-> +		list_del(&entry->list);
-> +		ima_free_key_entry(entry);
-> +	}
-> +}
-> +
-> 
+selftests: firmware: fw_run_tests.sh
+skip all tests: must be run as root
+not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/testing/selftests/firmware/fw_lib.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
+index b879305a766d..5b8c0fedee76 100755
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -34,6 +34,12 @@ test_modprobe()
+ 
+ check_mods()
+ {
++	local uid=$(id -u)
++	if [ $uid -ne 0 ]; then
++		echo "skip all tests: must be run as root" >&2
++		exit $ksft_skip
++	fi
++
+ 	trap "test_modprobe" EXIT
+ 	if [ ! -d $DIR ]; then
+ 		modprobe test_firmware
+-- 
+2.20.1
 
