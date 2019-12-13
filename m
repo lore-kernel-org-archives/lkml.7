@@ -2,164 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE6C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3093C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229B92465A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3Z/izHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A91224125
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLMVc4 (ORCPT
+        id S1726741AbfLMVdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:32:56 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38094 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMVcz (ORCPT
+        Fri, 13 Dec 2019 16:33:07 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:38607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMVdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:32:55 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u2so245358wmc.3;
-        Fri, 13 Dec 2019 13:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=VMUpcAkZBc/3hcg5ji+Dj7UkVJADZCSszth3iskQpEM=;
-        b=o3Z/izHZCjNfFVfVm8doXR0ARkwNOzoCeEuKPdB3PNRW8Gen+2qZI5SYK57ReaREdw
-         pac8ijJNfQIqM+NqMezzwStedtpVQHP1omiKLqFVHD599TR4/elJaEJo8IHSauT+EyIa
-         I4hwrBg+MHwLZ35+TTYc00Q6dAq0J/YEZZNvuU6DjVK0YTcW5ZgiyhbXF6aSaqVpZNFD
-         JXJWZgIpWJLct8jmuR2YRjD8E7oCuZngYIQ9DT+12xaLfd6/Y3kRYbRl/qRaXDNlWzST
-         AKu+NWp6DkDzWFXFj0ppawhad/fXahVRSboZaKZY8x59aNg8bHi1RVxGkz8wEgNK+pdr
-         +k2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VMUpcAkZBc/3hcg5ji+Dj7UkVJADZCSszth3iskQpEM=;
-        b=WmytR/7YOfBGZ+CT8hjnVZH0yRLGC2ogw0ttzuOeK5IH+YZBXKuHrC+Ik2ERvTsYib
-         MQt4KOX+XYqf2+QjzKPPKVOm5wXEzDlTHxRbXJaLBZu9sVGd092xig2gHtgjlhuVy9dN
-         uCe/mkWfRwyYw+Lw5hCUXEdOQl3u2VqUS71eo7B1Qs7onlVsKn/xB/IwB7QgnmYIWWGG
-         HoK24upqqyB7mc5/IdEsM7mzLd9/r1zLbxUDDqCOmzIAxSQld6O0rYbcExeyAxQ5hmC0
-         5oSKh2IzPjIsEZ/cK+6b2eyg4Baa9URtCMfvlJZe6JHJoEZyNRAW98KBj2NANfh0MBJC
-         3hxw==
-X-Gm-Message-State: APjAAAV9qwW5zvLrkQF+wRoBSyHCIvXWALMUDdi8kNs7uwHiPYSR7mgR
-        84DVzi7XGaom12mn83tntm3Pgja8
-X-Google-Smtp-Source: APXvYqxaoJm5XuC25S5FXSgPrhvzwen4ehJtxggPn8VuvrMFcDdqWKJkbNfgeHPGO7qVeXh+mffUfg==
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr16222550wmc.9.1576272772712;
-        Fri, 13 Dec 2019 13:32:52 -0800 (PST)
-Received: from [192.168.43.233] ([109.126.143.152])
-        by smtp.gmail.com with ESMTPSA id k8sm11595537wrl.3.2019.12.13.13.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 13:32:52 -0800 (PST)
-Subject: Re: [PATCH 1/1] io_uring: don't wait when under-submitting
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <5caa38be87f069eb4cc921d58ee1a98ff5d53978.1576223348.git.asml.silence@gmail.com>
- <21ca72b0-c35d-96b7-399f-d4034d976c27@kernel.dk>
- <9fbb03f4-6444-04a6-4cfb-ee4b3aa0bcd1@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <47a5641b-af81-0edf-1d71-4e3063ce8517@gmail.com>
-Date:   Sat, 14 Dec 2019 00:32:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 16:33:07 -0500
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N0X4e-1hjoHt3CJY-00wTtK; Fri, 13 Dec 2019 22:33:05 +0100
+Received: by mail-qv1-f52.google.com with SMTP id t9so319741qvh.13;
+        Fri, 13 Dec 2019 13:33:05 -0800 (PST)
+X-Gm-Message-State: APjAAAXfCTEfs5zqNZffgfa1NTymJUN9kz81+abqorsqbAZ/peGOEhlJ
+        ZCFaiBPpDezIK6BB2EGiG9cXKAgXUH0JKBTwxzI=
+X-Google-Smtp-Source: APXvYqwCzGhbymffr0MJ0HPN+piVHm6ukpyasxZTu0jrENW0TrLwxdmw8hoOi0tCS69BkfRXSZvzHOqSymJ6CdsWGV8=
+X-Received: by 2002:a0c:aca2:: with SMTP id m31mr15739114qvc.222.1576272784583;
+ Fri, 13 Dec 2019 13:33:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <9fbb03f4-6444-04a6-4cfb-ee4b3aa0bcd1@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck> <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck> <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
+In-Reply-To: <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 22:32:48 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a014U76S+t3rKyPghepOT_fYHBExuMC27MoGMNffjczEw@mail.gmail.com>
+Message-ID: <CAK8P3a014U76S+t3rKyPghepOT_fYHBExuMC27MoGMNffjczEw@mail.gmail.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FdXVnilKksLQLV1wzuAn1Esf8CicNBfi5v9XB/3emD6G0GJG4+S
+ ft0zSdL6XWPzgsIkHJp8BODgVJjytSWWLaBQ0a582j9cc8nVGuzjH2v0vBReXWD88GPddI8
+ FjhWmFChZ/vy8YWpbHbf1M1JWgEdPiaSz4x7KkcoBdUbrgVcU4FylFPFPqDOz4NcxddXJ1W
+ ltEsARmVTm/Y6yHckFRRw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YFAe+6A9cTM=:Zvky+XzJsJ322S4cP0pg6i
+ 86yBNT9R+qQvN1z0XLu1qYzbYWamXOzhuIETZG4TzscrcO/j8IZUgEh1udCOYE+Q6g8vKCGY4
+ WuZJlFDAlZG/u7YTV+g8Sh5n6xb+6DQUIaCkfbClcxgG/7oAiXZXur9/PGObWszYPHdHvzMiP
+ 4HVO3PyLsexxLM9aGHC1qeAMU7wFUKCoYkWgpV9AsMSZq36pWH8Tn8+zEVFhr5WmN5luNmiy8
+ wYjuqhmZmGgJt+GldlWvCfTC1OL2ggGDnP+IrmtPXh5UcMaStp5rdtgyxlp/KTv2ab/PspqZ3
+ nFeYhu9fpPSv2/xJoAcAG03zA0+fVKzyiODG8rWOYqNzrWuNNImfzvn9LxW6JzNhEecZh8yX3
+ C98KdPgUYQK9tRxSnV03jBTmfTTms8uHboe3aQmOIEfFIcQj7pYux/6jcq+jFaBpGkNILxG9p
+ 8AMb8fDbwdaYS1H2Is6fmcOTS59DsBR5612mlApK4nDAqip/JemqF0JhuDyQXkKdcfX2aS2up
+ e3iv2rLXuHQuqKgnRQ/fooZnPHazphhiW72Dogh8fWTpMc5pk5Juu1JLgNRn1iBrPbmGVWZCC
+ 2o6wbaFn3RTiPS55IBpWNjlkFJBJ07Mq9DuwcHmTDpbsxw6nqtWbTKD0JlKbO+L0Pb5BOj7ZA
+ qI4iFcj6IWnZxj4SxiIfaezNAWKHMXGXHWtjnt/MGo4/csM61RySWPAHqMA/TY74uW3aPPTGc
+ AAbWcTlOUpGzO0i7axqsYTWdjabheBfwXK3oJvwrrlumL7j1Oc4oc/UrNAFPphJxfXlEFMNul
+ iYgbe2K8SG0hoLqUCmwUC8WLgbf4d9uskXmUXylCcwxy8uK29tY7wYb+o6IaKq4K596GoDRbd
+ Qlm2tyxlshG50wIqkNGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/12/2019 21:32, Jens Axboe wrote:
-> On 12/13/19 11:22 AM, Jens Axboe wrote:
->> On 12/13/19 12:51 AM, Pavel Begunkov wrote:
->>> There is no reliable way to submit and wait in a single syscall, as
->>> io_submit_sqes() may under-consume sqes (in case of an early error).
->>> Then it will wait for not-yet-submitted requests, deadlocking the user
->>> in most cases.
->>
->> Why not just cap the wait_nr? If someone does to_submit = 8, wait_nr = 8,
->> and we only submit 4, just wait for 4? Ala:
->>
+On Fri, Dec 13, 2019 at 2:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Dec 12, 2019 at 9:50 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> I'll have my randconfig builder look for instances, so far I found one,
+> see below. My feeling is that it would be better to enforce at least
+> the size being a 1/2/4/8, to avoid cases where someone thinks
+> the access is atomic, but it falls back on a memcpy.
+>
+>       Arnd
+>
+> diff --git a/drivers/xen/time.c b/drivers/xen/time.c
+> index 0968859c29d0..adb492c0aa34 100644
+> --- a/drivers/xen/time.c
+> +++ b/drivers/xen/time.c
+> @@ -64,7 +64,7 @@ static void xen_get_runstate_snapshot_cpu_delta(
+>         do {
+>                 state_time = get64(&state->state_entry_time);
+>                 rmb();  /* Hypervisor might update data. */
+> -               *res = READ_ONCE(*state);
+> +               memcpy(res, state, sizeof(*res));
+>                 rmb();  /* Hypervisor might update data. */
+>         } while (get64(&state->state_entry_time) != state_time ||
+>                  (state_time & XEN_RUNSTATE_UPDATE));
 
-Is it worth entangling the code? I don't expect anyone trying to recover,
-maybe except full reset/restart. So, failing ASAP seemed to me as the
-right thing to do. It may also mean nothing to the user if e.g.
-submit(1), submit(1), ..., submit_and_wait(1, n)
 
-Anyway, this shouldn't even happen in a not buggy code, so I'm fine with
-any version as long as it doesn't lock up. I'll resend if you still prefer
-to cap it.
+A few hundred randconfig (x86, arm32 and arm64) builds later I
+still only found one other instance:
 
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index 81219a631a6d..4a76ccbb7856 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -5272,6 +5272,10 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
->>  		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
->>  					   &cur_mm, false);
->>  		mutex_unlock(&ctx->uring_lock);
->> +		if (submitted <= 0)
->> +			goto done;
->> +		if (submitted != to_submit && min_complete > submitted)
->> +			min_complete = submitted;
->>  	}
->>  	if (flags & IORING_ENTER_GETEVENTS) {
->>  		unsigned nr_events = 0;
->> @@ -5284,7 +5288,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
->>  			ret = io_cqring_wait(ctx, min_complete, sig, sigsz);
->>  		}
->>  	}
->> -
->> +done:
->>  	percpu_ref_put(&ctx->refs);
->>  out_fput:
->>  	fdput(f);
->>
-> 
-> This is probably a bit cleaner, since it only adjusts if we're going to
-> wait.
-> 
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 81219a631a6d..e262549a2601 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -5272,11 +5272,15 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
->  		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
->  					   &cur_mm, false);
->  		mutex_unlock(&ctx->uring_lock);
-> +		if (submitted <= 0)
-> +			goto done;
->  	}
->  	if (flags & IORING_ENTER_GETEVENTS) {
->  		unsigned nr_events = 0;
->  
->  		min_complete = min(min_complete, ctx->cq_entries);
-> +		if (submitted != to_submit && min_complete > submitted)
-> +			min_complete = submitted;
->  
->  		if (ctx->flags & IORING_SETUP_IOPOLL) {
->  			ret = io_iopoll_check(ctx, &nr_events, min_complete);
-> @@ -5284,7 +5288,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
->  			ret = io_cqring_wait(ctx, min_complete, sig, sigsz);
->  		}
->  	}
-> -
-> +done:
->  	percpu_ref_put(&ctx->refs);
->  out_fput:
->  	fdput(f);
-> 
+diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+index eddae4688862..1c1f33447e96 100644
+--- a/net/xdp/xsk_queue.h
++++ b/net/xdp/xsk_queue.h
+@@ -304,7 +304,9 @@ static inline struct xdp_desc
+*xskq_validate_desc(struct xsk_queue *q,
+                struct xdp_rxtx_ring *ring = (struct xdp_rxtx_ring *)q->ring;
+                unsigned int idx = q->cons_tail & q->ring_mask;
 
--- 
-Pavel Begunkov
+-               *desc = READ_ONCE(ring->desc[idx]);
++               barrier();
++               memcpy(desc, &ring->desc[idx], sizeof(*desc));
++               barrier();
+                if (xskq_is_valid_desc(q, desc, umem))
+                        return desc;
+
+       Arnd
