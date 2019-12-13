@@ -2,140 +2,124 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405C6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68399C32765
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746FB24784
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeZKPMZo"
+	by mail.kernel.org (Postfix) with ESMTP id A458924735
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfLMO3q (ORCPT
+        id S1727814AbfLMOgg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:29:46 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39740 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMO3q (ORCPT
+        Fri, 13 Dec 2019 09:36:36 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40462 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfLMOgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:29:46 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e10so2853197ljj.6;
-        Fri, 13 Dec 2019 06:29:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dzOJoViZyzmlBce2YvVe0rRd6r7H8bV+TzqfDck3oOc=;
-        b=KeZKPMZoIO7wUHMwZsZ9W3IjN9Ys8z+dw72Qio7PWqWDLsiGiXE6Gx4VBuCcdUIByX
-         CNU/eGA9oqca9M7zJJmDuUM+ucvK+riOiqhaAD3ffHNre7hvMzW1OYecExBRHEwN/yh3
-         3QZuPMyP/5a0mI/QRKUbImIx7XbjXJB1dRXB5hB1ZmhajpJnpJ2EDR2eclAnMCOlyQlb
-         0oHO4Y/kG4JGU4tEEamirI4zhDATVisSs2JxgAzaD0KHb7qYW9KW5tvK+uwWUchN6yTk
-         tX/D6xXYZsJCQ5LiHPXT9wPCgnVAHdjylnimxacw9WRhqLX4SHjw9NDSDaLspfDaVW5Z
-         h3dg==
+        Fri, 13 Dec 2019 09:36:36 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i15so6698860oto.7;
+        Fri, 13 Dec 2019 06:36:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dzOJoViZyzmlBce2YvVe0rRd6r7H8bV+TzqfDck3oOc=;
-        b=LdWzxMmQOJJ3+B+bV446vf4gbId5HhingHxrBDDYCmrN6EE2VIKrfjUkzkSJ8P4hOh
-         JQQtEjOMDDmKy+7BnMZQyX65HO1E1g3eTW+rw0z+s747Ep4ARglN7t3Jg+jvwCDJKDWu
-         cs6d7SLi1IGns6H5m7EzXJXeowN38+ndExUHRJwgrnZUWvFrohFIo48ugJmicAfslloO
-         5PCe2n5a5lWN/T35OTk4TROogcZ0PpsONxYxXmIE6NG39vjuXuZP0zf45uxBOc5z0u7Z
-         HZ7vJ+f526+YDNWxhS4bk8YFfqLOQtvNOhznt7Q/npnXnRkImXbUYUUCVDuMgJ29Xxk5
-         GQrQ==
-X-Gm-Message-State: APjAAAUTBv37sXnfUz9bm8ulAQ6Y9vspkUUJVg4UplnrKOENIuJWZiEF
-        mQZ3BhmhGRg26jAZCfIr8qk=
-X-Google-Smtp-Source: APXvYqzUIRA/6pr6C1HZPn0ryqhh2qLm3J/HEId13QznHjQsMIPsZR5tkA+XSTfT1loN4SwUMkt3GQ==
-X-Received: by 2002:a2e:810d:: with SMTP id d13mr9909467ljg.113.1576247383751;
-        Fri, 13 Dec 2019 06:29:43 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i13sm4874011ljg.89.2019.12.13.06.29.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 06:29:43 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
- state
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mikko Perttunen <cyndis@kapsi.fi>
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-4-digetx@gmail.com>
-Message-ID: <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
-Date:   Fri, 13 Dec 2019 17:29:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GGDHCjU3MM6dIoUZbPeaqvOt8azxG8D7bJ42yMYhguQ=;
+        b=Fg68g20DS9J34weDnrWGHF/e32qZHaPKuqqvTc5id+1NwJ8EhouTc3Sf5tDMNjnnY6
+         SqQa4qIVZqeLiYz9B5rO5FMd51FlHFwY1JMgj0K+BhdT1V9epD8WwlMWnyf56xe6qeqV
+         qtDhx3Lc4/+sNcFyLjAxnsIyQrqOaGSf1+EEb/qrGvKObeP2TnFYG0q+bi2ALBnd2gZz
+         04rZ79DmSzgBfSHIjkOYSPqFtxM5Br/Uz4emFiZN5CYUPReMTar0yFkYKcpjvjWgPNst
+         1ENDf3Fds4LmZ6vE1oAXSNaazzPtAN8jCYtfe+47tRQYQW5cH9oTN3bOJVXsxXA+ZVMO
+         2iNQ==
+X-Gm-Message-State: APjAAAUnN0pkrsHwA1bpmgIGHR0UBwkkOpB9uLf6PLVkKBpOBoVCgn5V
+        P58Gs8CdSrgYjbnrXx16OHRguMn9WoIYwiQZtH4=
+X-Google-Smtp-Source: APXvYqwKdL1VCGK4Oe8rL01hvhyHoDgd/HFUlME0PAelLe/cixzON7bfU2Iq4k7pCixPL7UT2s6qDca45N2N5QcrkBo=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr15219004otm.297.1576247795212;
+ Fri, 13 Dec 2019 06:36:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212233428.14648-4-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191212033952.5967-1-afaerber@suse.de> <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
+ <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de> <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
+In-Reply-To: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 13 Dec 2019 15:36:24 +0100
+Message-ID: <CAMuHMdXddQ4v8-by_SmcS09EYykoBZ2G2vcFUpqPadHFaasy7A@mail.gmail.com>
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        csd@princeton.com.tw,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, sales@fdhisi.com,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 02:34, Dmitry Osipenko пишет:
-> I noticed that sometime I2C clock is kept enabled during suspend-resume.
-> This happens because runtime PM defers dynamic suspension and thus it may
-> happen that runtime PM is in active state when system enters into suspend.
-> In particular I2C controller that is used for CPU's DVFS is often kept ON
-> during suspend because CPU's voltage scaling happens quite often.
-> 
-> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
-> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
-> suspend/resume in the NOIRQ phase which is used for the system-level
-> suspend/resume of the driver.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index b3ecdd87e91f..d309a314f4d6 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->  {
->  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +	int err;
->  
->  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+Hi Robin,
 
-I'm now in a doubt that it is correct to use NOIRQ level at all for the
-suspend because i2c_mark_adapter_suspended() uses mutex, thus I'm
-wondering what will happen if there is an asynchronous transfer
-happening during suspend..
+On Fri, Dec 13, 2019 at 3:08 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> On 12/12/2019 8:55 pm, Andreas Färber wrote:
+> > Am 12.12.19 um 14:14 schrieb Robin Murphy:
+> >> and as far as I
+> >> could tell the command set appears to derive from (or is at least common
+> >> to) some old Holtek VFD controllers.
+> >
+> > Hmm, HT16515 looks similar and has more lines, RAM and mode bits than I
+> > prepared here.
+> > https://www.holtek.com/productdetail/-/vg/ht16515
+> >
+> > So I'd need to make more numbers model-dependent and allocate the
+> > Display RAM buffer dynamically.
+> >
+> > Whereas HT16D35A seems incompatible command-wise, and HT16528 appears to
+> > be out of scope, for dot displays and with fancy embedded character map.
+> >
+> > No Holtek email alias that I can quickly spot.
+> >
+> > But given that I'm proposing vendor-specific compatibles just in case,
+> > the main decisions will be the Kconfig symbol and module name. The
+> > driver code itself we could always refactor after merging, and renaming
+> > the schema file (as opposed to compatible) should also be possible.
+>
+> Yeah, I'm not sure that it really matters, as I doubt there are many
+> Linux-capable devices with a real VFD anyway; it just seemed like an
+> interesting datapoint that fell out of scouring the web trying to find
+> any evidence for which the "canonical" 1618 might be (and the Holtek
+> connection was actually a coincidence from a misidentification of the
+> ARTSCHIP part number).
 
-The i2c_mark_adapter_suspended() will try to block and will never return?
+My Sony Blu-Ray/Home Theatre has a nice one (14-segment!), also driven
+by an HT16515.  While the specific model predates the arrival of Linux
+in the next stepping of the hardware, it should be sufficiently powerful
+to run Linux.
 
-> +	err = pm_runtime_force_suspend(dev);
-> +	if (err < 0)
-> +		return err;
-> +
->  	return 0;
->  }
->  
-> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->  	if (err)
->  		return err;
->  
-> +	err = pm_runtime_force_resume(dev);
-> +	if (err < 0)
-> +		return err;
-> +
->  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->  
->  	return 0;
-> 
+Unfortunately it's in active use, so hacking experiments would be vetoed by
+the family ;-)
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
