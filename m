@@ -2,137 +2,155 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82C7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCC6C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BCB24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5CD2253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfLMJk7 (ORCPT
+        id S1726691AbfLMJlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 13 Dec 2019 04:41:02 -0500
+Received: from mga17.intel.com ([192.55.52.151]:13865 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbfLMJk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Dec 2019 04:40:59 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:57996 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMJk6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:40:58 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 64EFE1C24A9; Fri, 13 Dec 2019 10:40:56 +0100 (CET)
-Date:   Fri, 13 Dec 2019 10:40:55 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
- state for HS
-Message-ID: <20191213094055.GB27976@amd>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150345.799359877@linuxfoundation.org>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 01:40:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="265487330"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.169]) ([10.237.72.169])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Dec 2019 01:40:56 -0800
+Subject: Re: [PATCH v3 4/7] mmc: sdhci: Add quirk for disabling DTO during
+ erase command
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc:     kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, zhang.chunyan@linaro.org, tony@atomide.com
+References: <20191210095151.15441-1-faiz_abbas@ti.com>
+ <20191210095151.15441-5-faiz_abbas@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <003f7e7a-a762-5355-9404-4a6655754fb0@intel.com>
+Date:   Fri, 13 Dec 2019 11:40:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
-Content-Disposition: inline
-In-Reply-To: <20191211150345.799359877@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191210095151.15441-5-faiz_abbas@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---BwCQnh7xodEAoBMC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> From: Thinh Nguyen <thinh.nguyen@synopsys.com>
->=20
-> [ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
->=20
-> Highspeed device and below has different state names than superspeed and
-> higher. Add proper checks and printouts of link states for highspeed and
-> below.
-
-Just noticed some more oddity:
->=20
-
-> +	case DWC3_LINK_STATE_RESUME:
-> +		return "Resume";
-> +	default:
-> +		return "UNKNOWN link state\n";
+On 10/12/19 11:51 am, Faiz Abbas wrote:
+> Some controllers might prematurely issue a data timeout during an erase
+> command. Add a quirk to disable the interrupt when an erase command is
+> issued.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  drivers/mmc/host/sdhci.c | 5 +++++
+>  drivers/mmc/host/sdhci.h | 2 ++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 6f3d4991bee1..b8934c50b9c4 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1532,6 +1532,11 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>  	/* Initially, a command has no error */
+>  	cmd->error = 0;
+>  
+> +	if (cmd->opcode == MMC_ERASE &&
+> +	    (host->quirks2 & SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE)) {
+> +		sdhci_set_data_timeout_irq(host, false);
 > +	}
 
-"UNKNOWN" would be consistent with the rest of the file.
+If you factor out __sdhci_set_timeout() like below then
+you could implement ->set_timeout() to do this.
 
-> +++ b/drivers/usb/dwc3/debugfs.c
-> @@ -433,13 +433,17 @@ static int dwc3_link_state_show(struct seq_file *s,=
- void *unused)
->  	unsigned long		flags;
->  	enum dwc3_link_state	state;
->  	u32			reg;
-> +	u8			speed;
-> =20
->  	spin_lock_irqsave(&dwc->lock, flags);
->  	reg =3D dwc3_readl(dwc->regs, DWC3_DSTS);
->  	state =3D DWC3_DSTS_USBLNKST(reg);
-> -	spin_unlock_irqrestore(&dwc->lock, flags);
-> +	speed =3D reg & DWC3_DSTS_CONNECTSPD;
-> =20
-> -	seq_printf(s, "%s\n", dwc3_gadget_link_string(state));
-> +	seq_printf(s, "%s\n", (speed >=3D DWC3_DSTS_SUPERSPEED) ?
-> +		   dwc3_gadget_link_string(state) :
-> +		   dwc3_gadget_hs_link_string(state));
-> +	spin_unlock_irqrestore(&dwc->lock, flags);
-> =20
->  	return 0;
->  }
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index ad6d2f93aa0b..389e3239eadc 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1002,27 +1002,28 @@ static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+ }
+ 
+-static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+ {
+-	u8 count;
+-
+-	if (host->ops->set_timeout) {
+-		host->ops->set_timeout(host, cmd);
+-	} else {
+-		bool too_big = false;
+-
+-		count = sdhci_calc_timeout(host, cmd, &too_big);
++	bool too_big = false;
++	u8 count = sdhci_calc_timeout(host, cmd, &too_big);
++
++	if (too_big && host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
++		sdhci_calc_sw_timeout(host, cmd);
++		sdhci_set_data_timeout_irq(host, false);
++	} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
++		sdhci_set_data_timeout_irq(host, true);
++	}
+ 
+-		if (too_big &&
+-		    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
+-			sdhci_calc_sw_timeout(host, cmd);
+-			sdhci_set_data_timeout_irq(host, false);
+-		} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
+-			sdhci_set_data_timeout_irq(host, true);
+-		}
++	sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
++}
++EXPORT_SYMBOL_GPL(__sdhci_set_timeout);
+ 
+-		sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
+-	}
++static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++{
++	if (host->ops->set_timeout)
++		host->ops->set_timeout(host, cmd);
++	else
++		__sdhci_set_timeout(host, cmd);
+ }
+ 
+ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
 
-The locking change is really wrong, right? There's no reason to do
-seq_printfs under spinlock..
 
-> @@ -477,6 +483,15 @@ static ssize_t dwc3_link_state_write(struct
-file *file,
->  		return -EINVAL;
-> =20
->  	spin_lock_irqsave(&dwc->lock, flags);
-> +	reg =3D dwc3_readl(dwc->regs, DWC3_DSTS);
-> +	speed =3D reg & DWC3_DSTS_CONNECTSPD;
+
 > +
-> +	if (speed < DWC3_DSTS_SUPERSPEED &&
-> +	    state !=3D DWC3_LINK_STATE_RECOV) {
-> +		spin_unlock_irqrestore(&dwc->lock, flags);
-> +		return -EINVAL;
-> +	}
-> +
->  	dwc3_gadget_set_link_state(dwc, state);
->  	spin_unlock_irqrestore(&dwc->lock, flags);
-> =20
+>  	if ((host->quirks2 & SDHCI_QUIRK2_STOP_WITH_TC) &&
+>  	    cmd->opcode == MMC_STOP_TRANSMISSION)
+>  		cmd->flags |= MMC_RSP_BUSY;
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index b28706a1bc6f..beda9afba3a6 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -482,6 +482,8 @@ struct sdhci_host {
+>   * block count.
+>   */
+>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
+> +/* Controller needs to disable DTO for erase command */
+> +#define SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE		(1<<19)
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> 
 
-This might be ok but is not mentioned in the changelog.
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---BwCQnh7xodEAoBMC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3zXKcACgkQMOfwapXb+vLikgCdHTHZdhRWzTvFTOhg7AE29rDJ
-U8MAn1UIEgISShvU3BWSVEyBiz6Mq470
-=qKFy
------END PGP SIGNATURE-----
-
---BwCQnh7xodEAoBMC--
