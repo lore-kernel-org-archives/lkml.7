@@ -2,78 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC534C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C485C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819442173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065A2253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gYQepg5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbfLMAnb (ORCPT
+        id S1731461AbfLMAs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:43:31 -0500
-Received: from mga06.intel.com ([134.134.136.31]:19840 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731593AbfLMAn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:43:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 16:43:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
-   d="scan'208";a="216472424"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2019 16:43:26 -0800
-Date:   Fri, 13 Dec 2019 08:44:45 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 0/7] Introduce support for guest CET feature
-Message-ID: <20191213004445.GA2822@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191212160345.GA13420@char.us.oracle.com>
+        Thu, 12 Dec 2019 19:48:27 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58452 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731026AbfLMAs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 19:48:26 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9A265440;
+        Fri, 13 Dec 2019 01:48:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576198104;
+        bh=fzDDFuwCssKk2Lvp2zwH1/AsL1CDBTeNOlHZdV77jgY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gYQepg5lJbxpmxMaRo6gyvtBboTn6WuGhBG29W42OR/vsxfAhXdyS0Bnv8ywu1ER5
+         2qop6RsqkdzWK/Bpnn1FZ6EtXv3o+mNjBpZ2Lvnpsncfl2SOHEfmhlHyWz+nWJA2ma
+         l9prcEVWJCOund9jveN6q7IEGJgiBP3yHricQz0A=
+Date:   Fri, 13 Dec 2019 02:48:12 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
+Message-ID: <20191213004812.GA27328@pendragon.ideasonboard.com>
+References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
+ <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
+ <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
+ <20190913090359.GC29992@pendragon.ideasonboard.com>
+ <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191212160345.GA13420@char.us.oracle.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:03:45AM -0500, Konrad Rzeszutek Wilk wrote:
-> On Fri, Nov 01, 2019 at 04:52:15PM +0800, Yang Weijiang wrote:
-> > Control-flow Enforcement Technology (CET) provides protection against
-> > Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
-> > sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
-> > 
-> > KVM change is required to support guest CET feature.
-> > This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
-> > and vmentry/vmexit configuration etc.so that guest kernel can setup CET
-> > runtime infrastructure based on them. Some CET MSRs and related feature
-> > flags used reference the definitions in kernel patchset.
-> > 
-> > CET kernel patches is here:
-> > https://lkml.org/lkml/2019/8/13/1110
-> > https://lkml.org/lkml/2019/8/13/1109
-> 
-> Is there a git tree with all of them against v5.5-rc1 (so all three series)?
-> I tried your github tree: https://github.com/yyu168/linux_cet.git #cet
-> but sadly that does not apply against 5.5-rc1 :-(
-> 
-> Thanks!
-Hi, 
-The CET patch includes two parts: one from kernel side the other from KVM,
-the kernel patch in github is maintained by my peer, he'll rebase
-it to the latest kernel tree shortly after resolve some issues.
-Thank you for having interest!
+Hi Kieran,
 
+On Mon, Dec 09, 2019 at 12:41:07PM +0000, Kieran Bingham wrote:
+> On 13/09/2019 10:03, Laurent Pinchart wrote:
+> > On Fri, Sep 13, 2019 at 10:21:29AM +0200, Simon Horman wrote:
+> >> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
+> >>> On 11.09.2019 22:25, Kieran Bingham wrote:
+> >>>
+> >>>> Add direct support for the r8a77980 (V3H).
+> >>>>
+> >>>> The V3H shares a common, compatible configuration with the r8a77970
+> >>>> (V3M) so that device info structure is reused.
+> >>>
+> >>>    Do we really need to add yet another compatible in this case?
+> >>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
+> >>> a patch like this one didn't get posted by me.
+> >>
+> >> The reason for having per-SoC compat strings is that the IP blocks
+> >> are not versioned and while we can observe that there are similarities
+> >> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
+> >> differences may not emerge at some point. By having per-SoC compat strings
+> >> we have the flexibility for the driver to address any such differences as
+> >> the need arises.
+> >>
+> >> My recollection is that this scheme has been adopted for non-versioned
+> >> Renesas IP blocks since June 2015 and uses of this scheme well before that.
+> > 
+> > Sure, but we could use
+> > 
+> > 	compatible = "renesas,du-r8a77980", "renesas,du-r8a77970";
+> > 
+> > in DT without updating the driver. If the r8a77980 turns out to be
+> > different, we'll then update the driver without a need to modify DT. I'm
+> > fine either way, so
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> Thanks,
+> 
+> This patch has an RB tag from you, and Simon, but alas I don't believe
+> it has been picked up in your drm/du/next branch.
+> 
+> Is this patch acceptable? Or do I need to repost?
+
+Could you just confirm I should apply this patch, and not go for the
+alternative proposal above ?
+
+> >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >>
+> >> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+-- 
+Regards,
+
+Laurent Pinchart
