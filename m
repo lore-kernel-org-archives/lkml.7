@@ -2,170 +2,120 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFDFC3B180
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E886CC3B184
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE4924721
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AA7246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YQiQG7cM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfLMPV6 (ORCPT
+        id S1727979AbfLMPW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:58 -0500
-Received: from out28-217.mail.aliyun.com ([115.124.28.217]:42213 "EHLO
-        out28-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfLMPV4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:21:56 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2455975|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.271369-0.00538365-0.723248;DS=CONTINUE|ham_system_inform|0.0408236-0.00028572-0.958891;FP=12605485605373645991|1|1|1|0|-1|-1|-1;HT=e02c03308;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
-          by smtp.aliyun-inc.com(10.147.40.233);
-          Fri, 13 Dec 2019 23:21:25 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 2/5] clk: Ingenic: Adjust code to make it compatible with new cgu code.
-Date:   Fri, 13 Dec 2019 23:21:09 +0800
-Message-Id: <1576250472-124315-4-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 13 Dec 2019 10:22:28 -0500
+Received: from mail-eopbgr20080.outbound.protection.outlook.com ([40.107.2.80]:50659
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727840AbfLMPW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 10:22:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TqVWoqLuwMxesZwMRiylbrRVVzzjRykS0XEBm4ZHgfmzAZ0Eu7cpjexHcEB/9hV3BdLNl22LbaDyP8YP79naPRnKsBQ6gVlgJnDocbz7w38E4495HO55ci+lZF/ifTZSjg8IOC+YkZKTNG8UyfpDRrEwzcI1h4CzQl0h4W04z4ikq/uRf9qfzX6YOOF1uJi4xcsqTcalYSLm82eiEOLB/HerC2Lswao3QeWpP7RiB763gUd6Ane7Lqy8KHM1FX2+WkndRF7JTUPxVSdDpESZLorwfrZmpeXTRvTFSC1ujazDVtHSbzw225qf4xSDFc225+C/M4z7h16aQHqJouHNUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jEjKG8q5pBMISXiQ5qDsnGu0nigh1a8c3aVgIuEIk1Q=;
+ b=eRQbuhLQ2B/DsPc1T7s8RYOurnlemhuVYjHqFskUsWM+UMqMadra3tDvZX/McCeHnulLRi0lPzoGYVVhqtta+lkITnliT0NjgBdqgrFvPzpP87KffNxmPngT1a4F9127/YL2fFAiUdFtPxD5szv+C8MD2RHfrndqRRYLBqhdsuZZ/PtG888MXMkAykc3ea4QLi5v8CyODkbFEemwOnBd2dTiJpmMPkn/Oy9ex8++YD4ImYny4gl0do27bayqpWiqfIWLFS304w2FJr4nroTsd5aX9k1wMYmpT2qxu13o7eTsqRpK9dkZr2PmNPVlkzWk8ygbDmB6qc06vJBebSuHkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jEjKG8q5pBMISXiQ5qDsnGu0nigh1a8c3aVgIuEIk1Q=;
+ b=YQiQG7cMSs18xnlT3FOnauVWbcYdy3A6v32zr3dlS3WAcJOeRMBae3WOQrq0D0Rm8uCnF+7fSltM8dtKBdilfRxbJ5RyHP14r7zm61dyB3E+oVhuE/yjvJbPVj8O/O+Ha3xzad9sbT39MjJAQh/iXEOHBX1mg2C8/kLUg52v3e8=
+Received: from DB6PR05MB3223.eurprd05.prod.outlook.com (10.175.232.149) by
+ DB6PR05MB3157.eurprd05.prod.outlook.com (10.170.220.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Fri, 13 Dec 2019 15:22:22 +0000
+Received: from DB6PR05MB3223.eurprd05.prod.outlook.com
+ ([fe80::4127:4f1a:a073:a987]) by DB6PR05MB3223.eurprd05.prod.outlook.com
+ ([fe80::4127:4f1a:a073:a987%4]) with mapi id 15.20.2516.019; Fri, 13 Dec 2019
+ 15:22:22 +0000
+From:   Liming Sun <lsun@mellanox.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        David Woods <dwoods@mellanox.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
+Thread-Topic: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
+Thread-Index: AQHVrsYzUl5YWvnJj0GywOQUtaqWFqe34JMAgABT9MA=
+Date:   Fri, 13 Dec 2019 15:22:22 +0000
+Message-ID: <DB6PR05MB3223B0F68E3E4EE3A20AD193A1540@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+ <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
+In-Reply-To: <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lsun@mellanox.com; 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: af39b36d-5971-4c6c-4664-08d77fe04043
+x-ms-traffictypediagnostic: DB6PR05MB3157:|DB6PR05MB3157:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR05MB315752FED45E501AED4E4DEEA1540@DB6PR05MB3157.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(199004)(189003)(13464003)(86362001)(8936002)(66946007)(81166006)(316002)(81156014)(4744005)(8676002)(76116006)(26005)(4326008)(2906002)(478600001)(54906003)(53546011)(6506007)(52536014)(55016002)(5660300002)(71200400001)(7696005)(6916009)(33656002)(66556008)(64756008)(66476007)(9686003)(186003)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR05MB3157;H:DB6PR05MB3223.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xO0807CNNBedzxFTYLyHi7DZI9DM+0XWLJJK5xYN3AXD4Rphp0NZN6v3iRW/IoSxnmYfOj3CfTp3DUkbzPutY2aC+M8ehVm63VKFiYr2TNS3rR8BMOg1uu+HH5PypYelVfCgi/xrdbCKVvbVncde9RQwZDhSymB/F6sC9gRYE8bv7C2kzxG+LugXGJqsR93zaUELK9t4WzEY2QyG7AByhcq+TJUCwwrnSS03XOKxUgQJrz6MzYLf3Debb7Eccp6APkv6KPiOiA/mDuzkdAWbldCzzwrSoInQVb7Qd4s4xNGF4DuUT21xKFO6mCoYcnbgrjPyftvrTy+8xP923Rr6jWWC5FSJWW636HmzFKxkyuBU5XMxfZkP5W1BCMon6OEQ4/kojv3oCQolZNJPbG8bzEBVCOHaHQqgZSZgZtszGRoGWQd3V7pe7E8SsLUyKbBv5iBlAVlC/RyKmBipKek4AyyxUIcX9+U9kjijbv34183qw2tUOcAm4RWOjqbmqsUj
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af39b36d-5971-4c6c-4664-08d77fe04043
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 15:22:22.0688
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IIe8RFIcQS5hx0F4cyKnLO1G5q0F3Te0rhSpbHsU64qOW1yPLpXgs8dSsRtve9a8SlVOXmQDzNKwKyNpcMfPzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR05MB3157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust the code in jz47xx-cgu.c and x1000-cgu.c, make it to be
-compatible with the new cgu code.
-
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
-
-Notes:
-    v1->v2:
-    1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
-      array (reg[2]).
-    2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
-    3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-      to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-      the old mailbox is in an unstable state.
-
- drivers/clk/ingenic/jz4725b-cgu.c | 4 +++-
- drivers/clk/ingenic/jz4740-cgu.c  | 4 +++-
- drivers/clk/ingenic/jz4770-cgu.c  | 8 ++++++--
- drivers/clk/ingenic/jz4780-cgu.c  | 4 +++-
- drivers/clk/ingenic/x1000-cgu.c   | 8 ++++++--
- 5 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
-index a3b4635..0b05167 100644
---- a/drivers/clk/ingenic/jz4725b-cgu.c
-+++ b/drivers/clk/ingenic/jz4725b-cgu.c
-@@ -53,7 +53,9 @@ static const struct ingenic_cgu_clk_info jz4725b_cgu_clocks[] = {
- 		"pll", CGU_CLK_PLL,
- 		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
- 		.pll = {
--			.reg = CGU_REG_CPPCR,
-+			.pll_reg = CGU_REG_CPPCR,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 1,
- 			.m_shift = 23,
- 			.m_bits = 9,
- 			.m_offset = 2,
-diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 4f0e92c..78f31df 100644
---- a/drivers/clk/ingenic/jz4740-cgu.c
-+++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -68,7 +68,9 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 		"pll", CGU_CLK_PLL,
- 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
- 		.pll = {
--			.reg = CGU_REG_CPPCR,
-+			.pll_reg = CGU_REG_CPPCR,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 1,
- 			.m_shift = 23,
- 			.m_bits = 9,
- 			.m_offset = 2,
-diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
-index 956dd65..32e476d 100644
---- a/drivers/clk/ingenic/jz4770-cgu.c
-+++ b/drivers/clk/ingenic/jz4770-cgu.c
-@@ -101,7 +101,9 @@ static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
- 		"pll0", CGU_CLK_PLL,
- 		.parents = { JZ4770_CLK_EXT },
- 		.pll = {
--			.reg = CGU_REG_CPPCR0,
-+			.pll_reg = CGU_REG_CPPCR0,
-+			.bypass_reg = CGU_REG_CPPCR0,
-+			.rate_multiplier = 1,
- 			.m_shift = 24,
- 			.m_bits = 7,
- 			.m_offset = 1,
-@@ -123,7 +125,9 @@ static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
- 		"pll1", CGU_CLK_PLL,
- 		.parents = { JZ4770_CLK_EXT },
- 		.pll = {
--			.reg = CGU_REG_CPPCR1,
-+			.pll_reg = CGU_REG_CPPCR1,
-+			.bypass_reg = CGU_REG_CPPCR1,
-+			.rate_multiplier = 1,
- 			.m_shift = 24,
- 			.m_bits = 7,
- 			.m_offset = 1,
-diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index ea905ff..d07fff1 100644
---- a/drivers/clk/ingenic/jz4780-cgu.c
-+++ b/drivers/clk/ingenic/jz4780-cgu.c
-@@ -220,7 +220,9 @@ static const struct ingenic_cgu_clk_info jz4780_cgu_clocks[] = {
- 	/* PLLs */
- 
- #define DEF_PLL(name) { \
--	.reg = CGU_REG_ ## name, \
-+	.pll_reg = CGU_REG_ ## name, \
-+	.bypass_reg = CGU_REG_ ## name, \
-+	.rate_multiplier = 1, \
- 	.m_shift = 19, \
- 	.m_bits = 13, \
- 	.m_offset = 1, \
-diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
-index b22d87b..d6fe28f 100644
---- a/drivers/clk/ingenic/x1000-cgu.c
-+++ b/drivers/clk/ingenic/x1000-cgu.c
-@@ -57,7 +57,9 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
- 		"apll", CGU_CLK_PLL,
- 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
- 		.pll = {
--			.reg = CGU_REG_APLL,
-+			.pll_reg = CGU_REG_APLL,
-+			.bypass_reg = CGU_REG_APLL,
-+			.rate_multiplier = 1,
- 			.m_shift = 24,
- 			.m_bits = 7,
- 			.m_offset = 1,
-@@ -78,7 +80,9 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
- 		"mpll", CGU_CLK_PLL,
- 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
- 		.pll = {
--			.reg = CGU_REG_MPLL,
-+			.pll_reg = CGU_REG_MPLL,
-+			.bypass_reg = CGU_REG_MPLL,
-+			.rate_multiplier = 1,
- 			.m_shift = 24,
- 			.m_bits = 7,
- 			.m_offset = 1,
--- 
-2.7.4
-
+VGhhbmtzISBVcGRhdGVkIGluIHYyLg0KDQotIExpbWluZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWls
+LmNvbT4NCj4gU2VudDogRnJpZGF5LCBEZWNlbWJlciAxMywgMjAxOSA1OjIxIEFNDQo+IFRvOiBM
+aW1pbmcgU3VuIDxsc3VuQG1lbGxhbm94LmNvbT4NCj4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5k
+eUBpbmZyYWRlYWQub3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFk
+aW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgRGF2aWQNCj4gV29vZHMgPGR3b29k
+c0BtZWxsYW5veC5jb20+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci14ODZAdmdl
+ci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMS8xXSBwbGF0Zm9y
+bS9tZWxsYW5veDogZml4IHRoZSBtbHgtYm9vdGN0bCBzeXNmcw0KPiANCj4gT24gTW9uLCBEZWMg
+OSwgMjAxOSBhdCA5OjI0IFBNIExpbWluZyBTdW4gPGxzdW5AbWVsbGFub3guY29tPiB3cm90ZToN
+Cj4gPg0KPiA+IFRoaXMgaXMgYSBmb2xsb3ctdXAgY29tbWl0IGZvciB0aGUgc3lzZnMgYXR0cmli
+dXRlcyB0byBjaGFuZ2UNCj4gPiBmcm9tIERSSVZFUl9BVFRSIHRvIERFVklDRV9BVFRSIGFjY29y
+ZGluZyB0byBzb21lIGluaXRpYWwgY29tbWVudHMuDQo+ID4gSW4gc3VjaCBjYXNlLCBpdCdzIGJl
+dHRlciB0byBwb2ludCB0aGUgc3lzZnMgcGF0aCB0byB0aGUgZGV2aWNlDQo+ID4gaXRzZWxmIGlu
+c3RlYWQgb2YgdGhlIGRyaXZlci4gVGhpcyBjb21taXQgYWRkcyB0aGUgbWlzc2luZw0KPiA+IHN5
+c2ZzX2NyZWF0ZV9ncm91cCgpIHNvIHRoZSBhdHRyaWJ1dGVzIGNhbiBiZSBjcmVhdGVkIHVuZGVy
+IHRoZQ0KPiA+IGRldmljZS4gVGhlIEFCSSBkb2N1bWVudCBpcyBhbHNvIHVwZGF0ZWQuDQo+ID4N
+Cj4gDQo+IEZpeGVzIHRhZywgcGxlYXNlLg0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMs
+DQo+IEFuZHkgU2hldmNoZW5rbw0K
