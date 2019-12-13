@@ -2,85 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B1CC3403B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0552EC3401C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08D124740
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4356D246B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfLMPVj (ORCPT
+        id S1727884AbfLMPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:39 -0500
-Received: from out28-172.mail.aliyun.com ([115.124.28.172]:40797 "EHLO
-        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfLMPVh (ORCPT
+        Fri, 13 Dec 2019 10:05:43 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:49399 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbfLMPFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:21:37 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2854059|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.577685-0.041398-0.380917;DS=CONTINUE|ham_regular_dialog|0.0169658-0.000813417-0.982221;FP=12603621234358998248|1|1|1|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
-          by smtp.aliyun-inc.com(10.147.40.233);
-          Fri, 13 Dec 2019 23:21:22 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 0/5] clk: Ingenic: Add support for the X1830 v2
-Date:   Fri, 13 Dec 2019 23:21:07 +0800
-Message-Id: <1576250472-124315-2-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 13 Dec 2019 10:05:42 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: ykhAAAECZnCZI8E2zOBJM46BZ6YwE0O/ABx5F/zDT9K2pj/dxCUQ+de86uNjHDFl7l9DwpoaHw
+ VDzc8gcZ0LF5Iwf2EGeBRG0ZLnT0VRRo5JgSfaizZu2byI/yyjSHmTgRmNH6rkeicAyp+5vMiY
+ 1AXO5SCjRxyCuLWggAqcMePO1ocyhuauSs/EJMw1Ky9A6pd2OffkSwuLCh3fRRZvKoBNo5aOOX
+ jZF8qy9H2U4Vg7KbmfArlYRY/beDIMmSF+nlP0sPPrS6Ume91tMGfExkTHycDEfheckai5gh5L
+ OI4=
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="59718112"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 08:05:25 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 13 Dec 2019 08:05:25 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 08:05:21 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <lee.jones@linaro.org>
+CC:     <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 4/6] mfd: atmel-hlcdc: return in case of error
+Date:   Fri, 13 Dec 2019 17:04:54 +0200
+Message-ID: <1576249496-4849-5-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1->v2:
-1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
-  array (reg[2]).
-2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
-3.Fix the coding style and add more detailed commit message.
-4.Remove [4/5] and [5/5] in v1, because some problems were found in
-  subsequent tests.
-5.Remove unnecessary spinlock as Paul Burton and Paul Cercueil's suggestion.
-6.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-  to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-  the old mailbox is in an unstable state.
+For HLCDC timing engine configurations bit ATMEL_HLCDC_SIP of
+ATMEL_HLCDC_SR needs to be polled before applying new config. In case of
+timeout there is no indicator about this, so, return in case of timeout
+and also print a message about this.
 
-周琰杰 (Zhou Yanjie) (5):
-  clk: Ingenic: Adjust cgu code to make it compatible with X1830.
-  clk: Ingenic: Adjust code to make it compatible with new cgu code.
-  dt-bindings: clock: Add X1830 bindings.
-  clk: Ingenic: Add CGU driver for X1830.
-  clk: Ingenic: Remove unnecessary spinlock when reading registers.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/mfd/atmel-hlcdc.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
- .../devicetree/bindings/clock/ingenic,cgu.txt      |   1 +
- drivers/clk/ingenic/Kconfig                        |  10 +
- drivers/clk/ingenic/Makefile                       |   1 +
- drivers/clk/ingenic/cgu.c                          |  36 +--
- drivers/clk/ingenic/cgu.h                          |   8 +-
- drivers/clk/ingenic/jz4725b-cgu.c                  |   4 +-
- drivers/clk/ingenic/jz4740-cgu.c                   |   4 +-
- drivers/clk/ingenic/jz4770-cgu.c                   |   8 +-
- drivers/clk/ingenic/jz4780-cgu.c                   |   4 +-
- drivers/clk/ingenic/x1000-cgu.c                    |   8 +-
- drivers/clk/ingenic/x1830-cgu.c                    | 340 +++++++++++++++++++++
- include/dt-bindings/clock/x1830-cgu.h              |  46 +++
- 12 files changed, 444 insertions(+), 26 deletions(-)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
-
+diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
+index 92bfcaa62ace..a1e46c87b956 100644
+--- a/drivers/mfd/atmel-hlcdc.c
++++ b/drivers/mfd/atmel-hlcdc.c
+@@ -40,10 +40,17 @@ static int regmap_atmel_hlcdc_reg_write(void *context, unsigned int reg,
+ 
+ 	if (reg <= ATMEL_HLCDC_DIS) {
+ 		u32 status;
+-
+-		readl_poll_timeout_atomic(hregmap->regs + ATMEL_HLCDC_SR,
+-					  status, !(status & ATMEL_HLCDC_SIP),
+-					  1, 100);
++		int ret;
++
++		ret = readl_poll_timeout_atomic(hregmap->regs + ATMEL_HLCDC_SR,
++						status,
++						!(status & ATMEL_HLCDC_SIP),
++						1, 100);
++		if (ret) {
++			dev_err(hregmap->dev,
++				"Timeout waiting for ATMEL_HLCDC_SIP\n");
++			return ret;
++		}
+ 	}
+ 
+ 	writel(val, hregmap->regs + reg);
 -- 
 2.7.4
 
