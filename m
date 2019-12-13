@@ -2,73 +2,173 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F13C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF78DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864F122527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9693722527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:14:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ijum+oeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfLMIOc convert rfc822-to-8bit (ORCPT
+        id S1726646AbfLMIOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:14:32 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMIOc (ORCPT
+        Fri, 13 Dec 2019 03:14:52 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:59954 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMIOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:14:32 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1ifg5k-0006op-LD; Fri, 13 Dec 2019 09:14:28 +0100
-Date:   Fri, 13 Dec 2019 09:14:28 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH RT] sched: migrate_enable: Busy loop until the migration
- request is completed
-Message-ID: <20191213081428.mw6bqjg6m7djwhby@linutronix.de>
-References: <20191212112717.2tzoqbe3xeknoyvs@linutronix.de>
- <30ab713901ef0e1f23c1ca387373788a4a73639f.camel@redhat.com>
+        Fri, 13 Dec 2019 03:14:52 -0500
+X-UUID: 404e3f5e490949e491e0a7a7d2e9ec50-20191213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qyqLc9Qc/AHMZVxh4MW/hNmQGqRMapZ3wj3ihngoU6Q=;
+        b=ijum+oeUD+RP7mOJsM62dO3oQJNjfZXpq45Wu2+XgwDlL35FeIqagUr8QsoD7tBari86mSHxm2QjsouV86tihjMN2FsAHRm+gKNhhm0YVtzU+93F1R916thcCRCST5zZFLVAtow3E9UbvHhg+F/CVkeDPECB/5t03ktIZ57Jjtk=;
+X-UUID: 404e3f5e490949e491e0a7a7d2e9ec50-20191213
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1404517709; Fri, 13 Dec 2019 00:14:48 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 13 Dec 2019 15:28:34 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 13 Dec 2019 15:28:25 +0800
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v2, 2/2] drm/mediatek: Add ctm property support
+Date:   Fri, 13 Dec 2019 15:28:52 +0800
+Message-ID: <1576222132-31586-3-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1576222132-31586-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1576222132-31586-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <30ab713901ef0e1f23c1ca387373788a4a73639f.camel@redhat.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-13 00:44:22 [-0600], Scott Wood wrote:
-> > @@ -8239,7 +8239,10 @@ void migrate_enable(void)
-> >  		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
-> >  				    &arg, &work);
-> >  		__schedule(true);
-> > -		WARN_ON_ONCE(!arg.done && !work.disabled);
-> > +		if (!work.disabled) {
-> > +			while (!arg.done)
-> > +				cpu_relax();
-> > +		}
-> 
-> We should enable preemption while spinning -- besides the general badness
-> of spinning with it disabled, there could be deadlock scenarios if
-> multiple CPUs are spinning in such a loop.  Long term maybe have a way to
-> dequeue the no-longer-needed work instead of waiting.
+QWRkIGN0bSBwcm9wZXJ0eSBzdXBwb3J0DQoNClNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUg
+PHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fY3J0Yy5jICAgICB8IDEwICsrKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDYyICsrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+DQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8ICA5ICsrKysr
+DQogMyBmaWxlcyBjaGFuZ2VkLCA3OCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQppbmRleCA5YThlMWQ0Li5kYjMw
+MzFlIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
+DQorKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCkBAIC02MTQs
+OCArNjE0LDEwIEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZmx1c2goc3RydWN0
+IGRybV9jcnRjICpjcnRjLA0KIAlpZiAobXRrX2NydGMtPmV2ZW50KQ0KIAkJbXRrX2NydGMtPnBl
+bmRpbmdfbmVlZHNfdmJsYW5rID0gdHJ1ZTsNCiAJaWYgKGNydGMtPnN0YXRlLT5jb2xvcl9tZ210
+X2NoYW5nZWQpDQotCQlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKysp
+DQorCQlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspIHsNCiAJCQlt
+dGtfZGRwX2dhbW1hX3NldChtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0sIGNydGMtPnN0YXRlKTsNCisJ
+CQltdGtfZGRwX2N0bV9zZXQobXRrX2NydGMtPmRkcF9jb21wW2ldLCBjcnRjLT5zdGF0ZSk7DQor
+CQl9DQogCW10a19kcm1fY3J0Y19od19jb25maWcobXRrX2NydGMpOw0KIH0NCiANCkBAIC03MzQs
+NiArNzM2LDcgQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRy
+bV9kZXYsDQogCWludCBwaXBlID0gcHJpdi0+bnVtX3BpcGVzOw0KIAlpbnQgcmV0Ow0KIAlpbnQg
+aTsNCisJYm9vbCBoYXNfY3RtID0gZmFsc2U7DQogCXVpbnQgZ2FtbWFfbHV0X3NpemUgPSAwOw0K
+IA0KIAlpZiAoIXBhdGgpDQpAQCAtNzg3LDYgKzc5MCw5IEBAIGludCBtdGtfZHJtX2NydGNfY3Jl
+YXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0KIA0KIAkJbXRrX2NydGMtPmRkcF9jb21w
+W2ldID0gY29tcDsNCiANCisJCWlmIChjb21wLT5mdW5jcy0+Y3RtX3NldCkNCisJCQloYXNfY3Rt
+ID0gdHJ1ZTsNCisNCiAJCWlmIChjb21wLT5mdW5jcy0+Z2FtbWFfc2V0KQ0KIAkJCWdhbW1hX2x1
+dF9zaXplID0gTVRLX0xVVF9TSVpFOw0KIAl9DQpAQCAtODEyLDcgKzgxOCw3IEBAIGludCBtdGtf
+ZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0KIA0KIAlpZiAoZ2Ft
+bWFfbHV0X3NpemUpDQogCQlkcm1fbW9kZV9jcnRjX3NldF9nYW1tYV9zaXplKCZtdGtfY3J0Yy0+
+YmFzZSwgZ2FtbWFfbHV0X3NpemUpOw0KLQlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRr
+X2NydGMtPmJhc2UsIDAsIGZhbHNlLCBnYW1tYV9sdXRfc2l6ZSk7DQorCWRybV9jcnRjX2VuYWJs
+ZV9jb2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwgaGFzX2N0bSwgZ2FtbWFfbHV0X3NpemUp
+Ow0KIAlwcml2LT5udW1fcGlwZXMrKzsNCiAJbXV0ZXhfaW5pdCgmbXRrX2NydGMtPmh3X2xvY2sp
+Ow0KIA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
+b21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQppbmRl
+eCBjYjMyOTZmLi4xODI5OTBhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwX2NvbXAuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwX2NvbXAuYw0KQEAgLTM3LDcgKzM3LDE1IEBADQogI2RlZmluZSBDQ09SUl9FTgkJCQlC
+SVQoMCkNCiAjZGVmaW5lIERJU1BfQ0NPUlJfQ0ZHCQkJCTB4MDAyMA0KICNkZWZpbmUgQ0NPUlJf
+UkVMQVlfTU9ERQkJCUJJVCgwKQ0KKyNkZWZpbmUgQ0NPUlJfRU5HSU5FX0VOCQkJCUJJVCgxKQ0K
+KyNkZWZpbmUgQ0NPUlJfR0FNTUFfT0ZGCQkJCUJJVCgyKQ0KKyNkZWZpbmUgQ0NPUlJfV0dBTVVU
+X1NSQ19DTElQCQkJQklUKDMpDQogI2RlZmluZSBESVNQX0NDT1JSX1NJWkUJCQkJMHgwMDMwDQor
+I2RlZmluZSBESVNQX0NDT1JSX0NPRUZfMAkJCTB4MDA4MA0KKyNkZWZpbmUgRElTUF9DQ09SUl9D
+T0VGXzEJCQkweDAwODQNCisjZGVmaW5lIERJU1BfQ0NPUlJfQ09FRl8yCQkJMHgwMDg4DQorI2Rl
+ZmluZSBESVNQX0NDT1JSX0NPRUZfMwkJCTB4MDA4Qw0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VG
+XzQJCQkweDAwOTANCiANCiAjZGVmaW5lIERJU1BfRElUSEVSX0VOCQkJCTB4MDAwMA0KICNkZWZp
+bmUgRElUSEVSX0VOCQkJCUJJVCgwKQ0KQEAgLTE4OCw3ICsxOTYsNyBAQCBzdGF0aWMgdm9pZCBt
+dGtfY2NvcnJfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3
+LA0KIAkJCSAgICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkN
+CiB7DQogCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGggPDwgMTYgfCB3LCBjb21wLCBESVNQX0ND
+T1JSX1NJWkUpOw0KLQltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCBDQ09SUl9SRUxBWV9NT0RFLCBj
+b21wLCBESVNQX0NDT1JSX0NGRyk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIENDT1JSX0VO
+R0lORV9FTiwgY29tcCwgRElTUF9DQ09SUl9DRkcpOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBtdGtf
+Y2NvcnJfc3RhcnQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCkBAIC0yMDEsNiArMjA5LDU3
+IEBAIHN0YXRpYyB2b2lkIG10a19jY29ycl9zdG9wKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAp
+DQogCXdyaXRlbF9yZWxheGVkKDB4MCwgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfRU4pOw0KIH0N
+CiANCisvKiBDb252ZXJ0cyBhIERSTSBTMzEuMzIgdmFsdWUgdG8gdGhlIEhXIFMxLjEwIGZvcm1h
+dC4gKi8NCitzdGF0aWMgdTE2IG10a19jdG1fczMxXzMyX3RvX3MxXzEwKHU2NCBpbikNCit7DQor
+CXUxNiByOw0KKw0KKwkvKiBTaWduIGJpdC4gKi8NCisJciA9IGluICYgQklUX1VMTCg2MykgPyBC
+SVQoMTEpIDogMDsNCisNCisJaWYgKChpbiAmIEdFTk1BU0tfVUxMKDYyLCAzMykpID4gMCkgew0K
+KwkJLyogaWRlbnRpdHkgdmFsdWUgMHgxMDAwMDAwMDAgLT4gMHg0MDAsICovDQorCQkvKiBpZiBi
+aWdnZXIgdGhpcywgc2V0IGl0IHRvIG1heCAweDdmZi4gKi8NCisJCXIgfD0gR0VOTUFTSygxMCwg
+MCk7DQorCX0gZWxzZSB7DQorCQkvKiB0YWtlIHRoZSAxMSBtb3N0IGltcG9ydGFudCBiaXRzLiAq
+Lw0KKwkJciB8PSAoaW4gPj4gMjIpICYgR0VOTUFTSygxMCwgMCk7DQorCX0NCisNCisJcmV0dXJu
+IHI7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG10a19jY29ycl9jdG1fc2V0KHN0cnVjdCBtdGtfZGRw
+X2NvbXAgKmNvbXAsDQorCQkJICAgICAgc3RydWN0IGRybV9jcnRjX3N0YXRlICpzdGF0ZSkNCit7
+DQorCXN0cnVjdCBkcm1fcHJvcGVydHlfYmxvYiAqYmxvYiA9IHN0YXRlLT5jdG07DQorCXN0cnVj
+dCBkcm1fY29sb3JfY3RtICpjdG07DQorCWNvbnN0IHU2NCAqaW5wdXQ7DQorCXVpbnQxNl90IGNv
+ZWZmc1s5XSA9IHsgMCB9Ow0KKwlpbnQgaTsNCisJc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCA9
+IE5VTEw7DQorDQorCWlmICghYmxvYikNCisJCXJldHVybjsNCisNCisJY3RtID0gKHN0cnVjdCBk
+cm1fY29sb3JfY3RtICopYmxvYi0+ZGF0YTsNCisJaW5wdXQgPSBjdG0tPm1hdHJpeDsNCisNCisJ
+Zm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoY29lZmZzKTsgaSsrKQ0KKwkJY29lZmZzW2ldID0g
+bXRrX2N0bV9zMzFfMzJfdG9fczFfMTAoaW5wdXRbaV0pOw0KKw0KKwltdGtfZGRwX3dyaXRlKGNt
+ZHFfcGt0LCBjb2VmZnNbMF0gPDwgMTYgfCBjb2VmZnNbMV0sDQorCQkgICAgICBjb21wLCBESVNQ
+X0NDT1JSX0NPRUZfMCk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1syXSA8PCAx
+NiB8IGNvZWZmc1szXSwNCisJCSAgICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl8xKTsNCisJbXRr
+X2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzRdIDw8IDE2IHwgY29lZmZzWzVdLA0KKwkJICAg
+ICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzIpOw0KKwltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCBj
+b2VmZnNbNl0gPDwgMTYgfCBjb2VmZnNbN10sDQorCQkgICAgICBjb21wLCBESVNQX0NDT1JSX0NP
+RUZfMyk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1s4XSA8PCAxNiwNCisJCSAg
+ICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl80KTsNCit9DQorDQogc3RhdGljIHZvaWQgbXRrX2Rp
+dGhlcl9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsDQog
+CQkJICAgICAgdW5zaWduZWQgaW50IGgsIHVuc2lnbmVkIGludCB2cmVmcmVzaCwNCiAJCQkgICAg
+ICB1bnNpZ25lZCBpbnQgYnBjLCBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KQ0KQEAgLTI3MSw2
+ICszMzAsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZ2FtbWFfc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAg
+KmNvbXAsDQogCS5jb25maWcgPSBtdGtfY2NvcnJfY29uZmlnLA0KIAkuc3RhcnQgPSBtdGtfY2Nv
+cnJfc3RhcnQsDQogCS5zdG9wID0gbXRrX2Njb3JyX3N0b3AsDQorCS5jdG1fc2V0ID0gbXRrX2Nj
+b3JyX2N0bV9zZXQsDQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9m
+dW5jcyBkZHBfZGl0aGVyID0gew0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHBfY29tcC5oDQppbmRleCAzODRhYmFlLi4yMGZlNTVkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KQEAgLTkyLDYgKzkyLDggQEAgc3RydWN0IG10
+a19kZHBfY29tcF9mdW5jcyB7DQogCQkJICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlKTsN
+CiAJdm9pZCAoKmJnY2xyX2luX29uKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsNCiAJdm9p
+ZCAoKmJnY2xyX2luX29mZikoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQorCXZvaWQgKCpj
+dG1fc2V0KShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCXN0cnVjdCBkcm1fY3J0Y19z
+dGF0ZSAqc3RhdGUpOw0KIH07DQogDQogc3RydWN0IG10a19kZHBfY29tcCB7DQpAQCAtMjA1LDYg
+KzIwNywxMyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jb21wX2JnY2xyX2luX29mZihz
+dHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQ0KIAkJY29tcC0+ZnVuY3MtPmJnY2xyX2luX29mZihj
+b21wKTsNCiB9DQogDQorc3RhdGljIGlubGluZSB2b2lkIG10a19kZHBfY3RtX3NldChzdHJ1Y3Qg
+bXRrX2RkcF9jb21wICpjb21wLA0KKwkJCQkgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRl
+KQ0KK3sNCisJaWYgKGNvbXAtPmZ1bmNzICYmIGNvbXAtPmZ1bmNzLT5jdG1fc2V0KQ0KKwkJY29t
+cC0+ZnVuY3MtPmN0bV9zZXQoY29tcCwgc3RhdGUpOw0KK30NCisNCiBpbnQgbXRrX2RkcF9jb21w
+X2dldF9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsDQogCQkJZW51bSBtdGtfZGRwX2NvbXBf
+dHlwZSBjb21wX3R5cGUpOw0KIGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpk
+ZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqY29tcF9ub2RlLA0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-Hmm. My plan was to use per-CPU memory and spin before the request is
-enqueued if the previous isn't done yet (which should not happen™).
-Then we could remove __schedule() here and rely on preempt_enable()
-doing that. With that change we wouldn't care about migrate-disable
-level vs preempt-disable level and could drop the hacks we have in futex
-code for instance (where we have an extra migrate_disable() in advance
-so they are later balanced). 
-
-> -Scott
-
-Sebastian
