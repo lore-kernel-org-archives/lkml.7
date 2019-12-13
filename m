@@ -2,152 +2,201 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AE3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D907AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600442253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25842253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGIf7Qy3"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="P327eHKM";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="GWx3S3lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLMJld (ORCPT
+        id S1726777AbfLMJlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:41:33 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60995 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726368AbfLMJld (ORCPT
+        Fri, 13 Dec 2019 04:41:39 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:16050 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbfLMJli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:41:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576230092;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=AAGzmTCJv3h5Cz7wJUEa1b4nNyP28rqALH9MEt1VkH4=;
-        b=hGIf7Qy3tZXhiYjuzXWmAQJM+SsdfilIvOblhWoLU/StJnO/leRfKrVSXWrsZRZ/52+E6x
-        muYvSP8jtJGWdTnsAB0yx9HM94B1+acUwBsIpp3BlZTlZuGLSD0eP0cYsd2xvMIfwT4AlU
-        AjssqaZqrp7LrfeA324ksuoiMU3Sp8M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-crM54kLROoCT3BeK_TWXJw-1; Fri, 13 Dec 2019 04:41:28 -0500
-X-MC-Unique: crM54kLROoCT3BeK_TWXJw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AFFB107ACC5;
-        Fri, 13 Dec 2019 09:41:26 +0000 (UTC)
-Received: from [10.36.117.150] (ovpn-117-150.ams2.redhat.com [10.36.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66DD05195A;
-        Fri, 13 Dec 2019 09:41:21 +0000 (UTC)
-Subject: Re: [PATCH RFC v4 01/13] ACPI: NUMA: export pxm_to_node
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-References: <20191212171137.13872-1-david@redhat.com>
- <20191212171137.13872-2-david@redhat.com> <5687328.t4MNS9KDDX@kreacher>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <ec81db03-b970-420a-9c1b-29849b5e8902@redhat.com>
-Date:   Fri, 13 Dec 2019 10:41:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 04:41:38 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBD9eTTM009831;
+        Fri, 13 Dec 2019 01:41:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=FErCI0CWPnvW0u5dE25M4F3Ih0PbFybydv+n8oBcVmA=;
+ b=P327eHKMDh9VnZKB09X7oCgPrBeJlcv59nDHjJkSAJHWoPAffQ6qFl+ZZ0QmqG3XikBj
+ iKWDoEFtf4KWohDRphQ/v14NXsIvOtwJ7GfM8sVe58Me+lygDdmVcyGM17N9jznOaZ2e
+ zaPaREpNRmBBPJkqIbW8z5u7NI/Z2n07ry8frBQRukmWlsykdUmxU8Iuq0qyBoOuhkN8
+ 8FIsytK9//CWkhRHC7CxdQfgVZpkzK657DcMkChFpomtAigYGCtwhfz6hU1ROOVEUqiA
+ yT8kgh3ef2BsP335bsMxCncu4KtMhHojqTUvoOi+p51Y2IF3oby2MWv6nUERSCFf5JSb 0w== 
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2050.outbound.protection.outlook.com [104.47.38.50])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2wr9dfx4hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Dec 2019 01:41:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=enROoi5heeR/4LJBsVmxQfZ3XsAJ8xRBDX6TdNup6cDOwYhUA0boonIp+PcSakcpL+7qvg1uMvqkdznjLZTSxzgA29n/yviILzzbOuo1QLuM9BuSH07hRvqJUXO5+h+RKXBnNYoCtjvfNbZXqGCjVp57ZKr/KzSJA463HO0wsn8yMCblsR28tbfySgn+gjw9DrILidkOhy5g62z7CWA6Z052gApZw0QClykLA10bYClZfk2wGijOqhrBKzn9z8I+rZTtRoXZ9VI4W5D7RaLzAMKzOvtOaThuG58xCWKUurw0n4XVTvxIa9M5ZL6sGQxTFdjEmjZUPObxHUBpKh/wNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FErCI0CWPnvW0u5dE25M4F3Ih0PbFybydv+n8oBcVmA=;
+ b=nkRjwNRE7iSLBiFnKVPGRIb9yHV0dDXHGafr+od6zdRRaWdX4+ywqqqYeLJSzwlhke1+EjiBiBMwi+DXiOkwxfXdkipRStdYSpl3nrQjWXCAMzunnFQ6yR2BaYrCrbTLxn/eAHaecotwq1lr6SfEZPAe0kZ817yRshtzv6ZHM1SuI8WhzmeGoFricx4WxHfumLgkWzskyNvbKtNP1OEwVr0AlI6NOk+VDNhCxNZTJ66sbFh0h7NXlKlcjQN+hfu832mipy0yLCy+m8BbEuz93AU8A1e7hu/JIOtpLeCugHQ61kok2MQ3pjIWmUQMy9Hmly9nu+YxBaGkICKnZPfEPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.28) smtp.rcpttodomain=gmail.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FErCI0CWPnvW0u5dE25M4F3Ih0PbFybydv+n8oBcVmA=;
+ b=GWx3S3lztqY6o3aYY1E5Ji74WMOipu5vY1orBDDKkLfCYNTZyg1qeaytFqNGmplf/XSG3ElvRkDAOTWx3e/50p10lzgWnTli6X2qDxYRGaqj89CcFl5J0Z/2bEridUtDO/6ffOWZmJSmwNdnqhNqV3NznTDjQ4QJvK1T1a6Kh34=
+Received: from BYAPR07CA0088.namprd07.prod.outlook.com (2603:10b6:a03:12b::29)
+ by CY4PR07MB3141.namprd07.prod.outlook.com (2603:10b6:903:ce::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Fri, 13 Dec
+ 2019 09:41:20 +0000
+Received: from DM6NAM12FT054.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe59::202) by BYAPR07CA0088.outlook.office365.com
+ (2603:10b6:a03:12b::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
+ Transport; Fri, 13 Dec 2019 09:41:20 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.28; helo=sjmaillnx2.cadence.com;
+Received: from sjmaillnx2.cadence.com (158.140.1.28) by
+ DM6NAM12FT054.mail.protection.outlook.com (10.13.178.109) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16 via Frontend Transport; Fri, 13 Dec 2019 09:41:20 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id xBD9fFSB025963
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 13 Dec 2019 01:41:16 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Fri, 13 Dec 2019 10:41:14 +0100
+Received: from lvlabc.cadence.com (10.165.128.101) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 13 Dec 2019 10:41:14 +0100
+Received: from lvlabc.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlabc.cadence.com (8.14.4/8.14.4) with ESMTP id xBD9fE7n011298;
+        Fri, 13 Dec 2019 09:41:14 GMT
+From:   Milind Parab <mparab@cadence.com>
+To:     <nicolas.nerre@microchip.com>, <andrew@lunn.ch>,
+        <antoine.tenart@bootlin.com>, <f.fainelli@gmail.com>,
+        <rmk+kernel@armlinux.org.uk>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <dkangude@cadence.com>, <a.fatoum@pengutronix.de>,
+        <brad.mouring@ni.com>, <pthombar@cadence.com>,
+        Milind Parab <mparab@cadence.com>
+Subject: [PATCH v2 1/3] net: macb: fix for fixed-link mode
+Date:   Fri, 13 Dec 2019 09:41:01 +0000
+Message-ID: <1576230061-11239-1-git-send-email-mparab@cadence.com>
+X-Mailer: git-send-email 2.2.2
+In-Reply-To: <1576230007-11181-1-git-send-email-mparab@cadence.com>
+References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <5687328.t4MNS9KDDX@kreacher>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(36092001)(199004)(189003)(7416002)(26005)(356004)(2616005)(426003)(70586007)(4326008)(70206006)(2906002)(6666004)(7636002)(107886003)(5660300002)(7126003)(336012)(246002)(110136005)(478600001)(26826003)(8676002)(86362001)(54906003)(7696005)(76130400001)(186003)(316002)(36756003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR07MB3141;H:sjmaillnx2.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.cadence.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c82a75d0-c237-4eec-cbc9-08d77fb09bed
+X-MS-TrafficTypeDiagnostic: CY4PR07MB3141:
+X-Microsoft-Antispam-PRVS: <CY4PR07MB31412FA0E56BFBE107C2BD7BD3540@CY4PR07MB3141.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0250B840C1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tKB+Ry3I6GA3iA6Dc96XCxp4ENupv1zf6IfwUqd3USLk0JSiJ1vsZceHutBg1836KaSdnl4wCu7+XD6u2fH2iI78nIkaD6c9r1DiW9+uNZipIMyDhJo34cewRcYOPST/Rjm9GHIeH1UTEwh0U+jQGo1bLHDlHmCn21KPqF6kBPUAm5udXTlpCtu6YS5MIpQ955wzzoOcxoRhYb4SnJWmQ+gTE0bA5Lm4DCPpDJ8q2kWKQm6ZVC/9WvGescH6uYlmZaS3MUkIjtnkhRHHbGF1fk76RlWhVm3MFTyF2agnRPIu65uddxHCFLZm/gqmUFOPaMT8Q62QLwD02z46nv/CWSiEJOBKGPnO2npnP80qBmrYfCwBmf/mUQklLkwUHVqgcuxM869xcV+mpN92VrZbGcQnHmEHiD4xPXCzMAT1MnktJcLIhszZ6d0pppgf2+4rNaFajmhTLcQq7BZs9F3gQmc8/9tETzIqdClCG6vFRsOnIOuZK1qIe5U7PwCJi69T
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2019 09:41:20.2138
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c82a75d0-c237-4eec-cbc9-08d77fb09bed
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR07MB3141
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_02:2019-12-12,2019-12-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=983
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.12.19 22:43, Rafael J. Wysocki wrote:
-> On Thursday, December 12, 2019 6:11:25 PM CET David Hildenbrand wrote:
->> Will be needed by virtio-mem to identify the node from a pxm.
->>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Len Brown <lenb@kernel.org>
->> Cc: linux-acpi@vger.kernel.org
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  drivers/acpi/numa/srat.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
->> index eadbf90e65d1..d5847fa7ac69 100644
->> --- a/drivers/acpi/numa/srat.c
->> +++ b/drivers/acpi/numa/srat.c
->> @@ -35,6 +35,7 @@ int pxm_to_node(int pxm)
->>  		return NUMA_NO_NODE;
->>  	return pxm_to_node_map[pxm];
->>  }
->> +EXPORT_SYMBOL(pxm_to_node);
->>  
->>  int node_to_pxm(int node)
->>  {
->>
-> 
-> This is fine by me FWIW.
+This patch fix the issue with fixed link. With fixed-link
+device opening fails due to macb_phylink_connect not
+handling fixed-link mode, in which case no MAC-PHY connection
+is needed and phylink_connect return success (0), however
+in current driver attempt is made to search and connect to
+PHY even for fixed-link.
 
-Can I count that as an Acked-by and carry it along? Thanks!
+Signed-off-by: Milind Parab <mparab@cadence.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 25 +++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 9c767ee252ac..8c1812f39927 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -611,21 +611,25 @@ static const struct phylink_mac_ops macb_phylink_ops = {
+ 	.mac_link_up = macb_mac_link_up,
+ };
+ 
++static bool macb_phy_handle_exists(struct device_node *dn)
++{
++	dn = of_parse_phandle(dn, "phy-handle", 0);
++	of_node_put(dn);
++	return dn != NULL;
++}
++
++
+ static int macb_phylink_connect(struct macb *bp)
+ {
+ 	struct net_device *dev = bp->dev;
+ 	struct phy_device *phydev;
++	struct device_node *dn = bp->pdev->dev.of_node;
+ 	int ret;
+ 
+-	if (bp->pdev->dev.of_node &&
+-	    of_parse_phandle(bp->pdev->dev.of_node, "phy-handle", 0)) {
+-		ret = phylink_of_phy_connect(bp->phylink, bp->pdev->dev.of_node,
+-					     0);
+-		if (ret) {
+-			netdev_err(dev, "Could not attach PHY (%d)\n", ret);
+-			return ret;
+-		}
+-	} else {
++	if (dn)
++		ret = phylink_of_phy_connect(bp->phylink, dn, 0);
++
++	if (!dn || (ret && !macb_phy_handle_exists(dn))) {
+ 		phydev = phy_find_first(bp->mii_bus);
+ 		if (!phydev) {
+ 			netdev_err(dev, "no PHY found\n");
+@@ -638,6 +642,9 @@ static int macb_phylink_connect(struct macb *bp)
+ 			netdev_err(dev, "Could not attach to PHY (%d)\n", ret);
+ 			return ret;
+ 		}
++	} else if (ret) {
++		netdev_err(dev, "Could not attach PHY (%d)\n", ret);
++		return ret;
+ 	}
+ 
+ 	phylink_start(bp->phylink);
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
