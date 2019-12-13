@@ -2,131 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B45DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1EFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E495D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:31:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="slRoN7tQ"
+	by mail.kernel.org (Postfix) with ESMTP id AA08F2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbfLMFb2 (ORCPT
+        id S1732092AbfLMFcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 00:31:28 -0500
-Received: from m228-5.mailgun.net ([159.135.228.5]:34370 "EHLO
-        m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732043AbfLMFb1 (ORCPT
+        Fri, 13 Dec 2019 00:32:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7932 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732073AbfLMFcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 00:31:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576215086; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=YrvqTP9z2N2j9Eee0g2uwcZZNKGFYVYmedHWIpnWR2A=;
- b=slRoN7tQ4GZ5Z+vji1lSY6X8vY0kigKtKJkDbtRxxFlFp1j7X9NFnceZ0rpXKMaiXQ0k8MHp
- 3MY7Pqf3nZi6HV8KNEEMNREzeXtRxdiU9mXOTTKGjZoaSKBl/MkXysg+vNLxmu4Zz1Q2ubDK
- A8IFVse4rHFHhhN5YeZIopN2HVg=
-X-Mailgun-Sending-Ip: 159.135.228.5
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df3222c.7fd25d5ad3e8-smtp-out-n01;
- Fri, 13 Dec 2019 05:31:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A8198C447A2; Fri, 13 Dec 2019 05:31:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1B48C433CB;
-        Fri, 13 Dec 2019 05:31:23 +0000 (UTC)
+        Fri, 13 Dec 2019 00:32:12 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBD5QxFK002785
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:32:11 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wupysq053-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:32:10 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Fri, 13 Dec 2019 05:32:08 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Dec 2019 05:32:04 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBD5W3mj5177350
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 05:32:03 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 418B8A4060;
+        Fri, 13 Dec 2019 05:32:03 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5D72A4054;
+        Fri, 13 Dec 2019 05:32:00 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 13 Dec 2019 05:32:00 +0000 (GMT)
+Date:   Fri, 13 Dec 2019 11:02:00 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
+ kthread
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com>
+ <20191211224617.GE19256@dread.disaster.area>
+ <20191212101031.GV2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Dec 2019 11:01:23 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
-        psodagud@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        tsoni@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Andy Gross <agross@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 2/2] drivers: edac: Add EDAC support for Kryo CPU caches
-In-Reply-To: <5df16ebe.1c69fb81.6481f.a011@mx.google.com>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a6311-e815485c-4b77-4342-a3de-203673941602-000000@us-west-2.amazonses.com>
- <CAE=gft5JvCegmrjkKuxYr9dgASPFCkgy97O1XGRyKDF6xT=BMA@mail.gmail.com>
- <5df16ebe.1c69fb81.6481f.a011@mx.google.com>
-Message-ID: <624229b9b2d5bf4b5eccf7778b420e2d@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20191212101031.GV2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19121305-4275-0000-0000-0000038E774F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121305-4276-0000-0000-000038A2334E
+Message-Id: <20191213053200.GA18602@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_08:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=710 priorityscore=1501 impostorscore=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 04:03, Stephen Boyd wrote:
-> Quoting Evan Green (2019-12-11 11:32:37)
->> Hi Sai,
->> 
->> On Thu, Dec 5, 2019 at 1:53 AM Sai Prakash Ranjan
->> <saiprakash.ranjan@codeaurora.org> wrote:
->> > diff --git a/drivers/edac/qcom_kryo_edac.c b/drivers/edac/qcom_kryo_edac.c
->> > new file mode 100644
->> > index 000000000000..05b60ad3cb0e
->> > --- /dev/null
->> > +++ b/drivers/edac/qcom_kryo_edac.c
->> > @@ -0,0 +1,679 @@
-> [...]
->> > +static const struct error_record serror_record[] = {
->> > +       { 0x1,  "Errors due to fault injection"         },
->> > +       { 0x2,  "ECC error from internal data buffer"   },
->> > +       { 0x6,  "ECC error on cache data RAM"           },
->> > +       { 0x7,  "ECC error on cache tag or dirty RAM"   },
->> > +       { 0x8,  "Parity error on TLB data RAM"          },
->> > +       { 0x9,  "Parity error on TLB tag RAM"           },
->> > +       { 0x12, "Error response for a cache copyback"   },
->> > +       { 0x15, "Deferred error not supported"          },
->> > +};
->> > +
->> > +static const struct error_type err_type[] = {
->> > +       { edac_device_handle_ce, "Kryo L1 Corrected Error"      },
->> > +       { edac_device_handle_ue, "Kryo L1 Uncorrected Error"    },
->> > +       { edac_device_handle_ue, "Kryo L1 Deferred Error"       },
->> > +       { edac_device_handle_ce, "Kryo L2 Corrected Error"      },
->> > +       { edac_device_handle_ue, "Kryo L2 Uncorrected Error"    },
->> > +       { edac_device_handle_ue, "Kryo L2 Deferred Error"       },
->> > +       { edac_device_handle_ce, "L3 Corrected Error"           },
->> > +       { edac_device_handle_ue, "L3 Uncorrected Error"         },
->> > +       { edac_device_handle_ue, "L3 Deferred Error"            },
->> > +};
->> 
->> A comment is warranted to indicate that err_type is indexed by the
->> enum, as this would be easy to mess up in later changes.
-> 
-> Instead of a comment please use array indexing.
-> 
-> 	[KRYO_L1_CE] = { edac_device_handle_ce, "Kryo L1..." },
-> 	...
+* Peter Zijlstra <peterz@infradead.org> [2019-12-12 11:10:31]:
 
-Will do this in the next spin.
+> On Thu, Dec 12, 2019 at 09:46:17AM +1100, Dave Chinner wrote:
+> > On Wed, Dec 11, 2019 at 11:08:29PM +0530, Srikar Dronamraju wrote:
+> 
+> Good point, something to maybe try (Srikar?) is making tick preemption
+> more agressive for such tasks.
+> 
+> The below extends the previous patch to retain the set_next_buddy() on
+> wakeup, but does not make the actual preemption more agressive.
+> 
+> Then it 'fixes' the tick preemption to better align with the actual
+> scheduler pick (ie. consider the buddy hints).
+> 
 
--Sai
+Just to let you know, I tried the patch, but it doesn't help.
+The results were identical to the one without the patch.
+
+I think its probably because when we allow the task to stay on the runqueue,
+it will surely lead to load_balance and so we see the active-balance kick
+in.
+
+Peter, Based on what Dave is asking for, would you be okay if we add
+
+1. A delayed_wake_list per runqueue,
+2. A new wake_up API to add tasks to this delayed wake_list
+3. On schedule, tasks on the delayed_wake_list would be actually woken up.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks and Regards
+Srikar Dronamraju
+
