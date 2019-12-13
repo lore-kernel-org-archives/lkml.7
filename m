@@ -2,134 +2,135 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD3C34356
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808FFC80D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F154F24718
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+RNfMxd"
+	by mail.kernel.org (Postfix) with ESMTP id B469A24718
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269651;
+	bh=jaXFBdH1JrIOTkP8xa8k6LKOsAlqJq3zpyPFCV9ZxQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xBS0DDtQg+52JQx94NHXbXLTGCXyFtJx5LpuUTdLQX0q4pkS8U/y+wFgx3DS7YKGl
+	 up/iWrWV2HKBgOrxeSvy+1bbEBAYl/S+kpmWSRWx95+gXxhUJatXy9PTX3/ohp3des
+	 NL25uVBA+aoBWy/sEQfkjE7pa6bmzvjWvP9U5BNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfLMSsT (ORCPT
+        id S1728869AbfLMTDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:48:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52625 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728686AbfLMSsP (ORCPT
+        Fri, 13 Dec 2019 14:03:38 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42740 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbfLMTDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:48:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576262894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VSDDjKTdNjIjYY9lNEGudZN4ZxbNPvX2QUzIT/T3/bU=;
-        b=H+RNfMxdNvTysBCOEmbPOGorcnkdQWR0n9YwUpYf65m+E0ejY7abgtQ04kHLSiM0UHU2Az
-        BWCe4hrJHp904ycXffWHXpDCVGBoLFmMWifQXPHMZYB9ZUI3ZUjE5r6bEQvZko5mrr7fTa
-        QDe+Owf7cMPRb/BLYrOL/nrCTXYhrwI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-arex5kL_PveUSWwTT-l1-A-1; Fri, 13 Dec 2019 13:48:12 -0500
-X-MC-Unique: arex5kL_PveUSWwTT-l1-A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 657F1107ACC4;
-        Fri, 13 Dec 2019 18:48:11 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-123.ams2.redhat.com [10.36.117.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDC1460474;
-        Fri, 13 Dec 2019 18:48:09 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     davem@davemloft.net
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH net 2/2] vsock/virtio: add WARN_ON check on virtio_transport_get_ops()
-Date:   Fri, 13 Dec 2019 19:48:01 +0100
-Message-Id: <20191213184801.486675-3-sgarzare@redhat.com>
-In-Reply-To: <20191213184801.486675-1-sgarzare@redhat.com>
-References: <20191213184801.486675-1-sgarzare@redhat.com>
+        Fri, 13 Dec 2019 14:03:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j22so1637780oij.9;
+        Fri, 13 Dec 2019 11:03:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0jLdwo4Gh3BpcLr+x8Y4V1BSkeVDpmaHMCwdlyDbPHI=;
+        b=hF/C1PzzLmW4SyI5BZCh1ATG6HILNW73mJ8mxcNDnMEacNvo8cXpax2KnPq2iA0asi
+         hIwxZis6VxrpzUO2URbJQTnYtDhB0RHauCFpEFcliZUr0uZPfRS59cTRFOtWIpYg5pGE
+         w7F2NwpXXEgP69/CEoASF60IsY31nzuHaTDbLAxAU+kMYvT90qZJz/ziK5Yc6aYJjq6H
+         4FoPwKyDCnyNsbNYC3P0hrIkw83Q4cd6RxW5/Dt69lP+goGOk0l2enbzJ+tFn79E/zjz
+         ineKWJVkVkrgZd/3kbtZ4RAp5XSBL0inMsvjs10OR3zyeD+sRyQVzCA9pLTRBPw0N3H9
+         erGQ==
+X-Gm-Message-State: APjAAAW0jSOtI0zp0ZGTOhbPiOtE5nghsfgpP2yYMDRwQ4MEjc6x2ZOX
+        cousz9uf98OKbbDqYZL+kQ==
+X-Google-Smtp-Source: APXvYqyDYMLhdnJ4CPCzJjTRPxkIRfS51N1GfBOGJw6/3Te72GU1lQmiGGiO0u/xbrXHuLqsxYwijg==
+X-Received: by 2002:aca:3141:: with SMTP id x62mr7090024oix.108.1576263816699;
+        Fri, 13 Dec 2019 11:03:36 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r124sm3612857oie.9.2019.12.13.11.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 11:03:35 -0800 (PST)
+Date:   Fri, 13 Dec 2019 13:03:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     min.guo@mediatek.com
+Cc:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, tony@atomide.com,
+        hdegoede@redhat.com
+Subject: Re: [PATCH v9 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Message-ID: <20191213190335.GA16897@bogus>
+References: <20191211015446.11477-1-min.guo@mediatek.com>
+ <20191211015446.11477-2-min.guo@mediatek.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211015446.11477-2-min.guo@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio_transport_get_ops() and virtio_transport_send_pkt_info()
-can only be used on connecting/connected sockets, since a socket
-assigned to a transport is required.
+On Wed, Dec 11, 2019 at 09:54:41AM +0800, min.guo@mediatek.com wrote:
+> From: Min Guo <min.guo@mediatek.com>
+> 
+> This adds support for MediaTek musb controller in
+> host, peripheral and otg mode.
+> 
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
+> ---
+> changes in v9:
+> 1. Add usb-role-switch
+> 2. Remove label of usb connector child node
+> 3. Change usb connector child node compatible as "gpio-usb-b-connector", "usb-b-connector";
+> 
+> changes in v8:
+> 1. Add reviewed by Rob
+> 
+> changes in v7:
+> 1. Modify compatible as
+> - compatible : should be one of:
+>                "mediatek,mt2701-musb"
+>                ...
+>                followed by "mediatek,mtk-musb"
+> 2. Change usb connector child node compatible as "gpio-usb-b-connector" 
+> 
+> changes in v6:
+> 1. Modify usb connector child node
+> 
+> changes in v5:
+> suggested by Rob:
+> 1. Modify compatible as 
+> - compatible : should be one of:
+>                "mediatek,mt-2701"
+>                ...
+>                followed by "mediatek,mtk-musb"
+> 2. Add usb connector child node
+> 
+> changes in v4:
+> suggested by Sergei:
+> 1. String alignment
+> 
+> changes in v3:
+> 1. no changes
+> 
+> changes in v2:
+> suggested by Bin:
+> 1. Modify DRC to DRD
+> suggested by Rob:
+> 2. Drop the "<soc-model>-musb" in compatible
+> 3. Remove phy-names
+> 4. Add space after comma in clock-names
+> ---
+>  .../devicetree/bindings/usb/mediatek,musb.txt | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
 
-This patch adds a WARN_ON() on virtio_transport_get_ops() to check
-this requirement, a comment and a returned error on
-virtio_transport_send_pkt_info(),
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virt=
-io_transport_common.c
-index f5991006190e..6abec3fc81d1 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -34,6 +34,9 @@ virtio_transport_get_ops(struct vsock_sock *vsk)
- {
- 	const struct vsock_transport *t =3D vsock_core_get_transport(vsk);
-=20
-+	if (WARN_ON(!t))
-+		return NULL;
-+
- 	return container_of(t, struct virtio_transport, transport);
- }
-=20
-@@ -161,15 +164,25 @@ void virtio_transport_deliver_tap_pkt(struct virtio=
-_vsock_pkt *pkt)
- }
- EXPORT_SYMBOL_GPL(virtio_transport_deliver_tap_pkt);
-=20
-+/* This function can only be used on connecting/connected sockets,
-+ * since a socket assigned to a transport is required.
-+ *
-+ * Do not use on listener sockets!
-+ */
- static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
- 					  struct virtio_vsock_pkt_info *info)
- {
- 	u32 src_cid, src_port, dst_cid, dst_port;
-+	const struct virtio_transport *t_ops;
- 	struct virtio_vsock_sock *vvs;
- 	struct virtio_vsock_pkt *pkt;
- 	u32 pkt_len =3D info->pkt_len;
-=20
--	src_cid =3D virtio_transport_get_ops(vsk)->transport.get_local_cid();
-+	t_ops =3D virtio_transport_get_ops(vsk);
-+	if (unlikely(!t_ops))
-+		return -EFAULT;
-+
-+	src_cid =3D t_ops->transport.get_local_cid();
- 	src_port =3D vsk->local_addr.svm_port;
- 	if (!info->remote_cid) {
- 		dst_cid	=3D vsk->remote_addr.svm_cid;
-@@ -202,7 +215,7 @@ static int virtio_transport_send_pkt_info(struct vsoc=
-k_sock *vsk,
-=20
- 	virtio_transport_inc_tx_pkt(vvs, pkt);
-=20
--	return virtio_transport_get_ops(vsk)->send_pkt(pkt);
-+	return t_ops->send_pkt(pkt);
- }
-=20
- static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
---=20
-2.23.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
