@@ -2,154 +2,145 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA3C4D2DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2BBC4D2E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D3B24784
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116AF24815
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efbOog/W"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="fi8pocFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfLMUAg (ORCPT
+        id S1729021AbfLMUFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:00:36 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37205 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbfLMUAf (ORCPT
+        Fri, 13 Dec 2019 15:05:22 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35731 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbfLMUFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:00:35 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so37547wru.4;
-        Fri, 13 Dec 2019 12:00:33 -0800 (PST)
+        Fri, 13 Dec 2019 15:05:22 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e12so80144qto.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 12:05:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=akaMhhNafypMcnWQLyODE4BRgRfGddqizBHDrWxFNdU=;
-        b=efbOog/WskF5WvsX/TQETNPh+NYOs7lPXVUnQDmByDNAqYOaoc3CERdK15vSZG98Ro
-         IF9UKf2/7ZbCWJ4QjS49SfMJsIS9qFKiqDSo5QnPPw7DiNyNDiDsOH0YCUyP7ofkJS9S
-         It911+bLXhRZMhTTMvBunFUmPcEIfO78ifWkXMsF02wMUk5DrcFmb+tsBt5FBB43Nq/t
-         0KsaZCAxCKTwAzDlS5r3KVZKu6/c9ww4KGLKPO/Ie3QRpk4iV+o+g7aZLwhIuCaSq4/t
-         6ZLQg3guvVRqzVasgzD3iCxfiiPDph7/T0Y7fIahwPMxD/6NuAekSVdEEfxXwS2oiO0I
-         qScQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AGxRnEh5CXFWXGLun9RvFBMrbc3Csuo1hFkC8taJ9Ao=;
+        b=fi8pocFAG1MtH+wrS/RwicUEW6vUdIGEjPL2lsSHOLPBs6UThnygqIyuQc95xton9e
+         Yxoneci0+u6nu3ovdvs2nwA6RCfIMHAvQP7WkJLiEs9uazqRsxy1GzWplPGcynkU2vEK
+         m7juwjZ8BwyfJRwNzTstai0DRHVpUgvjzk1Q5uqS/8LJE0nHMg3ldrRcWLKuHAHLT9dG
+         VlArpH8BK+h7UwtXjWpyLxEFn8kV0wny/tRfB8fOru0yd0avuJOpcJRwpsLKPK0y/1/z
+         q1OAdPQzLYkV9FLa/Gez/xOtKcg1Uv+ldtQ5Z2yWXT1+Sl1YJ5Vol1E4IiG9H3W6XsSS
+         WQAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=akaMhhNafypMcnWQLyODE4BRgRfGddqizBHDrWxFNdU=;
-        b=CthDYgaAe0TSxcbUQU87cXXuDFCEV68/y4RLgAOETiDN4wq50aAPp+5fzErW9GBgyd
-         OqGyShMLhaMZIVBbBLNfpfpPTlAZwrGan6f+bNOePU/64rt0Q1fpq1LP+TKRXmiJyoVL
-         AguyK1G8m7o3xbHn078893HxZv5oICU4vW3MMQZl5n7tY46PoS23keCfBWZe8B8BQWkJ
-         h61FpZQ1aUsUCPDzR8o/+3l2Lh61ttZGcKTk6c4CYTt+T9By6l8+kW6UOmGWzoI3q0e7
-         FaJdJme0iobbOpkKbInffV7WqdnJGk/uSXNccZKYsc8in1J9RxWb6ySCcH3S68GRIX4n
-         OTGw==
-X-Gm-Message-State: APjAAAXgNHM8yil7OkI8gstk3CsK4oagcxB+54BWitKz16RB1hxThPjn
-        w6JEDOPU80BFCQU4SnDDDooWuTfz
-X-Google-Smtp-Source: APXvYqxJd5XiL6lmgm/o87WE1QgbFt5mgEBHgT0f1GnpqQ+UEIS7FfBi3gr4LTXtRvWnocppmStftA==
-X-Received: by 2002:adf:f2d0:: with SMTP id d16mr15267300wrp.314.1576267232899;
-        Fri, 13 Dec 2019 12:00:32 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e16sm10926331wrs.73.2019.12.13.12.00.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AGxRnEh5CXFWXGLun9RvFBMrbc3Csuo1hFkC8taJ9Ao=;
+        b=am+Mz0aldLp0ukkWdwSEn1eKevpeu9oHerfuCIGyWoDaSzOSS5jW3+k+UFO8yxIn9k
+         qIxeunNv1o6dfvrlGO86koAKtxx9WGX99/P+vOIQFsnCWm+w/KvjqnT1oi6p9Fj+wI30
+         LydM/IAdzCVFQpJsaLBHS4uSaeWIOhQ+6P5j6ugXE3jHuF2HSJ25K8eEr7SUU8M95kTw
+         HqzjLvEoZJ2Q+4srNMJARiHoTdE90mfIsoaTBsmtzi9zpAHLmCzLtsIS2NZqlkX2vhJ+
+         iJ8Y/tONAr7dICY/IN9cE0u3rIvFjSy0T1jgXfCNi3dI5RCRfnJwhrT7eMrBTMYzWXCe
+         bdbA==
+X-Gm-Message-State: APjAAAVErmsltRchHa3EPgs+RnN752Ler8f5Qa8/kcItfJsFzW6QtLqY
+        zQkPPu21q7gIZee/5myJUcua6Q==
+X-Google-Smtp-Source: APXvYqyt8/F7dcovN6ml4CYTmL9Z4Gv+D5IHB1cNmx/2gV7w9evyzyCC0M4BYf6Eo/p0Bvy7I4PQQA==
+X-Received: by 2002:aed:24ec:: with SMTP id u41mr4951304qtc.220.1576267520991;
+        Fri, 13 Dec 2019 12:05:20 -0800 (PST)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id f23sm3092385qke.104.2019.12.13.12.05.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 12:00:32 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net: dsa: b53: Fix egress flooding settings
-Date:   Fri, 13 Dec 2019 12:00:27 -0800
-Message-Id: <20191213200027.20803-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Dec 2019 12:05:20 -0800 (PST)
+Date:   Fri, 13 Dec 2019 15:05:19 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20191213200519.GA168988@cmpxchg.org>
+References: <20191213192158.188939-1-hannes@cmpxchg.org>
+ <20191213192158.188939-4-hannes@cmpxchg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213192158.188939-4-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were several issues with 53568438e381 ("net: dsa: b53: Add support for port_egress_floods callback") that resulted in breaking connectivity for standalone ports:
+On Fri, Dec 13, 2019 at 02:21:58PM -0500, Johannes Weiner wrote:
+> +	if (cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT) {
+> +		unsigned long unclaimed;
+> +		/*
+> +		 * If the children aren't claiming (all of) the
+> +		 * protection afforded to them by the parent,
+> +		 * distribute the remainder in proportion to the
+> +		 * (unprotected) size of each cgroup. That way,
+> +		 * cgroups that aren't explicitly prioritized wrt each
+> +		 * other compete freely over the allowance, but they
+> +		 * are collectively protected from neighboring trees.
+> +		 *
+> +		 * We're using unprotected size for the weight so that
+> +		 * if some cgroups DO claim explicit protection, we
+> +		 * don't protect the same bytes twice.
+> +		 */
+> +		unclaimed = parent_effective - siblings_protected;
+> +		unclaimed *= usage - protected;
+> +		unclaimed /= parent_usage - siblings_protected;
 
-- both user and CPU ports must allow unicast and multicast forwarding by
-  default otherwise this just flat out breaks connectivity for
-  standalone DSA ports
-- IP multicast is treated similarly as multicast, but has separate
-  control registers
-- the UC, MC and IPMC lookup failure register offsets were wrong, and
-  instead used bit values that are meaningful for the
-  B53_IP_MULTICAST_CTRL register
+Brainfart I noticed just after sending it out - naturally. If there is
+unclaimed protection in the parent, but the children use exactly how
+much they claim, this will div0. We have to check for usage that isn't
+explicitly protected in the child to which to apply the float. Fixlet
+below. Doesn't change the overall logic, though.
 
-Fixes: 53568438e381 ("net: dsa: b53: Add support for port_egress_floods callback")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/b53/b53_common.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 36828f210030..edacacfc9365 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -347,7 +347,7 @@ static void b53_set_forwarding(struct b53_device *dev, int enable)
- 	 * frames should be flooded or not.
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2e352cd6c38d..8d7e9490740b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6328,21 +6328,24 @@ static unsigned long effective_protection(unsigned long usage,
  	 */
- 	b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
--	mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN;
-+	mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN | B53_IPMC_FWD_EN;
- 	b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
- }
+ 	ep = protected;
  
-@@ -526,6 +526,8 @@ int b53_enable_port(struct dsa_switch *ds, int port, struct phy_device *phy)
- 
- 	cpu_port = dsa_to_port(ds, port)->cpu_dp->index;
- 
-+	b53_br_egress_floods(ds, port, true, true);
+-	if (cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT) {
++	/*
++	 * If the children aren't claiming (all of) the protection
++	 * afforded to them by the parent, distribute the remainder in
++	 * proportion to the (unprotected) size of each cgroup. That
++	 * way, cgroups that aren't explicitly prioritized wrt each
++	 * other compete freely over the allowance, but they are
++	 * collectively protected from neighboring trees.
++	 *
++	 * We're using unprotected size for the weight so that if some
++	 * cgroups DO claim explicit protection, we don't protect the
++	 * same bytes twice.
++	 */
++	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
++		return ep;
 +
- 	if (dev->ops->irq_enable)
- 		ret = dev->ops->irq_enable(dev, port);
- 	if (ret)
-@@ -641,6 +643,8 @@ static void b53_enable_cpu_port(struct b53_device *dev, int port)
- 	b53_write8(dev, B53_CTRL_PAGE, B53_PORT_CTRL(port), port_ctrl);
- 
- 	b53_brcm_hdr_setup(dev->ds, port);
++	if (usage > protected && parent_effective > siblings_protected) {
+ 		unsigned long unclaimed;
+-		/*
+-		 * If the children aren't claiming (all of) the
+-		 * protection afforded to them by the parent,
+-		 * distribute the remainder in proportion to the
+-		 * (unprotected) size of each cgroup. That way,
+-		 * cgroups that aren't explicitly prioritized wrt each
+-		 * other compete freely over the allowance, but they
+-		 * are collectively protected from neighboring trees.
+-		 *
+-		 * We're using unprotected size for the weight so that
+-		 * if some cgroups DO claim explicit protection, we
+-		 * don't protect the same bytes twice.
+-		 */
 +
-+	b53_br_egress_floods(dev->ds, port, true, true);
- }
- 
- static void b53_enable_mib(struct b53_device *dev)
-@@ -1821,19 +1825,26 @@ int b53_br_egress_floods(struct dsa_switch *ds, int port,
- 	struct b53_device *dev = ds->priv;
- 	u16 uc, mc;
- 
--	b53_read16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, &uc);
-+	b53_read16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, &uc);
- 	if (unicast)
- 		uc |= BIT(port);
- 	else
- 		uc &= ~BIT(port);
--	b53_write16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, uc);
-+	b53_write16(dev, B53_CTRL_PAGE, B53_UC_FLOOD_MASK, uc);
-+
-+	b53_read16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, &mc);
-+	if (multicast)
-+		mc |= BIT(port);
-+	else
-+		mc &= ~BIT(port);
-+	b53_write16(dev, B53_CTRL_PAGE, B53_MC_FLOOD_MASK, mc);
- 
--	b53_read16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, &mc);
-+	b53_read16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, &mc);
- 	if (multicast)
- 		mc |= BIT(port);
- 	else
- 		mc &= ~BIT(port);
--	b53_write16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, mc);
-+	b53_write16(dev, B53_CTRL_PAGE, B53_IPMC_FLOOD_MASK, mc);
- 
- 	return 0;
- 
--- 
-2.17.1
-
+ 		unclaimed = parent_effective - siblings_protected;
+ 		unclaimed *= usage - protected;
+ 		unclaimed /= parent_usage - siblings_protected;
