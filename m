@@ -2,117 +2,127 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9806AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D022527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576197161;
-	bh=acTKaWoVcvywt0spaT133PNvy41sRxS9SaBK9U3EDXU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=skpvs/JiCfMnuiIIawvTFztB3S3qAQW2gwtj2mjVgxojMH/pB6zno6/lMlYmNNJ/6
-	 7cUu/6mKlxPQ/Td4V5mMa9nT0dpd3dHuiTc1Y9bgrSEsjZiiWlTA6JxglobA5WGx5R
-	 e1j7mLmu3j/ZpbqNwqi07NoYbhN1x1idMlUoKdJs=
+	by mail.kernel.org (Postfix) with ESMTP id 2E0CD2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:35:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="av45X8UB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfLMAck (ORCPT
+        id S1731581AbfLMAfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:32:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbfLMAcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:32:39 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA10D2073B;
-        Fri, 13 Dec 2019 00:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576197159;
-        bh=acTKaWoVcvywt0spaT133PNvy41sRxS9SaBK9U3EDXU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YFDlAjeWIOLK1gCctzHW6f5B70wPUvFCw5lHAPkP1dJ2c0H4VCym3LVDsjj6oMaxb
-         jCf3rJbutKD9z6Gl726KysNnD8FtLjYC8VHkmKubeWHdoytYdM4CYjb6f4pPqUBLJu
-         7xEvaUHiMJFsnXK7Cbg5Duj8Eo0VU6m0Rg21tEcg=
-Date:   Thu, 12 Dec 2019 18:32:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: imx6 and keystone PCIe abort handling
-Message-ID: <20191213003236.GA43783@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Dec 2019 19:35:36 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:40420 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731519AbfLMAff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 19:35:35 -0500
+Received: by mail-pg1-f202.google.com with SMTP id z12so337035pgf.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:35:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=HtK9xLwQDzGm+XiM/V3mqEhkctZrVfQExhZP64CAkFM=;
+        b=av45X8UBoDasxQtdUR/kaLHvAHnHqZ0KguighfVlEi1MLGDZJyX+X/OctMg/qQNkxx
+         aZSq54MBNlXTd0KPfh183tzC4j2Mhx3byjTrz74wtCNVa71EAHmL5lahqvgNrklAZ1Mz
+         EI0lEEvl/H1fIx9K0h+JHvPTbciX8XqO/bytl60c7VgAcGaywHcCn73ML038ODDRwYXE
+         mnC28CWxlHia2Ydi8Wk9GlK9noE8UsraXZ5SX4h6okl+mda1P+LhpoID6wUY7puYOKjF
+         QSHGgrHRvwNnLxPEGYZBjxGnk75KZHMdk1q9njYZRpPblfvdUOpz58YjED1yLtHHZmr0
+         /iuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=HtK9xLwQDzGm+XiM/V3mqEhkctZrVfQExhZP64CAkFM=;
+        b=NNYP42WT+2LK2Lc+V63fZZGl5MlFxW75fyyxgdExmbS/Q1cPl8wA1oRXJZa9qx1xPB
+         /BXd1bi0rcNof236OK43y0WUjQly5ahV604GNSeKwfQQva1dl73itFol6e/BC5cvj7pU
+         x50y4kfFMYKeMNc57GJ6jBA8cEYN7gwkxFviCYz8+IgaonlShyIq9DcjmAWjd6GzE7rK
+         2Xp3Zxo61qoCpS2rny7LBqckPf41nZrB7+ee7Nx7x1qmw6y6D8SonqjE1w4eL4AXkgoJ
+         BQLxb/58hEKXP/J3odppjtMOhUP53Jnn4F5ay6JowmRh9sLpt3pUa+JPdrRZniu7oPUD
+         ONwA==
+X-Gm-Message-State: APjAAAUkR5t5P21KsEup8pVcpWfE3vUFDdxLJoCoxztFZkYU47/QJ80A
+        xsGXKstxlnbg9QNPtUjGBgDOK4dPKGnAOHqmmMd47A==
+X-Google-Smtp-Source: APXvYqwkxYDvjlMgd7Crym7lfFwdMASMN3c0AFKGwJWaLZGshyjLoCuEXqUt6MHkWZ+L6yjQZHGJgoE6qNW3xfcXUZj1MQ==
+X-Received: by 2002:a65:42c2:: with SMTP id l2mr13503356pgp.172.1576197334956;
+ Thu, 12 Dec 2019 16:35:34 -0800 (PST)
+Date:   Thu, 12 Dec 2019 16:35:22 -0800
+Message-Id: <20191213003522.66450-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v1] lkdtm/bugs: fix build error in lkdtm_UNSET_SMEP
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     keescook@chromium.org
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+When building ARCH=3Dum with CONFIG_UML_X86=3Dy and CONFIG_64BIT=3Dy we get
+the build errors:
 
-Why are ks_pcie_fault() and imx6q_pcie_abort_handler() different?  I
-think they're doing the same thing, and the "instr & 0x0e100090" part
-is the same, but only imx6 has the "instr & 0x0c100000" part.  And the
-return values are different in some cases.
+drivers/misc/lkdtm/bugs.c: In function =E2=80=98lkdtm_UNSET_SMEP=E2=80=99:
+drivers/misc/lkdtm/bugs.c:288:8: error: implicit declaration of function =
+=E2=80=98native_read_cr4=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+  cr4 =3D native_read_cr4();
+        ^~~~~~~~~~~~~~~
+drivers/misc/lkdtm/bugs.c:290:13: error: =E2=80=98X86_CR4_SMEP=E2=80=99 und=
+eclared (first use in this function); did you mean =E2=80=98X86_FEATURE_SME=
+P=E2=80=99?
+  if ((cr4 & X86_CR4_SMEP) !=3D X86_CR4_SMEP) {
+             ^~~~~~~~~~~~
+             X86_FEATURE_SMEP
+drivers/misc/lkdtm/bugs.c:290:13: note: each undeclared identifier is repor=
+ted only once for each function it appears in
+drivers/misc/lkdtm/bugs.c:297:2: error: implicit declaration of function =
+=E2=80=98native_write_cr4=E2=80=99; did you mean =E2=80=98direct_write_cr4=
+=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+  native_write_cr4(cr4);
+  ^~~~~~~~~~~~~~~~
+  direct_write_cr4
 
-Could/should these be shared somehow?  They're both under #ifdef
-CONFIG_ARM, so maybe it could be provided by arch/arm?
+So specify that this block of code should only build when
+CONFIG_X86_64=3Dy *AND* CONFIG_UML is unset.
 
-  static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
-			   struct pt_regs *regs)
-  {
-	  unsigned long instr = *(unsigned long *) instruction_pointer(regs);
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
 
-	  if ((instr & 0x0e100090) == 0x00100090) {
-		  int reg = (instr >> 12) & 15;
+This patch is part of my larger effort to get allyesconfig closer to
+working for ARCH=3Dum. For more information about that, checkout the cover
+letter for a related patchset here:
 
-		  regs->uregs[reg] = -1;
-		  regs->ARM_pc += 4;
-	  }
+https://lore.kernel.org/lkml/20191211192742.95699-1-brendanhiggins@google.c=
+om/
 
-	  return 0;
-  }
+---
+ drivers/misc/lkdtm/bugs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  static int imx6q_pcie_abort_handler(unsigned long addr,
-		  unsigned int fsr, struct pt_regs *regs)
-  {
-	  unsigned long pc = instruction_pointer(regs);
-	  unsigned long instr = *(unsigned long *)pc;
-	  int reg = (instr >> 12) & 15;
-
-	  /*
-	   * If the instruction being executed was a read,
-	   * make it look like it read all-ones.
-	   */
-	  if ((instr & 0x0c100000) == 0x04100000) {
-		  unsigned long val;
-
-		  if (instr & 0x00400000)
-			  val = 255;
-		  else
-			  val = -1;
-
-		  regs->uregs[reg] = val;
-		  regs->ARM_pc += 4;
-		  return 0;
-	  }
-
-	  if ((instr & 0x0e100090) == 0x00100090) {
-		  regs->uregs[reg] = -1;
-		  regs->ARM_pc += 4;
-		  return 0;
-	  }
-
-	  return 1;
-  }
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index a4fdad04809a9..6c1aab177fced 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -278,7 +278,7 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+=20
+ void lkdtm_UNSET_SMEP(void)
+ {
+-#ifdef CONFIG_X86_64
++#if IS_ENABLED(CONFIG_X86_64) && !IS_ENABLED(CONFIG_UML)
+ #define MOV_CR4_DEPTH	64
+ 	void (*direct_write_cr4)(unsigned long val);
+ 	unsigned char *insn;
+--=20
+2.24.1.735.g03f4e72817-goog
 
