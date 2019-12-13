@@ -2,126 +2,130 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D517C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2126BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8432073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EwUctdIK"
+	by mail.kernel.org (Postfix) with ESMTP id F3F6024658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfLMJ5M (ORCPT
+        id S1726595AbfLMJ51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:57:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50606 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMJ5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:57:12 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBD9ubog152811;
-        Fri, 13 Dec 2019 09:56:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=S7FcfMv5EYcYTkRgDKj3WiJgIcLQuGB+dA630iy3KgE=;
- b=EwUctdIKdzeMK4U9V0eZodEkn7Bb+OG5JVroMMBxdp9bMxk5wASTgKNja1oZFcUIxOn9
- tEwtlEoYUj7T1nmTMIWJefNN9uBNqLmZcBaveIJj9AF+apGkAaTRefE83UrOWgK6WPOw
- HjC5MbEvqLZJWUT6/gWleJGhXHZfpG1tTUI2cWrApFo4/wvsq5VXZ2zz2o5Iv7BYFNXe
- f3cZeXdDri4EXBl9H/UJUNMx6HDy21MOtARZHgTzH8lWiV5rKpcU1uDLNL2mRVZvoF1q
- IOVwvYMv3u5y4WxG/pj0mkbmoeR4jkYl6KHCxMj0rJntCtjOOHDDgC9weq3RAMWCMtKO Yw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wr41qr6u2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 09:56:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBD9mlnf001336;
-        Fri, 13 Dec 2019 09:56:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2wumu62phb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 09:56:43 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBD9ugiY016371;
-        Fri, 13 Dec 2019 09:56:42 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Dec 2019 01:56:42 -0800
-Date:   Fri, 13 Dec 2019 12:56:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Willy Tarreau <w@1wt.eu>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        ebiederm@xmission.com, linux-arch@vger.kernel.org,
-        security@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
-Message-ID: <20191213095634.GB2407@kadam>
-References: <20191208171918.GC19716@avx2>
- <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
- <20191211072225.GB3700@avx2>
- <20191211095937.GB31670@1wt.eu>
- <20191211181933.GA3919@avx2>
- <20191211182401.GF31670@1wt.eu>
- <20191212212520.GA9682@avx2>
+        Fri, 13 Dec 2019 04:57:27 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46132 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfLMJ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:57:26 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id ED9E138D1922D1532078;
+        Fri, 13 Dec 2019 17:57:23 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.236) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
+ 17:57:17 +0800
+Subject: Re: [PATCH] sched/fair: Optimize select_idle_cpu
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mingo@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenwandun@huawei.com>, <xiexiuqi@huawei.com>,
+        <liwei391@huawei.com>, <huawei.libin@huawei.com>,
+        <bobo.shaobowang@huawei.com>, <juri.lelli@redhat.com>,
+        <vincent.guittot@linaro.org>,
+        "chengjian (D)" <cj.chengjian@huawei.com>
+References: <20191212144102.181510-1-cj.chengjian@huawei.com>
+ <20191212152406.GB2827@hirez.programming.kicks-ass.net>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <d40ac385-626f-e86f-b2cb-69adf10a193a@huawei.com>
+Date:   Fri, 13 Dec 2019 17:57:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212212520.GA9682@avx2>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912130078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912130078
+In-Reply-To: <20191212152406.GB2827@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.133.217.236]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:25:20AM +0300, Alexey Dobriyan wrote:
-> On Wed, Dec 11, 2019 at 07:24:01PM +0100, Willy Tarreau wrote:
-> > On Wed, Dec 11, 2019 at 09:19:33PM +0300, Alexey Dobriyan wrote:
-> > > Reports are better be done by people who know what they are doing, as in
-> > > understand what executable stack is and what does it mean in reality.
-> > > 
-> > > > Otherwise it will just go to /dev/null with all warning about bad blocks
-> > > > on USB sticks and CPU core throttling under high temperature.
-> > > 
-> > > That's fine. You don't want bugreports from people who don't know what
-> > > is executable stack. Every security bug bounty program is flooded by
-> > > such people. This is why message is worded in a neutral way.
-> > 
-> > Well we definitely don't have the same experience with user reports. I
-> > was just suggesting, but since you apparently already have all the
-> > responses you needed, I'm even wondering why the warning remains.
-> 
-> Willy, whatever instructions for users you have in mind must be
-> different for different people. Developer should be told to add
-> "-Wl,-z,noexecstack" and more. Regular user (define "regular") should be
-> told to send bugreport if the program really needs executable stack
-> which again splits into two situations: exec stack was added knowingly
-> because it is some old program with lost source code or it was readded
-> by mistake.
-> 
-> "Complain to linux-kernel" is meaningless, kernel is not responsible.
-> 
-> What the message is even supposed to say?
-> 
 
-You could direct people to a website and then update the instructions
-as needed.
+On 2019/12/12 23:24, Peter Zijlstra wrote:
+> On Thu, Dec 12, 2019 at 10:41:02PM +0800, Cheng Jian wrote:
+>
+>> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+> The 'funny' thing is that select_idle_core() actually does the right
+> thing.
+>
+> Copying that should work:
+>
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 08a233e97a01..416d574dcebf 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5828,6 +5837,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
+>    */
+>   static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
+>   {
+> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+>   	struct sched_domain *this_sd;
+>   	u64 avg_cost, avg_idle;
+>   	u64 time, cost;
+> @@ -5859,11 +5869,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>   
+>   	time = cpu_clock(this);
+>   
+> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
+> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+> +
+> +	for_each_cpu_wrap(cpu, cpus, target) {
+>   		if (!--nr)
+>   			return si_cpu;
+> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+> -			continue;
+>   		if (available_idle_cpu(cpu))
+>   			break;
+>   		if (si_cpu == -1 && sched_idle_cpu(cpu))
+>
+> .
 
-regards,
-dan carpenter
+
+in select_idle_smt()
+
+/*
+  * Scan the local SMT mask for idle CPUs.
+  */
+static int select_idle_smt(struct task_struct *p, int target)
+{
+     int cpu, si_cpu = -1;
+
+     if (!static_branch_likely(&sched_smt_present))
+         return -1;
+
+     for_each_cpu(cpu, cpu_smt_mask(target)) {
+         if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+             continue;
+         if (available_idle_cpu(cpu))
+             return cpu;
+         if (si_cpu == -1 && sched_idle_cpu(cpu))
+             si_cpu = cpu;
+     }
+
+     return si_cpu;
+}
+
+
+Why don't we do the same thing in this function,
+
+although cpu_smt_present () often has few CPUs.
+
+it is better to determine the 'p->cpus_ptr' first.
+
+
+
+
 
