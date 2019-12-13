@@ -2,131 +2,326 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF0EC3437F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A3BC3435A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A24324715
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243942474E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDTr9nd5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="na95Bme5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfLMN1w (ORCPT
+        id S1727360AbfLMNCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:27:52 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39893 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfLMN1v (ORCPT
+        Fri, 13 Dec 2019 08:02:54 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35365 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLMNCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:27:51 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so1953827lfb.6;
-        Fri, 13 Dec 2019 05:27:50 -0800 (PST)
+        Fri, 13 Dec 2019 08:02:54 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so1232035plp.2;
+        Fri, 13 Dec 2019 05:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3a5X/HsBz/Jc1tMHJpbmDEO9eAeGDYj6GdIi3XHqmgk=;
-        b=UDTr9nd5YdTb0v4Cj17QdUNasXorhaf3wFgqaZW+mh5qHk9tgTFVfXJT3QqZ8MIpvH
-         NXrAFiKT68JxWuNnIA8IIhJnY7IzP/mqtAac+7QkKHZn9Lq2MatgeODHqxVT8wRzBf8X
-         BTbQ+1JjFqPAuOCOxaM1SIWCiadtPhAh/mL8CBZF9dEP4iKqO4i1aEB71Hg5xEXWJNVL
-         U7I02pje8D8nu0w09x5OxgiF3FQTxuMy0pb+5B1x9/VLA0I57ZgxX/RMGrnlSuTmtQvD
-         DAxtqUoNakVHTLZkYfajb/4DJJbmIlSUifZCZV0UJb1rj0qEiCqUKiA0IxE8s8BPvs7P
-         74Yg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nLDfxoPJ5VtxV7g2ayKIW9c6W7jyRpbX81WHy5tkNdc=;
+        b=na95Bme5BuXyVngE8myQYMjzMOhLSpJlxbPfCES+KyNqJhN9pBMo7Sek/1TUdEUl6s
+         feKvl8vXkbftx6BWBVumtm7Bxs+WbGFrPCd/n9Bsa5epPzG0T0Xt3yQLwmIqX3EKGi3D
+         L6q1pVNtT3HY2/Fpax5NGTaE1iN8uYtQSCdp0oVPzsvWdPDNhN162tZd95f16Xw8Va0F
+         KUdEehtK0YygYRFhipSdVJ0WmJw5vxeJekMpzsMoXNYkufIYozKkDuIUeIcTVXUfPtcW
+         dgUeC+UFWFTnJ9MfuPhANerWvCEV5s/Nk0IllLkd6lZJqbncfoi0BaJwM651/UIhPnIi
+         OHvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3a5X/HsBz/Jc1tMHJpbmDEO9eAeGDYj6GdIi3XHqmgk=;
-        b=YtZj4dp+J0YPfl+CSLp9LLkKCh8mjqwydIvN9bLDQYUC7fP42RBoKjtwukeeuDPNb2
-         mOYhyGp76vGdkNvCKN4iYo0ky8KYH4s5epLOJhYlkIuPsN5KARt44eK1/3UKPyclRCb0
-         hpe71YzI7HNiJWjjabUF66Dos9a6WZ20BMeVW30JF0gt0XdcnuxIPYqYbn18eJG5lig2
-         +RP3x0GItlCgmN3o/cTkNDItZtczbhIgRWcLCdMxrqXH4Zjx6lg8UOgdU+8rPZRcCqUo
-         WpIDduxAe+jJwxJFIK9hurcAwIoI5z/l/U19coatG3iYGoKyemxAc1gA/v8t0S7qKMTW
-         yjIQ==
-X-Gm-Message-State: APjAAAV3Ekm4EjCe24191+mjtaGXiNri+HOT88M4e+Yh5D8bwaCL3Ihb
-        QC0pYAsHPmZfduix3tuTpdWoOJWH
-X-Google-Smtp-Source: APXvYqzdJxJTo1vC8tE/6X67cFm/2BzOhMPwQfT4615iB1t6JDsbDMiKJl5e+NhYNhJGVufp+Zj/Fw==
-X-Received: by 2002:a19:4ac2:: with SMTP id x185mr2761270lfa.131.1576243669708;
-        Fri, 13 Dec 2019 05:27:49 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 2sm4774272ljq.38.2019.12.13.05.27.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 05:27:48 -0800 (PST)
-Subject: Re: [PATCH v5 07/11] cpufreq: dt-platdev: Blacklist NVIDIA Tegra20
- and Tegra30 SoCs
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191118164512.8676-1-digetx@gmail.com>
- <20191118164512.8676-8-digetx@gmail.com>
- <2776e3c7-999e-5e6f-3a0e-211226dc30e6@gmail.com>
-Message-ID: <aee736a0-444c-3d1a-1e51-c5b5259eb1b5@gmail.com>
-Date:   Fri, 13 Dec 2019 16:27:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nLDfxoPJ5VtxV7g2ayKIW9c6W7jyRpbX81WHy5tkNdc=;
+        b=CBRY1ELhKtNqLtmLb7F+EzHu9kdYXYXfDlmEH+/mzX4r1oYliPeSyCjmvGJx2mw135
+         NWNszRofker9438NMwd5R1ZgotIHl4OV/sWuDczWEd7iWLEjoVQidjPG1kKX5BvEb6pi
+         ucUqCnTbT/HGfSEiJQAMZ5kQTBQxQaiqUgtmtYKQ95nLVTl1/1Q9sXq23AoObh5nnW6t
+         nNmilDjnES4huZo1ADp4quHDG2+FKgsU+EU+rYaK3yd2qPjIWVQQWLk06rKA7F6CLH8i
+         RO41ZfRIJU1QWJg1pGoqYb4qVHm0fBqlTA33Fz/i3of38YUdVpKdnTOUf+b5rqBOYOTb
+         QTHw==
+X-Gm-Message-State: APjAAAXjR6j5ilgRJzbIwm+nAqKLbaZbWDqxG7MVBns1z1DDOCuXuaOy
+        cwDvNGVZOPpyuRiCUvskyVA=
+X-Google-Smtp-Source: APXvYqwfNs3rYNCe85uoLP4qaAjVzfZujTE+Gw7cyfzke+ypRyumEQSr/Pa7zGuzaOUuJPWIC0vuSw==
+X-Received: by 2002:a17:90a:200d:: with SMTP id n13mr16663435pjc.16.1576242172888;
+        Fri, 13 Dec 2019 05:02:52 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 05:02:52 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        roger.pau@citrix.com
+Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
+        sjpark@amazon.com, sj38.park@gmail.com,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 2/3] xen/blkback: Squeeze page pools if a memory pressure is detected
+Date:   Fri, 13 Dec 2019 13:02:10 +0000
+Message-Id: <20191213130211.24011-3-sjpark@amazon.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213130211.24011-1-sjpark@amazon.de>
+References: <20191213130211.24011-1-sjpark@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <2776e3c7-999e-5e6f-3a0e-211226dc30e6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.11.2019 19:51, Dmitry Osipenko пишет:
-> 18.11.2019 19:45, Dmitry Osipenko пишет:
->> Both NVIDIA Tegra20 and Tegra30 SoCs should be blacklisted because CPU
->> OPPs use supported_hw and thus platdev isn't suitable for these SoCs.
->> Currently cpufreq-dt driver produces a bit annoying warning splats
->> during boot because valid OPPs are not found, this will be fixed once
->> tegra20-cpufreq driver will be update to support cpufreq-dt. The warnings
->> will also happen on older stable kernels using newer device-trees, thus
->> this patch should be backported to stable kernels as well.
->>
->> Cc: <stable@vger.kernel.org>
->> Reported-by: Jon Hunter <jonathanh@nvidia.com>
->> Fixes: 4053aa65c517 ("ARM: tegra: cardhu-a04: Add CPU Operating Performance Points")
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
->> index f1d170dcf4d3..aba591d57c67 100644
->> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
->> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
->> @@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
->>  	{ .compatible = "mediatek,mt8176", },
->>  	{ .compatible = "mediatek,mt8183", },
->>  
->> +	{ .compatible = "nvidia,tegra20", },
->> +	{ .compatible = "nvidia,tegra30", },
->>  	{ .compatible = "nvidia,tegra124", },
->>  	{ .compatible = "nvidia,tegra210", },
->>  
->>
-> 
-> Hello Viresh,
-> 
-> Could you please pick up this patch for v5.5 fixes? Thanks in advance!
-> 
+Each `blkif` has a free pages pool for the grant mapping.  The size of
+the pool starts from zero and is increased on demand while processing
+the I/O requests.  If current I/O requests handling is finished or 100
+milliseconds has passed since last I/O requests handling, it checks and
+shrinks the pool to not exceed the size limit, `max_buffer_pages`.
 
-Viresh / Rafael? Maybe I should send that patch separately?
+Therefore, host administrators can cause memory pressure in blkback by
+attaching a large number of block devices and inducing I/O.  Such
+problematic situations can be avoided by limiting the maximum number of
+devices that can be attached, but finding the optimal limit is not so
+easy.  Improper set of the limit can results in memory pressure or a
+resource underutilization.  This commit avoids such problematic
+situations by squeezing the pools (returns every free page in the pool
+to the system) for a while (users can set this duration via a module
+parameter) if memory pressure is detected.
+
+Discussions
+===========
+
+The `blkback`'s original shrinking mechanism returns only pages in the
+pool which are not currently be used by `blkback` to the system.  In
+other words, the pages that are not mapped with granted pages.  Because
+this commit is changing only the shrink limit but still uses the same
+freeing mechanism it does not touch pages which are currently mapping
+grants.
+
+Once memory pressure is detected, this commit keeps the squeezing limit
+for a user-specified time duration.  The duration should be neither too
+long nor too short.  If it is too long, the squeezing incurring overhead
+can reduce the I/O performance.  If it is too short, `blkback` will not
+free enough pages to reduce the memory pressure.  This commit sets the
+value as `10 milliseconds` by default because it is a short time in
+terms of I/O while it is a long time in terms of memory operations.
+Also, as the original shrinking mechanism works for at least every 100
+milliseconds, this could be a somewhat reasonable choice.  I also tested
+other durations (refer to the below section for more details) and
+confirmed that 10 milliseconds is the one that works best with the test.
+That said, the proper duration depends on actual configurations and
+workloads.  That's why this commit allows users to set the duration as a
+module parameter.
+
+Memory Pressure Test
+====================
+
+To show how this commit fixes the memory pressure situation well, I
+configured a test environment on a xen-running virtualization system.
+On the `blkfront` running guest instances, I attach a large number of
+network-backed volume devices and induce I/O to those.  Meanwhile, I
+measure the number of pages that swapped in (pswpin) and out (pswpout)
+on the `blkback` running guest.  The test ran twice, once for the
+`blkback` before this commit and once for that after this commit.  As
+shown below, this commit has dramatically reduced the memory pressure:
+
+                pswpin  pswpout
+    before      76,672  185,799
+    after          212    3,325
+
+Optimal Aggressive Shrinking Duration
+-------------------------------------
+
+To find a best squeezing duration, I repeated the test with three
+different durations (1ms, 10ms, and 100ms).  The results are as below:
+
+    duration    pswpin  pswpout
+    1           852     6,424
+    10          212     3,325
+    100         203     3,340
+
+As expected, the memory pressure has decreased as the duration is
+increased, but the reduction stopped from the `10ms`.  Based on this
+results, I chose the default duration as 10ms.
+
+Performance Overhead Test
+=========================
+
+This commit could incur I/O performance degradation under severe memory
+pressure because the squeezing will require more page allocations per
+I/O.  To show the overhead, I artificially made a worst-case squeezing
+situation and measured the I/O performance of a `blkfront` running
+guest.
+
+For the artificial squeezing, I set the `blkback.max_buffer_pages` using
+the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  In this
+test, I set the value to `1024` and `0`.  The `1024` is the default
+value.  Setting the value as `0` is same to a situation doing the
+squeezing always (worst-case).
+
+For the I/O performance measurement, I run a simple `dd` command 5 times
+as below and collect the 'MB/s' results.
+
+    $ for i in {1..5}; do dd if=/dev/zero of=file \
+                             bs=4k count=$((256*512)); sync; done
+
+If the underlying block device is slow enough, the squeezing overhead
+could be hidden.  For the reason, I do this test for both a slow block
+device and a fast block device.  I use a popular cloud block storage
+service, ebs[1] as a slow device and the ramdisk block device[2] for the
+fast device.
+
+The results are as below.  'max_pgs' represents the value of the
+`blkback.max_buffer_pages` parameter.
+
+On the slow block device
+------------------------
+
+    max_pgs   Min       Max       Median     Avg    Stddev
+    0         38.7      45.8      38.7       40.12  3.1752165
+    1024      38.7      45.8      38.7       40.12  3.1752165
+    No difference proven at 95.0% confidence
+
+On the fast block device
+------------------------
+
+    max_pgs   Min       Max       Median     Avg    Stddev
+    0         417       423       420        419.4  2.5099801
+    1024      414       425       416        417.8  4.4384682
+    No difference proven at 95.0% confidence
+
+In short, even worst case squeezing on ramdisk based fast block device
+makes no visible performance degradation.  Please note that this is just
+a very simple and minimal test.  On systems using super-fast block
+devices and a special I/O workload, the results might be different.  If
+you have any doubt, test on your machine with your workload to find the
+optimal squeezing duration for you.
+
+[1] https://aws.amazon.com/ebs/
+[2] https://www.kernel.org/doc/html/latest/admin-guide/blockdev/ramdisk.html
+
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ .../ABI/testing/sysfs-driver-xen-blkback      |  9 ++++++++
+ drivers/block/xen-blkback/blkback.c           | 22 +++++++++++++++++--
+ drivers/block/xen-blkback/common.h            |  2 ++
+ drivers/block/xen-blkback/xenbus.c            | 11 +++++++++-
+ 4 files changed, 41 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-driver-xen-blkback b/Documentation/ABI/testing/sysfs-driver-xen-blkback
+index 4e7babb3ba1f..a74a6d513c9f 100644
+--- a/Documentation/ABI/testing/sysfs-driver-xen-blkback
++++ b/Documentation/ABI/testing/sysfs-driver-xen-blkback
+@@ -25,3 +25,12 @@ Description:
+                 allocated without being in use. The time is in
+                 seconds, 0 means indefinitely long.
+                 The default is 60 seconds.
++
++What:           /sys/module/xen_blkback/parameters/buffer_squeeze_duration_ms
++Date:           December 2019
++KernelVersion:  5.5
++Contact:        Roger Pau Monné <roger.pau@citrix.com>
++Description:
++                How long the block backend buffers release every free pages in
++                those under memory pressure.  The time is in milliseconds.
++                The default is 10 milliseconds.
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index fd1e19f1a49f..26606c4896fd 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -142,6 +142,21 @@ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
+ 		HZ * xen_blkif_pgrant_timeout);
+ }
+ 
++/* Once a memory pressure is detected, squeeze free page pools for a while. */
++static unsigned int buffer_squeeze_duration_ms = 10;
++module_param_named(buffer_squeeze_duration_ms,
++		buffer_squeeze_duration_ms, int, 0644);
++MODULE_PARM_DESC(buffer_squeeze_duration_ms,
++"Duration in ms to squeeze pages buffer when a memory pressure is detected");
++
++static unsigned long buffer_squeeze_end;
++
++void xen_blkbk_update_buffer_squeeze_end(struct xen_blkif *blkif)
++{
++	blkif->buffer_squeeze_end = jiffies +
++		msecs_to_jiffies(buffer_squeeze_duration_ms);
++}
++
+ static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
+ {
+ 	unsigned long flags;
+@@ -656,8 +671,11 @@ int xen_blkif_schedule(void *arg)
+ 			ring->next_lru = jiffies + msecs_to_jiffies(LRU_INTERVAL);
+ 		}
+ 
+-		/* Shrink if we have more than xen_blkif_max_buffer_pages */
+-		shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
++		/* Shrink the free pages pool if it is too large. */
++		if (time_before(jiffies, buffer_squeeze_end))
++			shrink_free_pagepool(ring, 0);
++		else
++			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
+ 
+ 		if (log_stats && time_after(jiffies, ring->st_print))
+ 			print_stats(ring);
+diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkback/common.h
+index 1d3002d773f7..ba653126177d 100644
+--- a/drivers/block/xen-blkback/common.h
++++ b/drivers/block/xen-blkback/common.h
+@@ -319,6 +319,7 @@ struct xen_blkif {
+ 	/* All rings for this device. */
+ 	struct xen_blkif_ring	*rings;
+ 	unsigned int		nr_rings;
++	unsigned long		buffer_squeeze_end;
+ };
+ 
+ struct seg_buf {
+@@ -383,6 +384,7 @@ irqreturn_t xen_blkif_be_int(int irq, void *dev_id);
+ int xen_blkif_schedule(void *arg);
+ int xen_blkif_purge_persistent(void *arg);
+ void xen_blkbk_free_caches(struct xen_blkif_ring *ring);
++void xen_blkbk_update_buffer_squeeze_end(struct xen_blkif *blkif);
+ 
+ int xen_blkbk_flush_diskcache(struct xenbus_transaction xbt,
+ 			      struct backend_info *be, int state);
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index b90dbcd99c03..09fe6cb5c4ea 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -824,6 +824,14 @@ static void frontend_changed(struct xenbus_device *dev,
+ }
+ 
+ 
++void xen_blkbk_reclaim_memory(struct xenbus_device *dev)
++{
++	struct backend_info *be = dev_get_drvdata(&dev->dev);
++
++	xen_blkbk_update_buffer_squeeze_end(be->blkif);
++}
++
++
+ /* ** Connection ** */
+ 
+ 
+@@ -1115,7 +1123,8 @@ static struct xenbus_driver xen_blkbk_driver = {
+ 	.ids  = xen_blkbk_ids,
+ 	.probe = xen_blkbk_probe,
+ 	.remove = xen_blkbk_remove,
+-	.otherend_changed = frontend_changed
++	.otherend_changed = frontend_changed,
++	.reclaim_memory = xen_blkbk_reclaim_memory,
+ };
+ 
+ int xen_blkif_xenbus_init(void)
+-- 
+2.17.1
+
