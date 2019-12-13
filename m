@@ -6,64 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318AAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D1BC00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C62E2253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9613A2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576278613;
-	bh=W0/3GK7wjRbtYrP1sNxwWGJzeNh9uPSeWJTmPG73fwU=;
+	s=default; t=1576278614;
+	bh=7qzk3HQAeyJ3JJ09iWWj9q5Ehzl36kM4bhYgUdLpx1Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=c5DPXhJ3FhHC+ZBD3vIpJbvGFRM2uRx8183/B4zYgEcoE1gbGarO0rVVCgpHplGYY
-	 98Plmp+CUNxQQWUE0S7fQ7s6hGdfFzs53qHoSfJp4K5KdYBjpI+lC7YJDU2+XSMRgA
-	 RFVdTKHzYz9iTliHCumjeAk88WZxwpiT+q4NKz7Y=
+	b=YeTcQTwiOX1Mk0IFIwEHfDe7R3pbxNTRCdisTr5etkTgPNM/AwQm0d2rtvufOdUZt
+	 bjJPzm1pq3iCyWc239BDWromBMlm+drweAXnernW3lYn9zz35QTAglfcW0QBWOtRar
+	 /2I4Lp6lHogNhJj2nz2baZ7Lf8jCHsHpRTXLsG5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLMXKM (ORCPT
+        id S1726760AbfLMXKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 13 Dec 2019 18:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:38024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfLMXKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:10:11 -0500
-Subject: Re: [GIT PULL] treewide conversion to sizeof_field() for v5.5-rc2
+        id S1726599AbfLMXKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 18:10:12 -0500
+Subject: Re: [GIT PULL] arch/nios2 fix for v5.5-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576278611;
-        bh=W0/3GK7wjRbtYrP1sNxwWGJzeNh9uPSeWJTmPG73fwU=;
+        bh=7qzk3HQAeyJ3JJ09iWWj9q5Ehzl36kM4bhYgUdLpx1Q=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hHmQwpH+RNhSAXoUrf9aWUK+IEed6vMsUyG6Vh4hshHvcS3hv/UHVJjjK5oYtGHYz
-         USS+SagH0WdX4GiO9RsfMwAg7skb3uzHRIA4TIHtEFlbFdciYyGxRIhGoxm2wxuyhz
-         +FbiKut1COFxN3LQB6W+gy/mh8rRY5ph7ndlhQ2A=
+        b=JMawh/oNlSfP1F/WDku90CV1oez/35ooHoBNSxgl0eXQJJn4sTDRByRTKjpNlelY1
+         +qAkRadSoT+5O/aHmUQkJyXyDewa9tEwBC7aqX9/H5GHgKAUZ6IeMD1GCmOl43YBXC
+         HJSkV2Mv0MOEse8xTgR73xgZDcy94UMMvVDV6azU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <201912091054.ECCE323A6@keescook>
-References: <201912091054.ECCE323A6@keescook>
+In-Reply-To: <MN2PR11MB4509EB06FE5B942083D9E097CC540@MN2PR11MB4509.namprd11.prod.outlook.com>
+References: <MN2PR11MB4509EB06FE5B942083D9E097CC540@MN2PR11MB4509.namprd11.prod.outlook.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <201912091054.ECCE323A6@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
- tags/sizeof_field-v5.5-rc2
-X-PR-Tracked-Commit-Id: c593642c8be046915ca3a4a300243a68077cd207
+X-PR-Tracked-Message-Id: <MN2PR11MB4509EB06FE5B942083D9E097CC540@MN2PR11MB4509.namprd11.prod.outlook.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
+ tags/nios2-v5.5-rc2
+X-PR-Tracked-Commit-Id: e32ea127d81c12882f39c2783d78634597ff21a2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 22ff311af9c7d0eca4e9d276e95c4793a6ecf84f
-Message-Id: <157627861114.1837.10201169523541394928.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: e31736d9fae841e8a1612f263136454af10f476a
+Message-Id: <157627861163.1837.10202656917767790959.pr-tracker-bot@kernel.org>
 Date:   Fri, 13 Dec 2019 23:10:11 +0000
-To:     Kees Cook <keescook@chromium.org>
+To:     "Tan, Ley Foon" <ley.foon.tan@intel.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Joe Perches <joe@perches.com>
+        "'lftan.linux@gmail.com'" <lftan.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 9 Dec 2019 11:05:51 -0800:
+The pull request you sent on Fri, 13 Dec 2019 08:24:49 +0000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/sizeof_field-v5.5-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git tags/nios2-v5.5-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/22ff311af9c7d0eca4e9d276e95c4793a6ecf84f
+https://git.kernel.org/torvalds/c/e31736d9fae841e8a1612f263136454af10f476a
 
 Thank you!
 
