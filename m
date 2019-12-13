@@ -2,124 +2,194 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575EDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0160DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209AB2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576274708;
-	bh=lB0pmE4DH9n1aB+8qsKB2hF3RhXN8SqieZmVDmlXu3o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Peeef1+3Rcjyi6xmV1wkS4WLHTC3ZToUWU7fMk4PTpa/iyqwSXeJOV5FpZiVpKmy+
-	 bUqLalphcwvjcNj5FdG+eA2xEOuo7Dzy7v3e3vPbf84NVlgAlAnqQ5qxOwXgfM2VPy
-	 gy9/RCdYj1UjPbjMUij5QD8ay6LTgG5hFRoUMDG8=
+	by mail.kernel.org (Postfix) with ESMTP id CF3322073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfLMWFH (ORCPT
+        id S1726638AbfLMWHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:05:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34936 "EHLO mail.kernel.org"
+        Fri, 13 Dec 2019 17:07:30 -0500
+Received: from mga14.intel.com ([192.55.52.115]:6679 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbfLMWFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:05:06 -0500
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 790C7206DA
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 22:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576274705;
-        bh=lB0pmE4DH9n1aB+8qsKB2hF3RhXN8SqieZmVDmlXu3o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ro+XXfNCmF2DYiSC0iWcoMb30gc3gC5HlNG+UuNlqxhgAU0oCAuqiM+MS5aIiy33J
-         S2P+cuaDNV4QnzAoD+LNBCwyWpw8J9H/QxAIEaJyRi7QwdzD/yDWh9xAfYbCtvXdGV
-         hYlaX3pDqyYe7VwmzH/cWYJ00snRdfRcCkqs4bvI=
-Received: by mail-wm1-f44.google.com with SMTP id a5so363451wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:05:05 -0800 (PST)
-X-Gm-Message-State: APjAAAX8gqPHIrEGCRvU+hoFahojA+Ss0wSMtJN7PJ643VOSVvNctnlC
-        od4m5eBNKbKDPZo8l0zDiE+33BieRWNIKDq43Xvxjg==
-X-Google-Smtp-Source: APXvYqwJqiYJWWJLnD7MVAVhWixUCzijvK0zvRV05H850puS930kAWCyf3ggPO+OIZT7N+dZo0x4pEapwXHKt/lg4eo=
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr14372276wmc.165.1576259379347;
- Fri, 13 Dec 2019 09:49:39 -0800 (PST)
+        id S1725554AbfLMWHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:07:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 14:06:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="221003419"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Dec 2019 14:06:50 -0800
+Subject: Re: [PATCH RFC v2 04/14] mm: create common code from request
+ allocation based from blk-mq code
+To:     Andrew Morton <akpm@linux-foundation.org>, axboe@kernel.dk
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
+        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        fenghua.yu@intel.com, hpa@zytor.com
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+ <157617507410.42350.16156693139630931510.stgit@djiang5-desk3.ch.intel.com>
+ <20191212164303.7fb6e91c20ffe125f87bda57@linux-foundation.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <87c977f7-1c4d-a21d-8b7b-2d2b8fb317bb@intel.com>
+Date:   Fri, 13 Dec 2019 15:06:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <cbecab05-9e95-5dec-ef81-499617c153a6@suse.com>
- <08B92B44-CCA9-4B83-B9CC-F1601D44B73F@amacapital.net> <0053f606-f4f7-3951-f40b-b7bd08703590@suse.com>
- <CALCETrWHNunMzP1xHmOhvHG20_baoeXhNbCcEJgCgm5xzGM5Tw@mail.gmail.com> <ed9d8df6-0fe7-ca15-bab2-4d9cbbfe62f0@suse.com>
-In-Reply-To: <ed9d8df6-0fe7-ca15-bab2-4d9cbbfe62f0@suse.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 13 Dec 2019 09:49:28 -0800
-X-Gmail-Original-Message-ID: <CALCETrXoK+6gNn=3_yZdkHScd=N-a2f_VPC-svkFfHVsiVusVw@mail.gmail.com>
-Message-ID: <CALCETrXoK+6gNn=3_yZdkHScd=N-a2f_VPC-svkFfHVsiVusVw@mail.gmail.com>
-Subject: Re: [PATCH] x86-64/entry: add instruction suffix to SYSRET
-To:     Jan Beulich <jbeulich@suse.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191212164303.7fb6e91c20ffe125f87bda57@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 1:55 AM Jan Beulich <jbeulich@suse.com> wrote:
->
-> On 12.12.2019 22:43, Andy Lutomirski wrote:
-> > On Tue, Dec 10, 2019 at 7:40 AM Jan Beulich <jbeulich@suse.com> wrote:
-> >>
-> >> On 10.12.2019 16:29, Andy Lutomirski wrote:
-> >>>> On Dec 10, 2019, at 2:48 AM, Jan Beulich <JBeulich@suse.com> wrote:
-> >>>>
-> >>>> =EF=BB=BFOmitting suffixes from instructions in AT&T mode is bad pra=
-ctice when
-> >>>> operand size cannot be determined by the assembler from register
-> >>>> operands, and is likely going to be warned about by upstream gas in =
-the
-> >>>> future. Add the missing suffix here.
-> >>>>
-> >>>> Signed-off-by: Jan Beulich <jbeulich@suse.com>
-> >>>>
-> >>>> --- a/arch/x86/entry/entry_64.S
-> >>>> +++ b/arch/x86/entry/entry_64.S
-> >>>> @@ -1728,7 +1728,7 @@ END(nmi)
-> >>>> SYM_CODE_START(ignore_sysret)
-> >>>>    UNWIND_HINT_EMPTY
-> >>>>    mov    $-ENOSYS, %eax
-> >>>> -    sysret
-> >>>> +    sysretl
-> >>>
-> >>> Isn=E2=80=99t the default sysretq?  sysretl looks more correct, but t=
-hat suggests
-> >>> that your changelog is wrong.
-> >>
-> >> No, this is different from ret, and more like iret and lret.
-> >>
-> >>> Is this code even reachable?
-> >>
-> >> Yes afaict, supported by the comment ahead of the symbol. syscall_init=
-()
-> >> puts its address into MSR_CSTAR when !IA32_EMULATION.
-> >>
-> >
-> > What I meant was: can a program actually get itself into 32-bit mode
-> > to execute a 32-bit SYSCALL instruction?
->
-> Why not? It can set up a 32-bit code segment descriptor, far-branch
-> into it, and then execute SYSCALL. I can't see anything preventing
-> this in the logic involved in descriptor adjustment system calls. In
-> fact it looks to be at least partly the opposite - fill_ldt()
-> disallows creation of 64-bit code segments (oddly enough
-> fill_user_desc() then still copies the bit back, despite there
-> apparently being no way for it to get set).
+On 12/12/19 5:43 PM, Andrew Morton wrote:
+> On Thu, 12 Dec 2019 11:24:34 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Move the allocation of requests from compound pages to a common function
+>> to allow usages by other callers.
+> 
+> What other callers are expected?
 
-Do we allow creation of 32-bit code segments on !IA32_EMULATION
-kernels?  I think we shouldn't, but I'm not really sure.
+I'm introducing usage in the dmaengine subsystem. So it will be block 
+and dmaengine subsystem so far.
 
-Anyway, this is irrelevant to the patch at hand.
+> 
+>> Since the routine has more to do with
+>> memory allocation and management, it is moved to be exported by the
+>> mempool.h and be part of mm subsystem.
+>>
+> 
+> Hm, this move doesn't seem to fit very well.  But perhaps it's close
+> enough.
 
---Andy
+I'm open to suggestions.
+
+> 
+>> --- a/mm/Makefile
+>> +++ b/mm/Makefile
+>> @@ -42,7 +42,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+>>   			   mm_init.o mmu_context.o percpu.o slab_common.o \
+>>   			   compaction.o vmacache.o \
+>>   			   interval_tree.o list_lru.o workingset.o \
+>> -			   debug.o gup.o $(mmu-y)
+>> +			   debug.o gup.o request_alloc.o $(mmu-y)
+> 
+> Now there's a regression.  We're adding a bunch of unused code to a
+> CONFIG_BLOCK=n kernel.
+
+I will introduce a KCONFIG value and have block and dmaegine select it 
+to build this new code in when needed.
+
+> 
+>>
+>> ...
+>>
+>> +void request_from_pages_free(struct list_head *page_list)
+>>
+>> ...
+>>
+>> +int request_from_pages_alloc(void *ctx, unsigned int depth, size_t rq_size,
+>> +			     struct list_head *page_list, int max_order,
+>> +			     int node,
+>> +			     void (*assign)(void *ctx, void *req, int idx))
+> 
+> I find these function names hard to understand.  Are they well chosen?
+
+The names could probably be better. Maybe
+context_alloc_from_pages() and context_free_from_pages()?
+
+So the background of this was I saw a block of code in block-mq that I 
+can utilize in the new dmanegine request allocation. The code block is 
+for mq to allocate pre-allocate requests from pages. I contacted Jens 
+and he was ok with moving it to a common location out of blk-mq code. 
+Maybe the name request is too specific and for a "general" allocator 
+helper does not make sense.
+
+> 
+> Some documentation would help.  These are global, exported-to-modules
+> API functions and they really should be fully documented.
+
+Yes I will add more comments in regard to this function.
+
+Jens, since you are the original write of this code, do you mind 
+providing some commentary as to some of the quirks of this code block? I 
+can do my best to try to explain it but you probably know the the code 
+much better than me. Thanks!
+
+> 
+>> +{
+>> +	size_t left;
+>> +	unsigned int i, j, entries_per_page;
+>> +
+>> +	left = rq_size * depth;
+>> +
+>> +	for (i = 0; i < depth; ) {
+> 
+> "depth" of what?
+> 
+>> +		int this_order = max_order;
+>> +		struct page *page;
+>> +		int to_do;
+>> +		void *p;
+>> +
+>> +		while (this_order && left < order_to_size(this_order - 1))
+>> +			this_order--;
+>> +
+>> +		do {
+>> +			page = alloc_pages_node(node,
+>> +						GFP_NOIO | __GFP_NOWARN |
+>> +						__GFP_NORETRY | __GFP_ZERO,
+>> +						this_order);
+>> +			if (page)
+>> +				break;
+>> +			if (!this_order--)
+>> +				break;
+>> +			if (order_to_size(this_order) < rq_size)
+>> +				break;
+>> +		} while (1);
+> 
+> What the heck is all the above trying to do?  Some explanatory comments
+> are needed, methinks.
+> 
+>> +		if (!page)
+>> +			goto fail;
+>> +
+>> +		page->private = this_order;
+>> +		list_add_tail(&page->lru, page_list);
+>> +
+>> +		p = page_address(page);
+>> +		/*
+>> +		 * Allow kmemleak to scan these pages as they contain pointers
+>> +		 * to additional allocations like via ops->init_request().
+>> +		 */
+>> +		kmemleak_alloc(p, order_to_size(this_order), 1, GFP_NOIO);
+>> +		entries_per_page = order_to_size(this_order) / rq_size;
+>> +		to_do = min(entries_per_page, depth - i);
+>> +		left -= to_do * rq_size;
+>> +		for (j = 0; j < to_do; j++) {
+>> +			assign((void *)ctx, p, i);
+>> +			p += rq_size;
+>> +			i++;
+>> +		}
+>> +	}
+>> +
+>> +	return i;
+>> +
+>> +fail:
+>> +	request_from_pages_free(page_list);
+>> +	return -ENOMEM;
+>> +}
+>> +EXPORT_SYMBOL_GPL(request_from_pages_alloc);
