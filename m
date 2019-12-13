@@ -2,84 +2,221 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8A2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E895AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70422173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F302073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQ7K4Q2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731773AbfLMCuj convert rfc822-to-8bit (ORCPT
+        id S1731794AbfLMCwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:50:39 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:50468 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726897AbfLMCuj (ORCPT
+        Thu, 12 Dec 2019 21:52:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48826 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726631AbfLMCwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 21:50:39 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xBD2nRML016388
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 13 Dec 2019 10:49:27 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from lenovo (10.0.74.130) by BJMBX02.spreadtrum.com (10.0.64.8) with
- Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 13 Dec 2019 10:49:50 +0800
-Date:   Fri, 13 Dec 2019 10:49:35 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>
-CC:     Orson Zhai <orson.zhai@unisoc.com>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <baolin.wang@unisoc.com>, <kevin.tang@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        <liangcai.fan@unisoc.com>, <orsonzhai@gmail.com>
-Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon
- reference
-Message-ID: <20191213024935.GD9271@lenovo>
-References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
- <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
+        Thu, 12 Dec 2019 21:52:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576205539;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cD1L+8FREG+GUDcMz+uat68SlppNJ1ul4pAa2adOJms=;
+        b=HQ7K4Q2Yb0jJw4bWNsQQduqYLY8QRGMk7p0hJg0g14gnKwDYWf0tq+Mw6LBuX4yXZMgho8
+        Z7kfzkUG+RndNYIVcHBfoA1bgBw5SHa1X5hiznXnSZM7yS70q3s/tWEaLoDtKjAz2QVR67
+        5BKDgmuIVnla8+BgwNi8/EdVIKvUGAQ=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-9sV7kxYDO0Sb1xIYCOdpug-1; Thu, 12 Dec 2019 21:52:18 -0500
+X-MC-Unique: 9sV7kxYDO0Sb1xIYCOdpug-1
+Received: by mail-yb1-f197.google.com with SMTP id g132so837604ybf.21
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 18:52:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=cD1L+8FREG+GUDcMz+uat68SlppNJ1ul4pAa2adOJms=;
+        b=mCcp8kzQUoVj2R0OhxmGXQoR+4qajAH0B1TTbHdGu3I4gEo2afSFB9jA7cxFkL15TU
+         ClApa3o6Q+YWtB18Aos3QkRVPbOnixmvnOxnxYerE5tWpvKlePPDw5ovzJzvLs6sU+4F
+         pK0jOR9vn/X40T+JoUlj1HTcpTMEeQ4vD/lLwPJXOFOUlxCRlsCgClO/6xgs/nczvy+Q
+         JX474QCnb2yo/nNvJTcSKx74zY2spwVYgHuAZBiew9KlNI2HBtHQVFiRtDkPFaXwEfjV
+         U14tes8v+nRsC+o4CArH8/WDdNzXZyl+AYSe5TvebUq1EvK9wCQ+8d0aYShJv1JDUHCx
+         gX1w==
+X-Gm-Message-State: APjAAAX6NkdPAnOXK4GNpSDtSxpirXfH3DaBt4iiApfXxilLkzcCeV5I
+        Km4GiQWzZiJdHOc+2KJaQnuolJpdJJ+i5Lm/oyhGM+QFa0swMB0mtarUhLal4FEWGsgMpKJme7K
+        I2/jHQC+mCnXVQ7b6i/1TWS6m
+X-Received: by 2002:a25:b814:: with SMTP id v20mr7059590ybj.108.1576205537844;
+        Thu, 12 Dec 2019 18:52:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxKfbL8mDNB7zRISO5Uc+9Lbw1DKFRT8f3eUHKdf/Rvj+kSjJjTiPaM16CZsiJA82Bqiv70yQ==
+X-Received: by 2002:a25:b814:: with SMTP id v20mr7059569ybj.108.1576205537478;
+        Thu, 12 Dec 2019 18:52:17 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id g64sm3548300ywa.20.2019.12.12.18.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 18:52:16 -0800 (PST)
+Date:   Thu, 12 Dec 2019 19:51:59 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
+Message-ID: <20191213025159.kwf6f6zjmcjecamp@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
+ <20191212014952.vlrmxrk2cebwxjnp@cantor>
+ <6f3bcad9-b9b3-b349-fdad-ce53a79a665b@linux.intel.com>
+ <20191213003013.gc3zg3fpzpjntnzg@cantor>
+ <7d58da5b-3f55-72b2-0638-ae561446d207@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
-X-Originating-IP: [10.0.74.130]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xBD2nRML016388
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7d58da5b-3f55-72b2-0638-ae561446d207@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee and Rob,
-
-On Wed, Dec 11, 2019 at 02:55:39PM +0100, Arnd Bergmann wrote:
-> On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wrote:
-> >
-> > There are a lot of similar global registers being used across multiple SoCs
-> > from Unisoc. But most of these registers are assigned with different offset
-> > for different SoCs. It is hard to handle all of them in an all-in-one
-> > kernel image.
-> >
-> > Add a helper function to get regmap with arguments where we could put some
-> > extra information such as the offset value.
-> >
-> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+On Fri Dec 13 19, Lu Baolu wrote:
+>Hi,
 >
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>On 12/13/19 8:30 AM, Jerry Snitselaar wrote:
+>>On Thu Dec 12 19, Lu Baolu wrote:
+>>>Hi,
+>>>
+>>>On 12/12/19 9:49 AM, Jerry Snitselaar wrote:
+>>>>On Wed Dec 11 19, Lu Baolu wrote:
+>>>>>If the default DMA domain of a group doesn't fit a device, it
+>>>>>will still sit in the group but use a private identity domain.
+>>>>>When map/unmap/iova_to_phys come through iommu API, the driver
+>>>>>should still serve them, otherwise, other devices in the same
+>>>>>group will be impacted. Since identity domain has been mapped
+>>>>>with the whole available memory space and RMRRs, we don't need
+>>>>>to worry about the impact on it.
+>>>>>
+>>>>>Link: https://www.spinics.net/lists/iommu/msg40416.html
+>>>>>Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>>>>>Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>>>>Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains 
+>>>>>replaced with private")
+>>>>>Cc: stable@vger.kernel.org # v5.3+
+>>>>>Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>>
+>>>>Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>>
+>>>Can you please try this fix and check whether it can fix your problem?
+>>>If it helps, do you mind adding a Tested-by?
+>>>
+>>>Best regards,
+>>>baolu
+>>>
+>>
+>>I'm testing with this patch, my patch that moves the direct mapping call,
+>>and Alex's patch for the ISA bridge. It solved the 2 iommu mapping errors
+>>I was seeing with default passthrough, I no longer see all the dmar pte
+>>read access errors, and the system boots allowing me to login. I'm tracking
+>>down 2 issues at the moment. With passthrough I see a problem with 01:00.4
+>>that I mentioned in the earlier email:
+>>
+>>[   78.978573] uhci_hcd: USB Universal Host Controller Interface driver
+>>[   78.980842] uhci_hcd 0000:01:00.4: UHCI Host Controller
+>>[   78.982738] uhci_hcd 0000:01:00.4: new USB bus registered, 
+>>assigned bus number 3
+>>[   78.985222] uhci_hcd 0000:01:00.4: detected 8 ports
+>>[   78.986907] uhci_hcd 0000:01:00.4: port count misdetected? 
+>>forcing to 2 ports
+>>[   78.989316] uhci_hcd 0000:01:00.4: irq 16, io base 0x00003c00
+>>[   78.994634] uhci_hcd 0000:01:00.4: DMAR: 32bit DMA uses 
+>>non-identity mapping
+>>[   7 0000:01:00.4: unable to allocate consistent memory for frame list
+>>[   79.499891] uhci_hcd 0000:01:00.4: startup error -16
+>>[   79.501588] uhci_hcd 0000:01:00.4: USB bus 3 deregistered
+>>[   79.503494] uhci_hcd 0000:01:00.4: init 0000:01:00.4 fail, -16
+>>[   79.505497] uhci_hcd: probe of 0000:01:00.4 failed with error -16
+>>
+>>If I boot the system with iommu=nopt I see an iommu map failure due to
+>>the prot check in __domain_mapping:
+>>
+>>[   40.940589] pci 0000:00:1f.0: iommu_group_add_device: calling 
+>>iommu_group_create_direct_mappings
+>>[   40.943558] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+>>iterating through mappings
+>>[   40.946402] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+>>calling apply_resv_region
+>>[   40.949184] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+>>entry type is direct
+>>[   40.951819] DMAR: intel_iommu_map: enter
+>>[   40.953128] DMAR: __domain_mapping: prot & 
+>>(DMA_PTE_READ|DMA_PTE_WRITE) == 0
+>>[   40.955486] DMAR: domain_mapping: __domain_mapping failed
+>>[   40.957348] DMAR: intel_iommu_map: domain_pfn_mapping returned -22
+>>[   40.959466] DMAR: intel_iommu_map: leave
+>>[   40.959468] iommu: iommu_map: ops->map failed iova 0x0 pa 
+>>0x0000000000000000 pgsize 0x1000
+>>[   40.963511] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+>>iommu_map failed
+>>[   40.966026] pci 0000:00:1f.0: iommu_group_create_direct_mappings: 
+>>leaving func
+>>[   40.968487] pci 0000:00:1f.0: iommu_group_add_device: calling 
+>>__iommu_attach_device
+>>[   40.971016] pci 0000:00:1f.0: Adding to iommu group 19
+>>[   40.972731] pci 0000:00:1f.0: DMAR: domain->type is dma
+>>
+>>/sys/kernel/iommu_groups/19
+>>[root@hp-dl388g8-07 19]# cat reserved_regions 0x0000000000000000 
+>>0x0000000000ffffff direct
+>>0x00000000bdf6e000 0x00000000bdf84fff direct
+>>0x00000000fee00000 0x00000000feefffff msi
+>>
+>>00:1f.0 ISA bridge: Intel Corporation C600/X79 series chipset LPC 
+>>Controller
+>
+>This seems to be another issue?
+>
+>Best regards,
+>baolu
 
-Does this patch look good to be applied?
+In intel_iommu_get_resv_regions this iommu_alloc_resv_region is called
+with prot set to 0:
 
-Or if any comments please feel free to send to me.
+                 if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
+                         reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
+                                                       IOMMU_RESV_DIRECT_RELAXABLE);
+                         if (reg)
 
-Thank you!
+I wonder if this is an issue with the region starting at 0x0 and this
+bit in iommu_group_create_mappings:
 
-Best Regards,
-Orson
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+			phys_addr = iommu_iova_to_phys(domain, addr);
+			if (phys_addr)
+				continue;
+
+Off to stick in some more debugging statements.
+
+Regards,
+Jerry
+
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
+
