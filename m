@@ -4,82 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63ABC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DD0C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC55205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FACE2067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576279783;
-	bh=kg1wLmGEJoCQjghlwAfXm1IbkwuqJhDA7BK0Te/3gsg=;
+	s=default; t=1576279858;
+	bh=w+5EflHn+GOEyDjLz4lJrI0MadPUn/UihaR2B7nAUtE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xwZoi1Lledu0aRINTk8bJFd4fOiCJOxV37685cmuYdjLY0TXxElUsm6guAEf6iTaC
-	 KgQuY9YEg21kQ3bJy8acURz6ml04lDGRGvnHjB/0GBXIMpr/ikBWebRalGXS1UOeGc
-	 w2TM9idpExi7dZSDdjwM3WnfEdOzkpSCJ6LCttcE=
+	b=fWxTiy36Hq7Zf9aRFQUmVDTgdsffhHw5k3o9rqj47leCYKskUr8SY3eQwawaiNL1d
+	 0SAcSr/1u7yPnXsGuWIuMfPNTJ6HrwJBheq4GEu2SrXEE3DxfmiNebEiVlr0Z7PGBb
+	 yBkvnL3JJvV4MBH2IJxRHdJIGwdSjyvodfmtAALQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLMX3m (ORCPT
+        id S1726739AbfLMXa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:29:42 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42584 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLMX3k (ORCPT
+        Fri, 13 Dec 2019 18:30:57 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43642 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfLMXa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:29:40 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j22so2060276oij.9;
-        Fri, 13 Dec 2019 15:29:40 -0800 (PST)
+        Fri, 13 Dec 2019 18:30:57 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so1024288oth.10;
+        Fri, 13 Dec 2019 15:30:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m7ZDoVimtRbppkq3mXaQzzU3mfgleq0CeC6M4xh1UDQ=;
-        b=AKRx9J4dwBwHs/RtXmcqHbSkL/7XG4sxYXPt7kDkdhGBmXPcbqG7i9bmyfxtPjG9Jj
-         uHcGDBZdckyueZECdIQW0r312BvW5MYTxnqmH4bmGw6iaLcuvlsAtmQCZuSlpcHieKf2
-         ie6CfIuxk3nIdfBQXE7ARvxZ7Wl8XiWJO0Y3uqkSG8Ftl+z20Q/U4B/hqfXT7BRC9uv4
-         fyAIBQu9qekslX4zH5YZLzRq9lDXXE1gu/y6UtSehWgd2YCUYn/aFLNOsuNDpH0f0flV
-         ioNC27BcVYXGHWPY6VSM1eP7LH3nhb3c1PJpNLZ9srI0oRGjfzQyDnUIsdmL9SZZ8+w/
-         ef/g==
-X-Gm-Message-State: APjAAAXNjTBUQEjUSsH+d34vkbWNlIcdGhrMd79X5RpRU/NGOW4p9U49
-        aG+0vGIv2voIcidn2gX3kg==
-X-Google-Smtp-Source: APXvYqxxxXP3ATVpyq8gPqENQUD4uftWKFxljdXqs0fD2LDAfZJ7txJETyw1WR2Y8EXOFX8+Q3+Nmg==
-X-Received: by 2002:aca:4183:: with SMTP id o125mr7767626oia.125.1576279779822;
-        Fri, 13 Dec 2019 15:29:39 -0800 (PST)
+        bh=gtY2+T1ox0A8va554qxncCqvVnnEac9GVhKoxQz2brU=;
+        b=ns1Cl2YKnjYhrNT0mnFaujDQeAnBgF0pKxUu3q84eZ3xem6q1t2XAwAUG3SSumchGD
+         tdc9kCJhqDEsdDyjKwgPuP+2apeYRLioxj+v7kYIY4l9wcOGwlmTIJQrLSODuME6dD8y
+         lbs3Tq3ATBjinmmQlItrXKBdioAbhLC80MV2xAnnfw9S3NUhFeN/yfAp5nlk8Vf4WtsC
+         U6FpZxxYT4laBZJx1vY3x3As0X5EjEtVkHKZEZyqeum6zRY0/OFCrlxDCtuIZ058/IVL
+         G80F5DMEyPC+vb9i4ulHuawT7GT9+K0SI1cfM7HVl+rFZAnhjQ7M2QoVcNEwc665a7vX
+         Q5jA==
+X-Gm-Message-State: APjAAAVTkOxjxL7+4xsKiS+NyJ/xQQb63cPH4iSeWSXCi0iZXEegD0bg
+        TtSdSx9TlcIuW5S9Li1dKQ==
+X-Google-Smtp-Source: APXvYqw2C389pcvF1+lJ2N1jxwZzZt9i/M4bE79s8BprnibexkABp7GRtQp/76wBTLLcKD0z28qDVA==
+X-Received: by 2002:a9d:7f11:: with SMTP id j17mr18076404otq.281.1576279856058;
+        Fri, 13 Dec 2019 15:30:56 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm3788415oia.21.2019.12.13.15.29.38
+        by smtp.gmail.com with ESMTPSA id j43sm3920091ota.59.2019.12.13.15.30.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:29:38 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:29:38 -0600
+        Fri, 13 Dec 2019 15:30:55 -0800 (PST)
+Date:   Fri, 13 Dec 2019 17:30:54 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     devicetree@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add a broadmobi entry
-Message-ID: <20191213232938.GA26283@bogus>
-References: <20191202172203.11917-1-angus@akkea.ca>
+Subject: Re: [PATCH 2/2] ASoC: gtm601: add the broadmobi interface
+Message-ID: <20191213233054.GA28177@bogus>
+References: <20191202174831.13638-1-angus@akkea.ca>
+ <20191202174831.13638-3-angus@akkea.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202172203.11917-1-angus@akkea.ca>
+In-Reply-To: <20191202174831.13638-3-angus@akkea.ca>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Dec 2019 10:22:03 -0700, "Angus Ainslie (Purism)" wrote:
-> Add Shanghai Broadmobi Communication Technology Co.,Ltd. for their modem
-> dts entries.
+On Mon,  2 Dec 2019 10:48:31 -0700, "Angus Ainslie (Purism)" wrote:
+> The Broadmobi BM818 uses a different sample rate and channels from the
+> option modem.
 > 
 > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/sound/gtm601.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
