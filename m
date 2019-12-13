@@ -2,85 +2,101 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C4AC79DA6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C93DC4BA39
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE83E2470A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Y9roHoe4"
+	by mail.kernel.org (Postfix) with ESMTP id 8B6612470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfLMQvW (ORCPT
+        id S1728275AbfLMQk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:51:22 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36701 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbfLMQvV (ORCPT
+        Fri, 13 Dec 2019 11:40:59 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:57001 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727974AbfLMQk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:51:21 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so95601pgc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=CAKYbgJOuPrQjZzMU15duDzEPoqOHPryHWVB0LlLVJ0=;
-        b=Y9roHoe4knC/3BeSYJfMTn6bay+pT2YhyVNHvcWdl3A8J7dp63no9Ekvt1JsYnoaHY
-         vixMt2a9ZIF+VpZCiLfqaF2+Qi91TDmH48MdsevifKtcEMPwo8ThbhsPJtVU/DX3SPGT
-         hozgRBw67+xOvh61BGiu/pj8aspFRnxjXdEAx9WReUQNZcfB5mw4371fWOrp/1xZSa25
-         DjaByZ9CuvGnurGZFRES5Thm6CY+r6na325r5TRh9PVZDAykJPzB8gcpQDig6tzpk1nQ
-         gE+1JvbnCl7LRzMaO9F7wvvv0XpXmTLwYcpXgri3ros2x8HNdTjJkIbRG9NX/W5AcVjP
-         BIiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CAKYbgJOuPrQjZzMU15duDzEPoqOHPryHWVB0LlLVJ0=;
-        b=BS86QeVP5d4o03yBAfeyp9B8qrdaqw1slTkNca+FpTfk17KUpCIdsfjdxzuD1AP9/7
-         lGJkCoZeRK40VnRagTxIL8kQ/sAjIbiV0RgSLM/N8q1xKnHCx+p4xkNmLPcjjQeFW8qo
-         Y3v682Y4lRcqK+BzbVvcDMNLN0HvgCGVX43/iGvUwkbtzsNCTTKerYSmrlB0ZUzqvQke
-         d0b/j0SYyrcvWU5OpwH+pH0pprmDiJy/lxpQ5NmXYdtMZSlLpbLmjEGz1q73vAqYY2LG
-         8kWVMsAJNiQH2dR0CIQwrZsyzaDKh2k+olSJHU7+6HUZi38EJRoRsHVR9fF/l75wi8OC
-         uyiw==
-X-Gm-Message-State: APjAAAVuarLVIKW3B2BTW0HzC70mF8aIVwM8hgN3K6RPKVDKntgFpgIm
-        kSTT8DQihMJzF4wnAasOen/sgw==
-X-Google-Smtp-Source: APXvYqx8c6YOAASRXq1y4Uky+FLljcRzDfb1EqKwF5yKxzGUufqLyOLiT0Js4vaXwqrz7WYzNKz0zQ==
-X-Received: by 2002:a62:5544:: with SMTP id j65mr381415pfb.121.1576255880888;
-        Fri, 13 Dec 2019 08:51:20 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 91sm10649806pjq.18.2019.12.13.08.51.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Dec 2019 08:51:19 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, mjourdan@baylibre.com
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 4/4] arm64: dts: meson-g12-common: add video decoder node
-In-Reply-To: <20191120111430.29552-5-narmstrong@baylibre.com>
-References: <20191120111430.29552-1-narmstrong@baylibre.com> <20191120111430.29552-5-narmstrong@baylibre.com>
-Date:   Fri, 13 Dec 2019 08:51:19 -0800
-Message-ID: <7hwob088zc.fsf@baylibre.com>
+        Fri, 13 Dec 2019 11:40:58 -0500
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MuUrM-1hoOAF0LYo-00rV9X; Fri, 13 Dec 2019 17:40:57 +0100
+Received: by mail-qk1-f180.google.com with SMTP id z76so98914qka.2;
+        Fri, 13 Dec 2019 08:40:56 -0800 (PST)
+X-Gm-Message-State: APjAAAWoS0U0GNvBrpx4FO4Z767v7goXk114etyG00wNVxJxB7w6KGwj
+        rVC2hlaLZt6d+5r/iY7AWGBZ1DxhbWp7k6Yh7Ig=
+X-Google-Smtp-Source: APXvYqw5u1orJc/a+i3My5cWS10VAbPb8wFPnJLEObrgY4XMCNLfXeYS18RvOE3gtWInw4m44JEidx73ZCZBJjkLuTw=
+X-Received: by 2002:a37:5b45:: with SMTP id p66mr14335919qkb.394.1576255255850;
+ Fri, 13 Dec 2019 08:40:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191213141046.1770441-1-arnd@arndb.de> <20191213141046.1770441-11-arnd@arndb.de>
+ <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com>
+In-Reply-To: <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 17:40:39 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
+Message-ID: <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wAw4Wi6VZUHfEEGkMBUqSjMEdjXoZgnhYkmoeo226Z8fiMwLwrn
+ e+FiZgw2B64glMViYcoywnnndOtaJRWXgA+K4RprdKHttefgT3roLNNjjW+a+gyZpY+bHqk
+ zvjhrwIqjZfFCSJWWriCqYxnN0Q4a3rif5mNS5Y5GbTsrXMH3w4q3pNqCvk6AV4OZMN33tQ
+ pD1kLrJwrcpWbHm27ZVGg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:z5uKNK97r58=:gjhYy2fzJmWJLKHBZ4fv5W
+ NTpJ7HZEtn03HGZqGzkW32yUs77UdOfYrGPIPIuH7/Fo+nyEaU14NJHxalUxjIXSRJnrmwnAx
+ GIn4PxJrmF5gBeJlee5E5o/VftRICudQCP2RLFSWS5LfU+Z/je3paDQjHwLfdxNKuM4OF1GiX
+ H67SVOmz4ZctgCkyui+Jqi7YcclFb3eZXltSoSVPo6bGRy7A06TFxmpD0JStQIskRu+EQ48E7
+ V5z30XfWJ2S4StU2WomVStVZFjKNxrr0y5zCSwcRvOhYyInir3bgKRix5Fci8hmR6HMQWJMOi
+ 859clQQ0/w+YrC/35KC/5OwNjk5ZbH+svcIFV/FwloCqvnmbb+lLwHLNf2pISciBNVIGI/xQa
+ e6idsW0l23k0rQeKMX4gANTpzdfvhJCQybA1Q57t//3OmNmqrKSBrc+N4Li/hhXotIueSmzVY
+ neRY5AQUTjk5yzqnBN5mJStlQ7VBd8l24dUpfdPqDnfdO6GF1FuWYXPI3pfo3alScS2DgpvGY
+ u6X9DMb6TDk1yjTMsvDTxstu7YWADS4uhkMXOocDJslJvL86bowoNBrA1t0ExqCwiyOdGFOxI
+ KdQPfy7FhRNgXdm+8lfxblLDfe0X81aZMwdZ+GTqnlZpLPAxb+iJnqG8/hpX/NM23sbuTukb7
+ QXdBEEBjfeTzIZxOQNeJZtf4/rE1+CihnogHzsF2htmfTDDlXzo/HAdHePzi7FOexVS4ck5Bp
+ mJpOlkt3vCiK0W57VYPh3XV7hpCA8SXwDUgbfjUepfIb2/ef+z9E21M8LHLZYCRUzBK43/PB2
+ LRaSO5wFHLNEqaMNGZmxPm8Aj9tart/gMGrAtOwHopDLA65wCQ1BjQ10LCmFCx6p47tgYc+pA
+ 6pAizvX1MXLNaIAgLsMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+> > On Dec 13, 2019, at 9:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-> From: Maxime Jourdan <mjourdan@baylibre.com>
+> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > index 24534db87e86..508d7c6c00b5 100644
+> > --- a/fs/nfsd/nfs4callback.c
+> > +++ b/fs/nfsd/nfs4callback.c
+> > @@ -823,7 +823,12 @@ static const struct rpc_program cb_program = {
+> > static int max_cb_time(struct net *net)
+> > {
+> >       struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > -     return max(nn->nfsd4_lease/10, (time_t)1) * HZ;
+> > +
+> > +     /* nfsd4_lease is set to at most one hour */
+> > +     if (WARN_ON_ONCE(nn->nfsd4_lease > 3600))
+> > +             return 360 * HZ;
 >
-> Add the video decoder node for the Amlogic G12A and compatible SoC.
->
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Why is the WARN_ON_ONCE added here? Is it really necessary?
 
-Queued for v5.6,
+This is to ensure the kernel doesn't change to a larger limit that
+requires a 64-bit division on a 32-bit architecture.
 
-Kevin
+With the old code, dividing by 10 was always fast as
+nn->nfsd4_lease was the size of an integer register. Now it
+is 64 bit wide, and I check that truncating it to 32 bit again
+is safe.
+
+> (Otherwise these all LGTM).
+
+Thanks for taking a look.
+
+      Arnd
