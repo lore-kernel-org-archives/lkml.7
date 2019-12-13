@@ -2,135 +2,205 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C24C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AC5227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8F8214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 06:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQBWlcsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfLMGDy (ORCPT
+        id S1732033AbfLMGGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 01:03:54 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7231 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727474AbfLMGDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 01:03:53 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 23126A54932938F9DF43;
-        Fri, 13 Dec 2019 14:03:51 +0800 (CST)
-Received: from [127.0.0.1] (10.133.229.220) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
- 14:03:48 +0800
-Subject: Re: [PATCH] sched/debug: fix trival print task format
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <bsegall@google.com>,
-        <mgorman@suse.de>, <linux-kernel@vger.kernel.org>
-References: <20191212122244.132751-1-xiexiuqi@huawei.com>
- <20191212093721.1d9a2f7f@gandalf.local.home>
-From:   Xie XiuQi <xiexiuqi@huawei.com>
-Message-ID: <e7a5b896-4222-5e2e-5479-37c65e5e6b03@huawei.com>
-Date:   Fri, 13 Dec 2019 14:03:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 13 Dec 2019 01:06:13 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35669 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfLMGGM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 01:06:12 -0500
+Received: by mail-pl1-f196.google.com with SMTP id s10so799240plp.2;
+        Thu, 12 Dec 2019 22:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oTcpJNk1xqKGyB5ClAR/s3v8RFY0BEnq+v19yEDpJbk=;
+        b=GQBWlcszvv5PGxYVAfrOSXSUt48y7V81ivYARzQtMMY+sz6ilI/paRYxJhfgj0vnZY
+         WRyJw1FeC/qV5UxnlnCFzn4KM2iHW3fBeI+oy+uUlu7wvrGdVp8iL+eXn7HNPGLDnkrr
+         Nsj4WMdGcqA4Ko0fBaVM9J4xMAMMdKKJhDMzDmhZdmNMxfhepWq7285obv6Ub5hsgKfh
+         WX/dKSrPzVzvjmAe03kzo7JaR6NXW1C9kb85DHy43zw1bmtkMCc+KAxnSW/Ktt56SFmk
+         cRNKYUZBd4vWLgGBAAY2oy4jDyPbZtAmJQzuzoOmu9Y3NyCSNu6tTJjGwzL8uy8fWJld
+         /rpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oTcpJNk1xqKGyB5ClAR/s3v8RFY0BEnq+v19yEDpJbk=;
+        b=ZNm4SCxPaBdETWR9GSBbUh3mrrJg1pgV9i4gbK9VNZiWvix3ipALMeRGOQv9HSqJ9k
+         w5gF+qQABUB2hOE9dvaC/FztuKe+oTlaeqH+lvYGmjmNERAH09Y9LUxOebAigaF2BLUh
+         9d3yWLkxk+JxBKhj7DHtfREX6T8rRPSzKhOx/Y50268ViLHiqF+pwgJzFPpAs34MNELv
+         b7oN4cINN+CC4DUzeCYfcz6hvLGa05NUZjowz6/HxX2uhE8ipZN23rPGxTURmr7LZ4Qk
+         GFRWoTWtpxNkcYzTkJdPPvmS4Jk6twV+6UEJSLcFrm5R/geygmUGM/u+OrJW43VBM6P6
+         ptug==
+X-Gm-Message-State: APjAAAW+mpXvH6vy0nc8qAx8I3bgN5i+Og+I9XMoo36f/KP5160DZNgu
+        8TlRw8QOmgX/b3f6SctFLGs=
+X-Google-Smtp-Source: APXvYqxHC4EwkoEsA6d0ud4NuxpyBl1jUHDJihm6TQB0jKGokpavCDdX6mETYwj1FhyZW2jxcz4faw==
+X-Received: by 2002:a17:90a:bc05:: with SMTP id w5mr14491704pjr.64.1576217172025;
+        Thu, 12 Dec 2019 22:06:12 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p16sm8964659pgi.50.2019.12.12.22.06.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Dec 2019 22:06:11 -0800 (PST)
+Date:   Thu, 12 Dec 2019 22:06:09 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [-next] hwmon: (w83627ehf) make sensor_dev_attr_##_name
+ variables static
+Message-ID: <20191213060609.GA20673@roeck-us.net>
+References: <20191213015605.172472-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212093721.1d9a2f7f@gandalf.local.home>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.229.220]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213015605.172472-1-chenzhou10@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2019/12/12 22:37, Steven Rostedt wrote:
-> On Thu, 12 Dec 2019 20:22:44 +0800
-> Xie XiuQi <xiexiuqi@huawei.com> wrote:
+On Fri, Dec 13, 2019 at 09:56:05AM +0800, Chen Zhou wrote:
+> Fix sparse warning:
 > 
->> Ensure levave a whitespace between state and task name.
-> 
-> "levave"?
+> drivers/hwmon/w83627ehf.c:1202:1: warning: symbol 'sensor_dev_attr_pwm1_target' was not declared. Should it be static?
 
-Sorry for the typo.
+...
 
 > 
->>
->> w/o patch:
->> runnable tasks:
->>  S           task   PID         tree-key  switches  prio     wait
->> -----------------------------------------------------------------
->>  I    kworker/0:2   656     87693.884557      8255   120
->>  Sirq/10-ACPI:Ged   829         0.000000         3    49
->>  Sirq/11-ACPI:Ged   830         0.000000         3    49
->>  Sirq/50-arm-smmu   945         0.000000         3    49
->>
->> with patch:
->> runnable tasks:
->>  S            task   PID         tree-key  switches  prio     wait
->> ------------------------------------------------------------------
->>  I     kworker/0:2   656     87693.884557      8255   120
->>  S irq/10-ACPI:Ged   829         0.000000         3    49
->>  S irq/11-ACPI:Ged   830         0.000000         3    49
->>  S irq/50-arm-smmu   945         0.000000         3    49
->>
->> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
->> ---
->>  kernel/sched/debug.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
->> index f7e4579e746c..a1b5a4c1213e 100644
->> --- a/kernel/sched/debug.c
->> +++ b/kernel/sched/debug.c
->> @@ -434,9 +434,9 @@ static void
->>  print_task(struct seq_file *m, struct rq *rq, struct task_struct *p)
->>  {
->>  	if (rq->curr == p)
->> -		SEQ_printf(m, ">R");
->> +		SEQ_printf(m, ">R ");
->>  	else
->> -		SEQ_printf(m, " %c", task_state_to_char(p));
->> +		SEQ_printf(m, " %c ", task_state_to_char(p));
->>  
->>  	SEQ_printf(m, "%15s %5d %9Ld.%06ld %9Ld %5d ",
-> 
-> Wouldn't it be simpler to just add one space to the above?
-> 
-> 	SEQ_printf(m, " %15s %5d %9Ld.%06ld %9Ld %5d ",
-> 
-> ?
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
-That true, thanks.
+Applied (though I removed most of the log messages - there no point of
+having all of them in the commit message).
 
-> 
-> -- Steve
-> 
->>  		p->comm, task_pid_nr(p),
->> @@ -465,10 +465,10 @@ static void print_rq(struct seq_file *m, struct rq *rq, int rq_cpu)
->>  
->>  	SEQ_printf(m, "\n");
->>  	SEQ_printf(m, "runnable tasks:\n");
->> -	SEQ_printf(m, " S           task   PID         tree-key  switches  prio"
->> +	SEQ_printf(m, " S            task   PID         tree-key  switches  prio"
->>  		   "     wait-time             sum-exec        sum-sleep\n");
->>  	SEQ_printf(m, "-------------------------------------------------------"
->> -		   "----------------------------------------------------\n");
->> +		   "------------------------------------------------------\n");
->>  
->>  	rcu_read_lock();
->>  	for_each_process_thread(g, p) {
-> 
-> 
-> .
-> 
+Guenter
 
+> ---
+>  drivers/hwmon/w83627ehf.c | 56 +++++++++++++++++++++++------------------------
+>  1 file changed, 28 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/hwmon/w83627ehf.c b/drivers/hwmon/w83627ehf.c
+> index 207cc74..0a13f6b 100644
+> --- a/drivers/hwmon/w83627ehf.c
+> +++ b/drivers/hwmon/w83627ehf.c
+> @@ -1199,22 +1199,22 @@ store_tolerance(struct device *dev, struct device_attribute *attr,
+>  	return count;
+>  }
+>  
+> -SENSOR_DEVICE_ATTR(pwm1_target, 0644, show_target_temp,
+> +static SENSOR_DEVICE_ATTR(pwm1_target, 0644, show_target_temp,
+>  	    store_target_temp, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_target, 0644, show_target_temp,
+> +static SENSOR_DEVICE_ATTR(pwm2_target, 0644, show_target_temp,
+>  	    store_target_temp, 1);
+> -SENSOR_DEVICE_ATTR(pwm3_target, 0644, show_target_temp,
+> +static SENSOR_DEVICE_ATTR(pwm3_target, 0644, show_target_temp,
+>  	    store_target_temp, 2);
+> -SENSOR_DEVICE_ATTR(pwm4_target, 0644, show_target_temp,
+> +static SENSOR_DEVICE_ATTR(pwm4_target, 0644, show_target_temp,
+>  	    store_target_temp, 3);
+>  
+> -SENSOR_DEVICE_ATTR(pwm1_tolerance, 0644, show_tolerance,
+> +static SENSOR_DEVICE_ATTR(pwm1_tolerance, 0644, show_tolerance,
+>  	    store_tolerance, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_tolerance, 0644, show_tolerance,
+> +static SENSOR_DEVICE_ATTR(pwm2_tolerance, 0644, show_tolerance,
+>  	    store_tolerance, 1);
+> -SENSOR_DEVICE_ATTR(pwm3_tolerance, 0644, show_tolerance,
+> +static SENSOR_DEVICE_ATTR(pwm3_tolerance, 0644, show_tolerance,
+>  	    store_tolerance, 2);
+> -SENSOR_DEVICE_ATTR(pwm4_tolerance, 0644, show_tolerance,
+> +static SENSOR_DEVICE_ATTR(pwm4_tolerance, 0644, show_tolerance,
+>  	    store_tolerance, 3);
+>  
+>  /* Smart Fan registers */
+> @@ -1291,35 +1291,35 @@ store_##reg(struct device *dev, struct device_attribute *attr, \
+>  
+>  fan_time_functions(fan_stop_time, FAN_STOP_TIME)
+>  
+> -SENSOR_DEVICE_ATTR(pwm4_stop_time, 0644, show_fan_stop_time,
+> +static SENSOR_DEVICE_ATTR(pwm4_stop_time, 0644, show_fan_stop_time,
+>  	    store_fan_stop_time, 3);
+> -SENSOR_DEVICE_ATTR(pwm4_start_output, 0644, show_fan_start_output,
+> +static SENSOR_DEVICE_ATTR(pwm4_start_output, 0644, show_fan_start_output,
+>  	    store_fan_start_output, 3);
+> -SENSOR_DEVICE_ATTR(pwm4_stop_output, 0644, show_fan_stop_output,
+> +static SENSOR_DEVICE_ATTR(pwm4_stop_output, 0644, show_fan_stop_output,
+>  	    store_fan_stop_output, 3);
+> -SENSOR_DEVICE_ATTR(pwm4_max_output, 0644, show_fan_max_output,
+> +static SENSOR_DEVICE_ATTR(pwm4_max_output, 0644, show_fan_max_output,
+>  	    store_fan_max_output, 3);
+> -SENSOR_DEVICE_ATTR(pwm4_step_output, 0644, show_fan_step_output,
+> +static SENSOR_DEVICE_ATTR(pwm4_step_output, 0644, show_fan_step_output,
+>  	    store_fan_step_output, 3);
+>  
+> -SENSOR_DEVICE_ATTR(pwm3_stop_time, 0644, show_fan_stop_time,
+> +static SENSOR_DEVICE_ATTR(pwm3_stop_time, 0644, show_fan_stop_time,
+>  	    store_fan_stop_time, 2);
+> -SENSOR_DEVICE_ATTR(pwm3_start_output, 0644, show_fan_start_output,
+> +static SENSOR_DEVICE_ATTR(pwm3_start_output, 0644, show_fan_start_output,
+>  	    store_fan_start_output, 2);
+> -SENSOR_DEVICE_ATTR(pwm3_stop_output, 0644, show_fan_stop_output,
+> +static SENSOR_DEVICE_ATTR(pwm3_stop_output, 0644, show_fan_stop_output,
+>  		    store_fan_stop_output, 2);
+>  
+> -SENSOR_DEVICE_ATTR(pwm1_stop_time, 0644, show_fan_stop_time,
+> +static SENSOR_DEVICE_ATTR(pwm1_stop_time, 0644, show_fan_stop_time,
+>  	    store_fan_stop_time, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_stop_time, 0644, show_fan_stop_time,
+> +static SENSOR_DEVICE_ATTR(pwm2_stop_time, 0644, show_fan_stop_time,
+>  	    store_fan_stop_time, 1);
+> -SENSOR_DEVICE_ATTR(pwm1_start_output, 0644, show_fan_start_output,
+> +static SENSOR_DEVICE_ATTR(pwm1_start_output, 0644, show_fan_start_output,
+>  	    store_fan_start_output, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_start_output, 0644, show_fan_start_output,
+> +static SENSOR_DEVICE_ATTR(pwm2_start_output, 0644, show_fan_start_output,
+>  	    store_fan_start_output, 1);
+> -SENSOR_DEVICE_ATTR(pwm1_stop_output, 0644, show_fan_stop_output,
+> +static SENSOR_DEVICE_ATTR(pwm1_stop_output, 0644, show_fan_stop_output,
+>  	    store_fan_stop_output, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_stop_output, 0644, show_fan_stop_output,
+> +static SENSOR_DEVICE_ATTR(pwm2_stop_output, 0644, show_fan_stop_output,
+>  	    store_fan_stop_output, 1);
+>  
+>  
+> @@ -1327,17 +1327,17 @@ SENSOR_DEVICE_ATTR(pwm2_stop_output, 0644, show_fan_stop_output,
+>   * pwm1 and pwm3 don't support max and step settings on all chips.
+>   * Need to check support while generating/removing attribute files.
+>   */
+> -SENSOR_DEVICE_ATTR(pwm1_max_output, 0644, show_fan_max_output,
+> +static SENSOR_DEVICE_ATTR(pwm1_max_output, 0644, show_fan_max_output,
+>  	    store_fan_max_output, 0);
+> -SENSOR_DEVICE_ATTR(pwm1_step_output, 0644, show_fan_step_output,
+> +static SENSOR_DEVICE_ATTR(pwm1_step_output, 0644, show_fan_step_output,
+>  	    store_fan_step_output, 0);
+> -SENSOR_DEVICE_ATTR(pwm2_max_output, 0644, show_fan_max_output,
+> +static SENSOR_DEVICE_ATTR(pwm2_max_output, 0644, show_fan_max_output,
+>  	    store_fan_max_output, 1);
+> -SENSOR_DEVICE_ATTR(pwm2_step_output, 0644, show_fan_step_output,
+> +static SENSOR_DEVICE_ATTR(pwm2_step_output, 0644, show_fan_step_output,
+>  	    store_fan_step_output, 1);
+> -SENSOR_DEVICE_ATTR(pwm3_max_output, 0644, show_fan_max_output,
+> +static SENSOR_DEVICE_ATTR(pwm3_max_output, 0644, show_fan_max_output,
+>  	    store_fan_max_output, 2);
+> -SENSOR_DEVICE_ATTR(pwm3_step_output, 0644, show_fan_step_output,
+> +static SENSOR_DEVICE_ATTR(pwm3_step_output, 0644, show_fan_step_output,
+>  	    store_fan_step_output, 2);
+>  
+>  static ssize_t
