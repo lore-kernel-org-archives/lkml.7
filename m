@@ -2,155 +2,79 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF0C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B15C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8A021655
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9vmM3wb"
+	by mail.kernel.org (Postfix) with ESMTP id 06299206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbfLMBYR (ORCPT
+        id S1731755AbfLMB1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:24:17 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42022 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731288AbfLMBYR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:24:17 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so526236pfz.9;
-        Thu, 12 Dec 2019 17:24:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mVYnNLUWDZKpYLFTHOhdx5QMfZ/iaJU8SyrTIrnh1+U=;
-        b=C9vmM3wb6Ku+BwbrsiOw8sJcOapH9ak4S6OvvOJfkUVaVtflB03QO2A3IdCTuIPlw1
-         S0ecyAtDw8qd3a05aw/rdmjBr/xOrkoWb3NnVvNTm39DWW8P2ePVHV0BXKQlg6UNGRfi
-         L4f26CTJ71IIL8zgTDQNb9viGP8uNnLVRvIzmp0qqCS3J1HdUzIbZpXJsTsRAzcnmaDJ
-         gf5XOfBCm2jYtQryLN+pWkD/gTVVJztPbNTnmtbrTyFf//kGwyMRWcckgugnnxlXdu7I
-         tWoXUcQbMSdEng1Tda8UbAfvrXu5sAacDHgOHc3pq20si1CQFu8f1mIS3gKbwGyXw/zK
-         5YBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mVYnNLUWDZKpYLFTHOhdx5QMfZ/iaJU8SyrTIrnh1+U=;
-        b=PuXgIgYik+HTvvbw8ohhzAxLB+NJq5R+BqI3g6GEU6q/2ZteagsOFWhAXyCttPMzzD
-         pUnjeLeYKJj96aGF66nVFZM3YRCWkxX0k7T3xye8B9ZbSCWV21mk7XH9wxz17WuuBNNQ
-         9h/vzbAuFqCJbnyXT6xCu/1Dc2EIwR7MzdNI3Nu6UcE+UfAPQmgRFR3e+UvltVksXKcW
-         gwzdadHLt3144KqRjHBHs+2JEV/G1f0WoqCA97GKMCxvHJ5gwZCK/uzrZbKc+6Ikt/U7
-         QmfVNUQJNS7KXBsZuBajlMwAeesogaEfuRZrFkAz+KDRy8qWGcebQirkHmaZu0Ow7VIq
-         jxCA==
-X-Gm-Message-State: APjAAAVEiAicRacZAxlJEAsm5hbhfve0vBAIa632IdaprRIMWNB1I+1a
-        Fav5BKoHmcBhgBy7PertG1o=
-X-Google-Smtp-Source: APXvYqzslQWCGhhjC4AVQ3m239kr2s7F0YOheuzUQOjc5GF3xeZkaRbeg83aAHQgMnfEAhySOKU1Mg==
-X-Received: by 2002:a62:1883:: with SMTP id 125mr12979767pfy.166.1576200255999;
-        Thu, 12 Dec 2019 17:24:15 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c18sm8230295pgj.24.2019.12.12.17.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 17:24:14 -0800 (PST)
-Date:   Thu, 12 Dec 2019 17:24:08 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
-Message-ID: <20191213012408.GH101194@dtor-ws>
-References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
- <20191108042225.45391-2-dmitry.torokhov@gmail.com>
- <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
- <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com>
+        Thu, 12 Dec 2019 20:27:09 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7681 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731684AbfLMB1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:27:09 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 84F57648FB05A14B29D8;
+        Fri, 13 Dec 2019 09:27:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 13 Dec 2019 09:27:02 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <msinada@codeaurora.org>, <periyasa@codeaurora.org>,
+        <mpubbise@codeaurora.org>, <julia.lawall@lip6.fr>,
+        <milehu@codeaurora.org>
+CC:     <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ath11k: add dependency for struct ath11k member debug
+Date:   Fri, 13 Dec 2019 09:24:17 +0800
+Message-ID: <20191213012417.130719-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+If CONFIG_ATH11K, CONFIG_MAC80211_DEBUGFS are set,
+and CONFIG_ATH11K_DEBUGFS is not set, below error can be found,
+drivers/net/wireless/ath/ath11k/debugfs_sta.c: In function ath11k_dbg_sta_open_htt_peer_stats:
+drivers/net/wireless/ath/ath11k/debugfs_sta.c:411:4: error: struct ath11k has no member named debug
+  ar->debug.htt_stats.stats_req = stats_req;
 
-On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
-> Dear All,
-> 
-> On 08.11.2019 05:22, Dmitry Torokhov wrote:
-> > We do not need a special flag to know if we are dealing with an array,
-> > as we can get that data from ratio between element length and the data
-> > size, however we do need a flag to know whether the data is stored
-> > directly inside property_entry or separately.
-> >
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> Today I've noticed that this patch got merged to linux-next as commit 
-> e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI 
-> driver operation on Samsung Exynos5 SoCs (and probably on other SoCs 
-> which use DWC3 in host mode too). I get the following errors during boot:
-> 
-> dwc3 12000000.dwc3: failed to add properties to xHCI
-> dwc3 12000000.dwc3: failed to initialize host
-> dwc3: probe of 12000000.dwc3 failed with error -61
-> 
-> Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
-> 
-> https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
-> 
-> (lack of 'ref' clk is not related nor fatal to the driver operation).
-> 
-> The code which fails after this patch is located in 
-> drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
+It is to add the dependency for the member of struct ath11k.
 
-Does the following help? If, as I expect, it does, I'll submit it
-formally.
-
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
+ drivers/net/wireless/ath/ath11k/debugfs_sta.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 5567ed2cddbec..fa252870c926f 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+diff --git a/drivers/net/wireless/ath/ath11k/debugfs_sta.c b/drivers/net/wireless/ath/ath11k/debugfs_sta.c
+index 3c5f931..bcc51d7 100644
+--- a/drivers/net/wireless/ath/ath11k/debugfs_sta.c
++++ b/drivers/net/wireless/ath/ath11k/debugfs_sta.c
+@@ -408,7 +408,9 @@ ath11k_dbg_sta_open_htt_peer_stats(struct inode *inode, struct file *file)
+ 		return -ENOMEM;
  
- 	if (dwc->usb3_lpm_capable)
--		props[prop_idx++].name = "usb3-lpm-capable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
- 
- 	if (dwc->usb2_lpm_disable)
--		props[prop_idx++].name = "usb2-lpm-disable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
- 
- 	/**
- 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
-@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	 * This following flag tells XHCI to do just that.
- 	 */
- 	if (dwc->revision <= DWC3_REVISION_300A)
--		props[prop_idx++].name = "quirk-broken-port-ped";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
- 
- 	if (prop_idx) {
- 		ret = platform_device_add_properties(xhci, props);
-
-
+ 	mutex_lock(&ar->conf_mutex);
++#ifdef CONFIG_ATH11K_DEBUGFS
+ 	ar->debug.htt_stats.stats_req = stats_req;
++#endif
+ 	stats_req->type = ATH11K_DBG_HTT_EXT_STATS_PEER_INFO;
+ 	memcpy(stats_req->peer_addr, sta->addr, ETH_ALEN);
+ 	ret = ath11k_dbg_htt_stats_req(ar);
 -- 
-Dmitry
+2.7.4
+
