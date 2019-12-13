@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6953C79DB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52FFC4BA31
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206282470A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F084624758
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfLMQ76 (ORCPT
+        id S1728284AbfLMQhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:59:58 -0500
-Received: from mga03.intel.com ([134.134.136.65]:33321 "EHLO mga03.intel.com"
+        Fri, 13 Dec 2019 11:37:03 -0500
+Received: from mga17.intel.com ([192.55.52.151]:42883 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727480AbfLMQ76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:59:58 -0500
+        id S1727974AbfLMQhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:37:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:59:57 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:37:02 -0800
 X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="216485218"
+   d="scan'208";a="216480091"
 Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:59:56 -0800
-Message-ID: <1d1f8edbf6778d9fe904a9ed20c546df3b2534b2.camel@linux.intel.com>
-Subject: Re: [PATCH v15 0/7] mm / virtio: Provide support for free page
- reporting
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:37:01 -0800
+Message-ID: <f0153bdb80b26b99495cfc3086934968695deb6c.camel@linux.intel.com>
+Subject: Re: [PATCH v15 6/7] virtio-balloon: Add support for providing free
+ page reports to host
 From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
-        konrad.wilk@oracle.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de
-Date:   Fri, 13 Dec 2019 08:59:56 -0800
-In-Reply-To: <20191213110806.GA3178@techsingularity.net>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Fri, 13 Dec 2019 08:37:01 -0800
+In-Reply-To: <ca305a98-864e-ccb0-5393-f73997645acf@redhat.com>
 References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-         <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
-         <20191213110806.GA3178@techsingularity.net>
+         <20191205162255.19548.63866.stgit@localhost.localdomain>
+         <ca305a98-864e-ccb0-5393-f73997645acf@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
@@ -55,88 +55,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-13 at 11:08 +0000, Mel Gorman wrote:
-> On Fri, Dec 13, 2019 at 11:00:42AM +0100, David Hildenbrand wrote:
-> > > A brief history on the background of free page reporting can be found at:
-> > > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
-> > > 
-> > > Changes from v13:
-> > > https://lore.kernel.org/lkml/20191105215940.15144.65968.stgit@localhost.localdomain/
-> > > Rewrote core reporting functionality
-> > >   Merged patches 3 & 4
-> > >   Dropped boundary list and related code
-> > >   Folded get_reported_page into page_reporting_fill
-> > >   Folded page_reporting_fill into page_reporting_cycle
-> > > Pulled reporting functionality out of free_reported_page
-> > >   Renamed it to __free_isolated_page
-> > >   Moved page reporting specific bits to page_reporting_drain
-> > > Renamed phdev to prdev since we aren't "hinting" we are "reporting"
-> > > Added documentation to describe the usage of unused page reporting
-> > > Updated cover page and patch descriptions to avoid mention of boundary
-> > > 
-> > > Changes from v14:
-> > > https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
-> > > Renamed "unused page reporting" to "free page reporting"
-> > >   Updated code, kconfig, and patch descriptions
-> > > Split out patch for __free_isolated_page
-> > >   Renamed function to __putback_isolated_page
-> > > Rewrote core reporting functionality
-> > >   Added logic to reschedule worker in 2 seconds instead of run to completion
-> > >   Removed reported_pages statistics
-> > >   Removed REPORTING_REQUESTED bit used in zone flags
-> > >   Replaced page_reporting_dev_info refcount with state variable
-> > >   Removed scatterlist from page_reporting_dev_info
-> > >   Removed capacity from page reporting device
-> > >   Added dynamic scatterlist allocation/free at start/end of reporting process
-> > >   Updated __free_one_page so that reported pages are not always added to tail
-> > >   Added logic to handle error from report function
-> > > Updated virtio-balloon patch that adds support for page reporting
-> > >   Updated patch description to try and highlight differences in approaches
-> > >   Updated logic to reflect that we cannot limit the scatterlist from device
+On Fri, 2019-12-13 at 11:15 +0100, David Hildenbrand wrote:
+> On 05.12.19 17:22, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > > 
-> > Last time Mel said
+> > Add support for the page reporting feature provided by virtio-balloon.
+> > Reporting differs from the regular balloon functionality in that is is
+> > much less durable than a standard memory balloon. Instead of creating a
+> > list of pages that cannot be accessed the pages are only inaccessible
+> > while they are being indicated to the virtio interface. Once the
+> > interface has acknowledged them they are placed back into their respective
+> > free lists and are once again accessible by the guest system.
 > > 
-> > "Ok, I'm ok with how this hooks into the allocator as the overhead is
-> > minimal. However, the patch itself still includes a number of
-> > optimisations instead of being a bare-boned implementation of the
-> > feature with optimisations layered on top."
+> > Unlike a standard balloon we don't inflate and deflate the pages. Instead
+> > we perform the reporting, and once the reporting is completed it is
+> > assumed that the page has been dropped from the guest and will be faulted
+> > back in the next time the page is accessed.
 > > 
+> > For this reason when I had originally introduced the patch set I referred
+> > to this behavior as a "bubble" instead of a "balloon" since the duration
+> > is short lived, and when the page is touched the "bubble" is popped and
+> > the page is faulted back in.
 > 
-> I didn't get the chance to take a close look as I'm trying to clear as
-> much as possible from my table on the run-up to Christmas so I don't come
-> back to a disaster inbox. I also noted that the Acks for earlier patches
-> were not included so I was uncertain if doing a full review would still
-> be a good use of time when time was tight.
+> While an interesting read, I would drop that comment as it isn't really
+> of value for the code/codebase itself.
 
-Sorry about that. I will go back through and make sure to collect the Acks
-on the earlier patches. I guess I had overlooked them while focusing on
-rewriting the core functionality.
+Okay, I can drop the comment.
 
-> That said, some optimisations are still included but much reduced. For
-> example, list rotations are still there but it's very straight-forward.
+> [...]
+> 
+> > +
+> > +	vb->pr_dev_info.report = virtballoon_free_page_report;
+> > +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> > +		unsigned int capacity;
+> > +
+> > +		capacity = virtqueue_get_vring_size(vb->reporting_vq);
+> > +		if (capacity < PAGE_REPORTING_CAPACITY) {
+> > +			err = -ENOSPC;
+> > +			goto out_unregister_shrinker;
+> 
+> It's somewhat strange to fail loading the balloon completely here.
+> Wouldn't it be better to print e.g. a warning but continue without free
+> page reporting?
+> 
+> (I guess splitting up the list can be done in an addon patch if ever
+> really needed for virtio-balloon)
 
-I will go ahead and split the rotations out into a separate patch for v16.
-I can probably do that and pull the budget bit I had added out and put it
-together as a "work conserving/limiting" optimization for the patch set.
+That was kind of my thought. Odds are it probably is unlikely to come up.
+At least with the code I have now I think the virtqueue size is something
+like 128 and the capacity is only 32 as I wanted to limit the number of
+pages that were being reported at the time.
 
-> The refcount is gone which is good and replaced by a state, which could be
-> be better documented, but is more straight forward and the zone->lock is
-> back protecting the free lists primarily and not zone metadata or prdev
-> metadata (at least not obviously). I didn't put in the time to see if
-> the atomic_set in page_reporting_process() is ok or whether state could
-> be lost but I *think* it's ok because it should be called from just one
-> workqueue request and they shouldn't be stacked. A comment there explaining
-> why atomic_set is definitely correct would be helpful.
+> Apart from that
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
+> Thanks!
+> 
 
-I will go though and add some more documentation about the state.
 
-> I'm inclined to decide that yes, this version is potentially ok as a
-> bare minimum but didn't put in the time to be 100% sure.
-
-Sounds good. I will go through and address the concerns you brought up,
-and probably post a v16 by the end of next week.
-
-Thanks for the feedback.
+Thanks for the review.
 
 - Alex
 
