@@ -2,147 +2,449 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0076C3B186
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F33C341B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F827246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AR6bM5rc"
+	by mail.kernel.org (Postfix) with ESMTP id 927EF24705
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfLMPZj (ORCPT
+        id S1727966AbfLMPWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:25:39 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36788 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfLMPZj (ORCPT
+        Fri, 13 Dec 2019 10:22:15 -0500
+Received: from out28-221.mail.aliyun.com ([115.124.28.221]:60723 "EHLO
+        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbfLMPWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:25:39 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so3083523ljg.3;
-        Fri, 13 Dec 2019 07:25:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vpQPUvm03IxC9CJiK4kP7EGdEHCSuBFUn665asErXvY=;
-        b=AR6bM5rcNF/986NbNCEQGoh2OGNVIp20RdIEWLVX3Lz6Ru5RQpOThcU7eTVBVv3JvB
-         uwW5/L6bvyaou6OpTcxtI0b3y5u9lxswO+irVDHBh9idiqtsmvZdcPw8lWVwNwOialOH
-         gkdd2PSrpXJZ3Bl6j2LTSyMfQ251MfSnBZupKEPCVVgJ6CCeS2mBzEmXU1WH3d5gVd1F
-         1u6T8AkOq5kJm2vllPiq235MA0Tm3KVPqd39/2xKpZeMbyNx/CeYFYd5b+GBewL02CUw
-         7A369FlOtLnmxtW5y0ZcT+2CElrvyuIcxZ91gTVEYAyA90lg0seB6xmuive12Aj/yKzh
-         ysAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vpQPUvm03IxC9CJiK4kP7EGdEHCSuBFUn665asErXvY=;
-        b=tGPVm+/7JlIIBJ9mDkwfBun100Iq+p1X8HQAj4u2DBsBDzxDp1prfHF/H2QeWRFTu+
-         tCITs2yR4r0gwGZRBTysxCMsrVIisLmrP7vO1Pnt92EInP2nmAzSi/nsCEDh1BS1EFmD
-         Xcz0di2kRU78D4XJJkNuLcICKJJEIeLu9nd5uyBjrHC46EnmKTYzJ5R2SaDqZVft1kzw
-         YAmexmR9W40LlQWQsL0ZkBNqESguoEoZek3IzZEoYjtfuAqWWYafQh/q6vhP5DqxHNTW
-         gdrppiAr2w3G9fzgvy1Fw2pgxnzMXjt3BZ/NvZFH0yBWWRQHJOOj8QkRpLkG+tEhUASC
-         Z9Bw==
-X-Gm-Message-State: APjAAAXkbCVGvJPwffqiWyGVkB8TlYKRtEdQ17CXqp+5UQJ8kfqgMQ8Y
-        AylDpPLrO8mKh5PsuNB/CNaBWMOK
-X-Google-Smtp-Source: APXvYqzVYzB7rz3dmZxLnSFsF7aeMxxrRckTm0XmmHAfzsMamePK8EKc77HCYRP3IpZMj5Zoi6FkdQ==
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr9928921ljb.150.1576250736503;
-        Fri, 13 Dec 2019 07:25:36 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w6sm4661282lfq.95.2019.12.13.07.25.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 07:25:36 -0800 (PST)
-Subject: Re: [PATCH v1 1/3] i2c: tegra: Support atomic transfers
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-2-digetx@gmail.com> <20191213151208.GC222809@ulmo>
- <5a2a9cef-f4ed-c5a4-1f35-c89c3b5106a6@gmail.com>
- <20191213152017.GA293199@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <840b678e-de92-1564-1739-c15ca8dd5766@gmail.com>
-Date:   Fri, 13 Dec 2019 18:25:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 10:22:15 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07473893|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.514699-0.0199671-0.465334;DS=CONTINUE|ham_alarm|0.0300551-0.000725998-0.969219;FP=12572764264680971494|1|1|1|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 13 Dec 2019 23:21:27 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 4/5] clk: Ingenic: Add CGU driver for X1830.
+Date:   Fri, 13 Dec 2019 23:21:11 +0800
+Message-Id: <1576250472-124315-6-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20191213152017.GA293199@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 18:20, Thierry Reding пишет:
-> On Fri, Dec 13, 2019 at 06:15:12PM +0300, Dmitry Osipenko wrote:
->> 13.12.2019 18:12, Thierry Reding пишет:
->>> On Fri, Dec 13, 2019 at 02:34:26AM +0300, Dmitry Osipenko wrote:
->>>> System shutdown may happen with interrupts being disabled and in this case
->>>> I2C core rejects transfers if atomic transfer isn't supported by driver.
->>>>
->>>> There were several occurrences where I found my Nexus 7 completely
->>>> discharged despite of being turned off and then one day I spotted this in
->>>> the log:
->>>>
->>>>  reboot: Power down
->>>>  ------------[ cut here ]------------
->>>>  WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40 i2c_transfer+0x95/0x9c
->>>>  No atomic I2C transfer handler for 'i2c-1'
->>>>  Modules linked in: tegra30_devfreq
->>>>  CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.4.0-next-20191202-00120-gf7ecd80fb803-dirty #3195
->>>>  Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->>>>  [<c010e4b5>] (unwind_backtrace) from [<c010a0fd>] (show_stack+0x11/0x14)
->>>>  [<c010a0fd>] (show_stack) from [<c09995e5>] (dump_stack+0x85/0x94)
->>>>  [<c09995e5>] (dump_stack) from [<c011f3d1>] (__warn+0xc1/0xc4)
->>>>  [<c011f3d1>] (__warn) from [<c011f691>] (warn_slowpath_fmt+0x61/0x78)
->>>>  [<c011f691>] (warn_slowpath_fmt) from [<c069a8dd>] (i2c_transfer+0x95/0x9c)
->>>>  [<c069a8dd>] (i2c_transfer) from [<c05667f1>] (regmap_i2c_read+0x4d/0x6c)
->>>>  [<c05667f1>] (regmap_i2c_read) from [<c0563601>] (_regmap_raw_read+0x99/0x1cc)
->>>>  [<c0563601>] (_regmap_raw_read) from [<c0563757>] (_regmap_bus_read+0x23/0x38)
->>>>  [<c0563757>] (_regmap_bus_read) from [<c056293d>] (_regmap_read+0x3d/0xfc)
->>>>  [<c056293d>] (_regmap_read) from [<c0562d3b>] (_regmap_update_bits+0x87/0xc4)
->>>>  [<c0562d3b>] (_regmap_update_bits) from [<c0563add>] (regmap_update_bits_base+0x39/0x50)
->>>>  [<c0563add>] (regmap_update_bits_base) from [<c056fd39>] (max77620_pm_power_off+0x29/0x2c)
->>>>  [<c056fd39>] (max77620_pm_power_off) from [<c013bbdd>] (__do_sys_reboot+0xe9/0x170)
->>>>  [<c013bbdd>] (__do_sys_reboot) from [<c0101001>] (ret_fast_syscall+0x1/0x28)
->>>>  Exception stack(0xde907fa8 to 0xde907ff0)
->>>>  7fa0:                   00000000 00000000 fee1dead 28121969 4321fedc 00000000
->>>>  7fc0: 00000000 00000000 00000000 00000058 00000000 00000000 00000000 00000000
->>>>  7fe0: 0045adf0 bed9abb8 004444a0 b6c666d0
->>>>  ---[ end trace bdd18f87595b1a5e ]---
->>>>
->>>> The atomic transferring is implemented by enforcing PIO mode for the
->>>> transfer and by polling interrupt status until transfer is completed or
->>>> failed.
->>>>
->>>> Now system shuts down properly every time.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/i2c/busses/i2c-tegra.c | 95 +++++++++++++++++++++++++++++++---
->>>>  1 file changed, 88 insertions(+), 7 deletions(-)
->>>
->>> I ran this on the test farm and the results are all green, so:
->>>
->>> Tested-by: Thierry Reding <treding@nvidia.com>
->>>
->>
->> Thanks!
->>
->> Does the farm test board's shut down by verifying the
->> hardware's power state?
-> 
-> No, that's not something we test. I was primarily running this to make
-> sure we don't regress anywhere else.
+Add support for the clocks provided by the CGU in the Ingenic X1830
+SoC, making use of the cgu code to do the heavy lifting.
 
-Verifying basics is also good :) Thanks again!
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+
+Notes:
+    v1->v2:
+    1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+      array (reg[2]).
+    2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
+    3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+      to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+      the old mailbox is in an unstable state.
+
+ drivers/clk/ingenic/Kconfig     |  10 ++
+ drivers/clk/ingenic/Makefile    |   1 +
+ drivers/clk/ingenic/x1830-cgu.c | 340 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 351 insertions(+)
+ create mode 100644 drivers/clk/ingenic/x1830-cgu.c
+
+diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+index b4555b4..580b0cf 100644
+--- a/drivers/clk/ingenic/Kconfig
++++ b/drivers/clk/ingenic/Kconfig
+@@ -55,6 +55,16 @@ config INGENIC_CGU_X1000
+ 
+ 	  If building for a X1000 SoC, you want to say Y here.
+ 
++config INGENIC_CGU_X1830
++	bool "Ingenic X1830 CGU driver"
++	default MACH_X1830
++	select INGENIC_CGU_COMMON
++	help
++	  Support the clocks provided by the CGU hardware on Ingenic X1830
++	  and compatible SoCs.
++
++	  If building for a X1830 SoC, you want to say Y here.
++
+ config INGENIC_TCU_CLK
+ 	bool "Ingenic JZ47xx TCU clocks driver"
+ 	default MACH_INGENIC
+diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
+index 8b1dad9..aaa4bff 100644
+--- a/drivers/clk/ingenic/Makefile
++++ b/drivers/clk/ingenic/Makefile
+@@ -5,4 +5,5 @@ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_X1000)		+= x1000-cgu.o
++obj-$(CONFIG_INGENIC_CGU_X1830)		+= x1830-cgu.o
+ obj-$(CONFIG_INGENIC_TCU_CLK)		+= tcu.o
+diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
+new file mode 100644
+index 00000000..35ea05f
+--- /dev/null
++++ b/drivers/clk/ingenic/x1830-cgu.c
+@@ -0,0 +1,340 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * X1830 SoC CGU driver
++ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/of.h>
++#include <dt-bindings/clock/x1830-cgu.h>
++#include "cgu.h"
++#include "pm.h"
++
++/* CGU register offsets */
++#define CGU_REG_CPCCR		0x00
++#define CGU_REG_CPPCR		0x0c
++#define CGU_REG_APLL		0x10
++#define CGU_REG_MPLL		0x14
++#define CGU_REG_CLKGR0		0x20
++#define CGU_REG_OPCR		0x24
++#define CGU_REG_CLKGR1		0x28
++#define CGU_REG_DDRCDR		0x2c
++#define CGU_REG_USBPCR		0x3c
++#define CGU_REG_USBRDT		0x40
++#define CGU_REG_USBVBFIL	0x44
++#define CGU_REG_USBPCR1		0x48
++#define CGU_REG_MACCDR		0x54
++#define CGU_REG_EPLL		0x58
++#define CGU_REG_I2SCDR		0x60
++#define CGU_REG_LPCDR		0x64
++#define CGU_REG_MSC0CDR		0x68
++#define CGU_REG_I2SCDR1		0x70
++#define CGU_REG_SSICDR		0x74
++#define CGU_REG_CIMCDR		0x7c
++#define CGU_REG_MSC1CDR		0xa4
++#define CGU_REG_CMP_INTR	0xb0
++#define CGU_REG_CMP_INTRE	0xb4
++#define CGU_REG_DRCG		0xd0
++#define CGU_REG_CPCSR		0xd4
++#define CGU_REG_VPLL		0xe0
++#define CGU_REG_MACPHYC		0xe8
++
++/* bits within the OPCR register */
++#define OPCR_SPENDN0		BIT(7)
++#define OPCR_SPENDN1		BIT(6)
++
++static struct ingenic_cgu *cgu;
++
++static const s8 pll_od_encoding[64] = {
++	0x0, 0x1,  -1, 0x2,  -1,  -1,  -1, 0x3,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x4,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x5,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
++	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x6,
++};
++
++static const struct ingenic_cgu_clk_info x1830_cgu_clocks[] = {
++
++	/* External clocks */
++
++	[X1830_CLK_EXCLK] = { "ext", CGU_CLK_EXT },
++	[X1830_CLK_RTCLK] = { "rtc", CGU_CLK_EXT },
++
++	/* PLLs */
++
++	[X1830_CLK_APLL] = {
++		"apll", CGU_CLK_PLL,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.pll = {
++			.pll_reg = CGU_REG_APLL,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 2,
++			.m_shift = 20,
++			.m_bits = 9,
++			.m_offset = 1,
++			.n_shift = 14,
++			.n_bits = 6,
++			.n_offset = 1,
++			.od_shift = 11,
++			.od_bits = 3,
++			.od_max = 64,
++			.od_encoding = pll_od_encoding,
++			.bypass_bit = 30,
++			.enable_bit = 0,
++			.stable_bit = 3,
++		},
++	},
++
++	[X1830_CLK_MPLL] = {
++		"mpll", CGU_CLK_PLL,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.pll = {
++			.pll_reg = CGU_REG_MPLL,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 2,
++			.m_shift = 20,
++			.m_bits = 9,
++			.m_offset = 1,
++			.n_shift = 14,
++			.n_bits = 6,
++			.n_offset = 1,
++			.od_shift = 11,
++			.od_bits = 3,
++			.od_max = 64,
++			.od_encoding = pll_od_encoding,
++			.bypass_bit = 28,
++			.enable_bit = 0,
++			.stable_bit = 3,
++		},
++	},
++
++	[X1830_CLK_EPLL] = {
++		"epll", CGU_CLK_PLL,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.pll = {
++			.pll_reg = CGU_REG_EPLL,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 2,
++			.m_shift = 20,
++			.m_bits = 9,
++			.m_offset = 1,
++			.n_shift = 14,
++			.n_bits = 6,
++			.n_offset = 1,
++			.od_shift = 11,
++			.od_bits = 3,
++			.od_max = 64,
++			.od_encoding = pll_od_encoding,
++			.bypass_bit = 24,
++			.enable_bit = 0,
++			.stable_bit = 3,
++		},
++	},
++
++	[X1830_CLK_VPLL] = {
++		"vpll", CGU_CLK_PLL,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.pll = {
++			.pll_reg = CGU_REG_VPLL,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 2,
++			.m_shift = 20,
++			.m_bits = 9,
++			.m_offset = 1,
++			.n_shift = 14,
++			.n_bits = 6,
++			.n_offset = 1,
++			.od_shift = 11,
++			.od_bits = 3,
++			.od_max = 64,
++			.od_encoding = pll_od_encoding,
++			.bypass_bit = 26,
++			.enable_bit = 0,
++			.stable_bit = 3,
++		},
++	},
++
++	/* Muxes & dividers */
++
++	[X1830_CLK_SCLKA] = {
++		"sclk_a", CGU_CLK_MUX,
++		.parents = { -1, X1830_CLK_EXCLK, X1830_CLK_APLL, -1 },
++		.mux = { CGU_REG_CPCCR, 30, 2 },
++	},
++
++	[X1830_CLK_CPUMUX] = {
++		"cpu_mux", CGU_CLK_MUX,
++		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
++		.mux = { CGU_REG_CPCCR, 28, 2 },
++	},
++
++	[X1830_CLK_CPU] = {
++		"cpu", CGU_CLK_DIV,
++		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
++		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
++	},
++
++	[X1830_CLK_L2CACHE] = {
++		"l2cache", CGU_CLK_DIV,
++		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
++		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
++	},
++
++	[X1830_CLK_AHB0] = {
++		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
++		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
++		.mux = { CGU_REG_CPCCR, 26, 2 },
++		.div = { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
++	},
++
++	[X1830_CLK_AHB2PMUX] = {
++		"ahb2_apb_mux", CGU_CLK_MUX,
++		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
++		.mux = { CGU_REG_CPCCR, 24, 2 },
++	},
++
++	[X1830_CLK_AHB2] = {
++		"ahb2", CGU_CLK_DIV,
++		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
++		.div = { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
++	},
++
++	[X1830_CLK_PCLK] = {
++		"pclk", CGU_CLK_DIV,
++		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
++		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
++	},
++
++	[X1830_CLK_DDR] = {
++		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
++		.mux = { CGU_REG_DDRCDR, 30, 2 },
++		.div = { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR0, 31 },
++	},
++
++	[X1830_CLK_MAC] = {
++		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
++					 X1830_CLK_VPLL, X1830_CLK_EPLL },
++		.mux = { CGU_REG_MACCDR, 30, 2 },
++		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR1, 4 },
++	},
++
++	[X1830_CLK_MSCMUX] = {
++		"msc_mux", CGU_CLK_MUX,
++		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
++					 X1830_CLK_VPLL, X1830_CLK_EPLL },
++		.mux = { CGU_REG_MSC0CDR, 30, 2 },
++	},
++
++	[X1830_CLK_MSC0] = {
++		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
++		.div = { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR0, 4 },
++	},
++
++	[X1830_CLK_MSC1] = {
++		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
++		.div = { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR0, 5 },
++	},
++
++	[X1830_CLK_SSIPLL] = {
++		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
++		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
++					 X1830_CLK_VPLL, X1830_CLK_EPLL },
++		.mux = { CGU_REG_SSICDR, 30, 2 },
++		.div = { CGU_REG_SSICDR, 0, 1, 8, 28, 27, 26 },
++	},
++
++	[X1830_CLK_SSIMUX] = {
++		"ssi_mux", CGU_CLK_MUX,
++		.parents = { X1830_CLK_EXCLK, X1830_CLK_SSIPLL, -1, -1 },
++		.mux = { CGU_REG_SSICDR, 29, 1 },
++	},
++
++	/* Gate-only clocks */
++
++	[X1830_CLK_SSI0] = {
++		"ssi0", CGU_CLK_GATE,
++		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 6 },
++	},
++
++	[X1830_CLK_SMB0] = {
++		"smb0", CGU_CLK_GATE,
++		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 7 },
++	},
++
++	[X1830_CLK_SMB1] = {
++		"smb1", CGU_CLK_GATE,
++		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 8 },
++	},
++
++	[X1830_CLK_SMB2] = {
++		"smb2", CGU_CLK_GATE,
++		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 9 },
++	},
++
++	[X1830_CLK_UART0] = {
++		"uart0", CGU_CLK_GATE,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 14 },
++	},
++
++	[X1830_CLK_UART1] = {
++		"uart1", CGU_CLK_GATE,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 15 },
++	},
++
++	[X1830_CLK_SSI1] = {
++		"ssi1", CGU_CLK_GATE,
++		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 19 },
++	},
++
++	[X1830_CLK_SFC] = {
++		"sfc", CGU_CLK_GATE,
++		.parents = { X1830_CLK_SSIPLL, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 20 },
++	},
++
++	[X1830_CLK_PDMA] = {
++		"pdma", CGU_CLK_GATE,
++		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR0, 21 },
++	},
++};
++
++static void __init x1830_cgu_init(struct device_node *np)
++{
++	int retval;
++
++	cgu = ingenic_cgu_new(x1830_cgu_clocks,
++			      ARRAY_SIZE(x1830_cgu_clocks), np);
++	if (!cgu) {
++		pr_err("%s: failed to initialise CGU\n", __func__);
++		return;
++	}
++
++	retval = ingenic_cgu_register_clocks(cgu);
++	if (retval) {
++		pr_err("%s: failed to register CGU Clocks\n", __func__);
++		return;
++	}
++
++	ingenic_cgu_register_syscore_ops(cgu);
++}
++CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", x1830_cgu_init);
+-- 
+2.7.4
+
