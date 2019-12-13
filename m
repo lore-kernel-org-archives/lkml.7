@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D559AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF41C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6853214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B188124656
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576221692;
-	bh=1irYrXGOcxexWbuIpAf9P38P6DG0tz6DxNZJDv6EmtE=;
+	s=default; t=1576221756;
+	bh=0sPm7J7BCIEhMIoIedEg2UHth35LruEqtDCfrEnZ7Vs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ussYYG7PAJp1Qo9ZImOwBTD71x5WSj5Q9qea1hyxMvJKYP2b7/7x2UEukNu1O4DJc
-	 B6r1QVnPALnPCPa58bruqbVmYGpvTtHZGI8C9CAUkfZeXbotEb0PI4+hcsBdSz+NPx
-	 8gRlbvxJa2UISxK9m3bzn3e4ADq8aH3yeMIO7btU=
+	b=AGqGw9IXTihslhC1XhIKk/L8H08be2ioHVBZBj6xv756qLS5+PGNpan4iJPH+Kurq
+	 /NhdSk8ezhyO2m9BQSDA2ZBBkPEfuzy5THFb/Eu82Wh+OKHC3+oK70kFB3yGbk8ZlL
+	 9JAK1T20wLqdf6vVtMdAF2suB9mzK+us+AeHAzAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfLMHVb (ORCPT
+        id S1725906AbfLMHWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:21:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
+        Fri, 13 Dec 2019 02:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfLMHVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:21:31 -0500
+        id S1725468AbfLMHWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:22:35 -0500
 Received: from localhost (unknown [84.241.199.142])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF17A22527;
-        Fri, 13 Dec 2019 07:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E955222527;
+        Fri, 13 Dec 2019 07:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576221690;
-        bh=1irYrXGOcxexWbuIpAf9P38P6DG0tz6DxNZJDv6EmtE=;
+        s=default; t=1576221754;
+        bh=0sPm7J7BCIEhMIoIedEg2UHth35LruEqtDCfrEnZ7Vs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nK0mkKVmXw7yPAns6tFG57mYIF/DC4ECaDxa6MTMHPSLqnk+MSMsR085zVutvYQAV
-         7UYPqnsEhYcTghhvcofVsrcuPD2B/7IRgn+8EPaWeCWXZbUDRoQSgvL7oOtB+XzUcm
-         pjE/UUBFae5wZF8Yqo2aWF/lI+X0Txh4bbAcpKTM=
-Date:   Fri, 13 Dec 2019 08:21:27 +0100
+        b=2flDD/pRkDALP6RVioapKjvMd3DFwlByvJfqSwkUOzH4yhMOzaWu38P/krZc6cA4Y
+         fEKZ0sbG0hWTa4ccqYWjXdK6wy+iPKQMAlcUiZ4cpvW14Cfx8ti65ilWrLypCL6E2z
+         hO47UMngPqdR2r53YuwyJErkX1obP+uB1JvrdHD0=
+Date:   Fri, 13 Dec 2019 08:22:31 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
@@ -50,71 +50,82 @@ Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH v4 06/15] soundwire: add support for sdw_slave_type
-Message-ID: <20191213072127.GD1750354@kroah.com>
+Subject: Re: [PATCH v4 07/15] soundwire: slave: move uevent handling to slave
+Message-ID: <20191213072231.GE1750354@kroah.com>
 References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-7-pierre-louis.bossart@linux.intel.com>
+ <20191213050409.12776-8-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213050409.12776-7-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20191213050409.12776-8-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:04:00PM -0600, Pierre-Louis Bossart wrote:
-> Currently the bus does not have any explicit support for master
-> devices.
-> 
-> First add explicit support for sdw_slave_type and error checks if this type
-> is not set.
-> 
-> In follow-up patches we can add support for the sdw_md_type (md==Master
-> Device), following the Grey Bus example.
+On Thu, Dec 12, 2019 at 11:04:01PM -0600, Pierre-Louis Bossart wrote:
+> Currently the code deals with uevents at the bus level, but we only care
+> for Slave events
 
-How are you using greybus as an example of "master devices"?  All you
-are doing here is setting the type of the existing devices, right?
-
+What does this mean?  I can't understand it, can you please provide more
+information on what you are doing here?
 
 > 
+> Suggested-by: Vinod Koul <vkoul@kernel.org>
 > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/soundwire/bus_type.c       | 16 ++++++++++++----
->  drivers/soundwire/slave.c          |  7 ++++++-
->  include/linux/soundwire/sdw_type.h |  6 ++++++
->  3 files changed, 24 insertions(+), 5 deletions(-)
+>  drivers/soundwire/bus.h      | 2 ++
+>  drivers/soundwire/bus_type.c | 3 +--
+>  drivers/soundwire/slave.c    | 1 +
+>  3 files changed, 4 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> index cb482da914da..be01a5f3d00b 100644
+> --- a/drivers/soundwire/bus.h
+> +++ b/drivers/soundwire/bus.h
+> @@ -6,6 +6,8 @@
+>  
+>  #define DEFAULT_BANK_SWITCH_TIMEOUT 3000
+>  
+> +int sdw_uevent(struct device *dev, struct kobj_uevent_env *env);
+> +
+>  #if IS_ENABLED(CONFIG_ACPI)
+>  int sdw_acpi_find_slaves(struct sdw_bus *bus);
+>  #else
 > diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 9a0fd3ee1014..bbdedce5eb26 100644
+> index bbdedce5eb26..5c18c21545b5 100644
 > --- a/drivers/soundwire/bus_type.c
 > +++ b/drivers/soundwire/bus_type.c
-> @@ -49,13 +49,21 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+> @@ -47,7 +47,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+>  			slave->id.mfg_id, slave->id.part_id);
+>  }
 >  
->  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+> -static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+> +int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
 >  {
-> -	struct sdw_slave *slave = to_sdw_slave_device(dev);
-> +	struct sdw_slave *slave;
+>  	struct sdw_slave *slave;
 >  	char modalias[32];
+> @@ -71,7 +71,6 @@ static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  struct bus_type sdw_bus_type = {
+>  	.name = "soundwire",
+>  	.match = sdw_bus_match,
+> -	.uevent = sdw_uevent,
+>  };
+>  EXPORT_SYMBOL_GPL(sdw_bus_type);
 >  
-> -	sdw_slave_modalias(slave, modalias, sizeof(modalias));
-> +	if (is_sdw_slave(dev)) {
-> +		slave = to_sdw_slave_device(dev);
-> +
-> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
->  
-> -	if (add_uevent_var(env, "MODALIAS=%s", modalias))
-> -		return -ENOMEM;
-> +		if (add_uevent_var(env, "MODALIAS=%s", modalias))
-> +			return -ENOMEM;
-> +	} else {
-> +		/* only Slave device type supported */
-> +		dev_warn(dev, "uevent for unknown Soundwire type\n");
-> +		return -EINVAL;
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+> index c87267f12a3b..014c3ece1f17 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/slave.c
+> @@ -17,6 +17,7 @@ static void sdw_slave_release(struct device *dev)
+>  struct device_type sdw_slave_type = {
+>  	.name =		"sdw_slave",
+>  	.release =	sdw_slave_release,
+> +	.uevent = sdw_uevent,
 
-Right now, this can not happen, right?
+Align this with the other ones?
 
-Not a problem, just trying to understand the sequence of patches here...
+does this cause any different functionality?
 
 thanks,
 
