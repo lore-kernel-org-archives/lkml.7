@@ -2,170 +2,167 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51840C3402B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA433C3401B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84096246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0CvGYAn"
+	by mail.kernel.org (Postfix) with ESMTP id 1575B246B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfLMPMP (ORCPT
+        id S1727874AbfLMPFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:12:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39335 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfLMPMO (ORCPT
+        Fri, 13 Dec 2019 10:05:37 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:32964 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfLMPFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:12:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so7022136wrt.6;
-        Fri, 13 Dec 2019 07:12:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5xjMnK8d3jzGk55yKrr3T8iLeWJCVMJrKa58oe9VrAw=;
-        b=u0CvGYAn/bMZA/crdgBKxOSEJyGgQ5RshzxacnadteTrtuJBI7GaIm9C02V5VyiLkQ
-         FMt7evI11sHvfUqfUsloNQ01INbVsqHR/BjkYbI7ogT8Ur8+8hwgS7lfNFiu6DRLX7V5
-         1qowp3XY8eQpt5urCg+LDoLv38C63lNjjGTyiaDc1z5AYhrNYrYzGvg4Lm8orXnVffwv
-         663+wdGHu3u22PafCvUx19iuJAubYd2/ThGLdxbLK0kMaEmhMW3Pv3/doGrI6cd738ga
-         66MXV1s94wuscDXSvi/b7Kr99cwMClyowaHukz+nMDcTeYPMP5xhteEtqzyAumxaQqdx
-         Dowg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5xjMnK8d3jzGk55yKrr3T8iLeWJCVMJrKa58oe9VrAw=;
-        b=frwSwTH+6XkJPJZoZ42ywIh3EpPydGGr2hm9SCNBLFHahVEdxeTmcIoOhVWqISUiFZ
-         6+DRApOsEwU5qy17EPPchjjf8rK3vQIO7PRfnHrRh/R4vcQ0zY2kFzhTNgY4k/V0/vWD
-         aSCcD6sanYcBUg2A/Ad/ejLVPebYZYEsK0wdLgGtJJHRd/TjarROuv8G8LHjrrqL3Mii
-         C2g6XgnM4CLIqQwmrkjsepuo2TKgKVVBNL3yGkGAWZ31RQ1O3XcWIZJBcTYD1AmAHORR
-         azB4bcNpJVXhKcwew4Xr4h334Pn/8+WNrKTIzeZ/GFXo21MA5ayM4yHKnl6BNa0rFprj
-         Jvgg==
-X-Gm-Message-State: APjAAAUJNdr4WfVKA5XWiO4jqp4gv6g9xURpR6YqIF31KUjofAZ9JPs6
-        +V2yFvO1x5j5ulNxGb9hJuI=
-X-Google-Smtp-Source: APXvYqwpzk77923HcAksbraHc0T9/edYcR0wf0BywZ09CBJMLjJVF6VvY4snaopC5IjgcmLM4Kg96Q==
-X-Received: by 2002:adf:df90:: with SMTP id z16mr14214961wrl.273.1576249931170;
-        Fri, 13 Dec 2019 07:12:11 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id 16sm10475010wmi.0.2019.12.13.07.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:12:09 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:12:08 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] i2c: tegra: Support atomic transfers
-Message-ID: <20191213151208.GC222809@ulmo>
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-2-digetx@gmail.com>
+        Fri, 13 Dec 2019 10:05:36 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: oGwtiwfYvjjZREwj4sUA+zqOCDJsiGr6mTMDgf/guLFS7iQtfF1E8lv4yQo+jj9CZzN/rt1VQG
+ sN2jYAElRxkItkzsoYd9LugIWwQlBjQVuxELGVGCxcGrJErh3HnPmvLjDrFuYP2uZnOInzSv3a
+ 7kr5IrYd5P+qtG9q6nFKcRfAetEpIVphd8S8TE582layuQi2RTgxpPhL7m/6fYalfd1y7w0urK
+ ukHNG8SP2vk3uRNzV3S9hyZRt8XlpiFrfyIQnh6saJrjqOE1vlk1zuKdLAMTdxqLL8kHDguN40
+ aLI=
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="60293567"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 08:05:35 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 13 Dec 2019 08:05:34 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 08:05:30 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <lee.jones@linaro.org>
+CC:     <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Sandeep Sheriker Mallikarjun 
+        <sandeepsheriker.mallikarjun@microchip.com>
+Subject: [PATCH v2 6/6] Revert "drm: atmel-hlcdc: enable sys_clk during initalization."
+Date:   Fri, 13 Dec 2019 17:04:56 +0200
+Message-ID: <1576249496-4849-7-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1576249496-4849-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
-Content-Disposition: inline
-In-Reply-To: <20191212233428.14648-2-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This reverts commit d2c755e66617620b729041c625a6396c81d1231c
+("drm: atmel-hlcdc: enable sys_clk during initalization."). With
+commit "drm: atmel-hlcdc: enable clock before configuring timing engine"
+there is no need for this patch. Code is also simpler.
 
---GZVR6ND4mMseVXL/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
 
-On Fri, Dec 13, 2019 at 02:34:26AM +0300, Dmitry Osipenko wrote:
-> System shutdown may happen with interrupts being disabled and in this case
-> I2C core rejects transfers if atomic transfer isn't supported by driver.
->=20
-> There were several occurrences where I found my Nexus 7 completely
-> discharged despite of being turned off and then one day I spotted this in
-> the log:
->=20
->  reboot: Power down
->  ------------[ cut here ]------------
->  WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40 i2c_transfer+0x95/0x=
-9c
->  No atomic I2C transfer handler for 'i2c-1'
->  Modules linked in: tegra30_devfreq
->  CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.4.0-next-20191202-0012=
-0-gf7ecd80fb803-dirty #3195
->  Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->  [<c010e4b5>] (unwind_backtrace) from [<c010a0fd>] (show_stack+0x11/0x14)
->  [<c010a0fd>] (show_stack) from [<c09995e5>] (dump_stack+0x85/0x94)
->  [<c09995e5>] (dump_stack) from [<c011f3d1>] (__warn+0xc1/0xc4)
->  [<c011f3d1>] (__warn) from [<c011f691>] (warn_slowpath_fmt+0x61/0x78)
->  [<c011f691>] (warn_slowpath_fmt) from [<c069a8dd>] (i2c_transfer+0x95/0x=
-9c)
->  [<c069a8dd>] (i2c_transfer) from [<c05667f1>] (regmap_i2c_read+0x4d/0x6c)
->  [<c05667f1>] (regmap_i2c_read) from [<c0563601>] (_regmap_raw_read+0x99/=
-0x1cc)
->  [<c0563601>] (_regmap_raw_read) from [<c0563757>] (_regmap_bus_read+0x23=
-/0x38)
->  [<c0563757>] (_regmap_bus_read) from [<c056293d>] (_regmap_read+0x3d/0xf=
-c)
->  [<c056293d>] (_regmap_read) from [<c0562d3b>] (_regmap_update_bits+0x87/=
-0xc4)
->  [<c0562d3b>] (_regmap_update_bits) from [<c0563add>] (regmap_update_bits=
-_base+0x39/0x50)
->  [<c0563add>] (regmap_update_bits_base) from [<c056fd39>] (max77620_pm_po=
-wer_off+0x29/0x2c)
->  [<c056fd39>] (max77620_pm_power_off) from [<c013bbdd>] (__do_sys_reboot+=
-0xe9/0x170)
->  [<c013bbdd>] (__do_sys_reboot) from [<c0101001>] (ret_fast_syscall+0x1/0=
-x28)
->  Exception stack(0xde907fa8 to 0xde907ff0)
->  7fa0:                   00000000 00000000 fee1dead 28121969 4321fedc 000=
-00000
->  7fc0: 00000000 00000000 00000000 00000058 00000000 00000000 00000000 000=
-00000
->  7fe0: 0045adf0 bed9abb8 004444a0 b6c666d0
->  ---[ end trace bdd18f87595b1a5e ]---
->=20
-> The atomic transferring is implemented by enforcing PIO mode for the
-> transfer and by polling interrupt status until transfer is completed or
-> failed.
->=20
-> Now system shuts down properly every time.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 95 +++++++++++++++++++++++++++++++---
->  1 file changed, 88 insertions(+), 7 deletions(-)
+Hi Sam,
 
-I ran this on the test farm and the results are all green, so:
+I still kept this as a patch as I didn't got any answer from you at my
+last email up to this moment.
 
-Tested-by: Thierry Reding <treding@nvidia.com>
+If you think it is better to squash this one with patch 2/6 in this seris
+let me know.
 
---GZVR6ND4mMseVXL/
-Content-Type: application/pgp-signature; name="signature.asc"
+Thank you,
+Claudiu Beznea
 
------BEGIN PGP SIGNATURE-----
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3zqkgACgkQ3SOs138+
-s6F9NRAAhrADoRuLa9YvQLDZbxpA/Tnpsb8Qm67NM8YOmqAeKzOKlE3WRDH63mia
-MgbZAOoO3x31sfcku/u71k0fVKdDW4XEmCyCmthqj1Sv1hP5F4ySpAlewQZ5xV29
-O+TyJHpegVlBkO6m9cFUU3doeO081pUPf98vGrHjX+S/8eWMnFp836L+ZOPHJ7tg
-qC9MTCNdnQCMd/9JAvnWFO3l4d62gvyF6quaYVmanzbXrVZjeYQqfqzem8IeUsC5
-6XowmsO9xCUR030DVMnIhzFlno9L7rhZ16qA8ael7v6Ehu95JIJ5Ptoz4NPytk15
-loSt1C398luYGOxlVOoqN5eMiy2dYsiqoe/LCnkT8W8GnCCRhptcczyOddA2LoB2
-n6jrzgGFRqJgC4vKowqMTLQdZ4qKCPbQbo7DKRy+xWYVLp+B5TMQ7A8I8j2u6Baa
-yPOEY0qffNiPgR0xCyEqFRf5l+nuGdUQAmWOv6Bax+uq7U4lApTf7Dlc5HKcvWKh
-8+PzEsQ94lrORe/COI2BNCrVfoyqne1ltTrJmE7aryhY3FR8S+RBEQEmju9mB/JO
-ScvvU/wzg5ncg5Fy8U6dv1dhcRiqLHk/0Ejc4/MAZSHgUEXwldqsxSUNguRBpeK1
-SQhtkNgXOkCnjhQPDmKpbKGFobvSCf1ZH9gdehvvAMasyTykdeg=
-=j5aV
------END PGP SIGNATURE-----
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+index 8dc917a1270b..112aa5066cee 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+@@ -721,18 +721,10 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
+ 	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
+ 	dev->dev_private = dc;
+ 
+-	if (dc->desc->fixed_clksrc) {
+-		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
+-		if (ret) {
+-			dev_err(dev->dev, "failed to enable sys_clk\n");
+-			goto err_destroy_wq;
+-		}
+-	}
+-
+ 	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
+ 	if (ret) {
+ 		dev_err(dev->dev, "failed to enable periph_clk\n");
+-		goto err_sys_clk_disable;
++		goto err_destroy_wq;
+ 	}
+ 
+ 	pm_runtime_enable(dev->dev);
+@@ -768,9 +760,6 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
+ err_periph_clk_disable:
+ 	pm_runtime_disable(dev->dev);
+ 	clk_disable_unprepare(dc->hlcdc->periph_clk);
+-err_sys_clk_disable:
+-	if (dc->desc->fixed_clksrc)
+-		clk_disable_unprepare(dc->hlcdc->sys_clk);
+ 
+ err_destroy_wq:
+ 	destroy_workqueue(dc->wq);
+@@ -795,8 +784,6 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
+ 
+ 	pm_runtime_disable(dev->dev);
+ 	clk_disable_unprepare(dc->hlcdc->periph_clk);
+-	if (dc->desc->fixed_clksrc)
+-		clk_disable_unprepare(dc->hlcdc->sys_clk);
+ 	destroy_workqueue(dc->wq);
+ }
+ 
+@@ -910,8 +897,6 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
+ 	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
+ 	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
+ 	clk_disable_unprepare(dc->hlcdc->periph_clk);
+-	if (dc->desc->fixed_clksrc)
+-		clk_disable_unprepare(dc->hlcdc->sys_clk);
+ 
+ 	return 0;
+ }
+@@ -921,8 +906,6 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
+ 	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
+ 
+-	if (dc->desc->fixed_clksrc)
+-		clk_prepare_enable(dc->hlcdc->sys_clk);
+ 	clk_prepare_enable(dc->hlcdc->periph_clk);
+ 	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
+ 
+-- 
+2.7.4
 
---GZVR6ND4mMseVXL/--
