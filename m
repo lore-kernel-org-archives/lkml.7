@@ -2,135 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9C5C4BA2E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:24 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695DD2475C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33413C4BA28
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:23 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 71E5224758
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfLMQfO (ORCPT
+        id S1728264AbfLMQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:35:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:55846 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727480AbfLMQfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:35:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:35:13 -0800
+        Fri, 13 Dec 2019 11:33:21 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:58350 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfLMQdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:33:20 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Cristian.Birsan@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="Cristian.Birsan@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Cristian.Birsan@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: jCm+YbIbvrZMYGfEkz9L6cgyrmmUbpcfxSpfXJ0Idj7jy8zOfHt98o/vnYVzImWTGcUu3Akwc5
+ vJ5otLHfkSkpaSPPBjezQsdmey8evrhc77rZ38DaFAedgb44hlQrxVaSxxIsATBaak/yHTCSXf
+ /ZS4IEc2iDV+2NbWJ1DQSCK9wX0FkpdU2PIbSZqytstIHgPA3aJY68qg6ple7P4/usQQRrEb7K
+ CE84qilRHGUq011ULdEaT2x5LxJK4vgxsoDB9wd4q2ATLgfG8egFD0mEmp6J/7Img39FxLlyNS
+ oFA=
 X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="364346319"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 08:35:13 -0800
-Message-ID: <de779bcc6ccae238dbdedcc61db88abbdb8f291e.camel@linux.intel.com>
-Subject: Re: [PATCH v15 6/7] virtio-balloon: Add support for providing free
- page reports to host
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
-        konrad.wilk@oracle.com, david@redhat.com, pagupta@redhat.com,
-        riel@surriel.com, lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de
-Date:   Fri, 13 Dec 2019 08:35:13 -0800
-In-Reply-To: <20191213020553-mutt-send-email-mst@kernel.org>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-         <20191205162255.19548.63866.stgit@localhost.localdomain>
-         <20191213020553-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+   d="scan'208";a="59728878"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 09:33:19 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 13 Dec 2019 09:33:19 -0700
+Received: from cristi-W530.mchp-main.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 09:33:17 -0700
+From:   Cristian Birsan <cristian.birsan@microchip.com>
+To:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH] net: usb: lan78xx: Fix error message format specifier
+Date:   Fri, 13 Dec 2019 18:33:11 +0200
+Message-ID: <20191213163311.8319-1-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-13 at 02:08 -0500, Michael S. Tsirkin wrote:
-> On Thu, Dec 05, 2019 at 08:22:55AM -0800, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > Add support for the page reporting feature provided by virtio-balloon.
-> > Reporting differs from the regular balloon functionality in that is is
-> > much less durable than a standard memory balloon. Instead of creating a
-> > list of pages that cannot be accessed the pages are only inaccessible
-> > while they are being indicated to the virtio interface. Once the
-> > interface has acknowledged them they are placed back into their respective
-> > free lists and are once again accessible by the guest system.
-> > 
-> > Unlike a standard balloon we don't inflate and deflate the pages. Instead
-> > we perform the reporting, and once the reporting is completed it is
-> > assumed that the page has been dropped from the guest and will be faulted
-> > back in the next time the page is accessed.
-> > 
-> > For this reason when I had originally introduced the patch set I referred
-> > to this behavior as a "bubble" instead of a "balloon" since the duration
-> > is short lived, and when the page is touched the "bubble" is popped and
-> > the page is faulted back in.
-> > 
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> virtio POV is fine here:
-> 
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> 
-> However please copy virtio-comment on UAPI changes.
+Display the return code as decimal integer.
 
-So I have been avoiding copying virtio-dev on the kernel changes as I had
-gotten feedback that it was annoying some people as they were getting
-bounces since they were not subscribed. Will the same type of thing happen
-with virtio-comment?
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+---
+ drivers/net/usb/lan78xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> If possible isolate the last chunk in a patch by itself
-> to make it easier for non-kernel developers to review.
-
-Are you talking about the change in "include/uapi/linux/virtio_balloon.h"?
-
-I have it as a standalone patch in the QEMU set, and for the QEMU set I
-had included virtio-dev. Would you prefer I include virtio-comment instead
-or in addition to virtio-dev? My thought is that I would prefer to keep
-the virtio people focused on the QEMU code since they are probably more
-comfortable with that, and the kernel people focused on the kernel code.
-
-> > ---
-> >  drivers/virtio/Kconfig              |    1 +
-> >  drivers/virtio/virtio_balloon.c     |   64 +++++++++++++++++++++++++++++++++++
-> >  include/uapi/linux/virtio_balloon.h |    1 +
-> >  3 files changed, 66 insertions(+)
-
-<snip>
-
-> > 
-> > diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-> > index a1966cd7b677..19974392d324 100644
-> > --- a/include/uapi/linux/virtio_balloon.h
-> > +++ b/include/uapi/linux/virtio_balloon.h
-> > @@ -36,6 +36,7 @@
-> >  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
-> >  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
-> >  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> > +#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
-> >  
-> >  /* Size of a PFN in the balloon interface. */
-> >  #define VIRTIO_BALLOON_PFN_SHIFT 12
-
-If this is the bit we are talking about I have it split out already into a
-QEMU specific patch as well, it can be found here:
-https://lore.kernel.org/lkml/20191205162422.19737.57728.stgit@localhost.localdomain/
-
-If needed I could probably add a cover page and/or update the comments in
-that patch if that is needed to better explain the change.
-
-Thanks.
-
-- Alex
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index d7bf1918ca62..f940dc6485e5 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -511,7 +511,7 @@ static int lan78xx_read_stats(struct lan78xx_net *dev,
+ 		}
+ 	} else {
+ 		netdev_warn(dev->net,
+-			    "Failed to read stat ret = 0x%x", ret);
++			    "Failed to read stat ret = %d", ret);
+ 	}
+ 
+ 	kfree(stats);
+-- 
+2.17.1
 
