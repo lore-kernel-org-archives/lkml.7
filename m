@@ -2,221 +2,132 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2DDC341A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1620C34035
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E039C2471D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eNsSuvgn"
+	by mail.kernel.org (Postfix) with ESMTP id 0E2C7246D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfLMO7k (ORCPT
+        id S1727870AbfLMPVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:59:40 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:12136 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbfLMO7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:59:39 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47ZDN82bdGz9vBJg;
-        Fri, 13 Dec 2019 15:59:36 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=eNsSuvgn; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id JbWyOEqSF5fS; Fri, 13 Dec 2019 15:59:36 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47ZDN81JZNz9vBJc;
-        Fri, 13 Dec 2019 15:59:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576249176; bh=ciNClaFt4bgE8XImcN+vK2ienGGRWFLoOBnDEXiWkyo=;
-        h=From:Subject:To:Cc:Date:From;
-        b=eNsSuvgnmZw1YmG5E/YgVg0KpuE+7i8abcfUzZwyBTaKGuDHrE70cwAEPxQTNKOGT
-         Qayr0Zwr419NfgU9KtjmPIPc7OybWEmftzlVvIHoBLETrhaD4SPnCawConqvQNt09V
-         u1zs90wHYjnVo4VE7sjygwG6OfO5s83Z38EsEt2s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A27798B8CE;
-        Fri, 13 Dec 2019 15:59:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gYnh7uNCBj0G; Fri, 13 Dec 2019 15:59:37 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 471608B8C4;
-        Fri, 13 Dec 2019 15:59:37 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DDB6B63777; Fri, 13 Dec 2019 14:59:36 +0000 (UTC)
-Message-Id: <66a26ff96689f6f84b25ed11dcff6c3818801fe7.1576248635.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32: add support of KASAN_VMALLOC
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org
-Date:   Fri, 13 Dec 2019 14:59:36 +0000 (UTC)
+        Fri, 13 Dec 2019 10:21:35 -0500
+Received: from out28-172.mail.aliyun.com ([115.124.28.172]:39288 "EHLO
+        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfLMPVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 10:21:35 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4287215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0376297-0.00652272-0.955848;DS=CONTINUE|ham_regular_dialog|0.00548571-0.000451498-0.994063;FP=17206493567010594298|1|1|1|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 13 Dec 2019 23:21:26 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 3/5] dt-bindings: clock: Add X1830 bindings.
+Date:   Fri, 13 Dec 2019 23:21:10 +0800
+Message-Id: <1576250472-124315-5-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of KASAN_VMALLOC on PPC32.
+Add the clock bindings for the X1830 Soc from Ingenic.
 
-To allow this, the early shadow covering the VMALLOC space
-need to be removed once high_memory var is set and before
-freeing memblock.
-
-And the VMALLOC area need to be aligned such that boundaries
-are covered by a full shadow page.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2: rebased ; exclude specific module handling when CONFIG_KASAN_VMALLOC is set.
----
- arch/powerpc/Kconfig                         |  1 +
- arch/powerpc/include/asm/book3s/32/pgtable.h |  5 +++++
- arch/powerpc/include/asm/kasan.h             |  2 ++
- arch/powerpc/include/asm/nohash/32/pgtable.h |  5 +++++
- arch/powerpc/mm/kasan/kasan_init_32.c        | 33 +++++++++++++++++++++++++++-
- arch/powerpc/mm/mem.c                        |  3 +++
- 6 files changed, 48 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1ec34e16ed65..a247bbfb03d4 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -173,6 +173,7 @@ config PPC
- 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_KASAN			if PPC32
-+	select HAVE_ARCH_KASAN_VMALLOC		if PPC32
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index 0796533d37dd..5b39c11e884a 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -193,7 +193,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- #else
- #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
- #endif
+Notes:
+    v1->v2:
+    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+    the old mailbox is in an unstable state.
+
+ .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+ include/dt-bindings/clock/x1830-cgu.h              | 46 ++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 include/dt-bindings/clock/x1830-cgu.h
+
+diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+index 75598e6..74bfc57 100644
+--- a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
++++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+@@ -12,6 +12,7 @@ Required properties:
+   * ingenic,jz4770-cgu
+   * ingenic,jz4780-cgu
+   * ingenic,x1000-cgu
++  * ingenic,x1830-cgu
+ - reg : The address & length of the CGU registers.
+ - clocks : List of phandle & clock specifiers for clocks external to the CGU.
+   Two such external clocks should be specified - first the external crystal
+diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
+new file mode 100644
+index 00000000..6499170
+--- /dev/null
++++ b/include/dt-bindings/clock/x1830-cgu.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
++ *
++ * They are roughly ordered as:
++ *   - external clocks
++ *   - PLLs
++ *   - muxes/dividers in the order they appear in the x1830 programmers manual
++ *   - gates in order of their bit in the CLKGR* registers
++ */
 +
-+#ifdef CONFIG_KASAN_VMALLOC
-+#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
-+#else
- #define VMALLOC_END	ioremap_bot
-+#endif
- 
- #ifndef __ASSEMBLY__
- #include <linux/sched.h>
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 296e51c2f066..fbff9ff9032e 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -31,9 +31,11 @@
- void kasan_early_init(void);
- void kasan_mmu_init(void);
- void kasan_init(void);
-+void kasan_late_init(void);
- #else
- static inline void kasan_init(void) { }
- static inline void kasan_mmu_init(void) { }
-+static inline void kasan_late_init(void) { }
- #endif
- 
- #endif /* __ASSEMBLY */
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 552b96eef0c8..60c4d829152e 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -114,7 +114,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- #else
- #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
- #endif
++#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
++#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
 +
-+#ifdef CONFIG_KASAN_VMALLOC
-+#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
-+#else
- #define VMALLOC_END	ioremap_bot
-+#endif
- 
- /*
-  * Bits in a linux-style PTE.  These match the bits in the
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eea..88036fb88350 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -129,6 +129,31 @@ static void __init kasan_remap_early_shadow_ro(void)
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
- }
- 
-+static void __init kasan_unmap_early_shadow_vmalloc(void)
-+{
-+	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
-+	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
-+	unsigned long k_cur;
-+	phys_addr_t pa = __pa(kasan_early_shadow_page);
++#define X1830_CLK_EXCLK		0
++#define X1830_CLK_RTCLK		1
++#define X1830_CLK_APLL		2
++#define X1830_CLK_MPLL		3
++#define X1830_CLK_EPLL		4
++#define X1830_CLK_VPLL		5
++#define X1830_CLK_SCLKA		6
++#define X1830_CLK_CPUMUX	7
++#define X1830_CLK_CPU		8
++#define X1830_CLK_L2CACHE	9
++#define X1830_CLK_AHB0		10
++#define X1830_CLK_AHB2PMUX	11
++#define X1830_CLK_AHB2		12
++#define X1830_CLK_PCLK		13
++#define X1830_CLK_DDR		14
++#define X1830_CLK_MAC		15
++#define X1830_CLK_MSCMUX	16
++#define X1830_CLK_MSC0		17
++#define X1830_CLK_MSC1		18
++#define X1830_CLK_SSIPLL	19
++#define X1830_CLK_SSIMUX	20
++#define X1830_CLK_SSI0		21
++#define X1830_CLK_SMB0		22
++#define X1830_CLK_SMB1		23
++#define X1830_CLK_SMB2		24
++#define X1830_CLK_UART0		25
++#define X1830_CLK_UART1		26
++#define X1830_CLK_SSI1		27
++#define X1830_CLK_SFC		28
++#define X1830_CLK_PDMA		29
 +
-+	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
-+		int ret = kasan_init_shadow_page_tables(k_start, k_end);
-+
-+		if (ret)
-+			panic("kasan: kasan_init_shadow_page_tables() failed");
-+	}
-+	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
-+
-+		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-+			continue;
-+
-+		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
-+	}
-+	flush_tlb_kernel_range(k_start, k_end);
-+}
-+
- void __init kasan_mmu_init(void)
- {
- 	int ret;
-@@ -165,7 +190,13 @@ void __init kasan_init(void)
- 	pr_info("KASAN init done\n");
- }
- 
--#ifdef CONFIG_MODULES
-+void __init kasan_late_init(void)
-+{
-+	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
-+		kasan_unmap_early_shadow_vmalloc();
-+}
-+
-+#if defined(CONFIG_MODULES) && !defined(CONFIG_KASAN_VMALLOC)
- void *module_alloc(unsigned long size)
- {
- 	void *base;
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 9488b63dfc87..3bb212c8ef2d 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -294,6 +294,9 @@ void __init mem_init(void)
- 
- 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
- 	set_max_mapnr(max_pfn);
-+
-+	kasan_late_init();
-+
- 	memblock_free_all();
- 
- #ifdef CONFIG_HIGHMEM
++#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
 -- 
-2.13.3
+2.7.4
 
