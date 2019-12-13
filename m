@@ -2,62 +2,55 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC3BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4553DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5144924658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09ADD2073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WsHy+czN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FAE0jDdL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLMKPy (ORCPT
+        id S1726463AbfLMKRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:15:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21674 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725747AbfLMKPx (ORCPT
+        Fri, 13 Dec 2019 05:17:37 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45442 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbfLMKRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:15:53 -0500
+        Fri, 13 Dec 2019 05:17:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576232152;
+        s=mimecast20190719; t=1576232256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=fCyK+54C5dUu3rxHfQ2rgrM75MMeC+qMoOYiIQMgb+E=;
-        b=WsHy+czNgckWs8lws1s2Z5k/PfFt6v5xr7Unc8aQtSDQJqydJxGnfhqWu3JeFIQqJeu2iz
-        CWGoqM6++2iDHOXYktxkPE+noz4CyJ47Kg13MInn9j8uKLW01XvF5GhyDaPhnfYyv6C7xo
-        nvwCuH3PPG6o8uUqJ/VquuF5xr/9J6M=
+        bh=/U0mH53+fQF2bQWL+C20FuP1YuU5csZSWloaaYzan7k=;
+        b=FAE0jDdLkGiW1FdFmDzQcOcfaADYGgHe58rIZ1Hq4E9t7U13odIOn/0v2iqxMAy3FMHZpu
+        auv49xu6aynHmA+vG/O+Tkk1yKN0filZNno6qbWHwHsg+/1PImWp+66IQ9Y/ZfJqPno9AM
+        uqVVQwmYE9Z/NGYMIrx2u4Y8oL9uBTU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-3JRo0FVoPCmbP0CwGCLrOQ-1; Fri, 13 Dec 2019 05:15:51 -0500
-X-MC-Unique: 3JRo0FVoPCmbP0CwGCLrOQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-67-6DMMYLU8OBWdier-ftqitw-1; Fri, 13 Dec 2019 05:17:33 -0500
+X-MC-Unique: 6DMMYLU8OBWdier-ftqitw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1859D8024D3;
-        Fri, 13 Dec 2019 10:15:49 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E73EDB60;
+        Fri, 13 Dec 2019 10:17:31 +0000 (UTC)
 Received: from [10.36.117.150] (ovpn-117-150.ams2.redhat.com [10.36.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 57AED5C1D4;
-        Fri, 13 Dec 2019 10:15:35 +0000 (UTC)
-Subject: Re: [PATCH v15 6/7] virtio-balloon: Add support for providing free
- page reports to host
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
- <20191205162255.19548.63866.stgit@localhost.localdomain>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94D4F19C4F;
+        Fri, 13 Dec 2019 10:17:29 +0000 (UTC)
+Subject: Re: [PATCH] mm: remove __krealloc
+To:     Florian Westphal <fw@strlen.de>, linux-mm@kvack.org
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20191212223442.22141-1-fw@strlen.de>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -103,69 +96,108 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <ca305a98-864e-ccb0-5393-f73997645acf@redhat.com>
-Date:   Fri, 13 Dec 2019 11:15:34 +0100
+Message-ID: <cc82f3e8-6386-37d3-34e5-78f25521d9af@redhat.com>
+Date:   Fri, 13 Dec 2019 11:17:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191205162255.19548.63866.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191212223442.22141-1-fw@strlen.de>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.12.19 17:22, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On 12.12.19 23:34, Florian Westphal wrote:
+> Since 5.5-rc1 the last user of this function is gone, so remove the
+> functionality.
 > 
-> Add support for the page reporting feature provided by virtio-balloon.
-> Reporting differs from the regular balloon functionality in that is is
-> much less durable than a standard memory balloon. Instead of creating a
-> list of pages that cannot be accessed the pages are only inaccessible
-> while they are being indicated to the virtio interface. Once the
-> interface has acknowledged them they are placed back into their respective
-> free lists and are once again accessible by the guest system.
+> See commit
+> 2ad9d7747c10 ("netfilter: conntrack: free extension area immediately")
+> for details.
 > 
-> Unlike a standard balloon we don't inflate and deflate the pages. Instead
-> we perform the reporting, and once the reporting is completed it is
-> assumed that the page has been dropped from the guest and will be faulted
-> back in the next time the page is accessed.
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> ---
+>  include/linux/slab.h                    |  1 -
+>  mm/slab_common.c                        | 22 ----------------------
+>  scripts/coccinelle/free/devm_free.cocci |  4 ----
+>  3 files changed, 27 deletions(-)
 > 
-> For this reason when I had originally introduced the patch set I referred
-> to this behavior as a "bubble" instead of a "balloon" since the duration
-> is short lived, and when the page is touched the "bubble" is popped and
-> the page is faulted back in.
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 877a95c6a2d2..03a389358562 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -184,7 +184,6 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *, struct mem_cgroup *);
+>  /*
+>   * Common kmalloc functions provided by all allocators
+>   */
+> -void * __must_check __krealloc(const void *, size_t, gfp_t);
+>  void * __must_check krealloc(const void *, size_t, gfp_t);
+>  void kfree(const void *);
+>  void kzfree(const void *);
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index f0ab6d4ceb4c..87e8923cf0b6 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1675,28 +1675,6 @@ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+>  	return ret;
+>  }
+>  
+> -/**
+> - * __krealloc - like krealloc() but don't free @p.
+> - * @p: object to reallocate memory for.
+> - * @new_size: how many bytes of memory are required.
+> - * @flags: the type of memory to allocate.
+> - *
+> - * This function is like krealloc() except it never frees the originally
+> - * allocated buffer. Use this if you don't want to free the buffer immediately
+> - * like, for example, with RCU.
+> - *
+> - * Return: pointer to the allocated memory or %NULL in case of error
+> - */
+> -void *__krealloc(const void *p, size_t new_size, gfp_t flags)
+> -{
+> -	if (unlikely(!new_size))
+> -		return ZERO_SIZE_PTR;
+> -
+> -	return __do_krealloc(p, new_size, flags);
+> -
+> -}
+> -EXPORT_SYMBOL(__krealloc);
+> -
+>  /**
+>   * krealloc - reallocate memory. The contents will remain unchanged.
+>   * @p: object to reallocate memory for.
+> diff --git a/scripts/coccinelle/free/devm_free.cocci b/scripts/coccinelle/free/devm_free.cocci
+> index 441799b5359b..66aaf68889a5 100644
+> --- a/scripts/coccinelle/free/devm_free.cocci
+> +++ b/scripts/coccinelle/free/devm_free.cocci
+> @@ -94,8 +94,6 @@ position p;
+>   kfree@p(x)
+>  |
+>   kzfree@p(x)
+> -|
+> - __krealloc@p(x, ...)
+>  |
+>   krealloc@p(x, ...)
+>  |
+> @@ -120,8 +118,6 @@ position p != safe.p;
+>  |
+>  * kzfree@p(x)
+>  |
+> -* __krealloc@p(x, ...)
+> -|
+>  * krealloc@p(x, ...)
+>  |
+>  * free_pages@p(x, ...)
+> 
 
-While an interesting read, I would drop that comment as it isn't really
-of value for the code/codebase itself.
-
-[...]
-
-> +
-> +	vb->pr_dev_info.report = virtballoon_free_page_report;
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-> +		unsigned int capacity;
-> +
-> +		capacity = virtqueue_get_vring_size(vb->reporting_vq);
-> +		if (capacity < PAGE_REPORTING_CAPACITY) {
-> +			err = -ENOSPC;
-> +			goto out_unregister_shrinker;
-
-It's somewhat strange to fail loading the balloon completely here.
-Wouldn't it be better to print e.g. a warning but continue without free
-page reporting?
-
-(I guess splitting up the list can be done in an addon patch if ever
-really needed for virtio-balloon)
-
-Apart from that
+IMHO, __do_krealloc() changes can go into a separate patch.
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
-
-Thanks!
 
 -- 
 Thanks,
