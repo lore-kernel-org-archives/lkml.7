@@ -4,116 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F48C4D2E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EFBC4D2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE3C246A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E122469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLMU5V (ORCPT
+        id S1726856AbfLMU56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:57:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:35455 "EHLO
+        Fri, 13 Dec 2019 15:57:58 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:56003 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMU5T (ORCPT
+        with ESMTP id S1725747AbfLMU55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:57:19 -0500
+        Fri, 13 Dec 2019 15:57:57 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MJVU0-1iQOTT1xgu-00JvWU; Fri, 13 Dec 2019 21:56:59 +0100
+ 1N9dg5-1hcRf53jM5-015a8l; Fri, 13 Dec 2019 21:57:46 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Donald Buczek <buczek@molgen.mpg.de>,
-        Olga Kornievskaia <kolga@netapp.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 17/24] nfs: fix timstamp debug prints
-Date:   Fri, 13 Dec 2019 21:53:45 +0100
-Message-Id: <20191213205417.3871055-8-arnd@arndb.de>
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>
+Subject: [PATCH v2 20/24] xfs: disallow broken ioctls without compat-32-bit-time
+Date:   Fri, 13 Dec 2019 21:53:48 +0100
+Message-Id: <20191213205417.3871055-11-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
 References: <20191213204936.3643476-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:BPsskpb/goZHuGLwGJ1x2XQfxqhv8DLj+WuA9nQWoEVfSqSeN/I
- fGS/jLREazuK14w8zqELuRQegSYQUDL6R7qd9r8qD2KYJH0Q89uLdDaZnB9tbLT6UAgENTz
- TWgdOq04Zz9t0gBVAkaD5CKbQ7IbUyd/dHvLHlyi+8l2D+LVQzlW8wqlsVFa7A35ZaxNiSS
- 8woZIL/pUXR/kABRL3EKw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xADCT6UJRW4=:JIwiGJh/B+y32axL9wUyNJ
- mjMgZReUcesvl3rK9VNPN7H7n0lKP+2Heseh3H+PWkrpcUxSno872ZyWD+HXSbXUsXvDVmWlU
- ig9CBKV6/cf5i9EDx0byURIgX1kKuWCbXhgeDXrmDXiLusJoGlGMA83RsQ3ramscBXiyaEblb
- D3nXD+1TnHlktvnVFSwTCnd4Wio+7K9IIRC/zjvgw6wPpbyygztBemXwrpfvN2/7HKrxWsY8q
- RZRDj7sroLSnxryn6Pi9lA5vbOJ3INa9oeNt0gYnXTdAnsP2aqYP1IoxUVr/W9Mjh0q4kpn1C
- ZqJ2h0JWDqzN6j995ub5QpjfcFaLQBKwfKs6mXhWw9Jx6h5VHYqV4TVAAClpIFRBzSCi2/YeA
- xD6DkKzlnI6G4vt6nLZEinve0xmdmQbyk6Vv4tIxJnSQ6bB17HUAEBI3P/wQqcs9YJKycCDe4
- mf8ZsUH1Bk0c1fAgWjGVYI0drUefdMJgLVwavx4k8LL/vbqDKa9Dsb01RQD71dy57zBMALhhR
- uh0AlgKg6D21L+P6Tv8Df0sA890mAZu3u4Vmz9/2qGiiDp/Iars3qMCEypnKNDi3D25pbH/JZ
- 0DYshkArsJ+EWwVPv2QONE9m6ZfKnvmJZZmebQIuK/Te/qD0Kt8FosRTTaW1Bq0eybyokrfwa
- 1ac9L//a2fafyHGLcYqWhOEf8jVUtbQtWeuGrqryQKpGrP3POskes4D7vZ3giT4bxZALcIerX
- bWMKud/4acgIrU2prf9iC6PWhnUa5iTWPuVwjbufxNtKyVAXSD/W1buvBQMhx1wec4Us5Fy0P
- B6/vivSsZHDVXYMGDs+pJ+26UNZ1yYdF3QRjIDeCiZIKjjcwloFKxJt4izKJQWp+i41bdrjS+
- XPh+ftuT+CCVyLu+OMZw==
+X-Provags-ID: V03:K1:+OC98lqsRIacY7Fo8hffNaEguwEx5BrW1ehoyzc3XQFB5ZHNiyH
+ 3YX603rEPTrkOQExfMO9QXAGFroF+FD93OMx9FVC6EZty09STF3GnlQELmGO576vt5HzmMn
+ X5re2BzBcKgFmWs4Z1qDbbqpMGHnWYZCouGOGdR3XUvGTqVJihZQ7bnJ/2nvsy1qXT1bBNT
+ LbByJ8SMK3jY0wg9jfTVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hyZOFL3Pdhc=:c8WEjei9ibUrYRg7I5nOOT
+ uV2U+LutYN//sc6CK3IG/2yqD9u5+kPxqEpfyfGI5AnPSM42vSXYkcWAmuHZNl3qkpHZfBfi5
+ jL3Y/aBoYbidXGGJpMF9E4OjvFS+f1i0kfrEk6woVEmJDvyxstAQx0azJUrOpRZ8D5lMEErZY
+ zKTSPj3FmzEE7eIytszzFwKN7qLS0lY4X+6j76qz+q46OloyHeJE0EZy9TiVFErDzyzMt7Rrw
+ DEDRlCQfw9ic8qFrLRqjgIitBCIhLFktVhXGQVtF8Hw4gXZONvO3lF/Ugtfpscc9K3DuEz7NO
+ Tl/TE2WRwqa2ELqxyPYka4nMkdhcQ6XBF1GmkHKtzbStWOLw4Mn6OUpCRasZZ1iArigNbCA39
+ xvzP7ILLUKggS0iNdk6flDo16UFbFGuN5Owv0f59Jm6ipUZntiBhIm2GjTE0bTPdFq6vasDAk
+ SFTAJT/jZtxnclb1CEN7VFV4ZV81CxAqh/2ISzAhACjF5gE3OTVR0fz5Fil39oMVYA1uEGIT3
+ HWoPW/SNtQ363sKS75X6AAyU9us76vzNZbZyPj3Hi7BYvXrSdLoOAajFzm7gEYfPWJlQ3GJS5
+ lriS8hPIMhzMFlAEnAw05o0230kTwVbTLNafzi7NjuGr/2YnwzdVoAJRe3Q+6hxYQx5XcJLYU
+ gHc2QlrcR8ihFfBqSSxgf/5OA9HkYzWL02Ey9ma6puSYTXvA8kqvcCeCKm+Y07/FKPiQdJ6ut
+ ufWZcVA+3+STIzCrybd1pcL1zSIUCpmwFMvwlvCEEKzPw48lb7P48aagOI/F7pG3V2O+b6Z4M
+ TJGaa3pPvY/0B4jk3pyexJfYgefRXzzP9aN7oQZ3CjYDbtfQnBUfJiyByUAHvN1GfXJ4E08fU
+ 3wzrXqTv0isiQ9PrA16w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting in v5.5, the timestamps are correctly passed down as
-64-bit seconds with NFSv4 on 32-bit machines, but some debug
-statements still truncate them to 'long'.
+When building a kernel that disables support for 32-bit time_t
+system calls, it also makes sense to disable the old xfs_bstat
+ioctls completely, as they truncate the timestamps to 32-bit
+values.
 
-Fixes: e86d5a02874c ("NFS: Convert struct nfs_fattr to use struct timespec64")
+Any application using these needs to be updated to use the v5
+interfaces.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfs/nfs4xdr.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_ioctl.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 936c57779ff4..728d88b6a698 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4097,7 +4097,7 @@ static int decode_attr_time_access(struct xdr_stream *xdr, uint32_t *bitmap, str
- 			status = NFS_ATTR_FATTR_ATIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_ACCESS;
- 	}
--	dprintk("%s: atime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: atime=%lld\n", __func__, time->tv_sec);
- 	return status;
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 7b35d62ede9f..a4a4eed8879c 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -36,6 +36,7 @@
+ #include "xfs_reflink.h"
+ #include "xfs_ioctl.h"
+ 
++#include <linux/compat.h>
+ #include <linux/mount.h>
+ #include <linux/namei.h>
+ 
+@@ -617,6 +618,23 @@ xfs_fsinumbers_fmt(
+ 	return xfs_ibulk_advance(breq, sizeof(struct xfs_inogrp));
  }
  
-@@ -4115,7 +4115,7 @@ static int decode_attr_time_metadata(struct xdr_stream *xdr, uint32_t *bitmap, s
- 			status = NFS_ATTR_FATTR_CTIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_METADATA;
- 	}
--	dprintk("%s: ctime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: ctime=%lld\n", __func__, time->tv_sec);
- 	return status;
- }
++/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
++static bool xfs_have_compat_bstat_time32(unsigned int cmd)
++{
++	if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
++		return true;
++
++	if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
++		return true;
++
++	if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
++	    cmd == XFS_IOC_FSBULKSTAT ||
++	    cmd == XFS_IOC_SWAPEXT)
++		return false;
++
++	return true;
++}
++
+ STATIC int
+ xfs_ioc_fsbulkstat(
+ 	xfs_mount_t		*mp,
+@@ -637,6 +655,9 @@ xfs_ioc_fsbulkstat(
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
  
-@@ -4132,8 +4132,8 @@ static int decode_attr_time_delta(struct xdr_stream *xdr, uint32_t *bitmap,
- 		status = decode_attr_time(xdr, time);
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_DELTA;
- 	}
--	dprintk("%s: time_delta=%ld %ld\n", __func__, (long)time->tv_sec,
--		(long)time->tv_nsec);
-+	dprintk("%s: time_delta=%lld %ld\n", __func__, time->tv_sec,
-+		time->tv_nsec);
- 	return status;
- }
++	if (!xfs_have_compat_bstat_time32(cmd))
++		return -EINVAL;
++
+ 	if (XFS_FORCED_SHUTDOWN(mp))
+ 		return -EIO;
  
-@@ -4197,7 +4197,7 @@ static int decode_attr_time_modify(struct xdr_stream *xdr, uint32_t *bitmap, str
- 			status = NFS_ATTR_FATTR_MTIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_MODIFY;
- 	}
--	dprintk("%s: mtime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: mtime=%lld\n", __func__, time->tv_sec);
- 	return status;
- }
+@@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
+ 	struct fd	f, tmp;
+ 	int		error = 0;
  
++	if (xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
++		error = -EINVAL;
++		goto out;
++	}
++
+ 	/* Pull information for the target fd */
+ 	f = fdget((int)sxp->sx_fdtarget);
+ 	if (!f.file) {
 -- 
 2.20.0
 
