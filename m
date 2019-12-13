@@ -2,92 +2,85 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B48C35244
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31512C3CFC4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D730A246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUFdr87b"
+	by mail.kernel.org (Postfix) with ESMTP id 718FA246C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLMMGC (ORCPT
+        id S1727109AbfLMMHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:06:02 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46119 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbfLMMGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:06:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id z17so2326284ljk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 04:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8vy2WG4RuHa5f2z6LjbeaeW56JXxALVqQpIH2hCQzJo=;
-        b=MUFdr87bdfxATCI3TuO5k2GqC/HU8Dsml0uQw9V53Jd/55Qbe3TvFTuiiwhLJvYgw5
-         zfDgBf6GFZ4jSjt5tZVAQnxttYhw1lPR5WOrhifw5AkqsmSyFoHL++kCK4j/FeeRJ3do
-         4g2t1TYCAu0OCa6zVUR67UF+ejkN1IJ+hDkrM2SJbHadqHPABW5tDrg6QrhGpFz7Rr8L
-         F8Nf1nMaB4Ufr0urTRFjUd+WPj740mF3iCcP2SUsZIToizfiuaRXfW+oOjeyYYdcINk8
-         eMPSdHWD6uWpfVbvr/3r0xpjNZqG1QHnDfpxc0eFB3Noq77MyEHZUOgyuDflLkOk8Ri3
-         B5cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8vy2WG4RuHa5f2z6LjbeaeW56JXxALVqQpIH2hCQzJo=;
-        b=POdbsCCDL/PR86qmRdvn8BUA5R5YLnttkt1GWdGqjwQnhnPOh5SteAT1N7cTCaCKVv
-         DFDUHOijUi8LBBaykvLCgWuZovimgZriAKRkQOguAjyDXzQ8fZKEDeiaA7zmMUVRJ56p
-         kxthWdI7Xu/70CoaPSPvmWtVhieJ5RdSlwJbCqAFvPmZNUw8kOIjucHY8uExuIW0hJN6
-         rFQrO967B5F8ZFxseXS3Npf9r55HqnGZtC3qniUOjBTau3ETGBf2hbDOJYS943Ws6H/v
-         CT+xmVV4qn4/Otj7HVRZgo3ySUxU0HzaRWE0UJ2rVMbbYKKiGZLpQuq8HNiU2xpNPlcd
-         kQxA==
-X-Gm-Message-State: APjAAAVUAj9c92yzKXahvXjAohyB65/jNOZ7Zdv6QM4ssp2vcMZ9Pqz2
-        TBHPGMXrxx6bw+ebY+e6P+AmhDyBUCJ23/d9Lck=
-X-Google-Smtp-Source: APXvYqwBfVKH9QpfEnk02Am4ccGlNAh6cevgsF9QJIkcB8wjW9gjMc2o7+gzwuf/6YRf3nWwcpblq5xp3R3uXjjTd9I=
-X-Received: by 2002:a2e:b4b5:: with SMTP id q21mr9269515ljm.17.1576238759501;
- Fri, 13 Dec 2019 04:05:59 -0800 (PST)
-MIME-Version: 1.0
-References: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
- <20191212164835.GD10451@ediswmail.ad.cirrus.com> <20191212165311.GK4310@sirena.org.uk>
- <CAA+D8AP4XNNmQ72xG6gNevtu8i8TJ7AaQMMgXJMCPmv2VO0_HA@mail.gmail.com>
-In-Reply-To: <CAA+D8AP4XNNmQ72xG6gNevtu8i8TJ7AaQMMgXJMCPmv2VO0_HA@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 13 Dec 2019 09:05:49 -0300
-Message-ID: <CAOMZO5AHRWbgn0U=FsF7a1Ux1vu2_zhga5j6Z5p=6K86PSm1Xw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: wm8962: fix lambda value
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        guennadi.liakhovetski@linux.intel.com,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
-        Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Dec 2019 07:07:14 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:37230 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727036AbfLMMHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:07:12 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 436131A0CEC;
+        Fri, 13 Dec 2019 13:07:10 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D2B31A0801;
+        Fri, 13 Dec 2019 13:07:10 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 53887203B1;
+        Fri, 13 Dec 2019 13:07:09 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH v3 6/6] Add maintainer for IMX jpeg v4l2 driver
+Date:   Fri, 13 Dec 2019 14:06:21 +0200
+Message-Id: <1576238781-5911-7-git-send-email-mirela.rabulea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shengjiu,
+Added as:
+FREESCALE IMX / MXC JPEG V4L2 DRIVER
 
-On Fri, Dec 13, 2019 at 12:10 AM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> We encounter an issue that when Integer mode, the lambda=theta=0,
-> the output sound is slower than expected. After change lambda=1
-> the issue is gone.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d10d732..a4a267d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6609,6 +6609,14 @@ S:	Maintained
+ F:	include/linux/platform_data/video-imxfb.h
+ F:	drivers/video/fbdev/imxfb.c
+ 
++FREESCALE IMX / MXC JPEG V4L2 DRIVER
++M:	Mirela Rabulea <mirela.rabulea@nxp.com>
++R:	NXP Linux Team <linux-imx@nxp.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/imx8-jpeg.yaml
++F:	drivers/media/platform/imx-jpeg
++
+ FREESCALE QORIQ DPAA ETHERNET DRIVER
+ M:	Madalin Bucur <madalin.bucur@nxp.com>
+ L:	netdev@vger.kernel.org
+-- 
+2.7.4
 
-This is important information and it would be nice to have it included
-in the commit log.
-
-Thanks
