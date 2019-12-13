@@ -2,91 +2,82 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726D8C33C9C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C352C50704
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D1124715
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2482474C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cjQ0OZb/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B022IG0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfLMNaB (ORCPT
+        id S1727514AbfLMNrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:30:01 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45937 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfLMNaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:30:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so6612742wrj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 05:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=CcxRGFcCrtkq/Fa7c3EWJk3tVffr+ohpXoBBbiHwCUs=;
-        b=cjQ0OZb/t830fsiw1m+88Q5m3W6dN8tb2EKys48brHEsYFriumeCBYH1gzs1T6XiNa
-         KhtuxYzXEWvJPJ27bZlxSWvgp7VYtFnP2QlusXGZlXlPvJbKt2yi2FynYUxkpECpAjNm
-         TG8sHRSnfxO2OIzRCaJjOpo0Puq/OiXDeuxQOxVouZaPxq1TPv8BC4HTqVZXsDFgTMVE
-         gnT14QHP3ipUClIjCClxZu9mh6ubayg9egpQUtNgDdiDOctC5rkkQwl2TY0lewF4war9
-         O5/PVU/RtFElEAoU45X82nuswfcKwyuaX0qqBIdLUPqb3f+GeNmBT6XkHKCD5RFxZOnw
-         20Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CcxRGFcCrtkq/Fa7c3EWJk3tVffr+ohpXoBBbiHwCUs=;
-        b=Zr9tTt6VGB+U2bKtDdBPmSmGimmLO+sTgumKvmDXSuHSmsk58+LFuVj1rVOSoeTUtL
-         nu7nAiE0M8lwNsnYiGZo6eR1NjilaE5waWxpzoO0MhBsK3l6VmR+7FCuwIAPp/kkhqE7
-         Xvf69SuUJkcmwkcAsrl4U9XIYCCtnrcQEOW0sKz9Q4/GNP+8c9U47URA+5xIvpoIUsui
-         sEAz5aNQAQwYwQKTP85Ek/R5jTVkgSFiVwBmkWIPosRWvMSNTy2ksyoscJn3Cs2ntDtg
-         RjxJ7WcrOIM8wYy4d1s7+V59rpm/D0B6z4FYqA1joz7hXcZd09mdmqwjhzZkrO+YakZx
-         bVYQ==
-X-Gm-Message-State: APjAAAUsPU4zM2kASXQiSISHPJNSLqnD3EVxWI+EcstQzDI3MQf0DkAO
-        1o7MH6NVto1F/3/ei7THh6bg4Q==
-X-Google-Smtp-Source: APXvYqz43qjGSJwCgT1Fuw9onIXmdIlL82ZNT9dug1PH1gM72NKtNtBBRiNR6mykRXSa3xxRxVS7Ig==
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr13144184wrw.126.1576243798663;
-        Fri, 13 Dec 2019 05:29:58 -0800 (PST)
-Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:29:58 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     narmstrong@baylibre.com, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
-        devicetree@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Add support of CEC wakeup on Amlogic G12 and SM1 SoCs
-Date:   Fri, 13 Dec 2019 14:29:53 +0100
-Message-Id: <20191213132956.11074-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Dec 2019 08:47:32 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:51698 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfLMNrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:47:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=awCXz0GwD1LDcWzOjDMp0h+d0sdlS80mO4Nbpi4KuV0=; b=B022IG0f4HXZeMBlMNrforMruq
+        dFK7znmRa1CpiTRnP5y5JakiioHQ+FdeEMCHwk2Gj0/OgbKerI8jebCoeNmN1LuX1Yu+7UNmUTTXy
+        MGKwep3ErD6V9+pLSXg9iuy7P0DRSQDYOfxGJpzrOZ0+YYKV7JvJNzXUQvMMLC7dJSiw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iflHg-00019i-1C; Fri, 13 Dec 2019 14:47:08 +0100
+Date:   Fri, 13 Dec 2019 14:47:08 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     biao huang <biao.huang@mediatek.com>
+Cc:     davem@davemloft.net, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
+Subject: Re: [PATCH 1/2] net-next: stmmac: mediatek: add more suuport for RMII
+Message-ID: <20191213134708.GA4286@lunn.ch>
+References: <20191212024145.21752-1-biao.huang@mediatek.com>
+ <20191212024145.21752-2-biao.huang@mediatek.com>
+ <20191212132520.GB9959@lunn.ch>
+ <1576200981.29387.13.camel@mhfsdcap03>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576200981.29387.13.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patchset add support of CEC wakeup.
-We need to set logical address and activate some options in registers before going in suspend.
-Registers address and options values come from amlogic driver.
+> The clock labeled as "rmii_internal" is needed only in RMII(when MAC provides
+> reference clock), and useless for RGMII/MII/RMII(when phy provides reference
+> clock).
+> 
+> So, add a boolean flag to indicate where the RMII reference clock is from, MAC
+> or PHY, if MAC, enable the "rmii_internal", or disable it.
+> and this clock already documented in dt-binding in PATCH 2/2.
+> 
+> For power saving, it should not be enabled in default, so can't add it to the
+> existing list of clocks directly.
+> 
+> Any advice for this special case?
 
-Changes since v1:
-- fix bad mask variable use to set logical address.
-- use FIELD_PREP instead of shift value.
+O.K. Add the boolean, but also add the clock to the list of clocks in
+DT. Don't hard code the clock name in the driver.
 
-Guillaume La Roque (3):
-  media: dt-bindings: media: meson-ao-cec: Add support of ao-sysctrl
-    syscon
-  arm64: dts: meson-g12g12: add syscon phandle in cec node
-  media: platform: meson-ao-cec-g12a: add wakeup support
-
- .../media/amlogic,meson-gx-ao-cec.yaml        |  4 +++
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  1 +
- drivers/media/platform/meson/ao-cec-g12a.c    | 33 +++++++++++++++++++
- 3 files changed, 38 insertions(+)
-
--- 
-2.17.1
-
+    Andrew
