@@ -2,94 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981A3C33CA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2150CC2D0D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83862470C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2842470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iiL3Udja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfLMOLs (ORCPT
+        id S1727705AbfLMONK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:11:48 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:53621 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbfLMOLC (ORCPT
+        Fri, 13 Dec 2019 09:13:10 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35950 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbfLMONJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:11:02 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MDyoW-1iY6g00PeG-00A05y; Fri, 13 Dec 2019 15:10:56 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 04/12] nfsd: use timespec64 in encode_time_delta
-Date:   Fri, 13 Dec 2019 15:10:38 +0100
-Message-Id: <20191213141046.1770441-5-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
-References: <20191213141046.1770441-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 09:13:09 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a203so2143351qkc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 06:13:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Nid8tA47CgGN/j7YlqJfGqUykgFGi6RHG/gnONQyj4E=;
+        b=iiL3UdjaR/ciA0kSMNs852p8OTlOiquuE5fH159L/f/kyYZSKGWMWVam+pUVGCkXzn
+         9bgt3SEbd3pKnEhCeny9C42+mC0KXfiMLBQgpimffHI86crwzaVM/11h7Y8coEKA38o+
+         tCVCdPV56qNiZgx3KgERpcRrNrVWUEs+0alaL5KGOlujfPecyMF86opv0mn3yFtlMhi/
+         HSFudy4nXLFhq55ZzOCCgbDw0syt6JyzB7F1//hQ+zzHl5IqhR2XQhaFKSX6W7QnskC+
+         6wTsaWtttmI+TDa2Sz4IrzVt+oKSBMj5Bnc1BiFbug2PEg9RfDO5OiVAlqxNQb7ozfcK
+         /Ebg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nid8tA47CgGN/j7YlqJfGqUykgFGi6RHG/gnONQyj4E=;
+        b=oEu98J0q5cjO9FVDcnlYzPAoimuiozMDvT5Bp5hPKLD2cpK1L7M9dts09yMjOOlmEH
+         yZIw4iI4G5PN/fK6pnb7P6vccBufXBxTLJ3sznGqaR7Xl79EVx+LmuBOo3nFMeCPH3lI
+         lk+QJ+0JmU/tt4egqUTOKNH09wX+PSMtb7vpVIKaYSbIz99kJY5RvonpsvnKpUXqqufq
+         ZS6mLyj1UQSFzEmOJrw+KSoGXjX2KSmeqJUna/1kDyCIovBCQkPV61xIN/eTmU+D5diE
+         HaF8HfDnhuSXDkhDU3zfbhEaq9z0ERQcIV/RiSL8ZqUmYQ7gs+FTW6Qo47jecfu8Dpo+
+         BQ4g==
+X-Gm-Message-State: APjAAAUuK44QXuJv9qv0P2bGn9Tkkd3V2ktPQzTieo9aOaUUFMoxadMe
+        TgWLfeMwBUHHL7Ml0tUPC/phGw==
+X-Google-Smtp-Source: APXvYqym2ajF5omuu9eNtqjRTVEFjAXQV+T4/+DYjZkhvWoajaXY+wFuOq6d8uOBMk6PvGM6fJu4eg==
+X-Received: by 2002:a05:620a:12ae:: with SMTP id x14mr14203983qki.5.1576246387524;
+        Fri, 13 Dec 2019 06:13:07 -0800 (PST)
+Received: from [192.168.1.10] (c-66-30-119-151.hsd1.ma.comcast.net. [66.30.119.151])
+        by smtp.gmail.com with ESMTPSA id z28sm3463658qtz.69.2019.12.13.06.13.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 06:13:06 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+References: <20191212182238.46535-1-brho@google.com>
+ <20191212182238.46535-3-brho@google.com>
+ <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
+ <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
+ <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
+ <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <90a9af31-304c-e8d5-b17c-0ddb4c98fddb@google.com>
+Date:   Fri, 13 Dec 2019 09:13:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:tZvyC8/MQsSdMybbn7ZBclcwu9BJ9OSnv+w2Y49XsSD5Al3PHeV
- 1BpQWJ8CTGqYOrtPofdSkjDSiAe1FTqlMslMMcslfrQVwZo0TJcZsjeoV0vOa4OfOMwU94z
- cpb4m99r8/SDq4g1TmCXRfhgN390wAf1G4f9P8sD559qT2taHWbpzKYkBd/SYTQnMD1KmaK
- OUpuH4MSQDemrLltAdLrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AdmRwze8Z4E=:xF4d1Q1zbssKpYCKrZAehX
- iOa2n27bjHhFhK+1X3q2tJsP23OQKx+mtiNF0JzO63D5wzhzioYCobJkMXY75MXI1p4YpauX/
- 91nixKEqpV3FK7U9yX9/Ve4UVdTp/3UKEyVb0J1l4ctNmsQ+MtIlS8p0WCGPxfkcQKdATaqqQ
- b5rzmP2ZuOozb52J2ySXyLl9GjHDAUWiTUwvJOqkK8eSMZXnNJ/seuwJXVMejhHasDdSiIUse
- wWkn9pIyAUQsOE5WxOE8SU5Q3SA5XCM2O+7hWIJUHWvsCvylPAZCNeFpq1IsENaXZB4kjx5su
- NuKATCHd4a9EtwWD74lkt4PPPsUgfI1tOaT8N7dwQH6Qo2IPi63dJQHQLmT5luY4En7SmwP41
- W/vuVXK7zg3VWzGXk5e3OPpw1W0A1+bhygoX6f2+OgUMcd9L6qILvXmYsxjyO2aOC6Txg1J0r
- KmEz2asupLeds71AnKt0VuxFlj4JEN7EtFwdPj8qzD+NOEzWb2V0NijcKf0TJk3dELj3HgGtF
- nqefQE1umqOWr9WyPFNtgaugDhj4Xe0TYvrMb4CejcV86cXc6B9I5dDNJQVb4wIIcYmBRBNJD
- z6M88crsThjQ/VzH5avisyxpG+HzRYYDIe3sb9YMIX0/dxGnB70sDA9FBlMeNtZ/VCd3sNJJh
- aKHIT4xmXNN8idc4pUoUrYk3PWcVByde3cR0i6K5lRpZzlFAA7V0RnSS/3PNRS/+oGiPMG1w1
- A3L2HPVvXNwsUOMUmASY9x8O+O03OZGvDb3TmVOcjjeIOt7td2Zaolo9hn0PDkEknveBBW9zW
- AmRorA3LJfohba9VLRYd4NtsIFb6+yQecHEynYIXb1jKfa1CRBot2ykyVdzlrGHhjwJPJXeIy
- vH3EdYL4Sl644kr5PE+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The values in encode_time_delta are always small and don't
-overflow the range of 'struct timespec', so changing it has
-no effect.
+On 12/12/19 8:07 PM, Liran Alon wrote:
+>> I was a little hesitant to change the this to handle 1 GB pages with this patchset at first.  I didn't want to break the non-DAX case stuff by doing so.
+> 
+> Why would it affect non-DAX case?
+> Your patch should just make hugepage_adjust() to parse page-tables only in case is_zone_device_page(). Otherwise, page tables shouldn’t be parsed.
+> i.e. THP merged pages should still be detected by PageTransCompoundMap().
 
-Change it to timespec64 as a prerequisite for removing the
-timespec definition later.
+That's what I already do.  But if I wanted to make the hugepage_adjust() 
+function also handle the change to 1 GB, then that code would apply to 
+THP too.  I didn't want to do that without knowing the implications for THP.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/nfsd/nfs4xdr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> Specifically, can a THP page be 1 GB, and if so, how can you tell?  If you can't tell easily, I could walk the page table for all cases, instead of just zone_device().
+> 
+> I prefer to walk page-tables only for is_zone_device_page().
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index d2dc4c0e22e8..d95e9668eeff 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2024,11 +2024,11 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
-  */
- static __be32 *encode_time_delta(__be32 *p, struct inode *inode)
- {
--	struct timespec ts;
-+	struct timespec64 ts;
- 	u32 ns;
- 
- 	ns = max_t(u32, NSEC_PER_SEC/HZ, inode->i_sb->s_time_gran);
--	ts = ns_to_timespec(ns);
-+	ts = ns_to_timespec64(ns);
- 
- 	p = xdr_encode_hyper(p, ts.tv_sec);
- 	*p++ = cpu_to_be32(ts.tv_nsec);
--- 
-2.20.0
+Is there another way to tell if a THP page is 1 GB?  Anyway, this is the 
+sort of stuff I didn't want to mess around with.
+
+hugepage_adjust() seemed like a reasonable place to get a huge (2MB) 
+page table entry out of a DAX mapping.  I didn't want to proliferate 
+another special case for upgrading to a larger PTE size (i.e. how 
+hugetlbfs and THP have separate mechanisms), so I hopped on to the "can 
+we do a 2MB mapping even though host_mapping_level() didn't say so" case 
+- which is my interpretation of what huge_adjust() is for.
+
+Barret
+
 
