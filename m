@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BDAC5ED45
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8767CC5ED58
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FC5246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69B9246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfLMPuP (ORCPT
+        id S1728248AbfLMPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:50:15 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:44807 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfLMPuL (ORCPT
+        Fri, 13 Dec 2019 10:50:35 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:43859 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728204AbfLMPuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:50:11 -0500
+        Fri, 13 Dec 2019 10:50:32 -0500
 X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BA0A960010;
-        Fri, 13 Dec 2019 15:50:08 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 7EE4D4000D;
+        Fri, 13 Dec 2019 15:50:29 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
         f.fainelli@gmail.com, hkallweit1@gmail.com
@@ -35,9 +34,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         allan.nielsen@microchip.com, camelia.groza@nxp.com,
         Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
         jakub.kicinski@netronome.com
-Subject: [PATCH net-next v3 04/15] net: phy: add MACsec ops in phy_device
-Date:   Fri, 13 Dec 2019 16:48:33 +0100
-Message-Id: <20191213154844.635389-5-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v3 15/15] net: macsec: add support for offloading to the MAC
+Date:   Fri, 13 Dec 2019 16:48:44 +0100
+Message-Id: <20191213154844.635389-16-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
 References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
@@ -48,47 +47,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a reference to MACsec ops in the phy_device, to allow
-PHYs to support offloading MACsec operations. The phydev lock will be
-held while calling those helpers.
+This patch adds a new MACsec offloading option, MACSEC_OFFLOAD_MAC,
+allowing a user to select a MAC as a provider for MACsec offloading
+operations.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- include/linux/phy.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/macsec.c               | 16 +++++++++++++---
+ include/uapi/linux/if_link.h       |  1 +
+ tools/include/uapi/linux/if_link.h |  1 +
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index f4116947a7d7..11b92da25681 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -328,6 +328,7 @@ struct phy_c45_device_ids {
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 8247eb652f57..222b6ed93b27 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -324,7 +324,8 @@ static void macsec_set_shortlen(struct macsec_eth_header *h, size_t data_len)
+ /* Checks if a MACsec interface is being offloaded to an hardware engine */
+ static bool macsec_is_offloaded(struct macsec_dev *macsec)
+ {
+-	if (macsec->offload == MACSEC_OFFLOAD_PHY)
++	if (macsec->offload == MACSEC_OFFLOAD_MAC ||
++	    macsec->offload == MACSEC_OFFLOAD_PHY)
+ 		return true;
+ 
+ 	return false;
+@@ -340,6 +341,9 @@ static bool macsec_check_offload(enum macsec_offload offload,
+ 	if (offload == MACSEC_OFFLOAD_PHY)
+ 		return macsec->real_dev->phydev &&
+ 		       macsec->real_dev->phydev->macsec_ops;
++	else if (offload == MACSEC_OFFLOAD_MAC)
++		return macsec->real_dev->features & NETIF_F_HW_MACSEC &&
++		       macsec->real_dev->macsec_ops;
+ 
+ 	return false;
+ }
+@@ -354,9 +358,14 @@ static const struct macsec_ops *__macsec_get_ops(enum macsec_offload offload,
+ 
+ 		if (offload == MACSEC_OFFLOAD_PHY)
+ 			ctx->phydev = macsec->real_dev->phydev;
++		else if (offload == MACSEC_OFFLOAD_MAC)
++			ctx->netdev = macsec->real_dev;
+ 	}
+ 
+-	return macsec->real_dev->phydev->macsec_ops;
++	if (offload == MACSEC_OFFLOAD_PHY)
++		return macsec->real_dev->phydev->macsec_ops;
++	else
++		return macsec->real_dev->macsec_ops;
+ }
+ 
+ /* Returns a pointer to the MACsec ops struct if any and updates the MACsec
+@@ -2414,7 +2423,8 @@ static int macsec_upd_offload(struct sk_buff *skb, struct genl_info *info)
+ 
+ 			priv = macsec_priv(loop_dev);
+ 
+-			if (!macsec_check_offload(MACSEC_OFFLOAD_PHY, priv))
++			if (!macsec_check_offload(MACSEC_OFFLOAD_PHY, priv) &&
++			    !macsec_check_offload(MACSEC_OFFLOAD_MAC, priv))
+ 				continue;
+ 
+ 			if (priv->offload != MACSEC_OFFLOAD_OFF)
+diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+index 024af2d1d0af..771371d5b996 100644
+--- a/include/uapi/linux/if_link.h
++++ b/include/uapi/linux/if_link.h
+@@ -489,6 +489,7 @@ enum macsec_validation_type {
+ enum macsec_offload {
+ 	MACSEC_OFFLOAD_OFF = 0,
+ 	MACSEC_OFFLOAD_PHY = 1,
++	MACSEC_OFFLOAD_MAC = 2,
+ 	__MACSEC_OFFLOAD_END,
+ 	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
  };
- 
- struct macsec_context;
-+struct macsec_ops;
- 
- /* phy_device: An instance of a PHY
-  *
-@@ -351,6 +352,7 @@ struct macsec_context;
-  * attached_dev: The attached enet driver's device instance ptr
-  * adjust_link: Callback for the enet controller to respond to
-  * changes in the link state.
-+ * macsec_ops: MACsec offloading ops.
-  *
-  * speed, duplex, pause, supported, advertising, lp_advertising,
-  * and autoneg are used like in mii_if_info
-@@ -449,6 +451,11 @@ struct phy_device {
- 
- 	void (*phy_link_change)(struct phy_device *, bool up, bool do_carrier);
- 	void (*adjust_link)(struct net_device *dev);
-+
-+#if IS_ENABLED(CONFIG_MACSEC)
-+	/* MACsec management functions */
-+	const struct macsec_ops *macsec_ops;
-+#endif
+diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
+index 42efdb84d189..7bf406d3ce62 100644
+--- a/tools/include/uapi/linux/if_link.h
++++ b/tools/include/uapi/linux/if_link.h
+@@ -488,6 +488,7 @@ enum macsec_validation_type {
+ enum macsec_offload {
+ 	MACSEC_OFFLOAD_OFF = 0,
+ 	MACSEC_OFFLOAD_PHY = 1,
++	MACSEC_OFFLOAD_MAC = 2,
+ 	__MACSEC_OFFLOAD_END,
+ 	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
  };
- #define to_phy_device(d) container_of(to_mdio_device(d), \
- 				      struct phy_device, mdio)
 -- 
 2.23.0
 
