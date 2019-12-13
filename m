@@ -2,129 +2,228 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A99C751E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2701C751D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D80247CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D98246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJSd4RbR"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="4g2BQpzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfLMQFy (ORCPT
+        id S1728373AbfLMQFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:05:54 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:47026 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbfLMQFx (ORCPT
+        Fri, 13 Dec 2019 11:05:30 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:29502 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728049AbfLMQF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:05:53 -0500
-Received: by mail-yb1-f193.google.com with SMTP id v15so932446ybp.13;
-        Fri, 13 Dec 2019 08:05:52 -0800 (PST)
+        Fri, 13 Dec 2019 11:05:29 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDG1utl014245;
+        Fri, 13 Dec 2019 11:03:27 -0500
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wrb1sjs2r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Dec 2019 11:03:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h9aQmVltKksytEdoGKmebwnWppJQ1wfxU/Ed0KPVEYwXZw+tUX1RZDCLJ3aKMwl41zCVw6tPdldE0N4dx2J7+Z3BmlhYBYqCwaj5F9og8hHVoo1IkzJHGW8RKhqGWXPY+LkAOqgtLPuk1VG256uWN/q6UrvJpQUhf8yKeFzrKMiRA8ga0MIWAH1ser8oHxqLN7vN6a8ab5InlVMLPncpJVDMTHI3Yc90RGd5huZaTDPKnBJ/diJjqfg023JnkwgGMnW4H+URNW/2IFWjleLGNvmXMWOR/6Ua7oyRt5xYQWD/NwzrRe5+dRkKfXK4G1jhE5DF2m60cOkNHx3oWlqIog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSnkO8VGUrXZgXstlcMZuI3jng77fljerhwtjVpBzNU=;
+ b=jGjM71VeQUyRrGRA5JGktKY9fKm7cr0JLoJ7EExyELwOesiCvAeWOuYwQU254ZliqBd8/lEkZJVWPr/a5xpURVsPkJS+OfL0Y9cP+gEQybLDB2mvi5Gpr7oNBSo4HkUtkUS8JIlIkQ2900+aSl/1B968UMMpBhdcRXpXACiqTT0a9//YWPT7d0QpzTqp8x2+FYK9vBpmAquSlsmZrT6Rf5BDRdMC+88upsDHrsygC3JWB2UgUUONivTRtgKCXaPBPvzyXbzI6ycTlfcODd4DDuY+Cx7YSEIH2sMjIBBnVtJIdXTyuUTXyvYkRNoSu2/c5IjwdXftrvZ4tcl7aIu5LQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+VnUOz+8D3V2uKNqlxwDzqgg2+EXtUFjH7t7xpLJ+2k=;
-        b=OJSd4RbR4A1qe4EmWcAK5phI498i9Zr0SDiK6+YbkjrNCjzLgglR4miia93Tl0KE5D
-         dhc9HDuU/T7vqbpOxN6K+Vki4L622Gm0bWuCieWjqJyloY3eNXP5ouN1+fumHz1bHy19
-         fqZE98HtZ9ht9b9s3nueTUf3u3Lbz/eyL4ksPDPq/PBMZ/fx0Bo+MICSYzUnKf949b6r
-         eR06o96BwwKrVtQEVicodx91aPfHQMf6bRyWUmZnq6IDzlFni5MdkZwsRISCEE/h+82M
-         yxJ9vAtFCphgEA90dT0sRC9tOPsg23JO1ZyyEshVlolOjR1HRukqQht35BW8eDiBfhDx
-         H9rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+VnUOz+8D3V2uKNqlxwDzqgg2+EXtUFjH7t7xpLJ+2k=;
-        b=GtKcNe8pEdo7bsCwvs9jBcygMx7Jh1xwjxta4umA0j+9uu4/sm2msS5nXqSctALuc1
-         BwLQnJ1oEHtGT4gxQpGYyPkf3tAWM8LmH3QC8ol/iNCOD2+Rs4CCR9o3Xumn+wW52m6w
-         jFx5zZEjCbyLs+p7yFw84YxuTzKtqIjADv8qRGqUCT2T9teHhVAy9W6YTjQAjxssEU+f
-         tZnbRwc+eG4RtibnIfvUMHD5tWurXv9rLM9Dkvy0BMjaF0v3fAFBBWwy+Jw4J1lxbrKm
-         hjMttfrvDia/gyXuB96fr1iyKiZP4px71c8vTx4fO12yIknVC1yl2qYq/ErmSr1q35ic
-         OeVQ==
-X-Gm-Message-State: APjAAAXaADYWimRLoFL2/Hk1WPE08MH0fCCVgsjqVamv6r0srwBfXVSi
-        nYH4UFf+Wvzxlt/YbKixYZw=
-X-Google-Smtp-Source: APXvYqyH3cGVtkwoXj9l+rC5v9ceK5lYYEdVaYLTgOykQHR8iMWh+Pf+vCEY+WRK1WooF03tCRXT6w==
-X-Received: by 2002:a25:b108:: with SMTP id g8mr9228296ybj.518.1576253152035;
-        Fri, 13 Dec 2019 08:05:52 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id v38sm3984694ywh.63.2019.12.13.08.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 08:05:51 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     peng.fan@nxp.com, ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/7] soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
-Date:   Fri, 13 Dec 2019 10:05:36 -0600
-Message-Id: <20191213160542.15757-2-aford173@gmail.com>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSnkO8VGUrXZgXstlcMZuI3jng77fljerhwtjVpBzNU=;
+ b=4g2BQpzuYYOwQLHVc4BhMbS4eyy4cBUbscsgDAEmk70hvtinC8MPH89juTSNERlMNUaEnBWimARm2UvlOw7HFxoc8iz0UnPLGvxkznk8Rzq5qMAsIDEauIkjy3e5aUXMukRS+zwGs0R9Z/uYTZ8M3VGl7DP2EAoTye3mXNvtxGo=
+Received: from CH2PR03CA0006.namprd03.prod.outlook.com (2603:10b6:610:59::16)
+ by CO2PR03MB2360.namprd03.prod.outlook.com (2603:10b6:102:16::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Fri, 13 Dec
+ 2019 16:03:25 +0000
+Received: from SN1NAM02FT024.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by CH2PR03CA0006.outlook.office365.com
+ (2603:10b6:610:59::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
+ Transport; Fri, 13 Dec 2019 16:03:25 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT024.mail.protection.outlook.com (10.152.72.127) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
+ via Frontend Transport; Fri, 13 Dec 2019 16:03:24 +0000
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBDG3N3r005489
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 08:03:23 -0800
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 13 Dec
+ 2019 11:03:23 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 13 Dec 2019 11:03:23 -0500
+Received: from saturn.ad.analog.com ([10.48.65.121])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBDG3JMM015048;
+        Fri, 13 Dec 2019 11:03:21 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+Subject: [PATCH 3/5] iio: imu: adis16480: construct adis data on probe vs static on driver
+Date:   Fri, 13 Dec 2019 18:03:10 +0200
+Message-ID: <20191213160312.1834-3-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213160542.15757-1-aford173@gmail.com>
-References: <20191213160542.15757-1-aford173@gmail.com>
+In-Reply-To: <20191213160312.1834-1-alexandru.ardelean@analog.com>
+References: <20191213160312.1834-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(136003)(376002)(189003)(199004)(107886003)(7696005)(246002)(5660300002)(2906002)(26005)(8936002)(316002)(86362001)(7636002)(54906003)(6666004)(8676002)(2616005)(44832011)(478600001)(336012)(186003)(426003)(70206006)(110136005)(1076003)(4326008)(36756003)(356004)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR03MB2360;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ca4dff51-522f-43d1-9b1d-08d77fe5fba0
+X-MS-TrafficTypeDiagnostic: CO2PR03MB2360:
+X-Microsoft-Antispam-PRVS: <CO2PR03MB23603ABC1E38743300D5E0A7F9540@CO2PR03MB2360.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:608;
+X-Forefront-PRVS: 0250B840C1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Jed4MoUNuxPQ6bl+8/5KnDUnPHddwuike7Mjbzuc8jmay3hyQIq98Vi+tRNz6FSrsmLKI92jDW2WyZ7/23bFLHEltPPMGjFfklZZ4ScpH7gMr1YEnSckM/v3B9ZXRvbl0OC3QcTgosVF3K6TByqAoGASPwsu+BSFqBIYRhlHmw0Y4SkCfZ4Je+t1z+a7hxskI2M0Q70cwoOfqUdMSkbHx5odBiHVsYo7rlPnhxB+aBUnrx19wTpwPnxV4fwJhO5qz60PB0MczwHJAhxsKoAB0pDlKr835MdgRo/bCuVi3+I8SrBgsTjXtrLmzfKux2MB+PlA7P2qLWUwUEuaNfFvDsORmZHJXbz1RwA1z0ha1gMhg/J12ngfQrzHYvneeclur17lYB03D+EwzdZHMuSvczocpN+6FFcZLkn61jJDLMs65maG3/OQiA88i66RHs1H
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2019 16:03:24.0938
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca4dff51-522f-43d1-9b1d-08d77fe5fba0
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR03MB2360
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-13_05:2019-12-13,2019-12-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912130130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to add support for i.MX8M Mini, this renames
-the existing file to be more generic, so it doesn't become
-necessary to include multiple files to accomplish the same
-task in the future.
+This change is done in preparation of adding an `struct adis_timeout` type.
+Some ADIS drivers support multiple drivers, with various combinations of
+timeouts. Creating static tables for each driver is possible, but that also
+creates quite a lot of duplication.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
-V2:  No Change
+ drivers/iio/imu/adis16480.c | 61 ++++++++++++++++++++++---------------
+ 1 file changed, 37 insertions(+), 24 deletions(-)
 
- arch/arm64/boot/dts/freescale/imx8mq.dtsi                   | 2 +-
- drivers/soc/imx/gpcv2.c                                     | 2 +-
- include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 55a3d1c4bdf0..f73045539fb1 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -5,7 +5,7 @@
-  */
+diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+index f73094e8d35d..1edfed83d480 100644
+--- a/drivers/iio/imu/adis16480.c
++++ b/drivers/iio/imu/adis16480.c
+@@ -1022,29 +1022,6 @@ static const char * const adis16480_status_error_msgs[] = {
+ 	[ADIS16480_DIAG_STAT_BARO_FAIL] = "Barometer self-test failure",
+ };
  
- #include <dt-bindings/clock/imx8mq-clock.h>
--#include <dt-bindings/power/imx8mq-power.h>
-+#include <dt-bindings/power/imx8m-power.h>
- #include <dt-bindings/reset/imx8mq-reset.h>
- #include <dt-bindings/gpio/gpio.h>
- #include "dt-bindings/input/input.h"
-diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-index b0dffb06c05d..250f740d2314 100644
---- a/drivers/soc/imx/gpcv2.c
-+++ b/drivers/soc/imx/gpcv2.c
-@@ -15,7 +15,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <dt-bindings/power/imx7-power.h>
--#include <dt-bindings/power/imx8mq-power.h>
-+#include <dt-bindings/power/imx8m-power.h>
+-static const struct adis_data adis16480_data = {
+-	.diag_stat_reg = ADIS16480_REG_DIAG_STS,
+-	.glob_cmd_reg = ADIS16480_REG_GLOB_CMD,
+-	.has_paging = true,
+-
+-	.read_delay = 5,
+-	.write_delay = 5,
+-
+-	.status_error_msgs = adis16480_status_error_msgs,
+-	.status_error_mask = BIT(ADIS16480_DIAG_STAT_XGYRO_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_YGYRO_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_ZGYRO_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_XACCL_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_YACCL_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_ZACCL_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_XMAGN_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_YMAGN_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_ZMAGN_FAIL) |
+-		BIT(ADIS16480_DIAG_STAT_BARO_FAIL),
+-
+-	.enable_irq = adis16480_enable_irq,
+-};
+-
+ static int adis16480_config_irq_pin(struct device_node *of_node,
+ 				    struct adis16480 *st)
+ {
+@@ -1195,9 +1172,41 @@ static int adis16480_get_ext_clocks(struct adis16480 *st)
+ 	return 0;
+ }
  
- #define GPC_LPCR_A_CORE_BSC			0x000
++static struct adis_data *adis16480_adis_data_alloc(struct adis16480 *st,
++						   struct device *dev)
++{
++	struct adis_data *data;
++
++	data = devm_kzalloc(dev, sizeof(struct adis_data), GFP_KERNEL);
++	if (!data)
++		return ERR_PTR(-ENOMEM);
++
++	data->glob_cmd_reg = ADIS16480_REG_GLOB_CMD;
++	data->diag_stat_reg = ADIS16480_REG_DIAG_STS;
++	data->has_paging = true;
++	data->self_test_mask = BIT(1);
++	data->read_delay = 5;
++	data->write_delay = 5;
++	data->status_error_msgs = adis16480_status_error_msgs;
++	data->status_error_mask = BIT(ADIS16480_DIAG_STAT_XGYRO_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_YGYRO_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_ZGYRO_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_XACCL_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_YACCL_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_ZACCL_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_XMAGN_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_YMAGN_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_ZMAGN_FAIL) |
++				BIT(ADIS16480_DIAG_STAT_BARO_FAIL);
++	data->enable_irq = adis16480_enable_irq;
++
++	return data;
++}
++
+ static int adis16480_probe(struct spi_device *spi)
+ {
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
++	const struct adis_data *adis16480_data;
+ 	struct iio_dev *indio_dev;
+ 	struct adis16480 *st;
+ 	int ret;
+@@ -1218,7 +1227,11 @@ static int adis16480_probe(struct spi_device *spi)
+ 	indio_dev->info = &adis16480_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
  
-diff --git a/include/dt-bindings/power/imx8mq-power.h b/include/dt-bindings/power/imx8m-power.h
-similarity index 100%
-rename from include/dt-bindings/power/imx8mq-power.h
-rename to include/dt-bindings/power/imx8m-power.h
+-	ret = adis_init(&st->adis, indio_dev, spi, &adis16480_data);
++	adis16480_data = adis16480_adis_data_alloc(st, &spi->dev);
++	if (IS_ERR(adis16480_data))
++		return PTR_ERR(adis16480_data);
++
++	ret = adis_init(&st->adis, indio_dev, spi, adis16480_data);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.20.1
 
