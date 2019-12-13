@@ -2,109 +2,116 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A6C7D62E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176CEC7D634
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109B024741
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2A22475E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eTetltOh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Skh6QyHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfLMSDA (ORCPT
+        id S1728663AbfLMSEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:03:00 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51106 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLMSC7 (ORCPT
+        Fri, 13 Dec 2019 13:04:20 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43610 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMSEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:02:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kstcnju99/4uTkeBULCR49gexo2kDQXxkPqHdnoayrQ=; b=eTetltOhOvd8GfMlH1WcvAmkA
-        1vfDGo/w2yy4HK1O09ym7FJxwYu03Vb0s/Cu44ECIFWxVFBe3ifBBAOWhmQced+aIPH7VCotHimx/
-        Gjyg0vfIGklWdGNkB/xiYYkT44RzTIGw6yKxGH55ciFOzr2GKklPtibKo2PNNVIa4plprFmVx8Yv0
-        AoBeBrU2ELaCMHLsjM7W/xi94xm8IydD9vtqfuwLYwCvcKP/aBrDswX5qM5u3Hnlsr2fxH/HE4y+s
-        WBojoeF9OfXQQFTki8bEWfUH5UrnncdSZkRs3ZJ+rsjHX/XqFicFtJGQjFtDaHjSTCvcffsAVNSul
-        wXdefbkww==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifpGk-0000Mj-V7; Fri, 13 Dec 2019 18:02:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C39ED304D2B;
-        Fri, 13 Dec 2019 19:01:02 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7E68920427392; Fri, 13 Dec 2019 19:02:23 +0100 (CET)
-Date:   Fri, 13 Dec 2019 19:02:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
-Message-ID: <20191213180223.GE2844@hirez.programming.kicks-ass.net>
-References: <20191213153553.GE20583@krava>
- <20191213112438.773dff35@gandalf.local.home>
- <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
- <20191213121118.236f55b8@gandalf.local.home>
+        Fri, 13 Dec 2019 13:04:20 -0500
+Received: by mail-io1-f65.google.com with SMTP id s2so483747iog.10;
+        Fri, 13 Dec 2019 10:04:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=jlzKVAxbx+/Wr5suXUGHs2MnNQmk3chg9M1fa3mxz0g=;
+        b=Skh6QyHnf7xBMFDJYmzZZRHK0QvNMRhjfKNkFmERmWOjRUeuq9Cv8Dj3RgrxMNiTwI
+         ywitD7tQC8mx+ruBvsmxhQHSZkSezs7LGvajniWTFxP+/GZ3n1IB+54WP1xHR+tn3aSb
+         18zQItO6jGVSrwY0MzCcplQv9pZxuHfxzpfXFomF1dyHqb53kJfjOU7jUN0FvnB7utUZ
+         2F6V1W5Q1cZ2UYl6trJVIsXy+0ZiShGux1TuA3q4IKdt8A0f67Jo2EWdqv3dpWUhIKOW
+         4gVJ0tYkggMSUgNMeS2Qv3hCxmlslYR9tIzGISL7hi9nYeBLoWzU1I6TcEwsRGVrwt7V
+         5hGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=jlzKVAxbx+/Wr5suXUGHs2MnNQmk3chg9M1fa3mxz0g=;
+        b=W7OzOMfeV5+zRpiZjg8FJyX+KSi4qBmUgJj7svAE69dAhwFAajQhdy+mUxypmVTwn8
+         4CAehv2AsTxpbN9NEdEdlvB2oFRz9w4/RDCMVXWZvnP+4VYMp3StwqO4MUV+D7pqygSj
+         VTz4vfO02nVE8n9mNdOBt8hLny06cKZYmOUEMjnDS8amMBfpmO+5+F9sot8qKedpbEzY
+         XKAUZqAkofjVEFpDPsvEoWuu2NyFqOdBDqHwFKaBayixDlYQ2/ndR1l03RKFkDs0GFt/
+         nIFv1OhSJq7GShtPtaUko/SsdxbLcvX6oi9XQtJ5dJtFFMdz1/b7Cx9wu/oQHvjeXgH7
+         xl+A==
+X-Gm-Message-State: APjAAAVJbJxZ9hOoN1TyrV1l8xfV++s/pkSLBKFfKou3pPm9c7v2AKS3
+        6IFFEv0njPZVqpiScwVoUqaAmF7t3AWNvXVCorGVCQHw
+X-Google-Smtp-Source: APXvYqz+Ddjeu5WylBKH31KLJqL+in4RoPghN7qO8r+09q+bmZZr5Nz73OoWlxeyVxdUA4Ecm8R2x9ODEBCdv+gTVg4=
+X-Received: by 2002:a5d:9512:: with SMTP id d18mr8473567iom.85.1576260259061;
+ Fri, 13 Dec 2019 10:04:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213121118.236f55b8@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191210213836.GA149297@google.com> <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Fri, 13 Dec 2019 12:04:07 -0600
+Message-ID: <CABhMZUU_6Ljn60sH_C8EwhKwF=uUrP2Y3ob1nnAM_UjM=i+8=A@mail.gmail.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt enumeration
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:11:18PM -0500, Steven Rostedt wrote:
-> On Fri, 13 Dec 2019 08:51:57 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> 
-> > It had two choices. Both valid. I don't know why gdb picked this one.
-> > So yeah I think renaming 'ring_buffer' either in ftrace or in perf would be
-> > good. I think renaming ftrace one would be better, since gdb picked perf one
-> > for whatever reason.
-> 
-> Because of the sort algorithm. But from a technical perspective, the
-> ring buffer that ftrace uses is generic, where the perf ring buffer can
-> only be used for perf. Call it "event_ring_buffer" or whatever, but
-> it's not generic and should not have a generic name.
+On Thu, Dec 12, 2019 at 4:23 AM Nicholas Johnson
+<nicholas.johnson-opensource@outlook.com.au> wrote:
+>
+> On Tue, Dec 10, 2019 at 03:38:36PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> > > Hi all,
+> > >
+> > > Since last time:
+> > >     Reverse Christmas tree for a couple of variables
+> > >
+> > >     Changed while to whilst (sounds more formal, and so that
+> > >     grepping for "while" only brings up code)
+> > >
+> > >     Made sure they still apply to latest Linux v5.5-rc1
+> > >
+> > > Kind regards,
+> > > Nicholas
+> > >
+> > > Nicholas Johnson (4):
+> > >   PCI: Consider alignment of hot-added bridges when distributing
+> > >     available resources
+> > >   PCI: In extend_bridge_window() change available to new_size
+> > >   PCI: Change extend_bridge_window() to set resource size directly
+> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+> > >
+> > >  drivers/pci/setup-bus.c | 182 +++++++++++++++++++---------------------
+> > >  1 file changed, 88 insertions(+), 94 deletions(-)
+> >
+> > Applied to pci/resource for v5.6, thanks!
+> Thank you all for your time, support and patience with me. I have
+> learned a lot in the past year.
+>
+> I will obviously stick around to address any potential concerns with the
+> patches, but it also seems like kernel development is what I want to do
+> as a career. Hopefully I can take this beyond a hobby despite my
+> physical location. Perth, Western Australia is not big on this. Perhaps
+> there are companies open to telecommuting employees. In any case, you
+> will continue to see me around.
 
-Your ring buffer was so generic that I gave up trying to use it after
-trying for days :-( (the fundamental problem was that it was impossible
-to have a single cpu buffer; afaik that is still true today)
-
-Nor is the perf buffer fundamentally specific to perf, but there not
-being another user means there has been very little effort to remove
-perf specific things from it.
-
-There are major design differences between them, which is
-unquestionably, but I don't think it is fair to say one is more or less
-generic.
-
-How about we rename both? I'm a bit adverse to long names, so how about
-we rename the perf one to perf_buffer and the trace one to trace_buffer?
+Thanks for your work.  Springfield, Missouri, is not big on kernel
+development either, so I can sympathize with that :)
