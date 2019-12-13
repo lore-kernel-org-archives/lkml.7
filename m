@@ -2,86 +2,113 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C31BC50719
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E56DC50723
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A95724715
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A592470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b29/nw7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLMNzz (ORCPT
+        id S1727696AbfLMN4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:55:55 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43742 "EHLO
-        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727490AbfLMNzz (ORCPT
+        Fri, 13 Dec 2019 08:56:46 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36157 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727578AbfLMN4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:55:55 -0500
-Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [131.188.30.136])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 8F4DB2417CD;
-        Fri, 13 Dec 2019 14:55:53 +0100 (CET)
-Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id 857C6C20BC7; Fri, 13 Dec 2019 14:55:53 +0100 (CET)
-From:   Simon Geis <simon.geis@fau.de>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Simon Geis <simon.geis@fau.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: [PATCH v3 06/10] PCMCIA/i82092: move assignment out of if condition
-Date:   Fri, 13 Dec 2019 14:53:10 +0100
-Message-Id: <20191213135311.9111-7-simon.geis@fau.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213135311.9111-1-simon.geis@fau.de>
-References: <20191213135311.9111-1-simon.geis@fau.de>
+        Fri, 13 Dec 2019 08:56:44 -0500
+Received: by mail-pl1-f193.google.com with SMTP id d15so1283001pll.3;
+        Fri, 13 Dec 2019 05:56:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yOTiVTN6TRqhsiKXyuXZAhjh4xoZddWaYpKSnXhSel4=;
+        b=b29/nw7LjKjjtDsfIHyDRy89fMafLkL3tjAMHTk9Us6zjIH9NG/JAc4hnIjwQeioNE
+         VWKGJ+QgOfOvDuFq3Ed1S8wDHsyOw84lK0l+loINKOTBl4wpzaPxaIqSc1lqgKJZzwWa
+         oyQhJQlHmbFTT4lfmN0nk/jSIuS62OEVM9aXBT6SK93n0x2WHFrJylc6SizYkVAFjUuu
+         xwf+JqhKx/4qOtcCDv0orGHxThbuT++dUmL+H4CHZeIv2RDFvA//G5pwebolT/2dU3tP
+         j/C2H1LyLffEd4yLljNvnFQ+PQY49fcpVmTFTtnBUdhy5NIpyhwHSdJN5XBTuHyYPnHP
+         SzLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yOTiVTN6TRqhsiKXyuXZAhjh4xoZddWaYpKSnXhSel4=;
+        b=WrXcicGXXr0lbFx24GOk20L+fxjaG2PZ0mL5/BTGbDDLIGx2/KlcHsAm3L6qx7wZwq
+         y9hIOhueNbjncrOn98hTU6YobsT9G26K1aajRN4pCSiZcE5RXTVzdq+zbBOpZiJE57T2
+         kc7eP/rVcvsdHGyWvUfeSOdlqtGo9uFwovPuuYX44uB6F9L5b4L7g443FsNig70kMOWp
+         ki5eOywIsNUcJQoggMJnZkgNDpTRzMzT92FYiMJy5hweC6Yu3ecbQM9qVZJN9sc+nSpw
+         I3t07+38O8gORGaBuk0mSEZL3EAqnFk0dlg2q/s9zuA4929h8oRcBviI6Tuz0NHuXnNv
+         7heg==
+X-Gm-Message-State: APjAAAVP2sBRcuP1Rgimf2GNJT65JWotyfYpP4bIkJlOBHEDll7uZO3c
+        55rGsKRp1oBfhYhICJmx5jX54FU5
+X-Google-Smtp-Source: APXvYqxSnU8c+K3bHypBX2JvZR/ol+6V0HxmeKddZGGp+dpfva7PqMSkcSEsQPmDBV0BK5+V/M5tEQ==
+X-Received: by 2002:a17:902:7287:: with SMTP id d7mr15699726pll.17.1576245403682;
+        Fri, 13 Dec 2019 05:56:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n15sm11332899pgf.17.2019.12.13.05.56.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 05:56:42 -0800 (PST)
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191213093035.GA27637@amd>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <b9a5af67-c7db-a2f1-b573-cbf25c1f03f6@roeck-us.net>
+Date:   Fri, 13 Dec 2019 05:56:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191213093035.GA27637@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve readability by moving the assignment out of if conditions.
+On 12/13/19 1:30 AM, Pavel Machek wrote:
+> Hi!
+> 
+>> This is the start of the stable review cycle for the 4.19.89 release.
+>> There are 243 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+>> Anything received after that time might be too late.
+> 
+> Is there something funny going on with the timing, again? I see that
+> 4.19.89 is already out:
+> 
 
-Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Simon Geis <simon.geis@fau.de>
+Just for the record, in my opinion it is perfectly fine to publish stable
+releases early after all expected feedback is in. That lets me merge the
+release early today and gives me time to fix any merge related problems.
+I don't see the benefit of waiting until 14:46:07.
 
----
- drivers/pcmcia/i82092.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Guenter
 
-diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index 6b39750db282..ad105f9949c7 100644
---- a/drivers/pcmcia/i82092.c
-+++ b/drivers/pcmcia/i82092.c
-@@ -77,7 +77,8 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 
- 	enter("i82092aa_pci_probe");
- 
--	if ((ret = pci_enable_device(dev)))
-+	ret = pci_enable_device(dev);
-+	if (ret)
- 		return ret;
- 
- 	pci_read_config_byte(dev, 0x40, &configbyte);  /* PCI Configuration Control */
-@@ -133,7 +134,9 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 
- 	/* Register the interrupt handler */
- 	dev_dbg(&dev->dev, "Requesting interrupt %i\n", dev->irq);
--	if ((ret = request_irq(dev->irq, i82092aa_interrupt, IRQF_SHARED, "i82092aa", i82092aa_interrupt))) {
-+	ret = request_irq(dev->irq, i82092aa_interrupt, IRQF_SHARED,
-+			  "i82092aa", i82092aa_interrupt);
-+	if (ret) {
- 		dev_err(&dev->dev, "Failed to register IRQ %d, aborting\n",
- 			dev->irq);
- 		goto err_out_free_res;
--- 
-2.20.1
+> commit 312017a460d5ea31d646e7148e400e13db799ddc
+> Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date:   Fri Dec 13 08:52:59 2019 +0100
+> 
+>      Linux 4.19.89
+> 
+> Best regards,
+> 								Pavel
+> 
 
