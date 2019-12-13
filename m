@@ -2,128 +2,154 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD47BC7CFDF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75AC7CFE2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0972247F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C113C2474A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOIaI7+2"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1bgwUcAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfLMRq1 (ORCPT
+        id S1728592AbfLMRrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:46:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34291 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfLMRq1 (ORCPT
+        Fri, 13 Dec 2019 12:47:17 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46036 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMRrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:46:27 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r11so176067pgf.1;
-        Fri, 13 Dec 2019 09:46:26 -0800 (PST)
+        Fri, 13 Dec 2019 12:47:17 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d20so3540696ljc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 09:47:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=dtBoagETXVh0V7/P97k4Rqz1E496kHkXGXKVFlW3Xbw=;
-        b=gOIaI7+2eAoluHDBShTOls5VEGdzNqNIBmdslR9DmyTjn7b/HUvrlp9zqHJktb8K4H
-         g2GvU2kReI0XtpANkg3fZnYLwn1z5bY+Q6oeI4/PjyJN3MmDz07/pZoPauqN4yKiptJj
-         VYXDf43PfNocaHKVJkYNYh6UAI4qibBIhVIj8m8Mg1aHTtUHBrrpRb3tJpJsUjNQL9tU
-         Xuy3pFkvxLDR1vPfGaFCVD0etxUdGPti5OKb1GcaPbweg99gwql+rHQCWVZ+gMKLu3W2
-         z50+tlMO7omgHqKjwcZhE3TcWakp2FddFqGhZTUjtKhuc0aXvQ8/CCtz2PUU5wY2Cxt3
-         X6/Q==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=eoAJedssCRtORBBwXDIR4/QT9NuQsdzJ4Ntg4pSM5cY=;
+        b=1bgwUcAZ78xCTIqaqNviEKuMJb97CygulYIPlFUqxsRkcRsnof435hIi2Xo9UN6RIc
+         AZYzu5lldy7TGNkcuuLDtmbqA1CDS4B8+QWKjQIUCcDOGvfan9LAwAD5e4SGX5E4fWZ8
+         PXr8h/WLRIBnR5CSWvuAyIOKbY3V1te0Yx+wzlK6CRWEW1gFd8vpWsNfyjUJWPWCOmfv
+         MUC3EwO12smFILAg7MrScMAH0IE4qq/4k65nNGoDEWhlbyWO1MQ6X5wlg7AQ/TmO0+oK
+         uVCG6N9DC/fHP5UGuJFkKhRSC/pUrkPeWc06iatwR9gPJUnsjrur6Nrv/Sbm2NM0Hqat
+         RGTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=dtBoagETXVh0V7/P97k4Rqz1E496kHkXGXKVFlW3Xbw=;
-        b=Fyqld53eZTVCWtTEQTLgIHVfKvirlrfp4zSeiShiYcioYZsgmufHCIemVSlPE3EvYo
-         MDV8EytRmgxHAxMtDU1I+X+COji4CApeNMcvhcVW0lo6b4YIhdC6HeB2vPiaSmPvaVCF
-         Tq2sCGVBqDq+e5iIX/aJDSJDWbOErX77c1hqZGHy8B6UljjDn+ofwgm5jHfh66Db4D/E
-         WJk83r+KNB3zuZNrNwBIAzBaFSxAcT68zb5/nGvsTvGVYBmI4EBnFcEigJ+XQmLj9PzJ
-         AajBsJc43WMPlYADxvuN6gTjtKgBOWloQhlsjKW8fZJgqbWMQDFeG3J9rvKP6tWtCmuM
-         2nNw==
-X-Gm-Message-State: APjAAAW/0uLEPra3mOlRjSID0XD8QHrnIrv68BVeIl5CJ0V58wmgVT3a
-        yiLEJG1rawhoZiE9EEzex4g=
-X-Google-Smtp-Source: APXvYqyKV1E389RBA+UWrCbZt1ojc/ei0DHw5zlvBj3dEBxdxhbeQZ4NCwzp34jjtPT7agMXFqUBnA==
-X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr683869pfd.70.1576259186300;
-        Fri, 13 Dec 2019 09:46:26 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f18sm12823124pfk.124.2019.12.13.09.46.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=eoAJedssCRtORBBwXDIR4/QT9NuQsdzJ4Ntg4pSM5cY=;
+        b=MPoAk/66RoIC1DoCtmOIfTRyU8TEJii3xcbR+i+DIIdDDbZOsL8ZAK7wjDA868Ztfd
+         3hbo+NdATMS2DfjJtaVnBUIRDV5eVGB/8hanh74/CW7fwf8kfaJkyYLT7+PC9TI4cHuV
+         e5Gjez9VZUjHHVnCc4qkK9gjbz59wpEyJB2RDOw5+DuH67twe6MB8n7FRkHcNzdNBARt
+         Bv252reRBVWETJ3CAcSqtGtLxh0rDrg1xoT2i61s3RiX34/9Zdvw9LGTeB9FzMEf6O66
+         QZAzX0WVt113eKTSZU2CafZilvxLPtNLisQPz7gJy1RXdHsSaA9G2H4frTQp3UYFLePP
+         gQjQ==
+X-Gm-Message-State: APjAAAWWUxGzqH/vozvVYQxnA29HaRzkVqQLPq/sa++pGRbwBFfs+tKO
+        HjPQGtUrjq1uvUT2PYKADcxpjg==
+X-Google-Smtp-Source: APXvYqyrL4fP/y35voKQ93uhJQCdlErk3H7h25gfob2xBThYWvN+CbLHJ+UN7VZf7cdxBzpPbR1YQg==
+X-Received: by 2002:a2e:868c:: with SMTP id l12mr9458337lji.194.1576259234756;
+        Fri, 13 Dec 2019 09:47:14 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id j19sm5555628lfb.90.2019.12.13.09.47.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 09:46:25 -0800 (PST)
-Date:   Fri, 13 Dec 2019 09:46:23 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: dwc3: use proper initializers for property entries
-Message-ID: <20191213174623.GA20267@dtor-ws>
+        Fri, 13 Dec 2019 09:47:14 -0800 (PST)
+Date:   Fri, 13 Dec 2019 09:47:05 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191213094705.486101a0@cakuba.netronome.com>
+In-Reply-To: <CAEf4BzaG95dxgSBSm7m8c3gJ-XeL97=N4srS5fR7JRfcjaMwTw@mail.gmail.com>
+References: <CAEf4Bzb+3b-ypP8YJVA=ogQgp1KXx2xPConOswA0EiGXsmfJow@mail.gmail.com>
+        <20191211191518.GD3105713@mini-arch>
+        <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
+        <20191211200924.GE3105713@mini-arch>
+        <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
+        <20191212025735.GK3105713@mini-arch>
+        <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
+        <20191212162953.GM3105713@mini-arch>
+        <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
+        <20191212104334.222552a1@cakuba.netronome.com>
+        <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
+        <20191212122115.612bb13b@cakuba.netronome.com>
+        <CAEf4BzaG95dxgSBSm7m8c3gJ-XeL97=N4srS5fR7JRfcjaMwTw@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should not be reaching into property entries and initialize them by
-hand, but rather use proper initializer macros. This way we can alter
-internal representation of property entries with no visible changes to
-their users.
+On Thu, 12 Dec 2019 22:48:10 -0800, Andrii Nakryiko wrote:
+> > improve and hack on it. Baking it into as system tool is counter
+> > productive. Users should be able to grab the skel tool single-file
+> > source and adjust for their project's needs. Distributing your own copy
+> > of bpftool because you want to adjust skel is a heavy lift.  
+> 
+> Skeleton is auto-generated code, it's not supposed to be tweaked or
+> "adjusted" by hand. 
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+Obviously not, I said adjusting the codegen tool, not the output.
 
-It would be good if this could go through Rafael's tree as it is needed
-for the rest of my software_node/property_entry rework patch series
-which I would love not to delay till 5.6.
+> Because next time you do tiny change to your BPF
+> source code (just swap order of two global variables), skeleton
+> changes. If someone is not satisfied with the way skeleton generation
+> looks like, they should propose changes and contribute to common
+> algorithm. Or, of course, they can just go and re-implement it on
+> their own, if struct bpf_object_skeleton suits them still (which is
+> what libbpf works with). Then they can do it in Python, Go, Scala,
+> Java, Perl, whatnot. But somehow I doubt anyone would want to do that.
+> 
+> > And maybe one day we do have Python/Go/whatever bindings, and we can
+> > convert the skel tool to a higher level language with modern templating.  
+> 
+> Because high-level implementation is going to be so much simpler and
+> shorter, really? Is it that complicated in C right now? What's the
+> real benefit of waiting to be able to do it in "higher level" language
+> beyond being the contrarian? 
 
-Thanks!
+I did not say wait, I said do C and convert to something else once easy.
+You really gotta read responses more carefully :/
 
- drivers/usb/dwc3/host.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Apart from \n\ (which is mostly hidden
+> from view), I don't think high-level templates are going to be much
+> more clean.
+> 
+> > > We cannot and should not adopt kernel-like ABI guarantees to user space
+> > > code. It will paralyze the development.  
+> >
+> > Discussion for another time :)  
+> 
+> If this "experimental" disclaimer is a real blocker for all of this, I
+> don't mind making it a public API right now. bpf_object_skeleton is
+> already designed to be backward/forward compatible with size of struct
+> itself and all the sub-structs recorded during initialization. I
+> didn't mean to create impression like this whole approach is so raw
+> and untried that it will most certainly break and we are still unsure
+> about it. It's not and it certainly improves set up code for
+> real-world applications. We might need to add some extra option here
+> and there, but the stuff that's there already will stay as is.
 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 5567ed2cddbec..fa252870c926f 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
- 
- 	if (dwc->usb3_lpm_capable)
--		props[prop_idx++].name = "usb3-lpm-capable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
- 
- 	if (dwc->usb2_lpm_disable)
--		props[prop_idx++].name = "usb2-lpm-disable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
- 
- 	/**
- 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
-@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	 * This following flag tells XHCI to do just that.
- 	 */
- 	if (dwc->revision <= DWC3_REVISION_300A)
--		props[prop_idx++].name = "quirk-broken-port-ped";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
- 
- 	if (prop_idx) {
- 		ret = platform_device_add_properties(xhci, props);
--- 
-2.24.1.735.g03f4e72817-goog
+As explained the experimental disclaimer is fairly useless and it gives
+people precedent for maybe not caring as hard as they should about
+ironing the details out before sending code upstream.
 
+I think we can just add a switch or option for improved generation when
+needed. You already check there are not extra trailing arguments so we
+should be good.
 
--- 
-Dmitry
+> Would moving all the skeleton-related stuff into libbpf.h and
+> "stabilizing" it make all this more tolerable for you?
+
+I think I'm too tired if this to have an option any more.
