@@ -2,117 +2,99 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0204C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FA2C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B7824671
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:09:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLJp+lxy"
+	by mail.kernel.org (Postfix) with ESMTP id 45E122467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLMVJP (ORCPT
+        id S1726750AbfLMVKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:09:15 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32782 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMVJP (ORCPT
+        Fri, 13 Dec 2019 16:10:07 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:45929 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMVKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:09:15 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y206so2126993pfb.0;
-        Fri, 13 Dec 2019 13:09:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+TUXztuga5A213JEcA90cIY8cUeQjO98uwNxtYgKoO8=;
-        b=mLJp+lxyIcMsmoIvnTbdtwhTuQvxnR8TdvxTGzjjbmUrccq6DJRh5SWY1xpS5EM5di
-         AkCfdblv+SiB/aFMCNQezSHMhRxtEqt/TbQcqaAn8m9jqTLVhsDZd9ZqE62oTpIZS7wu
-         slOalUrRlRgSuiFAI8eQBeMKZ13Zt2AqK4X5PqNtudyo6tXyvHLRjkI4QdLBbddsKQUu
-         HrXjhDOIIdWTgyiDNfH8ZS8wg4RMp5R8BREPmnObGj21VHK1wtJ7+IFYbLknQIzkBjJ0
-         sBp6cy3QB04fpx1i0QusXBNGRBaI49AvyMYjsG6ri5dYmcXOJ3+Q7EB+gG3+RL9wjE1u
-         EOSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+TUXztuga5A213JEcA90cIY8cUeQjO98uwNxtYgKoO8=;
-        b=F7LWKFlxUf4Jgy6NulzCNRh60apZWSTGDt/3KYpRKfW0eZoX7OgyjKsAi/r2ouWlpr
-         l5Mg4EhqiPmPHdfRQr/9jiv6jn6//pVLLFU9SKsXU7T9DID7r14TAJbGhOLRKDnF/bMC
-         MJVAiD6tLpDKu3bBzYnJDdaEofrM6kNoL67oA98/eMK1AzIImCQEygrnp0YiPX0Y0BD+
-         W9xy2MHGwBt4O219ABbMmy26zvnxxkCsUn+5RPLsNP4XZ3/hnfwo04SoCP30leMZWAmZ
-         40Kd+G7H2MYoGaHQu0lKrw7QSaWbfbPwW/QPxKBQO5K2HEAs0t/X3aogBaQtSJX7AHD7
-         45Hw==
-X-Gm-Message-State: APjAAAWwWQgSLpl7LUiawjiBjIHyxjc7XLQJ9ePByZ99e8reV12ic9lU
-        igbdZWC6jDhnp97EfH+Szkw=
-X-Google-Smtp-Source: APXvYqwFhi12CyNeIQATqxuF18VfgmCL0rKmVR00cSNIPV42aOKU0GavMtROxRmKjJVamRecUlmk1g==
-X-Received: by 2002:a62:486:: with SMTP id 128mr1674843pfe.236.1576271354411;
-        Fri, 13 Dec 2019 13:09:14 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id t11sm10884949pjf.30.2019.12.13.13.09.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 13:09:13 -0800 (PST)
-Subject: Re: [PATCH bpf v2] bpf: clear skb->tstamp in bpf_redirect when
- necessary
-To:     Lorenz Bauer <lmb@cloudflare.com>, ast@kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel-team@cloudflare.com
-References: <20191213154634.27338-1-lmb@cloudflare.com>
- <20191213180817.2510-1-lmb@cloudflare.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <5e7ccc2c-cb6b-0154-15bf-fa93d374266e@gmail.com>
-Date:   Fri, 13 Dec 2019 13:09:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 16:10:07 -0500
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mnq4Q-1huvWZ2uao-00pJD5; Fri, 13 Dec 2019 22:10:05 +0100
+Received: by mail-qk1-f175.google.com with SMTP id z14so360747qkg.9;
+        Fri, 13 Dec 2019 13:10:05 -0800 (PST)
+X-Gm-Message-State: APjAAAWQQByzRJl+FRsh8mWKGC+1rCfdZACj1Xt9Dax7lDMM5PGgvkTp
+        BRbPDqVVHLAzeXZFoIRpgFIJvJIrjqQJUvrTVY0=
+X-Google-Smtp-Source: APXvYqyzAwR27KFKi5TkucxKpQNzOtGX0NSY+WgXrxpmwySh3tOt3BeOLfaBKAthCSioGeE7zaSTXD2qo8rhZRMFjvA=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr15047213qki.138.1576271404501;
+ Fri, 13 Dec 2019 13:10:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213180817.2510-1-lmb@cloudflare.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191213141046.1770441-1-arnd@arndb.de> <20191213141046.1770441-11-arnd@arndb.de>
+ <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com> <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
+ <BBB37836-D835-4EB7-8593-080BF60BDA38@oracle.com>
+In-Reply-To: <BBB37836-D835-4EB7-8593-080BF60BDA38@oracle.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 22:09:48 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3W3o6K_BGPaDre29Y1v=ZUMVv4+_mJr68vNkppKuuZrA@mail.gmail.com>
+Message-ID: <CAK8P3a3W3o6K_BGPaDre29Y1v=ZUMVv4+_mJr68vNkppKuuZrA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:u4OHeFUmz3H/zb1xub1jtQBskNNTwVgzesEymRCHoYLFvufnxM2
+ gPTbFFhWO6l7/m0gG6WMPqIm9Z9V10keWMTyI6kUspm7+2laK9JwkeAI+77p9PmOh5PVAvE
+ SjD0G/WeGITJ0cB3fSA1tTcSqKNaTBd9dqbJCjmecycb9lknHSEJ3VN6S7a4NRAkd3TpVjZ
+ SQmLDHMDGqj6uAoMmemOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dG+P425Wcyo=:9IxV4PrNZPQAgqwpS+PNZK
+ Dv8uaSwx1wV8UXsB+/+Ji6Ha6jRNM4GpbiZG/xZX0k3KOf8mwSBMwupJOEC3+urHrPFO2HLGG
+ iJjGkQLn2cEjNM7svNXGmSNSkIt+7VhYCDG8aBIZSD9v2GnqEj/Js7C10q6Zb5KTFuFAmJxF5
+ j8yNBODZWmWyXTct8O+E8aH4ek7IqcjrwEDNfuy14S6WUT7t6+R1iiIkf811fq5FLbO5ZjCdO
+ GsssljDOsst+X8AAcMjcDUVbXBcvA66QsUYWZ5mmzbjeh/lO64tNOAfCwP4WClWD831Qp6uqs
+ OB827wfffVJvYEQMgElECNP+3XpSEkXrlqp4bSs5ch1mXHvICOWSBw6q+09VVpVx+dsbTMOeL
+ GrOTRYMeSOMv/o5C3Og8F/SQZUoIdxUWZWVKGAX4hv8Fo8shXJaN3j1KgyTta4tEkrdOQmdfJ
+ l2bCKld3WBfAIbq1EDw3uHi2goLIQ8J0RLC6EQJh+JA6yKJlW/TD19E/+LVCBUJ5MjFWNJC80
+ myCU7OeIr+Ee8G47BFOcf9kQ8XDxf2GPE+LXZco9yH3IuPXFFVmbuY8Um7sYwvZZR/2d2/Bdf
+ vFrFZs0t4qBlNZfep5ZyWdnuK4WWMOEXLgMOM2ILA50fbEKivENBUfZRnaZhcSeeIrXr0hInF
+ QsOzSQXVG3QV4iEfvMx/6dol7rP5dHFAQuIBZUT/JqWVKhySbj7Il1+U+0wGnP7uvpcc9UnrZ
+ gAHRnlDpyB9U7IzpD15ZZBLuf+JyYIpFUS2xyPnSw40EBif6ynyMAwpBNJg2kund90RExMUwA
+ +ck2qANEIYRQeKZkYSOdc0bA0sn8HgLOY8TmeWld/7febOKTwkJM/Jj2xnv+g5HDtFS490tFd
+ liEA1OCLh7z1cjhtWriw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 13, 2019 at 7:23 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+> > On Dec 13, 2019, at 11:40 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+> >>> On Dec 13, 2019, at 9:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> >>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> >>> index 24534db87e86..508d7c6c00b5 100644
+> >
+> > With the old code, dividing by 10 was always fast as
+> > nn->nfsd4_lease was the size of an integer register. Now it
+> > is 64 bit wide, and I check that truncating it to 32 bit again
+> > is safe.
+>
+> OK. That comment should state this reason rather than just repeating
+> what the code does. ;-)
 
+I changed the comment now to:
 
-On 12/13/19 10:08 AM, Lorenz Bauer wrote:
-> Redirecting a packet from ingress to egress by using bpf_redirect
-> breaks if the egress interface has an fq qdisc installed. This is the same
-> problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
-> 
-> Clear skb->tstamp when redirecting into the egress path.
-> 
-> Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
-> Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  net/core/filter.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index f1e703eed3d2..d914257763b5 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -2055,6 +2055,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
->  	}
->  
->  	skb->dev = dev;
-> +	skb->tstamp = 0;
->  
->  	dev_xmit_recursion_inc();
->  	ret = dev_queue_xmit(skb);
-> 
++       /*
++        * nfsd4_lease is set to at most one hour in __nfsd4_write_time,
++        * so we can use 32-bit math on it. Warn if that assumption
++        * ever stops being true.
++        */
 
-Thanks !
+Modified branch pushed to
+git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-nfsd-v2
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-
+        Arnd
