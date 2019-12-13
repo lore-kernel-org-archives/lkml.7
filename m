@@ -2,99 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5C0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB4C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B247E2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="excwd9Fk"
+	by mail.kernel.org (Postfix) with ESMTP id C197420706
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576276586;
+	bh=EDTTSZNGbWXQl5rh9+wXt09UUcbeSsGxy1E9C7pfoQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ROmeTf9ltwZsdidBCP1rOp/VbOcGYwXDYxv455vnHoghYo8R+hi9qjnsWIYgae7Av
+	 0dVxJaFVwhF8H60PhEToZzyWQtftpwG0M9XPEjkfPDVnlJI1RY9+XufuF6hc6eEGnM
+	 nkaRbVtoXiL+lSbdN+UJnGzu7v1k2oe4XZ6B7KWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLMWee (ORCPT
+        id S1726671AbfLMWg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:34:34 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41033 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMWee (ORCPT
+        Fri, 13 Dec 2019 17:36:26 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35584 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLMWgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:34:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id bd4so1821214plb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:34:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=OXnhgxzAu2ihp1gT4DqyxwZPM5Oy8xgRqpPZGSezrTM=;
-        b=excwd9FkevMxcUhdTx2NzASWDsWNRvYWGjqPQf37dhH+BWvB5eXnGbvWW/yMj3d30r
-         mf33Z7oEnkabTL7hfmF0jjGZddiDCUBCLOZOwSDffIJRYVdXQd2iHTp2fsbJ2bHIN3SV
-         RfR62mYFSaoq9YEfTj25O4azgQgtz5cHI47KrewY5mieYT1Y9L3Mdj5BP4L6aPTq8MUx
-         xUbPCNATqLq1tpS/r8R7leHxVqlYUPJX/SOayyONezzleQdziaqaQXQtnzWIjFWhhhox
-         8jpkxD+67qKKZh5O//ViDzjhAK5Cg/TsDeWOvfQD6KphI+ZdfqVfCaUnxGisufiKMN5W
-         767A==
+        Fri, 13 Dec 2019 17:36:25 -0500
+Received: by mail-ot1-f65.google.com with SMTP id o9so928520ote.2;
+        Fri, 13 Dec 2019 14:36:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=OXnhgxzAu2ihp1gT4DqyxwZPM5Oy8xgRqpPZGSezrTM=;
-        b=d5QcobkkPkOIuqn8QAuDpIpLOVOlSmXSh15q5Ltvzr76KeYNGfTrQR/kqLTHLK5bY+
-         6Dgvq/V6MEPLNp/MFpJyI0v8JGKvjyDnTJj8lTIM39N+dz0xg9U8B1X+t2mXIVBHgywH
-         EUDnCIoZL8A899gUTxfwNoAWrJ8v/Z/xh7TaNkPP4a71EpRkzIqd3xWA86MLSQzBWvKO
-         Jagf8/hQamJIkZ9sZDfXJGUfpRxjLTmk3Vipn7vdyZe4y1Zmnbl7Trnndy3SqdGG73IO
-         wfg5dY7r3lYl3sfPXGBr3TB3Fg1DBOqjxGXcy4dsjdYLo0QZY1lfhCQ81j2h/R1Tykgz
-         qt3g==
-X-Gm-Message-State: APjAAAUraFvoFBEZ3VdhKGE6zwQbyCN+VOEyYfV3CyTMqPNCyPu07ETD
-        t6eIO/cHIa1P5A8D3JkCUJdjPw==
-X-Google-Smtp-Source: APXvYqyrfBN+RCPQBKIztlW8mo/Olwfn7pXA1oT//M3eThgBJmFAPX3aFrnLGHKEFff4HXyHJdc10Q==
-X-Received: by 2002:a17:902:9a04:: with SMTP id v4mr1974551plp.192.1576276473417;
-        Fri, 13 Dec 2019 14:34:33 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id x4sm12578994pfx.68.2019.12.13.14.34.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Dec 2019 14:34:32 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] ARM: dts: meson: clock updates
-In-Reply-To: <1j8snhbl4t.fsf@starbuckisacylon.baylibre.com>
-References: <20191208180525.1076152-1-martin.blumenstingl@googlemail.com> <1j8snhbl4t.fsf@starbuckisacylon.baylibre.com>
-Date:   Fri, 13 Dec 2019 14:34:32 -0800
-Message-ID: <7heex797nr.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aViRkDm5Q83Ziq8WvPrQQFLWmlznU7OM781DBB+jypg=;
+        b=ucND154++qoAxLmokTgA2eEdK6s5YKYYDcJ5pF5t0tyGwIbddMoGtivA0Wg+fU4wz0
+         8vhz78HoY/DWs1JxsnH/mHDzR1VWIB9UkCJzBrvm5HAMGUgCfLRGaUFXO0Yji/MqcFzx
+         NoGd/l2/VeyasbIRrswD6ocw1Q9QJEXZNNrTCpnBjmfOOtj8RwZ24+b5aj0VtHQcgooJ
+         E7X/dKc8aytc4HCPGXcuFkkKJ920A30MFpDRg1jKGQSAQedw0t397xpnHn9REHkVHpGb
+         rTWaFy0p9a4bA0rRsqJ1Kwc6mG1F5KCSl7lwMD7rfaQQfL/B3I2EsDLB4kNdT20KP6rC
+         bh1A==
+X-Gm-Message-State: APjAAAXEfS2TAXY7xDhJwpM4dlAZwxNiYMPArvynr1Wu4C3ppltt66cU
+        w1FLARk90hZ8wVdyxoElmA==
+X-Google-Smtp-Source: APXvYqw8SEx0ZsdXc4Aw+KPeDksSB3h46zpVT+15p6hwpJ1l8hKcJ9COeglbxaJdcO7zzSAu5R/efQ==
+X-Received: by 2002:a05:6830:1353:: with SMTP id r19mr17631952otq.288.1576276584871;
+        Fri, 13 Dec 2019 14:36:24 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b15sm3832281oti.23.2019.12.13.14.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 14:36:24 -0800 (PST)
+Date:   Fri, 13 Dec 2019 16:36:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v2 4/5] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
+ options
+Message-ID: <20191213223623.GA14809@bogus>
+References: <20191202133332.178110-1-amirmizi6@gmail.com>
+ <20191202133332.178110-5-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202133332.178110-5-amirmizi6@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Mon, Dec 02, 2019 at 03:33:31PM +0200, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c PTP based physical layer.
 
-> On Sun 08 Dec 2019 at 19:05, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->
->> This series moves the XTAL clock out of the main (HHI) clock controller
->> because it's an actual dedicated crystal on the PCBs.
->>
->> The last two patches add the DDR clock controller whose output is used
->> as input for some of the audio clocks.
->>
->>
->> Dependencies:
->> - patch #1 has a runtime dependency on my other series:
->>   "provide the XTAL clock via OF on Meson8/8b/8m2" [0]
->>   Jerome has already queued this for v5.6
->> - patches #2 and #3 have a compile time dependency on my other series:
->>   "add the DDR clock controller on Meson8 and Meson8b" [1]
->>   Jerome has already queued this for v5.6, but you need an immutable
->>   tag for the dt-bindings
->
-> Bindings tag clk-meson-dt-v5.6-1 available with the necessary ids
-> branch v5.6/drivers with the actual driver changes
+Wrap your commmit message. And TPM, TIS?, and I2C should be capitalized.
 
-Queued for v5.6,
+> 
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
 
-Kevin
+Please read my comments on v1 (The first v1 from 11/10, not the 2nd v1 
+you sent).
+
+Rob
