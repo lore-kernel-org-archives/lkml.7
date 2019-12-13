@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C906C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62D3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A669214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B6C24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="QdO6faUQ"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="pBO83T+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbfLMAIo (ORCPT
+        id S1731217AbfLMAIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:08:44 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42427 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731713AbfLMAIi (ORCPT
+        Thu, 12 Dec 2019 19:08:47 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:42650 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731369AbfLMAIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:08:38 -0500
-Received: by mail-pl1-f196.google.com with SMTP id x13so378799plr.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:38 -0800 (PST)
+        Thu, 12 Dec 2019 19:08:44 -0500
+Received: by mail-pj1-f67.google.com with SMTP id o11so336280pjp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:08:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XEE0LGDV1J/8PNdfM5R+G2BENKuEh6gWNO7Fuw2PlT8=;
-        b=QdO6faUQ9IU/Iu3hc9HssBIFSyYwL1wjx6YLW1AGrFNfD1NEqfQWLvBbb7cncEUgM4
-         kQNSs1EkyzWRVaSAXzHHvTGkZAPoKwhyDXu97A+VZwti2nj1I5pWHpnFM9QWA/lxoZ13
-         VrknhWKh1KzguA6nOSPPffDORtX3W7EhuGtzagBADUGjmlbzM7Q2UqoXF5G8fEDSrm2A
-         svAskRSke+8ffBqi9jrnIhsH4v8M/CIzFCAlcXKFmeVGJQARdG2tS0Gk8GQrUY4fyGJu
-         jQ00/4sNwNy20ADchZObQ4QB5SV3L17th2C9opjauWqVn7y0oaboxFBUdzXe2K6GG6wn
-         1L7g==
+        bh=Er5nAZa0dzjPGmbpRmr/URcdpkFHKxX1ZKta5byo+BA=;
+        b=pBO83T+3pLGQIG/lo6bFoz3CUjfvRFotL/CE9Az3B2XbEMhTbp5PLKYjAfoPEB59vG
+         2O/Zb2NN55/9N+nZmWeNlYp6Oe8nfM6fsSMmX8PTAhDYuqlPfhNP4mKs72qMKmPPrbIx
+         FroUhUeinf4yNuUDSVTwcyDaHsbQsmcKQHadhavR4Q/K4Ythj3VCPcDC2t/lX+djVWGb
+         FJvI5rWb9ge9+7O5dOjCdbau4XrTsCJqZhcPniOAiTcyOXRklo0qM2XUVtqr7yEl2jwF
+         e0oa/s10DoYmA7d/8PvJ4sP5ApdnsU35p4NUC4vRnyOX5JMGGyKH9dHSmHZjr6QvqiaG
+         2VBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XEE0LGDV1J/8PNdfM5R+G2BENKuEh6gWNO7Fuw2PlT8=;
-        b=n26TpPX/gheHLmAxJEWKq6H9zXs+vgo1tclk2FY01hFhCbbhnRZyTEgS3RixmwhFIE
-         U23ei9gzx6R6yIrwvj4w/6l07i/+I3apzK+Ub3VZ+WJ/1bcZjz/zy/g4ttmbzz3RYpfP
-         VloQ0YLKP/qkrgBv/7c18mY4KDj/TTvoR8TiNg3OWrHoDutlj/+//GNx8HXQdkpB3+6U
-         Sq/tLAr3VbBWWXPl5csxXht92K+6eOxN3/2DJk1Lqw1STGH5rm7KrVjtALxsYaxJkdkY
-         2UXbG8KwVhYmyaHPyyE4nM6HmIjaSagI2NUbdf04oybk6ie/iN6YxWrqBYiDuYcXXs9D
-         Qm1w==
-X-Gm-Message-State: APjAAAVsVcMdED/MlAc761/PoVLh/L0TDUm0eCubXNLd5mv1MdUtMYjl
-        JvSmmGHk4Eu+WLXLBSZhcg/ZaJ0qJ+8=
-X-Google-Smtp-Source: APXvYqzcYT0DHwWe/kfTwr+RdnsOlzCzNojd3O1sghIDf52D2BkxpgOg5Y3f2CLhLhsf0d2pnd8l+w==
-X-Received: by 2002:a17:90b:4391:: with SMTP id in17mr13218028pjb.33.1576195717651;
-        Thu, 12 Dec 2019 16:08:37 -0800 (PST)
+        bh=Er5nAZa0dzjPGmbpRmr/URcdpkFHKxX1ZKta5byo+BA=;
+        b=BEk+dWaq+uOJbHTU3LN+6NAUTkgKGJ8kbuK5fhzS8OILJ76FwpVChTsKA7vJoyOMth
+         AGk8YCwRt2JtSipevyoNCflm+C4UfBT38uI6i2yOHwix4Qe1zmTcXXDi5jnlWD5efHzA
+         qtuDXdm7BHSRrIjsWuWGJY8XJrR+4j7eIIqvxiWkvitxwX4IuQkhIZ+4i5uKUSLO4KV8
+         f0k6RqH5RZOUMTnlH5kUjGvJGipWUkTmIhPPohgtmdsLIgnKmN4ZM16XMzcrZWwY3BHX
+         EkIKiszfS0IUI8wFz2eURBp9l/Yo/LTYdmzvaPTkhSboEfAjqTM1Kb5jHrc5nRPU3uEZ
+         NLQQ==
+X-Gm-Message-State: APjAAAXzymAtEYwlNRonllGFT7YoA1ZEi0CpCo2bJ7xRxMLDAruRjjFV
+        RvQw6Jr69u18+mdbgVecxTsf5Vcss90=
+X-Google-Smtp-Source: APXvYqwB3D0kINS7nIHxvaSLTZkj+rB5xcPZkkmxepOINemcjk0j3BsedcI0tT2o8OES5EGFzhUJVw==
+X-Received: by 2002:a17:90a:8989:: with SMTP id v9mr13191061pjn.119.1576195723176;
+        Thu, 12 Dec 2019 16:08:43 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.35
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:08:36 -0800 (PST)
+        Thu, 12 Dec 2019 16:08:42 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
         linux-serial@vger.kernel.org
-Subject: [PATCH 28/58] tty/serial: Migrate omap-serial to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:27 +0000
-Message-Id: <20191213000657.931618-29-dima@arista.com>
+Subject: [PATCH 30/58] tty/serial: Don't check port->sysrq
+Date:   Fri, 13 Dec 2019 00:06:29 +0000
+Message-Id: <20191213000657.931618-31-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -77,43 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SUPPORT_SYSRQ ifdeffery is not nice as:
-- May create misunderstanding about sizeof(struct uart_port) between
-  different objects
-- Prevents moving functions from serial_core.h
-- Reduces readability (well, it's ifdeffery - it's hard to follow)
-
-In order to remove SUPPORT_SYSRQ, has_sysrq variable has been added.
-Initialise it in driver's probe and remove ifdeffery.
+uart_handle_sysrq_char() already handles it.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/omap-serial.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/tty/serial/pch_uart.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index 6420ae581a80..53b38a226f26 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -16,10 +16,6 @@
-  * this driver as required for the omap-platform.
-  */
+diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
+index c625bf7b8a92..0a96217dba67 100644
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -584,10 +584,8 @@ static int pch_uart_hal_read(struct eg20t_port *priv, unsigned char *buf,
+ 			if (uart_handle_break(port))
+ 				continue;
+ 		}
+-		if (port->sysrq) {
+-			if (uart_handle_sysrq_char(port, rbr))
+-				continue;
+-		}
++		if (uart_handle_sysrq_char(port, rbr))
++			continue;
  
--#if defined(CONFIG_SERIAL_OMAP_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
--#define SUPPORT_SYSRQ
--#endif
--
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/console.h>
-@@ -1680,6 +1676,7 @@ static int serial_omap_probe(struct platform_device *pdev)
- 	up->port.regshift = 2;
- 	up->port.fifosize = 64;
- 	up->port.ops = &serial_omap_pops;
-+	up->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_OMAP_CONSOLE);
- 
- 	if (pdev->dev.of_node)
- 		ret = of_alias_get_id(pdev->dev.of_node, "serial");
+ 		buf[i++] = rbr;
+ 	}
 -- 
 2.24.0
 
