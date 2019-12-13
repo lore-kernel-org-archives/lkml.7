@@ -2,204 +2,155 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70CFC34969
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3229C3B1BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F21246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B97246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfLMLTw (ORCPT
+        id S1727014AbfLMMHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:19:52 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52108 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMLTu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:19:50 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: lH2DhvT7SomBYBQ6THB2MuQsdRsIoltRtdm4rT/nTa4FJ2tVfL9sP5vUJfnOcncuDcdnRijeuc
- /AeejhZTdeHw7Vd5ARF4aCvYgk7QR6gOF6cVOEiUoSRQqMjGPCTWhisgRzvGi9d/FdzT+M6B2Z
- uqpSFFy9xzs+upmpKiayq4zeZ7qVdc/+1oIh4DmFyElqHjYAOwd8JaWJgn4t3EPgrx8UetdvP1
- IBLjSHz+ebTgIcY98M67ack8sT1wkQ4GYfJxkWNs0pZN77ZOUN5cGagLT+I298ZNDM+mophJ+p
- 0ec=
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="57662245"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 04:19:49 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Dec 2019 04:19:36 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 04:19:33 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v4 0/2] add Microchip PIT64B timer
-Date:   Fri, 13 Dec 2019 13:19:20 +0200
-Message-ID: <1576235962-30123-1-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 13 Dec 2019 07:07:08 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39920 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726939AbfLMMHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:07:06 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 03C4B200EAC;
+        Fri, 13 Dec 2019 13:07:04 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E5BB120035B;
+        Fri, 13 Dec 2019 13:07:03 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CC3E203B1;
+        Fri, 13 Dec 2019 13:07:03 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH v3 3/6] media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+Date:   Fri, 13 Dec 2019 14:06:18 +0200
+Message-Id: <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
 X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add bindings documentation for i.MX8QXP/QM JPEG decoder & encoder driver.
 
-This series adds driver for Microchip PIT64B timer.
-Timer could be used in continuous or oneshot mode. It has 2x32 bit registers
-to emulate a 64 bit timer. The timer's period could be configured via LSB_PR
-and MSB_PR registers. The current timer's value could be checked via TLSB and
-TMSB registers. When (TMSB << 32) | TLSB value reach the (MSB_PR << 32) | LSB_PR
-interrupt is raised. If in contiuous mode the TLSB and TMSB resets and restart
-counting.
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+---
+ .../devicetree/bindings/media/imx8-jpeg.yaml       | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
 
-This drivers uses PIT64B capabilities for clocksource and clockevent.
-The first requested PIT64B timer is used for clockevent. The second one is used
-for clocksource. Individual PIT64B hardware resources were used for clocksource
-and clockevent to be able to support high resolution timers with this PIT64B
-implementation.
-
-Thank you,
-Claudiu Beznea
-
-Changes in v4:
-- use clocksource_mmio_init() to register timer for clocksource
-  functionality; with this, struct mchp_pit64b_clksrc was removed and replaced
-  with mchp_pit64b_cs_base variable to keep the timer base address
-- removed clksrc_to_mchp_pit64b_timer() macro 
-- introduce mchp_pit64b_dt_init_timer() and add there the content of
-  mchp_pit64b_timer_init() which was removed
-- s/mchp_pit64b_dt_init_clksrc()/mchp_pit64b_init_clksrc(),
-  s/mchp_pit64b_dt_init_clkevt()/mchp_pit64b_init_clkevt() and minimize
-  their content
-- remove cycles member from mchp_pit64b_timer and add it as a local
-  variable (to be used only for clockevent timer in periodic mode)
-- add mode member to struct mchp_pit64b_timer keeping a precomputed value
-  (at probe) of the mode register to remove some of the logic inside
-  mchp_pit64b_reset() function
-- remove irq member from struct mchp_pit64b_timer; add it instead as
-  argument for mchp_pit64b_reset() function to be able to use the same
-  function also for programming of clocksource timer
-- remove mchp_pit64b_clkevt_set_oneshot() function; timer programming
-  while in one shot mode should be done by mchp_pit64b_clkevt_set_next_event()
-- in mchp_pit64b_clkevt_suspend()/mchp_pit64b_clkevt_resume() remove the
-  timer reconfiguration (via mchp_pit64b_reset()); it should be done
-  while programming next delta (if one shot mode) or in
-  mchp_pit64b_clkevt_set_periodic() if periodic mode
-- s/mchp_pit64b_get_period()/mchp_pit64b_cnt_read()
-- in mchp_pit64b_init_clksrc() stop timer if clocksource registration fails
-- remove MCHP_PIT64B_ISR_PERIOD macro
-- s/to_mchp_pit64b_clkevt()/to_mchp_pit64b_timer() and cast the result
-  to struct mchp_pit64b_timer *
-- s/mchp_pit64b_pres_prepare()/mchp_pit64b_init_mode() since the function
-  will be in charge of precomputing the mode registe value to be used at
-  runtime
-
-Changes in v3:
-- rework data structures:
-	- timer related data structure is called now mchp_pit64b_timer embedding
-	  base iomem, clocks, interrupt, prescaler value
-	- introduced struct mchp_pit64b_clksrc and struct mchp_pit64b_clkevt
-	  instead of mchp_pit64b_clksrc_data and mchp_pit64b_clkevt_data
-	- use container_of() to retrieve mchp_pit64b_timer objects on
-	  clocksource/clockevent specific APIs
-	- document data structures
-- use raw_local_irq_save()/raw_local_irq_restore() when reading
-  MCHP_PIT64B_TLSBR and MCHP_PIT64B_TMSBR in mchp_pit64b_get_period()
-- get rid of mchp_pit64b_read(), mchp_pit64b_write() and use instead
-  readl_relaxed(), writel_relaxed()
-- get rid of mchp_pit64b_set_period() and inlined its instructions in
-  mchp_pit64b_reset()
-- mchp_pit64b_reset() gets now as arguments an object of type
-  struct mchp_pit64b_timer, cycles to program and mode
-- remove static struct clocksource mchp_pit64b_clksrc and
-  static struct clock_event_device mchp_pit64b_clkevt and instead allocate
-  and fill them in mchp_pit64b_dt_init_clksrc() and
-  mchp_pit64b_dt_init_clkevt()
-- call mchp_pit64b_reset() in mchp_pit64b_clkevt_set_next_event() and
-  program clockevent timer with SMOD=0; if SMOD=1 the timer's period could
-  be reprogrammed also if writing TLSB, TMSB if it is running. In cases
-  were its period expired START bit still has to be set in control register.
-  In case the programming sequence is like in v2, with SMOD=1:
-	- program MSB_PR
-	- program LSB_PR
-	- program START bit in control register
-  for short programmed periods we may start the timer twice with this
-  programming sequence, 1st time after LSB_PR is updated (and due to SMOD=1),
-  2nd time after programming START bit in control register and in case
-  programmed period already expire
-- simplify mchp_pit64b_interrupt() by just reading ISR register, to clear the
-  received interrupt, and just call irq_data->clkevt->event_handler(irq_data->clkevt);
-- in mchp_pit64b_pres_compute() chose the bigest prescaler in case a good
-  one not found
-- document mchp_pit64b_pres_prepare() and simplified it a bit
-- enforce gclk as mandatory
-- introduce mchp_pit64b_timer_init() and mchp_pit64b_timer_cleanup()
-- keep the clocksource timer base address in a mchp_pit64b_cs_base variable so
-  that it could be used by mchp_pit64b_sched_read_clk()
-- rework mchp_pit64b_dt_init() and return -EINVAL in case it was called
-  more than two times: one for initialization of clockevent, one for
-  initialization of clocksource
-- introduce MCHP_PIT64B_MR_ONE_SHOT define
-- move the new lines introduced in Makefile and Kconfig at the end of files
-- collect Rob's Reviewed-by tag on patch 1/2
-- review the commit message of patch 2/2
-
-Changes in v2:
-- remove clock-frequency DT binding and hardcoded it in the driver
-- initialize best_pres variable in mchp_pit64b_pres_prepare()
-- remove MCHP_PIT64B_DEF_FREQ 
-- get rid of patches 3-5 from v1 [1] since there is no entry in MAINTAINERS file
-  for this entry. It was removed in
-  commit 44015a8181a5 ("MAINTAINERS: at91: remove the TC entry")
-
-[1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-
-
-Claudiu Beznea (2):
-  dt-bindings: arm: atmel: add bindings for PIT64B
-  clocksource/drivers/timer-microchip-pit64b: add Microchip PIT64B
-    support
-
- .../devicetree/bindings/arm/atmel-sysregs.txt      |   6 +
- drivers/clocksource/Kconfig                        |   7 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/timer-microchip-pit64b.c       | 449 +++++++++++++++++++++
- 4 files changed, 463 insertions(+)
- create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
-
+diff --git a/Documentation/devicetree/bindings/media/imx8-jpeg.yaml b/Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+new file mode 100644
+index 0000000..2df538d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/imx8-jpeg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: i.MX8QXP/QM JPEG decoder/encoder Device Tree Bindings
++
++maintainers:
++  - Mirela Rabulea <mirela.rabulea@nxp.com>
++
++description: |-
++  The JPEG decoder/encoder present in.MXQXP/QM SoC is an
++  ISO/IEC 10918-1 JPEG standard compliant decoder/encoder, for Baseline
++  and Extended Sequential DCT modes.
++
++properties:
++  compatible:
++    items:
++      - enum:
++            # JPEG decoder
++          - fsl,imx8-jpgdec
++            # JPEG encoder
++          - fsl,imx8-jpgenc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      There are 4 slots available in the IP
++      If a certain slot is used, it should have an associated interrupt
++    minItems: 1               # At least one slot should be available
++    maxItems: 4               # The IP has 4 slots available for use
++
++  power-domains:
++    description:
++      List of phandle and PM domain specifier as documented in
++      Documentation/devicetree/bindings/power/power_domain.txt
++    minItems: 2               # Wrapper and 1 slot
++    maxItems: 5               # Wrapper and 4 slots
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/firmware/imx/rsrc.h>
++
++    jpegdec: jpegdec@58400000 {
++        compatible = "fsl,imx8-jpgdec";
++        reg = <0x58400000 0x00050000 >;
++        interrupts = <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
++        power-domains = <&pd IMX_SC_R_MJPEG_DEC_MP>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S0>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S1>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S2>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S3>;
++    };
++
++    jpegenc: jpegenc@58450000 {
++        compatible = "fsl,imx8-jpgenc";
++        reg = <0x58450000 0x00050000 >;
++        interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
++        power-domains = <&pd IMX_SC_R_MJPEG_ENC_MP>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S0>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S1>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S2>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S3>;
++    };
++...
 -- 
 2.7.4
 
