@@ -2,176 +2,156 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D1EC2D0CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A22B246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D645246A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLMU7S (ORCPT
+        id S1726825AbfLMVAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:59:18 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:54913 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMU7R (ORCPT
+        Fri, 13 Dec 2019 16:00:04 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32789 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfLMVAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:59:17 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N1x6X-1hhwsx45CD-012Isl; Fri, 13 Dec 2019 21:58:47 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        sparclinux@vger.kernel.org
-Subject: [PATCH v2 24/24] y2038: sparc: remove use of struct timex
-Date:   Fri, 13 Dec 2019 21:53:52 +0100
-Message-Id: <20191213205417.3871055-15-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
-References: <20191213204936.3643476-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 16:00:04 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c13so1746511pls.0;
+        Fri, 13 Dec 2019 13:00:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+hqr72PqUIxaNHoI7oLvHLPcCc2ckec5rmVfoIaLp1w=;
+        b=V7Qt04xApwcMvSImCrv5Fzm10eoQVu4QY3yPmhD+OqccaDX24rdxlHtGBFI4AS2J84
+         fhf5l8Xge3bhynRSUPszZgFeAmDcwU0XJaWFibTDhrHNVEl0oO74w8rQuiyXAbDg98jV
+         YqhMJyc30IQtykTb4FHSk8qfIAGAMZvQUicpTGrj+jmtJaLrJuEFQlY6eKSMMAUHbrdi
+         bX1HcFXXwwI9O3SUUKj5kpMqI67TETNMqn/o1o9QBCzadMqH6Ey5hRgUrYgO9uk4FxhW
+         GaghaJf0o8n4Xdv/AMlFmRRhzX3jLGj2SGNzKozrYVY6gooE4KCGuQreC+g+eXmtI5fP
+         eW6Q==
+X-Gm-Message-State: APjAAAU23/Jy2tq0ro7nVfp6Zx+vXaSkf3w/pGOIxPZ1Z/ZqlBKM/TOI
+        +3lrJjME6CatDHUvq57XHiigUTdKc8U=
+X-Google-Smtp-Source: APXvYqwTTBroPHZG57UDlXK8ZOVGzNiM3x+9KlnFXCGmXzrfx8jOtQg/5P1uWsnqIQ38W6V549B1aQ==
+X-Received: by 2002:a17:90a:e4f:: with SMTP id p15mr1577202pja.90.1576270802809;
+        Fri, 13 Dec 2019 13:00:02 -0800 (PST)
+Received: from [172.19.248.113] ([38.98.37.141])
+        by smtp.gmail.com with ESMTPSA id i127sm12711144pfc.55.2019.12.13.12.59.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 13:00:01 -0800 (PST)
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425e749-1808e138-740e-4036-922f-7a49ec02c2b8-000000@us-west-2.amazonses.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <9c31a7f5-a39b-02e6-350f-5fe51f1c4275@acm.org>
+Date:   Fri, 13 Dec 2019 13:59:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:A7e9/MVVT8BzRCfImaCg9M4jUKmhpwO6crIaNymrEDwlQZeltNw
- ofdOA22H+2CteR63M/zW7/QJ9xk/xm5IFVcZUCEHHr0oqqYjO2F8BCaw7M36GDA1ouTCTdL
- XZuuvO73Er8lopAUQzkNngA9tNTZDinleHYow3Tyi+PYH/pzhVVO6ZyLKW/gM0r5NukKCve
- ucLS2WBHfH5TBH6bwkJlg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:elooNoLl0os=:wJwvhFEbWlK180NJ0akjSc
- IwQ5iLJjeglZh0liN9JFPCnp0HP2SWD6SDJJ5dLDCQbHYYueqnXerizC/HI9HgURy2945Ym+e
- PM6PPU3k9wcvKwJVMCS2WBVFEQLDj3xjsKA597uZY2j1O4iNej+KtCgNla7T5EY/cXwJqh8yM
- tQ8JhxM4qHJezU0J7TI/AFMSDZQ7+LJXkjGLRypSzXhkJCa+XmWXGizlDiOKI7H5Y1cvYlmPr
- grNp1+Cb7FQeUwPxUofvsVCx7Jr0/ux3M3omtgiUzFqEamULFm2BdG1l1Ee+LRqs3+nuR5Y17
- 0Es32GbadsSt665oJa61Q56UhPWbZaHCjMjwFBFbx0pQF5PR398evp8kkMCHrBdKXhEZ1moVG
- IE5yRTE/w6L43ko1QeqCkgYYUB4uEZULTnlLanp5LZyrsRHIDl+/3wvRgDOq62hK+SQT9R7LN
- o6uZU7XT1ifzYCob6rtsswqrbs7Gxx7h7h6D6mvVXzsYMBaHRseiIxkyQfdnpTvJCNBrJMxow
- wD7ZVP9yyDTJvzG51Q1Qv38SI2sSrB5TpHzV1eRqeA12bKmO6i0Ck5Ej1kEJrOBDwxea5BZLC
- H55xBxTLXhAV73IaWkgY7JQWaqYVQ9LSet/er0Pprh8ZkogvymsbLhc5zEYAMZhWFwVSWZ1w/
- eXAS9UBJnJVc/Pci+emwQcd8K9slTndz3hYmhZ1xADVoIQ7Iz8wMLRk3+Idz6hpSQg0SIJklt
- xY2V7xhOOGXlxK904sUolNvMcvCSNNvld7821PQK4/jM/PfsgTlaufqF0BDehwnShertppsWu
- usrFlmZ4CLcZ9qVJPm1zxMcSX6En/quVRVGCJhFFCL/ZtLaly7rEq7IHU6wkkQ3naAnlgv3gD
- rSp6ogSKRmbENOUzUb5w==
+In-Reply-To: <0101016ef425e749-1808e138-740e-4036-922f-7a49ec02c2b8-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct timex' is one of the last users of 'struct timeval' and is
-only referenced in one place in the kernel any more, to convert the
-user space timex into the kernel-internal version on sparc64, with a
-different tv_usec member type.
+On 12/11/19 3:49 AM, Can Guo wrote:
+> In order to improve the flexibility of ufs-bsg, modulizing it is a good
+> choice. This change introduces tristate to ufs-bsg to allow users compile
+> it as an external module.
 
-As a preparation for hiding the time_t definition and everything
-using that in the kernel, change the implementation once more
-to only convert the timeval member, and then enclose the
-struct definition in an #ifdef.
+Did you perhaps mean "modularize" instead of "modulize"? Additionally, 
+should "modulizing" perhaps be changed into "modularizing"?
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/sparc/kernel/sys_sparc_64.c | 29 +++++++++++++++--------------
- include/uapi/linux/timex.h       |  2 ++
- 2 files changed, 17 insertions(+), 14 deletions(-)
+> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+> index d14c224..72620ce 100644
+> --- a/drivers/scsi/ufs/Kconfig
+> +++ b/drivers/scsi/ufs/Kconfig
+> @@ -38,6 +38,7 @@ config SCSI_UFSHCD
+>   	select PM_DEVFREQ
+>   	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+>   	select NLS
+> +	select BLK_DEV_BSGLIB
+>   	---help---
+>   	This selects the support for UFS devices in Linux, say Y and make
+>   	  sure that you know the name of your UFS host adapter (the card
 
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index 9f41a6f5a032..1c85b0af4dfd 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -548,34 +548,35 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
- 	return err;
- }
- 
--SYSCALL_DEFINE1(sparc_adjtimex, struct timex __user *, txc_p)
-+SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
- {
--	struct timex txc;		/* Local copy of parameter */
--	struct __kernel_timex *kt = (void *)&txc;
-+	struct __kernel_timex txc;
-+	__kernel_old_timeval *tv = (void *)&txc->time;
- 	int ret;
- 
- 	/* Copy the user data space into the kernel copy
- 	 * structure. But bear in mind that the structures
- 	 * may change
- 	 */
--	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
-+	if (copy_from_user(&txc, txc_p, sizeof(txc)))
- 		return -EFAULT;
- 
- 	/*
- 	 * override for sparc64 specific timeval type: tv_usec
- 	 * is 32 bit wide instead of 64-bit in __kernel_timex
- 	 */
--	kt->time.tv_usec = txc.time.tv_usec;
-+	kt->time.tv_usec = tv->tv_usec;
- 	ret = do_adjtimex(kt);
--	txc.time.tv_usec = kt->time.tv_usec;
-+	tv->tv_usec = kt->time.tv_usec;
- 
--	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
-+	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
- }
- 
--SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex __user *, txc_p)
-+SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,
-+		struct __kernel_timex __user *, txc_p)
- {
--	struct timex txc;		/* Local copy of parameter */
--	struct __kernel_timex *kt = (void *)&txc;
-+	struct __kernel_timex txc;
-+	__kernel_old_timeval *tv = (void *)&txc->time;
- 	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_POSIX_TIMERS)) {
-@@ -590,18 +591,18 @@ SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex _
- 	 * structure. But bear in mind that the structures
- 	 * may change
- 	 */
--	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
-+	if (copy_from_user(&txc, txc_p, sizeof(txc)))
- 		return -EFAULT;
- 
- 	/*
- 	 * override for sparc64 specific timeval type: tv_usec
- 	 * is 32 bit wide instead of 64-bit in __kernel_timex
- 	 */
--	kt->time.tv_usec = txc.time.tv_usec;
-+	kt->time.tv_usec = tv->tv_usec;
- 	ret = do_clock_adjtime(which_clock, kt);
--	txc.time.tv_usec = kt->time.tv_usec;
-+	tv->tv_usec = kt->time.tv_usec;
- 
--	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
-+	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
- }
- 
- SYSCALL_DEFINE5(utrap_install, utrap_entry_t, type,
-diff --git a/include/uapi/linux/timex.h b/include/uapi/linux/timex.h
-index 9f517f9010bb..bd627c368d09 100644
---- a/include/uapi/linux/timex.h
-+++ b/include/uapi/linux/timex.h
-@@ -57,6 +57,7 @@
- 
- #define NTP_API		4	/* NTP API version */
- 
-+#ifndef __KERNEL__
- /*
-  * syscall interface - used (mainly by NTP daemon)
-  * to discipline kernel clock oscillator
-@@ -91,6 +92,7 @@ struct timex {
- 	int  :32; int  :32; int  :32; int  :32;
- 	int  :32; int  :32; int  :32;
- };
-+#endif
- 
- struct __kernel_timex_timeval {
- 	__kernel_time64_t       tv_sec;
--- 
-2.20.0
+I do not understand the above change. Doesn't moving the BSG code into a 
+separate module remove the dependency of SCSI_UFSHCD on BLK_DEV_BSGLIB?
 
+> +static int __init ufs_bsg_init(void)
+> +{
+> +	struct list_head *hba_list = NULL;
+> +	struct ufs_hba *hba;
+> +	int ret = 0;
+> +
+> +	ufshcd_get_hba_list_lock(&hba_list);
+> +	list_for_each_entry(hba, hba_list, list) {
+> +		ret = ufs_bsg_probe(hba);
+> +		if (ret)
+> +			break;
+> +	}
+> +	ufshcd_put_hba_list_unlock();
+> +
+> +	return ret;
+> +}
+
+What if ufs_bsg_probe() succeeds for some UFS adapters but not for 
+others? Shouldn't ufs_bgs_remove() be called in that case for the 
+adapters for which ufs_bsg_probe() succeeded?
+
+> +late_initcall_sync(ufs_bsg_init);
+> +module_exit(ufs_bsg_exit);
+
+Why late_initcall_sync() instead of module_init()?
+
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index a86b0fd..7a83a8f 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -108,6 +108,22 @@
+>   		       16, 4, buf, __len, false);                        \
+>   } while (0)
+>   
+> +static LIST_HEAD(ufs_hba_list);
+> +static DEFINE_MUTEX(ufs_hba_list_lock);
+> +
+> +void ufshcd_get_hba_list_lock(struct list_head **list)
+> +{
+> +	mutex_lock(&ufs_hba_list_lock);
+> +	*list = &ufs_hba_list;
+> +}
+> +EXPORT_SYMBOL_GPL(ufshcd_get_hba_list_lock);
+
+Please make ufshcd_get_hba_list_lock() return the list_head pointer 
+instead of the above.
+
+Thanks,
+
+Bart.
