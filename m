@@ -2,209 +2,175 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93DC80D23
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5A1C80D47
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165E824718
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1946924785
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="cUlOaDnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfLMTCk (ORCPT
+        id S1728935AbfLMTWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:02:40 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37326 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728455AbfLMTCk (ORCPT
+        Fri, 13 Dec 2019 14:22:10 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39710 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbfLMTWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:02:40 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDIrfY7048799
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:02:38 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wusmm3ftp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:02:38 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 13 Dec 2019 19:02:36 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 13 Dec 2019 19:02:35 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBDJ2XqZ42139826
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 19:02:34 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E20E1A405F;
-        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F628A405B;
-        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.49.79])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Dec 2019 19:02:33 +0000 (GMT)
-Subject: Re: [PATCH resend] s390/purgatory: Make sure we fail the build if
- purgatory has missing symbols
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Philipp Rudo <prudo@linux.ibm.com>
-References: <20191212205304.191610-1-hdegoede@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 13 Dec 2019 20:02:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 13 Dec 2019 14:22:09 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c16so125038qko.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kIHxBHZ5brpnLBIeYRR4Zy+JYAJhZx+hc+o8DfZr+/0=;
+        b=cUlOaDnZdkeZLanKU3aLP1Zk7P6+nUwqXpUXG5Wy4VV4OTMlkGpuWWEqfSVH12ocLM
+         XW/RSAmDIh0aicHiA8TCP7oJWIdm3BjV+PjXtnjLEv4Vx+gYKi6UT6j4Y+TFZ6kttAjQ
+         rOcwCQitZxXydHocsR8D8uK1qftqZfS7jmgt7MiTq8B6zQX4FN1IhGpfxiU1u3TzvqNQ
+         N43RE+El1Y3SQlyrZ1fToTNWVetgMWKvIwiYNQa9mtwM//ebyVkeUgfcEIY3Ce4Gn07A
+         58t78H8dkSNt6+9GZ1L6E7IJTa06q+H2BxoPjPzdh+VqBMfV1yqxOnDyUZKjtJop8ZG3
+         51Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kIHxBHZ5brpnLBIeYRR4Zy+JYAJhZx+hc+o8DfZr+/0=;
+        b=qntacG+twUlAWxIDqYH06SPY3HgsftGzEZbmL9H3KY2Y4NHaVxXMlBL8c5tidINGcC
+         gXWOXJTN0Zc02+HHDOvdzqXDOoLCkBjND/baXNYz7x2L0AsAlGiukdSQ2iu0++xgBXJX
+         kLiN0VFhNCpWDgiTzEm5tbxqcFc4GZm/0ZMXlxdJw4F9xpqAwIeubTZDTYKVvHrY8Zw+
+         BOwGw5S4RsdvD3OE+z64wlR81vOsPCAyJK/DE8cxIMPLVBys+Y92jMqG8cAUuYIoABKL
+         Hb9uzJ6TkHSwdF/MHhq8EShV135nRqDUtGfZiipR1yZmlByco483q2DTx1rsvpJM0QT9
+         /vZQ==
+X-Gm-Message-State: APjAAAVVkZMrwgTRaZYTJkGG4ZhH7D8Y1/lN28hEPnbZBhBg2gYN9o88
+        HY9ojyCUzzHYY5QqGT6MxFtMTg==
+X-Google-Smtp-Source: APXvYqzIQGv+yc5JGtSvpf6UidQoCll4ofJa937AnUTHgdo7FLBJIiUjkYn94LuuO96ZkGf3sxfGAA==
+X-Received: by 2002:a05:620a:3cf:: with SMTP id r15mr15267665qkm.12.1576264928301;
+        Fri, 13 Dec 2019 11:22:08 -0800 (PST)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id q126sm3074257qkd.21.2019.12.13.11.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 11:22:07 -0800 (PST)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH 1/3] mm: memcontrol: fix memory.low proportional distribution
+Date:   Fri, 13 Dec 2019 14:21:56 -0500
+Message-Id: <20191213192158.188939-2-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191213192158.188939-1-hannes@cmpxchg.org>
+References: <20191213192158.188939-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20191212205304.191610-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121319-0028-0000-0000-000003C84756
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121319-0029-0000-0000-0000248B859A
-Message-Id: <31fd8562-7591-ccc0-f170-4f2d3d0eb25a@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-13_07:2019-12-13,2019-12-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 adultscore=0 mlxscore=0 mlxlogscore=945 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912130145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks applied.
+When memory.low is overcommitted - i.e. the children claim more
+protection than their shared ancestor grants them - the allowance is
+distributed in proportion to each siblings's utilized protection:
 
-Now that the build fixes have been merged I do not see a reasons to
-defer this any longer.
-I also added a Tested-by: Philipp Rudo <prudo@linux.ibm.com>
-as he successfully tested v2 in October.
+	low_usage = min(low, usage)
+	elow = parent_elow * (low_usage / siblings_low_usage)
 
+However, siblings_low_usage is not the sum of all low_usages. It sums
+up the usages of *only those cgroups that are within their memory.low*
+That means that low_usage can be *bigger* than siblings_low_usage, and
+consequently the total protection afforded to the children can be
+bigger than what the ancestor grants the subtree.
 
+Consider three groups where two are in excess of their protection:
 
-On 12.12.19 21:53, Hans de Goede wrote:
-> Since we link purgatory with -r aka we enable "incremental linking"
-> no checks for unresolved symbols are done while linking the purgatory.
-> 
-> This commit adds an extra check for unresolved symbols by calling ld
-> without -r before running objcopy to generate purgatory.ro.
-> 
-> This will help us catch missing symbols in the purgatory sooner.
-> 
-> Note this commit also removes --no-undefined from LDFLAGS_purgatory
-> as that has no effect.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Using 2 if_changed lines under a single rule does not work, then
->   1 of the 2 will always execute each build.
->   Instead add a new (unused) purgatory.chk intermediate which gets
->   linked from purgatory.ro without -r to do the missing symbols check
-> - This also fixes the check generating an a.out file (oops)
-> ---
->  arch/s390/purgatory/.gitignore |  1 +
->  arch/s390/purgatory/Makefile   | 13 ++++++++++---
->  2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
-> index 04a03433c720..c82157f46b18 100644
-> --- a/arch/s390/purgatory/.gitignore
-> +++ b/arch/s390/purgatory/.gitignore
-> @@ -1,3 +1,4 @@
->  purgatory
-> +purgatory.chk
->  purgatory.lds
->  purgatory.ro
-> diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-> index bc0d7a0d0394..13e9a5dc0a07 100644
-> --- a/arch/s390/purgatory/Makefile
-> +++ b/arch/s390/purgatory/Makefile
-> @@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD := y
->  
->  purgatory-y := head.o purgatory.o string.o sha256.o mem.o
->  
-> -targets += $(purgatory-y) purgatory.lds purgatory purgatory.ro
-> +targets += $(purgatory-y) purgatory.lds purgatory purgatory.chk purgatory.ro
->  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
->  
->  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-> @@ -26,15 +26,22 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
->  KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
->  KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
->  
-> -LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
-> +# Since we link purgatory with -r unresolved symbols are not checked, so we
-> +# also link a purgatory.chk binary without -r to check for unresolved symbols.
-> +PURGATORY_LDFLAGS := -nostdlib -z nodefaultlib
-> +LDFLAGS_purgatory := -r $(PURGATORY_LDFLAGS) -T
-> +LDFLAGS_purgatory.chk := -e purgatory_start $(PURGATORY_LDFLAGS)
->  $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
->  		$(call if_changed,ld)
->  
-> +$(obj)/purgatory.chk: $(obj)/purgatory FORCE
-> +		$(call if_changed,ld)
-> +
->  OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
->  OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
->  OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
->  OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
-> -$(obj)/purgatory.ro: $(obj)/purgatory FORCE
-> +$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
->  		$(call if_changed,objcopy)
->  
->  $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
-> 
+  A/memory.low = 10G
+  A/A1/memory.low = 10G, A/memory.current = 20G
+  A/A2/memory.low = 10G, B/memory.current = 20G
+  A/A3/memory.low = 10G, C/memory.current =  8G
+
+  siblings_low_usage = 8G (only A3 contributes)
+  A1/elow = parent_elow(10G) * low_usage(20G) / siblings_low_usage(8G) = 25G
+
+The 25G are then capped to A1's own memory.low setting, i.e. 10G. The
+same is true for A2. And A3 would also receive 10G. The combined
+protection of A1, A2 and A3 is 30G, when A limits the tree to 10G.
+
+What does this mean in practice? A1 and A2 would still be in excess of
+their 10G allowance and would be reclaimed, whereas A3 would not. As
+they eventually drop below their protection setting, they would be
+counted in siblings_low_usage again and the error would right itself.
+
+When reclaim is applied in a binary fashion - cgroup is reclaimed when
+it's above its protection, otherwise it's skipped - this could work
+actually work out just fine - although it's not quite clear to me why
+we'd introduce this error in the first place. However, since
+1bc63fb1272b ("mm, memcg: make scan aggression always exclude
+protection"), reclaim pressure is scaled to how much a cgroup is above
+its protection. As a result this calculation error unduly skews
+pressure away from A1 and A2 toward the rest of the system.
+
+Fix this by by making siblings_low_usage the sum of all protected
+memory among siblings, including those that are in excess of their
+protection.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c   |  4 +---
+ mm/page_counter.c | 12 ++----------
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c5b5f74cfd4d..874a0b00f89b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6236,9 +6236,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  * elow = min( memory.low, parent->elow * ------------------ ),
+  *                                        siblings_low_usage
+  *
+- *             | memory.current, if memory.current < memory.low
+- * low_usage = |
+- *	       | 0, otherwise.
++ * low_usage = min(memory.low, memory.current)
+  *
+  *
+  * Such definition of the effective memory.low provides the expected
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index de31470655f6..75d53f15f040 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -23,11 +23,7 @@ static void propagate_protected_usage(struct page_counter *c,
+ 		return;
+ 
+ 	if (c->min || atomic_long_read(&c->min_usage)) {
+-		if (usage <= c->min)
+-			protected = usage;
+-		else
+-			protected = 0;
+-
++		protected = min(usage, c->min);
+ 		old_protected = atomic_long_xchg(&c->min_usage, protected);
+ 		delta = protected - old_protected;
+ 		if (delta)
+@@ -35,11 +31,7 @@ static void propagate_protected_usage(struct page_counter *c,
+ 	}
+ 
+ 	if (c->low || atomic_long_read(&c->low_usage)) {
+-		if (usage <= c->low)
+-			protected = usage;
+-		else
+-			protected = 0;
+-
++		protected = min(usage, c->low);
+ 		old_protected = atomic_long_xchg(&c->low_usage, protected);
+ 		delta = protected - old_protected;
+ 		if (delta)
+-- 
+2.24.0
 
