@@ -2,146 +2,85 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDFBC79DB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C4AC79DA6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E4A247F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE83E2470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiRgSKsE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Y9roHoe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfLMRCc (ORCPT
+        id S1728391AbfLMQvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:02:32 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:43673 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfLMRCb (ORCPT
+        Fri, 13 Dec 2019 11:51:22 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36701 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbfLMQvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:02:31 -0500
-Received: by mail-qv1-f67.google.com with SMTP id p2so15803qvo.10;
-        Fri, 13 Dec 2019 09:02:31 -0800 (PST)
+        Fri, 13 Dec 2019 11:51:21 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so95601pgc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 08:51:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vUE8AEfpv1Je3ytswJ2t5UjmrKOaLm5nTOW/OGZXKqs=;
-        b=LiRgSKsEotztqVrsicsLsNUDrDyYeIVpc5+lRgzqczvL62rsuBj4Sa8kv7CHVoxoXH
-         EWf2/4n/6YSz0KEDVyfYtJTpb8F7EmGyVJR+ZshuzOr+rwiewODBxJsSOOlq9GFzmfmR
-         xbyfqPPoFwYCGFYTbxa0kspoKBUFBP8SWqe6HFH220EKZNVz5tnRGO45bF6o7uPDCsYs
-         c/oZxItM/SELe7rS2ok8whcpRv0BeIPcwpH6Sy1KO9LukZKVfqv3oXFTjiNf3iXIc7hr
-         s0ZkR9IY00n1vFjE/biRCTww+E0EzM7oNaqT4yRiQqb5w4dqYj9TQmRdhnkZeug5/rJe
-         984Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=CAKYbgJOuPrQjZzMU15duDzEPoqOHPryHWVB0LlLVJ0=;
+        b=Y9roHoe4knC/3BeSYJfMTn6bay+pT2YhyVNHvcWdl3A8J7dp63no9Ekvt1JsYnoaHY
+         vixMt2a9ZIF+VpZCiLfqaF2+Qi91TDmH48MdsevifKtcEMPwo8ThbhsPJtVU/DX3SPGT
+         hozgRBw67+xOvh61BGiu/pj8aspFRnxjXdEAx9WReUQNZcfB5mw4371fWOrp/1xZSa25
+         DjaByZ9CuvGnurGZFRES5Thm6CY+r6na325r5TRh9PVZDAykJPzB8gcpQDig6tzpk1nQ
+         gE+1JvbnCl7LRzMaO9F7wvvv0XpXmTLwYcpXgri3ros2x8HNdTjJkIbRG9NX/W5AcVjP
+         BIiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vUE8AEfpv1Je3ytswJ2t5UjmrKOaLm5nTOW/OGZXKqs=;
-        b=i/PV790HYbbvudLmDWf7VeKvmG1ePspD27a+IMIMZ3DpDa1qMe8Zw061+8PGJQ4giM
-         4WPr2OeTBmJxN+IIQ986kVmtx2K1k61N4Sil/J9ZZLVJVQel7ErR45KEkQxWF5lE1onX
-         /osmbNozDQKQ3DO7TLI6wGLxZgsuqPZdxhrXFhU33K3GNtNaL53MdTbYz+Y8JOJ4lZ+j
-         QrD2Xb7U+tuN3kV/Y2f/2/qsYbR4K05HxuwFR0MwhwSfu87QOsIXvOpyp+Wc/lMBnDds
-         E8Fb0siqBFqKETUrHMtowLYQxwTgifSkBiN+Jldev6vOC2lgYhIbpSfsg/DDb4bsHth1
-         xi9Q==
-X-Gm-Message-State: APjAAAVTrboTUMk5PcmDTh3SbpeO+d5s45o6lnF3rRD1FIWAnewgFK2W
-        YODPgxPTgtAN9zxYfltV8nuhuTO62omAxnnlkY8=
-X-Google-Smtp-Source: APXvYqxSHgQ7tT0FFNjw0FMOJb3XsIngDsE1kSkmcHPlEmXgbqA8EhfpMfQEZmwNFjBDUp4xDIjV8uTmvi+wnxrkb7A=
-X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr14796667qvb.163.1576256550460;
- Fri, 13 Dec 2019 09:02:30 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=CAKYbgJOuPrQjZzMU15duDzEPoqOHPryHWVB0LlLVJ0=;
+        b=BS86QeVP5d4o03yBAfeyp9B8qrdaqw1slTkNca+FpTfk17KUpCIdsfjdxzuD1AP9/7
+         lGJkCoZeRK40VnRagTxIL8kQ/sAjIbiV0RgSLM/N8q1xKnHCx+p4xkNmLPcjjQeFW8qo
+         Y3v682Y4lRcqK+BzbVvcDMNLN0HvgCGVX43/iGvUwkbtzsNCTTKerYSmrlB0ZUzqvQke
+         d0b/j0SYyrcvWU5OpwH+pH0pprmDiJy/lxpQ5NmXYdtMZSlLpbLmjEGz1q73vAqYY2LG
+         8kWVMsAJNiQH2dR0CIQwrZsyzaDKh2k+olSJHU7+6HUZi38EJRoRsHVR9fF/l75wi8OC
+         uyiw==
+X-Gm-Message-State: APjAAAVuarLVIKW3B2BTW0HzC70mF8aIVwM8hgN3K6RPKVDKntgFpgIm
+        kSTT8DQihMJzF4wnAasOen/sgw==
+X-Google-Smtp-Source: APXvYqx8c6YOAASRXq1y4Uky+FLljcRzDfb1EqKwF5yKxzGUufqLyOLiT0Js4vaXwqrz7WYzNKz0zQ==
+X-Received: by 2002:a62:5544:: with SMTP id j65mr381415pfb.121.1576255880888;
+        Fri, 13 Dec 2019 08:51:20 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id 91sm10649806pjq.18.2019.12.13.08.51.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Dec 2019 08:51:19 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mjourdan@baylibre.com
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 4/4] arm64: dts: meson-g12-common: add video decoder node
+In-Reply-To: <20191120111430.29552-5-narmstrong@baylibre.com>
+References: <20191120111430.29552-1-narmstrong@baylibre.com> <20191120111430.29552-5-narmstrong@baylibre.com>
+Date:   Fri, 13 Dec 2019 08:51:19 -0800
+Message-ID: <7hwob088zc.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20191201195728.4161537-1-aurelien@aurel32.net>
- <87zhgbe0ix.fsf@mpe.ellerman.id.au> <20191202093752.GA1535@localhost.localdomain>
- <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
- <20191210222553.GA4580@calabresa> <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
- <20191211160133.GB4580@calabresa> <CAFxkdAp9OGjJS1Sdny+TiG2+zU4n0Nj+ZVrZt5J6iVsS_zqqcw@mail.gmail.com>
- <20191213101114.GA3986@calabresa>
-In-Reply-To: <20191213101114.GA3986@calabresa>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 13 Dec 2019 09:02:19 -0800
-Message-ID: <CAEf4BzY-JP+vYNjwShhgMs6sJ+Bdqc8FEd19BVf8uf+jSnX1Jw@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: Fix readelf output parsing for Fedora
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Cc:     Justin Forbes <jmforbes@linuxtx.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        debian-kernel@lists.debian.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 2:11 AM Thadeu Lima de Souza Cascardo
-<cascardo@canonical.com> wrote:
->
-> Fedora binutils has been patched to show "other info" for a symbol at the
-> end of the line. This was done in order to support unmaintained scripts
-> that would break with the extra info. [1]
->
-> [1] https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
->
-> This in turn has been done to fix the build of ruby, because of checksec.
-> [2] Thanks Michael Ellerman for the pointer.
->
-> [2] https://bugzilla.redhat.com/show_bug.cgi?id=1479302
->
-> As libbpf Makefile is not unmaintained, we can simply deal with either
-> output format, by just removing the "other info" field, as it always comes
-> inside brackets.
->
-> Cc: Aurelien Jarno <aurelien@aurel32.net>
-> Fixes: 3464afdf11f9 (libbpf: Fix readelf output parsing on powerpc with recent binutils)
-> Reported-by: Justin Forbes <jmforbes@linuxtx.org>
-> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-> ---
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-I was briefly playing with it and trying to make it use nm to dump
-symbols, instead of parsing more human-oriented output of readelf, but
-somehow nm doesn't output symbols with @@LIBBPF.* suffix at the end,
-so I just gave up. So I think this one is good.
-
-This should go through bpf-next tree.
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
-
->  tools/lib/bpf/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
+> From: Maxime Jourdan <mjourdan@baylibre.com>
 >
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index defae23a0169..23ae06c43d08 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -147,6 +147,7 @@ TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
+> Add the video decoder node for the Amlogic G12A and compatible SoC.
 >
->  GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
->                            cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
-> +                          sed 's/\[.*\]//' | \
->                            awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
->                            sort -u | wc -l)
->  VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
-> @@ -213,6 +214,7 @@ check_abi: $(OUTPUT)libbpf.so
->                      "versioned in $(VERSION_SCRIPT)." >&2;              \
->                 readelf -s --wide $(BPF_IN_SHARED) |                     \
->                     cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |   \
-> +                   sed 's/\[.*\]//' |                                   \
->                     awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
->                     sort -u > $(OUTPUT)libbpf_global_syms.tmp;           \
->                 readelf -s --wide $(OUTPUT)libbpf.so |                   \
-> --
-> 2.24.0
->
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Queued for v5.6,
+
+Kevin
