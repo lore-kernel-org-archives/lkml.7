@@ -2,77 +2,115 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606F1C751F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F801C34978
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE6E246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C6624720
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269552;
+	bh=RBVHAY+CJ2XeDspL1l3fObDb/ux4BAnVyu3PtEsXzhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zDvoSOEkHLIHdiWhJZPH7s+Q5+0R2YDLgcoegJbgi0h54MhwJ/u0zyhjU7I3CT5VB
+	 A1C5NKbFnKykZk9oVaULhUhVcdAtJTTAJZ/Ci6ouh6p2p+4rv3oJyVr1Vt0WbW2X7U
+	 DCoU35BPE/TdrAOo6s7Z17OtI2TVZ0Y4w/iYXQ2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfLMQPZ (ORCPT
+        id S1728209AbfLMQTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:15:25 -0500
-Received: from mailoutvs51.siol.net ([185.57.226.242]:33399 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726404AbfLMQPY (ORCPT
+        Fri, 13 Dec 2019 11:19:05 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37299 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbfLMQTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 11:15:24 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id CDC705245A4;
-        Fri, 13 Dec 2019 17:15:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id FVEEviERtmZv; Fri, 13 Dec 2019 17:15:22 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 7DFA75245AA;
-        Fri, 13 Dec 2019 17:15:22 +0100 (CET)
-Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 19BF9524592;
-        Fri, 13 Dec 2019 17:15:22 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mchehab@kernel.org, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, hverkuil@xs4all.nl
-Cc:     gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/2] media: cedrus: hevc: Minor fixes
-Date:   Fri, 13 Dec 2019 17:15:14 +0100
-Message-Id: <20191213161516.54688-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.24.0
+        Fri, 13 Dec 2019 11:19:04 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b15so2374429lfc.4;
+        Fri, 13 Dec 2019 08:19:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Spg0GfwWFlnRUw0lvoa6ReBLhxIzcCxpK224qhBQrwk=;
+        b=fS2w9fx2/qyRZCSQ7ld1Lck5W9YGKEyko/GaYYX6zDuKFTKxUOCu6aHpYPM6/ts8A1
+         ul7fUEDNoCcdtsiQ973+hkTLseRh5wv2ZkeDw8YIXdSXWuuYuZUSAMJhvzUzuOO/zsLm
+         Akr89PDzpaRXp4ZB1mtf9yAGE6gi4vmouWVNWufSAfxFI0BqZYx7ogKVR85I3YL6MNWQ
+         b35KglaacnJtkFnNl0XKLp6wHNfQ7L51T5Q3TuleAMkidmYaAl+ytGgw/SsI+FUWRcrX
+         he4K41jJPHcdEfOP4sC404HHTi8VyA7hAAqGyxelvVh2yGjivw4B051wGzzM2refoJKd
+         E+RQ==
+X-Gm-Message-State: APjAAAW3GMI8WnEDkOixPA7WoyKNLgiX4I2MXt8cYeJ72Eb69awT/SEL
+        3qZojReauFarRlyqmFXAOn8=
+X-Google-Smtp-Source: APXvYqxnVkGEyfViuTjx4mMxFXlrRlIx6//9d0OuQRcfhBx2KniHpTnXbEebHTcjKF/40vT+3FGIaw==
+X-Received: by 2002:a05:6512:21d:: with SMTP id a29mr9741453lfo.186.1576253941800;
+        Fri, 13 Dec 2019 08:19:01 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id x13sm4778590lfe.48.2019.12.13.08.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 08:19:00 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ifnef-0000iF-Bd; Fri, 13 Dec 2019 17:19:01 +0100
+Date:   Fri, 13 Dec 2019 17:19:01 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, khilman@baylibre.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: add interrupts
+ properties
+Message-ID: <20191213161901.GZ10631@localhost>
+References: <20191213150622.14162-1-glaroque@baylibre.com>
+ <20191213150622.14162-2-glaroque@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213150622.14162-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that some HEVC videos are not decoded correctly. It turns out
-that same workaround which works for H264 also works for HEVC. Crash is
-in HEVC more noticable. Any HEVC video decoding afterwards produces only
-green screen.
+On Fri, Dec 13, 2019 at 04:06:21PM +0100, Guillaume La Roque wrote:
+> add interrupts and interrupt-names as optional properties
+> to support host-wakeup by interrupt properties instead of
+> host-wakeup-gpios.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index b5eadee4a9a7..95912d979239 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -36,7 +36,9 @@ Optional properties:
+>      - pcm-frame-type: short, long
+>      - pcm-sync-mode: slave, master
+>      - pcm-clock-mode: slave, master
+> -
+> + - interrupts: must be one, used to wakeup the host processor if
+> +   gpiod_to_irq function not supported
 
-Second patch just adds missing luma bit depth which was probably
-overlooked in initial HEVC driver.
+This is a Linux implementation detail which therefore doesn't belong in
+the binding.
 
-This was developed on top of:
-https://patchwork.linuxtv.org/cover/60729/
+I think the general rule is to prefer interrupts over gpios where we
+have a choice, but here the current binding already has a
+host-wakeup-gpios.
 
-Best regards,
-Jernej
+Not sure how best to handle that, maybe Rob knows.
 
-Jernej Skrabec (2):
-  media: cedrus: Fix decoding for some HEVC videos
-  media: cedrus: hevc: Add luma bit depth
+> + - interrupt-names: must be "host-wakeup"
+>  
+>  Example:
 
- .../staging/media/sunxi/cedrus/cedrus_h265.c  | 26 ++++++++++++++++---
- .../staging/media/sunxi/cedrus/cedrus_regs.h  |  1 +
- 2 files changed, 24 insertions(+), 3 deletions(-)
+Oh, and please keep people commenting on your patches on CC when you
+submit new versions.
 
---=20
-2.24.0
-
+Johan
