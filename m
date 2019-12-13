@@ -2,213 +2,85 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URI_NOVOWEL,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D35C5073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B703CC3276F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8B224712
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028E224712
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfLMOHm (ORCPT
+        id S1727777AbfLMOLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:07:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:60532 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727507AbfLMOHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:07:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3A39139F;
-        Fri, 13 Dec 2019 06:07:39 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AB773F52E;
-        Fri, 13 Dec 2019 06:07:34 -0800 (PST)
-Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
- TM1628/FD628/AiP1618 LED controllers
-To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
-        linux-rockchip@lists.infradead.org
-References: <20191212033952.5967-1-afaerber@suse.de>
- <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
- <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-Date:   Fri, 13 Dec 2019 14:07:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Dec 2019 09:11:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:47387 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfLMOLD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:11:03 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MqatE-1htFXk3NMO-00mcAo; Fri, 13 Dec 2019 15:10:56 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 07/12] nfsd: use time64_t in nfsd_proc_setattr() check
+Date:   Fri, 13 Dec 2019 15:10:41 +0100
+Message-Id: <20191213141046.1770441-8-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:sX4dzulNvI3GFKBUZrcox6lRFdAV/6K1BJ9TvA9ivOBNVK9j/Fq
+ HRkqj1+KlXNIMOzBQU1Xwc0Zt8X512GFwS7+50tQv4ye+TTIUFaV+tPsdzIAz6k9IoK5zQv
+ wLf5aSCwQeZZzhx0SN2yos9NOwz3b2R466i8u7lDzFbCYfMYmEXJmjelP1g3OleNKYHT+hX
+ 7UqX81fHsFigibDLRpRHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4hTU0Zhy3NQ=:bv7zUqTP1evs5iKvCSg0Lm
+ PWh+T4mOdKNjNJstivcGtjiydc7IZ3gSqHcbbPsCuoTVP+xMTWkYehmIyu1DcBjRL+ecLJ0+X
+ ZJD6hl3vEk7hFKMqESnHpTYmz3MumF2cGk7ddeNT2/utJtc4hBxS04XIUs/SV5xPYH2ZDvrAV
+ V4Zk8YSoj+98aKd3X/MklOsAEb4JJFI726yWsSywMOsHuJXvoP/1cwHgYIxP5nbnQOSdqK1df
+ MOOvxp02OsMTr4p7iiPxAQ5EOviTs30gNQO/csbivnWmSH4xhXWREApWXjdAN//PvilsYetGe
+ OE1Yi1pwNhLl2uNkSCsuPrsvXIr26+yNj7ZFvS9hJ5TpiVqZdk6ckdGbYRUlW3p/zPxgk8m3N
+ NbPovt9gt9IOGOgIKjIESqCbrHCMyqQ0yJl973vWPUzMkIV6mchAOSb5HYXU/RfRjtTP2JOAk
+ 2D2zNcQuJYp9YKWJg3YOcwqcdXKbCRZb0YIM4Zq53XJiL5YJOCojmcW3nA3ZHiOgCkfX4QhVz
+ BL7U0W/rjW6fdpVJDl3gVbiqiCDqV7SqOjYA9Yi15VTgUFwp9Mrd+ZtANRvyRlyiw+FPNqiWj
+ +06/ZeRJE4dBtPz6MXkLEmoFBtCvvqqskQJXNqxuB3mHi8MXtVaiZoCwVYDvzaoN1j7xdJT8n
+ qqheUol17GKV+sNz5q9/7lHGfQm3PAVf4WXIx1RcnTAUzQ9jc2MslG+dNEuRc7I0PZmp9h9Pu
+ Q/0gMb+f+gZnJi+lrT+OXQKtOIYJV+5cvTPpmgrXSJvgWQ6TCSwgt8R9IColqV1Nz4otLJ3wv
+ LERsNwtkT11JsIdZEaP6cb3hVo17GSdMJzzc89I2xRPmFDhBATDB/jplloCjXF3+bnBbhGk0I
+ RypZQYndZrym8+J9LvqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 8:55 pm, Andreas Färber wrote:
-> Hi Robin,
-> 
-> [- Roc He, + linux-rockchip]
-> 
-> Am 12.12.19 um 14:14 schrieb Robin Murphy:
->> On 12/12/2019 3:39 am, Andreas Färber wrote:
->>> This patch series implements the LED controllers found in some RTD1295
->>> based
->>> TV set-top boxes.
-> [...]
->>> TM1628 and related chipsets have an internal Display RAM, from which they
->>> control a two-dimensional array of LED components, often used for
->>> seven-segment displays, i.e. clock display, but also for indicators.
->>> Individual LEDs can be turned on/off, but brightness is applied globally.
->>> Some chipsets also support polling a two-dimensional key pad.
-> [...]
->>> Some more notes:
->>> * Public TM1628 V1.1 datasheet is in Chinese only and differs from the
->>>     unversioned English version found elsewhere on datasheet sites by
->>>     documenting more display modes, included here (guessed from Arabic
->>> numbers).
->>> * Public FD628 datasheet is Chinese only (guesses based on Arabic
->>> numbers).
->>>     FD623 appears to have more output lines, which would fit current
->>> data types.
->>> * AiP1618 links were all broken (404); try Google "site:szfdwdz.com"
->>> search
->>>     to actually find the documents available on their site.
->>> * Princeton PT6964 is another related LED controller with public
->>> datasheet
->>>     that I did not encounter in my TV boxes yet, thus not included here.
->>>     Datasheets are linked only for PT6959 and PT6967, but PT6964 V1.3
->>> and V1.4
->>>     are available elsewhere. PT6967 has more output lines, which my
->>> current
->>>     data types could barely hold. Maybe bump them all to u32 type right
->>> away?
->>> * TM1628 is also found on MeLE V9 TV box, to be tested.
->>> * FD628 is also found on Amlogic S905X2 based Vontar X96 Max TV box,
->>>     to be tested (once UART is soldered).
->>> * AiP1618 was found on Ava and Lake I TV boxes, to be tested.
->>> * It remained unclear to me which of these many similar chipsets was
->>> first.
->>>     My driver name is therefore based on the chip I encountered first.
->>
->> It's pretty cool to see this!
-> 
-> Glad someone else finds it useful. :)
-> 
->> My Rockchip box has an AiP1618-driven
->> display [...]
-> 
-> You don't mention the model: Does it have a mainline .dts we can extend?
-> If not, I'd ask you to get that merged into -next, then I can happily
-> pick up patches adding the LED controller for your TV box into this
-> series as it evolves. (I'm expecting at least two more RFC iterations.)
+Change to time64_t and ktime_get_real_seconds() to make the
+logic work correctly on 32-bit architectures beyond 2038.
 
-It's the Beelink A1, which we have indeed just landed a DT for - I'll 
-certainly share whatever patch I come up with. I also have one of the 
-H96 Max boxes (which I picked up out of curiosity for the mysterious 
-RK3318) with an FD6551, although I've not attacked that one with the 
-logic analyser yet to see how similar it is.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfsproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Similarly, I'm planning to drop Xnano X5 in v2, if it doesn't require a
-> respin, so that no Realtek-specific parts other than .dts node additions
-> remain here.
-> 
->> In case it helps, in my research I found that ARTSCHIP are another
->> vendor of these things with accessible datasheets[1],
-> 
-> Thanks, their HT1628 indeed looks compatible.
-> 
-> Sunmoon Microelectronics SM1628 also looks compatible.
-> http://www.chinaasic.com/product.jsp#item=other#style=27#id=138
-> 
->> and as far as I
->> could tell the command set appears to derive from (or is at least common
->> to) some old Holtek VFD controllers.
-> 
-> Hmm, HT16515 looks similar and has more lines, RAM and mode bits than I
-> prepared here.
-> https://www.holtek.com/productdetail/-/vg/ht16515
-> 
-> So I'd need to make more numbers model-dependent and allocate the
-> Display RAM buffer dynamically.
-> 
-> Whereas HT16D35A seems incompatible command-wise, and HT16528 appears to
-> be out of scope, for dot displays and with fancy embedded character map.
-> 
-> No Holtek email alias that I can quickly spot.
-> 
-> But given that I'm proposing vendor-specific compatibles just in case,
-> the main decisions will be the Kconfig symbol and module name. The
-> driver code itself we could always refactor after merging, and renaming
-> the schema file (as opposed to compatible) should also be possible.
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index aa013b736073..b25c90be29fb 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -94,7 +94,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
+ 		 * Solaris, at least, doesn't seem to care what the time
+ 		 * request is.  We require it be within 30 minutes of now.
+ 		 */
+-		time_t delta = iap->ia_atime.tv_sec - get_seconds();
++		time64_t delta = iap->ia_atime.tv_sec - ktime_get_real_seconds();
+ 
+ 		nfserr = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
+ 		if (nfserr)
+-- 
+2.20.0
 
-Yeah, I'm not sure that it really matters, as I doubt there are many 
-Linux-capable devices with a real VFD anyway; it just seemed like an 
-interesting datapoint that fell out of scouring the web trying to find 
-any evidence for which the "canonical" 1618 might be (and the Holtek 
-connection was actually a coincidence from a misidentification of the 
-ARTSCHIP part number).
-
->> If I can figure out the DT parts (which was one of the areas that
->> stalled my attempt) I'll try to have a play with this series over the
->> holidays.
-> 
-> That reminded me that I forgot to push - done in the meantime. :)
-> 
->> One thought to ponder is that I have an "88:88" display where
->> the entire middle grid is reserved for the colon (which is wired to just
->> one segment) - I'm not sure how that could be sanely described :/
-> 
-> Well, that sounds exactly like my bindings example and X9S. You'll find
-> the colon configured as LED, separate from the four digits, which don't
-> need to be contiguous due to separate reg entries per digit.
-
-Aha, yes, I should have engaged the brain a bit more on that one :)
-
-> While it may be possible to put more cleverness into text_store() to set
-> the colon as part of five-char "88:88" text, we'd likely want to blink
-> it every half second, which we should better do without updating the
-> full display text from "88:88" to "88 88". "8888" updated every minute
-> sounds less problematic.
-
-Sure - perhaps at that point text_store() could also grow some caching 
-and partial update logic to decide if writing individual grids is 
-cheaper than clocking out the whole display for a given change, but this 
-initial approach does seem good enough to start with. Lumping colons in 
-with the other miscellaneous indicators many of these displays have does 
-at least have a self-consistent logic in terms of "things that aren't 
-7-segment grids".
-
-Thanks,
-Robin.
-
-> Ugly with the colon LED is that the redone LED bindings don't yet have a
-> function defined for this, so I'm currently misusing whatever was there.
-> I should prepare a bindings addition, if we want to use an LED node.
-> 
-> Regards,
-> Andreas
-> 
->> [1]
->> http://www.artschip.com/products.asp?lx=small&anid=779&ParentName=Signal%20management%20_I_O%20Extender
->>
->>> This series is based on my not-yet-posted RTD1295 pinctrl and GPIO
->>> drivers.
->>>
->>> Latest experimental patches at:
->>> https://github.com/afaerber/linux/commits/rtd1295-next
-> [snip]
-> 
