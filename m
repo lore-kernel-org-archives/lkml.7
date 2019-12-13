@@ -2,57 +2,57 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0270CC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97424C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7D6214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBC6214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gl+emP7q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SnfBwtRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLMXqE (ORCPT
+        id S1726860AbfLMXqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:46:04 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35893 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLMXqE (ORCPT
+        Fri, 13 Dec 2019 18:46:12 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39210 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMXqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:46:04 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so2299309pfb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 15:46:04 -0800 (PST)
+        Fri, 13 Dec 2019 18:46:06 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so243436pga.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 15:46:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m3tnYNjZklrCNxszO/0kPGsUfQeQByiJ9rpXVmlPYMQ=;
-        b=Gl+emP7qUPXPO55j3ZdogAAGaBmB1tfWrfMpr9B+Ioe1vF0uy6ZqocA9OMUB5JfstB
-         2bs+j0bHQBm7QsrZOv5xBgerkhrIe0uYNSi9r/+uKT6ZXAbYeRIqfLI4sp0WwtDAjmKe
-         Ci8Ckj76NCLRfPWwogRmjjbe5zkYOVRqNL0hk=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LCB1KIVahlXQKWBS7hxxSbVh5ZcN9u97BqK9nO2uQ04=;
+        b=SnfBwtRpMms+XqhrvoTDfK3B9tOlEd29DDYcdfTbv1yQlasgMa3ncrTzHEbvqmeAXR
+         uCP98TANejscAqyK9+hOQA4UQUXHllXs9HJksbv5JDXC9xL6AnYWt4hjU7a7zAOk07UH
+         TvpiY2+9LBqOgJe74n3uu9mqTNHlxbVWy6S98=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m3tnYNjZklrCNxszO/0kPGsUfQeQByiJ9rpXVmlPYMQ=;
-        b=U3nPhFPQIO83YPDyf+9qh6MNoP34plyyvc8YyKAohl4Q/uqolqzLplgrwYHepiitX8
-         SFlJAjTDnfWNYC05tTpD/oOzkzqqdrf0dTJyiQtv1OE00GRx25e1gzT+G+fieusbi+mu
-         WESIQLQK6ICFtgJ3aL4YrwpLQt3ccGYjSarGSbGKFS0Kg1sBQ9m7Kugsy2d2tqLm2zto
-         VqMlck5wlh6OfZr+IDaF91MaLOXLvFTVrKRR0K1cBkv9pMNBpRHmIk3bfWt0nc9Cx75q
-         d4e+6w+lE4BRSQquAI6qBkjS6d8sdPkUztq63gMMVlfdZECFgoDfTiRwn0cSbzh0RjFA
-         ELLg==
-X-Gm-Message-State: APjAAAX3J8qw48yfSY4mXhHy9CbWzrNHIfwIyJpgQESLF+Cw7CWVTPXc
-        OmkYLzEp6jo/SYpS55AQSyZzOA==
-X-Google-Smtp-Source: APXvYqwBnveObOq5rcN+uDkJGNGx9NFxQRCx/ISNhTEX/rA3Xqyawp1B4t3Q0KWqNaayvlxYUUaGVg==
-X-Received: by 2002:a62:c541:: with SMTP id j62mr2389128pfg.237.1576280763829;
-        Fri, 13 Dec 2019 15:46:03 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LCB1KIVahlXQKWBS7hxxSbVh5ZcN9u97BqK9nO2uQ04=;
+        b=fTQ9JJ2GdGDa1k2MKBITWVleHszrpUzBHG53LoPcEmU8jVbYv+MNC+wNew24fTly9A
+         mWZ/lyvWl8keZodpLu7v7oPT5FWLVKLyfNb0yBW2M5zAnYBo1tbt0lmrlzrM34W2mwsD
+         sV5o3bzDomgv+ZwRyfK7FHQpvv+wsuQvF69xJhbj3zo3vQzqI1D3shOOrvI/D5VNNXVe
+         u3V+lYGPY5tjEOUiBru5EWcTQcQ3HqOb3RLrLh/4hwtFcnS9yO/PmFaNsGY2lUsExKuJ
+         kmcRhmEgo39Mu+4W39QPQnE2mWLLpUxk+eGnTRWPuuFLPa9xUAJoAZzGvxyvgO9ktiou
+         hNTQ==
+X-Gm-Message-State: APjAAAWq00QN7xBvxRaeSqgG+n3PAUjGjldKhyaUF1/RhIdsPF/9SaPu
+        vAs1FXGGkq3zA2EJXFAfursVIw==
+X-Google-Smtp-Source: APXvYqwWU0kzoE96+aLrGB9T1QDrKSljpD+TwHPMs33XMNH5KyYsirHxBbrw+ZdaseYw0W0rize4cQ==
+X-Received: by 2002:a63:106:: with SMTP id 6mr2447435pgb.190.1576280765132;
+        Fri, 13 Dec 2019 15:46:05 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id z19sm12282905pfn.49.2019.12.13.15.46.02
+        by smtp.gmail.com with ESMTPSA id z19sm12282905pfn.49.2019.12.13.15.46.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:46:03 -0800 (PST)
+        Fri, 13 Dec 2019 15:46:04 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -64,10 +64,12 @@ Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 0/9] drm/bridge: ti-sn65dsi86: Improve support for AUO B116XAK01 + other low res DP
-Date:   Fri, 13 Dec 2019 15:45:21 -0800
-Message-Id: <20191213234530.145963-1-dianders@chromium.org>
+Subject: [PATCH 1/9] drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
+Date:   Fri, 13 Dec 2019 15:45:22 -0800
+Message-Id: <20191213154448.1.Icb765d5799e9651e5249c0c27627ba33a9e411cf@changeid>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+In-Reply-To: <20191213234530.145963-1-dianders@chromium.org>
+References: <20191213234530.145963-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,64 +77,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series contains a pile of patches that was created to support
-hooking up the AUO B116XAK01 panel to the eDP side of the bridge.  In
-general it should be useful for hooking up a wider variety of DP
-panels to the bridge, especially those with lower resolution and lower
-bits per pixel.
+These two things were in one function.  Split into two.  This looks
+like it's duplicating some code, but don't worry.  This is is just in
+preparation for future changes.
 
-The overall result of this series:
-* Allows panels with fewer than 4 DP lanes hooked up to work.
-* Optimizes the link rate for panels with 6 bpp.
-* Supports trying more than one link rate when training if the main
-  link rate didn't work.
+This is intended to have zero functional change and will just make
+future patches easier to understand.
 
-It's not expected that this series will break any existing users, but
-it is possible that the patch to skip non-standard DP rates could mean
-that a panel that used to use one of these non-standard link rates
-will now run at a higher rate than it used to.  If this happens, the
-patch could be reverted or someone could figure out how to decide when
-it's OK to use the non-standard rates.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-To support the AUO B116XAK01, we could actually stop at the ("Use
-18-bit DP if we can") patch since that causes the panel to run at a
-link rate of 1.62 which works.  The patches to try more than one link
-rate were all developed prior to realizing that I could just use
-18-bit mode and were validated with that patch reverted.
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 33 +++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-The patch to try more than one rate was validated by forcing the code
-to try 2.16 GHz (but still skip 2.43 GHz, which trains but shows
-garbage on AUO B116XAK01) and seeing that we'd try 2.16 GHz (and fail)
-and then eventually pass at 2.7 GHz and show a pretty screen.
-
-These patches were tested on sdm845-cheza atop mainline as of
-2019-12-13 and also on another board (the one with AUO B116XAK01) atop
-a downstream kernel tree.
-
-This patch series doesn't do anything to optimize the MIPI link and
-only focuses on the DP link.  For instance, it's left as an exercise
-to the reader to see if we can use the 666-packed mode on the MIPI
-link and save some power (because we could lower the clock rate).
-
-I am nowhere near a display expert and my knowledge of DP and MIPI is
-pretty much zero.  If something about this patch series smells wrong,
-it probably is.  Please let know and I'll try to fix it.
-
-
-Douglas Anderson (9):
-  drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
-  drm/bridge: ti-sn65dsi86: zero is never greater than an unsigned int
-  drm/bridge: ti-sn65dsi86: Don't use MIPI variables for DP link
-  drm/bridge: ti-sn65dsi86: Config number of DP lanes Mo' Betta
-  drm/bridge: ti-sn65dsi86: Read num lanes from the DP sink
-  drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
-  drm/bridge: ti-sn65dsi86: Group DP link training bits in a function
-  drm/bridge: ti-sn65dsi86: Train at faster rates if slower ones fail
-  drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 230 +++++++++++++++++++++-----
- 1 file changed, 187 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 43abf01ebd4c..2fb9370a76e6 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -417,6 +417,24 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn_bridge *pdata)
+ 			   REFCLK_FREQ(i));
+ }
+ 
++static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
++{
++	unsigned int bit_rate_mhz, clk_freq_mhz;
++	unsigned int val;
++	struct drm_display_mode *mode =
++		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++
++	/* set DSIA clk frequency */
++	bit_rate_mhz = (mode->clock / 1000) *
++			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
++	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
++
++	/* for each increment in val, frequency increases by 5MHz */
++	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
++		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
++	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
++}
++
+ /**
+  * LUT index corresponds to register value and
+  * LUT values corresponds to dp data rate supported
+@@ -426,22 +444,16 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
+ 	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
+ };
+ 
+-static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
++static void ti_sn_bridge_set_dp_rate(struct ti_sn_bridge *pdata)
+ {
+-	unsigned int bit_rate_mhz, clk_freq_mhz, dp_rate_mhz;
+-	unsigned int val, i;
++	unsigned int bit_rate_mhz, dp_rate_mhz;
++	unsigned int i;
+ 	struct drm_display_mode *mode =
+ 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
+ 
+ 	/* set DSIA clk frequency */
+ 	bit_rate_mhz = (mode->clock / 1000) *
+ 			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
+-	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
+-
+-	/* for each increment in val, frequency increases by 5MHz */
+-	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
+-		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
+-	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+ 
+ 	/* set DP data rate */
+ 	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
+@@ -510,7 +522,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+ 			   val);
+ 
+ 	/* set dsi/dp clk frequency value */
+-	ti_sn_bridge_set_dsi_dp_rate(pdata);
++	ti_sn_bridge_set_dsi_rate(pdata);
++	ti_sn_bridge_set_dp_rate(pdata);
+ 
+ 	/* enable DP PLL */
+ 	regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 1);
 -- 
 2.24.1.735.g03f4e72817-goog
 
