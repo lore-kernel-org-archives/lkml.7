@@ -2,108 +2,140 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A9C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698E2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBD52253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF222253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CNuTiTMq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoJvGU/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbfLMB7Q (ORCPT
+        id S1731874AbfLMCD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:59:16 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48632 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfLMB7Q (ORCPT
+        Thu, 12 Dec 2019 21:03:29 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38363 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfLMCD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:59:16 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 61D2F20B7187;
-        Thu, 12 Dec 2019 17:59:15 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 61D2F20B7187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576202355;
-        bh=YxXTmKallgLBW7/eDWy6Lx19SJtawJZqEYTFJolyfhY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CNuTiTMqkeQ2MswdQVXysPfvcdmZ2cNrJnYYqac+2rU02Wh60moR8u+XAW6oERWIe
-         v2fUa6G0XMEN6ITGO38tGW8Vl6yhrvEshMCKRT4PYPb6zoMhiQ3eEZbGWXgU6IIiQk
-         dXAYW0MEXYLtWnF6XiHmz0Dw4ImpveaIdcZU597w=
-Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
- measurements
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191213004250.21132-1-nramas@linux.microsoft.com>
- <20191213004250.21132-2-nramas@linux.microsoft.com>
- <1576202134.4579.189.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
-Date:   Thu, 12 Dec 2019 17:59:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 21:03:29 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so727656pgm.5;
+        Thu, 12 Dec 2019 18:03:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=sbQiyJc/inLjRaokZh7Q8U9UkbILv57sjMdX8isP4Mo=;
+        b=GoJvGU/pGNn2G/E7yRVTN1E+5omlN/INnTODmiCukTeBCtVV93jNiI7auavjP+VNfB
+         LKgnRr0LrIWAlifLg+wn9qlbpcx5pX5DWp5PRQQP7Ls6cKQBjx2LrLq8DLpBk21Fd8ey
+         dsV8/8EZZ61gPmzFEHciUaWIgk1LGUkGxzuPiG+tAPvBE/M5npuCcN3qRIsPPPyRQr7K
+         FUwh1+V/brjSEO4pMmIZXDFGSRd8P5DaZW5m6gMnxaSKJXgjnI41DRCgJqlowmdWrvJ3
+         cyZrZutJtW3mSVFgRujqCTgKJuzeC+ymvIXoRuoz08F3C2DfWGk0PtGXIlRETRyClng3
+         6fcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sbQiyJc/inLjRaokZh7Q8U9UkbILv57sjMdX8isP4Mo=;
+        b=nPeMmsSuIqPp/qyH3/msJ/1UvooVR6BsmWK34EMt/6hSBseITRbuTj3waCBOqEgShU
+         YzbjyhqCutcJo/KPd3lPtIQwun6PDmeMcaBynqU3hr1vmkwYb/JrZ+MhM0xzKMiV5UbL
+         GR027jF3Uc5SwFkSpTb+9fOdrPLtwTOK0Qup6M2x7SVIWmQgw+Mx34yFDeWIlQEo5ayI
+         CZ00HQCZV7ZVQ9Pn6GvbG52dKiznC6DZ3UC5abi571h/aNmjmUzwFELxZD6+rvHWy/XW
+         0P5fVWM1vMJDBg/bKGKxAof7lFd4sB/CK1oiZydK3v/9aPg7jRDm1H0NdpRovUSbKrMW
+         m38Q==
+X-Gm-Message-State: APjAAAVVXqFIJ9qmrV5obh2CDEFKjZWB2iMj3EpjlS8EMDKKdfsDmcnL
+        hkOIGGD5tA7L/hT2h0ZWIlE=
+X-Google-Smtp-Source: APXvYqyCa8C9agmQfMzONvcN2uCU48yrCEeTvqttPet6mVz18Q2EdYaTOi0HVYAYkNIVj6V22w49kA==
+X-Received: by 2002:a63:5950:: with SMTP id j16mr14651502pgm.314.1576202608242;
+        Thu, 12 Dec 2019 18:03:28 -0800 (PST)
+Received: from localhost.localdomain ([163.152.162.99])
+        by smtp.gmail.com with ESMTPSA id i68sm8886098pfe.173.2019.12.12.18.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 18:03:27 -0800 (PST)
+Date:   Fri, 13 Dec 2019 11:03:17 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, marmarek@invisiblethingslab.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
+Message-ID: <20191213020317.GA3276@localhost.localdomain>
+References: <20191212052841.6734-3-suwan.kim027@gmail.com>
+ <Pine.LNX.4.44L0.1912121050130.14053-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <1576202134.4579.189.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.1912121050130.14053-100000@netrider.rowland.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 5:55 PM, Mimi Zohar wrote:
->> +/*
->> + * ima_process_queued_keys() - process keys queued for measurement
->> + *
->> + * This function sets ima_process_keys to true and processes queued keys.
->> + * From here on keys will be processed right away (not queued).
->> + */
->> +void ima_process_queued_keys(void)
->> +{
->> +	struct ima_key_entry *entry, *tmp;
->> +	LIST_HEAD(temp_ima_keys);
->> +
->> +	if (ima_process_keys)
->> +		return;
->> +
->> +	/*
->> +	 * To avoid holding the mutex when processing queued keys,
->> +	 * transfer the queued keys with the mutex held to a temp list,
->> +	 * release the mutex, and then process the queued keys from
->> +	 * the temp list.
->> +	 *
->> +	 * Since ima_process_keys is set to true, any new key will be
->> +	 * processed immediately and not be queued.
->> +	 */
->> +	INIT_LIST_HEAD(&temp_ima_keys);
->> +
->> +	mutex_lock(&ima_keys_mutex);
+On Thu, Dec 12, 2019 at 10:54:08AM -0500, Alan Stern wrote:
+> On Thu, 12 Dec 2019, Suwan Kim wrote:
 > 
-> Don't you need a test here, before setting ima_process_keys?
+> > If a transaction error happens in vhci_recv_ret_submit(), event
+> > handler closes connection and changes port status to kick hub_event.
+> > Then hub tries to flush the endpoint URBs, but that causes infinite
+> > loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
+> > "vhci_priv" in vhci_urb_dequeue() was already released by
+> > vhci_recv_ret_submit() before a transmission error occurred. Thus,
+> > vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
+> > continuously calls vhci_urb_dequeue().
+> > 
+> > The root cause of this issue is that vhci_recv_ret_submit()
+> > terminates early without giving back URB when transaction error
+> > occurs in vhci_recv_ret_submit(). That causes the error URB to still
+> > be linked at endpoint list without “vhci_priv".
+> > 
+> > So, in the case of trasnaction error in vhci_recv_ret_submit(),
+> > unlink URB from the endpoint, insert proper error code in
+> > urb->status and give back URB.
+> > 
+> > Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> > ---
+> >  drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
+> > index 33f8972ba842..dc26acad6baf 100644
+> > --- a/drivers/usb/usbip/vhci_rx.c
+> > +++ b/drivers/usb/usbip/vhci_rx.c
+> > @@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
+> >  	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
+> >  
+> >  	/* recv transfer buffer */
+> > -	if (usbip_recv_xbuff(ud, urb) < 0)
+> > -		return;
+> > +	if (usbip_recv_xbuff(ud, urb) < 0) {
+> > +		urb->status = -EPIPE;
+> > +		goto error;
+> > +	}
+> >  
+> >  	/* recv iso_packet_descriptor */
+> > -	if (usbip_recv_iso(ud, urb) < 0)
+> > -		return;
+> > +	if (usbip_recv_iso(ud, urb) < 0) {
+> > +		urb->status = -EPIPE;
+> > +		goto error;
+> > +	}
 > 
-> 	if (ima_process_keys)
-> 		return;
-> 
-> Mimi
+> -EPIPE is used for STALL.  The appropriate error code for transaction 
+> error would be -EPROTO (or -EILSEQ or -ETIME, but people seem to be 
+> settling on -EPROTO).
 
-That check is done before the comment - at the start of 
-ima_process_queued_keys().
+Thanks for the feedback. I will fix it :)
 
-+void ima_process_queued_keys(void)
-+{
-+	struct ima_key_entry *entry, *tmp;
-+	LIST_HEAD(temp_ima_keys);
-+
-+	if (ima_process_keys)
-+		return;
-
-thanks,
-  -lakshmi
+Regards,
+Suwan Kim
