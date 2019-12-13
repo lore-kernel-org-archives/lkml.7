@@ -2,100 +2,109 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39812C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6EFC3496D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F1A246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2468E246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576269384;
+	bh=WlD17jKAQ9CMe2iR0cO+7SDqqvCCeKLDgUqLXoxpIlw=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=lnI1u7wGHxVIiaqteznBHN/FawLWUHcA+iu0J0+UefsaalUUvrAuGgahg6gFT6Bk4
+	 DOTuM5KFpK2yCnQbunBQo+/DmgGbP8YU3RkkL6aQ1rsK1wxgLQUtpn+KJ9QKUBeaCD
+	 SyDgQKTdDH7HRgG+97XaoIk8aRG913LEpJ5DdFDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLMLQw (ORCPT
+        id S1726777AbfLML2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:16:52 -0500
-Received: from mga03.intel.com ([134.134.136.65]:3016 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfLMLQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:16:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 03:16:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="216609003"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 13 Dec 2019 03:16:50 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ifiwD-00080o-R0; Fri, 13 Dec 2019 13:16:49 +0200
-Date:   Fri, 13 Dec 2019 13:16:49 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     kbuild test robot <lkp@intel.com>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: WARNING: lib/test_bitmap.o(.text.unlikely+0x5c): Section
- mismatch in reference from the function bitmap_copy_clear_tail() to the
- variable .init.rodata:clump_exp
-Message-ID: <20191213111649.GU32742@smile.fi.intel.com>
-References: <201912100401.fDYi5lhU%lkp@intel.com>
+        Fri, 13 Dec 2019 06:28:50 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33168 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbfLML2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 06:28:49 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ifj7k-0004JA-4j; Fri, 13 Dec 2019 12:28:44 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH] KVM: arm/arm64: vgic-its: Fix restoration of unmapped  collections
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912100401.fDYi5lhU%lkp@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Dec 2019 11:28:43 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>, <eric.auger.pro@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <kvmarm@lists.cs.columbia.edu>
+In-Reply-To: <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
+References: <20191213094237.19627-1-eric.auger@redhat.com>
+ <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
+Message-ID: <9e9e3ed65ddf40ab72528187089e0997@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:17:03AM +0800, kbuild test robot wrote:
+Hi Zenghui,
 
-+Cc: Max for xtensa matters, perhaps he has an idea.
+On 2019-12-13 10:53, Zenghui Yu wrote:
+> Hi Eric,
+>
+> On 2019/12/13 17:42, Eric Auger wrote:
+>> Saving/restoring an unmapped collection is a valid scenario. For
+>> example this happens if a MAPTI command was sent, featuring an
+>> unmapped collection. At the moment the CTE fails to be restored.
+>> Only compare against the number of online vcpus if the rdist
+>> base is set.
+>
+> Have you actually seen a problem and this patch fixed it? To be 
+> honest,
+> I'm surprised to find that we can map a LPI to an unmapped collection 
+> ;)
+> (and prevent it to be delivered to vcpu with an 
+> INT_UNMAPPED_INTERRUPT
+> error, until someone had actually mapped the collection).
+> After a quick glance of spec (MAPTI), just as you said, this is 
+> valid.
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   e42617b825f8073569da76dc4510bfa019b1c35a
-> commit: 30544ed5de431fe25d3793e4dd5a058d877c4d77 lib/bitmap: introduce bitmap_replace() helper
-> date:   5 days ago
-> config: xtensa-randconfig-a001-20191209 (attached as .config)
-> compiler: xtensa-linux-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 30544ed5de431fe25d3793e4dd5a058d877c4d77
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=xtensa 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
+Yes, this is one of the (many) odd bits in the architecture. And there 
+is
+a bizarre wording in the MAPC description when V=0:
 
-I'm not sure I got this (esp. relation to my patch).
-The mentioned code definitely compiled for 32-bit (since only then mentioned
-bitmap API is in use). I have tried to reproduce on i386 compilation (gcc 9.x),
-but can't.
+"Behavior is unpredictable if there are interrupts that are mapped to 
+the
+specified collection, with the restriction that further translation 
+requests
+from that device are ignored."
 
-> >> WARNING: lib/test_bitmap.o(.text.unlikely+0x5c): Section mismatch in reference from the function bitmap_copy_clear_tail() to the variable .init.rodata:clump_exp
->    The function bitmap_copy_clear_tail() references
->    the variable __initconst clump_exp.
->    This is often because bitmap_copy_clear_tail lacks a __initconst
->    annotation or the annotation of clump_exp is wrong.
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+It is really odd that:
 
+- it is unpredictable to unmap the collection with mapped interrupts,
+   but mapping interrupts to an unmapped collection is fine
 
+- the notion of "interrupts from that device" doesn't match any of the
+   MAPC parameters
 
+Do you hate the GIC already? ;-)
+
+> If Marc has no objection to this fix, please add
+>
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+
+Thanks for that, I've applied it to the patch and will push out
+the update as soon as ra.kernel.org is reachable again.
+
+         M.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz is not dead. It just smells funny...
