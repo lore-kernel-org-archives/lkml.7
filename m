@@ -2,133 +2,109 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F881C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED11AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E245520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:18:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H4cnMEb7"
+	by mail.kernel.org (Postfix) with ESMTP id 61D7A206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLMVSx (ORCPT
+        id S1726781AbfLMVTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:18:53 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:32838 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfLMVSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:18:51 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKsfWh090998;
-        Fri, 13 Dec 2019 21:18:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=X+2tEe+tYzg2Fks7bhpQkOAxHyaWVZAH0k0u6MwuV5E=;
- b=H4cnMEb75s31C6RYwQ5AebrGol7SnOC1Qk5+YeI7AkILJFOJI7bwjTkhzP/lGoR3offr
- 6pT2Xb+3QrPEGC/ia4XkeVB7qdZOuf3yho59Ezkf7Gw1DKMt84PnCQQGr9/rhAFcXKJK
- y4rm6gRy9f4RdFO5lR/iYuNTioANmVlZR2Byz5acHHNJQBiKOqo4fFFYqPH+HmMcQdku
- kpeen3aaR2BP/vdGMFaNZvMm24w06eBb8I5RitF7eY2aTWuxGo5R0Y2O2mK2KMc1XJy1
- ZckE6m7TSRyhjvsP/oVX4grX+XJIlUaKnVPkL/XWwsZEUCWQFL/8FAZXza9EKMpdV4n+ 3Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wr41qud5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 21:18:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKscae067505;
-        Fri, 13 Dec 2019 21:18:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wvdtvdd6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 21:18:43 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBDLIgls012266;
-        Fri, 13 Dec 2019 21:18:42 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Dec 2019 13:18:41 -0800
-Date:   Fri, 13 Dec 2019 13:18:40 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Nick Bowler <nbowler@draconx.ca>
-Subject: Re: [PATCH v2 19/24] xfs: rename compat_time_t to old_time32_t
-Message-ID: <20191213211840.GM99875@magnolia>
-References: <20191213204936.3643476-1-arnd@arndb.de>
- <20191213205417.3871055-10-arnd@arndb.de>
+        Fri, 13 Dec 2019 16:19:04 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59024 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfLMVTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:19:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 13:19:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="297039087"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 13 Dec 2019 13:19:01 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ifsKz-0004Nt-KV; Fri, 13 Dec 2019 23:19:01 +0200
+Date:   Fri, 13 Dec 2019 23:19:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: WARNING: lib/test_bitmap.o(.text.unlikely+0x5c): Section
+ mismatch in reference from the function bitmap_copy_clear_tail() to the
+ variable .init.rodata:clump_exp
+Message-ID: <20191213211901.GL32742@smile.fi.intel.com>
+References: <201912100401.fDYi5lhU%lkp@intel.com>
+ <20191213111649.GU32742@smile.fi.intel.com>
+ <CAMo8BfKhSkHapX=mDhauZz8pAwR+1DtDNL=oE_RNhmaSQ9V_Zw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213205417.3871055-10-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912130154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=905 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912130154
+In-Reply-To: <CAMo8BfKhSkHapX=mDhauZz8pAwR+1DtDNL=oE_RNhmaSQ9V_Zw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 09:53:47PM +0100, Arnd Bergmann wrote:
-> The compat_time_t type has been removed everywhere else,
-> as most users rely on old_time32_t for both native and
-> compat mode handling of 32-bit time_t.
+On Fri, Dec 13, 2019 at 01:08:08PM -0800, Max Filippov wrote:
+> On Fri, Dec 13, 2019 at 3:16 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Dec 10, 2019 at 04:17:03AM +0800, kbuild test robot wrote:
+> >
+> > +Cc: Max for xtensa matters, perhaps he has an idea.
+> >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > > head:   e42617b825f8073569da76dc4510bfa019b1c35a
+> > > commit: 30544ed5de431fe25d3793e4dd5a058d877c4d77 lib/bitmap: introduce bitmap_replace() helper
+> > > date:   5 days ago
+> > > config: xtensa-randconfig-a001-20191209 (attached as .config)
+> > > compiler: xtensa-linux-gcc (GCC) 7.5.0
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         git checkout 30544ed5de431fe25d3793e4dd5a058d877c4d77
+> > >         # save the attached .config to linux build tree
+> > >         GCC_VERSION=7.5.0 make.cross ARCH=xtensa
+> > >
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > >
+> > > All warnings (new ones prefixed by >>):
+> >
+> > I'm not sure I got this (esp. relation to my patch).
+> > The mentioned code definitely compiled for 32-bit (since only then mentioned
+> > bitmap API is in use). I have tried to reproduce on i386 compilation (gcc 9.x),
+> > but can't.
 > 
-> Remove the last one in xfs.
+> I was able to reproduce it on xtensa with gcc-9.
+> The issue comes from the test "test_replace", specifically
+> from the following call:
+>   bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> An invariable part of the call sequence used here is instantiated in
+> the section .text.unlikely with a reference to exp2_to_exp3_mask built
+> into it and it's called from the test_replace. It looks like a compiler bug
+> to me, I'd expect this code to be emitted to the .init.text, i.e the same
+> section where the function it was hoisted from resides.
+> And why "unlikely"? This code is definitely executed.
+> 
+> I'll file a bug against gcc.
 
-Looks fine to me, assuming that compat_time_t -> old_time32_t.
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Thanks for an analysis and quick response!
 
---D
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> ---
->  fs/xfs/xfs_ioctl32.c | 2 +-
->  fs/xfs/xfs_ioctl32.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-> index c4c4f09113d3..a49bd80b2c3b 100644
-> --- a/fs/xfs/xfs_ioctl32.c
-> +++ b/fs/xfs/xfs_ioctl32.c
-> @@ -107,7 +107,7 @@ xfs_ioctl32_bstime_copyin(
->  	xfs_bstime_t		*bstime,
->  	compat_xfs_bstime_t	__user *bstime32)
->  {
-> -	compat_time_t		sec32;	/* tv_sec differs on 64 vs. 32 */
-> +	old_time32_t		sec32;	/* tv_sec differs on 64 vs. 32 */
->  
->  	if (get_user(sec32,		&bstime32->tv_sec)	||
->  	    get_user(bstime->tv_nsec,	&bstime32->tv_nsec))
-> diff --git a/fs/xfs/xfs_ioctl32.h b/fs/xfs/xfs_ioctl32.h
-> index 8c7743cd490e..053de7d894cd 100644
-> --- a/fs/xfs/xfs_ioctl32.h
-> +++ b/fs/xfs/xfs_ioctl32.h
-> @@ -32,7 +32,7 @@
->  #endif
->  
->  typedef struct compat_xfs_bstime {
-> -	compat_time_t	tv_sec;		/* seconds		*/
-> +	old_time32_t	tv_sec;		/* seconds		*/
->  	__s32		tv_nsec;	/* and nanoseconds	*/
->  } compat_xfs_bstime_t;
->  
-> -- 
-> 2.20.0
-> 
+
