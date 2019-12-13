@@ -2,111 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A7EC80D45
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78940C7E0AD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D1524784
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC05324819
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wgSZLGRU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YkA/V1Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfLMTWI (ORCPT
+        id S1728661AbfLMSqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:22:08 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45067 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbfLMTWH (ORCPT
+        Fri, 13 Dec 2019 13:46:50 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51506 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbfLMSqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:22:07 -0500
-Received: by mail-qk1-f195.google.com with SMTP id x1so93185qkl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Md8aPp7pWyGuw5IIpUNdRQgPAvuPZuMepp2Ahz2Nx4M=;
-        b=wgSZLGRUOXwzFB4dfBnzTeSU23C7S7RRsjtSNusnCzXmKwnqrtYtHchbbxHW6dqapq
-         MjghPETHNvKrpaC4P42jqcAt5wpcqzU0OADzTYo1e7xY99FcQTby3wlOrGvEBtpkc3L2
-         6G0T1SS8d+6LQjg38Y2yKe6cLvZylqzSJ+aEhVQjCpBshBp3/jeI6QsuKw3DcOyxqTBC
-         MsKge1RHa22f8HtCjtNI02qMb+YOCDmCOgVfeMTTv/2eA/4D6h9d1lEZPJxI6dUoIiQa
-         sp8jbhVfvh+id58flVOEQZM5L+C5XnCBhhgjSG85RPGD9hI6Pm1nbl37bI40mNck5b3M
-         gQpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Md8aPp7pWyGuw5IIpUNdRQgPAvuPZuMepp2Ahz2Nx4M=;
-        b=LdkOvdRCJ1DlpmQS0vARkzEWSEtHsojhfHwnf7AgwGvZ8LJ+uiXZTcKPX/nLaB38RC
-         NTCdfRcLODe/R9diwNpvX+CSYSOx5/zwg4iIjeVVtxjlS9cS2apyevGyQ9T1Tefe9yzZ
-         drUe9NaJET1pBcs+cl+EtdFkcUbm70oyjLXnH28aLLSL/zoersbjzbOH4ATLuR0Bm/4I
-         ekNcvnxUubjb+9c/vmrFu5+zDLmp+4cVjfuk55WcjpFNCT4WRsBaryHQ9dBVhkZA4XnW
-         roQprgdz2JqVqzBuX0PanW7jRGoXa4NzAzAs745hNIFvYBE3SzbIN7CBCUwYlyDdlQWa
-         hwjg==
-X-Gm-Message-State: APjAAAVtfg78tEyX2AlUYFfqG5dDiM2y5iib8Zzd5vuGv4NtEjKaTI+0
-        OCi/WaZACNUc+ZbpoDX8mHdoBQ==
-X-Google-Smtp-Source: APXvYqw3FXp7YEWHaxT92Q3RIcSBkI/2b737GDnuzflnKDpEga0bi1FPxsejP17D7pOITWtyao4ogA==
-X-Received: by 2002:ae9:c112:: with SMTP id z18mr6555577qki.145.1576264926538;
-        Fri, 13 Dec 2019 11:22:06 -0800 (PST)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id c37sm3735674qta.56.2019.12.13.11.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:22:05 -0800 (PST)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 0/3] mm: memcontrol: recursive memory protection
-Date:   Fri, 13 Dec 2019 14:21:55 -0500
-Message-Id: <20191213192158.188939-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.24.0
+        Fri, 13 Dec 2019 13:46:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k6bX98yPAK/DWwqLyqs0Jt4qhMgt0hIUQCq2lotOApw=; b=YkA/V1SrXrgr0WXo9DcHht8QV
+        TqqvJGWVNJ6H22xf5/TmBH5JgYQ+V8YnsfttRvffykjeXO/T0IJaOx6TfbpGuJmbI20AShiBsLviH
+        Bx+S36f+y68qo6Gtjin0PdmZCwQwIafgVKXbpaChYxWwD7Kypcwa/WBmNgNq6Tm5lEU2xDq5US6wi
+        RhYQnyNqDrFfqXBY9Akut+5Wcg4IoqT2d4eKWwvWy+vpOzwMNJCJ6l3au5yMxCWC3JR2tgQcD/dE1
+        rjVZ65tfajlnPupA8sseaU5pKyx+UtyJVZDZ+pL4RdH9iVO/BvHjnp5H/rnJq3lZ666WrEuCYCMk1
+        Ei24SjF4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifpxG-000125-Ir; Fri, 13 Dec 2019 18:46:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E5C03058B4;
+        Fri, 13 Dec 2019 19:45:00 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 232B829D73AB4; Fri, 13 Dec 2019 19:46:21 +0100 (CET)
+Date:   Fri, 13 Dec 2019 19:46:21 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
+Message-ID: <20191213184621.GG2844@hirez.programming.kicks-ass.net>
+References: <20191213153553.GE20583@krava>
+ <20191213112438.773dff35@gandalf.local.home>
+ <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
+ <20191213121118.236f55b8@gandalf.local.home>
+ <20191213180223.GE2844@hirez.programming.kicks-ass.net>
+ <20191213132941.6fa2d1bd@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213132941.6fa2d1bd@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current memory.low (and memory.min) semantics require protection
-to be assigned to a cgroup in an untinterrupted chain from the
-top-level cgroup all the way to the leaf.
+On Fri, Dec 13, 2019 at 01:29:41PM -0500, Steven Rostedt wrote:
+> On Fri, 13 Dec 2019 19:02:23 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 
-In practice, we want to protect entire cgroup subtrees from each other
-(system management software vs. workload), but we would like the VM to
-balance memory optimally *within* each subtree, without having to make
-explicit weight allocations among individual components. The current
-semantics make that impossible.
+> > Your ring buffer was so generic that I gave up trying to use it after
+> > trying for days :-( (the fundamental problem was that it was impossible
+> > to have a single cpu buffer; afaik that is still true today)
+> 
+> Yeah, but that could have been fixed, and the only reason it's not
+> today, is because it requires more overhead to do so.
+> 
+> IIRC, the main reason that you didn't use it then, is because it wasn't
+> fully lockless at the time (it is today), and you couldn't use it from
+> NMI context.
 
-This patch series extends memory.low/min such that the knobs apply
-recursively to the entire subtree. Users can still assign explicit
-protection to subgroups, but if they don't, the protection set by the
-parent cgroup will be distributed dynamically such that children
-compete freely - as if no memory control were enabled inside the
-subtree - but enjoy protection from neighboring trees.
-
-Patch #1 fixes an existing bug that can give a cgroup tree more
-protection than it should receive as per ancestor configuration.
-
-Patch #2 simplifies and documents the existing code to make it easier
-to reason about the changes in the next patch.
-
-Patch #3 finally implements recursive memory protection semantics.
-
-Because of a risk of regressing legacy setups, the new semantics are
-hidden behind a cgroup2 mount option, 'memory_recursiveprot'.
-
-More details in patch #3.
-
- Documentation/admin-guide/cgroup-v2.rst |  11 ++
- include/linux/cgroup-defs.h             |   5 +
- kernel/cgroup/cgroup.c                  |  17 ++-
- mm/memcontrol.c                         | 241 +++++++++++++++++++-----------
- mm/page_counter.c                       |  12 +-
- 5 files changed, 190 insertions(+), 96 deletions(-)
+What I remember is that I couldn't get a single cpu buffer, the whole
+per-cpu stuff was mangled in at the wrong layer. But who knows, my
+memory is faulty.
 
 
+> > How about we rename both? I'm a bit adverse to long names, so how about
+> > we rename the perf one to perf_buffer and the trace one to trace_buffer?
+> 
+> I'm fine with this idea! Now what do we call the ring buffer that
+> tracing uses, as it is not specific for tracing, it was optimized for
+> splicing. But sure, I can rename it to trace_buffer. I just finished
+> renaming perf's...
+> 
+> Thinking about this, perhaps we should remove the word "ring" from
+> both. That is:
+> 
+>   perf_buffer and trace_buffer ?
+
+That's what I just proposed, right? So ACK on that ;-)
