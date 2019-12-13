@@ -2,152 +2,190 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A21BC3403C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72ACC34032
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443E6246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC034246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N28oMX0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfLMPVm (ORCPT
+        id S1727746AbfLMPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:42 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:54329 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727898AbfLMPVk (ORCPT
+        Fri, 13 Dec 2019 10:20:23 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55593 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfLMPUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:21:40 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 13 Dec 2019 17:21:35 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id xBDFLXVY023139;
-        Fri, 13 Dec 2019 10:21:33 -0500
-Received: (from lsun@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id xBDFLWLx027329;
-        Fri, 13 Dec 2019 10:21:32 -0500
-From:   Liming Sun <lsun@mellanox.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>
-Cc:     Liming Sun <lsun@mellanox.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/mellanox: fix the mlx-bootctl sysfs
-Date:   Fri, 13 Dec 2019 10:21:24 -0500
-Message-Id: <1576250484-27291-1-git-send-email-lsun@mellanox.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+        Fri, 13 Dec 2019 10:20:23 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so6784275wmj.5;
+        Fri, 13 Dec 2019 07:20:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IyM9kYryGwhS/vfw2Mg4/Xx3FqaSXsAW203JftzNDs0=;
+        b=N28oMX0/frD35kBPCdODSXIneJVNs1piLH+1pf5vlECwg/XmdCWl9aKoeRPWGjYzFR
+         4lr5StryK5t51Q41QZyl2qz0JADZ0tqpK7k0i0gXbsw69ldYS92j676yE7Edq7PyJ5rt
+         B13QJHKGK/QfHYMYp7EGfvfHlpM4IO5nfpuikdQlUYj8ZGFNHuskv+OrDWrfYTCSFC7Q
+         pTGPgBgL/nDypJcr1Ts4nYzA80Fxh9+4mpIZizmvYjq84k1PztNVBd9eQnyjPp1Ay0a3
+         vXSlPYpjBZ/eHXyW0qrQyaUjHIrBi90tFN1aR/WnyRm7CPlX6JsrOzbLvdVjc1+vGKVF
+         vjnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IyM9kYryGwhS/vfw2Mg4/Xx3FqaSXsAW203JftzNDs0=;
+        b=tT3wXTxlk6f7KrfGSzcxdmyJYDRKTvnL0hXTVGv9pas2GYj2gbNaz5KqR7PIuY3HEz
+         11Ehj1csevtLB4womjbXqfAEYR7qsDWU/DzbuGSUx4jhhr3F3W3l0/dKGgiccy4gDnz5
+         1VR3tdydC8FaNCv+l54ifzQmLipaHDX8CA/RIKtugxbYfbvNr5gYhetcGBScIdilvy2N
+         KElNNn3b/craP/EHW2mQNlBsSdH7y6DBw/rAY7EPP6WZeLnvkKkPzVbAa16mDKtthovm
+         hdL+iD8anaJB6oG4BW5M6cbyXB6J4DFc9aejDsWZy+sDgQmuz4mCljIG6DCidSPYVfp4
+         EiQg==
+X-Gm-Message-State: APjAAAURI4407mGYAEUsz2B2CgyhMXMdgb5eOSLOkmvLZgzDSVsIzBdC
+        xEHnCtFP8mDEeTZLsnm31z8=
+X-Google-Smtp-Source: APXvYqx9j6cHiFKuIvTAZD33wJm3bj0hty8LlcLFoWEHTfNTBH1O47z2QWNQohvK+Dlm66pSt3k1SQ==
+X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr3871453wmk.52.1576250419664;
+        Fri, 13 Dec 2019 07:20:19 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id y20sm9932789wmi.25.2019.12.13.07.20.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 07:20:18 -0800 (PST)
+Date:   Fri, 13 Dec 2019 16:20:17 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] i2c: tegra: Support atomic transfers
+Message-ID: <20191213152017.GA293199@ulmo>
+References: <20191212233428.14648-1-digetx@gmail.com>
+ <20191212233428.14648-2-digetx@gmail.com>
+ <20191213151208.GC222809@ulmo>
+ <5a2a9cef-f4ed-c5a4-1f35-c89c3b5106a6@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
+In-Reply-To: <5a2a9cef-f4ed-c5a4-1f35-c89c3b5106a6@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow-up commit for the sysfs attributes to change
-from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-In such case, it's better to point the sysfs path to the device
-itself instead of the driver. This commit adds the missing
-sysfs_create_group() so the attributes can be created under the
-device. The ABI document is also updated.
 
-Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
-v1->v2: Added the Fixes tag according to Andy's comment.
-v1: Initial version.
----
- Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
- drivers/platform/mellanox/mlxbf-bootctl.c                 | 15 +++++++++++++++
- 2 files changed, 20 insertions(+), 5 deletions(-)
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-index c65a805..401d202 100644
---- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-+++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-@@ -1,4 +1,4 @@
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -10,7 +10,7 @@ Description:
- 		  GA Non-Secured - Non-Secure chip and not able to change state
- 		  RMA - Return Merchandise Authorization
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
-+What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -19,7 +19,7 @@ Description:
- 		to reboot the chip and recover it to the old state if the new
- 		boot partition fails.
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -30,7 +30,7 @@ Description:
- 		  emmc - boot from the onchip eMMC
- 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -44,7 +44,7 @@ Description:
- 		  swap_emmc - swap the primary / secondary boot partition
- 		  none - cancel the action
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 61753b6..9482eab 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -282,9 +282,16 @@ static bool mlxbf_bootctl_guid_match(const guid_t *guid,
- static int mlxbf_bootctl_probe(struct platform_device *pdev)
- {
- 	struct arm_smccc_res res = { 0 };
-+	struct device *dev = &pdev->dev;
- 	guid_t guid;
- 	int ret;
- 
-+	ret = sysfs_create_group(&dev->kobj, &mlxbf_bootctl_group);
-+	if (ret) {
-+		dev_err(dev, "failed to create attributes, err=%d\n", ret);
-+		return ret;
-+	}
-+
- 	/* Ensure we have the UUID we expect for this service. */
- 	arm_smccc_smc(MLXBF_BOOTCTL_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
- 	guid_parse(mlxbf_bootctl_svc_uuid_str, &guid);
-@@ -305,8 +312,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int mlxbf_bootctl_remove(struct platform_device *pdev)
-+{
-+	sysfs_remove_group(&pdev->dev.kobj, &mlxbf_bootctl_group);
-+
-+	return 0;
-+}
-+
- static struct platform_driver mlxbf_bootctl_driver = {
- 	.probe = mlxbf_bootctl_probe,
-+	.remove = mlxbf_bootctl_remove,
- 	.driver = {
- 		.name = "mlxbf-bootctl",
- 		.groups = mlxbf_bootctl_groups,
--- 
-1.8.3.1
+On Fri, Dec 13, 2019 at 06:15:12PM +0300, Dmitry Osipenko wrote:
+> 13.12.2019 18:12, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Fri, Dec 13, 2019 at 02:34:26AM +0300, Dmitry Osipenko wrote:
+> >> System shutdown may happen with interrupts being disabled and in this =
+case
+> >> I2C core rejects transfers if atomic transfer isn't supported by drive=
+r.
+> >>
+> >> There were several occurrences where I found my Nexus 7 completely
+> >> discharged despite of being turned off and then one day I spotted this=
+ in
+> >> the log:
+> >>
+> >>  reboot: Power down
+> >>  ------------[ cut here ]------------
+> >>  WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40 i2c_transfer+0x95=
+/0x9c
+> >>  No atomic I2C transfer handler for 'i2c-1'
+> >>  Modules linked in: tegra30_devfreq
+> >>  CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.4.0-next-20191202-0=
+0120-gf7ecd80fb803-dirty #3195
+> >>  Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> >>  [<c010e4b5>] (unwind_backtrace) from [<c010a0fd>] (show_stack+0x11/0x=
+14)
+> >>  [<c010a0fd>] (show_stack) from [<c09995e5>] (dump_stack+0x85/0x94)
+> >>  [<c09995e5>] (dump_stack) from [<c011f3d1>] (__warn+0xc1/0xc4)
+> >>  [<c011f3d1>] (__warn) from [<c011f691>] (warn_slowpath_fmt+0x61/0x78)
+> >>  [<c011f691>] (warn_slowpath_fmt) from [<c069a8dd>] (i2c_transfer+0x95=
+/0x9c)
+> >>  [<c069a8dd>] (i2c_transfer) from [<c05667f1>] (regmap_i2c_read+0x4d/0=
+x6c)
+> >>  [<c05667f1>] (regmap_i2c_read) from [<c0563601>] (_regmap_raw_read+0x=
+99/0x1cc)
+> >>  [<c0563601>] (_regmap_raw_read) from [<c0563757>] (_regmap_bus_read+0=
+x23/0x38)
+> >>  [<c0563757>] (_regmap_bus_read) from [<c056293d>] (_regmap_read+0x3d/=
+0xfc)
+> >>  [<c056293d>] (_regmap_read) from [<c0562d3b>] (_regmap_update_bits+0x=
+87/0xc4)
+> >>  [<c0562d3b>] (_regmap_update_bits) from [<c0563add>] (regmap_update_b=
+its_base+0x39/0x50)
+> >>  [<c0563add>] (regmap_update_bits_base) from [<c056fd39>] (max77620_pm=
+_power_off+0x29/0x2c)
+> >>  [<c056fd39>] (max77620_pm_power_off) from [<c013bbdd>] (__do_sys_rebo=
+ot+0xe9/0x170)
+> >>  [<c013bbdd>] (__do_sys_reboot) from [<c0101001>] (ret_fast_syscall+0x=
+1/0x28)
+> >>  Exception stack(0xde907fa8 to 0xde907ff0)
+> >>  7fa0:                   00000000 00000000 fee1dead 28121969 4321fedc =
+00000000
+> >>  7fc0: 00000000 00000000 00000000 00000058 00000000 00000000 00000000 =
+00000000
+> >>  7fe0: 0045adf0 bed9abb8 004444a0 b6c666d0
+> >>  ---[ end trace bdd18f87595b1a5e ]---
+> >>
+> >> The atomic transferring is implemented by enforcing PIO mode for the
+> >> transfer and by polling interrupt status until transfer is completed or
+> >> failed.
+> >>
+> >> Now system shuts down properly every time.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/i2c/busses/i2c-tegra.c | 95 +++++++++++++++++++++++++++++++---
+> >>  1 file changed, 88 insertions(+), 7 deletions(-)
+> >=20
+> > I ran this on the test farm and the results are all green, so:
+> >=20
+> > Tested-by: Thierry Reding <treding@nvidia.com>
+> >=20
+>=20
+> Thanks!
+>=20
+> Does the farm test board's shut down by verifying the
+> hardware's power state?
 
+No, that's not something we test. I was primarily running this to make
+sure we don't regress anywhere else.
+
+Thierry
+
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3zrDEACgkQ3SOs138+
+s6GYQQ//ahbs76xzIAUlts/MDie7XTbSsoyXAOp2kMoEfIn0nVo4ewTgmpx05ekN
+Rw18GGGzFBjoLIpJLBclbKFrtyqq8Ztim+qoWdonDKDTGkTsXajen0tv6sjvQf8r
+10eAPZ2MA0mVIUww/YAVace6Ao/WisHJ4xN9CgHAkCdKw2QCnl4C4RAqD2QK5Ks/
+znryFOsJIZbHyVRT/KnaqFc765E9S6UMGh2kqkMc8WjZp+cjuFq2IfmSG+sQr09H
++LVL8HEJuBvVJTf38CT4hzlqJEXRYFwFcYpks/p+uefhfE51O9BCcEir+TeH8crc
+1rbMXtuOFIrs2lU5l2u9dOBtd7qQxh0cbBf0Qvwmb2doZR8w4Mz7bAI07UB+OeSi
+BeZBzheqo4/USxLqnhoBoUryFtJ60m8P49I80mIcmVUYPlEZEisszAW7j9eV//zE
+3YXwZRDv6P5DqmZ3saXF4jkYeb8ZDWrfwQDsoXEgoYhanjZfkM3uC6wNtwXth/iN
+/2QQN/+nmwoF3oKCBYao7u+KynYAhv9tkT1kmVtojXfGqSqCfJVs4+CVoc/SfftG
+nkb6zEsH2aSfAH1LJCJodukRrTAbOoyVBmqB/BCc2NHkLLOxvP9zsc+1TfIC7Fkw
+qLyMwgRrkVd6No9/0Y3Yje4tblRxM1SuGsp7RKUibHkQIO5dStQ=
+=SwoH
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
