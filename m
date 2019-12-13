@@ -2,134 +2,123 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346E7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 11:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D8C3B181
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059392077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 11:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gf5bZUfC"
+	by mail.kernel.org (Postfix) with ESMTP id 2F00B246BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLMLGq (ORCPT
+        id S1726752AbfLMLIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:06:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39908 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726029AbfLMLGp (ORCPT
+        Fri, 13 Dec 2019 06:08:20 -0500
+Received: from outbound-smtp36.blacknight.com ([46.22.139.219]:54814 "EHLO
+        outbound-smtp36.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726691AbfLMLIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:06:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576235204;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Crmf5u8UvQ4Fiv2iDfiUjbDLUFVVvKN850I3N8dlMLg=;
-        b=gf5bZUfCKh2TE1I0UZmkYvlBnd9iNt3vlOcVRkhJ8nVWxsp++wfuaAGo+y/PH3jiAHzZJn
-        IMrbb84SZtV00f3KLQF/8adq5nlkrDfboqUNbyqn+moJQeYjnFEQmXP2YDmHVMcD2EiF+O
-        E71xYewy7yYCF7Dtqo2gDe7he7udonQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-12UsN48CPvy5oIC1W_oLig-1; Fri, 13 Dec 2019 06:06:41 -0500
-X-MC-Unique: 12UsN48CPvy5oIC1W_oLig-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DAD218B5FA9;
-        Fri, 13 Dec 2019 11:06:39 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 494E560BE1;
-        Fri, 13 Dec 2019 11:06:37 +0000 (UTC)
-Subject: Re: [PATCH] KVM: arm/arm64: vgic-its: Fix restoration of unmapped
- collections
-To:     Zenghui Yu <yuzenghui@huawei.com>, eric.auger.pro@gmail.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu
-References: <20191213094237.19627-1-eric.auger@redhat.com>
- <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <604a28ab-3a4a-4b9f-a9fa-719edc915d0d@redhat.com>
-Date:   Fri, 13 Dec 2019 12:06:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 13 Dec 2019 06:08:20 -0500
+Received: from mail.blacknight.com (unknown [81.17.254.26])
+        by outbound-smtp36.blacknight.com (Postfix) with ESMTPS id BB7F6CF9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:08:17 +0000 (GMT)
+Received: (qmail 3412 invoked from network); 13 Dec 2019 11:08:17 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Dec 2019 11:08:17 -0000
+Date:   Fri, 13 Dec 2019 11:08:06 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
+        konrad.wilk@oracle.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Subject: Re: [PATCH v15 0/7] mm / virtio: Provide support for free page
+ reporting
+Message-ID: <20191213110806.GA3178@techsingularity.net>
+References: <20191205161928.19548.41654.stgit@localhost.localdomain>
+ <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On Fri, Dec 13, 2019 at 11:00:42AM +0100, David Hildenbrand wrote:
+> > A brief history on the background of free page reporting can be found at:
+> > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
+> > 
+> > Changes from v13:
+> > https://lore.kernel.org/lkml/20191105215940.15144.65968.stgit@localhost.localdomain/
+> > Rewrote core reporting functionality
+> >   Merged patches 3 & 4
+> >   Dropped boundary list and related code
+> >   Folded get_reported_page into page_reporting_fill
+> >   Folded page_reporting_fill into page_reporting_cycle
+> > Pulled reporting functionality out of free_reported_page
+> >   Renamed it to __free_isolated_page
+> >   Moved page reporting specific bits to page_reporting_drain
+> > Renamed phdev to prdev since we aren't "hinting" we are "reporting"
+> > Added documentation to describe the usage of unused page reporting
+> > Updated cover page and patch descriptions to avoid mention of boundary
+> > 
+> > Changes from v14:
+> > https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
+> > Renamed "unused page reporting" to "free page reporting"
+> >   Updated code, kconfig, and patch descriptions
+> > Split out patch for __free_isolated_page
+> >   Renamed function to __putback_isolated_page
+> > Rewrote core reporting functionality
+> >   Added logic to reschedule worker in 2 seconds instead of run to completion
+> >   Removed reported_pages statistics
+> >   Removed REPORTING_REQUESTED bit used in zone flags
+> >   Replaced page_reporting_dev_info refcount with state variable
+> >   Removed scatterlist from page_reporting_dev_info
+> >   Removed capacity from page reporting device
+> >   Added dynamic scatterlist allocation/free at start/end of reporting process
+> >   Updated __free_one_page so that reported pages are not always added to tail
+> >   Added logic to handle error from report function
+> > Updated virtio-balloon patch that adds support for page reporting
+> >   Updated patch description to try and highlight differences in approaches
+> >   Updated logic to reflect that we cannot limit the scatterlist from device
+> 
+> Last time Mel said
+> 
+> "Ok, I'm ok with how this hooks into the allocator as the overhead is
+> minimal. However, the patch itself still includes a number of
+> optimisations instead of being a bare-boned implementation of the
+> feature with optimisations layered on top."
+> 
 
-On 12/13/19 11:53 AM, Zenghui Yu wrote:
-> Hi Eric,
->=20
-> On 2019/12/13 17:42, Eric Auger wrote:
->> Saving/restoring an unmapped collection is a valid scenario. For
->> example this happens if a MAPTI command was sent, featuring an
->> unmapped collection. At the moment the CTE fails to be restored.
->> Only compare against the number of online vcpus if the rdist
->> base is set.
->=20
-> Have you actually seen a problem and this patch fixed it?
+I didn't get the chance to take a close look as I'm trying to clear as
+much as possible from my table on the run-up to Christmas so I don't come
+back to a disaster inbox. I also noted that the Acks for earlier patches
+were not included so I was uncertain if doing a full review would still
+be a good use of time when time was tight.
 
-It is not with a linux guest but with kvm-unit-test.
+That said, some optimisations are still included but much reduced. For
+example, list rotations are still there but it's very straight-forward.
+The refcount is gone which is good and replaced by a state, which could be
+be better documented, but is more straight forward and the zone->lock is
+back protecting the free lists primarily and not zone metadata or prdev
+metadata (at least not obviously). I didn't put in the time to see if
+the atomic_set in page_reporting_process() is ok or whether state could
+be lost but I *think* it's ok because it should be called from just one
+workqueue request and they shouldn't be stacked. A comment there explaining
+why atomic_set is definitely correct would be helpful.
 
- To be honest,
-> I'm surprised to find that we can map a LPI to an unmapped collection ;=
-)
-> (and prevent it to be delivered to vcpu with an INT_UNMAPPED_INTERRUPT
-> error, until someone had actually mapped the collection).
-> After a quick glance of spec (MAPTI), just as you said, this is valid.
->=20
-> If Marc has no objection to this fix, please add
->=20
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Thank you for the review.
-
-Eric
->=20
->=20
-> Thanks,
-> Zenghui
->=20
->>
->> Cc: stable@vger.kernel.org # v4.11+
->> Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table
->> save/restore")
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->> ---
->> =C2=A0 virt/kvm/arm/vgic/vgic-its.c | 3 ++-
->> =C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its=
-.c
->> index 98c7360d9fb7..17920d1b350a 100644
->> --- a/virt/kvm/arm/vgic/vgic-its.c
->> +++ b/virt/kvm/arm/vgic/vgic-its.c
->> @@ -2475,7 +2475,8 @@ static int vgic_its_restore_cte(struct vgic_its
->> *its, gpa_t gpa, int esz)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 target_addr =3D (u32)(val >> KVM_ITS_CT=
-E_RDBASE_SHIFT);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 coll_id =3D val & KVM_ITS_CTE_ICID_MASK=
-;
->> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (target_addr >=3D atomic_read(&kvm->onli=
-ne_vcpus))
->> +=C2=A0=C2=A0=C2=A0 if (target_addr !=3D COLLECTION_NOT_MAPPED &&
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 target_addr >=3D atomic_re=
-ad(&kvm->online_vcpus))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 collection =3D find_collection(i=
-ts, coll_id);
->>
->=20
-
+I'm inclined to decide that yes, this version is potentially ok as a
+bare minimum but didn't put in the time to be 100% sure.
+ 
+-- 
+Mel Gorman
+SUSE Labs
