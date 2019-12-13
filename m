@@ -2,183 +2,204 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681E3C80D21
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627FFC4D2E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C75224718
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269650;
-	bh=/EvEh1E9wFwFKbgrjOrVViLZY6/9YL7B+khY7dBrn/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ynqkR/ieqwZ2iG+LYprqS3EOBJx56LVWIcPTN7Fzsur2+kN0rqrRFBz2tPLpj+Mbc
-	 g5w7EfEU7DG0dvcEU6ieSMIXVa9V9i4gpSZqJpwZn6Psr8FQ5v5nezF0vViLXCKlsM
-	 WZ7tB7OzKVtN5+INzuuMUSxW9xlFqH61Nr2xgJ9c=
+	by mail.kernel.org (Postfix) with ESMTP id 885F92477D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="V8hTwpNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfLMTCD (ORCPT
+        id S1729006AbfLMUFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:02:03 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33254 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbfLMTCD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:02:03 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v140so1673847oie.0;
-        Fri, 13 Dec 2019 11:02:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2XdeKtI0YQlIdxephxhveyyskN7+C9/UjeBuKo3UXnA=;
-        b=ihrbPpTpwm9ABq5vgD5GK0bTAJXNLa3wdV2xdJrQgduGnQhnBNoiLx3Nu3QNtVKLET
-         zJM3pJ/lktGafG6SdbUt0GgN1XnQPdIxmleRDJ6KXsxh63HrdvzyHokupKFTZzvvDXzD
-         j3QDnNewtHchha7Gh2n2BYNUxzmXAtPFQ2VC7K0qE9LOnQkwN4uruaN/gRXTAhnUKM2L
-         6W9VgAYJdHyXvDZJTpqCPE9yVK/ZtaOgxc2IrzSGOJTatrOBJoAO+VadohhIp/rjiVYe
-         SZw7M8seGvCd2/EwnVsdiG8ZqnAeHkM8Nv2oOX5DacTbW9s6yiJgbd3tPFYZTrgqpL/Y
-         krIw==
-X-Gm-Message-State: APjAAAVk7x5YR8+pYP15JzxpWVlPHj3XAwmVTWUA9xtO65/+nX21jjfV
-        9YX6GPgdhOmSQm7cFDIWHit9YoU=
-X-Google-Smtp-Source: APXvYqw8UMim545Km3t4cYb2yWB3l/jkydMfF9IZ1540YOrSblxxasMA+XzaDkAFtvgcqL4kI0gBlg==
-X-Received: by 2002:a05:6808:6c5:: with SMTP id m5mr7214700oih.143.1576263722041;
-        Fri, 13 Dec 2019 11:02:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b3sm3542692oie.25.2019.12.13.11.02.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:02:01 -0800 (PST)
-Date:   Fri, 13 Dec 2019 13:02:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: Document JZ47xx VPU auxiliary
- processor
-Message-ID: <20191213190200.GA11267@bogus>
-References: <20191210164014.50739-1-paul@crapouillou.net>
+        Fri, 13 Dec 2019 15:05:06 -0500
+Received: from mail-eopbgr00072.outbound.protection.outlook.com ([40.107.0.72]:46052
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728736AbfLMUFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 15:05:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JEgQjzZdmkxEXGGlfr4iXc1fUPE3Po9jO3Ns+lA3Hw/1XNDueDeHnE5LvrijKzFTd6+SxZpNM1Pp58xV2qw0qhn1fnYYLf5F/qXI3eMPcUmHBMco9pjXHS32Xc/CIBK/ZJvoxD7G6rzTubOnRQF+tZyGXTIlxfE6PJMA3M6yENzmEl1sZ6IfDnEUwCNfegywPLj55p372SHq5HWfMnGCLdOiu2iKsE+uDays2LKwb8YZfoDVG80VRXKzGKUgBSVNXY8JbcJKnCSpRzOi/jH+LUolx8HBuO/EgtP3hza8xJxksaFMuXM2XKLudtXIPzOQi3R8HOc5hfxKCgKtfXP4hQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FLejNOpoJDgaOzMDvIIlQwPjlaZVYyJqxT19CKZnIGE=;
+ b=laGt8S0m3baovssY8k9p4AzHjwFOE44ZgNy645uG3P77qlutA4A70DLpSVcyfgY6J4rFnqvyy81/Gi+MJvaN6EtMLuK7/P6CN0jAsRECFFXQ+ALLFPYY9K9FjLoX4YGGIIPaNKvAgP67mFNFkZPI33j+VVsNj1jQVnHspioheF8FsA6JeZ8mbj7i3pb/sDwFnh1vC2Ld2/EfK569vBsu2NPCbKaWcdfTM4TWAD+liLpyiYalWh9ez93aqK3/JD8rfNGUqrcR7mp5hP0oY/8Xt9UaW+wruz71y0EJ3ru0JoF6yMNadJFkvgiK4GAqcRVovdV8MAubzPFk5WS+5CpCJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FLejNOpoJDgaOzMDvIIlQwPjlaZVYyJqxT19CKZnIGE=;
+ b=V8hTwpNRwNFuVmzaTIN6YO0x6n42zrLD89NMc3zevwF9n/zaq9YiRAzZh0hp67eZrNpcR7u4vrDRcm+vsc4uorHvrW1EEtSM8x8G2UvxEzShpjby/F/hkSg4Y4tNBPN50PApUZKEEkqjaBASV7OBcO9sW+bl6bS8Gi5SckvIIhQ=
+Received: from AM6PR05MB5142.eurprd05.prod.outlook.com (20.177.197.210) by
+ AM6PR05MB4872.eurprd05.prod.outlook.com (20.177.35.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Fri, 13 Dec 2019 20:05:00 +0000
+Received: from AM6PR05MB5142.eurprd05.prod.outlook.com
+ ([fe80::e8d3:c539:7550:2fdd]) by AM6PR05MB5142.eurprd05.prod.outlook.com
+ ([fe80::e8d3:c539:7550:2fdd%6]) with mapi id 15.20.2538.017; Fri, 13 Dec 2019
+ 20:05:00 +0000
+From:   Yuval Avnery <yuvalav@mellanox.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     Jiri Pirko <jiri@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Daniel Jurgens <danielj@mellanox.com>
+Subject: RE: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Thread-Topic: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Thread-Index: AQHVr871nDBB5hrvy0ak2C7+9Ay1lae1Oa8AgAAB1gCAABOZgIAACO8QgAArtYCAAAxfkIAAC50AgABVJmCAAOJ/gIAAIpgggABa3ACAABH7IIAA/jMAgAAW14A=
+Date:   Fri, 13 Dec 2019 20:05:00 +0000
+Message-ID: <AM6PR05MB51422CE9C249DB03F486CB63C5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
+References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
+        <20191211095854.6cd860f1@cakuba.netronome.com>
+        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211111537.416bf078@cakuba.netronome.com>
+        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211142401.742189cf@cakuba.netronome.com>
+        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211154952.50109494@cakuba.netronome.com>
+        <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191212102517.602a8a5d@cakuba.netronome.com>
+        <AM6PR05MB5142F0F18EA6B6F16C5888CEC5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191212175418.3b07b7a9@cakuba.netronome.com>
+        <AM6PR05MB514261CD6F95F104C0353A4BC5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191213100828.6767de6e@cakuba.netronome.com>
+In-Reply-To: <20191213100828.6767de6e@cakuba.netronome.com>
+Accept-Language: he-IL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yuvalav@mellanox.com; 
+x-originating-ip: [70.66.202.183]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 00ebf884-c424-482e-898a-08d78007bbff
+x-ms-traffictypediagnostic: AM6PR05MB4872:|AM6PR05MB4872:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB487249C0833633A2B4296CE3C5540@AM6PR05MB4872.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(13464003)(55016002)(9686003)(26005)(6506007)(53546011)(186003)(7696005)(4326008)(316002)(66476007)(66556008)(66446008)(107886003)(33656002)(52536014)(64756008)(66946007)(76116006)(71200400001)(6916009)(5660300002)(8676002)(478600001)(8936002)(54906003)(81156014)(86362001)(81166006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4872;H:AM6PR05MB5142.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TBjZFLChoC1kHVRS3/2loDxAC0e3GoTijoZ7dDDRxBzIsSsuhetzPXgSTZhN1Qp+MBwWmrdA3HEiTjWWnm9lX+pRABBV5sfwv7GduuAiDqZS8ORzXKRhieR1XOBCPL+WAmengCD2Q48a1mPe/zQ/TgrrsK/pRragWppYGLJHYp4Smz55uLm92jBo1KF7zqzKJUec9v1EGwUf6ipYQr0TT/tFPwdjXQmK81f3JapCF22a8HFeVx/mPTn9ZGiqAATztGLFbt4h6OuaaiCop3Im/r7aG0RnO0tu44+azIEj6EfvZvGB+KCdoROgKSIzcXCm7jGsiKBm47GeTF3TRMsB47FBroUvx8FNN+TSr7hsFR20zauljIDVXucuR050MUWgVc5DcjZy0BfNuOrMAtGzOx816pRY1BmZzeuf85rzdMMOblzvn6OIifnrF4feGyHf7m2C0jgxe5GkEAS3d4RqW76/AuKIesb55Eiuk+HckV0QtG+7PJ+UL6xjQ9zyXGPx
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210164014.50739-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00ebf884-c424-482e-898a-08d78007bbff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 20:05:00.1838
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vLvomEFwfvhZ1uZKICI5wBOzsBrEkxpXqDx7WrBlbqF6GxbjplWGdsab59FO55nXzOA5D77yormsv12WSx7yeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4872
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:40:10PM +0100, Paul Cercueil wrote:
-> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-> Ingenic is a second Xburst MIPS CPU very similar to the main core.
-> This document describes the devicetree bindings for this auxiliary
-> processor.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Update TCSM0 address in example
->     v3: Change node name to 'video-decoder'
->     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
-> 
->  .../bindings/remoteproc/ingenic,vpu.yaml      | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
-> new file mode 100644
-> index 000000000000..9f876d16a5a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/remoteproc/ingenic,vpu.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Ingenic Video Processing Unit bindings
-> +
-> +description:
-> +  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-> +  Ingenic is a second Xburst MIPS CPU very similar to the main core.
-> +  This document describes the devicetree bindings for this auxiliary
-> +  processor.
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +properties:
-> +  compatible:
-> +    const: ingenic,jz4770-vpu-rproc
-> +
-> +  reg:
-> +    items:
-> +      - description: aux registers
-> +      - description: tcsm0 registers
-> +      - description: tcsm1 registers
-> +      - description: sram registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: aux
-> +      - const: tcsm0
-> +      - const: tcsm1
-> +      - const: sram
-> +
-> +  clocks:
-> +    items:
-> +      - description: aux clock
-> +      - description: vpu clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aux
-> +      - const: vpu
-> +
-> +  interrupts:
-> +    description: VPU hardware interrupt
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    vpu: video-decoder@132a0000 {
-> +      compatible = "ingenic,jz4770-vpu-rproc";
-> +
-> +      reg = <0x132a0000 0x20 /* AUX */
-> +           0x132b0000 0x4000 /* TCSM0 */
-> +           0x132c0000 0xc000 /* TCSM1 */
-> +           0x132f0000 0x7000 /* SRAM */
-> +      >;
-> +      reg-names = "aux", "tcsm0", "tcsm1", "sram";
-> +
-> +      clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
 
-Examples are built now by 'make dt_binding_check' and this fails. You 
-need to add the include for these defines.
 
-Also, the schema should complain after that on 'reg'. You need to <> 
-each entry (addr and size).
+> -----Original Message-----
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Sent: Friday, December 13, 2019 10:08 AM
+> To: Yuval Avnery <yuvalav@mellanox.com>
+> Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Andy Gospodarek
+> <andy@greyhouse.net>
+> Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+>=20
+> On Fri, 13 Dec 2019 03:21:02 +0000, Yuval Avnery wrote:
+> > > I see, is this a more fine grained capability or all or nothing for S=
+R-IOV
+> control?
+> > > I'd think that if the SmartNIC's eswitch just encapsulates all the
+> > > frames into a
+> > > L4 tunnel it shouldn't care about L2 addresses.
+> >
+> > People keep saying that, but there are customers who wants this
+> > capability :)
+>=20
+> Right, but we should have a plan for both, right? Some form of a switch
+> between L4/no checking/ip link changes are okay vs strict checking/L2/
+> SmartNIC provisions MAC addrs?
 
-> +      clock-names = "aux", "vpu";
-> +
-> +      interrupt-parent = <&cpuintc>;
-> +      interrupts = <3>;
-> +    };
-> -- 
-> 2.24.0
-> 
+I am not sure I understand
+The L2 checks will be on NIC, not on the switch.
+Packet decapsulated and forwarded to the NIC, Where the MAC matters..
+
+>=20
+> > > > > What happens if the SR-IOV host changes the MAC? Is it used by
+> > > > > HW or is the MAC provisioned by the control CPU used for things
+> > > > > like spoof check?
+> > > >
+> > > > Host shouldn't have privileges to do it.
+> > > > If it does, then it's under the host ownership (like in non-smartni=
+c
+> mode).
+> > >
+> > > I see so the MAC is fixed from bare metal host's PoV? And it has to
+> > > be set
+> >
+> > Yes
+> >
+> > > through some high level cloud API (for live migration etc)?
+> > > Do existing software stacks like libvirt handle not being able to
+> > > set the MAC happily?
+> >
+> > I am not sure what you mean.
+> > What we are talking about here is the E-switch manager setting a MAC to
+> another VF.
+> > When the VF driver loads it will query this MAC from the NIC. This is
+> > the way It works today with "ip link set _vf_ mac"
+> >
+> > Or in other words we are replacing "ip link set _vf_ mac" and not "ip l=
+ink set
+> address"
+> > So that it can work from the SmartNic embedded system.
+> > There is nothing really new here, ip link will not work from a
+> > SmartNic, this is why need devlink subdev.
+>=20
+> Ack, but are we targeting the bare metal cloud scenario here or something
+> more limited? In a bare metal cloud AFAIU the customers can use SR-IOV on
+> the host, but the MACs need to be communicated/ /requested from the
+> cloud management system.
+
+Yes, so the cloud management system communicates with the Control CPU, not =
+the host,
+Not whatever customer decides to run on the hypervisor. The host PF is powe=
+rless here (almost like VF).
+
+>=20
+> IOW the ip link and the devlink APIs are in different domains of control.
+> Customer has access to ip link and provider has access to devlink.
+
+For host VF - Customer has access to ip link exactly like in non-smartnic m=
+ode.
+For host PF - "ip link set vf" will return error. Everything running on the=
+ host is not-trusted.
+
+>=20
+> So my question is does libvirt run by the customer handle the fact that i=
+t can't
+> poke at ip link gracefully, and if live migration is involved how is the =
+customer
+> supposed to ask the provider to move an address?
+
+I don't understand the question because I don't understand why is it differ=
+ent
+from non-smartnic where the host hypervisor is in-charge.
+
