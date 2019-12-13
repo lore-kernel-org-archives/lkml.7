@@ -2,109 +2,141 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36419C3276D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB4DC34344
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD1524712
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D24246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F3slO1yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfLMOLH (ORCPT
+        id S1727419AbfLMM4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:11:07 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:45803 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbfLMOLD (ORCPT
+        Fri, 13 Dec 2019 07:56:19 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48492 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbfLMM4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:11:03 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MO9qz-1iLjfE1Is5-00OVdn; Fri, 13 Dec 2019 15:10:57 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 09/12] nfsd: fix jiffies/time_t mixup in LRU list
-Date:   Fri, 13 Dec 2019 15:10:43 +0100
-Message-Id: <20191213141046.1770441-10-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
-References: <20191213141046.1770441-1-arnd@arndb.de>
+        Fri, 13 Dec 2019 07:56:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuFOX068982;
+        Fri, 13 Dec 2019 06:56:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576241775;
+        bh=AQ0B5jw9HQqxEfttQOLTZY4PnRmM6mThulC0kGIUZ/o=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=F3slO1ycN6mDAw+uzCVOzkJ5muFgZ/kCfNfbw4U9pyP50RMifio1ORoqz4qqtworG
+         Bzpl1Z8e8ZkFdqiJFR/wvRcQzkpKMze1C4EIf4ueXSSFD3i4zTTQnGGyA7kSVKEia6
+         W5145Z47eLmTMQBbR2CDNEEAmGyGmauZMP7SFvSo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuFS8071018
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 06:56:15 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Dec 2019 06:56:13 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Dec 2019 06:56:13 -0600
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVL127295;
+        Fri, 13 Dec 2019 06:56:11 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv3 06/15] remoteproc/omap: Initialize and assign reserved memory node
+Date:   Fri, 13 Dec 2019 14:55:28 +0200
+Message-ID: <20191213125537.11509-7-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RFuOm2jAOCBiUoXlcDVvCUpmtQ/EOsE27v8hWd2SPEDQBW1MVji
- F20sBMDqnoDPPoQR3UwHCy/qExcLtPGSC0zhgPPoacYANfEO0BM+cFNtUO39R+nniEFCvBZ
- 0vLjHqwoptxwnSOyc8O+ofFbLlZuGdwVfar9RmTj5Jqr9NXtOr7H0ORBwlnxhkqpm+i5vBc
- V2a+eqY0MgrkZ3mjf4+Zg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/UJVsafxFSg=:Y4ga6FSx7qvpwzE042pdFW
- nHzm568/bjSOtNM3soyeFV02GfMcErPlxHw0/MfcTiKPwvjl2kkgspCHFVFXg+7/Je1S/H4mM
- rPYIKoouGVczC+4S56Et4qsP8WXxfzlipZ4SJkiELqDl6eb6+El8v1Uko5qek/npGIRsdSnt6
- IrHYw1AinWZMoGf/rDw6Ngnu5CYJTeApgfuwA5wEiLDDzuZuptGI3ILthuJpWbxaTfqKtl9kC
- LTh45DFhs/FM0dtsQhevr8V9rGrplekeI1/Qc33aRGHbd8s3ecyUaHjEMNtR6aed9ob9GQunC
- y1w9XFb3DBEDfcEFqgLdy8AVRMxStRgS2I3fzDILpo5BeDEyhXDZo+XFu1dfcbATh66+DTC4t
- k3I8XEAeiibrm7GHdwxMYrGAKjb6wjkLX2WswG+US/bJWrq+WdBZgWcMXbu9mHUjaHCa5+mf9
- bPYQiSYIEr3VQr4G9qSXjWY1el9D8qTAti3zaV2Io3t44t0RbLFGL36NWieKADpKha6fv7aia
- l94qnerKOBVrbZRX8dfHxTIhMcmLwTitNJnt/0bqniD/dPddUefOzvhwPrKKBzOy73G/6Gf8W
- xK5+NwoNua0R4f0uh5LAVA7EgUeAFgej6hdX8xuwqSQ6lxH6Amy5BpS8vNjJbsFYByG0Noii2
- VniQCnoU/q+bnfa6qV4t0mOJ4neo1rxcaJgpheb51U2Gml0pmw+2w3e2YdMQvxP9F8zj6IquR
- CKZFWDn2aUFJPcDu9GfN0yZn2sXyVqFyuGgCBILMFwyOJhltZ18h+ANJxR34iIplBFk96ZV1z
- lsvol/QnE9t88BLt/vNZmiBEXFG9BSTw0kfgL5TNdRSza69lkUOqjZTql50g4+qCjpm2o5TH3
- 1YrHNuuBy5tUvhDoJYuA==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
-but then compared to a CLOCK_REALTIME timestamp later on, which makes
-no sense.
+From: Suman Anna <s-anna@ti.com>
 
-For consistency with the other timestamps, change this to use a time_t.
+The reserved memory nodes are not assigned to platform devices by
+default in the driver core to avoid the lookup for every platform
+device and incur a penalty as the real users are expected to be
+only a few devices.
 
-This is a change in behavior, which may cause regressions, but the
-current code is not sensible. On a system with CONFIG_HZ=1000,
-the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
-check is false for roughly the first 18 days of uptime and then true
-for the next 49 days.
+OMAP remoteproc devices fall into the above category and the OMAP
+remoteproc driver _requires_ specific CMA pools to be assigned
+for each device at the moment to align on the location of the
+vrings and vring buffers in the RTOS-side firmware images. So,
+use the of_reserved_mem_device_init/release() API appropriately
+to assign the corresponding reserved memory region to the OMAP
+remoteproc device. Note that only one region per device is
+allowed by the framework.
 
-Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- fs/nfsd/nfs4state.c | 2 +-
- fs/nfsd/state.h     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 5cb0f774218a..9a063c4b4460 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6549,7 +6549,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	}
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 28f14e24b389..3ad74c4b4071 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <linux/of_device.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/remoteproc.h>
+@@ -479,14 +480,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
  
- 	if (fl_flags & FL_SLEEP) {
--		nbl->nbl_time = jiffies;
-+		nbl->nbl_time = get_seconds();
- 		spin_lock(&nn->blocked_locks_lock);
- 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
- 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 2b4165cd1d3e..03fc7b4380f9 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
- struct nfsd4_blocked_lock {
- 	struct list_head	nbl_list;
- 	struct list_head	nbl_lru;
--	unsigned long		nbl_time;
-+	time_t			nbl_time;
- 	struct file_lock	nbl_lock;
- 	struct knfsd_fh		nbl_fh;
- 	struct nfsd4_callback	nbl_cb;
++	ret = of_reserved_mem_device_init(&pdev->dev);
++	if (ret) {
++		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
++		goto free_rproc;
++	}
++
+ 	platform_set_drvdata(pdev, rproc);
+ 
+ 	ret = rproc_add(rproc);
+ 	if (ret)
+-		goto free_rproc;
++		goto release_mem;
+ 
+ 	return 0;
+ 
++release_mem:
++	of_reserved_mem_device_release(&pdev->dev);
+ free_rproc:
+ 	rproc_free(rproc);
+ 	return ret;
+@@ -498,6 +507,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
+ 
+ 	rproc_del(rproc);
+ 	rproc_free(rproc);
++	of_reserved_mem_device_release(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
-2.20.0
+2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
