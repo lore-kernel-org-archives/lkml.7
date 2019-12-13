@@ -2,273 +2,100 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3760AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC335C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B892077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE58F2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 03:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N4/dr+7X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2ASXB/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbfLMDH2 (ORCPT
+        id S1731428AbfLMDJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:07:28 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36466 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731940AbfLMDHQ (ORCPT
+        Thu, 12 Dec 2019 22:09:22 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37973 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfLMDJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 22:07:16 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD379b5088029;
-        Thu, 12 Dec 2019 21:07:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576206429;
-        bh=wNSqEH38Oed8sIgIM32TSJQF8xXX52B/JVDKh3OpWOw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=N4/dr+7XOITaQenMSnj+A5PZIsJrqhAWV6RKFqKTUIKX1FRk/ql6r6o5FQQczHJh+
-         BqeffP4cDNdmnC8Hhm22vH2HLaXBsydDw5h7lHPzFjRWVLEpAQV74thWOcT7PCQSwE
-         ytn0ma5+ob90IWMf1V8oeRY4bDB39pFtHp1739t4=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD379F8128880
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 21:07:09 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 21:07:08 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 21:07:08 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD3782E019218;
-        Thu, 12 Dec 2019 21:07:08 -0600
-From:   Dave Gerlach <d-gerlach@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 2/5] ARM: OMAP2+: pm33xx-core: Add cpuidle_ops for am335x/am437x
-Date:   Thu, 12 Dec 2019 21:07:52 -0600
-Message-ID: <20191213030755.16096-3-d-gerlach@ti.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213030755.16096-1-d-gerlach@ti.com>
-References: <20191213030755.16096-1-d-gerlach@ti.com>
+        Thu, 12 Dec 2019 22:09:22 -0500
+Received: by mail-qk1-f196.google.com with SMTP id k6so620727qki.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 19:09:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yn6UPHNqzAqAhyMUDEs4A49nRxGs97+Efbe0+LADY9U=;
+        b=U2ASXB/p0KcIpBfRXiATBa7S7YIWLrGHaOsePzh9kKsODcF39oacUwEJctKodEtMEo
+         3SvCq+wAT4G+jY96OsduoDVjxgsGNCTKfNNyAHVdl6gMAtQkQnZBwYHPa2zRylD5lOSs
+         LyLcvYCpx4FPneRbKVGCgrW8qqP9GTU76kFccNPFIwLjdOE//vusrNeTvjdt8P5vJBj5
+         LZHzTFpvgNDDyX95SkaU1kzOuZ/wqlbvk76LXGA1Gp3YUh4uoOo5mHGpf+gFpsGGgyTV
+         2weocqCGhYBvQUmCQP0V8gvxwTI/jZZlW6+R73HL9pWcBDi7ztlrHNlQQ0sSjTI1c3S0
+         xrgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yn6UPHNqzAqAhyMUDEs4A49nRxGs97+Efbe0+LADY9U=;
+        b=jOz/hkN7Hq4GHkvtGfnQdgAJWu9lkQ6cm4UPVon0LlbzK9Ev2k2wrCSAz2Ospswxbo
+         gYinvJTTcNjFGj/XRmzznm7aaSs5k5+gAAby9porgvb3TmWjp2ES4805UyIfWy1z9QT9
+         aad80jzqvtF6dYZQtjenqpNqQIO83aZfB7zYZ/tShGDpKLpbaW8Q9uOcpnZQSWOUkz1U
+         S8CWqOKz48GIIIwp4THyEuxbq5+0qkLpii2zvEDnhk1q33P40OqmRD4yqKSh4mqPOp6J
+         p6lgaib6LVcH7G63zsvHmEZlr7x2EnxKeGUYjf8jpzYqjBV+PeBEYO0xW6pc4kJY93uC
+         5gmA==
+X-Gm-Message-State: APjAAAVO50eDIHp6aRRgsnj/f7J3tQaJYfXxuS/gn2TRjEENHquFGHtS
+        8LG/TACFWzv3YrgXp9DijmFWHdLPOcORxdW/tjc=
+X-Google-Smtp-Source: APXvYqwfNLv8emQc8zttzX0kdkP85YXsYBGaZxqIXTh8P469k+tB2NI9ziIDYcSlhO5cwf2V8CUQtk7BEvgjlkUMNHI=
+X-Received: by 2002:a37:4fd0:: with SMTP id d199mr11826130qkb.103.1576206560366;
+ Thu, 12 Dec 2019 19:09:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
+ <20191212164835.GD10451@ediswmail.ad.cirrus.com> <20191212165311.GK4310@sirena.org.uk>
+In-Reply-To: <20191212165311.GK4310@sirena.org.uk>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Fri, 13 Dec 2019 11:09:09 +0800
+Message-ID: <CAA+D8AP4XNNmQ72xG6gNevtu8i8TJ7AaQMMgXJMCPmv2VO0_HA@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: wm8962: fix lambda value
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        kstewart@linuxfoundation.org,
+        guennadi.liakhovetski@linux.intel.com,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        gregkh@linuxfoundation.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        patches@opensource.cirrus.com, tglx@linutronix.de,
+        allison@lohutok.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-am335x and am437x can now make use of the generic cpuidle-arm driver.
-This requires that we define init and suspend ops to be passed set as
-the cpuidle ops for the SoC. These ops are invoked directly at the last
-stage of the cpuidle-arm driver in order to allow low level platform
-code to run and bring the CPU the rest of the way into it's desired idle
-state. It is required that the CPUIDLE_METHOD_OF_DECLARE be called from
-code that is built in so define these ops in pm33xx-core where the
-always built-in portion of the PM code for these SoCs lives.
+Hi
 
-Additionally, although an soc_suspend function is already exposed by the
-pm33xx platform code, it contains additional operations needed for full
-SoC suspend beyond what is needed for a relatively simple CPU suspend
-needed during cpuidle. To get around this introduce cpu_suspend ops to
-be used by the am335x and am437x PM driver for the last stage of cpuidle
-path.
+On Fri, Dec 13, 2019 at 12:54 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 04:48:35PM +0000, Charles Keepax wrote:
+> > On Wed, Dec 11, 2019 at 07:57:22PM +0800, Shengjiu Wang wrote:
+> > > According to user manual, it is required that FLL_LAMBDA > 0
+> > > in all cases (Integer and Franctional modes).
+>
+> > How well tested is this change, and is it addressing an issue you
+> > have observed? I agree this does better fit the datasheet just a
+> > little nervous as its an older part that has seen a lot of usage.
+>
+> I've got a feeling that requirement might've been added in later
+> versions of the datasheet...
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/mach-omap2/pm33xx-core.c    | 117 ++++++++++++++++++++++++++-
- include/linux/platform_data/pm33xx.h |   3 +
- 2 files changed, 119 insertions(+), 1 deletion(-)
+We encounter an issue that when Integer mode, the lambda=theta=0,
+the output sound is slower than expected. After change lambda=1
+the issue is gone.
 
-diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
-index f11442ed3eff..dc43736f0ae6 100644
---- a/arch/arm/mach-omap2/pm33xx-core.c
-+++ b/arch/arm/mach-omap2/pm33xx-core.c
-@@ -6,11 +6,14 @@
-  *	Dave Gerlach
-  */
- 
-+#include <linux/cpuidle.h>
-+#include <linux/platform_data/pm33xx.h>
-+#include <asm/cpuidle.h>
- #include <asm/smp_scu.h>
- #include <asm/suspend.h>
- #include <linux/errno.h>
--#include <linux/platform_data/pm33xx.h>
- #include <linux/clk.h>
-+#include <linux/cpu.h>
- #include <linux/platform_data/gpio-omap.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/wkup_m3_ipc.h>
-@@ -34,6 +37,14 @@ static struct clockdomain *gfx_l4ls_clkdm;
- static void __iomem *scu_base;
- static struct omap_hwmod *rtc_oh;
- 
-+static int (*idle_fn)(u32 wfi_flags);
-+
-+struct amx3_idle_state {
-+	int wfi_flags;
-+};
-+
-+static struct amx3_idle_state *idle_states;
-+
- static int am43xx_map_scu(void)
- {
- 	scu_base = ioremap(scu_a9_get_base(), SZ_256);
-@@ -177,6 +188,43 @@ static int am43xx_suspend(unsigned int state, int (*fn)(unsigned long),
- 	return ret;
- }
- 
-+static int am33xx_cpu_suspend(int (*fn)(unsigned long), unsigned long args)
-+{
-+	int ret = 0;
-+
-+	if (omap_irq_pending() || need_resched())
-+		return ret;
-+
-+	ret = cpu_suspend(args, fn);
-+
-+	return ret;
-+}
-+
-+static int am43xx_cpu_suspend(int (*fn)(unsigned long), unsigned long args)
-+{
-+	int ret = 0;
-+
-+	if (!scu_base)
-+		return 0;
-+
-+	scu_power_mode(scu_base, SCU_PM_DORMANT);
-+	ret = cpu_suspend(args, fn);
-+	scu_power_mode(scu_base, SCU_PM_NORMAL);
-+
-+	return ret;
-+}
-+
-+static void amx3_begin_suspend(void)
-+{
-+	cpu_idle_poll_ctrl(true);
-+}
-+
-+static void amx3_finish_suspend(void)
-+{
-+	cpu_idle_poll_ctrl(false);
-+}
-+
-+
- static struct am33xx_pm_sram_addr *amx3_get_sram_addrs(void)
- {
- 	if (soc_is_am33xx())
-@@ -230,6 +278,9 @@ static void am43xx_prepare_rtc_resume(void)
- static struct am33xx_pm_platform_data am33xx_ops = {
- 	.init = am33xx_suspend_init,
- 	.soc_suspend = am33xx_suspend,
-+	.cpu_suspend = am33xx_cpu_suspend,
-+	.begin_suspend = amx3_begin_suspend,
-+	.finish_suspend = amx3_finish_suspend,
- 	.get_sram_addrs = amx3_get_sram_addrs,
- 	.save_context = am33xx_save_context,
- 	.restore_context = am33xx_restore_context,
-@@ -242,6 +293,9 @@ static struct am33xx_pm_platform_data am33xx_ops = {
- static struct am33xx_pm_platform_data am43xx_ops = {
- 	.init = am43xx_suspend_init,
- 	.soc_suspend = am43xx_suspend,
-+	.cpu_suspend = am43xx_cpu_suspend,
-+	.begin_suspend = amx3_begin_suspend,
-+	.finish_suspend = amx3_finish_suspend,
- 	.get_sram_addrs = amx3_get_sram_addrs,
- 	.save_context = am43xx_save_context,
- 	.restore_context = am43xx_restore_context,
-@@ -277,3 +331,64 @@ int __init amx3_common_pm_init(void)
- 
- 	return 0;
- }
-+
-+static int __init amx3_idle_init(struct device_node *cpu_node, int cpu)
-+{
-+	struct device_node *state_node;
-+	struct amx3_idle_state states[CPUIDLE_STATE_MAX];
-+	int i;
-+	int state_count = 1;
-+
-+	for (i = 0; ; i++) {
-+		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-+		if (!state_node)
-+			break;
-+
-+		if (!of_device_is_available(state_node))
-+			continue;
-+
-+		if (i == CPUIDLE_STATE_MAX) {
-+			pr_warn("%s: cpuidle states reached max possible\n",
-+				__func__);
-+			break;
-+		}
-+
-+		states[state_count].wfi_flags = 0;
-+
-+		if (of_property_read_bool(state_node, "ti,idle-wkup-m3"))
-+			states[state_count].wfi_flags |= WFI_FLAG_WAKE_M3 |
-+							 WFI_FLAG_FLUSH_CACHE;
-+
-+		state_count++;
-+	}
-+
-+	idle_states = kcalloc(state_count, sizeof(*idle_states), GFP_KERNEL);
-+	if (!idle_states)
-+		return -ENOMEM;
-+
-+	for (i = 1; i < state_count; i++)
-+		idle_states[i].wfi_flags = states[i].wfi_flags;
-+
-+	return 0;
-+}
-+
-+static int amx3_idle_enter(unsigned long index)
-+{
-+	struct amx3_idle_state *idle_state = &idle_states[index];
-+
-+	if (!idle_state)
-+		return -EINVAL;
-+
-+	if (idle_fn)
-+		idle_fn(idle_state->wfi_flags);
-+
-+	return 0;
-+}
-+
-+static struct cpuidle_ops amx3_cpuidle_ops __initdata = {
-+	.init = amx3_idle_init,
-+	.suspend = amx3_idle_enter,
-+};
-+
-+CPUIDLE_METHOD_OF_DECLARE(pm33xx_idle, "ti,am3352", &amx3_cpuidle_ops);
-+CPUIDLE_METHOD_OF_DECLARE(pm43xx_idle, "ti,am4372", &amx3_cpuidle_ops);
-diff --git a/include/linux/platform_data/pm33xx.h b/include/linux/platform_data/pm33xx.h
-index dd5971937a64..8e59f2db2adc 100644
---- a/include/linux/platform_data/pm33xx.h
-+++ b/include/linux/platform_data/pm33xx.h
-@@ -49,6 +49,9 @@ struct am33xx_pm_platform_data {
- 	int	(*init)(void);
- 	int	(*soc_suspend)(unsigned int state, int (*fn)(unsigned long),
- 			       unsigned long args);
-+	int	(*cpu_suspend)(int (*fn)(unsigned long), unsigned long args);
-+	void    (*begin_suspend)(void);
-+	void    (*finish_suspend)(void);
- 	struct  am33xx_pm_sram_addr *(*get_sram_addrs)(void);
- 	void __iomem *(*get_rtc_base_addr)(void);
- 	void (*save_context)(void);
--- 
-2.20.1
-
+Best regards
+Wang Shengjiu
