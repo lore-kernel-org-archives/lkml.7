@@ -4,94 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB5C7DBAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFE4C7DBB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187EC246EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073AC246EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfLMSNc (ORCPT
+        id S1728742AbfLMSQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:13:32 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44233 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbfLMSNb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:13:31 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A9E9920003;
-        Fri, 13 Dec 2019 18:13:27 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] drm/panel: simple: Support reset GPIOs
-Date:   Fri, 13 Dec 2019 19:13:25 +0100
-Message-Id: <20191213181325.26228-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Dec 2019 13:16:21 -0500
+Received: from mga09.intel.com ([134.134.136.24]:52404 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728720AbfLMSQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 13:16:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 10:16:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="208536352"
+Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.172])
+  by orsmga008.jf.intel.com with ESMTP; 13 Dec 2019 10:16:19 -0800
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     linux-pm@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, alex.hung@canonical.com,
+        linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
+        dvhart@infradead.org, Gayatri Kammela <gayatri.kammela@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Subject: [PATCH v2 1/4] acpi: dptf: Add new Tiger Lake hardware IDs to support DPTF drivers in acpi
+Date:   Fri, 13 Dec 2019 10:14:20 -0800
+Message-Id: <ee3ccf964d30c3b3745a3044196e36e4d77a6282.1576260216.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1576260216.git.gayatri.kammela@intel.com>
+References: <cover.1576260216.git.gayatri.kammela@intel.com>
+In-Reply-To: <cover.1576260216.git.gayatri.kammela@intel.com>
+References: <cover.1576260216.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The panel common bindings provide a gpios-reset property which is
-active low by default. Let's support it in the simple driver.
+Tiger Lake has new unique hardware IDs that are needed to support
+DPTF drivers. Hence, add them.
 
-De-asserting the reset pin implies a physical high, which in turns is
-a logic low.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/acpi/dptf/dptf_power.c      | 1 +
+ drivers/acpi/dptf/int340x_thermal.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5d487686d25c..15dd495c347d 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -110,6 +110,7 @@ struct panel_simple {
- 	struct i2c_adapter *ddc;
+diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+index eb58fc475a03..387f27ef3368 100644
+--- a/drivers/acpi/dptf/dptf_power.c
++++ b/drivers/acpi/dptf/dptf_power.c
+@@ -97,6 +97,7 @@ static int dptf_power_remove(struct platform_device *pdev)
+ }
  
- 	struct gpio_desc *enable_gpio;
-+	struct gpio_desc *reset_gpio;
- 
- 	struct drm_display_mode override_mode;
+ static const struct acpi_device_id int3407_device_ids[] = {
++	{"INT1047", 0},
+ 	{"INT3407", 0},
+ 	{"", 0},
  };
-@@ -433,12 +434,21 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 	if (IS_ERR(panel->supply))
- 		return PTR_ERR(panel->supply);
+diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
+index 5c7a90186e3c..1ec7b6900662 100644
+--- a/drivers/acpi/dptf/int340x_thermal.c
++++ b/drivers/acpi/dptf/int340x_thermal.c
+@@ -13,6 +13,10 @@
  
-+	panel->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(panel->reset_gpio)) {
-+		err = PTR_ERR(panel->reset_gpio);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "failed to request reset pin: %d\n", err);
-+		return err;
-+	}
-+
- 	panel->enable_gpio = devm_gpiod_get_optional(dev, "enable",
- 						     GPIOD_OUT_LOW);
- 	if (IS_ERR(panel->enable_gpio)) {
- 		err = PTR_ERR(panel->enable_gpio);
- 		if (err != -EPROBE_DEFER)
--			dev_err(dev, "failed to request GPIO: %d\n", err);
-+			dev_err(dev, "failed to request enable pin: %d\n", err);
- 		return err;
- 	}
- 
+ #define INT3401_DEVICE 0X01
+ static const struct acpi_device_id int340x_thermal_device_ids[] = {
++	{"INT1040"},
++	{"INT1043"},
++	{"INT1044"},
++	{"INT1047"},
+ 	{"INT3400"},
+ 	{"INT3401", INT3401_DEVICE},
+ 	{"INT3402"},
 -- 
-2.20.1
+2.17.1
 
