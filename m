@@ -2,75 +2,89 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F5C5ED5A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC59C5ED62
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2D424738
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8D32473F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KEpg5cLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfLMPuw (ORCPT
+        id S1728060AbfLMPvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:50:52 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56605 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfLMPu3 (ORCPT
+        Fri, 13 Dec 2019 10:51:44 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:60950 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbfLMPvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:50:29 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7ACE41BF203;
-        Fri, 13 Dec 2019 15:50:27 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next v3 14/15] net: macsec: allow to reference a netdev from a MACsec context
-Date:   Fri, 13 Dec 2019 16:48:43 +0100
-Message-Id: <20191213154844.635389-15-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+        Fri, 13 Dec 2019 10:51:44 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7026620B7187;
+        Fri, 13 Dec 2019 07:51:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7026620B7187
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576252303;
+        bh=VamZRT3RyyPdbHwxLZRTfXiZ1Bh2bvZ/QaCwK/05xRk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KEpg5cLK7KxN/GLfgvJ3dXvwLMsTMZ8LWoJ0CgTbgYIG90mrWYICoh7JhX6j3GOij
+         8hs6aqk2cAAdURDB2TGhD/oxO/WoKdd5QgKMLG9LH4ep/gwFYInphHzJetz6oTHpG1
+         nZ+Md1wyHdDrIl0bfuk2vBwwuz0pcYY9nmBsqf8I=
+Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
+ measurements
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+References: <20191213004250.21132-1-nramas@linux.microsoft.com>
+ <20191213004250.21132-2-nramas@linux.microsoft.com>
+ <1576202134.4579.189.camel@linux.ibm.com>
+ <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
+ <1576204377.4579.206.camel@linux.ibm.com>
+ <c60341a3-2329-cd92-c76c-6f8249a57b43@linux.microsoft.com>
+ <1576242406.4579.239.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <9938ff03-5cf2-5396-1172-5734cc10819e@linux.microsoft.com>
+Date:   Fri, 13 Dec 2019 07:51:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <1576242406.4579.239.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows to reference a net_device from a MACsec context. This
-is needed to allow implementing MACsec operations in net device drivers.
+On 12/13/19 5:06 AM, Mimi Zohar wrote:
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- include/net/macsec.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> I just need to convince myself that this is correct.  Normally before
+> reading and writing a flag, there is some sort of locking.  With
+> taking the mutex before setting the flag, there is now only a lock
+> around the single writer.
+> 
+> Without taking a lock before reading the flag, will the queue always
+> be empty is the question.  If it is, then the comment is correct, but
+> the code assumes not and processes the list again.  Testing the flag
+> after taking the mutex just re-enforces the comment.
+> 
+> Bottom line, does reading the flag need to be lock protected?
+> 
+> Mimi
+> 
 
-diff --git a/include/net/macsec.h b/include/net/macsec.h
-index a08f19099c7a..1b4de64d7fef 100644
---- a/include/net/macsec.h
-+++ b/include/net/macsec.h
-@@ -179,7 +179,10 @@ struct macsec_secy {
-  * struct macsec_context - MACsec context for hardware offloading
-  */
- struct macsec_context {
--	struct phy_device *phydev;
-+	union {
-+		struct net_device *netdev;
-+		struct phy_device *phydev;
-+	};
- 	enum macsec_offload offload;
- 
- 	struct macsec_secy *secy;
--- 
-2.23.0
+I'll change this function to check the flag again after taking the lock 
+and process only if the queue has entries. Will send an update today.
 
+Please let me know if you have any concern in other functions in this 
+file. I'll address them, if any, in today's update.
+
+thanks,
+  -lakshmi
