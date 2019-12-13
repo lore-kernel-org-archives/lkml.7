@@ -2,89 +2,204 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC59C5ED62
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A0C5ED55
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8D32473F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KEpg5cLK"
+	by mail.kernel.org (Postfix) with ESMTP id 9900F246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfLMPvo (ORCPT
+        id S1728224AbfLMPud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:51:44 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:60950 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbfLMPvo (ORCPT
+        Fri, 13 Dec 2019 10:50:33 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:37895 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbfLMPu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:51:44 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7026620B7187;
-        Fri, 13 Dec 2019 07:51:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7026620B7187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576252303;
-        bh=VamZRT3RyyPdbHwxLZRTfXiZ1Bh2bvZ/QaCwK/05xRk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KEpg5cLK7KxN/GLfgvJ3dXvwLMsTMZ8LWoJ0CgTbgYIG90mrWYICoh7JhX6j3GOij
-         8hs6aqk2cAAdURDB2TGhD/oxO/WoKdd5QgKMLG9LH4ep/gwFYInphHzJetz6oTHpG1
-         nZ+Md1wyHdDrIl0bfuk2vBwwuz0pcYY9nmBsqf8I=
-Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
- measurements
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191213004250.21132-1-nramas@linux.microsoft.com>
- <20191213004250.21132-2-nramas@linux.microsoft.com>
- <1576202134.4579.189.camel@linux.ibm.com>
- <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
- <1576204377.4579.206.camel@linux.ibm.com>
- <c60341a3-2329-cd92-c76c-6f8249a57b43@linux.microsoft.com>
- <1576242406.4579.239.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <9938ff03-5cf2-5396-1172-5734cc10819e@linux.microsoft.com>
-Date:   Fri, 13 Dec 2019 07:51:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 13 Dec 2019 10:50:26 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 243191C000A;
+        Fri, 13 Dec 2019 15:50:23 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
+        jakub.kicinski@netronome.com
+Subject: [PATCH net-next v3 11/15] net: phy: mscc: PN rollover support
+Date:   Fri, 13 Dec 2019 16:48:40 +0100
+Message-Id: <20191213154844.635389-12-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <1576242406.4579.239.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 5:06 AM, Mimi Zohar wrote:
+This patch adds support for handling MACsec PN rollover in the mscc PHY
+driver. When a flow rolls over, an interrupt is fired. This patch adds
+the logic to check all flows and identify the one rolling over in the
+handle_interrupt PHY helper, then disables the flow and report the event
+to the MACsec core.
 
-> I just need to convince myself that this is correct.  Normally before
-> reading and writing a flag, there is some sort of locking.  With
-> taking the mutex before setting the flag, there is now only a lock
-> around the single writer.
-> 
-> Without taking a lock before reading the flag, will the queue always
-> be empty is the question.  If it is, then the comment is correct, but
-> the code assumes not and processes the list again.  Testing the flag
-> after taking the mutex just re-enforces the comment.
-> 
-> Bottom line, does reading the flag need to be lock protected?
-> 
-> Mimi
-> 
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/mscc.c        | 61 ++++++++++++++++++++++++++++++++++-
+ drivers/net/phy/mscc_macsec.h |  2 ++
+ 2 files changed, 62 insertions(+), 1 deletion(-)
 
-I'll change this function to check the flag again after taking the lock 
-and process only if the queue has entries. Will send an update today.
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 18a983cec37c..2e2215335315 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -80,7 +80,7 @@ enum rgmii_rx_clock_delay {
+ #define MSCC_PHY_EXT_PHY_CNTL_2		  24
+ 
+ #define MII_VSC85XX_INT_MASK		  25
+-#define MII_VSC85XX_INT_MASK_MASK	  0xa000
++#define MII_VSC85XX_INT_MASK_MASK	  0xa020
+ #define MII_VSC85XX_INT_MASK_WOL	  0x0040
+ #define MII_VSC85XX_INT_STATUS		  26
+ 
+@@ -207,6 +207,9 @@ enum macsec_bank {
+ #define SECURE_ON_ENABLE		  0x8000
+ #define SECURE_ON_PASSWD_LEN_4		  0x4000
+ 
++#define MSCC_PHY_EXTENDED_INT		  28
++#define MSCC_PHY_EXTENDED_INT_MS_EGR	  BIT(9)
++
+ /* Extended Page 3 Registers */
+ #define MSCC_PHY_SERDES_TX_VALID_CNT	  21
+ #define MSCC_PHY_SERDES_TX_CRC_ERR_CNT	  22
+@@ -2880,6 +2883,43 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	return ret;
+ }
+ 
++static int vsc8584_handle_interrupt(struct phy_device *phydev)
++{
++#if IS_ENABLED(CONFIG_MACSEC)
++	struct vsc8531_private *priv = phydev->priv;
++	struct macsec_flow *flow, *tmp;
++	u32 cause, rec;
++
++	/* Check MACsec PN rollover */
++	cause = vsc8584_macsec_phy_read(phydev, MACSEC_EGR,
++					MSCC_MS_INTR_CTRL_STATUS);
++	cause &= MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS_M;
++	if (!(cause & MACSEC_INTR_CTRL_STATUS_ROLLOVER))
++		goto skip_rollover;
++
++	rec = 6 + priv->secy->key_len / sizeof(u32);
++	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list) {
++		u32 val;
++
++		if (flow->bank != MACSEC_EGR || !flow->has_transformation)
++			continue;
++
++		val = vsc8584_macsec_phy_read(phydev, MACSEC_EGR,
++					      MSCC_MS_XFORM_REC(flow->index, rec));
++		if (val == 0xffffffff) {
++			vsc8584_macsec_flow_disable(phydev, flow);
++			macsec_pn_wrapped(priv->secy, flow->tx_sa);
++			break;
++		}
++	}
++
++skip_rollover:
++#endif
++
++	phy_mac_interrupt(phydev);
++	return 0;
++}
++
+ static int vsc85xx_config_init(struct phy_device *phydev)
+ {
+ 	int rc, i, phy_id;
+@@ -3323,6 +3363,21 @@ static int vsc85xx_config_intr(struct phy_device *phydev)
+ 	int rc;
+ 
+ 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
++		if (IS_ENABLED(CONFIG_MACSEC)) {
++			phy_write(phydev, MSCC_EXT_PAGE_ACCESS,
++				  MSCC_PHY_PAGE_EXTENDED_2);
++			phy_write(phydev, MSCC_PHY_EXTENDED_INT,
++				  MSCC_PHY_EXTENDED_INT_MS_EGR);
++			phy_write(phydev, MSCC_EXT_PAGE_ACCESS,
++				  MSCC_PHY_PAGE_STANDARD);
++
++			vsc8584_macsec_phy_write(phydev, MACSEC_EGR,
++						 MSCC_MS_AIC_CTRL, 0xf);
++			vsc8584_macsec_phy_write(phydev, MACSEC_EGR,
++				MSCC_MS_INTR_CTRL_STATUS,
++				MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE(MACSEC_INTR_CTRL_STATUS_ROLLOVER));
++		}
++
+ 		rc = phy_write(phydev, MII_VSC85XX_INT_MASK,
+ 			       MII_VSC85XX_INT_MASK_MASK);
+ 	} else {
+@@ -3654,6 +3709,7 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.aneg_done	= &genphy_aneg_done,
+ 	.read_status	= &vsc85xx_read_status,
++	.handle_interrupt = &vsc8584_handle_interrupt,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+ 	.config_intr    = &vsc85xx_config_intr,
+ 	.did_interrupt  = &vsc8584_did_interrupt,
+@@ -3730,6 +3786,7 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.aneg_done	= &genphy_aneg_done,
+ 	.read_status	= &vsc85xx_read_status,
++	.handle_interrupt = &vsc8584_handle_interrupt,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+ 	.config_intr    = &vsc85xx_config_intr,
+ 	.did_interrupt  = &vsc8584_did_interrupt,
+@@ -3754,6 +3811,7 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.aneg_done	= &genphy_aneg_done,
+ 	.read_status	= &vsc85xx_read_status,
++	.handle_interrupt = &vsc8584_handle_interrupt,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+ 	.config_intr    = &vsc85xx_config_intr,
+ 	.did_interrupt  = &vsc8584_did_interrupt,
+@@ -3778,6 +3836,7 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.aneg_done	= &genphy_aneg_done,
+ 	.read_status	= &vsc85xx_read_status,
++	.handle_interrupt = &vsc8584_handle_interrupt,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+ 	.config_intr    = &vsc85xx_config_intr,
+ 	.did_interrupt  = &vsc8584_did_interrupt,
+diff --git a/drivers/net/phy/mscc_macsec.h b/drivers/net/phy/mscc_macsec.h
+index 9b5d0af91d20..d9ab6aba7482 100644
+--- a/drivers/net/phy/mscc_macsec.h
++++ b/drivers/net/phy/mscc_macsec.h
+@@ -83,6 +83,7 @@ enum mscc_macsec_validate_levels {
+ #define MSCC_MS_STATUS_CONTEXT_CTRL	0x3d02
+ #define MSCC_MS_INTR_CTRL_STATUS	0x3d04
+ #define MSCC_MS_BLOCK_CTX_UPDATE	0x3d0c
++#define MSCC_MS_AIC_CTRL		0x3e02
+ 
+ /* MACSEC_ENA_CFG */
+ #define MSCC_MS_ENA_CFG_CLK_ENA				BIT(0)
+@@ -260,5 +261,6 @@ enum mscc_macsec_validate_levels {
+ #define MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS_M	GENMASK(15, 0)
+ #define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE(x)		((x) << 16)
+ #define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE_M		GENMASK(31, 16)
++#define MACSEC_INTR_CTRL_STATUS_ROLLOVER		BIT(5)
+ 
+ #endif
+-- 
+2.23.0
 
-Please let me know if you have any concern in other functions in this 
-file. I'll address them, if any, in today's update.
-
-thanks,
-  -lakshmi
