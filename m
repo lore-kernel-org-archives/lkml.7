@@ -2,219 +2,60 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A81EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0826BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B2F2073D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sqme3mDO"
+	by mail.kernel.org (Postfix) with ESMTP id C389D24658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfLMKEV (ORCPT
+        id S1726955AbfLMKEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 13 Dec 2019 05:04:23 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60914 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726921AbfLMKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Dec 2019 05:04:21 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50978 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfLMKES (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:04:18 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so5672724wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:04:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VXK6UjT3yvQXehTLYa6S1u2sa5BlRdomwa2/Hcjjkmc=;
-        b=Sqme3mDOu29bXcnx3JAe8SM+kNYOjY0c1eOn0jeZhyWGeYUz5rGyQns0Ag7pq/6y+4
-         kyNlzPph787dZHJXZEiOAQhGqvDODOeUvfLalFGgPiFOIIbTOdaXxqCO4YXJM6O/J8A5
-         7y+ODXuNB/C6mQD7u8B9P5qd4jMdTwZO/82wv52hSD1gubm9gWP71J3kBDqhi6pnnpca
-         +eMsnw4qmTsvG5PLIGt4gyyUyu8eeJJt0qvL6jGUQfBofpLosscXuEDnqCzV3F3SUx26
-         ANV1PwSCvLnuSYw3unH3vKxAF87HodZ174wMuHlQoyrwyn7WrIeh517gJIyDMCnxww0g
-         DLDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VXK6UjT3yvQXehTLYa6S1u2sa5BlRdomwa2/Hcjjkmc=;
-        b=SpOZ/Ph+One6FP4/M7mEuHUwRycgZHMJ13EPSKAiNJDfqhW48R3ofir1kDTB80LKXq
-         vlRiLaSunooSLEwaU42vLAVBCnJoxfXY3JVs82wIrrtuSyxG0UBBat6X4OLllgrPNSaT
-         GLj/et7XTgoVl/61S3KONUFe49mc9JipSVR2mMIDj9pohB9SoM8KcoEWGErWng1nzzMx
-         1irUAH0/1qwQ/q+xUaMbmT9OlziMLzXyoKVpOgLY9ZGIihWP5raQGng+PdYsruQgA7oF
-         jrOmx+bk9XaJOBx/i75nqDtkF/EG0gk43cjulrlt+WaEUKiRrFJwwTxJgj41mAVD9G0Y
-         T+sg==
-X-Gm-Message-State: APjAAAUpmIxCI4Nsx3OUR66wBnmkn+ecHnhH+xr8YwjzaeJsMlUAS1bX
-        UgWYEVVUiFP6/PwDnGbPs1h/c/FaKlzpG831dBLjzg==
-X-Google-Smtp-Source: APXvYqzrrrCcFiuqdvaZaLnkNV6SCoP4uctJu8CpEBW12Wz60eMvE/ICbTcq/LDfsqhURwKKOS2I+ILGE90133ebxOI=
-X-Received: by 2002:a1c:a795:: with SMTP id q143mr11772299wme.52.1576231456007;
- Fri, 13 Dec 2019 02:04:16 -0800 (PST)
+Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ifhny-0000yI-M1; Fri, 13 Dec 2019 11:04:14 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Remove always-on properties from regulator nodes on rk3399-roc-pc.
+Date:   Fri, 13 Dec 2019 11:04:14 +0100
+Message-ID: <6226306.W37etdpfGF@phil>
+In-Reply-To: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
+References: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
 MIME-Version: 1.0
-References: <20191213090646.12329-1-jlee@suse.com> <20191213090646.12329-3-jlee@suse.com>
- <CAKv+Gu_2GTqKJNVpMEg4ic_3ACb5GJKAkgfFWoEdWqMN7pmwiA@mail.gmail.com> <20191213092049.GW22409@linux-l9pv.suse>
-In-Reply-To: <20191213092049.GW22409@linux-l9pv.suse>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Dec 2019 10:04:14 +0000
-Message-ID: <CAKv+Gu8-Ay2R9wU-wwz2w+Q9jZOduXYigmFJL8Rmppnm1CSpHg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] efi: show error messages only when loading
- certificates is failed
-To:     Joey Lee <JLee@suse.com>
-Cc:     Chun-Yi Lee <joeyli.kernel@gmail.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 at 10:21, Joey Lee <JLee@suse.com> wrote:
->
-> Hi Ard,
->
-> On Fri, Dec 13, 2019 at 09:10:12AM +0000, Ard Biesheuvel wrote:
-> > On Fri, 13 Dec 2019 at 10:07, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
-> > >
-> > > When loading certificates list from EFI variables, the error
-> > > message and efi status code always be emitted to dmesg. It looks
-> > > ugly:
-> > >
-> > > [    2.335031] Couldn't get size: 0x800000000000000e
-> > > [    2.335032] Couldn't get UEFI MokListRT
-> > > [    2.339985] Couldn't get size: 0x800000000000000e
-> > > [    2.339987] Couldn't get UEFI dbx list
-> > >
-> > > This cosmetic patch moved the messages to the error handling code
-> > > path. And, it also shows the corresponding status string of status
-> > > code.
-> > >
-> >
-> > So what output do we get after applying this patch when those
-> > variables don't exist?
-> >
->
-> A "UEFI:xxxx list was not found" message will be exposed in dmesg
-> when kernel loglevel be set to debug. Otherwise there have no messages.
->
+Hi Markus,
 
-OK, that works for me.
+Am Dienstag, 10. Dezember 2019, 13:44:38 CET schrieb Markus Reichl:
+> Some regulators don't need the always-on property, remove it.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 
-I take it this will go via the linux-security tree along with 1/2?
+applied for 5.6, but please check your mail client as "git am" was quite
+unhappy about it, which I fixed up in the patch itself.
+Maybe just switch to "git send-email" instead of using Thunderbird.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Heiko
 
 
 
-> > > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
-> > > ---
-> > >  security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++++-------------
-> > >  1 file changed, 21 insertions(+), 19 deletions(-)
-> > >
-> > > diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> > > index 81b19c52832b..b6c60fb3fb6c 100644
-> > > --- a/security/integrity/platform_certs/load_uefi.c
-> > > +++ b/security/integrity/platform_certs/load_uefi.c
-> > > @@ -1,4 +1,5 @@
-> > >  // SPDX-License-Identifier: GPL-2.0
-> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > >
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/sched.h>
-> > > @@ -39,7 +40,7 @@ static __init bool uefi_check_ignore_db(void)
-> > >   * Get a certificate list blob from the named EFI variable.
-> > >   */
-> > >  static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> > > -                                 unsigned long *size)
-> > > +                                 unsigned long *size, const char *source)
-> > >  {
-> > >         efi_status_t status;
-> > >         unsigned long lsize = 4;
-> > > @@ -48,23 +49,30 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> > >
-> > >         status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-> > >         if (status != EFI_BUFFER_TOO_SMALL) {
-> > > -               pr_err("Couldn't get size: 0x%lx\n", status);
-> > > -               return NULL;
-> > > +               if (status == EFI_NOT_FOUND) {
-> > > +                       pr_debug("%s list was not found\n", source);
-> > > +                       return NULL;
-> > > +               }
-> > > +               goto err;
-> > >         }
-> > >
-> > >         db = kmalloc(lsize, GFP_KERNEL);
-> > > -       if (!db)
-> > > -               return NULL;
-> > > +       if (!db) {
-> > > +               status = EFI_OUT_OF_RESOURCES;
-> > > +               goto err;
-> > > +       }
-> > >
-> > >         status = efi.get_variable(name, guid, NULL, &lsize, db);
-> > >         if (status != EFI_SUCCESS) {
-> > >                 kfree(db);
-> > > -               pr_err("Error reading db var: 0x%lx\n", status);
-> > > -               return NULL;
-> > > +               goto err;
-> > >         }
-> > >
-> > >         *size = lsize;
-> > >         return db;
-> > > +err:
-> > > +       pr_err("Couldn't get %s list: %s\n", source, efi_status_to_str(status));
-> > > +       return NULL;
-> > >  }
-> > >
-> > >  /*
-> > > @@ -153,10 +161,8 @@ static int __init load_uefi_certs(void)
-> > >          * an error if we can't get them.
-> > >          */
-> > >         if (!uefi_check_ignore_db()) {
-> > > -               db = get_cert_list(L"db", &secure_var, &dbsize);
-> > > -               if (!db) {
-> > > -                       pr_err("MODSIGN: Couldn't get UEFI db list\n");
-> > > -               } else {
-> > > +               db = get_cert_list(L"db", &secure_var, &dbsize, "UEFI:db");
-> > > +               if (db) {
-> > >                         rc = parse_efi_signature_list("UEFI:db",
-> > >                                         db, dbsize, get_handler_for_db);
-> > >                         if (rc)
-> > > @@ -166,10 +172,8 @@ static int __init load_uefi_certs(void)
-> > >                 }
-> > >         }
-> > >
-> > > -       mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-> > > -       if (!mok) {
-> > > -               pr_info("Couldn't get UEFI MokListRT\n");
-> > > -       } else {
-> > > +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, "UEFI:MokListRT");
-> > > +       if (mok) {
-> > >                 rc = parse_efi_signature_list("UEFI:MokListRT",
-> > >                                               mok, moksize, get_handler_for_db);
-> > >                 if (rc)
-> > > @@ -177,10 +181,8 @@ static int __init load_uefi_certs(void)
-> > >                 kfree(mok);
-> > >         }
-> > >
-> > > -       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-> > > -       if (!dbx) {
-> > > -               pr_info("Couldn't get UEFI dbx list\n");
-> > > -       } else {
-> > > +       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, "UEFI:dbx");
-> > > +       if (dbx) {
-> > >                 rc = parse_efi_signature_list("UEFI:dbx",
-> > >                                               dbx, dbxsize,
-> > >                                               get_handler_for_dbx);
-> > > --
-> > > 2.16.4
-> > >
