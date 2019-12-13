@@ -2,116 +2,81 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9661C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23424656
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqLAEFDa"
+	by mail.kernel.org (Postfix) with ESMTP id D556A205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725980AbfLMHvi (ORCPT
+        id S1725928AbfLMHyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:51:38 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38478 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfLMHvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:51:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so5548853wrh.5;
-        Thu, 12 Dec 2019 23:51:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zhWGf6of1paXEg2Udp6pFG3Inh/6p+5h7lz+S0oU+A4=;
-        b=sqLAEFDadV4KroJZMrXwhCmHegBtzMMxzO8vFNablwsVogQElVhFjExoQP2pEW+xXo
-         bKy7OW8Z3Mv04NDiBSGlg6yFsoxih7dyQIK6GvHlAIRlxgkGCvD01g8OBP/8dd5/RvkU
-         3nFbKMASTguOGC23Hqn+1W/KXMYXcJYB9gj9L54I6oiLdlCpFh5NMrYWL4LU5KbcV5jL
-         CjAdpHKN5KFv4k1+0L6kYnXBoGmb2FD73uDGbhMu+IvMnHXwREoIb2kyNyI4spnzF25l
-         /W6rm+v1zRWQBtG7HGWSX+RWuMhCFR4Gb+at5zxFRRhgWDphlUbGM+p/Z+AOG5ghn+Fc
-         MMpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zhWGf6of1paXEg2Udp6pFG3Inh/6p+5h7lz+S0oU+A4=;
-        b=dap9s4OEVRgDdDvsJQ5pJM7D/PWHp0QNOwC/RprifAvY4/znmCm8lnzQLScEHK1SVd
-         bGLHlX1rjbHboXGEuVu0dnr9p+gYR8WHtlPM8aHyf+y1xpVUJy00Ft8qGST12ZhSNFhG
-         aiWkfuG3iix87Zu/CLa9znaUH4suYxz5mfsU7p9GThoozq7w6pWy53C9wnsdvXMNEDL+
-         cEQp6PfibOFgrWQXe31IP0+6sXbP/wzFhDMRRxYC3GvWOr3W+tOx3qeWuqHHgEaTHTmq
-         a6wObBLbj9vu5ejRGvTOxR7tflTMGI/OKZovd2ajRrLe1qbpIdAxpM2Yj+h2JaCa1he0
-         wtDA==
-X-Gm-Message-State: APjAAAV3j//BgRXNywr/iTMYFWFn/BaqZTSDm2MsKgrbDAOqgitOfIh8
-        DdT59v8Um1M0Uxg7J/RSeokOS9tZ
-X-Google-Smtp-Source: APXvYqyom5M80VGqoE8j7sjcy58SGOQ6fbdKO7z9ZSAKXY8PLBLyuXfQjNqrFt9dILUbltwPcrBXhw==
-X-Received: by 2002:adf:ee82:: with SMTP id b2mr11602891wro.194.1576223495273;
-        Thu, 12 Dec 2019 23:51:35 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.210])
-        by smtp.gmail.com with ESMTPSA id q11sm8942490wrp.24.2019.12.12.23.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 23:51:34 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: don't wait when under-submitting
-Date:   Fri, 13 Dec 2019 10:51:00 +0300
-Message-Id: <5caa38be87f069eb4cc921d58ee1a98ff5d53978.1576223348.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 13 Dec 2019 02:54:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfLMHyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:54:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A01A0AC4D;
+        Fri, 13 Dec 2019 07:54:35 +0000 (UTC)
+Message-ID: <0949d65cf38c6c21f7b1565765dfc34def0b825a.camel@suse.de>
+Subject: Re: [PATCH] spi: bcm2835: don't print error on clk_get() DEFER
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>, linux-spi@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Ray Jui <ray.jui@broadcom.com>
+Date:   Fri, 13 Dec 2019 08:54:33 +0100
+In-Reply-To: <20191212231213.29061-1-jquinlan@broadcom.com>
+References: <20191212231213.29061-1-jquinlan@broadcom.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5DTumPm2OHpOqZWUQ8Si"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reliable way to submit and wait in a single syscall, as
-io_submit_sqes() may under-consume sqes (in case of an early error).
-Then it will wait for not-yet-submitted requests, deadlocking the user
-in most cases.
 
-Don't wait/poll if can't submit all sqes, and return -EAGAIN
+--=-5DTumPm2OHpOqZWUQ8Si
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+On Thu, 2019-12-12 at 18:12 -0500, Jim Quinlan wrote:
+> Otherwise one may get multiple error messages for normal
+> operation of a clock provider.
+>=20
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
 
-I wonder, why it doesn't return 2 error codes for submission and waiting
-separately? It's a bit puzzling figuring out what to return. I guess the
-same with the userspace side.
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
- fs/io_uring.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 42de210be631..82152ea13fe2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4877,6 +4877,11 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
- 					   &cur_mm, false);
- 		mutex_unlock(&ctx->uring_lock);
-+
-+		if (submitted != to_submit) {
-+			submitted = -EAGAIN;
-+			goto out;
-+		}
- 	}
- 	if (flags & IORING_ENTER_GETEVENTS) {
- 		unsigned nr_events = 0;
-@@ -4890,6 +4895,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 		}
- 	}
- 
-+out:
- 	percpu_ref_put(&ctx->refs);
- out_fput:
- 	fdput(f);
--- 
-2.24.0
+--=-5DTumPm2OHpOqZWUQ8Si
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3zQ7kACgkQlfZmHno8
+x/4fZgf9HkEjWQ+/PYekVxrIAJOea8gNqwD85mc8QG9VlGdic6z/NE8T30Ss9f5O
+SEco4JkgPJKnLX4iJmoKNSo451iXLDCe330twWilQDs5HWu06OKuSmb9X96gJQHb
+jJGB2unP+owneVegqK/xAv07qBzgsZiINyyjv9jtdv5Ox7P7ttY54vVww1reUPkt
+rsX+Di6zUZGFpTO6vODp4P9XhB52Lc9TE0/NaDuPuF3+4SUlqBLKYGcHpKv90RVm
+jT6nf9gPvyd09xeYzWg9G1ulMlGayFDzlKSDKj71cRVKKtpL35WBk1SzxGVMz4Um
+KXBFtci2hzFOribpHa1c2tSM6aQOJw==
+=7+Aj
+-----END PGP SIGNATURE-----
+
+--=-5DTumPm2OHpOqZWUQ8Si--
 
