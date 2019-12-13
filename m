@@ -2,117 +2,123 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C69C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C6DC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FBC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B4QfLAbq"
+	by mail.kernel.org (Postfix) with ESMTP id 06B5A22527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 01:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576199773;
+	bh=41UXekEdF9kavlN11G4wL1lFhr5jX6Gv12aUkd97nZU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=woN0kwl7haX1/GdjJ94CI4Wn/qovW7oaTSh0BtubQf+qRKCDBw3symWholQEVbo1w
+	 kmmWhHb+6EkV2pyqDx9Gl6o+Z3TpkD87Pk3x2liw9lGFEfg2iAm0SkiOoPcFWOHfMv
+	 az3+hX+S2RdPTHQlQHCVyi0wiM5u0Kx0X1GeQS/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731637AbfLMBME (ORCPT
+        id S1731640AbfLMBQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 20:12:04 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45828 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731578AbfLMBME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 20:12:04 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so502282pfg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 17:12:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OB/PpPf9DqYQf2Qw7tk2Kuy8kuD5wsJrhVi2dlqE7Sw=;
-        b=B4QfLAbqAM/M4tT0D/uQ37jaQjF2YFpQR7QbFzgjVP1wMSrjvfxL+DT4sxickn293d
-         pgaKxNvMbGrS9X2aVHL/W5rBxjeH7JPg/UAi0zUeUxSP7KPImmBYq+8Nf63RSlrZ8fN5
-         ZqQvtgOVa1bBRAwhr1TSh/3FU85gmuZGU0tARN+s/bKlXCC8Mydbng0a1YJkd0wNy/ov
-         9pcd6dLzTP7GXjagVVNyQla5nwJ74U9mOR8ii4Gi4R7LWQdGTIDjztuwrZ9w0PlU6W5I
-         vOHEvyHmACYgub1FJK3zGtzCKug61Zwwnwz4iSUCsdeEsJlJLPQy2muUnw3Cg3PnMySd
-         kBtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OB/PpPf9DqYQf2Qw7tk2Kuy8kuD5wsJrhVi2dlqE7Sw=;
-        b=T87uCWVAdnQk9b4UCd0PeeVrjAdQw0gqfWNB0LichaBSlOGwhYLs7cs5MkWDjIr/vi
-         Kt7lRTKhyqIVjLaTubxcwjUAmsN34b6NVwdszlw6rf1gL/h0szewsLvmd1OMimrlaDHi
-         WCZEPoIa2wMPdeZQhXT266ZwiHgrwzki6GPetQTEHeUuSrHHdQDTR9WsgLR/z6wYdtX5
-         ipGU1UcIVgBRe4w5jtxPOOaLaS0qbSSe67YCsH2elnFn2IXAlT9jHfyPT3sWmSTUI9u9
-         FVYWs+XMtC+cYrk5rwJNHsKdVmgyECyWk6cfzhFeFudfs0h51ZWkLXCz1RoGKBpvptOp
-         UF9w==
-X-Gm-Message-State: APjAAAW6d8S3SedMtRP8FOYRaehVgLzkgsCh6ylaP2kYlnNkbjCHN3+3
-        9pjKDPkT7FmXSVtWcw4r9X7rdG5j7L2UT0ti3UQd8g==
-X-Google-Smtp-Source: APXvYqxWvzd3ydWQnsw8GTi9x1x/1qLazZpUOpXIcE70GeNhhVCT1RDLbbb0t/qplulkQg7PwzhEf/OQh6tEoY3p+k8=
-X-Received: by 2002:a63:cc4f:: with SMTP id q15mr14061181pgi.159.1576199523237;
- Thu, 12 Dec 2019 17:12:03 -0800 (PST)
+        Thu, 12 Dec 2019 20:16:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727084AbfLMBQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 20:16:11 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E864B2173E;
+        Fri, 13 Dec 2019 01:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576199770;
+        bh=41UXekEdF9kavlN11G4wL1lFhr5jX6Gv12aUkd97nZU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CIHvI4iA5Eab4AxzB1ehbOKRX3V0VZqXs9o2dsLS3Ww31ZEIHy3ZaaTARQTO58q1/
+         O17lww/L0A4aA8YGeNLuEvIjGBbZGK2GbN6zm0mUTxj6a+r7w6OpHmobyrMj0/SQjg
+         zMEChoKxDLuJKMh3n9Gdo1Sb3arovX5qCJ22OKEE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7180835227E8; Thu, 12 Dec 2019 17:16:10 -0800 (PST)
+Date:   Thu, 12 Dec 2019 17:16:10 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
+        rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191213011610.GC2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160238.GE2889@paulmck-ThinkPad-P72>
+ <20191212215534.GE129023@google.com>
 MIME-Version: 1.0
-References: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1575473234-5443-1-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 12 Dec 2019 17:11:52 -0800
-Message-ID: <CAFd5g47KswC47H=0sDr+EFQUGJ3DSMSU2X=1dZc-5D_tZ3ZbOA@mail.gmail.com>
-Subject: Re: [PATCH v6 linux-kselftest-test 0/6] kunit: support building
- core/tests as modules
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Gow <davidgow@google.com>, adilger.kernel@dilger.ca,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212215534.GE129023@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 7:27 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> The current kunit execution model is to provide base kunit functionality
-> and tests built-in to the kernel.  The aim of this series is to allow
-> building kunit itself and tests as modules.  This in turn allows a
-> simple form of selective execution; load the module you wish to test.
-> In doing so, kunit itself (if also built as a module) will be loaded as
-> an implicit dependency.
->
-> Because this requires a core API modification - if a module delivers
-> multiple suites, they must be declared with the kunit_test_suites()
-> macro - we're proposing this patch set as a candidate to be applied to the
-> test tree before too many kunit consumers appear.  We attempt to deal
-> with existing consumers in patch 3.
+On Thu, Dec 12, 2019 at 04:55:34PM -0500, Joel Fernandes wrote:
+> On Fri, Dec 06, 2019 at 08:02:38AM -0800, Paul E. McKenney wrote:
+> 
+> Thanks for fixing these issues and I caught up with all the patches.
+> 
+> > 
+> > o	Create a list that is safe for bidirectional RCU traversal.
+> > 	This can use list_head, and would need these functions,
+> > 	give or take the exact names:
+> 
+> On a related topic, I was trying to reason about how one could come up with
+> bidirectional traversal without ever getting rid of poisoning.
+> 
+> As you noted in another post, if during traversal, the node is deleted and
+> poisoned, then the traverser can access a poisoned pointer. If the list is
+> being traversed in reverse (by following prev), then poisioning could hurt
+> it.
+> 
+> Even with the below modifications, poisoning would still hurt it. No? Were
+> you suggesting to remove poisoning for such bidirectional RCU list?
 
-Hey Alan,
+Yes.  We removed forward poisoning from list_del_rcu(), and a
+list_del_rcuprev() or whatever name would need to avoid poisoning both
+pointers.
 
-I just wanted to make sure you're not in the dark and wondering what
-happened in regards to this patchset. To my knowledge, I believe you
-have all necessary acks/reviewed-bys. As far as I am concerned,
-everything looks good here and is ready to go. The only remaining bit
-is Shuah picking it up, and sending it out in a pull request. Based on
-the nature of this series, it will have to wait until 5.6; however, I
-think we can accept it into kselftest/test (we are planning on
-renaming it to kunit-next or something like that) as soon as we cut
-that, which should be pretty soon.
+							Thanx, Paul
 
-Feel free to poke us if you have any questions!
-
-Thanks again for all your hard work on this! I think this is going to
-be a valuable addition to KUnit.
-
-Cheers
+> Sorry if I missed something.
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > 	list_add_tail_rcuprev():  This is like list_add_tail_rcu(),
+> > 	but also has smp_store_release() for ->prev.  (As in there is
+> > 	also a __list_add_rcuprev() helper that actually contains the
+> > 	additional smp_store_release().)
+> > 
+> > 	list_del_rcuprev():  This can be exactly __list_del_entry(),
+> > 	but with the assignment to ->prev in __list_del() becoming
+> > 	WRITE_ONCE().  And it looks like callers to __list_del_entry()
+> > 	and __list_del() might need some attention!  And these might
+> > 	result in additional users of *_rcuprev().
+> > 
+> > 	list_prev_rcu() as in your first patch, but with READ_ONCE().
+> > 	Otherwise DEC Alpha can fail.  And more subtle compiler issues
+> > 	can appear on other architectures.
+> > 
+> > 	Note that list_move_tail() will be OK give or take *_ONCE().
+> > 	It might be better to define a list_move_tail_rcuprev(), given
+> > 	the large number of users of list_move_tail() -- some of these
+> > 	users might not like even the possibility of added overhead due
+> > 	to volatile accesses.  ;-)
+> > 
+> > Or am I missing something subtle here?
+> > 
+> > 							Thanx, Paul
