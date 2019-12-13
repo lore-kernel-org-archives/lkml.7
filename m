@@ -2,152 +2,117 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF42C341A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF72C3499C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A4F2471D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+y5apdG"
+	by mail.kernel.org (Postfix) with ESMTP id B2E1724776
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfLMOzQ (ORCPT
+        id S1727783AbfLMOjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:55:16 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41901 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbfLMOzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:55:15 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so2169210lfp.8;
-        Fri, 13 Dec 2019 06:55:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2opFr/klQK1oObZvRIZa9Uwbm+rqJyT65CDiKOERf+U=;
-        b=Y+y5apdGrHSiwkctdVgYNHSe8GOEeduItT5VyjHaRwFq59Sm8SpifY0r94mYG73ClT
-         26dO/MXkfrUDu5hQHJ+CL+ZnoTgfp+6o40FvU7aKpgpJ8m0Lb0byz5PadhrpEvkX8/KW
-         PMEpDDr+WiifDLTE9f1z5hIfLkEVc52ncORBs72g+3N18QXtSiVcsmHrSWcagz9AwKbQ
-         E1UkMz9J44RN+zOFLaT33UWrfjzev4DakQRhc4Kx25TXI9r4q/gwXsLyfUXugumtfywb
-         jwbA/U8SA3Kn4cxRJs1/0Ch1CeZ2AZVROkj0vT4RDDd53topZmfFzawvyHh7fPUm1KEO
-         XFjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2opFr/klQK1oObZvRIZa9Uwbm+rqJyT65CDiKOERf+U=;
-        b=cNxTnusMz9mN133pKaZOTYdqMCRP9FPv90TZrBNiEE/PBTMOy80FsEcKPDg6ocZ7O1
-         OqpbVhMrcy/a+FAAKEee6FFvoXSS3CpgxHEhZFzsdO+7AtHyzg/o7k185GgDnN5FrROB
-         kTcN9lqwAXhFub7txv2Z6aSfYXCgMHfwqxn9G02RS2SgvTc/3PMRuK6kcKhSiN8Il/Dl
-         o9J5pix611nED65lI2Wubphga0SiUieW0jKTNuIh1k/c85n9IMVozqfigndJIC/K4W/3
-         k1z/i/X0frF0VVlG2jGLOL0PzZ0DicKRc77dlHq17K3qZ/iaLE4a4qAKbI6/zqvnkAID
-         BwmQ==
-X-Gm-Message-State: APjAAAU+MUCHgP9Yerc35+VWwDIOAwtbcOedBh087n1gnf6nYL7HwLuo
-        BLoT6CVkKBMFwyNhBueQYlA=
-X-Google-Smtp-Source: APXvYqzt/isFtrQIYcmnKxu+sYyMAJCKFYN/difz6VDeRNIWwYULjo+2bqyLCma+CrJDpzaPayDdfw==
-X-Received: by 2002:ac2:53a8:: with SMTP id j8mr9517976lfh.28.1576248912919;
-        Fri, 13 Dec 2019 06:55:12 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p12sm4696695lfc.43.2019.12.13.06.55.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 06:55:12 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
- state
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mikko Perttunen <cyndis@kapsi.fi>
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-4-digetx@gmail.com>
- <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
-Message-ID: <ec7e11f6-2695-29c8-c9ed-98dc229b8aac@gmail.com>
-Date:   Fri, 13 Dec 2019 17:55:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 09:39:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:33340 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727673AbfLMOjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:39:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03CA31435;
+        Fri, 13 Dec 2019 06:39:41 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 808A73F52E;
+        Fri, 13 Dec 2019 06:39:39 -0800 (PST)
+Date:   Fri, 13 Dec 2019 14:39:36 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191213143936.2160dd9d@donnerap.cambridge.arm.com>
+In-Reply-To: <20191212210723.GJ24359@e119886-lin.cambridge.arm.com>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+        <20191210144115.GA94877@google.com>
+        <20191212210723.GJ24359@e119886-lin.cambridge.arm.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <ae96db3a-0854-6e80-0469-e5fa6fd7bb8e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 17:29, Dmitry Osipenko пишет:
-> 13.12.2019 02:34, Dmitry Osipenko пишет:
->> I noticed that sometime I2C clock is kept enabled during suspend-resume.
->> This happens because runtime PM defers dynamic suspension and thus it may
->> happen that runtime PM is in active state when system enters into suspend.
->> In particular I2C controller that is used for CPU's DVFS is often kept ON
->> during suspend because CPU's voltage scaling happens quite often.
->>
->> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
->> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
->> suspend/resume in the NOIRQ phase which is used for the system-level
->> suspend/resume of the driver.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->> index b3ecdd87e91f..d309a314f4d6 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->>  {
->>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->> +	int err;
->>  
->>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
-> 
-> I'm now in a doubt that it is correct to use NOIRQ level at all for the
-> suspend because i2c_mark_adapter_suspended() uses mutex, thus I'm
-> wondering what will happen if there is an asynchronous transfer
-> happening during suspend..
-> 
-> The i2c_mark_adapter_suspended() will try to block and will never return?
+On Thu, 12 Dec 2019 21:07:24 +0000
+Andrew Murray <andrew.murray@arm.com> wrote:
 
-Moreover, the I2C interrupt should be disabled during the NOIRQ phase.
-So, yes.. looks like making use of NOIRQ level wasn't a correct
-decision. On the other hand, I don't think that any I2C client driver
-used by Tegra SoCs in the upstream kernel could cause the problem at the
-moment, so it shouldn't be critical.
+Hi,
 
-BTW: Jon, please CC me next time ;) [I'll try to find a better solution
-for the PCIE problem]
+> On Tue, Dec 10, 2019 at 08:41:15AM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:  
 
->> +	err = pm_runtime_force_suspend(dev);
->> +	if (err < 0)
->> +		return err;
->> +
->>  	return 0;
->>  }
->>  
->> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->>  	if (err)
->>  		return err;
->>  
->> +	err = pm_runtime_force_resume(dev);
->> +	if (err < 0)
->> +		return err;
->> +
->>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->>  
->>  	return 0;
->>
+[ ... ]
+
+> > Even ECAM compliance is not really minor -- if this controller were
+> > fully compliant with the spec, you would need ZERO Linux changes to
+> > support it.  Every quirk like this means additional maintenance
+> > burden, and it's not just a one-time thing.  It means old kernels that
+> > *should* "just work" on your system will not work unless somebody
+> > backports the quirk.  
 > 
+> With regards to URs resulting in unwanted aborts or similar - this seems
+> to be a very common theme amongst ARM PCI controller drivers. For example
+> both ARM32 imx6 and ARM32 keystone have fault handlers to handle an abort
+> and fabricate a 0xffffffff read value.
+> 
+> The ARM32 rcar driver, whilst it doesn't appear to produce an abort, does
+> read the PCI_STATUS register after making a config read to determine if
+> any aborts have happened - in which case it reports
+> PCIBIOS_DEVICE_NOT_FOUND.
+> 
+> And as recently reported [1], the rockchip driver also appears to produce
+> aborts.
+> 
+> I suspect that this ARM64 controller driver won't be the last either. Thus
+> any solution here may form the basis of copy-cat solutions for subsequent
+> controllers.
+
+Well, I think Bjorn is aware of them, but was actually hoping that those broken controllers would go away at some point ;-)
+And just to make this clear: I would categorise this issue as an integration bug, which just can't be fixed in hardware or firmware easily. It was never meant to be this way. So I am not sure we should promote generic solutions here.
+
+> From my understanding of the issues, the ARM64 serrors are imprecise and
+> as a result there isn't a sensible way of using them to determine that a
+> read is a UR. So where there are no other solutions to suppress the
+> generation of an abort by the controller, the only solutions that seem to
+> exist are 1) pre-scan the devices in firmware and only talk to those devices
+> in Linux - a safe option but limiting - perhaps with side effects for CRS
+> and 2) the approach rcar takes in using the PCI_STATUS register - though
+> you'd end up having to mask the serror (PSTATE.A) for a limited period of
+> time - a risky option (you'll miss real serrors) - but with no side effects.
+> 
+> (I don't know if option 2 is feasible in this case by the way).
+
+Interesting, we might evaluate this, but mostly out of curiosity or for debugging. I don't think it's really a better option.
+If there is a safe way of making this work in the majority of cases, that should be the way to go. Setting PSTATE.A sounds quite wacky to me.
+
+Thanks,
+Andre.
+
+> [1] https://lore.kernel.org/linux-pci/2a381384-9d47-a7e2-679c-780950cd862d@rock-chips.com/2-0001-WFT-PCI-rockchip-play-game-with-unsupported-request-.patch
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+> >   
+> > > This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+> > > and to access *any* devices (there are no platform devices except UART).  
 
