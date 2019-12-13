@@ -7,78 +7,76 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6188AC3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16657C341AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0767246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5467B24723
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLMMHF (ORCPT
+        id S1726942AbfLMMLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:07:05 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:36626 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfLMMHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:07:03 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB75F1A0079;
-        Fri, 13 Dec 2019 13:07:01 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B4EB61A08FE;
-        Fri, 13 Dec 2019 13:07:01 +0100 (CET)
-Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DA126203B1;
-        Fri, 13 Dec 2019 13:07:00 +0100 (CET)
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
-        robh+dt@kernel.org
-Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com,
-        Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: [PATCH v3 2/6] firmware: imx: scu-pd: Add power domains for imx-jpeg
-Date:   Fri, 13 Dec 2019 14:06:17 +0200
-Message-Id: <1576238781-5911-3-git-send-email-mirela.rabulea@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
-References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 13 Dec 2019 07:11:15 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47600 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfLMMLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:11:14 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 95267D7B149C30DAA05A;
+        Fri, 13 Dec 2019 20:11:12 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
+ 20:11:03 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <rrichter@marvell.com>
+CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] EDAC: remove set but not used variable 'ecc_loc'
+Date:   Fri, 13 Dec 2019 20:10:36 +0800
+Message-ID: <20191213121036.8886-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The power domains are for imx8qxp/imx8qm JPEG encoder & decoder.
-Each has 4 slots and a wrapper.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+drivers/edac/i5100_edac.c: In function ‘i5100_read_log’:
+drivers/edac/i5100_edac.c:489:11: warning: variable ‘ecc_loc’
+set but not used [-Wunused-but-set-variable]
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- drivers/firmware/imx/scu-pd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/edac/i5100_edac.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index b556612..e7bf48a 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -158,6 +158,12 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
- 	/* DC SS */
- 	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
- 	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
-+
-+	/* IMAGE SS */
-+	{ "img-jpegdec-mp", IMX_SC_R_MJPEG_DEC_MP, 1, false, 0 },
-+	{ "img-jpegdec-s0", IMX_SC_R_MJPEG_DEC_S0, 4, true, 0 },
-+	{ "img-jpegenc-mp", IMX_SC_R_MJPEG_ENC_MP, 1, false, 0 },
-+	{ "img-jpegenc-s0", IMX_SC_R_MJPEG_ENC_S0, 4, true, 0 },
- };
+diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
+index 0ddc41e47a96..a7ccf7b13619 100644
+--- a/drivers/edac/i5100_edac.c
++++ b/drivers/edac/i5100_edac.c
+@@ -486,7 +486,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
+ 	u32 dw;
+ 	u32 dw2;
+ 	unsigned syndrome = 0;
+-	unsigned ecc_loc = 0;
+ 	unsigned merr;
+ 	unsigned bank;
+ 	unsigned rank;
+@@ -499,7 +498,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
+ 		pci_read_config_dword(pdev, I5100_REDMEMA, &dw2);
+ 		syndrome = dw2;
+ 		pci_read_config_dword(pdev, I5100_REDMEMB, &dw2);
+-		ecc_loc = i5100_redmemb_ecc_locator(dw2);
+ 	}
  
- static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
+ 	if (i5100_validlog_recmemvalid(dw)) {
 -- 
-2.7.4
+2.17.2
 
