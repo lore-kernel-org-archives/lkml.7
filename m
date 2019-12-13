@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C639C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E57C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7A7206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A19206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FVQ6yX+k"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="aIUYOHnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbfLMAJm (ORCPT
+        id S1731888AbfLMAJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:09:42 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39323 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731871AbfLMAJi (ORCPT
+        Thu, 12 Dec 2019 19:09:44 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39573 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731875AbfLMAJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:09:38 -0500
-Received: by mail-pj1-f65.google.com with SMTP id v93so343472pjb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:09:38 -0800 (PST)
+        Thu, 12 Dec 2019 19:09:41 -0500
+Received: by mail-pl1-f194.google.com with SMTP id o9so385893plk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:09:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tRWGiJTgH8ojKPgouCjHwlEMcuQFXWpAzPDdrUxEpKQ=;
-        b=FVQ6yX+kvRCHL6zKDUuiBB1rf+YvkRSWFt5vXirWLuXqYqBXjk9mjSdMrZwfGlZLGq
-         POOC8a4uStNYh6tMonPqVWrJKWIQu6ooxZM3MQjlSrnp2DpB7XTz1dJSYtt7wlhV0p4C
-         mdFGes9xCtuCsWzeg6yE3Z3wjEJ+BFUtADcjhl/TehOfjK/r0RVJ6qxO7cwcdnf5lACx
-         mDD2sq/RdojXuL0TBrD6GNdPbtmar66iemj2l/jdXXEVV1Uv3LMt3NHzie7GFU02aw8m
-         GnV+CsXFRGUQcj1aMmDqAFtddqcU/I27uJG7gilqV48RYol5+kk4Laex2pZ5092HRxTd
-         9d8w==
+        bh=Hompvs4TzHM6s+1/5TyS4xDRIwWIj/44vZj5QlCvckg=;
+        b=aIUYOHntjzAwxd3L5BARNwmmEk6JQIP8acefncyZcp2QiHgm5HQZv+zhKNU/xkJ16s
+         sPSrprQUm6NWIX3lQSCvjJRnLZCZygrbhvclb/9KRyJwACumT/xx48RI6QMCdcT5Bioj
+         ZyMWZpiYgt4Awz4x0KzQTwlOAje8OnkoaLxXVxnJJP68wyH1RTYYtSpN6Ha54GhfC16Y
+         WL3GMHzTrOEg7UEYYLonxEEz+lA3YcYBkfqQJuctAaOE1C4401OHGK1MPSKzUNnoM8Ig
+         AU6McbGVMmCeb4Jeyawvqr++ESFWk0oJ+iKBM9fCWRvGDyfrpAz+3WNSfAEih82sdmeQ
+         ki7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tRWGiJTgH8ojKPgouCjHwlEMcuQFXWpAzPDdrUxEpKQ=;
-        b=EZVzr1dRnQCI0xDqTI4Imwe7lxZhTkJidZYAcJg7rUgeTWUJ3/vyDSvj3/fL6LWd8a
-         u9YrFDkb5ZFacZsb8gdADAObkKkRQKe5BToN7bNI+B/HO33ukf9oGkvWYKvZ/ertZFAi
-         PQh33karBu+dSXwbb2hSnDmKVKJbiSL7xvuqR/7E1tIdBR05TgWKRhT8Bi5kgXp4lMF3
-         NcraxAHGDXPIGWgIxYNU+PVx0dvkBtw2LnPicWrBtPVj6wIra0NaTfak0fxWwO01G79j
-         o4klfksh98W2u78djpMw9ENaQRpTs0pa/hkh8fBMp7xVRv652NbSDeg/MBW9JPi0MI8j
-         pntQ==
-X-Gm-Message-State: APjAAAVUW7t0L2/3WM+sIVsLp1mqpN237javHDEWiutbMzLc6q9kjPHg
-        35YQoHt+pqsZ4SJdxyKrZqNZ8HY8tmc=
-X-Google-Smtp-Source: APXvYqyeabE7rfY9K9RLj7vZAopmNplzFjzuLaZ8dvksqSyNsq801CAohBkkytIuAMMulL7af1Qpzg==
-X-Received: by 2002:a17:90a:21ee:: with SMTP id q101mr13227836pjc.94.1576195777319;
-        Thu, 12 Dec 2019 16:09:37 -0800 (PST)
+        bh=Hompvs4TzHM6s+1/5TyS4xDRIwWIj/44vZj5QlCvckg=;
+        b=bZZSoANaVYD3EHRfIQ26RsHROIEjJ0o8ktzEWCfNPI/kMjVHPff819Obk2/g2b09N6
+         mS2hGxTYhExxNVyg5ce7vcNggWFJFPyq0/ucaiD/sYMigAnuYqfIioAfCwh5iQB0T4Yp
+         UEnK59KBwLdukOz5q3fvBdToi+Xl99l8xTgqclVf5zgL9knf+e3Z8Haa9Z6E/Q3cEoKC
+         GHtmV+1JMIS+yn1BRbxkSdLpkqgRHHZADEdzN0sRy9hU/51+3TFKMok5277int+OzBqf
+         1zCkPeohN9HNFj+QCzq3MH/LmACiHOMMT3XZ5aScKrVEW1yeVb+6xmX0JiIDo1d7ma3y
+         k5Qw==
+X-Gm-Message-State: APjAAAU7d8VSypMqg1mapacW0E7S/Dk8tl2QLG1uYOIZe/el1cl9VRhP
+        I4/C65jASUl5sDZK3b8KIMUNaMs/9yg=
+X-Google-Smtp-Source: APXvYqwbjk8eQ60HCsyGrINj/6WOIvDOU0q5FM1bdjC6TvtdYoMStt8wLyL1RMXEwsRxfaqNgqVesQ==
+X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr13291140pjv.78.1576195780272;
+        Thu, 12 Dec 2019 16:09:40 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.09.34
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.09.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:09:36 -0800 (PST)
+        Thu, 12 Dec 2019 16:09:39 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -63,11 +63,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: [PATCH 48/58] tty/serial: Migrate sunzilog to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:47 +0000
-Message-Id: <20191213000657.931618-49-dima@arista.com>
+        linux-serial@vger.kernel.org, Timur Tabi <timur@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 49/58] serial/ucc_uart: Remove ifdef SUPPORT_SYSRQ
+Date:   Fri, 13 Dec 2019 00:06:48 +0000
+Message-Id: <20191213000657.931618-50-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -78,53 +78,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SUPPORT_SYSRQ ifdeffery is not nice as:
-- May create misunderstanding about sizeof(struct uart_port) between
-  different objects
-- Prevents moving functions from serial_core.h
-- Reduces readability (well, it's ifdeffery - it's hard to follow)
+ucc_uart doesn't seem to support console over itself, so maybe it can
+be deleted with uart_handle_sysrq_char() from the file.
 
-In order to remove SUPPORT_SYSRQ, has_sysrq variable has been added.
-Initialise it in driver's probe and remove ifdeffery.
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
+Cc: Timur Tabi <timur@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/sunzilog.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/tty/serial/ucc_uart.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/tty/serial/sunzilog.c b/drivers/tty/serial/sunzilog.c
-index bc7af8b08a72..103ab8c556e7 100644
---- a/drivers/tty/serial/sunzilog.c
-+++ b/drivers/tty/serial/sunzilog.c
-@@ -40,10 +40,6 @@
- #include <asm/prom.h>
- #include <asm/setup.h>
- 
--#if defined(CONFIG_SERIAL_SUNZILOG_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
--#define SUPPORT_SYSRQ
+diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
+index a0555ae2b1ef..ff7784047156 100644
+--- a/drivers/tty/serial/ucc_uart.c
++++ b/drivers/tty/serial/ucc_uart.c
+@@ -551,9 +551,7 @@ static void qe_uart_int_rx(struct uart_qe_port *qe_port)
+ 	/* Overrun does not affect the current character ! */
+ 	if (status & BD_SC_OV)
+ 		tty_insert_flip_char(tport, 0, TTY_OVERRUN);
+-#ifdef SUPPORT_SYSRQ
+ 	port->sysrq = 0;
 -#endif
--
- #include <linux/serial_core.h>
- #include <linux/sunserialcore.h>
+ 	goto error_return;
+ }
  
-@@ -1444,6 +1440,7 @@ static int zs_probe(struct platform_device *op)
- 	up[0].port.line = (inst * 2) + 0;
- 	up[0].port.dev = &op->dev;
- 	up[0].flags |= SUNZILOG_FLAG_IS_CHANNEL_A;
-+	up[0].port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_SUNZILOG_CONSOLE);
- 	if (keyboard_mouse)
- 		up[0].flags |= SUNZILOG_FLAG_CONS_KEYB;
- 	sunzilog_init_hw(&up[0]);
-@@ -1461,6 +1458,7 @@ static int zs_probe(struct platform_device *op)
- 	up[1].port.line = (inst * 2) + 1;
- 	up[1].port.dev = &op->dev;
- 	up[1].flags |= 0;
-+	up[1].port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_SUNZILOG_CONSOLE);
- 	if (keyboard_mouse)
- 		up[1].flags |= SUNZILOG_FLAG_CONS_MOUSE;
- 	sunzilog_init_hw(&up[1]);
 -- 
 2.24.0
 
