@@ -2,93 +2,116 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEAC34995
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E726AC34989
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25552473F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256BE246B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntCYo4fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLMLum (ORCPT
+        id S1726836AbfLMLqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:50:42 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42526 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfLMLum (ORCPT
+        Fri, 13 Dec 2019 06:46:40 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38350 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfLMLqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:50:42 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1579D1C25B1; Fri, 13 Dec 2019 12:50:40 +0100 (CET)
-Date:   Fri, 13 Dec 2019 12:50:39 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device
- node
-Message-ID: <20191213115039.GB31336@duo.ucw.cz>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150351.658072828@linuxfoundation.org>
- <20191212133132.GA13171@amd>
- <20191212140241.GA1595136@kroah.com>
+        Fri, 13 Dec 2019 06:46:39 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so6325048wrh.5;
+        Fri, 13 Dec 2019 03:46:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HCgiaWMI/x6U67hIPPycQp/x3zK3ZvfDXctut3Mj0H8=;
+        b=ntCYo4fm2d/zzZ4lTMIHE2k18++eeMkvDoPsZ2tVIeLuOwZKRH3Xl0/iqsxYzseV32
+         9JtOFz1k8zwhM7rcEfbl4Ul3T7p2HVGhxihyrWvvbKJ9c8Ti9MqToNwSmdA1M4cTmY4g
+         FE4K278750sNT48xziH/Hxs6RpB4M7bQuLqunBAH8s3sO8vnCqtvZeG+a+zC7r+HAqW2
+         KMRmPH93e5UhTfshDBVhWpsVneNuClqdHMb/bI1GEB4bmHsAed3iODeq1gPJxb+S2IfL
+         Xg7AzfAEQOGD6GGdnskwH/MkDQnpX1HilwhQvVmxk2Otg1pDMOCSx9jdIDda6roJYSko
+         TN4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HCgiaWMI/x6U67hIPPycQp/x3zK3ZvfDXctut3Mj0H8=;
+        b=srnIf4YEVAB/826wJhFwKBUkJ6HZLjlkdvI2EJo2hRt2fg/knN3lWA07ZCb+cbiDB6
+         l/eE4YpqtV46Wtv0AG5CEfoR2ri0ySz/69uMeEFQwAXjqER4N6etzF3aVmSjJd8vGZ3f
+         gIGEE2pLvdbqrBDLJGohrMUnWhUexMHoyKrlxc5gYgg61tVitOTBYoZyndsNN72q6gLF
+         yVqRYeZ0JPpJbabsIlvqcD9MJB9Bd3xeOeirENfubOtH11iOPYgZXrASeo/H98qZrEst
+         2VCNWsppQwtquvPX6f64fx68WRxfXbqoQRc9rIUia/ycu9643YQDejM1Sn8Qqkiny5UW
+         xrcw==
+X-Gm-Message-State: APjAAAUMZHxIoNsf7wIF63BUMZTpytENzQpEaHTLme08Z6K5hEIIr1kP
+        u66nbvkMc2kTI+EipK2sNB8xdvhB
+X-Google-Smtp-Source: APXvYqwijV//FwSD6ZdUbelYpMbehqqqYrxwCr2pcHvthrmHzwmG+JKUW2lWiTI9HuHu8NHjX/ZVbQ==
+X-Received: by 2002:adf:f6c1:: with SMTP id y1mr13203522wrp.17.1576237596862;
+        Fri, 13 Dec 2019 03:46:36 -0800 (PST)
+Received: from [192.168.178.26] (ipservice-092-219-207-064.092.219.pools.vodafone-ip.de. [92.219.207.64])
+        by smtp.gmail.com with ESMTPSA id a184sm10170022wmf.29.2019.12.13.03.46.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 03:46:36 -0800 (PST)
+Subject: Re: [PATCH 0/6] rtlwifi: convert rtl8192{ce,cu,de} to use generic
+ functions
+To:     Pkshih <pkshih@realtek.com>
+Cc:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191211154755.15012-1-straube.linux@gmail.com>
+ <1576115241.2733.1.camel@realtek.com>
+From:   Michael Straube <straube.linux@gmail.com>
+Message-ID: <84f3ec5e-eda7-c955-2705-482263eb1ee6@gmail.com>
+Date:   Fri, 13 Dec 2019 12:46:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
-Content-Disposition: inline
-In-Reply-To: <20191212140241.GA1595136@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576115241.2733.1.camel@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-12-12 02:47, Pkshih wrote:
+> On Wed, 2019-12-11 at 16:47 +0100, Michael Straube wrote:
+>> This series converts the drivers rtl8192{ce,cu,de} to use the generic
+>> functions rtl_query_rxpwrpercentage and rtl_signal_scale_mapping.
+>>
+>> Michael Straube (6):
+>>    rtlwifi: rtl8192ce: use generic rtl_query_rxpwrpercentage
+>>    rtlwifi: rtl8192cu: use generic rtl_query_rxpwrpercentage
+>>    rtlwifi: rtl8192de: use generic rtl_query_rxpwrpercentage
+>>    rtlwifi: rtl8192ce: use generic rtl_signal_scale_mapping
+>>    rtlwifi: rtl8192cu: use generic rtl_signal_scale_mapping
+>>    rtlwifi: rtl8192de: use generic rtl_signal_scale_mapping
+>>
+>>   .../wireless/realtek/rtlwifi/rtl8192ce/trx.c  | 48 ++----------------
+>>   .../wireless/realtek/rtlwifi/rtl8192cu/mac.c  | 49 ++-----------------
+>>   .../wireless/realtek/rtlwifi/rtl8192de/trx.c  | 47 ++----------------
+>>   3 files changed, 14 insertions(+), 130 deletions(-)
+>>
+> 
+> For all patches:
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+> 
 
---uQr8t48UFsdbeI+V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks.
 
-On Thu 2019-12-12 15:02:41, Greg Kroah-Hartman wrote:
-> On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > The RTC module on the A23 was claimed to be the same as on the A31, w=
-hen
-> > > in fact it is not. The A31 does not have an RTC external clock output,
-> > > and its internal RC oscillator's average clock rate is not in the same
-> > > range. The A33's RTC is the same as the A23.
-> > >=20
-> > > This patch fixes the compatible string and clock properties to conform
-> > > to the updated bindings. The register range is also fixed.
-> >=20
-> > No, this is not okay for v4.19. New compatible is not in
-> > ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
->=20
-> Good catch, I would have thought both of those would happen at the same
-> time.
+> Curiously. How can you find these function are identical?
+> 
+While sending cleanup patches for some staging wifi drivers I noticed
+that these functions are used in many of the realtek drivers and all
+looked very similar. Then used grep and diff to verify.
 
-That's not normally how it works for dts changes. Drivers and dts very
-often have different maintainers, so there is preference for them to
-go in separately.
+Michael
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---uQr8t48UFsdbeI+V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXfN7DwAKCRAw5/Bqldv6
-8ibFAJ4pxy30IvcxHFjCBJCU15Pdj8quWwCfeIuo5fW4RKucTDuAB+Q4aUsc+wk=
-=msQO
------END PGP SIGNATURE-----
-
---uQr8t48UFsdbeI+V--
