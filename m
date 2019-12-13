@@ -2,340 +2,158 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D042C80D48
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A2C80D4A
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5104424785
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045442477E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="lZ9bjJS5"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Z7EiXKi7";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ArSoiCfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfLMTWN (ORCPT
+        id S1728916AbfLMTYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:22:13 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39527 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbfLMTWM (ORCPT
+        Fri, 13 Dec 2019 14:24:19 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:46856 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728631AbfLMTYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 14:22:12 -0500
-Received: by mail-qt1-f193.google.com with SMTP id i12so3164468qtp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 11:22:10 -0800 (PST)
+        Fri, 13 Dec 2019 14:24:19 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9D26F4060D;
+        Fri, 13 Dec 2019 19:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576265058; bh=2HCRCMT0lnlcQv2rNYIM7SDUCX0x+USzVcUkgTa4nGE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Z7EiXKi7bboj2NlcwZDEgkcjnexg8nY8/doTgIDuILWTJ7pgVMFtPVLmKjLIU1xxE
+         LHMhcWtWoNBvydVQABaBVBYQFjzzbHM7dQ/NkTVv4H7XkGOyCGXE9YY90QSWfh+FzX
+         WPRlkkMUQcPc7w8jEEyZs42AdxuyRjRo3KlQkd9H7EMyudZm8PjtbaSqDuxYabOl6b
+         tIfFJpLNedSdRULgE6/pdcyEqqAwmDxEBCRDkDpmZMY9XZpYCFqklBVtnDdRZ24xgZ
+         ZUGbCGZE+q+3V6vAK3y/VwJJaBAXiMxFF3SCtFIgQI0Z86jMA/3vOal5jJM172vQmY
+         Q8SqVHgdfY7Ww==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B7D2A0083;
+        Fri, 13 Dec 2019 19:24:15 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Dec 2019 11:23:14 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 13 Dec 2019 11:23:14 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ob7ctWhJJR6BP+Npxbd1qCVwkabbwmxgiRf16OBQ19DW9QSFbSJdeXHrfGPH23iryQ50G4oI2S+5I53mBHQbHMs50TiYne/sc7VccFBICSAspeeEtXLe8LZkfkD3ukmqQAhXJrVvQJGReHEAISoHQxo8gGvbNBrW+8rSrxeH38MuzrNYi1a5fiEK0JwRpVl81IJ9ZnTnfYbKVJlmGofBoL16zAHMGepFW+6046iz+0RzZmd+BMaG4KbRkZHVTVCh7Qk1n6tE90CV66kYIYw6fuIlQBi2TxW+4fQwdpD3sS7DijBOtSz8OhhyZmea967ywJeOb27qe56S7fIuBxC+yA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NNw5wB0KY74oDpB/om061AlnENyOa34FNMdaWiNhm+w=;
+ b=fxxj/+m3sAju4g0IOvXxZfkTdMH5FzTPJiGL0RqQc+lW0AQ8xIxKqfKLJC02tsl3VQsiTfN6bMOsIRSa5VfLadPqbPmrLG4tanj6IJpafwqsRalHpQ9U83mAin05X09hoURN38WAeqJJ/z1WD5Mbz8T6alTDkyQVQRFDgblBieVFmrom7pk+Ii+3fYGY4niF+CaDF6hx/rerCVUuY4H4r77WR985KNKOm7J6DpmFG0LMMM80Bs2cO66D63x0Tu5BwOtlaXwVcmqCY9ESPJ73KdeihbNuZEBioFFqyy8sLPHsi6HQyK1UGJSIKBs+Wh7TfaeZ8DN8Tg2ZiRW0sgktjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ls8wrlESclxVq3FWZo1eL09b2RRlMQtABmUSobhX+h4=;
-        b=lZ9bjJS5Z8k4/MLIlRP/BYAnRVGwWQQ3CgZMTx0IRCiXdLNyvaEG0mUPyHZoCXDVqR
-         7l3k5fqaJC4ezU1alx/DqAD3PlK+3vxqGvA6A/3XaHSkScWEp8gn0ktcS31ZGjn4nh69
-         GXINwN6Q3qLPvv6WdLQGvfHD6BAMUQh3nVsze6hH7daRqyCS/bY5us0iGTOkO3KXVjfd
-         FxZgf3rxLhc1JXfcOC83ZkinubQ4iuzMKVr42zoHrKV0gQR2479UnJ7S6dtEpE4ppblA
-         pwjjtNHtW5vRpcJwQK80kGz1o29UYS4WMtpvY4AnvVCKI8nHQS1yawAv32umi9PnGTy5
-         CgQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ls8wrlESclxVq3FWZo1eL09b2RRlMQtABmUSobhX+h4=;
-        b=A6iY5XzTxaUW2lkjCnWU6qhyN5YnodW0FBB7cuTC9N9MqgA6FCKzcN/NgDj1MQwdY+
-         Tqrc58/Fndb3nc5dPzaw0hBbuRxNraDG4VU0nklKIRC286FUjpRvC1ihgIQLPXvccZwN
-         0JvAOrzVo943Dh9dFKrR/ExQNy5yFcHpBflJPuYLW9xGA66zIwFzlzFGQQG/6PsnqONT
-         wU9ussflWaJbp/W2+PxNEpUm5cZ865j6eEy2wgGzEef6HJqJGrpl/OU9/V2gCb0dCVxj
-         dA3cOqquwXbzXl6jemgzCZ95yiuDDRWsqBFFujSTvR8DjYAlvx4QguC0PCZsFkqxCpCV
-         6ZSQ==
-X-Gm-Message-State: APjAAAUYlNP4GEWdxZivcT+K8eXjS13mGo7xe6I4DENox2//a4P9NgDv
-        iq6Fx24Oaj+oyepyoV4WorTVMA==
-X-Google-Smtp-Source: APXvYqxZPysoe/Ql2LS4dKybRud0DpE+4jKywCpSWQlSa/OzILw6xdHPTOPaswqi6BLyV5dhF7vBiw==
-X-Received: by 2002:aed:2b02:: with SMTP id p2mr8383977qtd.225.1576264929972;
-        Fri, 13 Dec 2019 11:22:09 -0800 (PST)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id x65sm3092605qkd.15.2019.12.13.11.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:22:09 -0800 (PST)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 2/3] mm: memcontrol: clean up and document effective low/min calculations
-Date:   Fri, 13 Dec 2019 14:21:57 -0500
-Message-Id: <20191213192158.188939-3-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191213192158.188939-1-hannes@cmpxchg.org>
-References: <20191213192158.188939-1-hannes@cmpxchg.org>
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NNw5wB0KY74oDpB/om061AlnENyOa34FNMdaWiNhm+w=;
+ b=ArSoiCfr046loQDvc3lexM1bJLqL0q3yHl8iaEgZVsYUiiOSQ4J8+wDwdWau+8altH/lir7WMY0uazjfdn3sQNjRYeEheg4DoJalgBH0sctGyFkfNCvnhTphZoep030sZDk12zISeMcH42eMmJWVJnVJWuSwXi0YSlu3x1SK5ds=
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
+ CY4PR1201MB2485.namprd12.prod.outlook.com (10.172.117.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Fri, 13 Dec 2019 19:23:12 +0000
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4]) by CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4%8]) with mapi id 15.20.2516.018; Fri, 13 Dec 2019
+ 19:23:12 +0000
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
+ state for HS
+Thread-Topic: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link
+ state for HS
+Thread-Index: AQHVsDaLtpPSN5OMLk2Tn5J854A5uKe30MGAgACkVYA=
+Date:   Fri, 13 Dec 2019 19:23:12 +0000
+Message-ID: <f3c4d47c-ae00-1b5a-1894-d48da26ed5fd@synopsys.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150345.799359877@linuxfoundation.org> <20191213093501.GA27976@amd>
+In-Reply-To: <20191213093501.GA27976@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thinhn@synopsys.com; 
+x-originating-ip: [149.117.75.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71f00fef-6d6b-4503-189f-08d78001e547
+x-ms-traffictypediagnostic: CY4PR1201MB2485:
+x-microsoft-antispam-prvs: <CY4PR1201MB2485AEBC2E60ECD5B950BA2CAA540@CY4PR1201MB2485.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:612;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(36756003)(4744005)(81166006)(8676002)(4001150100001)(31696002)(478600001)(86362001)(8936002)(4326008)(31686004)(5660300002)(81156014)(26005)(6486002)(76116006)(66446008)(186003)(54906003)(2616005)(2906002)(64756008)(71200400001)(66556008)(6506007)(66476007)(6512007)(110136005)(66946007)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB2485;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vEgq3T7HcI1Y5agguSDf3y5T57jfhMsPEFlvJ90JWg0b/02MnWkrVfgyzdHHCxBnXePBvfg6JlE1m2UzFrmISt8PjNWwYqhCx2Ygqcd/+K/t6YCzOunn9SSK2bRO62VJ/qeAojtEmAR+3BPZKYGBphKPBTk7BRsdnDVL8EVMBNGkWVNW4brwq8XJxONJo0w07FlHsyN7ZnbksumILSH0SDcH1dLmyH77Vvlm6OhXbyz1pFt++8e8JY5OdksdMAMKNl0pobQGt1q+42otOzhiBlkyUkaQSyfxRg3lom8HIw8StVlhh/WJSX8KxHp5vZDJ8d8tOFUn/ytQPcrd/+oAaVqm3x8ooB1B/S2ZKxkxQvhWpll21mDCPBIvOZ1x146b+s1zAMDFlQB+JAnA/Ev5/yFNdAxk51NVr4dGRsKIqwufg3DQUA+jObGChQl1/t/x
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <081814DAFDBAA84CB1F8929E6A500D21@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71f00fef-6d6b-4503-189f-08d78001e547
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 19:23:12.5099
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E5ZXhiiJDGwv9q/mdKDwSMCzgFyi/16LvmQRnand2LO/BdzoawGlttscfWc1Hgd6ABIUHLIpVotc29JKIU9xWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2485
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The effective protection of any given cgroup is a somewhat complicated
-construct that depends on the ancestor's configuration, siblings'
-configurations, as well as current memory utilization in all these
-groups. It's done this way to satisfy hierarchical delegation
-requirements while also making the configuration semantics flexible
-and expressive in complex real life scenarios.
+Hi,
 
-Unfortunately, all the rules and requirements are sparsely documented,
-and the code is a little too clever in merging different scenarios
-into a single min() expression. This makes it hard to reason about the
-implementation and avoid breaking semantics when making changes to it.
+Pavel Machek wrote:
+> On Wed 2019-12-11 16:04:21, Greg Kroah-Hartman wrote:
+>> From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+>>
+>> [ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
+>>
+>> Highspeed device and below has different state names than superspeed and
+>> higher. Add proper checks and printouts of link states for highspeed and
+>> below.
+> This is debugfs, so I don't believe it was suitable for stable in the
+> first place, but....
+>
+>
+>> +	case DWC3_LINK_STATE_RESUME:
+>> +		return "Resume";
+>> +	default:
+>> +		return "UNKNOWN link state\n";
+>> +	}
+> You may want to delete \n here, it will be duplicated if this ever
+> triggers.
 
-This patch documents each semantic rule individually and splits out
-the handling of the overcommit case from the regular case.
+We already fixed it upstream:
+038761ce68c2 ("usb: dwc3: debug: Remove newline printout")
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 191 ++++++++++++++++++++++++++----------------------
- 1 file changed, 105 insertions(+), 86 deletions(-)
+> Best regards,
+> 								Pavel
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 874a0b00f89b..ac9a3a170bec 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6204,65 +6204,55 @@ struct cgroup_subsys memory_cgrp_subsys = {
- 	.early_init = 0,
- };
- 
--/**
-- * mem_cgroup_protected - check if memory consumption is in the normal range
-- * @root: the top ancestor of the sub-tree being checked
-- * @memcg: the memory cgroup to check
-- *
-- * WARNING: This function is not stateless! It can only be used as part
-- *          of a top-down tree iteration, not for isolated queries.
-- *
-- * Returns one of the following:
-- *   MEMCG_PROT_NONE: cgroup memory is not protected
-- *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-- *     an unprotected supply of reclaimable memory from other cgroups.
-- *   MEMCG_PROT_MIN: cgroup memory is protected
-- *
-- * @root is exclusive; it is never protected when looked at directly
-+/*
-+ * This function calculates an individual cgroup's effective
-+ * protection which is derived from its own memory.min/low, its
-+ * parent's and siblings' settings, as well as the actual memory
-+ * distribution in the tree.
-  *
-- * To provide a proper hierarchical behavior, effective memory.min/low values
-- * are used. Below is the description of how effective memory.low is calculated.
-- * Effective memory.min values is calculated in the same way.
-+ * The following rules apply to the effective protection values:
-  *
-- * Effective memory.low is always equal or less than the original memory.low.
-- * If there is no memory.low overcommittment (which is always true for
-- * top-level memory cgroups), these two values are equal.
-- * Otherwise, it's a part of parent's effective memory.low,
-- * calculated as a cgroup's memory.low usage divided by sum of sibling's
-- * memory.low usages, where memory.low usage is the size of actually
-- * protected memory.
-+ * 1. At the first level of reclaim, effective protection is equal to
-+ *    the declared protection in memory.min and memory.low.
-  *
-- *                                             low_usage
-- * elow = min( memory.low, parent->elow * ------------------ ),
-- *                                        siblings_low_usage
-+ * 2. To enable safe delegation of the protection configuration, at
-+ *    subsequent levels the effective protection is capped to the
-+ *    parent's effective protection.
-  *
-- * low_usage = min(memory.low, memory.current)
-+ * 3. To make complex and dynamic subtrees easier to configure, the
-+ *    user is allowed to overcommit the declared protection at a given
-+ *    level. If that is the case, the parent's effective protection is
-+ *    distributed to the children in proportion to how much protection
-+ *    they have declared and how much of it they are utilizing.
-  *
-+ *    This makes distribution proportional, but also work-conserving:
-+ *    if one cgroup claims much more protection than it uses memory,
-+ *    the unused remainder is available to its siblings.
-  *
-- * Such definition of the effective memory.low provides the expected
-- * hierarchical behavior: parent's memory.low value is limiting
-- * children, unprotected memory is reclaimed first and cgroups,
-- * which are not using their guarantee do not affect actual memory
-- * distribution.
-+ *    Consider the following example tree:
-  *
-- * For example, if there are memcgs A, A/B, A/C, A/D and A/E:
-+ *        A      A/memory.low = 2G, A/memory.current = 6G
-+ *       //\\
-+ *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
-+ *               C/memory.low = 1G  C/memory.current = 2G
-+ *               D/memory.low = 0   D/memory.current = 2G
-+ *               E/memory.low = 10G E/memory.current = 0
-  *
-- *     A      A/memory.low = 2G, A/memory.current = 6G
-- *    //\\
-- *   BC  DE   B/memory.low = 3G  B/memory.current = 2G
-- *            C/memory.low = 1G  C/memory.current = 2G
-- *            D/memory.low = 0   D/memory.current = 2G
-- *            E/memory.low = 10G E/memory.current = 0
-+ *    and memory pressure is applied, the following memory
-+ *    distribution is expected (approximately*):
-  *
-- * and the memory pressure is applied, the following memory distribution
-- * is expected (approximately):
-+ *      A/memory.current = 2G
-+ *      B/memory.current = 1.3G
-+ *      C/memory.current = 0.6G
-+ *      D/memory.current = 0
-+ *      E/memory.current = 0
-  *
-- *     A/memory.current = 2G
-+ *    *assuming equal allocation rate and reclaimability
-  *
-- *     B/memory.current = 1.3G
-- *     C/memory.current = 0.6G
-- *     D/memory.current = 0
-- *     E/memory.current = 0
-+ * 4. Conversely, when the declared protection is undercommitted at a
-+ *    given level, the distribution of the larger parental protection
-+ *    budget is NOT proportional. A cgroup's protection from a sibling
-+ *    is capped to its own memory.min/low setting.
-  *
-  * These calculations require constant tracking of the actual low usages
-  * (see propagate_protected_usage()), as well as recursive calculation of
-@@ -6272,12 +6262,64 @@ struct cgroup_subsys memory_cgrp_subsys = {
-  * for next usage. This part is intentionally racy, but it's ok,
-  * as memory.low is a best-effort mechanism.
-  */
-+static unsigned long effective_protection(unsigned long usage,
-+					  unsigned long setting,
-+					  unsigned long parent_effective,
-+					  unsigned long siblings_protected)
-+{
-+	unsigned long protected;
-+
-+	protected = min(usage, setting);
-+	/*
-+	 * If all cgroups at this level combined claim and use more
-+	 * protection then what the parent affords them, distribute
-+	 * shares in proportion to utilization.
-+	 *
-+	 * We are using actual utilization rather than the statically
-+	 * claimed protection in order to be work-conserving: claimed
-+	 * but unused protection is available to siblings that would
-+	 * otherwise get a smaller chunk than what they claimed.
-+	 */
-+	if (siblings_protected > parent_effective)
-+		return protected * parent_effective / siblings_protected;
-+
-+	/*
-+	 * Ok, utilized protection of all children is within what the
-+	 * parent affords them, so we know whatever this child claims
-+	 * and utilizes is effectively protected.
-+	 *
-+	 * If there is unprotected usage beyond this value, reclaim
-+	 * will apply pressure in proportion to that amount.
-+	 *
-+	 * If there is unutilized protection, the cgroup will be fully
-+	 * shielded from reclaim, but we do return a smaller value for
-+	 * protection than what the group could enjoy in theory. This
-+	 * is okay. With the overcommit distribution above, effective
-+	 * protection is always dependent on how memory is actually
-+	 * consumed among the siblings anyway.
-+	 */
-+	return protected;
-+}
-+
-+/**
-+ * mem_cgroup_protected - check if memory consumption is in the normal range
-+ * @root: the top ancestor of the sub-tree being checked
-+ * @memcg: the memory cgroup to check
-+ *
-+ * WARNING: This function is not stateless! It can only be used as part
-+ *          of a top-down tree iteration, not for isolated queries.
-+ *
-+ * Returns one of the following:
-+ *   MEMCG_PROT_NONE: cgroup memory is not protected
-+ *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-+ *     an unprotected supply of reclaimable memory from other cgroups.
-+ *   MEMCG_PROT_MIN: cgroup memory is protected
-+ */
- enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 						struct mem_cgroup *memcg)
- {
- 	struct mem_cgroup *parent;
--	unsigned long emin, parent_emin;
--	unsigned long elow, parent_elow;
-+	unsigned long emin, elow;
- 	unsigned long usage;
- 
- 	if (mem_cgroup_disabled())
-@@ -6292,52 +6334,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 	if (!usage)
- 		return MEMCG_PROT_NONE;
- 
--	emin = memcg->memory.min;
--	elow = memcg->memory.low;
--
- 	parent = parent_mem_cgroup(memcg);
- 	/* No parent means a non-hierarchical mode on v1 memcg */
- 	if (!parent)
- 		return MEMCG_PROT_NONE;
- 
--	if (parent == root)
--		goto exit;
--
--	parent_emin = READ_ONCE(parent->memory.emin);
--	emin = min(emin, parent_emin);
--	if (emin && parent_emin) {
--		unsigned long min_usage, siblings_min_usage;
--
--		min_usage = min(usage, memcg->memory.min);
--		siblings_min_usage = atomic_long_read(
--			&parent->memory.children_min_usage);
--
--		if (min_usage && siblings_min_usage)
--			emin = min(emin, parent_emin * min_usage /
--				   siblings_min_usage);
-+	if (parent == root) {
-+		memcg->memory.emin = memcg->memory.min;
-+		memcg->memory.elow = memcg->memory.low;
-+		goto out;
- 	}
- 
--	parent_elow = READ_ONCE(parent->memory.elow);
--	elow = min(elow, parent_elow);
--	if (elow && parent_elow) {
--		unsigned long low_usage, siblings_low_usage;
--
--		low_usage = min(usage, memcg->memory.low);
--		siblings_low_usage = atomic_long_read(
--			&parent->memory.children_low_usage);
-+	memcg->memory.emin = effective_protection(usage,
-+			memcg->memory.min, READ_ONCE(parent->memory.emin),
-+			atomic_long_read(&parent->memory.children_min_usage));
- 
--		if (low_usage && siblings_low_usage)
--			elow = min(elow, parent_elow * low_usage /
--				   siblings_low_usage);
--	}
--
--exit:
--	memcg->memory.emin = emin;
--	memcg->memory.elow = elow;
-+	memcg->memory.elow = effective_protection(usage,
-+			memcg->memory.low, READ_ONCE(parent->memory.elow),
-+			atomic_long_read(&parent->memory.children_low_usage));
- 
--	if (usage <= emin)
-+out:
-+	if (usage <= memcg->memory.emin)
- 		return MEMCG_PROT_MIN;
--	else if (usage <= elow)
-+	else if (usage <= memcg->memory.elow)
- 		return MEMCG_PROT_LOW;
- 	else
- 		return MEMCG_PROT_NONE;
--- 
-2.24.0
-
+BR
+Thinh
