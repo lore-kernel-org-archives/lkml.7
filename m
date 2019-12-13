@@ -2,101 +2,96 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D803C34991
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368B4C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE131246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77934246C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLMLsX (ORCPT
+        id S1726910AbfLMMGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:48:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:56292 "EHLO foss.arm.com"
+        Fri, 13 Dec 2019 07:06:48 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39706 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbfLMLsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:48:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ED401045;
-        Fri, 13 Dec 2019 03:48:22 -0800 (PST)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AD1B3F718;
-        Fri, 13 Dec 2019 03:48:20 -0800 (PST)
-Subject: Re: [PATCH v2] sched/fair: Optimize select_idle_cpu
-To:     Cheng Jian <cj.chengjian@huawei.com>, mingo@kernel.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org
-Cc:     chenwandun@huawei.com, xiexiuqi@huawei.com, liwei391@huawei.com,
-        huawei.libin@huawei.com, bobo.shaobowang@huawei.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org
-References: <20191213024530.28052-1-cj.chengjian@huawei.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <ac11014d-ffc9-f0b2-3d48-2456c1c5edfa@arm.com>
-Date:   Fri, 13 Dec 2019 11:48:20 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191213024530.28052-1-cj.chengjian@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726717AbfLMMGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:06:47 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 06875200804;
+        Fri, 13 Dec 2019 13:06:43 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E9D5A200761;
+        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 234F6203B1;
+        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH v3 0/6] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+Date:   Fri, 13 Dec 2019 14:06:15 +0200
+Message-Id: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/12/2019 02:45, Cheng Jian wrote:
-> select_idle_cpu() will scan the LLC domain for idle CPUs,
-> it's always expensive. so the next commit :
-> 
-> 	1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
-> 
-> introduces a way to limit how many CPUs we scan.
-> 
-> But it consume some CPUs out of 'nr' that are not allowed
-> for the task and thus waste our attempts. The function
-> always return nr_cpumask_bits, and we can't find a CPU
-> which our task is allowed to run.
-> 
-> Cpumask may be too big, similar to select_idle_core(), use
-> per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
-> 
-> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
-> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+Changes in v3:
+Add a 6th patch to update the MAINTAINERS file with an entry for this driver.
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
+and it's dependencies.
+The driver was tested on i.MX8QXP, using a unit test application and
+the v4l2-compliance tool, including the  streaming tests for encoder.
 
-> ---
->  kernel/sched/fair.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..d48244388ce9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5828,6 +5828,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
->   */
->  static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
->  {
-> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
->  	struct sched_domain *this_sd;
->  	u64 avg_cost, avg_idle;
->  	u64 time, cost;
-> @@ -5859,11 +5860,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  
->  	time = cpu_clock(this);
->  
-> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-> +
-> +	for_each_cpu_wrap(cpu, cpus, target) {
->  		if (!--nr)
->  			return si_cpu;
-> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> -			continue;
->  		if (available_idle_cpu(cpu))
->  			break;
->  		if (si_cpu == -1 && sched_idle_cpu(cpu))
-> 
+Mirela Rabulea (6):
+  media: v4l: Add packed YUV444 24bpp pixel format
+  firmware: imx: scu-pd: Add power domains for imx-jpeg
+  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
+  Add maintainer for IMX jpeg v4l2 driver
+
+ .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
+ drivers/firmware/imx/scu-pd.c                      |    6 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/imx-jpeg/Kconfig            |   10 +
+ drivers/media/platform/imx-jpeg/Makefile           |    3 +
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2293 ++++++++++++++++++++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  188 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+ include/uapi/linux/videodev2.h                     |    1 +
+ 16 files changed, 2985 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+ create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+ create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
+
+-- 
+2.7.4
+
