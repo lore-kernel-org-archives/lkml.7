@@ -2,175 +2,89 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05FDC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B3DC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31E52253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7707824658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDI74twS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+daNgiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLMIlj (ORCPT
+        id S1726676AbfLMImY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:41:39 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42110 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMIlj (ORCPT
+        Fri, 13 Dec 2019 03:42:24 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41177 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfLMImX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:41:39 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so1327132lfl.9;
-        Fri, 13 Dec 2019 00:41:37 -0800 (PST)
+        Fri, 13 Dec 2019 03:42:23 -0500
+Received: by mail-lf1-f66.google.com with SMTP id m30so1333074lfp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:42:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=rLQ5m+u1dvrjSizT1sS4iO+rnO5Zjh0/I2TBX2IdsrQ=;
-        b=lDI74twSnmzAP+UZ3bIAiF1+NnttuW0yfFKA2pCdFYGcb8nOdOD5Vd+1JeMr/xk5lt
-         MLayFIEEIaFktMbOiqEry4oYOO7QfBohbaDmto24P1Lg+sQHGf/jx4RS2PYdFeA8ZPRT
-         LbuRXKXmvnnThVDivXkbbGoKQOwRJWyWeRh6YgdKx5NqZGX0V5GLBOFEgRvPQWhdGZ67
-         wBjphQDcaVIzS8YuPPvW9vO7Ne6stVJ7eZy+N4VeU3C2343su9FQOS5eqCsIUqF0lA86
-         Ml/AemxALKi+ka01i5yoPCpFbgrkVZ069SgRuOgJ/do8G+sBAWpx7yrhOa7Q+vqhkpHk
-         0ooQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
+        b=a+daNgiQiCYJ8MM6UhnHVrWdoGUXOn3GJH0VpgdC9SpDGXCOkLoPmTrlEqRvbWJSWy
+         scJgeIUaLdduo9o91tDrNbzuthgAPOM+aFslD2C8TAcTn1tMXB+WFmtOrTcyb+iujSMm
+         7oUPcMGhQBLpN99Q5fopI9AB5FHtDFFgTs4hShQap/ML5xXW3jaBZ0I1lvhSAhM1jDPv
+         ujjyEpNoH383Drw+a2PgfQ3Yo6URBxeqlRWSJygP0NQJUkP0r2uCOw88AmCK3y5gPvfc
+         4JPfg+gDEUV27h+riy/0uIHzNAKSe1b2pC1GVrN+eAOOp5FrGij5sffNU2QagZHee+tA
+         xU6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rLQ5m+u1dvrjSizT1sS4iO+rnO5Zjh0/I2TBX2IdsrQ=;
-        b=BD/6RzGwC/1dKTKZ6cXQiD9lxdTQnMs2hLfSivcB4BI4YL1mqWbfsFZQPw1kVcOgWv
-         QWx4ayt6F8nr1OhBjD+9aaQi+wvLEvjPlo9zTZ1nbGl/3BAdh7JBAMLLQYwUlPKgEMiO
-         AKUHCuZhvr5WpOx9np9+ooBjx86mvFcYQ/JgIHFA5yreNj451NgmYuQUp+C6lIHrU9mi
-         yA9Sp+gU0g1d/p5rJql4t+c9UfK4oY5W5FRuSEykFmUsFCl3+geg3nFecAu6PrkBd5Hq
-         Y+bqbTxvKsPtyVgoVQGcA9ppZOf2Xwec0NR1BNx/3sO2hrUxu6YT/POGy3sqU7eaUrhb
-         wS2w==
-X-Gm-Message-State: APjAAAXIasKEyDFy24LhMwiSIXwrjlFv4u1nQqtRydBjizwwOoPg2BNp
-        7oHQiYncuk4W1dMCSJuUBxOeUDLOIKI=
-X-Google-Smtp-Source: APXvYqyySNePGf8Iw3wiWo/O7Kxs5ALek69lfyC5bZcw4C/Hicer9vtPstNSq6i9zEGJM7PBaabGXQ==
-X-Received: by 2002:a19:5212:: with SMTP id m18mr8153947lfb.7.1576226496826;
-        Fri, 13 Dec 2019 00:41:36 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id h19sm4356381ljl.57.2019.12.13.00.41.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Dec 2019 00:41:36 -0800 (PST)
-Subject: Re: [PATCH liburing] Test wait after under-consuming
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
-Message-ID: <688ff2e6-0bb3-908f-5b5f-af894ed9f0c5@gmail.com>
-Date:   Fri, 13 Dec 2019 11:41:35 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
+        b=Cr3F3IS1kQbbgPY29ziIZl1cpUjY8aZcML5fFFOIkeJWVBw+OfjtLFc/hwJlbWiMLr
+         exHGqSMw3mxW6GIG7aDXII8YMcbTa4LxdxTApOrPHYVpTic++28ZS1MwoNi34XaJ6gc+
+         7FE2izb8qVN+JiBdDisfu6FqnKwRlKz4EBw2LXHv8UDzzrnFqNWutRrvGxwDgT7N4ZXE
+         l26Zf8PvrET9amtjrzxVTyV7swnpYYvbz+kKa+8xvAcOhXwRXqkiDtnqiCTPHGss2Wuk
+         bGbXBXIiLbqLtnE+m67jmCvvvHdbtJOEk7MJrLKg7bMoDXrIyYkUnXhHw219fqzRtnR1
+         vZbQ==
+X-Gm-Message-State: APjAAAUPhdMr8whbtqlYUQdBuVeU1RELxg+xNd53QjHMXw7kNBBMMlQY
+        bBUfGJ+JayMrpnUjY/UJOnLmQYpDulL/gphlOpXhtQ==
+X-Google-Smtp-Source: APXvYqz79bn/tRSB6q2MlLzPdVGXKAD3lMBgrE6UtCaOD5iDixhhmHkxpkSan8geCglyFBt3hCB+ZaEC8V1y5zn49yA=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8062235lfp.133.1576226541430;
+ Fri, 13 Dec 2019 00:42:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191202061432.3996-1-andrew@aj.id.au>
+In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 09:42:10 +0100
+Message-ID: <CACRpkdZVdP+rfnhF8Dfk+jLsqTEvm_tqv6to2s4nnJh8diaM+A@mail.gmail.com>
+Subject: Re: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/2019 11:06 AM, Pavel Begunkov wrote:
-> In case of an error submission won't consume all sqes. This tests that
-> it will get back to the userspace even if (to_submit == to_wait)
-> 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  test/link.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/test/link.c b/test/link.c
-> index 8ec1649..93653f3 100644
-> --- a/test/link.c
-> +++ b/test/link.c
-> @@ -384,6 +384,55 @@ err:
->  	return 1;
->  }
->  
-> +static int test_early_fail_and_wait(struct io_uring *ring)
-> +{
-> +	struct io_uring_cqe *cqe;
-> +	struct io_uring_sqe *sqe;
-> +	int ret, submitted, i;
-> +	const int invalid_fd = 42;
-> +	struct iovec iov = { .iov_base = NULL, .iov_len = 0 };
-> +
-> +	sqe = io_uring_get_sqe(ring);
-> +	if (!sqe) {
-> +		printf("get sqe failed\n");
-> +		goto err;
-> +	}
-> +
-> +	io_uring_prep_readv(sqe, invalid_fd, &iov, 1, 0);
-> +	sqe->user_data = 1;
-> +	sqe->flags |= IOSQE_IO_LINK;
-> +
-> +	sqe = io_uring_get_sqe(ring);
-> +	if (!sqe) {
-> +		printf("get sqe failed\n");
-> +		goto err;
-> +	}
-> +
-> +	io_uring_prep_nop(sqe);
-> +	sqe->user_data = 2;
-> +
-> +	submitted = io_uring_submit_and_wait(ring, 2);
-> +	if (submitted == -EAGAIN)
-> +		return 0;
+On Mon, Dec 2, 2019 at 7:12 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-As io_uring isn't recreated for each test case, I need to complete all
-cqes in any case. I'll resend
+> This series adds USB and pinconf support to the AST2600 pincontrol driver. The
+> patches have largely been developed by Johnny Huang from ASPEED and have been
+> used for bringup and verification of the chip. The were developed around the
+> time of the 5.4 merge window but I got distracted for a while and haven't had
+> an opportunity to send them until now. They've had a run in the OpenBMC kernel
+> tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
+> getting them in early for 5.6 so we don't miss another release.
 
-> +	if (submitted <= 0) {
-> +		printf("sqe submit failed: %d\n", submitted);
-> +		goto err;
-> +	}
-> +
-> +	for (i = 0; i < 2; i++) {
-> +		ret = io_uring_wait_cqe(ring, &cqe);
-> +		if (ret < 0) {
-> +			printf("wait completion %d\n", ret);
-> +			goto err;
-> +		}
-> +		io_uring_cqe_seen(ring, cqe);
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	return 1;
-> +}
-> +
->  int main(int argc, char *argv[])
->  {
->  	struct io_uring ring, poll_ring;
-> @@ -400,7 +449,6 @@ int main(int argc, char *argv[])
->  	if (ret) {
->  		printf("poll_ring setup failed\n");
->  		return 1;
-> -
->  	}
->  
->  	ret = test_single_link(&ring);
-> @@ -439,5 +487,11 @@ int main(int argc, char *argv[])
->  		return ret;
->  	}
->  
-> +	ret = test_early_fail_and_wait(&ring);
-> +	if (ret) {
-> +		fprintf(stderr, "test_early_fail_and_wait\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
-> 
+All 7 patches applied!
 
--- 
-Pavel Begunkov
+Yours,
+Linus Walleij
