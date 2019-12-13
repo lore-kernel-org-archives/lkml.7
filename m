@@ -2,225 +2,160 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD619C3B1A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C243C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E51A246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="hwgBk3mN"
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B62474C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfLMPdD (ORCPT
+        id S1727823AbfLMOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:33:03 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:53611 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727831AbfLMPdC (ORCPT
+        Fri, 13 Dec 2019 09:11:43 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:34193 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfLMOLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:33:02 -0500
-Received: from [IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478]
- ([IPv6:2001:983:e9a7:1:c93c:45bd:1710:e478])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id fmw6iifUIGyJwfmw7i1f6C; Fri, 13 Dec 2019 16:33:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1576251180; bh=jkbeBwA2046yQAx8KlSre92+P3gjbk24eJvaxr1q7Sw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=hwgBk3mN8ggB5kEqpKJ3+Bxt4aYRPHwJNzv3tE42xLEz3JbSQnMaIqStabHcCeyaW
-         vhCnhGk1Y6DG40aT3PD9fYpGFjeJqONeLLE7HyJMl4uD92wnNg1ddSauBqx3nfIwvP
-         kJo3o4c/201KZfyv8k4JBi2JpFKYrk3qZIbtBaDbPnSN30plQOZvcVeQbSuAEpdT0a
-         PJZf9iSkbKpiIO8JX+U+cvODhkBF1B5UbGUMchXG/HHbjni4WLXyBCsVV5GfePiIJa
-         tH13SI6xL1zW4ruQYnWsMxbPtiSX+pQaA0oMr/mlmgEvtD5BV1189tWfMbF1IFJCHH
-         mhwdfsP7LETVQ==
-Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191126161824.337724-1-arnd@arndb.de>
- <20191126161824.337724-7-arnd@arndb.de>
- <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
- <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
-Date:   Fri, 13 Dec 2019 16:32:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Dec 2019 09:11:02 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MmU9R-1hxOHO3fnt-00iVR1; Fri, 13 Dec 2019 15:10:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 03/12] nfsd: handle nfs3 timestamps as unsigned
+Date:   Fri, 13 Dec 2019 15:10:37 +0100
+Message-Id: <20191213141046.1770441-4-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
+References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGVkJKKS1g0cyyV9cuBt4eBAaOVFkxlUfInP+p/AL+8d83IvSqATu4yY7i2PPlvfXOprcRiGJGwZ5dqVKbwe/rc81RkqyKRbMGV813thRftzAAjN7Wxz
- pAtFXN0qxurHtCQNyEOS+ky5iXZhn2z/KJnZc/fK+C6/YXCSBs+WHHgMGjqrYDBrMOeni7pKAX6a4jf5Hi0DlrL/ezCvREw5tr16bc0BEv/aCi2Hb5q9YYGh
- D3qEe/V7CHGH+iJWPAtpKeKMt8RemG2tpm3swpIpkrQkkwm/sasSuD2G8AE3/I0oxbGHGxpKuHgZp+cuB3v2uMXl/CS5yPWFp6mSRRbE4aWDcwfqBHpj266C
- tszlIurXT9o6U3HhhKMF44dsZvmL56YUhirLv7TIMB+Kc65vuZo=
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:RAcT70BOi6dHmwI2QhfGxwpnEjl8Xen3AOmqf/6IFLp0gdD9yWG
+ Dbi2Qqva4OJzNwTnQLnAgcWSZU801l9DwallJOmJl3lDQ6NmPxR+lV7AVfgGufQ0qEVmJYU
+ jwat9CZOl8PYNTLoJcKZ4H4ycr4wHjknk4DhfVY+Bo3NKExWjUhxgM8r8ID3OgmwyW/U09a
+ W1bZYKmA0QU0wXeH5mDVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F9gWEdFUl9Y=:AuUrT6ZxwheXz9gbaX9nA8
+ VBcgqdx4pgeuvh4BQK+JdUncPkMUcsR8Zj2wlNwLPAqgeIo/BFVJaIHrej3X6/CahQVYJEbtc
+ 5ueNY7LVZY2/m5h7FnDwTds4sxJ5iHe6CIq3WOXsHscPZRZdlnjL98GXK32bdiM/4pV4B+1s6
+ WaN2XhYi7aTHKeYMXIjOFXjdRSOxAHgHJrjnyJ1Ssp2kX5Hhsy7QaA/Uv2Pu9neunPqVaoluD
+ mJwrSoPJfYoIMzZbXCogbym/Qvuz3RS59chkxciH0kYAlrbHaZ1HLtsbJfD428bppcMkI/yL3
+ cuy7hX60DPQyGxYGBFHuOOSLJ8TXXvmoTGO+3T+Qku2teQlXKD6vV6ylPdx3FEkXNKB19RYXh
+ 0bilZ7qRptJk2DG5bEV+QGye+tE0UJuG+37lNCgf5wT126Yh83yKj8V3R5g5ppRgz8f0iQbpb
+ D5sIDNRhwr0h+Vh5H5iXVFo5lNU+K0mq40CEDXVV/T0M9hLlb7qUIKTOkkFdkRy2KMZepyrrU
+ qVNi6pHe7oVZ3GePPAs8YLWGrDKmzAlMK0MgwQCRU06bvHBP9ukD4oRGDsccxtfqWuggRZJyE
+ /Rxu7iEqoIuGFTEp4HwVwIoNOr3S32RXWbMTdfZgwgu6IfZ4yuPSUboNi2QWqlfZWc4Oc55uK
+ r6K9TbLIwAORI28te5SuvJNlsT+mBDmGyci3DJVNfNImgKdegYW9/BTQj9Dd/npqKudl8xf8R
+ I/v7yXERCFOg6ZOrjUoZjY9m531Il+o6AgLlNDqPWY6KFH11tSH9m+Rr79+UB6gFDn5JdkotO
+ DfWtpEstSEUJ/4odyAAgbNlNPhpAfczvJjyaRKrG/Mw7qKr3g9k1i9XtVfykbiIzVU765X3ii
+ VWIlLF7vHM26p4ZOWooA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 4:08 PM, Arnd Bergmann wrote:
-> On Thu, Dec 12, 2019 at 4:43 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 11/26/19 5:18 PM, Arnd Bergmann wrote:
->>>
->>>       switch (cmd) {
->>> +#ifdef COMPAT_32BIT_TIME
->>
->> COMPAT_32BIT_TIME -> CONFIG_COMPAT_32BIT_TIME
-> 
-> Fixed.
-> 
->>> +             *vb = (struct v4l2_buffer) {
->>> +                     .index          = vb32.index,
->>> +                     .type           = vb32.type,
->>> +                     .bytesused      = vb32.bytesused,
->>> +                     .flags          = vb32.flags,
->>> +                     .field          = vb32.field,
->>> +                     .timestamp.tv_sec       = vb32.timestamp.tv_sec,
->>> +                     .timestamp.tv_usec      = vb32.timestamp.tv_usec,
->>> +                     .timecode       = vb32.timecode,
->>
->> You forgot to copy sequence.
->>
->>> +                     .memory         = vb32.memory,
->>> +                     .m.userptr      = vb32.m.usercopy,
->>
->> usercopy -> userptr
-> 
-> Fixed.
-> 
->>> +                     .length         = vb32.length,
->>> +                     .request_fd     = vb32.request_fd,
->>> +             };
->>> +
->>> +             if (cmd == VIDIOC_QUERYBUF_TIME32)
->>> +                     memset(&vb->length, 0, sizeof(*vb) -
->>> +                            offsetof(struct v4l2_buffer, length));
->>
->> It's from the field AFTER vb->length that this needs to be zeroed. It's best to
->> use the CLEAR_AFTER_FIELD macro here.
-> 
-> I'm a bit lost about this one: the fields that are not explicitly
-> uninitialized here are already set to zero by the assignment
-> above. Should this simply be a
-> 
->                 if (cmd == VIDIOC_QUERYBUF_TIME32)
->                        vb->request_fd = 0;
+The decode_time3 function behaves differently on 32-bit
+and 64-bit architectures: on the former, a 32-bit timestamp
+gets converted into an signed number and then into a timestamp
+between 1902 and 2038, while on the latter it is interpreted
+as unsigned in the range 1970-2106.
 
-Yes, you are correct. That's much simpler.
+Change all the remaining 'timespec' in nfsd to 'timespec64'
+to make the behavior the same, and use the current interpretation
+of the dominant 64-bit architectures.
 
-> 
-> then? I don't remember where that memset() originally came
-> from or why request_fd has to be cleared here.
-> 
->>> @@ -3100,6 +3141,30 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
->>>                       return -EFAULT;
->>>               break;
->>>       }
->>> +     case VIDIOC_QUERYBUF_TIME32:
->>> +     case VIDIOC_QBUF_TIME32:
->>> +     case VIDIOC_DQBUF_TIME32:
->>> +     case VIDIOC_PREPARE_BUF_TIME32: {
->>> +             struct v4l2_buffer *vb = parg;
->>> +             struct v4l2_buffer_time32 vb32 = {
->>> +                     .index          = vb->index,
->>> +                     .type           = vb->type,
->>> +                     .bytesused      = vb->bytesused,
->>> +                     .flags          = vb->flags,
->>> +                     .field          = vb->field,
->>> +                     .timestamp.tv_sec       = vb->timestamp.tv_sec,
->>> +                     .timestamp.tv_usec      = vb->timestamp.tv_usec,
->>> +                     .timecode       = vb->timecode,
->>
->> You forgot to copy sequence.
-> 
-> Fixed.
-> 
->> With these changes this patch series passed both the 64 and 32 bit compliance
->> tests (in fact, all the issues mentioned above were found with these compliance
->> tests).
-> 
-> Yay compliance tests!
-> 
->> I am unable to test with musl since v4l2-ctl and v4l2-compliance are C++ programs,
->> and there doesn't appear to be an easy way to compile a C++ program with musl.
->>
->> If you happen to have a test environment where you can compile C++ with musl,
->> then let me know and I can give instructions on how to run the compliance tests.
->>
->> If you can't test that, then I can merge this regardless, and hope for the best
->> once the Y2038 fixes end up in glibc. But ideally I'd like to have this tested.
-> 
-> I've heard good things about the prebuilt toolchains from http://musl.cc/.
-> These seems to come with a libstdc++, but I have not tried that myself.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/nfsd/nfs3xdr.c | 20 ++++++++------------
+ fs/nfsd/nfsfh.h   |  4 ++--
+ 2 files changed, 10 insertions(+), 14 deletions(-)
 
-I'll see if I can give those a spin, but if I can't get it to work quickly,
-then I don't plan on spending much time on it.
-
-Regards,
-
-	Hans
-
-> 
-> I've folded the change below into this patch in my y2038-v4l2-v6 branch
-> but have not been able to update the copy on git.kernel.org yet because of
-> server-side issues today.
-> 
->           Arnd
-> 
-> 8<-----
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
-> b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index c416870a3166..667225712343 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -3055,7 +3055,7 @@ static int video_get_user(void __user *arg, void
-> *parg, unsigned int cmd,
->         }
-> 
->         switch (cmd) {
-> -#ifdef COMPAT_32BIT_TIME
-> +#ifdef CONFIG_COMPAT_32BIT_TIME
->         case VIDIOC_QUERYBUF_TIME32:
->         case VIDIOC_QBUF_TIME32:
->         case VIDIOC_DQBUF_TIME32:
-> @@ -3075,15 +3075,15 @@ static int video_get_user(void __user *arg,
-> void *parg, unsigned int cmd,
->                         .timestamp.tv_sec       = vb32.timestamp.tv_sec,
->                         .timestamp.tv_usec      = vb32.timestamp.tv_usec,
->                         .timecode       = vb32.timecode,
-> +                       .sequence       = vb32.sequence,
->                         .memory         = vb32.memory,
-> -                       .m.userptr      = vb32.m.usercopy,
-> +                       .m.userptr      = vb32.m.userptr,
->                         .length         = vb32.length,
->                         .request_fd     = vb32.request_fd,
->                 };
-> 
->                 if (cmd == VIDIOC_QUERYBUF_TIME32)
-> -                       memset(&vb->length, 0, sizeof(*vb) -
-> -                              offsetof(struct v4l2_buffer, length));
-> +                       vb->request_fd = 0;
-> 
->                 break;
->         }
-> @@ -3155,6 +3155,7 @@ static int video_put_user(void __user *arg, void
-> *parg, unsigned int cmd)
->                         .timestamp.tv_sec       = vb->timestamp.tv_sec,
->                         .timestamp.tv_usec      = vb->timestamp.tv_usec,
->                         .timecode       = vb->timecode,
-> +                       .sequence       = vb->sequence,
->                         .memory         = vb->memory,
->                         .m.userptr      = vb->m.userptr,
->                         .length         = vb->length,
-> 
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 195ab7a0fc89..c997b710af27 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -32,14 +32,14 @@ static u32	nfs3_ftypes[] = {
+  * XDR functions for basic NFS types
+  */
+ static __be32 *
+-encode_time3(__be32 *p, struct timespec *time)
++encode_time3(__be32 *p, struct timespec64 *time)
+ {
+ 	*p++ = htonl((u32) time->tv_sec); *p++ = htonl(time->tv_nsec);
+ 	return p;
+ }
+ 
+ static __be32 *
+-decode_time3(__be32 *p, struct timespec *time)
++decode_time3(__be32 *p, struct timespec64 *time)
+ {
+ 	time->tv_sec = ntohl(*p++);
+ 	time->tv_nsec = ntohl(*p++);
+@@ -167,7 +167,6 @@ encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
+ 	      struct kstat *stat)
+ {
+ 	struct user_namespace *userns = nfsd_user_namespace(rqstp);
+-	struct timespec ts;
+ 	*p++ = htonl(nfs3_ftypes[(stat->mode & S_IFMT) >> 12]);
+ 	*p++ = htonl((u32) (stat->mode & S_IALLUGO));
+ 	*p++ = htonl((u32) stat->nlink);
+@@ -183,12 +182,9 @@ encode_fattr3(struct svc_rqst *rqstp, __be32 *p, struct svc_fh *fhp,
+ 	*p++ = htonl((u32) MINOR(stat->rdev));
+ 	p = encode_fsid(p, fhp);
+ 	p = xdr_encode_hyper(p, stat->ino);
+-	ts = timespec64_to_timespec(stat->atime);
+-	p = encode_time3(p, &ts);
+-	ts = timespec64_to_timespec(stat->mtime);
+-	p = encode_time3(p, &ts);
+-	ts = timespec64_to_timespec(stat->ctime);
+-	p = encode_time3(p, &ts);
++	p = encode_time3(p, &stat->atime);
++	p = encode_time3(p, &stat->mtime);
++	p = encode_time3(p, &stat->ctime);
+ 
+ 	return p;
+ }
+@@ -277,8 +273,8 @@ void fill_pre_wcc(struct svc_fh *fhp)
+ 		stat.size  = inode->i_size;
+ 	}
+ 
+-	fhp->fh_pre_mtime = timespec64_to_timespec(stat.mtime);
+-	fhp->fh_pre_ctime = timespec64_to_timespec(stat.ctime);
++	fhp->fh_pre_mtime = stat.mtime;
++	fhp->fh_pre_ctime = stat.ctime;
+ 	fhp->fh_pre_size  = stat.size;
+ 	fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode);
+ 	fhp->fh_pre_saved = true;
+@@ -330,7 +326,7 @@ nfs3svc_decode_sattrargs(struct svc_rqst *rqstp, __be32 *p)
+ 	p = decode_sattr3(p, &args->attrs, nfsd_user_namespace(rqstp));
+ 
+ 	if ((args->check_guard = ntohl(*p++)) != 0) { 
+-		struct timespec time; 
++		struct timespec64 time;
+ 		p = decode_time3(p, &time);
+ 		args->guardtime = time.tv_sec;
+ 	}
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 755e256a9103..495540a248a1 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -42,8 +42,8 @@ typedef struct svc_fh {
+ 
+ 	/* Pre-op attributes saved during fh_lock */
+ 	__u64			fh_pre_size;	/* size before operation */
+-	struct timespec		fh_pre_mtime;	/* mtime before oper */
+-	struct timespec		fh_pre_ctime;	/* ctime before oper */
++	struct timespec64	fh_pre_mtime;	/* mtime before oper */
++	struct timespec64	fh_pre_ctime;	/* ctime before oper */
+ 	/*
+ 	 * pre-op nfsv4 change attr: note must check IS_I_VERSION(inode)
+ 	 *  to find out if it is valid.
+-- 
+2.20.0
 
