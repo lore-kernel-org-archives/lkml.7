@@ -2,206 +2,168 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC7FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217AB2465A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZu/Wv0m"
+	by mail.kernel.org (Postfix) with ESMTP id 8C63724676
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfLMI1s (ORCPT
+        id S1726518AbfLMIbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:27:48 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51226 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMI1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:27:47 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d73so5331072wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=JwuoHfqD4FyIs4KF1Ipmu8G5TBEwPS2a5x2rk/31xck=;
-        b=RZu/Wv0m4HqQgb7kZHHwyZiV72yCDHClDTjqRYig6G327C22KOVE23Gl4QlWIk4J9g
-         /mTwG/EcWHHf9sYXXpPtTpllj8NvhWZ9k5SsV4jgWzE2uqeHWssPggXoaT2gjyI8wre+
-         VqxL2RAU5YTssHRWil1Gz4l8a8O18PLMhlz0Fd0EfGvTrga/wRtXo8/VzsNwEzcaJc2o
-         kCgWLQL7844S7BROBTksqLxNyH5Y12iS0O9bHQi+v4QV3BqAKqGVjvm8V1yufjNHj3vI
-         SyFI8XHa40wO7C8ZTiULcUMVsX8duH9Oq530Z+8L5UrJXOxugLt6sFTO3yrlOsl2a4f/
-         pvOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=JwuoHfqD4FyIs4KF1Ipmu8G5TBEwPS2a5x2rk/31xck=;
-        b=hug8WZSBSHf1qnJqhuMTGkV7z66zmbTWq9KiEe/Yrh1QYF1zS5jqJxb4c7Pw+Izq9E
-         VggOZNkwunkLTN7NqvJTkY631s2c9sdfbutV+OCkyJBY9xqbBXPUiesVxLjDzThhCa7m
-         DiJVlRxPAdGXNj8nhWN1VkkTwX4TDG15Iu8Hcc6Ghjrq8awCga5atN0opjlKGRZSczIY
-         ugIo38WvqhHhIzrHoNsIDxYgUtBVNCKRoRPdOMIN1KpIZEBFxQK6bHJUKpXPbACg1n/m
-         1G3N5LMj9R5e9ghsyxYGBUKSJ4IwoPfaKwY+TQFo7QMqbJVVHTanoDrn6bvx94AFfEuY
-         Ygzw==
-X-Gm-Message-State: APjAAAUQk+ZtqolXzvwPvNpiJPYyxC67rpoxLu0vBv414sobvjUvP2yC
-        DdQSphd3l3G2peu6GnqMtlP1I5DQIeI=
-X-Google-Smtp-Source: APXvYqw9NFR6SJCU7qpurkLNw/ZkJfL008Kue/7hzmCvNYuR/i+XEHjDwK63wFSkZZdj2Cmg0QgOSw==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr12505169wme.125.1576225664505;
-        Fri, 13 Dec 2019 00:27:44 -0800 (PST)
-Received: from dell ([95.149.164.71])
-        by smtp.gmail.com with ESMTPSA id a133sm225770wme.29.2019.12.13.00.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 00:27:43 -0800 (PST)
-Date:   Fri, 13 Dec 2019 08:27:34 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
- to pwm_pmic_backlight
-Message-ID: <20191213082734.GE3468@dell>
-References: <20191119151818.67531-1-hdegoede@redhat.com>
- <20191119151818.67531-3-hdegoede@redhat.com>
- <20191210085111.GQ3468@dell>
- <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
- <20191212084546.GA3468@dell>
- <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
- <20191212155209.GC3468@dell>
- <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Dec 2019 03:31:10 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:36384 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725980AbfLMIbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:31:10 -0500
+Received: from localhost.loongson.cn (unknown [10.40.23.36])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxOtEqTPNdV2IKAA--.179S2;
+        Fri, 13 Dec 2019 16:30:35 +0800 (CST)
+From:   Guoyun Sun <sunguoyun@loongson.cn>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Guoyun Sun <sunguoyun@loongson.cn>
+Subject: [PATCH V2] MIPS: Add get_thread_area syscall
+Date:   Fri, 13 Dec 2019 16:30:34 +0800
+Message-Id: <1576225834-16389-1-git-send-email-sunguoyun@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxOtEqTPNdV2IKAA--.179S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGrW5urykXw18Gr43KFW3ZFb_yoW5tw47pr
+        WUAw1kKw4rury8Aa4fWFykWrWxJr1kXrWjgFs7trZ5Z3W8Xry5tr1Sga4rXFya9ryIkay0
+        qF4F9ry5t3yvvFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUHnQUUUUUU=
+X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, Hans de Goede wrote:
+CRIU(https://criu.org/) tools will dump TLS(Thread Local Storage) by
+get_thread_area during checkpoint and restore TLS by set_thread_area during
+restore. without syscall get_thread_area, criu restore will fail on MIPS
+platform.because a variable with GCC __thread is invalid.
 
-> Hi,
-> 
-> On 12-12-2019 16:52, Lee Jones wrote:
-> > On Thu, 12 Dec 2019, Hans de Goede wrote:
-> > 
-> > > Hi,
-> > > 
-> > > On 12-12-2019 09:45, Lee Jones wrote:
-> > > > On Wed, 11 Dec 2019, Hans de Goede wrote:
-> > > > 
-> > > > > Hi Lee,
-> > > > > 
-> > > > > On 10-12-2019 09:51, Lee Jones wrote:
-> > > > > > On Tue, 19 Nov 2019, Hans de Goede wrote:
-> > > > > > 
-> > > > > > > At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
-> > > > > > > different PWM controllers for controlling the LCD's backlight brightness.
-> > > > > > > 
-> > > > > > > Either the one integrated into the PMIC or the one integrated into the
-> > > > > > > SoC (the 1st LPSS PWM controller).
-> > > > > > > 
-> > > > > > > So far in the LPSS code on BYT we have skipped registering the LPSS PWM
-> > > > > > > controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
-> > > > > > > present, assuming that in this case the PMIC PWM controller will be used.
-> > > > > > > 
-> > > > > > > On CHT we have been relying on only 1 of the 2 PWM controllers being
-> > > > > > > enabled in the DSDT at the same time; and always registered the lookup.
-> > > > > > > 
-> > > > > > > So far this has been working, but the correct way to determine which PWM
-> > > > > > > controller needs to be used is by checking a bit in the VBT table and
-> > > > > > > recently I've learned about 2 different BYT devices:
-> > > > > > > Point of View MOBII TAB-P800W
-> > > > > > > Acer Switch 10 SW5-012
-> > > > > > > 
-> > > > > > > Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
-> > > > > > > PWM controller (and the VBT correctly indicates this), so here our old
-> > > > > > > heuristics fail.
-> > > > > > > 
-> > > > > > > Since only the i915 driver has access to the VBT, this commit renames
-> > > > > > > the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
-> > > > > > > controller to "pwm_pmic_backlight" so that the i915 driver can do a
-> > > > > > > pwm_get() for the right controller depending on the VBT bit, instead of
-> > > > > > > the i915 driver relying on a "pwm_backlight" lookup getting registered
-> > > > > > > which magically points to the right controller.
-> > > > > > > 
-> > > > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > > > > > ---
-> > > > > > >     drivers/mfd/intel_soc_pmic_core.c | 2 +-
-> > > > > > >     1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > 
-> > > > > > For my own reference:
-> > > > > >      Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > > > 
-> > > > > As mentioned in the cover-letter, to avoid breaking bi-sectability
-> > > > > as well as to avoid breaking the intel-gfx CI we need to merge this series
-> > > > > in one go through one tree. Specifically through the drm-intel tree.
-> > > > > Is that ok with you ?
-> > > > > 
-> > > > > If this is ok with you, then you do not have to do anything, I will just push
-> > > > > the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
-> > > > > does not see much changes so I do not expect this to lead to any conflicts.
-> > > > 
-> > > > It's fine, so long as a minimal immutable pull-request is provided.
-> > > > Whether it's pulled or not will depend on a number of factors, but it
-> > > > needs to be an option.
-> > > 
-> > > The way the drm subsys works that is not really a readily available
-> > > option. The struct definition which this patch changes a single line in
-> > > has not been touched since 2015-06-26 so I really doubt we will get a
-> > > conflict from this.
-> > 
-> > Always with the exceptions ...
-> > 
-> > OOI, why does this *have* to go through the DRM tree?
-> 
-> This patch renames the name used to lookup the pwm controller from
-> "pwm_backlight" to "pwm_pmic_backlight" because there are 2 possible
-> pwm controllers which may be used, one in the SoC itself and one
-> in the PMIC. Which controller should be used is described in a table
-> in the Video BIOS, so another part of this series adds this code to
-> the i915 driver:
-> 
-> -	panel->backlight.pwm = pwm_get(dev->dev, "pwm_backlight");
-> +	/* Get the right PWM chip for DSI backlight according to VBT */
-> +	if (dev_priv->vbt.dsi.config->pwm_blc == PPS_BLC_PMIC) {
-> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_pmic_backlight");
-> +		desc = "PMIC";
-> +	} else {
-> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_soc_backlight");
-> +		desc = "SoC";
-> +	}
-> 
-> So both not to break bisectability, but also so as to not break the extensive
-> CI system which is used to test the i915 driver we need the MFD change doing
-> the rename to go upstrream through the same tree as the i915 change.
-> 
-> I have even considered just squashing the 2 commits together as having only 1
-> present, but not the other breaks stuff left and right.
+The following function will be called when criu restore
 
-That doesn't answer the question.
+static inline void restore_tls(tls_t *ptls) {
+        asm volatile(
+                     "move $4, %0                                   \n"
+                     "li $2,  "__stringify(__NR_set_thread_area)"  \n"
+                     "syscall                                       \n"
+                     :
+                     : "r"(*ptls)
+                     : "$4","$2","memory");
 
-Why do they all *have* to go in via the DRM tree specifically?
+With this patch, the *ptls can be obtained by get_thread_area on MIPS
+platform when criu checkpoint. just like this:
 
+static inline void arch_get_tls(tls_t *ptls)
+{
+	asm volatile(
+		     "move $4, %0				    \n"
+		     "li $2,  "__stringify(__NR_get_thread_area)"  \n"
+		     "syscall					    \n"
+		     :
+		     : "r"(ptls)
+		     : "$4","$2","memory");
+
+}
+
+Signed-off-by: Guoyun Sun <sunguoyun@loongson.cn>
+---
+ arch/mips/kernel/syscall.c                | 10 ++++++++++
+ arch/mips/kernel/syscalls/syscall_n32.tbl |  2 ++
+ arch/mips/kernel/syscalls/syscall_n64.tbl |  2 ++
+ arch/mips/kernel/syscalls/syscall_o32.tbl |  2 ++
+ 4 files changed, 16 insertions(+)
+
+diff --git a/arch/mips/kernel/syscall.c b/arch/mips/kernel/syscall.c
+index c333e57..20bf4c5 100644
+--- a/arch/mips/kernel/syscall.c
++++ b/arch/mips/kernel/syscall.c
+@@ -94,6 +94,16 @@ SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
+ 	return 0;
+ }
+ 
++SYSCALL_DEFINE1(get_thread_area, unsigned long __user *, u_info)
++{
++	struct thread_info *ti = task_thread_info(current);
++
++	if (copy_to_user(u_info, &(ti->tp_value), sizeof(ti->tp_value)))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
+ {
+ 	unsigned long old, tmp;
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index e7c5ab3..3aa4858 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -341,6 +341,8 @@
+ 330	n32	statx				sys_statx
+ 331	n32	rseq				sys_rseq
+ 332	n32	io_pgetevents			compat_sys_io_pgetevents
++333	n32	get_thread_area			sys_get_thread_area
++
+ # 333 through 402 are unassigned to sync up with generic numbers
+ 403	n32	clock_gettime64			sys_clock_gettime
+ 404	n32	clock_settime64			sys_clock_settime
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index 13cd665..14b6796 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -337,6 +337,8 @@
+ 326	n64	statx				sys_statx
+ 327	n64	rseq				sys_rseq
+ 328	n64	io_pgetevents			sys_io_pgetevents
++329	n64	get_thread_area			sys_get_thread_area
++
+ # 329 through 423 are reserved to sync up with other architectures
+ 424	n64	pidfd_send_signal		sys_pidfd_send_signal
+ 425	n64	io_uring_setup			sys_io_uring_setup
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 353539e..bb4e050 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -380,6 +380,8 @@
+ 366	o32	statx				sys_statx
+ 367	o32	rseq				sys_rseq
+ 368	o32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
++369	o32	get_thread_area			sys_get_thread_area
++
+ # room for arch specific calls
+ 393	o32	semget				sys_semget
+ 394	o32	semctl				sys_semctl			compat_sys_semctl
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.1.0
+
