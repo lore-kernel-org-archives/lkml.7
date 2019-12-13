@@ -2,139 +2,128 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE372C3436B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E41C50701
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BBC24755
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="q+yFsIPL"
+	by mail.kernel.org (Postfix) with ESMTP id 06DB624769
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfLMNUv (ORCPT
+        id S1727548AbfLMNtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:20:51 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:41412 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfLMNUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:20:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576243250; x=1607779250;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tFySCLGtPwSbxUYEux7/p0Qq1N3sbGfPAhYwtPWA8rI=;
-  b=q+yFsIPL9vjV7Vk8SVEayXkaH+KzTUeReqwRvOFeNS/hB2HWIKZ12k1U
-   iu1yQG7MkOIFrMQmSTlWEqsHAO+ihcF6cijHLC6QLcfTd/1Vwp1+M4jEv
-   VNUV/SMdSTB+K8S1R80jvVX4TjM1kzeXAU1RpYgXxqdNuDQTsAqkXCaD/
-   8=;
-IronPort-SDR: O0jhjvelAXfwKAOT+PVxdrI3ucPHYGBWbSCbkKO9chIdq5QSf3fZxfvnAusUejisOvPnXz7Kg1
- G9cNGYjF/sKQ==
-X-IronPort-AV: E=Sophos;i="5.69,309,1571702400"; 
-   d="scan'208";a="7497894"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 13 Dec 2019 13:20:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 181C5A1B8E;
-        Fri, 13 Dec 2019 13:20:47 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 13 Dec 2019 13:20:46 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 13 Dec 2019 13:20:45 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Fri, 13 Dec 2019 13:20:43 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net v2] xen-netback: avoid race that can lead to NULL pointer dereference
-Date:   Fri, 13 Dec 2019 13:20:40 +0000
-Message-ID: <20191213132040.21446-1-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Dec 2019 08:49:07 -0500
+Received: from mail.sysgo.com ([176.9.12.79]:58406 "EHLO mail.sysgo.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfLMNtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:49:07 -0500
+Subject: Re: [PATCH] tty/serial: atmel: fix out of range clock divider
+ handling
+To:     Richard Genoud <richard.genoud@gmail.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com
+Cc:     linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191211162954.8393-1-david.engraf@sysgo.com>
+ <822ac68e-4dde-21e8-caf9-a219b910d49e@gmail.com>
+From:   David Engraf <david.engraf@sysgo.com>
+Message-ID: <1e2e3f63-84db-4b38-1bf1-85916116e0a2@sysgo.com>
+Date:   Fri, 13 Dec 2019 14:49:03 +0100
 MIME-Version: 1.0
+In-Reply-To: <822ac68e-4dde-21e8-caf9-a219b910d49e@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function xenvif_disconnect_queue(), the value of queue->rx_irq is
-zeroed *before* queue->task is stopped. Unfortunately that task may call
-notify_remote_via_irq(queue->rx_irq) and calling that function with a
-zero value results in a NULL pointer dereference in evtchn_from_irq().
+Hi,
 
-This patch simply re-orders things, stopping all tasks before zero-ing the
-irq values, thereby avoiding the possibility of the race.
+On 13.12.19 at 10:57, Richard Genoud wrote:
+> Hi,
+> 
+> Le 11/12/2019 à 17:29, David Engraf a écrit :
+>> Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+>> register was already written thus the clock selection is ignored.
+>>
+>> Fix by writing the mode register after calculating the baudrate.
+>>
+>> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+> 
+> It seems that this bug was introduced by:
+> commit 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+> 
+> Could you add the "Fixes:" header ?
 
-Fixes: 2ac061ce97f4 ("xen/netback: cleanup init and deinit code")
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
+Sure.
 
-v2:
- - Add 'Fixes' tag and re-work commit comment
----
- drivers/net/xen-netback/interface.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+> Ludovic, could you check if this was your intent at the time ?
+> 
+>> ---
+>>   drivers/tty/serial/atmel_serial.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+>> index a8dc8af83f39..9983e2fabbac 100644
+>> --- a/drivers/tty/serial/atmel_serial.c
+>> +++ b/drivers/tty/serial/atmel_serial.c
+>> @@ -2270,9 +2270,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>>   		mode |= ATMEL_US_USMODE_NORMAL;
+>>   	}
+>>   
+> I think it's better to mo move the "Set baud rate" block here (cf bellow)
+> 
+>> -	/* set the mode, clock divisor, parity, stop bits and data size */
+>> -	atmel_uart_writel(port, ATMEL_US_MR, mode);
+>> -
+>>   	/*
+>>   	 * when switching the mode, set the RTS line state according to the
+>>   	 * new mode, otherwise keep the former state
+>> @@ -2315,6 +2312,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>>   	}
+>>   	quot = cd | fp << ATMEL_US_FP_OFFSET;
+>>   
+>> +	/* set the mode, clock divisor, parity, stop bits and data size */
+>> +	atmel_uart_writel(port, ATMEL_US_MR, mode);
+>> +
+> I think your patch is good, but I'll be happier if instead of moving
+> those 2 lines here, the whole "Set the baud rate" block was moved before
+> "atmel_uart_writel(port, ATMEL_US_MR, mode);"
+> 
+> That's because at line 2291 the ATMEL_US_CR register is set with
+> ATMEL_US_RTSDIS or ATMEL_US_RTSEN.
+> And those 2 values have a different effect depending on US_MR.USART_MODE
+> 
+> Quoting from the relase manual:
+> RTSEN:
+> 1: Drives RTS pin to 1 if US_MR.USART_MODE field = 2, else drives RTS
+> pin to 0 if US_MR.USART_MODE field = 0.
+> 
+> RTSDIS:
+> 1: Drives RTS pin to 0 if US_MR.USART_MODE field = 2, else drives RTS
+> pin to 1 if US_MR.USART_MODE field = 0.
+> 
+> So, I think it's better to set the mode register before setting the
+> control register.
 
-diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-index 68dd7bb07ca6..f15ba3de6195 100644
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -628,18 +628,6 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
- 
- static void xenvif_disconnect_queue(struct xenvif_queue *queue)
- {
--	if (queue->tx_irq) {
--		unbind_from_irqhandler(queue->tx_irq, queue);
--		if (queue->tx_irq == queue->rx_irq)
--			queue->rx_irq = 0;
--		queue->tx_irq = 0;
--	}
--
--	if (queue->rx_irq) {
--		unbind_from_irqhandler(queue->rx_irq, queue);
--		queue->rx_irq = 0;
--	}
--
- 	if (queue->task) {
- 		kthread_stop(queue->task);
- 		queue->task = NULL;
-@@ -655,6 +643,18 @@ static void xenvif_disconnect_queue(struct xenvif_queue *queue)
- 		queue->napi.poll = NULL;
- 	}
- 
-+	if (queue->tx_irq) {
-+		unbind_from_irqhandler(queue->tx_irq, queue);
-+		if (queue->tx_irq == queue->rx_irq)
-+			queue->rx_irq = 0;
-+		queue->tx_irq = 0;
-+	}
-+
-+	if (queue->rx_irq) {
-+		unbind_from_irqhandler(queue->rx_irq, queue);
-+		queue->rx_irq = 0;
-+	}
-+
- 	xenvif_unmap_frontend_data_rings(queue);
- }
- 
--- 
-2.20.1
+I fully agree, the RTS pin configuration depends on USART_MODE. I will 
+make a new version of the patch.
+
+Thanks
+- David
+
+
+> 
+>>   	if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
+>>   		atmel_uart_writel(port, ATMEL_US_BRGR, quot);
+>>   	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+>>
+> 
+> Thanks !
+> 
 
