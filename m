@@ -2,310 +2,70 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABB1C34972
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92326C341BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0836246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhDJni7Z"
+	by mail.kernel.org (Postfix) with ESMTP id D24942471E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLML22 (ORCPT
+        id S1727076AbfLMMUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:28:28 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42256 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLML21 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:28:27 -0500
-Received: by mail-il1-f196.google.com with SMTP id a6so1768983ili.9;
-        Fri, 13 Dec 2019 03:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SApHZXxkyc33oQaGK6ky4W1VLNyP7mSMuSzcqHJ/PMo=;
-        b=HhDJni7Z8Yno+RYPsfonnh9u7UmeNE60s3l8GDJ5FsG12OyvWMXhrinljTrHbKD4+5
-         2xIpEk4Q7aekunme4PXh2CTzJbYFHwJzPzJh13yXzDlZud3PxhDGfbmyel4AAMP50yWg
-         HwNS9GiuiS9hnITqC41XdouC/rSjpT/LD2iRHgubIHsbTaxIAJHG7OQKE3zqCw2E+KGs
-         ohASwrdD4mWl+9NEypLgSLJCBkyTXr6e9IBxJlxiPTvBVHBS86ps752U9g+ESSuOeUIV
-         zdXXirsH0aCVba3F/hRWGAx831heB78XEk+MMfBwXApnBgmLefFw5I1mIiRan+GyhwR1
-         +txg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SApHZXxkyc33oQaGK6ky4W1VLNyP7mSMuSzcqHJ/PMo=;
-        b=f/gKqKAYfiHOaFGGgnVsJtuC+MraUOL/jZI055IiTssDHA9kUruBNk89voEGIcwrqK
-         XSaOWOb4OJ4E+UGwUlZdsEBz/P0mTYT3Z+z6wlUAFSV5dHY2lL/7lGZWx9/qekTpkBfD
-         b31rzySLbQwAbll2AB/SUqI7xqAuvoOtdSQSDP/Ory8QI8jV8k3E1tVrlG4qna4JJf32
-         u0z4elQuuoLBR1GMmHmInyvGqvaIQOSgIhZXp8aoHrY62/RqKxUnOWNAl82Vnzwcf+Y7
-         SvZwTYwzushclJMxuT/oWBUiZnpPxLvC9jw6ruTPckucIuGBzRZ/CSTaQ0aWK01LrwkX
-         Pfdg==
-X-Gm-Message-State: APjAAAUoJQnoskMBzSkRaxxVHr9KHH74WYo2ngrVAEU/iSDd/yaud4qy
-        +E+vD9Xh0jwr1XT1XK22/RxkkqPkrpEAaAQKBgk=
-X-Google-Smtp-Source: APXvYqwg0FT6i21iRj8cES5CzIZe+O41zVwBf4zrhT9VlubUT5C87Ye5zvW1/OTnwkaaVp0JwGsy31bWMWtRA/EdKSQ=
-X-Received: by 2002:a92:49d1:: with SMTP id k78mr13607183ilg.6.1576236506638;
- Fri, 13 Dec 2019 03:28:26 -0800 (PST)
+        Fri, 13 Dec 2019 07:20:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:57216 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727024AbfLMMUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:20:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CCC511B3;
+        Fri, 13 Dec 2019 04:20:05 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DED93F718;
+        Fri, 13 Dec 2019 04:20:04 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: Optimize select_idle_cpu
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "chengjian (D)" <cj.chengjian@huawei.com>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, chenwandun@huawei.com,
+        xiexiuqi@huawei.com, liwei391@huawei.com, huawei.libin@huawei.com,
+        bobo.shaobowang@huawei.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+References: <20191212144102.181510-1-cj.chengjian@huawei.com>
+ <20191212152406.GB2827@hirez.programming.kicks-ass.net>
+ <d40ac385-626f-e86f-b2cb-69adf10a193a@huawei.com>
+ <6d188305-66ab-81cf-6340-34d155dcaf3b@arm.com>
+ <20191213120913.GB2844@hirez.programming.kicks-ass.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <0a0744f4-24cf-f8b6-cc91-f63847560675@arm.com>
+Date:   Fri, 13 Dec 2019 12:20:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
- <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
- <7hfthsqcap.fsf@baylibre.com> <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
- <7hpngvontu.fsf@baylibre.com> <4e1339b4-c751-3edc-3a2e-36931ad1c503@baylibre.com>
- <CAFBinCCgKcwXSLxS_CRvz9JZvQo8PcUGm=egBbabVZSrkSc30Q@mail.gmail.com>
-In-Reply-To: <CAFBinCCgKcwXSLxS_CRvz9JZvQo8PcUGm=egBbabVZSrkSc30Q@mail.gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Fri, 13 Dec 2019 16:58:13 +0530
-Message-ID: <CANAwSgSFR3kftWLPqyoYfyxdQ5dcp2W7NgRCaFNkMj-xEDY1Kw@mail.gmail.com>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000000fd7b0059994291b"
+In-Reply-To: <20191213120913.GB2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000fd7b0059994291b
-Content-Type: text/plain; charset="UTF-8"
+On 13/12/2019 12:09, Peter Zijlstra wrote:
+>> Like you said the gains here would probably be small - the highest SMT
+>> count I'm aware of is SMT8 (POWER9). Still, if we end up with both
+>> select_idle_core() and select_idle_cpu() using that pattern, it would make
+>> sense IMO to align select_idle_smt() with those.
+> 
+> The cpumask_and() operation added would also have cost. I really don't
+> see that paying off.
+> 
+> The other sites have the problem that we combine an iteration limit with
+> affinity constraints. This loop doesn't do that and therefore doesn't
+> suffer the problem.
+> 
 
-Hi Martin
-
-On Fri, 13 Dec 2019 at 01:40, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Neil,
->
-> On Wed, Dec 11, 2019 at 9:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >
-> > On 10/12/2019 22:47, Kevin Hilman wrote:
-> > > Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-> > >
-> > >> On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
-> > >>>
-> > >>> Anand Moon <linux.amoon@gmail.com> writes:
-> > >>>
-> > >>>> Hi Neil / Kevin,
-> > >>>>
-> > >>>> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > >>>>>
-> > >>>>> On 09/12/2019 23:12, Kevin Hilman wrote:
-> > >>>>>> Anand Moon <linux.amoon@gmail.com> writes:
-> > >>>>>>
-> > >>>>>>> Some how this patch got lost, so resend this again.
-> > >>>>>>>
-> > >>>>>>> [0] https://patchwork.kernel.org/patch/11136545/
-> > >>>>>>>
-> > >>>>>>> This patch enable DVFS on GXBB Odroid C2.
-> > >>>>>>>
-> > >>>>>>> DVFS has been tested by running the arm64 cpuburn
-> > >>>>>>> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> > >>>>>>> PM-QA testing
-> > >>>>>>> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
-> > >>>>>>>
-> > >>>>>>> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
-> > >>>>>>
-> > >>>>>> Have you tested with the Harkernel u-boot?
-> > >>>>>>
-> > >>>>>> Last I remember, enabling CPUfreq will cause system hangs with the
-> > >>>>>> Hardkernel u-boot because of improperly enabled frequencies, so I'm not
-> > >>>>>> terribly inclined to merge this patch.
-> > >>>>
-> > >>>> HK u-boot have many issue with loading the kernel, with load address
-> > >>>> *it's really hard to build the kernel for HK u-boot*,
-> > >>>> to get the configuration correctly.
-> > >>>>
-> > >>>> Well I have tested with mainline u-boot with latest ATF .
-> > >>>> I would prefer mainline u-boot for all the Amlogic SBC, since
-> > >>>> they sync with latest driver changes.
-> > >>>
-> > >>> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
-> > >>> to support the vendor u-boot that is shipping with the boards.  So
-> > >>> until Hardkernel (and other vendors) switch to mainline u-boot we do not
-> > >>> want to have upstream kernel defaults that will not boot with the vendor
-> > >>> u-boot.
-> > >>>
-> > >>> We can always support these features, but they just cannot be enabled
-> > >>> by default.
-> > >> (I don't have an Odroid-C2 but I'm curious)
-> > >> should Anand submit a patch to mainline u-boot instead?
-> > >
-> > > It would be in addition to $SUBJECT patch, not instead, I think.
-> > >
-> > >> the &scpi_clocks node could be enabled at runtime by mainline u-boot
-> > >
-> > > That would work, but I don't know about u-boot maintainers opinions on
-> > > this kind of thing, so let's see what Neil thinks.
-> >
-> > U-Boot doesn't anything to do with SCPI, SCPI discusses directly with the SCP
-> > processor, and the CPU clock is set to 1,56GHz by the BL2 boot stage before
-> > U-boot starts.
-> >
-> > The only viable solution I see now is to find if we could add a DT OPP table
-> > only for Odroid-C2 dts to bypass the SCPI OPP table.
-> my understanding is that mainline u-boot (with whatever SCP firmware
-> it uses) provides the *correct* OPP table
-
-Right now I am not sure how this OPP table is populated.
-But I saw the same freq table used in 3.16.x kernel after enable the clk.
-
-> in this case it would be "safe" to have SCPI enabled with mainline u-boot
-> @Anand: please correct me if I misunderstood you
->
-
-As per my understanding DVFS OPP frequency table for SCPI firmware set
-for 1.536 GHz
-somewhere in BL2 as pointed by Neil.
-
-Arm Trusted firmware added new secure SCPI communication with
-Cortex-M3 co processor.
-[0] https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/meson-gxbb.rst
-[1] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/amlogic/common/aml_scpi.c
-
-ATF generated the *bl1.bin* which is replace the Amlogic's bl1.bin
-while preparing
-the new u-boot *u-boot.gxbb* image.
-
-> my idea to "enable SCPI with mainline u-boot" is to have u-boot update
-> the "status" property of the scpi_clocks node.
-> u-boot does something similar with the mac-address property of the
-> Ethernet controller for example.
-> as result of this users of mainline u-boot would have working CPU
-> DVFS, while users of the old vendor u-boot would run at fixed 1.54GHz.
->
->
-> Martin
-
-Right now as per my understanding 1.536 GHz max is bit under clocked.
-
-Some time ago on Odroid Forum tried to over clock the cpu to 2GHz.
-[3] https://forum.odroid.com/viewtopic.php?f=139&t=18738
-So more investigation need to done in this line.
-
-I also tried the same with HardKernel Image, with modifying the boot.ini
-I could increase the max DVFS cpu frequency to 1.90 GHz,
-This is just proof of concept.
-
-odroid:~# cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
-100000 250000 500000 1000000 1296000 1536000 1656000 1680000 1752000 1896000
-
-I have some minimal stress testing attached are the results for HK
-3.16.x kernel.
-
-For now we should not enable this clock.
-Until we can possible to check for higher clock frequency to work stable
-on all Amlogic S905X SBC.
-
-I like the Neil's approach to use it's own dts OPP table for SCPI protocol.
-
--Anand
-
---0000000000000fd7b0059994291b
-Content-Type: text/plain; charset="US-ASCII"; name="cpufreq_odroid_c2_3.16.78-48.txt"
-Content-Disposition: attachment; filename="cpufreq_odroid_c2_3.16.78-48.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k4414bbd0>
-X-Attachment-Id: f_k4414bbd0
-
-cm9vdEBvZHJvaWQ6fiMgc3lzYmVuY2ggLS10ZXN0PWNwdSAtLXRocmVhZHM9NCAtLWNwdS1tYXgt
-cHJpbWU9MjAwMDAwMCBydW4NCldBUk5JTkc6IHRoZSAtLXRlc3Qgb3B0aW9uIGlzIGRlcHJlY2F0
-ZWQuIFlvdSBjYW4gcGFzcyBhIHNjcmlwdCBuYW1lIG9yIHBhdGggb24gdGhlIGNvbW1hbmQgbGlu
-ZSB3aXRob3V0IGFueSBvcHRpb25zLg0Kc3lzYmVuY2ggMS4wLjExICh1c2luZyBzeXN0ZW0gTHVh
-SklUIDIuMS4wLWJldGEzKQ0KDQpSdW5uaW5nIHRoZSB0ZXN0IHdpdGggZm9sbG93aW5nIG9wdGlv
-bnM6DQpOdW1iZXIgb2YgdGhyZWFkczogNA0KSW5pdGlhbGl6aW5nIHJhbmRvbSBudW1iZXIgZ2Vu
-ZXJhdG9yIGZyb20gY3VycmVudCB0aW1lDQoNCg0KUHJpbWUgbnVtYmVycyBsaW1pdDogMjAwMDAw
-MA0KDQpJbml0aWFsaXppbmcgd29ya2VyIHRocmVhZHMuLi4NCg0KVGhyZWFkcyBzdGFydGVkIQ0K
-DQpDUFUgc3BlZWQ6DQogICAgZXZlbnRzIHBlciBzZWNvbmQ6ICAgICAwLjA5DQoNCkdlbmVyYWwg
-c3RhdGlzdGljczoNCiAgICB0b3RhbCB0aW1lOiAgICAgICAgICAgICAgICAgICAgICAgICAgNDYu
-NDc5OXMNCiAgICB0b3RhbCBudW1iZXIgb2YgZXZlbnRzOiAgICAgICAgICAgICAgNA0KDQpMYXRl
-bmN5IChtcyk6DQogICAgICAgICBtaW46ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMzEz
-MTkuODINCiAgICAgICAgIGF2ZzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzODU4My4z
-Nw0KICAgICAgICAgbWF4OiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDQ2NDc4LjUzDQog
-ICAgICAgICA5NXRoIHBlcmNlbnRpbGU6ICAgICAgICAgICAgICAgICAgNDYxMDMuNTINCiAgICAg
-ICAgIHN1bTogICAgICAgICAgICAgICAgICAgICAgICAgICAgIDE1NDMzMy40Nw0KDQpUaHJlYWRz
-IGZhaXJuZXNzOg0KICAgIGV2ZW50cyAoYXZnL3N0ZGRldik6ICAgICAgICAgICAxLjAwMDAvMC4w
-MA0KICAgIGV4ZWN1dGlvbiB0aW1lIChhdmcvc3RkZGV2KTogICAzOC41ODM0LzYuOTgNCnJvb3RA
-b2Ryb2lkOn4jIGNwdWZyZXEtDQpjcHVmcmVxLWFwZXJmICBjcHVmcmVxLWluZm8gICBjcHVmcmVx
-LXNldA0Kcm9vdEBvZHJvaWQ6fiMgY3B1ZnJlcS1pbmZvDQpjcHVmcmVxdXRpbHMgMDA4OiBjcHVm
-cmVxLWluZm8gKEMpIERvbWluaWsgQnJvZG93c2tpIDIwMDQtMjAwOQ0KUmVwb3J0IGVycm9ycyBh
-bmQgYnVncyB0byBjcHVmcmVxQHZnZXIua2VybmVsLm9yZywgcGxlYXNlLg0KYW5hbHl6aW5nIENQ
-VSAwOg0KICBkcml2ZXI6IG1lc29uX2NwdWZyZXENCiAgQ1BVcyB3aGljaCBydW4gYXQgdGhlIHNh
-bWUgaGFyZHdhcmUgZnJlcXVlbmN5OiAwIDEgMiAzDQogIENQVXMgd2hpY2ggbmVlZCB0byBoYXZl
-IHRoZWlyIGZyZXF1ZW5jeSBjb29yZGluYXRlZCBieSBzb2Z0d2FyZTogMCAxIDIgMw0KICBtYXhp
-bXVtIHRyYW5zaXRpb24gbGF0ZW5jeTogMjAwIHVzLg0KICBoYXJkd2FyZSBsaW1pdHM6IDEwMC4w
-IE1IeiAtIDEuOTAgR0h6DQogIGF2YWlsYWJsZSBmcmVxdWVuY3kgc3RlcHM6IDEwMC4wIE1Ieiwg
-MjUwIE1IeiwgNTAwIE1IeiwgMTAwMCBNSHosIDEuMzAgR0h6LCAxLjU0IEdIeiwgMS42NiBHSHos
-IDEuNjggR0h6LCAxLjc1IEdIeiwgMS45MCBHSHoNCiAgYXZhaWxhYmxlIGNwdWZyZXEgZ292ZXJu
-b3JzOiBob3RwbHVnLCBpbnRlcmFjdGl2ZSwgY29uc2VydmF0aXZlLCBvbmRlbWFuZCwgdXNlcnNw
-YWNlLCBwb3dlcnNhdmUsIHBlcmZvcm1hbmNlDQogIGN1cnJlbnQgcG9saWN5OiBmcmVxdWVuY3kg
-c2hvdWxkIGJlIHdpdGhpbiAxMDAuMCBNSHogYW5kIDEwMC4wIE1Iei4NCiAgICAgICAgICAgICAg
-ICAgIFRoZSBnb3Zlcm5vciAicGVyZm9ybWFuY2UiIG1heSBkZWNpZGUgd2hpY2ggc3BlZWQgdG8g
-dXNlDQogICAgICAgICAgICAgICAgICB3aXRoaW4gdGhpcyByYW5nZS4NCiAgY3VycmVudCBDUFUg
-ZnJlcXVlbmN5IGlzIDEwMC4wIE1IeiAoYXNzZXJ0ZWQgYnkgY2FsbCB0byBoYXJkd2FyZSkuDQog
-IGNwdWZyZXEgc3RhdHM6IDEwMC4wIE1IejoyOC41NCUsIDI1MCBNSHo6MC4wMCUsIDUwMCBNSHo6
-MC4wMCUsIDEwMDAgTUh6OjAuMDAlLCAxLjMwIEdIejowLjAwJSwgMS41NCBHSHo6MC4wMCUsIDEu
-NjYgR0h6OjAuMDAlLCAxLjY4IEdIejowLjAwJSwgMS43NSBHSHo6MC4wMCUsIDEuOTAgR0h6Ojcx
-LjQ2JSAgKDIpDQphbmFseXppbmcgQ1BVIDE6DQogIGRyaXZlcjogbWVzb25fY3B1ZnJlcQ0KICBD
-UFVzIHdoaWNoIHJ1biBhdCB0aGUgc2FtZSBoYXJkd2FyZSBmcmVxdWVuY3k6IDAgMSAyIDMNCiAg
-Q1BVcyB3aGljaCBuZWVkIHRvIGhhdmUgdGhlaXIgZnJlcXVlbmN5IGNvb3JkaW5hdGVkIGJ5IHNv
-ZnR3YXJlOiAwIDEgMiAzDQogIG1heGltdW0gdHJhbnNpdGlvbiBsYXRlbmN5OiAyMDAgdXMuDQog
-IGhhcmR3YXJlIGxpbWl0czogMTAwLjAgTUh6IC0gMS45MCBHSHoNCiAgYXZhaWxhYmxlIGZyZXF1
-ZW5jeSBzdGVwczogMTAwLjAgTUh6LCAyNTAgTUh6LCA1MDAgTUh6LCAxMDAwIE1IeiwgMS4zMCBH
-SHosIDEuNTQgR0h6LCAxLjY2IEdIeiwgMS42OCBHSHosIDEuNzUgR0h6LCAxLjkwIEdIeg0KICBh
-dmFpbGFibGUgY3B1ZnJlcSBnb3Zlcm5vcnM6IGhvdHBsdWcsIGludGVyYWN0aXZlLCBjb25zZXJ2
-YXRpdmUsIG9uZGVtYW5kLCB1c2Vyc3BhY2UsIHBvd2Vyc2F2ZSwgcGVyZm9ybWFuY2UNCiAgY3Vy
-cmVudCBwb2xpY3k6IGZyZXF1ZW5jeSBzaG91bGQgYmUgd2l0aGluIDEwMC4wIE1IeiBhbmQgMTAw
-LjAgTUh6Lg0KICAgICAgICAgICAgICAgICAgVGhlIGdvdmVybm9yICJwZXJmb3JtYW5jZSIgbWF5
-IGRlY2lkZSB3aGljaCBzcGVlZCB0byB1c2UNCiAgICAgICAgICAgICAgICAgIHdpdGhpbiB0aGlz
-IHJhbmdlLg0KICBjdXJyZW50IENQVSBmcmVxdWVuY3kgaXMgMTAwLjAgTUh6IChhc3NlcnRlZCBi
-eSBjYWxsIHRvIGhhcmR3YXJlKS4NCiAgY3B1ZnJlcSBzdGF0czogMTAwLjAgTUh6OjI4LjU0JSwg
-MjUwIE1IejowLjAwJSwgNTAwIE1IejowLjAwJSwgMTAwMCBNSHo6MC4wMCUsIDEuMzAgR0h6OjAu
-MDAlLCAxLjU0IEdIejowLjAwJSwgMS42NiBHSHo6MC4wMCUsIDEuNjggR0h6OjAuMDAlLCAxLjc1
-IEdIejowLjAwJSwgMS45MCBHSHo6NzEuNDYlICAoMikNCmFuYWx5emluZyBDUFUgMjoNCiAgZHJp
-dmVyOiBtZXNvbl9jcHVmcmVxDQogIENQVXMgd2hpY2ggcnVuIGF0IHRoZSBzYW1lIGhhcmR3YXJl
-IGZyZXF1ZW5jeTogMCAxIDIgMw0KICBDUFVzIHdoaWNoIG5lZWQgdG8gaGF2ZSB0aGVpciBmcmVx
-dWVuY3kgY29vcmRpbmF0ZWQgYnkgc29mdHdhcmU6IDAgMSAyIDMNCiAgbWF4aW11bSB0cmFuc2l0
-aW9uIGxhdGVuY3k6IDIwMCB1cy4NCiAgaGFyZHdhcmUgbGltaXRzOiAxMDAuMCBNSHogLSAxLjkw
-IEdIeg0KICBhdmFpbGFibGUgZnJlcXVlbmN5IHN0ZXBzOiAxMDAuMCBNSHosIDI1MCBNSHosIDUw
-MCBNSHosIDEwMDAgTUh6LCAxLjMwIEdIeiwgMS41NCBHSHosIDEuNjYgR0h6LCAxLjY4IEdIeiwg
-MS43NSBHSHosIDEuOTAgR0h6DQogIGF2YWlsYWJsZSBjcHVmcmVxIGdvdmVybm9yczogaG90cGx1
-ZywgaW50ZXJhY3RpdmUsIGNvbnNlcnZhdGl2ZSwgb25kZW1hbmQsIHVzZXJzcGFjZSwgcG93ZXJz
-YXZlLCBwZXJmb3JtYW5jZQ0KICBjdXJyZW50IHBvbGljeTogZnJlcXVlbmN5IHNob3VsZCBiZSB3
-aXRoaW4gMTAwLjAgTUh6IGFuZCAxMDAuMCBNSHouDQogICAgICAgICAgICAgICAgICBUaGUgZ292
-ZXJub3IgInBlcmZvcm1hbmNlIiBtYXkgZGVjaWRlIHdoaWNoIHNwZWVkIHRvIHVzZQ0KICAgICAg
-ICAgICAgICAgICAgd2l0aGluIHRoaXMgcmFuZ2UuDQogIGN1cnJlbnQgQ1BVIGZyZXF1ZW5jeSBp
-cyAxMDAuMCBNSHogKGFzc2VydGVkIGJ5IGNhbGwgdG8gaGFyZHdhcmUpLg0KICBjcHVmcmVxIHN0
-YXRzOiAxMDAuMCBNSHo6MjguNTQlLCAyNTAgTUh6OjAuMDAlLCA1MDAgTUh6OjAuMDAlLCAxMDAw
-IE1IejowLjAwJSwgMS4zMCBHSHo6MC4wMCUsIDEuNTQgR0h6OjAuMDAlLCAxLjY2IEdIejowLjAw
-JSwgMS42OCBHSHo6MC4wMCUsIDEuNzUgR0h6OjAuMDAlLCAxLjkwIEdIejo3MS40NiUgICgyKQ0K
-YW5hbHl6aW5nIENQVSAzOg0KICBkcml2ZXI6IG1lc29uX2NwdWZyZXENCiAgQ1BVcyB3aGljaCBy
-dW4gYXQgdGhlIHNhbWUgaGFyZHdhcmUgZnJlcXVlbmN5OiAwIDEgMiAzDQogIENQVXMgd2hpY2gg
-bmVlZCB0byBoYXZlIHRoZWlyIGZyZXF1ZW5jeSBjb29yZGluYXRlZCBieSBzb2Z0d2FyZTogMCAx
-IDIgMw0KICBtYXhpbXVtIHRyYW5zaXRpb24gbGF0ZW5jeTogMjAwIHVzLg0KICBoYXJkd2FyZSBs
-aW1pdHM6IDEwMC4wIE1IeiAtIDEuOTAgR0h6DQogIGF2YWlsYWJsZSBmcmVxdWVuY3kgc3RlcHM6
-IDEwMC4wIE1IeiwgMjUwIE1IeiwgNTAwIE1IeiwgMTAwMCBNSHosIDEuMzAgR0h6LCAxLjU0IEdI
-eiwgMS42NiBHSHosIDEuNjggR0h6LCAxLjc1IEdIeiwgMS45MCBHSHoNCiAgYXZhaWxhYmxlIGNw
-dWZyZXEgZ292ZXJub3JzOiBob3RwbHVnLCBpbnRlcmFjdGl2ZSwgY29uc2VydmF0aXZlLCBvbmRl
-bWFuZCwgdXNlcnNwYWNlLCBwb3dlcnNhdmUsIHBlcmZvcm1hbmNlDQogIGN1cnJlbnQgcG9saWN5
-OiBmcmVxdWVuY3kgc2hvdWxkIGJlIHdpdGhpbiAxMDAuMCBNSHogYW5kIDEwMC4wIE1Iei4NCiAg
-ICAgICAgICAgICAgICAgIFRoZSBnb3Zlcm5vciAicGVyZm9ybWFuY2UiIG1heSBkZWNpZGUgd2hp
-Y2ggc3BlZWQgdG8gdXNlDQogICAgICAgICAgICAgICAgICB3aXRoaW4gdGhpcyByYW5nZS4NCiAg
-Y3VycmVudCBDUFUgZnJlcXVlbmN5IGlzIDEwMC4wIE1IeiAoYXNzZXJ0ZWQgYnkgY2FsbCB0byBo
-YXJkd2FyZSkuDQogIGNwdWZyZXEgc3RhdHM6IDEwMC4wIE1IejoyOC41NSUsIDI1MCBNSHo6MC4w
-MCUsIDUwMCBNSHo6MC4wMCUsIDEwMDAgTUh6OjAuMDAlLCAxLjMwIEdIejowLjAwJSwgMS41NCBH
-SHo6MC4wMCUsIDEuNjYgR0h6OjAuMDAlLCAxLjY4IEdIejowLjAwJSwgMS43NSBHSHo6MC4wMCUs
-IDEuOTAgR0h6OjcxLjQ1JSAgKDIpDQpyb290QG9kcm9pZDp+Iw0K
---0000000000000fd7b0059994291b--
+select_idle_core() doesn't really have an iteration limit, right? That
+being said, yeah, the cpumask_and() for e.g. SMT2 systems would be
+mostly wasteful.
