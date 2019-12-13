@@ -2,130 +2,154 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2126BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F88C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F6024658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650E12073D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 09:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujociCaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLMJ51 (ORCPT
+        id S1726680AbfLMJ5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:57:27 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46132 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfLMJ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 04:57:26 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ED9E138D1922D1532078;
-        Fri, 13 Dec 2019 17:57:23 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.236) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 13 Dec 2019
- 17:57:17 +0800
-Subject: Re: [PATCH] sched/fair: Optimize select_idle_cpu
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mingo@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenwandun@huawei.com>, <xiexiuqi@huawei.com>,
-        <liwei391@huawei.com>, <huawei.libin@huawei.com>,
-        <bobo.shaobowang@huawei.com>, <juri.lelli@redhat.com>,
-        <vincent.guittot@linaro.org>,
-        "chengjian (D)" <cj.chengjian@huawei.com>
-References: <20191212144102.181510-1-cj.chengjian@huawei.com>
- <20191212152406.GB2827@hirez.programming.kicks-ass.net>
-From:   "chengjian (D)" <cj.chengjian@huawei.com>
-Message-ID: <d40ac385-626f-e86f-b2cb-69adf10a193a@huawei.com>
-Date:   Fri, 13 Dec 2019 17:57:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 04:57:55 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45947 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMJ5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 04:57:55 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j42so5910605wrj.12;
+        Fri, 13 Dec 2019 01:57:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dpNbKF4B4j4oXDchU1RrJO41reoDriPtS20xCTxdXFQ=;
+        b=ujociCaQeo4UzEdyNQmDF7/4gRqJCdfMiazcOKOemDS4RDAPb3Urs8ZvPzvVTZOiwY
+         78nwM1Mn17kew+jLZHAv+7bT2a5l8LurKCJLi0WSnEBIil9BXqZ+e+e6Cb4Wq9bE41Sc
+         lIYpC54Z6W9q6QvulK4ngX1CfdDZ0QYUTwK+UygZgaFTtMU3EcQkp2eN8nN7XuTa5fGy
+         CqHMNFzD82N3bJb/nJV9aSFu54KnIUAjQ4rwpWSyZTsyzbKKLVHF5NNO/9X3OLjjZbqe
+         7XTN29xCCrLkhipC1CbeG1/0q8r6XtSj9Z1ljD6ZC4OHIyEmC0M064y9dClyic4pqYoX
+         nrFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dpNbKF4B4j4oXDchU1RrJO41reoDriPtS20xCTxdXFQ=;
+        b=m+lFJQdeLg16WuXnMXiu6F5y8PpVnWW3tcDaExHRUrS4HsPzDWNsZT5sbSIQp22cPR
+         P4hyHm9xDmOG6j8LGUBp/WUefptS7ncsQ8v58kOwyKW/AiVsqg6IphGCcBmsU6TDsQsU
+         qA7pyKTTUahVTdFGCwW3X33zj0JRj7edddWXw5Vvt1bFjj3wKUJwUr5W0ZnYZiHWkQSE
+         xBDJYr8F7NDTOC4miLzFfIk86vFmbUoqf0PzDrYEP8CBzAG3pX9ph16ivwhOqkTjvugN
+         oD8OYIZR+KroEpojf6gHHEk9MNuVfE75N7GpTuAW0Lh31CYvsRmX8xr0o2J+pTIMcqYX
+         2YVg==
+X-Gm-Message-State: APjAAAUCJsVXzBd8qOkWaxTtkfHa0gJuP7JxX79YWFEh+U1A0HkvIKzu
+        PbldpCPTTf3LoF8oT/C637dJiUe+
+X-Google-Smtp-Source: APXvYqw/KxKkRXUonEjxr+p1HfHGF9/99eOKJSI1HzPVgp4nbjtBT1GLsgKgzov5u1Dn/l6wcsGj2w==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr11322198wrr.309.1576231071861;
+        Fri, 13 Dec 2019 01:57:51 -0800 (PST)
+Received: from [192.168.2.41] ([46.227.18.67])
+        by smtp.gmail.com with ESMTPSA id x10sm9327133wrv.60.2019.12.13.01.57.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 01:57:51 -0800 (PST)
+Subject: Re: [PATCH] tty/serial: atmel: fix out of range clock divider
+ handling
+To:     David Engraf <david.engraf@sysgo.com>, richard.genoud@gmail.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com
+Cc:     linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191211162954.8393-1-david.engraf@sysgo.com>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <822ac68e-4dde-21e8-caf9-a219b910d49e@gmail.com>
+Date:   Fri, 13 Dec 2019 10:57:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191212152406.GB2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211162954.8393-1-david.engraf@sysgo.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Originating-IP: [10.133.217.236]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2019/12/12 23:24, Peter Zijlstra wrote:
-> On Thu, Dec 12, 2019 at 10:41:02PM +0800, Cheng Jian wrote:
->
->> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
-> The 'funny' thing is that select_idle_core() actually does the right
-> thing.
->
-> Copying that should work:
->
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..416d574dcebf 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5828,6 +5837,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
->    */
->   static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
->   {
-> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
->   	struct sched_domain *this_sd;
->   	u64 avg_cost, avg_idle;
->   	u64 time, cost;
-> @@ -5859,11 +5869,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->   
->   	time = cpu_clock(this);
->   
-> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+Le 11/12/2019 à 17:29, David Engraf a écrit :
+> Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+> register was already written thus the clock selection is ignored.
+> 
+> Fix by writing the mode register after calculating the baudrate.
+> 
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+
+It seems that this bug was introduced by:
+commit 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+
+Could you add the "Fixes:" header ?
+
+Ludovic, could you check if this was your intent at the time ?
+
+> ---
+>  drivers/tty/serial/atmel_serial.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index a8dc8af83f39..9983e2fabbac 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -2270,9 +2270,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>  		mode |= ATMEL_US_USMODE_NORMAL;
+>  	}
+>  
+I think it's better to mo move the "Set baud rate" block here (cf bellow)
+
+> -	/* set the mode, clock divisor, parity, stop bits and data size */
+> -	atmel_uart_writel(port, ATMEL_US_MR, mode);
+> -
+>  	/*
+>  	 * when switching the mode, set the RTS line state according to the
+>  	 * new mode, otherwise keep the former state
+> @@ -2315,6 +2312,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>  	}
+>  	quot = cd | fp << ATMEL_US_FP_OFFSET;
+>  
+> +	/* set the mode, clock divisor, parity, stop bits and data size */
+> +	atmel_uart_writel(port, ATMEL_US_MR, mode);
 > +
-> +	for_each_cpu_wrap(cpu, cpus, target) {
->   		if (!--nr)
->   			return si_cpu;
-> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> -			continue;
->   		if (available_idle_cpu(cpu))
->   			break;
->   		if (si_cpu == -1 && sched_idle_cpu(cpu))
->
-> .
+I think your patch is good, but I'll be happier if instead of moving
+those 2 lines here, the whole "Set the baud rate" block was moved before
+"atmel_uart_writel(port, ATMEL_US_MR, mode);"
+
+That's because at line 2291 the ATMEL_US_CR register is set with
+ATMEL_US_RTSDIS or ATMEL_US_RTSEN.
+And those 2 values have a different effect depending on US_MR.USART_MODE
+
+Quoting from the relase manual:
+RTSEN:
+1: Drives RTS pin to 1 if US_MR.USART_MODE field = 2, else drives RTS
+pin to 0 if US_MR.USART_MODE field = 0.
+
+RTSDIS:
+1: Drives RTS pin to 0 if US_MR.USART_MODE field = 2, else drives RTS
+pin to 1 if US_MR.USART_MODE field = 0.
+
+So, I think it's better to set the mode register before setting the
+control register.
 
 
-in select_idle_smt()
+>  	if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
+>  		atmel_uart_writel(port, ATMEL_US_BRGR, quot);
+>  	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+> 
 
-/*
-  * Scan the local SMT mask for idle CPUs.
-  */
-static int select_idle_smt(struct task_struct *p, int target)
-{
-     int cpu, si_cpu = -1;
-
-     if (!static_branch_likely(&sched_smt_present))
-         return -1;
-
-     for_each_cpu(cpu, cpu_smt_mask(target)) {
-         if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-             continue;
-         if (available_idle_cpu(cpu))
-             return cpu;
-         if (si_cpu == -1 && sched_idle_cpu(cpu))
-             si_cpu = cpu;
-     }
-
-     return si_cpu;
-}
-
-
-Why don't we do the same thing in this function,
-
-although cpu_smt_present () often has few CPUs.
-
-it is better to determine the 'p->cpus_ptr' first.
-
-
-
-
-
+Thanks !
