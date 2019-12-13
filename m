@@ -2,206 +2,87 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09BFC3B1B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE4C3B1B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE502473C
+	by mail.kernel.org (Postfix) with ESMTP id F1C532473C
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6KbOGPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfLMPgX (ORCPT
+        id S1727947AbfLMPib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:36:23 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35182 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbfLMPgN (ORCPT
+        Fri, 13 Dec 2019 10:38:31 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:38505 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfLMPib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:36:13 -0500
-Received: by mail-pf1-f196.google.com with SMTP id b19so1667981pfo.2;
-        Fri, 13 Dec 2019 07:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N8r0QuiHzZhPzfXlIr3nAqSHS8c9llEbC1GhekqiE10=;
-        b=F6KbOGPx9PVaGCWYDfVXZx0Wv7bgIr2InYBmwwmVHz7OsqUOdNn+QmBhB60xZZUEzT
-         K1dSiIkwkC1r4wVbZDRdrMmRyFXlcMGj3ozzjTSYcMReoiUy2Gk6+DqQQ418KK9CMEsz
-         Aqlc3o8+YQsXwSHjletUicIS8++zUDtiR2i/IXAAwpvXepoYr5Ei+qyTOproxaELNVup
-         /ez4bQo06+8BIKFqoitV7RaE6Rqxkj6ljCtgfYm3DmUNKwhefwyX12hxAMdbCYWUR/82
-         7zVJgiqDLsDAqk1WsNPCLfSgZZ95BG3ahSRisvyPG4BswayY/e5EP/Z1zYqqG8+8V5p2
-         1QHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N8r0QuiHzZhPzfXlIr3nAqSHS8c9llEbC1GhekqiE10=;
-        b=GP/MPb7sTJ/F6wo93FIDAApjCxyuyYuN+xZXiD40fyDexn/qUBvhmaHVzkl901M/M1
-         dMQaOuGL+UqhC4o/MVZ8gR53oHR6nWP+z0OyH4R3FotEulaG+NZ1pmEIyxqbXygKGPPA
-         iVaYShPXMfquQ6RqAgo0RUU7xa0SSXQDXBjKB3N3fY5djY2+j9ChV8HOj/i9yr5oKfCu
-         UjNcF+fbvDkVDeltjGZnGienWECaQZVZyj44z2eruSbwW2yi4aPOQX61o8gwHio0R32w
-         g3VqCg1vK6URvP9fZnmSQj4hKF8RsNgq0iGMYd+GKXSMgEZ3FvT8bK7VZOQOR7WAjd4G
-         tB1w==
-X-Gm-Message-State: APjAAAX0t7wM9OOKIXQZ5shQ03heNGsVJmtE7IRz7PxlEVvGW3i7WOlR
-        grOhnFQbmvVxgSEagK+rGTo=
-X-Google-Smtp-Source: APXvYqygsPRpbMLO/A1yYDbfioOjb6ABqIJmU2FZN9TZsgdl7rEoOalqmpWjBkl8yfYRTwYIP1KSnw==
-X-Received: by 2002:aa7:8699:: with SMTP id d25mr4488pfo.139.1576251372654;
-        Fri, 13 Dec 2019 07:36:12 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id w131sm12039217pfc.16.2019.12.13.07.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:36:12 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 3/4] xen/blkback: Remove unnecessary static variable name prefixes
-Date:   Fri, 13 Dec 2019 15:35:45 +0000
-Message-Id: <20191213153546.17425-4-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213153546.17425-1-sjpark@amazon.de>
-References: <20191213153546.17425-1-sjpark@amazon.de>
+        Fri, 13 Dec 2019 10:38:31 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MdvVu-1i70lf2PTi-00b1qA; Fri, 13 Dec 2019 16:38:29 +0100
+Received: by mail-qt1-f172.google.com with SMTP id e12so2600021qto.2;
+        Fri, 13 Dec 2019 07:38:29 -0800 (PST)
+X-Gm-Message-State: APjAAAUVhP/5UXUxaWEfxul12GxhzJ0sA88FsR8jTr4Gh7XOuwGdRgdi
+        NQks70v7l20tNHnCMcbEwGT7W3NNffKQKKuDv6I=
+X-Google-Smtp-Source: APXvYqw99oGMzeSioZjqdskLBPgYHN7FjeXUu4HGv1laMzanNdwLYdX0anAAiC6bn6p3caU4v71uSXwskgpYo0rS1GI=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr12720676qtr.142.1576251508429;
+ Fri, 13 Dec 2019 07:38:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191126161824.337724-1-arnd@arndb.de> <20191126161824.337724-7-arnd@arndb.de>
+ <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl> <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
+ <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
+In-Reply-To: <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 16:38:12 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1zvMFrs1cG+nQmTq3Tcv4OWdBkPNcsr6JsaM=Zkj8cFQ@mail.gmail.com>
+Message-ID: <CAK8P3a1zvMFrs1cG+nQmTq3Tcv4OWdBkPNcsr6JsaM=Zkj8cFQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
+ time64 ABI
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wRRagCp/9UR7bP6HmPcw1OLo5+z22fM6ujfQU4/EM+H3I0fmN6f
+ zeza0Ofdr9yOfDUy2ttXCEZHA9Q9vBbpdgd6P+A38Qviex3VqffjuqZqQcGupr+jA4s5TT/
+ BKi3htCAO84NPb4tJ+9D1SpvLeDnzKMvC0EY4QgZLwHDA7k9vO8tsG55xEMfzW8B+3/qlJ4
+ Wuw50GON3Q6B/TjvnUp7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LpZlHmiYtzg=:w1Q5Pk0+AwPFPpJXJhgh5N
+ c8dX4aSsajw89bIyTgaZ7sqqK7Gx5e11J+M4aADq+GqDMJjup6bn4kyWOWVYKpBfcQZX6Tn+N
+ 3GDhzS3czTGsrJBOIbJrr4VwZ4lxn2SBlZW00EuSo77TRIhP4DQ+TZtQTzMR9bUQyBYze40eL
+ 1UFw318vhwSgI5vdmT8hvuKU+ulB9OpmZp/8/WG7HCpAtbkciwjzSbGVjQdX6nhbXF/owaIag
+ WwVHLmLdtJDjI84pOePdiyG5ElCjwIe5T76SLE15HiY294OAq/mwH8lzDaRCMQRD6LB5uJl+m
+ KuRSJcL41QJ7BJlekCl5jza5ma8MsYTUS07pjagDLODeiJlFjM4yolN10LdKyf12I80qP2jJX
+ zC11rUwWA92Goy5vpOGvOK0yTW425BbXDy5two+ZY7jhmIwOLnb4Q9uic9Ai5VENYP+iW1cKt
+ RGQl8Nqs6oVxNXGZzwifJWUlXtYIZiH0VQ+MrqJkpvyD79vZSRtt4gffVtfsqpWT8jE9GtD28
+ bnKIOB/uEy1aG8NdvrEncl1IOjNHUtQkY2E1i9ytgbI4ipNuSJy3TtRS/k6BYsNlLzdbzQ+ab
+ Xuq8/PC84xL/GRCXg5domnr/8mAfWugCamxy7yvqV0K3QZV/FIBdmJtFbSJC3uMalaB+Tn11O
+ 5NSN4rWzRM+4UFRghrQb8TxW6lCDA8WfbgeE/HImemFbLbshnCZCXpe6wua9qaah93wgcCFJ8
+ k8VSFGYhlULX2+bKIq5oKZp13dFjL5C/fVLOj0LmWbR5GyQWeKFd0La+aQ67e73eG0rur8LtM
+ yGNyw4vka9xxpnAKWK1P73uLH6CKq4jcTORqD4OrIYe0RpNOp7x97gY48islLn+wYvefalzXv
+ 9rv9gkKy69Qt1Qh1D7zA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few of static variables in blkback have 'xen_blkif_' prefix, though it
-is unnecessary for static variables.  This commit removes such prefixes.
+On Fri, Dec 13, 2019 at 4:33 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> On 12/13/19 4:08 PM, Arnd Bergmann wrote:
+> > On Thu, Dec 12, 2019 at 4:43 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> >
+> > I've heard good things about the prebuilt toolchains from http://musl.cc/.
+> > These seems to come with a libstdc++, but I have not tried that myself.
+>
+> I'll see if I can give those a spin, but if I can't get it to work quickly,
+> then I don't plan on spending much time on it.
 
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- drivers/block/xen-blkback/blkback.c | 37 +++++++++++++----------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+Ok, sounds good. The way the series is structured, I tried to have the
+time64 ioctls use the existing code, while adding new time32 ioctls
+to ensure that we catch the bugs in the new time32 version through
+testing, and have fewer bugs to start with in the time64 version.
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index 79f677aeb5cc..fbd67f8e4e4e 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -62,8 +62,8 @@
-  * IO workloads.
-  */
- 
--static int xen_blkif_max_buffer_pages = 1024;
--module_param_named(max_buffer_pages, xen_blkif_max_buffer_pages, int, 0644);
-+static int max_buffer_pages = 1024;
-+module_param_named(max_buffer_pages, max_buffer_pages, int, 0644);
- MODULE_PARM_DESC(max_buffer_pages,
- "Maximum number of free pages to keep in each block backend buffer");
- 
-@@ -78,8 +78,8 @@ MODULE_PARM_DESC(max_buffer_pages,
-  * algorithm.
-  */
- 
--static int xen_blkif_max_pgrants = 1056;
--module_param_named(max_persistent_grants, xen_blkif_max_pgrants, int, 0644);
-+static int max_pgrants = 1056;
-+module_param_named(max_persistent_grants, max_pgrants, int, 0644);
- MODULE_PARM_DESC(max_persistent_grants,
-                  "Maximum number of grants to map persistently");
- 
-@@ -88,8 +88,8 @@ MODULE_PARM_DESC(max_persistent_grants,
-  * use. The time is in seconds, 0 means indefinitely long.
-  */
- 
--static unsigned int xen_blkif_pgrant_timeout = 60;
--module_param_named(persistent_grant_unused_seconds, xen_blkif_pgrant_timeout,
-+static unsigned int pgrant_timeout = 60;
-+module_param_named(persistent_grant_unused_seconds, pgrant_timeout,
- 		   uint, 0644);
- MODULE_PARM_DESC(persistent_grant_unused_seconds,
- 		 "Time in seconds an unused persistent grant is allowed to "
-@@ -137,9 +137,8 @@ module_param(log_stats, int, 0644);
- 
- static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
- {
--	return xen_blkif_pgrant_timeout &&
--	       (jiffies - persistent_gnt->last_used >=
--		HZ * xen_blkif_pgrant_timeout);
-+	return pgrant_timeout && (jiffies - persistent_gnt->last_used >=
-+			HZ * pgrant_timeout);
- }
- 
- static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
-@@ -234,7 +233,7 @@ static int add_persistent_gnt(struct xen_blkif_ring *ring,
- 	struct persistent_gnt *this;
- 	struct xen_blkif *blkif = ring->blkif;
- 
--	if (ring->persistent_gnt_c >= xen_blkif_max_pgrants) {
-+	if (ring->persistent_gnt_c >= max_pgrants) {
- 		if (!blkif->vbd.overflow_max_grants)
- 			blkif->vbd.overflow_max_grants = 1;
- 		return -EBUSY;
-@@ -397,14 +396,13 @@ static void purge_persistent_gnt(struct xen_blkif_ring *ring)
- 		goto out;
- 	}
- 
--	if (ring->persistent_gnt_c < xen_blkif_max_pgrants ||
--	    (ring->persistent_gnt_c == xen_blkif_max_pgrants &&
-+	if (ring->persistent_gnt_c < max_pgrants ||
-+	    (ring->persistent_gnt_c == max_pgrants &&
- 	    !ring->blkif->vbd.overflow_max_grants)) {
- 		num_clean = 0;
- 	} else {
--		num_clean = (xen_blkif_max_pgrants / 100) * LRU_PERCENT_CLEAN;
--		num_clean = ring->persistent_gnt_c - xen_blkif_max_pgrants +
--			    num_clean;
-+		num_clean = (max_pgrants / 100) * LRU_PERCENT_CLEAN;
-+		num_clean = ring->persistent_gnt_c - max_pgrants + num_clean;
- 		num_clean = min(ring->persistent_gnt_c, num_clean);
- 		pr_debug("Going to purge at least %u persistent grants\n",
- 			 num_clean);
-@@ -599,8 +597,7 @@ static void print_stats(struct xen_blkif_ring *ring)
- 		 current->comm, ring->st_oo_req,
- 		 ring->st_rd_req, ring->st_wr_req,
- 		 ring->st_f_req, ring->st_ds_req,
--		 ring->persistent_gnt_c,
--		 xen_blkif_max_pgrants);
-+		 ring->persistent_gnt_c, max_pgrants);
- 	ring->st_print = jiffies + msecs_to_jiffies(10 * 1000);
- 	ring->st_rd_req = 0;
- 	ring->st_wr_req = 0;
-@@ -660,7 +657,7 @@ int xen_blkif_schedule(void *arg)
- 		if (time_before(jiffies, blkif->buffer_squeeze_end))
- 			shrink_free_pagepool(ring, 0);
- 		else
--			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
-+			shrink_free_pagepool(ring, max_buffer_pages);
- 
- 		if (log_stats && time_after(jiffies, ring->st_print))
- 			print_stats(ring);
-@@ -887,7 +884,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			continue;
- 		}
- 		if (use_persistent_gnts &&
--		    ring->persistent_gnt_c < xen_blkif_max_pgrants) {
-+		    ring->persistent_gnt_c < max_pgrants) {
- 			/*
- 			 * We are using persistent grants, the grant is
- 			 * not mapped but we might have room for it.
-@@ -914,7 +911,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			pages[seg_idx]->persistent_gnt = persistent_gnt;
- 			pr_debug("grant %u added to the tree of persistent grants, using %u/%u\n",
- 				 persistent_gnt->gnt, ring->persistent_gnt_c,
--				 xen_blkif_max_pgrants);
-+				 max_pgrants);
- 			goto next;
- 		}
- 		if (use_persistent_gnts && !blkif->vbd.overflow_max_grants) {
--- 
-2.17.1
-
+     Arnd
