@@ -2,79 +2,116 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D1FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9661C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37487214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F23424656
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ccNhwmDe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqLAEFDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfLMHt6 (ORCPT
+        id S1725980AbfLMHvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:49:58 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:49823 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725468AbfLMHt5 (ORCPT
+        Fri, 13 Dec 2019 02:51:38 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38478 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfLMHvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:49:57 -0500
-X-UUID: 24697eb6d00d4ee3bc3cc0d3f9472e60-20191213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sGCRslRMxKd4+sopLgy6QPoZUbVrNbm1Aabm9JQ7Fiw=;
-        b=ccNhwmDeAqop99pkVHs4JJD6zlqiDalwPWox+0bRHC4tv5JSARi8nuo4roFS0RoLn53d6/WyXAgUfbR+5fTdKaROMHDkB8D9dxQjw/gAVZ4W1VjO0BVbHK7E9FaxiXk2gt+rGuqh1vfJG5VGtDqAWbKETMicIx8C2wuD6Ks8NBk=;
-X-UUID: 24697eb6d00d4ee3bc3cc0d3f9472e60-20191213
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1559566732; Fri, 13 Dec 2019 15:49:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 13 Dec 2019 15:49:32 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 13 Dec 2019 15:49:40 +0800
-Message-ID: <1576223390.9817.4.camel@mtksdaap41>
-Subject: Re: [PATCH v2, 0/2] drm/mediatek: Add ctm property support
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 13 Dec 2019 15:49:50 +0800
-In-Reply-To: <1576222132-31586-1-git-send-email-yongqiang.niu@mediatek.com>
-References: <1576222132-31586-1-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 13 Dec 2019 02:51:37 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so5548853wrh.5;
+        Thu, 12 Dec 2019 23:51:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhWGf6of1paXEg2Udp6pFG3Inh/6p+5h7lz+S0oU+A4=;
+        b=sqLAEFDadV4KroJZMrXwhCmHegBtzMMxzO8vFNablwsVogQElVhFjExoQP2pEW+xXo
+         bKy7OW8Z3Mv04NDiBSGlg6yFsoxih7dyQIK6GvHlAIRlxgkGCvD01g8OBP/8dd5/RvkU
+         3nFbKMASTguOGC23Hqn+1W/KXMYXcJYB9gj9L54I6oiLdlCpFh5NMrYWL4LU5KbcV5jL
+         CjAdpHKN5KFv4k1+0L6kYnXBoGmb2FD73uDGbhMu+IvMnHXwREoIb2kyNyI4spnzF25l
+         /W6rm+v1zRWQBtG7HGWSX+RWuMhCFR4Gb+at5zxFRRhgWDphlUbGM+p/Z+AOG5ghn+Fc
+         MMpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhWGf6of1paXEg2Udp6pFG3Inh/6p+5h7lz+S0oU+A4=;
+        b=dap9s4OEVRgDdDvsJQ5pJM7D/PWHp0QNOwC/RprifAvY4/znmCm8lnzQLScEHK1SVd
+         bGLHlX1rjbHboXGEuVu0dnr9p+gYR8WHtlPM8aHyf+y1xpVUJy00Ft8qGST12ZhSNFhG
+         aiWkfuG3iix87Zu/CLa9znaUH4suYxz5mfsU7p9GThoozq7w6pWy53C9wnsdvXMNEDL+
+         cEQp6PfibOFgrWQXe31IP0+6sXbP/wzFhDMRRxYC3GvWOr3W+tOx3qeWuqHHgEaTHTmq
+         a6wObBLbj9vu5ejRGvTOxR7tflTMGI/OKZovd2ajRrLe1qbpIdAxpM2Yj+h2JaCa1he0
+         wtDA==
+X-Gm-Message-State: APjAAAV3j//BgRXNywr/iTMYFWFn/BaqZTSDm2MsKgrbDAOqgitOfIh8
+        DdT59v8Um1M0Uxg7J/RSeokOS9tZ
+X-Google-Smtp-Source: APXvYqyom5M80VGqoE8j7sjcy58SGOQ6fbdKO7z9ZSAKXY8PLBLyuXfQjNqrFt9dILUbltwPcrBXhw==
+X-Received: by 2002:adf:ee82:: with SMTP id b2mr11602891wro.194.1576223495273;
+        Thu, 12 Dec 2019 23:51:35 -0800 (PST)
+Received: from localhost.localdomain ([109.126.149.210])
+        by smtp.gmail.com with ESMTPSA id q11sm8942490wrp.24.2019.12.12.23.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 23:51:34 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: don't wait when under-submitting
+Date:   Fri, 13 Dec 2019 10:51:00 +0300
+Message-Id: <5caa38be87f069eb4cc921d58ee1a98ff5d53978.1576223348.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B532F401A64E730E8B148E727DA995610D1CD9CB4E6643715A43734C63D673E82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gRnJpLCAyMDE5LTEyLTEzIGF0IDE1OjI4ICswODAwLCBZb25n
-cWlhbmcgTml1IHdyb3RlOg0KPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiAtc2VwYXJhdGUgZ2FtbWEg
-cGF0Y2gNCj4gLXJlbW92ZSBjbWRxIHN1cHBvcnQgZm9yIGN0bSBzZXR0aW5nDQoNCklmIHRoaXMg
-c2VyaWVzIGRlcGVuZCBvbiBvdGhlciBwYXRjaCBvciBzZXJpZXMsIHBsZWFzZSBkZXNjcmliZSBp
-dC4NCg0KUmVnYXJkcywNCkNLDQoNCj4gDQo+IA0KPiBZb25ncWlhbmcgTml1ICgyKToNCj4gICBk
-cm0vbWVkaWF0ZWs6IEZpeCBnYW1tYSBjb3JyZWN0aW9uIGlzc3VlDQo+ICAgZHJtL21lZGlhdGVr
-OiBBZGQgY3RtIHByb3BlcnR5IHN1cHBvcnQNCj4gDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9jcnRjLmMgICAgIHwgMTggKysrKysrKy0tDQo+ICBkcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgNjIgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAg
-OSArKysrKw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA4NSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQ0KPiANCg0K
+There is no reliable way to submit and wait in a single syscall, as
+io_submit_sqes() may under-consume sqes (in case of an early error).
+Then it will wait for not-yet-submitted requests, deadlocking the user
+in most cases.
+
+Don't wait/poll if can't submit all sqes, and return -EAGAIN
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+
+I wonder, why it doesn't return 2 error codes for submission and waiting
+separately? It's a bit puzzling figuring out what to return. I guess the
+same with the userspace side.
+
+ fs/io_uring.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 42de210be631..82152ea13fe2 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4877,6 +4877,11 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
+ 					   &cur_mm, false);
+ 		mutex_unlock(&ctx->uring_lock);
++
++		if (submitted != to_submit) {
++			submitted = -EAGAIN;
++			goto out;
++		}
+ 	}
+ 	if (flags & IORING_ENTER_GETEVENTS) {
+ 		unsigned nr_events = 0;
+@@ -4890,6 +4895,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 		}
+ 	}
+ 
++out:
+ 	percpu_ref_put(&ctx->refs);
+ out_fput:
+ 	fdput(f);
+-- 
+2.24.0
 
