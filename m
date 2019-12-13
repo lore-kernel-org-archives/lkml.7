@@ -2,88 +2,81 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E34C2D0D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FDC50713
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CBC24735
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZU+7E//m"
+	by mail.kernel.org (Postfix) with ESMTP id D592E24722
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfLMOPw (ORCPT
+        id S1727565AbfLMNyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:15:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:35800 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfLMOPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:15:52 -0500
-Received: from zn.tnic (p200300EC2F0A5A0019677E6F46B493BB.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:1967:7e6f:46b4:93bb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 187591EC014A;
-        Fri, 13 Dec 2019 15:15:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576246551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3NrpyLsdGpjnrpXHUCOJYaX4M12sVqeC8Ylwrt+/qOU=;
-        b=ZU+7E//mo8qAtFVAC7zGNuf35D5oDZUa67ku4yOGXDi7Qh2F2sv2wDpXYCQEeDW6KvJugN
-        /qIlxqq/yWbFaQlsmGCmtmkjl1nKKep/38khDmkCGQ+4cUVo8tVhaya/deQR5th0UtVaO+
-        LsZ687SizwSt6gV/Gcg4LbO+O55v+Ao=
-Date:   Fri, 13 Dec 2019 15:15:43 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Fri, 13 Dec 2019 08:54:53 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43638 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727335AbfLMNyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:54:52 -0500
+Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:136])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 8A1D72417DD;
+        Fri, 13 Dec 2019 14:54:49 +0100 (CET)
+Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
+        id 72116C20BC7; Fri, 13 Dec 2019 14:54:49 +0100 (CET)
+From:   Simon Geis <simon.geis@fau.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Simon Geis <simon.geis@fau.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
- direct mapping.
-Message-ID: <20191213141543.GA25899@zn.tnic>
-References: <20191115144917.28469-1-msys.mizuma@gmail.com>
- <20191115144917.28469-5-msys.mizuma@gmail.com>
- <20191212201916.GL4991@zn.tnic>
- <20191213132850.GG28917@MiWiFi-R3L-srv>
+        Colin Ian King <colin.king@canonical.com>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        Lukas Panzer <lukas.panzer@fau.de>
+Subject: [PATCH v3 00/10] PCMCIA/i82092: Fix style issues in i82092.c
+Date:   Fri, 13 Dec 2019 14:53:02 +0100
+Message-Id: <20191213135311.9111-1-simon.geis@fau.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191213132850.GG28917@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 09:28:50PM +0800, Baoquan He wrote:
-> In Documentation/x86/x86_64/mm.rst, the physical memory regions mapping
-> with page_offset is called as the direct mapping of physical memory.
+This patch series removes all style issues in i82092.c
+detected by checkpatch.pl.
 
-The fact that it happens to compute the *first* region's size, which
-*happens* to be the direct mapping of all physical memory is immaterial
-here.
+Version 3 changes:
+- patch 1: remove 'i82092aa' out of dev_<level> output
+- patch 7: merge comments
+- patch 9: remove enter/leave entirely
+- changes in commit descriptions
 
-It is actually causing more confusion in an already complex piece of
-code. You can call this function just as well
+Version 2 changes:
+- merge whitespace patches into a single patch
+- convert ?-operator to if statement (patch 7)
+- rewrite commit messages
+- add i82092 to subject
+- modify enter/leave macro
 
-  calc_region_size()
+Simon Geis (10):
+  PCMCIA/i82092: use dev_<level> instead of printk
+  PCMCIA/i82092: add/remove spaces to improve readability
+  PCMCIA/i82092: remove braces around single statement blocks
+  PCMCIA/i82092: insert blank line after declarations
+  PCMCIA/i82092: change code indentation
+  PCMCIA/i82092: move assignment out of if condition
+  PCMCIA/i82092: shorten the lines with over 80 characters
+  PCMCIA/i82092: include <linux/io.h> instead of <asm/io.h>
+  PCMCIA/i82092: delete enter/leave macro
+  PCMCIA/i82092: remove #if 0 block
 
-which won't confuse readers. Because all you care about here is the
-region's size - not which region it is.
-
-> kernel_randomize_memory() is invoked much earlier than
-> acpi_table_parse_srat().
-
-And? What are we going to do about that?
+ drivers/pcmcia/i82092.c   | 639 ++++++++++++++++++--------------------
+ drivers/pcmcia/i82092aa.h |  11 -
+ 2 files changed, 307 insertions(+), 343 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
