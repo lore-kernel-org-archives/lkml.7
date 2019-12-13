@@ -2,328 +2,113 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20275C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2904C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7F82077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vISN4ZUa"
+	by mail.kernel.org (Postfix) with ESMTP id BC0EE2465B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLMKZg (ORCPT
+        id S1726671AbfLMKZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:25:36 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:48164 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMKZg (ORCPT
+        Fri, 13 Dec 2019 05:25:59 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:41381 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfLMKZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:25:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fQpuePhuHdsHfFjMSNRNk+qAJUyan+oz0DXuXdMrsXI=; b=vISN4ZUa1HVL5zZrMHlJo4Hle
-        0cO9SlMdmTXy5HojuMrYU0oSuOI/XS2JhoNvk8VmWLc7BNPA8KiZua578SsxODWX17buxJ/qeYJWt
-        jMXZ6vCOtOl/909c8eKAS9EGfMG1A42urcDXx5CqeFQlUS1k2N6/DTJSNJ4AhSd2ufdIj19DJpAMD
-        y+MTQdffatwzPV9eyleeFL8sIYFdOB8DzYAm+5GcGGpC9ppR0nZHD7wYH9D3tSe+pRuhkwKDf6UbQ
-        CX2HyCqYa9thzBGukY4FT4sT8KBQJXquLLiL+jFwiItKNoyngTkFhe0gle+d+FzAuByWGh9K1pzEx
-        UlFe6BHaA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifi8W-000268-50; Fri, 13 Dec 2019 10:25:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A2E34304637;
-        Fri, 13 Dec 2019 11:24:04 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 50D852B19B3AD; Fri, 13 Dec 2019 11:25:25 +0100 (CET)
-Date:   Fri, 13 Dec 2019 11:25:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
-Message-ID: <20191213102525.GA2844@hirez.programming.kicks-ass.net>
-References: <20191212223525.1652-1-longman@redhat.com>
- <20191212223525.1652-5-longman@redhat.com>
+        Fri, 13 Dec 2019 05:25:58 -0500
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MtwQm-1hsHv71CF2-00uIBN for <linux-kernel@vger.kernel.org>; Fri, 13 Dec
+ 2019 11:25:57 +0100
+Received: by mail-qt1-f176.google.com with SMTP id z15so1862393qts.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:25:57 -0800 (PST)
+X-Gm-Message-State: APjAAAXVGHaXeMLQZkIEWC4lzb5PPXuRY3l6wf433Ei87Y+sKx7o0USD
+        nDK7IeBS4TEIPDbrzRAY11l02xy4f2L+/Q6FSW4=
+X-Google-Smtp-Source: APXvYqzQbLZzun4UPMcyYud1qq2XcN6i6bQrSev+tzenclZnUxptcZ8EZKr8KndoQJUpiIybOxbQeNJCn8vGS4FD6jo=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr11551312qte.204.1576232756266;
+ Fri, 13 Dec 2019 02:25:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212223525.1652-5-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211212025.1981822-1-arnd@arndb.de> <20191211212025.1981822-7-arnd@arndb.de>
+ <0e00090ef6fcf310159d6ce23f2c92f511dd01de.camel@codethink.co.uk>
+ <CAK8P3a2-5qNsy0cbxmLYfgwtbdSp4e4XXQ+gAAh0X+Kr1F-4sw@mail.gmail.com> <b937b99c9843ae5daa3bdf84929b325f05ecab8f.camel@codethink.co.uk>
+In-Reply-To: <b937b99c9843ae5daa3bdf84929b325f05ecab8f.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Dec 2019 11:25:40 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2BwA-wnxRPLgLrb9e2HpnrhXXyNyLfn4sOpSOjiJ3oEw@mail.gmail.com>
+Message-ID: <CAK8P3a2BwA-wnxRPLgLrb9e2HpnrhXXyNyLfn4sOpSOjiJ3oEw@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH v7 6/9] ALSA: Avoid using timespec for struct snd_timer_tread
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eyS+wQjnZNz8XyPyl7OLhOOP/wDeX2qqcVdn3UETFCnnYRFW5kK
+ XV6/PfAorm72G8EwylAtton1Wxnx+7ZC2nnjQiYrupVpwm18dezrnDzEzNbD09yMaZCRxZV
+ sSPgFzRzKvq6KRjSJmfpUhOjv1uQndpgTxAT6rMHMfC67+MSqaCh8r6TgEBtx4fC6fOLxvN
+ /4QjeNzAI+UHIt1LfNvrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+GA4uxNrECo=:K+0oQWF19VYn4z5VS3irGY
+ 4RtSeil13++KGWsdIzE8sIJpj2/ygJsKXZnseQB/u7HsNk6RvGpRv3X0+pz0poU8EYrrVV8uK
+ /2/JjNoyKQ5nWYtAb6vY8U8RoDMize7haRAZE9osifpVvOA9vR+NTpddlC0Hr4sv3m8vG25k+
+ 77faQb/iFDN5u79GeMzk8PLq1RH7w29CtPXIv3KkBRnG3tjk3cEswA2hE8v08GqeOyHlzXs40
+ 1FhO+oX1RPKDDlhAzq0s6wNp4HoGBaa14th28HpVIA8mxBfYT2h4T/A/nHrHMNt6QVX4l1vrb
+ oJFfYQKUFXcZd1lPRRZyO9+zCO8Xh1G1vKnTbCzdIZ3+nvoET67arsRHGnD7pj7dVG44vE5VV
+ 0ZR1nDRojIkINWGCz4ynpPcJoc78Bd1KwnFETqMO3rsB1L5CB6bgsojVN8VN4IGratvpF0y3G
+ tSmMoUkOlEgYLkMy3wbvuYu1owhSituwf94RWJ6bi86AH0s+0AKYBBe0M8FvWh5OVC+oYidFJ
+ +bSH59MTCf4vBqqXzWeV6Ng2sUL4hQZUZE0wQaZDxFWHCUKAtk5rhq/PNSaxSz1hhOWB7tjrL
+ iSEnZpMNPMlvG4diPdlZzmAdQgWdWK7C3ZAnPQOOxGryI01KPMMjXiYvsBnqtPVTgz/eTCyOi
+ uOUpCM6h5LouVUQW+4Asj+wY5bltmtXyPGjh4PIR+IG3v/Q7eH126wgdUUz2JWn9sjLYn+/i3
+ CD13A1KYccf0/3aW4Uf7FqiElSCiDErd4MqE71XOdjVoU1piE/IAmMiO1xs0yr0eZ+L8VOV6j
+ OOFjE1fDwIBVDoWqWtvbaNGcdSbm2z31WBYAG22lDOf/poiLpaKpohJ/2D4/Y1j36QRsa583U
+ uzN6B9iOWLgGBpvpAUQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 05:35:24PM -0500, Waiman Long wrote:
+On Thu, Dec 12, 2019 at 3:27 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+> On Thu, 2019-12-12 at 10:57 +0100, Arnd Bergmann wrote:
+> > On Thu, Dec 12, 2019 at 1:14 AM Ben Hutchings
+> > <ben.hutchings@codethink.co.uk> wrote:
+> > > On Wed, 2019-12-11 at 22:20 +0100, Arnd Bergmann wrote:
+> > > > @@ -2145,14 +2202,34 @@ static ssize_t snd_timer_user_read(struct file *file, char __user *buffer,
+> > > > +             case TREAD_FORMAT_NONE:
+> > > >                       if (copy_to_user(buffer, &tu->queue[qhead],
+> > > >                                        sizeof(struct snd_timer_read)))
+> > > >                               err = -EFAULT;
+> > > > +                     break;
+> > > > +             default:
+> > > > +                     err = -ENOTSUPP;
+> > > [...]
+> > >
+> > > This is not a valid error code for returning to user-space, but this
+> > > case should be impossible so I don't think it matters.
+> >
+> > Agreed. Maybe it should also WARN_ON(1), as there getting here
+> > would indicate a bug in the kernel.
+>
+> Yes, WARN_ON() or WARN_ON_ONCE() would make sense.
 
-> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-> index 4c23ab7d27c2..999cd714e0d1 100644
-> --- a/kernel/locking/lockdep_internals.h
-> +++ b/kernel/locking/lockdep_internals.h
-> @@ -107,8 +107,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
->  #endif
->  
->  #define MAX_LOCKDEP_CHAINS	(1UL << MAX_LOCKDEP_CHAINS_BITS)
-> -
->  #define MAX_LOCKDEP_CHAIN_HLOCKS (MAX_LOCKDEP_CHAINS*5)
-> +#define MAX_CHAIN_HLOCKS_BLOCKS	1024
-> +#define CHAIN_HLOCKS_HASH	8
-> +
-> +struct chain_hlocks_block {
-> +	unsigned int		   depth: 8,
-> +				   base :24;
-> +	struct chain_hlocks_block *next;
-> +};
->  
->  extern struct list_head all_lock_classes;
->  extern struct lock_chain lock_chains[];
+This is what I added now:
 
-This doesn't need to be in the header, there are no users outside of the
-stuff you wrote below.
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -2161,6 +2161,7 @@ static ssize_t snd_timer_user_read(struct file
+*file, char __user *buffer,
+                unit = sizeof(struct snd_timer_read);
+                break;
+        default:
++               WARN_ONCE(1, "Corrupt snd_timer_user\n");
+                return -ENOTSUPP;
+        }
 
-> +#ifdef CONFIG_PROVE_LOCKING
-> +static struct chain_hlocks_block chain_hlocks_blocks[MAX_CHAIN_HLOCKS_BLOCKS];
-> +static struct chain_hlocks_block *chain_hlocks_block_hash[CHAIN_HLOCKS_HASH];
-> +static struct chain_hlocks_block *free_chain_hlocks_blocks;
-> +
-> +/*
-> + * Graph lock must be held before calling the chain_hlocks_block functions.
-> + * Chain hlocks of depth 1-(CHAIN_HLOCKS_HASH-1) is mapped directly to
-> + * chain_hlocks_block_hash[1-(CHAIN_HLOCKS_HASH-1)]. All other sizes
-> + * are mapped to chain_hlocks_block_hash[0].
-> + */
-> +static inline struct chain_hlocks_block *alloc_chain_hlocks_block(void)
-> +{
-> +	struct chain_hlocks_block *block = free_chain_hlocks_blocks;
-> +
-> +	WARN_ONCE(!debug_locks_silent && !block,
-> +		  "Running out of chain_hlocks_block\n");
-> +	free_chain_hlocks_blocks = block ? block->next : NULL;
-> +	return block;
-> +}
-> +
-> +static inline void free_chain_hlocks_block(struct chain_hlocks_block *block)
-> +{
-> +	block->next = free_chain_hlocks_blocks;
-> +	free_chain_hlocks_blocks = block;
-> +}
-> +
-> +static inline void push_chain_hlocks_block(struct chain_hlocks_block *block)
-> +{
-> +	int hash, depth = block->depth;
-> +
-> +	hash = (depth >= CHAIN_HLOCKS_HASH) ? 0 : depth;
-> +	block->next = chain_hlocks_block_hash[hash];
-> +	chain_hlocks_block_hash[hash] = block;
-> +	nr_free_chain_hlocks += depth;
-> +}
-
-I would argue this is not a hash, these are buckets. You're doing
-regular size buckets.
-
-> +static inline struct chain_hlocks_block *pop_chain_hlocks_block(int depth)
-> +{
-> +	struct chain_hlocks_block *curr, **pprev;
-> +
-> +	if (!nr_free_chain_hlocks)
-> +		return NULL;
-> +
-> +	if (depth < CHAIN_HLOCKS_HASH) {
-> +		curr = chain_hlocks_block_hash[depth];
-> +		if (curr) {
-> +			chain_hlocks_block_hash[depth] = curr->next;
-> +			nr_free_chain_hlocks -= depth;
-> +		}
-> +		return curr;
-> +	}
-> +
-> +	/*
-> +	 * For depth >= CHAIN_HLOCKS_HASH, it is not really a pop operation.
-> +	 * Instead, the first entry with the right size is returned.
-> +	 */
-> +	curr  = chain_hlocks_block_hash[0];
-> +	pprev = chain_hlocks_block_hash;
-> +
-> +	while (curr) {
-> +		if (curr->depth == depth)
-> +			break;
-> +		pprev = &(curr->next);
-> +		curr = curr->next;
-> +	}
-> +
-> +	if (curr) {
-> +		*pprev = curr->next;
-> +		nr_free_chain_hlocks -= depth;
-> +	}
-> +	return curr;
-> +}
-> +#else
-> +static inline void free_chain_hlocks_block(struct chain_hlocks_block *block) { }
-> +static inline struct chain_hlocks_block *pop_chain_hlocks_block(int depth)
-> +{
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_PROVE_LOCKING */
-
-You've made a bit of a mess of things though. Why is that push/pop crud
-exposed? Why didn't you build a self contained allocator?
-
-All you really want is:
-
-u16 *alloc_chain(int size);
-void free_chain(int size, u16 *chain);
-
-
-An implementation would be something along these lines (completely
-untested, fresh from the keyboard):
-
-struct chain_block {
-	int size;
-	int base;
-	struct chain_block *next;
-};
-
-struct chain_block chain_blocks[MAX_BLOCKS];
-struct chain_block *free_blocks;
-
-
-struct chain_block init_block = {
-	.size = MAX_LOCKDEP_CHAIN_HLOCKS,
-	.base = 0,
-	.next = NULL,
-};
-
-struct chain_block *free_list[MAX_BUCKETS] = {
-	&init_block, /* 0 */
-};
-
-
-void free_block(struct chain_block *b)
-{
-	b->next = free_blocks;
-	free_blocks = b;
-}
-
-struct chain_block *alloc_block(void)
-{
-	struct chain_block *block = free_blocks;
-	free_blocks = block->next;
-	return block;
-}
-
-struct chain_block *pop_block(struct chain_block **bp)
-{
-	struct chain_block *b = *bp;
-	if (!b)
-		return NULL;
-	*bp = b->next;
-}
-
-void push_block(struct chain_block **bp, struct chain_block *b)
-{
-	b->next = *bp;
-	*bp = b;
-}
-
-/* could contemplate ilog2() buckets */
-int size2bucket(int size)
-{
-	return size >= MAX_BUCKET ? 0 : size;
-}
-
-/* bucket[0] is mixed size */
-struct chain_block *pop_block_0(struct chain_block **bp, int size)
-{
-	struct chain_block **p = bp, *b = *bp;
-	if (!b)
-		return NULL;
-
-	p = bp;
-	while (b && b->size < size) {
-		p = &b->next;
-		b = b->next;
-	}
-	if (!b)
-		return NULL;
-
-	*p = b->next;
-	return b;
-}
-
-u16 *alloc_chain(int size)
-{
-	int i, bucket = size2bucket(size);
-	struct chain_block *b;
-	u16 *chain;
-
-	if (!bucket) {
-		b = pop_block_0(&free_list[0], size);
-		if (b)
-			goto got_block;
-	} else {
-		b = pop_block(&free_list[bucket]);
-		if (b)
-			goto got_block;
-
-		/* pop a large block, hope the fragment is still useful */
-		b = pop_block_0(&free_list[0], size);
-		if (b)
-			goto got_block;
-
-		for (i = MAX_BUCKETS-1; i > bucket; i--)
-			b = pop_block(&free_list[bucket]);
-			if (b)
-				goto got_block;
-		}
-	}
-	return NULL;
-
-got_block:
-
-	chain = chain_hlocks + b->base;
-	b->base += size;
-	b->size -= size;
-
-	if (b->size) {
-		/* return the fragment */
-		bucket = size2bucket(b->size);
-		push_block(&free_list[bucket], b);
-	} else {
-		free_block(b);
-	}
-
-	return chain;
-}
-
-void free_chain(int size, u16 *chain)
-{
-	struct chain_block *b = alloc_block();
-	int bucket = size2bucket(size);
-
-	if (!b) {
-		// leak stuff;
-		return;
-	}
-
-	b->size = size;
-	b->base = chain - chain_hlocks;
-
-	push_bucket(&free_list[bucket], b);
-}
-
-void init_blocks(void)
-{
-	int i;
-
-	for (i = 0; i < MAX_BLOCKS; i++)
-		free_block(chain_blocks[i]);
-}
+         Arnd
