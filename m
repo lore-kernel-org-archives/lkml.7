@@ -2,94 +2,143 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD1FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A0CC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A9722527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E522527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C82E5s4p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iJas9yV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfLMAtB (ORCPT
+        id S1727491AbfLMAvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:49:01 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43202 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730883AbfLMAtB (ORCPT
+        Thu, 12 Dec 2019 19:51:21 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38554 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfLMAvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:49:01 -0500
-Received: by mail-il1-f196.google.com with SMTP id u16so614378ilg.10;
-        Thu, 12 Dec 2019 16:49:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LXMfdGtpPwo1nM9kkoN12NplXgpmiYVMokpj1wCUqnI=;
-        b=C82E5s4pRIUwQbm0UuzY7t9EJw8vRJpQLibE2K6+OTEhvb/97vKx0+v2Vt1vaufkV8
-         xvVirfJzjvKCwRfqIN2ilj9Bhv4jgameRLMwFNHJNQRs1A/rJ8l2G374RmaXeI9tU3o7
-         A9w1LXQJ9kg0Z0OwDDZk3BwY5kFQ/OV3G7Nceg84WHk5njwnCcS+0HzVnegcBzuA4Gga
-         8hz9BG1QCTZggxmT9B4j3LHzSMZFYZ25Zi/IH+ytSDLOusjir48JF0XohfFPW9UTAtmU
-         604x2Apj2xxlmHhJJwZ/0HTKuw7EAhFcB5xZKRVIO0iJQVFey8u4hPQg3eDzwTpVvBh/
-         zaBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LXMfdGtpPwo1nM9kkoN12NplXgpmiYVMokpj1wCUqnI=;
-        b=Ypf7l7B8zk7IZ7Jw5IOkpLBpzkeyhTTFRnNa/KxWsldz5TksjUL7Ak3Sz17oDZCHR/
-         gkTZnMSVQgO/n2WVr+Q9PbcveCk0rJ/BekW5U6wA1APmQNYzbfFEQsr7iNLElnQ91zAO
-         WMSmAKRcfKb4hZQDPa/PkXoiRCzyis4bGJK0+WofJa8AifMHbpnZJoCCrYzc5nT1e7EZ
-         2pxICtRQdZS7M9Obq8qZRnGNe46Q1eXmHn4H5lg2EtliGvHbJ4o7ShITigOjgGaTtj3d
-         bCYluMO4LAxpMnUbotXYLFlMu0NeF65UALySF0VE7rcfmgv60d/k3ZzuYIixVxteNFQs
-         Z9KA==
-X-Gm-Message-State: APjAAAWscoGvb0tU56BS63lTlLYhfYMPJ5j9nCDITfMya3JpR5vlK1YW
-        PI+bnumEWu4Gi+s0MotZIhfi9bwaoWakzjJc05gpWw==
-X-Google-Smtp-Source: APXvYqxvMYOFRr6KT5lk7SC1D52QaM/O5Dt1mVrz2PTIjrnRB0zIovZeqMEuIpnZCrVKVy1gdr39Tfssc+qgeqbjuig=
-X-Received: by 2002:a92:d081:: with SMTP id h1mr10340696ilh.97.1576198140191;
- Thu, 12 Dec 2019 16:49:00 -0800 (PST)
+        Thu, 12 Dec 2019 19:51:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U/yCdrBeS8qawSt8fr5/pTCJsSZppXePjAIJbFodjBQ=; b=iJas9yV+XFfPNDfDe0uRBgXIk
+        5852wR2mDlLu5V3p4b3Qd+Up1xJUaxRvzW6vXlAd+do+YglPFoDxk8vSlh6EDK59S6nKviQWbK5Lc
+        yxjqInJezBx2k1i5Zon1Vf/5r6q+oIvDx/OFCegSTYnzy/AODOI4UuwTNYE2nAEPGLvTc5WPEfE/2
+        rc1gkljsvGP62aDUII1iUft3deErCXCNL7W6EoM1L6MWkFPqy+2oh5yOD5G7QOJf8uIMvNU2ZILYM
+        qGvqL4bGRwACIYcyEsrZmc4PhP1srYqu8Vp6UEECku4SNqhkWMCY/uhjYl4TuWu4W2SMK/Ghy1dD3
+        gSud7uyDA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52224)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ifZAl-0001dm-EJ; Fri, 13 Dec 2019 00:51:11 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ifZAj-0007Ls-Bb; Fri, 13 Dec 2019 00:51:09 +0000
+Date:   Fri, 13 Dec 2019 00:51:09 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Murali Karicheri <m-karicheri2@ti.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: imx6 and keystone PCIe abort handling
+Message-ID: <20191213005109.GP25745@shell.armlinux.org.uk>
+References: <20191213003236.GA43783@google.com>
 MIME-Version: 1.0
-References: <20191212105847.16488-1-gomonovych@gmail.com>
-In-Reply-To: <20191212105847.16488-1-gomonovych@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 12 Dec 2019 16:48:49 -0800
-Message-ID: <CAKgT0UeTgGmQGEaJ3ePmCoEW5r5KDMmE0c0jrBGGeb-uzbq=3A@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: index regs_buff array via index variable
-To:     Vasyl Gomonovych <gomonovych@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        David Miller <davem@davemloft.net>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213003236.GA43783@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 2:58 AM Vasyl Gomonovych <gomonovych@gmail.com> wrote:
->
-> This patch is just a preparation for additional register dump in regs_buff.
-> To make new register insertion in the middle of regs_buff array easier
-> change array indexing to use local counter reg_ix.
->
-> ---
->
-> Basically this path is just a subject to ask
-> How to add a new register to dump from dataseet
-> Because it is logically better to add an additional register
-> in the middle of an array but that will break ABI.
-> To not have the ABI problem we should just add it at the
-> end of the array and increase the array size.
+On Thu, Dec 12, 2019 at 06:32:36PM -0600, Bjorn Helgaas wrote:
+> Hi folks,
+> 
+> Why are ks_pcie_fault() and imx6q_pcie_abort_handler() different?  I
+> think they're doing the same thing, and the "instr & 0x0e100090" part
+> is the same, but only imx6 has the "instr & 0x0c100000" part.  And the
+> return values are different in some cases.
 
-So I am pretty sure the patch probably breaks ABI. The reasons for the
-fixed offsets is because this driver supports multiple parts that have
-different register sets so we cannot have them overlapping.
+Here's the opcodes for the three different types of loads that would
+be interesting.
 
-We cannot change the register locations because it will break the
-interface with ethtool. If you need to add additional registers you
-will need to add them to the end of the array.
+   0:   e5910000        ldr     r0, [r1] ; 32-bit
+   4:   e5d10000        ldrb    r0, [r1] ; 8-bit
+   8:   e1d100b0        ldrh    r0, [r1] ; 16-bit
+
+So, (instr & 0x0e100090) == 0x00100090 is trie for the ldrh case.
+(instr & 0x0c100000) == 0x04100000 is true for the ldr and ldrb case.
+
+So, the keystone version only traps ldrh instructions, whereas the
+imx6 traps them all.
+
+> Could/should these be shared somehow?  They're both under #ifdef
+> CONFIG_ARM, so maybe it could be provided by arch/arm?
+> 
+>   static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
+> 			   struct pt_regs *regs)
+>   {
+> 	  unsigned long instr = *(unsigned long *) instruction_pointer(regs);
+> 
+> 	  if ((instr & 0x0e100090) == 0x00100090) {
+> 		  int reg = (instr >> 12) & 15;
+> 
+> 		  regs->uregs[reg] = -1;
+> 		  regs->ARM_pc += 4;
+> 	  }
+> 
+> 	  return 0;
+>   }
+> 
+>   static int imx6q_pcie_abort_handler(unsigned long addr,
+> 		  unsigned int fsr, struct pt_regs *regs)
+>   {
+> 	  unsigned long pc = instruction_pointer(regs);
+> 	  unsigned long instr = *(unsigned long *)pc;
+> 	  int reg = (instr >> 12) & 15;
+> 
+> 	  /*
+> 	   * If the instruction being executed was a read,
+> 	   * make it look like it read all-ones.
+> 	   */
+> 	  if ((instr & 0x0c100000) == 0x04100000) {
+> 		  unsigned long val;
+> 
+> 		  if (instr & 0x00400000)
+> 			  val = 255;
+> 		  else
+> 			  val = -1;
+> 
+> 		  regs->uregs[reg] = val;
+> 		  regs->ARM_pc += 4;
+> 		  return 0;
+> 	  }
+> 
+> 	  if ((instr & 0x0e100090) == 0x00100090) {
+> 		  regs->uregs[reg] = -1;
+> 		  regs->ARM_pc += 4;
+> 		  return 0;
+> 	  }
+> 
+> 	  return 1;
+>   }
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
