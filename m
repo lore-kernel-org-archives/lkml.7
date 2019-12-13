@@ -2,139 +2,121 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47653C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15885C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D40A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1392253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 05:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKY8h0Jx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQ7IVTGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732005AbfLMFQT (ORCPT
+        id S1732033AbfLMFRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 00:16:19 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40848 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfLMFQS (ORCPT
+        Fri, 13 Dec 2019 00:17:24 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:41796 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728061AbfLMFRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 00:16:18 -0500
-Received: by mail-lj1-f193.google.com with SMTP id s22so1202824ljs.7;
-        Thu, 12 Dec 2019 21:16:16 -0800 (PST)
+        Fri, 13 Dec 2019 00:17:24 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ca19so688862pjb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 21:17:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HtHQdkqH4Es+ZIp2yRzZr6MYlrLXYfg6ekbWUN18b2I=;
-        b=dKY8h0JxXJUHhuimUVKzcifoLuMESUOhE3YvAPT8Ed5P2LVpjnb+wPesvekwYVMmWV
-         lca2b8ADEDpVm1j+LeOZ85ut0u+mF5kg9HH373P6xW0ER/wgAMcP1nBoXykldHdkpNVs
-         L/hVfZRvSsd/C+yFANp4lnHZM1DWlrg2m2xhgHcOfe+GtiGyCDmncFLAkta4uRtOoqXG
-         j1zkrdQwjmMP7lcK7k5mrp/velI5fdsv+vni2NA24IwondxJkD3lDLHEehbXgR3V7Mac
-         g5b/zU1kBwtJuhb4ANeK7drT7FZZGA2TT7LRDg0SmGbQTwL6sk2UVsfpFoz41tGrx2s4
-         ZuqA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dqy/QJc+oAc3Pxm6PYdZfNowES2QjcoSqMXPASTC9bA=;
+        b=fQ7IVTGGzOAEHEHDike9EbOXDYgyyH8SgqW8MpEv4RvmXds7m5DItzvv90k1mA4AWU
+         r0B99PPCANcjubVxR2JlNYr5ZVZp4vStws8TElJuPAvjd+WnaPjr0dkaaY7cn00j+gqJ
+         wAZQhF8azeNbXTv67uYl1GWU8uaGgve3/lqC9FzGZz9Xz2/3mkJ2BG++W4qBGsAHtdNE
+         hb4QoCCe0pvpf4/wIvEsrEhQRDLtmbonK1QpB1Kr4ekgAmlwqFR8+NUaqj0MtM/dHkx4
+         L1k5QYPsj5zarkYoHe4J7UvE+YXDfAeLfbzO7ceU+HlSoOslqyqxTqG7TJrxjSKyaAdB
+         lSCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HtHQdkqH4Es+ZIp2yRzZr6MYlrLXYfg6ekbWUN18b2I=;
-        b=XG1RkbNZUskXWvRIOumOqPl9JKM5oxYE0+4AId96k324NYKcGe91iFfMXqBt/RXI8x
-         TEILoWChx8/Pi54t18pl/t3xnuyNplJ8MmvEc8yQtQEhCLkTnwEtsN/fjn3s1njNGnS9
-         hII8+rLUubFYg9DAobrMWr+qRdV3j1T8QUFW7Ff5bN7A0ffw80thvP8mboJlzfhdxklN
-         SV8FW4ej4EYh1MEy5a7rmUcSPlIm6j7pSIWHOIhpd9fPMyQSMZTyf4JVx/JORyAfiBJ5
-         IzGQYLzs0qEH3rVRVK6W23Btcd32nERzLLjRlpNLq4FEHzErEdyHkbCxx6FDC3sDttAA
-         8rOA==
-X-Gm-Message-State: APjAAAWixFd9mNKVNbLuo6SBsHm1DEPDtbv2FHg2R+mPIg8NLzsHOL6t
-        /ga4y2Uh9Hkk6CsBkN5XIhKgn/S+yv+y2dzZoFtyWA==
-X-Google-Smtp-Source: APXvYqyWRWJccgtT72Yhl/J/B/P0l3E36sc6NcKyV2MDZoPUaxbtjRI7VSdtxF23LHwJL/UQ7tlYfya4Xg4uhs7RWfk=
-X-Received: by 2002:a2e:99cd:: with SMTP id l13mr8235977ljj.243.1576214175764;
- Thu, 12 Dec 2019 21:16:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dqy/QJc+oAc3Pxm6PYdZfNowES2QjcoSqMXPASTC9bA=;
+        b=MWF97O07WV9rFJo4RMZaF5Xu/Di/k8z8jmGm+ZJ+Mbgt+KdRoCQbv7eimQR3ZZCiN9
+         ZATzoYHvCdLTSJVdc+p8exUTWik+aknjrPr9F1KrZlX2ijRi6Kv7jTlD+drNxq1MI3Gm
+         qAfFu4miD2tJ2Q36N9+TdWTgyyiJ32ZAMKEmHE8bKZteVyGkiqqm2xxIe3ohpsSoH6BX
+         oWkS/CBMInZz9kIi1E8Tkiy+hiHOzknOyjMLiI9wMAgZnP+XiPGgKXFFAWEgonhH0e+7
+         vzNqIz8DuClrUmrzMWcikY86Fk+55og42hQZTYCVBUxWcGFdmuIqTk6S8xVwAFbuD7Jj
+         eivw==
+X-Gm-Message-State: APjAAAVqp1zgDEabd/VmbBFDPxejnqw04b2doyE8M++JuAw4PIVwhi2K
+        9TaYg42PPiJF+BqZ5dMYQwiz9g==
+X-Google-Smtp-Source: APXvYqw0GCGyKVbRAws7+exdzFyQp9oKPWroXC4euAviWcWLLtamSORnI4MfqTWy17WmSxdzhWGTFg==
+X-Received: by 2002:a17:90b:30c4:: with SMTP id hi4mr14596181pjb.62.1576214243274;
+        Thu, 12 Dec 2019 21:17:23 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g9sm9862109pfm.150.2019.12.12.21.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 21:17:22 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: msm8974: castor: Define pm8841 regulators
+Date:   Thu, 12 Dec 2019 21:17:19 -0800
+Message-Id: <20191213051719.3688771-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191211223344.165549-1-brianvv@google.com>
-In-Reply-To: <20191211223344.165549-1-brianvv@google.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 12 Dec 2019 21:16:04 -0800
-Message-ID: <CAADnVQLh9Dz82YUMCR7P0sHed9W+bkcGXw098E3dwO5rHTmZ2g@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 00/11] add bpf batch ops to process more than
- 1 elem
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 2:34 PM Brian Vazquez <brianvv@google.com> wrote:
->
-> This patch series introduce batch ops that can be added to bpf maps to
-> lookup/lookup_and_delete/update/delete more than 1 element at the time,
-> this is specially useful when syscall overhead is a problem and in case
-> of hmap it will provide a reliable way of traversing them.
->
-> The implementation inclues a generic approach that could potentially be
-> used by any bpf map and adds it to arraymap, it also includes the specific
-> implementation of hashmaps which are traversed using buckets instead
-> of keys.
->
-> The bpf syscall subcommands introduced are:
->
->   BPF_MAP_LOOKUP_BATCH
->   BPF_MAP_LOOKUP_AND_DELETE_BATCH
->   BPF_MAP_UPDATE_BATCH
->   BPF_MAP_DELETE_BATCH
->
-> The UAPI attribute is:
->
->   struct { /* struct used by BPF_MAP_*_BATCH commands */
->          __aligned_u64   in_batch;       /* start batch,
->                                           * NULL to start from beginning
->                                           */
->          __aligned_u64   out_batch;      /* output: next start batch */
->          __aligned_u64   keys;
->          __aligned_u64   values;
->          __u32           count;          /* input/output:
->                                           * input: # of key/value
->                                           * elements
->                                           * output: # of filled elements
->                                           */
->          __u32           map_fd;
->          __u64           elem_flags;
->          __u64           flags;
->   } batch;
->
->
-> in_batch and out_batch are only used for lookup and lookup_and_delete since
-> those are the only two operations that attempt to traverse the map.
->
-> update/delete batch ops should provide the keys/values that user wants
-> to modify.
->
-> Here are the previous discussions on the batch processing:
->  - https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
->  - https://lore.kernel.org/bpf/20190829064502.2750303-1-yhs@fb.com/
->  - https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
->
-> Changelog sinve v2:
->  - Add generic batch support for lpm_trie and test it (Yonghong Song)
->  - Use define MAP_LOOKUP_RETRIES for retries (John Fastabend)
->  - Return errors directly and remove labels (Yonghong Song)
->  - Insert new API functions into libbpf alphabetically (Yonghong Song)
->  - Change hlist_nulls_for_each_entry_rcu to
->    hlist_nulls_for_each_entry_safe in htab batch ops (Yonghong Song)
+Define the pm8841 regulators under SMD/RPM, to allow the modem
+remoteproc to set the voltage during boot of the remote processor.
 
-Yonghong,
-please review.
+Entries are just copied from the Honami dts.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../dts/qcom-msm8974-sony-xperia-castor.dts   | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
+index 701b396719c7..4655e7941232 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
+@@ -56,6 +56,28 @@
+ 	smd {
+ 		rpm {
+ 			rpm_requests {
++				pm8841-regulators {
++					s1 {
++						regulator-min-microvolt = <675000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s2 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s3 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s4 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++				};
++
+ 				pm8941-regulators {
+ 					vdd_l1_l3-supply = <&pm8941_s1>;
+ 					vdd_l2_lvs1_2_3-supply = <&pm8941_s3>;
+-- 
+2.23.0
+
