@@ -3,97 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AA2C7D606
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2368C7D609
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942C324741
+	by mail.kernel.org (Postfix) with ESMTP id F00FE247FA
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfLMRud (ORCPT
+        id S1728609AbfLMRuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:50:33 -0500
-Received: from mga11.intel.com ([192.55.52.93]:29881 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbfLMRuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:50:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 09:50:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="415709726"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Dec 2019 09:50:31 -0800
-Date:   Fri, 13 Dec 2019 09:50:31 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Barret Rhoden <brho@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jason.zeng@intel.com
-Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
-Message-ID: <20191213175031.GC31552@linux.intel.com>
-References: <20191212182238.46535-1-brho@google.com>
- <20191212182238.46535-3-brho@google.com>
- <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
- <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
- <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
- <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
- <20191213171950.GA31552@linux.intel.com>
- <4A5E026D-53E6-4F30-A80D-B5E6AA07A786@oracle.com>
+        Fri, 13 Dec 2019 12:50:50 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2192 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728516AbfLMRuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 12:50:50 -0500
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E551F4C557F52EF24B87;
+        Fri, 13 Dec 2019 17:50:48 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Dec 2019 17:50:48 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
+ 2019 17:50:48 +0000
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>, "hare@suse.com" <hare@suse.com>,
+        "hch@lst.de" <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <20191210014335.GA25022@ming.t460p>
+ <0ad37515-c22d-6857-65a2-cc28256a8afa@huawei.com>
+ <20191212223805.GA24463@ming.t460p>
+ <d4b89ecf-7ced-d5d6-fc02-6d4257580465@huawei.com>
+ <20191213131822.GA19876@ming.t460p>
+ <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
+ <20191213171222.GA17267@ming.t460p>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <a7ef3810-31af-013a-6d18-ceb6154aa2ef@huawei.com>
+Date:   Fri, 13 Dec 2019 17:50:47 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4A5E026D-53E6-4F30-A80D-B5E6AA07A786@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191213171222.GA17267@ming.t460p>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 07:31:55PM +0200, Liran Alon wrote:
+On 13/12/2019 17:12, Ming Lei wrote:
+>> pu list 80-83, effective list 81
+>> irq 97, cpu list 84-87, effective list 86
+>> irq 98, cpu list 88-91, effective list 89
+>> irq 99, cpu list 92-95, effective list 93
+>> john@ubuntu:~$
+>>
+>> I'm now thinking that we should just attempt this intelligent CPU affinity
+>> assignment for managed interrupts.
+> Right, the rule is simple: distribute effective list among CPUs evenly,
+> meantime select the effective CPU from the irq's affinity mask.
 > 
-> > On 13 Dec 2019, at 19:19, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > Then allowed_hugepage_adjust() would look something like:
-> > 
-> > static void allowed_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
-> > 				    kvm_pfn_t *pfnp, int *levelp, int max_level)
-> > {
-> > 	kvm_pfn_t pfn = *pfnp;
-> > 	int level = *levelp;	
-> > 	unsigned long mask;
-> > 
-> > 	if (is_error_noslot_pfn(pfn) || !kvm_is_reserved_pfn(pfn) ||
-> > 	    level == PT_PAGE_TABLE_LEVEL)
-> > 		return;
-> > 
-> > 	/*
-> > 	 * mmu_notifier_retry() was successful and mmu_lock is held, so
-> > 	 * the pmd/pud can't be split from under us.
-> > 	 */
-> > 	level = host_pfn_mapping_level(vcpu->kvm, gfn, pfn);
-> > 
-> > 	*levelp = level = min(level, max_level);
-> > 	mask = KVM_PAGES_PER_HPAGE(level) - 1;
-> > 	VM_BUG_ON((gfn & mask) != (pfn & mask));
-> > 	*pfnp = pfn & ~mask;
-> 
-> Why don’t you still need to kvm_release_pfn_clean() for original pfn and
-> kvm_get_pfn() for new huge-page start pfn?
 
-That code is gone in kvm/queue.  thp_adjust() is now called from
-__direct_map() and FNAME(fetch), and so its pfn adjustment doesn't bleed
-back to the page fault handlers.  The only reason the put/get pfn code
-existed was because the page fault handlers called kvm_release_pfn_clean()
-on the pfn, i.e. they would have put the wrong pfn.
+Even if we fix that, there is still a potential to have a CPU handling 
+multiple nvme completion queues due to many factors, like cpu count, 
+probe ordering, other PCI endpoints in the system, etc, so this lockup 
+needs to be remedied.
+
+Thanks,
+John
+
