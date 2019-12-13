@@ -2,253 +2,206 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683F1C5071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB59C3435B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A804624704
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934992473E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPQK3qsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfLMN4A (ORCPT
+        id S1727451AbfLMNC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:56:00 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:43758 "EHLO
-        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727490AbfLMN4A (ORCPT
+        Fri, 13 Dec 2019 08:02:58 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42296 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfLMNC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:56:00 -0500
-Received: from faui04f.informatik.uni-erlangen.de (faui04f.informatik.uni-erlangen.de [131.188.30.136])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 4F4512417DD;
-        Fri, 13 Dec 2019 14:55:57 +0100 (CET)
-Received: by faui04f.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id 459E6C20BC7; Fri, 13 Dec 2019 14:55:57 +0100 (CET)
-From:   Simon Geis <simon.geis@fau.de>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Simon Geis <simon.geis@fau.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: [PATCH v3 07/10] PCMCIA/i82092: shorten the lines with over 80 characters
-Date:   Fri, 13 Dec 2019 14:53:11 +0100
-Message-Id: <20191213135311.9111-8-simon.geis@fau.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213135311.9111-1-simon.geis@fau.de>
-References: <20191213135311.9111-1-simon.geis@fau.de>
+        Fri, 13 Dec 2019 08:02:57 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so1437694pfz.9;
+        Fri, 13 Dec 2019 05:02:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uEiwYwG2ib2Yeq5P9ACEefY7MIinaV0AW/8h9n1+N1Q=;
+        b=gPQK3qskrW2gOr2veuLvf3gAx9ng3L/VHZJ7mjG7Sk5Snik2Gdpm4PiVQRTPy8jyMD
+         0pn0MpgBCOy4m0xbDoG3lG2ws4voo87ZmXeWEIWxdrnmdf+h6UdUexqPOHE27GIYfOu7
+         dYbRwrNRkbApSAfXC5UtRr5A8euEdeWOOGWTGgdpDhLF1hWuwNJISZwaEz/x3lRZmpqr
+         OQ9bnyjBNR5dYnu2g2t8hsQ3gST0M32svalZmf8VLJWyccpz52Dh1H5GzWBP0zzN+r5L
+         2FCClYGdKGhx8BvcHCa/yvk3Kenf83R6/UT+CsgF5v04H3sCb9iUkphjcrAqHEkpfb7h
+         13nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uEiwYwG2ib2Yeq5P9ACEefY7MIinaV0AW/8h9n1+N1Q=;
+        b=Dk28sXf3AYMCkPa9weGBqI5U8ZDZDouZ9oDaqOd6+NXuF+ztR7YPISuinvHPlmR310
+         kbceA90wfsAGkWSnJS5K0lfmSfWP8cXfsdtb2LJDxP1ELb3yQ/oNw5wEOrd1J4xLcM8m
+         AotPV4X5JBBNJZDtiNwIJR2msZp2EpHdWwdq2UxQKoX8k7MeUf40ca99+uKxXI736XrX
+         q2AOPa3PqYSZ5sRZ38xCHMUhlaNKGkIWoaGhvZM9Ky9fzca62FsXUPlnO8R482BM85zy
+         PiqF4BnZeFABDf0vkwk4g+gx/5HnJoU2Sf69CKTFh1DxHK4b43HgSuG0ghG1kdC0WSpV
+         lP8g==
+X-Gm-Message-State: APjAAAXBb1jtsTRzzmsRr3Ai/Gq1GBGE0ynGM9l972J2kYQcOZUQU+oh
+        TY883rN1yfRbbEu+kamitTI=
+X-Google-Smtp-Source: APXvYqweIDheQHOiqrv3fPYFpeQWsnwFO9Q+ZKi9VcsDSHxaFOZMz0N8weNLFTTFp6v9m/m8d0pPvw==
+X-Received: by 2002:a63:1e5c:: with SMTP id p28mr17037963pgm.235.1576242176233;
+        Fri, 13 Dec 2019 05:02:56 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id k3sm10872278pgc.3.2019.12.13.05.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 05:02:55 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        roger.pau@citrix.com
+Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
+        sjpark@amazon.com, sj38.park@gmail.com,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 3/3] xen/blkback: Remove unnecessary static variable name prefixes
+Date:   Fri, 13 Dec 2019 13:02:11 +0000
+Message-Id: <20191213130211.24011-4-sjpark@amazon.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213130211.24011-1-sjpark@amazon.de>
+References: <20191213130211.24011-1-sjpark@amazon.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the lines with more than 80 characters
-in order to improve readability of the code.
+A few of static variables in blkback have 'xen_blkif_' prefix, though it
+is unnecessary for static variables.  This commit removes such prefixes.
 
-Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
-Signed-off-by: Simon Geis <simon.geis@fau.de>
-
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- drivers/pcmcia/i82092.c | 73 +++++++++++++++++++++++++++--------------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+ drivers/block/xen-blkback/blkback.c | 37 +++++++++++++----------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index ad105f9949c7..7c9749df47d8 100644
---- a/drivers/pcmcia/i82092.c
-+++ b/drivers/pcmcia/i82092.c
-@@ -70,7 +70,8 @@ static struct socket_info sockets[MAX_SOCKETS];
- static int socket_count;	/* shortcut */
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index 26606c4896fd..85ff629a7546 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -62,8 +62,8 @@
+  * IO workloads.
+  */
  
+-static int xen_blkif_max_buffer_pages = 1024;
+-module_param_named(max_buffer_pages, xen_blkif_max_buffer_pages, int, 0644);
++static int max_buffer_pages = 1024;
++module_param_named(max_buffer_pages, max_buffer_pages, int, 0644);
+ MODULE_PARM_DESC(max_buffer_pages,
+ "Maximum number of free pages to keep in each block backend buffer");
  
--static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+static int i82092aa_pci_probe(struct pci_dev *dev,
-+			      const struct pci_device_id *id)
+@@ -78,8 +78,8 @@ MODULE_PARM_DESC(max_buffer_pages,
+  * algorithm.
+  */
+ 
+-static int xen_blkif_max_pgrants = 1056;
+-module_param_named(max_persistent_grants, xen_blkif_max_pgrants, int, 0644);
++static int max_pgrants = 1056;
++module_param_named(max_persistent_grants, max_pgrants, int, 0644);
+ MODULE_PARM_DESC(max_persistent_grants,
+                  "Maximum number of grants to map persistently");
+ 
+@@ -88,8 +88,8 @@ MODULE_PARM_DESC(max_persistent_grants,
+  * use. The time is in seconds, 0 means indefinitely long.
+  */
+ 
+-static unsigned int xen_blkif_pgrant_timeout = 60;
+-module_param_named(persistent_grant_unused_seconds, xen_blkif_pgrant_timeout,
++static unsigned int pgrant_timeout = 60;
++module_param_named(persistent_grant_unused_seconds, pgrant_timeout,
+ 		   uint, 0644);
+ MODULE_PARM_DESC(persistent_grant_unused_seconds,
+ 		 "Time in seconds an unused persistent grant is allowed to "
+@@ -137,9 +137,8 @@ module_param(log_stats, int, 0644);
+ 
+ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
  {
- 	unsigned char configbyte;
- 	int i, ret;
-@@ -81,7 +82,9 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 	if (ret)
- 		return ret;
+-	return xen_blkif_pgrant_timeout &&
+-	       (jiffies - persistent_gnt->last_used >=
+-		HZ * xen_blkif_pgrant_timeout);
++	return pgrant_timeout && (jiffies - persistent_gnt->last_used >=
++			HZ * pgrant_timeout);
+ }
  
--	pci_read_config_byte(dev, 0x40, &configbyte);  /* PCI Configuration Control */
-+	/* PCI Configuration Control */
-+	pci_read_config_byte(dev, 0x40, &configbyte);
-+
- 	switch (configbyte&6) {
- 	case 0:
- 		socket_count = 2;
-@@ -128,9 +131,13 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
+ /* Once a memory pressure is detected, squeeze free page pools for a while. */
+@@ -249,7 +248,7 @@ static int add_persistent_gnt(struct xen_blkif_ring *ring,
+ 	struct persistent_gnt *this;
+ 	struct xen_blkif *blkif = ring->blkif;
+ 
+-	if (ring->persistent_gnt_c >= xen_blkif_max_pgrants) {
++	if (ring->persistent_gnt_c >= max_pgrants) {
+ 		if (!blkif->vbd.overflow_max_grants)
+ 			blkif->vbd.overflow_max_grants = 1;
+ 		return -EBUSY;
+@@ -412,14 +411,13 @@ static void purge_persistent_gnt(struct xen_blkif_ring *ring)
+ 		goto out;
+ 	}
+ 
+-	if (ring->persistent_gnt_c < xen_blkif_max_pgrants ||
+-	    (ring->persistent_gnt_c == xen_blkif_max_pgrants &&
++	if (ring->persistent_gnt_c < max_pgrants ||
++	    (ring->persistent_gnt_c == max_pgrants &&
+ 	    !ring->blkif->vbd.overflow_max_grants)) {
+ 		num_clean = 0;
+ 	} else {
+-		num_clean = (xen_blkif_max_pgrants / 100) * LRU_PERCENT_CLEAN;
+-		num_clean = ring->persistent_gnt_c - xen_blkif_max_pgrants +
+-			    num_clean;
++		num_clean = (max_pgrants / 100) * LRU_PERCENT_CLEAN;
++		num_clean = ring->persistent_gnt_c - max_pgrants + num_clean;
+ 		num_clean = min(ring->persistent_gnt_c, num_clean);
+ 		pr_debug("Going to purge at least %u persistent grants\n",
+ 			 num_clean);
+@@ -614,8 +612,7 @@ static void print_stats(struct xen_blkif_ring *ring)
+ 		 current->comm, ring->st_oo_req,
+ 		 ring->st_rd_req, ring->st_wr_req,
+ 		 ring->st_f_req, ring->st_ds_req,
+-		 ring->persistent_gnt_c,
+-		 xen_blkif_max_pgrants);
++		 ring->persistent_gnt_c, max_pgrants);
+ 	ring->st_print = jiffies + msecs_to_jiffies(10 * 1000);
+ 	ring->st_rd_req = 0;
+ 	ring->st_wr_req = 0;
+@@ -675,7 +672,7 @@ int xen_blkif_schedule(void *arg)
+ 		if (time_before(jiffies, buffer_squeeze_end))
+ 			shrink_free_pagepool(ring, 0);
+ 		else
+-			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
++			shrink_free_pagepool(ring, max_buffer_pages);
+ 
+ 		if (log_stats && time_after(jiffies, ring->st_print))
+ 			print_stats(ring);
+@@ -902,7 +899,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			continue;
  		}
- 	}
- 
--	/* Now, specifiy that all interrupts are to be done as PCI interrupts */
--	configbyte = 0xFF; /* bitmask, one bit per event, 1 = PCI interrupt, 0 = ISA interrupt */
--	pci_write_config_byte(dev, 0x50, configbyte); /* PCI Interrupt Routing Register */
-+	/* Now, specifiy that all interrupts are to be done as PCI interrupts
-+	 * bitmask, one bit per event, 1 = PCI interrupt, 0 = ISA interrupt
-+	 */
-+	configbyte = 0xFF;
-+
-+	/* PCI Interrupt Routing Register */
-+	pci_write_config_byte(dev, 0x50, configbyte);
- 
- 	/* Register the interrupt handler */
- 	dev_dbg(&dev->dev, "Requesting interrupt %i\n", dev->irq);
-@@ -251,7 +258,8 @@ static void indirect_setbit(int socket, unsigned short reg, unsigned char mask)
- }
- 
- 
--static void indirect_resetbit(int socket, unsigned short reg, unsigned char mask)
-+static void indirect_resetbit(int socket,
-+			      unsigned short reg, unsigned char mask)
- {
- 	unsigned short int port;
- 	unsigned char val;
-@@ -268,7 +276,8 @@ static void indirect_resetbit(int socket, unsigned short reg, unsigned char mask
- 	spin_unlock_irqrestore(&port_lock, flags);
- }
- 
--static void indirect_write16(int socket, unsigned short reg, unsigned short value)
-+static void indirect_write16(int socket,
-+			     unsigned short reg, unsigned short value)
- {
- 	unsigned short int port;
- 	unsigned char val;
-@@ -327,10 +336,12 @@ static irqreturn_t i82092aa_interrupt(int irq, void *dev)
- 		for (i = 0; i < socket_count; i++) {
- 			int csc;
- 
--			if (sockets[i].card_state == 0) /* Inactive socket, should not happen */
-+			/* Inactive socket, should not happen */
-+			if (sockets[i].card_state == 0)
- 				continue;
- 
--			csc = indirect_read(i, I365_CSC); /* card status change register */
-+			/* card status change register */
-+			csc = indirect_read(i, I365_CSC);
- 
- 			if (csc == 0)  /* no events on this socket */
- 				continue;
-@@ -345,12 +356,16 @@ static irqreturn_t i82092aa_interrupt(int irq, void *dev)
- 
- 			if (indirect_read(i, I365_INTCTL) & I365_PC_IOCARD) {
- 				/* For IO/CARDS, bit 0 means "read the card" */
--				events |= (csc & I365_CSC_STSCHG) ? SS_STSCHG : 0;
-+				if (csc & I365_CSC_STSCHG)
-+					events |= SS_STSCHG;
- 			} else {
- 				/* Check for battery/ready events */
--				events |= (csc & I365_CSC_BVD1) ? SS_BATDEAD : 0;
--				events |= (csc & I365_CSC_BVD2) ? SS_BATWARN : 0;
--				events |= (csc & I365_CSC_READY) ? SS_READY : 0;
-+				if (csc & I365_CSC_BVD1)
-+					events |= SS_BATDEAD;
-+				if (csc & I365_CSC_BVD2)
-+					events |= SS_BATWARN;
-+				if (csc & I365_CSC_READY)
-+					events |= SS_READY;
- 			}
- 
- 			if (events)
-@@ -434,7 +449,8 @@ static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value)
- 
- 	enter("i82092aa_get_status");
- 
--	status = indirect_read(sock, I365_STATUS); /* Interface Status Register */
-+	/* Interface Status Register */
-+	status = indirect_read(sock, I365_STATUS);
- 	*value = 0;
- 
- 	if ((status & I365_CS_DETECT) == I365_CS_DETECT)
-@@ -467,7 +483,8 @@ static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value)
- }
- 
- 
--static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *state)
-+static int i82092aa_set_socket(struct pcmcia_socket *socket,
-+			       socket_state_t *state)
- {
- 	struct socket_info *sock_info = container_of(socket, struct socket_info,
- 						     socket);
-@@ -483,12 +500,15 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
- 	/* Values for the IGENC register */
- 
- 	reg = 0;
--	if (!(state->flags & SS_RESET))	/* The reset bit has "inverse" logic */
-+
-+	/* The reset bit has "inverse" logic */
-+	if (!(state->flags & SS_RESET))
- 		reg = reg | I365_PC_RESET;
- 	if (state->flags & SS_IOCARD)
- 		reg = reg | I365_PC_IOCARD;
- 
--	indirect_write(sock, I365_INTCTL, reg); /* IGENC, Interrupt and General Control Register */
-+	/* IGENC, Interrupt and General Control Register */
-+	indirect_write(sock, I365_INTCTL, reg);
- 
- 	/* Power registers */
- 
-@@ -563,7 +583,9 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
- 
- 	}
- 
--	/* now write the value and clear the (probably bogus) pending stuff by doing a dummy read*/
-+	/* now write the value and clear the (probably bogus) pending stuff
-+	 * by doing a dummy read
-+	 */
- 
- 	indirect_write(sock, I365_CSCINT, reg);
- 	(void)indirect_read(sock, I365_CSC);
-@@ -572,7 +594,8 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
- 	return 0;
- }
- 
--static int i82092aa_set_io_map(struct pcmcia_socket *socket, struct pccard_io_map *io)
-+static int i82092aa_set_io_map(struct pcmcia_socket *socket,
-+			       struct pccard_io_map *io)
- {
- 	struct socket_info *sock_info = container_of(socket, struct socket_info,
- 						     socket);
-@@ -588,7 +611,8 @@ static int i82092aa_set_io_map(struct pcmcia_socket *socket, struct pccard_io_ma
- 		leave("i82092aa_set_io_map with invalid map");
- 		return -EINVAL;
- 	}
--	if ((io->start > 0xffff) || (io->stop > 0xffff) || (io->stop < io->start)) {
-+	if ((io->start > 0xffff) || (io->stop > 0xffff)
-+				 || (io->stop < io->start)) {
- 		leave("i82092aa_set_io_map with invalid io");
- 		return -EINVAL;
- 	}
-@@ -616,9 +640,11 @@ static int i82092aa_set_io_map(struct pcmcia_socket *socket, struct pccard_io_ma
- 	return 0;
- }
- 
--static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_map *mem)
-+static int i82092aa_set_mem_map(struct pcmcia_socket *socket,
-+				struct pccard_mem_map *mem)
- {
--	struct socket_info *sock_info = container_of(socket, struct socket_info, socket);
-+	struct socket_info *sock_info = container_of(socket, struct socket_info,
-+						     socket);
- 	unsigned int sock = sock_info->number;
- 	struct pci_bus_region region;
- 	unsigned short base, i;
-@@ -639,8 +665,7 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_
- 	     (mem->speed > 1000)) {
- 		leave("i82092aa_set_mem_map: invalid address / speed");
- 		dev_err(&sock_info->dev->dev,
--			"invalid mem map for socket %i: %llx to %llx with a "
--			"start of %x\n",
-+			"invalid mem map for socket %i: %llx to %llx with a start of %x\n",
- 			sock,
- 			(unsigned long long)region.start,
- 			(unsigned long long)region.end,
+ 		if (use_persistent_gnts &&
+-		    ring->persistent_gnt_c < xen_blkif_max_pgrants) {
++		    ring->persistent_gnt_c < max_pgrants) {
+ 			/*
+ 			 * We are using persistent grants, the grant is
+ 			 * not mapped but we might have room for it.
+@@ -929,7 +926,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			pages[seg_idx]->persistent_gnt = persistent_gnt;
+ 			pr_debug("grant %u added to the tree of persistent grants, using %u/%u\n",
+ 				 persistent_gnt->gnt, ring->persistent_gnt_c,
+-				 xen_blkif_max_pgrants);
++				 max_pgrants);
+ 			goto next;
+ 		}
+ 		if (use_persistent_gnts && !blkif->vbd.overflow_max_grants) {
 -- 
-2.20.1
+2.17.1
 
