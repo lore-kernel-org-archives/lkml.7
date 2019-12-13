@@ -5,137 +5,154 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698E2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BD4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF222253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3A02173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 02:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoJvGU/p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGpdExK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731874AbfLMCD3 (ORCPT
+        id S1731909AbfLMCFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:03:29 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38363 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLMCD3 (ORCPT
+        Thu, 12 Dec 2019 21:05:19 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53513 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfLMCFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 21:03:29 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so727656pgm.5;
-        Thu, 12 Dec 2019 18:03:28 -0800 (PST)
+        Thu, 12 Dec 2019 21:05:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id w8so1319920wmd.3;
+        Thu, 12 Dec 2019 18:05:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sbQiyJc/inLjRaokZh7Q8U9UkbILv57sjMdX8isP4Mo=;
-        b=GoJvGU/pGNn2G/E7yRVTN1E+5omlN/INnTODmiCukTeBCtVV93jNiI7auavjP+VNfB
-         LKgnRr0LrIWAlifLg+wn9qlbpcx5pX5DWp5PRQQP7Ls6cKQBjx2LrLq8DLpBk21Fd8ey
-         dsV8/8EZZ61gPmzFEHciUaWIgk1LGUkGxzuPiG+tAPvBE/M5npuCcN3qRIsPPPyRQr7K
-         FUwh1+V/brjSEO4pMmIZXDFGSRd8P5DaZW5m6gMnxaSKJXgjnI41DRCgJqlowmdWrvJ3
-         cyZrZutJtW3mSVFgRujqCTgKJuzeC+ymvIXoRuoz08F3C2DfWGk0PtGXIlRETRyClng3
-         6fcw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=4KHnlSOE+u7gVwbfHgyHTQo5E29XNhzxa8pc2Uz0sSQ=;
+        b=aGpdExK4CWD+ZFqM0use0gYjMn76UZwWr+c2NHqwZbnkLlkHzOQ3DPK9Ov5qdUnj5+
+         5XkaPpAJlELoFlHtLTFUOabW96QgYE6lBDAHYMtTSAXtk7IKYeOoKC0HnKVJ5ten1SYD
+         0R4TFyCfaQLLTzI6bqvJVAxR9kfSDCuuKbUQClOS1ew3nvhup6IVnGT6a2hJqU0I4HnE
+         qErauDVPA6nmfvr/MqinVjOVJhcP7unZeZV3U6ipkgJPU2VKc2IE9axD03IsNtqOlALB
+         K8AD9AEzf0rZbT/VRhP73Cl8YzHwCnZvnVJThMXcZgAlw9VrEjQ+S8RisIFpMNiGKQyd
+         8ZXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sbQiyJc/inLjRaokZh7Q8U9UkbILv57sjMdX8isP4Mo=;
-        b=nPeMmsSuIqPp/qyH3/msJ/1UvooVR6BsmWK34EMt/6hSBseITRbuTj3waCBOqEgShU
-         YzbjyhqCutcJo/KPd3lPtIQwun6PDmeMcaBynqU3hr1vmkwYb/JrZ+MhM0xzKMiV5UbL
-         GR027jF3Uc5SwFkSpTb+9fOdrPLtwTOK0Qup6M2x7SVIWmQgw+Mx34yFDeWIlQEo5ayI
-         CZ00HQCZV7ZVQ9Pn6GvbG52dKiznC6DZ3UC5abi571h/aNmjmUzwFELxZD6+rvHWy/XW
-         0P5fVWM1vMJDBg/bKGKxAof7lFd4sB/CK1oiZydK3v/9aPg7jRDm1H0NdpRovUSbKrMW
-         m38Q==
-X-Gm-Message-State: APjAAAVVXqFIJ9qmrV5obh2CDEFKjZWB2iMj3EpjlS8EMDKKdfsDmcnL
-        hkOIGGD5tA7L/hT2h0ZWIlE=
-X-Google-Smtp-Source: APXvYqyCa8C9agmQfMzONvcN2uCU48yrCEeTvqttPet6mVz18Q2EdYaTOi0HVYAYkNIVj6V22w49kA==
-X-Received: by 2002:a63:5950:: with SMTP id j16mr14651502pgm.314.1576202608242;
-        Thu, 12 Dec 2019 18:03:28 -0800 (PST)
-Received: from localhost.localdomain ([163.152.162.99])
-        by smtp.gmail.com with ESMTPSA id i68sm8886098pfe.173.2019.12.12.18.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 18:03:27 -0800 (PST)
-Date:   Fri, 13 Dec 2019 11:03:17 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, marmarek@invisiblethingslab.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
-Message-ID: <20191213020317.GA3276@localhost.localdomain>
-References: <20191212052841.6734-3-suwan.kim027@gmail.com>
- <Pine.LNX.4.44L0.1912121050130.14053-100000@netrider.rowland.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=4KHnlSOE+u7gVwbfHgyHTQo5E29XNhzxa8pc2Uz0sSQ=;
+        b=WPTDVJMU+XHbmTJjcMkQoSkNUg/RRb+lM6eT1lrWW0pRTDwSRMka/82/nFacPzlfGm
+         u5P3Di51UjLjFTQjC1i+1Pr38W7UotPjVXepAPu/D28Kws1H8YfcVGIq6E9VHpFnhggf
+         9eZLApGVI/2adMXIfhaTYGDphN4m2Gu6DqcjGJ70SCdFChoBSaka6cgPBESNQUuNE1HJ
+         O6ZJUge2am+Ul9WjQuGD9N8A/T2j9tOYZD9P4Mr7DsbZytau7tqtVMuLpbbqKYatY5G+
+         Lf/WgfABRrXy65iHosSw/z06StHgBOpJzItv5IRunOctI7Nkvi6gflLbYb1bOGkHkavD
+         hosw==
+X-Gm-Message-State: APjAAAUhiQaH7OYkg0fXB2ef03ZOy/e8jq0T1DbAbqiIP/xw2thf4u+Z
+        Yg7GdGhGgh49tk4EFtIWr3tKGPL7
+X-Google-Smtp-Source: APXvYqw5cMIDLL9NgFGAlF/E0fKpuzAyyOpNrDp+ABiAIecGcepzvQBIHE1252bGWMaBHoLtILsc5w==
+X-Received: by 2002:a1c:a98e:: with SMTP id s136mr9717036wme.140.1576202716814;
+        Thu, 12 Dec 2019 18:05:16 -0800 (PST)
+Received: from [172.30.89.135] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id m10sm8224474wrx.19.2019.12.12.18.05.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 18:05:15 -0800 (PST)
+Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
+ v4l2_async_notifier_cleanup in remove
+To:     Rui Miguel Silva <rmfrfs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, devel@driverdev.osuosl.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20191209085828.16183-1-hslester96@gmail.com>
+ <20191212115134.GA1895@kadam>
+ <20191212190858.nslwdcjpbjnrfvq2@arch-thunder.localdomain>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <def58acb-ae42-856a-f61d-645dcfbbe3f7@gmail.com>
+Date:   Thu, 12 Dec 2019 18:05:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Pine.LNX.4.44L0.1912121050130.14053-100000@netrider.rowland.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191212190858.nslwdcjpbjnrfvq2@arch-thunder.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:54:08AM -0500, Alan Stern wrote:
-> On Thu, 12 Dec 2019, Suwan Kim wrote:
-> 
-> > If a transaction error happens in vhci_recv_ret_submit(), event
-> > handler closes connection and changes port status to kick hub_event.
-> > Then hub tries to flush the endpoint URBs, but that causes infinite
-> > loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
-> > "vhci_priv" in vhci_urb_dequeue() was already released by
-> > vhci_recv_ret_submit() before a transmission error occurred. Thus,
-> > vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
-> > continuously calls vhci_urb_dequeue().
-> > 
-> > The root cause of this issue is that vhci_recv_ret_submit()
-> > terminates early without giving back URB when transaction error
-> > occurs in vhci_recv_ret_submit(). That causes the error URB to still
-> > be linked at endpoint list without “vhci_priv".
-> > 
-> > So, in the case of trasnaction error in vhci_recv_ret_submit(),
-> > unlink URB from the endpoint, insert proper error code in
-> > urb->status and give back URB.
-> > 
-> > Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> > ---
-> >  drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
-> > index 33f8972ba842..dc26acad6baf 100644
-> > --- a/drivers/usb/usbip/vhci_rx.c
-> > +++ b/drivers/usb/usbip/vhci_rx.c
-> > @@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
-> >  	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
-> >  
-> >  	/* recv transfer buffer */
-> > -	if (usbip_recv_xbuff(ud, urb) < 0)
-> > -		return;
-> > +	if (usbip_recv_xbuff(ud, urb) < 0) {
-> > +		urb->status = -EPIPE;
-> > +		goto error;
-> > +	}
-> >  
-> >  	/* recv iso_packet_descriptor */
-> > -	if (usbip_recv_iso(ud, urb) < 0)
-> > -		return;
-> > +	if (usbip_recv_iso(ud, urb) < 0) {
-> > +		urb->status = -EPIPE;
-> > +		goto error;
-> > +	}
-> 
-> -EPIPE is used for STALL.  The appropriate error code for transaction 
-> error would be -EPROTO (or -EILSEQ or -ETIME, but people seem to be 
-> settling on -EPROTO).
 
-Thanks for the feedback. I will fix it :)
 
-Regards,
-Suwan Kim
+On 12/12/19 11:08 AM, Rui Miguel Silva wrote:
+> Hi Dan,
+> Thanks for the inputs.
+> On Thu, Dec 12, 2019 at 02:51:34PM +0300, Dan Carpenter wrote:
+>> On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
+>>> All drivers in imx call v4l2_async_notifier_cleanup() after
+>>> unregistering the notifier except this driver.  This should be a
+>>> miss and we need to add the call to fix it.
+>>>
+>>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com> ---
+>>> drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c
+>>> b/drivers/staging/media/imx/imx7-mipi-csis.c index
+>>> 99166afca071..2bfa85bb84e7 100644 ---
+>>> a/drivers/staging/media/imx/imx7-mipi-csis.c +++
+>>> b/drivers/staging/media/imx/imx7-mipi-csis.c @@ -1105,6 +1105,7 @@
+>>> static int mipi_csis_remove(struct platform_device *pdev)
+>>> mipi_csis_debugfs_exit(state);
+>>> v4l2_async_unregister_subdev(&state->mipi_sd);
+>>> v4l2_async_notifier_unregister(&state->subdev_notifier); +
+>>> v4l2_async_notifier_cleanup(&state->subdev_notifier);
+>>>   
+>> In this case the "state->subdev_notifier" was never initialized or
+>> used so both v4l2_async_notifier_unregister() and
+>> v4l2_async_notifier_cleanup() are no-ops.
+> I have applied this patch on top of Steve's series [0], since by the
+> timeline I was expecting to be applied before this one, that series
+> adds a bound notifier, even though, it is not named the same, eheh.
+>
+> That trigged me to think that this cleanup was correct since a
+> notifier was initialized in probe.
+>
+> But as you say, it is a no-ops in the end.
+>
+> @Steve, that said, it looks that in [0], you will need to add some
+> unregister and cleanup for the notifiers that you are adding in
+> several places.
+
+Well, turns out I had failed to notice that an async notifier was 
+already included in 'struct imx7_csi' as 'subdev_notifier', even though 
+it was unused. So I ended up creating a duplicate 'notifier'. I'll 
+cleaning that up in v3 of [0].
+
+Steve
+
+> A patch to fix this will follow.
+>
+> ------
+> Cheers,
+>       Rui
+>
+>
+>
+> [0]: https://patchwork.kernel.org/project/linux-media/list/?series=207517
+>
+>> We should just delete "subdev_notifier".
+>>
+>> regards, dan carpenter
+>>
+>> _______________________________________________ devel mailing list
+>> devel@linuxdriverproject.org
+>> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+
