@@ -2,115 +2,94 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C485C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD1FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4065A2253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A9722527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gYQepg5l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C82E5s4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbfLMAs1 (ORCPT
+        id S1731598AbfLMAtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:48:27 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58452 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfLMAs0 (ORCPT
+        Thu, 12 Dec 2019 19:49:01 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43202 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730883AbfLMAtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:48:26 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9A265440;
-        Fri, 13 Dec 2019 01:48:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576198104;
-        bh=fzDDFuwCssKk2Lvp2zwH1/AsL1CDBTeNOlHZdV77jgY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gYQepg5lJbxpmxMaRo6gyvtBboTn6WuGhBG29W42OR/vsxfAhXdyS0Bnv8ywu1ER5
-         2qop6RsqkdzWK/Bpnn1FZ6EtXv3o+mNjBpZ2Lvnpsncfl2SOHEfmhlHyWz+nWJA2ma
-         l9prcEVWJCOund9jveN6q7IEGJgiBP3yHricQz0A=
-Date:   Fri, 13 Dec 2019 02:48:12 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
-Message-ID: <20191213004812.GA27328@pendragon.ideasonboard.com>
-References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
- <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
- <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
- <20190913090359.GC29992@pendragon.ideasonboard.com>
- <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
+        Thu, 12 Dec 2019 19:49:01 -0500
+Received: by mail-il1-f196.google.com with SMTP id u16so614378ilg.10;
+        Thu, 12 Dec 2019 16:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LXMfdGtpPwo1nM9kkoN12NplXgpmiYVMokpj1wCUqnI=;
+        b=C82E5s4pRIUwQbm0UuzY7t9EJw8vRJpQLibE2K6+OTEhvb/97vKx0+v2Vt1vaufkV8
+         xvVirfJzjvKCwRfqIN2ilj9Bhv4jgameRLMwFNHJNQRs1A/rJ8l2G374RmaXeI9tU3o7
+         A9w1LXQJ9kg0Z0OwDDZk3BwY5kFQ/OV3G7Nceg84WHk5njwnCcS+0HzVnegcBzuA4Gga
+         8hz9BG1QCTZggxmT9B4j3LHzSMZFYZ25Zi/IH+ytSDLOusjir48JF0XohfFPW9UTAtmU
+         604x2Apj2xxlmHhJJwZ/0HTKuw7EAhFcB5xZKRVIO0iJQVFey8u4hPQg3eDzwTpVvBh/
+         zaBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LXMfdGtpPwo1nM9kkoN12NplXgpmiYVMokpj1wCUqnI=;
+        b=Ypf7l7B8zk7IZ7Jw5IOkpLBpzkeyhTTFRnNa/KxWsldz5TksjUL7Ak3Sz17oDZCHR/
+         gkTZnMSVQgO/n2WVr+Q9PbcveCk0rJ/BekW5U6wA1APmQNYzbfFEQsr7iNLElnQ91zAO
+         WMSmAKRcfKb4hZQDPa/PkXoiRCzyis4bGJK0+WofJa8AifMHbpnZJoCCrYzc5nT1e7EZ
+         2pxICtRQdZS7M9Obq8qZRnGNe46Q1eXmHn4H5lg2EtliGvHbJ4o7ShITigOjgGaTtj3d
+         bCYluMO4LAxpMnUbotXYLFlMu0NeF65UALySF0VE7rcfmgv60d/k3ZzuYIixVxteNFQs
+         Z9KA==
+X-Gm-Message-State: APjAAAWscoGvb0tU56BS63lTlLYhfYMPJ5j9nCDITfMya3JpR5vlK1YW
+        PI+bnumEWu4Gi+s0MotZIhfi9bwaoWakzjJc05gpWw==
+X-Google-Smtp-Source: APXvYqxvMYOFRr6KT5lk7SC1D52QaM/O5Dt1mVrz2PTIjrnRB0zIovZeqMEuIpnZCrVKVy1gdr39Tfssc+qgeqbjuig=
+X-Received: by 2002:a92:d081:: with SMTP id h1mr10340696ilh.97.1576198140191;
+ Thu, 12 Dec 2019 16:49:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191212105847.16488-1-gomonovych@gmail.com>
+In-Reply-To: <20191212105847.16488-1-gomonovych@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 12 Dec 2019 16:48:49 -0800
+Message-ID: <CAKgT0UeTgGmQGEaJ3ePmCoEW5r5KDMmE0c0jrBGGeb-uzbq=3A@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: index regs_buff array via index variable
+To:     Vasyl Gomonovych <gomonovych@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        David Miller <davem@davemloft.net>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+On Thu, Dec 12, 2019 at 2:58 AM Vasyl Gomonovych <gomonovych@gmail.com> wrote:
+>
+> This patch is just a preparation for additional register dump in regs_buff.
+> To make new register insertion in the middle of regs_buff array easier
+> change array indexing to use local counter reg_ix.
+>
+> ---
+>
+> Basically this path is just a subject to ask
+> How to add a new register to dump from dataseet
+> Because it is logically better to add an additional register
+> in the middle of an array but that will break ABI.
+> To not have the ABI problem we should just add it at the
+> end of the array and increase the array size.
 
-On Mon, Dec 09, 2019 at 12:41:07PM +0000, Kieran Bingham wrote:
-> On 13/09/2019 10:03, Laurent Pinchart wrote:
-> > On Fri, Sep 13, 2019 at 10:21:29AM +0200, Simon Horman wrote:
-> >> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
-> >>> On 11.09.2019 22:25, Kieran Bingham wrote:
-> >>>
-> >>>> Add direct support for the r8a77980 (V3H).
-> >>>>
-> >>>> The V3H shares a common, compatible configuration with the r8a77970
-> >>>> (V3M) so that device info structure is reused.
-> >>>
-> >>>    Do we really need to add yet another compatible in this case?
-> >>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
-> >>> a patch like this one didn't get posted by me.
-> >>
-> >> The reason for having per-SoC compat strings is that the IP blocks
-> >> are not versioned and while we can observe that there are similarities
-> >> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
-> >> differences may not emerge at some point. By having per-SoC compat strings
-> >> we have the flexibility for the driver to address any such differences as
-> >> the need arises.
-> >>
-> >> My recollection is that this scheme has been adopted for non-versioned
-> >> Renesas IP blocks since June 2015 and uses of this scheme well before that.
-> > 
-> > Sure, but we could use
-> > 
-> > 	compatible = "renesas,du-r8a77980", "renesas,du-r8a77970";
-> > 
-> > in DT without updating the driver. If the r8a77980 turns out to be
-> > different, we'll then update the driver without a need to modify DT. I'm
-> > fine either way, so
-> > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Thanks,
-> 
-> This patch has an RB tag from you, and Simon, but alas I don't believe
-> it has been picked up in your drm/du/next branch.
-> 
-> Is this patch acceptable? Or do I need to repost?
+So I am pretty sure the patch probably breaks ABI. The reasons for the
+fixed offsets is because this driver supports multiple parts that have
+different register sets so we cannot have them overlapping.
 
-Could you just confirm I should apply this patch, and not go for the
-alternative proposal above ?
-
-> >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >>
-> >> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
--- 
-Regards,
-
-Laurent Pinchart
+We cannot change the register locations because it will break the
+interface with ethtool. If you need to add additional registers you
+will need to add them to the end of the array.
