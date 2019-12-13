@@ -2,163 +2,114 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334A4C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C65C5ED54
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6895B2473C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Db27FA3+"
+	by mail.kernel.org (Postfix) with ESMTP id 3A010246B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfLMPgP (ORCPT
+        id S1728197AbfLMPua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:36:15 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43915 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727991AbfLMPgM (ORCPT
+        Fri, 13 Dec 2019 10:50:30 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:40873 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbfLMPuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:36:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576251371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=XdvQKU8LiqO/th1XH/f5TTkHcNsE/YPklKDD6xZt6qQ=;
-        b=Db27FA3+Q1kolvE9edN0LO/0RSX8ErXy0AXWemMr3jEbp2sKgIfCuY92NDItgl+efEwj4A
-        XShBBAD1jHkRUKKbYHzvPbwxKTGo0fBy+RigcPZCLK/oA4kl9QMW8/NjXmFTRbnIuqN8cI
-        E4HVdP8vJ0MfQU9aULmpF8oHf1oNxvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-hbfm8CEePw28D6MRnwYrFA-1; Fri, 13 Dec 2019 10:36:07 -0500
-X-MC-Unique: hbfm8CEePw28D6MRnwYrFA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68935800582;
-        Fri, 13 Dec 2019 15:36:05 +0000 (UTC)
-Received: from krava (ovpn-205-9.brq.redhat.com [10.40.205.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23A2C5C219;
-        Fri, 13 Dec 2019 15:35:55 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 16:35:53 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: [RFC] btf: Some structs are doubled because of struct ring_buffer
-Message-ID: <20191213153553.GE20583@krava>
+        Fri, 13 Dec 2019 10:50:24 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 469951BF208;
+        Fri, 13 Dec 2019 15:50:21 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
+        jakub.kicinski@netronome.com
+Subject: [PATCH net-next v3 10/15] net: macsec: PN wrap callback
+Date:   Fri, 13 Dec 2019 16:48:39 +0100
+Message-Id: <20191213154844.635389-11-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
-the current BTF vmlinux file have some of the structs doubled:
+Allow to call macsec_pn_wrapped from hardware drivers to notify when a
+PN rolls over. Some drivers might used an interrupt to implement this.
 
-  $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep task_struct
-  [150] STRUCT 'task_struct' size=11008 vlen=205
-  [12262] STRUCT 'task_struct' size=11008 vlen=205
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/macsec.c | 24 ++++++++++++++++++------
+ include/net/macsec.h |  2 ++
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
-  $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'perf_event'"
-  [1666] STRUCT 'perf_event' size=1160 vlen=70
-  [12301] STRUCT 'perf_event' size=1160 vlen=70
-
-The reason seems to be that we have two distinct 'struct ring_buffer'
-objects used in kernel: one in perf subsystem and one in kernel trace
-subsystem.
-
-When we compile kernel/trace/ring_buffer.c we have 'struct task_struct',
-which references 'struct ring_buffer', which is at that compile time
-defined in kernel/trace/ring_buffer.c.
-
-While when we compile kernel/events/core.c we have 'struct task_struct',
-which references ring buffer, which is at that compile time defined
-in kernel/events/internal.h.
-
-So we end up with 2 different 'struct task_struct' objects, and few
-other objects which are on the way to the 'struct ring_buffer' field,
-like:
-
-	[1666] STRUCT 'perf_event' size=1160 vlen=70
-		...
-		'rb' type_id=2289 bits_offset=5632
-		...
-
-		[2289] PTR '(anon)' type_id=10872
-
-			-> trace ring buffer
-
-			[10872] STRUCT 'ring_buffer' size=184 vlen=12
-				'flags' type_id=10 bits_offset=0
-				'cpus' type_id=22 bits_offset=32
-				'record_disabled' type_id=81 bits_offset=64
-				...
-
-	[12301] STRUCT 'perf_event' size=1160 vlen=70
-		...
-		'rb' type_id=13148 bits_offset=5632
-		...
-
-		[13148] PTR '(anon)' type_id=13147
-
-			-> perf ring buffer
-
-			[13147] STRUCT 'ring_buffer' size=240 vlen=33
-				'refcount' type_id=795 bits_offset=0
-				'callback_head' type_id=90 bits_offset=64
-				'nr_pages' type_id=22 bits_offset=192
-				'overwrite' type_id=22 bits_offset=224
-				'paused' type_id=22 bits_offset=256
-				...
-
-I don't think dedup algorithm can handle this and I'm not sure if there's
-some way in pahole to detect/prevent this.
-
-I only found that if I rename the ring_buffer objects to have distinct
-names, it will help:
-
-  $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep task_struct
-  [150] STRUCT 'task_struct' size=11008 vlen=205
-
-  $ bpftool btf dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'perf_event'"
-  [1665] STRUCT 'perf_event' size=1160 vlen=70
-
-also the BTF data get smaller ;-) before:
-
-  $ ll /sys/kernel/btf/vmlinux
-  -r--r--r--. 1 root root 2067432 Dec 13 22:56 /sys/kernel/btf/vmlinux
-
-after:
-  $ ll /sys/kernel/btf/vmlinux
-  -r--r--r--. 1 root root 1984345 Dec 13 23:02 /sys/kernel/btf/vmlinux
-
-
-Peter, Steven,
-if above is correct and there's no other better solution, would it be possible
-to straighten up the namespace and user some distinct names for perf and ftrace
-ring buffers?
-
-thoughts?
-jirka
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index abe7a0599367..8247eb652f57 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -423,6 +423,22 @@ static struct macsec_eth_header *macsec_ethhdr(struct sk_buff *skb)
+ 	return (struct macsec_eth_header *)skb_mac_header(skb);
+ }
+ 
++static void __macsec_pn_wrapped(struct macsec_secy *secy,
++				struct macsec_tx_sa *tx_sa)
++{
++	pr_debug("PN wrapped, transitioning to !oper\n");
++	tx_sa->active = false;
++	if (secy->protect_frames)
++		secy->operational = false;
++}
++
++void macsec_pn_wrapped(struct macsec_secy *secy, struct macsec_tx_sa *tx_sa)
++{
++	spin_lock_bh(&tx_sa->lock);
++	__macsec_pn_wrapped(secy, tx_sa);
++	spin_unlock_bh(&tx_sa->lock);
++}
++
+ static u32 tx_sa_update_pn(struct macsec_tx_sa *tx_sa, struct macsec_secy *secy)
+ {
+ 	u32 pn;
+@@ -431,12 +447,8 @@ static u32 tx_sa_update_pn(struct macsec_tx_sa *tx_sa, struct macsec_secy *secy)
+ 	pn = tx_sa->next_pn;
+ 
+ 	tx_sa->next_pn++;
+-	if (tx_sa->next_pn == 0) {
+-		pr_debug("PN wrapped, transitioning to !oper\n");
+-		tx_sa->active = false;
+-		if (secy->protect_frames)
+-			secy->operational = false;
+-	}
++	if (tx_sa->next_pn == 0)
++		__macsec_pn_wrapped(secy, tx_sa);
+ 	spin_unlock_bh(&tx_sa->lock);
+ 
+ 	return pn;
+diff --git a/include/net/macsec.h b/include/net/macsec.h
+index 4d0afb79259e..a08f19099c7a 100644
+--- a/include/net/macsec.h
++++ b/include/net/macsec.h
+@@ -220,4 +220,6 @@ struct macsec_ops {
+ 	int (*mdo_del_txsa)(struct macsec_context *ctx);
+ };
+ 
++void macsec_pn_wrapped(struct macsec_secy *secy, struct macsec_tx_sa *tx_sa);
++
+ #endif /* _NET_MACSEC_H_ */
+-- 
+2.23.0
 
