@@ -2,163 +2,97 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA78C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49D4C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BA024656
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSaDFdOe"
+	by mail.kernel.org (Postfix) with ESMTP id A22EF22527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfLMIGz (ORCPT
+        id S1726820AbfLMIId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:06:55 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38361 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMIGz (ORCPT
+        Fri, 13 Dec 2019 03:08:33 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44174 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfLMII3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:06:55 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so521525wmc.3;
-        Fri, 13 Dec 2019 00:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I5SL/bqlSvsdjamq/iP/6SdZILW/1fqCxzt8/ezc6Ds=;
-        b=FSaDFdOe0ChenS0PyUuFKuMvHGFpVkkaeYMZMoWGXoGP0eaH7/btljc+cpo9/peq7u
-         yYEnh0FTcKl4iEulozbOXg9oOYgeTcGE2kfuvb19UJALwpjiKtqMP0zrehgNG017YD6l
-         5jtowULgNh5hsAbxJS/ZVLPEnZQi+KO5dMWM8EtaxUIm5tH7+uQNb4pmNJhvChCqUQVO
-         RfKIiBv9WysIfE5O/YwCEU/Eocff59XhcffeYJrWXgyCUotZIczQzvEJ5tnsakZLqyh4
-         1GFk2A1prQeQhkMfLrCkpfVKkTsUoOY5atVwuyMOP+kIMloYCplqYF0/Egam3Tjft0y4
-         eUwg==
+        Fri, 13 Dec 2019 03:08:29 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cm12so1300785edb.11;
+        Fri, 13 Dec 2019 00:08:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I5SL/bqlSvsdjamq/iP/6SdZILW/1fqCxzt8/ezc6Ds=;
-        b=l4PrdOAQiDM1Se40pGFXEuxi4BQOABBNGPM+djnAwpWruehOIA4X+xneYAilHgCSBs
-         u7W4gHZzqp9tzjCZAEPVMqiCRAvmSkfnnbVCZVKHJRVYcANYzs0wopeouktURD4Sa4qe
-         eFW8JC2FywrXGD/ratwsgASXd9prqKCTC1EUO2Fbg6SYYffPMo3keHxl2xvHjP1zodND
-         0CoeJwWk/1G8Dhn9AyZLvWZagwJpXTNweskvjQ1o2LPFWLcgV13Qh5REsHNOnyxQPu8z
-         FBqT3QObXfVB6kHOQo3wkT2C0wOIe+XM4HdZK46G0U6fbFNd3qNUFRgxsYGVFwvc+V0O
-         dSbw==
-X-Gm-Message-State: APjAAAWJ9KBUxpmgbR2hzYfgGwC3Ve3OINJjrq0o6ACoB2XC7lHb+GmX
-        7JIpMxpkBPKH0GsaauRf0PuoJmEW
-X-Google-Smtp-Source: APXvYqxCVon0+7wO1tLZGEvbxLmbmoy4quP8LE9xN1sLkAGhR3hrnCJXyNKJzlIlInDZvzRSLbKrHw==
-X-Received: by 2002:a7b:ce81:: with SMTP id q1mr11969896wmj.47.1576224413108;
-        Fri, 13 Dec 2019 00:06:53 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.210])
-        by smtp.gmail.com with ESMTPSA id y7sm955828wmd.1.2019.12.13.00.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 00:06:52 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH liburing] Test wait after under-consuming
-Date:   Fri, 13 Dec 2019 11:06:17 +0300
-Message-Id: <e5579bbac4fcb4f0e9b6ba4fbf3a56bd9a925c6c.1576224356.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Sb7h+Syw20vysdh92QJjNk/PaKzOiYC6n/84DQf0IY=;
+        b=XH2rMC6I3glDs3DANyDOLWnr2N5KJzJxOOfEqZYko6x12F/NA5ppoahwQ2BOcVpebH
+         lu5hPofdoRszEUF1Puzi3Bjnmbr62wTKDohiqXkhw9jxVQl8jbptVYQtCPQExwB9vDrG
+         XZNuTUI9bMUfKp4xkfGXSf7Ms1nHkL0rMILxSqVXYymif8KDOMb0WmPQ1Nx9MsVAUDGa
+         H0ZKSAxZBnjC3WQGLHdTAdqun3CwwQHC0ZH8uyVoIyoHj/dX17YfixFHcTiCfPDDa3nf
+         fGq2nmKh/954zM6yFCOnVSssqHAzgkgq98MkQMLe3T8y5VUAAM0hCOEzk9vwH7Kq9Pf9
+         s5Vw==
+X-Gm-Message-State: APjAAAU+zScqw12VuBxj8zu5tX5EkGPz5jDd7itREbOb5q2LHdwRHlOb
+        PKLImvJG+/EiVhMEaTQ+8czVlhU+Fgdl+w==
+X-Google-Smtp-Source: APXvYqxL77iUE0AzqbWyWlWllh0lDx8cvi1X6clZbtoF61J/Gh651ONiLGvGa7nICW0nrVOBQqVDqA==
+X-Received: by 2002:a17:906:5808:: with SMTP id m8mr7073600ejq.1.1576224506235;
+        Fri, 13 Dec 2019 00:08:26 -0800 (PST)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id l9sm353417ejr.45.2019.12.13.00.08.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 00:08:25 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id w8so2041719wmd.3;
+        Fri, 13 Dec 2019 00:08:25 -0800 (PST)
+X-Received: by 2002:a1c:6a05:: with SMTP id f5mr11357678wmc.2.1576224505305;
+ Fri, 13 Dec 2019 00:08:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20191211145222eucas1p1d761af59e04017ddadbdbd1cceb59b1f@eucas1p1.samsung.com>
+ <20191211145054.24835-1-m.szyprowski@samsung.com> <20191211145217.25025-1-m.szyprowski@samsung.com>
+In-Reply-To: <20191211145217.25025-1-m.szyprowski@samsung.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 13 Dec 2019 16:08:12 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65EBb-qvb6XVzvZgqKUbzJJgkXgB5y2uA8Aa1__n9v+qw@mail.gmail.com>
+Message-ID: <CAGb2v65EBb-qvb6XVzvZgqKUbzJJgkXgB5y2uA8Aa1__n9v+qw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        "moderated list:ARM/SAMSUNG EXYNO..." 
+        <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of an error submission won't consume all sqes. This tests that
-it will get back to the userspace even if (to_submit == to_wait)
+On Wed, Dec 11, 2019 at 10:52 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Current USB3503 driver ignores GPIO polarity and always operates as if the
+> GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+> USB3503 chip applications to match the chip specification and common
+> convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+> is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+> to fix the USB3503 driver to properly use generic GPIO bindings and read
+> polarity from DT.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- test/link.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-diff --git a/test/link.c b/test/link.c
-index 8ec1649..93653f3 100644
---- a/test/link.c
-+++ b/test/link.c
-@@ -384,6 +384,55 @@ err:
- 	return 1;
- }
- 
-+static int test_early_fail_and_wait(struct io_uring *ring)
-+{
-+	struct io_uring_cqe *cqe;
-+	struct io_uring_sqe *sqe;
-+	int ret, submitted, i;
-+	const int invalid_fd = 42;
-+	struct iovec iov = { .iov_base = NULL, .iov_len = 0 };
-+
-+	sqe = io_uring_get_sqe(ring);
-+	if (!sqe) {
-+		printf("get sqe failed\n");
-+		goto err;
-+	}
-+
-+	io_uring_prep_readv(sqe, invalid_fd, &iov, 1, 0);
-+	sqe->user_data = 1;
-+	sqe->flags |= IOSQE_IO_LINK;
-+
-+	sqe = io_uring_get_sqe(ring);
-+	if (!sqe) {
-+		printf("get sqe failed\n");
-+		goto err;
-+	}
-+
-+	io_uring_prep_nop(sqe);
-+	sqe->user_data = 2;
-+
-+	submitted = io_uring_submit_and_wait(ring, 2);
-+	if (submitted == -EAGAIN)
-+		return 0;
-+	if (submitted <= 0) {
-+		printf("sqe submit failed: %d\n", submitted);
-+		goto err;
-+	}
-+
-+	for (i = 0; i < 2; i++) {
-+		ret = io_uring_wait_cqe(ring, &cqe);
-+		if (ret < 0) {
-+			printf("wait completion %d\n", ret);
-+			goto err;
-+		}
-+		io_uring_cqe_seen(ring, cqe);
-+	}
-+
-+	return 0;
-+err:
-+	return 1;
-+}
-+
- int main(int argc, char *argv[])
- {
- 	struct io_uring ring, poll_ring;
-@@ -400,7 +449,6 @@ int main(int argc, char *argv[])
- 	if (ret) {
- 		printf("poll_ring setup failed\n");
- 		return 1;
--
- 	}
- 
- 	ret = test_single_link(&ring);
-@@ -439,5 +487,11 @@ int main(int argc, char *argv[])
- 		return ret;
- 	}
- 
-+	ret = test_early_fail_and_wait(&ring);
-+	if (ret) {
-+		fprintf(stderr, "test_early_fail_and_wait\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
--- 
-2.24.0
-
+I assume the dts patch has to go in before or at the same time as the driver
+patch?
