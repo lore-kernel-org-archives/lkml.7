@@ -2,156 +2,239 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A224AC34361
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439EC34347
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D985524715
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABF1246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TXsZUe9E"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SLCch5uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfLMNNe (ORCPT
+        id S1727441AbfLMM4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:13:34 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:53060 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfLMNNd (ORCPT
+        Fri, 13 Dec 2019 07:56:23 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48496 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfLMM4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 08:13:33 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191213131330epoutp0107ac0e3b7a9d425aca88ff7f14753ea7~f8HwdLlI91037910379epoutp01c
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 13:13:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191213131330epoutp0107ac0e3b7a9d425aca88ff7f14753ea7~f8HwdLlI91037910379epoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576242810;
-        bh=96KPzqH2k/XmIwhACmbQJCz/M1oFW9+Tap5Aw04fJ84=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=TXsZUe9E77tl14nV6kp41apWKGWUdU7y+ssSA0RfFJbINchWG/N+TV/fzTQ0AB7pt
-         QdtLWd2d0tGyQNBJYNULe3rzoiwWb6yzUH4CTQfBu3BnWWQgCgexzhMiaT+9WwAyFR
-         4kE02DWe8SDZ7QmvYYkly6rhUefRm3YxvoEvdWfE=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191213131329epcas5p231ece6e7556e3bdfb52cb8cd994ccfd5~f8HvJ2d1n0792807928epcas5p2p;
-        Fri, 13 Dec 2019 13:13:29 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B8.BB.20197.87E83FD5; Fri, 13 Dec 2019 22:13:29 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad~f8Hull8Xf2315123151epcas5p1l;
-        Fri, 13 Dec 2019 13:13:28 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191213131328epsmtrp1a092948ad0c864f5d7450406b9ce2b10~f8HukHDWq0753107531epsmtrp1L;
-        Fri, 13 Dec 2019 13:13:28 +0000 (GMT)
-X-AuditID: b6c32a4a-769ff70000014ee5-89-5df38e785690
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B2.5D.10238.87E83FD5; Fri, 13 Dec 2019 22:13:28 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191213131326epsmtip2e2a2d51a39eb729b631e6401314dc7e1~f8Hs4nT6H1546215462epsmtip2A;
-        Fri, 13 Dec 2019 13:13:26 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     kishon@ti.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        bhelgaas@google.com, pankaj.dubey@samsung.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v6 0/2] Add support to handle ZRX-DC Compliant PHYs
-Date:   Fri, 13 Dec 2019 18:43:18 +0530
-Message-Id: <1576242800-23969-1-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDIsWRmVeSWpSXmKPExsWy7bCmpm5l3+dYg3UTGC2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
-        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
-        S+DKmLu4l71gN1/F4o1LWRsYz3N3MXJySAiYSDStPMbexcjFISSwm1Hi3pFjTBDOJ0aJjU/m
-        Q2W+MUr8nbSdrYuRA6zlwBQ7iPheRokdrT2MEE4Lk8SfxncsIHPZBLQlfh7dyw5iiwhYSxxu
-        38IGYjML/GOUeDynAsQWFnCWeNE0jRHEZhFQlZjXt4oZxOYVcJGYvXcDC8R9chI3z3UygyyQ
-        EDjAJnFpei8LxBUuEo8eyEPUCEu8Or6FHcKWknjZ3wZl50v03l0KZddITLnbwQhh20scuDIH
-        bAyzgKbE+l36EKfxSfT+fsIEMZ1XoqNNCMJUkmibWQ3RKCGxeP5NZgjbQ+LBswtMILaQQKxE
-        57Y1zBMYZWYhzFzAyLiKUTK1oDg3PbXYtMAoL7Vcrzgxt7g0L10vOT93EyM4TWh57WBcds7n
-        EKMAB6MSDy9DyqdYIdbEsuLK3EOMEhzMSiK8qdqfY4V4UxIrq1KL8uOLSnNSiw8xSnOwKInz
-        TmK9GiMkkJ5YkpqdmlqQWgSTZeLglGpgbJiqnSiQETPRnOeO4KkJ8fmBRjeZHgbvl3miGXNS
-        Pyh3V/+DLd763EyuwSkXRa0LNV/edLRjURDlWt3tXhsleHjr3ooTWgfzDs+/ZC4TNuvf8lmf
-        X0YZLfd9+Xur01fGDSdZlRX+Rd0OTj4TUzdjyr5Hm6/au6s8XqtzN0HiReLCCXffs+6JV2Ip
-        zkg01GIuKk4EAPLI9qEPAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSvG5F3+dYg3cNghbN/7ezWpzdtZDV
-        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
-        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
-        JXBlzF3cy16wm69i8calrA2M57m7GDk4JARMJA5Mseti5OIQEtjNKLF17k22LkZOoLiExJe9
-        X6FsYYmV/56zQxQ1MUlcOf+HGSTBJqAt8fPoXnYQW0TAVuL+o8msIEXMAl1MEmd+3QcrEhZw
-        lnjRNI0RxGYRUJWY17cKLM4r4CIxe+8GFogNchI3z3UyT2DkWcDIsIpRMrWgODc9t9iwwDAv
-        tVyvODG3uDQvXS85P3cTIzgktTR3MF5eEn+IUYCDUYmHlyHlU6wQa2JZcWXuIUYJDmYlEd5U
-        7c+xQrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAq7zl2
-        3H0T72SHt06bZZZlhVayecX/eFvzwmdpeuYLXsUq5k3xsc1hettXLHO++XZnhsOXe7sfip2T
-        /fZIJyaV74btPs9l664knp9wLu5tOzuvwU7vFxErtmtssf4/Mf2H68sQjmSRMt6P7nM19nwP
-        mbto6cTXrPO+BR/xWvD3ZLZajfYPLx87JZbijERDLeai4kQA3Y6tHEUCAAA=
-X-CMS-MailID: 20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad
-References: <CGME20191213131328epcas5p1c6bafae662369c8f8968f5265163d7ad@epcas5p1.samsung.com>
+        Fri, 13 Dec 2019 07:56:21 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCuJKZ068997;
+        Fri, 13 Dec 2019 06:56:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576241779;
+        bh=cZPUDLryljiTau+tMhgFn/36rTJMjWD1u8FWT9ke/dg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=SLCch5ujnkucQnh3Tqin1Z803EelTj8t8v62HzwOCfXd4FpnXXvrDmmedHGbv0U61
+         yw9oQB2phu/PYL9ihOcfpI+8vQpC/yL5aIn6hgWYGPesm/wkJcA8jCJbh82/oL2aoE
+         2/vbI2q6mN6ewLwSUTBxZkxo7OTOXQIZLxEwrsoo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCuIL3071054
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 06:56:18 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Dec 2019 06:56:15 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Dec 2019 06:56:15 -0600
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCtwVM127295;
+        Fri, 13 Dec 2019 06:56:13 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv3 07/15] remoteproc/omap: Add support for DRA7xx remote processors
+Date:   Fri, 13 Dec 2019 14:55:29 +0200
+Message-ID: <20191213125537.11509-8-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213125537.11509-1-t-kristo@ti.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According the PCI Express base specification when PHY does not meet
-ZRX-DC specification, after every 100ms timeout the link should
-transition to recovery state when the link is in low power states. 
+From: Suman Anna <s-anna@ti.com>
 
-Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
-L1.Idle state and are therefore not required to implement the 100 ms
-timeout and transition to Recovery should avoid implementing it, since
-it will reduce the power savings expected from the L1 state.
+DRA7xx/AM57xx SoCs have two IPU and up to two DSP processor subsystems
+for offloading different computation algorithms. The IPU processor
+subsystem contains dual-core ARM Cortex-M4 processors, and is very
+similar to those on OMAP5. The DSP processor subsystem is based on
+the TI's standard TMS320C66x DSP CorePac core.
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+Support has been added to the OMAP remoteproc driver through new
+DRA7xx specific compatibles for properly probing and booting all
+the different processor subsystem instances on DRA7xx/AM57xx
+SoCs - IPU1, IPU2, DSP1 & DSP2. A build dependency with SOC_DRA7XX
+is added to enable the driver to be built in DRA7xx-only configuration.
 
-We need to get the PHY property in controller driver. So, we are
-proposing a new method phy_property_present() in the phy driver.
+The DSP boot address programming needed enhancement for DRA7xx as the
+boot register fields are different on DRA7 compared to OMAP4 and OMAP5
+SoCs. The register on DRA7xx contains additional fields within the
+register and the boot address bit-field is right-shifted by 10 bits.
+The internal memory parsing logic has also been updated to compute
+the device addresses for the L2 RAM for DSP devices using relative
+addressing logic, and to parse two additional RAMs at L1 level - L1P
+and L1D. This allows the remoteproc driver to support loading into
+these regions for a small subset of firmware images requiring as
+such. The most common usage would be to use the L1 programmable
+RAMs as L1 Caches.
 
-PCIe controller platform drivers should populate the phy_zrxdc_compliant
-flag, which will be used by generic DesignWare driver.
+The firmware lookup logic also has to be adjusted for DRA7xx as
+there are (can be) more than one instance of both the IPU and DSP
+remote processors for the first time in OMAP4+ SoCs.
 
-pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
+Signed-off-by: Suman Anna <s-anna@ti.com>
+[t-kristo@ti.com: moved address translation quirks to pdata]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/remoteproc/Kconfig           |  2 +-
+ drivers/remoteproc/omap_remoteproc.c | 44 +++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 2 deletions(-)
 
-Patchset v2 can be found at:
- - 1/2: https://lkml.org/lkml/2019/11/11/672
- - 2/2: https://lkml.org/lkml/2019/10/28/285
-
-Changes w.r.t v2:
- - Addressed review comments
- - Rebased on latest linus/master
-
-Changes w.r.t v3:
- - Added linux-pci@vger.kernel.org as pointed by Gustavo, Sorry for annoying.
-
-Changes w.r.t v4:
- - Addressed review comments from Andrew Murray
- - Rebased on latest linus/master
-
-Changes w.r.t v5:
- - Added check for NULL pointer
-
-Anvesh Salveru (2):
-  phy: core: add phy_property_present method
-  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
-
- drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
- drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
- drivers/phy/phy-core.c                       | 20 ++++++++++++++++++++
- include/linux/phy/phy.h                      |  6 ++++++
- 4 files changed, 36 insertions(+)
-
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 94afdde4bc9f..d6450d7fcf92 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -25,7 +25,7 @@ config IMX_REMOTEPROC
+ 
+ config OMAP_REMOTEPROC
+ 	tristate "OMAP remoteproc support"
+-	depends on ARCH_OMAP4 || SOC_OMAP5
++	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+ 	depends on OMAP_IOMMU
+ 	select MAILBOX
+ 	select OMAP2PLUS_MBOX
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 3ad74c4b4071..6cf7f0a9ba9a 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -34,10 +34,13 @@
+  * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+  * @syscon: regmap handle for the system control configuration module
+  * @boot_reg: boot register offset within the @syscon regmap
++ * @boot_reg_shift: bit-field shift required for the boot address value in
++ *		    @boot_reg
+  */
+ struct omap_rproc_boot_data {
+ 	struct regmap *syscon;
+ 	unsigned int boot_reg;
++	unsigned int boot_reg_shift;
+ };
+ 
+ /*
+@@ -78,12 +81,14 @@ struct omap_rproc {
+  * struct omap_rproc_dev_data - device data for the omap remote processor
+  * @device_name: device name of the remote processor
+  * @has_bootreg: true if this remote processor has boot register
++ * @boot_reg_shift: bit shift for the boot register mask
+  * @mem_names: memory names for this remote processor
+  * @dev_addrs: device addresses corresponding to the memory names
+  */
+ struct omap_rproc_dev_data {
+ 	const char *device_name;
+ 	bool has_bootreg;
++	int boot_reg_shift;
+ 	const char * const *mem_names;
+ 	const u32 *dev_addrs;
+ };
+@@ -153,6 +158,8 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+ 	struct omap_rproc *oproc = rproc->priv;
+ 	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+ 	u32 offset = bdata->boot_reg;
++	u32 value;
++	u32 mask;
+ 
+ 	if (rproc->bootaddr & (SZ_1K - 1)) {
+ 		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
+@@ -160,7 +167,10 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+ 		return -EINVAL;
+ 	}
+ 
+-	regmap_write(bdata->syscon, offset, rproc->bootaddr);
++	value = rproc->bootaddr >> bdata->boot_reg_shift;
++	mask = ~(SZ_1K - 1) >> bdata->boot_reg_shift;
++
++	regmap_update_bits(bdata->syscon, offset, mask, value);
+ 
+ 	return 0;
+ }
+@@ -286,6 +296,14 @@ static const u32 ipu_dev_addrs[] = {
+ 	0x20000000,
+ };
+ 
++static const char * const dra7_dsp_mem_names[] = {
++	"l2ram", "l1pram", "l1dram", NULL
++};
++
++static const u32 dra7_dsp_dev_addrs[] = {
++	0x800000, 0xe00000, 0xf00000,
++};
++
+ static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+ 	.device_name	= "dsp",
+ 	.has_bootreg	= true,
+@@ -308,6 +326,20 @@ static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+ 	.dev_addrs	= ipu_dev_addrs,
+ };
+ 
++static const struct omap_rproc_dev_data dra7_dsp_dev_data = {
++	.device_name	= "dsp",
++	.has_bootreg	= true,
++	.boot_reg_shift	= 10,
++	.mem_names	= dra7_dsp_mem_names,
++	.dev_addrs	= dra7_dsp_dev_addrs,
++};
++
++static const struct omap_rproc_dev_data dra7_ipu_dev_data = {
++	.device_name	= "ipu",
++	.mem_names	= ipu_mem_names,
++	.dev_addrs	= ipu_dev_addrs,
++};
++
+ static const struct of_device_id omap_rproc_of_match[] = {
+ 	{
+ 		.compatible     = "ti,omap4-dsp",
+@@ -325,6 +357,14 @@ static const struct of_device_id omap_rproc_of_match[] = {
+ 		.compatible     = "ti,omap5-ipu",
+ 		.data           = &omap5_ipu_dev_data,
+ 	},
++	{
++		.compatible     = "ti,dra7-dsp",
++		.data           = &dra7_dsp_dev_data,
++	},
++	{
++		.compatible     = "ti,dra7-ipu",
++		.data           = &dra7_ipu_dev_data,
++	},
+ 	{
+ 		/* end */
+ 	},
+@@ -382,6 +422,8 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+ 		return -EINVAL;
+ 	}
+ 
++	oproc->boot_data->boot_reg_shift = data->boot_reg_shift;
++
+ 	return 0;
+ }
+ 
 -- 
-2.7.4
+2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
