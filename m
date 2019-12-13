@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4142C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCC7C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54E6206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D00227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 00:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OcggiXbD"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="N44hjPgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbfLMAJF (ORCPT
+        id S1731796AbfLMAJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 19:09:05 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39115 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731767AbfLMAJB (ORCPT
+        Thu, 12 Dec 2019 19:09:09 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38779 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731764AbfLMAJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 19:09:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so389772pfx.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:09:01 -0800 (PST)
+        Thu, 12 Dec 2019 19:09:04 -0500
+Received: by mail-pj1-f68.google.com with SMTP id l4so344571pjt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 16:09:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3MVH0IytIktlYSZoL4rqg8LTHZ+hNgx1HRy12FyMRVY=;
-        b=OcggiXbDqASGa8a7H5cyEI5QMQ+J3uXvJEf7lpKl2y3L92IUziIjUeefF0uBhRPK16
-         Td9Ym/BWyyDqE/OcuB1mGpduksFVQJB4kIh0SX0/O0xYzGcjoOVAZ05lCBD1J9q094bz
-         7/JhQ1LQd6t6sUiVbyaKgE6TOI3lvP0Ej8IvGsrCFvQO6rtoaTp0SxorNKaTr/ZyRTaD
-         b2Vej3DZT1stbyiFh0Jvz9vCxEHGCyZW+xWsQ7+H5YBvX+/DeQncsVtbrTRiptB2QaJJ
-         JMgDz1PEVFooG2p7BhrhE5rcj4Q1uWaB7n3P23YADD2nXHDTjhE6mJvHElxA6A9/knm0
-         aD4w==
+        bh=0AvuSAjkIKauhY++c7YWp6c3q12AUyVxjR83OEuWwPU=;
+        b=N44hjPgUKP1rna4pDgr1TI6pgfXmWzNYqT2os27E2x9CgNvOq4XfY2uvZg3QbDL4q8
+         lC2uzw05PZALhHdfZOv00DF4DpIBbBiXA5k9+3/l8Go8fBWKLx0KNKMDxH7lsbo1ZYEF
+         QNGRGBDlsm1A5d+/s31tS1Eirnkr5aZfaRGP3QM+eD3CVaZ1++8VCJxOmoc/n4bNNa8k
+         wvVJzYhEIKOStfkx7/jI7JW+1eS53I77LUvwumVzjIJf9Vu1T+gi29abhbiOlFuq+5oZ
+         MMODig9sZun8DmyfjTS/+mELafP9hPHcMY44LTbnyeWo9KguTxA4KnALSwzn1jcrCX/L
+         rpYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3MVH0IytIktlYSZoL4rqg8LTHZ+hNgx1HRy12FyMRVY=;
-        b=bjvMTOgW01MY0iEPygu7Sl4yJlJSHdu889yDY+Mxppacsd0ee2C3DXxtvH1xFRa1e2
-         T05xvUhwQSatFoHJ2Lx8bNXccgLDkoy3QbeM8lnC7DuofbWiTYHbw2u/8FbHTeRkDZyV
-         cIi7AguAbXVmhcF4pzSNnRJV06UcBMwjDj9u+IZZntZZyxvBHzGX2+hvHMZwun9+RW9c
-         jB4SUYSfR+G24PGzNTGfZBQTLyPX1cgUmlw2NbWW1F3rUpJ3EjEACkCJZGMSWH8jQIiy
-         SfT6fvGq9vMCYxTbXBxoAX5yneRYGM1YE4p8znBjxAX5bvH4+DTOs+BMoHxCfkrvlQgB
-         5hvQ==
-X-Gm-Message-State: APjAAAVyAgDBuXzHG1vbmQQf/JkRGJgycCa9Jj87UNAOK/s8jVtZHAfI
-        VOPOPPZWvEtkhqWTUfH9igudZ/3htuE=
-X-Google-Smtp-Source: APXvYqz2fpugtxiFEVFNrvEOWUyHauLHOkhyLBr7rQ7WQYd0bvWwDAwNw0T+NTruARcW1efU/+wpRw==
-X-Received: by 2002:a63:f901:: with SMTP id h1mr13691936pgi.445.1576195740415;
-        Thu, 12 Dec 2019 16:09:00 -0800 (PST)
+        bh=0AvuSAjkIKauhY++c7YWp6c3q12AUyVxjR83OEuWwPU=;
+        b=JPkATx7oyG2TRgVEHd3mcYpQATubjYpQ/GnBB+okQEgInJxV+m8Y6ATvOsRmOulfu0
+         1TWyd5jT+d52vgp+ViqYVl5nwIkNIpPQBsy/0kwuqFFWVvifx7i2/I9kh2+LljTqVjXB
+         HMz1nOSCn1rSP/9m8L/zOrhMCHj73eSPSFqF7iONV0gKNra7O0ulyzOFZQMNeIqlqNBY
+         6k2AydD4+cGV5R+/E9C6TMGlHfBOgu97M7O8hFyU/LwEZsXcy+z2YrAknPwIRB0AWM+0
+         bZZ/0x7GOlJSS9g+g45f774imrw/GRdyB9DB/uRdsTlldOU1xvdTNWAzM8IPevSRnE+s
+         Pcyw==
+X-Gm-Message-State: APjAAAWCqp7dutUSHQDWB94J9eYg9PjDeaj0QRaL7ZX3o34xelFV2MYM
+        06G5uyNqw1EsV8cDD4hcJTk4WfmyKwU=
+X-Google-Smtp-Source: APXvYqwYRTF3MnCYATLiJ+ZqcgT9/DArauisQ+e4UKASVqEwmtFvSwNn2galsFLV/dQmuwgAPCREJA==
+X-Received: by 2002:a17:90a:a386:: with SMTP id x6mr13586682pjp.116.1576195743090;
+        Thu, 12 Dec 2019 16:09:03 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.08.58
+        by smtp.gmail.com with ESMTPSA id j38sm8317647pgj.27.2019.12.12.16.09.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 16:08:59 -0800 (PST)
+        Thu, 12 Dec 2019 16:09:02 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jiri Slaby <jslaby@suse.com>,
         Vasiliy Khoruzhick <vasilykh@arista.com>,
         linux-serial@vger.kernel.org
-Subject: [PATCH 36/58] tty/serial: Migrate sa1100 to use has_sysrq
-Date:   Fri, 13 Dec 2019 00:06:35 +0000
-Message-Id: <20191213000657.931618-37-dima@arista.com>
+Subject: [PATCH 37/58] tty/serial: Migrate samsung_tty to use has_sysrq
+Date:   Fri, 13 Dec 2019 00:06:36 +0000
+Message-Id: <20191213000657.931618-38-dima@arista.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191213000657.931618-1-dima@arista.com>
 References: <20191213000657.931618-1-dima@arista.com>
@@ -88,42 +88,32 @@ Initialise it in driver's probe and remove ifdeffery.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/tty/serial/sa1100.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/tty/serial/samsung_tty.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/sa1100.c b/drivers/tty/serial/sa1100.c
-index 8e618129e65c..75c2a22895f9 100644
---- a/drivers/tty/serial/sa1100.c
-+++ b/drivers/tty/serial/sa1100.c
-@@ -7,10 +7,6 @@
-  *  Copyright (C) 2000 Deep Blue Solutions Ltd.
-  */
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 83fd51607741..9770fe29ae86 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -21,10 +21,6 @@
+  * BJD, 04-Nov-2004
+ */
  
--#if defined(CONFIG_SERIAL_SA1100_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
+-#if defined(CONFIG_SERIAL_SAMSUNG_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 -#define SUPPORT_SYSRQ
 -#endif
 -
- #include <linux/module.h>
- #include <linux/ioport.h>
- #include <linux/init.h>
-@@ -214,9 +210,7 @@ sa1100_rx_chars(struct sa1100_port *sport)
- 			else if (status & UTSR1_TO_SM(UTSR1_FRE))
- 				flg = TTY_FRAME;
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
+@@ -1909,6 +1905,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+ 		ourport->port.fifosize = ourport->drv_data->fifosize[index];
+ 	else if (ourport->info->fifosize)
+ 		ourport->port.fifosize = ourport->info->fifosize;
++	ourport->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_SAMSUNG_CONSOLE);
  
--#ifdef SUPPORT_SYSRQ
- 			sport->port.sysrq = 0;
--#endif
- 		}
- 
- 		if (uart_handle_sysrq_char(&sport->port, ch))
-@@ -860,6 +854,7 @@ static int sa1100_serial_resume(struct platform_device *dev)
- static int sa1100_serial_add_one_port(struct sa1100_port *sport, struct platform_device *dev)
- {
- 	sport->port.dev = &dev->dev;
-+	sport->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_SA1100_CONSOLE);
- 
- 	// mctrl_gpio_init() requires that the GPIO driver supports interrupts,
- 	// but we need to support GPIO drivers for hardware that has no such
+ 	/*
+ 	 * DMA transfers must be aligned at least to cache line size,
 -- 
 2.24.0
 
