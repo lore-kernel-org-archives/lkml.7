@@ -2,177 +2,164 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D55C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7B3C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091AC214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576281017;
-	bh=9OF3gvIhgB4PoeGk+9abecbqLsPMubebNDgjiS1F+Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qq2OQ2A38ooceu8dLlMNV50vkrhOM6B+BJyW5jsIQYuGXsg1iV14mI54uAqIgebv/
-	 HAebJJ/k8/pPB/miBa/LR+ejQTZPaPVriL4lByTx9+BSA+2hbmJwkNinDU3dBk/ED6
-	 uYbGlgtqmqSxk3knoJAux19TE5wMf4EErhfKLc+I=
+	by mail.kernel.org (Postfix) with ESMTP id A27C6214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:51:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+2KD7Z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLMXuQ (ORCPT
+        id S1726826AbfLMXvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:50:16 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35392 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMXuP (ORCPT
+        Fri, 13 Dec 2019 18:51:07 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47276 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725747AbfLMXvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:50:15 -0500
-Received: by mail-ot1-f65.google.com with SMTP id o9so1120568ote.2;
-        Fri, 13 Dec 2019 15:50:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l8y7QpzQFo6LopgFPQ5NquvGTv5LeZYf4UuALbXDpoQ=;
-        b=R4UgmzSLZJ5vlfUw/XNSSK95LV5BqERGdme1wFccbsg7UxYubIrPRFEFmhSsQN3oVr
-         ET+pppv165CqGothU/rZNDJLpzjGSSWCg2MbGMI9M9Yw4LehkZ72EICnmGvkKnd8OxFM
-         NMoaUrxjceXVYjA6mscbgBC43Vs9n0uzTWClQTtSYoBJD6vWkVsQEe7n1rIrMjWstYV+
-         2I50Rjp0D5Mp9d0b7YtjdXFaovuHXf+SujsNzTVOAktLlQJv+4hx9wEJASPdbKh8pVhy
-         DVuJizIzXi+FYZ4WdfKNQoUm6eQNn7u2qc0M12KHOCollqddZ2CrYXrLePNSbhmy7LL7
-         z64w==
-X-Gm-Message-State: APjAAAXB21OAODVlrhQzxHYXEwpapBkvP4ixc+LxNDq0Z/f72u6HlwB0
-        25ljGD715n9AUbfzAPzI3Q==
-X-Google-Smtp-Source: APXvYqxtodM9bQIKZwdbEKbdE53q5NTExxX8dI91cxs2SHtzlLFLgHoUMHQBXFERpwqeV0o/UPjJ0w==
-X-Received: by 2002:a05:6830:1bd5:: with SMTP id v21mr18520364ota.154.1576281014805;
-        Fri, 13 Dec 2019 15:50:14 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f3sm3877604oto.57.2019.12.13.15.50.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:50:14 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:50:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
- device
-Message-ID: <20191213235013.GA9997@bogus>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191202233127.31160-2-ray.jui@broadcom.com>
- <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
- <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
+        Fri, 13 Dec 2019 18:51:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576281065;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=x5PAZo0wJg9ltSEENqy1gIgguVq0EPcJb5spZC5EjJE=;
+        b=D+2KD7Z/+JDLl0G8qaxLRMYPEN74wab8r86bFJPRXsvrCEWlFR82uut1xeFeUCJN4GjMiH
+        9oK+aEwUMmHBdDCRXWkdfRPP5beQdyfmAIZSrDgZQ6cnQQjSF4PlyJgMDFmKAjzHtSLiDb
+        Whnw52w1lGfoKDHdSnMuOVrmLUsTySo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-n94zhLJ0P3KzX6ZVYlCO8A-1; Fri, 13 Dec 2019 18:50:59 -0500
+X-MC-Unique: n94zhLJ0P3KzX6ZVYlCO8A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B0A2107ACC4;
+        Fri, 13 Dec 2019 23:50:57 +0000 (UTC)
+Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D03663BD9;
+        Fri, 13 Dec 2019 23:50:56 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 17:50:54 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+Message-ID: <20191213235054.6k2lcnwa63r26zwi@treble>
+References: <20191206135406.563336e7@canb.auug.org.au>
+ <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
+ <20191211134929.GL3929@twin.jikos.cz>
+ <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
+ <20191212184725.db3ost7rcopotr5u@treble>
+ <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
+ <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:09:34PM -0800, Ray Jui wrote:
-> 
-> 
-> On 12/5/19 4:09 PM, Florian Fainelli wrote:
-> > On 12/2/19 3:31 PM, Ray Jui wrote:
-> > > Add binding document for iProc based IDM devices.
-> > > 
-> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+On Fri, Dec 13, 2019 at 03:03:11PM -0800, Randy Dunlap wrote:
+> On 12/12/19 12:25 PM, Randy Dunlap wrote:
+> > On 12/12/19 10:47 AM, Josh Poimboeuf wrote:
+> >> On Wed, Dec 11, 2019 at 08:21:38AM -0800, Randy Dunlap wrote:
+> >>> [oops, forgot to add Josh and PeterZ]
+> >>>
+> >>> On 12/11/19 5:49 AM, David Sterba wrote:
+> >>>> On Fri, Dec 06, 2019 at 08:17:30AM -0800, Randy Dunlap wrote:
+> >>>>> On 12/5/19 6:54 PM, Stephen Rothwell wrote:
+> >>>>>> Hi all,
+> >>>>>>
+> >>>>>> Please do not add any material for v5.6 to your linux-next included
+> >>>>>> trees until after v5.5-rc1 has been released.
+> >>>>>>
+> >>>>>> Changes since 20191204:
+> >>>>>>
+> >>>>>
+> >>>>> on x86_64:
+> >>>>>
+> >>>>> fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
+> >>>>
+> >>>> Can somebody enlighten me what is one supposed to do to address the
+> >>>> warnings? Function names reported in the list contain our ASSERT macro
+> >>>> that conditionally calls BUG() that I believe is what could cause the
+> >>>> unreachable instructions but I don't see how.
+> >>>>
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/btrfs/ctree.h#n3113
+> >>>>
+> >>>> __cold
+> >>>> static inline void assfail(const char *expr, const char *file, int line)
+> >>>> {
+> >>>> 	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
+> >>>> 		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
+> >>>> 		BUG();
+> >>>> 	}
+> >>>> }
+> >>>>
+> >>>> #define ASSERT(expr)	\
+> >>>> 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
+> >>>>
+> >>
+> >> Randy, can you share one of the btrfs .o files?  I'm not able to
+> >> recreate.
+> >>
 > > 
-> > Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
-> > compatible binding since it is a new one?
+> > Hm. I'll have to try to recreate this. I no longer have files from 20191206
+> > (lack of space).
 > > 
+> > I'll let you know if/when I can recreate it.
 > 
-> Sorry I am not aware of this YAML requirement until now.
+> OK, 40 builds later, I have reproduced it.
 > 
-> Is this a new requirement that new DT binding document should be made with
-> YAML format?
+> I am attaching one of the btrfs .o files and the kernel config file (FTR).
+> (gzipped)
+> Let me know if you want more of the .o files.
 
-The format has been in place in the kernel for a year now and we've 
-moved slowly towards it being required. If you're paying that little 
-attention to upstream, then yes it's definitely required so someone else 
-doesn't get stuck converting your binding later.
+Thanks.  This is arguably a compiler bug, but the below produces better
+code generation by adding a noreturn annotation.  I think GCC gets
+tripped up by the IS_ENABLED conditional and can't always tell that
+assfail (sic) doesn't return.
 
-BTW, I think all but RPi chips still need their SoC/board bindings 
-converted. One of the few not yet converted...
+BTW, I'm on my way out the door for a week of much-needed PTO but I can
+handle this patch (and several others I have pending which were reported
+by you) when I get back.
 
-> Thanks,
-> 
-> Ray
-> 
-> 
-> > > ---
-> > >   .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
-> > >   1 file changed, 44 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> > > new file mode 100644
-> > > index 000000000000..388c6b036d7e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> > > @@ -0,0 +1,44 @@
-> > > +Broadcom iProc Interconnect Device Management (IDM) device
-> > > +
-> > > +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
-> > > +bus transactions. Most importantly, it can be configured to detect bus
-> > > +transaction timeout. In such case, critical information such as transaction
-> > > +address that caused the error, bus master ID of the transaction that caused
-> > > +the error, and etc., are made available from the IDM device.
-> > > +
-> > > +-------------------------------------------------------------------------------
-> > > +
-> > > +Required properties for IDM device node:
-> > > +- compatible: must be "brcm,iproc-idm"
-> > > +- reg: base address and length of the IDM register space
-> > > +- interrupt: IDM interrupt number
-> > > +- brcm,iproc-idm-bus: IDM bus string
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index b2e8fd8a8e59..bbd68520f5f1 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -3110,14 +3110,16 @@ do {								\
+ 	rcu_read_unlock();					\
+ } while (0)
+ 
+-__cold
++#ifdef CONFIG_BTRFS_ASSERT
++__cold __unlikely
+ static inline void assfail(const char *expr, const char *file, int line)
+ {
+-	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
+-		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
+-		BUG();
+-	}
++	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
++	BUG();
+ }
++#else
++static inline void assfail(const char *expr, const char *file, int line) {}
++#endif
+ 
+ #define ASSERT(expr)	\
+ 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
 
-What are possible values?
-
-> > > +
-> > > +Optional properties for IDM device node:
-> > > +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
-> > > +
-> > > +-------------------------------------------------------------------------------
-> > > +
-> > > +Required properties for IDM error logging device node:
-> > > +- compatible: must be "brcm,iproc-idm-elog";
-> > > +- reg: base address and length of reserved memory location where IDM error
-> > > +  events can be saved
-> > > +
-> > > +-------------------------------------------------------------------------------
-> > > +
-> > > +Example:
-> > > +
-> > > +idm {
-> > > +	idm-elog {
-> > > +		compatible = "brcm,iproc-idm-elog";
-> > > +		reg = <0x8f221000 0x1000>;
-> > > +	};
-> > > +
-> > > +	idm-mhb-paxc-axi {
-
-Needs a unit-address.
-
-> > > +		compatible = "brcm,iproc-idm";
-> > > +		reg = <0x60406900 0x200>;
-> > > +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
-
-Can't you just use the node name? Though if this is something that can 
-be a standard class of h/w (i.e. EDAC), then we'd want the node name to 
-be generic.
-
-> > > +		brcm,iproc-idm-elog = <&idm-elog>;
-> > > +	};
-> > > +};
-> > > 
-> > 
-> > 
