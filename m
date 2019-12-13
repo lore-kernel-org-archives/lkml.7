@@ -2,109 +2,131 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6EFC3496D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BEC34970
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2468E246B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269384;
-	bh=WlD17jKAQ9CMe2iR0cO+7SDqqvCCeKLDgUqLXoxpIlw=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=lnI1u7wGHxVIiaqteznBHN/FawLWUHcA+iu0J0+UefsaalUUvrAuGgahg6gFT6Bk4
-	 DOTuM5KFpK2yCnQbunBQo+/DmgGbP8YU3RkkL6aQ1rsK1wxgLQUtpn+KJ9QKUBeaCD
-	 SyDgQKTdDH7HRgG+97XaoIk8aRG913LEpJ5DdFDc=
+	by mail.kernel.org (Postfix) with ESMTP id D9101246EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGOHXm68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLML2u (ORCPT
+        id S1726772AbfLMLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:28:50 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33168 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbfLML2t (ORCPT
+        Fri, 13 Dec 2019 06:22:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48781 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725937AbfLMLWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:28:49 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ifj7k-0004JA-4j; Fri, 13 Dec 2019 12:28:44 +0100
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH] KVM: arm/arm64: vgic-its: Fix restoration of unmapped  collections
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 13 Dec 2019 06:22:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576236140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bxxAu2RAYAk9sdBPJuCvdYozDj3FKu5CoGp/NR/X1cA=;
+        b=iGOHXm68ASaVKV8vZlZVPwsM84E4Y2rbdlLtnHkt3LU752V/EfJjnMIoh6OOLB0IPApEM9
+        ZWSOlistFT5WxQQ6iTjqVMet4eTUxXWW3darlTWDllP1kcm3uwu88YazKfqucA/CKNeOMw
+        sDD5TcH997lrkpk3oe58H7xSS98a1TA=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-cYxRFOkaM9-7GvBSas-QWQ-1; Fri, 13 Dec 2019 06:22:19 -0500
+X-MC-Unique: cYxRFOkaM9-7GvBSas-QWQ-1
+Received: by mail-qk1-f200.google.com with SMTP id f22so1207506qka.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 03:22:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bxxAu2RAYAk9sdBPJuCvdYozDj3FKu5CoGp/NR/X1cA=;
+        b=VisswHR2b8D/rPUh2ie7Q/kyuf2K9NmefPA960lOK3Fu2R6XOo1l37QUX1xfKeDvOS
+         No9hemC72WsWtT8BomeMUlOtQRufc6rePSxkHU/P0OiiQlL1dk1xQluJnYIdhoLXijyZ
+         NZ5ULGMsssPjDd9SW73LGVimzweXD1NefVcEhuunyR8lCYP8y/r+u5+DEqqaQ6is62zc
+         V2UfYBPX/1Jascqs+G/X2R4fluItq9hR3L/rjETJt95UPtQWai4W33UsqBeFLZxZ7K3+
+         rj4KL7R20TeSmZV7RqAAmNLcqeHU4IT87x1IvGgw8ypPkaExKTA9EJb1sHryeuaO4Noz
+         4ywA==
+X-Gm-Message-State: APjAAAVjM9Wo/MJvxp+anDgrbSz6KSQJteiFOWhzngKr/Bi35vXdpPiz
+        qJ9Bs6Xht1OEL2kLoO8Rstc2NAF9JzIAp7GcsfF9zop8ckevuKlhHWvaiUd+3UFBuWlj3n7o9lW
+        y8kz30BKmCJFmD/Xyp0nbT3sGaSxv2ammYfGKdORZ
+X-Received: by 2002:a37:a086:: with SMTP id j128mr12498615qke.459.1576236138830;
+        Fri, 13 Dec 2019 03:22:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxAYPudOqMi80avGrAsnU5YfbLoBVwBc0pNQRaO2mn3aYj0+EkSoGgcWI4VsISAktipjG4JSgnszMgG5O/OhVs=
+X-Received: by 2002:a37:a086:: with SMTP id j128mr12498591qke.459.1576236138574;
+ Fri, 13 Dec 2019 03:22:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Dec 2019 11:28:43 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Eric Auger <eric.auger@redhat.com>, <eric.auger.pro@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <kvmarm@lists.cs.columbia.edu>
-In-Reply-To: <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
-References: <20191213094237.19627-1-eric.auger@redhat.com>
- <d36b75e7-bd83-e501-3bd4-76bf0489c5ce@huawei.com>
-Message-ID: <9e9e3ed65ddf40ab72528187089e0997@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191207210518.GA181006@dtor-ws> <nycvar.YFH.7.76.1912131027560.4603@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1912131027560.4603@cbobk.fhfr.pm>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 13 Dec 2019 12:22:07 +0100
+Message-ID: <CAO-hwJ+8gwm28DTx2Lw8Gj+eTbOa8kVoFbc0tpqFtyu8+WOA8w@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: hid-input: clear unmapped usages
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+Hi,
 
-On 2019-12-13 10:53, Zenghui Yu wrote:
-> Hi Eric,
+On Fri, Dec 13, 2019 at 10:28 AM Jiri Kosina <jikos@kernel.org> wrote:
 >
-> On 2019/12/13 17:42, Eric Auger wrote:
->> Saving/restoring an unmapped collection is a valid scenario. For
->> example this happens if a MAPTI command was sent, featuring an
->> unmapped collection. At the moment the CTE fails to be restored.
->> Only compare against the number of online vcpus if the rdist
->> base is set.
+> On Sat, 7 Dec 2019, Dmitry Torokhov wrote:
 >
-> Have you actually seen a problem and this patch fixed it? To be 
-> honest,
-> I'm surprised to find that we can map a LPI to an unmapped collection 
-> ;)
-> (and prevent it to be delivered to vcpu with an 
-> INT_UNMAPPED_INTERRUPT
-> error, until someone had actually mapped the collection).
-> After a quick glance of spec (MAPTI), just as you said, this is 
-> valid.
-
-Yes, this is one of the (many) odd bits in the architecture. And there 
-is
-a bizarre wording in the MAPC description when V=0:
-
-"Behavior is unpredictable if there are interrupts that are mapped to 
-the
-specified collection, with the restriction that further translation 
-requests
-from that device are ignored."
-
-It is really odd that:
-
-- it is unpredictable to unmap the collection with mapped interrupts,
-   but mapping interrupts to an unmapped collection is fine
-
-- the notion of "interrupts from that device" doesn't match any of the
-   MAPC parameters
-
-Do you hate the GIC already? ;-)
-
-> If Marc has no objection to this fix, please add
+> > We should not be leaving half-mapped usages with potentially invalid
+> > keycodes, as that may confuse hidinput_find_key() when the key is located
+> > by index, which may end up feeding way too large keycode into the VT
+> > keyboard handler and cause OOB write there:
+> >
+> > BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
+> > BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+> > BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+> > Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
+> > ...
+> >  kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+> >  kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+> >  input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
+> >  input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
+> >  input_pass_values drivers/input/input.c:949 [inline]
+> >  input_set_keycode+0x290/0x320 drivers/input/input.c:954
+> >  evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
+> >  evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+> >
+> > Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >
+> > v2: fixed up interaction with hid-multitouch according to Benjamin's
+> > feedback
+> >
+> > Please consider tagging for stable.
 >
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+> I'd like to push this for 5.5 (and tag for stable), but would prefer this
+> to have gone through the full battery of Benjamin's testing infrastructure
+> first.
+>
+> Benjamin, did you have chance to run Dmitry's patch through your
+> machinery?
 
-Thanks for that, I've applied it to the patch and will push out
-the update as soon as ra.kernel.org is reachable again.
+yep, this one was OK, so:
+Tested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Cheers,
+Benjamin
+
+>
+> Thanks,
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
+
