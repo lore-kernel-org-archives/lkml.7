@@ -2,264 +2,177 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A57C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D55C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE891214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091AC214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576281017;
+	bh=9OF3gvIhgB4PoeGk+9abecbqLsPMubebNDgjiS1F+Jo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qq2OQ2A38ooceu8dLlMNV50vkrhOM6B+BJyW5jsIQYuGXsg1iV14mI54uAqIgebv/
+	 HAebJJ/k8/pPB/miBa/LR+ejQTZPaPVriL4lByTx9+BSA+2hbmJwkNinDU3dBk/ED6
+	 uYbGlgtqmqSxk3knoJAux19TE5wMf4EErhfKLc+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfLMXsy (ORCPT
+        id S1726825AbfLMXuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:48:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:56595 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbfLMXsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:48:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 15:48:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
-   d="scan'208";a="388836448"
-Received: from spandruv-mobl.jf.intel.com ([10.255.89.247])
-  by orsmga005.jf.intel.com with ESMTP; 13 Dec 2019 15:48:50 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, corbet@lwn.net, lenb@kernel.org,
-        rui.zhang@intel.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 2/2] ACPI / fan: Display fan performance state information
-Date:   Fri, 13 Dec 2019 15:48:40 -0800
-Message-Id: <20191213234840.9791-3-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191213234840.9791-1-srinivas.pandruvada@linux.intel.com>
-References: <20191213234840.9791-1-srinivas.pandruvada@linux.intel.com>
+        Fri, 13 Dec 2019 18:50:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35392 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMXuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 18:50:15 -0500
+Received: by mail-ot1-f65.google.com with SMTP id o9so1120568ote.2;
+        Fri, 13 Dec 2019 15:50:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l8y7QpzQFo6LopgFPQ5NquvGTv5LeZYf4UuALbXDpoQ=;
+        b=R4UgmzSLZJ5vlfUw/XNSSK95LV5BqERGdme1wFccbsg7UxYubIrPRFEFmhSsQN3oVr
+         ET+pppv165CqGothU/rZNDJLpzjGSSWCg2MbGMI9M9Yw4LehkZ72EICnmGvkKnd8OxFM
+         NMoaUrxjceXVYjA6mscbgBC43Vs9n0uzTWClQTtSYoBJD6vWkVsQEe7n1rIrMjWstYV+
+         2I50Rjp0D5Mp9d0b7YtjdXFaovuHXf+SujsNzTVOAktLlQJv+4hx9wEJASPdbKh8pVhy
+         DVuJizIzXi+FYZ4WdfKNQoUm6eQNn7u2qc0M12KHOCollqddZ2CrYXrLePNSbhmy7LL7
+         z64w==
+X-Gm-Message-State: APjAAAXB21OAODVlrhQzxHYXEwpapBkvP4ixc+LxNDq0Z/f72u6HlwB0
+        25ljGD715n9AUbfzAPzI3Q==
+X-Google-Smtp-Source: APXvYqxtodM9bQIKZwdbEKbdE53q5NTExxX8dI91cxs2SHtzlLFLgHoUMHQBXFERpwqeV0o/UPjJ0w==
+X-Received: by 2002:a05:6830:1bd5:: with SMTP id v21mr18520364ota.154.1576281014805;
+        Fri, 13 Dec 2019 15:50:14 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f3sm3877604oto.57.2019.12.13.15.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 15:50:14 -0800 (PST)
+Date:   Fri, 13 Dec 2019 17:50:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
+ device
+Message-ID: <20191213235013.GA9997@bogus>
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+ <20191202233127.31160-2-ray.jui@broadcom.com>
+ <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
+ <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When _FPS object indicates support of variable speed fan, thermal cooling
-devices for fan shows max performance state count using attribute
-"max_state" greater than or equal to 1.
+On Fri, Dec 06, 2019 at 05:09:34PM -0800, Ray Jui wrote:
+> 
+> 
+> On 12/5/19 4:09 PM, Florian Fainelli wrote:
+> > On 12/2/19 3:31 PM, Ray Jui wrote:
+> > > Add binding document for iProc based IDM devices.
+> > > 
+> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > 
+> > Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
+> > compatible binding since it is a new one?
+> > 
+> 
+> Sorry I am not aware of this YAML requirement until now.
+> 
+> Is this a new requirement that new DT binding document should be made with
+> YAML format?
 
-But the thermal cooling device doesn't display properties of each
-performance state. This is not enough for smart fan control user space
-software, which also considers speed, power and noise level.
+The format has been in place in the kernel for a year now and we've 
+moved slowly towards it being required. If you're paying that little 
+attention to upstream, then yes it's definitely required so someone else 
+doesn't get stuck converting your binding later.
 
-This change presents fan performance states attributes under acpi
-device for the fan. This will be under:
-/sys/bus/acpi/devices/devices/INT3404:00
-or
-/sys/bus/platform/devices/PNP0C0B:00.
+BTW, I think all but RPi chips still need their SoC/board bindings 
+converted. One of the few not yet converted...
 
-For example:
-$ ls /sys/bus/acpi/devices/INT3404\:00
-description  path           state0   state11  state4  state7  status
-hid          physical_node  state1   state2   state5  state8  subsystem
-modalias     power          state10  state3   state6  state9  uevent
-uid          wakeup
+> Thanks,
+> 
+> Ray
+> 
+> 
+> > > ---
+> > >   .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
+> > >   1 file changed, 44 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+> > > new file mode 100644
+> > > index 000000000000..388c6b036d7e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
+> > > @@ -0,0 +1,44 @@
+> > > +Broadcom iProc Interconnect Device Management (IDM) device
+> > > +
+> > > +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+> > > +bus transactions. Most importantly, it can be configured to detect bus
+> > > +transaction timeout. In such case, critical information such as transaction
+> > > +address that caused the error, bus master ID of the transaction that caused
+> > > +the error, and etc., are made available from the IDM device.
+> > > +
+> > > +-------------------------------------------------------------------------------
+> > > +
+> > > +Required properties for IDM device node:
+> > > +- compatible: must be "brcm,iproc-idm"
+> > > +- reg: base address and length of the IDM register space
+> > > +- interrupt: IDM interrupt number
+> > > +- brcm,iproc-idm-bus: IDM bus string
 
-Here each state* attribute is representing a performance state.
+What are possible values?
 
-Contents of state* attribute are formatted using:
-control_percent:trip_point:speed_rpm:noise_level_mdb:power_mw
+> > > +
+> > > +Optional properties for IDM device node:
+> > > +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
+> > > +
+> > > +-------------------------------------------------------------------------------
+> > > +
+> > > +Required properties for IDM error logging device node:
+> > > +- compatible: must be "brcm,iproc-idm-elog";
+> > > +- reg: base address and length of reserved memory location where IDM error
+> > > +  events can be saved
+> > > +
+> > > +-------------------------------------------------------------------------------
+> > > +
+> > > +Example:
+> > > +
+> > > +idm {
+> > > +	idm-elog {
+> > > +		compatible = "brcm,iproc-idm-elog";
+> > > +		reg = <0x8f221000 0x1000>;
+> > > +	};
+> > > +
+> > > +	idm-mhb-paxc-axi {
 
-$ cat /sys/bus/acpi/devices/INT3404\:00/state10
-95:0:11600:47500:4500
+Needs a unit-address.
 
-For more information refer to:
-Documentation/acpi/fan_performance_states.txt
+> > > +		compatible = "brcm,iproc-idm";
+> > > +		reg = <0x60406900 0x200>;
+> > > +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
+> > > +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
 
-While here, return correct error from acpi_fan_probe() when
-acpi_fan_get_fps() or acpi_fan_get_fif() fails.
+Can't you just use the node name? Though if this is something that can 
+be a standard class of h/w (i.e. EDAC), then we'd want the node name to 
+be generic.
 
-Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/acpi/fan.c | 96 ++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 88 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
-index 816b0803f7fb..86d2417953b5 100644
---- a/drivers/acpi/fan.c
-+++ b/drivers/acpi/fan.c
-@@ -44,12 +44,16 @@ static const struct dev_pm_ops acpi_fan_pm = {
- #define FAN_PM_OPS_PTR NULL
- #endif
- 
-+#define ACPI_FPS_NAME_LEN	20
-+
- struct acpi_fan_fps {
- 	u64 control;
- 	u64 trip_point;
- 	u64 speed;
- 	u64 noise_level;
- 	u64 power;
-+	char name[ACPI_FPS_NAME_LEN];
-+	struct device_attribute dev_attr;
- };
- 
- struct acpi_fan_fif {
-@@ -265,6 +269,39 @@ static int acpi_fan_speed_cmp(const void *a, const void *b)
- 	return fps1->speed - fps2->speed;
- }
- 
-+static ssize_t show_state(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct acpi_fan_fps *fps = container_of(attr, struct acpi_fan_fps, dev_attr);
-+	int count;
-+
-+	if (fps->control == 0xFFFFFFFF || fps->control > 100)
-+		count = snprintf(buf, PAGE_SIZE, "not-defined:");
-+	else
-+		count = snprintf(buf, PAGE_SIZE, "%lld:", fps->control);
-+
-+	if (fps->trip_point == 0xFFFFFFFF || fps->trip_point > 9)
-+		count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-+	else
-+		count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->trip_point);
-+
-+	if (fps->speed == 0xFFFFFFFF)
-+		count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-+	else
-+		count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->speed);
-+
-+	if (fps->noise_level == 0xFFFFFFFF)
-+		count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-+	else
-+		count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->noise_level * 100);
-+
-+	if (fps->power == 0xFFFFFFFF)
-+		count += snprintf(&buf[count], PAGE_SIZE, "not-defined\n");
-+	else
-+		count += snprintf(&buf[count], PAGE_SIZE, "%lld\n", fps->power);
-+
-+	return count;
-+}
-+
- static int acpi_fan_get_fps(struct acpi_device *device)
- {
- 	struct acpi_fan *fan = acpi_driver_data(device);
-@@ -295,12 +332,13 @@ static int acpi_fan_get_fps(struct acpi_device *device)
- 	}
- 	for (i = 0; i < fan->fps_count; i++) {
- 		struct acpi_buffer format = { sizeof("NNNNN"), "NNNNN" };
--		struct acpi_buffer fps = { sizeof(fan->fps[i]), &fan->fps[i] };
-+		struct acpi_buffer fps = { offsetof(struct acpi_fan_fps, name),
-+						&fan->fps[i] };
- 		status = acpi_extract_package(&obj->package.elements[i + 1],
- 					      &format, &fps);
- 		if (ACPI_FAILURE(status)) {
- 			dev_err(&device->dev, "Invalid _FPS element\n");
--			break;
-+			goto err;
- 		}
- 	}
- 
-@@ -308,6 +346,24 @@ static int acpi_fan_get_fps(struct acpi_device *device)
- 	sort(fan->fps, fan->fps_count, sizeof(*fan->fps),
- 	     acpi_fan_speed_cmp, NULL);
- 
-+	for (i = 0; i < fan->fps_count; ++i) {
-+		struct acpi_fan_fps *fps = &fan->fps[i];
-+
-+		snprintf(fps->name, ACPI_FPS_NAME_LEN, "state%d", i);
-+		fps->dev_attr.show = show_state;
-+		fps->dev_attr.store = NULL;
-+		fps->dev_attr.attr.name = fps->name;
-+		fps->dev_attr.attr.mode = 0444;
-+		status = sysfs_create_file(&device->dev.kobj, &fps->dev_attr.attr);
-+		if (status) {
-+			int j;
-+
-+			for (j = 0; j < i; ++j)
-+				sysfs_remove_file(&device->dev.kobj, &fan->fps[j].dev_attr.attr);
-+			break;
-+		}
-+	}
-+
- err:
- 	kfree(obj);
- 	return status;
-@@ -330,14 +386,20 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, fan);
- 
- 	if (acpi_fan_is_acpi4(device)) {
--		if (acpi_fan_get_fif(device) || acpi_fan_get_fps(device))
--			goto end;
-+		result = acpi_fan_get_fif(device);
-+		if (result)
-+			return result;
-+
-+		result = acpi_fan_get_fps(device);
-+		if (result)
-+			return result;
-+
- 		fan->acpi4 = true;
- 	} else {
- 		result = acpi_device_update_power(device, NULL);
- 		if (result) {
- 			dev_err(&device->dev, "Failed to set initial power state\n");
--			goto end;
-+			goto err_end;
- 		}
- 	}
- 
-@@ -350,7 +412,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 						&fan_cooling_ops);
- 	if (IS_ERR(cdev)) {
- 		result = PTR_ERR(cdev);
--		goto end;
-+		goto err_end;
- 	}
- 
- 	dev_dbg(&pdev->dev, "registered as cooling_device%d\n", cdev->id);
-@@ -365,10 +427,21 @@ static int acpi_fan_probe(struct platform_device *pdev)
- 	result = sysfs_create_link(&cdev->device.kobj,
- 				   &pdev->dev.kobj,
- 				   "device");
--	if (result)
-+	if (result) {
- 		dev_err(&pdev->dev, "Failed to create sysfs link 'device'\n");
-+		goto err_end;
-+	}
-+
-+	return 0;
-+
-+err_end:
-+	if (fan->acpi4) {
-+		int i;
-+
-+		for (i = 0; i < fan->fps_count; ++i)
-+			sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
-+	}
- 
--end:
- 	return result;
- }
- 
-@@ -376,6 +449,13 @@ static int acpi_fan_remove(struct platform_device *pdev)
- {
- 	struct acpi_fan *fan = platform_get_drvdata(pdev);
- 
-+	if (fan->acpi4) {
-+		struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+		int i;
-+
-+		for (i = 0; i < fan->fps_count; ++i)
-+			sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
-+	}
- 	sysfs_remove_link(&pdev->dev.kobj, "thermal_cooling");
- 	sysfs_remove_link(&fan->cdev->device.kobj, "device");
- 	thermal_cooling_device_unregister(fan->cdev);
--- 
-2.17.2
-
+> > > +		brcm,iproc-idm-elog = <&idm-elog>;
+> > > +	};
+> > > +};
+> > > 
+> > 
+> > 
