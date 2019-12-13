@@ -2,106 +2,223 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FA1C5ED69
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C324C751CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B9E2473D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB20524796
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfLMPyR (ORCPT
+        id S1728253AbfLMQEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:54:17 -0500
-Received: from mga04.intel.com ([192.55.52.120]:34227 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfLMPyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:54:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 07:54:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="246170744"
-Received: from dbmoens-mobl1.amr.corp.intel.com ([10.255.228.102])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Dec 2019 07:54:15 -0800
-Subject: Re: [alsa-devel] [PATCH v4 06/15] soundwire: add support for
- sdw_slave_type
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-7-pierre-louis.bossart@linux.intel.com>
- <20191213072127.GD1750354@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <41d1fcbc-47b7-bbee-5b55-759cbb5f5a7b@linux.intel.com>
-Date:   Fri, 13 Dec 2019 09:05:37 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Fri, 13 Dec 2019 11:04:48 -0500
+Received: from mailoutvs54.siol.net ([185.57.226.245]:56576 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728215AbfLMQEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:04:46 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 63D6052454D;
+        Fri, 13 Dec 2019 17:04:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Y-bJ71l0u6-E; Fri, 13 Dec 2019 17:04:42 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id CE91452454E;
+        Fri, 13 Dec 2019 17:04:42 +0100 (CET)
+Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 829F6524558;
+        Fri, 13 Dec 2019 17:04:40 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mchehab@kernel.org, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com, hverkuil@xs4all.nl
+Cc:     gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling matrix
+Date:   Fri, 13 Dec 2019 17:04:26 +0100
+Message-Id: <20191213160428.54303-3-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191213160428.54303-1-jernej.skrabec@siol.net>
+References: <20191213160428.54303-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <20191213072127.GD1750354@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 1:21 AM, Greg KH wrote:
-> On Thu, Dec 12, 2019 at 11:04:00PM -0600, Pierre-Louis Bossart wrote:
->> Currently the bus does not have any explicit support for master
->> devices.
->>
->> First add explicit support for sdw_slave_type and error checks if this type
->> is not set.
->>
->> In follow-up patches we can add support for the sdw_md_type (md==Master
->> Device), following the Grey Bus example.
-> 
-> How are you using greybus as an example of "master devices"?  All you
-> are doing here is setting the type of the existing devices, right?
+HEVC frames may use scaling list feature. Add support for it.
 
-I took your advice to look at GreyBus and used the 'gb host device' as 
-the model to implement the 'sdw master' add/startup/remove interfaces we 
-needed.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
+ .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
+ 5 files changed, 81 insertions(+), 1 deletion(-)
 
-so yes in this patch we just add a type for the slave, the interesting 
-part is in the next patches.
->>   static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
->>   {
->> -	struct sdw_slave *slave = to_sdw_slave_device(dev);
->> +	struct sdw_slave *slave;
->>   	char modalias[32];
->>   
->> -	sdw_slave_modalias(slave, modalias, sizeof(modalias));
->> +	if (is_sdw_slave(dev)) {
->> +		slave = to_sdw_slave_device(dev);
->> +
->> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
->>   
->> -	if (add_uevent_var(env, "MODALIAS=%s", modalias))
->> -		return -ENOMEM;
->> +		if (add_uevent_var(env, "MODALIAS=%s", modalias))
->> +			return -ENOMEM;
->> +	} else {
->> +		/* only Slave device type supported */
->> +		dev_warn(dev, "uevent for unknown Soundwire type\n");
->> +		return -EINVAL;
-> 
-> Right now, this can not happen, right?
-> 
-> Not a problem, just trying to understand the sequence of patches here...
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.c
+index c6ddd46eff82..bf68bc6b20c8 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[]=
+ =3D {
+ 		.codec		=3D CEDRUS_CODEC_H265,
+ 		.required	=3D true,
+ 	},
++	{
++		.cfg =3D {
++			.id	=3D V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
++		},
++		.codec		=3D CEDRUS_CODEC_H265,
++		.required	=3D true,
++	},
+ 	{
+ 		.cfg =3D {
+ 			.id	=3D V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.h
+index 96765555ab8a..d945f4f0ff2d 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -73,6 +73,7 @@ struct cedrus_h265_run {
+ 	const struct v4l2_ctrl_hevc_sps			*sps;
+ 	const struct v4l2_ctrl_hevc_pps			*pps;
+ 	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
++	const struct v4l2_ctrl_hevc_scaling_matrix	*scaling_matrix;
+ };
+=20
+ struct cedrus_run {
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/st=
+aging/media/sunxi/cedrus/cedrus_dec.c
+index 4a2fc33a1d79..327ed6c264dc 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+@@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
+ 			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
+ 		run.h265.slice_params =3D cedrus_find_control_data(ctx,
+ 			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
++		run.h265.scaling_matrix =3D cedrus_find_control_data(ctx,
++			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
+ 		break;
+=20
+ 	default:
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h265.c
+index 6945dc74e1d7..888bfd5ca224 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+@@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct ced=
+rus_dev *dev,
+ 	}
+ }
+=20
++static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
++					   struct cedrus_run *run)
++{
++	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
++	struct cedrus_dev *dev =3D ctx->dev;
++	u32 i, j, k, val;
++
++	scaling =3D run->h265.scaling_matrix;
++
++	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
++		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
++		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
++		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
++		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
++
++	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
++		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
++		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
++		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
++		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
++
++	cedrus_h265_sram_write_offset(dev, VE_DEC_H265_SRAM_OFFSET_SCALING_LIST=
+S);
++
++	for (i =3D 0; i < 6; i++)
++		for (j =3D 0; j < 8; j++)
++			for (k =3D 0; k < 8; k +=3D 4) {
++				val =3D ((u32)scaling->scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
++				      ((u32)scaling->scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
++				      ((u32)scaling->scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
++				      scaling->scaling_list_8x8[i][j + k * 8];
++				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
++			}
++
++	for (i =3D 0; i < 2; i++)
++		for (j =3D 0; j < 8; j++)
++			for (k =3D 0; k < 8; k +=3D 4) {
++				val =3D ((u32)scaling->scaling_list_32x32[i][j + (k + 3) * 8] << 24)=
+ |
++				      ((u32)scaling->scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
++				      ((u32)scaling->scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
++				      scaling->scaling_list_32x32[i][j + k * 8];
++				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
++			}
++
++	for (i =3D 0; i < 6; i++)
++		for (j =3D 0; j < 8; j++)
++			for (k =3D 0; k < 8; k +=3D 4) {
++				val =3D ((u32)scaling->scaling_list_16x16[i][j + (k + 3) * 8] << 24)=
+ |
++				      ((u32)scaling->scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
++				      ((u32)scaling->scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
++				      scaling->scaling_list_16x16[i][j + k * 8];
++				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
++			}
++
++	for (i =3D 0; i < 6; i++)
++		for (j =3D 0; j < 4; j++) {
++			val =3D ((u32)scaling->scaling_list_4x4[i][j + 12] << 24) |
++			      ((u32)scaling->scaling_list_4x4[i][j + 8] << 16) |
++			      ((u32)scaling->scaling_list_4x4[i][j + 4] << 8) |
++			      scaling->scaling_list_4x4[i][j];
++			cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
++		}
++}
++
+ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+ 			      struct cedrus_run *run)
+ {
+@@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx=
+,
+=20
+ 	/* Scaling list. */
+=20
+-	reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
++	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
++		cedrus_h265_write_scaling_list(ctx, run);
++		reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
++	} else {
++		reg =3D VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
++	}
+ 	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
+=20
+ 	/* Neightbor information address. */
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_regs.h
+index 7beb03d3bb39..0d9449fe2b28 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+@@ -492,6 +492,8 @@
+ #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 0x64)
+ #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 0x68)
+ #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 0x6c)
++#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 + 0x78)
++#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 + 0x7c)
+=20
+ #define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 0x80)
+=20
+--=20
+2.24.0
 
-yes this cannot happen at this point, it's more of a paranoid test. In 
-theory a SoundWire solution could enable a 'monitor' device as defined 
-in the standard.
