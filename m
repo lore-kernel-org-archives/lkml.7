@@ -2,67 +2,118 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3EAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2CFC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB9722527
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E75822527
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 07:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQx+FVJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLMHKD (ORCPT
+        id S1726016AbfLMHPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:10:03 -0500
-Received: from mga01.intel.com ([192.55.52.88]:8694 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfLMHKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:10:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 23:10:02 -0800
-X-IronPort-AV: E=Sophos;i="5.69,308,1571727600"; 
-   d="scan'208";a="208368732"
-Received: from peterhae-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.100])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 23:09:58 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Vince Weaver <vincent.weaver@maine.edu>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [perf] perf_fuzzer triggers NULL pointer derefernce in i915 driver
-In-Reply-To: <alpine.DEB.2.21.1912121032420.15237@macbook-air>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <alpine.DEB.2.21.1912121032420.15237@macbook-air>
-Date:   Fri, 13 Dec 2019 09:09:59 +0200
-Message-ID: <87tv641z20.fsf@intel.com>
+        Fri, 13 Dec 2019 02:15:38 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36643 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMHPh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:15:37 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so820639pjc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 23:15:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mHQ0q3g+tRg8eVn0qW80HuKuE2LjVhRlKO13OPMy4+Y=;
+        b=aQx+FVJ730/G66jiW0rfYPuqoQg7TX1LUPRcRHlfbgyXEgO7uKvAIHOnQCbmkWGnOP
+         nGHoPie3hCjTBUatu8ebhpHQO9BqdUNAV0xvFsjKJ8RrEl1d7wXt/jNunRKwfLDG0+5r
+         oq/gnJ+LH79x3kRyCsnpJsDsNAeLHkmCfHNvEPRD4GELzribJintbTTevtB8T9MrEHS7
+         ooCe/agLWX2umyWLGGfecYB5OfGV9q7gN9AZT+6f2TJOtTp++c0de0VmbMT6tUqm36cv
+         eP1+qq0p1ukgiHi96LKj67mNns0Y2wuEhdGSlSIvXcUDf1alpavYr44mReDvg92YFtcM
+         RFyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mHQ0q3g+tRg8eVn0qW80HuKuE2LjVhRlKO13OPMy4+Y=;
+        b=LTAI+zRds1CYBELwZVGU2s8D/yAafDxoHRsO59FPB5ucge5is6m54CfatLt4T9xVwU
+         mSLZwRvoPGOJ+lovU4hxf+KJh9STH/5jXBtYBxpndt7FE/VPsn6QB1EkidNdo/0nEpOu
+         nD8G+jyfIkH/BU4BKgIQ17VzeKZ56lL4JB/1ZKtxjwKMiVthlG4pPK2gWSge92bkxTL+
+         wzyG9PoqPLtk+t2HZ3w6u3o3xMytuBMyiAJ277ej/MYwQYNiZ2vpnsam6h1O23DCu9lH
+         xS17JBAvDXikjqP4mKsol06cpYmmPnhOKIkkF65A8ha14sDMDAaw7JdCBsiyRRhVlJKM
+         8Dcw==
+X-Gm-Message-State: APjAAAUyDvLitS/Gas8R78NM6UjoQT5YW1ehINwVW/XJ/Ck00ZQ8EU3/
+        0DYpvJueggZ2v2XFYn6O5oPQaQ==
+X-Google-Smtp-Source: APXvYqzq74VMCuqzGB3Kj7gGVNIA4Ijzqq7PocCemaMG3g6FBuTGD0W9nmO37l+ydi3SA9McM2UACQ==
+X-Received: by 2002:a17:90a:8c02:: with SMTP id a2mr14893150pjo.79.1576221337047;
+        Thu, 12 Dec 2019 23:15:37 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o12sm10404288pfg.152.2019.12.12.23.15.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 23:15:36 -0800 (PST)
+Date:   Thu, 12 Dec 2019 23:15:33 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-watchdog@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] watchdog: qcom: Use platform_get_irq_optional() for bark
+ irq
+Message-ID: <20191213071533.GG415177@yoga>
+References: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213064934.4112-1-saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, Vince Weaver <vincent.weaver@maine.edu> wrote:
-> with current git the perf_fuzzer was able to trigger this NULL pointer
-> de-reference in the i915 driver.
+On Thu 12 Dec 22:49 PST 2019, Sai Prakash Ranjan wrote:
 
-Please file a bug.
+> platform_get_irq() prints an error message when the interrupt
+> is not available. So on platforms where bark interrupt is
+> not specified, following error message is observed on SDM845.
+> 
+> [    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
+> 
+> This is also seen on SC7180, SM8150 SoCs as well.
+> Fix this by using platform_get_irq_optional() instead.
+> 
+> Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-https://gitlab.freedesktop.org/drm/intel/wikis/How-to-file-i915-bugs
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-BR,
-Jani.
-
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+> ---
+>  drivers/watchdog/qcom-wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index a494543d3ae1..eb47fe5ed280 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* check if there is pretimeout support */
+> -	irq = platform_get_irq(pdev, 0);
+> +	irq = platform_get_irq_optional(pdev, 0);
+>  	if (irq > 0) {
+>  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+>  				       IRQF_TRIGGER_RISING,
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
