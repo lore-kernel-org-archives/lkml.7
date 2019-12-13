@@ -2,119 +2,147 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4139DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2B9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1406424658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1E324658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 08:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGZm49TS"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VzLXSu8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLMIXu (ORCPT
+        id S1726592AbfLMIYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:23:50 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35612 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfLMIXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 03:23:49 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so5665100wro.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 00:23:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=82UDForXBclaXTmeibYTDaW5JlhOC14SnMnAwguOTpo=;
-        b=MGZm49TSm6YR55Z4M/q8t/y0AMytdlby56dY6eoGVWh2vU00Al/RppWCcPhlnSMv7i
-         5jNUBrje+r0IqzOl8/kqfJWqDsRbgYZSyA9aMJOAed5HTnCxj4BSAVpRgKrQE/yIyoPB
-         Z0Fgf9puWv9aDusjm2k6ItffK/wr16PErOd19tZxtyx1Dhf1SJc63f8gVxfTaKE1aCUC
-         Anqkqg8Vj09BOmJ3LjFfuH4q7pmtIEtnBcAS9bLN8OfS2dkvSbSBBYKi1qNLC9SQQM8N
-         l+jf1tvRrTgeATSisYSSfEYrY/YwZgcSeGJXAHS76gnwB7R3qHWAllVe9KWCBArLyQ7L
-         NDvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=82UDForXBclaXTmeibYTDaW5JlhOC14SnMnAwguOTpo=;
-        b=imOWyQxcqq49ECPvIQ4DhM98Wxw6BAIZZ5CN0M4BijOVhz7mOea5AHFjoOqq4zkerF
-         BWTEKytZz6bgT8u1dXheSmtq2mOl4orRCnzolAqpYNKGCcNJnAk+eVRExQWRxqxxRXig
-         WA8wqZTARE9iTYok6fZji716LvF4zfLqVhLaY5/KW+azLDIZydIlZFdw32ulGB3JZO9Z
-         8/TrJKn/9f4j8WBuMcmdZ/krgdO1XDYjzNet4ePePk+Rr2bqbTLDKs4RDQQ9/n5sap5b
-         zaURXpakxVP3vvjOAMecfNZo4eDO9dt7wImLEfao0BXcvIZsQDQv8kAEbvwDW5ZWWUoM
-         cbVg==
-X-Gm-Message-State: APjAAAWf8du+57wYHu49i35SofAiJ3steKH1VGmgbQZ4it1r4uN6TpVH
-        1g2TBpjWdxyxZUICAIsRNTMYcQ==
-X-Google-Smtp-Source: APXvYqxuukvqRUXzxZ0gSTrMqxRuIlppYpygmVYLR71C/aCAJ673bnYC+GRd2ZcLF20qehIM64I1EQ==
-X-Received: by 2002:a5d:52c4:: with SMTP id r4mr10583908wrv.368.1576225426370;
-        Fri, 13 Dec 2019 00:23:46 -0800 (PST)
-Received: from dell ([95.149.164.71])
-        by smtp.gmail.com with ESMTPSA id x18sm9172810wrr.75.2019.12.13.00.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 00:23:45 -0800 (PST)
-Date:   Fri, 13 Dec 2019 08:23:36 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Orson Zhai <orson.zhai@spreadtrum.com>
-Cc:     Rob Herring <robh@kernel.org>, Orson Zhai <orson.zhai@unisoc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        baolin.wang@unisoc.com, kevin.tang@unisoc.com,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        liangcai.fan@unisoc.com, orsonzhai@gmail.com
-Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon
- reference
-Message-ID: <20191213082336.GD3468@dell>
-References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
- <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
- <20191213024935.GD9271@lenovo>
+        Fri, 13 Dec 2019 03:24:53 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57091 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfLMIYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 03:24:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 00:24:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="239226103"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Dec 2019 00:24:51 -0800
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 13 Dec 2019 00:24:51 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Fri, 13 Dec 2019 00:24:51 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OmAn/6/x5VPXqoUHfnFpT9xcruHWT1/RuD8atKtYK0mUIUGvOUwFap1QgO1osW+PNF/MaaQOMPmOc30g4d//PygbutwXt1EwPkgZgWchm/LUOq+AVLE6x0t6ENgmb4q0fSYwtuOfsRj013KNQVCtku+dstMvOQzYsjRL1PbvGhlck6ghcUn2tGlqKWqbPeXGQz7/wtFurfyU5MO3CuOqdRfP6pglQfThQ15JdBXNk4MMiXKQUwlNuH6yx4htn/2OrI12PaYuKGR+getJld2BCEEUcRt2CZAVCBz8AwfKpL04pLOwlO3Rv9S+V0QdFa7QUEf1eHCsKeB8gTlXMGbH7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gEIhJFh1YQwaWlCinWTM95lIrC6elA0l2H46jhhMOFE=;
+ b=ma+pOW0zPuPPoojYE29fdJ6mliMJ46mo85oGLw26EVZ2CykKWyzJZlZ7tVSB/tVTFD0heBlC4tNyvpcT8Bff2yoWJA0WyqG3N3gS5watjjwiX9/UkC/jPy+09mXO58ZKAKgNMu0rgOTvXLG4ld7ecPDS2jSChY0t2ZVa7h8VYvHk101pXe+eEI3pmEq6r4J6MqihtjDOwtbw2wowqMEwsOsz4OdDpc0/0r0nm29A+oQ1CnpoD8aIBFbOjtXUS7J5ES7/Iy5aSfw1NbUCnUpHdcRTLS8kHADB9cJJZuQIxUDBLjpFl+eOO4+K2A5Yuyc7qqjfJNyhL4kP4ejhQ4VQtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gEIhJFh1YQwaWlCinWTM95lIrC6elA0l2H46jhhMOFE=;
+ b=VzLXSu8VrJHfl7b+73HlN5cPs2dXzFnL2x7B7IS03/OE/x8g6pwLMWuTuvDco0dL3V8TD8eTTrqgu36Lz9p/IAVQdQpgozSCFVYF2S6/p9C242LOuHUejkCzAsi/fVtaKWyGSUqoLcOwpuEGop6cccldD7EPhp8nZ2PCntiQZ0M=
+Received: from MN2PR11MB4509.namprd11.prod.outlook.com (52.135.39.90) by
+ MN2PR11MB4143.namprd11.prod.outlook.com (20.179.150.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.14; Fri, 13 Dec 2019 08:24:50 +0000
+Received: from MN2PR11MB4509.namprd11.prod.outlook.com
+ ([fe80::bd81:f020:90e3:a12d]) by MN2PR11MB4509.namprd11.prod.outlook.com
+ ([fe80::bd81:f020:90e3:a12d%7]) with mapi id 15.20.2538.017; Fri, 13 Dec 2019
+ 08:24:49 +0000
+From:   "Tan, Ley Foon" <ley.foon.tan@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "'lftan.linux@gmail.com'" <lftan.linux@gmail.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [GIT PULL] arch/nios2 fix for v5.5-rc2
+Thread-Topic: [GIT PULL] arch/nios2 fix for v5.5-rc2
+Thread-Index: AdWxjlsJIo35b10gQX6XFgISDbGgDQ==
+Date:   Fri, 13 Dec 2019 08:24:49 +0000
+Message-ID: <MN2PR11MB4509EB06FE5B942083D9E097CC540@MN2PR11MB4509.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2NiMGExMmYtY2IwYi00ZGI2LWEwNGItNWU2MGE1ODk1YmZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNlVBZm00bWtWU2FNYWZhWm5zMWhTYUlGVzJzVGYxWkVDQzZuM0F2aTNycFBhN3BHVlBkc25sTkVYeWFhc0ZCSiJ9
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ley.foon.tan@intel.com; 
+x-originating-ip: [192.198.147.221]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cab0a825-69c9-4b7d-6ff4-08d77fa5ebde
+x-ms-traffictypediagnostic: MN2PR11MB4143:
+x-microsoft-antispam-prvs: <MN2PR11MB41433BEAFC84151958FA2450CC540@MN2PR11MB4143.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0250B840C1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(39860400002)(366004)(189003)(199004)(81156014)(81166006)(66556008)(66476007)(2906002)(76116006)(52536014)(4001150100001)(186003)(6916009)(64756008)(33656002)(8936002)(8676002)(71200400001)(55016002)(316002)(66946007)(54906003)(66446008)(6506007)(5660300002)(4744005)(86362001)(7696005)(9686003)(4326008)(26005)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR11MB4143;H:MN2PR11MB4509.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CKIjVhOs5kO5pK+eo/ZrDc8mkEgAJ3wJSsLrfd+PExb8uLC+Qz2SIj5JC1OOqU+NliRVhqxh3GWxAlW1Vu5nPby6la2Tofwaa6zsYWDyKq1FGU+KBfy0BJY1Fdfide2YwrG+w1mzs8T3TrKH9hotwenw/VNsNrEwdsk+qUnpzQCxezzY7N0ox1Y/eCHBb2rMTPCnGUJi/hT2v3kTDi6sA2jLrQJ7icVJpEk9CQyrN8/SWyUZtOjY6wXuUijBNyWF6ZDaUQErrL6aZECvJTn3DxYZk6j4hSfz2EUX8NNK91bj4e70FZl+1dePobVr3+mIr9BBRVvA2BnK2xT/qOFOwUbvQPyhRhwybJh+T5yy7XWrSmJ+PqagMFwrfqc3dHoQSz2ph6Msnwi6IjO+mlL4Q3ssJg5prp3GMPdWr1kWvyZkESDbwl7Gu0GtgOiT/qtu
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191213024935.GD9271@lenovo>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cab0a825-69c9-4b7d-6ff4-08d77fa5ebde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2019 08:24:49.8560
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xr3LfWrSy2F01Ts+1dkAPwxvNiUKdj8ZfF1S+VsQ9ekJ8dz0NYbILGDbDNiKGsikU4GudrJEGsVTC6U9L+vzJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4143
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019, Orson Zhai wrote:
 
-> Hi Lee and Rob,
-> 
-> On Wed, Dec 11, 2019 at 02:55:39PM +0100, Arnd Bergmann wrote:
-> > On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wrote:
-> > >
-> > > There are a lot of similar global registers being used across multiple SoCs
-> > > from Unisoc. But most of these registers are assigned with different offset
-> > > for different SoCs. It is hard to handle all of them in an all-in-one
-> > > kernel image.
-> > >
-> > > Add a helper function to get regmap with arguments where we could put some
-> > > extra information such as the offset value.
-> > >
-> > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> > > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
-> >
-> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Does this patch look good to be applied?
-> 
-> Or if any comments please feel free to send to me.
+Hi Linus
 
-If it looks good to Arnd, it looks good to me.
+Please pull the arch/nios2 fix for v5.5-rc2.
 
-I have quite a number of reviews to get through first though, please
-bear with me and resist the urge to nag.
+Thanks.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards
+Ley Foon
+
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a=
+:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git tags/nios2-=
+v5.5-rc2
+
+for you to fetch changes up to e32ea127d81c12882f39c2783d78634597ff21a2:
+
+  nios2: Fix ioremap (2019-12-12 16:34:33 +0800)
+
+----------------------------------------------------------------
+nios2 update for v5.2-rc2
+
+nios2: Fix ioremap
+
+----------------------------------------------------------------
+Guenter Roeck (1):
+      nios2: Fix ioremap
+
+ arch/nios2/mm/ioremap.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
