@@ -7,107 +7,186 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B11C32763
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7EDC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DB42474C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFB92470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfLMOLD (ORCPT
+        id S1727787AbfLMOLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:11:03 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:45377 "EHLO
+        Fri, 13 Dec 2019 09:11:31 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:57525 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfLMOLC (ORCPT
+        with ESMTP id S1727559AbfLMOLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:11:02 -0500
+        Fri, 13 Dec 2019 09:11:03 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MAwPZ-1iYuxC2l69-00BMTf; Fri, 13 Dec 2019 15:10:55 +0100
+ 1MFbeI-1iVKSE1XmY-00H7do; Fri, 13 Dec 2019 15:10:56 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 02/12] nfsd: print 64-bit timestamps in client_info_show
-Date:   Fri, 13 Dec 2019 15:10:36 +0100
-Message-Id: <20191213141046.1770441-3-arnd@arndb.de>
+Subject: [PATCH v2 05/12] nfsd: make 'boot_time' 64-bit wide
+Date:   Fri, 13 Dec 2019 15:10:39 +0100
+Message-Id: <20191213141046.1770441-6-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
 References: <20191213141046.1770441-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:9SKRS2jmAK5+hO6gAt+vF42FOBN1KpKLDxwzePH1lowj6foByry
- CIqvaRNhyDSGJgY3FraE0vEHhTpHpKrfa5lHsX29Shlb19GnvHhdffNyJS9o65dK9xFXSJr
- VKgO8AZg+Kqw+0tZkdVajeAJdnfFut49Q4DZ37HCEbXLwKg+6rqPXt1x3sWo/ARw4hOVUmd
- faFRZtD73I0oGQl1pWE5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HeR70z0Cop8=:StWF7PVMsAoCw2qyISGuhu
- dNC8WNZENQ17lNI7XUyUGADy6d+lWRK155FM3ImDhMxQFl2nBjLZaz162IzL9C5BHKUDjw0/T
- rUKeBzoUb7w37fiK+9Sm74zlZUb6BZEQGrUha0fBw0DuIwvOrnyVcrfQSpfaleBw31MANU0pn
- q31FBoAyCfPDL3VLNgX1L9n2ERQEUtEFOUy4B2eaWoMPOtPChMM6rL5nrJ9pKKR8uq4/7xaaS
- Y8MZJ6f8xP3ZVvkVHlv1Obvoc8gzGGIH2NAlEkcCQigu4TCOcjl04VrcUYY9mgx6tzZ77oOf1
- xTLEw+Uq2f2r2woveSUrNj4rin5VeKQecXorR/RlsaPUI4bl6VDdu9dO2K/+Id5ysiMg0Q6+p
- 2Goyo6sSRBYmz42XtoQEQeHdgZa+vQtmkX+lpDIW4hXMfsIM74RkoArDBZc27A90Vpmk9VlB8
- QyPec46dZyYO0jecL26YhuYIfr24WZIMwCm2Hjb2RdDtNqVqUuAhxgGqC4pK7IzyU/0rrbiNU
- rcFAA1nfLt8KSt3rllpNwcaMLkX4eu0hcr673dbNv1X5KUVeeHshvdxxD78G8ikyD3rEk7qI7
- eKgj+gbm1dDXQmCVAUy+75xpatHG5DGjd6nl/vcA8eIoesPToBAiM6WfP4lTTccKeZ5aSsVvp
- yI3P1RG9uKU332bbRHWfNgR6YOr8DD+N8p2Y+j+6V6HS4z8yES0d5oh/cfXJQ95762peAnpAe
- YLZqgjREekQECvmx1HBR+8BYfFf8gdFCBC5HX55pMG0efBAiFQ6u+qFiht8/ETmkoEF3GYkB4
- azWS5rk+p1lYbE33IxJxVgH4p/A9A8oOSiSmJA5mjJqW2kHaOEOS8n909p20y6/tArVaFkqDm
- +D+kjTJ0zwlmcGvnIzxg==
+X-Provags-ID: V03:K1:ulRRllI5JAoz0buK11S43JXVc/eMQFrIawurypLyW+N7TiEk0dp
+ sYPiQy6yvK8EGQIpnFN2TTwvGPPXkdo/AQIl7S/SrZCuD2WGshTS2C4G8EUX49W4DwNDUtD
+ L88/4+GwzL6UsguMBy6RERpwuy6IQumqGgXy6L+iDb2UHPXPwa2X8rChSWR1KTjzHVNkC34
+ OvnVT8pX39Yg9x925DqbA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NcumhT8wISM=:JBOSCdGfsCAdWOIW+bnrHA
+ QA4UJlzwE2vocoKnX7UialKPo/que+qGW7+EHoXxQ3MzakMVSf3MRYQW+Zlmh0kCKxlHkkV7d
+ Hsewp+K2GVG9yoCqQEdlG0WETcBZNX16d1xB/y/0Y8/2AJc03sSMK7pkikjEkHmIbHitedOJQ
+ EKABeWyDYp2cY+0uZLzplYYk/1tD3AnlejEyRaRqXOxLorSlGseUIXdMv+IHto94Zrv5mE3/h
+ KDxq/7bWkpGoaZbQZa3yv2htZBQ9sAPIQYJBuOAY/FpDtQaWxVKCb9nF2PiCzc4lm2jbQjYKs
+ jimwDA6j11Wa7kHmY8okBNaxsHNH+0wJZr9+BulTs2I1cHCGCL+Rzi/l6nYfTqAmbQEcKDZMf
+ 809SjF50j+Xt9lsK3xhP4QfmwJDThcv2i+zhkmzoxxOyqiZV9/AdU5CVF3C6MeUa6EfZtt68d
+ fBPyd9O/BOWiIX8br0c0LGWNStaj5Azfprth2wX+7ikjC9Ws8cOWYQMHxFUUzVCtPcwIFb6A/
+ 83a/4ae5n/RVimEcQW+iGZKvzSaxRxjNYXPUtj45wNuhIpP/YTozGnuDVpGrvIV1Wsd0NAfL4
+ 3n2xbxp4Vnqjq73aC7aoVn94SFKdcZtjg/JblwQQn4BHE4bj17s/xFYeuiQ4h/lMouLFm5BMo
+ kYOM3Ckbfj9wjCq9yzLCUDtFuzj1GGcqVeM4i3JLAzR71Ox5HzLU/xK3jCD/3J8hDmjyw+hvS
+ ysxVWEPsEW+RnFBu5Yvw9ANGOES60kgcfd+lh89NUBlF+fDtKB3bg97+5ElTjpdPze2sN9LaK
+ Bni5z1+PV0BVYjZ4U2olawi3BAss6zIQudiitpcdSo/23lXCtKNY2xjswb6JP+J40Jn41eufB
+ i1sS34VdQdTMvRMNDSgg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nii_time field gets truncated to 'time_t' on 32-bit architectures
-before printing.
+The local boot time variable gets truncated to time_t at the moment,
+which can lead to slightly odd behavior on 32-bit architectures.
 
-Remove the use of 'struct timespec' to product the correct output
-beyond 2038.
+Use ktime_get_real_seconds() instead of get_seconds() to always
+get a 64-bit result, and keep it that way wherever possible.
+
+It still gets truncated in a few places:
+
+- When assigning to cl_clientid.cl_boot, this is already documented
+  and is only used as a unique identifier.
+
+- In clients_still_reclaiming(), the truncation is to 'unsigned long'
+  in order to use the 'time_before() helper.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/nfsd/nfs4state.c | 5 ++---
- fs/nfsd/state.h     | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ fs/nfsd/netns.h       |  2 +-
+ fs/nfsd/nfs4recover.c |  8 ++++----
+ fs/nfsd/nfs4state.c   | 14 +++++++-------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bfdb3366239c..27a629cc5a46 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2292,7 +2292,7 @@ static int client_info_show(struct seq_file *m, void *v)
- 					clp->cl_nii_domain.len);
- 		seq_printf(m, "\nImplementation name: ");
- 		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
--		seq_printf(m, "\nImplementation time: [%ld, %ld]\n",
-+		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
- 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 9a4ef815fb8c..29bbe28eda53 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -40,7 +40,7 @@ struct nfsd_net {
+ 
+ 	struct lock_manager nfsd4_manager;
+ 	bool grace_ended;
+-	time_t boot_time;
++	time64_t boot_time;
+ 
+ 	/* internal mount of the "nfsd" pseudofilesystem: */
+ 	struct vfsmount *nfsd_mnt;
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index 2481e7662128..a8fb18609146 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1445,7 +1445,7 @@ nfsd4_cld_grace_done_v0(struct nfsd_net *nn)
  	}
- 	drop_client(clp);
-@@ -2946,8 +2946,7 @@ static __be32 copy_impl_id(struct nfs4_client *clp,
- 	xdr_netobj_dup(&clp->cl_nii_name, &exid->nii_name, GFP_KERNEL);
- 	if (!clp->cl_nii_name.data)
- 		return nfserr_jukebox;
--	clp->cl_nii_time.tv_sec = exid->nii_time.tv_sec;
--	clp->cl_nii_time.tv_nsec = exid->nii_time.tv_nsec;
-+	clp->cl_nii_time = exid->nii_time;
- 	return 0;
+ 
+ 	cup->cu_u.cu_msg.cm_cmd = Cld_GraceDone;
+-	cup->cu_u.cu_msg.cm_u.cm_gracetime = (int64_t)nn->boot_time;
++	cup->cu_u.cu_msg.cm_u.cm_gracetime = nn->boot_time;
+ 	ret = cld_pipe_upcall(cn->cn_pipe, &cup->cu_u.cu_msg);
+ 	if (!ret)
+ 		ret = cup->cu_u.cu_msg.cm_status;
+@@ -1782,7 +1782,7 @@ nfsd4_cltrack_client_has_session(struct nfs4_client *clp)
  }
  
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index d61b83b9654c..2b4165cd1d3e 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -320,7 +320,7 @@ struct nfs4_client {
- 	/* NFSv4.1 client implementation id: */
- 	struct xdr_netobj	cl_nii_domain;
- 	struct xdr_netobj	cl_nii_name;
--	struct timespec		cl_nii_time;
-+	struct timespec64	cl_nii_time;
+ static char *
+-nfsd4_cltrack_grace_start(time_t grace_start)
++nfsd4_cltrack_grace_start(time64_t grace_start)
+ {
+ 	int copied;
+ 	size_t len;
+@@ -1795,7 +1795,7 @@ nfsd4_cltrack_grace_start(time_t grace_start)
+ 	if (!result)
+ 		return result;
  
- 	/* for v4.0 and v4.1 callbacks: */
- 	struct nfs4_cb_conn	cl_cb_conn;
+-	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%ld",
++	copied = snprintf(result, len, GRACE_START_ENV_PREFIX "%lld",
+ 				grace_start);
+ 	if (copied >= len) {
+ 		/* just return nothing if output was truncated */
+@@ -2004,7 +2004,7 @@ nfsd4_umh_cltrack_grace_done(struct nfsd_net *nn)
+ 	char *legacy;
+ 	char timestr[22]; /* FIXME: better way to determine max size? */
+ 
+-	sprintf(timestr, "%ld", nn->boot_time);
++	sprintf(timestr, "%lld", nn->boot_time);
+ 	legacy = nfsd4_cltrack_legacy_topdir();
+ 	nfsd4_umh_cltrack_upcall("gracedone", timestr, legacy, NULL);
+ 	kfree(legacy);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 27a629cc5a46..1ac431aa29c4 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -753,7 +753,7 @@ int nfs4_init_cp_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
+ 	if (new_id < 0)
+ 		return 0;
+ 	copy->cp_stateid.si_opaque.so_id = new_id;
+-	copy->cp_stateid.si_opaque.so_clid.cl_boot = nn->boot_time;
++	copy->cp_stateid.si_opaque.so_clid.cl_boot = (u32)nn->boot_time;
+ 	copy->cp_stateid.si_opaque.so_clid.cl_id = nn->s2s_cp_cl_id;
+ 	return 1;
+ }
+@@ -1862,7 +1862,7 @@ STALE_CLIENTID(clientid_t *clid, struct nfsd_net *nn)
+ 	 */
+ 	if (clid->cl_boot == (u32)nn->boot_time)
+ 		return 0;
+-	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08lx\n",
++	dprintk("NFSD stale clientid (%08x/%08x) boot_time %08llx\n",
+ 		clid->cl_boot, clid->cl_id, nn->boot_time);
+ 	return 1;
+ }
+@@ -2222,7 +2222,7 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
+ 
+ static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
+ {
+-	clp->cl_clientid.cl_boot = nn->boot_time;
++	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
+ 	clp->cl_clientid.cl_id = nn->clientid_counter++;
+ 	gen_confirm(clp, nn);
+ }
+@@ -5183,9 +5183,9 @@ nfsd4_end_grace(struct nfsd_net *nn)
+  */
+ static bool clients_still_reclaiming(struct nfsd_net *nn)
+ {
+-	unsigned long now = get_seconds();
+-	unsigned long double_grace_period_end = nn->boot_time +
+-						2 * nn->nfsd4_lease;
++	unsigned long now = (unsigned long) ktime_get_real_seconds();
++	unsigned long double_grace_period_end = (unsigned long)nn->boot_time +
++					   2 * (unsigned long)nn->nfsd4_lease;
+ 
+ 	if (nn->track_reclaim_completes &&
+ 			atomic_read(&nn->nr_reclaim_complete) ==
+@@ -7640,7 +7640,7 @@ static int nfs4_state_create_net(struct net *net)
+ 		INIT_LIST_HEAD(&nn->sessionid_hashtbl[i]);
+ 	nn->conf_name_tree = RB_ROOT;
+ 	nn->unconf_name_tree = RB_ROOT;
+-	nn->boot_time = get_seconds();
++	nn->boot_time = ktime_get_real_seconds();
+ 	nn->grace_ended = false;
+ 	nn->nfsd4_manager.block_opens = true;
+ 	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
 -- 
 2.20.0
 
