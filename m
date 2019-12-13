@@ -2,97 +2,126 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB4C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C197420706
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576276586;
-	bh=EDTTSZNGbWXQl5rh9+wXt09UUcbeSsGxy1E9C7pfoQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ROmeTf9ltwZsdidBCP1rOp/VbOcGYwXDYxv455vnHoghYo8R+hi9qjnsWIYgae7Av
-	 0dVxJaFVwhF8H60PhEToZzyWQtftpwG0M9XPEjkfPDVnlJI1RY9+XufuF6hc6eEGnM
-	 nkaRbVtoXiL+lSbdN+UJnGzu7v1k2oe4XZ6B7KWA=
+	by mail.kernel.org (Postfix) with ESMTP id 540D02077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 22:38:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMkbyHim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLMWg0 (ORCPT
+        id S1726638AbfLMWiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:36:26 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35584 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMWgZ (ORCPT
+        Fri, 13 Dec 2019 17:38:17 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36267 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLMWiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:36:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id o9so928520ote.2;
-        Fri, 13 Dec 2019 14:36:25 -0800 (PST)
+        Fri, 13 Dec 2019 17:38:16 -0500
+Received: by mail-il1-f194.google.com with SMTP id b15so767541iln.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 14:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=05pwc1cDq1D/DICCYWl1LBEP7b2TGkJ4T9jlAojcSw4=;
+        b=AMkbyHim27QPrfH+SFbUq5K6UtLpL5hRLHJ2gT/tiB/okhD6H760a3eNBadZXZ3USZ
+         9IqwEe874ONRzJUPePaY7+ZFBY/7Jw4a8qNUz2Lwb2Cwe0AYa3Dr2ScyeuHIoT9QOopz
+         4WEjiIH+qRYgL3U4gHwl41xMXGF3CsjNG0ICD0D4HRgm3c9LHj2d9e0a9Oh5NzglgwDA
+         mKC2Zxb13JloprCzr+lr9Lgtg7CSK+ywVxFJ0L0bjf9FrOr3cu6Z1k7Eg1QTc17SVaM6
+         CoQrQ7YCAZAomYu7mxI0jRh+fZOtxyUbc5NVxGYImZTDO09mOhcam4wxIml9YPeUX8eI
+         ouZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aViRkDm5Q83Ziq8WvPrQQFLWmlznU7OM781DBB+jypg=;
-        b=ucND154++qoAxLmokTgA2eEdK6s5YKYYDcJ5pF5t0tyGwIbddMoGtivA0Wg+fU4wz0
-         8vhz78HoY/DWs1JxsnH/mHDzR1VWIB9UkCJzBrvm5HAMGUgCfLRGaUFXO0Yji/MqcFzx
-         NoGd/l2/VeyasbIRrswD6ocw1Q9QJEXZNNrTCpnBjmfOOtj8RwZ24+b5aj0VtHQcgooJ
-         E7X/dKc8aytc4HCPGXcuFkkKJ920A30MFpDRg1jKGQSAQedw0t397xpnHn9REHkVHpGb
-         rTWaFy0p9a4bA0rRsqJ1Kwc6mG1F5KCSl7lwMD7rfaQQfL/B3I2EsDLB4kNdT20KP6rC
-         bh1A==
-X-Gm-Message-State: APjAAAXEfS2TAXY7xDhJwpM4dlAZwxNiYMPArvynr1Wu4C3ppltt66cU
-        w1FLARk90hZ8wVdyxoElmA==
-X-Google-Smtp-Source: APXvYqw8SEx0ZsdXc4Aw+KPeDksSB3h46zpVT+15p6hwpJ1l8hKcJ9COeglbxaJdcO7zzSAu5R/efQ==
-X-Received: by 2002:a05:6830:1353:: with SMTP id r19mr17631952otq.288.1576276584871;
-        Fri, 13 Dec 2019 14:36:24 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b15sm3832281oti.23.2019.12.13.14.36.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=05pwc1cDq1D/DICCYWl1LBEP7b2TGkJ4T9jlAojcSw4=;
+        b=YeKDOGiNyJtvNyrfRK7wSFQKqJS4QzhcT1UuQ8yw9SE9/yNBluQKQde/LbKD6kZ4EG
+         ixJbQLXfMDKvK03jvx4UCyShXm60qZQsWZmMoGOEAOXrwTjaw/cPwBn7uUuNWJ+g1Knz
+         4AVSg/BDeqh9D3RcMXfwFIOt4/CpRrPpgBqgVblTMRrUC41yIKXmhbbadThtS+qC1a8V
+         2AB+89KJZHqSgoqj+7h5O5nxqw0y54uYixQSukRamMtHepHkqr9VswRYoxCoPON1/4XA
+         SJpHH+AFli3bBc3C9KEe7YmAyXQzqMyl9TTn8/zsmZH0idjePilEJaDkXAyq9TNergEB
+         xRGA==
+X-Gm-Message-State: APjAAAVg0BpBOnywB+a/xwgi5RbAPPi7o6yTwoXHc6ExEW05yTcz3ntg
+        z0kDuZ+zAseApPDb/X17PTY=
+X-Google-Smtp-Source: APXvYqx0uEsIvwLyNJN7RXSIIglVZGUqy7rs3mqi+4ZkWl+6KLFw6vmUQBxc/SD9Aaiscam/6CaC1g==
+X-Received: by 2002:a92:9107:: with SMTP id t7mr1701040ild.51.1576276695976;
+        Fri, 13 Dec 2019 14:38:15 -0800 (PST)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id f7sm2396743ioo.27.2019.12.13.14.38.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:36:24 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:36:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v2 4/5] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-Message-ID: <20191213223623.GA14809@bogus>
-References: <20191202133332.178110-1-amirmizi6@gmail.com>
- <20191202133332.178110-5-amirmizi6@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202133332.178110-5-amirmizi6@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Dec 2019 14:38:15 -0800 (PST)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, jhubbard@nvidia.com,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH v2] mm/gup: Fix memory leak in __gup_benchmark_ioctl
+Date:   Fri, 13 Dec 2019 16:37:41 -0600
+Message-Id: <20191213223751.4089-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
+References: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 03:33:31PM +0200, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c PTP based physical layer.
+In the implementation of __gup_benchmark_ioctl() the allocated pages
+should be released before returning in case of an invalid cmd. Release
+pages via kvfree() by goto done.
 
-Wrap your commmit message. And TPM, TIS?, and I2C should be capitalized.
+Fixes: 714a3a1ebafe ("mm/gup_benchmark.c: add additional pinning methods")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	-- added goto and ret value instead of return -1.
+---
+ mm/gup_benchmark.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index b160638f647e..b773b2568544 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -24,7 +24,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ {
+ 	ktime_t start_time, end_time;
+ 	unsigned long i, nr_pages, addr, next;
+-	int nr;
++	int nr, ret = 0;
+ 	struct page **pages;
+ 
+ 	if (gup->size > ULONG_MAX)
+@@ -63,8 +63,8 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 					    NULL);
+ 			break;
+ 		default:
+-			kvfree(pages);
+-			return -1;
++			ret = -EINVAL;
++			goto done;
+ 		}
+ 
+ 		if (nr <= 0)
+@@ -85,8 +85,9 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 	end_time = ktime_get();
+ 	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
+ 
++done:
+ 	kvfree(pages);
+-	return 0;
++	return ret;
+ }
+ 
+ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
+-- 
+2.17.1
 
-Please read my comments on v1 (The first v1 from 11/10, not the 2nd v1 
-you sent).
-
-Rob
