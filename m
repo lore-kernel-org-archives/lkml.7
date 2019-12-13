@@ -2,344 +2,234 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E306CC34010
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECED8C33CAD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23969246D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1B924735
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LM3x7IBg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WA/Nl5/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfLMPCf (ORCPT
+        id S1727716AbfLMOXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:02:35 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24647 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727499AbfLMPCf (ORCPT
+        Fri, 13 Dec 2019 09:23:39 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34717 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbfLMOXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:02:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576249354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nHXpTUcPw2SpnBmWlIQHCjEfMqdBse48PD3viLk8Sfs=;
-        b=LM3x7IBgPzG5ylnuL/kpFxa85kx3x4zAv2prSmzXUWVR+Mi+Yl8xX0CoA7PGC4+d37FOj5
-        udW5SdU7heJR1X7tVXLUrQIxSE378j4BfxzHqmLdfmlLpWg1vLgsxj2NVOCFnDtof47bRp
-        yMfhR3MLNoSquOphhwca9+uwgWIUJMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-5acyVH6yPoawh8q1UP2JtQ-1; Fri, 13 Dec 2019 10:02:30 -0500
-X-MC-Unique: 5acyVH6yPoawh8q1UP2JtQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77E401005502;
-        Fri, 13 Dec 2019 15:02:29 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-140.rdu2.redhat.com [10.10.122.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0B6619C4F;
-        Fri, 13 Dec 2019 15:02:26 +0000 (UTC)
-Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20191212223525.1652-1-longman@redhat.com>
- <20191212223525.1652-5-longman@redhat.com>
- <20191213102525.GA2844@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d639c80c-d60f-d5ac-8559-7942798dc92e@redhat.com>
-Date:   Fri, 13 Dec 2019 10:02:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 13 Dec 2019 09:23:38 -0500
+Received: by mail-io1-f67.google.com with SMTP id z193so2576805iof.1;
+        Fri, 13 Dec 2019 06:23:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oY4foPWzvMWBhrOb3ctOq9TVV5hU0NFwbmMTS0Zd/UU=;
+        b=WA/Nl5/qzxziow27rNFDBN6AR0i/0NcNiRvRVp80t0u9W0JQMaMjKJ1FXpSIJvFRsA
+         9XNtyo7R3tvMIJvxC8oiNyOk4J2wtKS7B3Ts81LXhTeznVpJDzP2bBwTq3eNp8TT5jGC
+         JeJnDQdKIfDwUHRy+/BauHNwzMIsrHZwY1yL13K6S1JG3p8bmPr43mrdPMlvRX974Db3
+         sejJ6jhmsn/JNHCDsnNqd+DX6Vt5JKtCkrXbQGX1nBV17cl/Lwbv1gGNky1WX5xz6cB9
+         qNaJLQ5sYArh6IQ72EsTE5mzorok1Y/tT0dn2XFjhtREMCr3CwECOoTe5T6M5fG+Ice6
+         rw+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oY4foPWzvMWBhrOb3ctOq9TVV5hU0NFwbmMTS0Zd/UU=;
+        b=KlXoeMAgnY9wxfhJhRH5/Tqns2hvtXu50qURkzSQCsWAfHwN0Lp7jM8QPfYCvKdSCS
+         ouost0PLswyuEPgYs9knFipMHyTc/bEUVRyb6LB+PuGWIMyV9mCP/TVSPglRtODJ/5yg
+         9QC7DOkjlO/eWQtqhf/OGcVdQnARX2NojWeEa6xIvqXSYrGCunasI1nLmiDX/Qq2ONvH
+         KeO0phIXInWfgNZXhj5YRBCUHMe6XoZQ360eOizBoYAjRRTdrpLCUylU4eEg0r+huWGX
+         XlP4k+n54KnQxEFvH++71BXuO6eXhSFXFJ5jyMOIr3JAfdj6EbiEHamVbn/TKsAxZ4rz
+         e65g==
+X-Gm-Message-State: APjAAAXuo/Id0J6TNevSr1WQ7WNAGjQ+1vbsksBAT0Ph0WKELu8sUr65
+        eCQa3eehPSU8E5Guv+Dq26CY07nfg1npE9iuvQ8=
+X-Google-Smtp-Source: APXvYqw9fo8CyH8rZgTkDXi/QpomXN7jj5DggXjh44v4tlkbINHuyaaFmy+kLmhjIEG8wBfM6tVMJ2kyLjCLt4kAyek=
+X-Received: by 2002:a02:844e:: with SMTP id l14mr2634809jah.30.1576247017731;
+ Fri, 13 Dec 2019 06:23:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213102525.GA2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
+ <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
+ <7hfthsqcap.fsf@baylibre.com> <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
+ <7hpngvontu.fsf@baylibre.com> <4e1339b4-c751-3edc-3a2e-36931ad1c503@baylibre.com>
+ <CAFBinCCgKcwXSLxS_CRvz9JZvQo8PcUGm=egBbabVZSrkSc30Q@mail.gmail.com>
+ <CANAwSgSFR3kftWLPqyoYfyxdQ5dcp2W7NgRCaFNkMj-xEDY1Kw@mail.gmail.com> <83791a71-a45c-383d-0406-b0f4e0a0c215@baylibre.com>
+In-Reply-To: <83791a71-a45c-383d-0406-b0f4e0a0c215@baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Fri, 13 Dec 2019 19:53:26 +0530
+Message-ID: <CANAwSgSsJ8oc--SxtOnsqAfRHQwtBi=ExWg0hqWX7QKga=OYRw@mail.gmail.com>
+Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 5:25 AM, Peter Zijlstra wrote:
-> On Thu, Dec 12, 2019 at 05:35:24PM -0500, Waiman Long wrote:
->
->> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
->> index 4c23ab7d27c2..999cd714e0d1 100644
->> --- a/kernel/locking/lockdep_internals.h
->> +++ b/kernel/locking/lockdep_internals.h
->> @@ -107,8 +107,15 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
->>  #endif
->>  
->>  #define MAX_LOCKDEP_CHAINS	(1UL << MAX_LOCKDEP_CHAINS_BITS)
->> -
->>  #define MAX_LOCKDEP_CHAIN_HLOCKS (MAX_LOCKDEP_CHAINS*5)
->> +#define MAX_CHAIN_HLOCKS_BLOCKS	1024
->> +#define CHAIN_HLOCKS_HASH	8
->> +
->> +struct chain_hlocks_block {
->> +	unsigned int		   depth: 8,
->> +				   base :24;
->> +	struct chain_hlocks_block *next;
->> +};
->>  
->>  extern struct list_head all_lock_classes;
->>  extern struct lock_chain lock_chains[];
-> This doesn't need to be in the header, there are no users outside of the
-> stuff you wrote below.
->
-That is true.
->> +#ifdef CONFIG_PROVE_LOCKING
->> +static struct chain_hlocks_block chain_hlocks_blocks[MAX_CHAIN_HLOCKS_BLOCKS];
->> +static struct chain_hlocks_block *chain_hlocks_block_hash[CHAIN_HLOCKS_HASH];
->> +static struct chain_hlocks_block *free_chain_hlocks_blocks;
->> +
->> +/*
->> + * Graph lock must be held before calling the chain_hlocks_block functions.
->> + * Chain hlocks of depth 1-(CHAIN_HLOCKS_HASH-1) is mapped directly to
->> + * chain_hlocks_block_hash[1-(CHAIN_HLOCKS_HASH-1)]. All other sizes
->> + * are mapped to chain_hlocks_block_hash[0].
->> + */
->> +static inline struct chain_hlocks_block *alloc_chain_hlocks_block(void)
->> +{
->> +	struct chain_hlocks_block *block = free_chain_hlocks_blocks;
->> +
->> +	WARN_ONCE(!debug_locks_silent && !block,
->> +		  "Running out of chain_hlocks_block\n");
->> +	free_chain_hlocks_blocks = block ? block->next : NULL;
->> +	return block;
->> +}
->> +
->> +static inline void free_chain_hlocks_block(struct chain_hlocks_block *block)
->> +{
->> +	block->next = free_chain_hlocks_blocks;
->> +	free_chain_hlocks_blocks = block;
->> +}
->> +
->> +static inline void push_chain_hlocks_block(struct chain_hlocks_block *block)
->> +{
->> +	int hash, depth = block->depth;
->> +
->> +	hash = (depth >= CHAIN_HLOCKS_HASH) ? 0 : depth;
->> +	block->next = chain_hlocks_block_hash[hash];
->> +	chain_hlocks_block_hash[hash] = block;
->> +	nr_free_chain_hlocks += depth;
->> +}
-> I would argue this is not a hash, these are buckets. You're doing
-> regular size buckets.
+Hi Neil
 
-I think I used the wrong terminology here. Bucket is a better description.
+On Fri, 13 Dec 2019 at 18:54, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 13/12/2019 12:28, Anand Moon wrote:
+> > Hi Martin
+> >
+> > On Fri, 13 Dec 2019 at 01:40, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> >>
+> >> Hi Neil,
+> >>
+> >> On Wed, Dec 11, 2019 at 9:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>
+> >>> On 10/12/2019 22:47, Kevin Hilman wrote:
+> >>>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+> >>>>
+> >>>>> On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
+> >>>>>>
+> >>>>>> Anand Moon <linux.amoon@gmail.com> writes:
+> >>>>>>
+> >>>>>>> Hi Neil / Kevin,
+> >>>>>>>
+> >>>>>>> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>>>>>>
+> >>>>>>>> On 09/12/2019 23:12, Kevin Hilman wrote:
+> >>>>>>>>> Anand Moon <linux.amoon@gmail.com> writes:
+> >>>>>>>>>
+> >>>>>>>>>> Some how this patch got lost, so resend this again.
+> >>>>>>>>>>
+> >>>>>>>>>> [0] https://patchwork.kernel.org/patch/11136545/
+> >>>>>>>>>>
+> >>>>>>>>>> This patch enable DVFS on GXBB Odroid C2.
+> >>>>>>>>>>
+> >>>>>>>>>> DVFS has been tested by running the arm64 cpuburn
+> >>>>>>>>>> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> >>>>>>>>>> PM-QA testing
+> >>>>>>>>>> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
+> >>>>>>>>>>
+> >>>>>>>>>> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
+> >>>>>>>>>
+> >>>>>>>>> Have you tested with the Harkernel u-boot?
+> >>>>>>>>>
+> >>>>>>>>> Last I remember, enabling CPUfreq will cause system hangs with the
+> >>>>>>>>> Hardkernel u-boot because of improperly enabled frequencies, so I'm not
+> >>>>>>>>> terribly inclined to merge this patch.
+> >>>>>>>
+> >>>>>>> HK u-boot have many issue with loading the kernel, with load address
+> >>>>>>> *it's really hard to build the kernel for HK u-boot*,
+> >>>>>>> to get the configuration correctly.
+> >>>>>>>
+> >>>>>>> Well I have tested with mainline u-boot with latest ATF .
+> >>>>>>> I would prefer mainline u-boot for all the Amlogic SBC, since
+> >>>>>>> they sync with latest driver changes.
+> >>>>>>
+> >>>>>> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
+> >>>>>> to support the vendor u-boot that is shipping with the boards.  So
+> >>>>>> until Hardkernel (and other vendors) switch to mainline u-boot we do not
+> >>>>>> want to have upstream kernel defaults that will not boot with the vendor
+> >>>>>> u-boot.
+> >>>>>>
+> >>>>>> We can always support these features, but they just cannot be enabled
+> >>>>>> by default.
+> >>>>> (I don't have an Odroid-C2 but I'm curious)
+> >>>>> should Anand submit a patch to mainline u-boot instead?
+> >>>>
+> >>>> It would be in addition to $SUBJECT patch, not instead, I think.
+> >>>>
+> >>>>> the &scpi_clocks node could be enabled at runtime by mainline u-boot
+> >>>>
+> >>>> That would work, but I don't know about u-boot maintainers opinions on
+> >>>> this kind of thing, so let's see what Neil thinks.
+> >>>
+> >>> U-Boot doesn't anything to do with SCPI, SCPI discusses directly with the SCP
+> >>> processor, and the CPU clock is set to 1,56GHz by the BL2 boot stage before
+> >>> U-boot starts.
+> >>>
+> >>> The only viable solution I see now is to find if we could add a DT OPP table
+> >>> only for Odroid-C2 dts to bypass the SCPI OPP table.
+> >> my understanding is that mainline u-boot (with whatever SCP firmware
+> >> it uses) provides the *correct* OPP table
+> >
+> > Right now I am not sure how this OPP table is populated.
+> > But I saw the same freq table used in 3.16.x kernel after enable the clk.
+> >
+> >> in this case it would be "safe" to have SCPI enabled with mainline u-boot
+> >> @Anand: please correct me if I misunderstood you
+> >>
+> >
+> > As per my understanding DVFS OPP frequency table for SCPI firmware set
+> > for 1.536 GHz
+> > somewhere in BL2 as pointed by Neil.
+> >
+> > Arm Trusted firmware added new secure SCPI communication with
+> > Cortex-M3 co processor.
+> > [0] https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/meson-gxbb.rst
+> > [1] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/amlogic/common/aml_scpi.c
+> >
+> > ATF generated the *bl1.bin* which is replace the Amlogic's bl1.bin
+> > while preparing
+> > the new u-boot *u-boot.gxbb* image.
+> >
+> >> my idea to "enable SCPI with mainline u-boot" is to have u-boot update
+> >> the "status" property of the scpi_clocks node.
+> >> u-boot does something similar with the mac-address property of the
+> >> Ethernet controller for example.
+> >> as result of this users of mainline u-boot would have working CPU
+> >> DVFS, while users of the old vendor u-boot would run at fixed 1.54GHz.
+> >>
+> >>
+> >> Martin
+> >
+> > Right now as per my understanding 1.536 GHz max is bit under clocked.
+> >
+> > Some time ago on Odroid Forum tried to over clock the cpu to 2GHz.
+>
+> This is the point, the Odroid-C2 is *not* stable at 2GHz,
+> a large amount of board doesn't support 2GHz, this is why Amlogic
+> dropped the freq > 1.536 GHz for the GXBB family.
+>
+> But HardKernel still delivers the SCPI table with > 1.536 GHz which breaks
+> on most of the boards, but doesn't on 3.14 since they have a hack disabling
+> higher freqs with a cmdline set in boot.ini.
+>
+> > [3] https://forum.odroid.com/viewtopic.php?f=139&t=18738
+> > So more investigation need to done in this line.
+> >
+> > I also tried the same with HardKernel Image, with modifying the boot.ini
+> > I could increase the max DVFS cpu frequency to 1.90 GHz,
+> > This is just proof of concept.
+> >
+> > odroid:~# cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
+> > 100000 250000 500000 1000000 1296000 1536000 1656000 1680000 1752000 1896000
+> >
+> > I have some minimal stress testing attached are the results for HK
+> > 3.16.x kernel.
+> >
+> > For now we should not enable this clock.
+> > Until we can possible to check for higher clock frequency to work stable
+> > on all Amlogic S905X SBC.
+> >
+> > I like the Neil's approach to use it's own dts OPP table for SCPI protocol.
+>
+> The various tests gave very little perf enhancement by going > 1,536 GHz, seriously
+> it's not worth the pain.
+>
+> Neil
+>
 
+Ok Thanks for your expert knowledge.
+I agree with you completely on this to set max freq to 1,536 GHz for
+all S905 SoC.
 
->
->> +static inline struct chain_hlocks_block *pop_chain_hlocks_block(int depth)
->> +{
->> +	struct chain_hlocks_block *curr, **pprev;
->> +
->> +	if (!nr_free_chain_hlocks)
->> +		return NULL;
->> +
->> +	if (depth < CHAIN_HLOCKS_HASH) {
->> +		curr = chain_hlocks_block_hash[depth];
->> +		if (curr) {
->> +			chain_hlocks_block_hash[depth] = curr->next;
->> +			nr_free_chain_hlocks -= depth;
->> +		}
->> +		return curr;
->> +	}
->> +
->> +	/*
->> +	 * For depth >= CHAIN_HLOCKS_HASH, it is not really a pop operation.
->> +	 * Instead, the first entry with the right size is returned.
->> +	 */
->> +	curr  = chain_hlocks_block_hash[0];
->> +	pprev = chain_hlocks_block_hash;
->> +
->> +	while (curr) {
->> +		if (curr->depth == depth)
->> +			break;
->> +		pprev = &(curr->next);
->> +		curr = curr->next;
->> +	}
->> +
->> +	if (curr) {
->> +		*pprev = curr->next;
->> +		nr_free_chain_hlocks -= depth;
->> +	}
->> +	return curr;
->> +}
->> +#else
->> +static inline void free_chain_hlocks_block(struct chain_hlocks_block *block) { }
->> +static inline struct chain_hlocks_block *pop_chain_hlocks_block(int depth)
->> +{
->> +	return NULL;
->> +}
->> +#endif /* CONFIG_PROVE_LOCKING */
-> You've made a bit of a mess of things though. Why is that push/pop crud
-> exposed? Why didn't you build a self contained allocator?
->
-> All you really want is:
->
-> u16 *alloc_chain(int size);
-> void free_chain(int size, u16 *chain);
->
->
-> An implementation would be something along these lines (completely
-> untested, fresh from the keyboard):
->
-> struct chain_block {
-> 	int size;
-> 	int base;
-> 	struct chain_block *next;
-> };
->
-> struct chain_block chain_blocks[MAX_BLOCKS];
-> struct chain_block *free_blocks;
->
->
-> struct chain_block init_block = {
-> 	.size = MAX_LOCKDEP_CHAIN_HLOCKS,
-> 	.base = 0,
-> 	.next = NULL,
-> };
->
-> struct chain_block *free_list[MAX_BUCKETS] = {
-> 	&init_block, /* 0 */
-> };
->
->
-> void free_block(struct chain_block *b)
-> {
-> 	b->next = free_blocks;
-> 	free_blocks = b;
-> }
->
-> struct chain_block *alloc_block(void)
-> {
-> 	struct chain_block *block = free_blocks;
-> 	free_blocks = block->next;
-> 	return block;
-> }
->
-> struct chain_block *pop_block(struct chain_block **bp)
-> {
-> 	struct chain_block *b = *bp;
-> 	if (!b)
-> 		return NULL;
-> 	*bp = b->next;
-> }
->
-> void push_block(struct chain_block **bp, struct chain_block *b)
-> {
-> 	b->next = *bp;
-> 	*bp = b;
-> }
->
-> /* could contemplate ilog2() buckets */
-> int size2bucket(int size)
-> {
-> 	return size >= MAX_BUCKET ? 0 : size;
-> }
->
-> /* bucket[0] is mixed size */
-> struct chain_block *pop_block_0(struct chain_block **bp, int size)
-> {
-> 	struct chain_block **p = bp, *b = *bp;
-> 	if (!b)
-> 		return NULL;
->
-> 	p = bp;
-> 	while (b && b->size < size) {
-> 		p = &b->next;
-> 		b = b->next;
-> 	}
-> 	if (!b)
-> 		return NULL;
->
-> 	*p = b->next;
-> 	return b;
-> }
->
-> u16 *alloc_chain(int size)
-> {
-> 	int i, bucket = size2bucket(size);
-> 	struct chain_block *b;
-> 	u16 *chain;
->
-> 	if (!bucket) {
-> 		b = pop_block_0(&free_list[0], size);
-> 		if (b)
-> 			goto got_block;
-> 	} else {
-> 		b = pop_block(&free_list[bucket]);
-> 		if (b)
-> 			goto got_block;
->
-> 		/* pop a large block, hope the fragment is still useful */
-> 		b = pop_block_0(&free_list[0], size);
-> 		if (b)
-> 			goto got_block;
->
-> 		for (i = MAX_BUCKETS-1; i > bucket; i--)
-> 			b = pop_block(&free_list[bucket]);
-> 			if (b)
-> 				goto got_block;
-> 		}
-> 	}
-> 	return NULL;
->
-> got_block:
->
-> 	chain = chain_hlocks + b->base;
-> 	b->base += size;
-> 	b->size -= size;
->
-> 	if (b->size) {
-> 		/* return the fragment */
-> 		bucket = size2bucket(b->size);
-> 		push_block(&free_list[bucket], b);
-> 	} else {
-> 		free_block(b);
-> 	}
->
-> 	return chain;
-> }
->
-> void free_chain(int size, u16 *chain)
-> {
-> 	struct chain_block *b = alloc_block();
-> 	int bucket = size2bucket(size);
->
-> 	if (!b) {
-> 		// leak stuff;
-> 		return;
-> 	}
->
-> 	b->size = size;
-> 	b->base = chain - chain_hlocks;
->
-> 	push_bucket(&free_list[bucket], b);
-> }
->
-> void init_blocks(void)
-> {
-> 	int i;
->
-> 	for (i = 0; i < MAX_BLOCKS; i++)
-> 		free_block(chain_blocks[i]);
-> }
->
-Thanks for the suggestion. I will incorporate your idea in the next
-version of the patch.
-
-Cheers,
-Longman
-
+-Anand
