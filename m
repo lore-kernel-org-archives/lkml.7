@@ -2,79 +2,134 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9EC7DBB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402ADC7DBC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBAF246EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746D724741
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q5tPiNb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfLMSQ0 (ORCPT
+        id S1728795AbfLMSXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 13:16:26 -0500
-Received: from mga09.intel.com ([134.134.136.24]:52404 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728693AbfLMSQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 13:16:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 10:16:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="208536379"
-Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.172])
-  by orsmga008.jf.intel.com with ESMTP; 13 Dec 2019 10:16:24 -0800
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, alex.hung@canonical.com,
-        linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
-        dvhart@infradead.org, Gayatri Kammela <gayatri.kammela@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Subject: [PATCH v2 2/4] acpi: fan: Add new Tiger Lake hardware ID to support fan driver in acpi
-Date:   Fri, 13 Dec 2019 10:14:21 -0800
-Message-Id: <3c1ed2c9964c63fc956ec249d7bfce8d49f53fee.1576260216.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1576260216.git.gayatri.kammela@intel.com>
-References: <cover.1576260216.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1576260216.git.gayatri.kammela@intel.com>
-References: <cover.1576260216.git.gayatri.kammela@intel.com>
+        Fri, 13 Dec 2019 13:23:21 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59064 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728626AbfLMSXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 13:23:21 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDIEtVi179089;
+        Fri, 13 Dec 2019 18:23:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=Wg9Cdl0upjNBwwnH+MGzpRTCePKvAfBt0cxN3PMC6OE=;
+ b=q5tPiNb3Ulac48t/L9aVotA/6wT26YDjHxTDD9plxZcrl+ZiF52LXYkPacnDRO/F3CGS
+ 0FVPXrR/O03rDTJmkCRtP0phwOhULG4V8t6S6Q+depYoaafRCCUxnXPuJd/SEG8K9NIY
+ aUFQhfgbfcvNwHqGPCrB/DxenVUPX0jJDK9aBGI2bEpl7EU7vUQ20CBNerLsxNwDKWdW
+ CIyzaTHsYD36+AKu0vPEcquTPLYuZpeI1nqzNsPzknEXcFmMi55F/n0FU7Z8U7G36cSi
+ oM3g1AkZAXs82QmM5OSxNHz0Ra2Ujqbag9Lw8V5swXIpL6s/U746TCrJjf/p5wTjmn4k uQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2wrw4nqgy5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 18:23:14 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDIEGMw109798;
+        Fri, 13 Dec 2019 18:23:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wvdwq5j3w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Dec 2019 18:23:13 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBDIN9O3010194;
+        Fri, 13 Dec 2019 18:23:09 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Dec 2019 10:23:09 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
+Date:   Fri, 13 Dec 2019 13:23:08 -0500
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <BBB37836-D835-4EB7-8593-080BF60BDA38@oracle.com>
+References: <20191213141046.1770441-1-arnd@arndb.de>
+ <20191213141046.1770441-11-arnd@arndb.de>
+ <CBC9899C-12BE-466E-8809-EA928AAE1F11@oracle.com>
+ <CAK8P3a3RXqVqpeTmOrEGtXyeMGZV+5g_QzywGgLnfvi2GMDx=g@mail.gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912130143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912130143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tiger Lake has a new unique hardware ID to support fan driver. Hence,
-add it.
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/acpi/fan.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
-index 816b0803f7fb..13708fb48038 100644
---- a/drivers/acpi/fan.c
-+++ b/drivers/acpi/fan.c
-@@ -25,6 +25,7 @@ static int acpi_fan_remove(struct platform_device *pdev);
- 
- static const struct acpi_device_id fan_device_ids[] = {
- 	{"PNP0C0B", 0},
-+	{"INT1044", 0},
- 	{"INT3404", 0},
- 	{"", 0},
- };
--- 
-2.17.1
+> On Dec 13, 2019, at 11:40 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> On Fri, Dec 13, 2019 at 5:26 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>> On Dec 13, 2019, at 9:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+>>> index 24534db87e86..508d7c6c00b5 100644
+>>> --- a/fs/nfsd/nfs4callback.c
+>>> +++ b/fs/nfsd/nfs4callback.c
+>>> @@ -823,7 +823,12 @@ static const struct rpc_program cb_program = {
+>>> static int max_cb_time(struct net *net)
+>>> {
+>>>      struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>>> -     return max(nn->nfsd4_lease/10, (time_t)1) * HZ;
+>>> +
+>>> +     /* nfsd4_lease is set to at most one hour */
+>>> +     if (WARN_ON_ONCE(nn->nfsd4_lease > 3600))
+>>> +             return 360 * HZ;
+>> 
+>> Why is the WARN_ON_ONCE added here? Is it really necessary?
+> 
+> This is to ensure the kernel doesn't change to a larger limit that
+> requires a 64-bit division on a 32-bit architecture.
+> 
+> With the old code, dividing by 10 was always fast as
+> nn->nfsd4_lease was the size of an integer register. Now it
+> is 64 bit wide, and I check that truncating it to 32 bit again
+> is safe.
+
+OK. That comment should state this reason rather than just repeating
+what the code does. ;-)
+
+
+>> (Otherwise these all LGTM).
+> 
+> Thanks for taking a look.
+> 
+>      Arnd
+
+--
+Chuck Lever
+
+
 
