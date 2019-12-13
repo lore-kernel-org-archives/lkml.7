@@ -6,161 +6,267 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9381EC341C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136D4C4D2C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE63F2469B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376972465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 20:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLMUxT (ORCPT
+        id S1726880AbfLMUyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 15:53:19 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:46181 "EHLO
+        Fri, 13 Dec 2019 15:54:37 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:45667 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfLMUxQ (ORCPT
+        with ESMTP id S1725747AbfLMUyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:53:16 -0500
+        Fri, 13 Dec 2019 15:54:37 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MeDYt-1i6oQm1xF1-00bIho; Fri, 13 Dec 2019 21:53:07 +0100
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M27Bp-1ihmpU2pLt-002XGN; Fri, 13 Dec 2019 21:54:33 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 06/24] acct: stop using get_seconds()
-Date:   Fri, 13 Dec 2019 21:52:11 +0100
-Message-Id: <20191213205221.3787308-3-arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>,
+        Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 11/24] hfs/hfsplus: use 64-bit inode timestamps
+Date:   Fri, 13 Dec 2019 21:53:39 +0100
+Message-Id: <20191213205417.3871055-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191213204936.3643476-1-arnd@arndb.de>
 References: <20191213204936.3643476-1-arnd@arndb.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:st6X4iFmtJPxqaDEnWHJh5aO982P37Ptwn8bOhTHFWKcELag9Vj
- u9uy/F7aNCOxmXM8GDWXhPfPSVohIQLF/cpqmdRNDJlyjs5FoLkKZXuOl1wSWlYQ+1kjRh1
- MXR+HAXY+hf6qeZTKw5iO08MRRwWmloaOTspzIIzU3UYsnTgVrHP72aqgmTNlwyM7j30jQ2
- ewbhl+TxIIDPyaymGx+bQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/P5Nke/yFgs=:XJpZhgz8TDetTezFII4o2+
- eXtRcfcirHDAi9Zi9JHrQDJaNR+fsE6lgyR707lukk/IkDM5bdUiibJAQ8wFN2sk1x185EgE5
- aCcIicl9JjgSh/3cxoeTedHnNmfg1HeleLIzCjxIYdYjLvquUQ0glGyP5LwcXSoExbYO6mVFE
- k5kXjzj8TxswNKV/NprsXkAmOdvMes1Rgz3pO19JRyXoMNqziMbjrT341AOaPEXbSC6gUGf8p
- abvoniCwWC0GkuJYSjw2qu97X5on4kRIS5wWU0dL6v9u9eg+tZWj5NVZz5prgYthgfvZ1yMjH
- Qe298ynwsh/zQY702mgpyvtXeNkSWK3fE6Fm5xoSfSYpDL2Tm86jGicej116D5fLtske8/c2N
- qThlrJvEkG/VomPdkDfKgJB7SE9E18ESIoOhHB8chd0fkzMSCF3jTzC4/OKRvC3kLQTp6xkuy
- p+F3k62RNvB9ErWZq4Ul8Cu3fgdqnoxHT6J9uGyYilnUH8HCDjxYVfz9j2O212z6ouv1yzqIq
- iT1G4fOMAVL4Pf2abMV4314Xdj/8ZCqa+wNa2okbhe9kfPM2TG3Nd9agKIBIF5IDGQgeJSbH0
- bf3F/RlQJ9IGAfWsNOt3X1fbZjlPQqnz7WL3pHPfZgEyCNq6bAEMKQlpJUovkamad/tr3BC+D
- DsQTqla5WW7KA1bmzTQ7nYz2YWitL+QoR9Ws1azKdiaa0vl4DEVUbXGEMoCDOkMP4VyzzSbYP
- wLYnd/v1HIBAAgmrdLwXsj9HYxHN6PaZSaC0NXOI1y9HrOUJTCNKeDSOy1MXmBb3HzdrvBIbW
- BSRYylPiHr0k8ZgJbYFXWRqFac/9Cl0riOhWctfDhLU8LLgOIgGzpCem/gwaLXqQOKHzi5wXc
- EIJXG1qqpjICfJ6VXKwA==
+X-Provags-ID: V03:K1:XqMpj8o6u9NYzuj3rgf12in7GXdK8b+g+ASj7vaIy/neEOyN42J
+ 4kT//QrdC+R3EDPxtHVZ/GkJhWttxJWqahEX0zv64cj5oVuoYETGHG7oAHIYvpX2QosSvct
+ ddBHO8D9+gADwoHY/gMwsp+K8ZyU+RCb5H3wQhtrjjk1NJBofRa8YMkMBg5jQdZsGihO7o+
+ PHBn9nB5gcuj9pJPu9ANQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lQyG22QQ74k=:ppxLRXs2HfG+wch52J7SEk
+ D7vKzuAX84XA4nvpIl9pgCmZ/WszjP/JKenJt8zkWiyaqhv9g7S8o3UtrHQzMDFBy+FvMxkzD
+ 1wQTppPANHKEygSveUEB7C4GyKYJKKyXZrxaaHY2aZxA9/tZ0owbANhc55kdmOET37BB4kah6
+ krpCRoJYNau0FCEfNb9EMZ6LtUDsXWyW10Rb8/qr2YsO1TqKYHpnnRfE3Gpj6g4TS2iEjvudY
+ uDEaQ+1N/yAsEiwlO/PFXB0zetAbmlY9wJqBvgP+IemkMrQlb1HZ2WBHDfhqQsMEYfezENF9j
+ hc3pOObQTJJvnti1eoNs2+/n/VwjaYkdfN9I06QkJu9BTcPoFrG58Ka4oQtFOUc6Wo323Ri5R
+ yvg6aUqXB6LhXW2WJ4r88lOMb9CwbA2XbkzFaQaSv1xboMfCSLX9Rt9i534Pw0H74mbv+Lxvv
+ pEa7B2vboRbQ+K/m6xDeladD96+1JAFq5cZ1sk9uG+nYoJEgrGswD/+hHAojvDtHPAS67rsUv
+ XijjSC6/OQ7QIHXBeW/eMkTJTq1+bcBIESvd4fAUezzzh6sdk1ophSDRoGikTQPpc1mQMb9MT
+ Ay4/4V8tBUo6zjEJiWIdNi4EGi+sfGLcHjJebbJQbTTHMmmfc3crLXKDeQuk/+G7apM5uT0XV
+ 7XUE3l3cJiIvAuuKeiKg+a+/bf1BtZb/cmkW5xT1GIVcABv1q/4QuAnTBntK0x2XPKo2RPXc/
+ rP0+BId4mwx7RiH78nufQOhFHQ+HHiCM1cK2QTtN0yQ68mR/saRKx5y66QzBn+SeflQUuJJZY
+ vB7SJHkcCtt7VQgtTCoyaAY+0i5ENre+M8lNhgOGwyl0oTwAUvTIkeWtYF8vIgX+ctKktIqdW
+ PgeweHdDkgOgDmvJtp1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 'struct acct', 'struct acct_v3', and 'struct taskstats' we have
-a 32-bit 'ac_btime' field containing an absolute time value, which
-will overflow in year 2106.
+The interpretation of on-disk timestamps in HFS and HFS+ differs
+between 32-bit and 64-bit kernels at the moment. Use 64-bit timestamps
+consistently so apply the current 64-bit behavior everyhere.
 
-There are two possible ways to deal with it:
+According to the official documentation for HFS+ [1], inode timestamps
+are supposed to cover the time range from 1904 to 2040 as originally
+used in classic MacOS.
 
-a) let it overflow and have user space code deal with reconstructing
-   the data based on the current time, or
-b) truncate the times based on the range of the u32 type.
+The traditional Linux usage is to convert the timestamps into an unsigned
+32-bit number based on the Unix epoch and from there to a time_t. On
+32-bit systems, that wraps the time from 2038 to 1902, so the last
+two years of the valid time range become garbled. On 64-bit systems,
+all times before 1970 get turned into timestamps between 2038 and 2106,
+which is more convenient but also different from the documented behavior.
 
-Neither of them solves the actual problem. Pick the second
-one to best document what the issue is, and have someone
-fix it in a future version.
+Looking at the Darwin sources [2], it seems that MacOS is inconsistent in
+yet another way: all timestamps are wrapped around to a 32-bit unsigned
+number when written to the disk, but when read back, all numeric values
+lower than 2082844800U are assumed to be invalid, so we cannot represent
+the times before 1970 or the times after 2040.
 
+While all implementations seem to agree on the interpretation of values
+between 1970 and 2038, they often differ on the exact range they support
+when reading back values outside of the common range:
+
+MacOS (traditional):		1904-2040
+Apple Documentation:		1904-2040
+MacOS X source comments:	1970-2040
+MacOS X source code:		1970-2038
+32-bit Linux:			1902-2038
+64-bit Linux:			1970-2106
+hfsfuse:			1970-2040
+hfsutils (32 bit, old libc)	1902-2038
+hfsutils (32 bit, new libc)	1970-2106
+hfsutils (64 bit)		1904-2040
+hfsplus-utils			1904-2040
+hfsexplorer			1904-2040
+7-zip				1904-2040
+
+Out of the above, the range from 1970 to 2106 seems to be the most useful,
+as it allows using HFS and HFS+ beyond year 2038, and this matches the
+behavior that most users would see today on Linux, as few people run
+32-bit kernels any more.
+
+Link: [1] https://developer.apple.com/library/archive/technotes/tn/tn1150.html
+Link: [2] https://opensource.apple.com/source/hfs/hfs-407.30.1/core/MacOSStubs.c.auto.html
+Link: https://lore.kernel.org/lkml/20180711224625.airwna6gzyatoowe@eaf/
+Suggested-by: "Ernesto A. Fernández" <ernesto.mnd.fernandez@gmail.com>
+Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+Reviewed-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/uapi/linux/acct.h      | 2 ++
- include/uapi/linux/taskstats.h | 1 +
- kernel/acct.c                  | 4 +++-
- kernel/tsacct.c                | 8 +++++---
- 4 files changed, 11 insertions(+), 4 deletions(-)
+v3: revert back to 1970-2106 time range
+    fix bugs found in review
+    merge both patches into one
+    drop cc:stable tag
+v2: treat pre-1970 dates as invalid following MacOS X behavior,
+    reword and expand changelog text
+---
+ fs/hfs/hfs_fs.h         | 28 ++++++++++++++++++++++------
+ fs/hfs/inode.c          |  4 ++--
+ fs/hfsplus/hfsplus_fs.h | 28 +++++++++++++++++++++++-----
+ fs/hfsplus/inode.c      | 12 ++++++------
+ 4 files changed, 53 insertions(+), 19 deletions(-)
 
-diff --git a/include/uapi/linux/acct.h b/include/uapi/linux/acct.h
-index 0e72172cd23a..985b89068591 100644
---- a/include/uapi/linux/acct.h
-+++ b/include/uapi/linux/acct.h
-@@ -49,6 +49,7 @@ struct acct
- 	__u16		ac_uid16;		/* LSB of Real User ID */
- 	__u16		ac_gid16;		/* LSB of Real Group ID */
- 	__u16		ac_tty;			/* Control Terminal */
-+	/* __u32 range means times from 1970 to 2106 */
- 	__u32		ac_btime;		/* Process Creation Time */
- 	comp_t		ac_utime;		/* User Time */
- 	comp_t		ac_stime;		/* System Time */
-@@ -81,6 +82,7 @@ struct acct_v3
- 	__u32		ac_gid;			/* Real Group ID */
- 	__u32		ac_pid;			/* Process ID */
- 	__u32		ac_ppid;		/* Parent Process ID */
-+	/* __u32 range means times from 1970 to 2106 */
- 	__u32		ac_btime;		/* Process Creation Time */
- #ifdef __KERNEL__
- 	__u32		ac_etime;		/* Elapsed Time */
-diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
-index 5e8ca16a9079..7d3ea366e93b 100644
---- a/include/uapi/linux/taskstats.h
-+++ b/include/uapi/linux/taskstats.h
-@@ -112,6 +112,7 @@ struct taskstats {
- 	__u32	ac_gid;			/* Group ID */
- 	__u32	ac_pid;			/* Process ID */
- 	__u32	ac_ppid;		/* Parent process ID */
-+	/* __u32 range means times from 1970 to 2106 */
- 	__u32	ac_btime;		/* Begin time [sec since 1970] */
- 	__u64	ac_etime __attribute__((aligned(8)));
- 					/* Elapsed time [usec] */
-diff --git a/kernel/acct.c b/kernel/acct.c
-index 81f9831a7859..11ff4a596d6b 100644
---- a/kernel/acct.c
-+++ b/kernel/acct.c
-@@ -416,6 +416,7 @@ static void fill_ac(acct_t *ac)
- {
- 	struct pacct_struct *pacct = &current->signal->pacct;
- 	u64 elapsed, run_time;
-+	time64_t btime;
- 	struct tty_struct *tty;
+diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
+index 6d0783e2e276..f71c384064c8 100644
+--- a/fs/hfs/hfs_fs.h
++++ b/fs/hfs/hfs_fs.h
+@@ -242,19 +242,35 @@ extern void hfs_mark_mdb_dirty(struct super_block *sb);
+ /*
+  * There are two time systems.  Both are based on seconds since
+  * a particular time/date.
+- *	Unix:	unsigned lil-endian since 00:00 GMT, Jan. 1, 1970
++ *	Unix:	signed little-endian since 00:00 GMT, Jan. 1, 1970
+  *	mac:	unsigned big-endian since 00:00 GMT, Jan. 1, 1904
+  *
++ * HFS implementations are highly inconsistent, this one matches the
++ * traditional behavior of 64-bit Linux, giving the most useful
++ * time range between 1970 and 2106, by treating any on-disk timestamp
++ * under HFS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
+  */
+-#define __hfs_u_to_mtime(sec)	cpu_to_be32(sec + 2082844800U - sys_tz.tz_minuteswest * 60)
+-#define __hfs_m_to_utime(sec)	(be32_to_cpu(sec) - 2082844800U  + sys_tz.tz_minuteswest * 60)
++#define HFS_UTC_OFFSET 2082844800U
  
- 	/*
-@@ -448,7 +449,8 @@ static void fill_ac(acct_t *ac)
- 	}
- #endif
- 	do_div(elapsed, AHZ);
--	ac->ac_btime = get_seconds() - elapsed;
-+	btime = ktime_get_real_seconds() - elapsed;
-+	ac->ac_btime = clamp_t(time64_t, btime, 0, U32_MAX);
- #if ACCT_VERSION==2
- 	ac->ac_ahz = AHZ;
- #endif
-diff --git a/kernel/tsacct.c b/kernel/tsacct.c
-index 7be3e7530841..ab12616ee6fb 100644
---- a/kernel/tsacct.c
-+++ b/kernel/tsacct.c
-@@ -24,6 +24,7 @@ void bacct_add_tsk(struct user_namespace *user_ns,
- 	const struct cred *tcred;
- 	u64 utime, stime, utimescaled, stimescaled;
- 	u64 delta;
-+	time64_t btime;
- 
- 	BUILD_BUG_ON(TS_COMM_LEN < TASK_COMM_LEN);
- 
-@@ -32,9 +33,10 @@ void bacct_add_tsk(struct user_namespace *user_ns,
- 	/* Convert to micro seconds */
- 	do_div(delta, NSEC_PER_USEC);
- 	stats->ac_etime = delta;
--	/* Convert to seconds for btime */
--	do_div(delta, USEC_PER_SEC);
--	stats->ac_btime = get_seconds() - delta;
-+	/* Convert to seconds for btime (note y2106 limit) */
-+	btime = ktime_get_real_seconds() - div_u64(delta, USEC_PER_SEC);
-+	stats->ac_btime = clamp_t(time64_t, btime, 0, U32_MAX);
++static inline time64_t __hfs_m_to_utime(__be32 mt)
++{
++	time64_t ut = (u32)(be32_to_cpu(mt) - HFS_UTC_OFFSET);
 +
- 	if (thread_group_leader(tsk)) {
- 		stats->ac_exitcode = tsk->exit_code;
- 		if (tsk->flags & PF_FORKNOEXEC)
++	return ut + sys_tz.tz_minuteswest * 60;
++}
++
++static inline __be32 __hfs_u_to_mtime(time64_t ut)
++{
++	ut -= sys_tz.tz_minuteswest * 60;
++
++	return cpu_to_be32(lower_32_bits(ut) + HFS_UTC_OFFSET);
++}
+ #define HFS_I(inode)	(container_of(inode, struct hfs_inode_info, vfs_inode))
+ #define HFS_SB(sb)	((struct hfs_sb_info *)(sb)->s_fs_info)
+ 
+-#define hfs_m_to_utime(time)	(struct timespec){ .tv_sec = __hfs_m_to_utime(time) }
+-#define hfs_u_to_mtime(time)	__hfs_u_to_mtime((time).tv_sec)
+-#define hfs_mtime()		__hfs_u_to_mtime(get_seconds())
++#define hfs_m_to_utime(time)   (struct timespec64){ .tv_sec = __hfs_m_to_utime(time) }
++#define hfs_u_to_mtime(time)   __hfs_u_to_mtime((time).tv_sec)
++#define hfs_mtime()		__hfs_u_to_mtime(ktime_get_real_seconds())
+ 
+ static inline const char *hfs_mdb_name(struct super_block *sb)
+ {
+diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
+index da243c84e93b..2f224b98ee94 100644
+--- a/fs/hfs/inode.c
++++ b/fs/hfs/inode.c
+@@ -351,7 +351,7 @@ static int hfs_read_inode(struct inode *inode, void *data)
+ 		inode->i_mode &= ~hsb->s_file_umask;
+ 		inode->i_mode |= S_IFREG;
+ 		inode->i_ctime = inode->i_atime = inode->i_mtime =
+-				timespec_to_timespec64(hfs_m_to_utime(rec->file.MdDat));
++				hfs_m_to_utime(rec->file.MdDat);
+ 		inode->i_op = &hfs_file_inode_operations;
+ 		inode->i_fop = &hfs_file_operations;
+ 		inode->i_mapping->a_ops = &hfs_aops;
+@@ -362,7 +362,7 @@ static int hfs_read_inode(struct inode *inode, void *data)
+ 		HFS_I(inode)->fs_blocks = 0;
+ 		inode->i_mode = S_IFDIR | (S_IRWXUGO & ~hsb->s_dir_umask);
+ 		inode->i_ctime = inode->i_atime = inode->i_mtime =
+-				timespec_to_timespec64(hfs_m_to_utime(rec->dir.MdDat));
++				hfs_m_to_utime(rec->dir.MdDat);
+ 		inode->i_op = &hfs_dir_inode_operations;
+ 		inode->i_fop = &hfs_dir_operations;
+ 		break;
+diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
+index b8471bf05def..3b03fff68543 100644
+--- a/fs/hfsplus/hfsplus_fs.h
++++ b/fs/hfsplus/hfsplus_fs.h
+@@ -533,13 +533,31 @@ int hfsplus_submit_bio(struct super_block *sb, sector_t sector, void *buf,
+ 		       void **data, int op, int op_flags);
+ int hfsplus_read_wrapper(struct super_block *sb);
+ 
+-/* time macros */
+-#define __hfsp_mt2ut(t)		(be32_to_cpu(t) - 2082844800U)
+-#define __hfsp_ut2mt(t)		(cpu_to_be32(t + 2082844800U))
++/*
++ * time helpers: convert between 1904-base and 1970-base timestamps
++ *
++ * HFS+ implementations are highly inconsistent, this one matches the
++ * traditional behavior of 64-bit Linux, giving the most useful
++ * time range between 1970 and 2106, by treating any on-disk timestamp
++ * under HFSPLUS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
++ */
++#define HFSPLUS_UTC_OFFSET 2082844800U
++
++static inline time64_t __hfsp_mt2ut(__be32 mt)
++{
++	time64_t ut = (u32)(be32_to_cpu(mt) - HFSPLUS_UTC_OFFSET);
++
++	return ut;
++}
++
++static inline __be32 __hfsp_ut2mt(time64_t ut)
++{
++	return cpu_to_be32(lower_32_bits(ut) + HFSPLUS_UTC_OFFSET);
++}
+ 
+ /* compatibility */
+-#define hfsp_mt2ut(t)		(struct timespec){ .tv_sec = __hfsp_mt2ut(t) }
++#define hfsp_mt2ut(t)		(struct timespec64){ .tv_sec = __hfsp_mt2ut(t) }
+ #define hfsp_ut2mt(t)		__hfsp_ut2mt((t).tv_sec)
+-#define hfsp_now2mt()		__hfsp_ut2mt(get_seconds())
++#define hfsp_now2mt()		__hfsp_ut2mt(ktime_get_real_seconds())
+ 
+ #endif
+diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
+index d131c8ea7eb6..94bd83b36644 100644
+--- a/fs/hfsplus/inode.c
++++ b/fs/hfsplus/inode.c
+@@ -504,9 +504,9 @@ int hfsplus_cat_read_inode(struct inode *inode, struct hfs_find_data *fd)
+ 		hfsplus_get_perms(inode, &folder->permissions, 1);
+ 		set_nlink(inode, 1);
+ 		inode->i_size = 2 + be32_to_cpu(folder->valence);
+-		inode->i_atime = timespec_to_timespec64(hfsp_mt2ut(folder->access_date));
+-		inode->i_mtime = timespec_to_timespec64(hfsp_mt2ut(folder->content_mod_date));
+-		inode->i_ctime = timespec_to_timespec64(hfsp_mt2ut(folder->attribute_mod_date));
++		inode->i_atime = hfsp_mt2ut(folder->access_date);
++		inode->i_mtime = hfsp_mt2ut(folder->content_mod_date);
++		inode->i_ctime = hfsp_mt2ut(folder->attribute_mod_date);
+ 		HFSPLUS_I(inode)->create_date = folder->create_date;
+ 		HFSPLUS_I(inode)->fs_blocks = 0;
+ 		if (folder->flags & cpu_to_be16(HFSPLUS_HAS_FOLDER_COUNT)) {
+@@ -542,9 +542,9 @@ int hfsplus_cat_read_inode(struct inode *inode, struct hfs_find_data *fd)
+ 			init_special_inode(inode, inode->i_mode,
+ 					   be32_to_cpu(file->permissions.dev));
+ 		}
+-		inode->i_atime = timespec_to_timespec64(hfsp_mt2ut(file->access_date));
+-		inode->i_mtime = timespec_to_timespec64(hfsp_mt2ut(file->content_mod_date));
+-		inode->i_ctime = timespec_to_timespec64(hfsp_mt2ut(file->attribute_mod_date));
++		inode->i_atime = hfsp_mt2ut(file->access_date);
++		inode->i_mtime = hfsp_mt2ut(file->content_mod_date);
++		inode->i_ctime = hfsp_mt2ut(file->attribute_mod_date);
+ 		HFSPLUS_I(inode)->create_date = file->create_date;
+ 	} else {
+ 		pr_err("bad catalog entry used to create inode\n");
 -- 
 2.20.0
 
