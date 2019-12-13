@@ -2,113 +2,112 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2904C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939DFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0EE2465B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705662077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 10:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLMKZ7 (ORCPT
+        id S1726620AbfLMK1g convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:25:59 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:41381 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfLMKZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:25:58 -0500
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MtwQm-1hsHv71CF2-00uIBN for <linux-kernel@vger.kernel.org>; Fri, 13 Dec
- 2019 11:25:57 +0100
-Received: by mail-qt1-f176.google.com with SMTP id z15so1862393qts.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 02:25:57 -0800 (PST)
-X-Gm-Message-State: APjAAAXVGHaXeMLQZkIEWC4lzb5PPXuRY3l6wf433Ei87Y+sKx7o0USD
-        nDK7IeBS4TEIPDbrzRAY11l02xy4f2L+/Q6FSW4=
-X-Google-Smtp-Source: APXvYqzQbLZzun4UPMcyYud1qq2XcN6i6bQrSev+tzenclZnUxptcZ8EZKr8KndoQJUpiIybOxbQeNJCn8vGS4FD6jo=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr11551312qte.204.1576232756266;
- Fri, 13 Dec 2019 02:25:56 -0800 (PST)
+        Fri, 13 Dec 2019 05:27:36 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:32952 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfLMK1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:27:36 -0500
+Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ifiAU-00015Z-9i; Fri, 13 Dec 2019 11:27:30 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Kever Yang <kever.yang@rock-chips.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-rockchip@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH] MAINTAINERS: rockchip: Track more files
+Date:   Fri, 13 Dec 2019 11:27:29 +0100
+Message-ID: <3160577.NKkQCOVCmZ@phil>
+In-Reply-To: <e4dc0f27-6a26-3b29-11fd-231f686fce91@rock-chips.com>
+References: <20191204090710.11646-1-miquel.raynal@bootlin.com> <e4dc0f27-6a26-3b29-11fd-231f686fce91@rock-chips.com>
 MIME-Version: 1.0
-References: <20191211212025.1981822-1-arnd@arndb.de> <20191211212025.1981822-7-arnd@arndb.de>
- <0e00090ef6fcf310159d6ce23f2c92f511dd01de.camel@codethink.co.uk>
- <CAK8P3a2-5qNsy0cbxmLYfgwtbdSp4e4XXQ+gAAh0X+Kr1F-4sw@mail.gmail.com> <b937b99c9843ae5daa3bdf84929b325f05ecab8f.camel@codethink.co.uk>
-In-Reply-To: <b937b99c9843ae5daa3bdf84929b325f05ecab8f.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Dec 2019 11:25:40 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2BwA-wnxRPLgLrb9e2HpnrhXXyNyLfn4sOpSOjiJ3oEw@mail.gmail.com>
-Message-ID: <CAK8P3a2BwA-wnxRPLgLrb9e2HpnrhXXyNyLfn4sOpSOjiJ3oEw@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH v7 6/9] ALSA: Avoid using timespec for struct snd_timer_tread
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eyS+wQjnZNz8XyPyl7OLhOOP/wDeX2qqcVdn3UETFCnnYRFW5kK
- XV6/PfAorm72G8EwylAtton1Wxnx+7ZC2nnjQiYrupVpwm18dezrnDzEzNbD09yMaZCRxZV
- sSPgFzRzKvq6KRjSJmfpUhOjv1uQndpgTxAT6rMHMfC67+MSqaCh8r6TgEBtx4fC6fOLxvN
- /4QjeNzAI+UHIt1LfNvrw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+GA4uxNrECo=:K+0oQWF19VYn4z5VS3irGY
- 4RtSeil13++KGWsdIzE8sIJpj2/ygJsKXZnseQB/u7HsNk6RvGpRv3X0+pz0poU8EYrrVV8uK
- /2/JjNoyKQ5nWYtAb6vY8U8RoDMize7haRAZE9osifpVvOA9vR+NTpddlC0Hr4sv3m8vG25k+
- 77faQb/iFDN5u79GeMzk8PLq1RH7w29CtPXIv3KkBRnG3tjk3cEswA2hE8v08GqeOyHlzXs40
- 1FhO+oX1RPKDDlhAzq0s6wNp4HoGBaa14th28HpVIA8mxBfYT2h4T/A/nHrHMNt6QVX4l1vrb
- oJFfYQKUFXcZd1lPRRZyO9+zCO8Xh1G1vKnTbCzdIZ3+nvoET67arsRHGnD7pj7dVG44vE5VV
- 0ZR1nDRojIkINWGCz4ynpPcJoc78Bd1KwnFETqMO3rsB1L5CB6bgsojVN8VN4IGratvpF0y3G
- tSmMoUkOlEgYLkMy3wbvuYu1owhSituwf94RWJ6bi86AH0s+0AKYBBe0M8FvWh5OVC+oYidFJ
- +bSH59MTCf4vBqqXzWeV6Ng2sUL4hQZUZE0wQaZDxFWHCUKAtk5rhq/PNSaxSz1hhOWB7tjrL
- iSEnZpMNPMlvG4diPdlZzmAdQgWdWK7C3ZAnPQOOxGryI01KPMMjXiYvsBnqtPVTgz/eTCyOi
- uOUpCM6h5LouVUQW+4Asj+wY5bltmtXyPGjh4PIR+IG3v/Q7eH126wgdUUz2JWn9sjLYn+/i3
- CD13A1KYccf0/3aW4Uf7FqiElSCiDErd4MqE71XOdjVoU1piE/IAmMiO1xs0yr0eZ+L8VOV6j
- OOFjE1fDwIBVDoWqWtvbaNGcdSbm2z31WBYAG22lDOf/poiLpaKpohJ/2D4/Y1j36QRsa583U
- uzN6B9iOWLgGBpvpAUQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 3:27 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
-> On Thu, 2019-12-12 at 10:57 +0100, Arnd Bergmann wrote:
-> > On Thu, Dec 12, 2019 at 1:14 AM Ben Hutchings
-> > <ben.hutchings@codethink.co.uk> wrote:
-> > > On Wed, 2019-12-11 at 22:20 +0100, Arnd Bergmann wrote:
-> > > > @@ -2145,14 +2202,34 @@ static ssize_t snd_timer_user_read(struct file *file, char __user *buffer,
-> > > > +             case TREAD_FORMAT_NONE:
-> > > >                       if (copy_to_user(buffer, &tu->queue[qhead],
-> > > >                                        sizeof(struct snd_timer_read)))
-> > > >                               err = -EFAULT;
-> > > > +                     break;
-> > > > +             default:
-> > > > +                     err = -ENOTSUPP;
-> > > [...]
-> > >
-> > > This is not a valid error code for returning to user-space, but this
-> > > case should be impossible so I don't think it matters.
+Am Montag, 9. Dezember 2019, 09:18:00 CET schrieb Kever Yang:
+> Hi Miquel,
+> 
+> On 2019/12/4 下午5:07, Miquel Raynal wrote:
+> > The current list misses a lot of drivers not prefixed or suffixed by
+> > "rockchip". For instance, there are plenty drivers called rk808 and
+> > rk805 which are currently not tracked (clk, regulator, pinctrl, RTC,
+> > MFD, includes, bindings). Add them to the list under the Rockchip
+> > entry.
 > >
-> > Agreed. Maybe it should also WARN_ON(1), as there getting here
-> > would indicate a bug in the kernel.
->
-> Yes, WARN_ON() or WARN_ON_ONCE() would make sense.
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >
+> > Hi Heiko,
+> >
+> > You are right we should try to check more often your tree. Also, here
+> > is a patch so that you are Cc'ed for all Rockchip related patches
+> > because the current list is not exhaustive at all (not sure it is
+> > voluntary or not though).
+> >
+> > Cheers,
+> > Miquèl
+> >
+> >   MAINTAINERS | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index cba1095547fd..a9564e6cb872 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2198,12 +2198,16 @@ L:	linux-rockchip@lists.infradead.org
+> >   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
+> >   S:	Maintained
+> >   F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+> > +F:	Documentation/devicetree/bindings/*/*rk80*
+> >   F:	arch/arm/boot/dts/rk3*
+> >   F:	arch/arm/boot/dts/rv1108*
+> >   F:	arch/arm/mach-rockchip/
+> > +F:	include/*/*/rk808.h
+> > +F:	include/*/*/*/rk808.h
+> >   F:	drivers/clk/rockchip/
+> >   F:	drivers/i2c/busses/i2c-rk3x.c
+> >   F:	drivers/*/*rockchip*
+> > +F:	drivers/*/*rk80*
+> >   F:	drivers/*/*/*rockchip*
+> >   F:	sound/soc/rockchip/
+> >   N:	rockchip
+> For the Rockchip PMIC, is it better to have a NEW MAINTAINER entry like 
+> "ROCKCHIP PMIC DRIVER"
+> which share the same mailing list linux-rockchip@, because there is not 
+> only rk808,
+> but also rk805, rk809, rk817, rk818, and may be more to come.
+> 
+> BTW, we should use 'rk8' instead of 'rk80' to match all the Rockchip PMICs.
 
-This is what I added now:
+yep, I agree with Kever on this ... also that new pmic-related entry should
+not really link to a git tree as patches for it will get distributed through
+multiple trees (mfd, regulator, rtc) most of the time.
 
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -2161,6 +2161,7 @@ static ssize_t snd_timer_user_read(struct file
-*file, char __user *buffer,
-                unit = sizeof(struct snd_timer_read);
-                break;
-        default:
-+               WARN_ONCE(1, "Corrupt snd_timer_user\n");
-                return -ENOTSUPP;
-        }
+Miquel can you do a v2 please?
 
-         Arnd
+Thanks
+Heiko
+
+
