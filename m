@@ -2,180 +2,108 @@ Return-Path: <SRS0=7lyw=2D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA36C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89777C00454
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1889D24671
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eSFH2uBM"
+	by mail.kernel.org (Postfix) with ESMTP id C74A22467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 21:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576271151;
+	bh=ZCTmFmuP+82kP0bAev+K+tiRBMnz5wbfX+OG3ptUObg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=E8q60TunIC6gHxCx2w9eTdbEfB8p+L8QmxbUIMyNKtmeM0JvPi2hi30UwqHhCE1G1
+	 Z4izzYMizwEgAEuYwP/vIt5DtOG4XIUXPLOwxcHkpaJkzHmJoxrroD3IjxGguSrRjH
+	 CYXJ+f9YV8hXCgtdzdwyiWm+B5d5T5fwGNGolrJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLMVFc (ORCPT
+        id S1726797AbfLMVFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:05:32 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48058 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLMVFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 16:05:32 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKsVO2090897;
-        Fri, 13 Dec 2019 21:05:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=+CxyBUYNOKKH5a8vZMlq3lGRzD8G5U21GoBTkL8d1Dk=;
- b=eSFH2uBMxA94q/8a7fNWX5MdRXjngAcsXdDL2FOVoW4HOaCbQy71bhZQv/5/Ar6VkDGC
- ZuuG5tGKdkeVA26f1IDoGUqS91bV0BlRXDRrjQC0GW9Ux/Fjv1MhiHKvevDH7up2zlio
- ZTc0kbbY3bQIPFm0ByZ7g+MGtdS4KdScdhnwpapulmxgkG7mztPd5PKwStM2x8gvBOPB
- bU9yCYhr2X6UdLjtqmxQ6b+GMbW3FaOG98+4BsvJwbgKSADdkn73tm9s7+DJTlDWkIWf
- A0qM0YTBu4AKwxtw6eat1a3qwoBfb3VsV2+/oHByNqYXrOpmbbaPH3RJfZYDpazWkPcw OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wr41qubcm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 21:05:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBDKsf70098671;
-        Fri, 13 Dec 2019 21:05:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2wvdwqwp38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Dec 2019 21:05:18 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBDL5BNK030978;
-        Fri, 13 Dec 2019 21:05:12 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Dec 2019 13:05:11 -0800
-Date:   Fri, 13 Dec 2019 13:05:09 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH v2 20/24] xfs: disallow broken ioctls without
- compat-32-bit-time
-Message-ID: <20191213210509.GK99875@magnolia>
-References: <20191213204936.3643476-1-arnd@arndb.de>
- <20191213205417.3871055-11-arnd@arndb.de>
+        Fri, 13 Dec 2019 16:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfLMVFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:05:51 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B28224671;
+        Fri, 13 Dec 2019 21:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576271149;
+        bh=ZCTmFmuP+82kP0bAev+K+tiRBMnz5wbfX+OG3ptUObg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=t6Qhei1TMSW87H73J95fJMqQBovt4qooCGfJGpcIzyU6OrTNzFdPK5sz5RkZx7Vt4
+         00J5X3JMBq7/onLPOtw2q+9IqsQrccVRsxGpHr2L2fs5Q3bP2UAL7V5F0rnyxMJeFI
+         TwW0/sTOhJR6QYfk9Ygc9R6KuX6savNbQppuGcQ8=
+Date:   Fri, 13 Dec 2019 15:05:48 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+Message-ID: <20191213201944.GA190383@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213205417.3871055-11-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912130154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912130154
+In-Reply-To: <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 09:53:48PM +0100, Arnd Bergmann wrote:
-> When building a kernel that disables support for 32-bit time_t
-> system calls, it also makes sense to disable the old xfs_bstat
-> ioctls completely, as they truncate the timestamps to 32-bit
-> values.
+On Fri, Dec 13, 2019 at 08:47:45AM +0000, Lad Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Note that current xfs doesn't support > 32-bit timestamps at all, so for
-now the old bulkstat/swapext ioctls will never overflow.
+$ git log --oneline drivers/of/address.c
+951d48855d86 of: Make of_dma_get_range() work on bus nodes
+645c138636de of/address: Fix of_pci_range_parser_one translation of DMA addresses
+81db12ee15cb of/address: Translate 'dma-ranges' for parent nodes missing 'dma-ranges'
+b68ac8dc22eb of: Factor out #{addr,size}-cells parsing
+c60bf3eb888a of: address: Follow DMA parent for "dma-coherent"
+862ab5578f75 of/address: Introduce of_get_next_dma_parent() helper
 
-Granted, I melded everyone's suggestions into a more fully formed
-'bigtime' feature patchset that I'll dump out soon as part of my usual
-end of year carpetbombing of the mailing list, so we likely still need
-most of this patch anyway...
+Make yours match.  There are a few "of: address: " subjects, but the
+ones from Rob (the maintainer) use "of/address: ", so I'd use that.
 
-> Any application using these needs to be updated to use the v5
-> interfaces.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  fs/xfs/xfs_ioctl.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 7b35d62ede9f..a4a4eed8879c 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -36,6 +36,7 @@
->  #include "xfs_reflink.h"
->  #include "xfs_ioctl.h"
->  
-> +#include <linux/compat.h>
->  #include <linux/mount.h>
->  #include <linux/namei.h>
->  
-> @@ -617,6 +618,23 @@ xfs_fsinumbers_fmt(
->  	return xfs_ibulk_advance(breq, sizeof(struct xfs_inogrp));
->  }
->  
-> +/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
-> +static bool xfs_have_compat_bstat_time32(unsigned int cmd)
+> this patch adds support to parse PCI outbound-ranges, the
+> outbound-regions are similar to pci ranges except it doesn't
+> have pci address, below is the format for bar-ranges:
 
-The v5 bulkstat ioctls follow an entirely separate path through
-xfs_ioctl.c, so I think you don't need the @cmd parameter.
+s/pci/PCI/
+Capitalize sentences.
 
-> +{
-> +	if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
-> +		return true;
-> +
-> +	if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
-> +		return true;
-> +
-> +	if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
-> +	    cmd == XFS_IOC_FSBULKSTAT ||
-> +	    cmd == XFS_IOC_SWAPEXT)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  STATIC int
->  xfs_ioc_fsbulkstat(
->  	xfs_mount_t		*mp,
-> @@ -637,6 +655,9 @@ xfs_ioc_fsbulkstat(
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	if (!xfs_have_compat_bstat_time32(cmd))
-> +		return -EINVAL;
-> +
->  	if (XFS_FORCED_SHUTDOWN(mp))
->  		return -EIO;
->  
-> @@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
->  	struct fd	f, tmp;
->  	int		error = 0;
->  
-> +	if (xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
+Is "bar-range" an actual DT property?  If it's supposed to be a
+generic description, "BAR range" would be better.
 
-if (!xfs_have...()) ?
-
---D
-
-> +		error = -EINVAL;
-> +		goto out;
-> +	}
-> +
->  	/* Pull information for the target fd */
->  	f = fdget((int)sxp->sx_fdtarget);
->  	if (!f.file) {
-> -- 
-> 2.20.0
-> 
+> outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+>                    upper32_size lower32_size>;
