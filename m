@@ -7,79 +7,81 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC2AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A92CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56D4205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D968F205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Dec 2019 23:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576279625;
-	bh=+rkDFwuE6m9Dy2wMFwA/ww2Ki3MclrFlWvnP2CEUPus=;
+	s=default; t=1576279654;
+	bh=sKszG99nwinMuvGshQ51xmMSwl7JdG7SQDBkCt/YiYo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JZa8uucNRB137c29HbOKMCWV56ROD4C0Ix3a3Rh0pXZIWwhOdpkCsmbkzR2FujC9l
-	 SQtw+gQ6WXG8e+WsMGWSO++ez31VnQBa/VPv+GNHDHEI+DgI9OIErO7I9pE3i7A0cm
-	 BmRZMq04uA4oFOIIDhK4vPxlIqwGx1IaHcx3QGiE=
+	b=QgWZ8Hlb2itycPHiMExZKIiTJgkBV3dc4fSsW7ZTOY7oW3B+8H/svaP1eoj0YrFHK
+	 VqyR1WJ5XWltoGZk3H6JZI/Sh+VbdvGa7fH6fsMRB06dQ7GQL4qBjqIz1vYtIcm96l
+	 IHNdgFp2uelwC1T5Ga4R15XQfnbq0x3UOZv2oBkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfLMX1F (ORCPT
+        id S1726841AbfLMX1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 18:27:05 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35194 "EHLO
+        Fri, 13 Dec 2019 18:27:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39170 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLMX1E (ORCPT
+        with ESMTP id S1726638AbfLMX1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 18:27:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id o9so1068765ote.2;
-        Fri, 13 Dec 2019 15:27:04 -0800 (PST)
+        Fri, 13 Dec 2019 18:27:32 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so1041716oty.6;
+        Fri, 13 Dec 2019 15:27:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TYp5sqcfkiifjsMp1o5uJlv1/2yExoosYWzgSPwTvDU=;
-        b=MG6NmJueQ9BrjuZSQKM5uT7eb8YEXEHru3L2FCsctgotN7tteTy8gF0XwoM0O85jmI
-         qBh2R2hCmy8pS3t1F3+LyCaanYUjyd/hHC8zrrfQft2ASozZBImGBvpi92x+ISdvU1FP
-         sln1MxL1u3wlY+tSxdTHdMP/wNWFCUKCRobVQ7XRGU4ao2zxHCzTMsDs4swcGZBB+MT2
-         gok4aSR/vlF6yXrLx8Xgqz9Z49NWX83m1cxBcSYhl0SuXZMEE+C/9bDe5JBVXIvS34y7
-         i7iMHxMv1zDBzSMxZvEXtAQSugfQhpN5ZLEan69vfsPIFvkA2VfW34L4eSiZSMsUF0JC
-         QNLQ==
-X-Gm-Message-State: APjAAAWfVZkUAyoId5WUoMl3PdP7nkdSs/+r0w76OpQQL1gmMoG1GCcq
-        9PtcUhbzeFovZXk/sjeLeg==
-X-Google-Smtp-Source: APXvYqyGpF5zXlBMXF7YOJcUxQgwuziR4mu9FJxfXVqud5UO3DL8TXG5Inzr2scO0w0CkanlhM/Lxw==
-X-Received: by 2002:a9d:768b:: with SMTP id j11mr17480041otl.116.1576279623911;
-        Fri, 13 Dec 2019 15:27:03 -0800 (PST)
+        bh=S4bPNr6OBo/g9aqwSLy55ENKU+9zI0oQQiPkpLV/Jps=;
+        b=kDqM1Ds/KcbFY/FLOQMpfQNYXvlaCBFdAI5dTBYv7jl8cldiPg0QU/xC5eNgZUPkJn
+         Lqtdto0UF48upbGUJxk+VgGu3GMLd82tzm8T9owHr3buRb5IanxPxM+5MF9dkcytBDB7
+         SYmr801XCHUmR76nVksgwu4F4q9VnmXHEMmRneYrt8TzaVt3g+ddx2D21jyWEg84r2fN
+         gCpDS1QDDwLNmEmUog2g2YG6emzAo88mubdP9AjSwd7P8ZxU5OdSPBlLUcaR7No8T584
+         nAXlu+G5lV/keLl2BIUp2vGnD10ViW0RBfIw3LFv1BReB6ss1oayMpjWZ9mV8dX19k5f
+         kZ0g==
+X-Gm-Message-State: APjAAAXvCx3bvWzZ89fDwbGkXIV5OviXkOLFFIT8R1Xujm5Vgkp6mxx4
+        lawlT+Ygqj6N6ZttA0C09A==
+X-Google-Smtp-Source: APXvYqyuN0Td4+RfvGK51mEm0cUvXxHhe/hls84mHF1OL3nAxDhPeCnm798ZyCCEISzCWecbI/Th3Q==
+X-Received: by 2002:a9d:7999:: with SMTP id h25mr17214493otm.347.1576279652074;
+        Fri, 13 Dec 2019 15:27:32 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r24sm3881140ota.61.2019.12.13.15.27.03
+        by smtp.gmail.com with ESMTPSA id y24sm3844418oix.31.2019.12.13.15.27.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 15:27:03 -0800 (PST)
-Date:   Fri, 13 Dec 2019 17:27:02 -0600
+        Fri, 13 Dec 2019 15:27:31 -0800 (PST)
+Date:   Fri, 13 Dec 2019 17:27:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm, "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH 2/2] dts: bindings: max17042_battery: add all of the
- compatible strings
-Message-ID: <20191213232702.GA22495@bogus>
-References: <20191202152520.27558-1-angus@akkea.ca>
- <20191202152520.27558-3-angus@akkea.ca>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Shenzhen Frida
+ LCD Co., Ltd.
+Message-ID: <20191213232730.GA23246@bogus>
+References: <20191202154123.64139-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191202152520.27558-3-angus@akkea.ca>
+In-Reply-To: <20191202154123.64139-1-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Dec 2019 08:25:20 -0700, "Angus Ainslie (Purism)" wrote:
-> The bindings are missing documentation for some of the compatible
-> strings.
+On Mon,  2 Dec 2019 16:41:21 +0100, Paul Cercueil wrote:
+> Add an entry for Shenzhen Frida LCD Co., Ltd.
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> v2: No change
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../devicetree/bindings/power/supply/max17042_battery.txt   | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
