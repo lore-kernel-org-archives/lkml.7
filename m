@@ -2,91 +2,131 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2344C47409
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 10:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C4DC2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 10:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75B224671
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 10:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCx6Hcds"
+	by mail.kernel.org (Postfix) with ESMTP id 1A27F24687
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 10:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfLNKHO (ORCPT
+        id S1726232AbfLNKJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 05:07:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48406 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725862AbfLNKHN (ORCPT
+        Sat, 14 Dec 2019 05:09:17 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:43074 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfLNKJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 05:07:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576318032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M7DjxLpVUDmrMfYFPEAv8TSiRH6FhuBM4F+xzNTmV2w=;
-        b=hCx6HcdsyaTF800VQphvj+AUcMTp4ViJCe58rsIxOwWoAOfiZA0v0M2bLjHWYyMuecSCWh
-        TPrP9g1DH1DjgLqsxoGKQfB9ZziLoiG0/INljDcejR2O6qQRu7daTvd2Ij/m5RCHBZZLs7
-        G8ieVIT9HA/5c8FWYoLMR+qQw4rZRFo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-VQmF1x_SMJafxx7yLz7sDg-1; Sat, 14 Dec 2019 05:07:08 -0500
-X-MC-Unique: VQmF1x_SMJafxx7yLz7sDg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 14 Dec 2019 05:09:17 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E5761005512;
-        Sat, 14 Dec 2019 10:07:06 +0000 (UTC)
-Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 37CB219C4F;
-        Sat, 14 Dec 2019 10:07:02 +0000 (UTC)
-Date:   Sat, 14 Dec 2019 18:07:00 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
- direct mapping.
-Message-ID: <20191214100700.GK28917@MiWiFi-R3L-srv>
-References: <20191115144917.28469-1-msys.mizuma@gmail.com>
- <20191115144917.28469-5-msys.mizuma@gmail.com>
- <20191212201916.GL4991@zn.tnic>
- <20191213132850.GG28917@MiWiFi-R3L-srv>
- <20191213141543.GA25899@zn.tnic>
- <20191213145448.GH28917@MiWiFi-R3L-srv>
- <20191213163818.GB25899@zn.tnic>
- <20191213232928.GI28917@MiWiFi-R3L-srv>
- <20191214071329.GA28635@zn.tnic>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8679E80513;
+        Sat, 14 Dec 2019 11:09:12 +0100 (CET)
+Date:   Sat, 14 Dec 2019 11:09:11 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add Satoz SAT050AT40H12R2 panel
+ support
+Message-ID: <20191214100911.GA2967@ravnborg.org>
+References: <20191213182325.27030-1-miquel.raynal@bootlin.com>
+ <20191213182325.27030-2-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191214071329.GA28635@zn.tnic>
+In-Reply-To: <20191213182325.27030-2-miquel.raynal@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=P-IC7800AAAA:8
+        a=-2JWhZF2_wdEBDjv_fEA:9 a=CjuIK1q_8ugA:10 a=d3PnA9EDa4IxuAV0gXij:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/14/19 at 08:13am, Borislav Petkov wrote:
-> On Sat, Dec 14, 2019 at 07:29:28AM +0800, Baoquan He wrote:
-> > OK, you mean parsing SRAT again before kernel_randomize_memory(). I
-> > think this is what Masa made this patchset to avoid. Then we will have
-> > three times SRAT parsing.
-> 
-> Can the SRAT parsing be *moved* up so that it is done before
-> kernel_randomize_memory() ?
-> 
-> So that it doesn't happen 3 times and acpi_numa_init() can simply use
-> the already parsed results.
+Hi Miquel.
 
-Not very sure, It could be doable. Maybe Masa can have a try.
+On Fri, Dec 13, 2019 at 07:23:25PM +0100, Miquel Raynal wrote:
+> Add support for the Satoz SAT050AT40H12R2 RGB panel.
 
+Google failed to find this display - do you have any pointers to
+datasheet?
+
+This turned up: SAT050AT40H12B2
+But I failed to find any data sheet.
+
+I wonder if there is any typical, min, max timings - so we could use
+display_timing rather than display_mode.
+
+Before the compatible is documented the patch will not be applied.
+So you need to submit a binding document too,
+which must be in meta-schema syntax (.yaml).
+
+	Sam
+
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 15dd495c347d..8ae98437cbba 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2557,6 +2557,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+>  	},
+>  };
+>  
+> +static const struct drm_display_mode satoz_sat050at40h12r2_mode = {
+> +	.clock = 33300,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 210,
+> +	.hsync_end = 800 + 210 + 20,
+> +	.htotal = 800 + 210 + 420 + 46,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 23,
+> +	.vsync_end = 480 + 23 + 10,
+> +	.vtotal = 480 + 23 + 10 + 22,
+> +	.vrefresh = 60,
+> +};
+> +
+> +static const struct panel_desc satoz_sat050at40h12r2 = {
+> +	.modes = &satoz_sat050at40h12r2_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 108,
+> +		.height = 65,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +};
+> +
+>  static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
+>  	.clock = 168480,
+>  	.hdisplay = 1920,
+> @@ -3357,6 +3381,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "samsung,ltn140at29-301",
+>  		.data = &samsung_ltn140at29_301,
+> +	}, {
+> +		.compatible = "satoz,sat050at40h12r2",
+> +		.data = &satoz_sat050at40h12r2,
+>  	}, {
+>  		.compatible = "sharp,ld-d5116z01b",
+>  		.data = &sharp_ld_d5116z01b,
+> -- 
+> 2.20.1
