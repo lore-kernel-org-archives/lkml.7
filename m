@@ -2,118 +2,467 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF6C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23462C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78E42465E
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:32:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCZd9EXG"
+	by mail.kernel.org (Postfix) with ESMTP id E511620706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLNMck (ORCPT
+        id S1726735AbfLNMdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 07:32:40 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40229 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNMcj (ORCPT
+        Sat, 14 Dec 2019 07:33:05 -0500
+Received: from out28-173.mail.aliyun.com ([115.124.28.173]:49661 "EHLO
+        out28-173.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfLNMdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 07:32:39 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c93so1318677edf.7;
-        Sat, 14 Dec 2019 04:32:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=og90X3T/HiK4QxMIRbjqxNLdYml1hZutaUaHYcrNOdw=;
-        b=QCZd9EXGlipVlMW0kDuKPdpPvkgsN1s4JbXfvvVr+3x+6erztvQifDa7qZGsPBu0k7
-         ihW84YNNf7LocFqHZAPJHTp9EP9srZacDWEyVaHg00hrt+8GqcRwBpQaaVIHbfgRFBGo
-         v13Ly3U9V5dZx3Br4G8j5VkfpnQbwmKvr6ISxJY/QVK+Pkrd/SV6NA3abO7UK4z6OAZu
-         gqX/X6jTxva8E5rCLYhYV+r9/EOMxOhG4T1umPtBKAsa2Zaeh+4f6rWPUg6bzqsGD8cr
-         196IgCedfP2avhBsY0wkEMOVEhmIqS7YeKfYNkCIkRQlt0eb/gR3FS62fKYtTNFZlVCZ
-         ORYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=og90X3T/HiK4QxMIRbjqxNLdYml1hZutaUaHYcrNOdw=;
-        b=i8KreDG1N6O2Z8kpbOEiQ5cxvMug5Tr9B3RL7eqb9s1qkkWnLQxYLHMn+8DBwM1Fms
-         cj+muFIEwNtetNq+6UMxYMKuGX9YFIOB+rWtHeU2LJLjhoWrzbHnBn2go0MIeTTBgOWt
-         8H7y/8xfqxK3nQhz1vWE8oPBA8mi4vrecGoVaPqEbYga8M1Byevew5AxsiFynCy5Q17x
-         YSTOSggy0fWzi1HVmPDrPhdEi8wPUjH3b3rumtzyN7yc7UIBs3o3r8YK2QYIPre+hE9U
-         qmnZRivzGWgR7fawU68zq8Qi79lgMPgFnZ6ETlXeU0dTWQ9RcX64lfy3bulBqtjve1Ob
-         SyHw==
-X-Gm-Message-State: APjAAAVSNQTdzs+u8XIp1zb4I4Ipn0Xo24xnmIJI5y8mWq5qV1q6cLNZ
-        rfYeku0pePpUUDopXhZXnWkms4EbpG4pym32gSw=
-X-Google-Smtp-Source: APXvYqwuHKJGqjCUjTSlBZ/MqbcEF/B+Nq4qhfakyrLrsUlsSKfg/LkgUpDcIDkUw/NFY7w4go4mFqybCrF0Nzs7n1M=
-X-Received: by 2002:a17:906:2281:: with SMTP id p1mr22619648eja.184.1576326757363;
- Sat, 14 Dec 2019 04:32:37 -0800 (PST)
+        Sat, 14 Dec 2019 07:33:04 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.351933-0.00694798-0.641119;DS=CONTINUE|ham_regular_dialog|0.107182-0.000433894-0.892384;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.GH.d-qj_1576326771;
+Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GH.d-qj_1576326771)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Sat, 14 Dec 2019 20:32:52 +0800
+Subject: Re: [PATCH 2/2] I2C: JZ4780: Add support for the X1000.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1576165850-20727-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576165850-20727-4-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576272065.3.2@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, paul.burton@mips.com,
+        paulburton@kernel.org, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+From:   zhouyanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5DF4D673.8050104@wanyeetech.com>
+Date:   Sat, 14 Dec 2019 20:32:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-References: <20191107140304.8426-1-laurent@vivier.eu> <20191107140304.8426-2-laurent@vivier.eu>
- <7cb245ed-f738-7991-a09b-b27152274b9f@vivier.eu> <20191213185110.06b52cf4@md1za8fc.ad001.siemens.net>
- <1576267177.4060.4.camel@HansenPartnership.com> <3205e74b-71f1-14f4-b784-d878b3ef697f@vivier.eu>
-In-Reply-To: <3205e74b-71f1-14f4-b784-d878b3ef697f@vivier.eu>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Sat, 14 Dec 2019 13:32:26 +0100
-Message-ID: <CAKgNAkiaKJZMA0pzvwDa75CxfULTL1LmOZDzhW0Y5TmL7nBGZw@mail.gmail.com>
-Subject: Re: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
-To:     Laurent Vivier <laurent@vivier.eu>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <dima@arista.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
-        Containers <containers@lists.linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1576272065.3.2@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Laurent,
+Hi Paul,
 
-On Sat, 14 Dec 2019 at 12:35, Laurent Vivier <laurent@vivier.eu> wrote:
+On 2019年12月14日 05:21, Paul Cercueil wrote:
+> Hi Zhou,
 >
-> Le 13/12/2019 =C3=A0 20:59, James Bottomley a =C3=A9crit :
-> > On Fri, 2019-12-13 at 18:51 +0100, Henning Schild wrote:
-> >> Hi all,
-> >>
-> >> that is a very useful contribution, which will hopefully be
-> >> considered.
-> >
-> > I'm technically the maintainer on the you touched it last you own it
-> > basis, so if Christian's concerns get addressed I'll shepherd it
-> > upstream.
 >
-> Thank you.
+> Le jeu., déc. 12, 2019 at 23:50, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> Add support for probing i2c driver on the X1000 Soc from Ingenic.
+>> call the corresponding fifo parameter according to the device
+>> model obtained from the devicetree.
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>  drivers/i2c/busses/i2c-jz4780.c | 159 
+>> +++++++++++++++++++++++++++++-----------
+>>  1 file changed, 117 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-jz4780.c 
+>> b/drivers/i2c/busses/i2c-jz4780.c
+>> index 25dcd73..3b21896 100644
+>> --- a/drivers/i2c/busses/i2c-jz4780.c
+>> +++ b/drivers/i2c/busses/i2c-jz4780.c
+>> @@ -4,6 +4,7 @@
+>>   *
+>>   * Copyright (C) 2006 - 2009 Ingenic Semiconductor Inc.
+>>   * Copyright (C) 2015 Imagination Technologies
+>> + * Copyright (C) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>>   */
+>>
+>>  #include <linux/bitops.h>
+>> @@ -17,6 +18,7 @@
+>>  #include <linux/io.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>> +#include <linux/of_device.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/sched.h>
+>>  #include <linux/slab.h>
+>> @@ -55,6 +57,7 @@
+>>  #define JZ4780_I2C_ACKGC    0x98
+>>  #define JZ4780_I2C_ENSTA    0x9C
+>>  #define JZ4780_I2C_SDAHD    0xD0
+>> +#define X1000_I2C_SDAHD        0x7C
+>>
+>>  #define JZ4780_I2C_CTRL_STPHLD        BIT(7)
+>>  #define JZ4780_I2C_CTRL_SLVDIS        BIT(6)
+>> @@ -73,6 +76,8 @@
+>>  #define JZ4780_I2C_STA_TFNF        BIT(1)
+>>  #define JZ4780_I2C_STA_ACT        BIT(0)
+>>
+>> +#define X1000_I2C_DC_STOP        BIT(9)
+>> +
+>>  static const char * const jz4780_i2c_abrt_src[] = {
+>>      "ABRT_7B_ADDR_NOACK",
+>>      "ABRT_10ADDR1_NOACK",
+>> @@ -130,18 +135,32 @@ static const char * const jz4780_i2c_abrt_src[] 
+>> = {
+>>  #define JZ4780_I2CFLCNT_ADJUST(n)    (((n) - 1) < 8 ? 8 : ((n) - 1))
+>>
+>>  #define JZ4780_I2C_FIFO_LEN    16
+>> -#define TX_LEVEL        3
+>> -#define RX_LEVEL        (JZ4780_I2C_FIFO_LEN - TX_LEVEL - 1)
+>> +
+>> +#define X1000_I2C_FIFO_LEN    64
+>>
+>>  #define JZ4780_I2C_TIMEOUT    300
+>>
+>>  #define BUFSIZE 200
+>>
+>> +enum ingenic_i2c_version {
+>> +    ID_JZ4780,
+>> +    ID_X1000,
+>> +};
+>> +
+>> +/** ingenic_i2c_config: SOC specific config data. */
+>> +struct ingenic_i2c_config {
+>> +    int fifosize;
+>> +    int tx_level;
+>> +    int rx_level;
+>> +};
+>> +
+>>  struct jz4780_i2c {
+>>      void __iomem        *iomem;
+>>      int             irq;
+>>      struct clk        *clk;
+>>      struct i2c_adapter     adap;
+>> +    enum ingenic_i2c_version version;
+>> +    const struct ingenic_i2c_config *cdata;
+>>
+>>      /* lock to protect rbuf and wbuf between xfer_rd/wr and irq 
+>> handler */
+>>      spinlock_t        lock;
+>> @@ -340,11 +359,18 @@ static int jz4780_i2c_set_speed(struct 
+>> jz4780_i2c *i2c)
+>>
+>>      if (hold_time >= 0) {
+>>          /*i2c hold time enable */
+>> -        hold_time |= JZ4780_I2C_SDAHD_HDENB;
+>> -        jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+>> +        if (i2c->version >= ID_X1000)
+>> +            jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, hold_time);
+>> +        else {
+>> +            hold_time |= JZ4780_I2C_SDAHD_HDENB;
+>> +            jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+>> +        }
+>>      } else {
+>>          /* disable hold time */
+>> -        jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+>> +        if (i2c->version >= ID_X1000)
+>> +            jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, 0);
+>> +        else
+>> +            jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+>>      }
+>>
+>>      return 0;
+>> @@ -359,9 +385,11 @@ static int jz4780_i2c_cleanup(struct jz4780_i2c 
+>> *i2c)
+>>      spin_lock_irqsave(&i2c->lock, flags);
+>>
+>>      /* can send stop now if need */
+>> -    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> -    tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    if (i2c->version < ID_X1000) {
+>> +        tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> +        tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    }
+>>
+>>      /* disable all interrupts first */
+>>      jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0);
+>> @@ -399,11 +427,18 @@ static int jz4780_i2c_prepare(struct jz4780_i2c 
+>> *i2c)
+>>      return jz4780_i2c_enable(i2c);
+>>  }
+>>
+>> -static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c, int cmd_count)
+>> +static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c,
+>> +                       int cmd_count, int cmd_left)
+>>  {
+>>      int i;
+>>
+>> -    for (i = 0; i < cmd_count; i++)
+>> +    for (i = 0; i < cmd_count - 1; i++)
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+>> +
+>> +    if ((cmd_left == 0) && (i2c->version >= ID_X1000))
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+>> +                JZ4780_I2C_DC_READ | X1000_I2C_DC_STOP);
+>> +    else
+>>          jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+>>  }
+>>
+>> @@ -458,37 +493,40 @@ static irqreturn_t jz4780_i2c_irq(int irqno, 
+>> void *dev_id)
+>>
+>>          rd_left = i2c->rd_total_len - i2c->rd_data_xfered;
+>>
+>> -        if (rd_left <= JZ4780_I2C_FIFO_LEN)
+>> +        if (rd_left <= i2c->cdata->fifosize)
+>>              jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, rd_left - 1);
+>>      }
+>>
+>>      if (intst & JZ4780_I2C_INTST_TXEMP) {
+>>          if (i2c->is_write == 0) {
+>>              int cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
+>> -            int max_send = (JZ4780_I2C_FIFO_LEN - 1)
+>> +            int max_send = (i2c->cdata->fifosize - 1)
+>>                       - (i2c->rd_cmd_xfered
+>>                       - i2c->rd_data_xfered);
+>>              int cmd_to_send = min(cmd_left, max_send);
+>>
+>>              if (i2c->rd_cmd_xfered != 0)
+>>                  cmd_to_send = min(cmd_to_send,
+>> -                          JZ4780_I2C_FIFO_LEN
+>> -                          - TX_LEVEL - 1);
+>> +                          i2c->cdata->fifosize
+>> +                          - i2c->cdata->tx_level - 1);
+>>
+>>              if (cmd_to_send) {
+>> -                jz4780_i2c_send_rcmd(i2c, cmd_to_send);
+>>                  i2c->rd_cmd_xfered += cmd_to_send;
+>> +                cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
+>> +                jz4780_i2c_send_rcmd(i2c, cmd_to_send, cmd_left);
+>> +
+>>              }
+>>
+>> -            cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
+>>              if (cmd_left == 0) {
+>>                  intmsk = jz4780_i2c_readw(i2c, JZ4780_I2C_INTM);
+>>                  intmsk &= ~JZ4780_I2C_INTM_MTXEMP;
+>>                  jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, intmsk);
+>>
+>> -                tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> -                tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> -                jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +                if (i2c->version < ID_X1000) {
+>> +                    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> +                    tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> +                    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +                }
+>>              }
+>>          } else {
+>>              unsigned short data;
+>> @@ -496,24 +534,22 @@ static irqreturn_t jz4780_i2c_irq(int irqno, 
+>> void *dev_id)
+>>
+>>              i2c_sta = jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>>
+>> -            while ((i2c_sta & JZ4780_I2C_STA_TFNF) &&
+>> -                   (i2c->wt_len > 0)) {
+>> +            while ((i2c_sta & JZ4780_I2C_STA_TFNF) && (i2c->wt_len > 
+>> 0)) {
+>>                  i2c_sta = jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>>                  data = *i2c->wbuf;
+>>                  data &= ~JZ4780_I2C_DC_READ;
+>> -                jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+>> -                          data);
+>> +                if ((!i2c->stop_hold) && (i2c->version >= ID_X1000))
+>> +                    data |= X1000_I2C_DC_STOP;
+>> +                jz4780_i2c_writew(i2c, JZ4780_I2C_DC, data);
+>>                  i2c->wbuf++;
+>>                  i2c->wt_len--;
+>>              }
+>>
+>>              if (i2c->wt_len == 0) {
+>> -                if (!i2c->stop_hold) {
+>> -                    tmp = jz4780_i2c_readw(i2c,
+>> -                                   JZ4780_I2C_CTRL);
+>> +                if ((!i2c->stop_hold) && (i2c->version < ID_X1000)) {
+>> +                    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>>                      tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> -                    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL,
+>> -                              tmp);
+>> +                    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>>                  }
+>>
+>>                  jz4780_i2c_trans_done(i2c);
+>> @@ -567,20 +603,22 @@ static inline int jz4780_i2c_xfer_read(struct 
+>> jz4780_i2c *i2c,
+>>      i2c->rd_data_xfered = 0;
+>>      i2c->rd_cmd_xfered = 0;
+>>
+>> -    if (len <= JZ4780_I2C_FIFO_LEN)
+>> +    if (len <= i2c->cdata->fifosize)
+>>          jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, len - 1);
+>>      else
+>> -        jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, RX_LEVEL);
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, i2c->cdata->rx_level);
+>>
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+>> +    jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>>
+>>      jz4780_i2c_writew(i2c, JZ4780_I2C_INTM,
+>>                JZ4780_I2C_INTM_MRXFL | JZ4780_I2C_INTM_MTXEMP
+>>                | JZ4780_I2C_INTM_MTXABT | JZ4780_I2C_INTM_MRXOF);
+>>
+>> -    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> -    tmp |= JZ4780_I2C_CTRL_STPHLD;
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    if (i2c->version < ID_X1000) {
+>> +        tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> +        tmp |= JZ4780_I2C_CTRL_STPHLD;
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    }
+>>
+>>      spin_unlock_irqrestore(&i2c->lock, flags);
+>>
+>> @@ -626,14 +664,16 @@ static inline int jz4780_i2c_xfer_write(struct 
+>> jz4780_i2c *i2c,
+>>      i2c->wbuf = buf;
+>>      i2c->wt_len = len;
+>>
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+>> +    jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>>
+>>      jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, JZ4780_I2C_INTM_MTXEMP
+>>                      | JZ4780_I2C_INTM_MTXABT);
+>>
+>> -    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> -    tmp |= JZ4780_I2C_CTRL_STPHLD;
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    if (i2c->version < ID_X1000) {
+>> +        tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> +        tmp |= JZ4780_I2C_CTRL_STPHLD;
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    }
+>>
+>>      spin_unlock_irqrestore(&i2c->lock, flags);
+>>
+>> @@ -716,8 +756,21 @@ static const struct i2c_algorithm 
+>> jz4780_i2c_algorithm = {
+>>      .functionality    = jz4780_i2c_functionality,
+>>  };
+>>
+>> +static const struct ingenic_i2c_config jz4780_i2c_config = {
+>> +    .fifosize = JZ4780_I2C_FIFO_LEN,
+>> +    .tx_level = JZ4780_I2C_FIFO_LEN / 2,
+>> +    .rx_level = JZ4780_I2C_FIFO_LEN / 2 - 1,
+>> +};
+>> +
+>> +static const struct ingenic_i2c_config x1000_i2c_config = {
+>> +    .fifosize = X1000_I2C_FIFO_LEN,
+>> +    .tx_level = X1000_I2C_FIFO_LEN / 2,
+>> +    .rx_level = X1000_I2C_FIFO_LEN / 2 - 1,
+>> +};
+>> +
+>>  static const struct of_device_id jz4780_i2c_of_matches[] = {
+>> -    { .compatible = "ingenic,jz4780-i2c", },
+>> +    { .compatible = "ingenic,jz4780-i2c", .data = (void *) ID_JZ4780 },
+>> +    { .compatible = "ingenic,x1000-i2c", .data = (void *) ID_X1000 },
 >
-> I update this in the next days and re-send the patch.
+> I think in general you should pass pointers to your ingenic_i2c_config 
+> structures directly in .data here, and have a "version" field in your 
+> ingenic_i2c_config struct.
+>
 
-Would you also be so kind as to craft a patch for the
-user_namespaces(7) manual page describing the changes (sent to me,
-linux-man@vger.kernel.org, and the other parties already in CC)?
+Sure, I will change it in v2.
 
-If you do not have the time to familiarize yourself with groff/man
-markup, a patch that uses plain text is fine; I can handle the
-formatting.
+>
+>>      { /* sentinel */ }
+>>  };
+>>  MODULE_DEVICE_TABLE(of, jz4780_i2c_of_matches);
+>> @@ -729,11 +782,24 @@ static int jz4780_i2c_probe(struct 
+>> platform_device *pdev)
+>>      unsigned short tmp;
+>>      struct resource *r;
+>>      struct jz4780_i2c *i2c;
+>> +    const struct platform_device_id *id = platform_get_device_id(pdev);
+>> +    const struct of_device_id  *of_id = of_match_device(
+>> +            jz4780_i2c_of_matches, &pdev->dev);
+>>
+>>      i2c = devm_kzalloc(&pdev->dev, sizeof(struct jz4780_i2c), 
+>> GFP_KERNEL);
+>>      if (!i2c)
+>>          return -ENOMEM;
+>>
+>> +    if (of_id)
+>> +        i2c->version = (enum ingenic_i2c_version)of_id->data;
+>> +    else
+>> +        i2c->version = (enum ingenic_i2c_version)id->driver_data;
+>> +
+>> +    if (i2c->version >= ID_X1000)
+>> +        i2c->cdata = &x1000_i2c_config;
+>> +    else
+>> +        i2c->cdata = &jz4780_i2c_config;
+>> +
+>
+> Then you can replace all these lines with:
+> i2c->cdata = device_get_match_data(dev);
+>
+> And your checks on i2c->version become checks on i2c->cdata->version.
+>
 
-Thanks,
+OK, will change in v2.
 
-Michael
---=20
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+>
+>>      i2c->adap.owner        = THIS_MODULE;
+>>      i2c->adap.algo        = &jz4780_i2c_algorithm;
+>>      i2c->adap.algo_data    = i2c;
+>> @@ -777,9 +843,11 @@ static int jz4780_i2c_probe(struct 
+>> platform_device *pdev)
+>>
+>>      dev_info(&pdev->dev, "Bus frequency is %d KHz\n", i2c->speed);
+>>
+>> -    tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> -    tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> -    jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    if (i2c->version < ID_X1000) {
+>> +        tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+>> +        tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+>> +        jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+>> +    }
+>>
+>>      jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
+>>
+>> @@ -809,6 +877,12 @@ static int jz4780_i2c_remove(struct 
+>> platform_device *pdev)
+>>      return 0;
+>>  }
+>>
+>> +static const struct platform_device_id ingenic_i2c_ids[] = {
+>> +    { "jz4780-i2c", ID_JZ4780 },
+>> +    { "x1000-i2c", ID_X1000 },
+>> +    {},
+>
+> I honestly think you can drop the platform ID table. It will never be 
+> used.
+>
+
+OK, just need to drop the platform ID table? Or any other changes need 
+to be made?
+
+Thanks and best regards!
+
+> Cheers,
+> -Paul
+>
+>> +};
+>> +
+>>  static struct platform_driver jz4780_i2c_driver = {
+>>      .probe        = jz4780_i2c_probe,
+>>      .remove        = jz4780_i2c_remove,
+>> @@ -816,6 +890,7 @@ static struct platform_driver jz4780_i2c_driver = {
+>>          .name    = "jz4780-i2c",
+>>          .of_match_table = of_match_ptr(jz4780_i2c_of_matches),
+>>      },
+>> +    .id_table = ingenic_i2c_ids,
+>>  };
+>>
+>>  module_platform_driver(jz4780_i2c_driver);
+>> -- 
+>> 2.7.4
+>>
+>
+
