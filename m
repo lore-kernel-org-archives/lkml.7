@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF6C00454
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3000C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B29D214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987C724683
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwbTlKjU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2VIPeNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLNRzS (ORCPT
+        id S1727177AbfLNRzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 12:55:18 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35801 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfLNRzP (ORCPT
+        Sat, 14 Dec 2019 12:55:23 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35811 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfLNRzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 12:55:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so850plt.2;
-        Sat, 14 Dec 2019 09:55:14 -0800 (PST)
+        Sat, 14 Dec 2019 12:55:22 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so942plt.2;
+        Sat, 14 Dec 2019 09:55:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p464edzUa2iPp9uHgJjpc0nSudXprxPgj9c87WZ/a/8=;
-        b=jwbTlKjUlgdBEVsfFGJ0AFRM27IrT+5/nGVpeqjmCQY8Pvog9nLbJEGs3BoJShCWcc
-         HUCs/NcUJEbspXufkbpSOSgpcLjHI9uSC2uL8deL98KCPLdAycltVaMbDTSY7BfErs2r
-         3jb+3au9m3HLLvo5IanTkhro0u+uMh+7QnL1Kmvn6n0zxgK8PqWxjbHB9UOlTP9lJERQ
-         fRA0q2rQ0Mg0I4cJZ6oR/WvAPyLLemDcLzfJOfJwdMDJDyZj6sbgdurkJ9mbvF3rvF94
-         qtAuTF6Xj2R2j2anoXaTjjEStkzmzXjXeUm9O3eCz5K6gXyVi95VvTd8QtE1eKhmZ/RZ
-         FutA==
+        bh=0jvWF9XYSISO584h2vYKYUoEcRiyVQ8hH7Hs2IoWF50=;
+        b=g2VIPeNv78fikjdmQp4F6HcLSJJlLRztzWIRg4z5MKw5ARx+QWeColI55a3kl7qx9i
+         cAFoFIbdKa4WMEDblx60nLEzaAGgygsrCa1OzawGh83RhPR4M+Pgz4cTiUuwtJ3+zLTR
+         rKSvgNvCdwzPqUvKrTPhWjfhJpfOInRRaTsdN4a2TkIHWk4Z3bZ0nLnwQonYk5wzWncg
+         vwCJdky9D1Os9HirkeURSPIS0re0yh8o0nUnCCSeya6qhWZv+FZ4VkTqLzURQWZQmAtq
+         IeuzYN5SfasSV/p6E2PnjMm3gp9rYSRVHGTAGwQgQAZsRDt5dp5Bj7folhkKi/e7xXRr
+         jVuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=p464edzUa2iPp9uHgJjpc0nSudXprxPgj9c87WZ/a/8=;
-        b=WS7vIVch4MTHFK1LyKHyJDrFFR/tymOvVfDq1ATaYUXxcmR0bMp9qRHLNKxtrWwYXb
-         OjT30sRlns2fUQL0HRmYJ7v5uRo9exUJhCI3kf4g1BS2JpsK1A/msFDzl2f+5oh/eVaA
-         mo6jx8+m/h93GCkvvW+w3Ow2isCMciREYTk4qIGe+BTZD95lBgJ48WESUKrAY2NO1xLM
-         X+Xi+T7PdSrDP3hFd64xsvzahZVSLwNqskStcNv1NngMjuFUCUGzneyw1OabBMzywGzz
-         F3Iu0B8+RJxdRRZFC4qoRmHcffmPR7LqN+yCTpVfxFdAwAV9cErWOR3wd/mpIkyTFDE+
-         CNdQ==
-X-Gm-Message-State: APjAAAUVfP4feqk+jgF+k4IiHePNkmW3BeduFj2NWO+U5EDP/lF3eliX
-        JUsnwp/bFBDnKuNSdfz2Mnc=
-X-Google-Smtp-Source: APXvYqxG8GAI4f/vKneCzHJdyU3sDnTOcUKGttUJVG0Uipa0HZQ6CtNPSXlPYC7sJOX/nTAUj+QlEA==
-X-Received: by 2002:a17:90a:374b:: with SMTP id u69mr6820565pjb.23.1576346114545;
-        Sat, 14 Dec 2019 09:55:14 -0800 (PST)
+        bh=0jvWF9XYSISO584h2vYKYUoEcRiyVQ8hH7Hs2IoWF50=;
+        b=MK4LfHsf0HISkL6Ay39hYcdzrty1NQhyF+GijcA1ItgXO9RVNIJCsFKgVUGZxECZIu
+         eNnDLBTcnezGfkApxTc6A95I+Ou1QwwEJwi+C9NG3rMRvCxtNrDJlepvTqVyapLIVrL8
+         A45yLbWxVePt00+gkxSyN5fVTabhzJf7o0AvnyfsH2qoE7lVNc9fm/Ib7vaSPEssbqEy
+         GA/m8j0E76L/cXZ7cm8bFmIsCiaRI9AcNPrx+xaOmge6RiIK2MUDGpMUXfAP3KPWk9j/
+         3BPq/uQ9bu7+1IMAtt/L0VJ+atxf8BXg9WKM1ZXDd1SbAcqAyCR7fPXez5hq2CKYq/6V
+         EV9A==
+X-Gm-Message-State: APjAAAUi5zAXKmOwQpXf6AVm20rU2I499kaGtlOZx5Sn3866/+6ZV8o8
+        z8mBR8Ji4itnoLzKxay9QAY=
+X-Google-Smtp-Source: APXvYqyqtm2BCTkQ1WB9nU9hiA5GJsGTHwnwitKhC/pdbIodt1usGKIoQH8Uv4CdMMinxB6/xHe66A==
+X-Received: by 2002:a17:90a:8685:: with SMTP id p5mr7039962pjn.92.1576346121104;
+        Sat, 14 Dec 2019 09:55:21 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id z23sm14868517pgj.43.2019.12.14.09.55.13
+        by smtp.gmail.com with ESMTPSA id l22sm14347112pjc.0.2019.12.14.09.55.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 14 Dec 2019 09:55:13 -0800 (PST)
+        Sat, 14 Dec 2019 09:55:20 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl,
         john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org,
@@ -68,9 +68,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 08/10] soc: lantiq: convert to devm_platform_ioremap_resource
-Date:   Sat, 14 Dec 2019 17:54:45 +0000
-Message-Id: <20191214175447.25482-8-tiny.windzz@gmail.com>
+Subject: [PATCH 10/10] soc: qcom: convert to devm_platform_ioremap_resource
+Date:   Sat, 14 Dec 2019 17:54:47 +0000
+Message-Id: <20191214175447.25482-10-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191214175447.25482-1-tiny.windzz@gmail.com>
 References: <20191214175447.25482-1-tiny.windzz@gmail.com>
@@ -83,28 +83,129 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/soc/lantiq/fpi-bus.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/soc/qcom/llcc-qcom.c    | 7 +------
+ drivers/soc/qcom/qcom-geni-se.c | 4 +---
+ drivers/soc/qcom/qcom_aoss.c    | 4 +---
+ drivers/soc/qcom/qcom_gsbi.c    | 5 +----
+ drivers/soc/qcom/spm.c          | 4 +---
+ 5 files changed, 5 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/soc/lantiq/fpi-bus.c b/drivers/soc/lantiq/fpi-bus.c
-index cb0303a0fe60..dff1375851cf 100644
---- a/drivers/soc/lantiq/fpi-bus.c
-+++ b/drivers/soc/lantiq/fpi-bus.c
-@@ -28,14 +28,12 @@ static int ltq_fpi_probe(struct platform_device *pdev)
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 429b5a60a1ba..99e19df76889 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -387,7 +387,6 @@ static int qcom_llcc_remove(struct platform_device *pdev)
+ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
+ 		const char *name)
+ {
+-	struct resource *res;
+ 	void __iomem *base;
+ 	struct regmap_config llcc_regmap_config = {
+ 		.reg_bits = 32,
+@@ -396,11 +395,7 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
+ 		.fast_io = true,
+ 	};
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+-	if (!res)
+-		return ERR_PTR(-ENODEV);
+-
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return ERR_CAST(base);
+ 
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index 7d622ea1274e..9c2c429b4b3f 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -723,7 +723,6 @@ EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+ static int geni_se_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
--	struct resource *res_xbar;
- 	struct regmap *rcu_regmap;
- 	void __iomem *xbar_membase;
- 	u32 rcu_ahb_endianness_reg_offset;
+-	struct resource *res;
+ 	struct geni_wrapper *wrapper;
  	int ret;
  
--	res_xbar = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	xbar_membase = devm_ioremap_resource(dev, res_xbar);
-+	xbar_membase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xbar_membase))
- 		return PTR_ERR(xbar_membase);
+@@ -732,8 +731,7 @@ static int geni_se_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	wrapper->dev = dev;
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	wrapper->base = devm_ioremap_resource(dev, res);
++	wrapper->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(wrapper->base))
+ 		return PTR_ERR(wrapper->base);
+ 
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index 006ac40c526a..fcfba9f1aaa1 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -513,7 +513,6 @@ static void qmp_cooling_devices_remove(struct qmp *qmp)
+ 
+ static int qmp_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct qmp *qmp;
+ 	int irq;
+ 	int ret;
+@@ -526,8 +525,7 @@ static int qmp_probe(struct platform_device *pdev)
+ 	init_waitqueue_head(&qmp->event);
+ 	mutex_init(&qmp->tx_lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
++	qmp->msgram = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(qmp->msgram))
+ 		return PTR_ERR(qmp->msgram);
+ 
+diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
+index 304afc223a58..202ff31cf54f 100644
+--- a/drivers/soc/qcom/qcom_gsbi.c
++++ b/drivers/soc/qcom/qcom_gsbi.c
+@@ -127,7 +127,6 @@ static int gsbi_probe(struct platform_device *pdev)
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct device_node *tcsr_node;
+ 	const struct of_device_id *match;
+-	struct resource *res;
+ 	void __iomem *base;
+ 	struct gsbi_info *gsbi;
+ 	int i, ret;
+@@ -135,12 +134,10 @@ static int gsbi_probe(struct platform_device *pdev)
+ 	const struct crci_config *config = NULL;
+ 
+ 	gsbi = devm_kzalloc(&pdev->dev, sizeof(*gsbi), GFP_KERNEL);
+-
+ 	if (!gsbi)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+diff --git a/drivers/soc/qcom/spm.c b/drivers/soc/qcom/spm.c
+index 8e10e02c6aa5..b6131ab07879 100644
+--- a/drivers/soc/qcom/spm.c
++++ b/drivers/soc/qcom/spm.c
+@@ -320,7 +320,6 @@ static const struct of_device_id spm_match_table[] = {
+ static int spm_dev_probe(struct platform_device *pdev)
+ {
+ 	struct spm_driver_data *drv;
+-	struct resource *res;
+ 	const struct of_device_id *match_id;
+ 	void __iomem *addr;
+ 	int cpu;
+@@ -329,8 +328,7 @@ static int spm_dev_probe(struct platform_device *pdev)
+ 	if (!drv)
+ 		return -EINVAL;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	drv->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	drv->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(drv->reg_base))
+ 		return PTR_ERR(drv->reg_base);
  
 -- 
 2.17.1
