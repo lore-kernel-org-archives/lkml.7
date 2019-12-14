@@ -2,164 +2,138 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C129C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF56BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E698F21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BrGWiWYw"
+	by mail.kernel.org (Postfix) with ESMTP id A1EC721655
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfLNCNZ (ORCPT
+        id S1726837AbfLNCOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 21:13:25 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35528 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfLNCNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 21:13:24 -0500
-Received: by mail-pj1-f67.google.com with SMTP id w23so493428pjd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 18:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=LlBgPd4jKU/ivB4inJv2NdvJiBH02P7hq9N0GagI2Hc=;
-        b=BrGWiWYwglLuch8nF6G6oTkqNFA41MXuP9p9xbZitOO4McQTuD58hZzHKG/a03AzkK
-         X42N8H0YvBPayz8I6Uh0XriwvXTVsejiXkIozcO4JgDIOkGFu1bZem2KEuMyLKAsPLL0
-         DzzY0oiQTF62+chWS2BeE/+P/XE/6/9LJNDzBKLLn9r7XmqtsIE2a/xwU9ZhTEVmlLtY
-         uVygOLJb1lOyo3gUbP24BGF05pbUAps3FPiYHRv9AFl1ek/+rbe3zhTz+ggEsoL8pc9O
-         Hz1TZIeeuZ5mPgTIqEG6ASO3x/BqGvjVtQnGFYp6crcvwEIkSVcW+fl1vaNiskAok30F
-         f/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=LlBgPd4jKU/ivB4inJv2NdvJiBH02P7hq9N0GagI2Hc=;
-        b=Ok8on3OkdQaOj8CtXvmwk/eZkP2SJBHbH/CG9XPGTDIATHaePTBAf6BRePQEttmZY7
-         0XwGHFWZ9/f03XvJDnUpZMv3z24U8/lcet3iUcqQ9DYLswzJaAS2glmRlD5/2EKZcJ7k
-         ITaK5wQBq7l96rjLXEChB7JivwDxSdkK+PqDARRrEw2itWNlRnc+17mmy4iPojoiUILK
-         R7taitK/omp4zLNcZUs13Yyte2F4XaLFG4uclMofhi23BAZPw3S+HSG/T3TzN908zHFO
-         C0Xp0+n+QB9o3j7nYOd0ejUtTvzlwSvS6sNl/jd2fJkBG5MGOIjq8iikun9AirlctgCh
-         eZiQ==
-X-Gm-Message-State: APjAAAU+NXkB9eqFs7YcyAJdgIyVz0c52fJM164VDSzDtPh1IYsqMyAW
-        HYfDjjkP++J0NARQ6Wa/klcTUA==
-X-Google-Smtp-Source: APXvYqwgMNyHwqaM8GRlUVZchzrPIFh4IykzVZXcNvpGe5skS7V0neTV1XyOGJHuYGdSk9AcfCXhUg==
-X-Received: by 2002:a17:902:b418:: with SMTP id x24mr2855620plr.85.1576289603789;
-        Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id y62sm13929924pfg.45.2019.12.13.18.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-Date:   Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-X-Google-Original-Date: Fri, 13 Dec 2019 18:13:20 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH 1/2] riscv: dts: Add DT support for SiFive L2 cache controller
-CC:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, allison@lohutok.net,
-        alexios.zavras@intel.com, Atish Patra <Atish.Patra@wdc.com>,
-        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, yash.shah@sifive.com
-To:     yash.shah@sifive.com
-In-Reply-To: <1575890706-36162-2-git-send-email-yash.shah@sifive.com>
-References: <1575890706-36162-2-git-send-email-yash.shah@sifive.com>
-  <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <mhng-119ed5ed-d9c3-422f-8d56-5794caef643c@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Dec 2019 21:14:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfLNCOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 21:14:12 -0500
+Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D05242073D;
+        Sat, 14 Dec 2019 02:14:10 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 21:14:03 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.19 031/219] arm64: preempt: Fix big-endian when
+ checking preempt count in assembly
+Message-ID: <20191214021403.GA1357@home.goodmis.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
+ <20191122054911.1750-24-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122054911.1750-24-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 09 Dec 2019 03:25:05 PST (-0800), yash.shah@sifive.com wrote:
-> Add the L2 cache controller DT node in SiFive FU540 soc-specific DT file
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+On Fri, Nov 22, 2019 at 12:46:03AM -0500, Sasha Levin wrote:
+> From: Will Deacon <will.deacon@arm.com>
+> 
+> [ Upstream commit 7faa313f05cad184e8b17750f0cbe5216ac6debb ]
+> 
+> Commit 396244692232 ("arm64: preempt: Provide our own implementation of
+> asm/preempt.h") extended the preempt count field in struct thread_info
+> to 64 bits, so that it consists of a 32-bit count plus a 32-bit flag
+> indicating whether or not the current task needs rescheduling.
+> 
+> Whilst the asm-offsets definition of TSK_TI_PREEMPT was updated to point
+> to this new field, the assembly usage was left untouched meaning that a
+> 32-bit load from TSK_TI_PREEMPT on a big-endian machine actually returns
+> the reschedule flag instead of the count.
+> 
+> Whilst we could fix this by pointing TSK_TI_PREEMPT at the count field,
+> we're actually better off reworking the two assembly users so that they
+> operate on the whole 64-bit value in favour of inspecting the thread
+> flags separately in order to determine whether a reschedule is needed.
+> 
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> index afa43c7..812db02 100644
-> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> @@ -19,6 +19,16 @@
->  	chosen {
->  	};
->
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		l2_lim: lim@0x8000000 {
-> +			reg = <0x0 0x8000000 0x0 0x2000000>;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -54,6 +64,7 @@
->  			reg = <1>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu1_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -77,6 +88,7 @@
->  			reg = <2>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu2_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -100,6 +112,7 @@
->  			reg = <3>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu3_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -123,6 +136,7 @@
->  			reg = <4>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu4_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -246,6 +260,18 @@
->  			#pwm-cells = <3>;
->  			status = "disabled";
->  		};
-> +		l2cache: cache-controller@2010000 {
-> +			compatible = "sifive,fu540-c000-ccache", "cache";
-> +			cache-block-size = <64>;
-> +			cache-level = <2>;
-> +			cache-sets = <1024>;
-> +			cache-size = <2097152>;
-> +			cache-unified;
-> +			interrupt-parent = <&plic0>;
-> +			interrupts = <1 2 3>;
-> +			reg = <0x0 0x2010000 0x0 0x1000>;
-> +			memory-region = <&l2_lim>;
-> +		};
->
->  	};
->  };
+>  arch/arm64/include/asm/assembler.h | 8 +++-----
+>  arch/arm64/kernel/entry.S          | 6 ++----
+>  2 files changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index 5a97ac8531682..0c100506a29aa 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -683,11 +683,9 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+>  	.macro		if_will_cond_yield_neon
+>  #ifdef CONFIG_PREEMPT
+>  	get_thread_info	x0
+> -	ldr		w1, [x0, #TSK_TI_PREEMPT]
+> -	ldr		x0, [x0, #TSK_TI_FLAGS]
+> -	cmp		w1, #PREEMPT_DISABLE_OFFSET
+> -	csel		x0, x0, xzr, eq
+> -	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
+> +	ldr		x0, [x0, #TSK_TI_PREEMPT]
+> +	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
+> +	cbz		x0, .Lyield_\@
+>  	/* fall through to endif_yield_neon */
+>  	.subsection	1
+>  .Lyield_\@ :
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index 5f800384cb9a8..bb68323530458 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -622,10 +622,8 @@ el1_irq:
+>  	irq_handler
+>  
+>  #ifdef CONFIG_PREEMPT
+> -	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+> -	cbnz	w24, 1f				// preempt count != 0
+> -	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
+> -	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
+> +	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+> +	cbnz	x24, 1f				// preempt count != 0
+>  	bl	el1_preempt
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+While updating 4.19-rt, I stumbled on this change to arm64 backport. And was
+confused by it, but looking deeper, this is something that breaks without
+having 396244692232f ("arm64: preempt: Provide our own implementation of
+asm/preempt.h").
+
+That commit inverts the TIF_NEED_RESCHED meaning where set means we don't need
+to resched, and clear means we need to resched. This way we can combine the
+preempt count with the need resched flag test as they share the same 64bit
+word. A 0 means we need to preempt (as NEED_RESCHED being zero means we need
+to resched, and this also means preempt_count is zero). If the
+TIF_NEED_RESCHED bit is set, that means we don't need to resched, and if
+preempt count is something other than zero, we don't need to resched, and
+since those two are together by commit 396244692232f, we can just test
+#TSK_TI_PREEMPT. But because that commit does not exist in 4.19, we can't
+remove the TIF_NEED_RESCHED check, that this backport does, and then breaks
+the kernel!
+
+-- Steve
+
+
+>  1:
+>  #endif
+> -- 
+> 2.20.1
