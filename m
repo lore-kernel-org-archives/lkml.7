@@ -2,128 +2,144 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A440C00454
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22ACC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBFE20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B57206A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9YiYLtr"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="lfGP0h/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfLNUdB (ORCPT
+        id S1726939AbfLNUg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 15:33:01 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46779 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfLNUdA (ORCPT
+        Sat, 14 Dec 2019 15:36:27 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36813 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfLNUg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 15:33:00 -0500
-Received: by mail-qk1-f194.google.com with SMTP id r14so1693671qke.13;
-        Sat, 14 Dec 2019 12:33:00 -0800 (PST)
+        Sat, 14 Dec 2019 15:36:27 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so1319377pgc.3
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 12:36:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZNiCKhGVuabttGDSYceTCobxezTEW7wv0FbaYh2+Hww=;
-        b=C9YiYLtrIdpG+KuV3L1R/0yo5uKkwF0VlnODsRmx8dm4YumjDg0rESRKQtrsLsCNde
-         7EhFaePJjSWMLzdBdBQJwE7EeAzX6O/FdO/WWM7gDv8zzW4mb9Y6xLsdnFmvvlbYjbbC
-         oPAtOpLI3UhhEqurdADb/Qr94WJ7Kxar5qj79WZOZ8ShFYgsDtqeMF71HXksuMgIqIFd
-         zKsraNIpfgucvw0yAmdaX33bd3LeJLNM5TDioKLuM/AYAvMcIzw+l+3xq5QsBrEBNcqL
-         Cz8J6j1hmAfqCuJZDxEtkJ10qHZlA3aZMzIu8CEDkxA0fVuVUhRKwH1wM93y2dqW5gNk
-         XEoA==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=u5S8AzA/two94BW1QHz+RPP0930vQSWwKoy/1jrejMo=;
+        b=lfGP0h/6gjRV3qM4YEFh2+9XY/Vn700YCuonoJZrLzUvgymJ4AwkVEjYqcRp6LBlMl
+         ptZSe9eEWDPT9Af6pcwB5Rd12R0ps6Rdsue/xR4W7IWtPvk87m9rzCSv7zx66OWmUnnP
+         z+6PZGJ0sQnUihfo3rijoi1qU6NsYEuNgZjWfihTdu/VKqe0oOLBGKVjw5GSBliKtM7i
+         B8kAQFe6vXRShN9qPbBkACTWzJEgjbfxxzPqtB2Ahdyhg/bj+mvtc3xoousWt49dfeu3
+         p30tsbDnEzZFNYY1geeh9It/aYV+mifXhi2O+iNCguBlN7RD1Z9hBxkKccDNUmUpOquF
+         YeoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZNiCKhGVuabttGDSYceTCobxezTEW7wv0FbaYh2+Hww=;
-        b=MP/cjpaxts9hLZ0AGm4e5wpJQ+DqGMSpVaxUDr6Hx9fOh6Uei/D8dNG1G3nlrfeYaQ
-         R+CnzzFfQgP4kWriKthyjVO2duF4XFHmSw+IQm8OCbweaiDaFEfBP7Tkt1yHgy3zOsaw
-         hAIXiqrXGq37ANQLPguSnG9kMlR/A8/e/sk0Ak3M8L7zJmxfE26o3IoZlr6o77hBaWg1
-         usL2c7eP6QOp2KR5nGAdTqaS+r1bgkwN3UvylTmYnPUoafyu8uF0HdzecjqGt6HULnVD
-         QFIx9Tk9ZZDKXfjmzx41IFiIr/u/ahbFXTwERUnbCZj4aqs/Y0pO2PNpMglht4MjHw4X
-         9FyQ==
-X-Gm-Message-State: APjAAAWEGkwrMmTC9eZgSR6TqqMjSP6vHqyb3rFPxHxrV1whpjPJqXnE
-        a4p3sDWfdqjjJgzkwpuLxg4=
-X-Google-Smtp-Source: APXvYqxhdQO5/rB3RxRjVO6KAyca49fQOo3kH2pCppJWqUCnKvoCHjouPLU8yR66pKA0FZA/LkJzHw==
-X-Received: by 2002:a05:620a:62c:: with SMTP id 12mr20114844qkv.154.1576355579393;
-        Sat, 14 Dec 2019 12:32:59 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o19sm5005624qtb.43.2019.12.14.12.32.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=u5S8AzA/two94BW1QHz+RPP0930vQSWwKoy/1jrejMo=;
+        b=gg0bXr2Qe1WK4QifA0JEcarmpqCKj4zBlLJVpBR6XbiETHejDMmVUH2oY4LgX2lEL4
+         j/xYy5VMmgHy8G8dnEo2fHOS+C79pv7/WUIOrw4GpMY26z7rfvQezgrV0nAlRD71r12C
+         7d4dDxM/sYhiFYvNasUgLYWVyNp9jjwoWAim70EagRlYBzhgzrg+/sSsCSokEpueQru1
+         uSSu1w4y+hhUx+5IoRc5RzmlP19bOq0ik6/L/YZQGS7jCkEmdk5ea0IdUwZpLBVF7lrq
+         InDY6ejZu3Jf+bOBF1atrOOYNQ6det3VJBrvPRFb41/vyFr2FtB9DcjjJtR047lhLvKa
+         w9rw==
+X-Gm-Message-State: APjAAAWsyUG1PO1dvtHzl3qrD5mVqpH+a5a9IzQ25FA2ADJU09Xf8SeH
+        SxkNotC2YHDgITQesN764JcTdg==
+X-Google-Smtp-Source: APXvYqyy2Uw5pYrnt7cqN32mxFB1vF+Q9fs1ZY/FlZ7maVgLk5Wicty7+Ay07UDDowWoZgWaopJlaA==
+X-Received: by 2002:a62:ee06:: with SMTP id e6mr7100945pfi.45.1576355786428;
+        Sat, 14 Dec 2019 12:36:26 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id j28sm15493997pgb.36.2019.12.14.12.36.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 12:32:59 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 14 Dec 2019 15:32:57 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH 03/10] efi/libstub: use a helper to iterate over a EFI
- handle array
-Message-ID: <20191214203257.GD140998@rani.riverdale.lan>
-References: <20191214175735.22518-1-ardb@kernel.org>
- <20191214175735.22518-4-ardb@kernel.org>
+        Sat, 14 Dec 2019 12:36:26 -0800 (PST)
+Date:   Sat, 14 Dec 2019 12:36:23 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/4] net: stmmac: Let TX and RX interrupts be
+ independently enabled/disabled
+Message-ID: <20191214123623.1aeb4966@cakuba.netronome.com>
+In-Reply-To: <04c000a3e0356e8bfb63e07490d8de8e081a2afe.1576007149.git.Jose.Abreu@synopsys.com>
+References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
+        <04c000a3e0356e8bfb63e07490d8de8e081a2afe.1576007149.git.Jose.Abreu@synopsys.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191214175735.22518-4-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 06:57:28PM +0100, Ard Biesheuvel wrote:
-> Iterating over a EFI handle array is a bit finicky, since we have
-> to take mixed mode into account, where handles are only 32-bit
-> while the native efi_handle_t type is 64-bit.
-> 
-> So introduce a helper, and replace the various occurrences of
-> this pattern.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  
-> +#define for_each_efi_handle(handle, array, size, i)			\
-> +	for (i = 1, handle = efi_is_64bit()				\
-> +		? (efi_handle_t)(unsigned long)((u64 *)(array))[0]	\
-> +		: (efi_handle_t)(unsigned long)((u32 *)(array))[0];	\
-> +	    i++ <= (size) / (efi_is_64bit() ? sizeof(efi_handle_t)	\
-> +					     : sizeof(u32));		\
-> +	    handle = efi_is_64bit()					\
-> +		? (efi_handle_t)(unsigned long)((u64 *)(array))[i]	\
-> +		: (efi_handle_t)(unsigned long)((u32 *)(array))[i])
+On Tue, 10 Dec 2019 20:54:43 +0100, Jose Abreu wrote:
+> @@ -2278,10 +2286,14 @@ static void stmmac_tx_timer(struct timer_list *t)
+>  	 * If NAPI is already running we can miss some events. Let's rearm
+>  	 * the timer and try again.
+>  	 */
+> -	if (likely(napi_schedule_prep(&ch->tx_napi)))
+> +	if (likely(napi_schedule_prep(&ch->tx_napi))) {
+> +		unsigned long flags;
 > +
->  /*
->   * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
->   * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
-> -- 
-> 2.17.1
-> 
+> +		spin_lock_irqsave(&ch->lock, flags);
+> +		stmmac_disable_dma_irq(priv, priv->ioaddr, ch->index, 0, 1);
+> +		spin_unlock_irqrestore(&ch->lock, flags);
+>  		__napi_schedule(&ch->tx_napi);
+> -	else
+> -		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(10));
 
-This would access one past the array, no? Eg if the array has one
-handle, i is incremented to 2 the first time the condition is checked,
-then the loop increment will access array[2] before the condition is
-checked again. There seem to be at least a couple of other for_each
-macros that might have similar issues.
+You should also remove the comment above the if statement if it's
+really okay to no longer re-arm the timer. No?
 
-How about the below instead?
+> +	}
+>  }
+>  
+>  /**
 
-#define for_each_efi_handle(handle, array, size, i)			\
-	for (i = 0;							\
-	    (i < (size) / (efi_is_64bit() ? sizeof(efi_handle_t)	\
-					  : sizeof(u32))) &&		\
-	    ((handle = efi_is_64bit()					\
-		? ((efi_handle_t *)(array))[i]				\
-		: (efi_handle_t)(unsigned long)((u32 *)(array))[i]), 1);\
-	    i++)
+> @@ -3759,24 +3777,18 @@ static int stmmac_napi_poll_tx(struct napi_struct *napi, int budget)
+>  	struct stmmac_channel *ch =
+>  		container_of(napi, struct stmmac_channel, tx_napi);
+>  	struct stmmac_priv *priv = ch->priv_data;
+> -	struct stmmac_tx_queue *tx_q;
+>  	u32 chan = ch->index;
+>  	int work_done;
+>  
+>  	priv->xstats.napi_poll++;
+>  
+> -	work_done = stmmac_tx_clean(priv, DMA_TX_SIZE, chan);
+> -	work_done = min(work_done, budget);
+> -
+> -	if (work_done < budget)
+> -		napi_complete_done(napi, work_done);
+> +	work_done = stmmac_tx_clean(priv, budget, chan);
+> +	if (work_done < budget && napi_complete_done(napi, work_done)) {
 
+Not really related to this patch, but this looks a little suspicious. 
+I think the TX completions should all be processed regardless of the
+budget. The budget is for RX.
+
+> +		unsigned long flags;
+>  
+> -	/* Force transmission restart */
+> -	tx_q = &priv->tx_queue[chan];
+> -	if (tx_q->cur_tx != tx_q->dirty_tx) {
+> -		stmmac_enable_dma_transmission(priv, priv->ioaddr);
+> -		stmmac_set_tx_tail_ptr(priv, priv->ioaddr, tx_q->tx_tail_addr,
+> -				       chan);
+> +		spin_lock_irqsave(&ch->lock, flags);
+> +		stmmac_enable_dma_irq(priv, priv->ioaddr, chan, 0, 1);
+> +		spin_unlock_irqrestore(&ch->lock, flags);
+>  	}
+>  
+>  	return work_done;
