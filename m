@@ -7,40 +7,35 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EB5C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D087C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF1724125
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB92924125
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfLNLxQ (ORCPT
+        id S1726299AbfLNLzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 06:53:16 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40780 "EHLO
+        Sat, 14 Dec 2019 06:55:35 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40796 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfLNLxP (ORCPT
+        with ESMTP id S1725809AbfLNLzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 06:53:15 -0500
+        Sat, 14 Dec 2019 06:55:35 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 3AA43289F5A
-Subject: Re: [PATCH] platform/chrome: cros_ec_lpc: Use
- platform_get_irq_optional() for optional IRQs
-To:     Guenter Roeck <groeck@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>
-References: <20191129102254.7910-1-enric.balletbo@collabora.com>
- <CABXOdTd8b+Lshh_Kf2fjeErrAyQcgZVgLNx3_cpW42Dh8YCN=Q@mail.gmail.com>
+        with ESMTPSA id 8BB3C289F5A
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_proto: Add response tracing
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     akshu.agrawal@amd.com, Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+References: <20191125104537.v2.1.Iaf98f0ab455b626537e77cfa71cef6ff2ab6f37b@changeid>
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <f2139eca-6561-a353-576f-cf6c53e5441f@collabora.com>
-Date:   Sat, 14 Dec 2019 12:53:11 +0100
+Message-ID: <af447845-5d6a-1bb7-c7c2-5a275351796e@collabora.com>
+Date:   Sat, 14 Dec 2019 12:55:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTd8b+Lshh_Kf2fjeErrAyQcgZVgLNx3_cpW42Dh8YCN=Q@mail.gmail.com>
+In-Reply-To: <20191125104537.v2.1.Iaf98f0ab455b626537e77cfa71cef6ff2ab6f37b@changeid>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,42 +46,157 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 29/11/19 16:56, Guenter Roeck wrote:
-> On Fri, Nov 29, 2019 at 2:23 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
->>
->> As platform_get_irq() now prints an error when the interrupt does not
->> exist, use platform_get_irq_optional() to get the IRQ which is optional
->> to avoid below error message during probe:
->>
->>   [    5.113502] cros_ec_lpcs GOOG0004:00: IRQ index 0 not found
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On 25/11/19 18:45, Raul E Rangel wrote:
+> Add the ability to view response codes as well.
 > 
-> Reviewed-by: Guenter Roeck <groeck@chromium.org>
+> I dropped the EVENT_CLASS since there is only one event per class.
 > 
+> cros_ec_cmd has now been renamed to cros_ec_request_start.
+> 
+> Example:
+> $ echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
+> $ cat /sys/kernel/debug/tracing/trace
+> 
+> 369.416372: cros_ec_request_start: version: 0, command: EC_CMD_USB_PD_POWER_INFO
+> 369.420528: cros_ec_request_done: version: 0, command: EC_CMD_USB_PD_POWER_INFO, ec result: EC_RES_SUCCESS, retval: 16
+> 369.420529: cros_ec_request_start: version: 0, command: EC_CMD_USB_PD_DISCOVERY
+> 369.421383: cros_ec_request_done: version: 0, command: EC_CMD_USB_PD_DISCOVERY, ec result: EC_RES_SUCCESS, retval: 5
+> 
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
-Queued for 5.6.
+Merge window is open now!  Queued for 5.6.
 
->> ---
->>
->>  drivers/platform/chrome/cros_ec_lpc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
->> index dccf479c6625..ffdea7c347f2 100644
->> --- a/drivers/platform/chrome/cros_ec_lpc.c
->> +++ b/drivers/platform/chrome/cros_ec_lpc.c
->> @@ -396,7 +396,7 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
->>          * Some boards do not have an IRQ allotted for cros_ec_lpc,
->>          * which makes ENXIO an expected (and safe) scenario.
->>          */
->> -       irq = platform_get_irq(pdev, 0);
->> +       irq = platform_get_irq_optional(pdev, 0);
->>         if (irq > 0)
->>                 ec_dev->irq = irq;
->>         else if (irq != -ENXIO) {
->> --
->> 2.20.1
->>
+Thanks,
+ Enric
+
+> ---
+> 
+> Changes in v2:
+> * Renamed events to cros_ec_request_start and cros_ec_request_done.
+> * Minor printf changes.
+> * Moved trace_cros_ec_request_start right above xfer_fxn.
+> * Fixed comment style.
+> END
+> 
+>  drivers/platform/chrome/cros_ec_proto.c |  8 ++++++--
+>  drivers/platform/chrome/cros_ec_trace.c | 24 ++++++++++++++++++++++
+>  drivers/platform/chrome/cros_ec_trace.h | 27 +++++++++++++++++++------
+>  3 files changed, 51 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index bd485ce98a42..1b98193a9fc1 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -54,8 +54,6 @@ static int send_command(struct cros_ec_device *ec_dev,
+>  	int ret;
+>  	int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command *msg);
+>  
+> -	trace_cros_ec_cmd(msg);
+> -
+>  	if (ec_dev->proto_version > 2)
+>  		xfer_fxn = ec_dev->pkt_xfer;
+>  	else
+> @@ -72,7 +70,10 @@ static int send_command(struct cros_ec_device *ec_dev,
+>  		return -EIO;
+>  	}
+>  
+> +	trace_cros_ec_request_start(msg);
+>  	ret = (*xfer_fxn)(ec_dev, msg);
+> +	trace_cros_ec_request_done(msg, ret);
+> +
+>  	if (msg->result == EC_RES_IN_PROGRESS) {
+>  		int i;
+>  		struct cros_ec_command *status_msg;
+> @@ -95,7 +96,10 @@ static int send_command(struct cros_ec_device *ec_dev,
+>  		for (i = 0; i < EC_COMMAND_RETRIES; i++) {
+>  			usleep_range(10000, 11000);
+>  
+> +			trace_cros_ec_request_start(status_msg);
+>  			ret = (*xfer_fxn)(ec_dev, status_msg);
+> +			trace_cros_ec_request_done(status_msg, ret);
+> +
+>  			if (ret == -EAGAIN)
+>  				continue;
+>  			if (ret < 0)
+> diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
+> index 6f80ff4532ae..ef423522bedc 100644
+> --- a/drivers/platform/chrome/cros_ec_trace.c
+> +++ b/drivers/platform/chrome/cros_ec_trace.c
+> @@ -120,5 +120,29 @@
+>  	TRACE_SYMBOL(EC_CMD_PD_GET_LOG_ENTRY), \
+>  	TRACE_SYMBOL(EC_CMD_USB_PD_MUX_INFO)
+>  
+> +/* See enum ec_status */
+> +#define EC_RESULT \
+> +	TRACE_SYMBOL(EC_RES_SUCCESS), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_COMMAND), \
+> +	TRACE_SYMBOL(EC_RES_ERROR), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_PARAM), \
+> +	TRACE_SYMBOL(EC_RES_ACCESS_DENIED), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_RESPONSE), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_VERSION), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_CHECKSUM), \
+> +	TRACE_SYMBOL(EC_RES_IN_PROGRESS), \
+> +	TRACE_SYMBOL(EC_RES_UNAVAILABLE), \
+> +	TRACE_SYMBOL(EC_RES_TIMEOUT), \
+> +	TRACE_SYMBOL(EC_RES_OVERFLOW), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_HEADER), \
+> +	TRACE_SYMBOL(EC_RES_REQUEST_TRUNCATED), \
+> +	TRACE_SYMBOL(EC_RES_RESPONSE_TOO_BIG), \
+> +	TRACE_SYMBOL(EC_RES_BUS_ERROR), \
+> +	TRACE_SYMBOL(EC_RES_BUSY), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_HEADER_VERSION), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_HEADER_CRC), \
+> +	TRACE_SYMBOL(EC_RES_INVALID_DATA_CRC), \
+> +	TRACE_SYMBOL(EC_RES_DUP_UNAVAILABLE)
+> +
+>  #define CREATE_TRACE_POINTS
+>  #include "cros_ec_trace.h"
+> diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
+> index 0dd4df30fa89..ee20d8571796 100644
+> --- a/drivers/platform/chrome/cros_ec_trace.h
+> +++ b/drivers/platform/chrome/cros_ec_trace.h
+> @@ -18,7 +18,7 @@
+>  
+>  #include <linux/tracepoint.h>
+>  
+> -DECLARE_EVENT_CLASS(cros_ec_cmd_class,
+> +TRACE_EVENT(cros_ec_request_start,
+>  	TP_PROTO(struct cros_ec_command *cmd),
+>  	TP_ARGS(cmd),
+>  	TP_STRUCT__entry(
+> @@ -33,13 +33,28 @@ DECLARE_EVENT_CLASS(cros_ec_cmd_class,
+>  		  __print_symbolic(__entry->command, EC_CMDS))
+>  );
+>  
+> -
+> -DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
+> -	TP_PROTO(struct cros_ec_command *cmd),
+> -	TP_ARGS(cmd)
+> +TRACE_EVENT(cros_ec_request_done,
+> +	TP_PROTO(struct cros_ec_command *cmd, int retval),
+> +	TP_ARGS(cmd, retval),
+> +	TP_STRUCT__entry(
+> +		__field(uint32_t, version)
+> +		__field(uint32_t, command)
+> +		__field(uint32_t, result)
+> +		__field(int, retval)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->version = cmd->version;
+> +		__entry->command = cmd->command;
+> +		__entry->result = cmd->result;
+> +		__entry->retval = retval;
+> +	),
+> +	TP_printk("version: %u, command: %s, ec result: %s, retval: %d",
+> +		  __entry->version,
+> +		  __print_symbolic(__entry->command, EC_CMDS),
+> +		  __print_symbolic(__entry->result, EC_RESULT),
+> +		  __entry->retval)
+>  );
+>  
+> -
+>  #endif /* _CROS_EC_TRACE_H_ */
+>  
+>  /* this part must be outside header guard */
 > 
