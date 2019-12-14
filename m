@@ -2,126 +2,180 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE09C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77C1C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C167214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A0C21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="lK+yU5+b"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VPX58ern"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfLNAeO (ORCPT
+        id S1726830AbfLNAkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 19:34:14 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34495 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfLNAeN (ORCPT
+        Fri, 13 Dec 2019 19:40:23 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36588 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLNAkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 19:34:13 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l18so556082lfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:34:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=AcKpSh1z8nexb80XCULmvBhMzvVCXcH0i/wbt+zGUhM=;
-        b=lK+yU5+bFuHaU9D3W6qUlPNk8AOj4NREd87YAzkJ6aYmKJIM2/QYqq2R2hkOGh6KPv
-         3q/yU7JUS23gE0olzVlBatTDM50fNZYaBjaETH23XoHylecROnklEkESAS76EpqdT70P
-         /dhkb4vT36tbmylUCmYZ9ezX9UU9sSGYRvzSFHP2jltZ7CZ9jJA98BpxpjOg/VPdZtBU
-         s4B5odIpY9nWRdp2NHwNJd0E5jt0TxsbYoldhf2oY3OljEOjMXmxmS6kBKVuKRLrSOTG
-         n8LyAki+kY2hsM3UomuEMBjmQMEqdPdonVdNw7SMrCIUk0cFVSmhqYPUj1nExJ1eV935
-         KxnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=AcKpSh1z8nexb80XCULmvBhMzvVCXcH0i/wbt+zGUhM=;
-        b=UZciQeE4dVEESzpXO6BKi4tff8uDdGlt0NiduBknEZhNmMu0aG+k2djMYJbZtGwv/v
-         bp+v+32LTGVIHZGgWGCsoXhlQPudwoA0WxyVNtXXcJ/9HEWRRgmfQ62AX+LyZujkY1j3
-         X1JrM9mr29xgXcwrBGUDMJZtynQavduj0i4KzjKHMCWxn9veWMH3fMlquSh/TdZz4V5V
-         gt7IuBhHEg6s0D3AenfNv37M6Bnsb7GcrERz6+qujV3pv6YIrv488mL7O5Wku66rzMyx
-         ztFtYFXDV1RX+jPZ9qzVXATWhJjQOIsFsW0i0M5FskwFi8/iCn04zucofP8wE8rJG5eu
-         WfdQ==
-X-Gm-Message-State: APjAAAVPXdAkGlun9HZcqiM9r8XBnCR4hn54L4biuh+MZVl+zT0Sv+ur
-        GLOK2BS2CCcV0N5csBhExEhi3Faq45E=
-X-Google-Smtp-Source: APXvYqyPhtKh1Kb3nOzkfa72SVdezx6QGgtN1MFmoihXUZRaDylBiZhiVDUFt59vZIi5CyWD8Y4DKg==
-X-Received: by 2002:ac2:4946:: with SMTP id o6mr10591734lfi.170.1576283651956;
-        Fri, 13 Dec 2019 16:34:11 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z3sm5658532ljh.83.2019.12.13.16.34.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 16:34:11 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:34:03 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link
- interrupt
-Message-ID: <20191213163403.2a054262@cakuba.netronome.com>
-In-Reply-To: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
-References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
-Organization: Netronome Systems, Ltd.
+        Fri, 13 Dec 2019 19:40:22 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBE0T9KN040394;
+        Sat, 14 Dec 2019 00:40:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=JEoC4i6q7axXXK1qldCEInA3qD0+oGpP+QEmCD/z1eY=;
+ b=VPX58ern0DUupW3HFQBwr4YdsUpOrwcqDQvhnHl6FJ6P7G1S4AgYNEPiID2trSzG4r9G
+ gIpj94DrjbF/uoetTl+kU6t8z3H1JrKCqsgmpstVYjSAILpC08qpd6j/UfxC1FMJzYoD
+ iynCKIcTeOOV1NyvBeib7N64SI36eazkIWzE2C2By1PPgBNzlbWRQC0PZKue+gjSXfkw
+ jDkOSWvJqEzGVIm9n0Ojjz9mWZ+1TGr8dwH/nfO+2SXExTf88JZ7ItnFj4w2KWz4Cls9
+ PSQ/svcdnSKNrY2aZ0RnEMLojFkV7NCgu8T1l3X8B2P2CyoFOeA+wj0Xx2GYeUHcTUBT cg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wr41quwpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Dec 2019 00:40:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBE0Swu4091707;
+        Sat, 14 Dec 2019 00:40:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wvdwrw982-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Dec 2019 00:40:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBE0eGv2011069;
+        Sat, 14 Dec 2019 00:40:17 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Dec 2019 16:40:15 -0800
+Date:   Fri, 13 Dec 2019 16:40:12 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org
+Subject: Re: [PATCH] vfs: stop shrinker while fs is freezed
+Message-ID: <20191214004012.GC99868@magnolia>
+References: <20191213222440.11519-1-junxiao.bi@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213222440.11519-1-junxiao.bi@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912140001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9470 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912140001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 22:33:05 +0000, Russell King wrote:
-> phylink requires the MAC to report when its link status changes when
-> operating in inband modes.  Failure to report link status changes
-> means that phylink has no idea when the link events happen, which
-> results in either the network interface's carrier remaining up or
-> remaining permanently down.
-> 
-> For example, with a fiber module, if the interface is brought up and
-> link is initially established, taking the link down at the far end
-> will cut the optical power.  The SFP module's LOS asserts, we
-> deactivate the link, and the network interface reports no carrier.
-> 
-> When the far end is brought back up, the SFP module's LOS deasserts,
-> but the MAC may be slower to establish link.  If this happens (which
-> in my tests is a certainty) then phylink never hears that the MAC
-> has established link with the far end, and the network interface is
-> stuck reporting no carrier.  This means the interface is
-> non-functional.
-> 
-> Avoiding the link interrupt when we have phylink is basically not
-> an option, so remove the !port->phylink from the test.
-> 
-> Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-> Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[adding mm to cc]
 
-Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
-
-Seems like you maybe didn't want this backported to stable hence 
-no fixes tag?
-
-Please advise :)
-
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 111b3b8239e1..ef44c6979a31 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
->  		valid = true;
->  	}
+On Fri, Dec 13, 2019 at 02:24:40PM -0800, Junxiao Bi wrote:
+> Shrinker could be blocked by freeze while dropping the last reference of
+> some inode that had been removed. As "s_umount" lock was acquired by the
+> Shrinker before blocked, the thaw will hung by this lock. This caused a
+> deadlock.
+> 
+>  crash7latest> set 132
+>      PID: 132
+>  COMMAND: "kswapd0:0"
+>     TASK: ffff9cdc9dfb5f00  [THREAD_INFO: ffff9cdc9dfb5f00]
+>      CPU: 6
+>    STATE: TASK_UNINTERRUPTIBLE
+>  crash7latest> bt
+>  PID: 132    TASK: ffff9cdc9dfb5f00  CPU: 6   COMMAND: "kswapd0:0"
+>   #0 [ffffaa5d075bf900] __schedule at ffffffff8186487c
+>   #1 [ffffaa5d075bf998] schedule at ffffffff81864e96
+>   #2 [ffffaa5d075bf9b0] rwsem_down_read_failed at ffffffff818689ee
+>   #3 [ffffaa5d075bfa40] call_rwsem_down_read_failed at ffffffff81859308
+>   #4 [ffffaa5d075bfa90] __percpu_down_read at ffffffff810ebd38
+>   #5 [ffffaa5d075bfab0] __sb_start_write at ffffffff812859ef
+>   #6 [ffffaa5d075bfad0] xfs_trans_alloc at ffffffffc07ebe9c [xfs]
+>   #7 [ffffaa5d075bfb18] xfs_free_eofblocks at ffffffffc07c39d1 [xfs]
+>   #8 [ffffaa5d075bfb80] xfs_inactive at ffffffffc07de878 [xfs]
+>   #9 [ffffaa5d075bfba0] __dta_xfs_fs_destroy_inode_3543 at ffffffffc07e885e [xfs]
+>  #10 [ffffaa5d075bfbd0] destroy_inode at ffffffff812a25de
+>  #11 [ffffaa5d075bfbe8] evict at ffffffff812a2b73
+>  #12 [ffffaa5d075bfc10] dispose_list at ffffffff812a2c1d
+>  #13 [ffffaa5d075bfc38] prune_icache_sb at ffffffff812a421a
+>  #14 [ffffaa5d075bfc70] super_cache_scan at ffffffff812870a1
+>  #15 [ffffaa5d075bfcc8] shrink_slab at ffffffff811eebb3
+>  #16 [ffffaa5d075bfdb0] shrink_node at ffffffff811f4788
+>  #17 [ffffaa5d075bfe38] kswapd at ffffffff811f58c3
+>  #18 [ffffaa5d075bff08] kthread at ffffffff810b75d5
+>  #19 [ffffaa5d075bff50] ret_from_fork at ffffffff81a0035e
+>  crash7latest> set 31060
+>      PID: 31060
+>  COMMAND: "safefreeze"
+>     TASK: ffff9cd292868000  [THREAD_INFO: ffff9cd292868000]
+>      CPU: 2
+>    STATE: TASK_UNINTERRUPTIBLE
+>  crash7latest> bt
+>  PID: 31060  TASK: ffff9cd292868000  CPU: 2   COMMAND: "safefreeze"
+>   #0 [ffffaa5d10047c90] __schedule at ffffffff8186487c
+>   #1 [ffffaa5d10047d28] schedule at ffffffff81864e96
+>   #2 [ffffaa5d10047d40] rwsem_down_write_failed at ffffffff81868f18
+>   #3 [ffffaa5d10047dd8] call_rwsem_down_write_failed at ffffffff81859367
+>   #4 [ffffaa5d10047e20] down_write at ffffffff81867cfd
+>   #5 [ffffaa5d10047e38] thaw_super at ffffffff81285d2d
+>   #6 [ffffaa5d10047e60] do_vfs_ioctl at ffffffff81299566
+>   #7 [ffffaa5d10047ee8] sys_ioctl at ffffffff81299709
+>   #8 [ffffaa5d10047f28] do_syscall_64 at ffffffff81003949
+>   #9 [ffffaa5d10047f50] entry_SYSCALL_64_after_hwframe at ffffffff81a001ad
+>      RIP: 0000000000453d67  RSP: 00007ffff9c1ce78  RFLAGS: 00000206
+>      RAX: ffffffffffffffda  RBX: 0000000001cbe92c  RCX: 0000000000453d67
+>      RDX: 0000000000000000  RSI: 00000000c0045878  RDI: 0000000000000014
+>      RBP: 00007ffff9c1cf80   R8: 0000000000000000   R9: 0000000000000012
+>      R10: 0000000000000008  R11: 0000000000000206  R12: 0000000000401fb0
+>      R13: 0000000000402040  R14: 0000000000000000  R15: 0000000000000000
+>      ORIG_RAX: 0000000000000010  CS: 0033  SS: 002b
+> 
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+> ---
+>  fs/super.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/super.c b/fs/super.c
+> index cfadab2cbf35..adc18652302b 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -80,6 +80,11 @@ static unsigned long super_cache_scan(struct shrinker *shrink,
+>  	if (!trylock_super(sb))
+>  		return SHRINK_STOP;
 >  
-> -	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
-> +	if (priv->hw_version == MVPP22 && port->link_irq) {
->  		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
->  				  dev->name, port);
->  		if (err) {
+> +	if (sb->s_writers.frozen != SB_UNFROZEN) {
+> +		up_read(&sb->s_umount);
+> +		return SHRINK_STOP;
+> +	}
 
+Whatever happened to "let's just fsfreeze the filesystems shortly before
+freezing the system?  Did someone find a reason why that wouldn't work?
+
+Also, uh, doesn't this disable memory reclaim for frozen filesystems?
+
+Maybe we all need to go review the xfs io-less inode reclaim series so
+we can stop running transactions in reclaim... I can't merge any of it
+until the mm changes go upstream.
+
+--D
+
+> +
+>  	if (sb->s_op->nr_cached_objects)
+>  		fs_objects = sb->s_op->nr_cached_objects(sb, sc);
+>  
+> -- 
+> 2.17.1
+> 
