@@ -2,87 +2,77 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE0CC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 08:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A3C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 08:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7925C2465E
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 08:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EED62465B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 08:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfLNInd (ORCPT
+        id S1726072AbfLNIr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 03:43:33 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37070 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfLNInd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 03:43:33 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7D1331C25FC; Sat, 14 Dec 2019 09:43:31 +0100 (CET)
-Date:   Sat, 14 Dec 2019 09:43:31 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martin Schiller <ms@dev.tdt.de>, linux-leds@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 034/134] leds: trigger: netdev: fix handling
- on interface rename
-Message-ID: <20191214084331.GD16834@duo.ucw.cz>
-References: <20191211151150.19073-1-sashal@kernel.org>
- <20191211151150.19073-34-sashal@kernel.org>
+        Sat, 14 Dec 2019 03:47:57 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:38502 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfLNIr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 03:47:57 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ig35e-00047a-5m; Sat, 14 Dec 2019 16:47:54 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ig35Z-0005rb-Ua; Sat, 14 Dec 2019 16:47:49 +0800
+Date:   Sat, 14 Dec 2019 16:47:49 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.5
+Message-ID: <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="x4pBfXISqBoDm8sr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211151150.19073-34-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus:
 
---x4pBfXISqBoDm8sr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This push fixes another build problem for Wireguard without Crypto
+API.
 
-On Wed 2019-12-11 10:10:10, Sasha Levin wrote:
-> From: Martin Schiller <ms@dev.tdt.de>
->=20
-> [ Upstream commit 5f820ed52371b4f5d8c43c93f03408d0dbc01e5b ]
->=20
-> The NETDEV_CHANGENAME code is not "unneeded" like it is stated in commit
-> 4cb6560514fa ("leds: trigger: netdev: fix refcnt leak on interface
-> rename").
->=20
-> The event was accidentally misinterpreted equivalent to
-> NETDEV_UNREGISTER, but should be equivalent to NETDEV_REGISTER.
->=20
-> This was the case in the original code from the openwrt project.
->=20
-> Otherwise, you are unable to set netdev led triggers for (non-existent)
-> netdevices, which has to be renamed. This is the case, for example, for
-> ppp interfaces in openwrt.
+The following changes since commit 8a6b8f4d7a891ac66db4f97900a86b55c84a5802:
 
-Please drop.
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+  crypto: hisilicon - fix a NULL vs IS_ERR() bug in sec_create_qp_ctx() (2019-11-27 13:08:50 +0800)
 
---x4pBfXISqBoDm8sr
-Content-Type: application/pgp-signature; name="signature.asc"
+are available in the git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXfSgswAKCRAw5/Bqldv6
-8gduAJ9Lu1crg0JOc3VxbN0IycADWiBfQQCgpZAKA5szYroZKAauiMcPMTgIzzE=
-=xFie
------END PGP SIGNATURE-----
+for you to fetch changes up to 84faa307249b341f6ad8de3e1869d77a65e26669:
 
---x4pBfXISqBoDm8sr--
+  crypto: arm/curve25519 - add arch-specific key generation function (2019-12-12 14:07:14 +0800)
+
+----------------------------------------------------------------
+Jason A. Donenfeld (1):
+      crypto: arm/curve25519 - add arch-specific key generation function
+
+ arch/arm/crypto/curve25519-glue.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
