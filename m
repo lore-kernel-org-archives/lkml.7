@@ -2,103 +2,181 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7F3C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD100C00454
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EC6214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576337333;
-	bh=3i3TJGlWnxTn79DIaJC4lzjFScVGz3jYaZBKCKe9FIk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=oTB/4r43YRC7gxBrcxQ7RBFg0aQ99cvOyWnSufVzW+TRSo1h5ZZmiKWLpz7j8VAAj
-	 ieAYeIdwzXsxibuCeu3NvwTQcK9kcLom6dTrqsi5pXXDtIDRDdH+ZjXafE/FDAZPXU
-	 RAadhn47aE2G+6eIUYOxTrZ1UY9OgLrNqirdzXUI=
+	by mail.kernel.org (Postfix) with ESMTP id A43B2214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FI9asMhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfLNP2w (ORCPT
+        id S1726875AbfLNPaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 10:28:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfLNP2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 10:28:51 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06707214AF;
-        Sat, 14 Dec 2019 15:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576337330;
-        bh=3i3TJGlWnxTn79DIaJC4lzjFScVGz3jYaZBKCKe9FIk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kIFbaNPOeiVez5C2G8X4UEY2h+MAyRcNQ432eHWbJJz5Mf2LLdePgwNSaZA0Aic0F
-         E32rUtfQ4F+hMR7nxVnu90/siF8yvG0BwcrZqs5HRKiWUQQA1UGxWXt/DYYLEUJHmz
-         SLRO3b+8TIWwmHgIhU8IB+fSaDB4fwco+RH6ieO8=
-Date:   Sat, 14 Dec 2019 16:28:48 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.5-rc2
-Message-ID: <20191214152848.GA3460394@kroah.com>
+        Sat, 14 Dec 2019 10:30:17 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34917 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfLNPaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 10:30:17 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j6so2036456lja.2;
+        Sat, 14 Dec 2019 07:30:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tKpbIIukiPmWkfZZ0EPYoAUPjMssF3lF5pcZV5QAq7w=;
+        b=FI9asMhypX+iTTK2QHrnbE/CnjXZpRBH0VnHuI7sg0lQ26kpoQhi+t/008a08zsTrp
+         +x2Zul36wICIbBvMHhGVj9qPVyKERWdJdI0h/k+4EWcyS793kujUGE47eEUrxjP2781y
+         B/PaRzBo0tQD5Oyljm1DWX7UBVzn8Q0RTs7/DMPBaDnX+zH4lM4qaPwxzMsyfewSSull
+         q/xwq5K3Misoy8QiJyf2y1HAoKvXmkyXYhSTkYwMSOgmFeOLSGscCx3g/rwsxEATgso+
+         TGGQoY/3nxR3HtGVG7hfQCUVtRNeUySrGD6XKIurkVsb3Fp/WICXidYOzsneqxdZrx4m
+         +uMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tKpbIIukiPmWkfZZ0EPYoAUPjMssF3lF5pcZV5QAq7w=;
+        b=lNbRWCK30LSrB1dJzE4auNJecrUuy+OKbpdrZVqd1pRdDoKGjyCgOhbd1bx/12KkCU
+         yHESvWhb+TSL8mWvmftC6L2gXtBAO58r8sbxswjyZgybHCdJ1h0glf83xDEt235jg32G
+         RxGnCv/9sK8EyKe6SToMIR0PeI41aR7S8n4KFv4rGClROIXAcetd1qRFbyGP9Hkdi6qF
+         CrETenNmeHt8dCvfHJ4g22EOgzUK2oommihRs6JCd2JtQ1H4xddXWcJWF19h9cZnUz4b
+         Otpf8+iiuyFYNDygRJ58qF+guY8XJjpmp58cTE2TYrKM2DCFi0exNOKUwa49nYdmUK2a
+         BAzA==
+X-Gm-Message-State: APjAAAWKasiRuAP6FOgFo/lf1idqB0INdKX1QDoy8kTD1v6/csCtcL7b
+        x12Od/ou1qrqTZFEJLKfwdo=
+X-Google-Smtp-Source: APXvYqz7YvUAePzepyy2r7W2pjTM1uI8FZQuy4Wu9rB+JMMJVUy09vzHbdSDCQDE0lbTZ4P7X6HP6A==
+X-Received: by 2002:a2e:b52a:: with SMTP id z10mr12828515ljm.178.1576337414874;
+        Sat, 14 Dec 2019 07:30:14 -0800 (PST)
+Received: from localhost.localdomain ([212.122.72.247])
+        by smtp.gmail.com with ESMTPSA id k5sm6007919lfd.86.2019.12.14.07.30.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 07:30:14 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] io_uring: add support for IORING_OP_IOCTL
+Date:   Sat, 14 Dec 2019 18:29:49 +0300
+Message-Id: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9455d25f4e3b3d009fa1b810862e5b06229530e4:
+This works almost like ioctl(2), except it doesn't support a bunch of
+common opcodes, (e.g. FIOCLEX and FIBMAP, see ioctl.c), and goes
+straight to a device specific implementation.
 
-  Merge tag 'ntb-5.5' of git://github.com/jonmason/ntb (2019-12-07 18:38:17 -0800)
+The case in mind is dma-buf, drm and other ioctl-centric interfaces.
 
-are available in the Git repository at:
+Not-yet Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.5-rc2
+It clearly needs some testing first, though works fine with dma-buf,
+but I'd like to discuss whether the use cases are convincing enough,
+and is it ok to desert some ioctl opcodes. For the last point it's
+fairly easy to add, maybe except three requiring fd (e.g. FIOCLEX)
 
-for you to fetch changes up to 16981742717b04644a41052570fb502682a315d2:
+P.S. Probably, it won't benefit enough to consider using io_uring
+in drm/mesa, but anyway.
 
-  binder: fix incorrect calculation for num_valid (2019-12-14 09:10:47 +0100)
+ fs/io_uring.c                 | 33 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/io_uring.h |  7 ++++++-
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
-----------------------------------------------------------------
-Char/Misc driver fixes for 5.5-rc2
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5dfc805ec31c..6269c51dd02f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -72,6 +72,7 @@
+ #include <linux/highmem.h>
+ #include <linux/namei.h>
+ #include <linux/fsnotify.h>
++#include <linux/security.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/io_uring.h>
+@@ -3164,6 +3165,35 @@ static int io_req_defer(struct io_kiocb *req)
+ 	return -EIOCBQUEUED;
+ }
+ 
++static int io_ioctl(struct io_kiocb *req,
++		    struct io_kiocb **nxt, bool force_nonblock)
++{
++	const struct io_uring_sqe *sqe = req->sqe;
++	unsigned int cmd = READ_ONCE(sqe->ioctl_cmd);
++	unsigned long arg = READ_ONCE(sqe->ioctl_arg);
++	int ret;
++
++	if (!req->file)
++		return -EBADF;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
++	if (unlikely(sqe->ioprio || sqe->addr || sqe->buf_index
++		|| sqe->rw_flags))
++		return -EINVAL;
++	if (force_nonblock)
++		return -EAGAIN;
++
++	ret = security_file_ioctl(req->file, cmd, arg);
++	if (!ret)
++		ret = (int)vfs_ioctl(req->file, cmd, arg);
++
++	if (ret < 0)
++		req_set_fail_links(req);
++	io_cqring_add_event(req, ret);
++	io_put_req_find_next(req, nxt);
++	return 0;
++}
++
+ __attribute__((nonnull))
+ static int io_issue_sqe(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			bool force_nonblock)
+@@ -3237,6 +3267,9 @@ static int io_issue_sqe(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	case IORING_OP_FILES_UPDATE:
+ 		ret = io_files_update(req, force_nonblock);
+ 		break;
++	case IORING_OP_IOCTL:
++		ret = io_ioctl(req, nxt, force_nonblock);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index cafee41efbe5..88d38364746a 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -22,9 +22,13 @@ struct io_uring_sqe {
+ 	union {
+ 		__u64	off;	/* offset into file */
+ 		__u64	addr2;
++		__u64	ioctl_arg;
+ 	};
+ 	__u64	addr;		/* pointer to buffer or iovecs */
+-	__u32	len;		/* buffer size or number of iovecs */
++	union {
++		__u32	len;	/* buffer size or number of iovecs */
++		__u32	ioctl_cmd;
++	};
+ 	union {
+ 		__kernel_rwf_t	rw_flags;
+ 		__u32		fsync_flags;
+@@ -81,6 +85,7 @@ enum {
+ 	IORING_OP_OPENAT,
+ 	IORING_OP_CLOSE,
+ 	IORING_OP_FILES_UPDATE,
++	IORING_OP_IOCTL,
+ 
+ 	/* this goes last, obviously */
+ 	IORING_OP_LAST,
+-- 
+2.24.0
 
-Here are 6 small fixes for some reported char/misc driver issues:
- - fix build warnings with new 'awk' with the raid6 code
- - 4 interconnect driver bugfixes
- - binder fix for reported problem
-
-All of these except the binder fix have been in linux-next with no
-reported issues.  The binder fix is "new" but Todd says it is good as he
-has tested it :)
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Georgi Djakov (3):
-      interconnect: qcom: sdm845: Walk the list safely on node removal
-      interconnect: qcom: qcs404: Walk the list safely on node removal
-      interconnect: qcom: msm8974: Walk the list safely on node removal
-
-Greg Kroah-Hartman (1):
-      lib: raid6: fix awk build warnings
-
-Krzysztof Kozlowski (1):
-      interconnect: qcom: Fix Kconfig indentation
-
-Todd Kjos (1):
-      binder: fix incorrect calculation for num_valid
-
- drivers/android/binder.c            |  4 ++--
- drivers/interconnect/qcom/Kconfig   | 14 +++++++-------
- drivers/interconnect/qcom/msm8974.c |  8 ++++----
- drivers/interconnect/qcom/qcs404.c  |  8 ++++----
- drivers/interconnect/qcom/sdm845.c  |  4 ++--
- lib/raid6/unroll.awk                |  2 +-
- 6 files changed, 20 insertions(+), 20 deletions(-)
