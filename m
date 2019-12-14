@@ -2,138 +2,116 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E75C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09960C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A89E20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C093920866
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lttw4tXB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="lWZ8zbtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLNU1z (ORCPT
+        id S1726967AbfLNU2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 15:27:55 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45583 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfLNU1z (ORCPT
+        Sat, 14 Dec 2019 15:28:07 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.87]:31929 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726484AbfLNU2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 15:27:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so2503371wrj.12
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 12:27:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i+75J0Dw1r5yEvpgIkQ19P8zMx2J5+W73CXbyBfhqvU=;
-        b=Lttw4tXBxHMWfjfV2ecxDid1JNEW7y88V4OuBJIB1oHbaIFLW8CVDG+hQVgEXksi7a
-         0lZVr++aGzqnvpPX2vUrdk/JpFCMKHRiXBq3eAO0oz4L4aVcnc5QKb5dtBovHuar/VN9
-         7bro2BQPiDC2ZIM35L/s5FNY5uuyxJhJoAIplXGbdr7vGMJKAyCbzENvSKFOYRATIOM4
-         P//QFb47iX6wj2RozdDo1c3zCV1c5Qdn+JDou3RrBRNEWSNy5mb/FAJNHbnygKJKuh6d
-         y3hqBWxFLRt/OcESH0t9wTCw9LbrYE/KC3pwb7FLPze0JrVMaBPcgmFSQ/yvl53EoHxP
-         gaeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i+75J0Dw1r5yEvpgIkQ19P8zMx2J5+W73CXbyBfhqvU=;
-        b=rqfbVTmzKnKfGuIiel+3D6K7Q5OfejlM1Nx+APtmXYygUN7/hQnEUaGaeCSIgeSSSi
-         RzVN+iWMo0NK7y8VB6GPN0ap32C9IjfMwYJt17XZLiQUYP/txJwnbI2cGIIiL/H9yh9u
-         JSCg5i9m68/z91in5meFausbAohlRlZ6vDMtqKFXRARzWiRNWv7aUC5SSrLabqwNHl5f
-         AdYeYafRjz46MMN+pwBGyNHiIHrlMMN07z98MDJqxDMkvoFI+FFFpHBqUpbMS1soD11m
-         igjGbbeSGJJRsPNBvhV7a21DkOAKx3O45OdC4DaO3pfzo+l5XibQJv7DjNpq+SLgkmuO
-         YmJQ==
-X-Gm-Message-State: APjAAAUJ6JCT4oBs75zv0eot23CATpuKP3Uc+xWRO98gRrLYr1evcc9e
-        fG+eM562D6i/3VfGtyZUv1lU3Ejq2GFjfA5uLfOQfg==
-X-Google-Smtp-Source: APXvYqyHSgL0areroJWp6qSyg36babTJ6gPRWX7Y+JLL+Yt8m5mgMkZ/GphYT9DivXL/EB83hCQ9p8p1Ta/qTD+Ty3E=
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr21457773wrv.0.1576355272607;
- Sat, 14 Dec 2019 12:27:52 -0800 (PST)
+        Sat, 14 Dec 2019 15:28:07 -0500
+X-Greylist: delayed 1330 seconds by postgrey-1.27 at vger.kernel.org; Sat, 14 Dec 2019 15:28:06 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 1E8FA60EC62
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 14:05:56 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id gDfoiOs5xiJ43gDfoioC1z; Sat, 14 Dec 2019 14:05:56 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=fuWZgfc/nOwr/7Hm0CFqLup50VNZxiYld5Lu20kW2H0=; b=lWZ8zbtphioj26kyBkxXWX+zoW
+        A0L2B3ikK4xhPE73/B5bwoM5ZyLysrLSKeMT/NECuU5mqtrHZXWu0lGtdTzTzxu+n8irduxR/IteD
+        mUzwP0crn27n84aDRu9rIjEQGNQPDEviDjdOhN9n99vfrZp2Q+12482FJY9IeN4NIVHJfEFkAXhCs
+        ly3lsPcyOtgTX1PtEHY2PGrelLYNoLphpZXwfvUZqFeZSW14Eyie9v9S5tIq+V2ZLu+ff41IsLjWe
+        SdI2EVSoaO4AkUE4iU1LHJI/GruJpBgVx7bULjevqzVAvo0jElqHFS8LJYJHN5SPNIALrAsbf05Ot
+        Emn7YcjA==;
+Received: from [187.192.35.14] (port=45108 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1igDfm-002mfX-Kj; Sat, 14 Dec 2019 14:05:54 -0600
+Date:   Sat, 14 Dec 2019 14:07:09 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.5-rc2
+Message-ID: <20191214200709.GA20124@embeddedor>
 MIME-Version: 1.0
-References: <20191214175735.22518-1-ardb@kernel.org> <20191214175735.22518-6-ardb@kernel.org>
- <20191214194626.GA140998@rani.riverdale.lan> <20191214194936.GB140998@rani.riverdale.lan>
- <CAKv+Gu_JQz=xd_UmqiuZ8TvA+ksT_rY4iXP_j7OdW4F5sfZt9g@mail.gmail.com> <20191214201334.GC140998@rani.riverdale.lan>
-In-Reply-To: <20191214201334.GC140998@rani.riverdale.lan>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 14 Dec 2019 20:27:50 +0000
-Message-ID: <CAKv+Gu-A4bE0DM96-dNjtsYG=a3g-X4f-y=NcJ5ZCvZHaDJZmw@mail.gmail.com>
-Subject: Re: [PATCH 05/10] efi/libstub: distinguish between native/mixed not
- 32/64 bit
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.35.14
+X-Source-L: No
+X-Exim-ID: 1igDfm-002mfX-Kj
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.35.14]:45108
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019 at 21:13, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Sat, Dec 14, 2019 at 07:54:25PM +0000, Ard Biesheuvel wrote:
-> > On Sat, 14 Dec 2019 at 20:49, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Sat, Dec 14, 2019 at 02:46:27PM -0500, Arvind Sankar wrote:
-> > > > On Sat, Dec 14, 2019 at 06:57:30PM +0100, Ard Biesheuvel wrote:
-> > > > > +
-> > > > > +#define efi_table_attr(table, attr, instance) ({                   \
-> > > > > +   __typeof__(((table##_t *)0)->attr) __ret;                       \
-> > > > > +   if (efi_is_native()) {                                          \
-> > > > > +           __ret = ((table##_t *)instance)->attr;                  \
-> > > > > +   } else {                                                        \
-> > > > > +           __typeof__(((table##_32_t *)0)->attr) at;               \
-> > > > > +           at = (((table##_32_t *)(unsigned long)instance)->attr); \
-> > > > > +           __ret = (__typeof__(__ret))(unsigned long)at;           \
-> > > > > +   }                                                               \
-> > > > > +   __ret;                                                          \
-> > > > > +})
-> > > >
-> > > > The casting of `at' is appropriate if the attr is a pointer type which
-> > > > needs to be zero-extended to 64-bit, but for other fields it is
-> > > > unnecessary at best and possibly dangerous.  There are probably no
-> > > > instances currently where it is called for a non-pointer field, but is
-> > > > it possible to detect if the type is pointer and avoid the cast if not?
-> > >
-> > > To clarify, I mean the casting via `unsigned long' -- casting to type of
-> > > __ret should be ok. We could also use uintptr_t for cleanliness when the
-> > > cast is required?
-> >
-> > Could you give an example of how it could break?
->
-> eg, if the field is actually a structure. Nobody seems to do this
-> currently, but say for
->         efi_table_attr(efi_boot_services, hdr, instance)
-> you shouldn't cast hdr to unsigned long.
->
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Yes. the efi_guid_t in efi_config_table_t is another example - I had
-to work around that in get_efi_config_table().
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-> There's also the case of nested 32/64-bit structures that breaks, but
-> that might be too hard to try to handle:
->         efi_table_attr(efi_pci_io_protocol, io, instance)
-> where io is a structure of two pointers which would need to be
-> individually casted. It's properly accessible as io.read/io.write
-> though.
->
+are available in the Git repository at:
 
-Yes. We already have calls to pci.read that use this.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.5-rc2
 
-> In general though, everything is either a pointer or a u64, so if it's
-> too messy to detect pointer type, the cast is still probably safe in
-> practice.
+for you to fetch changes up to 3d519d6d388ba4f9a75d0e0b6f60d890987bc096:
 
-Yes. I'm open to suggestions on how to improve this, but mixed mode is
-somewhat of a maintenance burden, so if new future functionality needs
-to leave mixed mode behind, I'm not too bothered.
+  sh: kgdb: Mark expected switch fall-throughs (2019-12-10 16:11:42 -0600)
 
-Thanks,
-Ard.
+----------------------------------------------------------------
+Wimplicit-fallthrough patches for 5.5-rc2
+
+Hi Linus,
+
+Please, pull the following patches that mark switch cases where we are
+expecting to fall through.
+
+ - Fix compile error on sh by marking expected switch fall-through
+
+Thanks
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+----------------------------------------------------------------
+Kuninori Morimoto (1):
+      sh: kgdb: Mark expected switch fall-throughs
+
+ arch/sh/kernel/kgdb.c | 1 +
+ 1 file changed, 1 insertion(+)
