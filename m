@@ -2,120 +2,88 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BFBC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D482AC00454
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA75214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D0B214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLNOlH (ORCPT
+        id S1726704AbfLNOol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 09:41:07 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:45441 "EHLO
+        Sat, 14 Dec 2019 09:44:41 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:33733 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNOlH (ORCPT
+        with ESMTP id S1725872AbfLNOol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 09:41:07 -0500
-Received: from orion.localdomain ([95.114.98.35]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPXxi-1iKbZU2Lw2-00MYOR; Sat, 14 Dec 2019 15:41:02 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     rafael@kernel.org
-Subject: [PATCH] drivers: devres: add devres_add_auto_ptr()
-Date:   Sat, 14 Dec 2019 15:40:32 +0100
-Message-Id: <20191214144032.24062-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:hrdThy5tTSwtzfNzGsrQrsoQfuU6JpoPS9+X4p0/p3FJiAzlCgc
- 1u8iA/TkQ6//f4bHhPShkk+HkzscwFSBeEs727oVNifijdH51/ud0R42lng/Esg3Fn5Azq6
- t2ZUpeK4sK2MVtQEuEtFVI+liz/tf7+TCfGQl8ZCLZ6rvfWqR8imZIXJduFKsT0EKfIk9xb
- kLXAqTYn+yVxVpHe/Q7zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:psYwW+SNV6c=:tX3sRAtkfnCKNMiT3QteeH
- GcrMyVhXxD+DG9uOn1BuHqBehrZ3/Rs9i5JkjPQvDnGQUieOzUKTl8R8W5rUJHAncReoYOQHy
- CfzFQukk1EKTzc0gTqBfdvjl8Ej2eCF13DQVcDvXNq8Ge8a6IYJYPFgwOMlTkO6YtgKObfwuu
- WJdVif1Qqw1GgKrOsGcqA891xjDah3teJATvJMGEQzonGn+aCEYm+ytH3iUWTzqCTAopAtQKS
- KChKmQ/NZPoHn7kJtJ8OLLsV5fXsoAli4zR2ZVBLEgyIcsiIs0rM41xFI8yUmYo/YAPgZDL3k
- NW/OvXLdtoKJkJ2TZPaxy1N9z/akWtmyyUuv1kpCUaVCWGsW+yRF0L8+mOHwp7s3/J6yscYTo
- 82qyJ2ufA0kgN0BNfGsXZ4wYzuwZPEfKxYWCzAbK6xP5+EFpR5Tf2cpFzEp4n8uskuJ0K8RaW
- kJYLR+OiEm3QNCEPV4dlAihKN2G+WYYVNyqMUQHv0uqLAMptS3XsG/k1274V4hbY6dI6GlhPk
- klbeFToGYGsEvqG8PPPV9AjA/tAjvPo+wA9aqygXNSir6mVdBh7biCxIzJzckD22aPBfL7/cw
- pOJbrwYd/1W2eFG079v5SzZlOpIXbSnmLNA0tcvcDsEUAydonFLDMll/RqVHC5Owfft+t9UTK
- UIiTGAxJiuO+Bbpvt9IGYIL3SHoNlzRkxMvKE4zVnBUKo7QyA/9kiN/C+SG5jbSN8fSQOEQDA
- 26n9gKNCneDA9goaARsJ0e5IsGgvxXFFfHh6ymgLcr4t+UdwD82ECX1dJ2tjiIhaGKifobL98
- nBfeHJmsx0GwjhGYi/XXVOAdoDTt43+gYY5VIPhHLjQzNPefbKIIFBwr9zhv+64ajEDc27TJW
- 1IRS7o0ibm1ssGrfevqg==
+        Sat, 14 Dec 2019 09:44:41 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MLRgp-1iPISi3R3r-00IWSQ; Sat, 14 Dec 2019 15:44:40 +0100
+Received: by mail-qt1-f178.google.com with SMTP id e12so1303927qto.2;
+        Sat, 14 Dec 2019 06:44:39 -0800 (PST)
+X-Gm-Message-State: APjAAAVPsgQHhdhqTY+tobWbByMAOqF1Gyr4idkvD9hOVlPfvoSNNBeV
+        WU/2+eCAHuBxSUcbf+0WqXirrob7AsIS/j8odKc=
+X-Google-Smtp-Source: APXvYqzGh5bFPG98ALm1rwS+1oBWlB0rdxMwfuMdc0Z+WDAdOTm5wzrRksxa1T6t4KX6ZZtoY3ya4gCQPdB2/t83nQQ=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr16755745qte.204.1576334678661;
+ Sat, 14 Dec 2019 06:44:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-15-arnd@arndb.de>
+ <CAGRGNgVCkyterFgOFL-WtHr4=tSnyr2TsYs5BQk+7FdtHjv4ow@mail.gmail.com>
+In-Reply-To: <CAGRGNgVCkyterFgOFL-WtHr4=tSnyr2TsYs5BQk+7FdtHjv4ow@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 14 Dec 2019 15:44:22 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1Tuv766qK0RX+ZkNiqDqiOOHPeawFXT0V-Zsj5ZKAAQg@mail.gmail.com>
+Message-ID: <CAK8P3a1Tuv766qK0RX+ZkNiqDqiOOHPeawFXT0V-Zsj5ZKAAQg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH v2 24/24] y2038: sparc: remove use of struct timex
+To:     Julian Calaby <julian.calaby@gmail.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:476WpjpbtZIZ4Qe480wQKSas3sZ10yCunJfDY4jCNnoTNI+ikUb
+ 9uOtr4EUHeaBdfBm7oXZk8q83a8qeNcVI39F1aGWYP1ogCqe7DU4QkJdZZQ23T3ZoYBkheM
+ 6chfglxG9GQ0SnXjpo5um76fVGHoHtM83Wv7fPPGbo2TB0heKoj+4DofNDx6cTf+4bkQLer
+ a9QSTPLhGGg/noSAprycQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3tsXHoCWadY=:r4R6+yIaJ/tkW2GZg4umBz
+ oXu1bttiPp2BlXHf5pQAH7rJyQxm3V4aEhQazpLphkAVVlz3ugOO2pARB+8AONoOEcWqr876p
+ SyEJQjVq6skp+g6YTPkCY5d8ZzsouSY/BnZTOto3Ub+04R8upmYL5zdg86kPopLpH3iWNN+Zz
+ lc3y1aVcmwSuAf7AC7rO12RYOCyE/6X27nIeFNSNK+XEo8l6+VVQ/5oYv1DlVGt/O6GvmAsU7
+ fbIUsUtJIq1HOpvBUZxsv5vkR9XkrTetv9pwpo3qHvkVWvprqLtq1/d5JzGvuzwGZk9N3TG9e
+ NbilQjzffC5Y0ZG7Wl7m5Yf2ZW4vrxAeKmeBoPdqjqN9hJSRNerDIY3MjfDfiuZgD/4DqZuax
+ tQELsBWy6VSjcI9rsMeXQEqEcsVI1Em4FxfH2tLOLQZtsm752VBLYjrtD1fyMbXd8+s0k1Nmx
+ Ty8g+KsPEYR4XExtZl4n8LcZysk3dqUzOo6AloKyrY+hr3pwNlUHpMjrDNxqAUt+/OaTlnKaO
+ hrQ0IBU4bs3/iMsVB4eZZO7ENrxg09Ned3B29uFr2zpMmBMV680Q7riQ3wl3ujm/uCzLRFTj+
+ +niboY8YipMgzO1qyAajUIaK39D9V9f7buvQ/RbLvo6fBy+LwQP/V7RYTWFCoOy4lI/gc81wn
+ Waxc2RHuJX/CS/728x3hL9U11oBQ7xYmbwA2rR22umZo+iKacu84jgYvCuWdJXJz3dD1uP9I0
+ Vquarupo7reM0NtXyqmHwyQ3E9YPowxyJLSgPdgYW+YMSjq68/gBCGKtRt27wzw5EHgdQnhzu
+ XGqmpr18/yE9wZibcnoz+mM3vAxvYCKT+cGr4w/pQMSa/mmCu76W/JhzYO+i4PKZu2YxdyiaI
+ PKerVjkz5voU4fXdpgwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding a helper for allocating and adding a devres in one shot,
-in order to minimize boilerplate. In case of failure, it frees
-the resource and returns error.
+On Sat, Dec 14, 2019 at 2:38 AM Julian Calaby <julian.calaby@gmail.com> wrote:
+> On Sat, Dec 14, 2019 at 7:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Am I mis-reading the patch, or is "kt" not defined?
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/base/devres.c  | 29 +++++++++++++++++++++++++++++
- include/linux/device.h |  2 ++
- 2 files changed, 31 insertions(+)
+You are right, and there are other problems in this patch that I should have
+found in a trivial compile-test. Please disregard this patch, it should not have
+been part of this set before I had gotten around to at least some testing.
 
-diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index 0bbb328bd17f..6631d3748ebe 100644
---- a/drivers/base/devres.c
-+++ b/drivers/base/devres.c
-@@ -237,6 +237,35 @@ void devres_add(struct device *dev, void *res)
- }
- EXPORT_SYMBOL_GPL(devres_add);
- 
-+/**
-+ * devres_add_auto_ptr - Reigster pointer device resource
-+ * @dev: Device to add resource to
-+ * @release: release callback function
-+ * @ptr: pointer to register
-+ *
-+ * Allocate a devres entry and register pointer @ptr to @dev. On driver
-+ * detach, the associated release function will be invokied and devres
-+ * will be freed automatically.
-+ *
-+ * The devres will be allocated w/ GFP_KERNEL
-+ *
-+ * In case of failure, the resource will be released automatically !
-+ */
-+int devres_add_auto_ptr(struct device *dev, dr_release_t release, void *ptr)
-+{
-+	void **dr;
-+	dr = devres_alloc(release, sizeof(ptr), GFP_KERNEL);
-+	if (!dr) {
-+		pr_err("devm: out of memory!\n");
-+		release(dev, ptr);
-+		return -ENOMEM;
-+	}
-+
-+	devres_add(dev, dr);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(devres_add_auto_ptr);
-+
- static struct devres *find_dr(struct device *dev, dr_release_t release,
- 			      dr_match_t match, void *match_data)
- {
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e226030c1df3..b8d8eef89fdf 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -905,6 +905,8 @@ extern void devres_for_each_res(struct device *dev, dr_release_t release,
- 				void *data);
- extern void devres_free(void *res);
- extern void devres_add(struct device *dev, void *res);
-+extern int devres_add_auto_ptr(struct device *dev, dr_release_t release,
-+			       void *ptr);
- extern void *devres_find(struct device *dev, dr_release_t release,
- 			 dr_match_t match, void *match_data);
- extern void *devres_get(struct device *dev, void *new_res,
--- 
-2.11.0
+When I collected stuff from my backlog, I only made sure that this one had
+no dependencies on other work, but failed to realize that sparc64 was not
+part of my build test matrix and that the 0day bot had not seen it either.
 
+       Arnd
