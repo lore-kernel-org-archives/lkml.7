@@ -2,131 +2,109 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767EAC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1784EC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AB524125
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFF620724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlCmN7o1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHnjEtAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLNRMb (ORCPT
+        id S1726769AbfLNRyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 12:12:31 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42635 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLNRMb (ORCPT
+        Sat, 14 Dec 2019 12:54:54 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46428 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfLNRyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 12:12:31 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so3238443otd.9
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 09:12:30 -0800 (PST)
+        Sat, 14 Dec 2019 12:54:53 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y14so3226750pfm.13;
+        Sat, 14 Dec 2019 09:54:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LfuFNZhwpZHLnF3djKVjiT3EXeRjqk5hTlCJtr0Ug00=;
-        b=TlCmN7o1+fMNUBHz9erkJfWUoUdU6UO2mLwWb8l2OezOxScfm59l9mw928OPcn/yBa
-         Xhl+xxt7CRSQs9M26xhDkm0qpkDohbNZy5JaN5ECOL9h9XnMmCPoEBL1boRtojpbvgrc
-         Ght8Wj+dD1eb0lSCrS3fpEAdVkxj2pV3eVXKkOg2ENf8l6nkaINwPxGpfnRGOwnquFZc
-         pL+qz0HFXn0mlj4DE6458MEirDfF3fb7wxRjGscI3mH4+5qfrIvYwDZFGFMHTIVinPJ6
-         SeqqPws1nPIVuGyx08gfwwZCFxeSIBu8z58WeOa3KajNbYjPAgDuhFKblJLY/acUYb2P
-         EJ5A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HUgbRO2BhcAt34RLIr2Su6ppZQ/Nd1zKa7NZkK38qdo=;
+        b=gHnjEtACweKJQ9KxtQ461Zgr7NfGqheFDsRZTRRJFz6YFL8wuergs72JfrcnO77sdJ
+         /QS7UPm1Bg4iIc3NujE4sEMdigb/F/ubMD4/HZVOB5uT9H+42YKgm8+veKx3a8YgFdtN
+         4jggFFFOQRkLhxlPZm6C6OxcyQ1QbRzAyrzeiBX8bXkva7ITvJqNDVSY0Fae7CSC21vy
+         JP8PdkfrraxJdDi8nNQMD4jxIHdZTp8NmiB1F0c7GS7VpvR2GLV2CyfBpXw8hFKCMdY4
+         5RyngV4Optzg3+dljoTt0tZeJ5RhogtepGPUJ1LqLD44vd/D1CspHKleJVWmOwLZLop4
+         BhsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LfuFNZhwpZHLnF3djKVjiT3EXeRjqk5hTlCJtr0Ug00=;
-        b=PzsH/sl1Xn+VB75HE0MnY91me+LZL2cucdQSvzyfBgvpXLGRHAZLUE6vJC70kv3Bfi
-         InSUFSIgnALe8N6ue+A57s864LqbJ92o1MCjKLmr0hVTttlll3kRgD8KVAwfV/qNUsQi
-         ugZKF2CTOOnF61M7E2znQ5v/ydaHCTERPiWLuDXG7p1pbeR2wJJhrbRA1zKvan69Se9j
-         I+JmtkDu0hM+aUcO6IBYQ8nyk980L78SJrBFQ6wG/mD7bObdcP3bjdcS5BxUVQW1s8yD
-         UkHK6gYGWbHWHZMxjPSZ02R1NN9p4PRpxpA+C84fKsrZl01XI5VjE+NCtoK29N89ZyRA
-         A9HA==
-X-Gm-Message-State: APjAAAUa9UBFUvpgu3KKCvdVB6pYwjTQ+bYWaAOO17/43kbyhjMW+PEZ
-        N7SnxGS/sh5nXg/Uizrhlnfn6ErgkOFK7eH5VCLavw==
-X-Google-Smtp-Source: APXvYqwwTQGCvVFuCI2TTbbAbQLnslTRGC4VFL+IaeZvnsp8ao1oG8F9eYiooFOo0Htw4V8HHQU3yDHWMVglPTU+OSw=
-X-Received: by 2002:a9d:4789:: with SMTP id b9mr22242455otf.110.1576343549895;
- Sat, 14 Dec 2019 09:12:29 -0800 (PST)
-MIME-Version: 1.0
-References: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
-In-Reply-To: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Sat, 14 Dec 2019 18:12:03 +0100
-Message-ID: <CAG48ez0N_b+kjbddhHe+BUvSnOSvpm1vdfQ9cv+cgTLuCMXqug@mail.gmail.com>
-Subject: Re: [RFC PATCH] io_uring: add support for IORING_OP_IOCTL
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HUgbRO2BhcAt34RLIr2Su6ppZQ/Nd1zKa7NZkK38qdo=;
+        b=i8hKxajTjMxSAODItWeKRUrbuDQXkdjNkwkbkZkTmfkNwfi9G33Kqc5rquh/mFpAwR
+         py5Q4w7J78nCsNUmGCy/oEpvNUwRrzFS6l5aTLiRcaT5lR1YrBZN3g7WTmFmevHJ8Cu+
+         lZKh0I7vNawShci/l03blwSRgSborehJPi5g0qtpIMb0HBhZ8ZAEs0GQ0rPxe9Vs1Wi1
+         K93o/AYWAE2eLIN0neHfmgFdyR3VzjiNOgmhBtMRvoZpoNu0UkRbtyG1HSWp+5hONjVx
+         S16DM5lNy5Yb3JUfQYuP55HdSxeX9A8rMCTWFTt2fe6sPFfzlnMlocAETznXqaaGbgDh
+         2Zaw==
+X-Gm-Message-State: APjAAAU2ma1G9QlDmJ5xnybgOLBs/9J1X2orCwxDFlOlSPU8t4lVQQO1
+        eboo52ItxVHDMQatHsYdOwg=
+X-Google-Smtp-Source: APXvYqzczN9kvUPQ7Hc2LxnRw9L6ohEd0G4hrwU0EL1lvwEgBvQanEfnjjXSSKWlr9BOfM41oALivA==
+X-Received: by 2002:a63:111e:: with SMTP id g30mr6840840pgl.251.1576346092717;
+        Sat, 14 Dec 2019 09:54:52 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id j16sm16064250pfi.165.2019.12.14.09.54.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 14 Dec 2019 09:54:52 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl,
+        john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, kgene@kernel.org, krzk@kernel.org,
+        mripard@kernel.org, wens@csie.org, ssantosh@kernel.org,
+        jun.nie@linaro.org, shawnguo@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 01/10] soc: sunxi: convert to devm_platform_ioremap_resource
+Date:   Sat, 14 Dec 2019 17:54:38 +0000
+Message-Id: <20191214175447.25482-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 4:30 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
-> This works almost like ioctl(2), except it doesn't support a bunch of
-> common opcodes, (e.g. FIOCLEX and FIBMAP, see ioctl.c), and goes
-> straight to a device specific implementation.
->
-> The case in mind is dma-buf, drm and other ioctl-centric interfaces.
->
-> Not-yet Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->
-> It clearly needs some testing first, though works fine with dma-buf,
-> but I'd like to discuss whether the use cases are convincing enough,
-> and is it ok to desert some ioctl opcodes. For the last point it's
-> fairly easy to add, maybe except three requiring fd (e.g. FIOCLEX)
->
-> P.S. Probably, it won't benefit enough to consider using io_uring
-> in drm/mesa, but anyway.
-[...]
-> +static int io_ioctl(struct io_kiocb *req,
-> +                   struct io_kiocb **nxt, bool force_nonblock)
-> +{
-> +       const struct io_uring_sqe *sqe = req->sqe;
-> +       unsigned int cmd = READ_ONCE(sqe->ioctl_cmd);
-> +       unsigned long arg = READ_ONCE(sqe->ioctl_arg);
-> +       int ret;
-> +
-> +       if (!req->file)
-> +               return -EBADF;
-> +       if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-> +               return -EINVAL;
-> +       if (unlikely(sqe->ioprio || sqe->addr || sqe->buf_index
-> +               || sqe->rw_flags))
-> +               return -EINVAL;
-> +       if (force_nonblock)
-> +               return -EAGAIN;
-> +
-> +       ret = security_file_ioctl(req->file, cmd, arg);
-> +       if (!ret)
-> +               ret = (int)vfs_ioctl(req->file, cmd, arg);
+Use devm_platform_ioremap_resource() to simplify code.
 
-This isn't going to work. For several of the syscalls that were added,
-special care had to be taken to avoid bugs - like for RECVMSG, for the
-upcoming OPEN/CLOSE stuff, and so on.
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/soc/sunxi/sunxi_sram.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-And in principle, ioctls handlers can do pretty much all of the things
-syscalls can do, and more. They can look at the caller's PID, they can
-open and close (well, technically that's slightly unsafe, but IIRC
-autofs does it anyway) things in the file descriptor table, they can
-give another process access to the calling process in some way, and so
-on. If you just allow calling arbitrary ioctls through io_uring, you
-will certainly get bugs, and probably security bugs, too.
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index 1b0d50f36349..f73fbcc73f51 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -320,7 +320,6 @@ static struct regmap_config sunxi_sram_emac_clock_regmap = {
+ 
+ static int sunxi_sram_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct dentry *d;
+ 	struct regmap *emac_clock;
+ 	const struct sunxi_sramc_variant *variant;
+@@ -331,8 +330,7 @@ static int sunxi_sram_probe(struct platform_device *pdev)
+ 	if (!variant)
+ 		return -EINVAL;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-- 
+2.17.1
 
-Therefore, I would prefer to see this not happen at all; and if you do
-have a usecase where you think the complexity is worth it, then I
-think you'll have to add new infrastructure that allows each
-file_operations instance to opt in to having specific ioctls called
-via this mechanism, or something like that, and ensure that each of
-the exposed ioctls only performs operations that are safe from uring
-worker context.
-
-Also, I'm not sure, but it might be a good idea to CC linux-api if you
-continue working on this.
