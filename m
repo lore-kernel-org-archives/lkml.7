@@ -2,138 +2,178 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E31C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCEDC00454
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C6420724
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A8B2073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bGbeJVz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfLNSop (ORCPT
+        id S1726803AbfLNSwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 13:44:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:47372 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbfLNSop (ORCPT
+        Sat, 14 Dec 2019 13:52:20 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43081 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLNSwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 13:44:45 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1igCPC-0003pB-Ts; Sat, 14 Dec 2019 18:44:42 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1igCPC-0007pG-GJ; Sat, 14 Dec 2019 18:44:42 +0000
-Message-ID: <48f5d55352e57e85925e98741331725109369476.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 04/72] leds: leds-lp5562 allow firmware files up to
- the maximum length
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Nick Stoughton <nstoughton@logitech.com>
-Date:   Sat, 14 Dec 2019 18:44:37 +0000
-In-Reply-To: <20191214083755.GA16834@duo.ucw.cz>
-References: <lsq.1575813164.154362148@decadent.org.uk>
-         <lsq.1575813165.827469937@decadent.org.uk>
-         <20191214083755.GA16834@duo.ucw.cz>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-8JBTCm4n1ufoD71qgRks"
-User-Agent: Evolution 3.30.5-1.1 
+        Sat, 14 Dec 2019 13:52:20 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p27so2646487pli.10
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 10:52:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JXNSYmiyVo7J45ItzV9PCSkFWIS1r+3A4E6slrSpFSE=;
+        b=bGbeJVz1GOQY1Bp2BCxd3Mn6LcOg9sn6BjFkJNqwsqSIIipID4KY1YZBLQu/1pAWk+
+         sxRqaJ+y++8TDXAXLcpNhnZ62XB+u0P1SatNnWQg3pVzs9p0UzMsqPb4qQfQj+SplYEn
+         zRGInrElloEFrABG8nLWyy7AlxgUSj+XT9FIQR/ObsaaJcT55izkmbDtnFnPYhiyUQK/
+         fnREpgyEQDQylGkFMi9oLTZ4LXh3sn9rDfZpx1AUxrvhSbcXTJELwG3h+awayONQO58o
+         mRgvBY0CzIq6HF6f0pbHjlNW4A1pHXX4mP5/UE5DKzMc7cgPyYqsSTepERapkUQWR8To
+         f4PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JXNSYmiyVo7J45ItzV9PCSkFWIS1r+3A4E6slrSpFSE=;
+        b=TZxOP3g5eGB4CHcQMJlbrMfAUAGCsT/FL6MkX++jjBIK8oYWoExaR5LgRdbing+X/T
+         TWfx15RlIjW7OyoUbn6umMfIpSZpJ2yVgZVKyy5jHK852xF1eilHEnmA4u71DmOATAWl
+         C+aeSTSQiDlPqwLuvotqj9AcAaoSdDE/aYnGxO17Wc2EGXc7cnVkyN3sglRjHsXwmQXi
+         RfvEql52aywOEyzLmHmnnQUyuJhT4ShmfnxwEaLRDLNOC0ivSDV6AhtESkLdwn0NImas
+         XNGHMJ06dPiO773RqM16HQsih7+naqD/ilzqszLNtqeiN8Dh18HlyaPKl8AKf9nIXw6E
+         nBWg==
+X-Gm-Message-State: APjAAAUY5xSI3MybebBLfVUjO7H/37UjCH+ny28k/FnYP0XYCBJ0UXIf
+        gya1mPTeFmwLiq1Nx8qP+cN2A9x1Ifn2Tw==
+X-Google-Smtp-Source: APXvYqzFQqZ9ceh+DjkMnuxKikVaS5h6iykAvPcLfPTHyz1yFGU9Crpgey4Zl6K7IfqcIprbiJFfhg==
+X-Received: by 2002:a17:902:70cb:: with SMTP id l11mr6594894plt.216.1576349538419;
+        Sat, 14 Dec 2019 10:52:18 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id a13sm16044703pfc.40.2019.12.14.10.52.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2019 10:52:17 -0800 (PST)
+Subject: Re: [RFC PATCH] io_uring: add support for IORING_OP_IOCTL
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jann Horn <jannh@google.com>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+References: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
+ <CAG48ez0N_b+kjbddhHe+BUvSnOSvpm1vdfQ9cv+cgTLuCMXqug@mail.gmail.com>
+ <9b4f56c1-dce9-1acd-2775-e64a3955d8ee@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1f995281-4a56-a7de-d20b-14b0f64536c0@kernel.dk>
+Date:   Sat, 14 Dec 2019 11:52:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <9b4f56c1-dce9-1acd-2775-e64a3955d8ee@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/14/19 10:56 AM, Pavel Begunkov wrote:
+> 
+> On 14/12/2019 20:12, Jann Horn wrote:
+>> On Sat, Dec 14, 2019 at 4:30 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>> This works almost like ioctl(2), except it doesn't support a bunch of
+>>> common opcodes, (e.g. FIOCLEX and FIBMAP, see ioctl.c), and goes
+>>> straight to a device specific implementation.
+>>>
+>>> The case in mind is dma-buf, drm and other ioctl-centric interfaces.
+>>>
+>>> Not-yet Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>>> ---
+>>>
+>>> It clearly needs some testing first, though works fine with dma-buf,
+>>> but I'd like to discuss whether the use cases are convincing enough,
+>>> and is it ok to desert some ioctl opcodes. For the last point it's
+>>> fairly easy to add, maybe except three requiring fd (e.g. FIOCLEX)
+>>>
+>>> P.S. Probably, it won't benefit enough to consider using io_uring
+>>> in drm/mesa, but anyway.
+>> [...]
+>>> +static int io_ioctl(struct io_kiocb *req,
+>>> +                   struct io_kiocb **nxt, bool force_nonblock)
+>>> +{
+>>> +       const struct io_uring_sqe *sqe = req->sqe;
+>>> +       unsigned int cmd = READ_ONCE(sqe->ioctl_cmd);
+>>> +       unsigned long arg = READ_ONCE(sqe->ioctl_arg);
+>>> +       int ret;
+>>> +
+>>> +       if (!req->file)
+>>> +               return -EBADF;
+>>> +       if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
+>>> +               return -EINVAL;
+>>> +       if (unlikely(sqe->ioprio || sqe->addr || sqe->buf_index
+>>> +               || sqe->rw_flags))
+>>> +               return -EINVAL;
+>>> +       if (force_nonblock)
+>>> +               return -EAGAIN;
+>>> +
+>>> +       ret = security_file_ioctl(req->file, cmd, arg);
+>>> +       if (!ret)
+>>> +               ret = (int)vfs_ioctl(req->file, cmd, arg);
+>>
+>> This isn't going to work. For several of the syscalls that were added,
+>> special care had to be taken to avoid bugs - like for RECVMSG, for the
+>> upcoming OPEN/CLOSE stuff, and so on.
+>>
+>> And in principle, ioctls handlers can do pretty much all of the things
+>> syscalls can do, and more. They can look at the caller's PID, they can
+>> open and close (well, technically that's slightly unsafe, but IIRC
+>> autofs does it anyway) things in the file descriptor table, they can
+>> give another process access to the calling process in some way, and so
+>> on. If you just allow calling arbitrary ioctls through io_uring, you
+>> will certainly get bugs, and probably security bugs, too.
+>>
+>> Therefore, I would prefer to see this not happen at all; and if you do
+>> have a usecase where you think the complexity is worth it, then I
+>> think you'll have to add new infrastructure that allows each
+>> file_operations instance to opt in to having specific ioctls called
+>> via this mechanism, or something like that, and ensure that each of
+>> the exposed ioctls only performs operations that are safe from uring
+>> worker context.
+> 
+> Sounds like hell of a problem. Thanks for sorting this out!
 
---=-8JBTCm4n1ufoD71qgRks
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+While the ioctl approach is tempting, for the use cases where it makes
+sense, I think we should just add a ioctl type opcode and have the
+sub-opcode be somewhere else in the sqe. Because I do think there's
+a large opportunity to expose a fast API that works with ioctl like
+mechanisms. If we have
 
-On Sat, 2019-12-14 at 09:37 +0100, Pavel Machek wrote:
-> On Sun 2019-12-08 13:52:48, Ben Hutchings wrote:
-> > 3.16.79-rc1 review patch.  If anyone has any objections, please let
-> > me know.
->=20
-> Nobody is hitting this one and noone cares. Not a serious bug as
-> described in stable rules.
->=20
-> I'd recommend dropping.
+IORING_OP_IOCTL
 
-This has already been included in 3.16.79 (and updates for other stable
-branches), so unless it causes a problem I don't intend to revert it.
+and set aside an sqe field for the per-driver (or per-user) and
+add a file_operations method for sending these to the fd, then we'll
+have a much better (and faster + async) API than ioctls. We could
+add fops->uring_issue() or something, and that passes the io_kiocb.
+When it completes, the ->io_uring_issue() posts a completion by
+calling io_uring_complete_req() or something.
 
-Ben.
+Outside of the issues that Jann outlined, ioctls are also such a
+decade old mess that we have to do the -EAGAIN punt for all of them
+like you did in your patch. If it's opt-in like ->uring_issue(), then
+care could be taken to do this right and just have it return -EAGAIN
+if it does need async context.
 
-> > ------------------
-> >=20
-> > From: Nick Stoughton <nstoughton@logitech.com>
-> >=20
-> > commit ed2abfebb041473092b41527903f93390d38afa7 upstream.
-> >=20
-> > Firmware files are in ASCII, using 2 hex characters per byte. The
-> > maximum length of a firmware string is therefore
-> >=20
-> > 16 (commands) * 2 (bytes per command) * 2 (characters per byte) =3D 64
-> >=20
-> > Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
-> > Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> > ---
-> >  drivers/leds/leds-lp5562.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >=20
-> > --- a/drivers/leds/leds-lp5562.c
-> > +++ b/drivers/leds/leds-lp5562.c
-> > @@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struc
-> >  {
-> >  	const struct firmware *fw =3D chip->fw;
-> > =20
-> > -	if (fw->size > LP5562_PROGRAM_LENGTH) {
-> > +	/*
-> > +	 * the firmware is encoded in ascii hex character, with 2 chars
-> > +	 * per byte
-> > +	 */
-> > +	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
-> >  		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
-> >  			fw->size);
-> >  		return;
---=20
-Ben Hutchings
-Anthony's Law of Force: Don't force it, get a larger hammer.
+ret = fops->uring_issue(req, force_nonblock);
+if (ret == -EAGAIN) {
+	... usual punt ...
+}
 
+I think working on this would be great, and some of the more performance
+sensitive ioctl cases should flock to it.
 
+-- 
+Jens Axboe
 
---=-8JBTCm4n1ufoD71qgRks
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl31LZUACgkQ57/I7JWG
-EQnG/Q/+J8w6IUF5IYasSuYv7QslTWpSAnzZ7KuYH6zqbdO/Ofo/NiYPmFeCVT7j
-O8z/+ZybZgBmUT8R8B1j3TgAU3YN/kbE7aZC2FBcgaUYBKCl5oH9Nogm2ji/LRjM
-t7QYsU2x2uE3S286kLW+/PYvQZz5AJ+vpt5NJ3/2PBOoEG79nooMfnOZtspGokEH
-w4DZFLpkKpI76NBzeXZ6qWjiKL6J4iQg2D36e+Qfy6xvDu4FSNArq3UUE46/s08h
-soiJHoPJCyf29y7z7gM61gpI4ekIw1QrSroAujr+yT3usmhDclg4jf9wef37LXRj
-qSWdcD9aV8V4pNIHdLnGfR79orR7ZhVlS7qgesrpjQnz+p6HzrL/esMdV9dkzFgO
-ikgmIQN7tpYWyyDPNBV1qAwAcsBxSHb6E+1/xkpneo40BKK5KfrxeRzKF/iKXQqw
-+le3K3FSuRUSgFFGBW0mWYISpFoCHIJJtWe6rlgTElcoApNQkI4JNhjCGCMs3idI
-/dVcWxZN/yhfJF5eU3reSEP/aQE24f5Q7U46vtKsKpPF3+qg03tcChvfnpEXk6qx
-xfGpk7gI1JnoeSNJWgQPbdqRoP+sP9+f4o9PdCaS5UzOWcdhmWaEkk0KFrPiHPx5
-sdA5lVT7UGlphi1e7GzOzeNy/qK9fw4RyOfysVhf+0y+zzswCpY=
-=59ot
------END PGP SIGNATURE-----
-
---=-8JBTCm4n1ufoD71qgRks--
