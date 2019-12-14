@@ -2,75 +2,85 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA58C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEADC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8342465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nUw9LW0G"
+	by mail.kernel.org (Postfix) with ESMTP id 5481C20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbfLNHPd (ORCPT
+        id S1726005AbfLNHTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:15:33 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40764 "EHLO mail.skyhub.de"
+        Sat, 14 Dec 2019 02:19:23 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29478 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfLNHPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:15:32 -0500
-Received: from zn.tnic (p200300EC2F0A5A00D0F33451B6E85A6B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:d0f3:3451:b6e8:5a6b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6522C1EC03AD;
-        Sat, 14 Dec 2019 08:15:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576307731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tMwjUthhqQ9hoTv144WJaupinyPbR61fTpHmQcNxzm8=;
-        b=nUw9LW0Gh8geZdoxRoVJhxSqBO7U2bgPbupYXsFqsiYhEIqHNwediy/SLOz2srZrBwdxpo
-        EO/D2m+UABG+bgnTYp9BUUBOrPdKmZwoHsSgR/z7D3pnSKJhCavLmSmUaBteHDKYFfgDce
-        zngTL5CjuR7aXpwGLIP34g7OJcuR7lk=
-Date:   Sat, 14 Dec 2019 08:15:29 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
- direct mapping.
-Message-ID: <20191214071529.GB28635@zn.tnic>
-References: <20191115144917.28469-1-msys.mizuma@gmail.com>
- <20191115144917.28469-5-msys.mizuma@gmail.com>
- <20191212201916.GL4991@zn.tnic>
- <20191214033348.GJ28917@MiWiFi-R3L-srv>
+        id S1725372AbfLNHTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 02:19:22 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBE7J7f9002928;
+        Sat, 14 Dec 2019 08:19:07 +0100
+Date:   Sat, 14 Dec 2019 08:19:07 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link interrupt
+Message-ID: <20191214071907.GA2925@1wt.eu>
+References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
+ <20191213163403.2a054262@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191214033348.GJ28917@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213163403.2a054262@cakuba.netronome.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 11:33:48AM +0800, Baoquan He wrote:
-> So in kernel there's no way to check if memory hotplug is supported in
-> system.
+On Fri, Dec 13, 2019 at 04:34:03PM -0800, Jakub Kicinski wrote:
+> On Tue, 10 Dec 2019 22:33:05 +0000, Russell King wrote:
+> > phylink requires the MAC to report when its link status changes when
+> > operating in inband modes.  Failure to report link status changes
+> > means that phylink has no idea when the link events happen, which
+> > results in either the network interface's carrier remaining up or
+> > remaining permanently down.
+> > 
+> > For example, with a fiber module, if the interface is brought up and
+> > link is initially established, taking the link down at the far end
+> > will cut the optical power.  The SFP module's LOS asserts, we
+> > deactivate the link, and the network interface reports no carrier.
+> > 
+> > When the far end is brought back up, the SFP module's LOS deasserts,
+> > but the MAC may be slower to establish link.  If this happens (which
+> > in my tests is a certainty) then phylink never hears that the MAC
+> > has established link with the far end, and the network interface is
+> > stuck reporting no carrier.  This means the interface is
+> > non-functional.
+> > 
+> > Avoiding the link interrupt when we have phylink is basically not
+> > an option, so remove the !port->phylink from the test.
+> > 
+> > Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> > Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
+> 
+> Seems like you maybe didn't want this backported to stable hence 
+> no fixes tag?
+> 
+> Please advise :)
 
-Which makes it even worse. We will carry this bunch of code which would
-be dead code on most systems. Do you understand now why I'm pushing back
-on this to be designed as clean and as lean as possible?
+Speaking for myself, I'd very much like to get it into stable in order
+to avoid having to keep this local patch on top of latest stable!
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Willy
