@@ -2,151 +2,347 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1BEC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAFBC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B27214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22633214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb40YQJx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nSzPNs9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLNBzV (ORCPT
+        id S1726736AbfLNB74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 20:55:21 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39766 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfLNBzU (ORCPT
+        Fri, 13 Dec 2019 20:59:56 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:19834 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726046AbfLNB7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 20:55:20 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so1372727oty.6;
-        Fri, 13 Dec 2019 17:55:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k+FqWQhg3zsQBz5OPBQ/f5P4w/hRAvhzjNsTIeI4VMs=;
-        b=eb40YQJxxFI9nsr+8ZM6C6CNG9Kg++mk4g6aGxotH/5OAQqcVfJYawtKyUfsu4hymC
-         nY1eR6f4dO235g/EebJLzVPWPps3gzeLlT5ilj2pnKiE8hEtqaGza2H38dPa0gAV+6DX
-         liPMCf1DXr9pa0gV9e9sjaQTpIsiaGTziQoU7aCss0OD8ZSjAp4fB1PzU81p5Mkgx5Vb
-         3nsfFiGMmeRrtATBDaAdsfOdrxGP/jiz0mT3Fsuhz0XYtj4xxmj11ljeuuWRx7q91myX
-         cdXu8KQIkGdX1Yxg5sbOEFiaK4P0R+pYz8llSH65XJmqxihk4cDWI9XS6NRqBXUeyGG/
-         04BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k+FqWQhg3zsQBz5OPBQ/f5P4w/hRAvhzjNsTIeI4VMs=;
-        b=MxSUXKFCLKslbiCKSbIs+d4bwWBVSu4bH3unPNE0qxmYdfdTJtOb6uq2P3cagJuso6
-         rx+lMoysxHpAaw2boba68Xjn+pcZMPKmsBI0F3POo/UNYImkJO1nuMu2QXOGH4tgzSoD
-         RuDoVKiZk86tzMGCHNM7zYvsGCDs09WjAKcakq2RXeQXq57ZS8aQcVOSEmuiRS9nDx3F
-         evTztMLFMdtjjXww2XrhGeUwa2M+z4ZfmR8AUZmr5gagoLUSXtp+d5gmo+gnvNFZyYre
-         UmZqDcfGo3uPyEX7yZfjzOiYql4WIaK3KW5cVnQvhRmfKHVwS8sFB7dILjOs/R/+BtWU
-         cT1w==
-X-Gm-Message-State: APjAAAW8r6ygEFcrJgfpfNPpIrPESV/LA0kPgToVWIxuN+vKV8T6cV8/
-        cIKagZy9uNuhgvkrYmAp0yxXrTFHNj8=
-X-Google-Smtp-Source: APXvYqzR10MlQHC06+el8PqUt6C6XneFN5lEqEgtMDJXXMvHieUzFlqxGcrPDSDiG28/Iyb29eRcdA==
-X-Received: by 2002:a9d:4d01:: with SMTP id n1mr16983744otf.245.1576288519734;
-        Fri, 13 Dec 2019 17:55:19 -0800 (PST)
-Received: from ?IPv6:2600:1700:dac0:2450::38? ([2600:1700:dac0:2450::38])
-        by smtp.gmail.com with ESMTPSA id s26sm4028031otk.43.2019.12.13.17.55.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2019 17:55:19 -0800 (PST)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     Yang Shi <yang.shi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>, cl@linux.com,
-        mhocko@suse.com, cai@lca.pw, akpm@linux-foundation.org
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
- <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
- <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <092adc11-7039-9343-7067-0e0199c9dc13@gmail.com>
-Date:   Sat, 14 Dec 2019 02:55:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Dec 2019 20:59:55 -0500
+X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Dec 2019 20:59:54 EST
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576288794; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=HZ2+FORy0LJouWVTz5kp4Nj+EV5Rk3gE2y6r8T20LU0=; b=nSzPNs9ywGlNtfX6rU/zlQPFFv5g6A/F26LIZFlpK2rYHjNgPS13P0TsoCuK6TFqu0VQP+4w
+ +/aNbbvfn3yCk7YnA064wRCE+Nd2MRcSYiVXLZ4KDbneZCAJIQSqxtKXomc93xPMLPf4QE2L
+ GbhYVjdRUABafu7JtqCHFeXLGms=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df440eb.7f45213a97d8-smtp-out-n02;
+ Sat, 14 Dec 2019 01:54:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 24AC2C447A2; Sat, 14 Dec 2019 01:54:50 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C742EC433CB;
+        Sat, 14 Dec 2019 01:54:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C742EC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH V2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
+Date:   Sat, 14 Dec 2019 07:24:34 +0530
+Message-Id: <1576288475-7606-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 6:26 PM, Yang Shi wrote:
-> 
-> 
-> On 12/6/19 12:25 AM, John Hubbard wrote:
->> On 12/5/19 5:34 PM, Yang Shi wrote:
->>> Since commit e78bbfa82624 ("mm: stop returning -ENOENT
->>> from sys_move_pages() if nothing got migrated"), move_pages doesn't
->>> return -ENOENT anymore if the pages are already on the target nodes, but
->>> this change is never reflected in manpage.
->>>
->>> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
->>> Cc: Christoph Lameter <cl@linux.com>
->>> Cc: John Hubbard <jhubbard@nvidia.com>
->>> Cc: Michal Hocko <mhocko@suse.com>
->>> Cc: Qian Cai <cai@lca.pw>
->>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>> ---
->>>   man2/move_pages.2 | 5 ++---
->>>   1 file changed, 2 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/man2/move_pages.2 b/man2/move_pages.2
->>> index 2d96468..2a2f3cd 100644
->>> --- a/man2/move_pages.2
->>> +++ b/man2/move_pages.2
->>> @@ -192,9 +192,8 @@ was specified or an attempt was made to migrate 
->>> pages of a kernel thread.
->>>   One of the target nodes is not online.
->>>   .TP
->>>   .B ENOENT
->>> -No pages were found that require moving.
->>> -All pages are either already
->>> -on the target node, not present, had an invalid address or could not be
->>> +No pages were found.
->>> +All pages are either not present, had an invalid address or could 
->>> not be
->>>   moved because they were mapped by multiple processes.
->>>   .TP
->>>   .B EPERM
->>>
->>
->> whoa, hold on. If I'm reading through the various error paths 
->> correctly, then this
->> code is *never* going to return ENOENT for the whole function. It can 
->> fill in that
->> value per-page, in the status array, but that's all. Did I get that 
->> right?
-> 
-> Nice catch. Yes, you are right.
-> 
->>
->> If so, we need to redo this part of the man page.
-> 
-> Yes.
+Add sdhc instances for supporting eMMC and SD-card on sc7180.
+The regulators should be in HPM state for proper functionality of
+eMMC and SD-card. Updating corresponding regulators accordingly.
 
-So where are things at with this? Is an improved man-pages 
-patch on the way, or is some other action (on the API) planned?
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
 
-Thanks,
+This depends on the patch series (dt support for sc7180):
+https://lkml.org/lkml/2019/11/8/149
+Also depends on documentation commit 2078158 (Present on mmc-next)
 
-Michael
+Changes since V1:
+	- Updated the regulator min, max voltages as per
+	  eMMC/SD-card voltage requirements
+	- Enabled IOMMU for eMMC and SD-card.
+	- Added pull and drive strength to SD-card cd-gpio.
+	- Incorporated review comments by Matthias Kaehlcke.
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+), 12 deletions(-)
 
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 189254f..b6d4dc1 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -7,6 +7,7 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+ #include "sc7180.dtsi"
+ #include "pm6150.dtsi"
+@@ -101,9 +102,9 @@
+ 		};
+ 
+ 		vreg_l12a_1p8: ldo12 {
+-			regulator-min-microvolt = <1696000>;
+-			regulator-max-microvolt = <1952000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l13a_1p8: ldo13 {
+@@ -143,9 +144,9 @@
+ 		};
+ 
+ 		vreg_l19a_2p9: ldo19 {
+-			regulator-min-microvolt = <2696000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 	};
+ 
+@@ -189,9 +190,9 @@
+ 		};
+ 
+ 		vreg_l6c_2p9: ldo6 {
+-			regulator-min-microvolt = <2696000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l7c_3p0: ldo7 {
+@@ -207,9 +208,9 @@
+ 		};
+ 
+ 		vreg_l9c_2p9: ldo9 {
+-			regulator-min-microvolt = <2952000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l10c_3p3: ldo10 {
+@@ -400,3 +401,25 @@
+ 			bias-pull-up;
+ 		};
+ };
++
++&sdhc_1 {
++	status = "ok";
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc1_on>;
++	pinctrl-1 = <&sdc1_off>;
++	vmmc-supply = <&vreg_l19a_2p9>;
++	vqmmc-supply = <&vreg_l12a_1p8>;
++};
++
++&sdhc_2 {
++	status = "ok";
++
++	pinctrl-names = "default","sleep";
++	pinctrl-0 = <&sdc2_on>;
++	pinctrl-1 = <&sdc2_off>;
++	vmmc-supply  = <&vreg_l9c_2p9>;
++	vqmmc-supply = <&vreg_l6c_2p9>;
++
++	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 666e9b9..16de9b8 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -182,6 +182,32 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		sdhc_1: sdhci@7c4000 {
++			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0 0x7c4000 0 0x1000>;
++			reg-names = "hc_mem";
++
++			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
++					<&gcc GCC_SDCC1_AHB_CLK>;
++			clock-names = "core", "iface";
++
++			iommus = <&apps_smmu 0x60 0x0>;
++
++			bus-width = <8>;
++			non-removable;
++
++			mmc-ddr-1_8v;
++			mmc-hs200-1_8v;
++			mmc-hs400-1_8v;
++			mmc-hs400-enhanced-strobe;
++
++			status = "disabled";
++		};
++
+ 		qupv3_id_0: geniqup@8c0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0 0x008c0000 0 0x6000>;
+@@ -897,6 +923,128 @@
+ 					function = "qup15";
+ 				};
+ 			};
++
++			sdc1_on: sdc1-on {
++				clk {
++					pins = "sdc1_clk";
++					bias-disable;
++					drive-strength = <16>;
++				};
++
++				cmd {
++					pins = "sdc1_cmd";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				data {
++					pins = "sdc1_data";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				rclk {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
++			sdc1_off: sdc1-off {
++				clk {
++					pins = "sdc1_clk";
++					bias-disable;
++					drive-strength = <2>;
++				};
++
++				cmd {
++					pins = "sdc1_cmd";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				data {
++					pins = "sdc1_data";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				rclk {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
++			sdc2_on: sdc2_on {
++				clk {
++					pins = "sdc2_clk";
++					bias-disable;
++					drive-strength = <16>;
++				};
++
++				cmd {
++					pins = "sdc2_cmd";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				data {
++					pins = "sdc2_data";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				sd-cd {
++					pins = "gpio69";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++			};
++
++			sdc2_off: sdc2_off {
++				clk {
++					pins = "sdc2_clk";
++					bias-disable;
++					drive-strength = <2>;
++				};
++
++				cmd {
++					pins = "sdc2_cmd";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				data {
++					pins = "sdc2_data";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				sd-cd {
++					pins = "gpio69";
++					bias-disable;
++					drive-strength = <2>;
++				};
++			};
++		};
++
++		sdhc_2: sdhci@8804000 {
++			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0 0x08804000 0 0x1000>;
++			reg-names = "hc_mem";
++
++			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
++					<&gcc GCC_SDCC2_AHB_CLK>;
++			clock-names = "core", "iface";
++
++			iommus = <&apps_smmu 0x80 0>;
++
++			bus-width = <4>;
++
++			status = "disabled";
+ 		};
+ 
+ 		qspi: spi@88dc000 {
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
