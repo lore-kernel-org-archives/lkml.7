@@ -2,122 +2,108 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3183BC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 05:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4E2C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 05:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1F02465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 05:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280A9214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 05:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijjZwzLi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDn4t7GW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbfLNFp0 (ORCPT
+        id S1725995AbfLNF4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 00:45:26 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32621 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbfLNFpZ (ORCPT
+        Sat, 14 Dec 2019 00:56:45 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46574 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfLNF4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 00:45:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576302324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aMoyw7B5Pg5yQ9QR7aJ058W9/8V7Fq7avIzK4TkKuto=;
-        b=ijjZwzLi5vfTGgkilZhx5emla6PnPU3sx7KI2DhDTEgX3+wp6p44+8x6GGdfDWS9WogfZ8
-        VeSgrMdE27QVR3k+xmW2LLoK0Db0oL2FVYypl5HkngAfMWaqVPieePVY+y63x+++4oBlVT
-        FCLPeRz0Yn77e5Te8bNJHZRyXmzA7DU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-Pc9bSVpXPkSN5mt7IhrOJA-1; Sat, 14 Dec 2019 00:45:20 -0500
-X-MC-Unique: Pc9bSVpXPkSN5mt7IhrOJA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB8DB107ACC7;
-        Sat, 14 Dec 2019 05:45:18 +0000 (UTC)
-Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87F5063BCD;
-        Sat, 14 Dec 2019 05:45:17 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 23:45:15 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20191214054515.ougsr5ykhl3vvy57@treble>
-References: <20191206135406.563336e7@canb.auug.org.au>
- <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
- <20191211134929.GL3929@twin.jikos.cz>
- <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
- <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
+        Sat, 14 Dec 2019 00:56:45 -0500
+Received: by mail-io1-f66.google.com with SMTP id t26so1417700ioi.13;
+        Fri, 13 Dec 2019 21:56:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=LFidI9AFv4Sc59cMqoo3XgfplDNLRpBH6YFgxECOIsc=;
+        b=rDn4t7GWhJctCGjRAHj+vZMGjFHmxfwZhp7JVQz0xTfK/y6ltDWESQvTq+M3pHs78Y
+         hlOOtBqRvv68Z4HcS0RR+QW1HKz2nzSbSNpc7T5HV4Kyaz9NMCRwZB/Ho5IKMikslQzl
+         SmJf3yyvf73u+dpGA9hOf5uuIIsoznW4DHU9RCuArcPBxYF0ydv6CwbaHuUzsLDaebcR
+         L3v9z8S7tDbW14+yFdTApnQpke7c+RFBTukKlLHJVtaw0DoWQRDCAtsCqloVXQgGcpR5
+         TIc5wnPt1Z3M4a1CUjgD3A6lIGk5BTKH+isGxLUn1Uv6xScSHAvhGIbo9yRzWSYI5zdx
+         HjkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=LFidI9AFv4Sc59cMqoo3XgfplDNLRpBH6YFgxECOIsc=;
+        b=ZWJj6VHmAxJTCPNEtD5rteXnrjtfLoSCZLABJuLwsxiAyqtaR4kejNnQuVWsgDPexU
+         BxQBMxcLOWhfV0jmSvvBcEtjmDTntz0cl2ik0oQyCDAUVhMe3AIqj6d8CBwydqed7qNt
+         oA0upxmsDxcdrfzV4bJLQhglvQKGD/KTsNSQl3t+IiUdk/NJXmg8KGc1KtneNxDXXzPC
+         WVqX3cFAf+PEDQ1nWJ823SdCxS7X42hWQhv6woZvvJaFcvtElZga3PUs2jrE3R6i1aAN
+         YEwHQ/rLlOttOc12LwtCOMLaYDHA69EEheoLSaVl5oxJ9IiDjNbl2xvjwAWnWQ0+ARUH
+         3tTA==
+X-Gm-Message-State: APjAAAXvqsnES609fg6YsmUy3dbXUJFtNwTjp6ShWDjsJSTmrz5pgOXr
+        qPbg+16jDSOeYDrWS+z1yLcXymUSn9tCfFO30pthy9aP
+X-Google-Smtp-Source: APXvYqwo1og5mmiyAD6wxtlYQHdQ0rNneEJnF1EePAZkOeEPvmRwILkhpaTZhuWwprxWWg46ViUXnYWadqywFApwrXw=
+X-Received: by 2002:a5d:939a:: with SMTP id c26mr10287438iol.3.1576303004631;
+ Fri, 13 Dec 2019 21:56:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+From:   Steve French <smfrench@gmail.com>
+Date:   Fri, 13 Dec 2019 23:56:33 -0600
+Message-ID: <CAH2r5msFp3RCtV_YYJSewKRMQFMTMRkEN=wHDEs8MJza162S0A@mail.gmail.com>
+Subject: [GIT PULL] 3 small SMB3 fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arthur Marsh <arthur.marsh@internode.on.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 04:04:58PM -0800, Randy Dunlap wrote:
-> > diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> > index b2e8fd8a8e59..bbd68520f5f1 100644
-> > --- a/fs/btrfs/ctree.h
-> > +++ b/fs/btrfs/ctree.h
-> > @@ -3110,14 +3110,16 @@ do {								\
-> >  	rcu_read_unlock();					\
-> >  } while (0)
-> >  
-> > -__cold
-> > +#ifdef CONFIG_BTRFS_ASSERT
-> > +__cold __unlikely
-> 
-> what provides __unlikely?  It is causing build errors.
-> 
-> and if I remove the "__unlikely", I still see the objtool warnings
-> (unreachable instructions).
+Please pull the following changes since commit
+e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Ha, not sure how that happened... Should be __noreturn instead of
-__unlikely.  Cheers...
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index b2e8fd8a8e59..398bd010dfc5 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3110,14 +3110,16 @@ do {								\
- 	rcu_read_unlock();					\
- } while (0)
- 
--__cold
-+#ifdef CONFIG_BTRFS_ASSERT
-+__cold __noreturn
- static inline void assfail(const char *expr, const char *file, int line)
- {
--	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
--		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
--		BUG();
--	}
-+	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-+	BUG();
- }
-+#else
-+static inline void assfail(const char *expr, const char *file, int line) {}
-+#endif
- 
- #define ASSERT(expr)	\
- 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
+are available in the Git repository at:
 
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.5-rc1-smb3-fixes
+
+for you to fetch changes up to d9191319358da13ee6a332fb9bf745f2181a612a:
+
+  CIFS: Close cached root handle only if it has a lease (2019-12-13
+00:49:57 -0600)
+
+----------------------------------------------------------------
+3 small smb3 fixes:  addresses two recent issues reported in
+additional testing during rc1, a refcount underflow and a problem with
+an intermittent crash in SMB2_open_init
+
+----------------------------------------------------------------
+Pavel Shilovsky (1):
+      CIFS: Close cached root handle only if it has a lease
+
+Steve French (2):
+      smb3: fix refcount underflow warning on unmount when no directory leases
+      SMB3: Fix crash in SMB2_open_init due to uninitialized field in
+compounding path
+
+ fs/cifs/cifsglob.h  |  2 +-
+ fs/cifs/cifssmb.c   |  3 +++
+ fs/cifs/smb2inode.c |  1 +
+ fs/cifs/smb2ops.c   | 19 ++++++++++++++++++-
+ fs/cifs/smb2pdu.c   |  2 +-
+ fs/cifs/smb2proto.h |  2 ++
+ 6 files changed, 26 insertions(+), 3 deletions(-)
+
+
+-- 
+Thanks,
+
+Steve
