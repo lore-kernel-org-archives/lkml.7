@@ -2,136 +2,116 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05972C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCEBC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E506E2077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ7XLlPc"
+	by mail.kernel.org (Postfix) with ESMTP id 8EEF82077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfLNBiF (ORCPT
+        id S1726735AbfLNBnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 20:38:05 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34210 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfLNBiF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 20:38:05 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m6so704820ljc.1;
-        Fri, 13 Dec 2019 17:38:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o/RAkFi6F4plFq+4FJ5FybixLxDkxXsHOnC0hMslJ0I=;
-        b=GJ7XLlPchLiZoHNy58cony05pWue++ZdwsgetvvcxZLRhiuBZxltwBEowy/Z6R6oUk
-         1uPpttPfg+mDoHbssJ/9j6X3uGcgTcAeUFk+WlFJ3SG8xEoknTey/BFICdKgbw1/0gmS
-         aGsATQVDIo48ta0KJA8U9Ro9qVtXsY3tiLzL7/fVNZP7z2xe7B0dHGiXMNbrkjI06wGR
-         Hmhk/sYYBzvVPO7jg3ogSvE3JTbGON3KqrkT/+hzq/QmdhGPd4ob9/t8T50HTXfTtdbo
-         fkSsFAZHqlIwEeM1QHarDRPVvE7aX16QdBkIpnk1hvRGinAybHiumTemjT8yAse/DWgY
-         7d0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o/RAkFi6F4plFq+4FJ5FybixLxDkxXsHOnC0hMslJ0I=;
-        b=XE8f84YRRlvQl0Ch+dbZWZVywxhJXBTKdcRpL+mrOOkcgsnCBcj1l9lcJJvIH3iLyW
-         B5JwnO92J883P3FbPqfS7VNncK6vydBri0Nhd46mlnKt1JAezUFg62dLIPv2+IWykWks
-         ESnYanUNd9ZZO2pvnwd0yFFNxa7k6WSHAzFYiBIvs0PNv9koMdAhtry08kwlBXjImof7
-         vPg29SpmZYs071lNC9vwW3/3FxMCcwK6RMLqnvxu5QjgRZyAwYxyLgT0/8rG3LvjgG4N
-         pYzLRAdfwMnFFJSY4RHoFJ0uDXKqrJAyTv26ZMj6S4YejQfDCjOSYyygG9FJsuPmEmxq
-         m0bQ==
-X-Gm-Message-State: APjAAAVH5svuJCHAX+2JIuondij503C2RKK8nfTes3RCA4+hyjN9aQCj
-        UqWAe0WgtM9vuKMlEODok0M73cY6ovpUVG8L6mwp9z5J
-X-Google-Smtp-Source: APXvYqwlPU13OUpguQIogzSIDZIM2JTdtVFfIdDJGtvg2VzMkk3HwNCTfZcE/eVyPnQ0uDjVJXc4Q0YpwqZTy3EmyAc=
-X-Received: by 2002:a2e:2c0a:: with SMTP id s10mr11099051ljs.193.1576287482570;
- Fri, 13 Dec 2019 17:38:02 -0800 (PST)
+        Fri, 13 Dec 2019 20:43:17 -0500
+Received: from mga12.intel.com ([192.55.52.136]:46212 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfLNBnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 20:43:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 17:43:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="226461161"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 13 Dec 2019 17:43:15 -0800
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH] iommu/vt-d: Allocate reserved region for ISA with correct
+ permission
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20191213053642.5696-1-jsnitsel@redhat.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <5ccaaec0-b070-b820-cebd-6b7ad179109c@linux.intel.com>
+Date:   Sat, 14 Dec 2019 09:42:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-15-arnd@arndb.de>
-In-Reply-To: <20191213205417.3871055-15-arnd@arndb.de>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Sat, 14 Dec 2019 12:37:51 +1100
-Message-ID: <CAGRGNgVCkyterFgOFL-WtHr4=tSnyr2TsYs5BQk+7FdtHjv4ow@mail.gmail.com>
-Subject: Re: [PATCH v2 24/24] y2038: sparc: remove use of struct timex
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        sparclinux <sparclinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191213053642.5696-1-jsnitsel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi Jerry,
 
-On Sat, Dec 14, 2019 at 7:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> 'struct timex' is one of the last users of 'struct timeval' and is
-> only referenced in one place in the kernel any more, to convert the
-> user space timex into the kernel-internal version on sparc64, with a
-> different tv_usec member type.
->
-> As a preparation for hiding the time_t definition and everything
-> using that in the kernel, change the implementation once more
-> to only convert the timeval member, and then enclose the
-> struct definition in an #ifdef.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 12/13/19 1:36 PM, Jerry Snitselaar wrote:
+> Currently the reserved region for ISA is allocated with no
+> permissions. If a dma domain is being used, mapping this region will
+> fail. Set the permissions to DMA_PTE_READ|DMA_PTE_WRITE.
+> 
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Cc: iommu@lists.linux-foundation.org
+> Cc: stable@vger.kernel.org # v5.3+
+> Fixes: d850c2ee5fe2 ("iommu/vt-d: Expose ISA direct mapping region via iommu_get_resv_regions")
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 > ---
->  arch/sparc/kernel/sys_sparc_64.c | 29 +++++++++++++++--------------
->  include/uapi/linux/timex.h       |  2 ++
->  2 files changed, 17 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-> index 9f41a6f5a032..1c85b0af4dfd 100644
-> --- a/arch/sparc/kernel/sys_sparc_64.c
-> +++ b/arch/sparc/kernel/sys_sparc_64.c
-> @@ -548,34 +548,35 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
->         return err;
->  }
->
-> -SYSCALL_DEFINE1(sparc_adjtimex, struct timex __user *, txc_p)
-> +SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
->  {
-> -       struct timex txc;               /* Local copy of parameter */
-> -       struct __kernel_timex *kt = (void *)&txc;
-> +       struct __kernel_timex txc;
-> +       __kernel_old_timeval *tv = (void *)&txc->time;
->         int ret;
->
->         /* Copy the user data space into the kernel copy
->          * structure. But bear in mind that the structures
->          * may change
->          */
-> -       if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
-> +       if (copy_from_user(&txc, txc_p, sizeof(txc)))
->                 return -EFAULT;
->
->         /*
->          * override for sparc64 specific timeval type: tv_usec
->          * is 32 bit wide instead of 64-bit in __kernel_timex
->          */
-> -       kt->time.tv_usec = txc.time.tv_usec;
-> +       kt->time.tv_usec = tv->tv_usec;
+>   drivers/iommu/intel-iommu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 0c8d81f56a30..998529cebcf2 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5736,7 +5736,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
+>   		struct pci_dev *pdev = to_pci_dev(device);
+>   
+>   		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
+> -			reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
+> +			reg = iommu_alloc_resv_region(0, 1UL << 24, prot,
+>   						      IOMMU_RESV_DIRECT);
 
-Am I mis-reading the patch, or is "kt" not defined?
 
-Thanks,
+This also applies to the IOAPIC range. Can you please change them
+together?
 
--- 
-Julian Calaby
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 0c8d81f56a30..256e48434f68 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5736,7 +5736,7 @@ static void intel_iommu_get_resv_regions(struct 
+device *device,
+                 struct pci_dev *pdev = to_pci_dev(device);
 
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+                 if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
+-                       reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
++                       reg = iommu_alloc_resv_region(0, 1UL << 24, prot,
+                                                       IOMMU_RESV_DIRECT);
+                         if (reg)
+                                 list_add_tail(&reg->list, head);
+@@ -5746,7 +5746,7 @@ static void intel_iommu_get_resv_regions(struct 
+device *device,
+
+         reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
+                                       IOAPIC_RANGE_END - 
+IOAPIC_RANGE_START + 1,
+-                                     0, IOMMU_RESV_MSI);
++                                     prot, IOMMU_RESV_MSI);
+         if (!reg)
+                 return;
+         list_add_tail(&reg->list, head);
+
+Best regards,
+baolu
+
+>   			if (reg)
+>   				list_add_tail(&reg->list, head);
+> 
