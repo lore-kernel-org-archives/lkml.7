@@ -2,137 +2,156 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F98EC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DBEC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6353224656
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OA1qGASg"
+	by mail.kernel.org (Postfix) with ESMTP id 722A3214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576337237;
+	bh=BSQVMNbCG4fPWQgnA5zQnefINcUCM9LyOPamsJUyTn4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=oYNdjvcTtMkoOKWF9gNDtyHgcAnggslfgnPHGChv/CJfGTD2DS7wwpiOhJtL1WeOE
+	 FH67fooO0xjli57VV16zlcAWVNLz2o83PhFIUgt4ocYeqkCeij+idUxaG3E3Tl6bzj
+	 SvmfwjzdqTzdXUeRocYya12En6LBB7QFJdB8zLPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfLNOxm (ORCPT
+        id S1726752AbfLNP1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 09:53:42 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36878 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNOxm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 09:53:42 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so1313792lfc.4;
-        Sat, 14 Dec 2019 06:53:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=LtP8axFgRqFzauZbZkt21kxhVbu1x/apgV9RLv9E/DQ=;
-        b=OA1qGASgsSIpKlr/o/6TKcWH/VY+zcBPwUz5lPJxoCObhk9koCvbAraNki+N8M323y
-         V1npiOLFbqo0JgJiDKWCqJTCu/wJQXq3OiNyC6QrQk9+gAcvAtd3W44q8NmE5pxry/Yh
-         vlPwQeu0Qq4EAXXf64Z7AbzQPztqYv6ycl+SpXGnzzLz8wNYcbeZ9Ffnm6Ztabe7cBs0
-         06c1k29iRaTbRCSEDMGwnbXzozVv19/8f6TMdOV3PtxnfHBlsmkeYlqV3AlIr4Vmo4od
-         GffNLL/YoSMkHQa75DoHDe8NQGhoX8BFQAi9ehHWiecQ1jP4NQJMNe25l2jPEW0F2kuS
-         i6vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LtP8axFgRqFzauZbZkt21kxhVbu1x/apgV9RLv9E/DQ=;
-        b=LVkn/4iEX3Lw7HU8HMMylhFSQKyXvEsw6Gg2RIe+mKjDSGkoSwj8v8tuHHjVDF2XkQ
-         MqmPUt50RmmeY7QWgRVzJB/zOjANLUOC/7s8igPuDnrQ6KaLOMErnDV/2v3+Zcq++NGA
-         S0ispmeZnv4Zncv0DyDLauelEYaETWwomdmqQDO2HsNZvEqYKD3XJza38v0UwAwM6AEA
-         F/opQDMn8SG+dyAVwlL5nt1CPT/yyJXPGZmbBN9V3rtwtsledyAC8pYJyv+DPy2W2J5b
-         EVGCne1IZzW+3nDOv8Ob6CGyJsbWY9tbUdaaqAbDKC3sowMfGTS8apqaRczWBGlQSBgx
-         bSZg==
-X-Gm-Message-State: APjAAAW3Q6IAkE52PwKX3jNPa5/UIlnF3TV4/JtEfBTazcRwDqdEaWs7
-        Brj4PpfuExYIipbwrysZw/E=
-X-Google-Smtp-Source: APXvYqwHOwTLEmzguOMBkv/bixIiSVVQLsRatRso9F0PQ4xDdWTJ7Zf/4xTHWceJQgmy71rf2GAGrA==
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr11368865lfi.93.1576335219887;
-        Sat, 14 Dec 2019 06:53:39 -0800 (PST)
-Received: from localhost.localdomain ([212.122.72.247])
-        by smtp.gmail.com with ESMTPSA id h19sm6771480ljl.57.2019.12.14.06.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 06:53:39 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] io_uring: don't wait when under-submitting
-Date:   Sat, 14 Dec 2019 17:53:14 +0300
-Message-Id: <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
-References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+        Sat, 14 Dec 2019 10:27:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfLNP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 10:27:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB81214AF;
+        Sat, 14 Dec 2019 15:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576337234;
+        bh=BSQVMNbCG4fPWQgnA5zQnefINcUCM9LyOPamsJUyTn4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FrfF6ta7pG8uH+lmGTQdjWhywN/vzP2tdnS7wj7SxDGaLDYNjcfDqcMgdktGoOc+9
+         oMiX3oxOc23G4rfssfLsjFZmHKZl1N6/bATKau1MKiBhQi97OByuSirPxF99H35Wsj
+         YuVIl7fSKbycMV1TU69ErD1QQm8IhmdLjQrpcNa4=
+Date:   Sat, 14 Dec 2019 16:27:12 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.5-rc2
+Message-ID: <20191214152712.GA3459916@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reliable way to submit and wait in a single syscall, as
-io_submit_sqes() may under-consume sqes (in case of an early error).
-Then it will wait for not-yet-submitted requests, deadlocking the user
-in most cases.
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-In such cases adjust min_complete, so it won't wait for more than
-what have been submitted in the current call to io_uring_enter(). It
-may be less than totally in-flight including previous submissions,
-but this shouldn't do harm and up to a user.
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+are available in the Git repository at:
 
-v2: cap min_complete if submitted partially (Jens Axboe)
-v3: update commit message (Jens Axboe)
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc2
 
- fs/io_uring.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+for you to fetch changes up to 3c3caae4cd6e122472efcf64759ff6392fb6bce2:
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 81219a631a6d..5dfc805ec31c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3763,11 +3763,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		unsigned int sqe_flags;
- 
- 		req = io_get_req(ctx, statep);
--		if (unlikely(!req)) {
--			if (!submitted)
--				submitted = -EAGAIN;
-+		if (unlikely(!req))
- 			break;
--		}
- 		if (!io_get_sqring(ctx, req)) {
- 			__io_free_req(req);
- 			break;
-@@ -5272,6 +5269,14 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
- 					   &cur_mm, false);
- 		mutex_unlock(&ctx->uring_lock);
-+
-+		if (submitted != to_submit) {
-+			if (!submitted) {
-+				submitted = -EAGAIN;
-+				goto done;
-+			}
-+			min_complete = min(min_complete, (u32)submitted);
-+		}
- 	}
- 	if (flags & IORING_ENTER_GETEVENTS) {
- 		unsigned nr_events = 0;
-@@ -5284,7 +5289,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 			ret = io_cqring_wait(ctx, min_complete, sig, sigsz);
- 		}
- 	}
--
-+done:
- 	percpu_ref_put(&ctx->refs);
- out_fput:
- 	fdput(f);
--- 
-2.24.0
+  usb: dwc3: pci: add ID for the Intel Comet Lake -H variant (2019-12-12 14:02:37 +0100)
 
+----------------------------------------------------------------
+USB driver fixes for 5.5-rc2
+
+Here are some small USB driver fixes for reported issues for 5.5-rc2
+
+There's the usual gadget and xhci fixes, as well as some other problems
+that syzbot has been finding during it's fuzzing runs.  Full details are
+in the shortlog.
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Bryan O'Donoghue (1):
+      usb: common: usb-conn-gpio: Don't log an error on probe deferral
+
+EJ Hsu (1):
+      usb: gadget: fix wrong endpoint desc
+
+Emiliano Ingrassia (1):
+      usb: core: urb: fix URB structure initialization function
+
+Fredrik Noring (1):
+      USB: Fix incorrect DMA allocations for local memory pool drivers
+
+Greg Kroah-Hartman (1):
+      Merge tag 'fixes-for-v5.5-rc2' of git://git.kernel.org/.../balbi/usb into usb-linus
+
+Heikki Krogerus (1):
+      usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
+
+Henry Lin (1):
+      usb: xhci: only set D3hot for pci device
+
+Johan Hovold (4):
+      USB: serial: io_edgeport: fix epic endpoint lookup
+      USB: idmouse: fix interface sanity checks
+      USB: adutux: fix interface sanity check
+      USB: atm: ueagle-atm: add missing endpoint check
+
+Kai-Heng Feng (1):
+      xhci: Increase STS_HALT timeout in xhci_suspend()
+
+Mathias Nyman (3):
+      xhci: fix USB3 device initiated resume race with roothub autosuspend
+      xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
+      xhci: make sure interrupts are restored to correct state
+
+Mika Westerberg (1):
+      xhci: Fix memory leak in xhci_add_in_port()
+
+Pete Zaitcev (1):
+      usb: mon: Fix a deadlock in usbmon between mmap and read
+
+Tejas Joglekar (1):
+      usb: dwc3: gadget: Fix logical condition
+
+Thinh Nguyen (2):
+      usb: dwc3: gadget: Clear started flag for non-IOC
+      usb: dwc3: ep0: Clear started flag on completion
+
+Wen Yang (2):
+      usb: roles: fix a potential use after free
+      usb: typec: fix use after free in typec_register_port()
+
+ drivers/usb/atm/ueagle-atm.c          | 18 ++++++++++-----
+ drivers/usb/common/usb-conn-gpio.c    |  3 ++-
+ drivers/usb/core/hcd.c                | 42 +++++++++++++++++------------------
+ drivers/usb/core/urb.c                |  1 +
+ drivers/usb/dwc3/dwc3-pci.c           |  6 ++++-
+ drivers/usb/dwc3/ep0.c                |  8 +++++++
+ drivers/usb/dwc3/gadget.c             |  5 ++++-
+ drivers/usb/gadget/function/f_ecm.c   |  6 ++++-
+ drivers/usb/gadget/function/f_rndis.c |  1 +
+ drivers/usb/host/xhci-hub.c           | 22 +++++++++++++-----
+ drivers/usb/host/xhci-mem.c           |  4 ++++
+ drivers/usb/host/xhci-pci.c           | 13 +++++++++++
+ drivers/usb/host/xhci-ring.c          |  6 ++---
+ drivers/usb/host/xhci.c               |  9 +++-----
+ drivers/usb/host/xhci.h               |  1 +
+ drivers/usb/misc/adutux.c             |  2 +-
+ drivers/usb/misc/idmouse.c            |  2 +-
+ drivers/usb/mon/mon_bin.c             | 32 +++++++++++++++++---------
+ drivers/usb/roles/class.c             |  2 +-
+ drivers/usb/serial/io_edgeport.c      | 10 +++++----
+ drivers/usb/storage/scsiglue.c        |  3 ++-
+ drivers/usb/typec/class.c             |  6 +++--
+ 22 files changed, 135 insertions(+), 67 deletions(-)
