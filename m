@@ -2,158 +2,177 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23718C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF92C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8E12073D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662442073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 02:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="SXb/Zp7f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kT5JfkWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLNCLC (ORCPT
+        id S1726769AbfLNCMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 21:11:02 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37852 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfLNCLC (ORCPT
+        Fri, 13 Dec 2019 21:12:40 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40163 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfLNCMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 21:11:02 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u17so733366lja.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 18:11:01 -0800 (PST)
+        Fri, 13 Dec 2019 21:12:40 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q8so2420541pfh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 18:12:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=ySR7TYBQhTmVu6KMG+j74j9+ZRg88KrNjUFtJErf2/0=;
-        b=SXb/Zp7fUVFOXqfsfn1Ioi/WCk64YO6dsh3bicKU9wV4cG/gEi+dbN5rIl0dnqNrhV
-         hj7Pekuq1K/ayYHab9CbuM/ujPP8uKnHBwwEwB0NYmiMBmcQAgQdGCjKDi6PV941gJrp
-         GbTgKumeOWmxeIRrA432U8eUyQzwl5vuupxwSUlwolCL2LXLTwjdQeLiLMwvTr55s8XK
-         IfyfzAaaN0D3Pjojv/MIQ+Bw/ZGf6wYdEd4WI10MM48Z925uAGyqIHxqQNf/Bqo/2SFe
-         cft5eLFeHCbYDPztS2t7tmfzWLQ9WjLGol5lFyuV3jgdVCNFcp8bSmaM1ILwTSUBpi/V
-         +K/g==
+        d=google.com; s=20161025;
+        h=date:from:subject:cc:to:in-reply-to:references:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VqAsPt9bELAFiBc9U8EPUlegvQWFH4OeQsw2yFpIirU=;
+        b=kT5JfkWWnltIHB+KMi22oaqdi0u7b/XW08cmsNjm4rw3SijQ4hzc17kT7kk1xgsZda
+         mqIMijiU6iWoQHCMyWHqU8fSBCVUg90YGHJ7ynH/UfGvk/2uvOxDff9KkUvHItY6Y7oo
+         lw5NjlExuH04tyEE0FfxlhF0iAXiTscaHVst2fLNWkpEdtXzloRmwvP4Mmji6OWMneWW
+         XBR2pDRcUNpAWWOmU/qgBUazLU8+aLtZnU7NxJ5l5TC3baS5oImDa1xkBINqMNiVUwhv
+         WFEAlA2pGu8Qzy3P5SYElGhntwaQXriA60SGHTFhxGQ4atZ5Vr1Njc8T+6OsOIzbfSwI
+         uDXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=ySR7TYBQhTmVu6KMG+j74j9+ZRg88KrNjUFtJErf2/0=;
-        b=uYqG+0aI6S+7I3Z3VK5OG++vItlfDfnO7Lbh2+blsfA3IJvWUm9haqhth8iUidI+sA
-         6yDQn/5ev4T5Gsb5dtnZnZrVBFVIQXY7VBlGVxyttzlpO+i/ZgVymKfrAj4ji4H4pg+N
-         LGDPEQjRjbNyiopfWZQN9sYlFBmfuhVqbfbrvlIGvX1YJVSo3LZ4H0SblnAWj4sDHYS5
-         EsXwnfrOe0+cB1RThQXHkHs2BtodyWHV1yOwxJILyfpa6zz0RHc1DOz1zdjEuPTCFRx4
-         tc2gQ+1vTsh8XlihUrzlKKROkljgk/cdm+y0+RzQWImO94GTlBLVKS3S9zcs0M9CsSHr
-         wgdA==
-X-Gm-Message-State: APjAAAUsEJ2+MwONxFykYAUc8C+Ks1ZcwI8B/ulIpOEV/FtNHZGSdwUi
-        c/4naowFUDl8cI04bpTTRtofSQ==
-X-Google-Smtp-Source: APXvYqx31c9AbeMwEq7DpSSfHmn+XAWX9b/tCrkJXLP1y/F+yXyKvwm6s4HTOnIAjWUHUq9asiCdQQ==
-X-Received: by 2002:a2e:978d:: with SMTP id y13mr11738378lji.103.1576289460426;
-        Fri, 13 Dec 2019 18:11:00 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id x13sm5268984lfe.48.2019.12.13.18.10.58
+        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=VqAsPt9bELAFiBc9U8EPUlegvQWFH4OeQsw2yFpIirU=;
+        b=IQgujMoPmLNr8ZvKNPo4DzNUEShpYBTFLXnnWy93VMXAaPj7IA8V8+8y91o5reQ+zA
+         6CQ1a7EZ/KqSSQEvxkD7JDnhGJRq7pbqSHzCfxpeQ9dnYzLYX8ZG03g+R4l9IiGd/rJT
+         AcvNSK0C5apVBXy+8Uq63nGbj7mv4rxHGif7NuKAXHfT448aVo+tblMovNATHZqT2TrT
+         48sSJIHAyzcjSmM4/5b4s7Qkoc4DLJGIRpKiNUIBP9zRMQv8eQbTeWh8+ija4uqqZ+uC
+         l8AkU2sZIJSjvzED4zprDJiETo5FnV90ctsTxHnmsttb1Mw9Bff8P4y8jhYRoNrX3BtQ
+         59KQ==
+X-Gm-Message-State: APjAAAUoCovEo0aiw3/eSO7eGcB6Y/BxaacqiynQn/21pOAKE9CTFFBP
+        JgkW3CqpHWHFLcEgcGOlVSuxzw==
+X-Google-Smtp-Source: APXvYqz6Aiqa+GHK4u01RqHA/l0Ts2E4I0yDj82iO4jlfpVQb6dLB9g4/nePTWCgR435ZKhTeO9gWg==
+X-Received: by 2002:a63:4b24:: with SMTP id y36mr3072965pga.176.1576289559199;
+        Fri, 13 Dec 2019 18:12:39 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
+        by smtp.gmail.com with ESMTPSA id u123sm13088597pfb.109.2019.12.13.18.12.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 18:11:00 -0800 (PST)
-Date:   Fri, 13 Dec 2019 18:10:51 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] bonding: don't init workqueues on error
-Message-ID: <20191213181051.0f949b17@cakuba.netronome.com>
-In-Reply-To: <20191210152454.86247-1-mcroce@redhat.com>
-References: <20191210152454.86247-1-mcroce@redhat.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Dec 2019 18:12:38 -0800 (PST)
+Date:   Fri, 13 Dec 2019 18:12:38 -0800 (PST)
+X-Google-Original-Date: Fri, 13 Dec 2019 18:12:36 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH 2/2] riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
+CC:     robh+dt@kernel.org, mark.rutland@arm.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, allison@lohutok.net,
+        alexios.zavras@intel.com, Atish Patra <Atish.Patra@wdc.com>,
+        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, yash.shah@sifive.com
+To:     yash.shah@sifive.com
+In-Reply-To: <1575890706-36162-3-git-send-email-yash.shah@sifive.com>
+References: <1575890706-36162-3-git-send-email-yash.shah@sifive.com>
+  <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <mhng-a1ba4b8a-4c6a-43e9-a87a-f8bbbe3555d8@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:24:54 +0100, Matteo Croce wrote:
-> bond_create() initialize six workqueues used later on.
-
-Work _entries_ not _queues_ no?
-
-> In the unlikely event that the device registration fails, these
-> structures are initialized unnecessarily, so move the initialization
-> out of the error path. Also, create an error label to remove some
-> duplicated code.
-
-Does the initialization of work entries matter? Is this prep for further
-changes?
-
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+On Mon, 09 Dec 2019 03:25:06 PST (-0800), yash.shah@sifive.com wrote:
+> In order to determine the number of L2 cache ways enabled at runtime,
+> implement a private attribute using cache_get_priv_group() in cacheinfo
+> framework. Reading this attribute ("number_of_ways_enabled") will return
+> the number of enabled L2 cache ways at runtime.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  drivers/net/bonding/bond_main.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> index fcb7c2f7f001..8756b6a023d7 100644
-> --- a/drivers/net/bonding/bond_main.c
-> +++ b/drivers/net/bonding/bond_main.c
-> @@ -4889,8 +4889,8 @@ int bond_create(struct net *net, const char *name)
->  				   bond_setup, tx_queues);
->  	if (!bond_dev) {
->  		pr_err("%s: eek! can't alloc netdev!\n", name);
+>  arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
+>  arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
+>  drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
+>  3 files changed, 38 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+> index 04f6748..217a42f 100644
+> --- a/arch/riscv/include/asm/sifive_l2_cache.h
+> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
+> @@ -10,6 +10,8 @@
+>  extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+>  extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+>
+> +int sifive_l2_largest_wayenabled(void);
 
-If this is a clean up patch I think this pr_err() could also be removed?
-Memory allocation usually fail very loudly so there should be no reason
-to print more errors.
+I thought the plan was to get this stuff out of arch/riscv?  It looks like it
+only got half-way done.
 
-> -		rtnl_unlock();
-> -		return -ENOMEM;
-> +		res = -ENOMEM;
-> +		goto out_unlock;
->  	}
->  
->  	/*
-> @@ -4905,14 +4905,17 @@ int bond_create(struct net *net, const char *name)
->  	bond_dev->rtnl_link_ops = &bond_link_ops;
->  
->  	res = register_netdevice(bond_dev);
-> +	if (res < 0) {
-> +		free_netdev(bond_dev);
-> +		goto out_unlock;
-> +	}
->  
->  	netif_carrier_off(bond_dev);
->  
->  	bond_work_init_all(bond);
->  
-> +out_unlock:
->  	rtnl_unlock();
-> -	if (res < 0)
-> -		free_netdev(bond_dev);
->  	return res;
+> +
+>  #define SIFIVE_L2_ERR_TYPE_CE 0
+>  #define SIFIVE_L2_ERR_TYPE_UE 1
+>
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 4c90c07..29bdb21 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <asm/sifive_l2_cache.h>
+>
+>  static void ci_leaf_init(struct cacheinfo *this_leaf,
+>  			 struct device_node *node,
+> @@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+>  	this_leaf->type = type;
 >  }
->  
-
-I do appreciate that the change makes the error handling follow a more
-usual kernel pattern, but IMHO it'd be even better if the error
-handling was completely moved. IOW the success path should end with
-return 0; and the error path should contain free_netdev(bond_dev);
-
--	int res;
-+	int err;
-
-	[...]
-
-	rtnl_unlock();
-
-	return 0;
-
-err_free_netdev:
-	free_netdev(bond_dev);
-err_unlock:
-	rtnl_unlock();
-	return err;
-
-I'm just not 100% sold on the improvement made by this patch being
-worth the code churn, please convince me, respin or get an ack from 
-one of the maintainers? :)
+>
+> +#ifdef CONFIG_SIFIVE_L2
+> +static ssize_t number_of_ways_enabled_show(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   char *buf)
+> +{
+> +	return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
+> +}
+> +
+> +static DEVICE_ATTR_RO(number_of_ways_enabled);
+> +
+> +static struct attribute *priv_attrs[] = {
+> +	&dev_attr_number_of_ways_enabled.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group priv_attr_group = {
+> +	.attrs = priv_attrs,
+> +};
+> +
+> +const struct attribute_group *
+> +cache_get_priv_group(struct cacheinfo *this_leaf)
+> +{
+> +	/* We want to use private group for L2 cache only */
+> +	if (this_leaf->level == 2)
+> +		return &priv_attr_group;
+> +	else
+> +		return NULL;
+> +}
+> +#endif /* CONFIG_SIFIVE_L2 */
+> +
+>  static int __init_cache_level(unsigned int cpu)
+>  {
+>  	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> index a9ffff3..f1a5f2c 100644
+> --- a/drivers/soc/sifive/sifive_l2_cache.c
+> +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> @@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
+>
+> +int sifive_l2_largest_wayenabled(void)
+> +{
+> +	return readl(l2_base + SIFIVE_L2_WAYENABLE);
+> +}
+> +
+>  static irqreturn_t l2_int_handler(int irq, void *device)
+>  {
+>  	unsigned int add_h, add_l;
