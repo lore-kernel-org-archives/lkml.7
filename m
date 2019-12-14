@@ -2,147 +2,92 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2137AC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E1FC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A3D2465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7957A214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NYBnGKnB"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XRYfMwU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLNNAB (ORCPT
+        id S1726691AbfLNNEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 08:00:01 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34498 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfLNNAA (ORCPT
+        Sat, 14 Dec 2019 08:04:13 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:31740 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725884AbfLNNEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 08:00:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cVfsByPBGAH0nlXQRgx8tkvnwPRM93zqT8emFAC0MMo=; b=NYBnGKnByJHlzENS5UPOeXPvF
-        lDm53oKLDryplzcg2wtiqsmjk3vVDVik46mpm2X542ZB8jgKcPYXLegNwiMKoe4d/3zB/HFIpweM3
-        W9zQNX2o0ic0jH6Xf1nD2ANFnYiJlYjPoErAzdJGnDjLlJNXwP6FaMq4iNpGOlslXBp3lY4Q1YfNZ
-        w7c61lybarYqsCdd00nAaqbA6LMJjEqcOt3OUo2xgdSp0A6sZSEZU0regJQgOud95o2biPA9vHEu9
-        6z87usN65hGtdKwyFimNG1lclpP+feXTewWQLO1uyc6CFoN3NYiXmGfYCsCkUKChTdYYOtCTKUm45
-        Rj/NHc5jw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41234)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ig71T-0002v6-Ew; Sat, 14 Dec 2019 12:59:51 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ig71P-0000SH-FH; Sat, 14 Dec 2019 12:59:47 +0000
-Date:   Sat, 14 Dec 2019 12:59:47 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: BUG - was: [GIT PULL 2/3] bcm2835-soc-next-2019-10-15
-Message-ID: <20191214125947.GD1337@shell.armlinux.org.uk>
-References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
- <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
- <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 14 Dec 2019 08:04:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576328652; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=/2YGTgU8CABW0fQKP2BGr2PLr66zRCOSYznYaN/MJII=; b=XRYfMwU5T5NV1pHeehJOwUdUE9KERjd90LdzcZiEa4O7jV8LWXDgtC7pKCtjX/yAJibao7zk
+ D/VZ1lX3rgzFLLCR+5B62LKbw5S+oNcO38zeoCAt2LDmj62FV/HwRtUwQi4A0nxDCZOmB7n/
+ xY6MAt8X0dF3EElDdJBbOGMrXOo=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df4ddca.7f659f00c8b8-smtp-out-n02;
+ Sat, 14 Dec 2019 13:04:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 132F3C447A2; Sat, 14 Dec 2019 13:04:09 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 95E30C433CB;
+        Sat, 14 Dec 2019 13:04:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 95E30C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+Date:   Sat, 14 Dec 2019 05:03:34 -0800
+Message-Id: <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 11:54:19AM +0100, H. Nikolaus Schaller wrote:
-> Hi Stefan,
-> 
-> > Am 15.10.2019 um 19:15 schrieb Stefan Wahren <wahrenst@gmx.net>:
-> > 
-> > Hi Florian,
-> > 
-> > The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-> > 
-> >  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-> > 
-> > are available in the git repository at:
-> > 
-> >  git://github.com/anholt/linux tags/bcm2835-soc-next-2019-10-15
-> > 
-> > for you to fetch changes up to 781fa0a954240c8487683ddf837fb2c4ede8e7ca:
-> > 
-> >  ARM: bcm: Add support for BCM2711 SoC (2019-10-10 19:21:03 +0200)
-> 
-> this patch has finally arrived in v5.5-rc1 but it seems to break
-> multiplatform build.
-> 
-> We run a distribution kernel that supports OMAP3/4/5, i.MX6 and RasPi 3B+
-> but since rebasing to v5.5-rc1 the kernel hangs after "Starting Kernel ...".
-> On all ARM devices (incl. RasPi 3B+).
-> 
-> Playing with our defconfig did show that deconfiguring CONFIG_ARCH_BCM2835
-> makes the kernel work again.
-> 
-> After further analysis it turns out that reverting this patch also
-> makes the boards work again.
-> 
-> I am not exactly sure what the reason is, but it may have something to
-> do with the new auto-selection of CONFIG_ZONE_DMA which is not automatically
-> selected by OMAP and i.MX6.
-> 
-> To reproduce on some OMAP device (i.MX6 should be similar)
-> 
-> 1st test:
-> 
-> git checkout v5.5-rc1
-> make omap2plus_defconfig
-> 
-> => boots OMAP device
-> 
-> 2nd test:
-> 
-> ( echo CONFIG_ARCH_BCM2835=y; echo CONFIG_ARCH_BCM=y ) >>arch/arm/configs/omap2plus_defconfig
-> make omap2plus_defconfig
-> 
-> => fails to boot OMAP device
-> 
-> 3rd test:
-> 
-> git revert 781fa0a954240c8487683ddf837fb2c4ede8e7ca
-> make omap2plus_defconfig
-> 
-> => boots OMAP device
-> 
-> BTW: the RasPi 3B+ runs equally well without this patch. So what is it
-> good for?
-> 
-> So please check and fix this patch.
+In ufshcd_remove(), after SCSI host is removed, put it once so that its
+resources can be released.
 
-Enabling ZONE_DMA shouldn't cause this problem - but as it does, please
-enable memblock debugging and early console, and please send any boot
-messages you can get from the system when it fails to boot.  Also
-having a successful boot log may be useful.
+Signed-off-by: Can Guo <cang@codeaurora.org>
 
-Thanks.
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index b5966fa..a86b0fd 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+ 	ufs_bsg_remove(hba);
+ 	ufs_sysfs_remove_nodes(hba->dev);
+ 	scsi_remove_host(hba->host);
++	scsi_host_put(hba->host);
+ 	/* disable interrupts */
+ 	ufshcd_disable_intr(hba, hba->intr_mask);
+ 	ufshcd_hba_stop(hba, true);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
