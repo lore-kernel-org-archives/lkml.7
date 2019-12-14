@@ -2,330 +2,181 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC47C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F90CC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3CA206A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751F32465B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VKk6mouG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgmGlJgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLNNEf (ORCPT
+        id S1726411AbfLNNO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 08:04:35 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59085 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726735AbfLNNEe (ORCPT
+        Sat, 14 Dec 2019 08:14:56 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26198 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbfLNNOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 08:04:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576328672; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=4eglewSQw9JKvQb9QmMPuYevi4dBPK/F62BRlODWg0c=; b=VKk6mouGCaryw6dXBgPBb8xnSD0AUjx1ACqsko7YX8teAJ6RVx+V2efj7wT+tuiMxB6E2kxo
- 5mTzWvmfA3H2wMw/28v/YWso+0yQoHNW0X8vDGQ1xfWBVTvvwnYX0QU70nMDeu6uxmNmrN4Q
- djxom3S1yQkbyCzbE7hg8od0UJE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df4dddd.7f4d4af83618-smtp-out-n03;
- Sat, 14 Dec 2019 13:04:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B7129C447A9; Sat, 14 Dec 2019 13:04:29 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 939DBC43383;
-        Sat, 14 Dec 2019 13:04:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 939DBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] scsi: ufs: Modularize ufs-bsg
-Date:   Sat, 14 Dec 2019 05:03:35 -0800
-Message-Id: <1576328616-30404-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+        Sat, 14 Dec 2019 08:14:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576329294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tXUYo8Z/1wc5z0Jgm8edXNyqrl3xATvrCgL0TB1nk/w=;
+        b=QgmGlJgk31M3cdPE5A04rioe+FYAY76MlL83lxm5/g1Oqd/tLnKlHImSEgBOGsm2mCg91D
+        N3kEK6hv+JEXt1SkymJmr6hAPQP0GhPNPxQMTJYkscsbxTTRaWXPjAeqT4/jKwDe9/6ABD
+        kZ6TvMD7Mps9pcBIZq24rL1N0t5gtA0=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-vYXazDyDP2S-UDbDhWHZpw-1; Sat, 14 Dec 2019 08:14:50 -0500
+X-MC-Unique: vYXazDyDP2S-UDbDhWHZpw-1
+Received: by mail-lj1-f200.google.com with SMTP id y15so596303lji.1
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 05:14:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tXUYo8Z/1wc5z0Jgm8edXNyqrl3xATvrCgL0TB1nk/w=;
+        b=FBETb76HiaLN7rdhWBwk+08VSrUjFjUsFkOApXF8ZlA23IiNzmz44hwShuvFGCGgwT
+         gwgiWBNIdX3/F6uyjfWcI2DMTqxnXe/T3YnZgjlxBBrEKw9dCxFB3t6Dfy04CVWblMSg
+         O6u63hVVUhKY1cdlt31qG9SSjnbSCRVOoYooRn+49l0iiamPVuQH5zkZyPi9wngaRVAz
+         FE/UcVMOHHGuYOq36iZ27I7LCQh3zImJ0sw7hJPDrAkPgIVWMSiAcmZK1pLIkV3sD9GP
+         9jpRQ9w3OHX5ES7lQM2ZBmsiWoZqe0PEbBnaMAR4Vn3DmW1VXENJAagtN/AeG6mvbgsA
+         yZxg==
+X-Gm-Message-State: APjAAAVjNwGO3pQd3V/AF66wUb+7nFJBpQv/L3mSps1tIuxwMTjzurfq
+        Zm+W0JImYlJkrmtz5Ib7JmmQmO5K76CYhOXOCfCnEDZ4Dkx1qVbf5YDWNKe6rGToYELpuwpc6pR
+        cgvSC2kfTS+jn7n1wIIprEO3YanyPsC7jJModzrXq
+X-Received: by 2002:a2e:824a:: with SMTP id j10mr13161576ljh.209.1576329289370;
+        Sat, 14 Dec 2019 05:14:49 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxZbGoEbpVT/4Wz1na9eFRLpPfqSek9IjoemkGbe1gb3IsBoF63dOqBqzFEQofQR68ctx7JMlHOmw1geb/Km1Q=
+X-Received: by 2002:a2e:824a:: with SMTP id j10mr13161563ljh.209.1576329289135;
+ Sat, 14 Dec 2019 05:14:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20191210152454.86247-1-mcroce@redhat.com> <20191213181051.0f949b17@cakuba.netronome.com>
+In-Reply-To: <20191213181051.0f949b17@cakuba.netronome.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Sat, 14 Dec 2019 14:14:13 +0100
+Message-ID: <CAGnkfhwbp3ZzsMTSuAP9WQhs49PJmPimoX1D-M+0uWuUErO91A@mail.gmail.com>
+Subject: Re: [PATCH net-next] bonding: don't init workqueues on error
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to improve the flexibility of ufs-bsg, modularizing it is a good
-choice. This change introduces tristate to ufs-bsg to allow users compile
-it as an external module.
+On Sat, Dec 14, 2019 at 3:11 AM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Tue, 10 Dec 2019 16:24:54 +0100, Matteo Croce wrote:
+> > bond_create() initialize six workqueues used later on.
+>
+> Work _entries_ not _queues_ no?
+>
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
+Right
 
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index d14c224..d43655a 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -143,7 +143,7 @@ config SCSI_UFS_TI_J721E
- 	  If unsure, say N.
- 
- config SCSI_UFS_BSG
--	bool "Universal Flash Storage BSG device node"
-+	tristate "Universal Flash Storage BSG device node"
- 	depends on SCSI_UFSHCD
- 	select BLK_DEV_BSGLIB
- 	help
-diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-index 94c6c5d..904eff1 100644
---- a/drivers/scsi/ufs/Makefile
-+++ b/drivers/scsi/ufs/Makefile
-@@ -6,7 +6,7 @@ obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) += cdns-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_QCOM) += ufs-qcom.o
- obj-$(CONFIG_SCSI_UFSHCD) += ufshcd-core.o
- ufshcd-core-y				+= ufshcd.o ufs-sysfs.o
--ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
-+obj-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
- obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
- obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
-diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
-index 3a2e68f..9c49b4e 100644
---- a/drivers/scsi/ufs/ufs_bsg.c
-+++ b/drivers/scsi/ufs/ufs_bsg.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2018 Western Digital Corporation
-  */
-+#include <linux/platform_device.h>
- #include "ufs_bsg.h"
- 
- static int ufs_bsg_get_query_desc_size(struct ufs_hba *hba, int *desc_len,
-@@ -158,53 +159,45 @@ static int ufs_bsg_request(struct bsg_job *job)
- 
- /**
-  * ufs_bsg_remove - detach and remove the added ufs-bsg node
-- * @hba: per adapter object
-+ * @pdev: Pointer to platform device handle
-  *
-- * Should be called when unloading the driver.
-+ * Return zero for success and non-zero for failure
-  */
--void ufs_bsg_remove(struct ufs_hba *hba)
-+static int ufs_bsg_remove(struct platform_device *pdev)
- {
--	struct device *bsg_dev = &hba->bsg_dev;
-+	struct ufs_hba *hba;
-+
-+	hba = (struct ufs_hba *)pdev->dev.platform_data;
-+	if (!hba)
-+		return -ENODEV;
- 
- 	if (!hba->bsg_queue)
--		return;
-+		return 0;
- 
- 	bsg_remove_queue(hba->bsg_queue);
-+	hba->bsg_queue = NULL;
- 
--	device_del(bsg_dev);
--	put_device(bsg_dev);
--}
--
--static inline void ufs_bsg_node_release(struct device *dev)
--{
--	put_device(dev->parent);
-+	return 0;
- }
- 
- /**
-- * ufs_bsg_probe - Add ufs bsg device node
-- * @hba: per adapter object
-+ * ufs_bsg_probe - Probe routine of the driver
-+ * @pdev: Pointer to platform device handle
-  *
-- * Called during initial loading of the driver, and before scsi_scan_host.
-+ * Return zero for success and non-zero for failure
-  */
--int ufs_bsg_probe(struct ufs_hba *hba)
-+static int ufs_bsg_probe(struct platform_device *pdev)
- {
--	struct device *bsg_dev = &hba->bsg_dev;
--	struct Scsi_Host *shost = hba->host;
--	struct device *parent = &shost->shost_gendev;
-+	struct ufs_hba *hba;
-+	struct device *bsg_dev;
- 	struct request_queue *q;
- 	int ret;
- 
--	device_initialize(bsg_dev);
--
--	bsg_dev->parent = get_device(parent);
--	bsg_dev->release = ufs_bsg_node_release;
--
--	dev_set_name(bsg_dev, "ufs-bsg");
--
--	ret = device_add(bsg_dev);
--	if (ret)
--		goto out;
-+	hba = (struct ufs_hba *)pdev->dev.platform_data;
-+	if (!hba)
-+		return -ENODEV;
- 
-+	bsg_dev = &pdev->dev;
- 	q = bsg_setup_queue(bsg_dev, dev_name(bsg_dev), ufs_bsg_request, NULL, 0);
- 	if (IS_ERR(q)) {
- 		ret = PTR_ERR(q);
-@@ -216,7 +209,19 @@ int ufs_bsg_probe(struct ufs_hba *hba)
- 	return 0;
- 
- out:
--	dev_err(bsg_dev, "fail to initialize a bsg dev %d\n", shost->host_no);
--	put_device(bsg_dev);
-+	dev_err(bsg_dev, "fail to initialize bsg node, err %d\n", ret);
- 	return ret;
- }
-+
-+static struct platform_driver ufs_bsg_driver = {
-+	.probe = ufs_bsg_probe,
-+	.remove = ufs_bsg_remove,
-+	.driver = {
-+		.name = "ufs-bsg",
-+	},
-+};
-+
-+module_platform_driver(ufs_bsg_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:ufs-bsg");
-diff --git a/drivers/scsi/ufs/ufs_bsg.h b/drivers/scsi/ufs/ufs_bsg.h
-index d099187..9d922c0 100644
---- a/drivers/scsi/ufs/ufs_bsg.h
-+++ b/drivers/scsi/ufs/ufs_bsg.h
-@@ -12,12 +12,4 @@
- #include "ufshcd.h"
- #include "ufs.h"
- 
--#ifdef CONFIG_SCSI_UFS_BSG
--void ufs_bsg_remove(struct ufs_hba *hba);
--int ufs_bsg_probe(struct ufs_hba *hba);
--#else
--static inline void ufs_bsg_remove(struct ufs_hba *hba) {}
--static inline int ufs_bsg_probe(struct ufs_hba *hba) {return 0; }
--#endif
--
- #endif /* UFS_BSG_H */
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index 76f9be7..90dc399 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -393,6 +393,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	void __iomem *mmio_base;
- 	int irq, err;
- 	struct device *dev = &pdev->dev;
-+	struct platform_device *bsg_pdev;
- 
- 	mmio_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mmio_base)) {
-@@ -440,6 +441,17 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	bsg_pdev = platform_device_register_data(dev, "ufs-bsg",
-+						 hba->host->host_no, hba,
-+						 sizeof(struct ufs_hba));
-+	/* Failure here is non-fatal */
-+	if (IS_ERR(bsg_pdev)) {
-+		err = PTR_ERR(bsg_pdev);
-+		dev_warn(dev, "Register bsg platform device failed %d\n", err);
-+	} else {
-+		hba->bsg_pdev = bsg_pdev;
-+	}
-+
- 	return 0;
- 
- dealloc_host:
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index a86b0fd..0160cc3 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -42,6 +42,7 @@
- #include <linux/nls.h>
- #include <linux/of.h>
- #include <linux/bitfield.h>
-+#include <linux/platform_device.h>
- #include "ufshcd.h"
- #include "ufs_quirks.h"
- #include "unipro.h"
-@@ -2093,6 +2094,7 @@ int ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
- 	ufshcd_release(hba);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(ufshcd_send_uic_cmd);
- 
- /**
-  * ufshcd_map_sg - Map scatter-gather list to prdt
-@@ -6024,6 +6026,7 @@ int ufshcd_exec_raw_upiu_cmd(struct ufs_hba *hba,
- 
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(ufshcd_exec_raw_upiu_cmd);
- 
- /**
-  * ufshcd_eh_device_reset_handler - device reset handler registered to
-@@ -7043,9 +7046,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			}
- 			hba->clk_scaling.is_allowed = true;
- 		}
--
--		ufs_bsg_probe(hba);
--
- 		scsi_scan_host(hba->host);
- 		pm_runtime_put_sync(hba->dev);
- 	}
-@@ -8248,7 +8248,7 @@ int ufshcd_shutdown(struct ufs_hba *hba)
-  */
- void ufshcd_remove(struct ufs_hba *hba)
- {
--	ufs_bsg_remove(hba);
-+	platform_device_unregister(hba->bsg_pdev);
- 	ufs_sysfs_remove_nodes(hba->dev);
- 	scsi_remove_host(hba->host);
- 	scsi_host_put(hba->host);
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2740f69..dd86404 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -734,7 +734,7 @@ struct ufs_hba {
- 	struct ufs_desc_size desc_size;
- 	atomic_t scsi_block_reqs_cnt;
- 
--	struct device		bsg_dev;
-+	struct platform_device	*bsg_pdev;
- 	struct request_queue	*bsg_queue;
- };
- 
+> > In the unlikely event that the device registration fails, these
+> > structures are initialized unnecessarily, so move the initialization
+> > out of the error path. Also, create an error label to remove some
+> > duplicated code.
+>
+> Does the initialization of work entries matter? Is this prep for further
+> changes?
+>
+
+Not a big issue, I just found useless to initialize those data and
+free a bit later.
+Just a cleanup.
+
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >  drivers/net/bonding/bond_main.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> > index fcb7c2f7f001..8756b6a023d7 100644
+> > --- a/drivers/net/bonding/bond_main.c
+> > +++ b/drivers/net/bonding/bond_main.c
+> > @@ -4889,8 +4889,8 @@ int bond_create(struct net *net, const char *name)
+> >                                  bond_setup, tx_queues);
+> >       if (!bond_dev) {
+> >               pr_err("%s: eek! can't alloc netdev!\n", name);
+>
+> If this is a clean up patch I think this pr_err() could also be removed?
+> Memory allocation usually fail very loudly so there should be no reason
+> to print more errors.
+>
+
+Sure, I just didn't want to alter the behaviour too much.
+
+> > -             rtnl_unlock();
+> > -             return -ENOMEM;
+> > +             res = -ENOMEM;
+> > +             goto out_unlock;
+> >       }
+> >
+> >       /*
+> > @@ -4905,14 +4905,17 @@ int bond_create(struct net *net, const char *name)
+> >       bond_dev->rtnl_link_ops = &bond_link_ops;
+> >
+> >       res = register_netdevice(bond_dev);
+> > +     if (res < 0) {
+> > +             free_netdev(bond_dev);
+> > +             goto out_unlock;
+> > +     }
+> >
+> >       netif_carrier_off(bond_dev);
+> >
+> >       bond_work_init_all(bond);
+> >
+> > +out_unlock:
+> >       rtnl_unlock();
+> > -     if (res < 0)
+> > -             free_netdev(bond_dev);
+> >       return res;
+> >  }
+> >
+>
+> I do appreciate that the change makes the error handling follow a more
+> usual kernel pattern, but IMHO it'd be even better if the error
+> handling was completely moved. IOW the success path should end with
+> return 0; and the error path should contain free_netdev(bond_dev);
+>
+> -       int res;
+> +       int err;
+>
+>         [...]
+>
+>         rtnl_unlock();
+>
+>         return 0;
+>
+> err_free_netdev:
+>         free_netdev(bond_dev);
+> err_unlock:
+>         rtnl_unlock();
+>         return err;
+>
+> I'm just not 100% sold on the improvement made by this patch being
+> worth the code churn, please convince me, respin or get an ack from
+> one of the maintainers? :)
+>
+
+ACK :)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Matteo Croce
+per aspera ad upstream
+
