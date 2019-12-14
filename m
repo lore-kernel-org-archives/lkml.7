@@ -2,113 +2,100 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F2AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4998C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BAF24658
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A5220706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtJYq8Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfLNHlc convert rfc822-to-8bit (ORCPT
+        id S1726039AbfLNHpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:41:32 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49943 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfLNHlb (ORCPT
+        Sat, 14 Dec 2019 02:45:39 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45635 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfLNHpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:41:31 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ig23G-0003Ok-MH; Sat, 14 Dec 2019 08:41:22 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7D2D01C2989;
-        Sat, 14 Dec 2019 08:41:21 +0100 (CET)
-Date:   Sat, 14 Dec 2019 07:41:21 -0000
-From:   "tip-bot2 for yu kuai" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/process: Remove set but not used variables
- prev and next
-Cc:     yu kuai <yukuai3@huawei.com>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, yi.zhang@huawei.com,
-        zhengbin13@huawei.com, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191213121253.10072-1-yukuai3@huawei.com>
-References: <20191213121253.10072-1-yukuai3@huawei.com>
+        Sat, 14 Dec 2019 02:45:38 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so649262pgk.12;
+        Fri, 13 Dec 2019 23:45:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=171Md9ofEXhJtMsBZQ4ZGBIOthbQw6oHUQqRUHleNKs=;
+        b=GtJYq8Yzqlzee8TSFmjnSSSYzBAe76dfgpqhoABAeo3g45uI22ppM5LP3lfoPBNz7O
+         1CXDIQrq1gDrT1aXQTesoYKoeC+O23xK3jrjnxvd93k6rYGdLQCACmstPuBJDtxrDvbs
+         KeM/nEn1qePXBiRDzgT9v7ZSOSCs9rSxb68ZkzHrcns2IB5KItNZYC8i2SggyCUfYJqj
+         FkCHX6tdQ+NcN4LE2RnWcn0lTLG1AglOkx6mcysbZU+X0r8pvDCHtkbYXuL5U6xKaGvt
+         MFoqueVVu1AALW18TnNenelqnaf7Nmk/djIja2e4tWZmjtrvX4G7CPNdxxvOrPbvPPyD
+         kWJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=171Md9ofEXhJtMsBZQ4ZGBIOthbQw6oHUQqRUHleNKs=;
+        b=jjjUiBi6h/qWKIZHFkUSBOV4sUvuo7i3N7gY4cJx3Mit9WGgWw/ifPDq3ghWN5jRII
+         6qhkefrue9BJyx2nsv3FB8g+zYX6xwckRCymA6Xy6drrbVzoqWd1qU3UUcaBFbGwzlZC
+         G88dSUeEqp4poi4wchKszqAptOlQmxMffH/HuWoF3Ih0LyqtOafe2laDIfe6sgin6QUF
+         KWXVxMlT9bxEtGswuetrlRXtxpWm22RgM/jk0WJlDeoan20HRcAnoXX1HAtBqKeCzO99
+         j2NWZ5Y+fPhti5TzqbItlHuWBa94sFFGt1+QDeHpNBR8vtcjQsi/nvhiEjWwBQnG6TDQ
+         Pe1w==
+X-Gm-Message-State: APjAAAX37WtGHhoz/+xFwX6QFPvsaBHZhRIV9PgM/aaUKPE+tliLJC3j
+        4X8FF2kbT9M/wsC88zsmi4S4mBcr
+X-Google-Smtp-Source: APXvYqxMzG4nmo15Dkm5aQHzyMOFISYvZS2x0fDvsWvXeJbqm172b3UTx31qm1tEZJ9nfmBjG8xBjA==
+X-Received: by 2002:a63:5f91:: with SMTP id t139mr4087513pgb.185.1576309537939;
+        Fri, 13 Dec 2019 23:45:37 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id z14sm12577737pfg.57.2019.12.13.23.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 23:45:37 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] rtc: asm9260: add the missed check for devm_clk_get
+Date:   Sat, 14 Dec 2019 15:45:28 +0800
+Message-Id: <20191214074528.16806-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Message-ID: <157630928132.30329.4530483129490664469.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+The driver misses a check for devm_clk_get().
+Add the check to fix it.
 
-Commit-ID:     27353d5785bca61bb49cfd7c78e14f1d21e66ec5
-Gitweb:        https://git.kernel.org/tip/27353d5785bca61bb49cfd7c78e14f1d21e66ec5
-Author:        yu kuai <yukuai3@huawei.com>
-AuthorDate:    Fri, 13 Dec 2019 20:12:53 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 14 Dec 2019 08:26:00 +01:00
-
-x86/process: Remove set but not used variables prev and next
-
-Remove two unused variables:
-
-  arch/x86/kernel/process.c: In function ‘__switch_to_xtra’:
-  arch/x86/kernel/process.c:618:31: warning: variable ‘next’ set but not used [-Wunused-but-set-variable]
-    618 |  struct thread_struct *prev, *next;
-        |                               ^~~~
-  arch/x86/kernel/process.c:618:24: warning: variable ‘prev’ set but not used [-Wunused-but-set-variable]
-    618 |  struct thread_struct *prev, *next;
-        |
-
-They are never used and so can be removed.
-
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: yi.zhang@huawei.com
-Cc: zhengbin13@huawei.com
-Link: https://lkml.kernel.org/r/20191213121253.10072-1-yukuai3@huawei.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/x86/kernel/process.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/rtc/rtc-asm9260.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 61e93a3..839b524 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -615,12 +615,8 @@ void speculation_ctrl_update_current(void)
+diff --git a/drivers/rtc/rtc-asm9260.c b/drivers/rtc/rtc-asm9260.c
+index 10064bdabdff..3ab81cdec00b 100644
+--- a/drivers/rtc/rtc-asm9260.c
++++ b/drivers/rtc/rtc-asm9260.c
+@@ -264,6 +264,9 @@ static int asm9260_rtc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->iobase);
  
- void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- {
--	struct thread_struct *prev, *next;
- 	unsigned long tifp, tifn;
- 
--	prev = &prev_p->thread;
--	next = &next_p->thread;
--
- 	tifn = READ_ONCE(task_thread_info(next_p)->flags);
- 	tifp = READ_ONCE(task_thread_info(prev_p)->flags);
- 
+ 	priv->clk = devm_clk_get(dev, "ahb");
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
++
+ 	ret = clk_prepare_enable(priv->clk);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to enable clk!\n");
+-- 
+2.24.0
+
