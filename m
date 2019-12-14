@@ -2,73 +2,73 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91461C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE09C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7485821655
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C167214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="moDlCKvu"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="lK+yU5+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfLNAW1 (ORCPT
+        id S1726590AbfLNAeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 19:22:27 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41345 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfLNAW0 (ORCPT
+        Fri, 13 Dec 2019 19:34:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34495 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLNAeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 19:22:26 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so545938ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:22:25 -0800 (PST)
+        Fri, 13 Dec 2019 19:34:13 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so556082lfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:34:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:in-reply-to:references
          :organization:mime-version:content-transfer-encoding;
-        bh=giiBxdvWgaNqH68xnv3JmWP9dzCBTdZ9klmH0YITisE=;
-        b=moDlCKvuxDXDzEEAIiXkhQpF42yemoKEbL0AZF9wNsfDWxNqQ6PAyC79TcuJE7Mkc9
-         Zd8qEd4kDdalk1yWC0H+Rr1MJ1/Yx0Hzhn7Tx0fCPyejRdP0cH3t3Jq5V7nYVWtI9cTR
-         S7EOX9jtd1eh7m3Y6RLy5trfH8sioerQknIUhEUlEwtfb3Rtt9vMYdIm0xtLws8vyLIo
-         8Wz5AZza9+t2BnITvbK6kvG+AWHbDFu93SVokmMiCVY0e3lv9bI1cVEarTCu+TarLpw3
-         brGJ7zEjLhMXpGfaQjutJUx6HNe/0vR1nl/rzpmdY6cIp+tWFtL5Bbuhd7ElwsD/eF6b
-         WE6w==
+        bh=AcKpSh1z8nexb80XCULmvBhMzvVCXcH0i/wbt+zGUhM=;
+        b=lK+yU5+bFuHaU9D3W6qUlPNk8AOj4NREd87YAzkJ6aYmKJIM2/QYqq2R2hkOGh6KPv
+         3q/yU7JUS23gE0olzVlBatTDM50fNZYaBjaETH23XoHylecROnklEkESAS76EpqdT70P
+         /dhkb4vT36tbmylUCmYZ9ezX9UU9sSGYRvzSFHP2jltZ7CZ9jJA98BpxpjOg/VPdZtBU
+         s4B5odIpY9nWRdp2NHwNJd0E5jt0TxsbYoldhf2oY3OljEOjMXmxmS6kBKVuKRLrSOTG
+         n8LyAki+kY2hsM3UomuEMBjmQMEqdPdonVdNw7SMrCIUk0cFVSmhqYPUj1nExJ1eV935
+         KxnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=giiBxdvWgaNqH68xnv3JmWP9dzCBTdZ9klmH0YITisE=;
-        b=BRT3ZG70DPaD8PWTy7jxwil6j6jnBmUGdhvaALP2wZ0Io0XNnOuB7UZQ8kgnFMHBkA
-         pGpVBCOZBVb73l3r6LvXclUwbYx1106d3irmBi3BjSOnFz2n+j1dWuI8ArDbYTHx2VjM
-         HzbdaLzVyaIoNOHoOHCt/yMTod7sA2iUD3pqnjp5lgGlyT39iSayQbp++oTQ9IGlHJ5j
-         zscpLj+AM7psEQe4YbqUr3qIIWKdK9NjIMfEx+CH9mzvq8DjvaPudy02/5H5EsS3N8AZ
-         LbyMyEkrThKkHBf2pgC6PnekCtcoIsH7VsqbrshShmZxHzdBiEdri2IlW3KUpytgAwZE
-         sWBA==
-X-Gm-Message-State: APjAAAW3Um1ifwFglS8r2hFiJkn5hGN7TlNB0Dybro7lsJPxrAHNPDzN
-        XYE/E5O0yCQt5e4hbzxN+6rWbg==
-X-Google-Smtp-Source: APXvYqxk4KifralwNEGO507iNNuOIWFqTEHw/xBJIq1aHCZdSobUATGCeEfnlG0VPQmTb1fbDwOe/Q==
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr11430388lji.256.1576282944630;
-        Fri, 13 Dec 2019 16:22:24 -0800 (PST)
+        bh=AcKpSh1z8nexb80XCULmvBhMzvVCXcH0i/wbt+zGUhM=;
+        b=UZciQeE4dVEESzpXO6BKi4tff8uDdGlt0NiduBknEZhNmMu0aG+k2djMYJbZtGwv/v
+         bp+v+32LTGVIHZGgWGCsoXhlQPudwoA0WxyVNtXXcJ/9HEWRRgmfQ62AX+LyZujkY1j3
+         X1JrM9mr29xgXcwrBGUDMJZtynQavduj0i4KzjKHMCWxn9veWMH3fMlquSh/TdZz4V5V
+         gt7IuBhHEg6s0D3AenfNv37M6Bnsb7GcrERz6+qujV3pv6YIrv488mL7O5Wku66rzMyx
+         ztFtYFXDV1RX+jPZ9qzVXATWhJjQOIsFsW0i0M5FskwFi8/iCn04zucofP8wE8rJG5eu
+         WfdQ==
+X-Gm-Message-State: APjAAAVPXdAkGlun9HZcqiM9r8XBnCR4hn54L4biuh+MZVl+zT0Sv+ur
+        GLOK2BS2CCcV0N5csBhExEhi3Faq45E=
+X-Google-Smtp-Source: APXvYqyPhtKh1Kb3nOzkfa72SVdezx6QGgtN1MFmoihXUZRaDylBiZhiVDUFt59vZIi5CyWD8Y4DKg==
+X-Received: by 2002:ac2:4946:: with SMTP id o6mr10591734lfi.170.1576283651956;
+        Fri, 13 Dec 2019 16:34:11 -0800 (PST)
 Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id k25sm5583547lji.42.2019.12.13.16.22.21
+        by smtp.gmail.com with ESMTPSA id z3sm5658532ljh.83.2019.12.13.16.34.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 16:22:24 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:22:16 -0800
+        Fri, 13 Dec 2019 16:34:11 -0800 (PST)
+Date:   Fri, 13 Dec 2019 16:34:03 -0800
 From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/8] net: stmmac: Fixes for -net
-Message-ID: <20191213162216.2dc8a108@cakuba.netronome.com>
-In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
-References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link
+ interrupt
+Message-ID: <20191213163403.2a054262@cakuba.netronome.com>
+In-Reply-To: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
+References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
 Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -78,31 +78,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 20:33:52 +0100, Jose Abreu wrote:
-> Fixes for stmmac.
+On Tue, 10 Dec 2019 22:33:05 +0000, Russell King wrote:
+> phylink requires the MAC to report when its link status changes when
+> operating in inband modes.  Failure to report link status changes
+> means that phylink has no idea when the link events happen, which
+> results in either the network interface's carrier remaining up or
+> remaining permanently down.
 > 
-> 1) Fixes the filtering selftests (again) for cases when the number of multicast
-> filters are not enough.
+> For example, with a fiber module, if the interface is brought up and
+> link is initially established, taking the link down at the far end
+> will cut the optical power.  The SFP module's LOS asserts, we
+> deactivate the link, and the network interface reports no carrier.
 > 
-> 2) Fixes SPH feature for MTU > default.
+> When the far end is brought back up, the SFP module's LOS deasserts,
+> but the MAC may be slower to establish link.  If this happens (which
+> in my tests is a certainty) then phylink never hears that the MAC
+> has established link with the far end, and the network interface is
+> stuck reporting no carrier.  This means the interface is
+> non-functional.
 > 
-> 3) Fixes the behavior of accepting invalid MTU values.
+> Avoiding the link interrupt when we have phylink is basically not
+> an option, so remove the !port->phylink from the test.
 > 
-> 4) Fixes FCS stripping for multi-descriptor packets.
-> 
-> 5) Fixes the change of RX buffer size in XGMAC.
-> 
-> 6) Fixes RX buffer size alignment.
-> 
-> 7) Fixes the 16KB buffer alignment.
-> 
-> 8) Fixes the enabling of 16KB buffer size feature.
+> Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Hi Jose!
+Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
 
-Patches directed at net should have a Fixes tag identifying the commit
-which introduced the problem. The commit messages should also describe
-user-visible outcomes of the bugs. Without those two its hard to judge
-which patches are important for stable backports.
+Seems like you maybe didn't want this backported to stable hence 
+no fixes tag?
 
-Could you please repost with appropriate Fixes tags?
+Please advise :)
+
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> index 111b3b8239e1..ef44c6979a31 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> @@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
+>  		valid = true;
+>  	}
+>  
+> -	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
+> +	if (priv->hw_version == MVPP22 && port->link_irq) {
+>  		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
+>  				  dev->name, port);
+>  		if (err) {
+
