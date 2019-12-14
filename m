@@ -2,132 +2,126 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C3CC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A77C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E02821655
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EB120724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NthJMitm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KHpcHkON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfLNAoj (ORCPT
+        id S1727020AbfLNAsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 19:44:39 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19066 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfLNAoi (ORCPT
+        Fri, 13 Dec 2019 19:48:13 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44845 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfLNAsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 19:44:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df4306e0000>; Fri, 13 Dec 2019 16:44:30 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 13 Dec 2019 16:44:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 13 Dec 2019 16:44:37 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 14 Dec
- 2019 00:44:37 +0000
-Subject: Re: [PATCH v2] mm/gup: Fix memory leak in __gup_benchmark_ioctl
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <emamd001@umn.edu>
-References: <9a692d27-4654-f1fc-d4c5-c6efba02c8a9@nvidia.com>
- <20191213223751.4089-1-navid.emamdoost@gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <2690f981-7291-f3fd-2f28-5d16f697f320@nvidia.com>
-Date:   Fri, 13 Dec 2019 16:44:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 13 Dec 2019 19:48:11 -0500
+Received: by mail-io1-f65.google.com with SMTP id b10so1428585iof.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:48:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vFS8VgWqLfvH3Ij7xQNX1+MJfR1R/okTz8jIXQ/PrWw=;
+        b=KHpcHkONtDRBkeXUyGK4TV4REhOe28eSqOpXzWRjTuEoQim33Pz9kdTNOakFhamF+2
+         oBnmWQErhxq3ML+ldiVgaxFs4m8k5S1eCZhqaC1hax0V7votOZGHr8Y/bYrGxjIDJ/sH
+         t282JVnHXDA3Kk/0/SW2h0yfhUsLzn5NgoZMg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vFS8VgWqLfvH3Ij7xQNX1+MJfR1R/okTz8jIXQ/PrWw=;
+        b=iz+SUqh99AFrH+y+LBn7X0qL3cIf1hQI+icml2OsFtHrgsGtjDOnXCP+KIjsAKd2v2
+         EpjKiH7hirz/9iSNWzH4cdRbk156n7ka+37zWLbZnNI57bYL5D0B9BJb7LKfRf13hHg8
+         LBdujpsS8VfC6sgEGtgFCOtWBys1SbNnV9Fn2VB9pU3yl/ae2t//blZ1Vqhce+tEWWfE
+         d8EiDZzVU8McH4AURJAoN0QwietBION0WTg1AYUbU62/9v42jFPmCoD9iXZLrCtyO2ta
+         Mti82D2BSu+q2vWFDzytTX6OOtumSQAKvQ9LTsO4e48pCH+4zjUHAPP9J0VSl8VYfxdc
+         /Ucg==
+X-Gm-Message-State: APjAAAXEOf8z9DMzeW/UPXGcIv3aJ5QuHeO3LIDAD+Uu0bhpRVYeV6VO
+        QoHJKYJhnRcvU+4RwjFP8Lc+D3teptM=
+X-Google-Smtp-Source: APXvYqyj7JKW+xUvXyQezpPYO3L3nOf9TwFoO9WjjUVmBqiYB7pSBUFFIZI6H3QyPj8Z+aSwzYDDZQ==
+X-Received: by 2002:a5e:d80f:: with SMTP id l15mr10190810iok.261.1576284490624;
+        Fri, 13 Dec 2019 16:48:10 -0800 (PST)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id w85sm3232738ili.44.2019.12.13.16.48.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 16:48:09 -0800 (PST)
+Received: by mail-io1-f53.google.com with SMTP id x1so1460667iop.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:48:09 -0800 (PST)
+X-Received: by 2002:a02:711d:: with SMTP id n29mr2124405jac.114.1576284489229;
+ Fri, 13 Dec 2019 16:48:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213223751.4089-1-navid.emamdoost@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576284270; bh=MLaoq1HvWNuPndisp3PFCN1X+uEl1V/8kfciklEUVvo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=NthJMitmyfjMWWnOwkaPgexAM26yp3PDLlBswnZOF/FRCLfiC5v4JV/rJYt9D0b6N
-         trjEm2jVRc3c/anL8vW8YWLncJJP0TfVcJRASDReBnMGfdd4kUrgHcG2mtMt3WqSXn
-         fvUKaz4CGy0yazLdEfcw3MpbOlvsajTar/oBNjVwrVUMXgH8m0eHxQv9Lf7mzfo5EC
-         u8t18fJPT0luUO3iEM1LRaa7Y1XJHDYkLwQXEF+3yv+rgWqTTz/Y8nPPDJ4AzJ4Vqw
-         Tkh5prl5KGrZkgVdYroJwicr5SXt3jNHUswUVjaSlXkrv43IzsO2dYmHL2F0H2wmL+
-         e0Mu5QOnfi/9A==
+References: <20191213234530.145963-1-dianders@chromium.org>
+ <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid> <20191214000738.GP624164@phenom.ffwll.local>
+In-Reply-To: <20191214000738.GP624164@phenom.ffwll.local>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 13 Dec 2019 16:47:57 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VqU8Aeuno44hAi6SP+7NZRTfgJcYPHcWpVNCo6GXUJPw@mail.gmail.com>
+Message-ID: <CAD=FV=VqU8Aeuno44hAi6SP+7NZRTfgJcYPHcWpVNCo6GXUJPw@mail.gmail.com>
+Subject: Re: [PATCH 9/9] drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 2:37 PM, Navid Emamdoost wrote:
-> In the implementation of __gup_benchmark_ioctl() the allocated pages
-> should be released before returning in case of an invalid cmd. Release
-> pages via kvfree() by goto done.
-> 
-> Fixes: 714a3a1ebafe ("mm/gup_benchmark.c: add additional pinning methods")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v2:
-> 	-- added goto and ret value instead of return -1.
-> ---
->  mm/gup_benchmark.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
+Hi,
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+On Fri, Dec 13, 2019 at 4:07 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Fri, Dec 13, 2019 at 03:45:30PM -0800, Douglas Anderson wrote:
+> > The bridge chip supports these DP rates according to TI's spec:
+> > * 1.62 Gbps (RBR)
+> > * 2.16 Gbps
+> > * 2.43 Gbps
+> > * 2.7 Gbps (HBR)
+> > * 3.24 Gbps
+> > * 4.32 Gbps
+> > * 5.4 Gbps (HBR2)
+> >
+> > As far as I can tell, only RBR, HBR, and HBR2 are part of the DP spec.
+> > If other rates work then I believe it's because the sink has allowed
+> > bending the spec a little bit.
+>
+> I think you need to look at the eDP spec. And filter this stuff correctly
+> (there's more fields there for these somewhat irky edp timings). Simply
+> not using them works, but it's defeating the point of having these
+> intermediate clocks for edp panels.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Ah, I see my problem.  I had earlier only found the eDP 1.3 spec which
+doesn't mention these rates.  The eDP 1.4 spec does, however.  ...and
+the change log for 1.4 specifically mentions that it added 4 new link
+rates and also adds the "SUPPORTED_LINK_RATES" register.
 
-> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> index b160638f647e..b773b2568544 100644
-> --- a/mm/gup_benchmark.c
-> +++ b/mm/gup_benchmark.c
-> @@ -24,7 +24,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  {
->  	ktime_t start_time, end_time;
->  	unsigned long i, nr_pages, addr, next;
-> -	int nr;
-> +	int nr, ret = 0;
->  	struct page **pages;
->  
->  	if (gup->size > ULONG_MAX)
-> @@ -63,8 +63,8 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  					    NULL);
->  			break;
->  		default:
-> -			kvfree(pages);
-> -			return -1;
-> +			ret = -EINVAL;
-> +			goto done;
->  		}
->  
->  		if (nr <= 0)
-> @@ -85,8 +85,9 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  	end_time = ktime_get();
->  	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
->  
-> +done:
->  	kvfree(pages);
-> -	return 0;
-> +	return ret;
->  }
->  
->  static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
-> 
+I can try to spin a v2 but for now I'll hold off for additional feedback.
+
+I'll also note that I'd be totally OK if just the first 8 patches in
+this series landed for now and someone could eventually figure out how
+to make this work.  With just the first 8 patches I think we will
+still be in an improved state compared to where we were before (and it
+fixes the panel I care about) and someone could later write the code
+to skip unsupported rates...
+
+
+-Doug
