@@ -2,135 +2,131 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD3EC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767EAC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900F52465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AB524125
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 17:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VmgSSuFH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlCmN7o1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfLNQyy (ORCPT
+        id S1726752AbfLNRMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 11:54:54 -0500
-Received: from mout.gmx.net ([212.227.17.21]:34757 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbfLNQyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 11:54:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576342475;
-        bh=+BbVCIHuNmxom49QgIOa+rVhYJNXL05jIfaUgchsleA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VmgSSuFHso6sSPe4dL2Mrpy3+5pVvrn50Sn4palz5AuuOf2wv6/ITivaMBffJ4kap
-         jMBIEwsB3TlD/tbecm54YNYHsbGLAvlGbxhxj/hsL1AZrpEtgicjGVYu0CSsqapeoc
-         DfMgcOWquAXtxcoVSkc0k0fb5L3oMCBRbVNcISXM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEm27-1iVTBh3EPD-00GMNY; Sat, 14
- Dec 2019 17:54:34 +0100
-Subject: Re: BUG - was: [GIT PULL 2/3] bcm2835-soc-next-2019-10-15
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
- <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
- <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <f6f38340-2555-7907-6b89-748c34cd2978@gmx.net>
-Date:   Sat, 14 Dec 2019 17:54:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 14 Dec 2019 12:12:31 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42635 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLNRMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 12:12:31 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so3238443otd.9
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 09:12:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LfuFNZhwpZHLnF3djKVjiT3EXeRjqk5hTlCJtr0Ug00=;
+        b=TlCmN7o1+fMNUBHz9erkJfWUoUdU6UO2mLwWb8l2OezOxScfm59l9mw928OPcn/yBa
+         Xhl+xxt7CRSQs9M26xhDkm0qpkDohbNZy5JaN5ECOL9h9XnMmCPoEBL1boRtojpbvgrc
+         Ght8Wj+dD1eb0lSCrS3fpEAdVkxj2pV3eVXKkOg2ENf8l6nkaINwPxGpfnRGOwnquFZc
+         pL+qz0HFXn0mlj4DE6458MEirDfF3fb7wxRjGscI3mH4+5qfrIvYwDZFGFMHTIVinPJ6
+         SeqqPws1nPIVuGyx08gfwwZCFxeSIBu8z58WeOa3KajNbYjPAgDuhFKblJLY/acUYb2P
+         EJ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LfuFNZhwpZHLnF3djKVjiT3EXeRjqk5hTlCJtr0Ug00=;
+        b=PzsH/sl1Xn+VB75HE0MnY91me+LZL2cucdQSvzyfBgvpXLGRHAZLUE6vJC70kv3Bfi
+         InSUFSIgnALe8N6ue+A57s864LqbJ92o1MCjKLmr0hVTttlll3kRgD8KVAwfV/qNUsQi
+         ugZKF2CTOOnF61M7E2znQ5v/ydaHCTERPiWLuDXG7p1pbeR2wJJhrbRA1zKvan69Se9j
+         I+JmtkDu0hM+aUcO6IBYQ8nyk980L78SJrBFQ6wG/mD7bObdcP3bjdcS5BxUVQW1s8yD
+         UkHK6gYGWbHWHZMxjPSZ02R1NN9p4PRpxpA+C84fKsrZl01XI5VjE+NCtoK29N89ZyRA
+         A9HA==
+X-Gm-Message-State: APjAAAUa9UBFUvpgu3KKCvdVB6pYwjTQ+bYWaAOO17/43kbyhjMW+PEZ
+        N7SnxGS/sh5nXg/Uizrhlnfn6ErgkOFK7eH5VCLavw==
+X-Google-Smtp-Source: APXvYqwwTQGCvVFuCI2TTbbAbQLnslTRGC4VFL+IaeZvnsp8ao1oG8F9eYiooFOo0Htw4V8HHQU3yDHWMVglPTU+OSw=
+X-Received: by 2002:a9d:4789:: with SMTP id b9mr22242455otf.110.1576343549895;
+ Sat, 14 Dec 2019 09:12:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:ELFNI87v57TSREqtXP96vdgImKzkkUHbI3qOsvnsOa/ruWSt74b
- i3rbtP0n/I1A1A6c5KebrDoY5ezip6rimI8jNOnmroTBHPhM1nprkvAIBeFGIhJsLeAGm1X
- S/geNjiXjtNFyhU0kFK+43LQ/jrPxKdXtOUfuv2lKmK87n0TcmYzqe9ekafdHaZerwFDKur
- Omzf9vF/uSNesLYbkpAcA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UNbQGgv5KWo=:paK+qqmVLcAsfK4nh6VZO0
- 8Suk8svgYYGTWkrUvzlY67n3dtDx/blwhgLOK1dsUBRMsjV9Odbj88HMkfXfSEuv4c7DTC6Cv
- QJdSmkzM6zGDDYEJeA9vc6ociK8vnobicFTHxYfLJHZYnEAZBXp/t2jwmSUljDQ0M4pWk3PR5
- 09onjuoPEvS89CqontZNOiLb42lRJzYM7M1xAwyygIqePbv/HY/QteCZ6jnO0mh/OMIPmj/uq
- YAMYwYsLDuv8iqVM8UY6vJsFaloQOF9LztiOnAcrhAORf7ukE0w5A/QHiIWHfFV4VT30nr+S1
- sNDfqsNziqIu8ng3WcUodW5j+L5HyUMtXZqfc0ElpC3ltiMNMrrDMcmhT9swK2tnU8doa/qQA
- /Kbafv/Bhe5/FSvQNEabGw3Fo2GWp6y1YUiQOlDVHyScwXOHCp7pPO8BrT1+YSovQ4i3msNTC
- dmEgbMe0DPdaYEadIRrhdYGTcDtd1sBYcc2UUY8FFmRr4uv8keqF0u58Rk2DX7eTYD2ElP4nb
- t3BQc/7rzK9DuPx+A9Ys4r/FQ2f5Iy9Vy5WsHCyTbTZ5vn/S6pX7iUQoxfbL8KHGQwcI6q47E
- zkDZyncaf5dTunui5SNjutSSdbmfMs5UIJjyokftX23qr7GJAADpPGOIz7lqbJplN6SvkvTFb
- tl0pvwVOKsHQU1BB8XGrkia6iL5PUz6fPACUfs2p7gkNUWHPDd78a6+IcPfuRVsrtGWKLknEq
- tIH4hwpGX5mAsPciQ0Np4KGrYfgE+/CY7vGpZb8OKmxwivCsjXp7K6w7HzHHG7fOkgoS4e7ye
- 8lhUN4bJ6X0AknBZbiTst2Kb/TMaiYd8LGy9ZCSli/EDCnHTRC2/UFUikGjGcfScqxLwYLvup
- 79VOcypVfo9q3FvvbhRBIfJdoFvXA3hvKLsbPfl4A8XO8xLKMLqTYDDIbCzRvsH4FSWxBjagm
- TtSkNSyPH2yEJMhMil+cBFUM1GQwbYdf2KHlIoRoc2IZazN0l6LzpI9V9cDOzsgNZ+Ep8oACr
- 1O4K4SeKqAmzq1ykgAJMU4mkz7/jJIGnDDitNqfc3iwjxmatONfnPexO/AaILszW4GHsYuEDx
- 3Ch02WHDRbWq2yOtxc/rI9EDBucPmATx2nKARHdzt1Mtk1BfNnE4cMkMolRiJ15mjl/X6t5p2
- EOp6U4068ajxNAHirzqBtpaKRnrg6QQV9+lRt0yNxlVBkgQv/WEeeIB3Qg8Nv2fytg0R3pd+7
- v2cdmaRPI09hGYnPalXy4KvlWb/GPVvN6fgH5Uq5Ds2bt52DbXJOL0ddrJeU=
+References: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
+In-Reply-To: <f77ac379ddb6a67c3ac6a9dc54430142ead07c6f.1576336565.git.asml.silence@gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Sat, 14 Dec 2019 18:12:03 +0100
+Message-ID: <CAG48ez0N_b+kjbddhHe+BUvSnOSvpm1vdfQ9cv+cgTLuCMXqug@mail.gmail.com>
+Subject: Re: [RFC PATCH] io_uring: add support for IORING_OP_IOCTL
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring <io-uring@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
-
-[add Nicolas as the new BCM2835 maintainer]
-
-Am 14.12.19 um 11:54 schrieb H. Nikolaus Schaller:
-> Hi Stefan,
+On Sat, Dec 14, 2019 at 4:30 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
+> This works almost like ioctl(2), except it doesn't support a bunch of
+> common opcodes, (e.g. FIOCLEX and FIBMAP, see ioctl.c), and goes
+> straight to a device specific implementation.
 >
->> Am 15.10.2019 um 19:15 schrieb Stefan Wahren <wahrenst@gmx.net>:
->>
->> Hi Florian,
->>
->> The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
->>
->>  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
->>
->> are available in the git repository at:
->>
->>  git://github.com/anholt/linux tags/bcm2835-soc-next-2019-10-15
->>
->> for you to fetch changes up to 781fa0a954240c8487683ddf837fb2c4ede8e7ca:
->>
->>  ARM: bcm: Add support for BCM2711 SoC (2019-10-10 19:21:03 +0200)
-> this patch has finally arrived in v5.5-rc1 but it seems to break
-> multiplatform build.
+> The case in mind is dma-buf, drm and other ioctl-centric interfaces.
 >
-> We run a distribution kernel that supports OMAP3/4/5, i.MX6 and RasPi 3B+
-> but since rebasing to v5.5-rc1 the kernel hangs after "Starting Kernel ...".
-> On all ARM devices (incl. RasPi 3B+).
+> Not-yet Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>
+> It clearly needs some testing first, though works fine with dma-buf,
+> but I'd like to discuss whether the use cases are convincing enough,
+> and is it ok to desert some ioctl opcodes. For the last point it's
+> fairly easy to add, maybe except three requiring fd (e.g. FIOCLEX)
+>
+> P.S. Probably, it won't benefit enough to consider using io_uring
+> in drm/mesa, but anyway.
+[...]
+> +static int io_ioctl(struct io_kiocb *req,
+> +                   struct io_kiocb **nxt, bool force_nonblock)
+> +{
+> +       const struct io_uring_sqe *sqe = req->sqe;
+> +       unsigned int cmd = READ_ONCE(sqe->ioctl_cmd);
+> +       unsigned long arg = READ_ONCE(sqe->ioctl_arg);
+> +       int ret;
+> +
+> +       if (!req->file)
+> +               return -EBADF;
+> +       if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
+> +               return -EINVAL;
+> +       if (unlikely(sqe->ioprio || sqe->addr || sqe->buf_index
+> +               || sqe->rw_flags))
+> +               return -EINVAL;
+> +       if (force_nonblock)
+> +               return -EAGAIN;
+> +
+> +       ret = security_file_ioctl(req->file, cmd, arg);
+> +       if (!ret)
+> +               ret = (int)vfs_ioctl(req->file, cmd, arg);
 
-i wasn't able to reproduce this issue with the RPi 3B+ so far and i
-don't have any OMAP hardware:
+This isn't going to work. For several of the syscalls that were added,
+special care had to be taken to avoid bugs - like for RECVMSG, for the
+upcoming OPEN/CLOSE stuff, and so on.
 
-Linux 5.3 (bcm2835_defconfig) + FW 2019-02-12 => okay
-Linux 5.3 (bcm2835_defconfig + ZONE_DMA) + FW 2019-02-12 => okay
-Linux 5.5-rc1 (bcm2835_defconfig) + FW 2019-02-12 => okay
-Linux 5.5-rc1 (multi_v7_defconfig) + FW 2019-02-12 => okay
+And in principle, ioctls handlers can do pretty much all of the things
+syscalls can do, and more. They can look at the caller's PID, they can
+open and close (well, technically that's slightly unsafe, but IIRC
+autofs does it anyway) things in the file descriptor table, they can
+give another process access to the calling process in some way, and so
+on. If you just allow calling arbitrary ioctls through io_uring, you
+will certainly get bugs, and probably security bugs, too.
 
-So please provide more information about your RPi 3B+ setup:
+Therefore, I would prefer to see this not happen at all; and if you do
+have a usecase where you think the complexity is worth it, then I
+think you'll have to add new infrastructure that allows each
+file_operations instance to opt in to having specific ioctls called
+via this mechanism, or something like that, and ensure that each of
+the exposed ioctls only performs operations that are safe from uring
+worker context.
 
-- VC firmware version
-- additional bootloader (U-Boot)
-- boot source (SD card, USB, network)
-- kernel config
-
-Did you tested the mainline kernel or the letux kernel?
-
-Best regards
-Stefan
+Also, I'm not sure, but it might be a good idea to CC linux-api if you
+continue working on this.
