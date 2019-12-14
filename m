@@ -2,106 +2,194 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE84C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCCCC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE9620724
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0A72067C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:09:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIFoW9Lo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfLNAtS (ORCPT
+        id S1726772AbfLNBJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 19:49:18 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63397 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfLNAtS (ORCPT
+        Fri, 13 Dec 2019 20:09:31 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37501 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfLNBJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 19:49:18 -0500
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBE0mX3g067624;
-        Sat, 14 Dec 2019 09:48:33 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
- Sat, 14 Dec 2019 09:48:33 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xBE0mWtv067616
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 14 Dec 2019 09:48:33 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- mem_serial_out
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-References: <00000000000053539a0599173973@google.com>
- <20191212105701.GB1476206@kroah.com>
- <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
- <20191213093357.GB2135612@kroah.com>
- <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
- <74859736-478a-6ad7-f0be-cfe87ec40ff5@i-love.sakura.ne.jp>
- <20191213160700.GA2632926@kroah.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <4f514a5a-af11-e688-8f8d-72bbadadc889@i-love.sakura.ne.jp>
-Date:   Sat, 14 Dec 2019 09:48:29 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 13 Dec 2019 20:09:31 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so613546edb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 17:09:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=uDET1/4WwioWwROI6pkXcNFShnofxk01ctVQVe+2uk0=;
+        b=nIFoW9LoBwdiIpDscOGCynjFYb294TiDMQkcXkFi3Wp3GdXHYIU3XrgLFm6l5VzGB/
+         rTLED8OscvI4QypySdsgARxqW9JdoQDjo1XZA6uLy3KFUluJF2zPNgFwbRGjUWZIs+Sj
+         zjtyV9KbuAHmH4Duprn2GnFoTIO8b3XMU4hGfAL79Q1G7NEd4rCy1ZbSD/U205GTMqGU
+         bFUS2qPz9R15GG9pdCY7gST+OvWHVwAiQSolu1cHY2Jr+PfAfbIIb8UmDPFUhyY/hd3b
+         2xBeNS2HTlZzjDfDEuoEW9YWs97oyAQakDu+NJrNzFmBlpl1rb/MRDTTT0p4OLEDjEkZ
+         LoCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=uDET1/4WwioWwROI6pkXcNFShnofxk01ctVQVe+2uk0=;
+        b=jffH2D2qd1jTkEGqMvvFdGZ9k5Iev9eRklNOwVzPeLrBqpSR3hgMnHKWIB2UpfZqaM
+         aabHWSYFXpcvfEzyTHcIwXEsfYTTH3ceOzgmToFrUk0r3TpgHOceZWwYtRgiGUoHUNfi
+         N3Fs1vVJcz3YZw9yRQiLM/tB0/Mj4AtkiesRlxr/IRuEau3tRxI9584XfPfxGN0nOwE8
+         G/j+lf9kAvR0TbPwjLa7Gkjit1LQK6Gi4FpFMV6mPLd1365mIpVYshTVue+sMHLQa+Di
+         uPUs98zwkZSn29eIyfJ34svaSNk4xG5okqwnuGQZa9XmDQODdaAko88Ue9gafa1fasw/
+         3Zwg==
+X-Gm-Message-State: APjAAAVouKVJgqCPKKKfyCefmaCdJHNERIYoJ+cpnYsmUVAG3Yy2ex7r
+        S/hce4AgWyBjnEJSVjXDACtiw9tqpHq5q0Mc6Camlk8S
+X-Google-Smtp-Source: APXvYqwx0aMnaVcmV8TCv/hWtphC5/JyFFI3+i8tOd31mo7/SXz3f6i7Hfr7KY9GWJmbqH/yZF4ohYvwScejy3mZoCo=
+X-Received: by 2002:a17:907:2112:: with SMTP id qn18mr19222413ejb.92.1576285768101;
+ Fri, 13 Dec 2019 17:09:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213160700.GA2632926@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   "David F." <df7729@gmail.com>
+Date:   Fri, 13 Dec 2019 17:09:16 -0800
+Message-ID: <CAGRSmLvPDM2DchiF2d-zBksdfFa3TdPb5+0K=M+YL3mGKVxkxA@mail.gmail.com>
+Subject: Makefile build failure 5.4..3
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/14 1:07, Greg KH wrote:
-> On Fri, Dec 13, 2019 at 11:31:08PM +0900, Tetsuo Handa wrote:
->> On 2019/12/13 19:00, Dmitry Vyukov wrote:
->>> Easier said than done. "normal user of the serial port" is not really
->>> a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
->>> not per-device...
->>> As far as I remember +Tetsuo proposed a config along the lines of
->>> "restrict only things that legitimately cause damage under a fuzzer
->>> workload", e.g. freezing filesystems, disabling console output, etc.
->>> This may be another candidate. But I can't find where that proposal is
->>> now.
->>
->> That suggestion got no response for two months.
->>
->>   https://lkml.kernel.org/r/3e4e2b6b-7828-54ab-cf28-db1a396d7e20@i-love.sakura.ne.jp
->>
->> Unless we add such kernel config option to upstream kernels, it will become
->> a whack-a-mole game.
-> 
-> It will be a whack-a-mole game no matter what.
-> 
-> Yes, /dev/mem/ makes no sense to fuzz.  Neither does other things (like
-> serial port memory addresses.)
+Hello,
 
-/dev/mem makes sense to fuzz. Ditto for other things.
+Building 5.4.3 x64 it completes but I noticed:
 
-> 
-> You just will have a list of things that you "do not fuzz as these are
-> dangerous".  Nothing new here, any os will have that.
-
-The list of kernel config options will become too complicated to maintain.
-If we can have one kernel config option, we can avoid maintaining
-the list of kernel config options (which keeps changing over time).
+ CC [M]  drivers/net/wireless/intel/iwlwifi/iwl-debug.o
+In file included from ./include/linux/export.h:42:0,
+                 from ./include/linux/linkage.h:7,
+                 from ./include/linux/kernel.h:8,
+                 from ./include/linux/skbuff.h:13,
+                 from ./include/linux/if_ether.h:19,
+                 from ./include/linux/etherdevice.h:20,
+                 from drivers/net/wireless/mediatek/mt76/mt7615/mac.c:10:
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c: In function =E2=80=98to_rs=
+si=E2=80=99:
+./include/linux/compiler.h:350:38: error: call to
+=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
+ILD_BUG_ON
+failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
+(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+                                      ^
+./include/linux/compiler.h:331:4: note: in definition of macro
+=E2=80=98__compiletime_assert=E2=80=99
+    prefix ## suffix();    \
+    ^
+./include/linux/compiler.h:350:2: note: in expansion of macro
+=E2=80=98_compiletime_assert=E2=80=99
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+  ^
+./include/linux/build_bug.h:39:37: note: in expansion of macro
+=E2=80=98compiletime_assert=E2=80=99
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^
+./include/linux/bitfield.h:46:3: note: in expansion of macro =E2=80=98BUILD=
+_BUG_ON_MSG=E2=80=99
+   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),  \
+   ^
+./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
+FIELD_CHECK=E2=80=99
+   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
+   ^
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
+expansion of macro =E2=80=98FIELD_GET=E2=80=99
+  return (FIELD_GET(field, rxv) - 220) / 2;
+          ^
+./include/linux/compiler.h:350:38: error: call to
+=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
+ILD_BUG_ON
+failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
+(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+                                      ^
+./include/linux/compiler.h:331:4: note: in definition of macro
+=E2=80=98__compiletime_assert=E2=80=99
+    prefix ## suffix();    \
+    ^
+./include/linux/compiler.h:350:2: note: in expansion of macro
+=E2=80=98_compiletime_assert=E2=80=99
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+  ^
+./include/linux/build_bug.h:39:37: note: in expansion of macro
+=E2=80=98compiletime_assert=E2=80=99
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^
+./include/linux/bitfield.h:48:3: note: in expansion of macro =E2=80=98BUILD=
+_BUG_ON_MSG=E2=80=99
+   BUILD_BUG_ON_MSG((_mask) =3D=3D 0, _pfx "mask is zero"); \
+   ^
+./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
+FIELD_CHECK=E2=80=99
+   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
+   ^
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
+expansion of macro =E2=80=98FIELD_GET=E2=80=99
+  return (FIELD_GET(field, rxv) - 220) / 2;
+          ^
+./include/linux/compiler.h:350:38: error: call to
+=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
+ILD_BUG_ON
+failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
+(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+                                      ^
+./include/linux/compiler.h:331:4: note: in definition of macro
+=E2=80=98__compiletime_assert=E2=80=99
+    prefix ## suffix();    \
+    ^
+./include/linux/compiler.h:350:2: note: in expansion of macro
+=E2=80=98_compiletime_assert=E2=80=99
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+  ^
+./include/linux/build_bug.h:39:37: note: in expansion of macro
+=E2=80=98compiletime_assert=E2=80=99
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^
+./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BUIL=
+D_BUG_ON_MSG=E2=80=99
+  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+  ^
+./include/linux/build_bug.h:21:2: note: in expansion of macro =E2=80=98BUIL=
+D_BUG_ON=E2=80=99
+  BUILD_BUG_ON(((n) & ((n) - 1)) !=3D 0)
+  ^
+./include/linux/bitfield.h:54:3: note: in expansion of macro
+=E2=80=98__BUILD_BUG_ON_NOT_POWER_OF_2=E2=80=99
+   __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +   \
+   ^
+./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
+FIELD_CHECK=E2=80=99
+   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
+   ^
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
+expansion of macro =E2=80=98FIELD_GET=E2=80=99
+  return (FIELD_GET(field, rxv) - 220) / 2;
+          ^
+scripts/Makefile.build:265: recipe for target
+'drivers/net/wireless/mediatek/mt76/mt7615/mac.o' failed
+make[9]: *** [drivers/net/wireless/mediatek/mt76/mt7615/mac.o] Error 1
+scripts/Makefile.build:509: recipe for target
+'drivers/net/wireless/mediatek/mt76/mt7615' failed
+make[8]: *** [drivers/net/wireless/mediatek/mt76/mt7615] Error 2
+scripts/Makefile.build:509: recipe for target
+'drivers/net/wireless/mediatek/mt76' failed
+make[7]: *** [drivers/net/wireless/mediatek/mt76] Error 2
+scripts/Makefile.build:509: recipe for target
+'drivers/net/wireless/mediatek' failed
+make[6]: *** [drivers/net/wireless/mediatek] Error 2
+make[6]: *** Waiting for unfinished jobs....
