@@ -2,74 +2,115 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B8AC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D39C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127B22465E
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6D82465E
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576306710;
+	bh=XBQHeoYqAMGOSLBvLrnshTLGXmqN0zjP5Hu0C573+lM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yhfjpmvaHmYtvgPoDeC4hlLRzrm6pGuAMXTRB8o6ZeZMFcuyc7s5xQzFJdEm4bI2C
+	 BxUki4nkVLh8QA6eZ6UqkN07+cKbC1ERpQ9aUIsTVw2v1dKJoVyzGr1xHqW/hY4GJy
+	 jM2NVuY3rTfxDd3nfveMJE6Y0w/Gv9+EthFrLGME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfLNGtL (ORCPT
+        id S1725933AbfLNG63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 01:49:11 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7688 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725372AbfLNGtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 01:49:10 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DC6962319C750067A1EF;
-        Sat, 14 Dec 2019 14:49:07 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 14 Dec 2019
- 14:48:58 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: vmx: delete meaningless nested_vmx_prepare_msr_bitmap() declaration
-Date:   Sat, 14 Dec 2019 14:48:45 +0800
-Message-ID: <1576306125-18843-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 14 Dec 2019 01:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfLNG63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 01:58:29 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B09762465B;
+        Sat, 14 Dec 2019 06:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576306709;
+        bh=XBQHeoYqAMGOSLBvLrnshTLGXmqN0zjP5Hu0C573+lM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uhQgp2kS87+CJb48lj/wVOuFkd8mNAzYyqgeTRMDZbaoJsm/NerK3HKr598V5Gmot
+         qWG7GtwFnlrvP+94oVn9Z8ggeujjafrns1ZDKMkBzL0hCOoofdojqilKlIQW0IREwt
+         PBOB/Y9G6JMTUP1YTcylx14GxVQe8xurL77tMOYU=
+Date:   Fri, 13 Dec 2019 22:58:27 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     zhou xianrong <zhou_xianrong@yeah.net>
+Cc:     dm-devel@redhat.com, weimin.mao@transsion.com,
+        haizhou.song@transsion.com, snitzer@redhat.com,
+        wanbin.wang@transsion.com, xianrong.zhou@transsion.com,
+        linux-kernel@vger.kernel.org, yuanjiong.gao@transsion.com,
+        ruxian.feng@transsion.com, agk@redhat.com
+Subject: Re: [PATCH] dm-verity: unnecessary data blocks that need not read
+ hash blocks
+Message-ID: <20191214065827.GA727@sol.localdomain>
+References: <20191211033240.169-1-zhou_xianrong@yeah.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211033240.169-1-zhou_xianrong@yeah.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Wed, Dec 11, 2019 at 11:32:40AM +0800, zhou xianrong wrote:
+> From: "xianrong.zhou" <xianrong.zhou@transsion.com>
+> 
+> If check_at_most_once enabled, just like verity work the prefetching work
+> should check for data block bitmap firstly before reading hash block
+> as well. Skip bit-set data blocks from both ends of data block range
+> by testing the validated bitmap. This can reduce the amounts of data 
+> blocks which need to read hash blocks.
+> 
+> Launching 91 apps every 15s and repeat 21 rounds on Android Q.
+> In prefetching work we can let only 2602/360312 = 0.72% data blocks
+> really need to read hash blocks.
+> 
+> But the reduced data blocks range would be enlarged again by
+> dm_verity_prefetch_cluster later.
+> 
+> Signed-off-by: xianrong.zhou <xianrong.zhou@transsion.com>
+> Signed-off-by: yuanjiong.gao <yuanjiong.gao@transsion.com>
+> Tested-by: ruxian.feng <ruxian.feng@transsion.com>
+> ---
+>  drivers/md/dm-verity-target.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> index 4fb33e7562c5..7b8eb754c0b6 100644
+> --- a/drivers/md/dm-verity-target.c
+> +++ b/drivers/md/dm-verity-target.c
+> @@ -581,6 +581,22 @@ static void verity_prefetch_io(struct work_struct *work)
+>  	struct dm_verity *v = pw->v;
+>  	int i;
+>  
+> +	if (v->validated_blocks) {
+> +		while (pw->n_blocks) {
+> +			if (unlikely(!test_bit(pw->block, v->validated_blocks)))
+> +				break;
+> +			pw->block++;
+> +			pw->n_blocks--;
+> +		}
+> +		while (pw->n_blocks) {
+> +			if (unlikely(!test_bit(pw->block + pw->n_blocks - 1,
+> +				v->validated_blocks)))
+> +				break;
+> +			pw->n_blocks--;
+> +		}
+> +		if (!pw->n_blocks)
+> +			return;
+> +	}
 
-The function nested_vmx_prepare_msr_bitmap() declaration is below its
-implementation. So this is meaningless and should be removed.
+This is a good idea, but shouldn't this logic go in verity_submit_prefetch()
+prior to the struct dm_verity_prefetch_work being allocated?  Then if no
+prefeching is needed, allocating and scheduling the work object can be skipped.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/vmx/nested.c | 3 ---
- 1 file changed, 3 deletions(-)
+Also note that you're currently leaking the work object with the early return.
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 63ab49de324d..e038a331583c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3048,9 +3048,6 @@ static int nested_vmx_check_vmentry_hw(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
--static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
--						 struct vmcs12 *vmcs12);
--
- static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
- {
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
--- 
-2.19.1
-
+- Eric
