@@ -2,89 +2,202 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E012C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3214FC2D0C9
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D9D24125
+	by mail.kernel.org (Postfix) with ESMTP id F26CC24658
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576321441;
+	bh=K+8/b5DrFFza66Ml5NLgUmEEc1VzN4w6znR4RhyopVI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gjmLVMpY65i5ZItc6hXxAr0ta71Q0Kvl89DyLkVDU00v64hTyr1CATQqtuPqYIwV4
+	 TczERTGaB7dovnn9UM4jhsWMY3q4zNBKcNvSNJuRy7MYp/XnmCaHKmBUh1d4gsiXiY
+	 Wow+1qdYyB+fDvAI0Babhvqe5AAp3wHIWEM1UMVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfLNKyW (ORCPT
+        id S1726232AbfLNK7W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 05:54:22 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:46754 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNKyW (ORCPT
+        Sat, 14 Dec 2019 05:59:22 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44362 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725884AbfLNK7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 05:54:22 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E184B804CE;
-        Sat, 14 Dec 2019 11:54:19 +0100 (CET)
-Date:   Sat, 14 Dec 2019 11:54:18 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: display/ingenic: Add compatible
- string for JZ4770
-Message-ID: <20191214105418.GA5687@ravnborg.org>
-References: <20191210144142.33143-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210144142.33143-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=nZJdUF_zLBciypfbcfYA:9
-        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=n87TN5wuljxrRezIQYnT:22
+        Sat, 14 Dec 2019 05:59:22 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ig58j-0004PM-A0; Sat, 14 Dec 2019 11:59:13 +0100
+Date:   Sat, 14 Dec 2019 10:59:11 +0000
+Message-ID: <86eex7i35s.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity for managed interrupt
+In-Reply-To: <174bfdbe-0c44-298b-35e9-8466e77528df@huawei.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+        <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+        <20191207080335.GA6077@ming.t460p>
+        <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+        <20191210014335.GA25022@ming.t460p>
+        <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
+        <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
+        <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
+        <6e513d25d8b0c6b95d37a64df0c27b78@www.loen.fr>
+        <06d1e2ff-9ec7-2262-25a0-4503cb204b0b@huawei.com>
+        <5caa8414415ab35e74662ac0a30bb4ac@www.loen.fr>
+        <f58c3ae0-9807-bea8-4570-28d975336090@huawei.com>
+        <2443e657-2ccd-bf85-072c-284ea0b3ce40@huawei.com>
+        <214947849a681fc702d018383a3f95ac@www.loen.fr>
+        <174bfdbe-0c44-298b-35e9-8466e77528df@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On Fri, 13 Dec 2019 12:08:54 +0000,
+John Garry <john.garry@huawei.com> wrote:
+> 
+> Hi Marc,
+> 
+> >> JFYI, we're still testing this and the patch itself seems to work as
+> >> intended.
+> >> 
+> >> Here's the kernel log if you just want to see how the interrupts are
+> >> getting assigned:
+> >> https://pastebin.com/hh3r810g
+> > 
+> > It is a bit hard to make sense of this dump, specially on such a wide
+> > machine (I want one!) 
+> 
+> So do I :) That's the newer "D06CS" board.
+> 
+> without really knowing the topology of the system.
+> 
+> So it's 2x socket, each socket has 2x CPU dies, and each die has 6
+> clusters of 4 CPUs, which gives 96 in total.
+> 
+> > 
+> >> For me, I did get a performance boost for NVMe testing, but my
+> >> colleague Xiang Chen saw a drop for our storage test of interest  -
+> >> that's the HiSi SAS controller. We're trying to make sense of it now.
+> > 
+> > One of the difference is that with this patch, the initial affinity
+> > is picked inside the NUMA node that matches the ITS. 
+> 
+> Is that even for managed interrupts? We're testing the storage
+> controller which uses managed interrupts. I should have made that
+> clearer.
 
-On Tue, Dec 10, 2019 at 03:41:37PM +0100, Paul Cercueil wrote:
-> Add a compatible string for the LCD controller found in the JZ4770 SoC.
-> 
-> v2: No change
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Acked-by: Rob Herring <robh@kernel.org>
+The ITS driver doesn't care about the fact that an interrupt affinity
+is 'managed' or not. And I don't think a low-level driver should, as
+it will just follow whatever interrupt affinity it is requested to
+use. If a managed interrupt has some requirements, then these
+requirements better be explicit in terms of CPU affinity.
 
-Whole series looks good.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> In your case,
+> > that's either node 0 or 2. But it is unclear whether which CPUs these
+> > map to.
+> > 
+> > Given that I see interrupts mapped to CPUs 0-23 on one side, and 48-71
+> > on the other, it looks like half of your machine gets starved, 
+> 
+> Seems that way.
+> 
+> So this is a mystery to me:
+> 
+> [   23.584192] picked CPU62 IRQ147
+> 
+> 147:          0          0          0          0          0          0
+> 0          0          0          0          0          0  0          0
+> 0          0          0          0          0       0          0
+> 0          0          0          0 0          0          0          0
+> 0          0          0     0          0          0          0
+> 0          0          0          0          0          0          0
+> 0          0    0          0          0          0          0
+> 0          0         0          0          0          0          0
+> 0   0          0          0          0          0          0
+> 0        0          0          0          0          0          0  0
+> 0          0          0          0          0          0       0
+> 0          0          0          0          0 0          0          0
+> 0          0          0          0     0          0          0
+> 0          0   ITS-MSI 94404626 Edge      hisi_sas_v3_hw cq
+> 
+> 
+> and
+> 
+> [   25.896728] picked CPU62 IRQ183
+> 
+> 183:          0          0          0          0          0          0
+> 0          0          0          0          0          0  0          0
+> 0          0          0          0          0       0          0
+> 0          0          0          0 0          0          0          0
+> 0          0          0     0          0          0          0
+> 0          0          0          0          0          0          0
+> 0          0    0          0          0          0          0
+> 0          0         0          0          0          0          0
+> 0   0          0          0          0          0          0
+> 0        0          0          0          0          0          0  0
+> 0          0          0          0          0          0       0
+> 0          0          0          0          0 0          0          0
+> 0          0          0          0     0          0          0
+> 0          0   ITS-MSI 94437398 Edge      hisi_sas_v3_hw cq
+> 
+> 
+> But mpstat reports for CPU62:
+> 
+> 12:44:58 AM  CPU    %usr   %nice    %sys %iowait    %irq   %soft
+> %steal  %guest  %gnice   %idle
+> 12:45:00 AM   62    6.54    0.00   42.99    0.00    6.54   12.15
+> 0.00    0.00    6.54   25.23
+> 
+> I don't know what interrupts they are...
 
-> ---
->  Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
->  1 file changed, 1 insertion(+)
+Clearly, they aren't your SAS interrupts. But the debug print do not
+mean that these are the only interrupts that are targeting
+CPU62. Looking at the 62nd column of /proc/interrupts should tell you
+what fires (and my bet is on something like the timer).
+
+> It's the "hisi_sas_v3_hw cq" interrupts which we're interested in.
+
+Clearly, they aren't firing.
+
+> and that
+> > may be because no ITS targets the NUMA nodes they are part of.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> index 7b536c8c6dde..01e3261defb6 100644
-> --- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> +++ b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: one of:
->    * ingenic,jz4740-lcd
->    * ingenic,jz4725b-lcd
-> +  * ingenic,jz4770-lcd
->  - reg: LCD registers location and length
->  - clocks: LCD pixclock and device clock specifiers.
->  	   The device clock is only required on the JZ4740.
-> -- 
-> 2.24.0
+> So both storage controllers (which we're interested in for this test)
+> are on socket #0, node #0.
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  It would
+> > be interesting to see what happens if you manually set the affinity
+> > of the interrupts outside of the NUMA node.
+> > 
+> 
+> Again, managed, so I don't think it's possible.
+
+OK, we need to get back to what the actual requirements of a 'managed'
+interrupt are, because there is clearly something that hasn't made it
+into the core code...
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
