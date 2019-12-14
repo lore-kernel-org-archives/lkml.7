@@ -2,29 +2,28 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AAFC00454
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E17DC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FDB214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144E62465B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfLNPeF (ORCPT
+        id S1726833AbfLNPeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 10:34:05 -0500
-Received: from out28-145.mail.aliyun.com ([115.124.28.145]:47570 "EHLO
-        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfLNPeF (ORCPT
+        Sat, 14 Dec 2019 10:34:11 -0500
+Received: from out28-1.mail.aliyun.com ([115.124.28.1]:51126 "EHLO
+        out28-1.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfLNPeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 10:34:05 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08317678|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.74776-0.016813-0.235427;DS=CONTINUE|ham_system_inform|0.227493-0.000573989-0.771933;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GH4QmPi_1576337632;
+        Sat, 14 Dec 2019 10:34:09 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1788901|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.577685-0.041398-0.380917;DS=CONTINUE|ham_system_inform|0.0169362-0.000812821-0.982251;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GH4QmPi_1576337632;
 Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GH4QmPi_1576337632)
           by smtp.aliyun-inc.com(10.147.41.143);
-          Sat, 14 Dec 2019 23:33:59 +0800
+          Sat, 14 Dec 2019 23:33:58 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -33,9 +32,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
         mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v3 1/5] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Sat, 14 Dec 2019 23:33:46 +0800
-Message-Id: <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v3 0/5] clk: Ingenic: Add support for the X1830 v3
+Date:   Sat, 14 Dec 2019 23:33:45 +0800
+Message-Id: <1576337630-78576-2-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -47,58 +46,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+v1->v2:
+1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+  array (reg[2]).
+2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
+3.Fix the coding style and add more detailed commit message.
+4.Remove [4/5] and [5/5] in v1, because some problems were found in
+  subsequent tests.
+5.Remove unnecessary spinlock as Paul Burton and Paul Cercueil's suggestion.
+6.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+  to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+  the old mailbox is in an unstable state.
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+v2-v3:
+Adjust the order of patches.
 
-Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
+周琰杰 (Zhou Yanjie) (5):
+  clk: Ingenic: Remove unnecessary spinlock when reading registers.
+  clk: Ingenic: Adjust cgu code to make it compatible with X1830.
+  clk: Ingenic: Adjust code to make it compatible with new cgu code.
+  dt-bindings: clock: Add X1830 bindings.
+  clk: Ingenic: Add CGU driver for X1830.
 
- drivers/clk/ingenic/cgu.c | 6 ------
- 1 file changed, 6 deletions(-)
+ .../devicetree/bindings/clock/ingenic,cgu.txt      |   1 +
+ drivers/clk/ingenic/Kconfig                        |  10 +
+ drivers/clk/ingenic/Makefile                       |   1 +
+ drivers/clk/ingenic/cgu.c                          |  36 +--
+ drivers/clk/ingenic/cgu.h                          |   8 +-
+ drivers/clk/ingenic/jz4725b-cgu.c                  |   4 +-
+ drivers/clk/ingenic/jz4740-cgu.c                   |   4 +-
+ drivers/clk/ingenic/jz4770-cgu.c                   |   8 +-
+ drivers/clk/ingenic/jz4780-cgu.c                   |   4 +-
+ drivers/clk/ingenic/x1000-cgu.c                    |   8 +-
+ drivers/clk/ingenic/x1830-cgu.c                    | 340 +++++++++++++++++++++
+ include/dt-bindings/clock/x1830-cgu.h              |  46 +++
+ 12 files changed, 444 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/clk/ingenic/x1830-cgu.c
+ create mode 100644 include/dt-bindings/clock/x1830-cgu.h
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e96303..8bd3998 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
 -- 
 2.7.4
 
