@@ -2,128 +2,128 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA2C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A440C00454
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E6820866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EBFE20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 20:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="gV1zMRDt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9YiYLtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLNU2l (ORCPT
+        id S1726922AbfLNUdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 15:28:41 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39699 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfLNU2l (ORCPT
+        Sat, 14 Dec 2019 15:33:01 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46779 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfLNUdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 15:28:41 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so3366378pfx.6
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 12:28:41 -0800 (PST)
+        Sat, 14 Dec 2019 15:33:00 -0500
+Received: by mail-qk1-f194.google.com with SMTP id r14so1693671qke.13;
+        Sat, 14 Dec 2019 12:33:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=XaEVbBb580dizOkGCrPl3aky5kExYp09pR6s9oLfxlg=;
-        b=gV1zMRDtDbnkngwtuQVwVmMdqJd0MOI0fNpU6Ahcqv24gDsTZqN7er/XEdhNFOIG2s
-         Xefw1oqnnTQsDc4ng5Cy8vViWduwKTiEG5+r2soBzQ+XgrMccITVnWoUgRcZEvMN0qhF
-         SyHwqKAw1126RdW6AkgKomQJestodaeQcGWLNA8Bo1YfcUDcUzm+IjAPhyyqM5sSU/UT
-         pJvQh3SP0tVr3+ISCV7EJ15wzggPTmxXP2qAuC9n5g29422zcnRupqNxkgq3N913afDE
-         yXlkrVCfPIQ3jUx6d5ySjT1pE0hJJRqikGo7Tf4wmiA88gVODXzbye5eaUYDTV1LIx6W
-         hQJQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZNiCKhGVuabttGDSYceTCobxezTEW7wv0FbaYh2+Hww=;
+        b=C9YiYLtrIdpG+KuV3L1R/0yo5uKkwF0VlnODsRmx8dm4YumjDg0rESRKQtrsLsCNde
+         7EhFaePJjSWMLzdBdBQJwE7EeAzX6O/FdO/WWM7gDv8zzW4mb9Y6xLsdnFmvvlbYjbbC
+         oPAtOpLI3UhhEqurdADb/Qr94WJ7Kxar5qj79WZOZ8ShFYgsDtqeMF71HXksuMgIqIFd
+         zKsraNIpfgucvw0yAmdaX33bd3LeJLNM5TDioKLuM/AYAvMcIzw+l+3xq5QsBrEBNcqL
+         Cz8J6j1hmAfqCuJZDxEtkJ10qHZlA3aZMzIu8CEDkxA0fVuVUhRKwH1wM93y2dqW5gNk
+         XEoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=XaEVbBb580dizOkGCrPl3aky5kExYp09pR6s9oLfxlg=;
-        b=kQCedlNLt3cV24JOkpt5eiG142ZHrR3ORZDuGznxoJz11oG0SrIDH5XW1zuFNxOSv1
-         COPJTCRRFoMJSvxnt8+awnRGt7OnvCumTM7lKO4JeNw/dKE4UU1VrWuOmhLBYRTt8Fri
-         h38RspBQruI76TP1azFe8Ztt870Eoiyvpg0AiXAf93Y9AxZ/+6rDQLFptmDNohc1jgvy
-         tZ7vKDkAxvr6Oj5CLLmyRtoEGupBlvlDZizKgR47qBMS3jxFJSrHitOUbTCydsj0VlCh
-         Ht74QU5bAUw2LvmCj1IybNJ5R8YVS9s+uCA2AWncmp1hxj8lIy7dNBE3SfTVHtk7n0RP
-         UgYg==
-X-Gm-Message-State: APjAAAVomQF0z/blhmywfcIaItq4fg0cUWG0E4EtAeOCYUug8/vYtUpd
-        OuG6eXOeQOdIBkcZJzWGroAh4Q==
-X-Google-Smtp-Source: APXvYqz7r5mvCKhiJymgkgcgt9xu5gMGoR9VG64DTQi7xuM3hxBSuiZTj0eQuUJtNFn0EbRE+cxYuw==
-X-Received: by 2002:a62:6342:: with SMTP id x63mr7050443pfb.103.1576355320580;
-        Sat, 14 Dec 2019 12:28:40 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id t63sm16959694pfb.70.2019.12.14.12.28.39
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZNiCKhGVuabttGDSYceTCobxezTEW7wv0FbaYh2+Hww=;
+        b=MP/cjpaxts9hLZ0AGm4e5wpJQ+DqGMSpVaxUDr6Hx9fOh6Uei/D8dNG1G3nlrfeYaQ
+         R+CnzzFfQgP4kWriKthyjVO2duF4XFHmSw+IQm8OCbweaiDaFEfBP7Tkt1yHgy3zOsaw
+         hAIXiqrXGq37ANQLPguSnG9kMlR/A8/e/sk0Ak3M8L7zJmxfE26o3IoZlr6o77hBaWg1
+         usL2c7eP6QOp2KR5nGAdTqaS+r1bgkwN3UvylTmYnPUoafyu8uF0HdzecjqGt6HULnVD
+         QFIx9Tk9ZZDKXfjmzx41IFiIr/u/ahbFXTwERUnbCZj4aqs/Y0pO2PNpMglht4MjHw4X
+         9FyQ==
+X-Gm-Message-State: APjAAAWEGkwrMmTC9eZgSR6TqqMjSP6vHqyb3rFPxHxrV1whpjPJqXnE
+        a4p3sDWfdqjjJgzkwpuLxg4=
+X-Google-Smtp-Source: APXvYqxhdQO5/rB3RxRjVO6KAyca49fQOo3kH2pCppJWqUCnKvoCHjouPLU8yR66pKA0FZA/LkJzHw==
+X-Received: by 2002:a05:620a:62c:: with SMTP id 12mr20114844qkv.154.1576355579393;
+        Sat, 14 Dec 2019 12:32:59 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o19sm5005624qtb.43.2019.12.14.12.32.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 12:28:40 -0800 (PST)
-Date:   Sat, 14 Dec 2019 12:28:37 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 4/4] net: stmmac: Always use TX coalesce timer
- value when rescheduling
-Message-ID: <20191214122837.4960adfd@cakuba.netronome.com>
-In-Reply-To: <23c0ff1feddcc690ee66adebefdc3b10031afe1b.1576007149.git.Jose.Abreu@synopsys.com>
-References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
-        <23c0ff1feddcc690ee66adebefdc3b10031afe1b.1576007149.git.Jose.Abreu@synopsys.com>
-Organization: Netronome Systems, Ltd.
+        Sat, 14 Dec 2019 12:32:59 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 14 Dec 2019 15:32:57 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH 03/10] efi/libstub: use a helper to iterate over a EFI
+ handle array
+Message-ID: <20191214203257.GD140998@rani.riverdale.lan>
+References: <20191214175735.22518-1-ardb@kernel.org>
+ <20191214175735.22518-4-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191214175735.22518-4-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 20:54:44 +0100, Jose Abreu wrote:
-> When we have pending packets we re-arm the TX timer with a magic value.
-> Change this from the hardcoded value to the pre-defined TX coalesce
-> timer value.
-
-s/pre-defined/user controlled/ ?
-
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> ---
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, Dec 14, 2019 at 06:57:28PM +0100, Ard Biesheuvel wrote:
+> Iterating over a EFI handle array is a bit finicky, since we have
+> to take mixed mode into account, where handles are only 32-bit
+> while the native efi_handle_t type is 64-bit.
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index f61780ae30ac..726a17d9cc35 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -1975,7 +1975,7 @@ static int stmmac_tx_clean(struct stmmac_priv *priv, int budget, u32 queue)
+> So introduce a helper, and replace the various occurrences of
+> this pattern.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
 >  
->  	/* We still have pending packets, let's call for a new scheduling */
->  	if (tx_q->dirty_tx != tx_q->cur_tx)
-> -		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(10));
-> +		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(priv->tx_coal_timer));
+> +#define for_each_efi_handle(handle, array, size, i)			\
+> +	for (i = 1, handle = efi_is_64bit()				\
+> +		? (efi_handle_t)(unsigned long)((u64 *)(array))[0]	\
+> +		: (efi_handle_t)(unsigned long)((u32 *)(array))[0];	\
+> +	    i++ <= (size) / (efi_is_64bit() ? sizeof(efi_handle_t)	\
+> +					     : sizeof(u32));		\
+> +	    handle = efi_is_64bit()					\
+> +		? (efi_handle_t)(unsigned long)((u64 *)(array))[i]	\
+> +		: (efi_handle_t)(unsigned long)((u32 *)(array))[i])
+> +
+>  /*
+>   * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
+>   * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
+> -- 
+> 2.17.1
+> 
 
-I think intent of this code is to re-check the ring soon. The same
-value of 10 is used in stmmac_tx_timer() for quick re-check.
+This would access one past the array, no? Eg if the array has one
+handle, i is incremented to 2 the first time the condition is checked,
+then the loop increment will access array[2] before the condition is
+checked again. There seem to be at least a couple of other for_each
+macros that might have similar issues.
 
-tx_coal_timer defaults to 1000, so it's quite a jump from 10 to 1000.
+How about the below instead?
 
-I think the commit message leaves too much unsaid.
-
-Also if you want to change to the ethtool timeout value, could you move 
-stmmac_tx_timer_arm() and reuse that helper?
-
->  
->  	__netif_tx_unlock_bh(netdev_get_tx_queue(priv->dev, queue));
->  
+#define for_each_efi_handle(handle, array, size, i)			\
+	for (i = 0;							\
+	    (i < (size) / (efi_is_64bit() ? sizeof(efi_handle_t)	\
+					  : sizeof(u32))) &&		\
+	    ((handle = efi_is_64bit()					\
+		? ((efi_handle_t *)(array))[i]				\
+		: (efi_handle_t)(unsigned long)((u32 *)(array))[i]), 1);\
+	    i++)
 
