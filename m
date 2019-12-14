@@ -2,452 +2,159 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761A3C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F71C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562F72465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487892073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 15:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="NAhC7mF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLNPgq (ORCPT
+        id S1726769AbfLNPyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 10:36:46 -0500
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:52316 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLNPgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 10:36:46 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07473686|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.514699-0.0199671-0.465334;DS=CONTINUE|ham_alarm|0.0300551-0.000725998-0.969219;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GH4QmPi_1576337632;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GH4QmPi_1576337632)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Sat, 14 Dec 2019 23:34:03 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v3 5/5] clk: Ingenic: Add CGU driver for X1830.
-Date:   Sat, 14 Dec 2019 23:33:50 +0800
-Message-Id: <1576337630-78576-7-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Sat, 14 Dec 2019 10:54:49 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:39178 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfLNPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 10:54:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RGWmKTY/yyH/XxxUvdn8dLr0Xj3UkAx6dUbBBDhQWg4=; b=NAhC7mF/Yab18ZaE+pUkHVnuQc
+        Rgvf7NPxBLw0tPcMFS6J2+w0oSjKt3kbCD48Lrh7o00GEuT5CRpwn07PICo4cINX4MHKu7BlM/Xhy
+        38qndSEf6wUIzDc6FsC5/uWaF2b8P6Z3uWsXfLfTXHxsgIlzYi+cGSgXXHnYtsYwLruo=;
+Received: from p200300ccff382f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff38:2f00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ig9ke-0003oA-QQ; Sat, 14 Dec 2019 16:54:41 +0100
+Date:   Sat, 14 Dec 2019 16:54:39 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [Letux-kernel] BUG - was: [GIT PULL 2/3]
+ bcm2835-soc-next-2019-10-15
+Message-ID: <20191214165439.6873625b@aktux>
+In-Reply-To: <20191214125947.GD1337@shell.armlinux.org.uk>
+References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
+        <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
+        <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
+        <20191214125947.GD1337@shell.armlinux.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the clocks provided by the CGU in the Ingenic X1830
-SoC, making use of the cgu code to do the heavy lifting.
+On Sat, 14 Dec 2019 12:59:47 +0000
+Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+> On Sat, Dec 14, 2019 at 11:54:19AM +0100, H. Nikolaus Schaller wrote:
+> > Hi Stefan,
+> >   
+> > > Am 15.10.2019 um 19:15 schrieb Stefan Wahren <wahrenst@gmx.net>:
+> > > 
+> > > Hi Florian,
+> > > 
+> > > The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+> > > 
+> > >  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+> > > 
+> > > are available in the git repository at:
+> > > 
+> > >  git://github.com/anholt/linux tags/bcm2835-soc-next-2019-10-15
+> > > 
+> > > for you to fetch changes up to 781fa0a954240c8487683ddf837fb2c4ede8e7ca:
+> > > 
+> > >  ARM: bcm: Add support for BCM2711 SoC (2019-10-10 19:21:03 +0200)  
+> > 
+> > this patch has finally arrived in v5.5-rc1 but it seems to break
+> > multiplatform build.
+> > 
+> > We run a distribution kernel that supports OMAP3/4/5, i.MX6 and RasPi 3B+
+> > but since rebasing to v5.5-rc1 the kernel hangs after "Starting Kernel ...".
+> > On all ARM devices (incl. RasPi 3B+).
+> > 
+> > Playing with our defconfig did show that deconfiguring CONFIG_ARCH_BCM2835
+> > makes the kernel work again.
+> > 
+> > After further analysis it turns out that reverting this patch also
+> > makes the boards work again.
+> > 
+> > I am not exactly sure what the reason is, but it may have something to
+> > do with the new auto-selection of CONFIG_ZONE_DMA which is not automatically
+> > selected by OMAP and i.MX6.
+> > 
+> > To reproduce on some OMAP device (i.MX6 should be similar)
+> > 
+> > 1st test:
+> > 
+> > git checkout v5.5-rc1
+> > make omap2plus_defconfig
+> >   
+> > => boots OMAP device  
+> > 
+> > 2nd test:
+> > 
+> > ( echo CONFIG_ARCH_BCM2835=y; echo CONFIG_ARCH_BCM=y ) >>arch/arm/configs/omap2plus_defconfig
+> > make omap2plus_defconfig
+> >   
+> > => fails to boot OMAP device  
+> > 
+here it does not give any output at all if earlycon is appended to
+kernel parameters.
 
-Notes:
-    v1->v2:
-    1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
-      array (reg[2]).
-    2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
-    3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-      to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-      the old mailbox is in an unstable state.
-    
-    v2->v3:
-    Adjust order from [4/5] in v2 to [5/5] in v3.
+> > 3rd test:
+> > 
+> > git revert 781fa0a954240c8487683ddf837fb2c4ede8e7ca
+> > make omap2plus_defconfig
+> >   
+> > => boots OMAP device  
+> > 
+> > BTW: the RasPi 3B+ runs equally well without this patch. So what is it
+> > good for?
+> > 
+> > So please check and fix this patch.  
+> 
+> Enabling ZONE_DMA shouldn't cause this problem - but as it does, please
+> enable memblock debugging and early console, and please send any boot
+> messages you can get from the system when it fails to boot.  Also
+> having a successful boot log may be useful.
+> 
+diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+index ad08d470a2ca..b46cf3d5e389 100644
+--- a/arch/arm/mach-omap2/Kconfig
++++ b/arch/arm/mach-omap2/Kconfig
+@@ -17,6 +17,7 @@ config ARCH_OMAP3
+        select OMAP_INTERCONNECT
+        select PM_OPP if PM
+        select PM if CPU_IDLE
++       select ZONE_DMA
+        select SOC_HAS_OMAP2_SDRC
+        select ARM_ERRATA_430973
 
- drivers/clk/ingenic/Kconfig     |  10 ++
- drivers/clk/ingenic/Makefile    |   1 +
- drivers/clk/ingenic/x1830-cgu.c | 340 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 351 insertions(+)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
+seems not to cause problems with make omap2plus_defconfig
+here.
 
-diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
-index b4555b4..580b0cf 100644
---- a/drivers/clk/ingenic/Kconfig
-+++ b/drivers/clk/ingenic/Kconfig
-@@ -55,6 +55,16 @@ config INGENIC_CGU_X1000
- 
- 	  If building for a X1000 SoC, you want to say Y here.
- 
-+config INGENIC_CGU_X1830
-+	bool "Ingenic X1830 CGU driver"
-+	default MACH_X1830
-+	select INGENIC_CGU_COMMON
-+	help
-+	  Support the clocks provided by the CGU hardware on Ingenic X1830
-+	  and compatible SoCs.
-+
-+	  If building for a X1830 SoC, you want to say Y here.
-+
- config INGENIC_TCU_CLK
- 	bool "Ingenic JZ47xx TCU clocks driver"
- 	default MACH_INGENIC
-diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
-index 8b1dad9..aaa4bff 100644
---- a/drivers/clk/ingenic/Makefile
-+++ b/drivers/clk/ingenic/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
- obj-$(CONFIG_INGENIC_CGU_X1000)		+= x1000-cgu.o
-+obj-$(CONFIG_INGENIC_CGU_X1830)		+= x1830-cgu.o
- obj-$(CONFIG_INGENIC_TCU_CLK)		+= tcu.o
-diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
-new file mode 100644
-index 00000000..35ea05f
---- /dev/null
-+++ b/drivers/clk/ingenic/x1830-cgu.c
-@@ -0,0 +1,340 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * X1830 SoC CGU driver
-+ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <dt-bindings/clock/x1830-cgu.h>
-+#include "cgu.h"
-+#include "pm.h"
-+
-+/* CGU register offsets */
-+#define CGU_REG_CPCCR		0x00
-+#define CGU_REG_CPPCR		0x0c
-+#define CGU_REG_APLL		0x10
-+#define CGU_REG_MPLL		0x14
-+#define CGU_REG_CLKGR0		0x20
-+#define CGU_REG_OPCR		0x24
-+#define CGU_REG_CLKGR1		0x28
-+#define CGU_REG_DDRCDR		0x2c
-+#define CGU_REG_USBPCR		0x3c
-+#define CGU_REG_USBRDT		0x40
-+#define CGU_REG_USBVBFIL	0x44
-+#define CGU_REG_USBPCR1		0x48
-+#define CGU_REG_MACCDR		0x54
-+#define CGU_REG_EPLL		0x58
-+#define CGU_REG_I2SCDR		0x60
-+#define CGU_REG_LPCDR		0x64
-+#define CGU_REG_MSC0CDR		0x68
-+#define CGU_REG_I2SCDR1		0x70
-+#define CGU_REG_SSICDR		0x74
-+#define CGU_REG_CIMCDR		0x7c
-+#define CGU_REG_MSC1CDR		0xa4
-+#define CGU_REG_CMP_INTR	0xb0
-+#define CGU_REG_CMP_INTRE	0xb4
-+#define CGU_REG_DRCG		0xd0
-+#define CGU_REG_CPCSR		0xd4
-+#define CGU_REG_VPLL		0xe0
-+#define CGU_REG_MACPHYC		0xe8
-+
-+/* bits within the OPCR register */
-+#define OPCR_SPENDN0		BIT(7)
-+#define OPCR_SPENDN1		BIT(6)
-+
-+static struct ingenic_cgu *cgu;
-+
-+static const s8 pll_od_encoding[64] = {
-+	0x0, 0x1,  -1, 0x2,  -1,  -1,  -1, 0x3,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x4,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x5,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x6,
-+};
-+
-+static const struct ingenic_cgu_clk_info x1830_cgu_clocks[] = {
-+
-+	/* External clocks */
-+
-+	[X1830_CLK_EXCLK] = { "ext", CGU_CLK_EXT },
-+	[X1830_CLK_RTCLK] = { "rtc", CGU_CLK_EXT },
-+
-+	/* PLLs */
-+
-+	[X1830_CLK_APLL] = {
-+		"apll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_APLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 30,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_MPLL] = {
-+		"mpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_MPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 28,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_EPLL] = {
-+		"epll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_EPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 24,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_VPLL] = {
-+		"vpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_VPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 26,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	/* Muxes & dividers */
-+
-+	[X1830_CLK_SCLKA] = {
-+		"sclk_a", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_EXCLK, X1830_CLK_APLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_CPUMUX] = {
-+		"cpu_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 28, 2 },
-+	},
-+
-+	[X1830_CLK_CPU] = {
-+		"cpu", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[X1830_CLK_L2CACHE] = {
-+		"l2cache", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB0] = {
-+		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 26, 2 },
-+		.div = { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB2PMUX] = {
-+		"ahb2_apb_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 24, 2 },
-+	},
-+
-+	[X1830_CLK_AHB2] = {
-+		"ahb2", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
-+	},
-+
-+	[X1830_CLK_PCLK] = {
-+		"pclk", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
-+	},
-+
-+	[X1830_CLK_DDR] = {
-+		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_DDRCDR, 30, 2 },
-+		.div = { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 31 },
-+	},
-+
-+	[X1830_CLK_MAC] = {
-+		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MACCDR, 30, 2 },
-+		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR1, 4 },
-+	},
-+
-+	[X1830_CLK_MSCMUX] = {
-+		"msc_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MSC0CDR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_MSC0] = {
-+		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 4 },
-+	},
-+
-+	[X1830_CLK_MSC1] = {
-+		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 5 },
-+	},
-+
-+	[X1830_CLK_SSIPLL] = {
-+		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_SSICDR, 30, 2 },
-+		.div = { CGU_REG_SSICDR, 0, 1, 8, 28, 27, 26 },
-+	},
-+
-+	[X1830_CLK_SSIMUX] = {
-+		"ssi_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_EXCLK, X1830_CLK_SSIPLL, -1, -1 },
-+		.mux = { CGU_REG_SSICDR, 29, 1 },
-+	},
-+
-+	/* Gate-only clocks */
-+
-+	[X1830_CLK_SSI0] = {
-+		"ssi0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 6 },
-+	},
-+
-+	[X1830_CLK_SMB0] = {
-+		"smb0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 7 },
-+	},
-+
-+	[X1830_CLK_SMB1] = {
-+		"smb1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 8 },
-+	},
-+
-+	[X1830_CLK_SMB2] = {
-+		"smb2", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 9 },
-+	},
-+
-+	[X1830_CLK_UART0] = {
-+		"uart0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 14 },
-+	},
-+
-+	[X1830_CLK_UART1] = {
-+		"uart1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 15 },
-+	},
-+
-+	[X1830_CLK_SSI1] = {
-+		"ssi1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 19 },
-+	},
-+
-+	[X1830_CLK_SFC] = {
-+		"sfc", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIPLL, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 20 },
-+	},
-+
-+	[X1830_CLK_PDMA] = {
-+		"pdma", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 21 },
-+	},
-+};
-+
-+static void __init x1830_cgu_init(struct device_node *np)
-+{
-+	int retval;
-+
-+	cgu = ingenic_cgu_new(x1830_cgu_clocks,
-+			      ARRAY_SIZE(x1830_cgu_clocks), np);
-+	if (!cgu) {
-+		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
-+
-+	retval = ingenic_cgu_register_clocks(cgu);
-+	if (retval) {
-+		pr_err("%s: failed to register CGU Clocks\n", __func__);
-+		return;
-+	}
-+
-+	ingenic_cgu_register_syscore_ops(cgu);
-+}
-+CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", x1830_cgu_init);
--- 
-2.7.4
-
+Regards,
+Andreas
