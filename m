@@ -2,71 +2,61 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73715C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185F8C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53256214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E256C20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfLNSce (ORCPT
+        id S1726803AbfLNShO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 13:32:34 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34351 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfLNScd (ORCPT
+        Sat, 14 Dec 2019 13:37:14 -0500
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:39285 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfLNShO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 13:32:33 -0500
-Received: by mail-pg1-f195.google.com with SMTP id r11so1230823pgf.1;
-        Sat, 14 Dec 2019 10:32:33 -0800 (PST)
+        Sat, 14 Dec 2019 13:37:14 -0500
+Received: by mail-pl1-f175.google.com with SMTP id z3so1118513plk.6
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 10:37:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UZcSU5PLQVwBUi4dUWpFu/eGboJk4k9Zub31FQhbfA8=;
-        b=Y7BbXHXQPsDFQRqOBcZx5ijc+QyG1r+lpPL3YgWREMt4vPKU+hKsbrI1Iq0xdu27xr
-         UyykTklxefjbe53VAEsXsCiWMBvrncYBRpyTwDBYER5xvOI1bZEE67FAZLgBWPM1gFVq
-         etDIgUqaJ8JVYnORqHUHqagMCZ9U5U11wxrlXDmuFigC54pHCS5IBmTIoB5XHrK5NpsN
-         5Ofp+zbCRTV4iFf20tSOgBQK37WV8g8FySLzD5yxq7Z9j3OiEqhUyNvjymNMtCKyG999
-         yfhJK/qbCuByMuVuV2I34ENlwgp6oPY0bTIlQPqsa8RHph5GIsqjU5HIAFugnqyis+Vs
-         ezHg==
-X-Gm-Message-State: APjAAAXswRCC3W4y5aro2+AiV/M+G5ucUSNX0jNAUGt+BXw0WOmOXteQ
-        JNZAgIFFx66drDQg5/F53REgeKoah7E=
-X-Google-Smtp-Source: APXvYqxBqQLywmZ1VKTYBYJucMFNEsiqxTyeM+bEDCOBIWuq3o6OEtZmn6tzAUFSpeuzeUCMaZfgxQ==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr6696564pgt.283.1576348352324;
-        Sat, 14 Dec 2019 10:32:32 -0800 (PST)
+        bh=fDi3go+cgZ7zREiYSpSvMocBbyGj4IXfMH2dwOtb9AA=;
+        b=ukK7i+xT9XhkZibAF5yOXUPUepPofcWmGx3hY4JEe2ZUFwnr3hFSJoX5b3a1ZViFJ9
+         o6rhqhH44X+3DVicWwAoDVFSTklSo0KszR+Xig8DhlnmYypVtWZvx9B/4cEMzi/esqV0
+         MYY5BKDi+5tR//RwmUL+DSrYuNRwahwVsGsuG8E6JtkEa3pgjmQDqOtYkwFOr9x0qaQk
+         hLhZn2E2xDAu5JisvCUba1jYPSdlank+KOt1AZJU3ARv/Vpz9QeILM+jZ0iQmYxj3Mxg
+         6VwYXW7TfPs5qzkfGj5y4tJZKYslhW/QHgmhx/XLmM8+Qa44zL4c6PAyCGgRk9fGnzNh
+         jBkQ==
+X-Gm-Message-State: APjAAAVHWKnNik8nW8ZNJDSCTXcU9rGkuQibK+3WdTaVwNXobDB73W3c
+        f3r7RBJEWglrASqvz5+q9HnyS/rE
+X-Google-Smtp-Source: APXvYqyU9447ekZDZwnwKPDDDrIhIveEE3o7Y8eb6vojEL2DbjwJPP1Y7c5l29p3DboZGuujbuGZLw==
+X-Received: by 2002:a17:902:9a8d:: with SMTP id w13mr6446493plp.330.1576348633372;
+        Sat, 14 Dec 2019 10:37:13 -0800 (PST)
 Received: from [10.234.191.77] ([73.93.155.125])
-        by smtp.gmail.com with ESMTPSA id u18sm16198958pgn.9.2019.12.14.10.32.30
+        by smtp.gmail.com with ESMTPSA id m12sm15170555pgr.87.2019.12.14.10.37.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Dec 2019 10:32:31 -0800 (PST)
-Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
-To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
- <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+        Sat, 14 Dec 2019 10:37:12 -0800 (PST)
+Subject: Re: [PATCH] locking/lockdep: Fix lockdep_stats indentation problem
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191211213139.29934-1-longman@redhat.com>
 From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
-Date:   Sat, 14 Dec 2019 10:32:29 -0800
+Message-ID: <bca1ba05-fc5a-e31b-57fa-3ba2e070fb84@acm.org>
+Date:   Sat, 14 Dec 2019 10:37:11 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+In-Reply-To: <20191211213139.29934-1-longman@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,32 +65,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/14/19 8:03 AM, Can Guo wrote:
-> In ufshcd_remove(), after SCSI host is removed, put it once so that its
-> resources can be released.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index b5966fa..a86b0fd 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
->   	ufs_bsg_remove(hba);
->   	ufs_sysfs_remove_nodes(hba->dev);
->   	scsi_remove_host(hba->host);
-> +	scsi_host_put(hba->host);
->   	/* disable interrupts */
->   	ufshcd_disable_intr(hba, hba->intr_mask);
->   	ufshcd_hba_stop(hba, true);
+On 12/11/19 4:31 PM, Waiman Long wrote:
+> It was found that two lines in the output of /proc/lockdep_stats have
+> indentation problem:
 
-Hi Can,
-
-The UFS driver may queue work asynchronously and that asynchronous work 
-may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it guaranteed 
-that all that asynchronous work has finished before scsi_host_put() is 
-called?
-
-Thanks,
-
-Bart.
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
