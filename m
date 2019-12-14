@@ -6,65 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF98C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5FBC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853C020866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902712073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576361127;
-	bh=I2VWsQ7ikxV/ncRAKaZFTsgS5lVdp1KBdow1jMBx9bU=;
+	s=default; t=1576361130;
+	bh=bYqmOj491EOyOv7eR425pvyWyV9wjzuh+dQsccpdHpc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RaWEfKRFF13aC6K4TKuZhpUeDex2Vl2tJgvTAP9cFzCg4j6fWPvPCH5DcNtuWIQu6
-	 newMAQuZagvr2sItbOsFfyX9hkKS97JCB002jnM8nyRSPofno0vGFCcwVPlq+llHiJ
-	 wed00Zw2k6ljCnO5UVyGQgfaP0dUjcLVujbZ0XTI=
+	b=ehRR4HqegGait2h2LFOsvYjS/BugKFezvUxoss8DrHueUPw1YAP8i9cX/ZDNeFxg+
+	 6IDNpT5Fsty+U3XkkI5G7XZbgwSuF/30dGEnU6zQN2dXbiuOs9N4WQEOYJ9wdLT+KF
+	 0NgaKiJDsWP6Mg/iG8bvRB3oADpVSks8TAWN+Twc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfLNWFQ (ORCPT
+        id S1727581AbfLNWF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:05:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44902 "EHLO mail.kernel.org"
+        Sat, 14 Dec 2019 17:05:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfLNWFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:05:14 -0500
-Subject: Re: [GIT PULL] Crypto Fixes for 5.5
+        id S1727545AbfLNWFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 17:05:15 -0500
+Subject: Re: [GIT PULL] Driver core fixes for 5.5-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576361114;
-        bh=I2VWsQ7ikxV/ncRAKaZFTsgS5lVdp1KBdow1jMBx9bU=;
+        s=default; t=1576361115;
+        bh=bYqmOj491EOyOv7eR425pvyWyV9wjzuh+dQsccpdHpc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=FbSZdmMYsZNc+xQpGM1DvtwBJVLiJ46bhuHxB2RYDglaa2o9WmIwkmMVtqRlScxOK
-         vy227D4a0+FiM1GWgjylmiHWuwMi8emch3gZAKpi86+rezwRmWrVNkXswDT/cOSJ/l
-         UstsHc4Fm0JEGYp/04H3baqQP98NTWg6bRTxZEFc=
+        b=vFhnU4zLamDm6k0lJW0k/OpsRtrlNKHGM/1j5qkDSPNKT6WSRJXavV+NERWZcU5Jg
+         aJcD1IHQDYJ6NPMDhg1LxNa21+KD5FIrxLyByAv8p+/6QuU1p2wIwj++LqZec9x03b
+         XVvNweEyKF4qjzfwi+HJlTY7fRxCZ3hcdk/Jri9k=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+In-Reply-To: <20191214152815.GA3460263@kroah.com>
+References: <20191214152815.GA3460263@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 84faa307249b341f6ad8de3e1869d77a65e26669
+X-PR-Tracked-Message-Id: <20191214152815.GA3460263@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+ tags/driver-core-5.5-rc2
+X-PR-Tracked-Commit-Id: eecd37e105f0137af0d1b726bf61ff35d1d7d2eb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f791ede32a14151a313783e1105049a137bc13c8
-Message-Id: <157636111437.10255.7018789282938420709.pr-tracker-bot@kernel.org>
-Date:   Sat, 14 Dec 2019 22:05:14 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+X-PR-Merge-Commit-Id: 894554c1ca793ad96a26b7c9f1eedd043e9e8164
+Message-Id: <157636111547.10255.1646057568439910021.pr-tracker-bot@kernel.org>
+Date:   Sat, 14 Dec 2019 22:05:15 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 14 Dec 2019 16:47:49 +0800:
+The pull request you sent on Sat, 14 Dec 2019 16:28:15 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-5.5-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f791ede32a14151a313783e1105049a137bc13c8
+https://git.kernel.org/torvalds/c/894554c1ca793ad96a26b7c9f1eedd043e9e8164
 
 Thank you!
 
