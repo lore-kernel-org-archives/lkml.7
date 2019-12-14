@@ -2,115 +2,142 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34AC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928202465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hF+NJEqw"
+	by mail.kernel.org (Postfix) with ESMTP id AEE5524125
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLNLf2 (ORCPT
+        id S1726083AbfLNLsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 06:35:28 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30390 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbfLNLf1 (ORCPT
+        Sat, 14 Dec 2019 06:48:22 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55886 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfLNLsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 06:35:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576323326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fnFLoseAIUqVaLCUCqNEVG0PWtrK90uaCn6K4I9qTxs=;
-        b=hF+NJEqw8icZC7gJzoYLY0KF+M6SZNK1dF0W4DvSfPz8rd6xV4fW7ChgON+vUhy/xDE1ps
-        l4XipFH06X9pde8KDf5euFeVAgPsqSdMRNYqzCapYI2pVFaZtQK1KrNg1/Ewci04dqO8N8
-        cpGnwMfVqlE593M0lZwPyeQEvNkNtdI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-nKIjVvFUOI-I_KmJ5HcbXg-1; Sat, 14 Dec 2019 06:35:25 -0500
-X-MC-Unique: nKIjVvFUOI-I_KmJ5HcbXg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6B6B100550E;
-        Sat, 14 Dec 2019 11:35:22 +0000 (UTC)
-Received: from krava (ovpn-204-62.brq.redhat.com [10.40.204.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE62E61348;
-        Sat, 14 Dec 2019 11:35:13 +0000 (UTC)
-Date:   Sat, 14 Dec 2019 12:35:10 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [RFC] btf: Some structs are doubled because of struct ring_buffer
-Message-ID: <20191214113510.GB12440@krava>
-References: <20191213153553.GE20583@krava>
- <20191213112438.773dff35@gandalf.local.home>
- <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
- <20191213121118.236f55b8@gandalf.local.home>
- <20191213180223.GE2844@hirez.programming.kicks-ass.net>
- <20191213132941.6fa2d1bd@gandalf.local.home>
- <20191213184621.GG2844@hirez.programming.kicks-ass.net>
- <20191213140349.5a42a8af@gandalf.local.home>
- <20191213140531.116b3200@gandalf.local.home>
+        Sat, 14 Dec 2019 06:48:22 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ig5u8-0005YC-B3; Sat, 14 Dec 2019 11:48:12 +0000
+Date:   Sat, 14 Dec 2019 12:48:11 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     chenqiwu <qiwuchen55@gmail.com>
+Cc:     peterz@infradead.org, mingo@kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, chenqiwu@xiaomi.com, oleg@redhat.com
+Subject: Re: [PATCH] kernel/exit: do panic earlier to get coredump if global
+ init task exit
+Message-ID: <20191214114810.ftfxtx4qaa5nzji4@wittgenstein>
+References: <1576131255-3433-1-git-send-email-qiwuchen55@gmail.com>
+ <20191212095127.GA5460@redhat.com>
+ <20191212100838.GB5460@redhat.com>
+ <20191212110513.qf2sapgggnp46voc@wittgenstein>
+ <20191214062704.GA5580@cqw-OptiPlex-7050>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191213140531.116b3200@gandalf.local.home>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20191214062704.GA5580@cqw-OptiPlex-7050>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 02:05:31PM -0500, Steven Rostedt wrote:
+On Sat, Dec 14, 2019 at 02:27:04PM +0800, chenqiwu wrote:
+> On Thu, Dec 12, 2019 at 12:05:14PM +0100, Christian Brauner wrote:
+> > On Thu, Dec 12, 2019 at 11:08:38AM +0100, Oleg Nesterov wrote:
+> > > can't you use is_global_init() && group_dead ?
+> > 
+> > Seems reasonable.
+> > Looks like we can move
+> > group_dead = atomic_dec_and_test(&tsk->signal->live);
+> > further up...
+> > 
+> > (Ideally I'd like to have a test for this to ensure that this lets you
+> > capture a global init coredump but that might be tricky. But since you've
+> > seem to have run into this case maybe you even have something that could
+> > be turned into a test? (Similar to how we already have a purely opt-in
+> > test for pstore.))
+> > 
+> > Christian
+> 
+> Hi all,
+> I agree that using is_global_init() && group_dead is more reasonable.
+> 
+> The crash isuee happened on a Android phone by reboot stress test.
+> panic log:
+> [   84.048521] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> [   84.048521]
+> [   84.048540] CPU: 2 PID: 1 Comm: init Tainted: G S         O    4.14.117-perf-g8035d1a #1
+> [   84.048544] Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 RAPHAEL (DT)
+> [   84.048550] Call trace:
+> [   84.048564]  dump_backtrace+0x0/0x268
+> [   84.048569]  show_stack+0x14/0x20
+> [   84.048577]  dump_stack+0xc4/0x100
+> [   84.048584]  panic+0x1f0/0x410
+> [   84.048591]  complete_and_exit+0x0/0x20
+> [   84.048596]  do_group_exit+0x8c/0xa0
+> [   84.048602]  get_signal+0x1c0/0x790
+> [   84.048608]  do_notify_resume+0x184/0xc30
+> [   84.048613]  work_pending+0x8/0x10
+> 
+> From the kdump loaded by crash utility, all threads of global init have exited,
+> the group_dead value of global init has truned to 0 by atomic_dec_and_test().
+> crash> ps init
+>    PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
+> >     1      0   2  ffffffcd77526000  ??   0.0       0      0  init
+>     534      1   4  ffffffcd6b9a9000  ZO   0.0       0      0  init
+>     535      1   4  ffffffcd6b9aa000  ZO   0.0       0      0  init
+> crash> ps -g 1
+> PID: 1      TASK: ffffffcd77526000  CPU: 2   COMMAND: "init"
+>   (no threads)
+> crash> struct task_struct.signal ffffffcd77526000
+>   signal = 0xffffffcd77530000
+> crash> struct signal_struct 0xffffffcd77530000
+> struct signal_struct {
+>   sigcnt = {
+>     counter = 1
+>   },
+>   live = {
+>     counter = 0
+>   },
+>   nr_threads = 1,
+>   thread_head = {
+>     next = 0xffffffcd77526730,
+>     prev = 0xffffffcd77526730
+>   },
+>   group_exit_code = 11,
+>   notify_count = 0,
+>   group_exit_task = 0x0,
+>   group_stop_count = 0,
+>   flags = 4,
+>   ...
+>  }
+> 
+> However, as Christian said, the test for this is tricky since we must
+> make sure all of init threads exited. I make a test for is_global_init()
+> and send a SIGSEGV signal to global init task in userspace. The phone
+> crash imeddiately and reboot to collect kdump. Then I extract the coredump
+> of global init task from kdump successfully.
+> (gdb) core-file core.1.init
+> Core was generated by `/system/bin/init second_stage'.
+> #0  _exit () at bionic/libc/arch-arm64/syscalls/_exit.S:9
+> 9           cmn     x0, #(MAX_ERRNO + 1)
+> (gdb) bt
+> #0  _exit () at bionic/libc/arch-arm64/syscalls/_exit.S:9
+> #1  0x00000055606db11c in android::init::InstallRebootSignalHandlers()::$_14::operator()(int) const (this=<optimized out>, signal=11)
+>     at system/core/init/reboot_utils.cpp:141
+> #2  0x00000055606db100 in android::init::InstallRebootSignalHandlers()::$_14::__invoke(int) (signal=11) at system/core/init/reboot_utils.cpp:138
+> #3  0x0000007f8de236a0 in ?? ()
+> Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+> 
+> So from the following test, we have confidence that the following patch can help us
 
-SNIP
+Thanks. Can you please resend this as a proper patch for v2?
 
->  	struct trace_array *tr = filp->private_data;
-> -	struct ring_buffer *buffer = tr->trace_buffer.buffer;
-> +	struct trace_buffer *buffer = tr->trace_buffer.buffer;
->  	unsigned long val;
->  	int ret;
->  
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 63bf60f79398..308fcd673102 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -178,7 +178,7 @@ struct trace_option_dentry;
->  
->  struct trace_buffer {
->  	struct trace_array		*tr;
-> -	struct ring_buffer		*buffer;
-> +	struct trace_buffer		*buffer;
-
-perf change is fine, but 'trace_buffer' won't work because
-we already have 'struct trace_buffer' defined in here
-
-maybe we could change this name to trace_buffer_array?
-
-thanks,
-jirka
-
+Christian
