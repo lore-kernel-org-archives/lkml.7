@@ -2,194 +2,136 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCCCC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05972C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0A72067C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E506E2077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIFoW9Lo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ7XLlPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfLNBJb (ORCPT
+        id S1726713AbfLNBiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 20:09:31 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37501 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfLNBJb (ORCPT
+        Fri, 13 Dec 2019 20:38:05 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34210 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfLNBiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 20:09:31 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so613546edb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 17:09:29 -0800 (PST)
+        Fri, 13 Dec 2019 20:38:05 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m6so704820ljc.1;
+        Fri, 13 Dec 2019 17:38:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=uDET1/4WwioWwROI6pkXcNFShnofxk01ctVQVe+2uk0=;
-        b=nIFoW9LoBwdiIpDscOGCynjFYb294TiDMQkcXkFi3Wp3GdXHYIU3XrgLFm6l5VzGB/
-         rTLED8OscvI4QypySdsgARxqW9JdoQDjo1XZA6uLy3KFUluJF2zPNgFwbRGjUWZIs+Sj
-         zjtyV9KbuAHmH4Duprn2GnFoTIO8b3XMU4hGfAL79Q1G7NEd4rCy1ZbSD/U205GTMqGU
-         bFUS2qPz9R15GG9pdCY7gST+OvWHVwAiQSolu1cHY2Jr+PfAfbIIb8UmDPFUhyY/hd3b
-         2xBeNS2HTlZzjDfDEuoEW9YWs97oyAQakDu+NJrNzFmBlpl1rb/MRDTTT0p4OLEDjEkZ
-         LoCw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o/RAkFi6F4plFq+4FJ5FybixLxDkxXsHOnC0hMslJ0I=;
+        b=GJ7XLlPchLiZoHNy58cony05pWue++ZdwsgetvvcxZLRhiuBZxltwBEowy/Z6R6oUk
+         1uPpttPfg+mDoHbssJ/9j6X3uGcgTcAeUFk+WlFJ3SG8xEoknTey/BFICdKgbw1/0gmS
+         aGsATQVDIo48ta0KJA8U9Ro9qVtXsY3tiLzL7/fVNZP7z2xe7B0dHGiXMNbrkjI06wGR
+         Hmhk/sYYBzvVPO7jg3ogSvE3JTbGON3KqrkT/+hzq/QmdhGPd4ob9/t8T50HTXfTtdbo
+         fkSsFAZHqlIwEeM1QHarDRPVvE7aX16QdBkIpnk1hvRGinAybHiumTemjT8yAse/DWgY
+         7d0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=uDET1/4WwioWwROI6pkXcNFShnofxk01ctVQVe+2uk0=;
-        b=jffH2D2qd1jTkEGqMvvFdGZ9k5Iev9eRklNOwVzPeLrBqpSR3hgMnHKWIB2UpfZqaM
-         aabHWSYFXpcvfEzyTHcIwXEsfYTTH3ceOzgmToFrUk0r3TpgHOceZWwYtRgiGUoHUNfi
-         N3Fs1vVJcz3YZw9yRQiLM/tB0/Mj4AtkiesRlxr/IRuEau3tRxI9584XfPfxGN0nOwE8
-         G/j+lf9kAvR0TbPwjLa7Gkjit1LQK6Gi4FpFMV6mPLd1365mIpVYshTVue+sMHLQa+Di
-         uPUs98zwkZSn29eIyfJ34svaSNk4xG5okqwnuGQZa9XmDQODdaAko88Ue9gafa1fasw/
-         3Zwg==
-X-Gm-Message-State: APjAAAVouKVJgqCPKKKfyCefmaCdJHNERIYoJ+cpnYsmUVAG3Yy2ex7r
-        S/hce4AgWyBjnEJSVjXDACtiw9tqpHq5q0Mc6Camlk8S
-X-Google-Smtp-Source: APXvYqwx0aMnaVcmV8TCv/hWtphC5/JyFFI3+i8tOd31mo7/SXz3f6i7Hfr7KY9GWJmbqH/yZF4ohYvwScejy3mZoCo=
-X-Received: by 2002:a17:907:2112:: with SMTP id qn18mr19222413ejb.92.1576285768101;
- Fri, 13 Dec 2019 17:09:28 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o/RAkFi6F4plFq+4FJ5FybixLxDkxXsHOnC0hMslJ0I=;
+        b=XE8f84YRRlvQl0Ch+dbZWZVywxhJXBTKdcRpL+mrOOkcgsnCBcj1l9lcJJvIH3iLyW
+         B5JwnO92J883P3FbPqfS7VNncK6vydBri0Nhd46mlnKt1JAezUFg62dLIPv2+IWykWks
+         ESnYanUNd9ZZO2pvnwd0yFFNxa7k6WSHAzFYiBIvs0PNv9koMdAhtry08kwlBXjImof7
+         vPg29SpmZYs071lNC9vwW3/3FxMCcwK6RMLqnvxu5QjgRZyAwYxyLgT0/8rG3LvjgG4N
+         pYzLRAdfwMnFFJSY4RHoFJ0uDXKqrJAyTv26ZMj6S4YejQfDCjOSYyygG9FJsuPmEmxq
+         m0bQ==
+X-Gm-Message-State: APjAAAVH5svuJCHAX+2JIuondij503C2RKK8nfTes3RCA4+hyjN9aQCj
+        UqWAe0WgtM9vuKMlEODok0M73cY6ovpUVG8L6mwp9z5J
+X-Google-Smtp-Source: APXvYqwlPU13OUpguQIogzSIDZIM2JTdtVFfIdDJGtvg2VzMkk3HwNCTfZcE/eVyPnQ0uDjVJXc4Q0YpwqZTy3EmyAc=
+X-Received: by 2002:a2e:2c0a:: with SMTP id s10mr11099051ljs.193.1576287482570;
+ Fri, 13 Dec 2019 17:38:02 -0800 (PST)
 MIME-Version: 1.0
-From:   "David F." <df7729@gmail.com>
-Date:   Fri, 13 Dec 2019 17:09:16 -0800
-Message-ID: <CAGRSmLvPDM2DchiF2d-zBksdfFa3TdPb5+0K=M+YL3mGKVxkxA@mail.gmail.com>
-Subject: Makefile build failure 5.4..3
-To:     linux-kernel <linux-kernel@vger.kernel.org>
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-15-arnd@arndb.de>
+In-Reply-To: <20191213205417.3871055-15-arnd@arndb.de>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Sat, 14 Dec 2019 12:37:51 +1100
+Message-ID: <CAGRGNgVCkyterFgOFL-WtHr4=tSnyr2TsYs5BQk+7FdtHjv4ow@mail.gmail.com>
+Subject: Re: [PATCH v2 24/24] y2038: sparc: remove use of struct timex
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        sparclinux <sparclinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Arnd,
 
-Building 5.4.3 x64 it completes but I noticed:
+On Sat, Dec 14, 2019 at 7:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> 'struct timex' is one of the last users of 'struct timeval' and is
+> only referenced in one place in the kernel any more, to convert the
+> user space timex into the kernel-internal version on sparc64, with a
+> different tv_usec member type.
+>
+> As a preparation for hiding the time_t definition and everything
+> using that in the kernel, change the implementation once more
+> to only convert the timeval member, and then enclose the
+> struct definition in an #ifdef.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/sparc/kernel/sys_sparc_64.c | 29 +++++++++++++++--------------
+>  include/uapi/linux/timex.h       |  2 ++
+>  2 files changed, 17 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+> index 9f41a6f5a032..1c85b0af4dfd 100644
+> --- a/arch/sparc/kernel/sys_sparc_64.c
+> +++ b/arch/sparc/kernel/sys_sparc_64.c
+> @@ -548,34 +548,35 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
+>         return err;
+>  }
+>
+> -SYSCALL_DEFINE1(sparc_adjtimex, struct timex __user *, txc_p)
+> +SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
+>  {
+> -       struct timex txc;               /* Local copy of parameter */
+> -       struct __kernel_timex *kt = (void *)&txc;
+> +       struct __kernel_timex txc;
+> +       __kernel_old_timeval *tv = (void *)&txc->time;
+>         int ret;
+>
+>         /* Copy the user data space into the kernel copy
+>          * structure. But bear in mind that the structures
+>          * may change
+>          */
+> -       if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
+> +       if (copy_from_user(&txc, txc_p, sizeof(txc)))
+>                 return -EFAULT;
+>
+>         /*
+>          * override for sparc64 specific timeval type: tv_usec
+>          * is 32 bit wide instead of 64-bit in __kernel_timex
+>          */
+> -       kt->time.tv_usec = txc.time.tv_usec;
+> +       kt->time.tv_usec = tv->tv_usec;
 
- CC [M]  drivers/net/wireless/intel/iwlwifi/iwl-debug.o
-In file included from ./include/linux/export.h:42:0,
-                 from ./include/linux/linkage.h:7,
-                 from ./include/linux/kernel.h:8,
-                 from ./include/linux/skbuff.h:13,
-                 from ./include/linux/if_ether.h:19,
-                 from ./include/linux/etherdevice.h:20,
-                 from drivers/net/wireless/mediatek/mt76/mt7615/mac.c:10:
-drivers/net/wireless/mediatek/mt76/mt7615/mac.c: In function =E2=80=98to_rs=
-si=E2=80=99:
-./include/linux/compiler.h:350:38: error: call to
-=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
-ILD_BUG_ON
-failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
-(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:331:4: note: in definition of macro
-=E2=80=98__compiletime_assert=E2=80=99
-    prefix ## suffix();    \
-    ^
-./include/linux/compiler.h:350:2: note: in expansion of macro
-=E2=80=98_compiletime_assert=E2=80=99
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^
-./include/linux/build_bug.h:39:37: note: in expansion of macro
-=E2=80=98compiletime_assert=E2=80=99
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^
-./include/linux/bitfield.h:46:3: note: in expansion of macro =E2=80=98BUILD=
-_BUG_ON_MSG=E2=80=99
-   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),  \
-   ^
-./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
-FIELD_CHECK=E2=80=99
-   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
-   ^
-drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
-expansion of macro =E2=80=98FIELD_GET=E2=80=99
-  return (FIELD_GET(field, rxv) - 220) / 2;
-          ^
-./include/linux/compiler.h:350:38: error: call to
-=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
-ILD_BUG_ON
-failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
-(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:331:4: note: in definition of macro
-=E2=80=98__compiletime_assert=E2=80=99
-    prefix ## suffix();    \
-    ^
-./include/linux/compiler.h:350:2: note: in expansion of macro
-=E2=80=98_compiletime_assert=E2=80=99
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^
-./include/linux/build_bug.h:39:37: note: in expansion of macro
-=E2=80=98compiletime_assert=E2=80=99
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^
-./include/linux/bitfield.h:48:3: note: in expansion of macro =E2=80=98BUILD=
-_BUG_ON_MSG=E2=80=99
-   BUILD_BUG_ON_MSG((_mask) =3D=3D 0, _pfx "mask is zero"); \
-   ^
-./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
-FIELD_CHECK=E2=80=99
-   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
-   ^
-drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
-expansion of macro =E2=80=98FIELD_GET=E2=80=99
-  return (FIELD_GET(field, rxv) - 220) / 2;
-          ^
-./include/linux/compiler.h:350:38: error: call to
-=E2=80=98__compiletime_assert_18=E2=80=99 declared with attribute error: BU=
-ILD_BUG_ON
-failed: (((field) + (1ULL << (__builtin_ffsll(field) - 1))) &
-(((field) + (1ULL << (__builtin_ffsll(field) - 1))) - 1)) !=3D 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:331:4: note: in definition of macro
-=E2=80=98__compiletime_assert=E2=80=99
-    prefix ## suffix();    \
-    ^
-./include/linux/compiler.h:350:2: note: in expansion of macro
-=E2=80=98_compiletime_assert=E2=80=99
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^
-./include/linux/build_bug.h:39:37: note: in expansion of macro
-=E2=80=98compiletime_assert=E2=80=99
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^
-./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BUIL=
-D_BUG_ON_MSG=E2=80=99
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^
-./include/linux/build_bug.h:21:2: note: in expansion of macro =E2=80=98BUIL=
-D_BUG_ON=E2=80=99
-  BUILD_BUG_ON(((n) & ((n) - 1)) !=3D 0)
-  ^
-./include/linux/bitfield.h:54:3: note: in expansion of macro
-=E2=80=98__BUILD_BUG_ON_NOT_POWER_OF_2=E2=80=99
-   __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +   \
-   ^
-./include/linux/bitfield.h:95:3: note: in expansion of macro =E2=80=98__BF_=
-FIELD_CHECK=E2=80=99
-   __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: "); \
-   ^
-drivers/net/wireless/mediatek/mt76/mt7615/mac.c:18:10: note: in
-expansion of macro =E2=80=98FIELD_GET=E2=80=99
-  return (FIELD_GET(field, rxv) - 220) / 2;
-          ^
-scripts/Makefile.build:265: recipe for target
-'drivers/net/wireless/mediatek/mt76/mt7615/mac.o' failed
-make[9]: *** [drivers/net/wireless/mediatek/mt76/mt7615/mac.o] Error 1
-scripts/Makefile.build:509: recipe for target
-'drivers/net/wireless/mediatek/mt76/mt7615' failed
-make[8]: *** [drivers/net/wireless/mediatek/mt76/mt7615] Error 2
-scripts/Makefile.build:509: recipe for target
-'drivers/net/wireless/mediatek/mt76' failed
-make[7]: *** [drivers/net/wireless/mediatek/mt76] Error 2
-scripts/Makefile.build:509: recipe for target
-'drivers/net/wireless/mediatek' failed
-make[6]: *** [drivers/net/wireless/mediatek] Error 2
-make[6]: *** Waiting for unfinished jobs....
+Am I mis-reading the patch, or is "kt" not defined?
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
