@@ -2,93 +2,105 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB6C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73715C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F9C20706
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="gM0RcaRa"
+	by mail.kernel.org (Postfix) with ESMTP id 53256214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfLNSQR (ORCPT
+        id S1726781AbfLNSce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 13:16:17 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:45528 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfLNSQR (ORCPT
+        Sat, 14 Dec 2019 13:32:34 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34351 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfLNScd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 13:16:17 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so1128165pjp.12
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 10:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=k6fPKTYuqDNsNSoLPxZubXx3iAFLDMNc6sAuC29KYcA=;
-        b=gM0RcaRa9bVy+qq5TW9SRanGBujp7squ5/A/43VewxMFBAVMn6WKusvANs/SrSU+ea
-         4yrMFece7MOIiqr8niTdFJDRy0RYEU3s+TQIzQ21H8P1mji84OurJr8MUavctVr7sfv7
-         nveSnxYlevZ7kU7H1E353pWSFGxQPGYhfoPFcJpbvyy7APjOAVJ3G1vX9KHxXhUMoung
-         6UeN04gsDaCmhRXVq/Az8onJ5KCfMFD9iFpN0NVan7cabEa2uke3OED00564JoRcJC+u
-         0yGAZ6Iv+3PjtkrHXg5uQ11tlhE02vosAh+JqymBmU3j+0SSdFiBpDle4QKBulBbR2SM
-         e7Yg==
+        Sat, 14 Dec 2019 13:32:33 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r11so1230823pgf.1;
+        Sat, 14 Dec 2019 10:32:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=k6fPKTYuqDNsNSoLPxZubXx3iAFLDMNc6sAuC29KYcA=;
-        b=XeLJ7RMAOLTTiUri6SeFPQ9AoP11Y5GBYoBLbvQcyIgXu7kOY5XYF8jBt/uQ2EMNnH
-         b/EIrcKmqfRQokrHN1oy8ScOeTIxfBWktf4AlasxG07uVcoHRk50XtRfDDk7k9ebq6PS
-         v1UsdA0cxI9pHVo7mxzIJ/KuXmnkpUwX7Q6NGi3muWnGuezHBGYNzfQmFGE2rbgEgkvX
-         Ou0OwP5uS0rXgn52uUpJKqRkB+uAgOJCQhs+khtuq3siyZj+0UVwMn3/iaz7Exu82PkN
-         GyJXy7BF8XRa7x3O0Hsvb4XYQY0Zac7zSqIjvKV5+MW4nrAvYWVJZsObxM1kzYKdjuDd
-         muIw==
-X-Gm-Message-State: APjAAAW3rWDB2WVfFERPg9FoOZS7dfuS1nSJAAxaPmlyzaLsh3eObEM6
-        1ctZwOtcqWtrfzETOdyB0c9QBegHtfk=
-X-Google-Smtp-Source: APXvYqwgmEyC7zmUtlhf6Dgb+uFGtuIL7svrumQoIMVRzPs5sE6sn2N24NTcua2KnsrnkTE111nNfQ==
-X-Received: by 2002:a17:90a:1b45:: with SMTP id q63mr7292190pjq.118.1576347376885;
-        Sat, 14 Dec 2019 10:16:16 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id e23sm13719750pjt.23.2019.12.14.10.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 10:16:16 -0800 (PST)
-Date:   Sat, 14 Dec 2019 10:16:13 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link
- interrupt
-Message-ID: <20191214101613.1acf774d@cakuba.netronome.com>
-In-Reply-To: <20191214082403.GA2959@1wt.eu>
-References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
-        <20191213163403.2a054262@cakuba.netronome.com>
-        <20191214075127.GX25745@shell.armlinux.org.uk>
-        <20191214075602.GY25745@shell.armlinux.org.uk>
-        <20191214082403.GA2959@1wt.eu>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UZcSU5PLQVwBUi4dUWpFu/eGboJk4k9Zub31FQhbfA8=;
+        b=Y7BbXHXQPsDFQRqOBcZx5ijc+QyG1r+lpPL3YgWREMt4vPKU+hKsbrI1Iq0xdu27xr
+         UyykTklxefjbe53VAEsXsCiWMBvrncYBRpyTwDBYER5xvOI1bZEE67FAZLgBWPM1gFVq
+         etDIgUqaJ8JVYnORqHUHqagMCZ9U5U11wxrlXDmuFigC54pHCS5IBmTIoB5XHrK5NpsN
+         5Ofp+zbCRTV4iFf20tSOgBQK37WV8g8FySLzD5yxq7Z9j3OiEqhUyNvjymNMtCKyG999
+         yfhJK/qbCuByMuVuV2I34ENlwgp6oPY0bTIlQPqsa8RHph5GIsqjU5HIAFugnqyis+Vs
+         ezHg==
+X-Gm-Message-State: APjAAAXswRCC3W4y5aro2+AiV/M+G5ucUSNX0jNAUGt+BXw0WOmOXteQ
+        JNZAgIFFx66drDQg5/F53REgeKoah7E=
+X-Google-Smtp-Source: APXvYqxBqQLywmZ1VKTYBYJucMFNEsiqxTyeM+bEDCOBIWuq3o6OEtZmn6tzAUFSpeuzeUCMaZfgxQ==
+X-Received: by 2002:a65:6815:: with SMTP id l21mr6696564pgt.283.1576348352324;
+        Sat, 14 Dec 2019 10:32:32 -0800 (PST)
+Received: from [10.234.191.77] ([73.93.155.125])
+        by smtp.gmail.com with ESMTPSA id u18sm16198958pgn.9.2019.12.14.10.32.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2019 10:32:31 -0800 (PST)
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+Date:   Sat, 14 Dec 2019 10:32:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019 09:24:03 +0100, Willy Tarreau wrote:
-> > > > Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
-> > Oh, sorry, too early, wrong patch.  Yes, please add the fixes tag.  
+On 12/14/19 8:03 AM, Can Guo wrote:
+> In ufshcd_remove(), after SCSI host is removed, put it once so that its
+> resources can be released.
 > 
-> I prefer :-)  Because indeed I only have this one on top of 5.4.2 which
-> solved the problem. You can even add my tested-by if you want (though I
-> don't care).
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index b5966fa..a86b0fd 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+>   	ufs_bsg_remove(hba);
+>   	ufs_sysfs_remove_nodes(hba->dev);
+>   	scsi_remove_host(hba->host);
+> +	scsi_host_put(hba->host);
+>   	/* disable interrupts */
+>   	ufshcd_disable_intr(hba, hba->intr_mask);
+>   	ufshcd_hba_stop(hba, true);
 
-OK, applied, and queued for stable, thanks!
+Hi Can,
+
+The UFS driver may queue work asynchronously and that asynchronous work 
+may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it guaranteed 
+that all that asynchronous work has finished before scsi_host_put() is 
+called?
+
+Thanks,
+
+Bart.
