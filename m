@@ -2,122 +2,139 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD48AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE655C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BF92465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576310122;
-	bh=37tV1SM+durbtVnc1SZJaIoQfBdJLToeVvqsv8IROTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AbsVNtnR42VdVsVtmrqU1Z2wTmKumdN6/OxLcmo9enaA57PrI3I0iN3PGBztMReuD
-	 CA/V08nT82cNThNbpE/BZWvbzQX4pb0gNbYGjr7ocuvb1J5g+iWJrbsYCw0c6e5NMQ
-	 ovKueBv4oI/sM7915Buc/8xpKmG7O+3jGy7onVOU=
+	by mail.kernel.org (Postfix) with ESMTP id 941CD2073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zici7AUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfLNHzV (ORCPT
+        id S1726192AbfLNH4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfLNHzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:55:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B032073D;
-        Sat, 14 Dec 2019 07:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576310120;
-        bh=37tV1SM+durbtVnc1SZJaIoQfBdJLToeVvqsv8IROTA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dKTe7f5Na3+7CLUnVjCF7EOhyTtJ2pHjUXEe1t4rQjsuuiBTBpGjFpR0aBBNv+Wkj
-         LzeKZ0DvFcG2v5lwx1DsNU7xU1SxYalBvu68J8qcBh2xvNw/R0ac+0QzCiFbcrA3T0
-         JCAd9aZgMezJH5a9dZ186sq5sP9iFMaYN8FTU1D0=
-Date:   Sat, 14 Dec 2019 08:55:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- mem_serial_out
-Message-ID: <20191214075517.GA3314866@kroah.com>
-References: <00000000000053539a0599173973@google.com>
- <20191212105701.GB1476206@kroah.com>
- <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
- <20191213093357.GB2135612@kroah.com>
- <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
- <74859736-478a-6ad7-f0be-cfe87ec40ff5@i-love.sakura.ne.jp>
- <20191213160700.GA2632926@kroah.com>
- <4f514a5a-af11-e688-8f8d-72bbadadc889@i-love.sakura.ne.jp>
+        Sat, 14 Dec 2019 02:56:15 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59540 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfLNH4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 02:56:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hctS6KUiaNGHqgsslJuxo9aI2reeZbNQZlgXcHiTvlI=; b=zici7AUmbqBVtT4YsB1filS6m
+        9XN7dbi8MC/OF9tTGT+fbxUb1gxvjG+0pADLzMBto/zsP1KuGI26AsRAb5fUJCVw3nB74kEYDdER4
+        6CivBFg2XtF9OgOsm93MtfFt+WieEBdU3APH6Wv1i6jlFHZ7GjbI4DSaHIPL8jkolUYy6w2w00dq3
+        R/WKcfHIluO73a3+Pa4TquDz3d7KFUGj5IsZ5BgnEGrcNV8WROFBjygpiHWZfcBF+HCQI8hiefXMx
+        OR30MPUO6gQPRU6PFuSXKtppjXSzeoYprUeE9kntzxJIL9Y4vHwqnaNKlFhfhPjfOjqVXSFCQPG/d
+        UtXpjPtmQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:48666)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ig2HU-0001ee-08; Sat, 14 Dec 2019 07:56:04 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ig2HS-0000GW-FF; Sat, 14 Dec 2019 07:56:02 +0000
+Date:   Sat, 14 Dec 2019 07:56:02 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link interrupt
+Message-ID: <20191214075602.GY25745@shell.armlinux.org.uk>
+References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
+ <20191213163403.2a054262@cakuba.netronome.com>
+ <20191214075127.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4f514a5a-af11-e688-8f8d-72bbadadc889@i-love.sakura.ne.jp>
+In-Reply-To: <20191214075127.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 09:48:29AM +0900, Tetsuo Handa wrote:
-> On 2019/12/14 1:07, Greg KH wrote:
-> > On Fri, Dec 13, 2019 at 11:31:08PM +0900, Tetsuo Handa wrote:
-> >> On 2019/12/13 19:00, Dmitry Vyukov wrote:
-> >>> Easier said than done. "normal user of the serial port" is not really
-> >>> a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
-> >>> not per-device...
-> >>> As far as I remember +Tetsuo proposed a config along the lines of
-> >>> "restrict only things that legitimately cause damage under a fuzzer
-> >>> workload", e.g. freezing filesystems, disabling console output, etc.
-> >>> This may be another candidate. But I can't find where that proposal is
-> >>> now.
-> >>
-> >> That suggestion got no response for two months.
-> >>
-> >>   https://lkml.kernel.org/r/3e4e2b6b-7828-54ab-cf28-db1a396d7e20@i-love.sakura.ne.jp
-> >>
-> >> Unless we add such kernel config option to upstream kernels, it will become
-> >> a whack-a-mole game.
+On Sat, Dec 14, 2019 at 07:51:27AM +0000, Russell King - ARM Linux admin wrote:
+> On Fri, Dec 13, 2019 at 04:34:03PM -0800, Jakub Kicinski wrote:
+> > On Tue, 10 Dec 2019 22:33:05 +0000, Russell King wrote:
+> > > phylink requires the MAC to report when its link status changes when
+> > > operating in inband modes.  Failure to report link status changes
+> > > means that phylink has no idea when the link events happen, which
+> > > results in either the network interface's carrier remaining up or
+> > > remaining permanently down.
+> > > 
+> > > For example, with a fiber module, if the interface is brought up and
+> > > link is initially established, taking the link down at the far end
+> > > will cut the optical power.  The SFP module's LOS asserts, we
+> > > deactivate the link, and the network interface reports no carrier.
+> > > 
+> > > When the far end is brought back up, the SFP module's LOS deasserts,
+> > > but the MAC may be slower to establish link.  If this happens (which
+> > > in my tests is a certainty) then phylink never hears that the MAC
+> > > has established link with the far end, and the network interface is
+> > > stuck reporting no carrier.  This means the interface is
+> > > non-functional.
+> > > 
+> > > Avoiding the link interrupt when we have phylink is basically not
+> > > an option, so remove the !port->phylink from the test.
+> > > 
+> > > Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> > > Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > > 
-> > It will be a whack-a-mole game no matter what.
+> > Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
 > > 
-> > Yes, /dev/mem/ makes no sense to fuzz.  Neither does other things (like
-> > serial port memory addresses.)
+> > Seems like you maybe didn't want this backported to stable hence 
+> > no fixes tag?
 > 
-> /dev/mem makes sense to fuzz. Ditto for other things.
-
-What?  What are you going to find if you randomly start to write to
-/dev/mem?  How are we supposed to "fix" that?
-
-> > You just will have a list of things that you "do not fuzz as these are
-> > dangerous".  Nothing new here, any os will have that.
+> Correct, because backporting just this patch will break the
+> Macchiatobin.
 > 
-> The list of kernel config options will become too complicated to maintain.
-> If we can have one kernel config option, we can avoid maintaining
-> the list of kernel config options (which keeps changing over time).
+> This patch is dependent on the previous two patches, which are more
+> about correct use of the API.  I suspect if you try to backport the
+> series, things will get very hairly very quickly.
 
-Use the newly added security_locked_down() call, that gives you a great
-indication that root can cause problems for those things.
+Oh, sorry, too early, wrong patch.  Yes, please add the fixes tag.
 
-And it's not a config thing, it's a functionality thing within features,
-as is explicitly shown by this very thread for the serial port memory
-location.
+> 
+> > 
+> > Please advise :)
+> > 
+> > > diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > index 111b3b8239e1..ef44c6979a31 100644
+> > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > @@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
+> > >  		valid = true;
+> > >  	}
+> > >  
+> > > -	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
+> > > +	if (priv->hw_version == MVPP22 && port->link_irq) {
+> > >  		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
+> > >  				  dev->name, port);
+> > >  		if (err) {
+> > 
+> > 
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
 
-thanks,
-
-greg k-h
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
