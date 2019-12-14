@@ -2,138 +2,106 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCC1C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1C4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FF924658
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945812467C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QKTuuexY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbfLNHXY (ORCPT
+        id S1726072AbfLNHaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:23:24 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7689 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725871AbfLNHXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:23:24 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6B77C538BC6A79D7CB3B;
-        Sat, 14 Dec 2019 15:23:20 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Sat, 14 Dec 2019
- 15:23:10 +0800
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
-        <salil.mehta@huawei.com>, <xiaojiangfeng@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leeyou.li@huawei.com>, <nixiaoming@huawei.com>
-Subject: [PATCH] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Sat, 14 Dec 2019 15:23:02 +0800
-Message-ID: <1576308182-121147-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Sat, 14 Dec 2019 02:30:14 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:17387 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfLNHaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 02:30:14 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47ZfM828F5z9v4kg;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=QKTuuexY; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id rXUFt3zZMGyh; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47ZfM813fFz9v4kF;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1576308612; bh=jJtG71JXNYzYDF4z7ntC3bwNQLarVarmUswHWhluOuQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QKTuuexYKKEPVIL8i2FVj9ntngPsKl2SiB7u/7pALV0PsyXDg/Aea96V+3KDifu1Y
+         mslw9qUfpy3D4X6gNwmrP2n8zKN6Y2GPjsXcghjD65vUZkYbppmnD0JQKozphLtqSx
+         LgOdj0j4PXqcDBaUN6qFU0nqsjPcXZIVjMUMutVo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C4908B788;
+        Sat, 14 Dec 2019 08:30:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id eEW_ZV8vhUP2; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 228048B755;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Subject: Re: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on
+ fsl,spi nodes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org
+References: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
+ <20191213213418.GA17361@bogus>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <678cdcce-9bad-519a-68a5-a43414c15f94@c-s.fr>
+Date:   Sat, 14 Dec 2019 08:30:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.167]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191213213418.GA17361@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The trace is as follow:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
 
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+Le 13/12/2019 à 22:34, Rob Herring a écrit :
+> On Thu, Nov 28, 2019 at 12:16:35PM +0000, Christophe Leroy wrote:
+>> Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
+>> descriptors"), the prefered way to define chipselect GPIOs is using
+>> 'cs-gpios' property instead of the legacy 'gpios' property.
+> 
+> This will break using a new dtb on a kernel without the above commit. Or
+> with any OS that never made the change.
 
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+Why would anybody use a new dtb on an old kernel ? I have not tagged 
+this change for stable, it will only apply to DTBs in new kernels, won't 
+it ?
 
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
+That's not the first time DTS have to change for new kernels. For 
+instance, some time ago I had to replace all 'gpios' property by a set 
+of 'rdy-gpio', 'nce-gpio', 'ale-gpio' and 'cle-gpio' properties to 
+continue using 'gpio-control-nand' driver.
 
-In addition, I adjusted the position of "count++;"
-to make the code more readable.
+> 
+> I'm fine with the doc change, but you should keep 'gpios' as deprecated.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ok
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 3e9b6d5..085476d 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -543,9 +543,8 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
--	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
- 
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
-@@ -553,6 +552,7 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 	/* Ensure tx_head update visible to tx reclaim */
- 	smp_wmb();
- 
-+	count++;
- 	/* queue is getting full, better start cleaning up now */
- 	if (count >= priv->tx_coalesce_frames) {
- 		if (napi_schedule_prep(&priv->napi)) {
--- 
-1.8.5.6
-
+Christophe
