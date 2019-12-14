@@ -2,106 +2,107 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1C4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC908C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945812467C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QKTuuexY"
+	by mail.kernel.org (Postfix) with ESMTP id 821F120706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfLNHaO (ORCPT
+        id S1725975AbfLNHkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:30:14 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:17387 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfLNHaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:30:14 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47ZfM828F5z9v4kg;
-        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QKTuuexY; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id rXUFt3zZMGyh; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47ZfM813fFz9v4kF;
-        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576308612; bh=jJtG71JXNYzYDF4z7ntC3bwNQLarVarmUswHWhluOuQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QKTuuexYKKEPVIL8i2FVj9ntngPsKl2SiB7u/7pALV0PsyXDg/Aea96V+3KDifu1Y
-         mslw9qUfpy3D4X6gNwmrP2n8zKN6Y2GPjsXcghjD65vUZkYbppmnD0JQKozphLtqSx
-         LgOdj0j4PXqcDBaUN6qFU0nqsjPcXZIVjMUMutVo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C4908B788;
-        Sat, 14 Dec 2019 08:30:13 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id eEW_ZV8vhUP2; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 228048B755;
-        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
-Subject: Re: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on
- fsl,spi nodes
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org
-References: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
- <20191213213418.GA17361@bogus>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <678cdcce-9bad-519a-68a5-a43414c15f94@c-s.fr>
-Date:   Sat, 14 Dec 2019 08:30:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Sat, 14 Dec 2019 02:40:10 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725372AbfLNHkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 02:40:10 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8EF5C3EA7E02956B2F5C;
+        Sat, 14 Dec 2019 15:40:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 14 Dec 2019 15:40:00 +0800
+From:   Xie XiuQi <xiexiuqi@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>
+CC:     <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
+        <bsegall@google.com>, <mgorman@suse.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] sched/debug: fix trival print task format
+Date:   Sat, 14 Dec 2019 15:37:14 +0800
+Message-ID: <20191214073714.52215-1-xiexiuqi@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191213213418.GA17361@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ensure leave one space between state and task name.
 
+w/o patch:
+runnable tasks:
+ S           task   PID         tree-key  switches  prio     wait
+-----------------------------------------------------------------
+ I    kworker/0:2   656     87693.884557      8255   120
+ Sirq/10-ACPI:Ged   829         0.000000         3    49
+ Sirq/11-ACPI:Ged   830         0.000000         3    49
+ Sirq/50-arm-smmu   945         0.000000         3    49
 
-Le 13/12/2019 à 22:34, Rob Herring a écrit :
-> On Thu, Nov 28, 2019 at 12:16:35PM +0000, Christophe Leroy wrote:
->> Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
->> descriptors"), the prefered way to define chipselect GPIOs is using
->> 'cs-gpios' property instead of the legacy 'gpios' property.
-> 
-> This will break using a new dtb on a kernel without the above commit. Or
-> with any OS that never made the change.
+with patch:
+runnable tasks:
+ S            task   PID         tree-key  switches  prio     wait
+------------------------------------------------------------------
+ I     kworker/0:2   656     87693.884557      8255   120
+ S irq/10-ACPI:Ged   829         0.000000         3    49
+ S irq/11-ACPI:Ged   830         0.000000         3    49
+ S irq/50-arm-smmu   945         0.000000         3    49
 
-Why would anybody use a new dtb on an old kernel ? I have not tagged 
-this change for stable, it will only apply to DTBs in new kernels, won't 
-it ?
+---
+v2:
+ - fix a typo
+ - simpler to add one space before print format
 
-That's not the first time DTS have to change for new kernels. For 
-instance, some time ago I had to replace all 'gpios' property by a set 
-of 'rdy-gpio', 'nce-gpio', 'ale-gpio' and 'cle-gpio' properties to 
-continue using 'gpio-control-nand' driver.
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+---
+ kernel/sched/debug.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> I'm fine with the doc change, but you should keep 'gpios' as deprecated.
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index f7e4579e746c..9ee6250cef0d 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -438,7 +438,7 @@ print_task(struct seq_file *m, struct rq *rq, struct task_struct *p)
+ 	else
+ 		SEQ_printf(m, " %c", task_state_to_char(p));
+ 
+-	SEQ_printf(m, "%15s %5d %9Ld.%06ld %9Ld %5d ",
++	SEQ_printf(m, " %15s %5d %9Ld.%06ld %9Ld %5d ",
+ 		p->comm, task_pid_nr(p),
+ 		SPLIT_NS(p->se.vruntime),
+ 		(long long)(p->nvcsw + p->nivcsw),
+@@ -465,10 +465,10 @@ static void print_rq(struct seq_file *m, struct rq *rq, int rq_cpu)
+ 
+ 	SEQ_printf(m, "\n");
+ 	SEQ_printf(m, "runnable tasks:\n");
+-	SEQ_printf(m, " S           task   PID         tree-key  switches  prio"
++	SEQ_printf(m, " S            task   PID         tree-key  switches  prio"
+ 		   "     wait-time             sum-exec        sum-sleep\n");
+ 	SEQ_printf(m, "-------------------------------------------------------"
+-		   "----------------------------------------------------\n");
++		   "------------------------------------------------------\n");
+ 
+ 	rcu_read_lock();
+ 	for_each_process_thread(g, p) {
+-- 
+2.20.1
 
-Ok
-
-Christophe
