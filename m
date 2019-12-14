@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F1C00454
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8092CC2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E86A2465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5861624658
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujMHJWNU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRkA+6qP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLNN0w (ORCPT
+        id S1726744AbfLNN0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 08:26:52 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41706 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNN0w (ORCPT
+        Sat, 14 Dec 2019 08:26:55 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37161 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfLNN0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 08:26:52 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so1747214wrw.8;
-        Sat, 14 Dec 2019 05:26:49 -0800 (PST)
+        Sat, 14 Dec 2019 08:26:55 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so1663578wmf.2;
+        Sat, 14 Dec 2019 05:26:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HvGlD5kPVTONmWTHdpaxbRMm/71Q6Yy4dcoeO1YH8dE=;
-        b=ujMHJWNUwGcEg58M5xky4eCEQulioq+bUebi+7IQ6CK59ZinoFgikEMLhleIoQQ8kI
-         RS5VC4ycAadZG3m8A5nie06k0goclK+2ef8qukWD1mUo/3sbojPagfzw7lrR2tIYuC5f
-         tYJSfmnoEk3esCPCOeVP9/s5xbHf8bh/N+UEF0cXwot7NT9pqNF/qlU2v7P3Et2X7469
-         XnRdeo22aixZ+YO3e4TQaCFCg1EB04Rj2ze5j0a7RPlsmzCR17mXACIcypa/Pnndk8dF
-         hbdRD0CxBqq0VMBVYc4JpDSNo1AwVxkT1VvF/1J1TLdTnmqXIPC6RlriMBto+vvi64Ow
-         X8nQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wq33jM3x02eHZQgjnJnfIIMER7XKwdVI1dmuxCz9aVA=;
+        b=rRkA+6qP2z8riusQtyEMzfUaOn6MpLEGZlaQ36h0iJX6u0RzGOGPsCfjRFrPOoGrOL
+         jxXWhbm9CXn1Zln2WOYDQRmkoDq5C6/M4Ztzhv40mCYQ424YeQKStfRPg0UqcBgpBZHy
+         S02p/wdcrIO+RVU4v/PlkJYF+eTGMvWhPFpXabo2DiiJuJ8ArAvUB7Z8KRMg+NdFeXNR
+         k45HL4nLPPwmpof+pFKDeMLiYqhi6S8UyUGVLvr4sdYmeiCmpc8Ob2XA2k4vQL7eN6Ig
+         Hn7a1YLnv20LnFtSw8QxDGVpJqPvIi1qbD0aqWD9lXk8BPaNin5y0bLG7nusYkvHv4UM
+         jG6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HvGlD5kPVTONmWTHdpaxbRMm/71Q6Yy4dcoeO1YH8dE=;
-        b=OReZ1j4DnhSvuvAHIdrygQ94izGibCUpDob5J25CJaYf20meV7f4cqnxrn9ca010O1
-         277fqSEqy/dpWDXwZd1OJ1QevYCQnueQWZc34m16x64PMuEOqC1qHqSvxAyZ1lGPbHVu
-         KR+y6X+xrHLZ5+YR1LSOGy2LlXdwlT7F5f2MIQr6yeePW+0pbefYa3W6wUgppcrn43We
-         7wZf978+WnxiOaaCL6rejL0rWKQ9uCeudfZcm8l+h7FLFrxCer+Hna44eQPGtLeNzK2B
-         +EFSHDHuAEVr/QZs5PDJgUitZHacAAvM76FyTMKAC1rB6Nh0LlCOLTuLzGNa88DQJ6yW
-         sTPg==
-X-Gm-Message-State: APjAAAXdjqubA2Ys8qclECM5fUj96IRWvFXnoo/viMvPjcnunmaJBghi
-        bRk3eR+PTTc1v/PSWyKmRaE=
-X-Google-Smtp-Source: APXvYqyP44yq+IRE0YnGCPJUV5ruEA+Y0HOJdzxXa5REdibu3JoLLBLxdjGgaDYPrmoy6iARusRctQ==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr17803023wrx.87.1576330008281;
-        Sat, 14 Dec 2019 05:26:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wq33jM3x02eHZQgjnJnfIIMER7XKwdVI1dmuxCz9aVA=;
+        b=eD6hrwISBPsQ7yLVzG9SCeOWXMDWsg9VfWr4jAypbshJoGywTLrZz7aXbZU7h4RpNM
+         3wnS+j2xiXTTWMQvqoBg/5FpjruR0eWCdRqnZ20HKlnTI6BQaS65389kKSdV3WvHpbNu
+         5GYt3gMFuwUGKisXvB23wdyfBMxa3/eT4T1JdWx2w/87Wr3sq9UHoI5IF11ItMCb6i4f
+         IvN7BYMpfGATBp84t0hBJm3TDXxtei4vAn1hwny686aWnia1eO7VDV8b0mlp+Kgrx/H9
+         VOnkUs95KB68u08hawQjVBqUqHN0RkM7jXflc2mF7H42QFQtK9XwPfJG9S33/1okVQFz
+         ZPBQ==
+X-Gm-Message-State: APjAAAUjEmU8KgY8aKdmoXLsHvNf/DURqwaf2rRsDc+M/B8B5cckJTN/
+        tAMtrq/7hogi/6qZjA/kc6M=
+X-Google-Smtp-Source: APXvYqxMvWK2sPaexIDmvj9lFcFw4yvvJsoOgR4bUNCZmT+9TGVtBols5tU3V3LtMifoJD1DuCkRrg==
+X-Received: by 2002:a1c:a543:: with SMTP id o64mr8560081wme.73.1576330009856;
+        Sat, 14 Dec 2019 05:26:49 -0800 (PST)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::42f0:c285])
-        by smtp.gmail.com with ESMTPSA id o194sm4247383wme.45.2019.12.14.05.26.46
+        by smtp.gmail.com with ESMTPSA id o194sm4247383wme.45.2019.12.14.05.26.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 05:26:47 -0800 (PST)
+        Sat, 14 Dec 2019 05:26:49 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -64,10 +64,12 @@ To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 1/3] arm64: dts: allwinner: Fix wrong license header
-Date:   Sat, 14 Dec 2019 14:26:40 +0100
-Message-Id: <20191214132642.29564-1-peron.clem@gmail.com>
+Subject: [PATCH v3 3/3] arm64: dts: allwinner: unify header comment style
+Date:   Sat, 14 Dec 2019 14:26:42 +0100
+Message-Id: <20191214132642.29564-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191214132642.29564-1-peron.clem@gmail.com>
+References: <20191214132642.29564-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -76,240 +78,545 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some headers specify that files are under dual-licensed GPL2.0+
-and X11. But in fact, it turns out that the full licenses texts
-associated are GPL2.0+ and MIT.
+Allwinner device tree files used different comment style for
+copyright notice.
 
-Fix license headers to reflect real licenses associated.
+Update this to keep a coherency.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/axp803.dtsi                       | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts       | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts         | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts          | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts       | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts        | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts             | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts   | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi            | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi                   | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts    | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts         | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts        | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts      | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi                    | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
+ arch/arm64/boot/dts/allwinner/axp803.dtsi                | 4 +---
+ .../boot/dts/allwinner/sun50i-a64-amarula-relic.dts      | 6 ++----
+ .../arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts  | 4 +---
+ .../dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts     | 8 +++-----
+ .../boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts     | 6 ++----
+ arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts   | 4 +---
+ .../arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 6 ++----
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts  | 7 ++-----
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts      | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts    | 7 ++-----
+ .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts   | 9 +++------
+ arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi     | 9 +++------
+ arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts     | 9 +++------
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi            | 8 +++-----
+ .../dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts | 4 ++--
+ .../boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi    | 4 ++--
+ .../boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts | 6 ++----
+ .../boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts    | 6 ++----
+ arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts  | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts | 4 +---
+ .../boot/dts/allwinner/sun50i-h5-orangepi-prime.dts      | 9 +++------
+ .../boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts  | 9 +++------
+ .../boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi             | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts  | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts   | 4 +---
+ .../boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts      | 4 +---
+ .../boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts   | 6 ++----
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi    | 6 ++----
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts     | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts    | 4 +---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi             | 4 +---
+ 34 files changed, 59 insertions(+), 130 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-index f0349ef4bfdd..22396406c5f9 100644
+index f4f2c70fde5c..10e9186a76bf 100644
 --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-@@ -2,7 +2,7 @@
-  * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
+- */
++// Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
+ 
+ /*
+  * AXP803 Integrated Power Management Chip
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 5634245d11db..ac979de19013 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 Amarula Solutions B.V.
+- * Author: Jagan Teki <jagan@amarulasolutions.com>
+- */
++// Copyright (C) 2018 Amarula Solutions B.V.
++// Author: Jagan Teki <jagan@amarulasolutions.com>
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 208373efee49..e19fbe066c9e 100644
+index 76d0399b7737..2e00c44c7178 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -2,7 +2,7 @@
-  * Copyright (c) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2016 ARM Ltd.
+- */
++// Copyright (c) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index 9b9d9157128c..311475159def 100644
+index 4e7d4532e498..e7b64a5f8c13 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+- */
++// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index 787ebd805a3b..577f9e1d08a1 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -1,9 +1,7 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
+- * Copyright (C) 2019 Amarula Solutions B.V.
+- * Author: Jagan Teki <jagan@amarulasolutions.com>
+- */
++// Copyright (C) 2019 Oceanic Systems (UK) Ltd.
++// Copyright (C) 2019 Amarula Solutions B.V.
++// Author: Jagan Teki <jagan@amarulasolutions.com>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+index 12f8c62c4f52..efb20846de49 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 Martin Ayotte <martinayotte@gmail.com>
+- * Copyright (C) 2019 Sunil Mohan Adapa <sunil@medhas.org>
+- */
++// Copyright (C) 2018 Martin Ayotte <martinayotte@gmail.com>
++// Copyright (C) 2019 Sunil Mohan Adapa <sunil@medhas.org>
+ 
+ #include "sun50i-a64-olinuxino.dts"
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 0a2570575e1f..c98c4fca57de 100644
+index 62f58233292e..0463564ae552 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+- */
++// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index f54a415f2e3b..ee419b028e2d 100644
+index 48bea0b526fa..72120e45f35e 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -3,7 +3,7 @@
-  * Copyright (C) 2017-2018 Samuel Holland <samuel@sholland.org>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+- * Copyright (C) 2017-2018 Samuel Holland <samuel@sholland.org>
+- */
++// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
++// Copyright (C) 2017-2018 Samuel Holland <samuel@sholland.org>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+index 72d6961dc312..302e24be0a31 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+@@ -1,8 +1,5 @@
+-/*
+- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+- *
+- * Copyright (c) 2018 ARM Ltd.
+- */
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++// Copyright (c) 2018 ARM Ltd.
+ 
+ #include "sun50i-a64-sopine-baseboard.dts"
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index d5b6e8159a33..311525ff82df 100644
+index 2fb8cef0309e..b26181cf9095 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -2,7 +2,7 @@
-  * Copyright (c) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2016 ARM Ltd.
+- */
++// Copyright (c) 2016 ARM Ltd.
+ 
+ #include "sun50i-a64-pine64.dts"
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 409523cb0950..6ba9f9052be5 100644
+index 830ab9beb3b2..6f817cfcccb9 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -2,7 +2,7 @@
-  * Copyright (c) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2016 ARM Ltd.
+- */
++// Copyright (c) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index 78c82a665c84..2d0b3c6cc143 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -1,9 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
+- * Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
+- *
+- */
++// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
++// Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 920103ec0046..612f4c295549 100644
+index e5b29f37ffd1..2f6ea9f3f6a2 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -5,7 +5,7 @@
-  *   Copyright (c) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,10 +1,7 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
+- *
+- * Based on sun50i-a64-pine64.dts, which is:
+- *   Copyright (c) 2016 ARM Ltd.
+- */
++// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
++// Based on sun50i-a64-pine64.dts, which is:
++//   Copyright (c) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 9d20e13f0c02..a578a276d555 100644
+index 1733306c469e..f1204fc4223c 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -5,7 +5,7 @@
-  *   Copyright (c) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,10 +1,7 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
+- *
+- * Based on sun50i-a64-pine64.dts, which is:
+- *   Copyright (c) 2016 ARM Ltd.
+- */
++// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
++// Based on sun50i-a64-pine64.dts, which is:
++//   Copyright (c) 2016 ARM Ltd.
+ 
+ #include "sun50i-a64.dtsi"
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 970415106dcf..421454c8add7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -1,9 +1,6 @@
+-/*
+- * Copyright (C) Harald Geyer <harald@ccbib.org>
+- * based on sun50i-a64-olinuxino.dts by Jagan Teki <jteki@openedev.com>
+- *
+- * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+- */
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++// Copyright (C) Harald Geyer <harald@ccbib.org>
++// based on sun50i-a64-olinuxino.dts by Jagan Teki <jteki@openedev.com>
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 27e48234f1c2..0dfee8b7f523 100644
+index ceacb093d258..ab42c0664b3e 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -4,7 +4,7 @@
-  *    Copyright (C) 2015 Jens Kuske <jenskuske@gmail.com>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,9 +1,7 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2016 ARM Ltd.
+- * based on the Allwinner H3 dtsi:
+- *    Copyright (C) 2015 Jens Kuske <jenskuske@gmail.com>
+- */
++// Copyright (C) 2016 ARM Ltd.
++// based on the Allwinner H3 dtsi:
++//    Copyright (C) 2015 Jens Kuske <jenskuske@gmail.com>
+ 
+ #include <dt-bindings/clock/sun50i-a64-ccu.h>
+ #include <dt-bindings/clock/sun8i-de2.h>
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+index d6cc6592cfa3..076a0b983101 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++// Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
++
+ /*
+  * DTS for Emlid Neutis N5 Dev board.
+- *
+- * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+index 7df7308ec9f0..fc570011495f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++// Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
++
+ /*
+  * DTSI for Emlid Neutis N5 SoM.
+- *
+- * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
+index d68bdfea2271..64d35daf2023 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 BayLibre, SAS
+- * Author: Neil Armstrong <narmstrong@baylibre.com>
+- */
++// Copyright (C) 2018 BayLibre, SAS
++// Author: Neil Armstrong <narmstrong@baylibre.com>
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-index 1c7dde84e54d..7037ec9df4a1 100644
+index b65094488820..4f9ba53ffaae 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -3,7 +3,7 @@
-  * Copyright (C) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Antony Antony <antony@phenome.org>
+- * Copyright (C) 2016 ARM Ltd.
+- */
++// Copyright (C) 2017 Antony Antony <antony@phenome.org>
++// Copyright (C) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-index 57a6f45036c1..fa56e232f380 100644
+index ee0aa49bce1e..b059e20813bd 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+- */
++// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index e126c1c9f05c..74f5d8b3eb8a 100644
+index 22df6dc44c79..70b5f0998421 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2016 ARM Ltd.
+- */
++// Copyright (C) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-index d9b3ed257088..05c1c26ce6e6 100644
+index d9e3be17d842..cb44bfa5981f 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-@@ -5,7 +5,7 @@
-  *   Copyright (C) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,10 +1,7 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
+- *
+- * Based on sun50i-h5-orangepi-pc2.dts, which is:
+- *   Copyright (C) 2016 ARM Ltd.
+- */
++// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
++// Based on sun50i-h5-orangepi-pc2.dts, which is:
++//   Copyright (C) 2016 ARM Ltd.
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+index 08829849bc0d..ef5ca6444220 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+@@ -1,9 +1,6 @@
+-/*
+- * Copyright (C) 2016 ARM Ltd.
+- * Copyright (C) 2018 Hauke Mehrtens <hauke@hauke-m.de>
+- *
+- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+- */
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++// Copyright (C) 2016 ARM Ltd.
++// Copyright (C) 2018 Hauke Mehrtens <hauke@hauke-m.de>
+ 
+ /dts-v1/;
+ #include "sun50i-h5.dtsi"
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index dacf61399527..93b104f2f9f5 100644
+index 54d360198622..c95a68541309 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+- */
++// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+ 
+ /dts-v1/;
+ 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 7c775a918a4e..620a3171c3e8 100644
+index 83d177aff06e..3e724788dd3e 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -2,7 +2,7 @@
-  * Copyright (C) 2016 ARM Ltd.
-  *
-  * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-+ * of the GPL or the MIT license, at your option. Note that this dual
-  * licensing only applies to this file, and not this project as a
-  * whole.
-  *
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2016 ARM Ltd.
+- */
++// Copyright (C) 2016 ARM Ltd.
+ 
+ #include <arm/sunxi-h3-h5.dtsi>
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 9957b81996ba..df6d872c34e2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2019 Clément Péron <peron.clem@gmail.com>
+- */
++// Copyright (C) 2019 Clément Péron <peron.clem@gmail.com>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 735a959cf399..c311eee52a35 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
+- */
++// Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
+index 8844968f7227..e7ca75c0d0f7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 Jagan Teki <jagan@openedev.com>
+- */
++// Copyright (C) 2018 Jagan Teki <jagan@openedev.com>
+ 
+ #include "sun50i-h6-orangepi.dtsi"
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+index 2bd863561282..83aab7368889 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 Amarula Solutions
+- * Author: Jagan Teki <jagan@amarulasolutions.com>
+- */
++// Copyright (C) 2018 Amarula Solutions
++// Author: Jagan Teki <jagan@amarulasolutions.com>
+ 
+ #include "sun50i-h6-orangepi.dtsi"
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index caccebe3389b..37f4c57597d4 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2018 Amarula Solutions
+- * Author: Jagan Teki <jagan@amarulasolutions.com>
+- */
++// Copyright (C) 2018 Amarula Solutions
++// Author: Jagan Teki <jagan@amarulasolutions.com>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index e1f5784e1566..d1c2aa5b3a20 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.io>
+- */
++// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.io>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+index 260dac597d6c..83e6cb0e59ce 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
+- */
++// Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
+ 
+ /dts-v1/;
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 8e5999cd08bb..6567dabbc0c7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+-/*
+- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+- */
++// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/sun50i-h6-ccu.h>
 -- 
 2.20.1
 
