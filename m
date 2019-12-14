@@ -2,103 +2,129 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F8C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB1C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E46F20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8EA20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqR3BInj"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fPMD/xFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfLNVJh (ORCPT
+        id S1727001AbfLNVKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 16:09:37 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44519 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLNVJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 16:09:37 -0500
-Received: by mail-lj1-f196.google.com with SMTP id c19so2521281lji.11
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 13:09:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EQQEq9PTrEL9uBad7QGCPNruaz6IPJiTv99Hu/EpDwA=;
-        b=TqR3BInjw/IqJswekxIeRtPW85atl7eHttemwFLOjsc1p6M6IvmN0ZUcclC5MQEjgl
-         TcsvPd/dAWMwZPm3JvPw0PjGhyXhqAbyCxR1wjqmg1/8JMgornWJy0V/hdfScF1TWb5N
-         1GUKLV4nbTE4px2Bioz3F/gllrAV1Wl2A+3/Ykb1QfBzJL7SOmFfA0avWUZRjYsE52Qr
-         isltovE2z9xHXaxNFtmoBWxXdnqm3V3N5vhjf7R/fsB8U69ajWtB0PpiQO0LeUuFpmmK
-         pmyJ+W/ybPqYIjAyQ8ZqcxZH47k1tmk1PEfO+gCV9qGj48VPIufxdl9dic4jkAp30hQd
-         AWTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EQQEq9PTrEL9uBad7QGCPNruaz6IPJiTv99Hu/EpDwA=;
-        b=rcbkx/ub6Mz2Fp8QNGqKtR09itgWSzj4Q45Cw3Q3brWxZzufBrt0VGiSuS3tGbSikD
-         t+l6yh20/8BmVXSXX7HpW7xdWEy/A3sFRvB8GEKQ0ZYsWEWQUiI5eg3dcXG02f/cHaaZ
-         rUHPHlgKojWj6i2IRVp9LgVOBS2A983WAABiVPwqkmcLjU5D50vltnvqcsvXu4UA0dYq
-         ODPTYhyxhivmJyjH+1fG4tJ1mIBM8X9JX2J18C4eJ0kfSTpSvOoKziix1jBPo7WJkpyB
-         uIr3daIkYVjSXtxZXFcDHuAwvMpk3B2rQmraRWrd+zH3tw1lzW1M0zMy3whxsSexmUPP
-         yt5g==
-X-Gm-Message-State: APjAAAV+ve1IFv6SqaHK4eMzJ2EuKW6J2tCKHkrUUdt+uTleesGY8v2g
-        D7407NlCzZtXN1WHdrAPSRI=
-X-Google-Smtp-Source: APXvYqx1W6X0Gtp+sZynYaCyuFsLfu5ht4rhMlovrmvhkUwUUyQl+pOQjTJA3L9dl/7wSGb33qqyIg==
-X-Received: by 2002:a2e:809a:: with SMTP id i26mr13794036ljg.108.1576357775077;
-        Sat, 14 Dec 2019 13:09:35 -0800 (PST)
-Received: from ul001888.synapse.com (18-129-132-95.pool.ukrtel.net. [95.132.129.18])
-        by smtp.gmail.com with ESMTPSA id t81sm6236909lff.25.2019.12.14.13.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 13:09:34 -0800 (PST)
-From:   Vasyl Gomonovych <gomonovych@gmail.com>
-To:     piotrs@cadence.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com
-Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] git commit --signoff -m "mtd: cadence: Fix cast to pointer from integer of different size warning
-Date:   Sat, 14 Dec 2019 22:09:45 +0100
-Message-Id: <20191214210946.29922-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 14 Dec 2019 16:10:12 -0500
+Received: from mout.gmx.net ([212.227.15.19]:60731 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfLNVKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 16:10:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576357790;
+        bh=TXBkusM4pGGyyc42JuzHWCOIuM+BLDKgM7c9ve9GIqY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=fPMD/xFJTCMs3LrZKukP4l0lDeb4LAswt9Po2OEfDOnyP7Of0Q7+SXPW2cfh0cthX
+         0jru4yctgV1TSvFu9w3k1IKhWOYBCyxoIMQXK5FtviVN6I6l5XEyXlk49vTCbmbKnr
+         89ls6eAV9lHcD9tv3lb6VSWzUlQfeJ7ceo9Bu3Tc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUGi9-1iG4ib0WSR-00REKH; Sat, 14
+ Dec 2019 22:09:50 +0100
+Subject: Re: [PATCH] ARM: bcm: Fix support for BCM2711 SoC which breaks other
+ ARM platforms
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     letux-kernel@openphoenux.org, Tony Lindgren <tony@atomide.com>,
+        linux@armlinux.org.uk,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org, kernel@pyra-handheld.com,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+References: <33662723d61a80669390abc1e592eb006d8709f1.1576353784.git.hns@goldelico.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <a78dbb9c-31ee-90c6-6bb6-6f6448c8208e@gmx.net>
+Date:   Sat, 14 Dec 2019 22:09:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <33662723d61a80669390abc1e592eb006d8709f1.1576353784.git.hns@goldelico.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:W19swVnhvLWklH1Ap3rdgPxUw/2Kp/bVdKN4sEQ/PBWwjnDI5b2
+ A48uwBM4gtkWr80+vegiKsJV+Cszcb/2mvAIKzGjIsy0KRO7ZYWbG6Uu7Oj0Fa46hkNBht2
+ w+/WFYA7GcddJKwDk/amdibedXDP/G0MJLHfpeNHFkCFDZHULdWgqQAkqvyoU7o9sdNHDSu
+ vIZ9xgkq+MwWtwu+3yl1A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tN3rSwrH9Ok=:yigtH0PU6m6NjmVpqOiYkl
+ 1vLoM48c66zGlX+gVDVUttKOoFJ8RkNqQ6sxj4dKtO4Z7ACo+I5+UioIVbSwLSxrDyUvP5nFz
+ iOAnsTXtnaOecrOJKR4DObXhW5FahpQFOKQ5lfZQ8zZWulSuDaM1hNz+8MUQ3Vr09ibunC7e/
+ BIOXbeuQeucovK/253kqe2p2wTMvbIp46zl42xkhxupUWT3FyZ7TThlQ4KvRCsG7TEtTuPZ+W
+ hB8dS8O+uVEQpOYnTd6yl3jWX5hJMLZ8XweT5ZWS2aeGBBQaNBnq22NosasqxsFsBDSF411/Y
+ k0RH+rWns3jwcZbv0OUCcPxdGo2pXJFXVexYi5fid1auhLWA7iDrX95+yCq0V9cZD7NuxDRXL
+ Xm3kKAv7z05d9P8OxhVfxIqfml32rEI7KxpsruNUN5yeqc0RDocd+Xpj86JOXERvfrwVCbDYh
+ g9X5lG3P880nq/zZ0dRD/RPzb6iMM7PNhS7gBIz3jVz99LGOtV0qSSHb8v6ztyflRRRoRope5
+ U4yjuz/4RDoQo7hB7QrwySIhqX3tgVTWHFNyL1dMrXb0wqfRaTMzToXc7AUM6A4jYZkr5mP00
+ 4m9aL1afP1PW66vQd+H1heo4MLK5szRHlniGgzLntiZJpaqMQY0/dD6I/McfpW1Cvdul8N3q6
+ n5gja47RHBkVOSQtrJ3NwCwNwqipKmxJ78PWsBWIEM1QSPBEtZq3bv60u4MxdQIAJtDPvg+AO
+ CWC7+U17H7LweSTF9NFv+hNo9aCFfWgPju2yBc4++VVrdmrHobNOrkSbES1QWZ/D+5fT8z6ON
+ mepwGtjD3QYF4ZvafYJ2O0ge1EO4LJz3OAyVGKtaxsNBTzeKYSw44FWmFP0i0JVQAIQ4gyoU3
+ GxaIv3y4TxCkUyDk8Prn7qHgRwrLCY9G/Ov1LkwfpImispxH9MjmVAsMPaMYKYeRS/sqtx2T1
+ CQJKrqKWqy1vj2Gyda7iC6e5D+eaElyYRCDqEDXatu1croxR8mc2uu4B8kisFTP4CN/nsR5G6
+ sqJt5DYiiQX2o8lKPC3UMuoGHcGSHO30NS/XxFw15+//jxAdEO1h6/jvEAQkHEc8c/cprnWSe
+ 5AEc2ohhNTdAwSmBk1mSf/8lMhxCvyn42BYb29bn+Vo9S4M8eQeasKS1odgKH0SYaT0roEdMb
+ 1x8roXR4lnOsPbuhlKJS5rSeeQHZblDZwHuxF20RpezSQxODyKwmtZPPsqGwSWP7/haUkIes+
+ VkmA08KzuSEB/NdZhGeeRH61SWfc0S8Sgra922cOBHxvxi2Fmm2XCpxeS88s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a cast to uintptr_t and next to a pointer
-In the final assignment the same casting in place
-memory_pointer = (uintptr_t)mem_ptr;
-Fix warning: cast to pointer from integer of different size
+Hi Nikolaus,
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
-This commit fixes a minor issue with a warning
-Not sure if we will have problem here in case of
-dma_addr_t which can be 64-bit wide on 32-bit arch
+Am 14.12.19 um 21:03 schrieb H. Nikolaus Schaller:
+> commit 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
+>
+> breaks boot of many other platforms (e.g. OMAP or i.MX6) if
+> CONFIG_ARCH_BCM2835 is enabled in addition to some multiplatform
+> config (e.g. omap2plus_defconfig). The symptom is that the OMAP
+> based board does not show any activity beyond "Starting Kernel ..."
+> even with earlycon.
+>
+> Reverting the mentioned commit makes it work again.
+>
+> The real fix is to add the missing NULL sentinel to the
+> bcm2711_compat[] variable-length array.
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
----
- drivers/mtd/nand/raw/cadence-nand-controller.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+could you please add a Fixes tag. Apart from that
 
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index 3a36285a8d8a..960c3a0be69c 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -1280,8 +1280,8 @@ cadence_nand_cdma_transfer(struct cdns_nand_ctrl *cdns_ctrl, u8 chip_nr,
- 	}
- 
- 	cadence_nand_cdma_desc_prepare(cdns_ctrl, chip_nr, page,
--				       (void *)dma_buf, (void *)dma_ctrl_dat,
--				       ctype);
-+				       (void *)(uintptr_t)dma_buf,
-+				       (void *)(uintptr_t)dma_ctrl_dat, ctype);
- 
- 	status = cadence_nand_cdma_send_and_wait(cdns_ctrl, thread_nr);
- 
--- 
-2.17.1
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
 
+Thank you
+Stefan
+
+> ---
+>  arch/arm/mach-bcm/bcm2711.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
+> index dbe296798647..fa0300d8c79d 100644
+> --- a/arch/arm/mach-bcm/bcm2711.c
+> +++ b/arch/arm/mach-bcm/bcm2711.c
+> @@ -13,6 +13,7 @@ static const char * const bcm2711_compat[] =3D {
+>  #ifdef CONFIG_ARCH_MULTI_V7
+>  	"brcm,bcm2711",
+>  #endif
+> +	NULL
+>  };
+>
+>  DT_MACHINE_START(BCM2711, "BCM2711")
