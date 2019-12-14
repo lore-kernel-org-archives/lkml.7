@@ -2,129 +2,165 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB1C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B5C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8EA20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EAA20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fPMD/xFJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPscf8un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfLNVKM (ORCPT
+        id S1727020AbfLNVLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 16:10:12 -0500
-Received: from mout.gmx.net ([212.227.15.19]:60731 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfLNVKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 16:10:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576357790;
-        bh=TXBkusM4pGGyyc42JuzHWCOIuM+BLDKgM7c9ve9GIqY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=fPMD/xFJTCMs3LrZKukP4l0lDeb4LAswt9Po2OEfDOnyP7Of0Q7+SXPW2cfh0cthX
-         0jru4yctgV1TSvFu9w3k1IKhWOYBCyxoIMQXK5FtviVN6I6l5XEyXlk49vTCbmbKnr
-         89ls6eAV9lHcD9tv3lb6VSWzUlQfeJ7ceo9Bu3Tc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUGi9-1iG4ib0WSR-00REKH; Sat, 14
- Dec 2019 22:09:50 +0100
-Subject: Re: [PATCH] ARM: bcm: Fix support for BCM2711 SoC which breaks other
- ARM platforms
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     letux-kernel@openphoenux.org, Tony Lindgren <tony@atomide.com>,
-        linux@armlinux.org.uk,
+        Sat, 14 Dec 2019 16:11:53 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33480 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfLNVLx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 16:11:53 -0500
+Received: by mail-qk1-f193.google.com with SMTP id d71so320022qkc.0;
+        Sat, 14 Dec 2019 13:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LDgrFmqwBbruyvbEPNvS6lroKGpuFewbY+qcvevRshA=;
+        b=BPscf8unKDMk9/9oIHbHvBOJKH0tk1PilMYY7IWC8e/wmylNMy3jw8l7hP79ws3vtr
+         VjpOBVUFczhc3wlpZHibWn6UZKF6l5d+zkQGhAglLdT9V/vFOm29GlQ3ZtnmBXMybXLT
+         lExwL7h2RWGoe2SlsvYYTI1PaZ278DFREdiUXNAhfP4flqPvq7LMRbuA8k5qCCpOrtEq
+         tYgR62CSqBxxs+M1aonbZwu5TRErIdMgBznyFNmgouhVFcUiqlQxr13pZLdm3C4V63h5
+         yhczXyRKJod8Ph7FQlPSQI54rrQ1tQj2GtQx7ogjUGd7O60TgjH8ZFcDH/2wAmxJJlWN
+         3nIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LDgrFmqwBbruyvbEPNvS6lroKGpuFewbY+qcvevRshA=;
+        b=mNl4qcISM6goAfXKteR5uxXF0n9DNYfNyR1MF50WlZvazf8Bjj7nkD+7T+AK7D3mlM
+         VymYas9e+XTv2u+KBLuDsg5XFfIWjORtfe0i1rR3UDmVqDGwf9BAbjNYiVgfJ7ZPbLz8
+         N23tw+QEjLaaJ0Bl9ZTeJNWEP1j/ChffqlXZjYUOYeuBQHYzoXAZYuSQrHRqpHT3XOoP
+         NNNMnAtdHKJgVJmZfyGmZ26dRMUP0biVK34VlQMm6YJaelaLpZZiw9+nTv1wKxa8h483
+         mDKpKIApsYiMpmaJBi9Lbvi2saJvGJNSU/xkGbSwpXu+UpjrJQJdfGnKm0AYrhefTdJV
+         /LlQ==
+X-Gm-Message-State: APjAAAXsVpf+V+aCMUEu49xSSWbsfwFMvMjcNKxaHgReoDBNFAKfuDB+
+        4/WMLeIU5qSiXSI3Sm6MeZS6A6rZkTo=
+X-Google-Smtp-Source: APXvYqxpnh5ryJNu99UJk1DyouhWQX9c1rYYsT+90OGNUd8qtnam7MgMea7wQA6dTFWYWFsAhimmTA==
+X-Received: by 2002:a05:620a:1114:: with SMTP id o20mr19709799qkk.128.1576357911445;
+        Sat, 14 Dec 2019 13:11:51 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n190sm4279637qke.90.2019.12.14.13.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 13:11:51 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 14 Dec 2019 16:11:49 -0500
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel@lists.infradead.org, kernel@pyra-handheld.com,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-References: <33662723d61a80669390abc1e592eb006d8709f1.1576353784.git.hns@goldelico.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <a78dbb9c-31ee-90c6-6bb6-6f6448c8208e@gmx.net>
-Date:   Sat, 14 Dec 2019 22:09:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        linux-efi <linux-efi@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 03/10] efi/libstub: use a helper to iterate over a EFI
+ handle array
+Message-ID: <20191214211149.GF140998@rani.riverdale.lan>
+References: <20191214175735.22518-1-ardb@kernel.org>
+ <20191214175735.22518-4-ardb@kernel.org>
+ <20191214203257.GD140998@rani.riverdale.lan>
+ <CAKv+Gu-XAvYf8G+7Oi-XVM+DvR89_zkmETmou-2ftgC41tnvMw@mail.gmail.com>
+ <CAKv+Gu9kEySOrKM0Q01a-ZFbSTZz51TcfmnWbSq=LWqKw=8cNw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <33662723d61a80669390abc1e592eb006d8709f1.1576353784.git.hns@goldelico.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:W19swVnhvLWklH1Ap3rdgPxUw/2Kp/bVdKN4sEQ/PBWwjnDI5b2
- A48uwBM4gtkWr80+vegiKsJV+Cszcb/2mvAIKzGjIsy0KRO7ZYWbG6Uu7Oj0Fa46hkNBht2
- w+/WFYA7GcddJKwDk/amdibedXDP/G0MJLHfpeNHFkCFDZHULdWgqQAkqvyoU7o9sdNHDSu
- vIZ9xgkq+MwWtwu+3yl1A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tN3rSwrH9Ok=:yigtH0PU6m6NjmVpqOiYkl
- 1vLoM48c66zGlX+gVDVUttKOoFJ8RkNqQ6sxj4dKtO4Z7ACo+I5+UioIVbSwLSxrDyUvP5nFz
- iOAnsTXtnaOecrOJKR4DObXhW5FahpQFOKQ5lfZQ8zZWulSuDaM1hNz+8MUQ3Vr09ibunC7e/
- BIOXbeuQeucovK/253kqe2p2wTMvbIp46zl42xkhxupUWT3FyZ7TThlQ4KvRCsG7TEtTuPZ+W
- hB8dS8O+uVEQpOYnTd6yl3jWX5hJMLZ8XweT5ZWS2aeGBBQaNBnq22NosasqxsFsBDSF411/Y
- k0RH+rWns3jwcZbv0OUCcPxdGo2pXJFXVexYi5fid1auhLWA7iDrX95+yCq0V9cZD7NuxDRXL
- Xm3kKAv7z05d9P8OxhVfxIqfml32rEI7KxpsruNUN5yeqc0RDocd+Xpj86JOXERvfrwVCbDYh
- g9X5lG3P880nq/zZ0dRD/RPzb6iMM7PNhS7gBIz3jVz99LGOtV0qSSHb8v6ztyflRRRoRope5
- U4yjuz/4RDoQo7hB7QrwySIhqX3tgVTWHFNyL1dMrXb0wqfRaTMzToXc7AUM6A4jYZkr5mP00
- 4m9aL1afP1PW66vQd+H1heo4MLK5szRHlniGgzLntiZJpaqMQY0/dD6I/McfpW1Cvdul8N3q6
- n5gja47RHBkVOSQtrJ3NwCwNwqipKmxJ78PWsBWIEM1QSPBEtZq3bv60u4MxdQIAJtDPvg+AO
- CWC7+U17H7LweSTF9NFv+hNo9aCFfWgPju2yBc4++VVrdmrHobNOrkSbES1QWZ/D+5fT8z6ON
- mepwGtjD3QYF4ZvafYJ2O0ge1EO4LJz3OAyVGKtaxsNBTzeKYSw44FWmFP0i0JVQAIQ4gyoU3
- GxaIv3y4TxCkUyDk8Prn7qHgRwrLCY9G/Ov1LkwfpImispxH9MjmVAsMPaMYKYeRS/sqtx2T1
- CQJKrqKWqy1vj2Gyda7iC6e5D+eaElyYRCDqEDXatu1croxR8mc2uu4B8kisFTP4CN/nsR5G6
- sqJt5DYiiQX2o8lKPC3UMuoGHcGSHO30NS/XxFw15+//jxAdEO1h6/jvEAQkHEc8c/cprnWSe
- 5AEc2ohhNTdAwSmBk1mSf/8lMhxCvyn42BYb29bn+Vo9S4M8eQeasKS1odgKH0SYaT0roEdMb
- 1x8roXR4lnOsPbuhlKJS5rSeeQHZblDZwHuxF20RpezSQxODyKwmtZPPsqGwSWP7/haUkIes+
- VkmA08KzuSEB/NdZhGeeRH61SWfc0S8Sgra922cOBHxvxi2Fmm2XCpxeS88s=
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9kEySOrKM0Q01a-ZFbSTZz51TcfmnWbSq=LWqKw=8cNw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+On Sat, Dec 14, 2019 at 09:04:10PM +0000, Ard Biesheuvel wrote:
+> On Sat, 14 Dec 2019 at 21:40, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Sat, 14 Dec 2019 at 21:33, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > On Sat, Dec 14, 2019 at 06:57:28PM +0100, Ard Biesheuvel wrote:
+> > > > Iterating over a EFI handle array is a bit finicky, since we have
+> > > > to take mixed mode into account, where handles are only 32-bit
+> > > > while the native efi_handle_t type is 64-bit.
+> > > >
+> > > > So introduce a helper, and replace the various occurrences of
+> > > > this pattern.
+> > > >
+> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > ---
+> > > >
+> > > > +#define for_each_efi_handle(handle, array, size, i)                  \
+> > > > +     for (i = 1, handle = efi_is_64bit()                             \
+> > > > +             ? (efi_handle_t)(unsigned long)((u64 *)(array))[0]      \
+> > > > +             : (efi_handle_t)(unsigned long)((u32 *)(array))[0];     \
+> > > > +         i++ <= (size) / (efi_is_64bit() ? sizeof(efi_handle_t)      \
+> > > > +                                          : sizeof(u32));            \
+> > > > +         handle = efi_is_64bit()                                     \
+> > > > +             ? (efi_handle_t)(unsigned long)((u64 *)(array))[i]      \
+> > > > +             : (efi_handle_t)(unsigned long)((u32 *)(array))[i])
+> > > > +
+> > > >  /*
+> > > >   * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
+> > > >   * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > This would access one past the array, no? Eg if the array has one
+> > > handle, i is incremented to 2 the first time the condition is checked,
+> > > then the loop increment will access array[2] before the condition is
+> > > checked again. There seem to be at least a couple of other for_each
+> > > macros that might have similar issues.
+> > >
+> >
+> > Indeed.
+> >
+> > > How about the below instead?
+> > >
+> > > #define for_each_efi_handle(handle, array, size, i)                     \
+> > >         for (i = 0;                                                     \
+> > >             (i < (size) / (efi_is_64bit() ? sizeof(efi_handle_t)        \
+> > >                                           : sizeof(u32))) &&            \
+> > >             ((handle = efi_is_64bit()                                   \
+> > >                 ? ((efi_handle_t *)(array))[i]                          \
+> > >                 : (efi_handle_t)(unsigned long)((u32 *)(array))[i]), 1);\
+> > >             i++)
+> > >
+> >
+> > Yeah, that looks correct to me, but perhaps we can come up with
+> > something slightly more readable? :-)
+> > (Not saying my code was better in that respect)
+> 
+> How about
+> 
+> #define efi_get_handle_at(array, idx)      \
+>     (efi_is_64bit() ? (efi_handle_t)(unsigned long)((u64 *)(array))[idx] \
+>                     : (efi_handle_t)(unsigned long)((u32 *)(array))[i])
+> 
+> 
+> #define efi_get_handle_num(size) \
+>     ((size) / (efi_is_64bit() ? sizeof(u64) : sizeof(u32)))
+> 
+> #define for_each_efi_handle(handle, array, size, i) \
+>     for (i = 0; \
+>          i < efi_get_handle_num(size) && \
+>             ((handle = efi_get_handle_at((array), i)) || true); \
+>          i++)
 
-Am 14.12.19 um 21:03 schrieb H. Nikolaus Schaller:
-> commit 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
->
-> breaks boot of many other platforms (e.g. OMAP or i.MX6) if
-> CONFIG_ARCH_BCM2835 is enabled in addition to some multiplatform
-> config (e.g. omap2plus_defconfig). The symptom is that the OMAP
-> based board does not show any activity beyond "Starting Kernel ..."
-> even with earlycon.
->
-> Reverting the mentioned commit makes it work again.
->
-> The real fix is to add the missing NULL sentinel to the
-> bcm2711_compat[] variable-length array.
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-could you please add a Fixes tag. Apart from that
-
-Acked-by: Stefan Wahren <wahrenst@gmx.net>
-
-Thank you
-Stefan
-
-> ---
->  arch/arm/mach-bcm/bcm2711.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
-> index dbe296798647..fa0300d8c79d 100644
-> --- a/arch/arm/mach-bcm/bcm2711.c
-> +++ b/arch/arm/mach-bcm/bcm2711.c
-> @@ -13,6 +13,7 @@ static const char * const bcm2711_compat[] =3D {
->  #ifdef CONFIG_ARCH_MULTI_V7
->  	"brcm,bcm2711",
->  #endif
-> +	NULL
->  };
->
->  DT_MACHINE_START(BCM2711, "BCM2711")
+Heh, I came up with almost the same thing, but yours is slightly better,
+You have a typo in efi_get_handle_at (i instead of idx in the second
+line).
