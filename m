@@ -2,116 +2,94 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCEBC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940BBC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEF82077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367B214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 01:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLNBnR (ORCPT
+        id S1726691AbfLNBxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 20:43:17 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46212 "EHLO mga12.intel.com"
+        Fri, 13 Dec 2019 20:53:42 -0500
+Received: from mga12.intel.com ([192.55.52.136]:46750 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfLNBnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 20:43:17 -0500
+        id S1726046AbfLNBxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 20:53:42 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 17:43:16 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 17:53:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
-   d="scan'208";a="226461161"
+   d="scan'208";a="226462850"
 Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 13 Dec 2019 17:43:15 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org, stable@vger.kernel.org
-Subject: Re: [PATCH] iommu/vt-d: Allocate reserved region for ISA with correct
- permission
-To:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20191213053642.5696-1-jsnitsel@redhat.com>
+  by orsmga002.jf.intel.com with ESMTP; 13 Dec 2019 17:53:38 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] iommu/vt-d bad RMRR workarounds
+To:     Barret Rhoden <brho@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Yian Chen <yian.chen@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>
+References: <20191211194606.87940-1-brho@google.com>
+ <35f49464-0ce5-9998-12a0-624d9683ea18@linux.intel.com>
+ <8a530d5c-22e1-3c2f-98df-45028cc6c771@google.com>
 From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <5ccaaec0-b070-b820-cebd-6b7ad179109c@linux.intel.com>
-Date:   Sat, 14 Dec 2019 09:42:27 +0800
+Message-ID: <02d69d9a-9c45-d9e7-4c1a-cb5e50590c47@linux.intel.com>
+Date:   Sat, 14 Dec 2019 09:52:50 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191213053642.5696-1-jsnitsel@redhat.com>
+In-Reply-To: <8a530d5c-22e1-3c2f-98df-45028cc6c771@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerry,
 
-On 12/13/19 1:36 PM, Jerry Snitselaar wrote:
-> Currently the reserved region for ISA is allocated with no
-> permissions. If a dma domain is being used, mapping this region will
-> fail. Set the permissions to DMA_PTE_READ|DMA_PTE_WRITE.
+On 12/13/19 10:31 PM, Barret Rhoden wrote:
+> On 12/11/19 9:43 PM, Lu Baolu wrote:
+>> The VT-d spec defines the BIOS considerations about RMRR in section 8.4:
+>>
+>> "
+>> BIOS must report the RMRR reported memory addresses as reserved (or as
+>> EFI runtime) in the system memory map returned through methods such as
+>> INT15, EFI GetMemoryMap etc.
+>> "
+>>
+>> So we should treat it as firmware bug if the RMRR range is not mapped as
+>> RESERVED in the system memory map table.
+>>
+>> As for how should the driver handle this case, ignoring buggy RMRR with
+>> a warning message might be a possible choice.
 > 
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: iommu@lists.linux-foundation.org
-> Cc: stable@vger.kernel.org # v5.3+
-> Fixes: d850c2ee5fe2 ("iommu/vt-d: Expose ISA direct mapping region via iommu_get_resv_regions")
-> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> ---
->   drivers/iommu/intel-iommu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 0c8d81f56a30..998529cebcf2 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5736,7 +5736,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
->   		struct pci_dev *pdev = to_pci_dev(device);
->   
->   		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
-> -			reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
-> +			reg = iommu_alloc_resv_region(0, 1UL << 24, prot,
->   						      IOMMU_RESV_DIRECT);
+> Agreed, firmware should not be doing this.  My first patch just skips 
+> those entries, instead of aborting DMAR processing, and keeps the warning.
+>
 
+Hi Yian,
 
-This also applies to the IOAPIC range. Can you please change them
-together?
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 0c8d81f56a30..256e48434f68 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5736,7 +5736,7 @@ static void intel_iommu_get_resv_regions(struct 
-device *device,
-                 struct pci_dev *pdev = to_pci_dev(device);
-
-                 if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
--                       reg = iommu_alloc_resv_region(0, 1UL << 24, 0,
-+                       reg = iommu_alloc_resv_region(0, 1UL << 24, prot,
-                                                       IOMMU_RESV_DIRECT);
-                         if (reg)
-                                 list_add_tail(&reg->list, head);
-@@ -5746,7 +5746,7 @@ static void intel_iommu_get_resv_regions(struct 
-device *device,
-
-         reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
-                                       IOAPIC_RANGE_END - 
-IOAPIC_RANGE_START + 1,
--                                     0, IOMMU_RESV_MSI);
-+                                     prot, IOMMU_RESV_MSI);
-         if (!reg)
-                 return;
-         list_add_tail(&reg->list, head);
+Does this work for you?
 
 Best regards,
 baolu
 
->   			if (reg)
->   				list_add_tail(&reg->list, head);
+
+> So long as the machine still boots in a safe manner, I'm reasonably happy.
+> 
+> Thanks,
+> 
+> Barret
+> 
 > 
