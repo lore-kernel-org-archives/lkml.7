@@ -2,129 +2,118 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CFCC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF6C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AC320706
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78E42465E
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OHETnmaE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCZd9EXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfLNMas (ORCPT
+        id S1726683AbfLNMck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 07:30:48 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:58533 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725895AbfLNMar (ORCPT
+        Sat, 14 Dec 2019 07:32:40 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40229 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfLNMcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 07:30:47 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576326647; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=nEhgWqsCxMZod3X8xArRbg45hp9WJhR8VXPah4HQGdA=;
- b=OHETnmaEmO1Fy0VxkkDuH1qJ0PaWp/9LYN36AhY9wASJwt2NDjB8yqLTwA+tZAZzpiNWmPLo
- NKpqX3Sw73thWVHY6Xp8R7fgWBKuIa0hCpibwctuO/DJQWovA6WbvbKqinMvLtXQR08fegmJ
- P3d3uXkB9K1NUsTy7IsaeSIe12A=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df4d5f5.7f0a44f89a08-smtp-out-n02;
- Sat, 14 Dec 2019 12:30:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A22C1C447A3; Sat, 14 Dec 2019 12:30:45 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9749DC433CB;
-        Sat, 14 Dec 2019 12:30:44 +0000 (UTC)
+        Sat, 14 Dec 2019 07:32:39 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c93so1318677edf.7;
+        Sat, 14 Dec 2019 04:32:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=og90X3T/HiK4QxMIRbjqxNLdYml1hZutaUaHYcrNOdw=;
+        b=QCZd9EXGlipVlMW0kDuKPdpPvkgsN1s4JbXfvvVr+3x+6erztvQifDa7qZGsPBu0k7
+         ihW84YNNf7LocFqHZAPJHTp9EP9srZacDWEyVaHg00hrt+8GqcRwBpQaaVIHbfgRFBGo
+         v13Ly3U9V5dZx3Br4G8j5VkfpnQbwmKvr6ISxJY/QVK+Pkrd/SV6NA3abO7UK4z6OAZu
+         gqX/X6jTxva8E5rCLYhYV+r9/EOMxOhG4T1umPtBKAsa2Zaeh+4f6rWPUg6bzqsGD8cr
+         196IgCedfP2avhBsY0wkEMOVEhmIqS7YeKfYNkCIkRQlt0eb/gR3FS62fKYtTNFZlVCZ
+         ORYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=og90X3T/HiK4QxMIRbjqxNLdYml1hZutaUaHYcrNOdw=;
+        b=i8KreDG1N6O2Z8kpbOEiQ5cxvMug5Tr9B3RL7eqb9s1qkkWnLQxYLHMn+8DBwM1Fms
+         cj+muFIEwNtetNq+6UMxYMKuGX9YFIOB+rWtHeU2LJLjhoWrzbHnBn2go0MIeTTBgOWt
+         8H7y/8xfqxK3nQhz1vWE8oPBA8mi4vrecGoVaPqEbYga8M1Byevew5AxsiFynCy5Q17x
+         YSTOSggy0fWzi1HVmPDrPhdEi8wPUjH3b3rumtzyN7yc7UIBs3o3r8YK2QYIPre+hE9U
+         qmnZRivzGWgR7fawU68zq8Qi79lgMPgFnZ6ETlXeU0dTWQ9RcX64lfy3bulBqtjve1Ob
+         SyHw==
+X-Gm-Message-State: APjAAAVSNQTdzs+u8XIp1zb4I4Ipn0Xo24xnmIJI5y8mWq5qV1q6cLNZ
+        rfYeku0pePpUUDopXhZXnWkms4EbpG4pym32gSw=
+X-Google-Smtp-Source: APXvYqwuHKJGqjCUjTSlBZ/MqbcEF/B+Nq4qhfakyrLrsUlsSKfg/LkgUpDcIDkUw/NFY7w4go4mFqybCrF0Nzs7n1M=
+X-Received: by 2002:a17:906:2281:: with SMTP id p1mr22619648eja.184.1576326757363;
+ Sat, 14 Dec 2019 04:32:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 14 Dec 2019 20:30:44 +0800
-From:   cang@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Avri Altman <Avri.Altman@wdc.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-In-Reply-To: <20191212182411.GE415177@yoga>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
- <MN2PR04MB69919AA0C345E7D6620C3ADFFC550@MN2PR04MB6991.namprd04.prod.outlook.com>
- <0101016efb07efac-32cf270a-68dd-455a-b037-9fac2f3834cd-000000@us-west-2.amazonses.com>
- <20191212182411.GE415177@yoga>
-Message-ID: <0baa9d993cf9cb3e6c94f4c4440e9f95@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20191107140304.8426-1-laurent@vivier.eu> <20191107140304.8426-2-laurent@vivier.eu>
+ <7cb245ed-f738-7991-a09b-b27152274b9f@vivier.eu> <20191213185110.06b52cf4@md1za8fc.ad001.siemens.net>
+ <1576267177.4060.4.camel@HansenPartnership.com> <3205e74b-71f1-14f4-b784-d878b3ef697f@vivier.eu>
+In-Reply-To: <3205e74b-71f1-14f4-b784-d878b3ef697f@vivier.eu>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Sat, 14 Dec 2019 13:32:26 +0100
+Message-ID: <CAKgNAkiaKJZMA0pzvwDa75CxfULTL1LmOZDzhW0Y5TmL7nBGZw@mail.gmail.com>
+Subject: Re: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
+To:     Laurent Vivier <laurent@vivier.eu>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
+        Containers <containers@lists.linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-13 02:24, Bjorn Andersson wrote:
-> On Thu 12 Dec 08:53 PST 2019, cang@codeaurora.org wrote:
-> 
->> On 2019-12-12 15:00, Avri Altman wrote:
->> > > On Wed 11 Dec 22:01 PST 2019, cang@codeaurora.org wrote:
->> > > > On 2019-12-12 12:53, Bjorn Andersson wrote:
->> > > > > On Wed 11 Dec 00:49 PST 2019, Can Guo wrote:
-> [..]
->> > > > And in real cases, as the UFS is the boot device, UFS driver will always
->> > > > be probed during bootup.
->> > > >
->> > >
->> > > The UFS driver will load and probe because it's mentioned in the
->> > > devicetree, but if either the ufs drivers or any of its dependencies
->> > > (phy, resets, clocks, etc) are built as modules it might very well
->> > > finish probing after lateinitcall.
->> > >
->> > > So in the even that the bsg is =y and any of these drivers are =m,
->> > > or if
->> > > you're having bad luck with your timing, the list will be empty.
->> > >
->> > > As described below, if bsg=m, then there's nothing that will load the
->> > > module and the bsg will not probe...
->> > Right.
->> > bsg=y and ufshcd=m is a bad idea, and should be avoided.
->> >
->> 
->> Yeah, I will get it addressed in the next patchset.
->> 
-> 
-> If you build this around platform_device_register_data() from ufshcd I
-> don't see a reason to add additional restrictions on this combination
-> (even though it might not make much sense for people to use this
-> combination).
-> 
-> Regards,
-> Bjorn
+Hello Laurent,
 
-Agree, thanks.
+On Sat, 14 Dec 2019 at 12:35, Laurent Vivier <laurent@vivier.eu> wrote:
+>
+> Le 13/12/2019 =C3=A0 20:59, James Bottomley a =C3=A9crit :
+> > On Fri, 2019-12-13 at 18:51 +0100, Henning Schild wrote:
+> >> Hi all,
+> >>
+> >> that is a very useful contribution, which will hopefully be
+> >> considered.
+> >
+> > I'm technically the maintainer on the you touched it last you own it
+> > basis, so if Christian's concerns get addressed I'll shepherd it
+> > upstream.
+>
+> Thank you.
+>
+> I update this in the next days and re-send the patch.
 
-Regards,
-Can Guo.
+Would you also be so kind as to craft a patch for the
+user_namespaces(7) manual page describing the changes (sent to me,
+linux-man@vger.kernel.org, and the other parties already in CC)?
+
+If you do not have the time to familiarize yourself with groff/man
+markup, a patch that uses plain text is fine; I can handle the
+formatting.
+
+Thanks,
+
+Michael
+--=20
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
