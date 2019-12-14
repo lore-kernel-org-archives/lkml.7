@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03382C2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D752C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3994206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAE8206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="v+ekk9zC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GZqvKpLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfLNWLs (ORCPT
+        id S1727551AbfLNWLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:11:48 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:54940 "EHLO
+        Sat, 14 Dec 2019 17:11:54 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:54978 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfLNWLr (ORCPT
+        with ESMTP id S1727002AbfLNWLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:11:47 -0500
+        Sat, 14 Dec 2019 17:11:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576361492; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1576361493; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jQw0ApAkaWKDscKzdmhZ/9zupaUBgI74oe8/g48qF8I=;
-        b=v+ekk9zCzZ6OUip8IqnTxVmI6a3oxA7nnc48CwQrPx1LpAUfPsBujSxPfabC4yUH2Dsx6H
-        35GMTeDZ7tpiMphY5vGeso+MQI8r6Bdr9BbGUn+HsdvUqk6lmo6o/sqySHWxGPF5HKWUOx
-        SVIwdPpqqgyns/FhJsHpX9BPvq1u1Ss=
+        bh=qMX6UIY9bmRWjVAt92xIir5wDSF3AxsXg4z8MhqUuq4=;
+        b=GZqvKpLNRWx3uwt3Efv+uWssqlsHWaddDgk17heOYSl9UawFPhihp7ZdMEAgGDbIR65Ti6
+        6+qcUwNNqr5j2NBPaIVk3leUw5ocUGw6oSV8k3QKi+tl2HMymKBpgLdyf6DdFnBasLT/Kq
+        S4hW6iz6o2xfZhTmM2KUOHYCQ47p/wM=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/6] usb: musb: jz4740: Constify jz4740_musb_pdata struct
-Date:   Sat, 14 Dec 2019 23:11:23 +0100
-Message-Id: <20191214221126.93116-3-paul@crapouillou.net>
+Subject: [PATCH 4/6] usb: musb: jz4740: Rename platform_device field in priv struct
+Date:   Sat, 14 Dec 2019 23:11:24 +0100
+Message-Id: <20191214221126.93116-4-paul@crapouillou.net>
 In-Reply-To: <20191214221126.93116-1-paul@crapouillou.net>
 References: <20191214221126.93116-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -48,58 +48,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By moving around the jz4740_musb_pdata structure, we can have the
-.platform_ops field initialized, so that we don't have to initialize it
-manually in the probe function. Therefore, the struct can be const now.
+Name the platform_device pointer 'pdev' instead of 'musb'. Since the
+driver also deal with pointers to 'struct musb', it can be very
+confusing to have a pointer named after this struct but with a different
+type.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/musb/jz4740.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/usb/musb/jz4740.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index b31b028e5ee7..3410e6b01bac 100644
+index 3410e6b01bac..e2baa1b6bad6 100644
 --- a/drivers/usb/musb/jz4740.c
 +++ b/drivers/usb/musb/jz4740.c
-@@ -72,11 +72,6 @@ static const struct musb_hdrc_config jz4740_musb_config = {
- 	.fifo_cfg_size = ARRAY_SIZE(jz4740_musb_fifo_cfg),
+@@ -17,7 +17,7 @@
+ #include "musb_core.h"
+ 
+ struct jz4740_glue {
+-	struct platform_device  *musb;
++	struct platform_device	*pdev;
+ 	struct clk		*clk;
  };
  
--static struct musb_hdrc_platform_data jz4740_musb_platform_data = {
--	.mode   = MUSB_PERIPHERAL,
--	.config = &jz4740_musb_config,
--};
--
- static int jz4740_musb_init(struct musb *musb)
- {
- 	struct device *dev = musb->controller->parent;
-@@ -114,10 +109,16 @@ static const struct musb_platform_ops jz4740_musb_ops = {
- #endif
- };
+@@ -151,7 +151,7 @@ static int jz4740_probe(struct platform_device *pdev)
+ 	musb->dev.dma_mask		= &musb->dev.coherent_dma_mask;
+ 	musb->dev.coherent_dma_mask	= DMA_BIT_MASK(32);
  
-+static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
-+	.mode		= MUSB_PERIPHERAL,
-+	.config		= &jz4740_musb_config,
-+	.platform_ops	= &jz4740_musb_ops,
-+};
-+
- static int jz4740_probe(struct platform_device *pdev)
- {
- 	struct device			*dev = &pdev->dev;
--	struct musb_hdrc_platform_data	*pdata = &jz4740_musb_platform_data;
-+	const struct musb_hdrc_platform_data *pdata = &jz4740_musb_pdata;
- 	struct platform_device		*musb;
- 	struct jz4740_glue		*glue;
- 	struct clk                      *clk;
-@@ -153,8 +154,6 @@ static int jz4740_probe(struct platform_device *pdev)
- 	glue->musb			= musb;
+-	glue->musb			= musb;
++	glue->pdev			= musb;
  	glue->clk			= clk;
  
--	pdata->platform_ops		= &jz4740_musb_ops;
--
  	platform_set_drvdata(pdev, glue);
+@@ -188,7 +188,7 @@ static int jz4740_remove(struct platform_device *pdev)
+ {
+ 	struct jz4740_glue	*glue = platform_get_drvdata(pdev);
  
- 	ret = platform_device_add_resources(musb, pdev->resource,
+-	platform_device_unregister(glue->musb);
++	platform_device_unregister(glue->pdev);
+ 	clk_disable_unprepare(glue->clk);
+ 
+ 	return 0;
 -- 
 2.24.0
 
