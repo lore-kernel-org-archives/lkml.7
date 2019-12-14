@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D752C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0C3C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAE8206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B04214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GZqvKpLN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EDeuY7by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfLNWLy (ORCPT
+        id S1727558AbfLNWMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:11:54 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:54978 "EHLO
+        Sat, 14 Dec 2019 17:12:01 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55008 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfLNWLx (ORCPT
+        with ESMTP id S1727002AbfLNWMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:11:53 -0500
+        Sat, 14 Dec 2019 17:12:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576361493; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1576361494; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qMX6UIY9bmRWjVAt92xIir5wDSF3AxsXg4z8MhqUuq4=;
-        b=GZqvKpLNRWx3uwt3Efv+uWssqlsHWaddDgk17heOYSl9UawFPhihp7ZdMEAgGDbIR65Ti6
-        6+qcUwNNqr5j2NBPaIVk3leUw5ocUGw6oSV8k3QKi+tl2HMymKBpgLdyf6DdFnBasLT/Kq
-        S4hW6iz6o2xfZhTmM2KUOHYCQ47p/wM=
+        bh=wO86ve54NEKdhdaSZv4eNbfzAoNfLippFMfAu/0tZxw=;
+        b=EDeuY7byW2/Fcijm901XMG1DJ11Ea+QXHZPuZjhXT0tLJB83Rg8mpvBjLDG1JXgi8t0CXt
+        N1OliQhJVUoyiqQ4yUZECLOFaG+ZQMbsbEtfDkd/TcggaZIQ2MG1VQa3hM5ilZkW5Gk4Dc
+        jUZcvZHyQI8wbICe/5LjWPTiZ69ayi0=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 4/6] usb: musb: jz4740: Rename platform_device field in priv struct
-Date:   Sat, 14 Dec 2019 23:11:24 +0100
-Message-Id: <20191214221126.93116-4-paul@crapouillou.net>
+Subject: [PATCH 5/6] usb: musb: jz4740: Comments fix
+Date:   Sat, 14 Dec 2019 23:11:25 +0100
+Message-Id: <20191214221126.93116-5-paul@crapouillou.net>
 In-Reply-To: <20191214221126.93116-1-paul@crapouillou.net>
 References: <20191214221126.93116-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -48,47 +48,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Name the platform_device pointer 'pdev' instead of 'musb'. Since the
-driver also deal with pointers to 'struct musb', it can be very
-confusing to have a pointer named after this struct but with a different
-type.
+Add a /* sentinel */ comment to the sentinel entry of the devicetree ID
+table, and fix a multi-line comment not having its opening token on a
+separate line.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/musb/jz4740.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/musb/jz4740.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index 3410e6b01bac..e2baa1b6bad6 100644
+index e2baa1b6bad6..a8cd2ba2ed06 100644
 --- a/drivers/usb/musb/jz4740.c
 +++ b/drivers/usb/musb/jz4740.c
-@@ -17,7 +17,7 @@
- #include "musb_core.h"
+@@ -88,7 +88,8 @@ static int jz4740_musb_init(struct musb *musb)
+ 		return err;
+ 	}
  
- struct jz4740_glue {
--	struct platform_device  *musb;
-+	struct platform_device	*pdev;
- 	struct clk		*clk;
+-	/* Silicon does not implement ConfigData register.
++	/*
++	 * Silicon does not implement ConfigData register.
+ 	 * Set dyn_fifo to avoid reading EP config from hardware.
+ 	 */
+ 	musb->dyn_fifo = true;
+@@ -197,7 +198,7 @@ static int jz4740_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_musb_of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-musb" },
+-	{},
++	{ /* sentinel */ },
  };
- 
-@@ -151,7 +151,7 @@ static int jz4740_probe(struct platform_device *pdev)
- 	musb->dev.dma_mask		= &musb->dev.coherent_dma_mask;
- 	musb->dev.coherent_dma_mask	= DMA_BIT_MASK(32);
- 
--	glue->musb			= musb;
-+	glue->pdev			= musb;
- 	glue->clk			= clk;
- 
- 	platform_set_drvdata(pdev, glue);
-@@ -188,7 +188,7 @@ static int jz4740_remove(struct platform_device *pdev)
- {
- 	struct jz4740_glue	*glue = platform_get_drvdata(pdev);
- 
--	platform_device_unregister(glue->musb);
-+	platform_device_unregister(glue->pdev);
- 	clk_disable_unprepare(glue->clk);
- 
- 	return 0;
+ MODULE_DEVICE_TABLE(of, jz4740_musb_of_match);
+ #endif
 -- 
 2.24.0
 
