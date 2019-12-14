@@ -2,133 +2,106 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A2C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AC8C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE833206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9E5206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="oV+MAQ+x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILEZNtdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfLNWMJ (ORCPT
+        id S1727002AbfLNWOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:12:09 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:55048 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfLNWMH (ORCPT
+        Sat, 14 Dec 2019 17:14:24 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44307 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfLNWOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:12:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576361496; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TN0+FhuwFIyt1lIZC+35LLQzNXVjGCFlWEFqzkd6TBY=;
-        b=oV+MAQ+xzwE33cGD/vwNaLe1wPsxdmO/yQCKvYPWYbjlmsm5CG2ETbEBVAvQH4limz+Ubr
-        xu8OBL23edKhc/dkdTkuxBEA6BPQv78VzQVYyeAgBKrrOzgY5pCTtIJfPTaDIG3523aKtp
-        CU+RBTak9ZeP2Ag9J7XYg9/hpwS57ok=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 6/6] usb: musb: jz4740: Whitespace and indentation fixes
-Date:   Sat, 14 Dec 2019 23:11:26 +0100
-Message-Id: <20191214221126.93116-6-paul@crapouillou.net>
-In-Reply-To: <20191214221126.93116-1-paul@crapouillou.net>
-References: <20191214221126.93116-1-paul@crapouillou.net>
+        Sat, 14 Dec 2019 17:14:23 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w127so2241550qkb.11;
+        Sat, 14 Dec 2019 14:14:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mNxH4bC0nj4GKy1qzFOGpsL1EBMNwk7EhK4/inatLcs=;
+        b=ILEZNtdmmx/CUHtQBEJSuLuOmeMmonMQ4Gq1TR2xfxGV7Q8RsQ+ySllmBfGH1TBFVf
+         LnFaVgqExmdgj7k9KErMQIIlmmFW8rIvzFXvzl/Zzgf9Fm3lDynGykU1NeL3KYEUCm91
+         CkeLUYt2AUR3nJzfNE+nna+rly3IsSbpKJRsYHgdOdNUWngwKddkYOinlnIYFyZOsf1N
+         VUOEfVZzvwnfbwpnE0r7H11kd+LtFPbqME8nCOK3izp4SvaS2XqajynwZM3b2pAIpIFi
+         WPqz8r64PNEsTpCwD6XnEoR/Q7BGpoa/plFcWhzW8c2xSFa0hiVk8yIf0uZ2rC9ripHd
+         Sqrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mNxH4bC0nj4GKy1qzFOGpsL1EBMNwk7EhK4/inatLcs=;
+        b=M52XxHJnr/gAaQ4QvafAwh9z89oNNTW/H0N7JmWVns15oftoDnDIgQGWW2xAC5GPgO
+         fZt2XrkSPOIC/v111N9NXLr0VOpcDBjV7PTyRsxMhexYGVhQpJxntWQh3C9832+Dsw69
+         ToN2kxEXoEeJrO2Qz4z8ssgNsOgZ1LiWgZgsJvTMsmQXcF3iAmDqrVpwWygxYgEPoAdS
+         +29FyRdPpe7NzG2iILoDK4s4LmE+EN99l9XC8pV+YJ5fl7aNAr4vL6mvTDyuLMFZVerS
+         TSiSOZZLuw8oMmufv+tLrKGDgP56XhRmEmg/HsVNviGM/QDRSTZeT+wubhi7WWzo0IGj
+         jzMA==
+X-Gm-Message-State: APjAAAX7aIGG2R+r9i/dBgZfMDFw6zg9dkMOnJ3KlFt/Kk0THlChzzK/
+        T2HIMacKDAR3OytuajdC37Y=
+X-Google-Smtp-Source: APXvYqyt2uNyrzAsRZWGSIBr1phWC1jzp/BKcUCVuGfbTEZT334tULcotp3l/4PxFNR99raWAnHPFQ==
+X-Received: by 2002:a37:4f04:: with SMTP id d4mr12713502qkb.200.1576361662509;
+        Sat, 14 Dec 2019 14:14:22 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d23sm5179142qte.32.2019.12.14.14.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 14:14:22 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 14 Dec 2019 17:14:20 -0500
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 05/10] efi/libstub: distinguish between native/mixed not
+ 32/64 bit
+Message-ID: <20191214221419.GA314531@rani.riverdale.lan>
+References: <20191214175735.22518-1-ardb@kernel.org>
+ <20191214175735.22518-6-ardb@kernel.org>
+ <20191214194626.GA140998@rani.riverdale.lan>
+ <20191214194936.GB140998@rani.riverdale.lan>
+ <CAKv+Gu_JQz=xd_UmqiuZ8TvA+ksT_rY4iXP_j7OdW4F5sfZt9g@mail.gmail.com>
+ <20191214201334.GC140998@rani.riverdale.lan>
+ <CAKv+Gu-A4bE0DM96-dNjtsYG=a3g-X4f-y=NcJ5ZCvZHaDJZmw@mail.gmail.com>
+ <20191214211725.GG140998@rani.riverdale.lan>
+ <CAKv+Gu85yLS6cYaGPTLc=hjHjvjjYYX-E0wCwKK+1W+T9dxAcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu85yLS6cYaGPTLc=hjHjvjjYYX-E0wCwKK+1W+T9dxAcQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix lines with too much or not enough indentation, and lines which were
-indented with spaces instead of tabs.
+On Sat, Dec 14, 2019 at 09:30:08PM +0000, Ard Biesheuvel wrote:
+> On Sat, 14 Dec 2019 at 22:17, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Maybe just do
+> >         if (sizeof(at) < sizeof(__ret))
+> >                 __ret = (__typeof__(__ret))(uintptr_t)at;
+> >         else
+> >                 __ret = (__typeof__(__ret))at;
+> > That should cover most of the cases.
+> 
+> But the compiler will still be unhappy about the else clause if __ret
+> is a pointer type, since we'll be casting an u32 to a pointer,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/musb/jz4740.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index a8cd2ba2ed06..f948eca654f3 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -23,9 +23,9 @@ struct jz4740_glue {
- 
- static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
- {
--	unsigned long   flags;
--	irqreturn_t     retval = IRQ_NONE, retval_dma = IRQ_NONE;
--	struct musb     *musb = __hci;
-+	unsigned long	flags;
-+	irqreturn_t	retval = IRQ_NONE, retval_dma = IRQ_NONE;
-+	struct musb	*musb = __hci;
- 
- 	spin_lock_irqsave(&musb->lock, flags);
- 
-@@ -42,7 +42,7 @@ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
- 	 * never see them set
- 	 */
- 	musb->int_usb &= MUSB_INTR_SUSPEND | MUSB_INTR_RESUME |
--	    MUSB_INTR_RESET | MUSB_INTR_SOF;
-+			 MUSB_INTR_RESET | MUSB_INTR_SOF;
- 
- 	if (musb->int_usb || musb->int_tx || musb->int_rx)
- 		retval = musb_interrupt(musb);
-@@ -56,20 +56,20 @@ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
- }
- 
- static struct musb_fifo_cfg jz4740_musb_fifo_cfg[] = {
--{ .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
--{ .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
--{ .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 64, },
-+	{ .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 64, },
- };
- 
- static const struct musb_hdrc_config jz4740_musb_config = {
- 	/* Silicon does not implement USB OTG. */
--	.multipoint = 0,
-+	.multipoint	= 0,
- 	/* Max EPs scanned, driver will decide which EP can be used. */
--	.num_eps    = 4,
-+	.num_eps	= 4,
- 	/* RAMbits needed to configure EPs from table */
--	.ram_bits   = 9,
--	.fifo_cfg = jz4740_musb_fifo_cfg,
--	.fifo_cfg_size = ARRAY_SIZE(jz4740_musb_fifo_cfg),
-+	.ram_bits	= 9,
-+	.fifo_cfg	= jz4740_musb_fifo_cfg,
-+	.fifo_cfg_size	= ARRAY_SIZE(jz4740_musb_fifo_cfg),
- };
- 
- static int jz4740_musb_init(struct musb *musb)
-@@ -122,7 +122,7 @@ static int jz4740_probe(struct platform_device *pdev)
- 	const struct musb_hdrc_platform_data *pdata = &jz4740_musb_pdata;
- 	struct platform_device		*musb;
- 	struct jz4740_glue		*glue;
--	struct clk                      *clk;
-+	struct clk			*clk;
- 	int				ret;
- 
- 	glue = devm_kzalloc(dev, sizeof(*glue), GFP_KERNEL);
-@@ -187,7 +187,7 @@ static int jz4740_probe(struct platform_device *pdev)
- 
- static int jz4740_remove(struct platform_device *pdev)
- {
--	struct jz4740_glue	*glue = platform_get_drvdata(pdev);
-+	struct jz4740_glue *glue = platform_get_drvdata(pdev);
- 
- 	platform_device_unregister(glue->pdev);
- 	clk_disable_unprepare(glue->clk);
--- 
-2.24.0
-
+Ugh, yeah it complains even though it can tell at compile time that that
+branch isn't taken.
