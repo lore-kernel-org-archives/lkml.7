@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BDBC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE86C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8353B20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC0D2073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfLNWDj (ORCPT
+        id S1727144AbfLNWDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:03:39 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34197 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfLNWDI (ORCPT
+        Sat, 14 Dec 2019 17:03:07 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58119 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfLNWDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:03:08 -0500
+        Sat, 14 Dec 2019 17:03:04 -0500
 X-Originating-IP: 90.65.92.102
 Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id DF2111BF204;
-        Sat, 14 Dec 2019 22:03:06 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 250C11C0005;
+        Sat, 14 Dec 2019 22:03:02 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 11/17] rtc: pcf85063: return meaningful value for RTC_VL_READ
-Date:   Sat, 14 Dec 2019 23:02:53 +0100
-Message-Id: <20191214220259.621996-12-alexandre.belloni@bootlin.com>
+Subject: [PATCH 02/17] rtc: Document RTC_VL_READ and RTC_VL_CLR ioctls
+Date:   Sat, 14 Dec 2019 23:02:44 +0100
+Message-Id: <20191214220259.621996-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191214220259.621996-1-alexandre.belloni@bootlin.com>
 References: <20191214220259.621996-1-alexandre.belloni@bootlin.com>
@@ -42,36 +42,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCF85063_REG_SC_OS means the voltage dropped too low and data has been
-lost.
+RTC_VL_READ and RTC_VL_CLR have been introduced in 2012 with commit
+0f20b767e20a ("drivers/rtc/rtc-pcf8563.c: add RTC_VL_READ/RTC_VL_CLR ioctl
+feature")
+
+Document them now that they have been unified.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf85063.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ Documentation/ABI/testing/rtc-cdev | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 2ddd95420a8c..1db17ba1fc64 100644
---- a/drivers/rtc/rtc-pcf85063.c
-+++ b/drivers/rtc/rtc-pcf85063.c
-@@ -289,15 +289,9 @@ static int pcf85063_ioctl(struct device *dev, unsigned int cmd,
- 		if (ret < 0)
- 			return ret;
+diff --git a/Documentation/ABI/testing/rtc-cdev b/Documentation/ABI/testing/rtc-cdev
+index 97447283f13b..25910c3c3d7e 100644
+--- a/Documentation/ABI/testing/rtc-cdev
++++ b/Documentation/ABI/testing/rtc-cdev
+@@ -33,6 +33,14 @@ Description:
+ 		  Requires a separate RTC_PIE_ON call to enable the periodic
+ 		  interrupts.
  
--		if (status & PCF85063_REG_SC_OS)
--			dev_warn(&pcf85063->rtc->dev, "Voltage low, data loss detected.\n");
-+		status = status & PCF85063_REG_SC_OS ? RTC_VL_DATA_INVALID : 0;
- 
--		status &= PCF85063_REG_SC_OS;
--
--		if (copy_to_user((void __user *)arg, &status, sizeof(int)))
--			return -EFAULT;
--
--		return 0;
-+		return put_user(status, (unsigned int __user *)arg);
- 
- 	default:
- 		return -ENOIOCTLCMD;
++		* RTC_VL_READ: Read the voltage inputs status of the RTC when
++		  supported. The value is a bit field of RTC_VL_*, giving the
++		  status of the main and backup voltages.
++
++		* RTC_VL_CLEAR: Clear the voltage status of the RTC. Some RTCs
++		  need user interaction when the backup power provider is
++		  replaced or charged to be able to clear the status.
++
+ 		The ioctl() calls supported by the older /dev/rtc interface are
+ 		also supported by the newer RTC class framework. However,
+ 		because the chips and systems are not standardized, some PC/AT
 -- 
 2.23.0
 
