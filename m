@@ -2,98 +2,133 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E8CC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB21C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0FF2465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BF824125
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 14:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtDQUYh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfLNOXs (ORCPT
+        id S1726701AbfLNOc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 09:23:48 -0500
-Received: from mail1.ugh.no ([178.79.162.34]:46762 "EHLO mail1.ugh.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfLNOXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 09:23:47 -0500
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Sat, 14 Dec 2019 09:23:47 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail1.ugh.no (Postfix) with ESMTP id 3659C24E2B6;
-        Sat, 14 Dec 2019 15:13:59 +0100 (CET)
-Received: from mail1.ugh.no ([127.0.0.1])
-        by localhost (catastrophix.ugh.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5pqLAV_NdfjM; Sat, 14 Dec 2019 15:13:58 +0100 (CET)
-Received: from [10.255.64.11] (unknown [185.176.245.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: andre@tomt.net)
-        by mail.ugh.no (Postfix) with ESMTPSA id 7912724E282;
-        Sat, 14 Dec 2019 15:13:58 +0100 (CET)
-Subject: Re: [PATCH 4.19 153/306] block: fix the DISCARD request merge
- (4.19.87+ crash)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sat, 14 Dec 2019 09:32:27 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38839 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfLNOc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 09:32:26 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k8so1916641ljh.5;
+        Sat, 14 Dec 2019 06:32:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=Eh8ihC6qfc/wJON6akO+nDoCfJM/SJL9lZfSseHNz9M=;
+        b=QtDQUYh5xX4natfZkxU9TAw/+BANCFiRtYYhNQvA6WKmR12vI7iJWark1MmzbAXfHJ
+         /wgeMkCUHku60elPojerq7WBLvoiCp30SMJYfRoOrRiGEuZBhwmwPb+CbXO0rxFNon3k
+         rn8ZiTYjfFkVqq7lUQzLx3ess07wapMC3gbeX08VLYxa9askzmLSM8zVLNOU9NOy1/DN
+         iMPZUyI89wEdllwaKj85UfsEquwiI+82BsVinT1WsDMG/4jzqzxFdUhuhbryaOYmuI1c
+         nhXZxCuxySWigFeMbYrPJdrNb13EjFnz11y5MGorlLOqGb5ENuokNNhU7tX5DrZ5GqhW
+         zKhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Eh8ihC6qfc/wJON6akO+nDoCfJM/SJL9lZfSseHNz9M=;
+        b=YdP97L4tidmC2hbJ1xVPc+Ee5/wE1AWWv7T0iTOjSJc5FnHvxcEfij6MGlq3Anh4rX
+         N0yelBJ7lK1ToJlKTXlm8hJR/bOeQvEInLVwe+6wQwO8tBdxsQou+oZX9KywmVAQMSZ/
+         HdASTnnKEQTmXjQiXf9qNrj+mMq52r895aq/ffC7TkDOcCk/k0sP6vcmXnGX58eICRNt
+         hIdi9RjCfn4OfoC2E1kt1froKjTfCOm1fod2w+7wipaEDYcDOTbJNzZz/2UQwl1rKRLf
+         fZj+CtKxakwJQBk0TN/y66Rly3uKtT/L/QufQXKDWc5gHNEKlRKSqoOTXBvp+1agKpBp
+         pdHA==
+X-Gm-Message-State: APjAAAWpn8w94aS3RAt+f7JoE6QeGRwNdKOSre7/05EGMOHDgQq1VLya
+        5bGN4Unso1ESbWq/qk/bNXqm4A0WuvE=
+X-Google-Smtp-Source: APXvYqwkvAS1wgVDtwOqr56+ZWG1h7uv/J2tmU8uZ84jHXKNG1hXj9U8Py+/XDxHePhLgBrw3RXc0g==
+X-Received: by 2002:a2e:9705:: with SMTP id r5mr13321066lji.114.1576333944244;
+        Sat, 14 Dec 2019 06:32:24 -0800 (PST)
+Received: from localhost.localdomain ([212.122.72.247])
+        by smtp.gmail.com with ESMTPSA id f11sm6873066lfa.9.2019.12.14.06.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 06:32:23 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203126.845809286@linuxfoundation.org>
-From:   Andre Tomt <andre@tomt.net>
-Message-ID: <aabbc521-b263-2d5f-efc6-72d500ab5c71@tomt.net>
-Date:   Sat, 14 Dec 2019 15:13:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+Subject: [PATCH v2] io_uring: don't wait when under-submitting
+Date:   Sat, 14 Dec 2019 17:31:57 +0300
+Message-Id: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <5caa38be87f069eb4cc921d58ee1a98ff5d53978.1576223348.git.asml.silence@gmail.com>
+References: <5caa38be87f069eb4cc921d58ee1a98ff5d53978.1576223348.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191127203126.845809286@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.11.2019 21:30, Greg Kroah-Hartman wrote:
-> From: Jianchao Wang <jianchao.w.wang@oracle.com>
-> 
-> [ Upstream commit 69840466086d2248898020a08dda52732686c4e6 ]
-> 
-> There are two cases when handle DISCARD merge.
-> If max_discard_segments == 1, the bios/requests need to be contiguous
-> to merge. If max_discard_segments > 1, it takes every bio as a range
-> and different range needn't to be contiguous.
-> 
-> But now, attempt_merge screws this up. It always consider contiguity
-> for DISCARD for the case max_discard_segments > 1 and cannot merge
-> contiguous DISCARD for the case max_discard_segments == 1, because
-> rq_attempt_discard_merge always returns false in this case.
-> This patch fixes both of the two cases above.
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+There is no reliable way to submit and wait in a single syscall, as
+io_submit_sqes() may under-consume sqes (in case of an early error).
+Then it will wait for not-yet-submitted requests, deadlocking the user
+in most cases.
 
-4.19.87, 4.19.88, 4.19.89 all lock up frequently on some of my systems. 
-The same systems run 5.4.3 fine, so the newer trees are probably OK.
-Reverting this commit on top of 4.19.87 makes everything stable.
+Don't wait/poll if can't submit all sqes, and return -EAGAIN
 
-To trigger it all I have to do is re-rsyncing a directory tree with some 
-changed files churn, it will usually crash in 10 to 30 minutes.
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-The systems crashing has ext4 filesystem on a two ssd md raid1 mounted 
-with the mount option discard. If mounting it without discard, the 
-crashes no longer seem to occur.
+v2: cap min_complete if submitted partially (Jens Axboe)
 
-No oops/panic made it to the ipmi console. I suspect the console is just 
-misbehaving and it didnt really livelock. At one point one line of the 
-crash made it to the console (kernel BUG at block/blk-core.c:1776), and 
-it was enough to pinpoint this commit. Note that the line number might 
-be off, as I was attempting a bisect at the time.
+ fs/io_uring.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-This commit also made it to 4.14.x, but I have not tested it.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c2f66e30a812..4c281f382bec 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3526,11 +3526,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 		unsigned int sqe_flags;
+ 
+ 		req = io_get_req(ctx, statep);
+-		if (unlikely(!req)) {
+-			if (!submitted)
+-				submitted = -EAGAIN;
++		if (unlikely(!req))
+ 			break;
+-		}
+ 		if (!io_get_sqring(ctx, req)) {
+ 			__io_free_req(req);
+ 			break;
+@@ -4910,6 +4907,14 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
+ 					   &cur_mm, false);
+ 		mutex_unlock(&ctx->uring_lock);
++
++		if (submitted != to_submit) {
++			if (!submitted) {
++				submitted = -EAGAIN;
++				goto done;
++			}
++			min_complete = min(min_complete, (u32)submitted);
++		}
+ 	}
+ 	if (flags & IORING_ENTER_GETEVENTS) {
+ 		unsigned nr_events = 0;
+@@ -4922,7 +4927,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 			ret = io_cqring_wait(ctx, min_complete, sig, sigsz);
+ 		}
+ 	}
+-
++done:
+ 	percpu_ref_put(&ctx->refs);
+ out_fput:
+ 	fdput(f);
+-- 
+2.24.0
+
