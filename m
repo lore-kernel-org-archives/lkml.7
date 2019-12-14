@@ -2,100 +2,83 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4998C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2969C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A5220706
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:45:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtJYq8Yz"
+	by mail.kernel.org (Postfix) with ESMTP id C661D20706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbfLNHpj (ORCPT
+        id S1726019AbfLNHu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:45:39 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45635 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfLNHpi (ORCPT
+        Sat, 14 Dec 2019 02:50:28 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:60028 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfLNHu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:45:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b9so649262pgk.12;
-        Fri, 13 Dec 2019 23:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=171Md9ofEXhJtMsBZQ4ZGBIOthbQw6oHUQqRUHleNKs=;
-        b=GtJYq8Yzqlzee8TSFmjnSSSYzBAe76dfgpqhoABAeo3g45uI22ppM5LP3lfoPBNz7O
-         1CXDIQrq1gDrT1aXQTesoYKoeC+O23xK3jrjnxvd93k6rYGdLQCACmstPuBJDtxrDvbs
-         KeM/nEn1qePXBiRDzgT9v7ZSOSCs9rSxb68ZkzHrcns2IB5KItNZYC8i2SggyCUfYJqj
-         FkCHX6tdQ+NcN4LE2RnWcn0lTLG1AglOkx6mcysbZU+X0r8pvDCHtkbYXuL5U6xKaGvt
-         MFoqueVVu1AALW18TnNenelqnaf7Nmk/djIja2e4tWZmjtrvX4G7CPNdxxvOrPbvPPyD
-         kWJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=171Md9ofEXhJtMsBZQ4ZGBIOthbQw6oHUQqRUHleNKs=;
-        b=jjjUiBi6h/qWKIZHFkUSBOV4sUvuo7i3N7gY4cJx3Mit9WGgWw/ifPDq3ghWN5jRII
-         6qhkefrue9BJyx2nsv3FB8g+zYX6xwckRCymA6Xy6drrbVzoqWd1qU3UUcaBFbGwzlZC
-         G88dSUeEqp4poi4wchKszqAptOlQmxMffH/HuWoF3Ih0LyqtOafe2laDIfe6sgin6QUF
-         KWXVxMlT9bxEtGswuetrlRXtxpWm22RgM/jk0WJlDeoan20HRcAnoXX1HAtBqKeCzO99
-         j2NWZ5Y+fPhti5TzqbItlHuWBa94sFFGt1+QDeHpNBR8vtcjQsi/nvhiEjWwBQnG6TDQ
-         Pe1w==
-X-Gm-Message-State: APjAAAX37WtGHhoz/+xFwX6QFPvsaBHZhRIV9PgM/aaUKPE+tliLJC3j
-        4X8FF2kbT9M/wsC88zsmi4S4mBcr
-X-Google-Smtp-Source: APXvYqxMzG4nmo15Dkm5aQHzyMOFISYvZS2x0fDvsWvXeJbqm172b3UTx31qm1tEZJ9nfmBjG8xBjA==
-X-Received: by 2002:a63:5f91:: with SMTP id t139mr4087513pgb.185.1576309537939;
-        Fri, 13 Dec 2019 23:45:37 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id z14sm12577737pfg.57.2019.12.13.23.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 23:45:37 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] rtc: asm9260: add the missed check for devm_clk_get
-Date:   Sat, 14 Dec 2019 15:45:28 +0800
-Message-Id: <20191214074528.16806-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 14 Dec 2019 02:50:27 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 6E70B804BE;
+        Sat, 14 Dec 2019 08:50:22 +0100 (CET)
+Date:   Sat, 14 Dec 2019 08:50:21 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     thierry.reding@gmail.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robh+dt@kernel.org, christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
+Message-ID: <20191214075020.GA22818@ravnborg.org>
+References: <20191209144208.4863-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209144208.4863-1-heiko@sntech.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NXpJzYs8AAAA:8
+        a=7gkXJVJtAAAA:8 a=fl1vwWo_N044qBe9EycA:9 a=CjuIK1q_8ugA:10
+        a=cwV61pgf2j4Cq8VD9hE_:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver misses a check for devm_clk_get().
-Add the check to fix it.
+Hi Heiko.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/rtc/rtc-asm9260.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-asm9260.c b/drivers/rtc/rtc-asm9260.c
-index 10064bdabdff..3ab81cdec00b 100644
---- a/drivers/rtc/rtc-asm9260.c
-+++ b/drivers/rtc/rtc-asm9260.c
-@@ -264,6 +264,9 @@ static int asm9260_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->iobase);
- 
- 	priv->clk = devm_clk_get(dev, "ahb");
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
- 	ret = clk_prepare_enable(priv->clk);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable clk!\n");
--- 
-2.24.0
+On Mon, Dec 09, 2019 at 03:42:06PM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 6046f4555852..85e7c26a05c7 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1056,6 +1056,8 @@ patternProperties:
+>      description: Extreme Engineering Solutions (X-ES)
+>    "^xillybus,.*":
+>      description: Xillybus Ltd.
+> +  "^xinpeng,.*":
+> +    description: Shenzhen Xinpeng Technology Co., Ltd
+>    "^xlnx,.*":
+>      description: Xilinx
+>    "^xunlong,.*":
 
+Looks good.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
