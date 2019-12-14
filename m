@@ -2,138 +2,144 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC19C00454
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A929C00454
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3A824656
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jDBRPuID"
+	by mail.kernel.org (Postfix) with ESMTP id D40E32465E
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 16:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfLNQDN (ORCPT
+        id S1726798AbfLNQUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 11:03:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39122 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfLNQDN (ORCPT
+        Sat, 14 Dec 2019 11:20:09 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50336 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfLNQUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 11:03:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XBaM42oBNhOSXJ0EDeTAvIyXJwZ5pDoXlUcg9BjVjf4=; b=jDBRPuIDc8BvevpOBxnzvFVDN
-        kqWQFf8kWtSZEY0dvIYfsmPdloFnbm8H8WV6Rx3rxIOaMVtzWititWXRwHKNZJcuAZAM1Q5mMC6dM
-        JyxhVaKxpvUoHVO5rAlZ6xNutdlXAyIUIBSx5XAAcIWCbvFlCSUBiznE9NZCpVe50J+bfd0ygsCp1
-        Igdv4rdAAocY+vS3kWrd5GyLQx44ZVYKnpPAJmWPhjP+5ZpXljO85eujDTBwyrM8WhmS3iF2JJ0kQ
-        GhSixTjyaPer9emU5/TW0RnD79AybIg/hwXVDgamv+368rscWeMHYZLndesrXti6hZsWuOhNI48Gq
-        PXx1xV0zA==;
-Received: from [2601:1c0:6280:3f0::fee9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ig9su-0005KH-TW; Sat, 14 Dec 2019 16:03:12 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] devfreq: fix multiple kernel-doc warnings
-Message-ID: <a6cbc380-0f88-1c97-83f2-c06f47eb18fa@infradead.org>
-Date:   Sat, 14 Dec 2019 08:03:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sat, 14 Dec 2019 11:20:08 -0500
+Received: by mail-il1-f198.google.com with SMTP id l63so2332489ili.17
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 08:20:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=T1hiEXBdS0/Iki3lXc3Ewuu/hWuzKibBkn/YRWovuxE=;
+        b=XeOFsRCI32ydA+lu7v17y9P3xLY06dT8Lbl0Bk8cTtyM9p5q5gpbodRIRH+prO9yje
+         2K9h2hLxjhF/RM5PCnw7+NJzFpnB4FHPanJrxNx3hkp2WgQY3pKo9nbUhyGK0G62g3an
+         CcfS9twny0McJ/vbEzHIsr5CQRcXarOF/fXJC1mSc/TDe+vyH947IpDIIVJwJ0wZShag
+         EPdon3BtUvSIcWxeNeLRmutlHNPd16OoCYB51+olaC0PH4EHRmazpKUM2wMK3dxBG/wX
+         DkQVUNNBMprODbj6Wn+6C+k+5fE3RDCVxa7FxHi+Qvv+/e9wtVCk2xMWyqLnEiGcRSRQ
+         EdtA==
+X-Gm-Message-State: APjAAAVTOVBVITHIHRtSKbFPRvED9yB0DpDBp/8Bq1Eszw/Nx0mvmMN9
+        mNrywUoSFxMKUakUW/zzxY8QNlCSg9w3MVTYbWx5Kdlv116c
+X-Google-Smtp-Source: APXvYqw/Q2rdRY5+Jv4EzoPhboppRj1eT9m/lQO+8jJ/R7+yFck9Y8fEwFUI1BW6rIHxzYo/V8XKxvttd+FPL4CiAAZmzivw1hoI
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:465c:: with SMTP id t89mr4917217ila.263.1576340407854;
+ Sat, 14 Dec 2019 08:20:07 -0800 (PST)
+Date:   Sat, 14 Dec 2019 08:20:07 -0800
+In-Reply-To: <000000000000a6f2030598bbe38c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e32950599ac5a96@google.com>
+Subject: Re: WARNING in wp_page_copy
+From:   syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bjorn.topel@intel.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, jonathan.lemon@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+syzbot has found a reproducer for the following crash on:
 
-Fix kernel-doc warnings in devfreq files.
-Also fix a typo.
+HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
+dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
 
-../include/linux/devfreq.h:181: warning: Function parameter or member 'last_status' not described in 'devfreq'
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
 
-../drivers/devfreq/devfreq.c:1687: warning: bad line:         - Resource-managed devfreq_register_notifier()
-../drivers/devfreq/devfreq.c:1723: warning: bad line:         - Resource-managed devfreq_unregister_notifier()
-../drivers/devfreq/devfreq-event.c:355: warning: Function parameter or member 'edev' not described in 'devfreq_event_remove_edev'
-../drivers/devfreq/devfreq-event.c:355: warning: Excess function parameter 'dev' description in 'devfreq_event_remove_edev'
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-pm@vger.kernel.org
----
-v2: update for latest devfreq tree
-
- drivers/devfreq/devfreq-event.c |    4 ++--
- drivers/devfreq/devfreq.c       |    4 ++--
- include/linux/devfreq.h         |    3 ++-
- 3 files changed, 6 insertions(+), 5 deletions(-)
-
---- linux-next-20191213.orig/drivers/devfreq/devfreq.c
-+++ linux-next-20191213/drivers/devfreq/devfreq.c
-@@ -1852,7 +1852,7 @@ static void devm_devfreq_notifier_releas
- 
- /**
-  * devm_devfreq_register_notifier()
--	- Resource-managed devfreq_register_notifier()
-+ *	- Resource-managed devfreq_register_notifier()
-  * @dev:	The devfreq user device. (parent of devfreq)
-  * @devfreq:	The devfreq object.
-  * @nb:		The notifier block to be unregistered.
-@@ -1888,7 +1888,7 @@ EXPORT_SYMBOL(devm_devfreq_register_noti
- 
- /**
-  * devm_devfreq_unregister_notifier()
--	- Resource-managed devfreq_unregister_notifier()
-+ *	- Resource-managed devfreq_unregister_notifier()
-  * @dev:	The devfreq user device. (parent of devfreq)
-  * @devfreq:	The devfreq object.
-  * @nb:		The notifier block to be unregistered.
---- linux-next-20191213.orig/drivers/devfreq/devfreq-event.c
-+++ linux-next-20191213/drivers/devfreq/devfreq-event.c
-@@ -346,9 +346,9 @@ EXPORT_SYMBOL_GPL(devfreq_event_add_edev
- 
- /**
-  * devfreq_event_remove_edev() - Remove the devfreq-event device registered.
-- * @dev		: the devfreq-event device
-+ * @edev	: the devfreq-event device
-  *
-- * Note that this function remove the registered devfreq-event device.
-+ * Note that this function removes the registered devfreq-event device.
-  */
- int devfreq_event_remove_edev(struct devfreq_event_dev *edev)
- {
---- linux-next-20191213.orig/include/linux/devfreq.h
-+++ linux-next-20191213/include/linux/devfreq.h
-@@ -136,6 +136,7 @@ struct devfreq_stats {
-  *		devfreq.nb to the corresponding register notifier call chain.
-  * @work:	delayed work for load monitoring.
-  * @previous_freq:	previously configured frequency value.
-+ * @last_status:	devfreq user device info, performance statistics
-  * @data:	Private data of the governor. The devfreq framework does not
-  *		touch this.
-  * @user_min_freq_req:	PM QoS minimum frequency request from user (via sysfs)
-@@ -151,7 +152,7 @@ struct devfreq_stats {
-  * @nb_min:		Notifier block for DEV_PM_QOS_MIN_FREQUENCY
-  * @nb_max:		Notifier block for DEV_PM_QOS_MAX_FREQUENCY
-  *
-- * This structure stores the devfreq information for a give device.
-+ * This structure stores the devfreq information for a given device.
-  *
-  * Note that when a governor accesses entries in struct devfreq in its
-  * functions except for the context of callbacks defined in struct
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 cow_user_page  
+mm/memory.c:2229 [inline]
+WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 wp_page_copy+0x10b7/0x1560  
+mm/memory.c:2414
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9104 Comm: syz-executor.0 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:cow_user_page mm/memory.c:2229 [inline]
+RIP: 0010:wp_page_copy+0x10b7/0x1560 mm/memory.c:2414
+Code: 4c 89 f7 ba 00 10 00 00 48 81 e6 00 f0 ff ff e8 0f e6 22 06 31 ff 41  
+89 c7 89 c6 e8 23 03 d3 ff 45 85 ff 74 0f e8 99 01 d3 ff <0f> 0b 4c 89 f7  
+e8 3f d8 22 06 e8 8a 01 d3 ff 65 4c 8b 34 25 c0 1e
+RSP: 0018:ffffc90002267668 EFLAGS: 00010293
+RAX: ffff8880a04c6140 RBX: ffffc90002267918 RCX: ffffffff81a22a0d
+RDX: 0000000000000000 RSI: ffffffff81a22a17 RDI: 0000000000000005
+RBP: ffffc900022677a8 R08: ffff8880a04c6140 R09: 0000000000000000
+R10: ffffed101125cfff R11: ffff8880892e7fff R12: ffff88809e403108
+R13: ffffea000224b9c0 R14: ffff8880892e7000 R15: 0000000000001000
+  do_wp_page+0x543/0x1540 mm/memory.c:2724
+  handle_pte_fault mm/memory.c:3961 [inline]
+  __handle_mm_fault+0x327b/0x3da0 mm/memory.c:4075
+  handle_mm_fault+0x3b2/0xa50 mm/memory.c:4112
+  do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
+  __do_page_fault+0x536/0xd80 arch/x86/mm/fault.c:1506
+  do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
+  page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
+RIP: 0010:copy_user_generic_unrolled+0x89/0xc0  
+arch/x86/lib/copy_user_64.S:91
+Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d  
+7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d  
+76 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
+RSP: 0018:ffffc90002267bb8 EFLAGS: 00010206
+RAX: 0000000000000001 RBX: 0000000000000018 RCX: 0000000000000003
+RDX: 0000000000000000 RSI: ffffc90002267c58 RDI: 0000000020001300
+RBP: ffffc90002267bf0 R08: 0000000000000000 R09: fffff5200044cf8e
+R10: fffff5200044cf8d R11: ffffc90002267c6f R12: 0000000020001300
+R13: ffffc90002267c58 R14: 0000000020001318 R15: 00007ffffffff000
+  copy_to_user include/linux/uaccess.h:152 [inline]
+  xsk_getsockopt+0x575/0x6c0 net/xdp/xsk.c:898
+  __sys_getsockopt+0x16d/0x310 net/socket.c:2174
+  __do_sys_getsockopt net/socket.c:2189 [inline]
+  __se_sys_getsockopt net/socket.c:2186 [inline]
+  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2186
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a909
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0ec9e9ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a909
+RDX: 0000000000000007 RSI: 000000000000011b RDI: 000000000000000a
+RBP: 000000000075bf20 R08: 0000000020000100 R09: 0000000000000000
+R10: 0000000020001300 R11: 0000000000000246 R12: 00007f0ec9e9f6d4
+R13: 00000000004c1ab5 R14: 00000000004d5f60 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
