@@ -2,179 +2,557 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A1EC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E22C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C9C21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FE+LH7VG"
+	by mail.kernel.org (Postfix) with ESMTP id BAA13206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 00:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLNAHo (ORCPT
+        id S1726762AbfLNAOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Dec 2019 19:07:44 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33052 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfLNAHo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Dec 2019 19:07:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so593425wrq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Dec 2019 16:07:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=geIx/nWQ0BpqVGVQsVk8KzxkfCCv3NpUyxjodfVFmZc=;
-        b=FE+LH7VGWD2YVnwVryc8AR/nUGMxZvoq5poiP1yIRfG/jwEEV8Lu4LmBbRXf7o8H2U
-         RkoXCnPbo7CxnwZUca1iBsJGPp999jHsgOVDhAuQr+gcH/xf6a4QyTBvCsx6VZ2lb+Oo
-         dlfw7jlyAuMoQfz0wzDD/M+5nZeE/AN2w7yQg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=geIx/nWQ0BpqVGVQsVk8KzxkfCCv3NpUyxjodfVFmZc=;
-        b=bCg3ySRQrbqR7yIvQSEwnQi76wdnvtlj6q/qaTl7nKU8m65bfp8iRA1d+SmcO1v3D3
-         nzlBg6teBi+todzus1fehceMJlZCREmoqiZu/9v1NBSW+jOU6iod9tvs+1stY/hLTbAb
-         XIie2+idaisRfqylkFWO1Vg3GPyA1GojLrcbnDr9bVoe3zPtsSInMov75KPEgpNj+H+K
-         Scceqseo6ugXSiwn0x625SqeXwBWP6e7FjpqWa0XPRXUKMHZ2AbOwiEtbmT64Ibz0aFK
-         MlQsENcJ2H9+IMjjER2vFZvptsZCG+rxdzOjuwWTO47k+j+YRYXhfcDbk5i/b6450XM8
-         NCjw==
-X-Gm-Message-State: APjAAAV2O7DPs7BIhFWiMKZqof7242WzD/78QNjr+8zQ6TNkeOGaXCBc
-        N+cC+LiR++McRmZ2rVM1YLmoRA==
-X-Google-Smtp-Source: APXvYqwxYCWfJRRSj199aMaUgb0YJevPf0BbXzzQoVl+o2Z1ZWFUB4UHGK3BMt+ufjNs8HxlASLylw==
-X-Received: by 2002:a5d:5403:: with SMTP id g3mr15468210wrv.302.1576282061890;
-        Fri, 13 Dec 2019 16:07:41 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id s10sm11760046wrw.12.2019.12.13.16.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 16:07:41 -0800 (PST)
-Date:   Sat, 14 Dec 2019 01:07:38 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        seanpaul@chromium.org, bjorn.andersson@linaro.org,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 9/9] drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
-Message-ID: <20191214000738.GP624164@phenom.ffwll.local>
-Mail-Followup-To: Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>, robdclark@chromium.org,
-        linux-arm-msm@vger.kernel.org, seanpaul@chromium.org,
-        bjorn.andersson@linaro.org, Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-References: <20191213234530.145963-1-dianders@chromium.org>
- <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 13 Dec 2019 19:14:44 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57956 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbfLNAOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Dec 2019 19:14:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 16:14:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,311,1571727600"; 
+   d="scan'208";a="216585270"
+Received: from spandruv-mobl.jf.intel.com ([10.255.89.247])
+  by orsmga006.jf.intel.com with ESMTP; 13 Dec 2019 16:14:42 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     dvhart@infradead.org, andy@infradead.org, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/2] platform/x86: Add support for Uncore frequency control
+Date:   Fri, 13 Dec 2019 16:14:07 -0800
+Message-Id: <20191214001408.4878-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 03:45:30PM -0800, Douglas Anderson wrote:
-> The bridge chip supports these DP rates according to TI's spec:
-> * 1.62 Gbps (RBR)
-> * 2.16 Gbps
-> * 2.43 Gbps
-> * 2.7 Gbps (HBR)
-> * 3.24 Gbps
-> * 4.32 Gbps
-> * 5.4 Gbps (HBR2)
-> 
-> As far as I can tell, only RBR, HBR, and HBR2 are part of the DP spec.
-> If other rates work then I believe it's because the sink has allowed
-> bending the spec a little bit.
+Some server users set limits on the uncore frequency using MSR 620H, while
+running latency sensitive workloads. Here uncore frequency controls
+RING/LLC(last-level cache) clocks.
 
-I think you need to look at the eDP spec. And filter this stuff correctly
-(there's more fields there for these somewhat irky edp timings). Simply
-not using them works, but it's defeating the point of having these
-intermediate clocks for edp panels.
--Daniel
+But MSR control is not always possible from the user space, so this driver
+provides a sysfs interface to set max and min frequency limits. This MSR
+620H is a die scoped in multi-die system or package scoped in non multi-die
+systems.
 
-> 
-> I hoped that we could tell which rates would work and which rates
-> didn't work based on whether link training passed or not.
-> Unfortunately this wasn't so good on at least one panel hooked up to
-> the bridge (AUO B116XAK01).  On that panel with 24 bpp configured:
-> * 1.62: too small for 69500 kHz at 24 bpp
-> * 2.16: link training failed
-> * 2.43: link training passed, but garbage on screen
-> * 2.7:  joy and happiness
-> 
-> Let's bypass all non-standard rates, which makes this panel happy
-> working.  I'll still keep the code organized in such a way where it
-> _could_ try the other rates, though, on the assumption that eventually
-> someone will find a way to make use of them.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index cc8bef172f69..cb774ee536cd 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -454,6 +454,15 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
->  	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
->  };
->  
-> +/**
-> + * A table indicating which of the rates in ti_sn_bridge_dp_rate_lut
-> + * is as per the DP spec (AKA a standard) as opposed to an intermediate
-> + * rate.
-> + */
-> +static const bool ti_sn_bridge_dp_rate_standard[] = {
-> +	false, true, false, false, true, false, false, true
-> +};
-> +
->  static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
->  {
->  	unsigned int bit_rate_khz, dp_rate_mhz;
-> @@ -660,6 +669,18 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata);
->  	     dp_rate_idx <= max_dp_rate_idx;
->  	     dp_rate_idx++) {
-> +		/*
-> +		 * To be on the safe side, we'll skip all non-standard
-> +		 * rates and move up to the next standard one.  This is
-> +		 * because some panels will pass link training with a non-
-> +		 * standard rate but just show garbage.  If the non-standard
-> +		 * rates are useful we should figure out how to enable them
-> +		 * through querying the panel, having a per-panel whitelist,
-> +		 * or adding a DT property.
-> +		 */
-> +		if (!ti_sn_bridge_dp_rate_standard[dp_rate_idx])
-> +			continue;
-> +
->  		ret = ti_sn_link_training(pdata, dp_rate_idx, &last_err_str);
->  		if (!ret)
->  			break;
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
+When this driver is loaded, a new directory is created under
+ /sys/devices/system/cpu.
 
+For example on a two package Skylake server:
+$cd /sys/devices/system/cpu/intel_uncore_frequency
+
+$ls
+package_00_die_00 package_01_die_00
+
+$ls package_00_die_00
+max_freq_khz  min_freq_khz  power_up_max_freq_khz
+power_up_min_freq_khz
+
+$grep . *
+    max_freq_khz:2400000
+    min_freq_khz:1200000
+    power_up_max_freq_khz:2400000
+    power_up_min_freq_khz:1200000
+
+Here, power_up_max_freq_khz and power_up_min_freq_khz are read only
+attributes to show power up values of max and min frequencies respectively.
+Other attributes are read-write, so that users can modify.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig                  |  11 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel-uncore-frequency.c | 434 ++++++++++++++++++
+ 3 files changed, 446 insertions(+)
+ create mode 100644 drivers/platform/x86/intel-uncore-frequency.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..6013c3b96cfd 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1337,6 +1337,17 @@ config PCENGINES_APU2
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pcengines-apuv2.
+ 
++config INTEL_UNCORE_FREQ_CONTROL
++	tristate "Intel Uncore frequency control driver"
++	depends on X86_64
++	help
++	  This driver allows control of uncore frequency limits on
++	  supported server platforms.
++	  Uncore frequency controls RING/LLC (last-level cache) clocks.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel-uncore-frequency.
++
+ source "drivers/platform/x86/intel_speed_select_if/Kconfig"
+ 
+ config SYSTEM76_ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 42d85a00be4e..3747b1f07cf1 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -105,3 +105,4 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
+ obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
+ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += intel_speed_select_if/
+ obj-$(CONFIG_SYSTEM76_ACPI)	+= system76_acpi.o
++obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency.o
+diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel-uncore-frequency.c
+new file mode 100644
+index 000000000000..82ee5a3107cf
+--- /dev/null
++++ b/drivers/platform/x86/intel-uncore-frequency.c
+@@ -0,0 +1,434 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel Uncore Frequency Setting
++ * Copyright (c) 2019, Intel Corporation.
++ * All rights reserved.
++ *
++ * Provide interface to set MSR 620 at a granularity of per die. On CPU online,
++ * one control CPU is identified per die to read/write limit. This control CPU
++ * is changed, if the CPU state is changed to offline. When the last CPU is
++ * offline in a die then remove the sysfs object for that die.
++ * The majority of actual code is related to sysfs create and read/write
++ * attributes.
++ *
++ * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++ */
++
++#include <linux/cpu.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/suspend.h>
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
++
++#define MSR_UNCORE_RATIO_LIMIT			0x620
++#define UNCORE_FREQ_KHZ_MULTIPLIER		100000
++
++/**
++ * struct uncore_data -	Encapsulate all uncore data
++ * @stored_uncore_data:	Last user changed MSR 620 value, which will be restored
++ *			on system resume.
++ * @power_up_min_freq_khz: Sampled minimum uncore frequency at driver init
++ * @power_up_max_freq_khz: Sampled maximum uncore frequency at driver init
++ * @control_cpu:	Designated CPU for a die to read/write
++ * @valid:		Mark the data valid/invalid
++ *
++ * This structure is used to encapsulate all data related to uncore sysfs
++ * settings for a die/package.
++ */
++struct uncore_data {
++	struct kobject kobj;
++	u64 stored_uncore_data;
++	u32 power_up_min_freq_khz;
++	u32 power_up_max_freq_khz;
++	int control_cpu;
++	bool valid;
++};
++
++#define to_uncore_data(a) container_of(a, struct uncore_data, kobj)
++
++/* Max instances for uncore data, one for each die */
++static int uncore_max_entries __read_mostly;
++/* Storage for uncore data for all instances */
++static struct uncore_data *uncore_instances;
++/* Root of the all uncore sysfs kobjs */
++struct kobject uncore_root_kobj;
++/* Stores the CPU mask of the target CPUs to use during uncore read/write */
++static cpumask_t uncore_cpu_mask;
++/* CPU online callback register instance */
++static enum cpuhp_state uncore_hp_state __read_mostly;
++/* Mutex to control all mutual exclusions */
++static DEFINE_MUTEX(uncore_lock);
++
++struct uncore_attr {
++	struct attribute attr;
++	ssize_t (*show)(struct kobject *kobj,
++			struct attribute *attr, char *buf);
++	ssize_t (*store)(struct kobject *kobj,
++			 struct attribute *attr, const char *c, ssize_t count);
++};
++
++#define define_one_uncore_ro(_name) \
++static struct uncore_attr _name = \
++__ATTR(_name, 0444, show_##_name, NULL)
++
++#define define_one_uncore_rw(_name) \
++static struct uncore_attr _name = \
++__ATTR(_name, 0644, show_##_name, store_##_name)
++
++#define show_uncore_data(member_name)					\
++	static ssize_t show_##member_name(struct kobject *kobj,         \
++					  struct attribute *attr,	\
++					  char *buf)			\
++	{                                                               \
++		struct uncore_data *data = to_uncore_data(kobj);	\
++		return scnprintf(buf, PAGE_SIZE, "%u\n",		\
++				 data->member_name);			\
++	}								\
++	define_one_uncore_ro(member_name)
++
++show_uncore_data(power_up_min_freq_khz);
++show_uncore_data(power_up_max_freq_khz);
++
++/* Common function to read MSR 0x620 and read min/max */
++static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
++			     unsigned int *max)
++{
++	u64 cap;
++	int ret;
++
++	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
++	if (ret)
++		return ret;
++
++	*max = (cap & 0x7F) * UNCORE_FREQ_KHZ_MULTIPLIER;
++	*min = ((cap & GENMASK(14, 8)) >> 8) * UNCORE_FREQ_KHZ_MULTIPLIER;
++
++	return 0;
++}
++
++/* Common function to set min/max ratios to be used by sysfs callbacks */
++static int uncore_write_ratio(struct uncore_data *data, unsigned int input,
++			      int set_max)
++{
++	int ret;
++	u64 cap;
++
++	mutex_lock(&uncore_lock);
++
++	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
++	if (!input || input > 0x7F) {
++		ret = -EINVAL;
++		goto finish_write;
++	}
++
++	rdmsrl(MSR_UNCORE_RATIO_LIMIT, cap);
++	if (set_max) {
++		cap &= ~0x7F;
++		cap |= input;
++	} else  {
++		cap &= ~GENMASK(14, 8);
++		cap |= (input << 8);
++	}
++
++	ret = wrmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, cap);
++	if (ret)
++		goto finish_write;
++
++	data->stored_uncore_data = cap;
++
++finish_write:
++	mutex_unlock(&uncore_lock);
++
++	return ret;
++}
++
++static ssize_t store_min_max_freq_khz(struct kobject *kobj,
++				      struct attribute *attr,
++				      const char *buf, ssize_t count,
++				      int min_max)
++{
++	struct uncore_data *data = to_uncore_data(kobj);
++	unsigned int input;
++
++	if (kstrtouint(buf, 10, &input))
++		return -EINVAL;
++
++	uncore_write_ratio(data, input, min_max);
++
++	return count;
++}
++
++static ssize_t show_min_max_freq_khz(struct kobject *kobj,
++				     struct attribute *attr,
++				     char *buf, int min_max)
++{
++	struct uncore_data *data = to_uncore_data(kobj);
++	unsigned int min, max;
++	int ret;
++
++	mutex_lock(&uncore_lock);
++	ret = uncore_read_ratio(data, &min, &max);
++	mutex_unlock(&uncore_lock);
++	if (ret)
++		return ret;
++
++	if (min_max)
++		return sprintf(buf, "%u\n", max);
++
++	return sprintf(buf, "%u\n", min);
++}
++
++#define store_uncore_min_max(name, min_max)				\
++	static ssize_t store_##name(struct kobject *kobj,		\
++				    struct attribute *attr,		\
++				    const char *buf, ssize_t count)	\
++	{                                                               \
++									\
++		return store_min_max_freq_khz(kobj, attr, buf, count,	\
++					      min_max);			\
++	}
++
++#define show_uncore_min_max(name, min_max)				\
++	static ssize_t show_##name(struct kobject *kobj,		\
++				   struct attribute *attr, char *buf)	\
++	{                                                               \
++									\
++		return show_min_max_freq_khz(kobj, attr, buf, min_max); \
++	}
++
++store_uncore_min_max(min_freq_khz, 0);
++store_uncore_min_max(max_freq_khz, 1);
++
++show_uncore_min_max(min_freq_khz, 0);
++show_uncore_min_max(max_freq_khz, 1);
++
++define_one_uncore_rw(min_freq_khz);
++define_one_uncore_rw(max_freq_khz);
++
++static struct attribute *uncore_attrs[] = {
++	&power_up_min_freq_khz.attr,
++	&power_up_max_freq_khz.attr,
++	&max_freq_khz.attr,
++	&min_freq_khz.attr,
++	NULL
++};
++
++static struct kobj_type uncore_ktype = {
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_attrs = uncore_attrs,
++};
++
++static struct kobj_type uncore_root_ktype = {
++	.sysfs_ops = &kobj_sysfs_ops,
++};
++
++/* Caller provides protection */
++static struct uncore_data *uncore_get_instance(unsigned int cpu)
++{
++	int id = topology_logical_die_id(cpu);
++
++	if (id >= 0 && id < uncore_max_entries)
++		return &uncore_instances[id];
++
++	return NULL;
++}
++
++static void uncore_add_die_entry(int cpu)
++{
++	struct uncore_data *data;
++
++	mutex_lock(&uncore_lock);
++	data = uncore_get_instance(cpu);
++	if (!data) {
++		mutex_unlock(&uncore_lock);
++		return;
++	}
++
++	if (data->valid) {
++		/* control cpu changed */
++		data->control_cpu = cpu;
++	} else {
++		char str[64];
++		int ret;
++
++		memset(data, 0, sizeof(*data));
++		sprintf(str, "package_%02d_die_%02d",
++			topology_physical_package_id(cpu),
++			topology_die_id(cpu));
++
++		uncore_read_ratio(data, &data->power_up_min_freq_khz,
++				  &data->power_up_max_freq_khz);
++
++		ret = kobject_init_and_add(&data->kobj, &uncore_ktype,
++					   &uncore_root_kobj, str);
++		if (!ret) {
++			data->control_cpu = cpu;
++			data->valid = true;
++		}
++	}
++	mutex_unlock(&uncore_lock);
++}
++
++/* Last CPU in this die is offline, so remove sysfs entries */
++static void uncore_remove_die_entry(int cpu)
++{
++	struct uncore_data *data;
++
++	mutex_lock(&uncore_lock);
++	data = uncore_get_instance(cpu);
++	if (data) {
++		kobject_put(&data->kobj);
++		data->control_cpu = -1;
++		data->valid = false;
++	}
++	mutex_unlock(&uncore_lock);
++}
++
++static int uncore_event_cpu_online(unsigned int cpu)
++{
++	int target;
++
++	/* Check if there is an online cpu in the package for uncore MSR */
++	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
++	if (target < nr_cpu_ids)
++		return 0;
++
++	/* Use this CPU on this die as a control CPU */
++	cpumask_set_cpu(cpu, &uncore_cpu_mask);
++	uncore_add_die_entry(cpu);
++
++	return 0;
++}
++
++static int uncore_event_cpu_offline(unsigned int cpu)
++{
++	int target;
++
++	/* Check if existing cpu is used for uncore MSRs */
++	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
++		return 0;
++
++	/* Find a new cpu to set uncore MSR */
++	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
++
++	if (target < nr_cpu_ids) {
++		cpumask_set_cpu(target, &uncore_cpu_mask);
++		uncore_add_die_entry(target);
++	} else {
++		uncore_remove_die_entry(cpu);
++	}
++
++	return 0;
++}
++
++static int uncore_pm_notify(struct notifier_block *nb, unsigned long mode,
++			    void *_unused)
++{
++	int cpu;
++
++	switch (mode) {
++	case PM_POST_HIBERNATION:
++	case PM_POST_RESTORE:
++	case PM_POST_SUSPEND:
++		for_each_cpu(cpu, &uncore_cpu_mask) {
++			struct uncore_data *data;
++			int ret;
++
++			data = uncore_get_instance(cpu);
++			if (!data || !data->valid || !data->stored_uncore_data)
++				continue;
++
++			ret = wrmsrl_on_cpu(cpu, MSR_UNCORE_RATIO_LIMIT,
++					    data->stored_uncore_data);
++			if (ret)
++				return ret;
++		}
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static struct notifier_block uncore_pm_nb = {
++	.notifier_call = uncore_pm_notify,
++};
++
++#define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
++
++static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
++	ICPU(INTEL_FAM6_BROADWELL_G),
++	ICPU(INTEL_FAM6_BROADWELL_X),
++	ICPU(INTEL_FAM6_BROADWELL_D),
++	ICPU(INTEL_FAM6_SKYLAKE_X),
++	ICPU(INTEL_FAM6_ICELAKE_X),
++	ICPU(INTEL_FAM6_ICELAKE_D),
++	{}
++};
++
++static int __init intel_uncore_init(void)
++{
++	const struct x86_cpu_id *id;
++	int ret;
++
++	id = x86_match_cpu(intel_uncore_cpu_ids);
++	if (!id)
++		return -ENODEV;
++
++	uncore_max_entries = topology_max_packages() *
++					topology_max_die_per_package();
++	uncore_instances = kcalloc(uncore_max_entries,
++				   sizeof(*uncore_instances), GFP_KERNEL);
++	if (!uncore_instances)
++		return -ENOMEM;
++
++	ret = kobject_init_and_add(&uncore_root_kobj, &uncore_root_ktype,
++				   &cpu_subsys.dev_root->kobj,
++				   "intel_uncore_frequency");
++	if (ret)
++		goto err_free;
++
++	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				"platform/x86/uncore-freq:online",
++				uncore_event_cpu_online,
++				uncore_event_cpu_offline);
++	if (ret < 0)
++		goto err_rem_kobj;
++
++	uncore_hp_state = ret;
++
++	ret = register_pm_notifier(&uncore_pm_nb);
++	if (ret)
++		goto err_rem_state;
++
++	return 0;
++
++err_rem_state:
++	cpuhp_remove_state(uncore_hp_state);
++err_rem_kobj:
++	kobject_put(&uncore_root_kobj);
++err_free:
++	kfree(uncore_instances);
++
++	return ret;
++}
++module_init(intel_uncore_init)
++
++static void __exit intel_uncore_exit(void)
++{
++	int i;
++
++	unregister_pm_notifier(&uncore_pm_nb);
++	cpuhp_remove_state(uncore_hp_state);
++	for (i = 0; i < uncore_max_entries; ++i) {
++		if (uncore_instances[i].valid)
++			kobject_put(&uncore_instances[i].kobj);
++	}
++	kobject_put(&uncore_root_kobj);
++	kfree(uncore_instances);
++}
++module_exit(intel_uncore_exit)
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Intel Uncore Frequency Limits Driver");
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.2
+
