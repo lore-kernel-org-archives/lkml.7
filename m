@@ -2,121 +2,148 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2E4C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25517C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE7A214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E074E214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CgKhjGqM"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="X4i2STGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLNWOm (ORCPT
+        id S1727049AbfLNWR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:14:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34992 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfLNWOm (ORCPT
+        Sat, 14 Dec 2019 17:17:56 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52406 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfLNWRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:14:42 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so2566582wmb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 14:14:40 -0800 (PST)
+        Sat, 14 Dec 2019 17:17:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so2613288wmc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 14:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=le9gTEplXasSXY5+vU+POpcZ8GAoVTNi2DgRESF94BM=;
-        b=CgKhjGqMjA2Ua4JZEnoVl9pkDc3irF6rNmQisnnigTz32BBdJj0Xz5PRQaXiAcUw5V
-         eblM0Al8GX6idpxU+O+1z5URLpOZ39TTZ9JqoXlta344q/oKLNxi0oMNdlPCLT6eq6o+
-         Paz31NM4grktE57soKYFyBqOda9J/Jq0tUuk20g6wllWE8fCCbvikAuTBkKc0zPh46DO
-         4AwgSLVhpYWXLe1/PrthS5cK77yZPjZBr4fX6TFxqtMFhoeG7JmJl9uQq0Pk7O8HleWr
-         8qOWZPATz2piV8ARXFuxta9CBPDQYfHUvve4r8JUb3Pma5oXnOSAgKdOZ0UJcz5bo96Z
-         2JLA==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=79IrCBJD/FrWwFsM5VkomWZRb2YW0b9uPZeIzeZo4a0=;
+        b=X4i2STGLFXwRLGU11iIHHLPOLbLvUhQbAKPOoSKNMUC6tUNkmWSGaYHipTewealELB
+         FuOA/dit6jslVoqQPf62hdN2CnC9DaqfdKOwp60vloOuMo8eOv79XTJOszHRmzz+QmW+
+         YPRnZivgdSBm/zZu5rvEeQfWFaJO3VF2FP8dU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=le9gTEplXasSXY5+vU+POpcZ8GAoVTNi2DgRESF94BM=;
-        b=uBazg1iwx6EoOKLOKDHbgmxckCUTT/cCGsGIVq5utc5ui0pQcCcygUkDDuUhya5wGO
-         +Yp80Cw74Tc/htuievZeeyb88CK+pJfj5kePthjs6VQigLzb3WwYmpcDMX8UGSJ7ob8j
-         0ktkJSY+9ddHq4d/41HzrTkccqQd2Lrpb/Hui3eLiY5Uw9+4/6SlgrVYpe8g6blNa7Xt
-         fTSEDcAN7FtAYZQe42pBKhtR26FUJggKkKehvZJOo3xF778XdWXvbTzSnv17yWnyCG5Q
-         JO27PH+Sim9i6B+2Y5rCwovtc0siGFYEx1MX+llpjO435XIzsSDfQFZNhBcL5SqINloe
-         5wXQ==
-X-Gm-Message-State: APjAAAX5T3fqyYKWEtFOkQQhvhd2D8HExOeNTKfG1gBboTReEAtl1206
-        DHEj1GzG+ikzUqjfOLLZ6/kHpnMrf1kNDXuG4FIuLg==
-X-Google-Smtp-Source: APXvYqz/Z3CqaojWv8/IXIkI9cm5DNoK5eR8xmbyteKGdULWQOhr7KljxO1EoyBbnQ0OjeuG/sHwIDTV+qS+hrVBthM=
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr22174711wmc.9.1576361679990;
- Sat, 14 Dec 2019 14:14:39 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=79IrCBJD/FrWwFsM5VkomWZRb2YW0b9uPZeIzeZo4a0=;
+        b=pbqjCWW9BZSxL05R681wgk3sB3T9k6QeZCq5v63hJTY7FPNrk4QbHkupEqRwUCVWhG
+         GFslrX+TM/LA62ORuuZxRtiaQfv8dW79OziLpEsO5dT7SgOIFD6winKDo5333JPmTODr
+         5REZYIqWH+zc/8yNPK9lMBNeiFLM2qT6aBkyKlG9KoZRVHgKBOJa0kXkWuahmrMxOJXZ
+         2w6kWVO7ob4eSe3jOi44bTbFc9CclIhK3v8Or0utVYYzsMoKD6y+nxiFI6m3yHUuevI1
+         +AzZavSOrSYeqnbI2ILW6X2R8FQ+9h3xlE/HVRVeDy7va4BIGMwM9nRb5MQrNtwqwCrA
+         MJ8Q==
+X-Gm-Message-State: APjAAAWHy3j09G2JbiZLmOlycrPVgrS5zcoz1EKqOSiGr6gqoho8n4h2
+        wuoWzkccXr2sqtikTInwz7Opnraqb6vPUA==
+X-Google-Smtp-Source: APXvYqyrVaOO0U+Mr+LFVkJVcWO83f79a/GXZPmUsVx+I6HsOiWfA8Ln09V9gPIVtGfmEcdbjQTv7w==
+X-Received: by 2002:a1c:498a:: with SMTP id w132mr11325387wma.10.1576361872889;
+        Sat, 14 Dec 2019 14:17:52 -0800 (PST)
+Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id x7sm15381620wrq.41.2019.12.14.14.17.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2019 14:17:52 -0800 (PST)
+Subject: Re: [PATCH] openat2: switch to __attribute__((packed)) for open_how
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     dev@opencontainers.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20191213222351.14071-1-cyphar@cyphar.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
+Date:   Sat, 14 Dec 2019 23:17:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191214175735.22518-1-ardb@kernel.org> <20191214175735.22518-6-ardb@kernel.org>
- <20191214194626.GA140998@rani.riverdale.lan> <20191214194936.GB140998@rani.riverdale.lan>
- <CAKv+Gu_JQz=xd_UmqiuZ8TvA+ksT_rY4iXP_j7OdW4F5sfZt9g@mail.gmail.com>
- <20191214201334.GC140998@rani.riverdale.lan> <CAKv+Gu-A4bE0DM96-dNjtsYG=a3g-X4f-y=NcJ5ZCvZHaDJZmw@mail.gmail.com>
- <20191214211725.GG140998@rani.riverdale.lan> <CAKv+Gu85yLS6cYaGPTLc=hjHjvjjYYX-E0wCwKK+1W+T9dxAcQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu85yLS6cYaGPTLc=hjHjvjjYYX-E0wCwKK+1W+T9dxAcQ@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 14 Dec 2019 22:14:38 +0000
-Message-ID: <CAKv+Gu8DNwWF4FfiZNStHTqNZeUP90c1_NkSLC_80YxF4smnxA@mail.gmail.com>
-Subject: Re: [PATCH 05/10] efi/libstub: distinguish between native/mixed not
- 32/64 bit
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191213222351.14071-1-cyphar@cyphar.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019 at 22:30, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Sat, 14 Dec 2019 at 22:17, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Sat, Dec 14, 2019 at 08:27:50PM +0000, Ard Biesheuvel wrote:
-> > > On Sat, 14 Dec 2019 at 21:13, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > >
-> > > > On Sat, Dec 14, 2019 at 07:54:25PM +0000, Ard Biesheuvel wrote:
-> > > > > On Sat, 14 Dec 2019 at 20:49, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > > > >
-> > > > > > On Sat, Dec 14, 2019 at 02:46:27PM -0500, Arvind Sankar wrote:
-> > > > > > > On Sat, Dec 14, 2019 at 06:57:30PM +0100, Ard Biesheuvel wrote:
-> > > > > > > > +
-> > > > > > > > +#define efi_table_attr(table, attr, instance) ({                   \
-> > > > > > > > +   __typeof__(((table##_t *)0)->attr) __ret;                       \
-> > > > > > > > +   if (efi_is_native()) {                                          \
-> > > > > > > > +           __ret = ((table##_t *)instance)->attr;                  \
-> > > > > > > > +   } else {                                                        \
-> > > > > > > > +           __typeof__(((table##_32_t *)0)->attr) at;               \
-> > > > > > > > +           at = (((table##_32_t *)(unsigned long)instance)->attr); \
-> > > > > > > > +           __ret = (__typeof__(__ret))(unsigned long)at;           \
-> > > > > > > > +   }                                                               \
-> > > > > > > > +   __ret;                                                          \
-> > > > > > > > +})
-> > > > > > >
-> > > Yes. I'm open to suggestions on how to improve this, but mixed mode is
-> > > somewhat of a maintenance burden, so if new future functionality needs
-> > > to leave mixed mode behind, I'm not too bothered.
-> > >
-> >
-> > Maybe just do
-> >         if (sizeof(at) < sizeof(__ret))
-> >                 __ret = (__typeof__(__ret))(uintptr_t)at;
-> >         else
-> >                 __ret = (__typeof__(__ret))at;
-> > That should cover most of the cases.
->
-> But the compiler will still be unhappy about the else clause if __ret
-> is a pointer type, since we'll be casting an u32 to a pointer,
+On 13/12/2019 23.23, Aleksa Sarai wrote:
+> The design of the original open_how struct layout was such that it
+> ensured that there would be no un-labelled (and thus potentially
+> non-zero) padding to avoid issues with struct expansion, as well as
+> providing a uniform representation on all architectures (to avoid
+> complications with OPEN_HOW_SIZE versioning).
+> 
+> However, there were a few other desirable features which were not
+> fulfilled by the previous struct layout:
+> 
+>  * Adding new features (other than new flags) should always result in
+>    the struct getting larger. However, by including a padding field, it
+>    was possible for new fields to be added without expanding the
+>    structure. This would somewhat complicate version-number based
+>    checking of feature support.
+> 
+>  * A non-zero bit in __padding yielded -EINVAL when it should arguably
+>    have been -E2BIG (because the padding bits are effectively
+>    yet-to-be-used fields). However, the semantics are not entirely clear
+>    because userspace may expect -E2BIG to only signify that the
+>    structure is too big. It's much simpler to just provide the guarantee
+>    that new fields will always result in a struct size increase, and
+>    -E2BIG indicates you're using a field that's too recent for an older
+>    kernel.
 
-I think the answer is to have efi_table_ptr() for pointers and
-efi_table_attr() for other types.
+And when the first extension adds another u64 field, that padding has to
+be added back in and checked for being 0, at which point the padding is
+again yet-to-be-used fields. So what exactly is the problem with
+returning EINVAL now?
+
+>  * The padding wasted space needlessly, and would very likely not be
+>    used up entirely by future extensions for a long time (because it
+>    couldn't fit a u64).
+
+Who knows, it does fit a u32. And if the struct is to be 8-byte aligned
+(see below), it doesn't actually waste space.
+
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index d886bdb585e4..0e070c7f568a 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -109,17 +109,16 @@
+>   * O_TMPFILE} are set.
+>   *
+>   * @flags: O_* flags.
+> - * @mode: O_CREAT/O_TMPFILE file mode.
+>   * @resolve: RESOLVE_* flags.
+> + * @mode: O_CREAT/O_TMPFILE file mode.
+>   */
+>  struct open_how {
+> -	__aligned_u64 flags;
+> +	__u64 flags;
+> +	__u64 resolve;
+>  	__u16 mode;
+> -	__u16 __padding[3]; /* must be zeroed */
+> -	__aligned_u64 resolve;
+> -};
+> +} __attribute__((packed));
+
+IIRC, gcc assumes such a struct has alignment 1, which means that it
+will generate horrible code to access it. So if you do this (and I don't
+think it's a good idea), I think you'd also want to include a
+__attribute__((__aligned__(8))) - or perhaps that can be accomplished by
+just keeping flags as an explicitly aligned member. But that will of
+course bump its sizeof() back to 24, at which point it seems better to
+just make the padding explicit.
+
+Rasmus
