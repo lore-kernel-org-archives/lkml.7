@@ -2,115 +2,147 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45DC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2137AC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828A0214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A3D2465B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 13:00:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NYBnGKnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfLNM6k (ORCPT
+        id S1726741AbfLNNAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 07:58:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59496 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbfLNM6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 07:58:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 65A29ADEB;
-        Sat, 14 Dec 2019 12:58:38 +0000 (UTC)
-Date:   Sat, 14 Dec 2019 13:58:31 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fanc.fnst@cn.fujitsu.com, ardb@kernel.org,
-        dave.hansen@linux.intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH] x86/boot/KASLR: Fix unused variable warning
-Message-ID: <20191214125831.GA29335@zn.tnic>
-References: <CAFH1YnM_2xud4V7sAZAMWPpWP0CBHxuddAKjxHJsj9U9WfH2ww@mail.gmail.com>
+        Sat, 14 Dec 2019 08:00:01 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34498 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfLNNAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 08:00:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cVfsByPBGAH0nlXQRgx8tkvnwPRM93zqT8emFAC0MMo=; b=NYBnGKnByJHlzENS5UPOeXPvF
+        lDm53oKLDryplzcg2wtiqsmjk3vVDVik46mpm2X542ZB8jgKcPYXLegNwiMKoe4d/3zB/HFIpweM3
+        W9zQNX2o0ic0jH6Xf1nD2ANFnYiJlYjPoErAzdJGnDjLlJNXwP6FaMq4iNpGOlslXBp3lY4Q1YfNZ
+        w7c61lybarYqsCdd00nAaqbA6LMJjEqcOt3OUo2xgdSp0A6sZSEZU0regJQgOud95o2biPA9vHEu9
+        6z87usN65hGtdKwyFimNG1lclpP+feXTewWQLO1uyc6CFoN3NYiXmGfYCsCkUKChTdYYOtCTKUm45
+        Rj/NHc5jw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41234)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ig71T-0002v6-Ew; Sat, 14 Dec 2019 12:59:51 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ig71P-0000SH-FH; Sat, 14 Dec 2019 12:59:47 +0000
+Date:   Sat, 14 Dec 2019 12:59:47 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: BUG - was: [GIT PULL 2/3] bcm2835-soc-next-2019-10-15
+Message-ID: <20191214125947.GD1337@shell.armlinux.org.uk>
+References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
+ <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
+ <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFH1YnM_2xud4V7sAZAMWPpWP0CBHxuddAKjxHJsj9U9WfH2ww@mail.gmail.com>
+In-Reply-To: <12244E4E-A1A0-4EE9-ACD3-EA165D9A2C79@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:04:17PM +0800, Zhenzhong Duan wrote:
-> This patch fixes below warning by moving variable 'i':
-
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
-
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable ‘i’
-> [-Wunused-variable]
-
-You could explain here why the warning fires...
-
-> Also use true/false instead of 1/0 for boolean return.
+On Sat, Dec 14, 2019 at 11:54:19AM +0100, H. Nikolaus Schaller wrote:
+> Hi Stefan,
 > 
-> Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the
-> kernel in immovable memory only")
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> ---
->  arch/x86/boot/compressed/kaslr.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> > Am 15.10.2019 um 19:15 schrieb Stefan Wahren <wahrenst@gmx.net>:
+> > 
+> > Hi Florian,
+> > 
+> > The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+> > 
+> >  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+> > 
+> > are available in the git repository at:
+> > 
+> >  git://github.com/anholt/linux tags/bcm2835-soc-next-2019-10-15
+> > 
+> > for you to fetch changes up to 781fa0a954240c8487683ddf837fb2c4ede8e7ca:
+> > 
+> >  ARM: bcm: Add support for BCM2711 SoC (2019-10-10 19:21:03 +0200)
+> 
+> this patch has finally arrived in v5.5-rc1 but it seems to break
+> multiplatform build.
+> 
+> We run a distribution kernel that supports OMAP3/4/5, i.MX6 and RasPi 3B+
+> but since rebasing to v5.5-rc1 the kernel hangs after "Starting Kernel ...".
+> On all ARM devices (incl. RasPi 3B+).
+> 
+> Playing with our defconfig did show that deconfiguring CONFIG_ARCH_BCM2835
+> makes the kernel work again.
+> 
+> After further analysis it turns out that reverting this patch also
+> makes the boards work again.
+> 
+> I am not exactly sure what the reason is, but it may have something to
+> do with the new auto-selection of CONFIG_ZONE_DMA which is not automatically
+> selected by OMAP and i.MX6.
+> 
+> To reproduce on some OMAP device (i.MX6 should be similar)
+> 
+> 1st test:
+> 
+> git checkout v5.5-rc1
+> make omap2plus_defconfig
+> 
+> => boots OMAP device
+> 
+> 2nd test:
+> 
+> ( echo CONFIG_ARCH_BCM2835=y; echo CONFIG_ARCH_BCM=y ) >>arch/arm/configs/omap2plus_defconfig
+> make omap2plus_defconfig
+> 
+> => fails to boot OMAP device
+> 
+> 3rd test:
+> 
+> git revert 781fa0a954240c8487683ddf837fb2c4ede8e7ca
+> make omap2plus_defconfig
+> 
+> => boots OMAP device
+> 
+> BTW: the RasPi 3B+ runs equally well without this patch. So what is it
+> good for?
+> 
+> So please check and fix this patch.
 
+Enabling ZONE_DMA shouldn't cause this problem - but as it does, please
+enable memblock debugging and early console, and please send any boot
+messages you can get from the system when it fails to boot.  Also
+having a successful boot log may be useful.
 
-WARNING: please, no spaces at the start of a line
-#45: FILE: arch/x86/boot/compressed/kaslr.c:707:
-+ return true;$
-
-WARNING: please, no spaces at the start of a line
-#48: FILE: arch/x86/boot/compressed/kaslr.c:709:
-+ return false;$
-
-WARNING: please, no spaces at the start of a line
-#52: FILE: arch/x86/boot/compressed/kaslr.c:713:
-+ int i;$
-
-ERROR: patch seems to be corrupt (line wrapped?)
-#60: FILE: arch/x86/boot/compressed/kaslr.c:736:
-regions(slot_areas full)!\n");
-
-WARNING: please, no spaces at the start of a line
-#62: FILE: arch/x86/boot/compressed/kaslr.c:737:
-+ return true;$
-
-WARNING: please, no spaces at the start of a line
-#67: FILE: arch/x86/boot/compressed/kaslr.c:741:
-+ return false;$
-
-
-$ test-apply.sh /tmp/zhenzhong.duan.01 
-checking file arch/x86/boot/compressed/kaslr.c
-patch: **** malformed patch at line 60: regions(slot_areas full)!\n");
-
-I'd be very interested to know how you even managed to create such a
-well, hm, "patch"?!
-
-For the future, before you send a patch:
-
-- use checkpatch on it
-- send it to yourself and try applying it first
-
-Thx.
+Thanks.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
