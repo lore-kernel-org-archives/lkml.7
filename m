@@ -2,105 +2,129 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723E3C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CFCC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A7624656
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AC320706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TdT7jtcC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OHETnmaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfLNM3O (ORCPT
+        id S1726551AbfLNMas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 07:29:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:54140 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfLNM3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 07:29:14 -0500
-Received: from zn.tnic (p200300EC2F0A5A009CBB5BB8E6A81C1F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:9cbb:5bb8:e6a8:1c1f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 14 Dec 2019 07:30:48 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58533 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725895AbfLNMar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 07:30:47 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576326647; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=nEhgWqsCxMZod3X8xArRbg45hp9WJhR8VXPah4HQGdA=;
+ b=OHETnmaEmO1Fy0VxkkDuH1qJ0PaWp/9LYN36AhY9wASJwt2NDjB8yqLTwA+tZAZzpiNWmPLo
+ NKpqX3Sw73thWVHY6Xp8R7fgWBKuIa0hCpibwctuO/DJQWovA6WbvbKqinMvLtXQR08fegmJ
+ P3d3uXkB9K1NUsTy7IsaeSIe12A=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df4d5f5.7f0a44f89a08-smtp-out-n02;
+ Sat, 14 Dec 2019 12:30:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A22C1C447A3; Sat, 14 Dec 2019 12:30:45 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E3E281EC095C;
-        Sat, 14 Dec 2019 13:29:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576326552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8NCoc4fb2yRyFtctOcE7NM5N1P1G1fFp8+EyemH6LM8=;
-        b=TdT7jtcCxSBC/j3j6arokG0EX5msVb8eN5aWP4jJdYexOAWLvsWeWZBIvvXmkU0X9ArVuS
-        YwGvoKUlJJYh8ZU5WSbTyEDdtEZaZSYfT/PXnaXXQCE4JfA3hjcMEIhY8tJDVf8l7s5MbZ
-        NqxojWGpiWAs15TS2oWFCWsHAH08fLE=
-Date:   Sat, 14 Dec 2019 13:29:10 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v5 3/5] Documentation/arm64: Fix a simple typo in
- memory.rst
-Message-ID: <20191214122910.GD28635@zn.tnic>
-References: <1574972716-25858-1-git-send-email-bhsharma@redhat.com>
- <1574972716-25858-2-git-send-email-bhsharma@redhat.com>
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9749DC433CB;
+        Sat, 14 Dec 2019 12:30:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1574972716-25858-2-git-send-email-bhsharma@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 14 Dec 2019 20:30:44 +0800
+From:   cang@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Avri Altman <Avri.Altman@wdc.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+In-Reply-To: <20191212182411.GE415177@yoga>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
+ <20191212045357.GA415177@yoga>
+ <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
+ <20191212063703.GC415177@yoga>
+ <MN2PR04MB69919AA0C345E7D6620C3ADFFC550@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <0101016efb07efac-32cf270a-68dd-455a-b037-9fac2f3834cd-000000@us-west-2.amazonses.com>
+ <20191212182411.GE415177@yoga>
+Message-ID: <0baa9d993cf9cb3e6c94f4c4440e9f95@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 01:55:14AM +0530, Bhupesh Sharma wrote:
-> Fix a simple typo in arm64/memory.rst
+On 2019-12-13 02:24, Bjorn Andersson wrote:
+> On Thu 12 Dec 08:53 PST 2019, cang@codeaurora.org wrote:
 > 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  Documentation/arm64/memory.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> On 2019-12-12 15:00, Avri Altman wrote:
+>> > > On Wed 11 Dec 22:01 PST 2019, cang@codeaurora.org wrote:
+>> > > > On 2019-12-12 12:53, Bjorn Andersson wrote:
+>> > > > > On Wed 11 Dec 00:49 PST 2019, Can Guo wrote:
+> [..]
+>> > > > And in real cases, as the UFS is the boot device, UFS driver will always
+>> > > > be probed during bootup.
+>> > > >
+>> > >
+>> > > The UFS driver will load and probe because it's mentioned in the
+>> > > devicetree, but if either the ufs drivers or any of its dependencies
+>> > > (phy, resets, clocks, etc) are built as modules it might very well
+>> > > finish probing after lateinitcall.
+>> > >
+>> > > So in the even that the bsg is =y and any of these drivers are =m,
+>> > > or if
+>> > > you're having bad luck with your timing, the list will be empty.
+>> > >
+>> > > As described below, if bsg=m, then there's nothing that will load the
+>> > > module and the bsg will not probe...
+>> > Right.
+>> > bsg=y and ufshcd=m is a bad idea, and should be avoided.
+>> >
+>> 
+>> Yeah, I will get it addressed in the next patchset.
+>> 
 > 
-> diff --git a/Documentation/arm64/memory.rst b/Documentation/arm64/memory.rst
-> index 02e02175e6f5..cf03b3290800 100644
-> --- a/Documentation/arm64/memory.rst
-> +++ b/Documentation/arm64/memory.rst
-> @@ -129,7 +129,7 @@ this logic.
->  
->  As a single binary will need to support both 48-bit and 52-bit VA
->  spaces, the VMEMMAP must be sized large enough for 52-bit VAs and
-> -also must be sized large enought to accommodate a fixed PAGE_OFFSET.
-> +also must be sized large enough to accommodate a fixed PAGE_OFFSET.
->  
->  Most code in the kernel should not need to consider the VA_BITS, for
->  code that does need to know the VA size the variables are
-> -- 
+> If you build this around platform_device_register_data() from ufshcd I
+> don't see a reason to add additional restrictions on this combination
+> (even though it might not make much sense for people to use this
+> combination).
+> 
+> Regards,
+> Bjorn
 
-Why is this a separate patch?
+Agree, thanks.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Can Guo.
