@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DDFC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E20C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3B520866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E2A2073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfLNWD7 (ORCPT
+        id S1727469AbfLNWEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:03:59 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:38005 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfLNWDF (ORCPT
+        Sat, 14 Dec 2019 17:04:06 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48415 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfLNWDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:03:05 -0500
+        Sat, 14 Dec 2019 17:03:03 -0500
 X-Originating-IP: 90.65.92.102
 Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 191BB1C0002;
-        Sat, 14 Dec 2019 22:03:04 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id AB20960005;
+        Sat, 14 Dec 2019 22:03:01 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 06/17] rtc: pcf8563: remove RTC_VL_CLR handling
-Date:   Sat, 14 Dec 2019 23:02:48 +0100
-Message-Id: <20191214220259.621996-7-alexandre.belloni@bootlin.com>
+Subject: [PATCH 01/17] rtc: define RTC_VL_READ values
+Date:   Sat, 14 Dec 2019 23:02:43 +0100
+Message-Id: <20191214220259.621996-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191214220259.621996-1-alexandre.belloni@bootlin.com>
 References: <20191214220259.621996-1-alexandre.belloni@bootlin.com>
@@ -42,41 +42,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove RTC_VL_CLR handling because it is a disservice to userspace as it
-removes the important information that the RTC data is invalid. This may
-lead userspace to set an invalid system time later on.
+Currently, the meaning of the value returned by RTC_VL_READ is undocumented
+and left to the driver implementation. In order to get more meaningful
+values, define a set of values to use as to make clear to userspace what is
+the status of the various voltages feeding the RTC.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf8563.c | 15 ---------------
- 1 file changed, 15 deletions(-)
+ include/uapi/linux/rtc.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 3c322f3079b0..c701eef82349 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -291,21 +291,6 @@ static int pcf8563_rtc_ioctl(struct device *dev, unsigned int cmd, unsigned long
- 					sizeof(int)))
- 			return -EFAULT;
- 		return 0;
--	case RTC_VL_CLR:
--		/*
--		 * Clear the VL bit in the seconds register in case
--		 * the time has not been set already (which would
--		 * have cleared it). This does not really matter
--		 * because of the cached voltage_low value but do it
--		 * anyway for consistency.
--		 */
--		if (pcf8563_rtc_read_time(dev, &tm))
--			pcf8563_rtc_set_time(dev, &tm);
--
--		/* Clear the cached value. */
--		pcf8563->voltage_low = 0;
--
--		return 0;
- 	default:
- 		return -ENOIOCTLCMD;
- 	}
+diff --git a/include/uapi/linux/rtc.h b/include/uapi/linux/rtc.h
+index 2ad1788968d0..095af360326a 100644
+--- a/include/uapi/linux/rtc.h
++++ b/include/uapi/linux/rtc.h
+@@ -92,7 +92,12 @@ struct rtc_pll_info {
+ #define RTC_PLL_GET	_IOR('p', 0x11, struct rtc_pll_info)  /* Get PLL correction */
+ #define RTC_PLL_SET	_IOW('p', 0x12, struct rtc_pll_info)  /* Set PLL correction */
+ 
+-#define RTC_VL_READ	_IOR('p', 0x13, int)	/* Voltage low detector */
++#define RTC_VL_DATA_INVALID	BIT(0) /* Voltage too low, RTC data is invalid */
++#define RTC_VL_BACKUP_LOW	BIT(1) /* Backup voltage is low */
++#define RTC_VL_BACKUP_EMPTY	BIT(2) /* Backup empty or not present */
++#define RTC_VL_ACCURACY_LOW	BIT(3) /* Voltage is low, RTC accuracy is reduced */
++
++#define RTC_VL_READ	_IOR('p', 0x13, unsigned int)	/* Voltage low detection */
+ #define RTC_VL_CLR	_IO('p', 0x14)		/* Clear voltage low information */
+ 
+ /* interrupt flags */
 -- 
 2.23.0
 
