@@ -2,85 +2,95 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C666C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A8CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686E12465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CBF2465B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 06:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576305652;
+	bh=ywRbms/3SILxNnbJWJRfGsJaom/QIpHbbWAIN9MG/Xc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=lBfmQ6f0EWoYxBhHb28PHspA/3XbynUDtBCNuKI0ma2UlDwXDSebjjohLzWgfsz9l
+	 p3nV86y4GOCSkMrsmH426JJ9KVKWCBdbBgFDLuLI+wglh8fEA60k2u3iviscKKXj//
+	 zsGE5of88WOGjd6SRVCt/FaELABSaiab2dhCDAw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfLNGio (ORCPT
+        id S1725990AbfLNGkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 01:38:44 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7241 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725372AbfLNGio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 01:38:44 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 13477E9D23A12DEFDBE2;
-        Sat, 14 Dec 2019 14:38:41 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 14 Dec 2019 14:38:31 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     Felipe Balbi <balbi@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ma Feng <mafeng.ma@huawei.com>
-Subject: [PATCH] usb: gadget: Remove unneeded semicolon
-Date:   Sat, 14 Dec 2019 14:39:29 +0800
-Message-ID: <1576305569-106590-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Sat, 14 Dec 2019 01:40:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfLNGku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 01:40:50 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E87B6214AF;
+        Sat, 14 Dec 2019 06:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576305650;
+        bh=ywRbms/3SILxNnbJWJRfGsJaom/QIpHbbWAIN9MG/Xc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TArLbUEdqOTQ8RP5TNPmRuqZQ8TG3JA6KzrdenMoMMjnXeYmQPORLO7UEPY7POfac
+         Yeal7xjT9zoRYp+MZrHMkz1JLowXAyh4OtbA8haXK56LY70Coi6IUa3UD+Q9bUj3qK
+         gwSEDUpqQXmwgQTElBrSc7uMW7mjJ+Q2rzvw7n78=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 13534352276B; Fri, 13 Dec 2019 22:40:48 -0800 (PST)
+Date:   Fri, 13 Dec 2019 22:40:48 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Tejun Heo <tj@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: "rcu: React to callback overload by aggressively seeking
+ quiescent states" hangs on boot
+Message-ID: <20191214064048.GI2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191213224646.GH2889@paulmck-ThinkPad-P72>
+ <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Fri, Dec 13, 2019 at 06:11:16PM -0500, Qian Cai wrote:
+> 
+> 
+> > On Dec 13, 2019, at 5:46 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > I am running this on a number of x86 systems, but will try it on a
+> 
+> The config to reproduce includes several debugging options that might
+> required to recreate.
 
-drivers/usb/gadget/function/f_fs.c:2508:2-3: Unneeded semicolon
-drivers/usb/gadget/udc/omap_udc.c:2579:2-3: Unneeded semicolon
+If you run without those debugging options, do you still see the hangs?
+If not, please let me know which debugging are involved.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
----
- drivers/usb/gadget/function/f_fs.c | 2 +-
- drivers/usb/gadget/udc/omap_udc.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> > wider variety.  If I cannot reproduce it, would you be willing to
+> > run diagnostics?
+> 
+> Yes.
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 0bbccac..92f4645 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -2505,7 +2505,7 @@ static int __ffs_data_got_descs(struct ffs_data *ffs,
- 		os_descs_count = get_unaligned_le32(data);
- 		data += 4;
- 		len -= 4;
--	};
-+	}
+Very good!  Let me see what I can put together.  (No luck reproducing
+at my end thus far.)
 
- 	/* Read descriptors */
- 	raw_descs = data;
-diff --git a/drivers/usb/gadget/udc/omap_udc.c b/drivers/usb/gadget/udc/omap_udc.c
-index f36f073..6bb65f3 100644
---- a/drivers/usb/gadget/udc/omap_udc.c
-+++ b/drivers/usb/gadget/udc/omap_udc.c
-@@ -2576,7 +2576,7 @@ omap_ep_setup(char *name, u8 addr, u8 type,
- 	case USB_ENDPOINT_XFER_INT:
- 		ep->ep.caps.type_int = true;
- 		break;
--	};
-+	}
+> > Just to double-check...  Are you running rcutorture built into the kernel?
+> > (My guess is "no", but figured that I should ask.)
+> 
+> No as you can see from the config I linked in the original email.
 
- 	if (addr & USB_DIR_IN)
- 		ep->ep.caps.dir_in = true;
---
-2.6.2
+Fair point, and please accept my apologies for the pointless question.
 
+							Thanx, Paul
