@@ -2,93 +2,138 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE52C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E31C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FD220706
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:43:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Mxx1kbGm"
+	by mail.kernel.org (Postfix) with ESMTP id E6C6420724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 18:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfLNSnn (ORCPT
+        id S1726861AbfLNSop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 13:43:43 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41586 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfLNSnm (ORCPT
+        Sat, 14 Dec 2019 13:44:45 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:47372 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbfLNSop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 13:43:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so1222624pgk.8
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 10:43:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=QbzwIxwiBFo2cffoX1L047KjXjiOr4rf4SxlZuAhMrY=;
-        b=Mxx1kbGm0XFApeOmkSnbAtCAJM74EDCCF8bxEFFLrIiHYpH99UvvEkjQ4pgCeSK8IA
-         ZEsHxCPSZEgTrksBJIT61B+gw9G5fs89J4RzYKG0pv3u4t+rEoAgfq/azFGYLkSBa18+
-         5Syf7b5XnU0yWLcR0GQmoFbNKZsZ1xd3qfLPSGGCyqoRiHCtnvYlJhtqz7pf/ZRj3Qi3
-         gcghiGyr28AfdNoOfIGJxr+WLyD2LcE3FEVMIaRmSXtzNKBCzD+Ff/tM02BL2B3cIKbR
-         WqQb7TQnNM4WErVb/MNbQD7F9cgZ+N2g+xH+6Ppt30Pr+ObJM/WR+w19vM8dDb4WQPox
-         UK0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QbzwIxwiBFo2cffoX1L047KjXjiOr4rf4SxlZuAhMrY=;
-        b=ZyPd39MaZdUTpgpUlVEUkmdtOyelDBW3BisJOFM43Y796aI7raWUhC1y1DYghLcDwu
-         Axti1UjfGPhmq5DuzofSm3lpRhM2j1Yw94LjoyRgxOBrWU7CkHGtxRrtkceVXm1kbtMS
-         wBzuSodqgyFr1271y1OtuYpx2IBG/s93jbbp/TNnTmxs89MH/FRZWHWfNp9x5wAE3N+O
-         2681Tx4boAs9/kT8rTF5+lVbHRAYfUQIqxpDmMrvXKvwdBGHfNKrNJLYigDstmyORiQN
-         gJGGw3qRfszVwVSLXUqzAPdkpX0DojNoCZeQzQVqcIblsmj2R/H0+Mg2oKNGgK2w8l1c
-         gvGw==
-X-Gm-Message-State: APjAAAU597kG/EWpKse7OtiCi68qkjJPxQfxuAtrN/LpgvLbvkTceGp8
-        qRhM8/3xVYyWhX9NbJXcFMuXIAg9h6S7dQ==
-X-Google-Smtp-Source: APXvYqzRVHXJbkaHToZpXQuBbgfNfNrwyA7GnRMI4cTusCicSSlssbKOJWnBtTcZWc4BIUpjcxob9A==
-X-Received: by 2002:a63:5d03:: with SMTP id r3mr6986201pgb.306.1576349021449;
-        Sat, 14 Dec 2019 10:43:41 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id m15sm15216850pgi.91.2019.12.14.10.43.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Dec 2019 10:43:39 -0800 (PST)
-Subject: Re: [PATCH v3] io_uring: don't wait when under-submitting
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
- <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a1f0a9ed-085f-dd6f-9038-62d701f4c354@kernel.dk>
-Date:   Sat, 14 Dec 2019 11:43:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 14 Dec 2019 13:44:45 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1igCPC-0003pB-Ts; Sat, 14 Dec 2019 18:44:42 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC7)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1igCPC-0007pG-GJ; Sat, 14 Dec 2019 18:44:42 +0000
+Message-ID: <48f5d55352e57e85925e98741331725109369476.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 04/72] leds: leds-lp5562 allow firmware files up to
+ the maximum length
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Nick Stoughton <nstoughton@logitech.com>
+Date:   Sat, 14 Dec 2019 18:44:37 +0000
+In-Reply-To: <20191214083755.GA16834@duo.ucw.cz>
+References: <lsq.1575813164.154362148@decadent.org.uk>
+         <lsq.1575813165.827469937@decadent.org.uk>
+         <20191214083755.GA16834@duo.ucw.cz>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-8JBTCm4n1ufoD71qgRks"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/14/19 7:53 AM, Pavel Begunkov wrote:
-> There is no reliable way to submit and wait in a single syscall, as
-> io_submit_sqes() may under-consume sqes (in case of an early error).
-> Then it will wait for not-yet-submitted requests, deadlocking the user
-> in most cases.
-> 
-> In such cases adjust min_complete, so it won't wait for more than
-> what have been submitted in the current call to io_uring_enter(). It
-> may be less than totally in-flight including previous submissions,
-> but this shouldn't do harm and up to a user.
 
-Thanks, applied.
+--=-8JBTCm4n1ufoD71qgRks
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+On Sat, 2019-12-14 at 09:37 +0100, Pavel Machek wrote:
+> On Sun 2019-12-08 13:52:48, Ben Hutchings wrote:
+> > 3.16.79-rc1 review patch.  If anyone has any objections, please let
+> > me know.
+>=20
+> Nobody is hitting this one and noone cares. Not a serious bug as
+> described in stable rules.
+>=20
+> I'd recommend dropping.
 
+This has already been included in 3.16.79 (and updates for other stable
+branches), so unless it causes a problem I don't intend to revert it.
+
+Ben.
+
+> > ------------------
+> >=20
+> > From: Nick Stoughton <nstoughton@logitech.com>
+> >=20
+> > commit ed2abfebb041473092b41527903f93390d38afa7 upstream.
+> >=20
+> > Firmware files are in ASCII, using 2 hex characters per byte. The
+> > maximum length of a firmware string is therefore
+> >=20
+> > 16 (commands) * 2 (bytes per command) * 2 (characters per byte) =3D 64
+> >=20
+> > Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+> > Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> > ---
+> >  drivers/leds/leds-lp5562.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >=20
+> > --- a/drivers/leds/leds-lp5562.c
+> > +++ b/drivers/leds/leds-lp5562.c
+> > @@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struc
+> >  {
+> >  	const struct firmware *fw =3D chip->fw;
+> > =20
+> > -	if (fw->size > LP5562_PROGRAM_LENGTH) {
+> > +	/*
+> > +	 * the firmware is encoded in ascii hex character, with 2 chars
+> > +	 * per byte
+> > +	 */
+> > +	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+> >  		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+> >  			fw->size);
+> >  		return;
+--=20
+Ben Hutchings
+Anthony's Law of Force: Don't force it, get a larger hammer.
+
+
+
+--=-8JBTCm4n1ufoD71qgRks
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl31LZUACgkQ57/I7JWG
+EQnG/Q/+J8w6IUF5IYasSuYv7QslTWpSAnzZ7KuYH6zqbdO/Ofo/NiYPmFeCVT7j
+O8z/+ZybZgBmUT8R8B1j3TgAU3YN/kbE7aZC2FBcgaUYBKCl5oH9Nogm2ji/LRjM
+t7QYsU2x2uE3S286kLW+/PYvQZz5AJ+vpt5NJ3/2PBOoEG79nooMfnOZtspGokEH
+w4DZFLpkKpI76NBzeXZ6qWjiKL6J4iQg2D36e+Qfy6xvDu4FSNArq3UUE46/s08h
+soiJHoPJCyf29y7z7gM61gpI4ekIw1QrSroAujr+yT3usmhDclg4jf9wef37LXRj
+qSWdcD9aV8V4pNIHdLnGfR79orR7ZhVlS7qgesrpjQnz+p6HzrL/esMdV9dkzFgO
+ikgmIQN7tpYWyyDPNBV1qAwAcsBxSHb6E+1/xkpneo40BKK5KfrxeRzKF/iKXQqw
++le3K3FSuRUSgFFGBW0mWYISpFoCHIJJtWe6rlgTElcoApNQkI4JNhjCGCMs3idI
+/dVcWxZN/yhfJF5eU3reSEP/aQE24f5Q7U46vtKsKpPF3+qg03tcChvfnpEXk6qx
+xfGpk7gI1JnoeSNJWgQPbdqRoP+sP9+f4o9PdCaS5UzOWcdhmWaEkk0KFrPiHPx5
+sdA5lVT7UGlphi1e7GzOzeNy/qK9fw4RyOfysVhf+0y+zzswCpY=
+=59ot
+-----END PGP SIGNATURE-----
+
+--=-8JBTCm4n1ufoD71qgRks--
