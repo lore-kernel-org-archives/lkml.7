@@ -2,155 +2,103 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FDFC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F8C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886E6214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E46F20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 21:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IryrQR+I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqR3BInj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfLNVIA (ORCPT
+        id S1726939AbfLNVJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 16:08:00 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36552 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLNVIA (ORCPT
+        Sat, 14 Dec 2019 16:09:37 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44519 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLNVJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 16:08:00 -0500
-Received: by mail-qk1-f193.google.com with SMTP id a203so1173026qkc.3;
-        Sat, 14 Dec 2019 13:07:59 -0800 (PST)
+        Sat, 14 Dec 2019 16:09:37 -0500
+Received: by mail-lj1-f196.google.com with SMTP id c19so2521281lji.11
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 13:09:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h4m24kjjVELGBf67T3Sqeabi8zZPBxcF9/3vyN0xZq0=;
-        b=IryrQR+IH5+iX7wsZIFOqz9y2HqsFeXaIoOVLELOlnEgNyooteQJdC9TRfUUNNgWne
-         bD0X6AjoGH/nn4WGKE/mX/qubAFXjoCl/W88bLoXVECIkBSAxXVDfZ28tafXUADV81aD
-         qgmLXZWNRRkTFJosyOLegs5Z44uCXPKIlzRKLoyOR0NQW7qYUFdXyG2dYYtlJdEF0AVX
-         jpgjC7xQv3EairSpifNjQ1ftHCt9Mt6bP2W6+gMVA/hiYqlSoW51UBZqf/uvR5Myh25l
-         fjGN0KtaTjFy0AVtEMZugcaf/PFBKOjsiDBuOoKyCJCSGXCReRYmXJfjg63I7WZ7sPu0
-         JglA==
+        h=from:to:cc:subject:date:message-id;
+        bh=EQQEq9PTrEL9uBad7QGCPNruaz6IPJiTv99Hu/EpDwA=;
+        b=TqR3BInjw/IqJswekxIeRtPW85atl7eHttemwFLOjsc1p6M6IvmN0ZUcclC5MQEjgl
+         TcsvPd/dAWMwZPm3JvPw0PjGhyXhqAbyCxR1wjqmg1/8JMgornWJy0V/hdfScF1TWb5N
+         1GUKLV4nbTE4px2Bioz3F/gllrAV1Wl2A+3/Ykb1QfBzJL7SOmFfA0avWUZRjYsE52Qr
+         isltovE2z9xHXaxNFtmoBWxXdnqm3V3N5vhjf7R/fsB8U69ajWtB0PpiQO0LeUuFpmmK
+         pmyJ+W/ybPqYIjAyQ8ZqcxZH47k1tmk1PEfO+gCV9qGj48VPIufxdl9dic4jkAp30hQd
+         AWTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h4m24kjjVELGBf67T3Sqeabi8zZPBxcF9/3vyN0xZq0=;
-        b=gEdQj2EgCx6NolwQPFvslBNiQgZWoxLcNDHIOIFOmg66xG6oliNnAhVsJ+tokRP7iL
-         cRR1Cgm9rdtIG9ltkEfzoqiCfuxAjNLhKZWRc05A6feC7DrcOVUT9li675h2spEeSwNq
-         zZEUKA7WqWFmGD3Bdu1EvZuBORcV3q84ljUIDHCGH7AT4P72X0ZdmvcIOhGW/FEnYERz
-         z6Oqct71GBmIQpH+5fRTlg5pDXrAUfKtZ9dxKBV+GbkioqeSg9PAt1c5rmRRFzFlWqqm
-         rhxqoK/tNdMrRoYqwzZ3lwgu7srTB8ONbns9djc3tP/YuFqYV93fUeUt++uZpbdnGown
-         jAFQ==
-X-Gm-Message-State: APjAAAWlKwr82OhepUjLTaJMJxr4cIfAjruFxPDdO4AyEtPXKzpTLmuk
-        hUay2She/Ssr17qsvfUFmWM=
-X-Google-Smtp-Source: APXvYqz5hstfVo4TxonMN7wsU9XAM/lVdgfmOfTiyfXsMl/6wLscnNnvt5a9rx9E9AhWlzi33/NcaQ==
-X-Received: by 2002:a05:620a:149b:: with SMTP id w27mr19561271qkj.229.1576357679354;
-        Sat, 14 Dec 2019 13:07:59 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v125sm4252515qka.47.2019.12.14.13.07.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EQQEq9PTrEL9uBad7QGCPNruaz6IPJiTv99Hu/EpDwA=;
+        b=rcbkx/ub6Mz2Fp8QNGqKtR09itgWSzj4Q45Cw3Q3brWxZzufBrt0VGiSuS3tGbSikD
+         t+l6yh20/8BmVXSXX7HpW7xdWEy/A3sFRvB8GEKQ0ZYsWEWQUiI5eg3dcXG02f/cHaaZ
+         rUHPHlgKojWj6i2IRVp9LgVOBS2A983WAABiVPwqkmcLjU5D50vltnvqcsvXu4UA0dYq
+         ODPTYhyxhivmJyjH+1fG4tJ1mIBM8X9JX2J18C4eJ0kfSTpSvOoKziix1jBPo7WJkpyB
+         uIr3daIkYVjSXtxZXFcDHuAwvMpk3B2rQmraRWrd+zH3tw1lzW1M0zMy3whxsSexmUPP
+         yt5g==
+X-Gm-Message-State: APjAAAV+ve1IFv6SqaHK4eMzJ2EuKW6J2tCKHkrUUdt+uTleesGY8v2g
+        D7407NlCzZtXN1WHdrAPSRI=
+X-Google-Smtp-Source: APXvYqx1W6X0Gtp+sZynYaCyuFsLfu5ht4rhMlovrmvhkUwUUyQl+pOQjTJA3L9dl/7wSGb33qqyIg==
+X-Received: by 2002:a2e:809a:: with SMTP id i26mr13794036ljg.108.1576357775077;
+        Sat, 14 Dec 2019 13:09:35 -0800 (PST)
+Received: from ul001888.synapse.com (18-129-132-95.pool.ukrtel.net. [95.132.129.18])
+        by smtp.gmail.com with ESMTPSA id t81sm6236909lff.25.2019.12.14.13.09.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 13:07:59 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 14 Dec 2019 16:07:57 -0500
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 03/10] efi/libstub: use a helper to iterate over a EFI
- handle array
-Message-ID: <20191214210756.GE140998@rani.riverdale.lan>
-References: <20191214175735.22518-1-ardb@kernel.org>
- <20191214175735.22518-4-ardb@kernel.org>
- <20191214203257.GD140998@rani.riverdale.lan>
- <CAKv+Gu-XAvYf8G+7Oi-XVM+DvR89_zkmETmou-2ftgC41tnvMw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-XAvYf8G+7Oi-XVM+DvR89_zkmETmou-2ftgC41tnvMw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 14 Dec 2019 13:09:34 -0800 (PST)
+From:   Vasyl Gomonovych <gomonovych@gmail.com>
+To:     piotrs@cadence.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com
+Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] git commit --signoff -m "mtd: cadence: Fix cast to pointer from integer of different size warning
+Date:   Sat, 14 Dec 2019 22:09:45 +0100
+Message-Id: <20191214210946.29922-1-gomonovych@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 08:40:57PM +0000, Ard Biesheuvel wrote:
-> On Sat, 14 Dec 2019 at 21:33, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Sat, Dec 14, 2019 at 06:57:28PM +0100, Ard Biesheuvel wrote:
-> > > Iterating over a EFI handle array is a bit finicky, since we have
-> > > to take mixed mode into account, where handles are only 32-bit
-> > > while the native efi_handle_t type is 64-bit.
-> > >
-> > > So introduce a helper, and replace the various occurrences of
-> > > this pattern.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >
-> > > +#define for_each_efi_handle(handle, array, size, i)                  \
-> > > +     for (i = 1, handle = efi_is_64bit()                             \
-> > > +             ? (efi_handle_t)(unsigned long)((u64 *)(array))[0]      \
-> > > +             : (efi_handle_t)(unsigned long)((u32 *)(array))[0];     \
-> > > +         i++ <= (size) / (efi_is_64bit() ? sizeof(efi_handle_t)      \
-> > > +                                          : sizeof(u32));            \
-> > > +         handle = efi_is_64bit()                                     \
-> > > +             ? (efi_handle_t)(unsigned long)((u64 *)(array))[i]      \
-> > > +             : (efi_handle_t)(unsigned long)((u32 *)(array))[i])
-> > > +
-> > >  /*
-> > >   * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
-> > >   * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > This would access one past the array, no? Eg if the array has one
-> > handle, i is incremented to 2 the first time the condition is checked,
-> > then the loop increment will access array[2] before the condition is
-> > checked again. There seem to be at least a couple of other for_each
-> > macros that might have similar issues.
-> >
-> 
-> Indeed.
-> 
-> > How about the below instead?
-> >
-> > #define for_each_efi_handle(handle, array, size, i)                     \
-> >         for (i = 0;                                                     \
-> >             (i < (size) / (efi_is_64bit() ? sizeof(efi_handle_t)        \
-> >                                           : sizeof(u32))) &&            \
-> >             ((handle = efi_is_64bit()                                   \
-> >                 ? ((efi_handle_t *)(array))[i]                          \
-> >                 : (efi_handle_t)(unsigned long)((u32 *)(array))[i]), 1);\
-> >             i++)
-> >
-> 
-> Yeah, that looks correct to me, but perhaps we can come up with
-> something slightly more readable? :-)
-> (Not saying my code was better in that respect)
+Use a cast to uintptr_t and next to a pointer
+In the final assignment the same casting in place
+memory_pointer = (uintptr_t)mem_ptr;
+Fix warning: cast to pointer from integer of different size
 
-:) The idiom of the && with , operator is copied from for_each_bvec in bvec.h.
+Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+---
+This commit fixes a minor issue with a warning
+Not sure if we will have problem here in case of
+dma_addr_t which can be 64-bit wide on 32-bit arch
 
-Perhaps more readable with helper macros:
+---
+ drivers/mtd/nand/raw/cadence-nand-controller.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-#define __efi_handle_size (efi_is_64bit() ? sizeof(efi_handle_t)	\
-					  : sizeof(u32))
-#define __efi_handle_elem(array, i)					\
-	(efi_is_64bit() ? ((efi_handle_t *)(array))[i]			\
-			: (efi_handle_t)(uintptr_t)((u32 *)(array))[i])
+diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
+index 3a36285a8d8a..960c3a0be69c 100644
+--- a/drivers/mtd/nand/raw/cadence-nand-controller.c
++++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
+@@ -1280,8 +1280,8 @@ cadence_nand_cdma_transfer(struct cdns_nand_ctrl *cdns_ctrl, u8 chip_nr,
+ 	}
+ 
+ 	cadence_nand_cdma_desc_prepare(cdns_ctrl, chip_nr, page,
+-				       (void *)dma_buf, (void *)dma_ctrl_dat,
+-				       ctype);
++				       (void *)(uintptr_t)dma_buf,
++				       (void *)(uintptr_t)dma_ctrl_dat, ctype);
+ 
+ 	status = cadence_nand_cdma_send_and_wait(cdns_ctrl, thread_nr);
+ 
+-- 
+2.17.1
 
-#define for_each_efi_handle(handle, array, size, i)			\
-	for (i = 0; i < (size) / __efi_handle_size &&			\
-		    (handle = __efi_handle_elem(array, i), 1); i++)
