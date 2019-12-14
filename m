@@ -2,129 +2,130 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0329C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC418C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5552073D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:51:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="B5c9YO+Z"
+	by mail.kernel.org (Postfix) with ESMTP id B08C12073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 07:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbfLNHvr (ORCPT
+        id S1726049AbfLNHyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:51:47 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59478 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfLNHvr (ORCPT
+        Sat, 14 Dec 2019 02:54:16 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:60306 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfLNHyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 02:51:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WAFCLYGV8jNiyKKmUCzFAPrQcuYc31iQJNkSj8zCW2U=; b=B5c9YO+Zy+RTcHNTGcvBCk1qk
-        GjVq+ncgLD993LzLfsfCf/y7RSVYl9Td1NFBf1cjuiDygqQxyjOh1gib/mfHTcOIdOXeCQLNWVaf4
-        KhiPDsNMvPFS6vZQ/LXrHns/U1y409D57uC5ln0bkcVYe4TpvKue81y717hA7qeBvQ0QgkNcBHvOz
-        zu9Olqm38uoDDstbP2V9/UWClfAHYqvvZfs5KnsnXVnNB7WbR02gh/bPDkHRhipQ2dtZ2eRRaCfE7
-        QAOuU/1iYu18+1REcJIMAeYk32YcJ1orR1Gy5ARefQV4LVWf7PRxR7zMzNbGMXkI6iA4XPRnek2/5
-        Lz3/ktefQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41150)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ig2D5-0001dV-DI; Sat, 14 Dec 2019 07:51:34 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ig2D1-0000GN-Dl; Sat, 14 Dec 2019 07:51:27 +0000
-Date:   Sat, 14 Dec 2019 07:51:27 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] net: marvell: mvpp2: phylink requires the link interrupt
-Message-ID: <20191214075127.GX25745@shell.armlinux.org.uk>
-References: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
- <20191213163403.2a054262@cakuba.netronome.com>
+        Sat, 14 Dec 2019 02:54:16 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 495CB804FD;
+        Sat, 14 Dec 2019 08:54:13 +0100 (CET)
+Date:   Sat, 14 Dec 2019 08:54:12 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     thierry.reding@gmail.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robh+dt@kernel.org, christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 2/3] dt-bindings: display: panel: Add binding document
+ for Xinpeng XPP055C272
+Message-ID: <20191214075412.GB22818@ravnborg.org>
+References: <20191209144208.4863-1-heiko@sntech.de>
+ <20191209144208.4863-2-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213163403.2a054262@cakuba.netronome.com>
+In-Reply-To: <20191209144208.4863-2-heiko@sntech.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NXpJzYs8AAAA:8
+        a=gEfo2CItAAAA:8 a=7gkXJVJtAAAA:8 a=kqpNkawWe9FrIPx1R8MA:9
+        a=CjuIK1q_8ugA:10 a=cwV61pgf2j4Cq8VD9hE_:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 04:34:03PM -0800, Jakub Kicinski wrote:
-> On Tue, 10 Dec 2019 22:33:05 +0000, Russell King wrote:
-> > phylink requires the MAC to report when its link status changes when
-> > operating in inband modes.  Failure to report link status changes
-> > means that phylink has no idea when the link events happen, which
-> > results in either the network interface's carrier remaining up or
-> > remaining permanently down.
-> > 
-> > For example, with a fiber module, if the interface is brought up and
-> > link is initially established, taking the link down at the far end
-> > will cut the optical power.  The SFP module's LOS asserts, we
-> > deactivate the link, and the network interface reports no carrier.
-> > 
-> > When the far end is brought back up, the SFP module's LOS deasserts,
-> > but the MAC may be slower to establish link.  If this happens (which
-> > in my tests is a certainty) then phylink never hears that the MAC
-> > has established link with the far end, and the network interface is
-> > stuck reporting no carrier.  This means the interface is
-> > non-functional.
-> > 
-> > Avoiding the link interrupt when we have phylink is basically not
-> > an option, so remove the !port->phylink from the test.
-> > 
-> > Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-> > Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> 
-> Fixes: 4bb043262878 ("net: mvpp2: phylink support") ?
-> 
-> Seems like you maybe didn't want this backported to stable hence 
-> no fixes tag?
+Hi Heiko.
 
-Correct, because backporting just this patch will break the
-Macchiatobin.
 
-This patch is dependent on the previous two patches, which are more
-about correct use of the API.  I suspect if you try to backport the
-series, things will get very hairly very quickly.
+On Mon, Dec 09, 2019 at 03:42:07PM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> The XPP055C272 is a 5.5" 720x1280 DSI display.
+Can we get the size info included in the title in the binding?
+Then all relavant info is in the binding, and no git digging is needed.
 
 > 
-> Please advise :)
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  .../display/panel/xinpeng,xpp055c272.yaml     | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
 > 
-> > diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > index 111b3b8239e1..ef44c6979a31 100644
-> > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > @@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
-> >  		valid = true;
-> >  	}
-> >  
-> > -	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
-> > +	if (priv->hw_version == MVPP22 && port->link_irq) {
-> >  		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
-> >  				  dev->name, port);
-> >  		if (err) {
-> 
-> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+> new file mode 100644
+> index 000000000000..4515d44d189b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xinpeng XPP055C272 720x1280 DSI panel
+> +
+> +maintainers:
+> +  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: xinpeng,xpp055c272
+> +  reg: true
+> +  backlight: true
+> +  port: true
+> +  reset-gpios: true
+> +  iovcc-supply:
+> +     description: regulator that supplies the iovcc voltage
+> +  vci-supply:
+> +     description: regulator that supplies the vci voltage
+> +
+> +required:
+> +  - compatible
+> +  - reg
+One would assume the display also required power to operate.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dsi@ff450000 {
+> +        panel@0 {
+> +            compatible = "xinpeng,xpp055c272";
+> +            reg = <0>;
+> +            backlight = <&backlight>;
+> +            iovcc-supply = <&vcc_1v8>;
+> +            vci-supply = <&vcc3v3_lcd>;
+> +        };
+> +    };
+> +
+> +...
+
+With the few things mentioned above fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
