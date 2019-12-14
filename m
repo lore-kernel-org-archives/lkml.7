@@ -2,249 +2,112 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788DDC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6028C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6CC2465B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D11624679
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 12:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="K+KEMlZ+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iKV/5TAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfLNMQy (ORCPT
+        id S1726333AbfLNMTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 07:16:54 -0500
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:54946 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfLNMQx (ORCPT
+        Sat, 14 Dec 2019 07:19:36 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:45151 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbfLNMTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 07:16:53 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436329|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.477822-0.00910106-0.513076;DS=CONTINUE|ham_regular_dialog|0.28273-0.00130711-0.715963;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GH.ETg._1576325792;
-Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GH.ETg._1576325792)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Sat, 14 Dec 2019 20:16:33 +0800
-Subject: Re: [PATCH v2 1/5] clk: Ingenic: Adjust cgu code to make it
- compatible with X1830.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1576250472-124315-3-git-send-email-zhouyanjie@wanyeetech.com>
- <1576272301.3.3@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-From:   zhouyanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5DF4D2A0.3010603@wanyeetech.com>
-Date:   Sat, 14 Dec 2019 20:16:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sat, 14 Dec 2019 07:19:35 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 3BD4174D;
+        Sat, 14 Dec 2019 07:19:34 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 14 Dec 2019 07:19:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=TpQIsNWUD1aN8iX9f7m5nX9Qcoa
+        8CADrqKR5uk7hcMk=; b=K+KEMlZ+FKtWC+0zhCYdiD4sAysq2VuSA4TlqEwMAMJ
+        ze+vkuA0o80WcLYuZsagwXdriSbI4Wl9KfmDMhq+IW599m/huCfGG8z+9KjQcZMN
+        Q/uuFrnLKYO3nWJlbVi7SGPzDVocrmYQGNc3nuelzDhVT9KtZ+vJf9gII0xh+cNK
+        REy5w4MjA8HSSOk1BGv+6zA0ard/+JUBExCUBlgYyc/HeC+7gW33V8w+bgPE9sof
+        3021MU3/j2DwjL6+rQ7VmjaXzjd5i58UbbAD+eaS6b4KN2O5gCs+aoE3Uozs5cHJ
+        pZdeazSQcfXKR41YDksHdNWRzrSM/v1/00Xei/gpVtw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=TpQIsN
+        WUD1aN8iX9f7m5nX9Qcoa8CADrqKR5uk7hcMk=; b=iKV/5TApzSPhkSY3PaIfw7
+        WRnQhYx8isfVTkKThAO2bGm4rIGfRQfkfozKirRdkAqE7O1VuO2uQwu9hNXI6UGn
+        1jUgJupOzdak32+DPOEim8fUxdJCKRuSf9cq+LbgRWhhkEJFVmCGxwW3KAjp1/ja
+        1HVCuN4za1Zuok6qwKp5hc1y2LyjIPjp4AYVots2TTyFpmdHrjt+bjPODPABtvry
+        KrYSX9HISA8MVHrgiVOMbLHsJfpaURlxQbmGwzE+2g0d0pPapQiMy9TZETJhhNsn
+        83neR7l/l4MvtIxN9X2DYCWLdziTqonrzsKwpJubmdmdtOvSd478umcY5q9KyJsA
+        ==
+X-ME-Sender: <xms:VdP0XZ61zgg78ON7KbM2z_ZAwEIen7qGRDotKhWOfIS78kzlhKeKZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtuddggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:VdP0XZPeOZX1bXwwt4EsqMSzhkEUDl-oF0I93HpxJ3CkmiRkAh0XuQ>
+    <xmx:VdP0XfP9yl1ilFmKtDUmWqWijNJ-nucar7nvkTbP8dBZ7Tx1xFXT6A>
+    <xmx:VdP0XcXeKS9TTFzp6_m9X-lsrCXaYMrVh2oVYMa-1tx7c5XEmsIB1g>
+    <xmx:VdP0XTCJiGRhXXxPfKlI39fhyIXpSqPZY6ej_T18K-aXr-lHlhq-sA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6D75180061;
+        Sat, 14 Dec 2019 07:19:32 -0500 (EST)
+Date:   Sat, 14 Dec 2019 13:19:30 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: linux-next: manual merge of the staging tree with the
+ staging.current tree
+Message-ID: <20191214121930.GA3338917@kroah.com>
+References: <20191213120534.6e04aa02@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1576272301.3.3@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213120534.6e04aa02@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Fri, Dec 13, 2019 at 12:05:34PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the staging tree got a conflict in:
+> 
+>   drivers/staging/isdn/gigaset/usb-gigaset.c
+> 
+> between commits:
+> 
+>   53f35a39c386 ("staging: gigaset: fix general protection fault on probe")
+>   84f60ca7b326 ("staging: gigaset: fix illegal free on probe errors")
+>   ed9ed5a89acb ("staging: gigaset: add endpoint-type sanity check")
+> 
+> from the staging.current tree and commit:
+> 
+>   f10870b05d5e ("staging: remove isdn capi drivers")
+> 
+> from the staging tree.
+> 
+> I fixed it up (I just removed the file) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-On 2019年12月14日 05:25, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le ven., déc. 13, 2019 at 23:21, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> The PLL of X1830 Soc from Ingenic has been greatly changed,
->> the bypass control is placed in another register, so now two
->> registers may needed to control the PLL. To this end, the
->> original "reg" was changed to "pll_reg", and a new "bypass_reg"
->> was introduced. In addition, when calculating rate, the PLL of
->> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
->> was introduced.
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>
->> Notes:
->>     v1->v2:
->>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
->>       array (reg[2]).
->>     2.Remove the "pll_info->version" and add a 
->> "pll_info->rate_multiplier".
->>     3.Fix the coding style and add more detailed commit message.
->>     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->>       to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
->>       the old mailbox is in an unstable state.
->>
->>  drivers/clk/ingenic/cgu.c | 32 +++++++++++++++++++++-----------
->>  drivers/clk/ingenic/cgu.h |  8 ++++++--
->>  2 files changed, 27 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
->> index 6e96303..ae1ddcb 100644
->> --- a/drivers/clk/ingenic/cgu.c
->> +++ b/drivers/clk/ingenic/cgu.c
->> @@ -84,7 +84,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned 
->> long parent_rate)
->>      pll_info = &clk_info->pll;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>
->>      m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
->> @@ -93,6 +93,11 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
->> unsigned long parent_rate)
->>      n += pll_info->n_offset;
->>      od_enc = ctl >> pll_info->od_shift;
->>      od_enc &= GENMASK(pll_info->od_bits - 1, 0);
->> +
->> +    spin_lock_irqsave(&cgu->lock, flags);
->> +    ctl = readl(cgu->base + pll_info->bypass_reg);
->> +    spin_unlock_irqrestore(&cgu->lock, flags);
->
-> I think you should start the patchset with the current [5/5] patch; 
-> then you wouldn't have to add spinlock protection here just to see it 
-> removed later in the same patchset.
->
+Thanks, I knew this would happen :)
 
-OK, I will adjust their order in v3.
-
-Thanks and best regards!
-
-> Cheers,
-> -Paul
->
->> +
->>      bypass = !pll_info->no_bypass_bit &&
->>           !!(ctl & BIT(pll_info->bypass_bit));
->>
->> @@ -106,7 +111,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
->> unsigned long parent_rate)
->>      BUG_ON(od == pll_info->od_max);
->>      od++;
->>
->> -    return div_u64((u64)parent_rate * m, n * od);
->> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, 
->> n * od);
->>  }
->>
->>  static unsigned long
->> @@ -139,7 +144,7 @@ ingenic_pll_calc(const struct 
->> ingenic_cgu_clk_info *clk_info,
->>      if (pod)
->>          *pod = od;
->>
->> -    return div_u64((u64)parent_rate * m, n * od);
->> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, 
->> n * od);
->>  }
->>
->>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
->> @@ -183,7 +188,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned 
->> long req_rate,
->>              clk_info->name, req_rate, rate);
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      ctl &= ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
->>      ctl |= (m - pll_info->m_offset) << pll_info->m_shift;
->> @@ -194,7 +199,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned 
->> long req_rate,
->>      ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
->>      ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>
->>      return 0;
->> @@ -212,16 +217,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
->>      u32 ctl;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->bypass_reg);
->>
->>      ctl &= ~BIT(pll_info->bypass_bit);
->> +
->> +    writel(ctl, cgu->base + pll_info->bypass_reg);
->> +
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->> +
->>      ctl |= BIT(pll_info->enable_bit);
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>
->>      /* wait for the PLL to stabilise */
->>      for (i = 0; i < timeout; i++) {
->> -        ctl = readl(cgu->base + pll_info->reg);
->> +        ctl = readl(cgu->base + pll_info->pll_reg);
->>          if (ctl & BIT(pll_info->stable_bit))
->>              break;
->>          mdelay(1);
->> @@ -245,11 +255,11 @@ static void ingenic_pll_disable(struct clk_hw *hw)
->>      u32 ctl;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      ctl &= ~BIT(pll_info->enable_bit);
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>  }
->>
->> @@ -263,7 +273,7 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
->>      u32 ctl;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>
->>      return !!(ctl & BIT(pll_info->enable_bit));
->> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
->> index 0dc8004..f7b6908 100644
->> --- a/drivers/clk/ingenic/cgu.h
->> +++ b/drivers/clk/ingenic/cgu.h
->> @@ -16,7 +16,9 @@
->>
->>  /**
->>   * struct ingenic_cgu_pll_info - information about a PLL
->> - * @reg: the offset of the PLL's control register within the CGU
->> + * @pll_reg: the offset of the PLL's control register within the CGU
->> + * @bypass_reg: the offset of the bypass control register within the 
->> CGU
->> + * @rate_multiplier: the multiplier needed by pll rate calculation
->>   * @m_shift: the number of bits to shift the multiplier value by 
->> (ie. the
->>   *           index of the lowest bit of the multiplier value in the 
->> PLL's
->>   *           control register)
->> @@ -43,7 +45,9 @@
->>   * @no_bypass_bit: if set, the PLL has no bypass functionality
->>   */
->>  struct ingenic_cgu_pll_info {
->> -    unsigned reg;
->> +    unsigned pll_reg;
->> +    unsigned bypass_reg;
->> +    unsigned rate_multiplier;
->>      const s8 *od_encoding;
->>      u8 m_shift, m_bits, m_offset;
->>      u8 n_shift, n_bits, n_offset;
->> -- 
->> 2.7.4
->>
->
-
+greg k-h
