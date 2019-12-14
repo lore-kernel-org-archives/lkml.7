@@ -2,77 +2,192 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F727C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48E4C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A9E2067C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AE020724
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 22:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pxfJyM/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3wJwwER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfLNWfJ (ORCPT
+        id S1727050AbfLNWto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 17:35:09 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47642 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLNWfI (ORCPT
+        Sat, 14 Dec 2019 17:49:44 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35419 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLNWto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:35:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576362907; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=D8vcvAXh5n4Ipif6aaOi/DGeJKxBOvkvdh2wheOB+JI=;
-        b=pxfJyM/sjHPouXV1XzvvqPmfTYqZI4FDkQ1OTxSXW4DRzNRYzd+hf5lpI8qTRbHlXx+ro1
-        JHYysaf6ckh5rPur+PU8aFkEHLsq2S9emG4WKpBvf3CXvu8ekBAWf1ty02IFJVbUa1gNZ/
-        q398Ik1pKvXTBBvg42rsuwyEOtt+l34=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     od@zcrc.me, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] clk: ingenic/jz4770: Exit with error if CGU init failed
-Date:   Sat, 14 Dec 2019 23:35:00 +0100
-Message-Id: <20191214223500.100093-1-paul@crapouillou.net>
+        Sat, 14 Dec 2019 17:49:44 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w23so1310390pjd.2;
+        Sat, 14 Dec 2019 14:49:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JS3eimEK+8tECtQ62GL9rDEyecb7PnvneN4exldlcGo=;
+        b=U3wJwwERZ+VzeREesWyUURxHbvKfknBGU6stoYAJOYT0DfnHTJx7+O13SS1WJSQzIp
+         /hyQ/HXGZ82+LUd8sCpC4O51oS7MKApljuVZp9qkUsjVfM6ytvh7Vxixac3dMiBE+MhV
+         7uRj9pDDtivlKF1wFJqVzMnetWJGXMEv3YdIT3e/JCYHxHXzFGagJr//e7fFK78aPm6N
+         71hykkLWeClFwVyT+tw+gwWjOIsWJrX9bVvULYn+iY9jJvT5sSZGRAKJi0c/mBEvXSAy
+         kj87uFJ24YKsDGS/iFvo6FhPUKsLAX9mnD5ouWcVv2nMQEzKi2kwOwkWulFgZ6YLxIC6
+         is+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JS3eimEK+8tECtQ62GL9rDEyecb7PnvneN4exldlcGo=;
+        b=qlV8ylBUMzpCq4BGQnC9QVsuKTtrIdoUYu6IGS/BQlJdno4EQp/v6e1jrovwgV35sv
+         9WP7m9z+vS/IaNdyRMeDAaxaK+K6M0IlXpDTFU/17BqkojMKryM71Pf3Xh6XsaAgMi19
+         Io6k4riOxSwJggpmv7iEwFLpeOle6FZiUdQv+y+rEaW3YSB5d/G4XvgjhIVI1SJqqI2p
+         hN9ILnj7fKgd48dS+TcvJwd9Ma/3XCd/DSnw77poLUq6c41pEAjPBDbCYp4BSPRAgIMD
+         dXWdh37DkD7GJOr4jZCeitRmssLuRQinkDlpThrRNIKCvgQnNyxXT6kc11vk+uHt3ajF
+         wSsQ==
+X-Gm-Message-State: APjAAAW7GTlwj4KNCCK3Sw0D0DTd9gksv60HkwtrAmgHZeKQVzk23qkG
+        jAEm1BLviECwf450AL5ewIk=
+X-Google-Smtp-Source: APXvYqz5m/o5J3avTbGLFFULiNWRoCy4x8Thopw4LGePPvxKI54g9GI93KqyxDL3+9yLHl1wepBVBw==
+X-Received: by 2002:a17:90b:4396:: with SMTP id in22mr8062392pjb.111.1576363783482;
+        Sat, 14 Dec 2019 14:49:43 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id z129sm10765184pfb.67.2019.12.14.14.49.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2019 14:49:42 -0800 (PST)
+Subject: Re: [PATCH v2] ARM: bcm: Fix support for BCM2711 SoC which breaks
+ other ARM platforms
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Stefan Wahren <wahrenst@gmx.net>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux@armlinux.org.uk,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+References: <0d7bef0622d69bd4f1129afe26b358669e639ae8.1576361067.git.hns@goldelico.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <b209c3dd-0d20-05b1-6cbc-62f40623028c@gmail.com>
+Date:   Sat, 14 Dec 2019 14:49:41 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d7bef0622d69bd4f1129afe26b358669e639ae8.1576361067.git.hns@goldelico.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exit jz4770_cgu_init() if the 'cgu' pointer we get is NULL, since the
-pointer is passed as argument to functions later on.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/clk/ingenic/jz4770-cgu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
-index 956dd653a43d..c051ecba5cf8 100644
---- a/drivers/clk/ingenic/jz4770-cgu.c
-+++ b/drivers/clk/ingenic/jz4770-cgu.c
-@@ -432,8 +432,10 @@ static void __init jz4770_cgu_init(struct device_node *np)
- 
- 	cgu = ingenic_cgu_new(jz4770_cgu_clocks,
- 			      ARRAY_SIZE(jz4770_cgu_clocks), np);
--	if (!cgu)
-+	if (!cgu) {
- 		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
- 
- 	retval = ingenic_cgu_register_clocks(cgu);
- 	if (retval)
+On 12/14/2019 2:04 PM, H. Nikolaus Schaller wrote:
+> commit 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
+> 
+> breaks boot of many other platforms (e.g. OMAP or i.MX6) if
+> CONFIG_ARCH_BCM2835 is enabled in addition to some multiplatform
+> config (e.g. omap2plus_defconfig). The symptom is that the OMAP
+> based board does not show any activity beyond "Starting Kernel ..."
+> even with earlycon.
+> 
+> Reverting the mentioned commit makes it work again.
+> 
+> The real fix is to add the missing NULL sentinel to the
+> bcm2711_compat[] variable-length array.
+> 
+> Fixes: 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
+> Acked-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+
+This looks fine, I would just rephrase the commit subject as:
+
+ARM: bcm: Add missing sentinel to bcm2711_compat[]
+
+instead of indicating the breakage but not so much the fix, if that is
+okay with you. And good catch, I will augment my local tests with a
+basic multiplatform boot on several QEMU supported platforms.
+
+> ---
+>  arch/arm/mach-bcm/bcm2711.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
+> index dbe296798647..fa0300d8c79d 100644
+> --- a/arch/arm/mach-bcm/bcm2711.c
+> +++ b/arch/arm/mach-bcm/bcm2711.c
+> @@ -13,6 +13,7 @@ static const char * const bcm2711_compat[] = {
+>  #ifdef CONFIG_ARCH_MULTI_V7
+>  	"brcm,bcm2711",
+>  #endif
+> +	NULL
+>  };
+>  
+>  DT_MACHINE_START(BCM2711, "BCM2711")
+> 
+
 -- 
-2.24.0
-
+Florian
