@@ -2,124 +2,101 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B38C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 19:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F6FC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 19:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C9B20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 19:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178A52073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 19:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="v0vv4/ne"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVurpgad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfLNTaa (ORCPT
+        id S1726918AbfLNTqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 14:30:30 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35224 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfLNTa3 (ORCPT
+        Sat, 14 Dec 2019 14:46:31 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46350 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfLNTqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 14:30:29 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so1272801pgk.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 11:30:29 -0800 (PST)
+        Sat, 14 Dec 2019 14:46:30 -0500
+Received: by mail-qk1-f193.google.com with SMTP id r14so1641608qke.13;
+        Sat, 14 Dec 2019 11:46:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=8m+mIQybzPaMhyllV8M24lvSQe2bTRL/4FeQ9BAt9Rg=;
-        b=v0vv4/nevwZ0h0QI0iLwMoCOox6HCrRjTxAFAm8BiSWIn/3MoN2ymskGUUtaTooz2m
-         0gt1ZZZ71ODtrhzw35UYJemvEf48PE9Y+haWK81vn1yaPy190xYMlLNevezCcXtLtZ60
-         XSIN0Xe8d0BVHHfEs07NLyKQ40FUSZAIn7vLmNPlmRje+7GGvuojszNUylMFYT2LKLs3
-         JUgAVZVWf/QfQU3ALCnekQJGWmCYlmSpBFKhD060l3i7ODkJ/KO9l0Vbrfpg2ZN2xEam
-         5mkxYsi/iNVxlZpkVNbiMWTBKMypYDPxiNPgiSvwjp/0EYZCt2zEWOUOgsNoGyaluEqo
-         5EzQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=taLHS8JyLC+BenbNT7BxnrVrwoDPqQMtSy8lb0fixC0=;
+        b=HVurpgad1QMZQN0+i58d659mAg2CARQfC7k6Yc2ns+gRiGEMv+w662w2XASNY+IBO0
+         obJd8LRJkqjqAenPYRGZZnrote5+1rpMa9nHxa5DQTQueo+82hxsRVo3D8ANaRk75+si
+         9G81TK6fBwZeIxbVZLaaDVMQFMw1OSEDE7VojohAI1kRpEMxwoAjJ/iZoijSrYueLjV/
+         xxSmyZlzThT5yo90i1oUBwhSjiCKrqZgRIbTU1By6IEKtkODA/IlqX0o3/ICRpPQY6we
+         EqbRu5FKQiNHdG+48YSA0nFN9mnHx6O3sBHSO2ttCAbzSWjn2TFOtqBKkswukr8sF+zT
+         N6mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=8m+mIQybzPaMhyllV8M24lvSQe2bTRL/4FeQ9BAt9Rg=;
-        b=gzuNA+alygtRrobsOIfCXpiXsAdZ/97xzVBIhLBb/eKDXR54c+hjJtc+I6BcqKzFTz
-         /d0/2h1UTqn4Dghd2N9nBUSDFv9zl8ZcPpaZgc5Y3zTi9VQMlHKmTtU9kRZvJXnHMPyW
-         7FJLsWXeVfYJKXdjbYRmXFkr8KP99mxi4ZbHsambxouqDSzK1d7XahC1re04hiKVvo0U
-         gXb78+jupe2iCq3s9Un1IgJ/WtD9xngNDUeouMjjMz7Y24RU+o+WGQ7hVVhR6ELsNdFH
-         db5+8wp62hzp8PpmDkt2LScJyXi8h4+UWpCscM0YuhpP5BOsvMzUu122z0AngSd40iLn
-         JkRw==
-X-Gm-Message-State: APjAAAUwCEGLd/qcmpYqKkreRP3ppvX4PEBh8sErJ4f0Y1KMb/NkdPRM
-        JQgGQ23Py5sF8l73EAzScui3Lw==
-X-Google-Smtp-Source: APXvYqydEQC93uE9aFoQrBDU9to7Enmv6EqE1GrIh9R0bN67mX/nT11jWrIrP0Cj7flLCHUVszdIkA==
-X-Received: by 2002:aa7:85d3:: with SMTP id z19mr6861440pfn.62.1576351828972;
-        Sat, 14 Dec 2019 11:30:28 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id s27sm16592197pfd.88.2019.12.14.11.30.28
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=taLHS8JyLC+BenbNT7BxnrVrwoDPqQMtSy8lb0fixC0=;
+        b=TftmVZc4oWBcZsk62txCrodD1Ioqgiy6GF8wy4/BaPYUl1YqnMSmH1FMPuKQGU2/9/
+         sWtN+wPVrCMs9RKXhz85mj58tO+rNcMtssUMKZQNiZDVuwvE6zqs7iNjg2sehbVftAtz
+         o2oNXuDM9kx+n7ZpPj2blPNjKkuL3JCIbWXJvgtYx7HPvbvGvLq4UB2+gD6Go7emD3zZ
+         FdV+Vxxjt37L07R87K3ZsBedrVT3Dw4TxXXwiEOq/THmPds2OLHMyFkhLwWY9tNz1oDd
+         4828ZrDA983abCtY1xCtYVSNvCnSLRPuZ2zyhKEOdKyAUPv2u4rjWRim2swv4aDdGqKV
+         4RPQ==
+X-Gm-Message-State: APjAAAVtEkh0MWgsIQqW7O1ZkbA8MEo1GlyYMwb1kUlhBZ5aCBCW+O7/
+        8oYDsQRVL8mg+2/EJhwQfzg=
+X-Google-Smtp-Source: APXvYqwQrs/JEOLTWQC8pQo+gOvB/pQ/X08MuDids0dmfojHeL4EZ/iAx1PIIZhPK+PosoSANVKCmw==
+X-Received: by 2002:a37:2e47:: with SMTP id u68mr19395733qkh.485.1576352789530;
+        Sat, 14 Dec 2019 11:46:29 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d25sm4837459qtm.67.2019.12.14.11.46.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 11:30:28 -0800 (PST)
-Date:   Sat, 14 Dec 2019 11:30:25 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in
- rndis_set_subchannel()
-Message-ID: <20191214113025.363f21e2@cakuba.netronome.com>
-In-Reply-To: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
-References: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
-Organization: Netronome Systems, Ltd.
+        Sat, 14 Dec 2019 11:46:28 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 14 Dec 2019 14:46:27 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH 05/10] efi/libstub: distinguish between native/mixed not
+ 32/64 bit
+Message-ID: <20191214194626.GA140998@rani.riverdale.lan>
+References: <20191214175735.22518-1-ardb@kernel.org>
+ <20191214175735.22518-6-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191214175735.22518-6-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 14:26:27 -0800, Haiyang Zhang wrote:
-> Host can provide send indirection table messages anytime after RSS is
-> enabled by calling rndis_filter_set_rss_param(). So the host provided
-> table values may be overwritten by the initialization in
-> rndis_set_subchannel().
-> 
-> To prevent this problem, move the tx_table initialization before calling
-> rndis_filter_set_rss_param().
-> 
-> Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-Applied, but there are two more problems with this code:
- - you should not reset the indirection table if it was configured by
-   the user to something other than the default (use the
-   netif_is_rxfh_configured() helper to check for that)
- - you should use the ethtool_rxfh_indir_default() wrapper
-
-Please fix the former problem in the net tree, and after net is merged
-into linux/master and net-next in a week or two please follow up with
-the fix for the latter for net-next.
-
-> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-> index 206b4e7..05bc5ec8 100644
-> --- a/drivers/net/hyperv/rndis_filter.c
-> +++ b/drivers/net/hyperv/rndis_filter.c
-> @@ -1171,6 +1171,9 @@ int rndis_set_subchannel(struct net_device *ndev,
->  	wait_event(nvdev->subchan_open,
->  		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
->  
-> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-> +		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
+On Sat, Dec 14, 2019 at 06:57:30PM +0100, Ard Biesheuvel wrote:
 > +
->  	/* ignore failures from setting rss parameters, still have channels */
->  	if (dev_info)
->  		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-> @@ -1180,9 +1183,6 @@ int rndis_set_subchannel(struct net_device *ndev,
->  	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
->  	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
->  
-> -	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-> -		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
-> -
->  	return 0;
->  }
->  
+> +#define efi_table_attr(table, attr, instance) ({			\
+> +	__typeof__(((table##_t *)0)->attr) __ret;			\
+> +	if (efi_is_native()) {						\
+> +		__ret = ((table##_t *)instance)->attr;			\
+> +	} else {							\
+> +		__typeof__(((table##_32_t *)0)->attr) at;		\
+> +		at = (((table##_32_t *)(unsigned long)instance)->attr);	\
+> +		__ret = (__typeof__(__ret))(unsigned long)at;		\
+> +	}								\
+> +	__ret;								\
+> +})
 
+The casting of `at' is appropriate if the attr is a pointer type which
+needs to be zero-extended to 64-bit, but for other fields it is
+unnecessary at best and possibly dangerous.  There are probably no
+instances currently where it is called for a non-pointer field, but is
+it possible to detect if the type is pointer and avoid the cast if not?
