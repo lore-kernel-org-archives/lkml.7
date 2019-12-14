@@ -2,183 +2,160 @@ Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77756C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB285C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3774724656
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYN2p7AP"
+	by mail.kernel.org (Postfix) with ESMTP id A368A20706
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 11:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576322756;
+	bh=bfAx3tMBpuyf9PTP1KRe7hblSecePb+KkhuMWPbsFy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XQcQTPvxJ7ufcijmcizJXSckNcWBBUL9Kci38crQBkKLkCOAwb771aJwmsC/6mnsW
+	 5RKAUQh/1NH/yCasokH/kdgIaRj80zjw60PEMDtdSBV3RmQju+V/SSdfJ2LG4T/o/l
+	 mnyNzljLH67ljawrxdypSB0KEQHBYYNASZJ6VF/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfLNLQd (ORCPT
+        id S1726299AbfLNLZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 06:16:33 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46044 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfLNLQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 06:16:33 -0500
-Received: by mail-io1-f65.google.com with SMTP id i11so2250623ioi.12;
-        Sat, 14 Dec 2019 03:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QOWXreM1Eker5pRXUv0eyiXO51QArVEpS3Nl6aWrboI=;
-        b=nYN2p7APSUWSG9BiyRr5KNZ8RAqoPCiPPGx6hh1wwsKHwhrrpSOEJ82K6mdQRDCA2g
-         PDREK6Lur8VH3OBZ9qwbgDuvpmX2iPSBMCjeVjQu+knhI5qXnY3p4QabIt5cgrBsbNHP
-         SyJR0S3S1iPm1SETJ0A1W5T3uS9SyRTCeWKtoQtt5QDqVuZ08tiie85kNR0QpsFisqQd
-         6j8qudVhD6Ha9Rd1WoCGX38rGO7zOYz1p7FXQQ198tlOqOXmXcQrj3hv4oRFAzGVlpj6
-         mnKln2ExeZDYJwNwYwCyEIv+eeYRzLlPP4e9NX7bpDnPmPCDAVox+VbmSKz6YcNJ7G8P
-         whTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QOWXreM1Eker5pRXUv0eyiXO51QArVEpS3Nl6aWrboI=;
-        b=bi9IbqN6XAhr5Fp1STSg/v4y+a5J0tZTVoT64oZiIf2Oh48hLvEy3cKlecCoRXQ9jt
-         wnXKwpAtXaUvEBa9ZolE1imsSZhk9RVX5LwkjY0Sy9Me/pTw48x+lu2zoa6vwNlrvJQe
-         43fp8jIq6wvGbhC8fN5a1do3tLqmsmKb5Zy1Y2qkwfK87+uHEP1UCp8cDXBM30VfOBCC
-         NGyTZHDUTBUdK37jiS5KyvXsd8P0bkpeFu4Db8wr8rlHd4mza/cXiROJn0EK0pxLJzVN
-         Rjvj2oTjChKTHrjdeAxlrOsHWyXcEw5UoPxt6LLIMELOYtH0beXr5gbXG8g3POVZz6FD
-         vOag==
-X-Gm-Message-State: APjAAAXY0q4pFVIWffxbxn4hNMrVJwBo8RwcO0lu0VnNZRHVmx8nznBI
-        gn4I9/wEhoYY0gKf820FAzp/zlircA/h566HKgY=
-X-Google-Smtp-Source: APXvYqzHr+YPLOX1WWLc7bTs9855C5opCiJi7zIgAw/iMDTd+ruuUYfm7S2PbuyX8tPE2rjeD+q727hSZghQRDbMdEs=
-X-Received: by 2002:a6b:6118:: with SMTP id v24mr9038878iob.73.1576322192347;
- Sat, 14 Dec 2019 03:16:32 -0800 (PST)
+        Sat, 14 Dec 2019 06:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfLNLZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 06:25:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4975720706;
+        Sat, 14 Dec 2019 11:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576322752;
+        bh=bfAx3tMBpuyf9PTP1KRe7hblSecePb+KkhuMWPbsFy0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZoYfbxq+FWhksWV/FryykzNpUrg4TRRBonSt3uGe0SHTHm98yaXV+u4Jv43RILhXV
+         hcqXWo6LaqCAzjuhXRB+Muayiy48T8i/lI9oSNSTE/Kj+Wr/aAKevyZQ9XmT3CA9Yg
+         atQOdZZ3kwHcKQYlKs9XhbwtohmOYmGx5xQozfT8=
+Date:   Sat, 14 Dec 2019 12:25:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
+        Jiri Slaby <jslaby@suse.com>,
+        kai heng feng <kai.heng.feng@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
+        paulburton@kernel.org, sr@denx.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yegorslists@googlemail.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ mem_serial_out
+Message-ID: <20191214112550.GA3328133@kroah.com>
+References: <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
+ <20191213093357.GB2135612@kroah.com>
+ <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
+ <74859736-478a-6ad7-f0be-cfe87ec40ff5@i-love.sakura.ne.jp>
+ <20191213160700.GA2632926@kroah.com>
+ <4f514a5a-af11-e688-8f8d-72bbadadc889@i-love.sakura.ne.jp>
+ <20191214075517.GA3314866@kroah.com>
+ <8b130791-d48a-6505-f3f1-d08cada23d8d@i-love.sakura.ne.jp>
+ <20191214090905.GA3322570@kroah.com>
+ <1634f244-543c-28c6-c322-c3d981c3a973@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-References: <20191211160734.18087-1-mmarchini@netflix.com>
-In-Reply-To: <20191211160734.18087-1-mmarchini@netflix.com>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Sat, 14 Dec 2019 14:16:21 +0300
-Message-ID: <CALYGNiOtYgyCTAZn_Ti4wF+64a-mB=T9JdSb8+pyy7Aavq6Wfw@mail.gmail.com>
-Subject: Re: [PATCH] perf map: fix infinite loop on map_groups__fixup_overlappings
-To:     Matheus Marchini <mmarchini@netflix.com>
-Cc:     linux-perf-users@vger.kernel.org, jkoch@netflix.com,
-        =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0JPQtdC90L3QsNC00YzQtdCy0LjRhyDQpdC70LXQsdC90LjQutC+?=
-         =?UTF-8?B?0LI=?= <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Keeping <john@metanate.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1634f244-543c-28c6-c322-c3d981c3a973@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 7:10 PM Matheus Marchini <mmarchini@netflix.com> wrote:
->t
-> In some cases, when using perf inject and there are JIT_CODE_MOVE
-> records in the jitdump file, perf will end up in an infinite loop on
-> map_groups__fixup_overlappings, which will keep allocating memory
-> indefinitely. This issue was observed on Node.js (with changes to
-> generate JIT_CODE_MOVE records) and on Java.
+On Sat, Dec 14, 2019 at 07:28:02PM +0900, Tetsuo Handa wrote:
+> On 2019/12/14 18:09, Greg KH wrote:
+> > On Sat, Dec 14, 2019 at 05:39:02PM +0900, Tetsuo Handa wrote:
+> >> On 2019/12/14 16:55, Greg KH wrote:
+> >>>>>> That suggestion got no response for two months.
+> >>>>>>
+> >>>>>>   https://lkml.kernel.org/r/3e4e2b6b-7828-54ab-cf28-db1a396d7e20@i-love.sakura.ne.jp
+> >>>>>>
+> >>>>>> Unless we add such kernel config option to upstream kernels, it will become
+> >>>>>> a whack-a-mole game.
+> >>>>>
+> >>>>> It will be a whack-a-mole game no matter what.
+> >>>>>
+> >>>>> Yes, /dev/mem/ makes no sense to fuzz.  Neither does other things (like
+> >>>>> serial port memory addresses.)
+> >>>>
+> >>>> /dev/mem makes sense to fuzz. Ditto for other things.
+> >>>
+> >>> What?  What are you going to find if you randomly start to write to
+> >>> /dev/mem?  How are we supposed to "fix" that?
+> >>>
+> >>
+> >> When did I say "writing to random addresses" ? If you saw my suggestion, you
+> >> will find that "fuzzer will be able to test reading from random addresses,
+> >> writing to safe addresses (in order to find new lock dependency which would
+> >> otherwise be unnoticed)".
+> > 
+> > I don't remember the suggestion specifically, sorry.  But how would you
+> > figure out what those "safe addresses" really are?  They will change on
+> > every single platform.
+> 
+> ----------
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +static char dummybuf[PAGE_SIZE];
+> +#endif
+> ----------
+> 
+> ----------
+>                         ptr = xlate_dev_mem_ptr(p);
+>                         if (!ptr) {
+>                                 if (written)
+>                                         break;
+>                                 return -EFAULT;
+>                         }
+> +#ifndef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+>                         copied = copy_from_user(ptr, buf, sz);
+> +#else
+> +                       copied = copy_from_user(dummybuf, buf, min(sizeof(dummybuf), sz));
+> +#endif
 
-Could you show what it prints with -vv ?
-I suppose map tree could be broken, like there is zero (or negative) size maps.
+Ick ick ick, we don't like #ifdefs in .c files for a reason :)
 
-This should help to catch that
+>                         unxlate_dev_mem_ptr(p, ptr);
+> ----------
+> 
+> How dummybuf cannot be "safe address" ?
 
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -848,13 +848,18 @@ static void __maps__insert(struct maps *maps,
-struct map *map)
-        const u64 ip = map->start;
-        struct map *m;
+Sure, that's safe, but don't try to change what I originally said about
+writing to random /dev/mem addresses please.
 
-+       assert((map->start < map->end) || !map->end);
-+
-        while (*p != NULL) {
-                parent = *p;
-                m = rb_entry(parent, struct map, rb_node);
--               if (ip < m->start)
-+               if (ip < m->start) {
-+                       assert(map->end <= m->start);
-                        p = &(*p)->rb_left;
--               else
-+               } else {
-+                       assert(m->end <= map->start);
-                        p = &(*p)->rb_right;
-+               }
-        }
+> > And why would this even help anything?  What lock dependency?
+> > 
+> 
+> copy_from_user() can trigger page fault which involves memory allocation.
+> And direct reclaim which is performed within memory allocation operation
+> is full of subtle dependency bugs. :-(
 
-        rb_link_node(&map->rb_node, parent, p);
+It's as if you want a memory/platform type to be a "fuzz target", right?
+You aren't going to go around and try to put the above crazyness into
+each and every spot in the kernel that wants to write to a
+user-specified address.
 
+Fuzzing the kernel is great, but remember it's a means to an end, that
+of trying to ensure that the kernel has less bugs than before.  Forcing
+the kernel to adapt a memory model that is not what it "normally" uses
+kind of goes against your main goal here, right?
 
->
-> This issue started to occur after 6a9405b56c274 (perf map:
-> Optimize maps__fixup_overlappings()). To prevent it from happening,
-> partially revert those changes without losing the optimizations
-> introduced in it.
->
-> Signed-off-by: Matheus Marchini <mmarchini@netflix.com>
-> ---
->  tools/perf/util/map.c | 17 +++++++++++++++++
->  tools/perf/util/map.h |  1 +
->  2 files changed, 18 insertions(+)
->
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 744bfbaf35cf..8918fdb8ddab 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -781,6 +781,21 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
->         __maps__insert(&mg->maps, map);
->  }
->
-> +int map__overlap(struct map *l, struct map *r)
-> +{
-> +       if (l->start > r->start) {
-> +               struct map *t = l;
-> +
-> +               l = r;
-> +               r = t;
-> +       }
-> +
-> +       if (l->end > r->start)
-> +               return 1;
-> +
-> +       return 0;
-> +}
-> +
->  int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
->  {
->         struct maps *maps = &mg->maps;
-> @@ -821,6 +836,8 @@ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE
->                  */
->                 if (pos->start >= map->end)
->                         break;
-> +               if (!map__overlap(map, pos))
-> +                       continue;
->
->                 if (verbose >= 2) {
->
-> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> index 5e8899883231..1383571437aa 100644
-> --- a/tools/perf/util/map.h
-> +++ b/tools/perf/util/map.h
-> @@ -132,6 +132,7 @@ static inline void __map__zput(struct map **map)
->
->  #define map__zput(map) __map__zput(&map)
->
-> +int map__overlap(struct map *l, struct map *r);
->  size_t map__fprintf(struct map *map, FILE *fp);
->  size_t map__fprintf_dsoname(struct map *map, FILE *fp);
->  char *map__srcline(struct map *map, u64 addr, struct symbol *sym);
-> --
-> 2.17.1
->
+And have you all really run out of apis that are all now bug free that
+you are going after these types of ones?
+
+thanks,
+
+greg k-h
