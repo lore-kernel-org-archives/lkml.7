@@ -2,105 +2,130 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11C2C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD6C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A254B24654
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/VfA6zj"
+	by mail.kernel.org (Postfix) with ESMTP id 375E7206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfLOOFb (ORCPT
+        id S1726231AbfLOOMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 09:05:31 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35577 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfLOOFa (ORCPT
+        Sun, 15 Dec 2019 09:12:05 -0500
+Received: from out28-194.mail.aliyun.com ([115.124.28.194]:45803 "EHLO
+        out28-194.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfLOOME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 09:05:30 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so718149plt.2;
-        Sun, 15 Dec 2019 06:05:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Wk/gZsMdaGy0jm+3Mc8U+KJ30OYinc4tUKVLGNDZUUw=;
-        b=t/VfA6zjNq6twSmm/eDknA7wFv0aYMZtIV1Q/W3/cGi6CKebVbjOx+LBZ7SLHxOirL
-         Ng2qhp/BPlwwFFFlBibYr2sudgcuJIdXBF4LLxYMgWHEZqpOdckGs4ogO+DZefIFxZaG
-         fPMkcktsZi+FNqLp/IieHKmet6RIoWGA/9yimzjbRh5ghbSxdxCCY275I370WG0FXfxm
-         kVRQdB1I3Ray17dkdIA+sYKwzxCpjgr4otBZrcXjhNzvgRQKF8KYQMGxILcRm9K4GLHi
-         I0kYcC6JVrBqGh/jt4a32hDck2B4ZaL5qs6lVCLKms1RAlWuZP6xH4COjP3kJ8l9B863
-         GMVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Wk/gZsMdaGy0jm+3Mc8U+KJ30OYinc4tUKVLGNDZUUw=;
-        b=Q0QMi6kZTgai3xbpXMs/mSq+WL9y33IfqxdXHM8MLk1cURSWnYl93eSaf5HzuaZvip
-         VBv4U7AlwfENvKgA/0dBsRXLljow8Gsz4o//lKOi+25FjHfGf+leqnm1oyGPS3KB43Rx
-         gABjEBHsg9ZqfBx4N3Cqdd4Hc8/sR+jYoulWnh3F1YBIkWa0HI5RTzQFJ2E9syFmGgO1
-         zIywqfvHc1LfUPmV+d08FVY5dZBOSq1FA+wqaMnqXsCXg8lcQuk5V3R7GHfVO+XsEQl4
-         TFAXcm9l65hK+klrgrzyrv8F9rN9T8UySS1TwtgrAnk17pIdNoAU4yAPfkFzM2FAVTFi
-         We4A==
-X-Gm-Message-State: APjAAAXJog7T56egvkMqXHzSdpXfvu1n8NDyJxpfAGSfHl0b5UuMv3/1
-        TVP4Dla+VtkCnWlxEjzMKV0=
-X-Google-Smtp-Source: APXvYqwd7ja6uBp48Wo3lLb4h2D7DyEkB5M28GRRvi98qmYGhQru7n/aMo6o8DWYNXSFo6U+RcJYDg==
-X-Received: by 2002:a17:90a:b009:: with SMTP id x9mr12215391pjq.124.1576418729853;
-        Sun, 15 Dec 2019 06:05:29 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id e4sm19097170pfj.125.2019.12.15.06.05.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 06:05:29 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 2/2] cpufreq: tegra186: convert to devm_platform_ioremap_resource
-Date:   Sun, 15 Dec 2019 14:05:22 +0000
-Message-Id: <20191215140522.30872-2-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191215140522.30872-1-tiny.windzz@gmail.com>
-References: <20191215140522.30872-1-tiny.windzz@gmail.com>
+        Sun, 15 Dec 2019 09:12:04 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07524233|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.748144-0.0180301-0.233826;DS=SPAM|spam_ad|0.859637-0.000764868-0.139599;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GHcsMuJ_1576419116;
+Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHcsMuJ_1576419116)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Sun, 15 Dec 2019 22:11:58 +0800
+Subject: Re: [PATCH v3 1/5] clk: Ingenic: Remove unnecessary spinlock when
+ reading registers.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576346863.3.1@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5DF63F2E.2040608@wanyeetech.com>
+Date:   Sun, 15 Dec 2019 22:11:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <1576346863.3.1@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify code.
+Hi Paul,
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/cpufreq/tegra186-cpufreq.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On 2019年12月15日 02:07, Paul Cercueil wrote:
+> Hi Zhou,
+>
+> You can also remove the locks around ingenic_cgu_gate_get(), they are 
+> useless. Then also edit the doc of this function as currently it says 
+> that the caller must hold the lock.
+>
 
-diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
-index bcecb068b51b..2e233ad72758 100644
---- a/drivers/cpufreq/tegra186-cpufreq.c
-+++ b/drivers/cpufreq/tegra186-cpufreq.c
-@@ -187,7 +187,6 @@ static int tegra186_cpufreq_probe(struct platform_device *pdev)
- {
- 	struct tegra186_cpufreq_data *data;
- 	struct tegra_bpmp *bpmp;
--	struct resource *res;
- 	unsigned int i = 0, err;
- 
- 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-@@ -205,8 +204,7 @@ static int tegra186_cpufreq_probe(struct platform_device *pdev)
- 	if (IS_ERR(bpmp))
- 		return PTR_ERR(bpmp);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->regs = devm_ioremap_resource(&pdev->dev, res);
-+	data->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->regs)) {
- 		err = PTR_ERR(data->regs);
- 		goto put_bpmp;
--- 
-2.17.1
+Sure, I'll remove it in v4.
+
+Thanks and best regards!
+
+> -Paul
+>
+>
+> Le sam., déc. 14, 2019 at 23:33, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> It is not necessary to use spinlock when reading registers,
+>> so remove it from cgu.c.
+>>
+>> Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>> Suggested-by: Paul Burton <paulburton@kernel.org>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>     v2:
+>>     New patch.
+>>
+>>     v2->v3:
+>>     Adjust order from [5/5] in v2 to [1/5] in v3.
+>>
+>>  drivers/clk/ingenic/cgu.c | 6 ------
+>>  1 file changed, 6 deletions(-)
+>>
+>> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+>> index 6e96303..8bd3998 100644
+>> --- a/drivers/clk/ingenic/cgu.c
+>> +++ b/drivers/clk/ingenic/cgu.c
+>> @@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
+>> unsigned long parent_rate)
+>>      const struct ingenic_cgu_pll_info *pll_info;
+>>      unsigned m, n, od_enc, od;
+>>      bool bypass;
+>> -    unsigned long flags;
+>>      u32 ctl;
+>>
+>>      clk_info = &cgu->clock_info[ingenic_clk->idx];
+>>      BUG_ON(clk_info->type != CGU_CLK_PLL);
+>>      pll_info = &clk_info->pll;
+>>
+>> -    spin_lock_irqsave(&cgu->lock, flags);
+>>      ctl = readl(cgu->base + pll_info->reg);
+>> -    spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+>>      m += pll_info->m_offset;
+>> @@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw 
+>> *hw)
+>>      struct ingenic_cgu *cgu = ingenic_clk->cgu;
+>>      const struct ingenic_cgu_clk_info *clk_info = 
+>> to_clk_info(ingenic_clk);
+>>      const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+>> -    unsigned long flags;
+>>      u32 ctl;
+>>
+>> -    spin_lock_irqsave(&cgu->lock, flags);
+>>      ctl = readl(cgu->base + pll_info->reg);
+>> -    spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      return !!(ctl & BIT(pll_info->enable_bit));
+>>  }
+>> -- 
+>> 2.7.4
+>>
+>
 
