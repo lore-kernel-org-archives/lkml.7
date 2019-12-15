@@ -8,120 +8,104 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D544C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 01:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7E0C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 01:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88632073D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 01:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F89206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 01:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxqdzJuv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2YznvDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfLOBdT (ORCPT
+        id S1727185AbfLOBv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 20:33:19 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45900 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfLOBdS (ORCPT
+        Sat, 14 Dec 2019 20:51:28 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36782 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfLOBv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 20:33:18 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so331609ioi.12
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 17:33:18 -0800 (PST)
+        Sat, 14 Dec 2019 20:51:27 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so2672306iln.3;
+        Sat, 14 Dec 2019 17:51:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=twHtR4aXXJ++Vn0jlK/ZQHhpDH2MxdLzHdpLj7lTb4w=;
-        b=TxqdzJuvEpKOlPzpxWjcaBW/fDqrszwu9z2YpjHmOOjAdtoGbZvroZjaFgLdVD6K46
-         LXzA+KS1ba6K9wuTZh903zH+K9bKtFTf1wMu48fpD7MKqfnvlyWy87sXPLjp4pTnoUN4
-         P2vYRamv41qdFo5Jdm/sb23chNdeQyDavKa2/2wXZ4xpFf7UxVgGhuu1nwSUqaPL9Dsy
-         0cqW2TNRitcFSTjNqw57dDW/sBwGL2ChRIIDiI6MeQrmP7x0eQtdF7TN4BJZfdc495im
-         SpU6zpf91IBphByb3NgNYmdLpsUuuty5PAY1Ank4WfLFf1Ucq9R4PDuf7VO6n4RPawBh
-         86SQ==
+        bh=7ila3ACaEBkte0RQGIwBOqqVKb25YlQx6hZbg+XIx7w=;
+        b=M2YznvDUbC+oI2ORLdlKHZU221buG1yFNbL3d3PnZEFpw0MpYpDAoHadWunc3MIeMh
+         nT0ORJwX+0+c/DVfrF3oeUPXw4FvSMd6Z2YuZqHELAJeU0zVbVxMsc6YlopAePA1bmdf
+         ae89PYWru7qVtptShh1y4/02s/JSRIGPPPnYP9cee/+TL7p3g0HBReLP5jPbbxpU1WgT
+         N0T661QXxDElWDGXan5TmfKuts2sSB2IfFLimVM1Bf0VNz671cctClTeDoiR2bLzI8X7
+         TjCt5heNFIMkH+BuwsuQbHW6K3Z7FTr5J5C9qp7reNus4ax1HXWHxR8PBpoPKwExmFU3
+         cH8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=twHtR4aXXJ++Vn0jlK/ZQHhpDH2MxdLzHdpLj7lTb4w=;
-        b=ewazPFPvr3Wh5yONzZ7vNmexbZFawRHQnzudCtqS5JmA0aD2rxrmQI3ZA1vQXioVpq
-         vjtbsjPD9NZCpofDeQXJpN7Qd0X42o56glmzu6AQZNtP7enb5IgeVsZJL1dvkbaJSb06
-         lUCviWVrzrpQ5xvuJBFyheKMvTnvsOks860OCVZu0JXpb30X7TzEc0vU+NgeY5puLBqY
-         YRxZxpHiWZvy4UsOd1vEH7URxHbHFM55ifXTQ9pQz7cVxh3883dE1deii1KscS8KPDv0
-         hHvHOAf80OKKk/DQdGijf35rLgkX7Rt+a4jX5UWSJUgcEUDP6RML5YlJslzA1N7ZCcyA
-         OLBw==
-X-Gm-Message-State: APjAAAWgW9MYa0D/RmbHOnW4lSThCY6yHSmkicriSzLfGlfkvYq0CS/b
-        P0qC6CHotZ0FQbZyxln8ggQ=
-X-Google-Smtp-Source: APXvYqxVuEuEMh9Wh2jXS3PQASEpnW7hDbA7c0sfDrSvLzaSaixbmeInGzm3xrbwOVxrmCdf/D8Jcg==
-X-Received: by 2002:a02:966a:: with SMTP id c97mr6650981jai.7.1576373597761;
-        Sat, 14 Dec 2019 17:33:17 -0800 (PST)
+        bh=7ila3ACaEBkte0RQGIwBOqqVKb25YlQx6hZbg+XIx7w=;
+        b=nVFD/yKadg5cBMP1C8/Ilxmf6YTM5YfTK0dW/N9QY558Sf5hIWqT80uKGAF2TxXOSK
+         g3WbTlwgwY88Cv89GoFeCUcoP3HfSobjtoZARR/AS4UQ+9PFL9y5LenumANIeckWdz0J
+         2aalVwsKWSgY4e6UpPfOYdslPdiMZY2KL/K7frjhVmliNNfRYwXTsTYjenp/ZisVbG7F
+         Gbd+xnYXEuvAksOgANLA5RZ2bXD1SBlkgpBfXU8ktBfuiLfd6Pz4tTi/JJ2mGndzBIvb
+         YGZPcr2mN/wi5v58L4Ad4ID+IfwBT+YXRoGTebRSksAap4csjLRqqiQugfK6k19NQrY2
+         Mu4Q==
+X-Gm-Message-State: APjAAAXjNOnYwzWj+M5/5jsoIx10B0nF8v7HXk2hmm24+A68FN14ae90
+        8NckfLTMH+e/nbOkpl0z7LI=
+X-Google-Smtp-Source: APXvYqz0KmdNAXYfzGhk2gPnfOnNtd6IkkcGO0SiadEIk+YNhK3wzwvkU5gjfF4ogx0edteSrt9iew==
+X-Received: by 2002:a92:b506:: with SMTP id f6mr6850648ile.103.1576374686670;
+        Sat, 14 Dec 2019 17:51:26 -0800 (PST)
 Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id t15sm4297605ili.50.2019.12.14.17.33.16
+        by smtp.googlemail.com with ESMTPSA id f16sm4368858ilq.16.2019.12.14.17.51.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2019 17:33:17 -0800 (PST)
+        Sat, 14 Dec 2019 17:51:26 -0800 (PST)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu
-Subject: [PATCH] staging: comedi: drivers: Fix memory leak in gsc_hpdi_auto_attach
-Date:   Sat, 14 Dec 2019 19:33:03 -0600
-Message-Id: <20191215013306.18880-1-navid.emamdoost@gmail.com>
+To:     Arend van Spriel <arend@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alwin Beukers <alwin@broadcom.com>,
+        Pieter-Paul Giesberts <pieterpg@broadcom.com>,
+        Kan Yan <kanyan@broadcom.com>,
+        "Franky (Zhenhui) Lin" <frankyl@broadcom.com>,
+        Piotr Figiel <p.figiel@camlintechnologies.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        YueHaibing <yuehaibing@huawei.com>, Kangjie Lu <kjlu@umn.edu>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
+Date:   Sat, 14 Dec 2019 19:51:14 -0600
+Message-Id: <20191215015117.21801-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of gsc_hpdi_auto_attach(), the allocated dma
-description is leaks in case of alignment error, or failure of
-gsc_hpdi_setup_dma_descriptors() or comedi_alloc_subdevices(). Release
-devpriv->dma_desc via dma_free_coherent().
+In the implementation of brcmf_usbdev_qinit() the allocated memory for
+reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
+handling path.
 
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/staging/comedi/drivers/gsc_hpdi.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/comedi/drivers/gsc_hpdi.c b/drivers/staging/comedi/drivers/gsc_hpdi.c
-index 4bdf44d82879..c0c7047a6d1b 100644
---- a/drivers/staging/comedi/drivers/gsc_hpdi.c
-+++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
-@@ -633,16 +633,17 @@ static int gsc_hpdi_auto_attach(struct comedi_device *dev,
- 	if (devpriv->dma_desc_phys_addr & 0xf) {
- 		dev_warn(dev->class_dev,
- 			 " dma descriptors not quad-word aligned (bug)\n");
--		return -EIO;
-+		retval = -EIO;
-+		goto release_dma_desc;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 06f3c01f10b3..237c6b491b88 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -430,6 +430,7 @@ brcmf_usbdev_qinit(struct list_head *q, int qsize)
+ 			usb_free_urb(req->urb);
+ 		list_del(q->next);
  	}
++	kfree(reqs);
+ 	return NULL;
  
- 	retval = gsc_hpdi_setup_dma_descriptors(dev, 0x1000);
- 	if (retval < 0)
--		return retval;
-+		goto release_dma_desc;
- 
- 	retval = comedi_alloc_subdevices(dev, 1);
- 	if (retval)
--		return retval;
-+		goto release_dma_desc;
- 
- 	/* Digital I/O subdevice */
- 	s = &dev->subdevices[0];
-@@ -660,6 +661,15 @@ static int gsc_hpdi_auto_attach(struct comedi_device *dev,
- 	s->cancel	= gsc_hpdi_cancel;
- 
- 	return gsc_hpdi_init(dev);
-+
-+release_dma_desc:
-+	if (devpriv->dma_desc)
-+		dma_free_coherent(&pcidev->dev,
-+				  sizeof(struct plx_dma_desc) *
-+				NUM_DMA_DESCRIPTORS,
-+				devpriv->dma_desc,
-+				devpriv->dma_desc_phys_addr);
-+	return retval;
  }
- 
- static void gsc_hpdi_detach(struct comedi_device *dev)
 -- 
 2.17.1
 
