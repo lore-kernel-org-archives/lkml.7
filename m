@@ -2,290 +2,158 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2DAC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D03C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1ED20726
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684752467B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576429175;
+	bh=Gd00U8yFwwl+S6X9g/gX+uSdH0+/+1ri3WTiVTHeXXs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B06dhmcy5EPP6ONZ7rpm7sVj/dTk7y0b8mKmz4bKDrXQ1Pf2jT8r7b2Kqwqt43jaC
+	 AZhXS49oeNxGU7s0+vRjMSECY7vLt4hXDxMMYnx++pzAwbRNmWnu0yHfvNhcsFSfKk
+	 axB0w5kc65m40x5vI18hWWtPvIXve3VX4F11BKkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfLOQsY (ORCPT
+        id S1726571AbfLOQ7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:48:24 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46525 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfLOQsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:48:23 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g18so5713170otj.13;
-        Sun, 15 Dec 2019 08:48:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IyI92hdnfY8PAAUr1dTGVnrFEL80XEUV2Rj9Icj07bk=;
-        b=e+cOQt9FRZAB2bj8pdBANZMExyhoP6vLekdVAx9ISF1v7Rrx0pLgrXoFyWB5aKR0d6
-         M26vOWm8zLBbdDzEuL36Ipx0g5mKGJRs6yPnj1GOIe58ZBsYFrmfA9nSfAldqJv9bj/Z
-         BD6BsAbvVjQQ33Y/soDkV8lJ0Tu24M0N9FgdRzYIUVRgu5zqJygogfMxfbBSoWFfYe9R
-         Pu6ZeSBBnEjIEI+OWfBCnC+ayek33b/rmvepbHnOoawz3mZBPW8KNY6rECIRGQ8A7YU9
-         Oa3cokgKWfd5SO1R6/nlkIJeHBGpoKw9Sg3OSObIMR5yXcAB3E5vyorwU9mosFJj/KD7
-         YSTg==
-X-Gm-Message-State: APjAAAVfk1S/Kba+8/1qaDdXg6HBP+C4T2MhdfI0m0QPvPTyXePsxtpQ
-        9LQr6ovGe9riRdta9sboQ3rgzNsRU0uBQeM1twecnXEK
-X-Google-Smtp-Source: APXvYqwmJdOxqsPVi4f7kKJuUSBxsrpNtrpa2HsLfNb//2maPELqkQETjBaDVVH1cxohsWjE71SufaeBQUF4Qqn0Udk=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr27656640otm.297.1576428502295;
- Sun, 15 Dec 2019 08:48:22 -0800 (PST)
+        Sun, 15 Dec 2019 11:59:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfLOQ7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:59:30 -0500
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 757FD2465E;
+        Sun, 15 Dec 2019 16:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576429169;
+        bh=Gd00U8yFwwl+S6X9g/gX+uSdH0+/+1ri3WTiVTHeXXs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A2ZXDhDk9koYFIl88D6Mf/4V2RRFy/5q2UI+sO847d65qk70b5J6uA+RnF1nyviow
+         aQoCzGBqfD3q5AxcDjueSTEOK4TCJGk49FCtiCx9ABY1ykYfLduCqOqr9b9YSD9fxY
+         Lb0JyooRRdJ2d2U+E+agKEk4x55CibCkZsvsH/mE=
+Received: by wens.tw (Postfix, from userid 1000)
+        id 12FD95FC87; Mon, 16 Dec 2019 00:59:26 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/14] media: sun4i-csi: A10/A20 CSI1 and R40 CSI0 support
+Date:   Mon, 16 Dec 2019 00:59:10 +0800
+Message-Id: <20191215165924.28314-1-wens@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdVv9FU+kTf7RDd=AFKL12tJxzmGbX4jZZ8Av3VCZUzwhA@mail.gmail.com>
- <20191126144121.kzkujr27ga36gqnf@wittgenstein> <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
-In-Reply-To: <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 15 Dec 2019 17:48:10 +0100
-Message-ID: <CAMuHMdVLQF_KyWDn=HxmLAp6Vy3jyw=JLDQWryLt809sCecosA@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Wire up clone3() syscall
-To:     Kars de Jong <jongk@linux-m68k.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kars,
+From: Chen-Yu Tsai <wens@csie.org>
 
-On Tue, Nov 26, 2019 at 4:29 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> Op di 26 nov. 2019 om 15:41 schreef Christian Brauner
-> <christian.brauner@ubuntu.com>:
-> > On Mon, Nov 25, 2019 at 10:12:25AM +0100, Geert Uytterhoeven wrote:
-> > > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> > > > Wire up the clone3() syscall for m68k. The special entry point is done in
-> > > > assembler as was done for clone() as well. This is needed because all
-> > > > registers need to be saved. The C wrapper then calls the generic
-> > > > sys_clone3() with the correct arguments.
-> > > >
-> > > > Tested on A1200 using the simple test program from:
-> > > >
-> > > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
-> >
-> > Please note that we now have a growing test-suite for the clone3()
-> > syscall under
-> > tools/testing/selftests/clone3/*
-> >
-> > You can test on a suitable kernel with
-> >
-> > make TARGETS=clone3 kselftest
->
-> I'm afraid my user space is almost prehistoric. I have a homebrewn
-> root filesystem of about 2001 vintage, and another one with Debian
-> 3.1.
-> So until I have bootstrapped a more recent one, I'll leave that to others ;-)
+Hi everyone,
 
-With Ubuntu's libc6-m68k-cross installed, the selftest binaries cross-build
-fine.  Running them on a very old Debian requires some hackery:
+This series adds basic support for CSI1 on Allwinner A10/A20 and CSI0 on
+Allwinner R40. The CSI1 block has the same structure and layout as the
+CSI0 block. Differences include:
 
-  1. Copy ld.so.1, ld-2.27.so, libc.so.6, and libc-2.27.so from
-     /usr/m68k-linux-gnu/lib/ to /tmp/lib on the m68k target,
-  2. mkdir /tmp/proc && mount proc /tmp/proc -t proc,
-  3. chroot /tmp /tmp/<test-binary>.
+  - Only one channel in BT.656 instead of four in CSI0
+  - 10-bit raw data input vs 8-bit in CSI0
+  - 24-bit RGB888/YUV444 input vs 16-bit RGB565/YUV422 in CSI0
+  - No ISP hardware (CSI SCLK not needed)
 
-Unfortunately some tests failed:
+The CSI0 block in the Allwinner R40 SoC looks to be the same as the one
+in the A20. The register maps line up, and they support the same
+features. The R40 appears to support BT.1120 based on the feature
+overview, but it is not mentioned anywhere else. Also like the A20, the
+ISP is not mentioned, but the CSI special clock needs to be enabled for
+the hardware to function. The manual does state that the CSI special
+clock is the TOP clock for all CSI hardware, but currently no hardware
+exists for us to test if CSI1 also depends on it or not.
 
-atari:~# chroot /tmp /tmp/clone3
-# clone3() syscall supported
-TAP version 13
-1..17
-# [825] Trying clone3() with flags 0 (size 0)
-# I am the parent (825). My child's pid is 826
-# I am the child, my PID is 826
-# [825] clone3() with flags says: 0 expected 0
-ok 1 [825] Result (0) matches expectation (0)
-# [825] Trying clone3() with flags 0x20000000 (size 0)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected 0
-not ok 2 [825] Result (-22) is different than expected (0)
-# [825] Trying clone3() with flags 0 (size 64)
-# I am the parent (825). My child's pid is 827
-# I am the child, my PID is 827
-# [825] clone3() with flags says: 0 expected 0
-ok 3 [825] Result (0) matches expectation (0)
-# [825] Trying clone3() with flags 0 (size 56)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 4 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0 (size 88)
-# I am the parent (825). My child's pid is 828
-# I am the child, my PID is 828
-# [825] clone3() with flags says: 0 expected 0
-ok 5 [825] Result (0) matches expectation (0)
-# [825] Trying clone3() with flags 0 (size 0)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 6 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0 (size 0)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 7 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0 (size 0)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 8 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0 (size 0)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 9 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0 (size 88)
-# I am the parent (825). My child's pid is 829
-# I am the child, my PID is 829
-# [825] clone3() with flags says: 0 expected 0
-ok 10 [825] Result (0) matches expectation (0)
-# [825] Trying clone3() with flags 0 (size 96)
-# Argument list too long - Failed to create new process
-# [825] clone3() with flags says: -7 expected -7
-ok 11 [825] Result (-7) matches expectation (-7)
-# [825] Trying clone3() with flags 0 (size 160)
-# Argument list too long - Failed to create new process
-# [825] clone3() with flags says: -7 expected -7
-ok 12 [825] Result (-7) matches expectation (-7)
-# [825] Trying clone3() with flags 0 (size 4104)
-# Argument list too long - Failed to create new process
-# [825] clone3() with flags says: -7 expected -7
-ok 13 [825] Result (-7) matches expectation (-7)
-# [825] Trying clone3() with flags 0x20000000 (size 64)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected 0
-not ok 14 [825] Result (-22) is different than expected (0)
-# [825] Trying clone3() with flags 0x20000000 (size 56)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected -22
-ok 15 [825] Result (-22) matches expectation (-22)
-# [825] Trying clone3() with flags 0x20000000 (size 88)
-# Invalid argument - Failed to create new process
-# [825] clone3() with flags says: -22 expected 0
-not ok 16 [825] Result (-22) is different than expected (0)
-# [825] Trying clone3() with flags 0x20000000 (size 4104)
-# Argument list too long - Failed to create new process
-# [825] clone3() with flags says: -7 expected -7
-ok 17 [825] Result (-7) matches expectation (-7)
-Bail out!
-# Pass 14 Fail 3 Xfail 0 Xpass 0 Skip 0 Error 0
-atari:~# chroot /tmp /tmp/clone3_set_tid
-TAP version 13
-# clone3() syscall supported
-1..29
-# /proc/sys/kernel/pid_max 32768
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 1 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 2 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 3 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 4 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 5 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 6 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 7 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 8 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 9 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 10 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 0 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 0 says :-22 - expected -22
-ok 11 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 12 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 13 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to -1 and 0x20000000
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID -1 says :-22 - expected -22
-ok 14 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 1 and 0x0
-# File exists - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 1 says :-17 - expected -17
-ok 15 [830] Result (-17) matches expectation (-17)
-# [830] Trying clone3() with CLONE_SET_TID to 1 and 0x20000000
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 1 says :-22 - expected 0
-not ok 16 [830] Result (-22) is different than expected (0)
-# [830] Trying clone3() with CLONE_SET_TID to 32768 and 0x0
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 32768 says :-22 - expected -22
-ok 17 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 32768 and 0x20000000
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 32768 says :-22 - expected -22
-ok 18 [830] Result (-22) matches expectation (-22)
-# Child has PID 831
-# [830] Trying clone3() with CLONE_SET_TID to 831 and 0x0
-# I am the parent (830). My child's pid is 831
-# I am the child, my PID is 831 (expected 831)
-# [830] clone3() with CLONE_SET_TID 831 says :0 - expected 0
-ok 19 [830] Result (0) matches expectation (0)
-# [830] Trying clone3() with CLONE_SET_TID to 831 and 0x20000000
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 831 says :-22 - expected -22
-ok 20 [830] Result (-22) matches expectation (-22)
-# [830] Trying clone3() with CLONE_SET_TID to 1 and 0x20000000
-# Invalid argument - Failed to create new process
-# [830] clone3() with CLONE_SET_TID 1 says :-22 - expected 0
-not ok 21 [830] Result (-22) is different than expected (0)
-# unshare PID namespace
-Bail out! unshare(CLONE_NEWPID) failed: Invalid argument
-# Planned tests != run tests (29 != 21)
-# Pass 19 Fail 2 Xfail 0 Xpass 0 Skip 0 Error 0
-atari:~# chroot /tmp /tmp/clone3_clear_sighand
-TAP version 13
-# clone3() syscall supported
-1..1
-Bail out! Failed to clear signal handler for child process
-# Planned tests != run tests (1 != 0)
-# Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-atari:~#
+Included are a couple of fixes for signal polarity and DRAM offset
+handling.
 
-So this needs a bit more work?
+Patches 1 and 2 add compatible strings for the newly supported hardware.
 
-Gr{oetje,eeting}s,
+Patches 3 and 4 fix the polarity setting of [HV]sync and data sampling.
+Allwinner hardware uses [HV]ref semantics instead of [HV]sync.
 
-                        Geert
+Patch 5 deals with the DRAM offset when the CSI hardware does DMA. The
+hardware does DMA directly to the memory bus, thus requiring the address
+to not be offset like when DMA is done over the system bus.
+
+Patch 6 add support for the CSI1 hardware block. For now this simply
+means not requiring the ISP clock.
+
+Patches 7 and 8 add CSI1 to A10 (sun4i) and A20 (sun7i) dtsi files.
+
+Patch 9 adds I2C pixmuxing options for the R40. Used in the last example
+patch.
+
+Patch 10 adds a compatible string for the R40's MBUS (memory bus).
+
+Patch 11 adds CSI0 to the R40 dtsi file
+
+Patches 12 through 14 are examples of cameras hooked up to boards.
+
+Please have a look. The MBUS compatible patch is likely to conflict
+with a DT binding conversion patch Maxime sent out.
+
+Also, I sent out an email asking about the polarity settings for
+[HV]sync, how to signal the use of [HV]ref instead, and how to pass
+timings from the camera to the capture interface. So far I haven't
+heard back. In particular I think the OV7670 driver has inverted
+polarity settings for HSYNC. Not sure about VSYNC.
+
+
+Regards
+ChenYu
+
+
+Chen-Yu Tsai (14):
+  dt-bindings: media: sun4i-csi: Add compatible for CSI1 on A10/A20
+  dt-bindings: media: sun4i-csi: Add compatible for CSI0 on R40
+  media: sun4i-csi: Fix data sampling polarity handling
+  media: sun4i-csi: Fix [HV]sync polarity handling
+  media: sun4i-csi: Deal with DRAM offset
+  media: sun4i-csi: Add support for A10 CSI1 camera sensor interface
+  ARM: dts: sun4i: Add CSI1 controller and pinmux options
+  ARM: dts: sun7i: Add CSI1 controller and pinmux options
+  ARM: dts: sun8i: r40: Add I2C pinmux options
+  dt-bindings: bus: sunxi: Add R40 MBUS compatible
+  ARM: dts: sun8i: r40: Add device node for CSI0
+  [DO NOT MERGE] ARM: dts: sun4i: cubieboard: Enable OV7670 camera on
+    CSI1
+  [DO NOT MERGE] ARM: dts: sun7i: cubieboard2: Enable OV7670 camera on
+    CSI1
+  [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable OV5640
+    camera
+
+ .../bindings/arm/sunxi/sunxi-mbus.txt         |  1 +
+ .../media/allwinner,sun4i-a10-csi.yaml        | 14 +++-
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts    | 42 ++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi              | 35 ++++++++++
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts   | 42 ++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi              | 36 ++++++++++
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 67 +++++++++++++++++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 64 ++++++++++++++++++
+ .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 57 ++++++++++++++--
+ .../platform/sunxi/sun4i-csi/sun4i_csi.h      |  6 +-
+ .../platform/sunxi/sun4i-csi/sun4i_dma.c      | 20 ++++--
+ 11 files changed, 370 insertions(+), 14 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
