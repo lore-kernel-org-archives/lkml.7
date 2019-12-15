@@ -2,275 +2,117 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DCEC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E572FC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0782B24671
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CC220726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FygM01nF"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jkfJBUJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfLORVc (ORCPT
+        id S1726470AbfLORYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:21:32 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28915 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726204AbfLORVc (ORCPT
+        Sun, 15 Dec 2019 12:24:11 -0500
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:45130 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfLORYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:21:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576430490;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ADBtJPMiOqroMyMBBwifechFlOzJVQXPXEIkpj00sng=;
-        b=FygM01nF1zErX5EQtn8vn2Oqx33hyUFx0oQPGOleFmSSMrVCzcISCFGrCSevRKBLz47bvc
-        croty4ZUeCqA1wJ+Ihc1FU2kWtIDmsn2WufIr5iB1M39Svwt+4WUAAH+EOBMyo76RCbtTc
-        /a+PfxOZbcTFOZIdMymvAgMu8JDgHLA=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-dFw6EviNOUeSswm_lPGn8g-1; Sun, 15 Dec 2019 12:21:28 -0500
-X-MC-Unique: dFw6EviNOUeSswm_lPGn8g-1
-Received: by mail-qk1-f197.google.com with SMTP id n128so3169814qke.19
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:21:28 -0800 (PST)
+        Sun, 15 Dec 2019 12:24:11 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47bWV24kvYz9vY9V
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 17:24:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WXcHSaoWwK3Z for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 11:24:10 -0600 (CST)
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com [209.85.219.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47bWV23Y6xz9vY9l
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:24:10 -0600 (CST)
+Received: by mail-yb1-f200.google.com with SMTP id g132so4670496ybf.21
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:24:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pecgs7ML7Vk7tWrjFYP98uMh9IdJ4hgC/me6N1U0MqY=;
+        b=jkfJBUJcQoX1yFjzdjzLoe6pY8qFLcPsJcRicv8sUQ3KI7lJHM7wqg+Chr1001bMPD
+         W0XsUrqobdn0msYcUN4TjL5exX0UMw7kQoOY6P9+0jUi7bfoxbjBoQJSuMYSE3uSTBFF
+         OkOLAYaUMmu20lBSqyQRpbnA45FEYZrOqhcijBpNbSByPR85MMdpUNOj0P8+pdcBYv/H
+         z2iFxZy3LIzlFRBYDNsSVARyQdsrcjJQsSoHj001/cE63omL5zHgY9Eypl6Vzl5yFNOq
+         cVkZV8X2/NUrc7M9t8coomBP5LcBhg0S7lfU61ZpPEuF6BI6giwm5uzNOQXF5SHOkaCh
+         8pzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ADBtJPMiOqroMyMBBwifechFlOzJVQXPXEIkpj00sng=;
-        b=gmurJ+MoNU+z3fF7C4QQK6MsejN7voZdmoXaTFU5ywDNVMb34Y2Sj2R9C9ZB2Fh28K
-         XE+qwC1ur3LLkqc9tkxhEtCzwG1w6C+D7YqvtVPhiHoj45V5UxTKcu8NAT9a0Pr5IkUI
-         6hc+FDqtcvf39Katdi/TUtFUg0ic40dAClxq4uWrr3oLdH5HH2AQzLF8XBCycpxFyj9g
-         TV3kLAfltKcX0YEhoeq6sA4J5Rt75vgKtg4DsM58gCYB4rALuEuZm6qv9RXisPB7sB0D
-         rmVQw+4LI0dB3oS4Fk2EcC4GGBgYhF8a1eAqgdLRapxdVi9FLWKTH5YaEYj3wW8FnwZU
-         r/AQ==
-X-Gm-Message-State: APjAAAXKtNyhWSgdxsKeg6BWdxqmDV1hPfYN55U/Xx32ItrAJbwM/5mk
-        avh5iFSADFSyIL+j7M9bz+E5V1nDfswtlCbXlB7viUF9+yPRbN+JScvBYOm3PRlF2OUIU2JfEDV
-        +mF1BtoB1hf5+91FIoehWfo5x
-X-Received: by 2002:a37:9807:: with SMTP id a7mr23404936qke.213.1576430488296;
-        Sun, 15 Dec 2019 09:21:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxAoCdS8FnRIEzT0hJRh8zcgHR/NRA7BSO3cylgFHiFStVv1aVyM+Hl7l32HAXtz86pLxtWuQ==
-X-Received: by 2002:a37:9807:: with SMTP id a7mr23404919qke.213.1576430487861;
-        Sun, 15 Dec 2019 09:21:27 -0800 (PST)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id e19sm4902428qtc.75.2019.12.15.09.21.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pecgs7ML7Vk7tWrjFYP98uMh9IdJ4hgC/me6N1U0MqY=;
+        b=VqOb2E2R4be1HeRvW9R7WyR/nqRrAbz/mXQyHbi70yloyuZnBa+kMhqL9SPHdKs+Oo
+         lhic4sPF1dJpqZFTNssBg/mBggIclkKgeXcgNVkw3vjqSlLK5inqxn84ZQHgYDkJulvk
+         rKvcFMZeaj/iAl1pPHiD/kD8JiyknQVdtCHMLSV0icMtBnFHx9DEav3pLraWTdUCqfqb
+         MZ0HK7XX9WEneFhEMuklLH4UZCibtdu4alPpWxyiVZ3zU0rUhNY+gIcPV3eJ2w51+CuM
+         ilfINreaPOtBmorM2LyMeBSt69WR0BscXKarDsvlaQl2PtY6vUjwe8pxAtXIUVks/K5i
+         lpSQ==
+X-Gm-Message-State: APjAAAVs1nBRB8KWiUWuTe8ooGjOM8sw9YZ9G3ENmUoqR9fZ5OkvCC7e
+        HrKTdKGmFvMWq08DxW9dp5gWLbQgWfF+CmemZ30vq4o6PxqIM6KMXXiy96ThfRyyEKOComOmA53
+        ISkU+/5LemQvmtZ+NFeoPs0fmXmDP
+X-Received: by 2002:a25:c4c6:: with SMTP id u189mr16155467ybf.145.1576430649875;
+        Sun, 15 Dec 2019 09:24:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqztTQTtMit3I1wZgX7qTMNPjPQRMZAa5AVd+u0lgsRsZTteFqWzJH36T48vebwVZixwVly3DA==
+X-Received: by 2002:a25:c4c6:: with SMTP id u189mr16155458ybf.145.1576430649672;
+        Sun, 15 Dec 2019 09:24:09 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id 205sm69295ywm.17.2019.12.15.09.24.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 09:21:26 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:21:24 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191215172124.GA83861@xz-x1>
-References: <20191202201036.GJ4063@linux.intel.com>
- <20191202211640.GF31681@xz-x1>
- <20191202215049.GB8120@linux.intel.com>
- <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
- <20191203184600.GB19877@linux.intel.com>
- <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
- <20191209215400.GA3352@xz-x1>
- <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
- <20191210155259.GD3352@xz-x1>
- <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+        Sun, 15 Dec 2019 09:24:09 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Tyler Hicks <tyhicks@canonical.com>,
+        ecryptfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ecryptfs: replace BUG_ON with error handling code
+Date:   Sun, 15 Dec 2019 11:24:04 -0600
+Message-Id: <20191215172404.28204-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 06:09:02PM +0100, Paolo Bonzini wrote:
-> On 10/12/19 16:52, Peter Xu wrote:
-> > On Tue, Dec 10, 2019 at 11:07:31AM +0100, Paolo Bonzini wrote:
-> >>> I'm thinking whether I can start
-> >>> to use this information in the next post on solving an issue I
-> >>> encountered with the waitqueue.
-> >>>
-> >>> Current waitqueue is still problematic in that it could wait even with
-> >>> the mmu lock held when with vcpu context.
-> >>
-> >> I think the idea of the soft limit is that the waiting just cannot
-> >> happen.  That is, the number of dirtied pages _outside_ the guest (guest
-> >> accesses are taken care of by PML, and are subtracted from the soft
-> >> limit) cannot exceed hard_limit - (soft_limit + pml_size).
-> > 
-> > So the question go backs to, whether this is guaranteed somehow?  Or
-> > do you prefer us to keep the warn_on_once until it triggers then we
-> > can analyze (which I doubt..)?
-> 
-> Yes, I would like to keep the WARN_ON_ONCE just because you never know.
-> 
-> Of course it would be much better to audit the calls to kvm_write_guest
-> and figure out how many could trigger (e.g. two from the operands of an
-> emulated instruction, 5 from a nested EPT walk, 1 from a page walk, etc.).
+In crypt_scatterlist, if the crypt_stat argument is not set up
+correctly, we avoid crashing, by returning the error upstream.
+This patch performs the fix.
 
-I would say we'd better either figure out all the caller's sites to
-prove it will never overflow, or, I think we'll need the waitqueue at
-least.  The problem is if we release a kvm with WARN_ON_ONCE and at
-last we found that it can be triggered and ring full can't be avoided,
-then it means the interface and design is broken, and it could even be
-too late to fix it after the interface is published.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ fs/ecryptfs/crypto.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-(Actually I was not certain on previous clear_dirty interface where we
- introduced a new capability for it.  I'm not sure whether that can be
- avoided because after all the initial version is not working at all,
- and we fixed it up without changing the interface.  However for this
- one if at last we prove the design wrong, then we must introduce
- another capability for it IMHO, and the interface is prone to change
- too)
-
-So, with the hope that we could avoid the waitqueue, I checked all the
-callers of mark_page_dirty_in_slot().  Since this initial work is only
-for x86, I didn't look more into other archs, assuming that can be
-done later when it is implemented for other archs (and this will for
-sure also cover the common code):
-
-    mark_page_dirty_in_slot calls, per-vm (x86 only)
-        __kvm_write_guest_page
-            kvm_write_guest_page
-                init_rmode_tss
-                    vmx_set_tss_addr
-                        kvm_vm_ioctl_set_tss_addr [*]
-                init_rmode_identity_map
-                    vmx_create_vcpu [*]
-                vmx_write_pml_buffer
-                    kvm_arch_write_log_dirty [&]
-                kvm_write_guest
-                    kvm_hv_setup_tsc_page
-                        kvm_guest_time_update [&]
-                    nested_flush_cached_shadow_vmcs12 [&]
-                    kvm_write_wall_clock [&]
-                    kvm_pv_clock_pairing [&]
-                    kvmgt_rw_gpa [?]
-                    kvm_write_guest_offset_cached
-                        kvm_steal_time_set_preempted [&]
-                        kvm_write_guest_cached
-                            pv_eoi_put_user [&]
-                            kvm_lapic_sync_to_vapic [&]
-                            kvm_setup_pvclock_page [&]
-                            record_steal_time [&]
-                            apf_put_user [&]
-                kvm_clear_guest_page
-                    init_rmode_tss [*] (see above)
-                    init_rmode_identity_map [*] (see above)
-                    kvm_clear_guest
-                        synic_set_msr
-                            kvm_hv_set_msr [&]
-        kvm_write_guest_offset_cached [&] (see above)
-        mark_page_dirty
-            kvm_hv_set_msr_pw [&]
-
-We should only need to look at the leaves of the traces because
-they're where the dirty request starts.  I'm marking all the leaves
-with below criteria then it'll be easier to focus:
-
-Cases with [*]: should not matter much
-           [&]: actually with a per-vcpu context in the upper layer
-           [?]: uncertain...
-
-I'm a bit amazed after I took these notes, since I found that besides
-those that could probbaly be ignored (marked as [*]), most of the rest
-per-vm dirty requests are actually with a vcpu context.
-
-Although now because we have kvm_get_running_vcpu() all cases for [&]
-should be fine without changing anything, but I tend to add another
-patch in the next post to convert all the [&] cases explicitly to pass
-vcpu pointer instead of kvm pointer to be clear if no one disagrees,
-then we verify that against kvm_get_running_vcpu().
-
-So the only uncertainty now is kvmgt_rw_gpa() which is marked as [?].
-Could this happen frequently?  I would guess the answer is we don't
-know (which means it can).
-
-> 
-> > One thing to mention is that for with-vcpu cases, we probably can even
-> > stop KVM_RUN immediately as long as either the per-vm or per-vcpu ring
-> > reaches the softlimit, then for vcpu case it should be easier to
-> > guarantee that.  What I want to know is the rest of cases like ioctls
-> > or even something not from the userspace (which I think I should read
-> > more later..).
-> 
-> Which ioctls?  Most ioctls shouldn't dirty memory at all.
-
-init_rmode_tss or init_rmode_identity_map.  But I've marked them as
-unimportant because they should only happen once at boot.
-
-> 
-> >>> And if we see if the mark_page_dirty_in_slot() is not with a vcpu
-> >>> context (e.g. kvm_mmu_page_fault) but with an ioctl context (those
-> >>> cases we'll use per-vm dirty ring) then it's probably fine.
-> >>>
-> >>> My planned solution:
-> >>>
-> >>> - When kvm_get_running_vcpu() != NULL, we postpone the waitqueue waits
-> >>>   until we finished handling this page fault, probably in somewhere
-> >>>   around vcpu_enter_guest, so that we can do wait_event() after the
-> >>>   mmu lock released
-> >>
-> >> I think this can cause a race:
-> >>
-> >> 	vCPU 1			vCPU 2		host
-> >> 	---------------------------------------------------------------
-> >> 	mark page dirty
-> >> 				write to page
-> >> 						treat page as not dirty
-> >> 	add page to ring
-> >>
-> >> where vCPU 2 skips the clean-page slow path entirely.
-> > 
-> > If we're still with the rule in userspace that we first do RESET then
-> > collect and send the pages (just like what we've discussed before),
-> > then IMHO it's fine to have vcpu2 to skip the slow path?  Because
-> > RESET happens at "treat page as not dirty", then if we are sure that
-> > we only collect and send pages after that point, then the latest
-> > "write to page" data from vcpu2 won't be lost even if vcpu2 is not
-> > blocked by vcpu1's ring full?
-> 
-> Good point, the race would become
-> 
->  	vCPU 1			vCPU 2		host
->  	---------------------------------------------------------------
->  	mark page dirty
->  				write to page
-> 						reset rings
-> 						  wait for mmu lock
->  	add page to ring
-> 	release mmu lock
-> 						  ...do reset...
-> 						  release mmu lock
-> 						page is now dirty
-
-Hmm, the page will be dirty after the reset, but is that an issue?
-
-Or, could you help me to identify what I've missed?
-
-> 
-> > Maybe we can also consider to let mark_page_dirty_in_slot() return a
-> > value, then the upper layer could have a chance to skip the spte
-> > update if mark_page_dirty_in_slot() fails to mark the dirty bit, so it
-> > can return directly with RET_PF_RETRY.
-> 
-> I don't think that's possible, most writes won't come from a page fault
-> path and cannot retry.
-
-Yep, maybe I should say it in the other way round: we only wait if
-kvm_get_running_vcpu() == NULL.  Then in somewhere near
-vcpu_enter_guest(), we add a check to wait if per-vcpu ring is full.
-Would that work?
-
-Thanks,
-
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index f91db24bbf3b..a064b408d841 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -311,8 +311,10 @@ static int crypt_scatterlist(struct ecryptfs_crypt_stat *crypt_stat,
+ 	struct extent_crypt_result ecr;
+ 	int rc = 0;
+ 
+-	BUG_ON(!crypt_stat || !crypt_stat->tfm
+-	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
++	if (!crypt_stat || !crypt_stat->tfm
++	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
++		return -EINVAL;
++
+ 	if (unlikely(ecryptfs_verbosity > 0)) {
+ 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
+ 				crypt_stat->key_size);
 -- 
-Peter Xu
+2.20.1
 
