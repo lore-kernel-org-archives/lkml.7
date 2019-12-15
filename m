@@ -2,143 +2,155 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C4CC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A18C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D0E206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991F2206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="SKPoVh4m"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="RRHGLZR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfLORLa (ORCPT
+        id S1726481AbfLORMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:11:30 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43243 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfLORLa (ORCPT
+        Sun, 15 Dec 2019 12:12:44 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:41572 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfLORMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:11:30 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so2288982pga.10
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:11:29 -0800 (PST)
+        Sun, 15 Dec 2019 12:12:44 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47bWDq0Jq9z9vYkY
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 17:12:43 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IdPLWI0kfu7V for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 11:12:42 -0600 (CST)
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47bWDp68sLz9vYkW
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:12:42 -0600 (CST)
+Received: by mail-yw1-f69.google.com with SMTP id a190so967805ywe.15
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:12:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gIhKjqXFZFihOuTqCYQ9SMFzjz9Xta5r8J8lgbXYpgY=;
-        b=SKPoVh4mDvHViOs7XKg3U0rBm8HOrt5iWnSjK1E83GV7RiEfUC8/+gB00diouZlOTc
-         +WpLcbbcWKfnp7dXFYm16Q7hRaMvQyDBUlT2G7MVbb/lt56UOHp6RXPtbwmjPQMtwVdI
-         Al4WgZdcw4ME/icYtaPl9/OjsnyPPLrhfHIcPLHH3qm9GA5UWqEN08O3pJHanvvsIiQ9
-         Y88bHL5nAOwHkWz/WZIq2g0Ge6PArgBtxSlbCAKYoCBi/VV5WWHjhGt76s273FGhaE+R
-         BGwoVdmAd1yQrakfrgtoFTtlIlzuoas/uuPOkdP7OkUfiDUS6//zkhqfJwWDVleZlW72
-         edAw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhtlch/cxMxWFqhg5J9e0u6iluOrhN5n/YoxV6vgAHw=;
+        b=RRHGLZR6ustuYdKO8l7flwqB2ODykJg3s+gUufn2+cnqJUZnf90AidnC7J4gEbgpjX
+         P1FXQt/fPXkeCpSn89bNmVzDB1bJYNvDfzXXLkFOc67Cn2OYJPH42OebHzivAgyfU9NW
+         dQshdiJOZ7y84P8wVoSCakfcvpFzG9AdOJW4ntI5wbe42CEF+euU6b+51Tmlh18Bum5f
+         9brC8VxO0bXu2ACn2v8ONUsNSSXtm41LonLCI2RDtEWmvehExYrbOUXM0LbHIxG5nJkV
+         aBNFqL15GltjxrbiRt8YVIjX0cld6OWCFUXdzn1Jr9VFXpjbSj8aVdjEyzZR+pzqPvDC
+         nY6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gIhKjqXFZFihOuTqCYQ9SMFzjz9Xta5r8J8lgbXYpgY=;
-        b=MtxX4NtCDBvhSoPUMRBwMt8QW8QbIUCG02xaWdx2+nChhfnl0DnnMu23br122l8lbJ
-         ZQIIxBAH8DA+8BiSVgzXQa4cl8iZ6ikR/sNFFd4GaQmnIo5803EcPnoDjzxfxhc4MdeW
-         n0qGH0jpAB2+yWR27AdNn/oepi8+uF06Suu2zU90is/EW53Iyhka/QaGYUKTjdEJKNfx
-         xGZKLnlhk6/Dg8dNOut4twr7RrWMP5mc4et+YqoYuzmf7XcQQTTLi97UlCUmxzwD4lU/
-         qoeoH6AEv4jL4BXQHH1Sa/RsizJMrP7cOTMo+I2JH5mmlCCtxF1lD79QAN05XzFS0K4K
-         XvUg==
-X-Gm-Message-State: APjAAAXqfXQ+a0xrWxF4Sv/ggBgYfBtapriAaYufmQUbrnNLzougCsNL
-        3O7+0gFvp4om5Qe92u5CnsNFmg==
-X-Google-Smtp-Source: APXvYqyEf/392Icr1o5JSGcmxYTTTRzsvWVgWW0xiuqgFihnu5/rq+BxN+5JgU25+nnQe9ICy5wzJA==
-X-Received: by 2002:a62:e50d:: with SMTP id n13mr11209412pff.201.1576429889133;
-        Sun, 15 Dec 2019 09:11:29 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id in6sm15877804pjb.8.2019.12.15.09.11.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhtlch/cxMxWFqhg5J9e0u6iluOrhN5n/YoxV6vgAHw=;
+        b=VvzyoeTwU/WWVWsfFyaFK6UJr7xXicusHqucZzQWhwRtT4U5LR2RmIag88f9prmqu3
+         nFy6UkOuGQ/AdVUZBtsPlzrfJ/QOdaJHX3zMk+PO+/Z8KblCrBt/IIINAnvXJxl9zgWs
+         jD2aEKi020dCzgtfY6hYxy5jfxH+Y45H6AC5HgmUu3adfdviF0AGAJp7osQxioVb2lII
+         vQaCWOSlh0+QBwuwtxK5yCHf28nk0YFxTcJJjpOXLpZSzwpJ6eVumSGSiY5QuRrQ3YJp
+         OM8dk1lLbzpP3yEr0lyePonG8rfpWi/reWJ4tIECEdaB5kw3gt1xMRjOL8k9qt2VYJRO
+         BsDQ==
+X-Gm-Message-State: APjAAAWaBBL+PfzuF4Onxcs/4bt7pWkCg1h9px3XvmB0s5IMlz7jyibL
+        yunZVOx1i7HxBB2tl9IrmHiAUECw4Q6MJHxgf1B32Fpn82VfAKXS1pzp3/ABNWg6fqe8eZq0hLb
+        C/38muEHeqpy3WObpm8XRSJcF41aP
+X-Received: by 2002:a0d:d5cf:: with SMTP id x198mr16663602ywd.80.1576429962334;
+        Sun, 15 Dec 2019 09:12:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxYCROf8cfDp7PKzWucgQEPd95CFFWqsUgOZcKkKLNUNNvfWa15pchhEHzFjQ4HKE5bYgnJVA==
+X-Received: by 2002:a0d:d5cf:: with SMTP id x198mr16663586ywd.80.1576429962091;
+        Sun, 15 Dec 2019 09:12:42 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id h68sm3256433ywe.21.2019.12.15.09.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 09:11:28 -0800 (PST)
-Date:   Sun, 15 Dec 2019 09:11:20 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in
- rndis_set_subchannel()
-Message-ID: <20191215091120.24e581e1@hermes.lan>
-In-Reply-To: <MN2PR21MB1375F30B3BEEF42DFDB3D39ECA560@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
-        <20191214113025.363f21e2@cakuba.netronome.com>
-        <MN2PR21MB1375F30B3BEEF42DFDB3D39ECA560@MN2PR21MB1375.namprd21.prod.outlook.com>
+        Sun, 15 Dec 2019 09:12:41 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: remove BUG_ON used as assertions
+Date:   Sun, 15 Dec 2019 11:12:36 -0600
+Message-Id: <20191215171237.27482-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Dec 2019 16:38:00 +0000
-Haiyang Zhang <haiyangz@microsoft.com> wrote:
+alloc_extent_state_atomic() allocates extents via GFP_ATOMIC flag
+and cannot fail. There are multiple invocations of BUG_ON on the
+return value to check for failure. The patch replaces certain
+invocations of BUG_ON by returning the error upstream.
 
-> > -----Original Message-----
-> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > Sent: Saturday, December 14, 2019 2:30 PM
-> > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
-> > KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> > <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> > <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
-> > 
-> > On Wed, 11 Dec 2019 14:26:27 -0800, Haiyang Zhang wrote:  
-> > > Host can provide send indirection table messages anytime after RSS is
-> > > enabled by calling rndis_filter_set_rss_param(). So the host provided
-> > > table values may be overwritten by the initialization in
-> > > rndis_set_subchannel().
-> > >
-> > > To prevent this problem, move the tx_table initialization before calling
-> > > rndis_filter_set_rss_param().
-> > >
-> > > Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after  
-> > subchannels open")  
-> > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>  
-> > 
-> > Applied, but there are two more problems with this code:
-> >  - you should not reset the indirection table if it was configured by
-> >    the user to something other than the default (use the
-> >    netif_is_rxfh_configured() helper to check for that)  
-> 
-> For Send indirection table (tx_table) ethtool doesn't have the option 
-> to set it, and it's usually provided by the host. So we always initialize 
-> it...
-> But, yes, for Receive indirection table (rx_table), I will make a fix, so 
-> it will be set to default only for new devices, or changing the number 
-> of channels; otherwise it will remain the same during operations like 
-> changing MTU, ringparam.
-> 
-> 
-> >  - you should use the ethtool_rxfh_indir_default() wrapper  
-> For rx_table, we already use it:
->                 rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
-> For tx_table, I know it's the same operation (%, mod), but this wrapper 
-> function's name is for rx_table. Should we use it for tx_table too?
-> 
-> > 
-> > Please fix the former problem in the net tree, and after net is merged
-> > into linux/master and net-next in a week or two please follow up with
-> > the fix for the latter for net-next.  
-> 
-> Sure.
-> 
-> Thanks,
-> - Haiyang
-> 
-As Haiyang said, this send indirection table is unique to Hyper-V it is not part of
-any of the other device models. It is not supported by ethtool. It would not be
-appropriate to repurpose the existing indirection tool; the device already uses
-the receive indirection table for RSS.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ fs/btrfs/extent_io.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index eb8bd0258360..e72e5a333e71 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -989,7 +989,10 @@ __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
+ 	node = tree_search_for_insert(tree, start, &p, &parent);
+ 	if (!node) {
+ 		prealloc = alloc_extent_state_atomic(prealloc);
+-		BUG_ON(!prealloc);
++		if (!prealloc) {
++			err = -ENOMEM;
++			goto out;
++		}
+ 		err = insert_state(tree, prealloc, start, end,
+ 				   &p, &parent, &bits, changeset);
+ 		if (err)
+@@ -1054,7 +1057,10 @@ __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
+ 		}
+ 
+ 		prealloc = alloc_extent_state_atomic(prealloc);
+-		BUG_ON(!prealloc);
++		if (!prealloc) {
++			err = -ENOMEM;
++			goto out;
++		}
+ 		err = split_state(tree, state, prealloc, start);
+ 		if (err)
+ 			extent_io_tree_panic(tree, err);
+@@ -1091,7 +1097,10 @@ __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
+ 			this_end = last_start - 1;
+ 
+ 		prealloc = alloc_extent_state_atomic(prealloc);
+-		BUG_ON(!prealloc);
++		if (!prealloc) {
++			err = -ENOMEM;
++			goto out;
++		}
+ 
+ 		/*
+ 		 * Avoid to free 'prealloc' if it can be merged with
+@@ -1121,7 +1130,10 @@ __set_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
+ 		}
+ 
+ 		prealloc = alloc_extent_state_atomic(prealloc);
+-		BUG_ON(!prealloc);
++		if (!prealloc) {
++			err = -ENOMEM;
++			goto out;
++		}
+ 		err = split_state(tree, state, prealloc, end + 1);
+ 		if (err)
+ 			extent_io_tree_panic(tree, err);
+-- 
+2.20.1
+
