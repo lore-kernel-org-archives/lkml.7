@@ -2,94 +2,146 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D33C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACCC2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2142206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wz4/M2YJ"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC5020726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfLOMoB (ORCPT
+        id S1726373AbfLOMor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:44:01 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:43024 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfLOMoB (ORCPT
+        Sun, 15 Dec 2019 07:44:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51876 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726199AbfLOMor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:44:01 -0500
-Received: by mail-wr1-f41.google.com with SMTP id d16so3857127wre.10
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 04:44:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=p7hVdXnSKeOOfrLxwI2s0NxIC4n1/uQ0c98XN8Ll0EI=;
-        b=Wz4/M2YJMdYRXndLhSOIVQrDcJoeYOSgPViSsEjU2IAPDpupVkO5Y9YDBJaHgwJbDR
-         inwGKcmM8QK336xp48zujm5JFm+6GuyFtSGLHHztAjOLzwKPB86eJ/JK0yNHu+jHWNEF
-         SrRTSP4oHUM5B0Mn0fcQfjznSG3XFtk+RRY0oF6pMXi+q9JVoEmkzi34IUyDA1HpC0yH
-         SRU4EiuG6uFubWqfhJshe/EcuNXUFM2deRlF1x1lKCvxDADhuRukjhcOoAVjWBgjY5zI
-         xUAbiAwZ1FQnpZlUPltt8h61BHUyFQhzcwFiGWC5AKO8OzFQfWGQLRNlSOhoyqiUp4GK
-         97YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=p7hVdXnSKeOOfrLxwI2s0NxIC4n1/uQ0c98XN8Ll0EI=;
-        b=TWoHP4Y7R9Cx0bfzp+kb40PTnd8FV99U06qzxqL2uQdldx8m3Mi3ZcPnXnArzGDXnF
-         PV0XMPxIE7FMMQrooW5doLz0cVgTi2ZUQhL0YlprTjS9A8onZSTHYEdR/132Cj9Ln75y
-         CkVSbQFM0i70aNSImYkMvNozqrAMkDeqenWiUw3Uo/wQ9EYbZtPKC3F4SyCBHl4VObZ1
-         9LrLxYSXK6xGsH/iUg50lBFEWZZtNxXsasEJ5lN7LpHcYtnwsep/jVqqYC8FQsErMVYy
-         pQ/4dX1/C989P25DwOTynxvOtkH9jX8cu2EoL212+Gnts3YksW0GOmmDMqzHmxBKa5t8
-         hsAQ==
-X-Gm-Message-State: APjAAAXGU02LVmnItsnvtrEI7ah9NI0pM1dJc46XrHJsyC8Zt3P4x/vz
-        0d+us519jc6G3DalQMU/yGpIzuE=
-X-Google-Smtp-Source: APXvYqztcp1Myvf+2h10Oj/yQEfsV1y7IpCtLZie29CgZnGy8MwehtSIafKF5E0aUKWpe+hOIfj2/A==
-X-Received: by 2002:a5d:530d:: with SMTP id e13mr24550642wrv.125.1576413839333;
-        Sun, 15 Dec 2019 04:43:59 -0800 (PST)
-Received: from avx2 ([46.53.248.136])
-        by smtp.gmail.com with ESMTPSA id w13sm17693787wru.38.2019.12.15.04.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 04:43:58 -0800 (PST)
-Date:   Sun, 15 Dec 2019 15:43:55 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH -mm 1/2] ELF: make BAD_ADDR() unlikely
-Message-ID: <20191215124355.GA21124@avx2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 15 Dec 2019 07:44:47 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBFCgM7k017694
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 07:44:46 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe4htg21-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 07:44:45 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 15 Dec 2019 12:44:43 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 15 Dec 2019 12:44:40 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBFCidZk49348706
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 15 Dec 2019 12:44:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CC9B42041;
+        Sun, 15 Dec 2019 12:44:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C3DA4203F;
+        Sun, 15 Dec 2019 12:44:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.206.32])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 15 Dec 2019 12:44:38 +0000 (GMT)
+Subject: Re: [PATCH v3 1/2] IMA: Define workqueue for early boot "key"
+ measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Sun, 15 Dec 2019 07:44:37 -0500
+In-Reply-To: <1576242406.4579.239.camel@linux.ibm.com>
+References: <20191213004250.21132-1-nramas@linux.microsoft.com>
+         <20191213004250.21132-2-nramas@linux.microsoft.com>
+         <1576202134.4579.189.camel@linux.ibm.com>
+         <6e0dad33-66f9-4807-d08d-ff30396cec5e@linux.microsoft.com>
+         <1576204377.4579.206.camel@linux.ibm.com>
+         <c60341a3-2329-cd92-c76c-6f8249a57b43@linux.microsoft.com>
+         <1576242406.4579.239.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121512-0012-0000-0000-00000375088F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121512-0013-0000-0000-000021B0EB8C
+Message-Id: <1576413877.4579.280.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-15_03:2019-12-13,2019-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0
+ spamscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1912150121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If some mapping goes past TASK_SIZE it will be rejected by kernel
-which means no such userspace binaries exist.
+On Fri, 2019-12-13 at 08:06 -0500, Mimi Zohar wrote:
+> On Thu, 2019-12-12 at 18:59 -0800, Lakshmi Ramasubramanian wrote:
+> > On 12/12/2019 6:32 PM, Mimi Zohar wrote:
+> > 
+> > >>>
+> > >>> Don't you need a test here, before setting ima_process_keys?
+> > >>>
+> > >>> 	if (ima_process_keys)
+> > >>> 		return;
+> 
+> > >> That check is done before the comment - at the start of
+> > >> ima_process_queued_keys().
+> > > 
+> > > The first test prevents taking the mutex unnecessarily.
+> > > 
+> > 
+> > I am trying to understand your concern here. Could you please clarify?
+> > 
+> >   => If ima_process_keys is false
+> >        -> With the mutex held, should check ima_process_keys again 
+> > before setting?
+> > 
+> > Let's say 2 or more threads are racing in calling ima_process_queued_keys():
+> > 
+> > The 1st one will set ima_process_keys and process queued keys.
+> > 
+> > The 2nd and subsequent ones - even if they have gone past the initial 
+> > check, will find an empty list of keys (the list "ima_keys") when they 
+> > take the mutex. So they'll not process any keys.
+> 
+> I just need to convince myself that this is correct.  Normally before
+> reading and writing a flag, there is some sort of locking.  With
+> taking the mutex before setting the flag, there is now only a lock
+> around the single writer.
+> 
+> Without taking a lock before reading the flag, will the queue always
+> be empty is the question.  If it is, then the comment is correct, but
+> the code assumes not and processes the list again.  Testing the flag
+> after taking the mutex just re-enforces the comment.
+> 
+> Bottom line, does reading the flag need to be lock protected?
 
-Mark every such check as unlikely.
+Reading the flag IS lock protected, just spread across two functions.
+ For performance, ima_post_key_create_or_update() checks
+ima_process_keys, before calling ima_queue_key(), which takes the
+mutex before checking ima_process_keys again.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+As long as both the reader and writer, take the mutex before checking
+the flag, the locking is fine.  The additional check, before taking
+the mutex, is simply for performance.
 
- fs/binfmt_elf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Mimi
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -97,7 +97,7 @@ static struct linux_binfmt elf_format = {
- 	.min_coredump	= ELF_EXEC_PAGESIZE,
- };
- 
--#define BAD_ADDR(x) ((unsigned long)(x) >= TASK_SIZE)
-+#define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
- 
- static int set_brk(unsigned long start, unsigned long end, int prot)
- {
+
+
+ 
+
+
