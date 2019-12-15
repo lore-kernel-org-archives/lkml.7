@@ -2,112 +2,139 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E87C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 10:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B5C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 10:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7D82072B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 10:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576406917;
-	bh=CJsSVHXB476Upc9lgt7guU2DBHksZsrLon30h4hEa9M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Jq1vofcEfXek8Dp7wVtd9LhLc6O/Ig8Oyr1zvnmY3x3602GU8SmU3w5qoT6lo8as/
-	 p4NXogBC30qlw585BpjgSMohAeCkDluWY0n47B0Od/PVtoyZINK506q+/PLJbein+A
-	 qDWv+yBTxSdjiHIFCIfrzh75/rAwWyvM6YFr/7VI=
+	by mail.kernel.org (Postfix) with ESMTP id 4A01E20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 10:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfLOKsg (ORCPT
+        id S1726192AbfLOKwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 05:48:36 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33226 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726081AbfLOKsg (ORCPT
+        Sun, 15 Dec 2019 05:52:00 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51337 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfLOKv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 05:48:36 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1igRRq-0007sB-2S; Sun, 15 Dec 2019 11:48:26 +0100
-Date:   Sun, 15 Dec 2019 10:48:24 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl,
-        john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, kgene@kernel.org, krzk@kernel.org,
-        mripard@kernel.org, wens@csie.org, ssantosh@kernel.org,
-        jun.nie@linaro.org, shawnguo@kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 10/10] soc: qcom: convert to
- devm_platform_ioremap_resource
-Message-ID: <20191215104824.658889d3@why>
-In-Reply-To: <20191214175447.25482-10-tiny.windzz@gmail.com>
-References: <20191214175447.25482-1-tiny.windzz@gmail.com>
-        <20191214175447.25482-10-tiny.windzz@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Dec 2019 05:51:59 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2EAAD240003;
+        Sun, 15 Dec 2019 10:51:55 +0000 (UTC)
+Date:   Sun, 15 Dec 2019 12:00:20 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: meson: pll: Fix by 0 division in
+ __pll_params_to_rate()
+Message-ID: <20191215110020.GA7304@voidbox>
+References: <20191208212206.16808-1-repk@triplefau.lt>
+ <1jo8whesj2.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tiny.windzz@gmail.com, khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl, john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org, kgene@kernel.org, krzk@kernel.org, mripard@kernel.org, wens@csie.org, ssantosh@kernel.org, jun.nie@linaro.org, shawnguo@kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1jo8whesj2.fsf@starbuckisacylon.baylibre.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019 17:54:47 +0000
-Yangtao Li <tiny.windzz@gmail.com> wrote:
-
-> Use devm_platform_ioremap_resource() to simplify code.
+On Mon, Dec 09, 2019 at 10:51:13AM +0100, Jerome Brunet wrote:
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/soc/qcom/llcc-qcom.c    | 7 +------
->  drivers/soc/qcom/qcom-geni-se.c | 4 +---
->  drivers/soc/qcom/qcom_aoss.c    | 4 +---
->  drivers/soc/qcom/qcom_gsbi.c    | 5 +----
->  drivers/soc/qcom/spm.c          | 4 +---
->  5 files changed, 5 insertions(+), 19 deletions(-)
+> On Sun 08 Dec 2019 at 22:22, Remi Pommarel <repk@triplefau.lt> wrote:
 > 
-> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-> index 429b5a60a1ba..99e19df76889 100644
-> --- a/drivers/soc/qcom/llcc-qcom.c
-> +++ b/drivers/soc/qcom/llcc-qcom.c
-> @@ -387,7 +387,6 @@ static int qcom_llcc_remove(struct platform_device *pdev)
->  static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
->  		const char *name)
->  {
-> -	struct resource *res;
->  	void __iomem *base;
->  	struct regmap_config llcc_regmap_config = {
->  		.reg_bits = 32,
-> @@ -396,11 +395,7 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
->  		.fast_io = true,
->  	};
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-> -	if (!res)
-> -		return ERR_PTR(-ENODEV);
-> -
-> -	base = devm_ioremap_resource(&pdev->dev, res);
-> +	base = devm_platform_ioremap_resource(pdev, 0);
+> > Some meson pll registers can be initialized with 0 as N value, introducing
+> > the following division by 0 when computing rate :
+> >
+> >   UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
+> >   division by zero
+> >   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
+> >   Call trace:
+> >    dump_backtrace+0x0/0x1c0
+> >    show_stack+0x14/0x20
+> >    dump_stack+0xc4/0x100
+> >    ubsan_epilogue+0x14/0x68
+> >    __ubsan_handle_divrem_overflow+0x98/0xb8
+> >    __pll_params_to_rate+0xdc/0x140
+> >    meson_clk_pll_recalc_rate+0x278/0x3a0
+> >    __clk_register+0x7c8/0xbb0
+> >    devm_clk_hw_register+0x54/0xc0
+> >    meson_eeclkc_probe+0xf4/0x1a0
+> >    platform_drv_probe+0x54/0xd8
+> >    really_probe+0x16c/0x438
+> >    driver_probe_device+0xb0/0xf0
+> >    device_driver_attach+0x94/0xa0
+> >    __driver_attach+0x70/0x108
+> >    bus_for_each_dev+0xd8/0x128
+> >    driver_attach+0x30/0x40
+> >    bus_add_driver+0x1b0/0x2d8
+> >    driver_register+0xbc/0x1d0
+> >    __platform_driver_register+0x78/0x88
+> >    axg_driver_init+0x18/0x20
+> >    do_one_initcall+0xc8/0x24c
+> >    kernel_init_freeable+0x2b0/0x344
+> >    kernel_init+0x10/0x128
+> >    ret_from_fork+0x10/0x18
+> >
+> > This checks if N is null before doing the division.
+> 
+> Thanks for reporting this
+> 
+> >
+> > Fixes: 8289aafa4f36 ("clk: meson: improve pll driver results with
+> > frac")
+> 
+> In mainline, the commit above went in with sha1 3c4fe763d64d.
+> 
+> Also, this commit is not really responsible for the problem. Having HW
+> initialized with N = 0 would have failed since the beginning, I believe.
+> 
+> In this case the correct fixes would be:
+> Fixes: 7a29a869434e ("clk: meson: Add support for Meson clock controller")
+> 
+> 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> >  drivers/clk/meson/clk-pll.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+> > index ddb1e5634739..6649659f216a 100644
+> > --- a/drivers/clk/meson/clk-pll.c
+> > +++ b/drivers/clk/meson/clk-pll.c
+> > @@ -66,6 +66,10 @@ static unsigned long __pll_params_to_rate(unsigned long parent_rate,
+> >  					 (1 << pll->frac.width));
+> >  	}
+> >  
+> > +	/* Avoid by zero division */
+> > +	if (n == 0)
+> > +		return 0;
+> 
+> This can only really happen after init, in recalc() rate.
+> 
+> I would much prefer if you could check the n value right after it is
+> read (meson_parm_read()) in .recalc_rate() and add a comment explaining
+> that some HW may have this parameter set 0 on init.
+> 
 
-What guarantees do you have that entry 0 matches name?
+Sure will do.
 
-I find these changes pointless: they don't add much to the readability
-or maintainability of the code, and instead introduce creative bugs.
+Thanks for reviewing this.
 
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Remi
+
+> > +
+> >  	return DIV_ROUND_UP_ULL(rate, n);
+> >  }
+> 
