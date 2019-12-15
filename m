@@ -2,100 +2,90 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945F9C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB00C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFE4206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:54:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahQQFLVq"
+	by mail.kernel.org (Postfix) with ESMTP id 945082467A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576436114;
+	bh=qxCq1Eg94Bm5MYZwDFLzvHbmo6W6Stbi9CbdFj0Q4jU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i1FSGv0Dn9hFTxKPtulE9iwu6TX9sD1GgPL5DDliHFBwcctIrCkNbvYs8bRZ4Tuf9
+	 FNcNOvjWkwJsOk8zmiv1odbkI/p8ZzayPM6IKXCoH5n11P9U0UE4Nvj0XK2JgIt5nG
+	 /gqNMy4+6gpgfFzp6PuLjn+tW0aaRQOT7dFOHAjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLOSye (ORCPT
+        id S1726671AbfLOSzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 13:54:34 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35338 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfLOSyd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 13:54:33 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so4317954lja.2;
-        Sun, 15 Dec 2019 10:54:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lWviGd0q9M7mX9BtKeMbyBIvqQbgGAAL9cMMxClvQgg=;
-        b=ahQQFLVq8VEuKSkuR/NnhDV1T3CEomWC4pJOJnVTPTe2lIAQRYLghoLWitFyVqEPj8
-         M4Hhl9kXueLUPgTARXRNEykYsRvK6wEhli1Cit+YOtageWnpJkqPBIucdYcd23GsLSmQ
-         DOLkQ5N3SorE5aYMDJuOQg2MSXtoCbMsNLLrv/KfgFAF970KNHuYcAZlrw/z4NT4H/2S
-         T1FFQCD4J2CZn/v3D8d3UF9ttsJo0Q/+D+qWiZ7ySSwxyEwAU0UdYf4hNi4QjdWTx9H6
-         ktmb2XyanPVYw+fqEUjZUGyuFtbDgCinPCqULdjGxpGpbTa+5KBiXNU4JznnuH+JBO2u
-         dXfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lWviGd0q9M7mX9BtKeMbyBIvqQbgGAAL9cMMxClvQgg=;
-        b=rXoOjctx6pFjsxRa/XKhD3E9cmhs9x2Vzyc2logxqIY8v3TkegmvcXLjafqkzyiJVS
-         JdqwX2R77suIeXI28WG2hgKXnSciube32RAfXgx1j/oodwqR/pIBpnK7zyychmxUsWZu
-         gMLnWoDR7aAbWR0T0+UTKk/wdRCZOoRVPRGQxHv157+zv8LzYItxa14/KvoB7iIndWLe
-         2KM/pfFjTSlEFTNU2KP+EK7Rz30drbKwFaP2nzpjrqa1DF9YhFzM/IbPsu9CtfmVwE9Q
-         YHvsLTXpcxbKdWMfA3obOtxVYhZ3OKZjhzCqho2mFRURm42T/zZyzVK77JzsOeAikOfj
-         esoA==
-X-Gm-Message-State: APjAAAXIE8CIDXElAWJr8KZOMBK2OymJWhGwVj9PyWIUfGcdwVVfW8JR
-        LNa+eacMz5f7koHZeQ73GCY=
-X-Google-Smtp-Source: APXvYqwjQnuQA16yy6o3m75gF/sZExlEHtLc1G0qzNYWc1Ck1n6372OKLFumw5uApIRe7vpO+8muKA==
-X-Received: by 2002:a2e:8505:: with SMTP id j5mr15075021lji.235.1576436071558;
-        Sun, 15 Dec 2019 10:54:31 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id t2sm8738514ljj.11.2019.12.15.10.54.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 10:54:30 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] dt-bindings: net: broadcom-bluetooth: Document BCM4329 support
-Date:   Sun, 15 Dec 2019 21:52:53 +0300
-Message-Id: <20191215185253.14024-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191215185253.14024-1-digetx@gmail.com>
-References: <20191215185253.14024-1-digetx@gmail.com>
+        Sun, 15 Dec 2019 13:55:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbfLOSzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 13:55:13 -0500
+Received: from localhost (unknown [5.29.147.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F55206D8;
+        Sun, 15 Dec 2019 18:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576436112;
+        bh=qxCq1Eg94Bm5MYZwDFLzvHbmo6W6Stbi9CbdFj0Q4jU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wj09b1guP/gt7Byo70cXSasaHvLkF5hTReDDqJsPfA/4wRaouCOrqgmYhQRde/Cqc
+         saXLnyJ/1jTtLbmgEjr1t57KJeT56+WAo052IH+M7Dor2ofLRtE9DjSNVlJuM3a02P
+         bBypbr1vd0XFSJxeVbShKqmthLUyDdepkci5W3zg=
+Date:   Sun, 15 Dec 2019 20:55:00 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Prabhath Sajeepa <psajeepa@purestorage.com>
+Cc:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, roland@purestorage.com
+Subject: Re: [PATCH] IB/mlx5: Fix outstanding_pi index for GSI qps
+Message-ID: <20191215185500.GA6097@unreal>
+References: <1576195889-23527-1-git-send-email-psajeepa@purestorage.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576195889-23527-1-git-send-email-psajeepa@purestorage.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM4329 is a 802.11 a/b/g/n WiFi + Bluetooth 2.1 chip which is found
-in Azurewave AW-NH611 WiFi+BT module.
+On Thu, Dec 12, 2019 at 05:11:29PM -0700, Prabhath Sajeepa wrote:
+> b0ffeb537f3a changed the way how outstanding WRs are tracked for GSI QP. But the
+> fix did not cover the case when a call to ib_post_send fails and index
+> to track outstanding WRs need to be updated correctly.
+>
+> Fixes: b0ffeb537f3a ('IB/mlx5: Fix iteration overrun in GSI qps ')
+> Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+> ---
+>  drivers/infiniband/hw/mlx5/gsi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/infiniband/hw/mlx5/gsi.c b/drivers/infiniband/hw/mlx5/gsi.c
+> index ac4d8d1..1ae6fd9 100644
+> --- a/drivers/infiniband/hw/mlx5/gsi.c
+> +++ b/drivers/infiniband/hw/mlx5/gsi.c
+> @@ -507,8 +507,7 @@ int mlx5_ib_gsi_post_send(struct ib_qp *qp, const struct ib_send_wr *wr,
+>  		ret = ib_post_send(tx_qp, &cur_wr.wr, bad_wr);
+>  		if (ret) {
+>  			/* Undo the effect of adding the outstanding wr */
+> -			gsi->outstanding_pi = (gsi->outstanding_pi - 1) %
+> -					      gsi->cap.max_send_wr;
+> +			gsi->outstanding_pi--;
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
- 1 file changed, 1 insertion(+)
+I'm a little bit confused, what is the difference before and after
+except dropping "gsi->cap.max_send_wr"?
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index b5eadee4a9a7..c44a30dbe43d 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -11,6 +11,7 @@ Required properties:
- 
-  - compatible: should contain one of the following:
-    * "brcm,bcm20702a1"
-+   * "brcm,bcm4329-bt"
-    * "brcm,bcm4330-bt"
-    * "brcm,bcm43438-bt"
-    * "brcm,bcm4345c5"
--- 
-2.24.0
+Thanks
 
+>  			goto err;
+>  		}
+>  		spin_unlock_irqrestore(&gsi->lock, flags);
+> --
+> 2.7.4
+>
