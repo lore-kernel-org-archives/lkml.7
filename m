@@ -2,123 +2,113 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3742C2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EBC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADD6206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8034920866
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="bae0QB32";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nOf164TK"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gFbnXdjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLOPWh (ORCPT
+        id S1726551AbfLOPYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:22:37 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38764 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbfLOPWh (ORCPT
+        Sun, 15 Dec 2019 10:24:03 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:54016 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfLOPYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:22:37 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id F2E238EE163;
-        Sun, 15 Dec 2019 07:22:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576423356;
-        bh=kvuqPPhoUhuej+greuJFdVimHdta1pVopykZYNvvk88=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bae0QB32kC9fsngp2gNoYx4TAeRJ5+X4z/u5ftK5bYoCuUCFyRnw6y0UNyNRFz7FC
-         AzrCZyFAyDeDtReiJs2xq9KyzSDpVDl+wSXrO0UTsBt7KLUlnorTM9CpKjTvL78OPN
-         gttRi3oYH6FjSB9Z+sBauGI+gJA07WwzoyTKx7a0=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id I8ldxVfxBjL5; Sun, 15 Dec 2019 07:22:35 -0800 (PST)
-Received: from jarvis.lan (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 15 Dec 2019 10:24:02 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bSqP2mydz9vZ5g
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 15:24:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id s7tMtDrrs8GL for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 09:24:01 -0600 (CST)
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B40BF8EE0E2;
-        Sun, 15 Dec 2019 07:22:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576423355;
-        bh=kvuqPPhoUhuej+greuJFdVimHdta1pVopykZYNvvk88=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nOf164TKANgBuxswIn2wJAvvRPXcx99Pf6Xel6lvyD9HDorh9ylJ4k9/rI0YCExFn
-         tT786CGvGB6FaQMaLA6Oex2jUa8EBWg0xi8u+kyLZ7sYYg5L43QMTzVmNbdrRIoYIA
-         aFt5quqpd0NJsgQ69gRmzzHcXly5AWR9TKksw3EQ=
-Message-ID: <1576423353.3343.3.camel@HansenPartnership.com>
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Sun, 15 Dec 2019 07:22:33 -0800
-In-Reply-To: <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
-         <20191213171827.28657-3-nramas@linux.microsoft.com>
-         <1576257955.8504.20.camel@HansenPartnership.com>
-         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bSqP1jM0z9vZ5x
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:24:01 -0600 (CST)
+Received: by mail-yw1-f69.google.com with SMTP id j9so3764634ywg.14
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 07:24:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LXeOuc0B3gYX32LabDU9f+RSGbyw1wcQBHVeANF/Ibg=;
+        b=gFbnXdjz2JyDs4kf8BW4QAMQEHuYlzIExGtIGz08EPf7yeUz69r2qyT9KH+d6UHKYD
+         +8Y68qzOIDZjoC/J/jbi/P+wfQs+Ts54xVgQNcRO570Hu0dMRXd2kpxg4sVOQFF7rltE
+         5hqGsoOLgKmq0/4sEYqHVWCiFKXmHBgYJdsG2+YCSeKjNTJW3EGZtWqAy3/lrDv5wm6y
+         QU2i0RKp0HvZuZF4i3elIn/MjXO7LBHPV/lWHDNK8k3C33mOoZq9EV1HlAqMac7v+YMH
+         x90F2rZA0JpnodY+TigIVIH/qhsKVxsws4grBrtIq1w8VRJIqe/5lAYf+2f4ihzU79Z+
+         WMHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LXeOuc0B3gYX32LabDU9f+RSGbyw1wcQBHVeANF/Ibg=;
+        b=fqJjph2nHQIWdqAM6CtB9EnoawqN0YmUXHJadS6aKHdQXi4zmuZuEYIwRKJssv3HXA
+         ARlIQGlC+5+aSRKFu3fEFEDwale/Et5KyiH17c/wo60WEhEseb9XqNP356O67r94uhUJ
+         t9GlOM6NHsaX0CEcaE5Az8zNK9+COP6wlbgj/J96V6zfkZE4sj/aoz/H6W+3RNa49wXD
+         MTNArxL/E/xV88fTuYEtxTXoFFExsm9ifXG6tqyxKY4hwamfNvwWBUiKCIDkNTSEnc/e
+         IttCAa/HnsCrDkEOpq4CC7Np/eTAYj4cgsSv67Sbk+nkhILSwd0D99vx2IUKqyL7WEP7
+         G6MA==
+X-Gm-Message-State: APjAAAWDWt5Lo0M4m6nTXT9L2Rn7e/N7fNrKzyTGXHm4izf+60+i5KxW
+        hiklMZGTobYsYjiv6QMnldoxF8anlv3f5B/owavgrZ3jejkhAdhdQf0QLj4BpSNxqsnQ10Hvb8n
+        rnAXw9gx0cHimuGQdHKW3ap0NaBG4
+X-Received: by 2002:a25:7cc1:: with SMTP id x184mr12866651ybc.69.1576423440623;
+        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzmH7sFfvfBy1cep+91o5KmIInPx1Yz9wIMEp9QMF/hlEh4qqQVE73XWTB1gu0XWKPd9zKF2g==
+X-Received: by 2002:a25:7cc1:: with SMTP id x184mr12866635ybc.69.1576423440363;
+        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id b192sm3235899ywe.2.2019.12.15.07.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mac80211: Remove redundant assertion
+Date:   Sun, 15 Dec 2019 09:23:48 -0600
+Message-Id: <20191215152348.20912-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-13 at 09:31 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/13/19 9:25 AM, James Bottomley wrote:
-> 
-> Hi James,
-> 
-> > 
-> > There's no locking around the ima_process_keys flag.  If you get
-> > two policy updates in quick succession can't this flag change as
-> > you're processing the second update meaning you lose it because the
-> > flag was false when you decided to build it for the queue but
-> > becomes true before you check above whether you need to queue it?
-> > 
-> > Note you don't need locking to fix this, you just need to ensure
-> > that you use the same copy of the flag value for both tests.
-> > 
-> > James
-> > 
-> 
-> Same flag (ima_process_keys) is used for making the queuing decision.
-> 
-> Taking a lock to access ima_process_keys is required only if the flag
-> is false. That is handled in ima_queue_key() and
-> ima_process_queued_keys() functions.
-> 
-> Queued keys are processed when the first policy update occurs. 
-> Subsequently, the keys are processed immediately (not queued).
-> 
-> Could you please review those functions in this patch and let me know
-> if you see a problem?
+In wiphy_to_ieee80211_hw, the assertion to check if wiphy is NULL is
+repeated in wiphy_priv. The patch removes the duplicated BUG_ON check.
 
-This is the problem:
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ net/mac80211/util.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-if (!flag)
-    pre()
-.
-.
-.
-if (!flag)
-    post()
-
-And your pre and post function either have to both run or neither must.
- However, the flag is set asynchronously, so if it gets set while
-another thread is running through the above code, it can change after
-pre is run but before post is.
-
-James
-
-
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 32a7a53833c0..780df3e9092e 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -39,7 +39,6 @@ const void *const mac80211_wiphy_privid = &mac80211_wiphy_privid;
+ struct ieee80211_hw *wiphy_to_ieee80211_hw(struct wiphy *wiphy)
+ {
+ 	struct ieee80211_local *local;
+-	BUG_ON(!wiphy);
+ 
+ 	local = wiphy_priv(wiphy);
+ 	return &local->hw;
+-- 
+2.20.1
 
