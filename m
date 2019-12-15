@@ -2,116 +2,118 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1E7C2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5C8C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74232467A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C0224679
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbR7pVsV"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="K/4WYQMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfLORwS (ORCPT
+        id S1726536AbfLOR6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:52:18 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37655 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfLORvj (ORCPT
+        Sun, 15 Dec 2019 12:58:49 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:43292 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbfLOR6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:51:39 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ep17so1966596pjb.4;
-        Sun, 15 Dec 2019 09:51:39 -0800 (PST)
+        Sun, 15 Dec 2019 12:58:48 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bXFz6bn1z9vKdx
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 17:58:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yFnDaOMB1Qa7 for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 11:58:47 -0600 (CST)
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com [209.85.219.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bXFz5QBWz9vKdq
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:58:47 -0600 (CST)
+Received: by mail-yb1-f200.google.com with SMTP id y127so4709429yba.19
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:58:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TZ1xS5qPhU2IhwfRNSwTRqhYIldYr8v5xb3e3qhR6PU=;
-        b=pbR7pVsVjeHw0gd67xvoEtScCkAwIdUeTHkozhA37RkgiSyp8YcSx9ERtIfAY+IuDw
-         hrCtp5fcXF0DIRbJ9NfadYRWzR7Y1o2M4UDFlv40n+lZbg23Tni/uvFNaakQLuZvz2Bq
-         bFwDHfxbqE2SpINHP8LFYxmZWELq6LEjJ3AxV3llH7olhcxa+IBpYaaHVWdsQ4dapcFM
-         EOH9KUPmlJpXEPcIKhCwJUnMEMXiTNTg5kJ+Q7IKAKs4CzrlLmCHMy2REvs+RoZazFVg
-         ivCZcwp2kgFJP1mYiaGKP/MTCbZNJFOkBX3D7yyGnRrSbgXS12ywC4c8SNGQRXMkKw3u
-         nvwA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jU+IZfsrbWu2RYKQORP75VmblWiOY4wZRLGbP+XVlQc=;
+        b=K/4WYQMbmQ1wpcHdnuZeoJwrgi1TuSRJxWawgTjssgCRnX8GiJ6iRyBlTqADg15eX0
+         48CwOuD9aEvwjfg8cpARkHqUADVenh2nclXVmA42nA7VHZzjtIYXgH9HSmT/K6mwQ5yQ
+         Wr0g2dZd6zj3FKFJbhcx+2DdrGBIXJX/+dXGuQeJRI4LOMPFLg28QeYB3tWJQ3jOybg1
+         bflpmQLNnlFFZ28wh0+p8QKU7/9g/9yfFDVabGzh3EU8hXJf0FE4RA8kCoIzSbJqvpET
+         vm5r2Xq/Uy50ZVhZ5Q3JTiCITOQZlM33gZGhu0U20c0lz6QudM6oqhn52R2C/x6hppJu
+         YsKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TZ1xS5qPhU2IhwfRNSwTRqhYIldYr8v5xb3e3qhR6PU=;
-        b=poAPCk2D14lUS7b7aNr0tiNoclMrSXCj1sDyV0zLSfoXDugQFErNyFOJhozoXI7UTA
-         jiGyu/KtqvLJ+mp7kYnfLbjrJyJ4QWhsoQqa6ALsPmIKA1nTI9L1g2BmJyIYg1T4yJUr
-         Miu9JGzU/3BnXszqEwsuXPvzy6EwqfVVDiuH5HVr91lUGNNFt0u5oZ9NLlA96qxCAj9h
-         OdlZyYGd76wRWzNlpzb1Y/F7wES3Y6m+cvcZ7oX2z14spNbE9HP9xa6fydc5ftnuaIYE
-         y/ylKqstIu1xGXypzsrRotd/v9ia0yhqw+wb+5F9pxy78XoDqiri6nvKY/0eMlnST88m
-         micQ==
-X-Gm-Message-State: APjAAAUDkPLLJ1IuBAcEIGHrea4m34TJ0mOZDsotnfpCr/L1M69S5DcL
-        ++MnDBKhKnB5v46PJwJfsfY=
-X-Google-Smtp-Source: APXvYqy/1P3upyMouvKmiwh3Vz1uiBI+Jt3S3WCz0rzjwcujE1WXEXrqRVWI2k1ffFwimt3XZuCt8g==
-X-Received: by 2002:a17:90a:a44:: with SMTP id o62mr13115954pjo.80.1576432298835;
-        Sun, 15 Dec 2019 09:51:38 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id s18sm18243050pfh.47.2019.12.15.09.51.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 09:51:38 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     manuel.lauss@gmail.com, ulf.hansson@linaro.org,
-        khilman@baylibre.com, chaotian.jing@mediatek.com,
-        matthias.bgg@gmail.com, nico@fluxnic.net, adrian.hunter@intel.com,
-        agross@kernel.org, bjorn.andersson@linaro.org, ben-linux@fluff.org,
-        jh80.chung@samsung.com, vireshk@kernel.org, mripard@kernel.org,
-        wens@csie.org, wsa+renesas@sang-engineering.com,
-        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
-        yamada.masahiro@socionext.com, tglx@linutronix.de,
-        allison@lohutok.net, yoshihiro.shimoda.uh@renesas.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 06/13] mmc: sh_mmcif: convert to devm_platform_ioremap_resource
-Date:   Sun, 15 Dec 2019 17:51:13 +0000
-Message-Id: <20191215175120.3290-6-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191215175120.3290-1-tiny.windzz@gmail.com>
-References: <20191215175120.3290-1-tiny.windzz@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jU+IZfsrbWu2RYKQORP75VmblWiOY4wZRLGbP+XVlQc=;
+        b=GiEAFIFgukbSh9BE1sHjTKwVhD9zo8Bs/8bFNlULbtFnDgMsczeEgjnQSzsjNVSQ0Q
+         HOMLWIOblUqIiFQwYiPJE3F2qUQseF9vcl9ctv6M8OJUMPF5AE0rFButgE635TKwTheu
+         gOGIihS6WBLxn6KhmAROF8K+anQ5DXshyklG1gWWAp8AGeVQCD3mwrfORCJocq/F6j+p
+         9XIytamABK23OnCBjac51//FIB/NS8vQgYkFE4qknlefwVvKVtcXB65X2B96qev33J06
+         Pt96LPD2lXpab9/hxD2SJZl7Rl3SDf5q+d1DSqpp8ltYRpDJ6yQYbH8NenwfhwgmMBsP
+         tE8g==
+X-Gm-Message-State: APjAAAVY3uIIhqc/BlH96e4cAbz12fChH0MlrPxA4Lp0Rq2OaTi1eu8m
+        1DAzQVceShOVelBbvvlLrv1YFCAdq8KVV+LBG+Yay1A3504NyOel9CjzTmRnBYrdyt/bsf/0Uw2
+        JwmRNd77mGag0qkJGvOIv8q6KGpfr
+X-Received: by 2002:a25:c884:: with SMTP id y126mr18656399ybf.406.1576432727234;
+        Sun, 15 Dec 2019 09:58:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxLm13Xu0mUMgPfV76cA+1JEcVfLMMY9sBlXwtZ/dJhI+on6PQRm9vQAfnecJEurrKb9n20AQ==
+X-Received: by 2002:a25:c884:: with SMTP id y126mr18656390ybf.406.1576432727025;
+        Sun, 15 Dec 2019 09:58:47 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id l39sm7400528ywk.36.2019.12.15.09.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 09:58:46 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] hdlcdrv: replace assertion with recovery code
+Date:   Sun, 15 Dec 2019 11:58:41 -0600
+Message-Id: <20191215175842.30767-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify code.
+In hdlcdrv_register, failure to register the driver causes a crash.
+However, by returning the error to the caller in case ops is NULL
+can avoid the crash. The patch fixes this issue.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/mmc/host/sh_mmcif.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/hamradio/hdlcdrv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-index 98c575de43c7..5069f1cbcef8 100644
---- a/drivers/mmc/host/sh_mmcif.c
-+++ b/drivers/mmc/host/sh_mmcif.c
-@@ -1388,7 +1388,6 @@ static int sh_mmcif_probe(struct platform_device *pdev)
- 	struct sh_mmcif_host *host;
- 	struct device *dev = &pdev->dev;
- 	struct sh_mmcif_plat_data *pd = dev->platform_data;
--	struct resource *res;
- 	void __iomem *reg;
- 	const char *name;
+diff --git a/drivers/net/hamradio/hdlcdrv.c b/drivers/net/hamradio/hdlcdrv.c
+index df495b5595f5..38e5d1e54800 100644
+--- a/drivers/net/hamradio/hdlcdrv.c
++++ b/drivers/net/hamradio/hdlcdrv.c
+@@ -687,7 +687,8 @@ struct net_device *hdlcdrv_register(const struct hdlcdrv_ops *ops,
+ 	struct hdlcdrv_state *s;
+ 	int err;
  
-@@ -1397,8 +1396,7 @@ static int sh_mmcif_probe(struct platform_device *pdev)
- 	if (irq[0] < 0)
- 		return -ENXIO;
+-	BUG_ON(ops == NULL);
++	if (!ops)
++		return ERR_PTR(-EINVAL);
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	reg = devm_ioremap_resource(dev, res);
-+	reg = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(reg))
- 		return PTR_ERR(reg);
- 
+ 	if (privsize < sizeof(struct hdlcdrv_state))
+ 		privsize = sizeof(struct hdlcdrv_state);
 -- 
-2.17.1
+2.20.1
 
