@@ -2,273 +2,84 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D80C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 06:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF7AC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 06:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5347206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 06:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3F4206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 06:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfLOGaw (ORCPT
+        id S1726192AbfLOGbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 01:30:52 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47302 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbfLOGaw (ORCPT
+        Sun, 15 Dec 2019 01:31:02 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:46237 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfLOGbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 01:30:52 -0500
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBF6UL5E023086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Dec 2019 01:30:21 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EA22C4207DF; Sun, 15 Dec 2019 01:30:20 -0500 (EST)
-Date:   Sun, 15 Dec 2019 01:30:20 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     syzbot <syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com>
-Cc:     a@unstable.cc, adilger.kernel@dilger.ca, afd@ti.com,
-        b.a.t.m.a.n@lists.open-mesh.org, chris@lapa.com.au,
-        davem@davemloft.net, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in ext4_xattr_set_entry (2)
-Message-ID: <20191215063020.GA11512@mit.edu>
-References: <000000000000c71dcf0579b0553f@google.com>
- <000000000000dcc9b10599b3fd5e@google.com>
+        Sun, 15 Dec 2019 01:31:01 -0500
+Received: by mail-il1-f198.google.com with SMTP id s85so3574818ild.13
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 22:31:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=uPjooTBgtNtcDU16+HUh9j8DUTREFvIUsjeh8i5zb8c=;
+        b=YJJ5ByfVGSIouiWGJyDgW3MEnx3Fk9M+UrEoFjYJXVtdQnNV2WbF4vnhWvYR0gVR7A
+         x1TrRmGP2Sf3QNvUtm81bGnMUAOUWJxfJyGAaNxEcX4rj39nCie97LbvDDHDpigYDr3O
+         OCRHb4iUWSE5v51mozuY5XbSFuRFEnoiw8nTB4GxwLupKndiSMFsJVN01BfHe2jJ98O8
+         9iDLgdgVSflAQG9ki4tIQtO8+2on+PSyi4OMomljut6jQ9iKWMTS3kkjh9isbKfhVjKO
+         t0/Q1Xpt2OJH05so8CzP1IlyXfM+i3g5MIBYBi/zDzub0QybfwmDSytJBHG+JpmjJoVS
+         BtJQ==
+X-Gm-Message-State: APjAAAXJ0Aq9aO+K4QRKsx0kAqPBQhGhSdkjz26lYeVMHdrvZK9cdaAw
+        rA6Wc8tyQXpHvlhD3+NuTfsIbqoqPih0mgt8aJ+YLNpKpwW/
+X-Google-Smtp-Source: APXvYqww0KZklP/HZPASxOh1ECBAek11I/mQkvDmtxWf0F+hizPdRYifxpJhSeQt7ZuoAXuoj1TH6U4YiqD2qQs428uaZ4+Q3wAV
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000dcc9b10599b3fd5e@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a6b:16c5:: with SMTP id 188mr13807757iow.195.1576391461017;
+ Sat, 14 Dec 2019 22:31:01 -0800 (PST)
+Date:   Sat, 14 Dec 2019 22:31:01 -0800
+In-Reply-To: <000000000000cd9e600599b051e5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000f9d220599b83d18@google.com>
+Subject: Re: KASAN: vmalloc-out-of-bounds Read in compat_copy_entries
+From:   syzbot <syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, aryabinin@virtuozzo.com,
+        bridge@lists.linux-foundation.org, coreteam@netfilter.org,
+        davem@davemloft.net, dja@axtens.net, dvyukov@google.com,
+        fw@strlen.de, kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        nikolay@cumulusnetworks.com, pablo@netfilter.org,
+        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 05:27:00PM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 8835cae5f2abd7f7a3143afe357f416aff5517a4
-> Author: Chris Lapa <chris@lapa.com.au>
-> Date:   Wed Jan 11 01:44:47 2017 +0000
-> 
->     power: supply: bq27xxx: adds specific support for bq27520-g4 revision.
+syzbot has bisected this bug to:
 
-This is pretty clearly nonsense.  However let's try this fix:
+commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
+Author: Daniel Axtens <dja@axtens.net>
+Date:   Sun Dec 1 01:55:00 2019 +0000
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git master
+     x86/kasan: support KASAN_VMALLOC
 
-From 9c962de70a52e0b24fba00ee7b8707964d3d1e37 Mon Sep 17 00:00:00 2001
-From: Theodore Ts'o <tytso@mit.edu>
-Date: Sun, 15 Dec 2019 01:09:03 -0500
-Subject: [PATCH] ext4: validate the debug_want_extra_isize mount option at parse time
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166d43dee00000
+start commit:   e31736d9 Merge tag 'nios2-v5.5-rc2' of git://git.kernel.or..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=156d43dee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116d43dee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=f68108fed972453a0ad4
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bc5946e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17302361e00000
 
-Instead of setting s_want_extra_size and then making sure that it is a
-valid value afterwards, validate the field before we set it.  This
-avoids races and other problems when remounting the file system.
+Reported-by: syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com
+Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
 
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reported-by: syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
----
- fs/ext4/super.c | 143 +++++++++++++++++++++++-------------------------
- 1 file changed, 69 insertions(+), 74 deletions(-)
-
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index b205112ca051..46b6d5b150ac 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1886,6 +1886,13 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
- 		}
- 		sbi->s_commit_interval = HZ * arg;
- 	} else if (token == Opt_debug_want_extra_isize) {
-+		if ((arg & 1) ||
-+		    (arg < 4) ||
-+		    (arg > (sbi->s_inode_size - EXT4_GOOD_OLD_INODE_SIZE))) {
-+			ext4_msg(sb, KERN_ERR,
-+				 "Invalid want_extra_isize %d", arg);
-+			return -1;
-+		}
- 		sbi->s_want_extra_isize = arg;
- 	} else if (token == Opt_max_batch_time) {
- 		sbi->s_max_batch_time = arg;
-@@ -3540,40 +3547,6 @@ int ext4_calculate_overhead(struct super_block *sb)
- 	return 0;
- }
- 
--static void ext4_clamp_want_extra_isize(struct super_block *sb)
--{
--	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	struct ext4_super_block *es = sbi->s_es;
--	unsigned def_extra_isize = sizeof(struct ext4_inode) -
--						EXT4_GOOD_OLD_INODE_SIZE;
--
--	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
--		sbi->s_want_extra_isize = 0;
--		return;
--	}
--	if (sbi->s_want_extra_isize < 4) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		if (ext4_has_feature_extra_isize(sb)) {
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_want_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_want_extra_isize);
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_min_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_min_extra_isize);
--		}
--	}
--	/* Check if enough inode space is available */
--	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
--	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size)) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		ext4_msg(sb, KERN_INFO,
--			 "required extra inode space not available");
--	}
--}
--
- static void ext4_set_resv_clusters(struct super_block *sb)
- {
- 	ext4_fsblk_t resv_clusters;
-@@ -3781,6 +3754,68 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	 */
- 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
- 
-+	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
-+		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
-+		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
-+	} else {
-+		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
-+		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
-+		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
-+			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
-+				 sbi->s_first_ino);
-+			goto failed_mount;
-+		}
-+		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
-+		    (!is_power_of_2(sbi->s_inode_size)) ||
-+		    (sbi->s_inode_size > blocksize)) {
-+			ext4_msg(sb, KERN_ERR,
-+			       "unsupported inode size: %d",
-+			       sbi->s_inode_size);
-+			goto failed_mount;
-+		}
-+		/*
-+		 * i_atime_extra is the last extra field available for
-+		 * [acm]times in struct ext4_inode. Checking for that
-+		 * field should suffice to ensure we have extra space
-+		 * for all three.
-+		 */
-+		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-+			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-+			sb->s_time_gran = 1;
-+			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
-+		} else {
-+			sb->s_time_gran = NSEC_PER_SEC;
-+			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
-+		}
-+		sb->s_time_min = EXT4_TIMESTAMP_MIN;
-+	}
-+	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+			EXT4_GOOD_OLD_INODE_SIZE;
-+		if (ext4_has_feature_extra_isize(sb)) {
-+			unsigned v, max = (sbi->s_inode_size -
-+					   EXT4_GOOD_OLD_INODE_SIZE);
-+
-+			v = le16_to_cpu(es->s_want_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_want_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+
-+			v = le16_to_cpu(es->s_min_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_min_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+		}
-+	}
-+
- 	if (sbi->s_es->s_mount_opts[0]) {
- 		char *s_mount_opts = kstrndup(sbi->s_es->s_mount_opts,
- 					      sizeof(sbi->s_es->s_mount_opts),
-@@ -4019,42 +4054,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 						      has_huge_files);
- 	sb->s_maxbytes = ext4_max_size(sb->s_blocksize_bits, has_huge_files);
- 
--	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
--		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
--		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
--	} else {
--		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
--		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
--		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
--			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
--				 sbi->s_first_ino);
--			goto failed_mount;
--		}
--		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
--		    (!is_power_of_2(sbi->s_inode_size)) ||
--		    (sbi->s_inode_size > blocksize)) {
--			ext4_msg(sb, KERN_ERR,
--			       "unsupported inode size: %d",
--			       sbi->s_inode_size);
--			goto failed_mount;
--		}
--		/*
--		 * i_atime_extra is the last extra field available for [acm]times in
--		 * struct ext4_inode. Checking for that field should suffice to ensure
--		 * we have extra space for all three.
--		 */
--		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
--			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
--			sb->s_time_gran = 1;
--			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
--		} else {
--			sb->s_time_gran = NSEC_PER_SEC;
--			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
--		}
--
--		sb->s_time_min = EXT4_TIMESTAMP_MIN;
--	}
--
- 	sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
- 	if (ext4_has_feature_64bit(sb)) {
- 		if (sbi->s_desc_size < EXT4_MIN_DESC_SIZE_64BIT ||
-@@ -4503,8 +4502,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	} else if (ret)
- 		goto failed_mount4a;
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	ext4_set_resv_clusters(sb);
- 
- 	err = ext4_setup_system_zone(sb);
-@@ -5292,8 +5289,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		goto restore_opts;
- 	}
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
- 	    test_opt(sb, JOURNAL_CHECKSUM)) {
- 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
--- 
-2.24.1
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
