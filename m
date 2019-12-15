@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE887C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2238EC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D0A2465E
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA332465E
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUB0KVQA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkW7kWPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfLORv7 (ORCPT
+        id S1727046AbfLORwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:51:59 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43143 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbfLORvw (ORCPT
+        Sun, 15 Dec 2019 12:52:04 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39229 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfLORvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:51:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p27so3446975pli.10;
-        Sun, 15 Dec 2019 09:51:52 -0800 (PST)
+        Sun, 15 Dec 2019 12:51:47 -0500
+Received: by mail-pj1-f67.google.com with SMTP id v93so1961039pjb.6;
+        Sun, 15 Dec 2019 09:51:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/cz4vRUnbRV9SZ3G6wT7uGNBKfnOEqLWr9ZhQq3aPJY=;
-        b=VUB0KVQAHEHprXd8JPg/0jED90d4vxehQR5oM13rBTaAw8YxpSr2SHoeE4jGTI7E22
-         9CU2zoUYjBTnG3V+h4FvWpk0N4jlhpjp3RLjpQqDiDyO3pz0inFoNokv0y6Fsu0Awb+b
-         M7s6Pjtbd8WVa7wOSJJuhjTi8zjBu2AzhoYEhH4fmQZO8q7pTFpxAYhgqOwQ4eb0W5aG
-         zmAXTggqqLYOk2JsO0UFqjCtuNRE80TkubJxiCWtarkBSzlpDy5d5eZOKISXqW7sd+ap
-         kPsjx2a3CPqG9IkXh3otL1pUVKFSZOoFGepy/lTbYnDJhLyZkz4V+bsRjFtnTv1ABJz3
-         6zqA==
+        bh=YhjgtX960UbsjbrvQDkjR25LC0Xp5UzP+rm2Z3AHVDQ=;
+        b=VkW7kWPXziC0PIAM0OaTLrvFFbF7v1ufFpviwDay49gsDMIcH+IRBccBJkurcCi4Vq
+         q5zOaB1wZls+sDA4pOti1NqA+zCz50hczkno5ZcBXkTH7MAUjtp+hxim8dDi0xM9zlBh
+         ORTfc7tfdwMyf44es4S115TlGJAo26zBaga4SP9Y2tm88AQJ8aj2m7/XSID274AaZLms
+         r7kAlePWaMqowpfXAbyBnPXOCr/YpBVHULS1GQ8tBd2FKQnh71FuVAqFXVNByMVol0gD
+         bv4nHt2lDPvuMrqo5uZe2xwrtq1AVl0Tr5mMHy7rSIm1CxFBmAOLQYeCQ17ker7YtIVV
+         /G1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/cz4vRUnbRV9SZ3G6wT7uGNBKfnOEqLWr9ZhQq3aPJY=;
-        b=gYAqU1QIk2o+Q/91eGqXvx0rB6tJjumCJlNBE4Xt3sC3pCqW/yTbnNWnVMTyuSlNLR
-         onnZYHiZVMY2VGRmAR/wkLm/M5OJ7hJNWn6/vt/qNUJcmO/1VLw7HgvfoUM8RjP6vo5d
-         sI+9xtctlV//ODo6lNoDaNA5g34w8l5o5dP1oSMqA4sN4uKQzl35cV1E21xp3lSlOE++
-         LCzGxuO4KPWNT7bX2i1CfdxodQ4xYaU3jTv80kggRQ3dt0c6/plq4Dk0zRWf2Y6Lcxpb
-         JwM+IVfn+C942r1xeqjetmYuEQDf5dlKxWKJKpkKLPGrAT3n7Hnce9mIKe+4Wx5Dda/e
-         SF5A==
-X-Gm-Message-State: APjAAAU91b3F1KDZBOrHM5qo8mHc13wc1nLRD5IQAq5tWXO2FkekTUZt
-        JToHnP6VzOPNXfS6Z9BwPT0=
-X-Google-Smtp-Source: APXvYqwynwF10fAEJxkpOjzXrYzf6q0kcA5H9tyhmFPNupU2grFmbw3V9ozwvElSbTNjK4798iHyCA==
-X-Received: by 2002:a17:902:d708:: with SMTP id w8mr11897094ply.280.1576432312130;
-        Sun, 15 Dec 2019 09:51:52 -0800 (PST)
+        bh=YhjgtX960UbsjbrvQDkjR25LC0Xp5UzP+rm2Z3AHVDQ=;
+        b=NgM7WJd1k+S5cn1R5Dv/7sSwbGTGPnQ00EYbOdcDurpKH4EzCzHqvxoXLsamxLhJk9
+         mTBTtcr+ACP/SvFjY10IftwDOGYruIh501yqHm0HykLpkxdIEjxL2c/wjToWX+nL9txN
+         7BV/WIUgGQmG2PKuRMqk4nSFnpzqhDI8hZ3PKCrNOnhT+ot1VE5xxv0A2V+NM5dJek7j
+         b57tMkLd8oSxy88V826hk2+wQ6JCpOaOlkSOmw9N06rHVhwm6EBLqf13opmldNk/kLN0
+         DLTLxu2iFmozXBFx/4b6Sa24PgNSr9rWHdaCYRTbkOb0eCx/5rgBNHB3spRk3wvvzOVt
+         s11g==
+X-Gm-Message-State: APjAAAXCJKRAFHQIfFL9mjfL1S+DPv6fdgRFjgj3F0xfK/CA/5XnP7yz
+        X8TePYtAqmo8PuDL8Z1M0XA=
+X-Google-Smtp-Source: APXvYqyFOVnVHQlrCHXl4b4SA8i+eeSI1R8YkDiMXk+XQeJjyOl6YSByuDfOki4oIhQ8Xaa4GARrSg==
+X-Received: by 2002:a17:90a:86c9:: with SMTP id y9mr13116519pjv.88.1576432306430;
+        Sun, 15 Dec 2019 09:51:46 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id h3sm19102447pfr.15.2019.12.15.09.51.51
+        by smtp.gmail.com with ESMTPSA id p28sm18232181pgb.93.2019.12.15.09.51.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 09:51:51 -0800 (PST)
+        Sun, 15 Dec 2019 09:51:46 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     manuel.lauss@gmail.com, ulf.hansson@linaro.org,
         khilman@baylibre.com, chaotian.jing@mediatek.com,
@@ -72,9 +72,9 @@ Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 13/13] mmc: au1xmmc: switch to platform_get_irq
-Date:   Sun, 15 Dec 2019 17:51:20 +0000
-Message-Id: <20191215175120.3290-13-tiny.windzz@gmail.com>
+Subject: [PATCH 10/13] mmc: sdhci-msm: convert to devm_platform_ioremap_resource
+Date:   Sun, 15 Dec 2019 17:51:17 +0000
+Message-Id: <20191215175120.3290-10-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191215175120.3290-1-tiny.windzz@gmail.com>
 References: <20191215175120.3290-1-tiny.windzz@gmail.com>
@@ -83,35 +83,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
-requesting IRQ's resources, as they can be not ready yet. Using
-platform_get_irq() instead is preferred for getting IRQ even if it
-was not retrieved earlier.
+Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/mmc/host/au1xmmc.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/mmc/host/sdhci-msm.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/mmc/host/au1xmmc.c b/drivers/mmc/host/au1xmmc.c
-index bc8aeb47a7b4..8823680ca42c 100644
---- a/drivers/mmc/host/au1xmmc.c
-+++ b/drivers/mmc/host/au1xmmc.c
-@@ -984,12 +984,9 @@ static int au1xmmc_probe(struct platform_device *pdev)
- 		goto out2;
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 3d0bb5e2e09b..6daacef4ceec 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1746,7 +1746,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 	struct sdhci_host *host;
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct sdhci_msm_host *msm_host;
+-	struct resource *core_memres;
+ 	struct clk *clk;
+ 	int ret;
+ 	u16 host_version, core_minor;
+@@ -1847,9 +1846,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
  	}
  
--	r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!r) {
--		dev_err(&pdev->dev, "no IRQ defined\n");
-+	host->irq = platform_get_irq(pdev, 0);
-+	if (host->irq < 0)
- 		goto out3;
--	}
--	host->irq = r->start;
+ 	if (!msm_host->mci_removed) {
+-		core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-		msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
+-				core_memres);
++		msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
  
- 	mmc->ops = &au1xmmc_ops;
- 
+ 		if (IS_ERR(msm_host->core_mem)) {
+ 			ret = PTR_ERR(msm_host->core_mem);
 -- 
 2.17.1
 
