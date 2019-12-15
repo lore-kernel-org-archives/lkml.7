@@ -2,148 +2,143 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2CEC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E188C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83D12467B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576441226;
-	bh=MdmJ64HRkk9tT9NmFhePTWKkIqcvoa642z83P8Vcuko=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0fuoXHkkjm7+CrCpllEV63h6g7NEYGWi3+rjjifeBL8xXiJ8vrIYs9GiF/o741oB5
-	 UKyGttwmGvLttz9KrP/qyj7OdF6epjiX6dx0CcEwhHmbj0gzTCnGNvWjRkpQgmGEzb
-	 WCZFazfYJh7Lz9C5ncqYRJ2XyEvBjjGvPzVWXY3g=
+	by mail.kernel.org (Postfix) with ESMTP id 2CD7824676
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfLOUUZ (ORCPT
+        id S1726437AbfLOU1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:20:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59058 "EHLO mail.kernel.org"
+        Sun, 15 Dec 2019 15:27:23 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:51232 "EHLO mail.bugwerft.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOUUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:20:25 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2955920700;
-        Sun, 15 Dec 2019 20:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576441224;
-        bh=MdmJ64HRkk9tT9NmFhePTWKkIqcvoa642z83P8Vcuko=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=d9cjONB1gZogQ7rCuOiMfiY9u6KF7ktCTrf++iYsV18pOmg27cV+2p5ZabjVKkonH
-         zx3/I0HS5WQD7bWJIsZQk7GK2vtjvilEhkenCNnMz7mvDj1QkdmDo+Tr5FIQsCzBLL
-         eTXdz4kywjvQv9XR5LsAJ2/1/pxmgtRyDj1nqAjA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 00690352274B; Sun, 15 Dec 2019 12:20:23 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:20:23 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dexuan-Linux Cui <dexuan.linux@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Tejun Heo <tj@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lili Deng <Lili.Deng@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Baihua Lu <Baihua.Lu@microsoft.com>
-Subject: Re: "rcu: React to callback overload by aggressively seeking
- quiescent states" hangs on boot
-Message-ID: <20191215202023.GM2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191213224646.GH2889@paulmck-ThinkPad-P72>
- <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
- <20191214064048.GI2889@paulmck-ThinkPad-P72>
- <CAA42JLbBFkpYHXRVvyveYO76DnbkE3gyRW-=qmBGZcJTAiB6Uw@mail.gmail.com>
+        id S1726146AbfLOU1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 15:27:23 -0500
+Received: from [192.168.178.200] (p57BC9BBE.dip0.t-ipconnect.de [87.188.155.190])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 0143A2E79BE;
+        Sun, 15 Dec 2019 20:20:57 +0000 (UTC)
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+ <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+ <20191212163315.GA3932@kunai>
+From:   Daniel Mack <daniel@zonque.org>
+Autocrypt: addr=daniel@zonque.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
+Date:   Sun, 15 Dec 2019 21:27:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20191212163315.GA3932@kunai>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA42JLbBFkpYHXRVvyveYO76DnbkE3gyRW-=qmBGZcJTAiB6Uw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 11:18:43AM -0800, Dexuan-Linux Cui wrote:
-> On Fri, Dec 13, 2019 at 10:41 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Fri, Dec 13, 2019 at 06:11:16PM -0500, Qian Cai wrote:
-> > >
-> > >
-> > > > On Dec 13, 2019, at 5:46 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > I am running this on a number of x86 systems, but will try it on a
-> > >
-> > > The config to reproduce includes several debugging options that might
-> > > required to recreate.
-> >
-> > If you run without those debugging options, do you still see the hangs?
-> > If not, please let me know which debugging are involved.
-> >
-> > > > wider variety.  If I cannot reproduce it, would you be willing to
-> > > > run diagnostics?
-> > >
-> > > Yes.
-> >
-> > Very good!  Let me see what I can put together.  (No luck reproducing
-> > at my end thus far.)
-> >
-> > > > Just to double-check...  Are you running rcutorture built into the kernel?
-> > > > (My guess is "no", but figured that I should ask.)
-> > >
-> > > No as you can see from the config I linked in the original email.
-> >
-> > Fair point, and please accept my apologies for the pointless question.
-> >
-> >                                                         Thanx, Paul
-> 
-> Hi,
-> We're seeing the same hang issue with a recent Linux next-20191213
-> kernel.  If we revert the same commit 82150cb53dcb ("rcu: React to
-> callback overload by aggressively seeking quiescent states”), the
-> issue will go away.
-> 
-> Note: we're running the x86-64 Linux VM Hyper-V, and the the torture
-> test is not used:
-> 
-> $ grep  -i torture  .config
-> CONFIG_LOCK_TORTURE_TEST=m
-> CONFIG_TORTURE_TEST=m
-> # CONFIG_RCU_TORTURE_TEST is not set
-> 
-> (FYI: the kernel config and the serial console log are attached).
-> 
-> When the issue happens, I force a kernel panic by NMI several times
-> and I can see the rcu_gp_kthread hangs at some places, but it looks
-> all the places are in the below loop:
-> 
-> (The first panic log is in the attachment)
-> (gdb) l *(rcu_gp_kthread+0x703)
-> 0xffffffff811128c3 is in rcu_gp_kthread (kernel/rcu/tree.c:1763).
-> 1758                    if (rnp == rdp->mynode)
-> 1759                            needgp = __note_gp_changes(rnp, rdp) || needgp;
-> 1760                    /* smp_mb() provided by prior unlock-lock pair. */
-> 1761                    needgp = rcu_future_gp_cleanup(rnp) || needgp;
-> 1762                    // Reset overload indication for CPUs no
-> longer overloaded
-> 1763                    for_each_leaf_node_cpu_mask(rnp, cpu, rnp->cbovldmask) {
-> 1764                            rdp = per_cpu_ptr(&rcu_data, cpu);
-> 1765                            check_cb_ovld_locked(rdp, rnp);
-> 1766                    }
-> 1767                    sq = rcu_nocb_gp_get(rnp);
+Hi,
 
-This is consistent with what I saw in Qian Cai's report, FYI.  So I
-am very interested in learning whether the first patch in my reply [1]
-helps you.
+Thanks for the review!
 
-							Thanx, Paul
+On 12/12/2019 5:33 pm, Wolfram Sang wrote:
+> Hi Luca,
+> 
+> thanks for the review!
+> 
+>> good, but I think there's a problem in this function. A "normal"
+>> master_xfer function issues a repeated start between one msg and the
+>> next one, at least in the typical case where all msgs have the same
+>> slave address. Your implementation breaks repeated start. At first sight
+>> we might need more complex code here to coalesce all consecutive msgs
+>> with the same address into a single i2c_transfer() call.
+> 
+> Note that it is by far the standard case that all messages in a transfer
+> have the same client address (99,999%?). But technically, this is not a
+> requirement and the repeated start on the bus is totally independent of
+> the addresses used. It is just a master wanting to send without being
+> interrupted by another master.
 
-[1]  https://lore.kernel.org/lkml/20191215201646.GK2889@paulmck-ThinkPad-P72/
+I'm not quite sure I understand.
+
+Let's assume the following setup. An i2c client (some driver code) is
+sending a list of messages to the a2b xfer function, which in turn is
+logically connected to a 'real' i2c bus master that'll put the data on
+the wire.
+
+The a2b code has to tell the 'master node' the final destination of the
+payload by programming registers on its primary i2c address, and then
+forwards the messages to its secondary i2c address. The layout of the
+messages don't change, and neither do the flags; i2c messages are being
+sent as i2c messages, except their addresses are changed, a bit like NAT
+in networking. That procedure is described on page 3-4 of the TRM,
+"Remote Peripheral I2C Accesses".
+
+The 'real' i2c master that handles the hardware bus is responsible for
+adding start conditions, and as the messages as such are untouched, I
+believe it should do the right thing. The code in my xfer functions
+merely suppresses reprogramming remote addresses by remembering the last
+one that was used, but that is independent of the start conditions on
+the wire.
+
+Maybe I'm missing anything. Could you provide an example that explains
+in which case this approach would leads to issues?
+
+
+Thanks,
+Daniel
