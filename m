@@ -2,122 +2,94 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46BDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19116C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9727E2467F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43B32467A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576443419;
+	bh=P3lfOLQN58AvTesW0ND/Xvyc4RVCSmd/MxkVTZFTRZ4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=RnL2iIbPELYZlvVh+Zd6Uiw+aP4rcMmCzK9lT4FRwqAKRbDrjZVevqVQE+U+f4+l0
+	 bT7hpiiEmlHxXVJk84QXF4hktOQOJApGHI+ksYVLnRnHrNTw/r3U4YVWmVI6SSvS9o
+	 Ww1N5WhohfqAG6dCsrWkMkE+U+mAme7VruT23Yqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfLOUz5 (ORCPT
+        id S1726536AbfLOU46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:55:57 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:53040 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOUz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:55:57 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Sun, 15 Dec 2019 15:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbfLOU45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 15:56:57 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47bcBM0DybzQlB1;
-        Sun, 15 Dec 2019 21:55:55 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id 4aLf2vSWysit; Sun, 15 Dec 2019 21:55:50 +0100 (CET)
-Date:   Mon, 16 Dec 2019 07:55:39 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] openat2: switch to __attribute__((packed)) for open_how
-Message-ID: <20191215205539.ly2ns5wglautu47u@yavin.dot.cyphar.com>
-References: <20191213222351.14071-1-cyphar@cyphar.com>
- <87o8w9bcaf.fsf@mid.deneb.enyo.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD1824673;
+        Sun, 15 Dec 2019 20:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576443416;
+        bh=P3lfOLQN58AvTesW0ND/Xvyc4RVCSmd/MxkVTZFTRZ4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=u8sU9E7JVDTFYAsBlwTHyn+MZ7IXDLFjixO5cwVR7Nlp3S6inP+ENIQOVhY4+iRcl
+         ZASKiPQMYKiOOY+Je5PZsc/imCUlMmT0OB2Sa1JKngqNkeu1obkDohVsENz66fSlHg
+         pfvIioaWESCu83R5Dy3b1wZ8+BBe7dR6eaFgWtWM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B2168352274B; Sun, 15 Dec 2019 12:56:56 -0800 (PST)
+Date:   Sun, 15 Dec 2019 12:56:56 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Tejun Heo <tj@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lili Deng <Lili.Deng@microsoft.com>,
+        Baihua Lu <Baihua.Lu@microsoft.com>
+Subject: Re: "rcu: React to callback overload by aggressively seeking
+ quiescent states" hangs on boot
+Message-ID: <20191215205656.GO2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191213224646.GH2889@paulmck-ThinkPad-P72>
+ <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
+ <20191214064048.GI2889@paulmck-ThinkPad-P72>
+ <CAA42JLbBFkpYHXRVvyveYO76DnbkE3gyRW-=qmBGZcJTAiB6Uw@mail.gmail.com>
+ <20191215202023.GM2889@paulmck-ThinkPad-P72>
+ <HK0P153MB01485AF4FC857C8D26F4F471BF560@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lhbbxkijknkbhl5m"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o8w9bcaf.fsf@mid.deneb.enyo.de>
+In-Reply-To: <HK0P153MB01485AF4FC857C8D26F4F471BF560@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Dec 15, 2019 at 08:40:40PM +0000, Dexuan Cui wrote:
+> > From: Paul E. McKenney <paulmck@kernel.org>
+> > Sent: Sunday, December 15, 2019 12:20 PM
+> > 
+> > This is consistent with what I saw in Qian Cai's report, FYI.  So I
+> > am very interested in learning whether the first patch in my reply [1]
+> > helps you.
+> > 							Thanx, Paul
+> 
+> Hi Paul, yes, your first patch (the below) can fix the hang issue:
+> 
+> commit e8d6182b015bdd8221164477f4ab1c307bd2fbe9
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Sun Dec 15 10:59:06 2019 -0800
+> 
+>     squash! rcu: React to callback overload by aggressively seeking quiescent states
 
---lhbbxkijknkbhl5m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you!  May I add your Tested-by?
 
-On 2019-12-15, Florian Weimer <fw@deneb.enyo.de> wrote:
-> * Aleksa Sarai:
->=20
-> > diff --git a/tools/testing/selftests/openat2/helpers.h b/tools/testing/=
-selftests/openat2/helpers.h
-> > index 43ca5ceab6e3..eb1535c8fa2e 100644
-> > --- a/tools/testing/selftests/openat2/helpers.h
-> > +++ b/tools/testing/selftests/openat2/helpers.h
-> > @@ -32,17 +32,16 @@
-> >   * O_TMPFILE} are set.
-> >   *
-> >   * @flags: O_* flags.
-> > - * @mode: O_CREAT/O_TMPFILE file mode.
-> >   * @resolve: RESOLVE_* flags.
-> > + * @mode: O_CREAT/O_TMPFILE file mode.
-> >   */
-> >  struct open_how {
-> > -	__aligned_u64 flags;
-> > +	__u64 flags;
-> > +	__u64 resolve;
-> >  	__u16 mode;
-> > -	__u16 __padding[3]; /* must be zeroed */
-> > -	__aligned_u64 resolve;
-> > -};
-> > +} __attribute__((packed));
-> > =20
-> > -#define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-> > +#define OPEN_HOW_SIZE_VER0	18 /* sizeof first published struct */
-> >  #define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
->=20
-> A userspace ABI that depends on GCC extensions probably isn't a good
-> idea.  Even with GCC, it will not work well with some future
-> extensions because it pretty much rules out having arrays or other
-> members that are access through pointers.  Current GCC does not carry
-> over the packed-ness of the struct to addresses of its members.
-
-Right, those are also good points.
-
-Okay, I'm going to send a separate patch which changes the return value
-for invalid __padding to -E2BIG, and moves the padding to the end of the
-struct (along with open_how.mode). That should fix all of the warts I
-raised, without running into the numerous problems with
-__attribute__((packed)) of which I am now aware.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---lhbbxkijknkbhl5m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfadxgAKCRCdlLljIbnQ
-EnZkAQDEI0SqPaVjZ0DfeCNK/Oej24PSHHnlQslkzD1ijil74QD/aTyeW+1lV5OQ
-nKYasufz04VrST6LL+l0ZOId14X/AAE=
-=y9fv
------END PGP SIGNATURE-----
-
---lhbbxkijknkbhl5m--
+							Thanx, Paul
