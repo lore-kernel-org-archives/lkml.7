@@ -2,135 +2,190 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1835C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 09:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7048C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 09:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AD0206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 09:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903A321D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 09:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbfLOJNg (ORCPT
+        id S1726136AbfLOJXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 04:13:36 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:46496 "EHLO gloria.sntech.de"
+        Sun, 15 Dec 2019 04:23:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:7574 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfLOJNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 04:13:35 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1igPxy-0001xP-1M; Sun, 15 Dec 2019 10:13:30 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     thierry.reding@gmail.com, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH 3/3] drm/panel: add panel driver for Xinpeng XPP055C272 panels
-Date:   Sun, 15 Dec 2019 10:13:29 +0100
-Message-ID: <1744285.zQlJhejOUX@phil>
-In-Reply-To: <20191215082916.GA25772@ravnborg.org>
-References: <20191209144208.4863-1-heiko@sntech.de> <2272108.TFxdGdtKl4@diego> <20191215082916.GA25772@ravnborg.org>
+        id S1726078AbfLOJXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 04:23:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 01:22:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,317,1571727600"; 
+   d="scan'208";a="217119280"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga003.jf.intel.com with ESMTP; 15 Dec 2019 01:22:58 -0800
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 15 Dec 2019 01:22:57 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.164]) with mapi id 14.03.0439.000;
+ Sun, 15 Dec 2019 17:22:55 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Topic: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Index: AQHVr8iiJX/bvAPmK0eIArQDcTD6yKe33K3QgACZjICAAndaMA==
+Date:   Sun, 15 Dec 2019 09:22:54 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A132C50@SHSMSX104.ccr.corp.intel.com>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-6-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
+ <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
+In-Reply-To: <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDU3MTUyN2EtZWEzNC00MWYxLThlNjEtYTdjZjkyZmI5YTkxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoib21rQVZoUEpRYTlNa0p4ZnNTdlAxVHFrTmQrSnhyeWsraFBVUHh2ZGNGZ2NFbjRcL2x1a1J0cjNFdEowUDNKNHIifQ==
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-Am Sonntag, 15. Dezember 2019, 09:29:16 CET schrieb Sam Ravnborg:
-> Hi Heiko.
-> 
-> > Am Samstag, 14. Dezember 2019, 09:17:30 CET schrieb Sam Ravnborg:
-> > > > +#define dsi_generic_write_seq(dsi, cmd, seq...) do {			\
-> > > > +		static const u8 d[] = { seq };				\
-> > > > +		int ret;						\
-> > > > +		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-> > > > +		if (ret < 0)						\
-> > > > +			return ret;					\
-> > > > +	} while (0)
-> > > This macro return an error code if a write fails.
-> > > 
-> > > > +
-> > > > +static int xpp055c272_init_sequence(struct xpp055c272 *ctx)
-> > > > +{
-> > > > +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-> > > > +	struct device *dev = ctx->dev;
-> > > > +	int ret;
-> > > > +
-> > > > +	/*
-> > > > +	 * Init sequence was supplied by the panel vendor without much
-> > > > +	 * documentation.
-> > > > +	 */
-> > > > +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEXTC, 0xf1, 0x12, 0x83);
-> > > But all uses of the macro here ignore the error.
-> > 
-> > hmm, am I way off track here?
-> > 
-> > 	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEXTC, 0xf1, 0x12, 0x83);
-> > 	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETMIPI,
-> > 			      0x33, 0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
-> > 			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
-> > 			      0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4f, 0x01,
-> > 			      0x00, 0x00, 0x37);
-> > 	...
-> > 
-> > should just expand to
-> > 
-> > do {
-> > 		static const u8 d[] = { 0xf1, 0x12, 0x83 };
-> > 		int ret;
-> > 		ret = mipi_dsi_dcs_write(dsi, XPP055C272_CMD_SETEXTC, d, ARRAY_SIZE(d));
-> > 		if (ret < 0)
-> > 			return ret;
-> > } while (0)
-> > do {
-> > 		static const u8 d[] = { 0x33, 0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
-> > 			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
-> > 			      0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4f, 0x01,
-> > 			      0x00, 0x00, 0x37 };
-> > 		int ret;
-> > 		ret = mipi_dsi_dcs_write(dsi, XPP055C272_CMD_SETMIPI, d, ARRAY_SIZE(d));
-> > 		if (ret < 0)
-> > 			return ret;
-> > } while (0)
-> > ...
-> > 
-> > so every write instance will actually return an error if it happens and not
-> > continue on with the next init item.
-> The idea was that if a write returned an error then do not even attempt
-> more writes. So if a write fails we do not loose the original error
-> code, assuming subsequent write would also fail.
-
-Shouldn't the code above do exactly that? ... Because it's like
-
-	ret = dcs_write(...)
-	if (ret <0)
-		return ret;
-
-So if any of the dcs_writes goes wrong it should just return the
-error code from that write from the function and not try any more
-writes. (or I'm blind and do not see something ;-) )
-
-
-Heiko
-
-> I have looked through all the panel drivers now, and the majority does
-> not check if the write goes wrong.
-> So following the pattern on the other panels you can also decide to just
-> ignore the return value of mipi_dsi_dcs_write() rahter than trying to
-> invent the check I tried to explain.
-> 
-> 	Sam
-> 
-
-
-
-
+SGkgQmFvbHUsDQoNClBsZWFzZSBjaGVjayByZXBsaWVzIGJlbG93Og0KDQo+IEZyb206IEx1IEJh
+b2x1IFttYWlsdG86YmFvbHUubHVAbGludXguaW50ZWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwg
+RGVjZW1iZXIgMTQsIDIwMTkgMTE6MjQgQU0NCj4gVG86IExpdSwgWWkgTCA8eWkubC5saXVAaW50
+ZWwuY29tPjsgSm9lcmcgUm9lZGVsIDxqb3JvQDhieXRlcy5vcmc+OyBEYXZpZA0KPiBXb29kaG91
+c2UgPGR3bXcyQGluZnJhZGVhZC5vcmc+OyBBbGV4IFdpbGxpYW1zb24NCj4gPGFsZXgud2lsbGlh
+bXNvbkByZWRoYXQuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDUvNl0gaW9tbXUvdnQt
+ZDogRmx1c2ggUEFTSUQtYmFzZWQgaW90bGIgZm9yIGlvdmEgb3ZlciBmaXJzdA0KPiBsZXZlbA0K
+PiANCj4gSGkgTGl1IFlpLA0KPiANCj4gT24gMTIvMTMvMTkgNzo0MiBQTSwgTGl1LCBZaSBMIHdy
+b3RlOg0KPiA+PiBGcm9tOiBrdm0tb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86a3ZtLW93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24NCj4gQmVoYWxmDQo+ID4+IE9mIEx1IEJhb2x1DQo+ID4+
+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMTEsIDIwMTkgMTA6MTIgQU0NCj4gPj4gVG86IEpv
+ZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPjsgRGF2aWQgV29vZGhvdXNlDQo+IDxkd213MkBp
+bmZyYWRlYWQub3JnPjsNCj4gPj4gU3ViamVjdDogW1BBVENIIHYzIDUvNl0gaW9tbXUvdnQtZDog
+Rmx1c2ggUEFTSUQtYmFzZWQgaW90bGIgZm9yIGlvdmEgb3ZlciBmaXJzdA0KPiBsZXZlbA0KPiA+
+Pg0KPiA+PiBXaGVuIHNvZnR3YXJlIGhhcyBjaGFuZ2VkIGZpcnN0LWxldmVsIHRhYmxlcywgaXQg
+c2hvdWxkIGludmFsaWRhdGUNCj4gPj4gdGhlIGFmZmVjdGVkIElPVExCIGFuZCB0aGUgcGFnaW5n
+LXN0cnVjdHVyZS1jYWNoZXMgdXNpbmcgdGhlIFBBU0lELQ0KPiA+PiBiYXNlZC1JT1RMQiBJbnZh
+bGlkYXRlIERlc2NyaXB0b3IgZGVmaW5lZCBpbiBzcGVjIDYuNS4yLjQuDQo+ID4+DQo+ID4+IFNp
+Z25lZC1vZmYtYnk6IEx1IEJhb2x1IDxiYW9sdS5sdUBsaW51eC5pbnRlbC5jb20+DQo+ID4+IC0t
+LQ0KPiA+PiAgIGRyaXZlcnMvaW9tbXUvZG1hci5jICAgICAgICB8IDQxICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysNCj4gPj4gICBkcml2ZXJzL2lvbW11L2ludGVsLWlvbW11LmMg
+fCA0NCArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tDQo+ID4+ICAgaW5jbHVk
+ZS9saW51eC9pbnRlbC1pb21tdS5oIHwgIDIgKysNCj4gPj4gICAzIGZpbGVzIGNoYW5nZWQsIDcy
+IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9pb21tdS9kbWFyLmMgYi9kcml2ZXJzL2lvbW11L2RtYXIuYw0KPiA+PiBpbmRleCAz
+YWNmYTZhMjVmYTIuLmZiMzBkNTA1MzY2NCAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9pb21t
+dS9kbWFyLmMNCj4gPj4gKysrIGIvZHJpdmVycy9pb21tdS9kbWFyLmMNCj4gPj4gQEAgLTEzNzEs
+NiArMTM3MSw0NyBAQCB2b2lkIHFpX2ZsdXNoX2Rldl9pb3RsYihzdHJ1Y3QgaW50ZWxfaW9tbXUg
+KmlvbW11LA0KPiB1MTYNCj4gPj4gc2lkLCB1MTYgcGZzaWQsDQo+ID4+ICAgCXFpX3N1Ym1pdF9z
+eW5jKCZkZXNjLCBpb21tdSk7DQo+ID4+ICAgfQ0KPiA+Pg0KPiA+PiArLyogUEFTSUQtYmFzZWQg
+SU9UTEIgaW52YWxpZGF0aW9uICovDQo+ID4+ICt2b2lkIHFpX2ZsdXNoX3Bpb3RsYihzdHJ1Y3Qg
+aW50ZWxfaW9tbXUgKmlvbW11LCB1MTYgZGlkLCB1MzIgcGFzaWQsIHU2NCBhZGRyLA0KPiA+PiAr
+CQkgICAgIHVuc2lnbmVkIGxvbmcgbnBhZ2VzLCBib29sIGloKQ0KPiA+PiArew0KPiA+PiArCXN0
+cnVjdCBxaV9kZXNjIGRlc2MgPSB7LnF3MiA9IDAsIC5xdzMgPSAwfTsNCj4gPj4gKw0KPiA+PiAr
+CS8qDQo+ID4+ICsJICogbnBhZ2VzID09IC0xIG1lYW5zIGEgUEFTSUQtc2VsZWN0aXZlIGludmFs
+aWRhdGlvbiwgb3RoZXJ3aXNlLA0KPiA+PiArCSAqIGEgcG9zaXRpdmUgdmFsdWUgZm9yIFBhZ2Ut
+c2VsZWN0aXZlLXdpdGhpbi1QQVNJRCBpbnZhbGlkYXRpb24uDQo+ID4+ICsJICogMCBpcyBub3Qg
+YSB2YWxpZCBpbnB1dC4NCj4gPj4gKwkgKi8NCj4gPj4gKwlpZiAoV0FSTl9PTighbnBhZ2VzKSkg
+ew0KPiA+PiArCQlwcl9lcnIoIkludmFsaWQgaW5wdXQgbnBhZ2VzID0gJWxkXG4iLCBucGFnZXMp
+Ow0KPiA+PiArCQlyZXR1cm47DQo+ID4+ICsJfQ0KPiA+PiArDQo+ID4+ICsJaWYgKG5wYWdlcyA9
+PSAtMSkgew0KPiA+PiArCQlkZXNjLnF3MCA9IFFJX0VJT1RMQl9QQVNJRChwYXNpZCkgfA0KPiA+
+PiArCQkJCVFJX0VJT1RMQl9ESUQoZGlkKSB8DQo+ID4+ICsJCQkJUUlfRUlPVExCX0dSQU4oUUlf
+R1JBTl9OT05HX1BBU0lEKSB8DQo+ID4+ICsJCQkJUUlfRUlPVExCX1RZUEU7DQo+ID4+ICsJCWRl
+c2MucXcxID0gMDsNCj4gPj4gKwl9IGVsc2Ugew0KPiA+PiArCQlpbnQgbWFzayA9IGlsb2cyKF9f
+cm91bmR1cF9wb3dfb2ZfdHdvKG5wYWdlcykpOw0KPiA+PiArCQl1bnNpZ25lZCBsb25nIGFsaWdu
+ID0gKDFVTEwgPDwgKFZURF9QQUdFX1NISUZUICsgbWFzaykpOw0KPiA+PiArDQo+ID4+ICsJCWlm
+IChXQVJOX09OX09OQ0UoIUFMSUdOKGFkZHIsIGFsaWduKSkpDQo+ID4+ICsJCQlhZGRyICY9IH4o
+YWxpZ24gLSAxKTsNCj4gPj4gKw0KPiA+PiArCQlkZXNjLnF3MCA9IFFJX0VJT1RMQl9QQVNJRChw
+YXNpZCkgfA0KPiA+PiArCQkJCVFJX0VJT1RMQl9ESUQoZGlkKSB8DQo+ID4+ICsJCQkJUUlfRUlP
+VExCX0dSQU4oUUlfR1JBTl9QU0lfUEFTSUQpIHwNCj4gPj4gKwkJCQlRSV9FSU9UTEJfVFlQRTsN
+Cj4gPj4gKwkJZGVzYy5xdzEgPSBRSV9FSU9UTEJfQUREUihhZGRyKSB8DQo+ID4+ICsJCQkJUUlf
+RUlPVExCX0lIKGloKSB8DQo+ID4+ICsJCQkJUUlfRUlPVExCX0FNKG1hc2spOw0KPiA+PiArCX0N
+Cj4gPj4gKw0KPiA+PiArCXFpX3N1Ym1pdF9zeW5jKCZkZXNjLCBpb21tdSk7DQo+ID4+ICt9DQo+
+ID4+ICsNCj4gPj4gICAvKg0KPiA+PiAgICAqIERpc2FibGUgUXVldWVkIEludmFsaWRhdGlvbiBp
+bnRlcmZhY2UuDQo+ID4+ICAgICovDQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lu
+dGVsLWlvbW11LmMgYi9kcml2ZXJzL2lvbW11L2ludGVsLWlvbW11LmMNCj4gPj4gaW5kZXggODNh
+N2FiZjBjNGYwLi5lNDdmNWZlMzdiNTkgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvaW9tbXUv
+aW50ZWwtaW9tbXUuYw0KPiA+PiArKysgYi9kcml2ZXJzL2lvbW11L2ludGVsLWlvbW11LmMNCj4g
+Pj4gQEAgLTE1MjAsMTggKzE1MjAsMjQgQEAgc3RhdGljIHZvaWQgaW9tbXVfZmx1c2hfaW90bGJf
+cHNpKHN0cnVjdA0KPiBpbnRlbF9pb21tdQ0KPiA+PiAqaW9tbXUsDQo+ID4+DQo+ID4+ICAgCWlm
+IChpaCkNCj4gPj4gICAJCWloID0gMSA8PCA2Ow0KPiA+PiAtCS8qDQo+ID4+IC0JICogRmFsbGJh
+Y2sgdG8gZG9tYWluIHNlbGVjdGl2ZSBmbHVzaCBpZiBubyBQU0kgc3VwcG9ydCBvciB0aGUgc2l6
+ZSBpcw0KPiA+PiAtCSAqIHRvbyBiaWcuDQo+ID4+IC0JICogUFNJIHJlcXVpcmVzIHBhZ2Ugc2l6
+ZSB0byBiZSAyIF4geCwgYW5kIHRoZSBiYXNlIGFkZHJlc3MgaXMgbmF0dXJhbGx5DQo+ID4+IC0J
+ICogYWxpZ25lZCB0byB0aGUgc2l6ZQ0KPiA+PiAtCSAqLw0KPiA+PiAtCWlmICghY2FwX3Bnc2Vs
+X2ludihpb21tdS0+Y2FwKSB8fCBtYXNrID4gY2FwX21heF9hbWFza192YWwoaW9tbXUtDQo+ID4+
+PiBjYXApKQ0KPiA+PiAtCQlpb21tdS0+Zmx1c2guZmx1c2hfaW90bGIoaW9tbXUsIGRpZCwgMCwg
+MCwNCj4gPj4gLQkJCQkJCURNQV9UTEJfRFNJX0ZMVVNIKTsNCj4gPj4gLQllbHNlDQo+ID4+IC0J
+CWlvbW11LT5mbHVzaC5mbHVzaF9pb3RsYihpb21tdSwgZGlkLCBhZGRyIHwgaWgsIG1hc2ssDQo+
+ID4+IC0JCQkJCQlETUFfVExCX1BTSV9GTFVTSCk7DQo+ID4+ICsNCj4gPj4gKwlpZiAoZG9tYWlu
+X3VzZV9maXJzdF9sZXZlbChkb21haW4pKSB7DQo+ID4+ICsJCXFpX2ZsdXNoX3Bpb3RsYihpb21t
+dSwgZGlkLCBkb21haW4tPmRlZmF1bHRfcGFzaWQsDQo+ID4+ICsJCQkJYWRkciwgcGFnZXMsIGlo
+KTsNCj4gPg0KPiA+IEknbSBub3Qgc3VyZSBpZiBteSB1bmRlcnN0YW5kaW5nIGlzIGNvcnJlY3Qu
+IEJ1dCBsZXQgbWUgdGVsbCBhIHN0b3J5Lg0KPiA+IEFzc3VtaW5nIHdlIGFzc2lnbiBhIG1kZXYg
+YW5kIGEgUEYvVkYgdG8gYSBzaW5nbGUgVk0sIHRoZW4gdGhlcmUNCj4gPiB3aWxsIGJlIHBfaW90
+bGIgdGFnZ2VkIHdpdGggUEFTSURfUklEMlBBU0lEIGFuZCBwX2lvdGxiIHRhZ2dlZCB3aXRoDQo+
+ID4gZGVmYXVsdF9wYXNpZC4gV2UgbWF5IHdhbnQgdG8gZmx1c2ggYm90aC4uLiBJZiB0aGlzIG9w
+ZXJhdGlvbiBpcw0KPiANCj4gSSBhc3N1bWUgdGhhdCBTUklPViBhbmQgU0lPViBhcmUgZXhjbHVz
+aXZlLiBZb3UgY2FuJ3QgZW5hYmxlIGJvdGggU1JJT1YNCj4gYW5kIFNJT1Ygb24gYSBzaW5nbGUg
+ZGV2aWNlLg0KDQp5ZXMsIGJ1dCBJJ20gbm90IHRhbGtpbmcgdXNlIHRoZW0gb24gYSBzaW5nbGUg
+ZGV2aWNlLi4uDQoNCj4gU28gdGhlIG1kZXYgYW5kIFBGL1ZGIGFyZSBmcm9tIGRpZmZlcmVudA0K
+PiBkZXZpY2VzLCByaWdodD8NCg0KeWVzLCB0aGUgY2FzZSBJIG1lbnRpb25lZCBhYm92ZSBpczog
+YSBtZGV2IGZyb20gYSBkZXZpY2UgKHNheSBkZXZBKSwNCmFuZCBhbm90aGVyIGRldmljZSAoc2F5
+IGRldkIpLiBDcmVhdGUgbWRldiBvbiBkZXZBIGFuZCBhc3NpZ24gaXQgdG8NCmEgVk0gdG9nZXRo
+ZXIgd2l0aCBkZXZCLg0KDQo+IA0KPiBPciwgaW4gU1JJT1YgY2FzZSwgeW91IGNhbiB3cmFwIGEg
+UEYgb3IgVkYgYXMgYSBtZWRpYXRlZCBkZXZpY2UuIEJ1dA0KPiB0aGlzIG1kZXYgc3RpbGwgYmUg
+YmFja2VkIHdpdGggYSBwYXNpZCBvZiBSSUQyUEFTSUQuDQoNCk15IGNvbW1lbnQgaGFzIG5vIGJ1
+c2luZXNzIHdpdGggd3JhcHBpbmcgUEYvVlIgYXMgbWRldi4uLg0KDQo+IA0KPiA+IGludm9rZWQg
+cGVyLWRldmljZSwgdGhlbiBuZWVkIHRvIHBhc3MgaW4gYSBoaW50IHRvIGluZGljYXRlIHdoZXRo
+ZXINCj4gPiB0byB1c2UgUEFTSURfUklEMlBBU0lEIG9yIGRlZmF1bHRfcGFzaWQsIG9yIHlvdSBt
+YXkganVzdCBpc3N1ZSB0d28NCj4gPiBmbHVzaCB3aXRoIHRoZSB0d28gUEFTSUQgdmFsdWVzLiBU
+aG91Z2h0cz8NCj4gDQo+IFRoaXMgaXMgcGVyLWRvbWFpbiBhbmQgZWFjaCBkb21haW4gaGFzIHNw
+ZWNpZmljIGRvbWFpbiBpZCBhbmQgZGVmYXVsdA0KPiBwYXNpZCAoYXNzdW1lIGRlZmF1bHQgZG9t
+YWluIGlzIDAgaW4gUklEMlBBU0lEIGNhc2UpLg0KDQpPaywgbGV0IG1lIGV4cGxhaW4gbW9yZS4u
+LiBkZWZhdWx0IHBhc2lkIGlzIG1lYW5pbmdmdWwgb25seSB3aGVuDQp0aGUgZG9tYWluIGhhcyBi
+ZWVuIGF0dGFjaGVkIHRvIGEgZGV2aWNlIGFzIGFuIGF1eC1kb21haW4uIHJpZ2h0Pw0KSWYgYSBk
+b21haW4gb25seSBoYXMgb25lIGRldmljZSwgYW5kIGl0IGlzIGF0dGFjaGVkIHRvIHRoaXMgZGV2
+aWNlIGFzDQpub3JtYWwgZG9tYWluIChub3JtYWwgZG9tYWluIG1lYW5zIG5vbiBhdXgtZG9tYWlu
+IGhlcmUpLiBUaGVuDQp5b3Ugc2hvdWxkIGZsdXNoIGNhY2hlIHdpdGggZG9tYWluLWlkIGFuZCBS
+SUQyUEFTSUQgdmFsdWUuDQpJZiBhIGRvbWFpbiBoYXMgb25lIGRldmljZSwgYW5kIGl0IGlzIGF0
+dGFjaGVkIHRvIHRoaXMgZGV2aWNlIGFzDQphdXgtZG9tYWluLiBUaGVuIHlvdSBtYXkgd2FudCB0
+byBmbHVzaCBjYWNoZSB3aXRoIGRvbWFpbi1pZA0KYW5kIGRlZmF1bHQgcGFzaWQuIHJpZ2h0Pw0K
+VGhlbiBsZXQncyBjb21lIHRvIHRoZSBjYXNlIEkgbWVudGlvbmVkIGluIHByZXZpb3VzIGVtYWls
+LiBhIG1kZXYNCmFuZCBhbm90aGVyIGRldmljZSBhc3NpZ25lZCB0byBhIHNpbmdsZSBWTS4gSW4g
+aG9zdCwgeW91IHdpbGwgaGF2ZQ0KYSBkb21haW4gd2hpY2ggaGFzIHR3byBkZXZpY2VzLCBvbmUg
+ZGV2aWNlKGRldmEpIGlzIGF0dGFjaGVkIGFzDQpub3JtYWwgZG9tYWluLCBhbm90aGVyIG9uZSAo
+ZGV2QikgaXMgYXR0YWNoZWQgYXMgYXV4LWRvbWFpbi4gVGhlbg0Kd2hpY2ggcGFzaWQgc2hvdWxk
+IGJlIHVzZWQgd2hlbiB0aGUgbWFwcGluZyBpbiBJT1ZBIHBhZ2UgdGFibGUgaXMNCm1vZGlmaWVk
+PyBSSUQyUEFTSUQgb3IgZGVmYXVsdCBwYXNpZD8gSSB0aGluayBib3RoIHNob3VsZCBiZSB1c2Vk
+DQpzaW5jZSB0aGUgZG9tYWluIG1lYW5zIGRpZmZlcmVudGx5IHRvIHRoZSB0d28gZGV2aWNlcy4g
+SWYgeW91IGp1c3QNCnVzZSBkZWZhdWx0IHBhc2lkLCB0aGVuIGRldmEgbWF5IHN0aWxsIGJlIGFi
+bGUgdG8gdXNlIHN0YWxlIGNhY2hlcy4NCg0KUmVnYXJkcywNCllpIExpdQ0K
