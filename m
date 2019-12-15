@@ -2,211 +2,122 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A496C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6225AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE1E24676
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3051D2467B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgUmGn7b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EYxQ6HYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfLOWqs (ORCPT
+        id S1726485AbfLOXFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 17:46:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27247 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726515AbfLOWqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 17:46:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576450006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NXF+NOL8cs5KVV01fZgEL5eG/R3TkoDYY4D2F7+iy5Q=;
-        b=KgUmGn7bbNfGnUbS5M+gbrrbPrUtnaf3n2nrmmXajbG85VBWEqY6uXCbn8V6AR5sib8zdi
-        lcUJ3yAvxICtBlG9HAlcumvGP2YxCYgLkV9ak1VWcxzQ7REykOp5ngoq8ku+X5qMH6E1x4
-        xCOUAhBVpVE8cZeORzbOJ9rE4XXom3Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-VNPPqdMRO4CqNXF-VSsU_A-1; Sun, 15 Dec 2019 17:46:45 -0500
-X-MC-Unique: VNPPqdMRO4CqNXF-VSsU_A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 15 Dec 2019 18:05:21 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50453 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbfLOXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 18:05:21 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE56A1800D7B;
-        Sun, 15 Dec 2019 22:46:43 +0000 (UTC)
-Received: from x1.home (ovpn-116-53.phx2.redhat.com [10.3.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6DF6046C;
-        Sun, 15 Dec 2019 22:46:43 +0000 (UTC)
-Date:   Sun, 15 Dec 2019 15:46:42 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     kwankhede@nvidia.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, yi.y.sun@intel.com, joro@8bytes.org,
-        jean-philippe.brucker@arm.com, peterx@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3 03/10] vfio_pci: refine vfio_pci_driver reference in
- vfio_pci.c
-Message-ID: <20191215154642.1d4163bf@x1.home>
-In-Reply-To: <1574335427-3763-4-git-send-email-yi.l.liu@intel.com>
-References: <1574335427-3763-1-git-send-email-yi.l.liu@intel.com>
-        <1574335427-3763-4-git-send-email-yi.l.liu@intel.com>
-Organization: Red Hat
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bg3f0NzNz9sP6;
+        Mon, 16 Dec 2019 10:05:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576451118;
+        bh=784n75LssZqq0BD3ApIFwrO1v+2m+UVROA25VXJx33c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EYxQ6HYbpWD7HWKYQfMZ3cbBsxopENyiUXSGZhH4eWyT4jaYDxVi2HwL1nKIgAzFn
+         i8K5iYzU2u7Hyk3/Vb90ZAHGS3Kdy4o1Wze+gxS7khziWLZq5DFGLv1fCCQEdwg1Xc
+         YxuvN2SEulRjXslGODI6jhIU61qIfJtadJ/SnkyDUmBfJF2dCWwvFQOwPKsdZYAANH
+         MEdob+BuIZ/nE4Gol3flCXZZpTN2ErgKY0A5BfUElzOwVQ080SwgtQ5uhXT450koow
+         M3EMaw+eoZsrpYiyecWzYWQbzGRyV7DFRRgC1be+uDHhuu/382gNe+odviKnaDtc92
+         nzRhK3Gk/MYJA==
+Date:   Mon, 16 Dec 2019 10:05:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20191216100516.22d2d85f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: multipart/signed; boundary="Sig_/kO=0q4ENmladIFze3Wkvczy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019 19:23:40 +0800
-Liu Yi L <yi.l.liu@intel.com> wrote:
+--Sig_/kO=0q4ENmladIFze3Wkvczy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> This patch replaces the vfio_pci_driver reference in vfio_pci.c with
-> pci_dev_driver(vdev->pdev) which is more helpful to make the functions
-> be generic to module types.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index b04e43a..2096e66 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -1460,24 +1460,25 @@ static void vfio_pci_reflck_get(struct vfio_pci_reflck *reflck)
->  
->  static int vfio_pci_reflck_find(struct pci_dev *pdev, void *data)
->  {
-> -	struct vfio_pci_reflck **preflck = data;
-> +	struct vfio_pci_device *vdev = data;
-> +	struct vfio_pci_reflck **preflck = &vdev->reflck;
->  	struct vfio_device *device;
-> -	struct vfio_pci_device *vdev;
-> +	struct vfio_pci_device *tmp;
->  
->  	device = vfio_device_get_from_dev(&pdev->dev);
->  	if (!device)
->  		return 0;
->  
-> -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> +	if (pci_dev_driver(pdev) != pci_dev_driver(vdev->pdev)) {
->  		vfio_device_put(device);
->  		return 0;
->  	}
->  
-> -	vdev = vfio_device_data(device);
-> +	tmp = vfio_device_data(device);
->  
-> -	if (vdev->reflck) {
-> -		vfio_pci_reflck_get(vdev->reflck);
-> -		*preflck = vdev->reflck;
-> +	if (tmp->reflck) {
-> +		vfio_pci_reflck_get(tmp->reflck);
-> +		*preflck = tmp->reflck;
->  		vfio_device_put(device);
->  		return 1;
->  	}
-> @@ -1494,7 +1495,7 @@ static int vfio_pci_reflck_attach(struct vfio_pci_device *vdev)
->  
->  	if (pci_is_root_bus(vdev->pdev->bus) ||
->  	    vfio_pci_for_each_slot_or_bus(vdev->pdev, vfio_pci_reflck_find,
-> -					  &vdev->reflck, slot) <= 0)
-> +					  vdev, slot) <= 0)
->  		vdev->reflck = vfio_pci_reflck_alloc();
->  
->  	mutex_unlock(&reflck_lock);
-> @@ -1519,6 +1520,7 @@ static void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck)
->  
->  struct vfio_devices {
->  	struct vfio_device **devices;
-> +	struct vfio_pci_device *vdev;
->  	int cur_index;
->  	int max_index;
->  };
-> @@ -1527,7 +1529,7 @@ static int vfio_pci_get_unused_devs(struct pci_dev *pdev, void *data)
->  {
->  	struct vfio_devices *devs = data;
->  	struct vfio_device *device;
-> -	struct vfio_pci_device *vdev;
-> +	struct vfio_pci_device *tmp;
->  
->  	if (devs->cur_index == devs->max_index)
->  		return -ENOSPC;
-> @@ -1536,15 +1538,15 @@ static int vfio_pci_get_unused_devs(struct pci_dev *pdev, void *data)
->  	if (!device)
->  		return -EINVAL;
->  
-> -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> +	if (pci_dev_driver(pdev) != pci_dev_driver(devs->vdev->pdev)) {
->  		vfio_device_put(device);
->  		return -EBUSY;
->  	}
->  
-> -	vdev = vfio_device_data(device);
-> +	tmp = vfio_device_data(device);
->  
->  	/* Fault if the device is not unused */
-> -	if (vdev->refcnt) {
-> +	if (tmp->refcnt) {
->  		vfio_device_put(device);
->  		return -EBUSY;
->  	}
-> @@ -1590,6 +1592,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
->  	if (!devs.devices)
->  		return;
->  
-> +	devs.vdev = vdev;
+Hi all,
 
-This could be added to the declaration initializer:
+Today's linux-next merge of the net-next tree got a conflict in:
 
-struct vfio_devices devs = { .vdev = vdev, .cur_index = 0 };
+  drivers/net/ethernet/amazon/ena/ena_netdev.c
 
-It might seem a little less random then.  Thanks,
+between commit:
 
-Alex
+  24dee0c7478d ("net: ena: fix napi handler misbehavior when the napi budge=
+t is zero")
 
+from the net tree and commit:
 
->  	if (vfio_pci_for_each_slot_or_bus(vdev->pdev,
->  					  vfio_pci_get_unused_devs,
->  					  &devs, slot))
-> @@ -1634,7 +1637,7 @@ static void __exit vfio_pci_cleanup(void)
->  	vfio_pci_uninit_perm_bits();
->  }
->  
-> -static void __init vfio_pci_fill_ids(char *ids)
-> +static void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
->  {
->  	char *p, *id;
->  	int rc;
-> @@ -1662,7 +1665,7 @@ static void __init vfio_pci_fill_ids(char *ids)
->  			continue;
->  		}
->  
-> -		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
-> +		rc = pci_add_dynid(driver, vendor, device,
->  				   subvendor, subdevice, class, class_mask, 0);
->  		if (rc)
->  			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
-> @@ -1689,7 +1692,7 @@ static int __init vfio_pci_init(void)
->  	if (ret)
->  		goto out_driver;
->  
-> -	vfio_pci_fill_ids(ids);
-> +	vfio_pci_fill_ids(ids, &vfio_pci_driver);
->  
->  	return 0;
->  
+  548c4940b9f1 ("net: ena: Implement XDP_TX action")
 
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 948583fdcc28,26954fde4766..000000000000
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@@ -1237,9 -1861,8 +1861,8 @@@ static int ena_io_poll(struct napi_stru
+  {
+  	struct ena_napi *ena_napi =3D container_of(napi, struct ena_napi, napi);
+  	struct ena_ring *tx_ring, *rx_ring;
+-=20
+ -	u32 tx_work_done;
+ -	u32 rx_work_done;
+ +	int tx_work_done;
+ +	int rx_work_done =3D 0;
+  	int tx_budget;
+  	int napi_comp_call =3D 0;
+  	int ret;
+
+--Sig_/kO=0q4ENmladIFze3Wkvczy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32vCwACgkQAVBC80lX
+0GzjWgf/fhKAC7ROSD+Ay7jyW01YhtFCfStpWnu2JvaxGC32ZACZbK+DMxnhQuqR
+UnvHWnzfq8qnUHZp3Jw8DmseaXc/Z0RU3wK3VyojTL8exsnAjW8DNYQ6SkpM7wNW
+uFTD1qF1VSax5cuLhh4QX0876qwbECeA3gqiP8vM7t15jvbGtTmvGUeEa4S1DxsZ
+U2ZNoXrpdmEk9FZrmcTn1OmOIlgpn/pKfA6uwERgWHcOX9lOEI1k6mo5Xe+JXAQT
+vqq+1BIcgR2XBa6SRiwoDFEEPuQlJUtomQ11CpM4ShyZNN9nGACEW1sLJJBXFq4B
+1329RiHXQQwyxKo+ohPFahwtiffS/Q==
+=SXQM
+-----END PGP SIGNATURE-----
+
+--Sig_/kO=0q4ENmladIFze3Wkvczy--
