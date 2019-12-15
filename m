@@ -2,116 +2,165 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA227C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37300C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB7224679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088D724679
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cV5bO+pK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l39CyODr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfLOT7H (ORCPT
+        id S1726422AbfLOUCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:59:07 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:40382 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfLOT7H (ORCPT
+        Sun, 15 Dec 2019 15:02:18 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44872 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbfLOUCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:59:07 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bZwp2V5gz9vZ6L
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:59:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rPITfd9syBNr for <linux-kernel@vger.kernel.org>;
-        Sun, 15 Dec 2019 13:59:06 -0600 (CST)
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bZwp1Jzlz9vZ6Q
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 13:59:06 -0600 (CST)
-Received: by mail-yw1-f71.google.com with SMTP id q130so4118267ywh.11
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:59:06 -0800 (PST)
+        Sun, 15 Dec 2019 15:02:17 -0500
+Received: by mail-ed1-f67.google.com with SMTP id bx28so122975edb.11;
+        Sun, 15 Dec 2019 12:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8TUcX1RfgZ492tOYJ5s68irOhl6zZB85wQRSq77/peo=;
-        b=cV5bO+pKRY3btcUkVNBJcD4tq59cy1Fw6Mlknr43a6PVbLbDvgGPoljM6wBB31iIpc
-         GccTGzcaJFMK+3ciJ0/vehKwYAKe2k10CyxyUOykIzZvsAlFGOumqum5zzu2IZo8dpaf
-         8EU+bceJKoUvtPFzXXVDlI2OpZT0FAJIjiHWHSpv65KIHuVKTmMhO4++QXY/aqByf/YM
-         cFkpC8M45swPp8XtL3huRukcVd+wbtMXpS1L4p1icFdHEQ4TGu+9+zCUcPnDK6+PqOtF
-         MyzvvX5jQ1++SHaKIWskUqeJj73fcBFv4ltA2E30iv9uJdI4QGD9IauPZ1j5gGOoOQ77
-         1vIg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Eb9PaeS91fFId6JoOrDL2h8mYp/pNovUb3BQNtXEkY=;
+        b=l39CyODrigrJr//o2nlMDiXSW3PPVc3PNwlifzyBK9+ZaFT4yW+61K18suZPiJhZ4y
+         9P3RWsUKzrow2krjPjWnJ02+xHox/C9gDf14LyZW1OFgJI+HljebzeklvQer9KNO1zN7
+         BcjQA+gomciH5LFjv8vu03ZwAVOc5ZmY2Z3zFOrGLMC5DFAd+chfQIPFEl0IH2t3Sh9T
+         r/HLEqDrH3pPwBIFHlDmFMtNYiRSkT7qxSe6qZXZ8j7KDSP+vqedTca2cqLQBSu3a/zm
+         UIF6u2zSeOoCxqxCVF9/8OMen+aV2r3X1AMH6CBA6CXNWKUMiMU7TQXatxoBG1aLR0qd
+         D5aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8TUcX1RfgZ492tOYJ5s68irOhl6zZB85wQRSq77/peo=;
-        b=uF/PcFHb8p8W1NODxNg+WiKm9P/2+xk93mhttXZfcjW6+AnEwMQyat/KQQnrDCEO7p
-         0aHRLiN0kqgvIRynikmbj67Zk4BsJTBL5S7MaMLBUvqLqfAPyBgr/MVjdrT2bm2ySd5w
-         VciAY7/FChoFMrl1fxBZ+32GspYz/nrd0ePQaMm3OHJiUpULvr5UBuLThYOygQtQhWwy
-         Trtu3OhrxAyX/bwVlO2zooQFaLMjBbDKIutbKnbDj7CzaK1je4tDt6Nh6iByThaFb21r
-         /INDKRCmT3mmzgLxfU7RQg/m3D18+6XtniVE5n3g2R/wUZiNmnDp429ljudrMPfTfeKY
-         S8dg==
-X-Gm-Message-State: APjAAAWwpwBEAQrmbcGF6W9+UOxnt/RO9zkyx47N6sxipQ1TOpZR9RhU
-        mKubYSJhsduQNR9xraEMf3OSvlNMZrmn6SRjS+eTfmMr8sX/vwVtP1F/yblxWCcSBpQI1X8qddf
-        xG73uEAEOcXH70KG5pj8fPrqZW6p9
-X-Received: by 2002:a25:3009:: with SMTP id w9mr6023070ybw.47.1576439945685;
-        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy5IqUJNnB0dOatc0l9p5iHfoI+NtpfRKhivnJlbv9QIJmKpopWGOVWyNhfXIUi8AuGJKEmdg==
-X-Received: by 2002:a25:3009:: with SMTP id w9mr6023058ybw.47.1576439945472;
-        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id d126sm1059071ywf.28.2019.12.15.11.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] orinoco: avoid assertion in case of NULL pointer
-Date:   Sun, 15 Dec 2019 13:58:58 -0600
-Message-Id: <20191215195900.6109-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Eb9PaeS91fFId6JoOrDL2h8mYp/pNovUb3BQNtXEkY=;
+        b=osH78/WeXVo/jYujIfbc+hHj74kvySi/Eusmo7fpq253HsgLdur2szz0OcNalXsrIc
+         VWYSO/A3QtiVXTJ+Vnb5sW2p7LgOwPZfbqIm3dEUlY8ImC8EYOBlyRaszEgD8I5Nr70H
+         aMfGTEnKygpvIZKWbzvH13mi0LSUSix8cSwy0luh+Qmsy4RmImq6Xa2jXJyMaz4xidVW
+         NNid0gzgaqoUF53gxTLuxse+4vS2nwtUlJM1xUIxN1rKY9MM/e9hUpuQ66jCTx8gSDkm
+         GQetuB0RRerDB3lvE9xfu+n54nwubAxPJvWN6gzOaq1erwLfCBGyyda5sBxu3++49VnK
+         oNGg==
+X-Gm-Message-State: APjAAAWrkkWSojD4zezPCD9dEPuKc1c+GG7+6I54nZBDSMfTHevZmahI
+        h2ckSBntBb7kmRNxstg2v08tD+IF+3NxI/n41yg=
+X-Google-Smtp-Source: APXvYqwXWuftMyTU+v9pDTeFceCDJh7oOC80IPG6kupreczCdmilrRrpGU30V0yDNxarQZ4IwUA5DCbL3g36OxTBcSw=
+X-Received: by 2002:aa7:d80c:: with SMTP id v12mr16528373edq.302.1576440135503;
+ Sun, 15 Dec 2019 12:02:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191213234530.145963-1-dianders@chromium.org>
+In-Reply-To: <20191213234530.145963-1-dianders@chromium.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 15 Dec 2019 12:02:07 -0800
+Message-ID: <CAF6AEGusg19F-=m7k5JDQDdr4xAT1By--5FicM_iuKcFRCfMdA@mail.gmail.com>
+Subject: Re: [PATCH 0/9] drm/bridge: ti-sn65dsi86: Improve support for AUO
+ B116XAK01 + other low res DP
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ezusb_init, if upriv is NULL, the code crashes. However, the caller
-in ezusb_probe can handle the error and print the failure message.
-The patch replaces the BUG_ON call to error return.
+On Fri, Dec 13, 2019 at 3:46 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> This series contains a pile of patches that was created to support
+> hooking up the AUO B116XAK01 panel to the eDP side of the bridge.  In
+> general it should be useful for hooking up a wider variety of DP
+> panels to the bridge, especially those with lower resolution and lower
+> bits per pixel.
+>
+> The overall result of this series:
+> * Allows panels with fewer than 4 DP lanes hooked up to work.
+> * Optimizes the link rate for panels with 6 bpp.
+> * Supports trying more than one link rate when training if the main
+>   link rate didn't work.
+>
+> It's not expected that this series will break any existing users, but
+> it is possible that the patch to skip non-standard DP rates could mean
+> that a panel that used to use one of these non-standard link rates
+> will now run at a higher rate than it used to.  If this happens, the
+> patch could be reverted or someone could figure out how to decide when
+> it's OK to use the non-standard rates.
+>
+> To support the AUO B116XAK01, we could actually stop at the ("Use
+> 18-bit DP if we can") patch since that causes the panel to run at a
+> link rate of 1.62 which works.  The patches to try more than one link
+> rate were all developed prior to realizing that I could just use
+> 18-bit mode and were validated with that patch reverted.
+>
+> The patch to try more than one rate was validated by forcing the code
+> to try 2.16 GHz (but still skip 2.43 GHz, which trains but shows
+> garbage on AUO B116XAK01) and seeing that we'd try 2.16 GHz (and fail)
+> and then eventually pass at 2.7 GHz and show a pretty screen.
+>
+> These patches were tested on sdm845-cheza atop mainline as of
+> 2019-12-13 and also on another board (the one with AUO B116XAK01) atop
+> a downstream kernel tree.
+>
+> This patch series doesn't do anything to optimize the MIPI link and
+> only focuses on the DP link.  For instance, it's left as an exercise
+> to the reader to see if we can use the 666-packed mode on the MIPI
+> link and save some power (because we could lower the clock rate).
+>
+> I am nowhere near a display expert and my knowledge of DP and MIPI is
+> pretty much zero.  If something about this patch series smells wrong,
+> it probably is.  Please let know and I'll try to fix it.
+>
+>
+> Douglas Anderson (9):
+>   drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
+>   drm/bridge: ti-sn65dsi86: zero is never greater than an unsigned int
+>   drm/bridge: ti-sn65dsi86: Don't use MIPI variables for DP link
+>   drm/bridge: ti-sn65dsi86: Config number of DP lanes Mo' Betta
+>   drm/bridge: ti-sn65dsi86: Read num lanes from the DP sink
+>   drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+>   drm/bridge: ti-sn65dsi86: Group DP link training bits in a function
+>   drm/bridge: ti-sn65dsi86: Train at faster rates if slower ones fail
+>   drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 230 +++++++++++++++++++++-----
+>  1 file changed, 187 insertions(+), 43 deletions(-)
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I've given these a spin on my yoga c630, which uses the same bridge, so:
 
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-index 40a8b941ad5c..813de06c03de 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -1361,7 +1361,8 @@ static int ezusb_init(struct hermes *hw)
- 	int retval;
- 
- 	BUG_ON(in_interrupt());
--	BUG_ON(!upriv);
-+	if (!upriv)
-+		return -EINVAL;
- 
- 	upriv->reply_count = 0;
- 	/* Write the MAGIC number on the simulated registers to keep
--- 
-2.20.1
+Tested-by: Rob Clark <robdclark@gmail.com>
 
+I've got one small fixup for a compiler warning for the 2nd to last,
+and with that, the first 8 are:
+
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+
+I've also got a fixup for the last one which reads
+SUPPORTED_LINK_RATES.  However the panel I have is pre eDP 1.4, so the
+interesting codepath there is untested.  Not sure offhand if the
+panels you have are eDP 1.4+ or not?
+
+BR,
+-R
+
+>
+> --
+> 2.24.1.735.g03f4e72817-goog
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
