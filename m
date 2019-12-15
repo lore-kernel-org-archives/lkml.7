@@ -2,108 +2,101 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067D3C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ACEC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACE121D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2252053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576410647;
+	bh=5WnJaA2pB81rlF30cK68l346QPHhyj2DUcLn2x16gBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d0inOYSRd3WLRhH8Cm6oLd7QcdF683JYR5Fyt8cHyrhfuEW/A1OuDlnPDqDivulv4
+	 WTIXGTcrWDLETgUYkNhjE0p9AUFUgT+PE75xlc/ChOXDOBA6+T0Kqj0rJ0qQuQFH9I
+	 ytW0pwCUB2cU5EpBr8mafjNAYVILfHU7HmMsyxtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfLOLiz (ORCPT
+        id S1726232AbfLOLup convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 06:38:55 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38039 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfLOLiz (ORCPT
+        Sun, 15 Dec 2019 06:50:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44794 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfLOLup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 06:38:55 -0500
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1CEFD200003;
-        Sun, 15 Dec 2019 11:38:51 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v2] clk: meson: pll: Fix by 0 division in __pll_params_to_rate()
-Date:   Sun, 15 Dec 2019 12:47:05 +0100
-Message-Id: <20191215114705.24401-1-repk@triplefau.lt>
-X-Mailer: git-send-email 2.24.0
+        Sun, 15 Dec 2019 06:50:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cm12so2711030edb.11;
+        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VQb8AJk5LNTjc5T1l/6wnDNHTC2CJyoRZWm9i8TCC6Y=;
+        b=A0fe0YlK4Q7tH8msv7qbStmlJAgSVHaLyA5wWmFY4wDDzdrHTFZSOkJOjQaad8TbGK
+         JHaqHb3o+P1UFdJWfDWdT9Dp3jdOEk1wUu678ZLU55u0vM/Tx298fLBtvInjD9UbggAD
+         lWly1+sWanLAamCIdCwhlyF575Dgt+GugbEihslNuNIn+5pNwuHkWgBTXsJIvMjUYn7P
+         hTW3028KguKQKFiwQqhVsAQ+HPI4wTIL90feHseKR+g0UPlPeRMyT2bAQ3zN9xUA4sBn
+         TV9yzuQJhATJMMfgCzdzMpQE4kJPk/2Z5vNvitYGXhRYxupLZCX7NJ9J42X66gPSXlA4
+         65cg==
+X-Gm-Message-State: APjAAAUxWhQJEZPHI9s7cmUuoQEVpt3wrpy/K6ee6WYmaRI5HXPCt8C/
+        1VYd2eHkL1azlZP8AqXU70A=
+X-Google-Smtp-Source: APXvYqySGZN88GuNZI3q/4jIa46RYAeOm8r3e/4RoLEa9a1DPs6w4iZdHpCADlYueTiK1rOSy2zyGw==
+X-Received: by 2002:a17:906:229b:: with SMTP id p27mr27526719eja.21.1576410643077;
+        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id bo13sm1007730ejb.5.2019.12.15.03.50.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Dec 2019 03:50:41 -0800 (PST)
+Date:   Sun, 15 Dec 2019 12:50:39 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Chen Zhou <chenzhou10@huawei.com>
+Subject: Re: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency
+ on S3C24xx and S3C64xx
+Message-ID: <20191215115039.GA30973@kozik-lap>
+References: <1576221873-28738-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some meson pll registers can be initialized with 0 as N value, introducing
-the following division by 0 when computing rate :
+On Fri, Dec 13, 2019 at 08:24:33AM +0100, Krzysztof Kozlowski wrote:
+> All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which uses
+> both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
+> therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
+> failed:
+> 
+>     drivers/pinctrl/samsung/pinctrl-samsung.c: In function ‘samsung_gpiolib_register’:
+>     drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>        gc->of_node = bank->of_node;
+>          ^
+> 
+> Rework the dependencies so all Samsung drivers and common
+> PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
+> and OF are enabled).
+> 
+> Reported-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pinctrl/samsung/Kconfig | 6 ++++--
 
-  UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
-  division by zero
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
-  Call trace:
-   dump_backtrace+0x0/0x1c0
-   show_stack+0x14/0x20
-   dump_stack+0xc4/0x100
-   ubsan_epilogue+0x14/0x68
-   __ubsan_handle_divrem_overflow+0x98/0xb8
-   __pll_params_to_rate+0xdc/0x140
-   meson_clk_pll_recalc_rate+0x278/0x3a0
-   __clk_register+0x7c8/0xbb0
-   devm_clk_hw_register+0x54/0xc0
-   meson_eeclkc_probe+0xf4/0x1a0
-   platform_drv_probe+0x54/0xd8
-   really_probe+0x16c/0x438
-   driver_probe_device+0xb0/0xf0
-   device_driver_attach+0x94/0xa0
-   __driver_attach+0x70/0x108
-   bus_for_each_dev+0xd8/0x128
-   driver_attach+0x30/0x40
-   bus_add_driver+0x1b0/0x2d8
-   driver_register+0xbc/0x1d0
-   __platform_driver_register+0x78/0x88
-   axg_driver_init+0x18/0x20
-   do_one_initcall+0xc8/0x24c
-   kernel_init_freeable+0x2b0/0x344
-   kernel_init+0x10/0x128
-   ret_from_fork+0x10/0x18
+Applied.
 
-This checks if N is null before doing the division.
-
-Fixes: 7a29a869434e ("clk: meson: Add support for Meson clock controller")
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
-Changes since v1:
-  - Change Fix tag
-  - Move null test to .recalc_rate()
----
- drivers/clk/meson/clk-pll.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e5634739..4d3a8003ca20 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -77,6 +77,10 @@ static unsigned long meson_clk_pll_recalc_rate(struct clk_hw *hw,
- 	unsigned int m, n, frac;
- 
- 	n = meson_parm_read(clk->map, &pll->n);
-+	/* Some hw may have n set to 0 at init, avoid div by 0 in that case */
-+	if (n == 0)
-+		return 0;
-+
- 	m = meson_parm_read(clk->map, &pll->m);
- 
- 	frac = MESON_PARM_APPLICABLE(&pll->frac) ?
--- 
-2.24.0
+Best regards,
+Krzysztof
 
