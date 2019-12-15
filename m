@@ -2,81 +2,133 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB7C2D0CB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC29C43603
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B625214AF
+	by mail.kernel.org (Postfix) with ESMTP id 3FC972073D
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szRkUEKY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vTcdmZlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfLODRZ (ORCPT
+        id S1726101AbfLODRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 22:17:25 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43502 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfLODRY (ORCPT
+        Sat, 14 Dec 2019 22:17:20 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40976 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfLODRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 22:17:24 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p27so2944607pli.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 19:17:24 -0800 (PST)
+        Sat, 14 Dec 2019 22:17:19 -0500
+Received: by mail-qv1-f68.google.com with SMTP id x1so18045qvr.8
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 19:17:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qw7GdobDKaisGqFcCqov7HH16/PH0v/fdoTK/utz/dk=;
-        b=szRkUEKYuobVKh+VLYMU6sYS5xgFvUr5j8ECJA20DbOjRWaV5h2/WIkZ56CKyqeLCK
-         uoLdxiU98iemsr8Lu+haKhz+Tj69fGlSG/0s1r7Bg6A9Yvo65E4r8Lp7orB3/W3P7puD
-         IvCbj0RDT6i1z0AfvPw5sIsXx5vS2yii3rv/RWvavvcT3qIn4rCSjq+xzDO+8cPCbMQx
-         6YKwgCLDNFRHJ0oJB3ohuDFhDDLIXrS7tkCli1SzkzqGDiEoCw1LA+8ZAr7U1zqB2zj/
-         DAcdPw75zJ6v8Fw0EZXEuxzoJuVbOVIuD/nnovwh4FysYb5+Q4rGezfLQ7GWa+jNCWlz
-         JN4g==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=/dXw9e16vwl8LpxK98yuq5eDs/kqmpne1VxegZwo9tU=;
+        b=vTcdmZlKxf6Ut2mCo3MRUIykmRVOIPR2SVz/XMIIfmlf/CcR506FaZII7DWsRM3CHr
+         75t2eanICwi/fUz5NNcTcLldWv0vqC/gj/g40ABeMzqbMJ/FmaHIIUFdlVfthXI2Sw1v
+         Hh1U26lmbHakoyOqgN8XPmHJDBaGLmyqvia0gvl5LRV74J/Nff/hsv1lzqO+80XT4wKW
+         1hCHVfvRXrh9jcpQ6c1k3mb1scR3m8Z3IjsivBU208msc8JVqlo+3kqOgjbFerQSJCW7
+         T59YDUW02RVo6sAw/GlY15kwdIlEpUXY2GaKej0Ra0+h4nR2FBUSEGlQQ5Q0CjlpKLOk
+         BQQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qw7GdobDKaisGqFcCqov7HH16/PH0v/fdoTK/utz/dk=;
-        b=Xt/sNXrBTaHrjcFqHd8uFkJ4aSIe10W/dVEVlLxcZceE4evzX7+jC+rN/tMQd1kU9s
-         pDX19t/KlJ1FUPah+JU1wVrk4qUX9/Yz5mEZZQizyR1JHJsxRHKN1w+8oJFKLPvXAHc3
-         AFnuNxcP+Bnyf96E7lsHICtM2rxbZ2QWhSvzyil7dLnSYsDbvVKkJiQCawUUxtV3MgHl
-         xvMsZgvv2P0nIVt0OTmCaV+lTY2AYuKL8w3TquzN0syj3ZC2uHszxo/lSbiC/d+aW0cc
-         Ohbbae5ydhEenXuEgKwOzYSUgLzy9HsY7CqcEfRTbQ2zX9KKbbGVzH/l3xU6Wy/tR2n4
-         yryw==
-X-Gm-Message-State: APjAAAXeyGpRQAigW/xkUZU+nOYvy3iqauhpTS6vYwPGuPg+iu4RgHA1
-        WfhGk9pJHz5rwZeAnP5wtqnTCGtzOFHDQPHTf1rHM1G6
-X-Google-Smtp-Source: APXvYqwrgwLwljcFKO4bMrhekEcasQxZ7GfNWAO6On+Dem71755HhK+vwyLMrrUPb1RjgRbNUoCxafLSC1kMMTs74NM=
-X-Received: by 2002:a17:902:744c:: with SMTP id e12mr4015886plt.123.1576379843907;
- Sat, 14 Dec 2019 19:17:23 -0800 (PST)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=/dXw9e16vwl8LpxK98yuq5eDs/kqmpne1VxegZwo9tU=;
+        b=UF94Twmr2UtwqogQEeBG3gzbDWCvwLFpoJcD+P6dckoBl5j5gYkD5taI97L9Zjidl9
+         fvkE2TjXrCzdMEvghDW8bgYYp6B8ScZ0LVP6BbQbjGvbMPTl7AxzPWQFll7ftiuMsfa5
+         ebpqtCkuRXWvm0pxojMW4slFj4INF/+S/2FmHOiVX6JKRLrvs3cPmEzpzpjs5IL7KisT
+         H+kFrYGy2f8Kne4e4cUFn/fXEwnRAxl28FN8nNrblO/Hdsqk5+dFek0GD/5j5wMsVjJ1
+         c9fItuCVk2gczFYfCeQT3QpwH3L+9Jajp+tqHPD+Zhs3a2LpyvGPIxwdYX/lJymwYN6B
+         i7vA==
+X-Gm-Message-State: APjAAAVI21lVmrZb4JcUZK0RYTEWLav6KCeUpKGQKxk4Hk3eTxQ/HNqj
+        O9/l52BBECqcHD73faLpXQ==
+X-Google-Smtp-Source: APXvYqzBXdaiKTf32Px9Udixmb+daFEYrWp8FC6bTC09CpUnoxtDzvVcUtp18RU54sNJ609QMeCjIA==
+X-Received: by 2002:a05:6214:7cc:: with SMTP id bb12mr5862753qvb.207.1576379838584;
+        Sat, 14 Dec 2019 19:17:18 -0800 (PST)
+Received: from [120.7.1.38] ([184.175.21.212])
+        by smtp.gmail.com with ESMTPSA id c84sm4567540qkg.78.2019.12.14.19.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Dec 2019 19:17:17 -0800 (PST)
+To:     hch@lst.de, DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Pavel Machek <pavel@ucw.cz>
+From:   Woody Suwalski <terraluna977@gmail.com>
+Subject: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+Message-ID: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+Date:   Sat, 14 Dec 2019 22:17:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101 Firefox/52.0
+ SeaMonkey/2.49.5
 MIME-Version: 1.0
-References: <201912100401.fDYi5lhU%lkp@intel.com> <20191213111649.GU32742@smile.fi.intel.com>
- <CAMo8BfKhSkHapX=mDhauZz8pAwR+1DtDNL=oE_RNhmaSQ9V_Zw@mail.gmail.com>
-In-Reply-To: <CAMo8BfKhSkHapX=mDhauZz8pAwR+1DtDNL=oE_RNhmaSQ9V_Zw@mail.gmail.com>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Sat, 14 Dec 2019 19:17:13 -0800
-Message-ID: <CAMo8BfLHnAcvC40dpzzYpSYhSuxhPjKsDpZWn2V7spvQWB3smQ@mail.gmail.com>
-Subject: Re: WARNING: lib/test_bitmap.o(.text.unlikely+0x5c): Section mismatch
- in reference from the function bitmap_copy_clear_tail() to the variable .init.rodata:clump_exp
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 1:08 PM Max Filippov <jcmvbkbc@gmail.com> wrote:
-> I'll file a bug against gcc.
+Regression in 5.4 kernel on 32-bit Radeon IBM T40
+triggered by
+commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Thu Aug 15 09:27:00 2019 +0200
 
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92938
+Howdy,
+The above patch has triggered a display problem on IBM Thinkpad T40, 
+where the screen is covered with a lots of random short black horizontal 
+lines, or distorted letters in X terms.
 
--- 
-Thanks.
--- Max
+The culprit seems to be that the dma_get_required_mask() is returning a 
+value 0x3fffffff
+which is smaller than dma_get_mask()0xffffffff.That results in 
+dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma 
+instead of 32-bits.
+
+If I hardcode "1" as the last parameter to ttm_bo_device_init() in place 
+of a call to dma_addressing_limited(),the problem goes away.
+
+I have added the debug lines starting with "wms:" to the start of 
+radeon_ttm_init() and of radeon_device_init()printing the interesting 
+variables.
+/....
+[    2.091692] Linux agpgart interface v0.103
+[    2.092380] agpgart-intel 0000:00:00.0: Intel 855PM Chipset
+[    2.107706] agpgart-intel 0000:00:00.0: AGP aperture is 256M @ 0xd0000000
+[    2.108111] [drm] radeon kernel modesetting enabled.
+[    2.108200] radeon 0000:01:00.0: vgaarb: deactivate vga console
+[    2.109365] Console: switching to colour dummy device 80x25
+******* radeon_device_init()
+[    2.110712] wms: radeon_init flags = 0x90003
+[    2.110718] [drm] initializing kernel modesetting (RV200 
+0x1002:0x4C57 0x1014:0x0530 0x00).
+[    2.111220] agpgart-intel 0000:00:00.0: AGP 2.0 bridge
+[    2.111233] agpgart-intel 0000:00:00.0: putting AGP V2 device into 1x 
+mode
+[    2.111265] radeon 0000:01:00.0: putting AGP V2 device into 1x mode
+[    2.111286] radeon 0000:01:00.0: GTT: 256M 0xD0000000 - 0xDFFFFFFF
+[    2.111295] radeon 0000:01:00.0: VRAM: 128M 0x00000000E0000000 - 
+0x00000000E7FFFFFF (32M used)
+[    2.111701] [drm] Detected VRAM RAM=128M, BAR=128M
+[    2.111704] [drm] RAM width 64bits DDR
+******* radeon_ttm_init()
+[    2.111706] wms: dma_addressing_limited=0x0
+[    2.111709] wms: dma_get_mask=0xffffffff, bus_dma_limit=0x0, 
+dma_get_required_mask=0x3fffffff
+[    2.115971] [TTM] Zone  kernel: Available graphics memory: 437028 KiB
+[    2.115973] [TTM] Zone highmem: Available graphics memory: 510440 KiB
+
+What should be the proper value of these dma variables on the 32-bit system?
+How to fix that issue correctly (patches welcomed :-) )Or is the 
+platform fubar?
+
+Thanks, Woody
+
+
