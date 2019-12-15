@@ -2,202 +2,94 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95718C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D33C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDFB206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2142206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wz4/M2YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfLOMf7 (ORCPT
+        id S1726192AbfLOMoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:35:59 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:50834 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfLOMf7 (ORCPT
+        Sun, 15 Dec 2019 07:44:01 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:43024 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfLOMoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:35:59 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 17A26804FC;
-        Sun, 15 Dec 2019 13:35:52 +0100 (CET)
-Date:   Sun, 15 Dec 2019 13:35:51 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        CK Hu <ck.hu@mediatek.com>, linux-mediatek@lists.infradead.org,
-        sj.huang@mediatek.com
-Subject: Re: [PATCH] drm/panel: seperate panel power control from panel
- prepare/unprepare
-Message-ID: <20191215123551.GA32327@ravnborg.org>
-References: <20191106064005.8016-1-jitao.shi@mediatek.com>
+        Sun, 15 Dec 2019 07:44:01 -0500
+Received: by mail-wr1-f41.google.com with SMTP id d16so3857127wre.10
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 04:44:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=p7hVdXnSKeOOfrLxwI2s0NxIC4n1/uQ0c98XN8Ll0EI=;
+        b=Wz4/M2YJMdYRXndLhSOIVQrDcJoeYOSgPViSsEjU2IAPDpupVkO5Y9YDBJaHgwJbDR
+         inwGKcmM8QK336xp48zujm5JFm+6GuyFtSGLHHztAjOLzwKPB86eJ/JK0yNHu+jHWNEF
+         SrRTSP4oHUM5B0Mn0fcQfjznSG3XFtk+RRY0oF6pMXi+q9JVoEmkzi34IUyDA1HpC0yH
+         SRU4EiuG6uFubWqfhJshe/EcuNXUFM2deRlF1x1lKCvxDADhuRukjhcOoAVjWBgjY5zI
+         xUAbiAwZ1FQnpZlUPltt8h61BHUyFQhzcwFiGWC5AKO8OzFQfWGQLRNlSOhoyqiUp4GK
+         97YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=p7hVdXnSKeOOfrLxwI2s0NxIC4n1/uQ0c98XN8Ll0EI=;
+        b=TWoHP4Y7R9Cx0bfzp+kb40PTnd8FV99U06qzxqL2uQdldx8m3Mi3ZcPnXnArzGDXnF
+         PV0XMPxIE7FMMQrooW5doLz0cVgTi2ZUQhL0YlprTjS9A8onZSTHYEdR/132Cj9Ln75y
+         CkVSbQFM0i70aNSImYkMvNozqrAMkDeqenWiUw3Uo/wQ9EYbZtPKC3F4SyCBHl4VObZ1
+         9LrLxYSXK6xGsH/iUg50lBFEWZZtNxXsasEJ5lN7LpHcYtnwsep/jVqqYC8FQsErMVYy
+         pQ/4dX1/C989P25DwOTynxvOtkH9jX8cu2EoL212+Gnts3YksW0GOmmDMqzHmxBKa5t8
+         hsAQ==
+X-Gm-Message-State: APjAAAXGU02LVmnItsnvtrEI7ah9NI0pM1dJc46XrHJsyC8Zt3P4x/vz
+        0d+us519jc6G3DalQMU/yGpIzuE=
+X-Google-Smtp-Source: APXvYqztcp1Myvf+2h10Oj/yQEfsV1y7IpCtLZie29CgZnGy8MwehtSIafKF5E0aUKWpe+hOIfj2/A==
+X-Received: by 2002:a5d:530d:: with SMTP id e13mr24550642wrv.125.1576413839333;
+        Sun, 15 Dec 2019 04:43:59 -0800 (PST)
+Received: from avx2 ([46.53.248.136])
+        by smtp.gmail.com with ESMTPSA id w13sm17693787wru.38.2019.12.15.04.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 04:43:58 -0800 (PST)
+Date:   Sun, 15 Dec 2019 15:43:55 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH -mm 1/2] ELF: make BAD_ADDR() unlikely
+Message-ID: <20191215124355.GA21124@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191106064005.8016-1-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=UN12_I82iCspjviWGz0A:9 a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+If some mapping goes past TASK_SIZE it will be rejected by kernel
+which means no such userspace binaries exist.
 
-On Wed, Nov 06, 2019 at 02:40:05PM +0800, Jitao Shi wrote:
-> Some dsi panels require the dsi lanes keeping low before panel power
-> on. So seperate the panel power control and the communication with panel.
-> 
-> And put the power control in drm_panel_prepare_power and
-> drm_panel_unprepare_power. Put the communication with panel in
-> drm_panel_prepare and drm_panel_unprepare.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Mark every such check as unlikely.
 
-Panels that requires power before communicating often/always have
-some timing constraints. Power need to be applied in XYZ micro seconds
-before it is safe to communicate with the panel.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-To support this a typical pattern is:
+ fs/binfmt_elf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-panel_xxx_prepare()
-{
-   // power on the panel using one or a few regulators
-
-   // wait until panel is known to be ready
-
-   // Communicate with the panel
-
-}
-
-first driver I looked at (panel-feiyang-fy07024di26a30d.c) follows this
-pattern.
-
-So we have the timing spelled out in the enable() function
-and the sequence is obvious.
-
-
-What will the benefit be from a separate drm_panel_prepare_power()
-function pointer?
-
-	Sam
-
-
-> ---
->  drivers/gpu/drm/drm_panel.c | 38 +++++++++++++++++++++++++++++++++++++
->  include/drm/drm_panel.h     | 17 +++++++++++++++++
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> index 6b0bf42039cf..e57f6385d2cc 100644
-> --- a/drivers/gpu/drm/drm_panel.c
-> +++ b/drivers/gpu/drm/drm_panel.c
-> @@ -131,6 +131,24 @@ void drm_panel_detach(struct drm_panel *panel)
->  }
->  EXPORT_SYMBOL(drm_panel_detach);
->  
-> +/**
-> + * drm_panel_prepare_power - power on a panel's power
-> + * @panel: DRM panel
-> + *
-> + * Calling this function will enable power and deassert any reset signals to
-> + * the panel.
-> + *
-> + * Return: 0 on success or a negative error code on failure.
-> + */
-> +int drm_panel_prepare_power(struct drm_panel *panel)
-> +{
-> +	if (panel && panel->funcs && panel->funcs->prepare_power)
-> +		return panel->funcs->prepare_power(panel);
-> +
-> +	return panel ? -ENOSYS : -EINVAL;
-> +}
-> +EXPORT_SYMBOL(drm_panel_prepare_power);
-> +
->  /**
->   * drm_panel_prepare - power on a panel
->   * @panel: DRM panel
-> @@ -170,6 +188,26 @@ int drm_panel_unprepare(struct drm_panel *panel)
->  }
->  EXPORT_SYMBOL(drm_panel_unprepare);
->  
-> +/**
-> + * drm_panel_unprepare_power - power off a panel
-> + * @panel: DRM panel
-> + *
-> + * Calling this function will completely power off a panel (assert the panel's
-> + * reset, turn off power supplies, ...). After this function has completed, it
-> + * is usually no longer possible to communicate with the panel until another
-> + * call to drm_panel_prepare_power and drm_panel_prepare().
-> + *
-> + * Return: 0 on success or a negative error code on failure.
-> + */
-> +int drm_panel_unprepare_power(struct drm_panel *panel)
-> +{
-> +	if (panel && panel->funcs && panel->funcs->unprepare_power)
-> +		return panel->funcs->unprepare_power(panel);
-> +
-> +	return panel ? -ENOSYS : -EINVAL;
-> +}
-> +EXPORT_SYMBOL(drm_panel_unprepare_power);
-> +
->  /**
->   * drm_panel_enable - enable a panel
->   * @panel: DRM panel
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index 624bd15ecfab..0d8c4855405c 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -61,6 +61,13 @@ struct display_timing;
->   * the panel. This is the job of the .unprepare() function.
->   */
->  struct drm_panel_funcs {
-> +	/**
-> +	 * @prepare_power:
-> +	 *
-> +	 * Turn on panel power.
-> +	 */
-> +	int (*prepare_power)(struct drm_panel *panel);
-> +
->  	/**
->  	 * @prepare:
->  	 *
-> @@ -89,6 +96,13 @@ struct drm_panel_funcs {
->  	 */
->  	int (*unprepare)(struct drm_panel *panel);
->  
-> +	/**
-> +	 * @unprepare_power:
-> +	 *
-> +	 * Turn off panel_power.
-> +	 */
-> +	int (*unprepare_power)(struct drm_panel *panel);
-> +
->  	/**
->  	 * @get_modes:
->  	 *
-> @@ -155,6 +169,9 @@ void drm_panel_remove(struct drm_panel *panel);
->  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector);
->  void drm_panel_detach(struct drm_panel *panel);
->  
-> +int drm_panel_prepare_power(struct drm_panel *panel);
-> +int drm_panel_unprepare_power(struct drm_panel *panel);
-> +
->  int drm_panel_prepare(struct drm_panel *panel);
->  int drm_panel_unprepare(struct drm_panel *panel);
->  
-> -- 
-> 2.21.0
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -97,7 +97,7 @@ static struct linux_binfmt elf_format = {
+ 	.min_coredump	= ELF_EXEC_PAGESIZE,
+ };
+ 
+-#define BAD_ADDR(x) ((unsigned long)(x) >= TASK_SIZE)
++#define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
+ 
+ static int set_brk(unsigned long start, unsigned long end, int prot)
+ {
