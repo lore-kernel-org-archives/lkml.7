@@ -2,94 +2,110 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19116C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3A0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43B32467A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576443419;
-	bh=P3lfOLQN58AvTesW0ND/Xvyc4RVCSmd/MxkVTZFTRZ4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=RnL2iIbPELYZlvVh+Zd6Uiw+aP4rcMmCzK9lT4FRwqAKRbDrjZVevqVQE+U+f4+l0
-	 bT7hpiiEmlHxXVJk84QXF4hktOQOJApGHI+ksYVLnRnHrNTw/r3U4YVWmVI6SSvS9o
-	 Ww1N5WhohfqAG6dCsrWkMkE+U+mAme7VruT23Yqg=
+	by mail.kernel.org (Postfix) with ESMTP id A469424673
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mbTNiwGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfLOU46 (ORCPT
+        id S1726454AbfLOVCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOU45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:56:57 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAD1824673;
-        Sun, 15 Dec 2019 20:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576443416;
-        bh=P3lfOLQN58AvTesW0ND/Xvyc4RVCSmd/MxkVTZFTRZ4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=u8sU9E7JVDTFYAsBlwTHyn+MZ7IXDLFjixO5cwVR7Nlp3S6inP+ENIQOVhY4+iRcl
-         ZASKiPQMYKiOOY+Je5PZsc/imCUlMmT0OB2Sa1JKngqNkeu1obkDohVsENz66fSlHg
-         pfvIioaWESCu83R5Dy3b1wZ8+BBe7dR6eaFgWtWM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B2168352274B; Sun, 15 Dec 2019 12:56:56 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:56:56 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Dexuan-Linux Cui <dexuan.linux@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Tejun Heo <tj@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lili Deng <Lili.Deng@microsoft.com>,
-        Baihua Lu <Baihua.Lu@microsoft.com>
-Subject: Re: "rcu: React to callback overload by aggressively seeking
- quiescent states" hangs on boot
-Message-ID: <20191215205656.GO2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191213224646.GH2889@paulmck-ThinkPad-P72>
- <CAA6354A-C747-4BE0-8EDC-C06E3C1D7D08@lca.pw>
- <20191214064048.GI2889@paulmck-ThinkPad-P72>
- <CAA42JLbBFkpYHXRVvyveYO76DnbkE3gyRW-=qmBGZcJTAiB6Uw@mail.gmail.com>
- <20191215202023.GM2889@paulmck-ThinkPad-P72>
- <HK0P153MB01485AF4FC857C8D26F4F471BF560@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+        Sun, 15 Dec 2019 16:02:15 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34498 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfLOVCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 16:02:15 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f4so3567567wmj.1;
+        Sun, 15 Dec 2019 13:02:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ev5ncFOZ6pn1RKGaLQHfd+wzEPLZWc48NhzIDiNBMKc=;
+        b=mbTNiwGcGxLE8/AdKDrOeX57Uprrn9eqyB81r57F+OM3HGhuGvrgA36mxHrmlPRJba
+         /X14+icOF2sMXk5Mqv6TthEzJrFbUyTbSvMh8DuRy7YeVKuBYTM67UNLMaODykgVD+CU
+         92nj1crd5sSqmkJ48fbBs0Yt+R0zSa6cV4SSEbM/07aqpwAkn4hi11KoFOuV2knaFyOK
+         A2QEgkmo6As7ho30gQBmWD3kTyRqXf9B3O9y+KyG3RffpFc1T0DMLCJ4bSQqNAMGyQhv
+         g0egWnkhevjUEaPsbvLV84h5+D5HZboktSorhwu1x0BVMV1/LliPL0ozW4jX96DuOCF0
+         oljg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ev5ncFOZ6pn1RKGaLQHfd+wzEPLZWc48NhzIDiNBMKc=;
+        b=ZcdVHVJXxVqRBV5rHCcF6I84S9ikzSE6+T1Y0bv5uiJzCuvRg7i/wMM1iMUUd09ATr
+         f4cnQqTvyrxGSlwC/L/9dSG/Q5n8nAphdGcfzaLaYu876a1XTbdzfY9aE2doKbCriqBm
+         4Ty8xOuD2gmlSyrUOy+nmtMSqY0lbB33Jd+owDHaa7eQLgKiLZqwewVXtO5PCxwYNBzK
+         /H2DdIqTpvgyB0TDBus6XDV5nSrOlmB1E3nnMYzoU0vw7CzJ0ib2YbJ3QciZaRFza+/j
+         SPbNJg3BRG8p9ZHmDQLZJTuX00Pljg2Wqt/+OhA43QuO+Lk1pCawJK65jz1u2oOuIeE1
+         YjPA==
+X-Gm-Message-State: APjAAAWXRliCH/L3nfTbe+v3abquV1BPW5exhP0RAs7togWPctC04+E4
+        L6kv4WASa8vNi++gZeCCpJ10J3kc
+X-Google-Smtp-Source: APXvYqy4zElZG4fJVBRHzoUncu70+64m8M5QJ/eiHjlk/oa09t06tGUW1wwLeUN7ztldupMxZzQZgw==
+X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr25825846wmk.50.1576443732500;
+        Sun, 15 Dec 2019 13:02:12 -0800 (PST)
+Received: from localhost.localdomain (p200300F1370FCC00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:370f:cc00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id f1sm19565645wrp.93.2019.12.15.13.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 13:02:11 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com,
+        narmstrong@baylibre.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] clk: Meson8/8b/8m2: fix the mali clock flags
+Date:   Sun, 15 Dec 2019 22:01:52 +0100
+Message-Id: <20191215210153.1449067-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB01485AF4FC857C8D26F4F471BF560@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 08:40:40PM +0000, Dexuan Cui wrote:
-> > From: Paul E. McKenney <paulmck@kernel.org>
-> > Sent: Sunday, December 15, 2019 12:20 PM
-> > 
-> > This is consistent with what I saw in Qian Cai's report, FYI.  So I
-> > am very interested in learning whether the first patch in my reply [1]
-> > helps you.
-> > 							Thanx, Paul
-> 
-> Hi Paul, yes, your first patch (the below) can fix the hang issue:
-> 
-> commit e8d6182b015bdd8221164477f4ab1c307bd2fbe9
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Sun Dec 15 10:59:06 2019 -0800
-> 
->     squash! rcu: React to callback overload by aggressively seeking quiescent states
+While playing with devfreq support for the lima driver I experienced
+sporadic (random) system lockups. It turned out that this was in
+certain cases when changing the mali clock.
 
-Thank you!  May I add your Tested-by?
+The Amlogic vendor GPU platform driver (which is responsible for
+changing the clock frequency) uses the following pattern when updating
+the mali clock rate:
+- at initialization: initialize the two mali_0 and mali_1 clock trees
+  with a default setting and enable both clocks
+- when changing the clock frequency:
+-- set HHI_MALI_CLK_CNTL[31] to temporarily use the mali_1 clock output
+-- update the mali_0 clock tree (set the mux, divider, etc.)
+-- clear HHI_MALI_CLK_CNTL[31] to temporarily use the mali_0 clock
+   output again
 
-							Thanx, Paul
+With the common clock framework we can even do better:
+by setting CLK_SET_RATE_PARENT for the mali_0 and mali_1 output gates
+we can force the common clock framework to update the "inactive" clock
+and then switch to it's output.
+
+I only tested this patch for a limited time only (approx. 2 hours).
+So far I couldn't reproduce the sporadic system lockups with it.
+However, broader testing would be great so I would like this to be
+applied for -next.
+
+
+Martin Blumenstingl (1):
+  clk: meson: meson8b: make the CCF use the glitch-free "mali" mux
+
+ drivers/clk/meson/meson8b.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.24.1
+
