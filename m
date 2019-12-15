@@ -2,139 +2,112 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA41AC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70DBC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A565F24679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F442467A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KVMa0kkK"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NAZjoJp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfLOVYY (ORCPT
+        id S1726478AbfLOVdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 16:24:24 -0500
-Received: from mout.web.de ([212.227.15.3]:37913 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOVYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 16:24:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576445052;
-        bh=eCUdcI2nCUe6hq6eD8muOW7l4NxkUtCc/Udi30XHMRo=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=KVMa0kkKNkRJdqlY/Cm54b7hjY4HbGyeEaDR2sNFVzd7BMXL42ansFVj2i3N3rr+f
-         UpGiYHHwaVVuOO4Cbhfd9RNn5G61O9tuw+2nHxmKcZZT0YUpZ56T38bMyeWJjUFX52
-         NOQk7eh4sUL0NehBqpznjPauaGnt1nifBeji+LPo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.43.108] ([89.204.138.206]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Mck7d-1iPLbR1RvF-00HveM; Sun, 15
- Dec 2019 22:24:12 +0100
-Subject: Re: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
-From:   Soeren Moch <smoch@web.de>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191211235253.2539-1-smoch@web.de>
- <0101016ef97cf6b5-2552a5e4-12de-4616-94d6-b63d9c795ed6-000000@us-west-2.amazonses.com>
- <1daadfe0-5964-db9b-818c-6e4c75ac6a69@web.de>
-Message-ID: <22526722-1ae8-a018-0e24-81d7ad7512dd@web.de>
-Date:   Sun, 15 Dec 2019 22:24:10 +0100
+        Sun, 15 Dec 2019 16:33:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45325 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfLOVdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 16:33:35 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so2482906pgk.12
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 13:33:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=kTJ/7PtigGJNtvEy3SeDXyZtHfW7Mm5hgX7oNRog2kI=;
+        b=NAZjoJp/q2hXBMAct65XDGFTHIbNGntvM4aNNUhsXLOG35VC4Gc3NnDYztbjfsBeCK
+         CB4Wn5uyPaCIzbb0AjjhZ2Kv6BWAhYYt2JJqbUBaO28HlTSAwZUAUJEI9KjCLVZ3YG2W
+         GsK3hb+oavZCoo0e9L2It01N+KxOrGro+CAdVOnWAQv0kXvY6u0mM9/7rhtKgas3obRC
+         wPGnCfXbc+F+lbc4Fwz0gay5e2dQvrfZimEITY3Olq9dwou3YSWWrSfpQYBs+kEgX80j
+         kUVkePhhS8kBqIggYYBRAncTiiVVXdHkojsPfwhUvrpuU1/EBus1tdtB5pZcvuk/L3Ss
+         pS7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kTJ/7PtigGJNtvEy3SeDXyZtHfW7Mm5hgX7oNRog2kI=;
+        b=ggNwMJduRqbdc4U4lJEoBboOh22scI/PSQDqfii59vXA/k2ffjlN7sFEWSwA+5Zv/T
+         chetQVK9RRUcWvb6HwMu5ulszfy041cD10dG7xO24y7vSPfh9Go3gyXUGGwsWjn0gQcu
+         nRgiLzDGxWBJOS4dGbM73QUvFYQMFDDPmL550e/xq9KdKceJeS7057mDhrGiLJzGgqiI
+         L6aSS8zYMzpzv6atKnm4NvPaYPDUSa2kJxwt4f+WaidBkQ/1nUqy8DXWM4hNjsniIkQj
+         rGWXMInG6L9k8YR+p/SMiTn7OYtKzhMw0dPxl+7eSmQw0u0t8G6jhkkeKcIKnMwB/vJp
+         qYSg==
+X-Gm-Message-State: APjAAAVY7YxIN+BpHS9Ut67U0Mdqv9cBuwoLwbE83xTK/coc74suc/F+
+        +3zWhYEi91PNZNriGELF/nWpKikeZC8Fxg==
+X-Google-Smtp-Source: APXvYqzdip90VRg3jiwuwYEbS/hK6r4YY+Tg9kZQviVxN2oQopRJMgCbWsQSonf23ER9FT3pjavzbg==
+X-Received: by 2002:a63:f60:: with SMTP id 32mr14162830pgp.206.1576445614391;
+        Sun, 15 Dec 2019 13:33:34 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id k16sm19654855pfh.97.2019.12.15.13.33.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2019 13:33:33 -0800 (PST)
+Subject: Re: [PATCH v3] io_uring: don't wait when under-submitting
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+ <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
+ <a1f0a9ed-085f-dd6f-9038-62d701f4c354@kernel.dk>
+ <3a102881-3cc3-ba05-2f86-475145a87566@kernel.dk>
+ <900dbb63-ae9e-40e6-94f9-8faa1c14389e@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
+Date:   Sun, 15 Dec 2019 14:33:32 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1daadfe0-5964-db9b-818c-6e4c75ac6a69@web.de>
+In-Reply-To: <900dbb63-ae9e-40e6-94f9-8faa1c14389e@gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Provags-ID: V03:K1:QhKcYNNQrZd6thN4hQsC9O7Yf91beeDEgTC+ZesnncMwRYbdp6k
- PcVfxxisANZf5uninSbdb8XlFs43Q8aukGZfSECbUxgh+NFVXxC5/CV/0zyqxmrCf9Ujs2x
- b6v7dWT2uNmz5OfaMlimF17bQj8CWalZC/cdhlAPJb5da0W9x7AA244YyuuXUwiusfGxafl
- Xgo4bupLX2lw+JKtOKStw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1ISRg0nEFow=:wc+RMp78TqOTVz7simHpvW
- bK3VSfSBE/9kizexywirb7ZXzVZhs7mriDltIXa16CJdeKX7HfFuTZsc0ZdAYKJSmQORgwQy5
- Zpft+rWolrPyRPfVXjHmP9vwwTjNvjz2cYYy0/1Xf7q7MyUsRpLsxn6oj3yHmsPhZGmopCnwQ
- AqkxbmpU3AiZlhPCqV0vhS+xIXturcE4pLnYlOYZHy6AaWYYxz1K9pIO3wHeBtDEtAfF8qRNR
- msgqmOY3iZ02hrHfdv0AVqNBy3n8Ex+rwL0POG1Cm2z9P0KEm2GO2W9EEZ4xh37/u1lxunK6k
- FnkDUUZpMcnkexMWz12CqOpdlF3uDqQc8J65EZWebAJc25joOd2oJUT/fRn/4LPsP4r5FEJA1
- kYJzAzZrL0bVdwX38Gt9LeAwBhjxB2uySxuaZPcrWI7tMafC3Med8W44nkyyFrhPAhYMNoeJ4
- OSoSKYx63fF885aT0zScBovb1bZZzm3Ja4XHPYaCagNOvG6fzEwM6d2+kGBj9l86sidgml9if
- K1pmjqN1Wf2Mgndz0odCyTXfOSMgVveWhhqfGDe45P2f2KzH0PBg9iPq3BK2V2Tbnd8WwW+De
- KSVZe/W2ommLUL6zBYATH+WTElYuwxbCk+76dh5jJx8Z0gxR1mz40cZw0qvgQvHgx/fqXE8Y0
- 7GRZaeQeueNcKzKD/HRUBK7R6yCTgLJS2YlRI6GI6UHDpBGXLbeJcCaWL3Dk38OrsAWYr67fH
- ybBNxY1YB9qd5hA1lHYje/RUMW0zY1JSV5z4WU4SLxYK6UivFrpgq6GOEphRgOVFgxFNqKyoN
- NdyNh8qZCOvPvYmy4OPQ62KfCO7QsM/SgaujMZIencM/T4KJbJsRHKIkJf3GyDZymvpZiG6cH
- TylB2KnNPD8QCdLRz2dwk7f4Z2dBZueBvS38sgT9RnyY/zZNNClNPEMBARzfYJXhmHNT4oPoA
- yzo85V9fzHKgwrsCUfA+CIKdkJqAX/fqp9Zdr+P3klh4dXV1PWmuZldE7SkbBfcGm5hadkOGx
- HLKBN0+GkWt/Cyyz54nhmUITMrlvFY8rRiPca0TXRBktv+1gVsYkYtO2HhxFtggfufsO2Sfrd
- R860lSzrhp7RL8Intuse99bV+424/kScZMvP94VEJ3Bou++y4akIDbP7Y7W1Ix7vlhnh7+MpU
- mxUOcEEQdTi9AVGZxa7JshX8jDsfUiFpFBqyzdhbpzLLO+6xddhCJj02ABW2WUg10SAfYbtQd
- rULgwVJAOeh+Gg5uHa+vTI91QRC1m08sLTyWrgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.12.19 11:59, Soeren Moch wrote:
-> On 12.12.19 10:42, Kalle Valo wrote:
->> Soeren Moch <smoch@web.de> writes:
+On 12/15/19 8:48 AM, Pavel Begunkov wrote:
+> On 15/12/2019 08:42, Jens Axboe wrote:
+>> On 12/14/19 11:43 AM, Jens Axboe wrote:
+>>> On 12/14/19 7:53 AM, Pavel Begunkov wrote:
+>>>> There is no reliable way to submit and wait in a single syscall, as
+>>>> io_submit_sqes() may under-consume sqes (in case of an early error).
+>>>> Then it will wait for not-yet-submitted requests, deadlocking the user
+>>>> in most cases.
+>>>>
+>>>> In such cases adjust min_complete, so it won't wait for more than
+>>>> what have been submitted in the current call to io_uring_enter(). It
+>>>> may be less than totally in-flight including previous submissions,
+>>>> but this shouldn't do harm and up to a user.
+>>>
+>>> Thanks, applied.
 >>
->>> Add support for the BCM4359 chipset with SDIO interface and RSDB support
->>> to the brcmfmac wireless network driver in patches 1-7.
->>>
->>> Enhance devicetree of the RockPro64 arm64/rockchip board to use an
->>> AP6359SA based wifi/bt combo module with this chipset in patches 8-9.
->>>
->>>
->>> Chung-Hsien Hsu (1):
->>>   brcmfmac: set F2 blocksize and watermark for 4359
->>>
->>> Soeren Moch (5):
->>>   brcmfmac: fix rambase for 4359/9
->>>   brcmfmac: make errors when setting roaming parameters non-fatal
->>>   brcmfmac: add support for BCM4359 SDIO chipset
->>>   arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
->>>   arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
->>>
->>> Wright Feng (3):
->>>   brcmfmac: reset two D11 cores if chip has two D11 cores
->>>   brcmfmac: add RSDB condition when setting interface combinations
->>>   brcmfmac: not set mbss in vif if firmware does not support MBSS
->>>
->>>  .../boot/dts/rockchip/rk3399-rockpro64.dts    | 50 +++++++++++---
->>>  .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  8 ++-
->>>  .../broadcom/brcm80211/brcmfmac/cfg80211.c    | 68 +++++++++++++++----
->>>  .../broadcom/brcm80211/brcmfmac/chip.c        | 54 ++++++++++++++-
->>>  .../broadcom/brcm80211/brcmfmac/chip.h        |  1 +
->>>  .../broadcom/brcm80211/brcmfmac/pcie.c        |  2 +-
->>>  .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 +++++
->>>  include/linux/mmc/sdio_ids.h                  |  2 +
->>>  8 files changed, 176 insertions(+), 26 deletions(-)
->> Just to make sure we are on the same page, I will apply patches 1-7 to
->> wireless-drivers-next and patches 8-9 go to some other tree? And there
->> are no dependencies between the brcmfmac patches and dts patches?
+>> This causes a behavioral change where if you ask to submit 1 but
+>> there's nothing in the SQ ring, then you would get 0 before. Now
+>> you get -EAGAIN. This doesn't make a lot of sense, since there's no
+>> point in retrying as that won't change anything.
 >>
-> Yes, this also is my understanding. I'm glad if you are fine with
-> patches 1-7.
-> Heiko will pick up patches 8-9 later for linux-rockchip independently.
-> And if we need another round of review for patches 8-9, I think we don't
-> need to bother linux-wireless with this.
+>> Can we please just do something like the one I sent, instead of trying
+>> to over-complicate it?
+>>
+> 
+> Ok, when I get to a compiler.
 
-Heiko,
+Great, thanks. BTW, I noticed when a regression test failed.
 
-is this OK for you when patches 1-7 are merged now in wireless-drivers,
-and then I send a v3 for patches 8-9 only for you to merge in
-linux-rockchip later? Or do you prefer a full v3 for the whole series
-with only this pending clock name update in patch 9?
-
-Thanks,
-Soeren
-
-
+-- 
+Jens Axboe
 
