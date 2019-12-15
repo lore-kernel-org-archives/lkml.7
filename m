@@ -2,100 +2,94 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA4FC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9A5C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2385B24679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A722467E
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bipom6FU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfLOSAC (ORCPT
+        id S1726478AbfLOSJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 13:00:02 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36147 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfLOSAB (ORCPT
+        Sun, 15 Dec 2019 13:09:30 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34558 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfLOSJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 13:00:01 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i4so5926198otr.3;
-        Sun, 15 Dec 2019 10:00:01 -0800 (PST)
+        Sun, 15 Dec 2019 13:09:30 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m6so4251812ljc.1;
+        Sun, 15 Dec 2019 10:09:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6BwnLgIw1O6Pl9DGM8GPZ2MRa8LW0r8gaeFDwLz4cXY=;
+        b=Bipom6FUC0WO3TCqvzVyO12ZkoPXYR/rXIPD3qGKXxWhqDR3zF/bPgqWf5ivb0Ivdy
+         fUjjMP9/DSFCZRptRknJoupOgk+MpqJYJK9bl7Kxc/+h78uhAiPS9wctOZBk+uW75su8
+         WwPUXrh4VI9NKsRn5zm5lA7yILGTNtWQV7d0IudazRL6qZU1rqocy7TKwwpa2Fa3ezO4
+         Dk+iPMAwhXuAGQvWzI3pa3iJKHKp5yKAZWlcbfbk+g8Axk/843n7tK5MsC42mshuoob9
+         j/s7mD8XMIyOXNufpQ77/lzWcFsC2T3crt7Fk/DG60XN113q8pixbjtlo+7hV+sUoE8J
+         On8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9fJ0LWYw9AfYu5ktwDXf17s2jDM7dPBu5+xWG/aTJpg=;
-        b=P8rdlsnWDUqLmIGutoirlP2ON30p/BbtEX2fsdBkAXoYUgACve5TS3RDWOsoYDbdRD
-         3OZbpjZxDzr93JPik6Il3WtY2/2zoGOJgMxXcQEJnrAUIPMO6/lH/8YGmZ78i9nvdXA/
-         pEJYvoooM/MVvFX2AgiAYtR2pKErXcvOgqkRM0HLadnGx/0GDUQfuDv+akaTiDH3vnik
-         2WSntiMm7wjhpDFLvRGQ+VKP1ZQYu3IMcqTEm43aqzvR282Ln0KqnO8gz21dVlbWWqEt
-         UTc7+t+imddDjyZ6StKYbQ2qQ5ocFL0y0EdSmPbXlCvk/FgP2N10R5AAJwGP0QK9mP71
-         8ONg==
-X-Gm-Message-State: APjAAAUH+rf2f04UZM1kv0qRhwXZiCOqbqSZL8ZEK6fZ1ubwIv0DQOpZ
-        1LzvjXxy2FczlbaZf5dJDrC+Et2hFXWJpFn4rW8=
-X-Google-Smtp-Source: APXvYqweU6+eLolGhQ1GP76ei4WBc/pILrjGMBaPf/+81RXB8SQJ9StRzVmc9XoykZ8tB9azr+V6L5oIbAyUUkLBrUo=
-X-Received: by 2002:a9d:6c81:: with SMTP id c1mr27915439otr.39.1576432800843;
- Sun, 15 Dec 2019 10:00:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6BwnLgIw1O6Pl9DGM8GPZ2MRa8LW0r8gaeFDwLz4cXY=;
+        b=si/W6NlZoVegOXwqX8/NqdBBTnaZIFxfLxNHT1Q6pZkwUK9eb2rqgVEsLNcv9hyeby
+         iFddpXxFIqvrNsfczVfMeVHp8d8xbz/RasckzBkpdrrSHJ4MHOaJ1WrONNTvoibimWJp
+         HXkWG/WWQ/yv78xy1Veg4PNr8mMEwKt/UqiiEa+ecjdBMnbjR614RSNjhy005BP3pkNK
+         f4UFko5PPG3/AFCQrekQo4mUSSl2RZAiR88WFqCAP4blSOl8DMPqjmAXkvbkWiDpJufD
+         cF5VYEnMrZLOgPPhtGmfvF0duROLJ4O6qiZi9dxjFO69EV20MVGfS9jQ+wzg+/soF5BG
+         D5hg==
+X-Gm-Message-State: APjAAAURZdHC2sKKzGmTDmgaGz086u+zkFsnzv5Kj0JZCRpljjtf5ySV
+        GpSuN+Y0U4g2yY3VvYecdH0=
+X-Google-Smtp-Source: APXvYqzBE614d51TKdCJodABHNuKxNyNlbBjrp69WJZ5wESzrJnGB5fpNG1iDS6jv04Zq0cO+bASSg==
+X-Received: by 2002:a2e:99cd:: with SMTP id l13mr16798134ljj.243.1576433367539;
+        Sun, 15 Dec 2019 10:09:27 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id t27sm8871875ljd.26.2019.12.15.10.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 10:09:26 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Tegra VDE: Minor code clean up
+Date:   Sun, 15 Dec 2019 21:07:49 +0300
+Message-Id: <20191215180752.5408-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191215175132.30139-1-pakki001@umn.edu>
-In-Reply-To: <20191215175132.30139-1-pakki001@umn.edu>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 15 Dec 2019 18:59:49 +0100
-Message-ID: <CAMuHMdWUv+f=b4cMDX7dbK0fW=YnL=L11ODvZc9mh+L-02jo_w@mail.gmail.com>
-Subject: Re: [PATCH] net: caif: replace BUG_ON with recovery code
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Kangjie Lu <kjlu@umn.edu>, "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aditya,
+Hello,
 
-On Sun, Dec 15, 2019 at 6:51 PM Aditya Pakki <pakki001@umn.edu> wrote:
-> In caif_xmit, there is a crash if the ptr dev is NULL. However, by
-> returning the error to the callers, the error can be handled. The
-> patch fixes this issue.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+This small series just makes a minor clean up of the driver's code,
+addressing COMPILE_TEST build problem that was reported sometime ago.
 
-Thanks for your patch!
+Dmitry Osipenko (3):
+  media: staging: tegra-vde: Select IOVA unconditionally in Kconfig
+  media: staging: tegra-vde: Sort headers alphabetically
+  media: staging: tegra-vde: Use __maybe_unused attribute instead of
+    ifdef
 
-> --- a/drivers/net/caif/caif_serial.c
-> +++ b/drivers/net/caif/caif_serial.c
-> @@ -270,7 +270,9 @@ static int caif_xmit(struct sk_buff *skb, struct net_device *dev)
->  {
->         struct ser_device *ser;
->
-> -       BUG_ON(dev == NULL);
-> +       if (WARN_ON(!dev))
-
-This will still crash the kernel with panic_on_warn.
-
-> +               return -EINVAL;
-> +
->         ser = netdev_priv(dev);
->
->         /* Send flow off once, on high water mark */
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ drivers/staging/media/tegra-vde/Kconfig | 2 +-
+ drivers/staging/media/tegra-vde/vde.c   | 6 ++----
+ drivers/staging/media/tegra-vde/vde.h   | 2 +-
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
