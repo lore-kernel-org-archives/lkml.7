@@ -2,135 +2,286 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321CBC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B00DC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F4031206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1881206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kZybwPg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYiS+9Cn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfLOSuX (ORCPT
+        id S1726481AbfLOSwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 13:50:23 -0500
-Received: from mout.web.de ([212.227.17.12]:57993 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOSuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 13:50:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576435804;
-        bh=cCv7sJXfJnO1QQcnZn3J3mtAlYRbJz8IbfwwjzYhvZE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=kZybwPg+QqeD2tv7u1JbSm9gtaXFGDV7VXY0l3++CfAKzV+ge5DCdxHHRD4ZQhEyC
-         TvnDCzNoxRsLpDzmtnWQC6icwB0yoq6GiFbF17d7srjzUbvD3P/4AE1OjCFsNv0E8h
-         uwV5kvQaUkJODE2wDO0dZYDK7njL1kfEkUb3sgrQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.76.50]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9GJ0-1iYMZG1bdm-00CjXr; Sun, 15
- Dec 2019 19:50:04 +0100
-Subject: Re: [PATCH] hdlcdrv: replace assertion with recovery code
-To:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <20191215175842.30767-1-pakki001@umn.edu>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e43a4b92-c236-8f79-ffbb-60bd4bbcb065@web.de>
-Date:   Sun, 15 Dec 2019 19:50:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sun, 15 Dec 2019 13:52:05 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40897 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfLOSwF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 13:52:05 -0500
+Received: by mail-io1-f67.google.com with SMTP id x1so4636743iop.7
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 10:52:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=++SuXPbeJ8HW/JTgrnYki41wnpjCIWM0WgXunOlEX7k=;
+        b=mYiS+9CnqxC+9BHQ+xrob3lut2K9Kaa4lQADI+64wCUWSoj6Rww9Br8GIFc6NwaNRc
+         Uc0h/21rVPStoUqk3tiELHRKHtBpNDjAtsQ2wUTEdAHweASUFY2+le6lpi94wjUf5Yi2
+         B+e+iCpyg3wY7WDMzwMgci4b4XrzWTnecUQ4TwNWCcOBOenbs28IjmEbHYRZhRWGb6Tg
+         vvWRWxsrKhzbj1485dNt7H4YCK3RFlKM2jz+a0vLoIRvIDeJQ1E3YOQsFnwNCPZ9/acm
+         TZSayrNOmYoRc/JBwmICnp6w2U6BR+mabsD2wfplhGoWa/aN2D1TGyXvhLCIkkWJkJVs
+         BMOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=++SuXPbeJ8HW/JTgrnYki41wnpjCIWM0WgXunOlEX7k=;
+        b=gGslQqyVxUCOVh2Szy0dfL3CWeDi56kUpAucHSl+q7lTV4zhUGnfZBSfrM4jXbJkxw
+         MCYdgvLOs6y8XdFmkeZAiptlD71BMzF2dG9L4Dkhc9h1j/eXgxSzIL/9kvEgQpG9wV2p
+         NWeEO1vRHRYx1j7xYDN4lezI9JbMVPvFaZicvObMoPlVJKt6ptnyTLPRW5YU4/kPpN8v
+         AzKHnneuRRfx3CGTzyYoQu9BD7QodNMHM12xjOk52/iBWIk7Za0LjN7k7z/3xDrBjYgF
+         8U6EQqgLisCOCsuyr+E6a8DCQr9MHLr/VCaFlvJBTvcU/nNkWgj8ucaqfRVKFjwhJ4ye
+         jXdA==
+X-Gm-Message-State: APjAAAVSJhif6pQ1tMB7Cma11X1VUE/2xC18fkgMJXF1zouae0XAIt2r
+        dPH1ZHbGexKYQhRy7uK3ShDZKsTb4USXaFihe94=
+X-Google-Smtp-Source: APXvYqx6vaHHB+YvwrXYvMgA1CNMQ6SU9HLtubdKaBsY7EXiHjqe3Eo/svLz6iEm7bJuMSY+KlZkIPgH6y+Rn6xxAAI=
+X-Received: by 2002:a02:8817:: with SMTP id r23mr9223515jai.120.1576435922826;
+ Sun, 15 Dec 2019 10:52:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191215175842.30767-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LTLaqZLehBwVqcibF/rrsH9IaHsL1Y0SiF58MechtcVR9LbsXBx
- cV5++VyOuoaPqdPBQEnlu/xAhP+S+f4n1yjOwyPeQBQpdssbXXtyb0y6Y164Fgw7Cuw/rxX
- NavtM46eBfPZidlLjlU63LZLSKXYTqklPR5m8u2ql9989c5XqJy4iaa+oCG7vf7HzTPnz7c
- TAzQ3rfUgqFx3wFx/oWng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5xiAHMmbqUQ=:WsezQUDEglUue+evouMb1j
- rxeldg/ju4Fgyds+xC/wbB6qMglz9y+O8wLFFj/kB7F27NnuSR2WvfNki8jaUkxqNgELof/lr
- zU4QBpeMLt1VWSlYMOz3pjiCWJq3uhLesB7fmVEwOiH5Mbqvnc6Eiy/FoPeaRP3VZP4kMucKi
- Rm8zhV9im7xNEJzODU3F3ZU4a1OE+FuIo1bzdkM16DfcQGLwlvgk+E9mjRZ7oLs3xOuK+3t/J
- DJsy7lY4zbuUr9NzJr2j13JnwGPDbWlcqy0ctSBIK+uFmruSGKrub0qpjaeahRqgME3ih6RyO
- mNBxYSuMPGMQ5dEOLLl9WP32mhN7VTpa8F/1Wwq0/RYv7+RsdXiovh7by5Wf5vMXc+CkZh6+n
- vRYbHINFtXYif+y9SsJ1Fn4NjPH1EE0cDRa99JmvFgb+wSbscErDIzg5GegX69ISE1PtRU6Us
- yy1rsitn9tqyYzeNm63T9tkNqbhn3W75CKA+5adSccwBqcJ2Bxz/MqLMTZ7ma9GFMZXsW/fJh
- FcK5ETGhv721hWAW0LVyxtAUH6WfMkjB1//Oojbt0vvP5g5CwVZUspVb0BtyNPhn7uuXLmCF1
- YPFKWHVx4Rv2trPI2FuoXtY6/CcEiWVcOBN6f0CsiPaM9QVnoSXVaOaqm7WvtA7V3LizP4wIs
- UTP4iNSs0exbTCrnvlyupFuwx8xomiEO65Y3+eNv6v2Li6P7NWKkLiZ5NVRbPrfyn1jC2LsGf
- /hH1WfIEOBMmAOTqrCKYOa+cnX4REuZJuLU+s+z90NlXet+7UXGXASNij+5oQGbNTw9+j1I8T
- wEDYMrV8V5s7O729PGE51jRzop3OfT7KlViFccx3XQk991i3Fm8LQPqdkW+iQbINwIoAQWJyC
- 47COMet9JXHpIaXI+iGQH4JWBuCtECuDzNri1a60QRjwDuUc3/bHN2w0yWtREUpis2J5nYZjA
- s83LYcpXS3knwvoZirthSMUZvA4mFs13p8xW+52fC4xpkIzozvCi+JZ+4AbvGnizbYOrdaHwd
- oWgvOGbKwrSVcf3V4sqnSipPwAsT9U7iHdaOaK3MRMBRqW69eFueqLtpRA6X+wVYNisoGl9Vs
- AWPjFy0qdUkDffMIdGE5wJZP8EtYEmwgnEMv7rM+e/3P/Vfs96m6ziiuPjp67ehJPBnBteY2O
- ARrzp0QKAPPLCFG841wuVw2Ca47AdpJXV7NbSlEhfYAMT4LTi7TF0fFAvOEqG6+ikRVma2Hpt
- YkAPyNHW+iHW4q94MCZbNfz/Lfmb8ToA+J7mPGvOHR2Ljg9e8leZALHOYeJE=
+References: <cover.1575932654.git.robin.murphy@arm.com> <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
+In-Reply-To: <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 16 Dec 2019 00:21:50 +0530
+Message-ID: <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>, Soeren Moch <smoch@web.de>,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> However, by returning the error to the caller in case ops is NULL
-> can avoid the crash.
+Hi Robin
 
-I suggest to improve this change description by choosing also
-a more imperative wording.
+On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK817,
+> so it makes little sense for the driver to have to have two completely
+> different mechanisms to handle essentially the same thing. Bring RK805
+> in line with the RK809/RK817 flow to clean things up.
+>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/mfd/rk808.c       | 58 +++++++++++++++++----------------------
+>  include/linux/mfd/rk808.h |  1 -
+>  2 files changed, 25 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index 657b8baa3b8a..e88bdb889d3a 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -186,7 +186,6 @@ static const struct rk808_reg_data rk805_pre_init_reg[] = {
+>         {RK805_BUCK4_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
+>                                  RK805_BUCK4_ILMAX_3500MA},
+>         {RK805_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK, BUCK_ILMIN_400MA},
+> -       {RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SLEEP_FUN},
+>         {RK805_THERMAL_REG, TEMP_HOTDIE_MSK, TEMP115C},
+>  };
+>
+> @@ -449,21 +448,6 @@ static const struct regmap_irq_chip rk818_irq_chip = {
+>
+>  static struct i2c_client *rk808_i2c_client;
+>
+> -static void rk805_device_shutdown_prepare(void)
+> -{
+> -       int ret;
+> -       struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+> -
+> -       if (!rk808)
+> -               return;
+> -
+> -       ret = regmap_update_bits(rk808->regmap,
+> -                                RK805_GPIO_IO_POL_REG,
+> -                                SLP_SD_MSK, SHUTDOWN_FUN);
+> -       if (ret)
+> -               dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
+> -}
+> -
+>  static void rk808_device_shutdown(void)
+>  {
+>         int ret;
+> @@ -499,17 +483,29 @@ static void rk8xx_syscore_shutdown(void)
+>         struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+>         int ret;
+>
+> -       if (system_state == SYSTEM_POWER_OFF &&
+> -           (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
+> +       if (system_state != SYSTEM_POWER_OFF)
+> +              return;
+> +
+> +       switch (rk808->variant) {
+> +       case RK805_ID:
+> +               ret = regmap_update_bits(rk808->regmap,
+> +                                        RK805_GPIO_IO_POL_REG,
+> +                                        SLP_SD_MSK,
+> +                                        SHUTDOWN_FUN);
+> +               break;
+> +       case RK809_ID:
+> +       case RK817_ID:
+>                 ret = regmap_update_bits(rk808->regmap,
+>                                          RK817_SYS_CFG(3),
+>                                          RK817_SLPPIN_FUNC_MSK,
+>                                          SLPPIN_DN_FUN);
+> -               if (ret) {
+> -                       dev_warn(&rk808_i2c_client->dev,
+> -                                "Cannot switch to power down function\n");
+> -               }
+> +               break;
+> +       default:
+> +               return;
+>         }
+> +       if (ret)
+> +               dev_warn(&rk808_i2c_client->dev,
+> +                        "Cannot switch to power down function\n");
+>  }
+>
+>  static struct syscore_ops rk808_syscore_ops = {
+> @@ -579,7 +575,6 @@ static int rk808_probe(struct i2c_client *client,
+>                 nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
+>                 cells = rk805s;
+>                 nr_cells = ARRAY_SIZE(rk805s);
+> -               rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
+>                 break;
+>         case RK808_ID:
+>                 rk808->regmap_cfg = &rk808_regmap_config;
+> @@ -658,10 +653,8 @@ static int rk808_probe(struct i2c_client *client,
+>                 goto err_irq;
+>         }
+>
+> -       if (of_property_read_bool(np, "rockchip,system-power-controller")) {
+> +       if (of_property_read_bool(np, "rockchip,system-power-controller"))
+>                 pm_power_off = rk808_device_shutdown;
+> -               pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
+> -       }
+>
+>         return 0;
+>
+> @@ -686,13 +679,6 @@ static int rk808_remove(struct i2c_client *client)
+>         if (pm_power_off == rk808_device_shutdown)
+>                 pm_power_off = NULL;
+>
+> -       /**
+> -        * As above, check if the pointer is set by us before overwrite.
+> -        */
+> -       if (rk808->pm_pwroff_prep_fn &&
+> -           pm_power_off_prepare == rk808->pm_pwroff_prep_fn)
+> -               pm_power_off_prepare = NULL;
+> -
+>         return 0;
+>  }
+>
+> @@ -702,6 +688,12 @@ static int __maybe_unused rk8xx_suspend(struct device *dev)
+>         int ret = 0;
+>
+>         switch (rk808->variant) {
+> +       case RK805_ID:
+> +               ret = regmap_update_bits(rk808->regmap,
+> +                                        RK805_GPIO_IO_POL_REG,
+> +                                        SLP_SD_MSK,
+> +                                        SLEEP_FUN);
+> +               break;
+>         case RK809_ID:
+>         case RK817_ID:
+>                 ret = regmap_update_bits(rk808->regmap,
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index b038653fa87e..e07f6e61cd38 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -620,6 +620,5 @@ struct rk808 {
+>         long                            variant;
+>         const struct regmap_config      *regmap_cfg;
+>         const struct regmap_irq_chip    *regmap_irq_chip;
+> -       void                            (*pm_pwroff_prep_fn)(void);
+>  };
+>  #endif /* __LINUX_REGULATOR_RK808_H */
+> --
+> 2.17.1
+>
 
+I am sill getting the kernel warning on issue poweroff see below.
+on my Rock960 Model A
+I feel the reason for this is we now have two poweroff callback
+1  pm_power_off = rk808_device_shutdown
+2  rk8xx_syscore_shutdown
 
-> The patch fixes this issue.
-Please replace this sentence by the tag =E2=80=9CFixes=E2=80=9D.
+In my investigation earlier common function for shutdown solve
+the issue of clean shutdown.
 
-Regards,
-Markus
+for *rockchip,system-power-controller* dts property
+we can used flags if check if this property support clean shutdown
+for that device.
+
+[  565.009291] xhci-hcd xhci-hcd.0.auto: USB bus 5 deregistered
+[  565.010179] reboot: Power down
+[  565.010536] ------------[ cut here ]------------
+[  565.010940] No atomic I2C transfer handler for 'i2c-0'
+[  565.011437] WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40
+i2c_transfer+0xe4/0xf8
+[  565.012126] Modules linked in: snd_soc_hdmi_codec dw_hdmi_i2s_audio
+rockchipdrm nvme analogix_dp nvme_core brcmfmac hci_uart dw_mipi_dsi
+dw_hdmi btbcm cec panfrost bluetooth drm_kms_helper brcmutil gpu_sched
+cfg80211 crct10dif_ce snd_soc_rockchip_i2s snd_soc_simple_card drm
+ecdh_generic snd_soc_rockchip_pcm snd_soc_simple_card_utils
+phy_rockchip_pcie ecc rtc_rk808 rfkill rockchip_thermal
+pcie_rockchip_host ip_tables x_tables ipv6 nf_defrag_ipv6
+[  565.015578] CPU: 0 PID: 1 Comm: shutdown Not tainted
+5.5.0-rc1-00292-gd46dd6369c55 #7
+[  565.016260] Hardware name: 96boards Rock960 (DT)
+[  565.016666] pstate: 60000085 (nZCv daIf -PAN -UAO)
+[  565.017087] pc : i2c_transfer+0xe4/0xf8
+[  565.017425] lr : i2c_transfer+0xe4/0xf8
+[  565.017762] sp : ffff80001004baf0
+[  565.018052] x29: ffff80001004baf0 x28: ffff00007d208000
+[  565.018517] x27: 0000000000000000 x26: 0000000000000000
+[  565.018982] x25: 0000000000000008 x24: 0000000000000000
+[  565.019447] x23: ffff00007d208000 x22: ffff80001004bc64
+[  565.019912] x21: ffff80001004bb48 x20: 0000000000000002
+[  565.020377] x19: ffff000078502080 x18: 0000000000000010
+[  565.020842] x17: 0000000000000001 x16: 0000000000000019
+[  565.021307] x15: ffff00007d208470 x14: ffffffffffffffff
+[  565.021772] x13: ffff80009004b857 x12: ffff80001004b860
+[  565.022237] x11: ffff800011841000 x10: ffff800011a10658
+[  565.022702] x9 : 0000000000000000 x8 : ffff800011a11000
+[  565.023167] x7 : ffff800010697c78 x6 : 0000000000000262
+[  565.023632] x5 : 0000000000000000 x4 : 0000000000000000
+[  565.024096] x3 : 00000000ffffffff x2 : ffff800011841ab8
+[  565.024561] x1 : 7b11701b0ae78800 x0 : 0000000000000000
+[  565.025027] Call trace:
+[  565.025246]  i2c_transfer+0xe4/0xf8
+[  565.025556]  regmap_i2c_read+0x5c/0xa0
+[  565.025886]  _regmap_raw_read+0xcc/0x138
+[  565.026230]  _regmap_bus_read+0x3c/0x70
+[  565.026568]  _regmap_read+0x60/0xe0
+[  565.026875]  _regmap_update_bits+0xc8/0x108
+[  565.027241]  regmap_update_bits_base+0x60/0x90
+[  565.027633]  rk808_device_shutdown+0x6c/0x88
+[  565.028010]  machine_power_off+0x24/0x30
+[  565.028356]  kernel_power_off+0x64/0x70
+[  565.028693]  __do_sys_reboot+0x15c/0x240
+[  565.029038]  __arm64_sys_reboot+0x20/0x28
+[  565.029390]  el0_svc_common.constprop.0+0x68/0x160
+[  565.029811]  el0_svc_handler+0x20/0x80
+[  565.030141]  el0_sync_handler+0x10c/0x180
+[  565.030493]  el0_sync+0x140/0x180
+[  565.030785] ---[ end trace 5167e842ce15f686 ]---
+
+-Anand
