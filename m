@@ -2,101 +2,110 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ACEC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B15C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2252053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576410647;
-	bh=5WnJaA2pB81rlF30cK68l346QPHhyj2DUcLn2x16gBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d0inOYSRd3WLRhH8Cm6oLd7QcdF683JYR5Fyt8cHyrhfuEW/A1OuDlnPDqDivulv4
-	 WTIXGTcrWDLETgUYkNhjE0p9AUFUgT+PE75xlc/ChOXDOBA6+T0Kqj0rJ0qQuQFH9I
-	 ytW0pwCUB2cU5EpBr8mafjNAYVILfHU7HmMsyxtg=
+	by mail.kernel.org (Postfix) with ESMTP id 8508A21D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfLOLup convert rfc822-to-8bit (ORCPT
+        id S1726267AbfLOLxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 06:50:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44794 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfLOLup (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 06:50:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cm12so2711030edb.11;
-        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VQb8AJk5LNTjc5T1l/6wnDNHTC2CJyoRZWm9i8TCC6Y=;
-        b=A0fe0YlK4Q7tH8msv7qbStmlJAgSVHaLyA5wWmFY4wDDzdrHTFZSOkJOjQaad8TbGK
-         JHaqHb3o+P1UFdJWfDWdT9Dp3jdOEk1wUu678ZLU55u0vM/Tx298fLBtvInjD9UbggAD
-         lWly1+sWanLAamCIdCwhlyF575Dgt+GugbEihslNuNIn+5pNwuHkWgBTXsJIvMjUYn7P
-         hTW3028KguKQKFiwQqhVsAQ+HPI4wTIL90feHseKR+g0UPlPeRMyT2bAQ3zN9xUA4sBn
-         TV9yzuQJhATJMMfgCzdzMpQE4kJPk/2Z5vNvitYGXhRYxupLZCX7NJ9J42X66gPSXlA4
-         65cg==
-X-Gm-Message-State: APjAAAUxWhQJEZPHI9s7cmUuoQEVpt3wrpy/K6ee6WYmaRI5HXPCt8C/
-        1VYd2eHkL1azlZP8AqXU70A=
-X-Google-Smtp-Source: APXvYqySGZN88GuNZI3q/4jIa46RYAeOm8r3e/4RoLEa9a1DPs6w4iZdHpCADlYueTiK1rOSy2zyGw==
-X-Received: by 2002:a17:906:229b:: with SMTP id p27mr27526719eja.21.1576410643077;
-        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id bo13sm1007730ejb.5.2019.12.15.03.50.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 03:50:41 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:50:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>
-Subject: Re: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency
- on S3C24xx and S3C64xx
-Message-ID: <20191215115039.GA30973@kozik-lap>
-References: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+        Sun, 15 Dec 2019 06:53:44 -0500
+Received: from mga18.intel.com ([134.134.136.126]:55004 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbfLOLxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 06:53:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 03:53:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,317,1571727600"; 
+   d="scan'208";a="416159519"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Dec 2019 03:53:41 -0800
+Received: from [10.251.95.214] (abudanko-mobl.ccr.corp.intel.com [10.251.95.214])
+        by linux.intel.com (Postfix) with ESMTP id 1FB7658044E;
+        Sun, 15 Dec 2019 03:53:36 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
+ Perf users groups
+To:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Andi Kleen <ak@linux.intel.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        elena.reshetova@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>
+References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+ <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
+ <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
+ <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+ <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
+ <16e9e399-2ebf-261f-eee5-cf9ace2a82b9@schaufler-ca.com>
+ <20191211203648.GA862919@tassilo.jf.intel.com>
+ <d2095e4a-261b-b561-2a2c-cf00fd416503@tycho.nsa.gov>
+Organization: Intel Corp.
+Message-ID: <533d0954-25ce-9df0-6324-3ff00d1ee042@linux.intel.com>
+Date:   Sun, 15 Dec 2019 14:53:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <d2095e4a-261b-b561-2a2c-cf00fd416503@tycho.nsa.gov>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1576221873-28738-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 08:24:33AM +0100, Krzysztof Kozlowski wrote:
-> All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which uses
-> both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
-> therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
-> failed:
-> 
->     drivers/pinctrl/samsung/pinctrl-samsung.c: In function ‘samsung_gpiolib_register’:
->     drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: ‘struct gpio_chip’ has no member named ‘of_node’
->        gc->of_node = bank->of_node;
->          ^
-> 
-> Rework the dependencies so all Samsung drivers and common
-> PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
-> and OF are enabled).
-> 
-> Reported-by: Chen Zhou <chenzhou10@huawei.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/pinctrl/samsung/Kconfig | 6 ++++--
 
-Applied.
+On 12.12.2019 17:24, Stephen Smalley wrote:
+> On 12/11/19 3:36 PM, Andi Kleen wrote:
+>>>> In this circumstances CAP_SYS_PERFMON looks like smart balanced advancement that
+>>>> trade-offs between perf_events subsystem extensions, required level of control
+>>>> and configurability of perf_events, existing users adoption effort, and it brings
+>>>> security hardening benefits of decreasing attack surface for the existing users
+>>>> and use cases.
+>>>
+>>> I'm not 100% opposed to CAP_SYS_PERFMON. I am 100% opposed to new capabilities
+>>> that have a single use. Surely there are other CAP_SYS_ADMIN users that [cs]ould
+>>> be converted to CAP_SYS_PERFMON as well. If there is a class of system performance
+>>> privileged operations, say a dozen or so, you may have a viable argument.
+>>
+>> perf events is not a single use. It has a bazillion of sub functionalities,
+>> including hardware tracing, software tracing, pmu counters, software counters,
+>> uncore counters, break points and various other stuff in its PMU drivers.
+>>
+>> See it more as a whole quite heterogenous driver subsystem.
+>>
+>> I guess CAP_SYS_PERFMON is not a good name because perf is much more
+>> than just Perfmon. Perhaps call it CAP_SYS_PERF_EVENTS
+> 
+> That seems misleading since it isn't being checked for all perf_events operations IIUC (CAP_SYS_ADMIN is still required for some?) and it is even more specialized than CAP_SYS_PERFMON, making it less likely that we could ever use this capability as a check for other kernel performance monitoring facilities beyond perf_events.
+> 
+> I'm not as opposed to fine-grained capabilities as Casey is but I do recognize that there are a limited number of available bits (although we do have a fair number of unused ones currently given the extension to 64-bits) and that it would be easy to consume them all if we allocated one for every kernel feature.  That said, this might be a sufficiently important use case to justify it.
+> 
+> Obviously I'd encourage you to consider leveraging SELinux as well but I understand that you are looking for a solution that doesn't depend on a distro using a particular LSM or a particular policy.  I will note that SELinux doesn't suffer from the limited bits problem because one can always define a new SELinux security class with its own access vector permissions bitmap, as has been done for the recently added LSM/SELinux perf_event hooks.
+> 
+> I don't know who actually gets to decide when/if a new capability is allocated.  Maybe Serge and/or James as capabilities and LSM maintainers.
+> 
+> I have no objections to these patches from a SELinux POV.
 
-Best regards,
-Krzysztof
+Stephen, thanks for meaningful input!
 
+~Alexey
