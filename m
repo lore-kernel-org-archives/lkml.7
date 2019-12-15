@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C6DC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72167C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C10A20726
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F22120726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLOQBV (ORCPT
+        id S1726794AbfLOQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:01:21 -0500
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44500 "EHLO
+        Sun, 15 Dec 2019 11:01:22 -0500
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44510 "EHLO
         saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfLOQBU (ORCPT
+        with ESMTP id S1726540AbfLOQBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 15 Dec 2019 11:01:20 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id B153B9E7D76;
-        Sun, 15 Dec 2019 15:53:30 +0000 (GMT)
-Date:   Sun, 15 Dec 2019 15:53:29 +0000
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 76E989E7630;
+        Sun, 15 Dec 2019 15:52:05 +0000 (GMT)
+Date:   Sun, 15 Dec 2019 15:52:03 +0000
 From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 105/350] iio: chemical: atlas-ph-sensor: fix
- iio_triggered_buffer_predisable() position
-Message-ID: <20191215155329.4c71ad53@archlinux>
-In-Reply-To: <20191210210735.9077-66-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
-        <20191210210735.9077-66-sashal@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.4 019/350] iio: tcs3414: fix
+ iio_triggered_buffer_{pre,post}enable positions
+Message-ID: <20191215155203.607cc56d@archlinux>
+In-Reply-To: <20191210210402.8367-19-sashal@kernel.org>
+References: <20191210210402.8367-1-sashal@kernel.org>
+        <20191210210402.8367-19-sashal@kernel.org>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,60 +45,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:03:30 -0500
+On Tue, 10 Dec 2019 15:58:31 -0500
 Sasha Levin <sashal@kernel.org> wrote:
 
 > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > 
-> [ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
+> [ Upstream commit 0fe2f2b789190661df24bb8bf62294145729a1fe ]
 > 
 > The iio_triggered_buffer_{predisable,postenable} functions attach/detach
 > the poll functions.
 > 
-> The iio_triggered_buffer_predisable() should be called last, to detach the
-> poll func after the devices has been suspended.
+> For the predisable hook, the disable code should occur before detaching
+> the poll func, and for the postenable hook, the poll func should be
+> attached before the enable code.
 > 
-> The position of iio_triggered_buffer_postenable() is correct.
-> 
-> Note this is not stable material. It's a fix in the logical
-> model rather fixing an actual bug.  These are being tidied up
-> throughout the subsystem to allow more substantial rework that
-> was blocked by variations in how things were done.
-
-See comment.  This is not what I would consider stable material.
-
+> The driver was slightly reworked. The preenable hook was moved to the
+> postenable, to add some symmetry to the postenable/predisable part.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
+I doubt this did any harm, but wouldn't consider it stable material normally.
+
+This is part of a general rework going on to allow some core refactoring.
+
+I should have added a note to this one like some related patches that it
+is a logical fix, but we don't have an actual known bug afaik.
+
+Sorry about that.
+
+Jonathan
+
 > ---
->  drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/iio/light/tcs3414.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
-> index 3a20cb5d9bffc..6c175eb1c7a7f 100644
-> --- a/drivers/iio/chemical/atlas-ph-sensor.c
-> +++ b/drivers/iio/chemical/atlas-ph-sensor.c
-> @@ -323,16 +323,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
->  	struct atlas_data *data = iio_priv(indio_dev);
->  	int ret;
+> diff --git a/drivers/iio/light/tcs3414.c b/drivers/iio/light/tcs3414.c
+> index 7c0291c5fe76e..b542e5619ead8 100644
+> --- a/drivers/iio/light/tcs3414.c
+> +++ b/drivers/iio/light/tcs3414.c
+> @@ -240,32 +240,42 @@ static const struct iio_info tcs3414_info = {
+>  	.attrs = &tcs3414_attribute_group,
+>  };
 >  
-> -	ret = iio_triggered_buffer_predisable(indio_dev);
-> +	ret = atlas_set_interrupt(data, false);
->  	if (ret)
->  		return ret;
+> -static int tcs3414_buffer_preenable(struct iio_dev *indio_dev)
+> +static int tcs3414_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct tcs3414_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = iio_triggered_buffer_postenable(indio_dev);
+> +	if (ret)
+> +		return ret;
 >  
-> -	ret = atlas_set_interrupt(data, false);
-> +	pm_runtime_mark_last_busy(&data->client->dev);
-> +	ret = pm_runtime_put_autosuspend(&data->client->dev);
->  	if (ret)
->  		return ret;
->  
-> -	pm_runtime_mark_last_busy(&data->client->dev);
-> -	return pm_runtime_put_autosuspend(&data->client->dev);
-> +	return iio_triggered_buffer_predisable(indio_dev);
+>  	data->control |= TCS3414_CONTROL_ADC_EN;
+> -	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+> +	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+>  		data->control);
+> +	if (ret)
+> +		iio_triggered_buffer_predisable(indio_dev);
+> +
+> +	return ret;
 >  }
 >  
->  static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
+>  static int tcs3414_buffer_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct tcs3414_data *data = iio_priv(indio_dev);
+> -	int ret;
+> -
+> -	ret = iio_triggered_buffer_predisable(indio_dev);
+> -	if (ret < 0)
+> -		return ret;
+> +	int ret, ret2;
+>  
+>  	data->control &= ~TCS3414_CONTROL_ADC_EN;
+> -	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+> +	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+>  		data->control);
+> +
+> +	ret2 = iio_triggered_buffer_predisable(indio_dev);
+> +	if (!ret)
+> +		ret = ret2;
+> +
+> +	return ret;
+>  }
+>  
+>  static const struct iio_buffer_setup_ops tcs3414_buffer_setup_ops = {
+> -	.preenable = tcs3414_buffer_preenable,
+> -	.postenable = &iio_triggered_buffer_postenable,
+> +	.postenable = tcs3414_buffer_postenable,
+>  	.predisable = tcs3414_buffer_predisable,
+>  };
+>  
 
