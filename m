@@ -2,246 +2,99 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896B8C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ECEC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6065D206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413F3206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 14:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbEDLRMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfLOON0 (ORCPT
+        id S1726207AbfLOOZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 09:13:26 -0500
-Received: from out28-5.mail.aliyun.com ([115.124.28.5]:40820 "EHLO
-        out28-5.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfLOON0 (ORCPT
+        Sun, 15 Dec 2019 09:25:45 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34953 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfLOOZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 09:13:26 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436489|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.477822-0.00910106-0.513076;DS=CONTINUE|ham_regular_dialog|0.288924-0.00126952-0.709806;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GHd2RIv_1576419196;
-Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHd2RIv_1576419196)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Sun, 15 Dec 2019 22:13:17 +0800
-Subject: Re: [PATCH v3 2/5] clk: Ingenic: Adjust cgu code to make it
- compatible with X1830.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1576337630-78576-4-git-send-email-zhouyanjie@wanyeetech.com>
- <1576346987.3.2@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5DF63F7E.4040106@wanyeetech.com>
-Date:   Sun, 15 Dec 2019 22:13:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sun, 15 Dec 2019 09:25:44 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j6so3896404lja.2;
+        Sun, 15 Dec 2019 06:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cJydTZHkesdHgSzZFjvg4ewf57EUtmZOykP8heOTn30=;
+        b=LbEDLRMrDEcGDNF0xxcPisZn1hl8ND2yW75hdo/Y4LGFQ5hiaBAnW51Y/WqLQvZ/uw
+         WhQOP+IDn8TKLWDLvLb9cq2dKP1scfxTujlmCDYL6LguWPyZ2XKbrwMLQCh3uyfPAv65
+         eRkXDInR6z1oivB6wmOe5JMhXgeLxEBokK53FtL7HyFN2S4HNTWMPZ19EvCcfzT8nZwe
+         TzzdwJ4h9IABZJToRiwWCde7k84KveJMkPz5iNY0f3A9S+FkynzqodFiFpCgjQwi3VMr
+         NG0JnG5fcRbvg/eobzmpp/mUweNlWHMYgnsdE6AFZYLw43E2pma7QChN+mKwVunlZpJm
+         BG1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cJydTZHkesdHgSzZFjvg4ewf57EUtmZOykP8heOTn30=;
+        b=H8KhWa+1nkJ84GAlUx4PBpU1lFMxy5BMgnlk6F3HI5fmbmXOhD/VFc3mljT24lYCkJ
+         jmemTT5kvASU4dCVxsLmFn1vzFTiLYieW4Iy4cY6xpDAIfhBdVFyGsCepVWA31n5BGbQ
+         j6fj1Qdmqr3WimV/TP/Szt21M/2tVbl10c1+gfytUxIMZLlelF44lBO69pLyTsV5dYQ3
+         uuH7Go60rEcNfTJbU2YwJJJ+1/TJVCQfPkfd4SWsLBcaDNmeY5M5SlugHunSbVkcjJaa
+         50pl3eHVi9hDiOLk9+hldubx8K6di3qUA0Pt7fKWYaGXqLtLm1o/S1vKcJvtcxN0Ofna
+         qGZw==
+X-Gm-Message-State: APjAAAVgEYoKddfMKHnH3EhBeYXX/6NB/+hMZotztxR95liVQiECKkz7
+        dJ7gn/nTBuIonzBnADQqWsiPFUqy
+X-Google-Smtp-Source: APXvYqxsPx5OunWlr3wv/mjK/7x/Yv4AlnYMaKswEgT7Cg2yW5NJYHucmCKoCEvGEgdkmJo6BL+Q/w==
+X-Received: by 2002:a2e:91c1:: with SMTP id u1mr16402744ljg.181.1576419942130;
+        Sun, 15 Dec 2019 06:25:42 -0800 (PST)
+Received: from localhost.localdomain ([91.237.107.85])
+        by smtp.googlemail.com with ESMTPSA id t6sm8364634ljj.62.2019.12.15.06.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 06:25:41 -0800 (PST)
+From:   Leonid Maksymchuk <leonmaxx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
+        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
+        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
+        Leonid Maksymchuk <leonmaxx@gmail.com>
+Subject: [PATCH v6 0/2] platform/x86: asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+Date:   Sun, 15 Dec 2019 16:25:27 +0200
+Message-Id: <20191215142527.13780-1-leonmaxx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <1576346987.3.2@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi,
 
-On 2019年12月15日 02:09, Paul Cercueil wrote:
-> Hi Zhou,
->
-> The patch looks good but it should be merged with [3/5]. Because right 
-> now it is not atomic, if you only have the first two patches applied 
-> the kernel won't compile.
->
+this patch series adds support of Throttle themal policy ACPI device to
+existing asus_wmi platform driver. Support of this device is required
+for ASUS TUF laptops on Ryzen CPUs to properly work on Linux.
 
-OK, I will merge it in v4.
+v2: fixed indentation.
+v3: patches 2/3 and 3/3 are refactored.
+v4: patch 2/3 are simplified.
+v5: add new device instead of merging with fan boost mode.
+v6: document new ABI, simplify code.
 
-> -Paul
->
->
-> Le sam., déc. 14, 2019 at 23:33, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> The PLL of X1830 Soc from Ingenic has been greatly changed,
->> the bypass control is placed in another register, so now two
->> registers may needed to control the PLL. To this end, the
->> original "reg" was changed to "pll_reg", and a new "bypass_reg"
->> was introduced. In addition, when calculating rate, the PLL of
->> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
->> was introduced.
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>
->> Notes:
->>     v1->v2:
->>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
->>       array (reg[2]).
->>     2.Remove the "pll_info->version" and add a 
->> "pll_info->rate_multiplier".
->>     3.Fix the coding style and add more detailed commit message.
->>     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->>       to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
->>       the old mailbox is in an unstable state.
->>
->>     v2->v3:
->>     Adjust order from [1/5] in v2 to [2/5] in v3.
->>
->>  drivers/clk/ingenic/cgu.c | 30 +++++++++++++++++++-----------
->>  drivers/clk/ingenic/cgu.h |  8 ++++++--
->>  2 files changed, 25 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
->> index 8bd3998..3c95451 100644
->> --- a/drivers/clk/ingenic/cgu.c
->> +++ b/drivers/clk/ingenic/cgu.c
->> @@ -82,7 +82,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned 
->> long parent_rate)
->>      BUG_ON(clk_info->type != CGU_CLK_PLL);
->>      pll_info = &clk_info->pll;
->>
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
->>      m += pll_info->m_offset;
->> @@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned 
->> long parent_rate)
->>      n += pll_info->n_offset;
->>      od_enc = ctl >> pll_info->od_shift;
->>      od_enc &= GENMASK(pll_info->od_bits - 1, 0);
->> +
->> +    ctl = readl(cgu->base + pll_info->bypass_reg);
->> +
->>      bypass = !pll_info->no_bypass_bit &&
->>           !!(ctl & BIT(pll_info->bypass_bit));
->>
->> @@ -103,7 +106,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
->> unsigned long parent_rate)
->>      BUG_ON(od == pll_info->od_max);
->>      od++;
->>
->> -    return div_u64((u64)parent_rate * m, n * od);
->> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, 
->> n * od);
->>  }
->>
->>  static unsigned long
->> @@ -136,7 +139,7 @@ ingenic_pll_calc(const struct 
->> ingenic_cgu_clk_info *clk_info,
->>      if (pod)
->>          *pod = od;
->>
->> -    return div_u64((u64)parent_rate * m, n * od);
->> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, 
->> n * od);
->>  }
->>
->>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
->> @@ -180,7 +183,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned 
->> long req_rate,
->>              clk_info->name, req_rate, rate);
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      ctl &= ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
->>      ctl |= (m - pll_info->m_offset) << pll_info->m_shift;
->> @@ -191,7 +194,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned 
->> long req_rate,
->>      ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
->>      ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>
->>      return 0;
->> @@ -209,16 +212,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
->>      u32 ctl;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->bypass_reg);
->>
->>      ctl &= ~BIT(pll_info->bypass_bit);
->> +
->> +    writel(ctl, cgu->base + pll_info->bypass_reg);
->> +
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->> +
->>      ctl |= BIT(pll_info->enable_bit);
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>
->>      /* wait for the PLL to stabilise */
->>      for (i = 0; i < timeout; i++) {
->> -        ctl = readl(cgu->base + pll_info->reg);
->> +        ctl = readl(cgu->base + pll_info->pll_reg);
->>          if (ctl & BIT(pll_info->stable_bit))
->>              break;
->>          mdelay(1);
->> @@ -242,11 +250,11 @@ static void ingenic_pll_disable(struct clk_hw *hw)
->>      u32 ctl;
->>
->>      spin_lock_irqsave(&cgu->lock, flags);
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      ctl &= ~BIT(pll_info->enable_bit);
->>
->> -    writel(ctl, cgu->base + pll_info->reg);
->> +    writel(ctl, cgu->base + pll_info->pll_reg);
->>      spin_unlock_irqrestore(&cgu->lock, flags);
->>  }
->>
->> @@ -258,7 +266,7 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
->>      const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
->>      u32 ctl;
->>
->> -    ctl = readl(cgu->base + pll_info->reg);
->> +    ctl = readl(cgu->base + pll_info->pll_reg);
->>
->>      return !!(ctl & BIT(pll_info->enable_bit));
->>  }
->> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
->> index 0dc8004..f7b6908 100644
->> --- a/drivers/clk/ingenic/cgu.h
->> +++ b/drivers/clk/ingenic/cgu.h
->> @@ -16,7 +16,9 @@
->>
->>  /**
->>   * struct ingenic_cgu_pll_info - information about a PLL
->> - * @reg: the offset of the PLL's control register within the CGU
->> + * @pll_reg: the offset of the PLL's control register within the CGU
->> + * @bypass_reg: the offset of the bypass control register within the 
->> CGU
->> + * @rate_multiplier: the multiplier needed by pll rate calculation
->>   * @m_shift: the number of bits to shift the multiplier value by 
->> (ie. the
->>   *           index of the lowest bit of the multiplier value in the 
->> PLL's
->>   *           control register)
->> @@ -43,7 +45,9 @@
->>   * @no_bypass_bit: if set, the PLL has no bypass functionality
->>   */
->>  struct ingenic_cgu_pll_info {
->> -    unsigned reg;
->> +    unsigned pll_reg;
->> +    unsigned bypass_reg;
->> +    unsigned rate_multiplier;
->>      const s8 *od_encoding;
->>      u8 m_shift, m_bits, m_offset;
->>      u8 n_shift, n_bits, n_offset;
->> -- 
->> 2.7.4
->>
->
+Leonid Maksymchuk (2):
+  platform/x86: asus_wmi: Support throttle thermal policy
+  platform/x86: asus_wmi: Set throttle thermal policy to default
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  10 ++
+ drivers/platform/x86/asus-wmi.c               | 124 ++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h    |   1 +
+ 3 files changed, 135 insertions(+)
+
+-- 
+2.24.0
 
