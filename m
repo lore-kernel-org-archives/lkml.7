@@ -2,123 +2,101 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23E2C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0721CC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E9B206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWFc+tty"
+	by mail.kernel.org (Postfix) with ESMTP id DDBC5206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfLORms (ORCPT
+        id S1726548AbfLORmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:42:48 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37148 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfLORms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:42:48 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so2603872lfc.4;
-        Sun, 15 Dec 2019 09:42:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AUhydgvmr8d296EsM44KLtz5TapZKISR8Mk06Hsxmpw=;
-        b=vWFc+ttySOUZBiFE/iWiSppbkP+sqNfBnoBw/J2iL3Hqn4Drlz+PSTvTjKoeD10YhC
-         3csWHOkn+ooTHB0Jf6yLQJCRuUnfL7HGatXc6autez33cqhB0FG6joQQjnyuN1zZJFGO
-         VG4xGVjI4NnpO0FY7fiXhS4h36Qs+khbbqtW69dIboGFkTPAq9zuqXv62BUVzmnNk7Lf
-         ZFHXyQB/piXa+EiXO3wHJnIvjaWy9jG51X1lCbYn2X+UtjRLoFexDBIzDU5O+LCOpoCC
-         OWCDq8F+YucbIjVP8gEqkdbDg+eLOrU6jF9oyLsXSM5uKOK+/xa2gQdTWCnwFrObtfuY
-         ScZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AUhydgvmr8d296EsM44KLtz5TapZKISR8Mk06Hsxmpw=;
-        b=f48GNMusi0sWrlaN70M8aiLdES4418h6ZwZA1TMIa/w/h36SariKASxAUUkpJpLuOb
-         3UU10pva5LSyyYe0xC1gicd8krb09eVHw0MSC17a9znqMPDC+b4rLNHQ+lQjKEOG5asw
-         v1q4lzCP3XVveIEOC6oX3Qqbom7l2KplTZN9N0K1daw+a/KeY2kT3qVYZWNgxSMhC45v
-         vb6k5M/jF17bCMV2a+TtZTgU4e0f0W6I6vyhua8ELpdAm3nIfMHXMdXiXrD2eZU9WP8k
-         Id0fgzoSZpx5jTuv4kOKLJmwd/fxeMzHKIkc/CaxsswB+o62FSK/Fc+G41ckxq5PNjkF
-         kuDg==
-X-Gm-Message-State: APjAAAUiDKVB35gp5PpcA4u+2vaekrj6mOsgiP0BZs0skPkdRUms9xEk
-        dutFJ9gkMGXjJ4A8wowc8N5DCaYU2/DGdO1AFFA=
-X-Google-Smtp-Source: APXvYqxB9j2tqO8U7z+jhYOK+V++KM2dx+C8P8/kFICH+Gwd/b/A8Evh9Z1mIuzX8BRExtjVm/sbfnpJEeelvLvd5H8=
-X-Received: by 2002:a19:48c5:: with SMTP id v188mr14502104lfa.100.1576431765980;
- Sun, 15 Dec 2019 09:42:45 -0800 (PST)
+        Sun, 15 Dec 2019 12:42:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54948 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726260AbfLORmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 12:42:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D11A6AFC6;
+        Sun, 15 Dec 2019 17:42:52 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: remove BUG_ON used as assertions
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191215171237.27482-1-pakki001@umn.edu>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <38c5aa97-675b-b4fa-14ab-04988a9c6a39@suse.com>
+Date:   Sun, 15 Dec 2019 19:42:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191201195728.4161537-1-aurelien@aurel32.net>
- <87zhgbe0ix.fsf@mpe.ellerman.id.au> <20191202093752.GA1535@localhost.localdomain>
- <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
- <20191210222553.GA4580@calabresa> <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
- <20191211160133.GB4580@calabresa> <CAFxkdAp9OGjJS1Sdny+TiG2+zU4n0Nj+ZVrZt5J6iVsS_zqqcw@mail.gmail.com>
- <20191213101114.GA3986@calabresa> <CAEf4BzY-JP+vYNjwShhgMs6sJ+Bdqc8FEd19BVf8uf+jSnX1Jw@mail.gmail.com>
-In-Reply-To: <CAEf4BzY-JP+vYNjwShhgMs6sJ+Bdqc8FEd19BVf8uf+jSnX1Jw@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sun, 15 Dec 2019 09:42:34 -0800
-Message-ID: <CAADnVQJY+URQfAk=372TUqVkB4dxNPqNVY8-eSe7mFXuY_XhRA@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: Fix readelf output parsing for Fedora
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, ppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        debian-kernel@lists.debian.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191215171237.27482-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 9:02 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Dec 13, 2019 at 2:11 AM Thadeu Lima de Souza Cascardo
-> <cascardo@canonical.com> wrote:
-> >
-> > Fedora binutils has been patched to show "other info" for a symbol at the
-> > end of the line. This was done in order to support unmaintained scripts
-> > that would break with the extra info. [1]
-> >
-> > [1] https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
-> >
-> > This in turn has been done to fix the build of ruby, because of checksec.
-> > [2] Thanks Michael Ellerman for the pointer.
-> >
-> > [2] https://bugzilla.redhat.com/show_bug.cgi?id=1479302
-> >
-> > As libbpf Makefile is not unmaintained, we can simply deal with either
-> > output format, by just removing the "other info" field, as it always comes
-> > inside brackets.
-> >
-> > Cc: Aurelien Jarno <aurelien@aurel32.net>
-> > Fixes: 3464afdf11f9 (libbpf: Fix readelf output parsing on powerpc with recent binutils)
-> > Reported-by: Justin Forbes <jmforbes@linuxtx.org>
-> > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-> > ---
->
-> I was briefly playing with it and trying to make it use nm to dump
-> symbols, instead of parsing more human-oriented output of readelf, but
-> somehow nm doesn't output symbols with @@LIBBPF.* suffix at the end,
-> so I just gave up. So I think this one is good.
->
-> This should go through bpf-next tree.
->
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Applied. Thanks
+
+On 15.12.19 г. 19:12 ч., Aditya Pakki wrote:
+> alloc_extent_state_atomic() allocates extents via GFP_ATOMIC flag
+> and cannot fail. There are multiple invocations of BUG_ON on the
+> return value to check for failure. The patch replaces certain
+> invocations of BUG_ON by returning the error upstream.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
+Have you actually audited all callers of __set_extent_bit whether they
+correctly handle failures?
