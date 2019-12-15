@@ -2,251 +2,87 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E90C2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ACCC2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E02720700
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:06:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoSvc9Ly"
+	by mail.kernel.org (Postfix) with ESMTP id 1A18020700
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfLOUGe (ORCPT
+        id S1726539AbfLOUGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:06:34 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34784 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOUGe (ORCPT
+        Sun, 15 Dec 2019 15:06:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44113 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbfLOUGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:06:34 -0500
-Received: by mail-pf1-f193.google.com with SMTP id l127so2635543pfl.1;
-        Sun, 15 Dec 2019 12:06:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=olA02RGJ4z+GQuBAoSMwgqWAuMGZ9U+U5K9YnozTaYU=;
-        b=NoSvc9LyNA6ksrJeUp7FB7vkKf1dy8iN5L/6J33qDLMS48EKyfcMwFOo4vAihGWHq3
-         ajgxWM90HehvQKUpelwLATIPKx9GU+S2ysA9V72PjJz/GeAvoDfYzptauittAyAHSz4d
-         R6E71A3Nb+TQDPpR/RAlpUIllwmLrvt+cLKy6XaX4deBhNZT7YgPuArygUF7vdmVZVRV
-         qi73VWZpOFXAaR21napSi/Mf68/d2FEpPdtGus2IKGGuUd9V7MnLT9fPD1FdNtyYRg3e
-         aemPBsITUNmstQjweFgFX3okr2QhWJ0IUlby6qU6sutU1wx84QlgnSSCAIK/VkSPpoHw
-         TwWw==
+        Sun, 15 Dec 2019 15:06:39 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x3so6163150oto.11;
+        Sun, 15 Dec 2019 12:06:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=olA02RGJ4z+GQuBAoSMwgqWAuMGZ9U+U5K9YnozTaYU=;
-        b=QrYecJsY8FqL72U4IPbqUPr0lq1ESlg6OZaY5bYioEtIBxKOZQwj9So+zQI+1ZDhsb
-         aS3Cdw81nTsCJ0b3VBGSXnq7efopPOoBQyYL58BRc84qyyig3Hj2uc7Qga8UaMsMJYxs
-         tsD3za1eGhkOp99rppDdjzEHJiYaHJgHjCK7/YFUXjvalIT9IlYIoPSkJdlsNBVp88pX
-         qJMXxFGVMo/87APnWae9pFz2LZwNO2UsjXI6+Lv3bnvRYXCmkulPUZPcPOMNaKbj0wDF
-         2AVGGEQanh2rqFOnKYFwvzAlFRWpMmgcgsEUyHCVLveiZD8DlVSyuMkb7JKGuZ/PJQP/
-         5q8Q==
-X-Gm-Message-State: APjAAAXiXRrVySs2kzi8FTQQZcW7tFrGyccJXwKrrZE6RxAmpRK1A4tQ
-        u86Y2ze7qKkMpB1lFFdIu40=
-X-Google-Smtp-Source: APXvYqxe5x94xy2/MvtT893jlm05f9npIWyWZBI3QysNVvpVvCVSB7MKtaVzP6zm2GYjpCyme8qK2w==
-X-Received: by 2002:a63:4664:: with SMTP id v36mr13653993pgk.147.1576440393629;
-        Sun, 15 Dec 2019 12:06:33 -0800 (PST)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id l66sm18645744pga.30.2019.12.15.12.06.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 12:06:33 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 2/2] fixup! drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
-Date:   Sun, 15 Dec 2019 12:06:32 -0800
-Message-Id: <20191215200632.1019065-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid>
-References: <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3xp/csttZXysouE5r2d8VrjHUVDN87UbLOURq7DDwLA=;
+        b=hLAVN4WkYeu6I00PxA1+fpLc7La5z5RDigcIJRS7IwqxG0T5xwSeLWTPxGLhb9pQ7c
+         oY36cSaysMZg2wE6yPLo32I0AkoOmt+P3jpetWRxmSMuTa1tSRK14GpVQQH7lHczqUHY
+         ggS9Ec8IChLlPlEFaLpQklwAPKn3yebUrN9tMq2dlzQ1lkC3203lujdq9anTgDFH/wM9
+         FZXJ/J8TYy2zjeTtObV37yx3ZG7IkrN9S26aRKEKo/aylCPBjs6XqoykHk3HZ9+BpMTi
+         Doy4eQ4zUHJcZDMm1FIztawz/doR1sdLh2UwJ/sPPP25zIL3HbazsxYwhUDH+Ap8VzET
+         Qvxg==
+X-Gm-Message-State: APjAAAUInsi9J4r7tqVMb5VmmA1/yK5IA8ZGnCfbgOpftvla0zXksLOu
+        BTcplVP1Q0Dj87hsMOSya2kLmobW1ib6obo3FGwKJw==
+X-Google-Smtp-Source: APXvYqxTnkedDl3WfOaTYc5zPvQzy8kthpkpkpBSqhN6gZHv/BspJZ7NO7Rg1+s2VLYZDUBSdjj/t55S8xtLQ87up3w=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr28456355ots.250.1576440398617;
+ Sun, 15 Dec 2019 12:06:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdVv9FU+kTf7RDd=AFKL12tJxzmGbX4jZZ8Av3VCZUzwhA@mail.gmail.com>
+ <20191126144121.kzkujr27ga36gqnf@wittgenstein> <CACz-3riWp1fWCaAJtMgRx9VRVAJ+ktdbAqHBobQUXR9XpHrVcQ@mail.gmail.com>
+ <CAMuHMdVLQF_KyWDn=HxmLAp6Vy3jyw=JLDQWryLt809sCecosA@mail.gmail.com> <009ee46a-eb51-f76f-915d-baa883f0be24@physik.fu-berlin.de>
+In-Reply-To: <009ee46a-eb51-f76f-915d-baa883f0be24@physik.fu-berlin.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 15 Dec 2019 21:06:27 +0100
+Message-ID: <CAMuHMdWFuiFMzYe4L5JY6iRfwzbGW4BH5MVCGrSuuXZHrzKGpw@mail.gmail.com>
+Subject: Re: [PATCH] m68k: Wire up clone3() syscall
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Hi Adrian,
 
----
-Note however, the panel I have on the yoga c630 is not eDP 1.4+, so I
-cannot test that path.  But I think it looks correct.
+On Sun, Dec 15, 2019 at 6:01 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On 12/15/19 5:48 PM, Geert Uytterhoeven wrote:
+> > With Ubuntu's libc6-m68k-cross installed, the selftest binaries cross-build
+> > fine.  Running them on a very old Debian requires some hackery:
+> >
+> >   1. Copy ld.so.1, ld-2.27.so, libc.so.6, and libc-2.27.so from
+> >      /usr/m68k-linux-gnu/lib/ to /tmp/lib on the m68k target,
+> >   2. mkdir /tmp/proc && mount proc /tmp/proc -t proc,
+> >   3. chroot /tmp /tmp/<test-binary>.
+> Why not use a recent environment?
+>
+> > https://wiki.debian.org/M68k/QemuSystemM68k
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 110 +++++++++++++++++++++-----
- 1 file changed, 89 insertions(+), 21 deletions(-)
+Yeah, I will give that a try... one day...
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 976f98991b3d..1cb53be7c9e9 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -102,6 +102,9 @@ struct ti_sn_bridge {
- 	struct gpio_desc		*enable_gpio;
- 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
- 	int				dp_lanes;
-+	u8				edp_dpcd[EDP_DISPLAY_CTL_CAP_SIZE];
-+	int				num_sink_rates;
-+	int				sink_rate_idxs[DP_MAX_SUPPORTED_RATES];
- };
- 
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -454,15 +457,6 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
- 	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
- };
- 
--/**
-- * A table indicating which of the rates in ti_sn_bridge_dp_rate_lut
-- * is as per the DP spec (AKA a standard) as opposed to an intermediate
-- * rate.
-- */
--static const bool ti_sn_bridge_dp_rate_standard[] = {
--	false, true, false, false, true, false, false, true
--};
--
- static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
- {
- 	unsigned int bit_rate_khz, dp_rate_mhz;
-@@ -573,11 +567,95 @@ static unsigned int ti_sn_get_max_lanes(struct ti_sn_bridge *pdata)
- 	return data & DP_LANE_COUNT_MASK;
- }
- 
-+/* TODO possibly fold ti_sn_get_max_lanes() into this? */
-+static void ti_sn_read_sink_config(struct ti_sn_bridge *pdata)
-+{
-+	memset(pdata->edp_dpcd, 0, sizeof(pdata->edp_dpcd));
-+
-+	/*
-+	 * Read the eDP display control registers.
-+	 *
-+	 * Do this independent of DP_DPCD_DISPLAY_CONTROL_CAPABLE bit in
-+	 * DP_EDP_CONFIGURATION_CAP, because some buggy displays do not have it
-+	 * set, but require eDP 1.4+ detection (e.g. for supported link rates
-+	 * method). The display control registers should read zero if they're
-+	 * not supported anyway.
-+	 */
-+	if (drm_dp_dpcd_read(&pdata->aux, DP_EDP_DPCD_REV,
-+			     pdata->edp_dpcd, sizeof(pdata->edp_dpcd)) ==
-+			     sizeof(pdata->edp_dpcd))
-+		DRM_DEBUG_KMS("eDP DPCD: %*ph\n", (int) sizeof(pdata->edp_dpcd),
-+			      pdata->edp_dpcd);
-+
-+	/* Read the eDP 1.4+ supported link rates. */
-+	if (pdata->edp_dpcd[0] >= DP_EDP_14) {
-+		__le16 sink_rates[DP_MAX_SUPPORTED_RATES];
-+		int i, j;
-+
-+		drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
-+				sink_rates, sizeof(sink_rates));
-+
-+		for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
-+			int val = le16_to_cpu(sink_rates[i]);
-+			int rate_mhz;
-+
-+			if (val == 0)
-+				break;
-+
-+			/* Value read multiplied by 200kHz gives the per-lane
-+			 * link rate in kHz. The source rates are, however,
-+			 * stored in MHz
-+			 */
-+			rate_mhz = DIV_ROUND_UP(val * 200, 1000);
-+
-+			/* If the rate is also supported by the bridge, add it
-+			 * to the table of supported rates:
-+			 */
-+			for (j = 1; j < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut); j++) {
-+				if (rate_mhz == ti_sn_bridge_dp_rate_lut[j]) {
-+					pdata->sink_rate_idxs[pdata->num_sink_rates++] = j;
-+					break;
-+				}
-+			}
-+		}
-+		pdata->num_sink_rates = i;
-+	} else {
-+		int i;
-+
-+		/**
-+		 * A table indicating which of the rates in ti_sn_bridge_dp_rate_lut
-+		 * is as per the DP spec (AKA a standard) as opposed to an intermediate
-+		 * rate.
-+		 */
-+		static const bool ti_sn_bridge_dp_rate_standard[] = {
-+			false, true, false, false, true, false, false, true
-+		};
-+
-+		/* if prior to eDP 1.4, then just use the supported standard rates: */
-+		for (i = 1; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut); i++) {
-+			if (!ti_sn_bridge_dp_rate_standard[i])
-+				continue;
-+			pdata->sink_rate_idxs[pdata->num_sink_rates++] = i;
-+		}
-+	}
-+}
-+
- static int ti_sn_link_training(struct ti_sn_bridge *pdata, int dp_rate_idx,
- 			       const char **last_err_str)
- {
- 	unsigned int val;
- 	int ret;
-+	int i;
-+
-+	/* check for supported rate: */
-+	for (i = 0; i < pdata->num_sink_rates; i++)
-+		if (pdata->sink_rate_idxs[i] == dp_rate_idx)
-+			break;
-+
-+	if (i == pdata->num_sink_rates) {
-+		*last_err_str = "Unsupported rate";
-+		return -EINVAL;
-+	}
- 
- 	/* set dp clk frequency value */
- 	regmap_update_bits(pdata->regmap, SN_DATARATE_CONFIG_REG,
-@@ -624,6 +702,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 	unsigned int val;
- 	int ret = -EINVAL;
- 
-+	ti_sn_read_sink_config(pdata);
-+
- 	/*
- 	 * Run with the maximum number of lanes that the DP sink supports.
- 	 *
-@@ -669,18 +749,6 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata);
- 	     dp_rate_idx <= max_dp_rate_idx;
- 	     dp_rate_idx++) {
--		/*
--		 * To be on the safe side, we'll skip all non-standard
--		 * rates and move up to the next standard one.  This is
--		 * because some panels will pass link training with a non-
--		 * standard rate but just show garbage.  If the non-standard
--		 * rates are useful we should figure out how to enable them
--		 * through querying the panel, having a per-panel whitelist,
--		 * or adding a DT property.
--		 */
--		if (!ti_sn_bridge_dp_rate_standard[dp_rate_idx])
--			continue;
--
- 		ret = ti_sn_link_training(pdata, dp_rate_idx, &last_err_str);
- 		if (!ret)
- 			break;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
