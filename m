@@ -2,55 +2,72 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E00CC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBBEC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D800E2467B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF602206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="fV42WMmw"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ABd2KxBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLOTd3 (ORCPT
+        id S1726481AbfLOTlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:33:29 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:45884 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfLOTd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:33:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=66GL6uEMhL/IBdQ3j8dGFVszWMz92MKvrMh/IitWSgw=; b=fV42WMmwbpzdggy7SHL6TptND+
-        u/3IjtbOdXfdoFhjGGeq5gihZoRGVv6xSZ2uposkH3gyBB324LvG+MArY+4ePRDymXqevik2o0PLp
-        F+UUKL4+o/+jsCLNz/U8WYXvZw4YHtX1jr2t+hBx3ptQsqQHBr+8ITCZ63f+AZDFXCXs=;
-Received: from p200300ccff4bb7001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff4b:b700:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igZdr-00014T-ND; Sun, 15 Dec 2019 20:33:24 +0100
-Date:   Sun, 15 Dec 2019 20:33:19 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20191215203319.2874ac04@aktux>
-In-Reply-To: <20191215173817.47918-1-tony@atomide.com>
-References: <20191215173817.47918-1-tony@atomide.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Dec 2019 14:41:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43047 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfLOTln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 14:41:43 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so2399888pga.10
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:41:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=Lji5rc5oRoeIVgFMKgJ1S6HCLAhlBppwFI0mo3XGwLs=;
+        b=ABd2KxBCvCtitidd4X4lyO6QmLU1Kn3vuhoxh34gkyCub4ef0LpMK0y9bF6EjUThTr
+         lSFSktVMOlEGp+3Xv+04QrPZrToUoHTATF3iPyji9FtfF/oIHSa5sBmNv2eVYyw80p3o
+         usnhp7w9qrDytJVz/d+DGB74auilmBYm9Q3HFxDWyu/WDHvMeJm4tzRFGtS5RcJuijQp
+         ELg8hRXW0Xu/5dPhVik09K81H+uoPi7120FYTPFckBcv7fdV79BDiLRxlfjd7jUDriyu
+         vdgX71UqETiKAAqUfF+jhjYxe65wsWMfDOXE37lum2s2xVktdVZjdWjx7sII6CEw4fE1
+         CDgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Lji5rc5oRoeIVgFMKgJ1S6HCLAhlBppwFI0mo3XGwLs=;
+        b=Et2+iowfNCKIgp3yGpUgZcmc3Xp3HaBgqVydfJK0ngCFZD2RysrTbJvXVGbDV7I2zj
+         AOZxQkfmQvzOzMLEhK1eNwrGARR2uPXUDTRS0MhILhD2Tib9Ou5qw9ZuuXjKiU/AyyEd
+         tzl+gttjr7e7MGwTts10KctAZe+PnWDauBhqZXavxxNGE8PmVibP88BsPSjj9OoRhy2b
+         Mi1ns6OCWBBsGmg23Nw5of7QbdJKPfTJFN3CISTREHAr+MIIhTk72/SAQNEXH2Zco3E7
+         u5/4sgjXrPiVM7sdrimXXqlKz4HzX2RCXuhIRgN4ONjlT9GmR+OGfkQrKDNBKEdzc7rQ
+         MQhA==
+X-Gm-Message-State: APjAAAWYvev7lmcBjDiO4QVkKVozoKEZG4WWEPYOEJaOxnQfpfKSWw4j
+        tFw4y5ZZI/5ETLoKtXmpswbHsQ==
+X-Google-Smtp-Source: APXvYqwO1kxy24gYDG8jZH6lc+wfwsq1T/YgDVVyLVhgAtpGNCuID54ncQaY4dC2vFzHwxjn0oPlwg==
+X-Received: by 2002:a63:cb09:: with SMTP id p9mr10771521pgg.105.1576438903199;
+        Sun, 15 Dec 2019 11:41:43 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id j22sm16335515pji.16.2019.12.15.11.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 11:41:43 -0800 (PST)
+Date:   Sun, 15 Dec 2019 11:41:39 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Paul Durrant <pdurrant@amazon.com>
+Cc:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Juergen Gross <jgross@suse.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net v2] xen-netback: avoid race that can lead to NULL
+ pointer dereference
+Message-ID: <20191215114139.34f0d24e@cakuba.netronome.com>
+In-Reply-To: <20191213132040.21446-1-pdurrant@amazon.com>
+References: <20191213132040.21446-1-pdurrant@amazon.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -59,67 +76,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Dec 2019 09:38:17 -0800
-Tony Lindgren <tony@atomide.com> wrote:
-
-> We've had generic code handling module sysconfig and OCP reset registers
-> for omap variants for many years now and all the drivers really needs to
-> do is just call runtime PM functions.
+On Fri, 13 Dec 2019 13:20:40 +0000, Paul Durrant wrote:
+> In function xenvif_disconnect_queue(), the value of queue->rx_irq is
+> zeroed *before* queue->task is stopped. Unfortunately that task may call
+> notify_remote_via_irq(queue->rx_irq) and calling that function with a
+> zero value results in a NULL pointer dereference in evtchn_from_irq().
 > 
-> Looks like the omap-hdq driver got only partially updated over the years
-> to use runtime PM, and still has lots of custom PM code left.
+> This patch simply re-orders things, stopping all tasks before zero-ing the
+> irq values, thereby avoiding the possibility of the race.
 > 
-> We can replace all the custom code for sysconfig, OCP reset, and PM with
-> just a few lines of runtime PM autosuspend code.
-> 
-> Note that the earlier driver specific usage count limit of four seems
-> completely artificial and should not be an issue in normal use.
-> 
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Andreas Kemnade <andreas@kemnade.info>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Vignesh R <vigneshr@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> 
-> Can you guys please review and and test on gta04 and torpedo?
-> 
-I tried this after booting with init=/bin/bash and mounting kernel
-filesystems (no off mode enabled):
-root@(none):/# echo on >/sys/bus/platform/devices/480b2000.1w/power/control
-root@(none):/# modprobe omap_hdq
-[   49.590820] Driver for 1-wire Dallas network protocol.
-[   49.598327] omap_hdq 480b2000.1w: OMAP HDQ Hardware Rev 0.5. Driver in Interrupt mode
-root@(none):/# [   49.624572] w1_master_driver w1_bus_master1: Attaching one wire slave 01.000000000000 crc 3d
-[   49.660980] power_supply bq27000-battery: power_supply_get_battery_info currently only supports devicetree
+> Fixes: 2ac061ce97f4 ("xen/netback: cleanup init and deinit code")
+> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 
-root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
-0
+> v2:
+>  - Add 'Fixes' tag and re-work commit comment
 
-real    0m2.561s
-user    0m0.008s
-sys     0m0.002s
-root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
-0
+I've added Wei's Ack from v1, if the code doesn't change substantially
+please keep people's Acks.
 
-real    0m12.601s
-user    0m0.010s
-sys     0m0.002s
-root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
-0
-
-real    0m12.601s
-user    0m0.010s
-sys     0m0.002s
-root@(none):/# 
-
-No data could be read but some detection work seem to be done.
-Of course, I also tried without that forced power on.
-
-I hope I can find more time to analyze.
-Looks like a nice cleanup but needs some work.
-
-Regards,
-Andreas
+Applied, thanks.
