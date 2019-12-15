@@ -2,251 +2,202 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D8C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95718C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE49F22B48
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDFB206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfLOMfF (ORCPT
+        id S1726351AbfLOMf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:35:05 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:41034 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfLOMfE (ORCPT
+        Sun, 15 Dec 2019 07:35:59 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:50834 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfLOMf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:35:04 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Sun, 15 Dec 2019 07:35:59 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47bP4P1TWdzQk8j;
-        Sun, 15 Dec 2019 13:35:01 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id uAfNvh4N5EDU; Sun, 15 Dec 2019 13:34:56 +0100 (CET)
-Date:   Sun, 15 Dec 2019 23:34:43 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] openat2: switch to __attribute__((packed)) for open_how
-Message-ID: <20191215123443.jmfnrtgbscdwfohc@yavin.dot.cyphar.com>
-References: <20191213222351.14071-1-cyphar@cyphar.com>
- <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 17A26804FC;
+        Sun, 15 Dec 2019 13:35:52 +0100 (CET)
+Date:   Sun, 15 Dec 2019 13:35:51 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        CK Hu <ck.hu@mediatek.com>, linux-mediatek@lists.infradead.org,
+        sj.huang@mediatek.com
+Subject: Re: [PATCH] drm/panel: seperate panel power control from panel
+ prepare/unprepare
+Message-ID: <20191215123551.GA32327@ravnborg.org>
+References: <20191106064005.8016-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uvrtjxp4z3rdqsxa"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
+In-Reply-To: <20191106064005.8016-1-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
+        a=UN12_I82iCspjviWGz0A:9 a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jitao.
 
---uvrtjxp4z3rdqsxa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 06, 2019 at 02:40:05PM +0800, Jitao Shi wrote:
+> Some dsi panels require the dsi lanes keeping low before panel power
+> on. So seperate the panel power control and the communication with panel.
+> 
+> And put the power control in drm_panel_prepare_power and
+> drm_panel_unprepare_power. Put the communication with panel in
+> drm_panel_prepare and drm_panel_unprepare.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 
-On 2019-12-14, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
-> On 13/12/2019 23.23, Aleksa Sarai wrote:
-> > The design of the original open_how struct layout was such that it
-> > ensured that there would be no un-labelled (and thus potentially
-> > non-zero) padding to avoid issues with struct expansion, as well as
-> > providing a uniform representation on all architectures (to avoid
-> > complications with OPEN_HOW_SIZE versioning).
-> >=20
-> > However, there were a few other desirable features which were not
-> > fulfilled by the previous struct layout:
-> >=20
-> >  * Adding new features (other than new flags) should always result in
-> >    the struct getting larger. However, by including a padding field, it
-> >    was possible for new fields to be added without expanding the
-> >    structure. This would somewhat complicate version-number based
-> >    checking of feature support.
-> >=20
-> >  * A non-zero bit in __padding yielded -EINVAL when it should arguably
-> >    have been -E2BIG (because the padding bits are effectively
-> >    yet-to-be-used fields). However, the semantics are not entirely clear
-> >    because userspace may expect -E2BIG to only signify that the
-> >    structure is too big. It's much simpler to just provide the guarantee
-> >    that new fields will always result in a struct size increase, and
-> >    -E2BIG indicates you're using a field that's too recent for an older
-> >    kernel.
->=20
-> And when the first extension adds another u64 field, that padding has to
-> be added back in and checked for being 0, at which point the padding is
-> again yet-to-be-used fields.
+Panels that requires power before communicating often/always have
+some timing constraints. Power need to be applied in XYZ micro seconds
+before it is safe to communicate with the panel.
 
-Maybe I'm missing something, but what is the issue with
+To support this a typical pattern is:
 
-  struct open_how {
-    u64 flags;
-    u64 resolve;
-    u16 mode;
-	u64 next_extension;
-  } __attribute__((packed));
+panel_xxx_prepare()
+{
+   // power on the panel using one or a few regulators
 
-It was my understanding that __aligned_u64 was used to ensure consistent
-layouts, not that it was needed for safety against unaligned accesses.
+   // wait until panel is known to be ready
 
-> So what exactly is the problem with returning EINVAL now?
+   // Communicate with the panel
 
-I would argue that -EINVAL was the wrong choice of return code from the
-outset (and if we do keep the padding, I will send a patch to switch it
-to -E2BIG -- see below). The purpose of -E2BIG for the newer
-"extensible" syscalls is to differentiate between using an unsupported
-extension field and an unsupported (or invalid) flag.
+}
 
-This will be useful for a few other extension ideas for these types of
-syscalls (related to allowing userspace to more efficiently figure out
-what flags are supported by the kernel without having to try each one
-separately).
+first driver I looked at (panel-feiyang-fy07024di26a30d.c) follows this
+pattern.
 
-> >  * The padding wasted space needlessly, and would very likely not be
-> >    used up entirely by future extensions for a long time (because it
-> >    couldn't fit a u64).
->=20
-> Who knows, it does fit a u32. And if the struct is to be 8-byte aligned
-> (see below), it doesn't actually waste space.
+So we have the timing spelled out in the enable() function
+and the sequence is obvious.
 
-Yeah, though giving it some more thought I think this might be a better
-layout to avoid this problem:
 
-  struct open_how {
-    __aligned_u64 flags;
-    __aligned_u64 resolve;
-    __u16 mode;
-	__u16 __padding[3]; /* must be zero */
-  };
+What will the benefit be from a separate drm_panel_prepare_power()
+function pointer?
 
-That way, we won't end up with a u16 which we never use (and we won't
-have multiple __padding fields in the future).
+	Sam
 
-> > diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> > index d886bdb585e4..0e070c7f568a 100644
-> > --- a/include/uapi/linux/fcntl.h
-> > +++ b/include/uapi/linux/fcntl.h
-> > @@ -109,17 +109,16 @@
-> >   * O_TMPFILE} are set.
-> >   *
-> >   * @flags: O_* flags.
-> > - * @mode: O_CREAT/O_TMPFILE file mode.
-> >   * @resolve: RESOLVE_* flags.
-> > + * @mode: O_CREAT/O_TMPFILE file mode.
-> >   */
-> >  struct open_how {
-> > -	__aligned_u64 flags;
-> > +	__u64 flags;
-> > +	__u64 resolve;
-> >  	__u16 mode;
-> > -	__u16 __padding[3]; /* must be zeroed */
-> > -	__aligned_u64 resolve;
-> > -};
-> > +} __attribute__((packed));
->=20
-> IIRC, gcc assumes such a struct has alignment 1, which means that it
-> will generate horrible code to access it. So if you do this (and I don't
-> think it's a good idea), I think you'd also want to include a
-> __attribute__((__aligned__(8))) - or perhaps that can be accomplished by
-> just keeping flags as an explicitly aligned member. But that will of
-> course bump its sizeof() back to 24, at which point it seems better to
-> just make the padding explicit.
 
-Yeah, you're quite right -- I was aware that GCC generated "less than
-great" code for aligned(1) structures, but wasn't sure whether it would
-be seen as being a serious enough issue to NACK the change.
-
-There is an additional problem -- unfortunately, having the struct be
-__attribute__((aligned(8))) doesn't solve the Rust representation
-problem because Rust can't represent a struct as both being
-#[repr(packed)] and #[repr(align(n))]. Obviously the kernel doesn't
-really care about Rust language restrictions, but given one of the main
-users of how->resolve will be libpathrs, I'd prefer to not make my own
-life any harder if possible. ;)
-
-So, given all of the above, I suggest that instead I send something like
-this instead:
-
-diff --git a/fs/open.c b/fs/open.c
-index 50a46501bcc9..6c97f52453fe 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -994,7 +994,7 @@ static inline int build_open_flags(const struct open_ho=
-w *how,
-        if (how->resolve & ~VALID_RESOLVE_FLAGS)
-                return -EINVAL;
-        if (memchr_inv(how->__padding, 0, sizeof(how->__padding)))
--               return -EINVAL;
-+               return -E2BIG;
-=20
-        /* Deal with the mode. */
-        if (WILL_CREATE(flags)) {
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index d886bdb585e4..c307640071c8 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -114,9 +114,9 @@
-  */
- struct open_how {
-        __aligned_u64 flags;
-+       __aligned_u64 resolve;
-        __u16 mode;
-        __u16 __padding[3]; /* must be zeroed */
--       __aligned_u64 resolve;
- };
-=20
- #define OPEN_HOW_SIZE_VER0     24 /* sizeof first published struct */
-diff --git a/tools/testing/selftests/openat2/openat2_test.c b/tools/testing=
-/selftests/openat2/openat2_test.c
-index 0b64fedc008b..88e3614cbb3a 100644
---- a/tools/testing/selftests/openat2/openat2_test.c
-+++ b/tools/testing/selftests/openat2/openat2_test.c
-@@ -61,15 +61,15 @@ void test_openat2_struct(void)
-                { .name =3D "normal struct (non-zero padding[0])",
-                  .arg.inner.flags =3D O_RDONLY,
-                  .arg.inner.__padding =3D {0xa0, 0x00, 0x00},
--                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
-+                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
-                { .name =3D "normal struct (non-zero padding[1])",
-                  .arg.inner.flags =3D O_RDONLY,
-                  .arg.inner.__padding =3D {0x00, 0x1a, 0x00},
--                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
-+                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
-                { .name =3D "normal struct (non-zero padding[2])",
-                  .arg.inner.flags =3D O_RDONLY,
-                  .arg.inner.__padding =3D {0x00, 0x00, 0xef},
--                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
-+                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
-=20
-                /* TODO: Once expanded, check zero-padding. */
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---uvrtjxp4z3rdqsxa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfYoVwAKCRCdlLljIbnQ
-EvN7AQDwo4/O9nZFcp0yersckNBPVj7BMZ9v79JCcI1aurRDfAEAwe9HeP+jGXMh
-oYq9nIRg+RvL03iTvyD9Q/4gIXDqoA8=
-=PES2
------END PGP SIGNATURE-----
-
---uvrtjxp4z3rdqsxa--
+> ---
+>  drivers/gpu/drm/drm_panel.c | 38 +++++++++++++++++++++++++++++++++++++
+>  include/drm/drm_panel.h     | 17 +++++++++++++++++
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index 6b0bf42039cf..e57f6385d2cc 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -131,6 +131,24 @@ void drm_panel_detach(struct drm_panel *panel)
+>  }
+>  EXPORT_SYMBOL(drm_panel_detach);
+>  
+> +/**
+> + * drm_panel_prepare_power - power on a panel's power
+> + * @panel: DRM panel
+> + *
+> + * Calling this function will enable power and deassert any reset signals to
+> + * the panel.
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+> + */
+> +int drm_panel_prepare_power(struct drm_panel *panel)
+> +{
+> +	if (panel && panel->funcs && panel->funcs->prepare_power)
+> +		return panel->funcs->prepare_power(panel);
+> +
+> +	return panel ? -ENOSYS : -EINVAL;
+> +}
+> +EXPORT_SYMBOL(drm_panel_prepare_power);
+> +
+>  /**
+>   * drm_panel_prepare - power on a panel
+>   * @panel: DRM panel
+> @@ -170,6 +188,26 @@ int drm_panel_unprepare(struct drm_panel *panel)
+>  }
+>  EXPORT_SYMBOL(drm_panel_unprepare);
+>  
+> +/**
+> + * drm_panel_unprepare_power - power off a panel
+> + * @panel: DRM panel
+> + *
+> + * Calling this function will completely power off a panel (assert the panel's
+> + * reset, turn off power supplies, ...). After this function has completed, it
+> + * is usually no longer possible to communicate with the panel until another
+> + * call to drm_panel_prepare_power and drm_panel_prepare().
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+> + */
+> +int drm_panel_unprepare_power(struct drm_panel *panel)
+> +{
+> +	if (panel && panel->funcs && panel->funcs->unprepare_power)
+> +		return panel->funcs->unprepare_power(panel);
+> +
+> +	return panel ? -ENOSYS : -EINVAL;
+> +}
+> +EXPORT_SYMBOL(drm_panel_unprepare_power);
+> +
+>  /**
+>   * drm_panel_enable - enable a panel
+>   * @panel: DRM panel
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index 624bd15ecfab..0d8c4855405c 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -61,6 +61,13 @@ struct display_timing;
+>   * the panel. This is the job of the .unprepare() function.
+>   */
+>  struct drm_panel_funcs {
+> +	/**
+> +	 * @prepare_power:
+> +	 *
+> +	 * Turn on panel power.
+> +	 */
+> +	int (*prepare_power)(struct drm_panel *panel);
+> +
+>  	/**
+>  	 * @prepare:
+>  	 *
+> @@ -89,6 +96,13 @@ struct drm_panel_funcs {
+>  	 */
+>  	int (*unprepare)(struct drm_panel *panel);
+>  
+> +	/**
+> +	 * @unprepare_power:
+> +	 *
+> +	 * Turn off panel_power.
+> +	 */
+> +	int (*unprepare_power)(struct drm_panel *panel);
+> +
+>  	/**
+>  	 * @get_modes:
+>  	 *
+> @@ -155,6 +169,9 @@ void drm_panel_remove(struct drm_panel *panel);
+>  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector);
+>  void drm_panel_detach(struct drm_panel *panel);
+>  
+> +int drm_panel_prepare_power(struct drm_panel *panel);
+> +int drm_panel_unprepare_power(struct drm_panel *panel);
+> +
+>  int drm_panel_prepare(struct drm_panel *panel);
+>  int drm_panel_unprepare(struct drm_panel *panel);
+>  
+> -- 
+> 2.21.0
