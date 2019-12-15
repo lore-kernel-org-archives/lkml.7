@@ -2,141 +2,108 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D353C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2F6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6452467A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003FF2467B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="N+c4HK+q"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t6TW0QsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfLOXZk (ORCPT
+        id S1726672AbfLOX0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 18:25:40 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41304 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfLOXZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 18:25:39 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so5016267ioo.8
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 15:25:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WEL4itFmihZqlf+pK1DU7DEDt/SepncHaF9ZMAufTQk=;
-        b=N+c4HK+qYE45RWqlaHU7AnTEY46OfO0t0kBAN2F+qSebIf6nmrna9JaUNv7TDH9X27
-         eCgTN0xBKqFk/ruLZ7CepWQ0jgS9fLOYi7yjsjSN9bKiqaIzJ/+CIrt8kekjVO41P6NN
-         d5Eo49hMKI8IYCNwJ9GMtn/oFArpJVH77Ajsw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WEL4itFmihZqlf+pK1DU7DEDt/SepncHaF9ZMAufTQk=;
-        b=JEEwKH7FjomZXTyAaSqkPXtvU68EWbb+Dh9tnP6E6TP8qyQgh4AaP3x7Ea6+IqU0Sp
-         QCGOw8OV/Hf8JXkzjyY5YjnUc70Yu83icHP6DYcod2F2Xs6Co09ULPqWPjg/RXUVEfab
-         UXL6AmrAB+qbVenEO5YnxHA9UZBnp/K2nu+zIrrhRC3eFWOTerypEIdwqK/aDLEAvejk
-         8JsMkdssRLZQpQmJfIe1Cf+eM7poaXu4SACyampsM+7kxhUinrK9uGNsbnOidNYHCafa
-         Qmsx3/oFA2Loyke1eGRA66iofzV7jzNT0I625xmA5IkmFVw2nuSQ7G7cNyrmW73Gti+8
-         G0Rg==
-X-Gm-Message-State: APjAAAVDUBKDukwuFn6Z7+XZoOdjrpAziqPN+AzvPt6si81yHaku3ieP
-        RhkIy5oWvnDExaDxl56FD0McmUgrTd8POXlYik1M4w==
-X-Google-Smtp-Source: APXvYqyxqgqtul5GG7UvGBKwhR/jHF82eADU4suOa7b5QH1cqUuBRY6sCnLgmir+XVDsPtFBuRQBjcI89ud2U+OOQlo=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr9795715jad.136.1576452338679;
- Sun, 15 Dec 2019 15:25:38 -0800 (PST)
+        Sun, 15 Dec 2019 18:26:37 -0500
+Received: from ozlabs.org ([203.11.71.1]:47195 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfLOX0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 18:26:36 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bgX90rwRz9sP3;
+        Mon, 16 Dec 2019 10:26:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576452394;
+        bh=Q836Q0gCA+hPUmVyyMXcLvrPYwmVS9fKCYz2xOUkNIo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=t6TW0QsGlj9X0To9d7MhPfN4dUVvuhEaiyjNfUKggYUH3ou8feREhg5aqN4iVPedf
+         DYjouezdEL3scujyyv6jxPdVZ4yRw9wWag7XtnGS58Xn07bdpgapQV9TZJ9D8uZcrE
+         zvxYXc23Va1P8qKh0wfesNXfhB6HygSBfWPpuGUH/y+SHr+1euKdr/NLPg2eVGtKyL
+         ib0CBy7PVtAnURbJz+SBzocCauji3cHJ+ExD3/TGDQ0J79m2RP+kio0e9D6JQUEldm
+         Y02EN93yODXwSbMnrC/xzdSvrXFasIz3kKNt1HNhDtpsEjPG5f9r9K5kktkZDNfcQv
+         gvdnVW/RKghaw==
+Date:   Mon, 16 Dec 2019 10:26:32 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>
+Subject: linux-next: manual merge of the bpf-next tree with Linus' tree
+Message-ID: <20191216102632.3e2ee576@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191210210735.9077-1-sashal@kernel.org> <20191210210735.9077-66-sashal@kernel.org>
- <20191215155329.4c71ad53@archlinux>
-In-Reply-To: <20191215155329.4c71ad53@archlinux>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Sun, 15 Dec 2019 15:25:27 -0800
-Message-ID: <CAJCx=gkM8=WCC6t8bjX-q-mDco7HBMdBmJjOQzRHZr4-nKVvcA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 105/350] iio: chemical: atlas-ph-sensor: fix
- iio_triggered_buffer_predisable() position
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/h5aalMVYZp0e+ZTIWKmVXei";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 7:53 AM Jonathan Cameron
-<jic23@jic23.retrosnub.co.uk> wrote:
->
-> On Tue, 10 Dec 2019 16:03:30 -0500
-> Sasha Levin <sashal@kernel.org> wrote:
->
-> > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >
-> > [ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
-> >
-> > The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-> > the poll functions.
-> >
-> > The iio_triggered_buffer_predisable() should be called last, to detach the
-> > poll func after the devices has been suspended.
-> >
-> > The position of iio_triggered_buffer_postenable() is correct.
-> >
-> > Note this is not stable material. It's a fix in the logical
-> > model rather fixing an actual bug.  These are being tidied up
-> > throughout the subsystem to allow more substantial rework that
-> > was blocked by variations in how things were done.
->
-> See comment.  This is not what I would consider stable material.
->
+--Sig_/h5aalMVYZp0e+ZTIWKmVXei
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Outside of the comment, which really isn't probably enough to avoid
-the autoselection script from detecting it (could be "stable" in the
-message alone selects it :) ),
-is there any way to signal that a patch is "NOT for stable trees"?
-Probably don't want to clutter up the commit messages of course.
+Hi all,
 
-- Matt
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
-> > index 3a20cb5d9bffc..6c175eb1c7a7f 100644
-> > --- a/drivers/iio/chemical/atlas-ph-sensor.c
-> > +++ b/drivers/iio/chemical/atlas-ph-sensor.c
-> > @@ -323,16 +323,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
-> >       struct atlas_data *data = iio_priv(indio_dev);
-> >       int ret;
-> >
-> > -     ret = iio_triggered_buffer_predisable(indio_dev);
-> > +     ret = atlas_set_interrupt(data, false);
-> >       if (ret)
-> >               return ret;
-> >
-> > -     ret = atlas_set_interrupt(data, false);
-> > +     pm_runtime_mark_last_busy(&data->client->dev);
-> > +     ret = pm_runtime_put_autosuspend(&data->client->dev);
-> >       if (ret)
-> >               return ret;
-> >
-> > -     pm_runtime_mark_last_busy(&data->client->dev);
-> > -     return pm_runtime_put_autosuspend(&data->client->dev);
-> > +     return iio_triggered_buffer_predisable(indio_dev);
-> >  }
-> >
-> >  static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
->
+  net/bpf/test_run.c
+
+between commit:
+
+  c593642c8be0 ("treewide: Use sizeof_field() macro")
+
+from Linus' tree and commits:
+
+  b590cb5f802d ("bpf: Switch to offsetofend in BPF_PROG_TEST_RUN")
+  850a88cc4096 ("bpf: Expose __sk_buff wire_len/gso_segs to BPF_PROG_TEST_R=
+UN")
+
+from the bpf-next tree.
+
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/h5aalMVYZp0e+ZTIWKmVXei
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32wSgACgkQAVBC80lX
+0GzvVwf/YTxou35hG5DHK0UkLIVIsFUy3MWOxubZ6nUZQpWaznHIh1XElTOoiGdH
+ZYjchIGCdcBACEgbuDyYnkZht+pnYV7gFH6je2J34o3mDlkqcS1EARbcLW+WT7RU
+lBaks4BzgNaFpzLmOwi1MD+vge7f48dEulEsZ2sNI42yQRBVjguJ99qnx/R6OE//
+yUb/C5B/c467deIEE9rJV4MKuyi68fvU9ziT99NyG5P8eNq9rZLriPNwpEgNh9d7
+m0Op2i2bRCVQ1fu1fSCBw3x5U4sP6TOIpscLmOWLPg2eG7ZpC/xdzws8v2MUEftT
+CgnZthxH4t4qX9nhAdoRcShYRrtXaQ==
+=8EAE
+-----END PGP SIGNATURE-----
+
+--Sig_/h5aalMVYZp0e+ZTIWKmVXei--
