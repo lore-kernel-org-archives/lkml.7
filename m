@@ -2,113 +2,104 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EBC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C54FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8034920866
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gFbnXdjz"
+	by mail.kernel.org (Postfix) with ESMTP id 01B032465B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576423898;
+	bh=LgHeGbyJrYWU3ryipXZAEWbKr4XnV0pc7CZo8nwe71o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TbKaNV5uVPWZc/2vPgx4MyYr4kuwzVAAvO+33e2KwU2jYlWKstE6ihqXdh+gtQQDP
+	 3HvZJ63K3I6rAweFv5rL9LSr7KDt5GB4Kl/pexBWo+DgFLmmdU3THA4aiOkn4n5zDw
+	 9jphCeM3go1k7R1Dnl3lwwLH9IOvcSXLtS9IWhsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfLOPYD (ORCPT
+        id S1726540AbfLOPbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:24:03 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:54016 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfLOPYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:24:02 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bSqP2mydz9vZ5g
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 15:24:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id s7tMtDrrs8GL for <linux-kernel@vger.kernel.org>;
-        Sun, 15 Dec 2019 09:24:01 -0600 (CST)
-Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        Sun, 15 Dec 2019 10:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfLOPbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 10:31:36 -0500
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bSqP1jM0z9vZ5x
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:24:01 -0600 (CST)
-Received: by mail-yw1-f69.google.com with SMTP id j9so3764634ywg.14
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 07:24:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LXeOuc0B3gYX32LabDU9f+RSGbyw1wcQBHVeANF/Ibg=;
-        b=gFbnXdjz2JyDs4kf8BW4QAMQEHuYlzIExGtIGz08EPf7yeUz69r2qyT9KH+d6UHKYD
-         +8Y68qzOIDZjoC/J/jbi/P+wfQs+Ts54xVgQNcRO570Hu0dMRXd2kpxg4sVOQFF7rltE
-         5hqGsoOLgKmq0/4sEYqHVWCiFKXmHBgYJdsG2+YCSeKjNTJW3EGZtWqAy3/lrDv5wm6y
-         QU2i0RKp0HvZuZF4i3elIn/MjXO7LBHPV/lWHDNK8k3C33mOoZq9EV1HlAqMac7v+YMH
-         x90F2rZA0JpnodY+TigIVIH/qhsKVxsws4grBrtIq1w8VRJIqe/5lAYf+2f4ihzU79Z+
-         WMHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LXeOuc0B3gYX32LabDU9f+RSGbyw1wcQBHVeANF/Ibg=;
-        b=fqJjph2nHQIWdqAM6CtB9EnoawqN0YmUXHJadS6aKHdQXi4zmuZuEYIwRKJssv3HXA
-         ARlIQGlC+5+aSRKFu3fEFEDwale/Et5KyiH17c/wo60WEhEseb9XqNP356O67r94uhUJ
-         t9GlOM6NHsaX0CEcaE5Az8zNK9+COP6wlbgj/J96V6zfkZE4sj/aoz/H6W+3RNa49wXD
-         MTNArxL/E/xV88fTuYEtxTXoFFExsm9ifXG6tqyxKY4hwamfNvwWBUiKCIDkNTSEnc/e
-         IttCAa/HnsCrDkEOpq4CC7Np/eTAYj4cgsSv67Sbk+nkhILSwd0D99vx2IUKqyL7WEP7
-         G6MA==
-X-Gm-Message-State: APjAAAWDWt5Lo0M4m6nTXT9L2Rn7e/N7fNrKzyTGXHm4izf+60+i5KxW
-        hiklMZGTobYsYjiv6QMnldoxF8anlv3f5B/owavgrZ3jejkhAdhdQf0QLj4BpSNxqsnQ10Hvb8n
-        rnAXw9gx0cHimuGQdHKW3ap0NaBG4
-X-Received: by 2002:a25:7cc1:: with SMTP id x184mr12866651ybc.69.1576423440623;
-        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzmH7sFfvfBy1cep+91o5KmIInPx1Yz9wIMEp9QMF/hlEh4qqQVE73XWTB1gu0XWKPd9zKF2g==
-X-Received: by 2002:a25:7cc1:: with SMTP id x184mr12866635ybc.69.1576423440363;
-        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id b192sm3235899ywe.2.2019.12.15.07.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 07:24:00 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mac80211: Remove redundant assertion
-Date:   Sun, 15 Dec 2019 09:23:48 -0600
-Message-Id: <20191215152348.20912-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3302465B;
+        Sun, 15 Dec 2019 15:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576423895;
+        bh=LgHeGbyJrYWU3ryipXZAEWbKr4XnV0pc7CZo8nwe71o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=i5Cutc5J5C/5aYfb3pnqldlule1dkMTiFtdLJQQf0csa7oyzCh7cQOCYG07GcSVZ9
+         IqhCNmw8CkN/a/xa4PpC8UyV1eVrvlsHUwUDR3+xpHamO7llyTLZV0IjgaarW3NFPu
+         smNpvbffdnRweEOQ/u/ZeoB1inTYavFVuPAUA4iU=
+Received: by mail-lj1-f178.google.com with SMTP id h23so3967503ljc.8;
+        Sun, 15 Dec 2019 07:31:35 -0800 (PST)
+X-Gm-Message-State: APjAAAVsIYOgOb/Muw/9yMUEjVfjYTAUGVU8EbdnvV8zjQ2UWTG9nmvH
+        BocPKACnfdoRNuJvziYnELhBgiDEObBzqUZqH0A=
+X-Google-Smtp-Source: APXvYqw2DbqZ9mPFhwyFC3xGwQKN0FgHbG3yv4TEKTv/RS3DYTfQCkrygxKAvb9/4K7Pve0MBgrcu0ELakg7Nt6nOu8=
+X-Received: by 2002:a05:651c:208:: with SMTP id y8mr16919184ljn.36.1576423893690;
+ Sun, 15 Dec 2019 07:31:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191214181130.25808-1-tiny.windzz@gmail.com>
+In-Reply-To: <20191214181130.25808-1-tiny.windzz@gmail.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Mon, 16 Dec 2019 00:30:57 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH2CS6o-zaHXReKJXzxsU_jfYKg2WL7uGpzyaFNhgTSVbg@mail.gmail.com>
+Message-ID: <CAGTfZH2CS6o-zaHXReKJXzxsU_jfYKg2WL7uGpzyaFNhgTSVbg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PM / devfreq: rockchip-dfi: add missing of_node_put()
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wiphy_to_ieee80211_hw, the assertion to check if wiphy is NULL is
-repeated in wiphy_priv. The patch removes the duplicated BUG_ON check.
+2019=EB=85=84 12=EC=9B=94 15=EC=9D=BC (=EC=9D=BC) =EC=98=A4=EC=A0=84 3:12, =
+Yangtao Li <tiny.windzz@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> of_node_put needs to be called when the device node which is got
+> from of_parse_phandle has finished using.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/devfreq/event/rockchip-dfi.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event=
+/rockchip-dfi.c
+> index 5d1042188727..45b190e443d8 100644
+> --- a/drivers/devfreq/event/rockchip-dfi.c
+> +++ b/drivers/devfreq/event/rockchip-dfi.c
+> @@ -200,6 +200,7 @@ static int rockchip_dfi_probe(struct platform_device =
+*pdev)
+>         node =3D of_parse_phandle(np, "rockchip,pmu", 0);
+>         if (node) {
+>                 data->regmap_pmu =3D syscon_node_to_regmap(node);
+> +               of_node_put(node);
+>                 if (IS_ERR(data->regmap_pmu))
+>                         return PTR_ERR(data->regmap_pmu);
+>         }
+> --
+> 2.17.1
+>
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- net/mac80211/util.c | 1 -
- 1 file changed, 1 deletion(-)
+Applied it. Better to use the capital letter for first char of sentence.
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 32a7a53833c0..780df3e9092e 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -39,7 +39,6 @@ const void *const mac80211_wiphy_privid = &mac80211_wiphy_privid;
- struct ieee80211_hw *wiphy_to_ieee80211_hw(struct wiphy *wiphy)
- {
- 	struct ieee80211_local *local;
--	BUG_ON(!wiphy);
- 
- 	local = wiphy_priv(wiphy);
- 	return &local->hw;
--- 
-2.20.1
-
+--=20
+Best Regards,
+Chanwoo Choi
