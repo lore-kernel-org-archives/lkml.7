@@ -2,141 +2,134 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC242C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 05:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ABAC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 05:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8145F2253D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 05:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246E920700
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 05:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrmuGguM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cVq5RUxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfLOFRu (ORCPT
+        id S1726061AbfLOFiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 00:17:50 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45563 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLOFRr (ORCPT
+        Sun, 15 Dec 2019 00:38:22 -0500
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:42838 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfLOFiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 00:17:47 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so1707582pgk.12;
-        Sat, 14 Dec 2019 21:17:46 -0800 (PST)
+        Sun, 15 Dec 2019 00:38:21 -0500
+Received: by mail-pf1-f176.google.com with SMTP id 4so3763566pfz.9
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 21:38:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rs+ph61PgowUB2wxJYFFkBstw61v/JyioJPVFcT1dTo=;
-        b=PrmuGguMd8I2icLDPcfOnUjhxgAkYI89eucLm58rL6pWLvQL2jZxJTUV6iNRcYSoQ2
-         sKk2OHbbVJPQZZq8MT2heyABgtzLtkONYwt26Zk+TkTkAYRNziB7w4K8Q5suhmYOXkR3
-         POykAo/0yD/76gVPmRSp7biObXx0ma7YjYqyoVxlPQ1JTyhH6KpJ6H6Jnz94BeV/15du
-         cwtfk9+BTmygl5heycnwix988ik+j1JV7n6H5L4OTWXP+GKoFXjVCQy4x2NB/4vNQaOA
-         eoYdoyMlUaHLlo+pSFsk56d5j/vVEZ5cSa73TgiJO85GCfq+XhKbVxnbyPrRf8JLKn9b
-         /OUw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rYhW8ESLkaBmTx7qrwRV9ukpRcsTp5ZieGL9xLqhxqg=;
+        b=cVq5RUxuoKRkBf5bRNowyvHttDHrpqivGM7mkFO6t77Q5EJexqHpl9Htjk0T96CQuj
+         S0G8JrJ4G3Hyg890YJb+MHVqaVjA2svy6Fi8IFebbuKlxLnaLqtbanrJq96QUn9u3fs7
+         G0FYimTXWqGNC7YEhZue5i/kIMXHrw2X4eJY6L76matWOp3yHT39QdazEmINyfGXUI6j
+         asmhjJRETatjXBx6n2SAcjmYHRehILcZHIyFz/6Au0vmc1vfu9mC5y1d22mvBoPUbBw2
+         sVWZuvDQE6jMJgettug1rPDLOFXGN3IZs6NvYKq2v9Z57VHR+jRDNWx85Hf7OxkkZIBt
+         2+yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rs+ph61PgowUB2wxJYFFkBstw61v/JyioJPVFcT1dTo=;
-        b=qWb+Y6dN2mIreYPFr1ecn8zetJA+4a/dEgeET+hVxH00DoEhfYknGvlobLI8J2un67
-         YQsS2GEJiUMXYJ53PM7MoWZ3l/GhkvboKRapq/EJbsAWqhGC7+EAet4QlChOEogBpcpt
-         3LvPeOOsOjwRiCWwLkzpcpfDWQEJKHyRtk5UtHt/D/HJTd8P8WrQV4GCHD0UaDVXrUo5
-         d+ubOxA+y0WO/Ap9ytxmj+2hjPiLr0rdvGzeTLRJdaIjW7IkWQbYg6Qbbln472ZiAFtQ
-         CIXkh4b5RvuPMSPyx7VprSmgjPuHN6FEssjOPtId4CZj8aTcyrcXMaGFRINlqjWlZnAG
-         lCWg==
-X-Gm-Message-State: APjAAAXgeEUMGY930CoFBQuhhPkZfL4PPPS8vw5m0qc9Zx/GYzZ8LBq0
-        mT6xAF5YGJNa7M8ScB9tWU4=
-X-Google-Smtp-Source: APXvYqyz2b9p5as0HpR/8ZvYU3LMjgqtKZ/4OlUPaESNc9g0DwHCBTVHwRTYyxlafrFwiY2Ib4eY4g==
-X-Received: by 2002:a63:3104:: with SMTP id x4mr9984060pgx.369.1576387066555;
-        Sat, 14 Dec 2019 21:17:46 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id u10sm16596528pgg.41.2019.12.14.21.17.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 14 Dec 2019 21:17:45 -0800 (PST)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: [PATCH v4 12/12] iio: adc: qcom-vadc-common: use <linux/units.h> helpers
-Date:   Sun, 15 Dec 2019 14:16:15 +0900
-Message-Id: <1576386975-7941-13-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576386975-7941-1-git-send-email-akinobu.mita@gmail.com>
-References: <1576386975-7941-1-git-send-email-akinobu.mita@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rYhW8ESLkaBmTx7qrwRV9ukpRcsTp5ZieGL9xLqhxqg=;
+        b=P+Hv/GEoXsf9yzR1QMpMo8OdExmZAjrrWxCCFd3oDhgo4FBvCaL6sfUf3ti+Ftsp3n
+         zRIb0DZWKV5i8JI52liTJ1s/J6vLrhoBas+LR6f8aINkaNgXPqumaZyOV0YtH9HYSGry
+         ULH1iXv6V+YK5zSTYSgSmMooltQgPBkCCrjW/vtwjLtGje0MrY4IJUpDyLNjTM9R2BHS
+         Zv10uUkXi+BJw3JuQmRO7ItRWdHKXzfq7TIdfvU99TRcCld5u/AHb1Q6kmeRTa2JxYRw
+         ZMglPG1CJqDy7Rxxlu8Cd3HsiTNq7W3qmp19y0FulcpOVmiuX39UqyUyMg1DRclYL9ZX
+         h1gg==
+X-Gm-Message-State: APjAAAWA+OH3RCfWrnodQhtQUhr/1jACxabwZJL51wxuiwV8xVAu7MWk
+        yrE0jtuVJwTJWuaLHMv68fTnKA==
+X-Google-Smtp-Source: APXvYqzT+FaHGqEnJrAVRzuXE5zg4gCcrhA3as3C3sjQD2G5tvRVpe7lYVzaZ7Z4aaCqB2S1c5AXMw==
+X-Received: by 2002:a62:3043:: with SMTP id w64mr9342707pfw.227.1576388301007;
+        Sat, 14 Dec 2019 21:38:21 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id q13sm14923566pjc.4.2019.12.14.21.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 21:38:19 -0800 (PST)
+Date:   Sat, 14 Dec 2019 21:38:18 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        "Singh, Brijesh" <brijesh.singh@amd.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Peter Gonda <pgonda@google.com>,
+        Jianxiong Gao <jxgao@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [bug] __blk_mq_run_hw_queue suspicious rcu usage
+In-Reply-To: <alpine.DEB.2.21.1912121550230.148507@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.1912142118080.202749@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1909041434580.160038@chino.kir.corp.google.com> <20190905060627.GA1753@lst.de> <alpine.DEB.2.21.1909051534050.245316@chino.kir.corp.google.com> <alpine.DEB.2.21.1909161641320.9200@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.1909171121300.151243@chino.kir.corp.google.com> <1d74607e-37f7-56ca-aba3-5a3bd7a68561@amd.com> <20190918132242.GA16133@lst.de> <alpine.DEB.2.21.1911271359000.135363@chino.kir.corp.google.com> <20191128064056.GA19822@lst.de>
+ <alpine.DEB.2.21.1912121550230.148507@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This switches the qcom-vadc-common to use milli_kelvin_to_millicelsius()
-in <linux/units.h>.
+On Thu, 12 Dec 2019, David Rientjes wrote:
 
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v4
-- add Reviewed-by tag
+> Since all DMA must be unencrypted in this case, what happens if all 
+> dma_direct_alloc_pages() calls go through the DMA pool in 
+> kernel/dma/remap.c when force_dma_unencrypted(dev) == true since 
+> __PAGE_ENC is cleared for these ptes?  (Ignoring for a moment that this 
+> special pool should likely be a separate dma pool.)
+> 
+> I assume a general depletion of that atomic pool so 
+> DEFAULT_DMA_COHERENT_POOL_SIZE becomes insufficient.  I'm not sure what 
+> size any DMA pool wired up for this specific purpose would need to be 
+> sized at, so I assume dynamic resizing is required.
+> 
+> It shouldn't be *that* difficult to supplement kernel/dma/remap.c with the 
+> ability to do background expansion of the atomic pool when nearing its 
+> capacity for this purpose?  I imagine that if we just can't allocate pages 
+> within the DMA mask that it's the only blocker to dynamic expansion and we 
+> don't oom kill for lowmem.  But perhaps vm.lowmem_reserve_ratio is good 
+> enough protection?
+> 
+> Beyond that, I'm not sure what sizing would be appropriate if this is to 
+> be a generic solution in the DMA API for all devices that may require 
+> unecrypted memory.
+> 
 
- drivers/iio/adc/qcom-vadc-common.c | 6 +++---
- drivers/iio/adc/qcom-vadc-common.h | 1 -
- 2 files changed, 3 insertions(+), 4 deletions(-)
+Optimizations involving lowmem reserve ratio aside, is it ok that 
+CONFIG_AMD_MEM_ENCRYPT develops a dependency on DMA_DIRECT_REMAP because 
+set_memory_decrypted() must be allowed to block?
 
-diff --git a/drivers/iio/adc/qcom-vadc-common.c b/drivers/iio/adc/qcom-vadc-common.c
-index dcd7fb5..2bb78d1 100644
---- a/drivers/iio/adc/qcom-vadc-common.c
-+++ b/drivers/iio/adc/qcom-vadc-common.c
-@@ -6,6 +6,7 @@
- #include <linux/log2.h>
- #include <linux/err.h>
- #include <linux/module.h>
-+#include <linux/units.h>
- 
- #include "qcom-vadc-common.h"
- 
-@@ -236,8 +237,7 @@ static int qcom_vadc_scale_die_temp(const struct vadc_linear_graph *calib_graph,
- 		voltage = 0;
- 	}
- 
--	voltage -= KELVINMIL_CELSIUSMIL;
--	*result_mdec = voltage;
-+	*result_mdec = milli_kelvin_to_millicelsius(voltage);
- 
- 	return 0;
- }
-@@ -325,7 +325,7 @@ static int qcom_vadc_scale_hw_calib_die_temp(
- {
- 	*result_mdec = qcom_vadc_scale_code_voltage_factor(adc_code,
- 				prescale, data, 2);
--	*result_mdec -= KELVINMIL_CELSIUSMIL;
-+	*result_mdec = milli_kelvin_to_millicelsius(*result_mdec);
- 
- 	return 0;
- }
-diff --git a/drivers/iio/adc/qcom-vadc-common.h b/drivers/iio/adc/qcom-vadc-common.h
-index bbb1fa0..e074902a 100644
---- a/drivers/iio/adc/qcom-vadc-common.h
-+++ b/drivers/iio/adc/qcom-vadc-common.h
-@@ -38,7 +38,6 @@
- #define VADC_AVG_SAMPLES_MAX			512
- #define ADC5_AVG_SAMPLES_MAX			16
- 
--#define KELVINMIL_CELSIUSMIL			273150
- #define PMIC5_CHG_TEMP_SCALE_FACTOR		377500
- #define PMIC5_SMB_TEMP_CONSTANT			419400
- #define PMIC5_SMB_TEMP_SCALE_FACTOR		356
--- 
-2.7.4
+If so, we could allocate from the atomic pool when we can't block and the 
+device requires unencrypted DMA from dma_direct_alloc_pages().  I assume 
+we need this to be its own atomic pool specifically for 
+force_dma_unencrypted() devices and to check addr_in_gen_pool() for this 
+new unencrypted pool in dma_direct_free_pages().
 
+I have no idea how large this unencrypted atomic pool should be sized.  We 
+could determine a nice default and grow size for nvme itself, but as 
+Christoph mentioned many drivers require non-blockable allocations that 
+can be run inside a SEV encrypted guest.
+
+Trivial implementation would be to just double the size of the unencrypted 
+pool when it reaches half capacity.  Perhaps done with GFP_KERNEL | 
+__GFP_DMA allocations in a workqueue.  We can reclaim from ZONE_DMA or 
+ZONE_DMA32 in this context but when that fails I'm not sure if it's 
+satisfactory to just fail the dma_pool_alloc() when the unecrypted pool 
+runs out.
+
+Heuristics can be tweaked, of course, but I want to make sure I'm not 
+missing anything obvious with this approach before implementing it.  
+Please let me know, thanks.
