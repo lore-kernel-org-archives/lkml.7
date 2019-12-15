@@ -2,67 +2,130 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0512C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC4AC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A587B205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDB82253D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfLOQEr (ORCPT
+        id S1726618AbfLOQGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:04:47 -0500
-Received: from mx2.cyber.ee ([193.40.6.72]:50637 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfLOQEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:04:47 -0500
-Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
-To:     Woody Suwalski <terraluna977@gmail.com>
-Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
-References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
-From:   Meelis Roos <mroos@linux.ee>
-Message-ID: <1e6a6ccb-a7a0-4173-d667-a53eb99b8699@linux.ee>
-Date:   Sun, 15 Dec 2019 18:04:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sun, 15 Dec 2019 11:06:20 -0500
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44530 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfLOQGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:06:19 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id EC0A59E74F7;
+        Sun, 15 Dec 2019 15:57:01 +0000 (GMT)
+Date:   Sun, 15 Dec 2019 15:57:00 +0000
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 137/350] iio: pressure: zpa2326: fix
+ iio_triggered_buffer_postenable position
+Message-ID: <20191215155700.5183d752@archlinux>
+In-Reply-To: <20191210210735.9077-98-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
+        <20191210210735.9077-98-sashal@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.12.19 05:17 Woody Suwalski wrote:
-> Regression in 5.4 kernel on 32-bit Radeon IBM T40
-> triggered by
-> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
-> Author: Christoph Hellwig <hch@lst.de>
-> Date:   Thu Aug 15 09:27:00 2019 +0200
+On Tue, 10 Dec 2019 16:04:02 -0500
+Sasha Levin <sashal@kernel.org> wrote:
+
+> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > 
-> Howdy,
-> The above patch has triggered a display problem on IBM Thinkpad T40, where the screen is covered with a lots of random short black horizontal lines, or distorted letters in X terms.
+> [ Upstream commit fe2392c67db9730d46f11fc4fadfa7bffa8843fa ]
 > 
-> The culprit seems to be that the dma_get_required_mask() is returning a value 0x3fffffff
-> which is smaller than dma_get_mask()0xffffffff.That results in dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma instead of 32-bits.
+> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> the poll functions.
+> 
+> The iio_triggered_buffer_postenable() should be called before (to attach
+> the poll func) and then the
+> 
+> The iio_triggered_buffer_predisable() function is hooked directly without
+> anything, which is probably fine, as the postenable() version seems to also
+> do some reset/wake-up of the device.
+> This will mean it will be easier when removing it; i.e. it just gets
+> removed.
 
-I have the same problem on 32-bit Dell Latitude D600.
+Ah. I should have added a note to this one as well.  This is more general
+rework, that is a fix in the sense of bringing things towards a standard
+way of doing things rather than 'fixing' a known bug.
 
-> If I hardcode "1" as the last parameter to ttm_bo_device_init() in place of a call to dma_addressing_limited(),the problem goes away.
+Alex, for any more of these, lets not have fix in the title (though they
+sort of do 'fix' things).
 
-Tried this on top on 5.4.0 and it helped here too.
+Thanks,
 
--- 
-Meelis Roos <mroos@linux.ee>
+Jonathan
 
-
-
-
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/iio/pressure/zpa2326.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+> index 9d0d07930236e..99dfe33ee402f 100644
+> --- a/drivers/iio/pressure/zpa2326.c
+> +++ b/drivers/iio/pressure/zpa2326.c
+> @@ -1243,6 +1243,11 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  	const struct zpa2326_private *priv = iio_priv(indio_dev);
+>  	int                           err;
+>  
+> +	/* Plug our own trigger event handler. */
+> +	err = iio_triggered_buffer_postenable(indio_dev);
+> +	if (err)
+> +		goto err;
+> +
+>  	if (!priv->waken) {
+>  		/*
+>  		 * We were already power supplied. Just clear hardware FIFO to
+> @@ -1250,7 +1255,7 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  		 */
+>  		err = zpa2326_clear_fifo(indio_dev, 0);
+>  		if (err)
+> -			goto err;
+> +			goto err_buffer_predisable;
+>  	}
+>  
+>  	if (!iio_trigger_using_own(indio_dev) && priv->waken) {
+> @@ -1260,16 +1265,13 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  		 */
+>  		err = zpa2326_config_oneshot(indio_dev, priv->irq);
+>  		if (err)
+> -			goto err;
+> +			goto err_buffer_predisable;
+>  	}
+>  
+> -	/* Plug our own trigger event handler. */
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+> -	if (err)
+> -		goto err;
+> -
+>  	return 0;
+>  
+> +err_buffer_predisable:
+> +	iio_triggered_buffer_predisable(indio_dev);
+>  err:
+>  	zpa2326_err(indio_dev, "failed to enable buffering (%d)", err);
+>  
 
