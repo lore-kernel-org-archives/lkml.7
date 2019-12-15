@@ -2,132 +2,239 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307EDC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B348C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF682467B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452E02467A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="SWE01Eqy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y2GvNnd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfLOWDh (ORCPT
+        id S1726539AbfLOWDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 17:03:37 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:46694 "EHLO mail.andi.de1.cc"
+        Sun, 15 Dec 2019 17:03:51 -0500
+Received: from ozlabs.org ([203.11.71.1]:60089 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfLOWDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 17:03:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=j61D3HGEJXdBDHMeL0WoNw5Ytq0J/SM0rRu+UJnmkj4=; b=SWE01EqywgiRXpRhLnUihSrKpi
-        IeLkqnORO0u2YszBzlaHaCI18N8rcW1PHoh+U8soCb3zIxm5oXL/0asUhLI1dsVqOlTttQWPc1YFg
-        vadaJDie+Ny3Ia4EbnQOgLt8gfCFljWkAWkAHqMHltHzO5PjKinGVkBwRLyC/zNe34nY=;
-Received: from p200300ccff4bb7001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff4b:b700:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igbzA-0004oC-8T; Sun, 15 Dec 2019 23:03:32 +0100
-Date:   Sun, 15 Dec 2019 23:03:31 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20191215230331.645b9064@aktux>
-In-Reply-To: <20191215173817.47918-1-tony@atomide.com>
-References: <20191215173817.47918-1-tony@atomide.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726232AbfLOWDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 17:03:51 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bdhf6PTbz9sPW;
+        Mon, 16 Dec 2019 09:03:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576447427;
+        bh=LKOQjoyP/DytLKa5tScoJIiXOC4BgSHniwnQS2sOOw4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y2GvNnd74mbrIdjVwvleyccdLLN72P7Ul47lLnlWHCJgp0YJwHWMoKbQgtWqkR4AL
+         g+gXQbhzXqipsXkySi6M9zZ17pFtCZyQ/ps6tD36zFFJ7PUuEzWRP7IQLRjWO1KIFc
+         AdMbLs5qdxwS7BVCvHTIns3rx0Ipxal2yAeOJpAelz3MvMSlNpIrE4f+B+NMkjx+Os
+         /fEXrbe11Lmbo6BQZMz32+pWEfQGwbx+W3TpBxdQhWSZ3m7CQHxcuH1tCO5R3fb3Sj
+         t/lc598AhhrMufR8jf8NCqTz8uqfA43CNUWURii2UFV+bQApiIpP9iaGFvwdEefn9x
+         QDP+8e5cV7H0w==
+Date:   Mon, 16 Dec 2019 09:03:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>
+Subject: linux-next: build failure after merge of the mediatek tree
+Message-ID: <20191216090337.4b4cfb42@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/2rdamvqKBDcBqSxPN4w/jiD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Dec 2019 09:38:17 -0800
-Tony Lindgren <tony@atomide.com> wrote:
+--Sig_/2rdamvqKBDcBqSxPN4w/jiD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> We've had generic code handling module sysconfig and OCP reset registers
-> for omap variants for many years now and all the drivers really needs to
-> do is just call runtime PM functions.
-> 
-> Looks like the omap-hdq driver got only partially updated over the years
-> to use runtime PM, and still has lots of custom PM code left.
-> 
-> We can replace all the custom code for sysconfig, OCP reset, and PM with
-> just a few lines of runtime PM autosuspend code.
-> 
-> Note that the earlier driver specific usage count limit of four seems
-> completely artificial and should not be an issue in normal use.
-> 
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Andreas Kemnade <andreas@kemnade.info>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Vignesh R <vigneshr@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> 
-> Can you guys please review and and test on gta04 and torpedo?
-> 
-[...]
->  
-> -static int _omap_hdq_reset(struct hdq_data *hdq_data)
-> -{
-> -	int ret;
-> -	u8 tmp_status;
-> -
-> -	hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
-> -		    OMAP_HDQ_SYSCONFIG_SOFTRESET);
-> -	/*
-> -	 * Select HDQ/1W mode & enable clocks.
-> -	 * It is observed that INT flags can't be cleared via a read and GO/INIT
-> -	 * won't return to zero if interrupt is disabled. So we always enable
-> -	 * interrupt.
-> -	 */
+Hi all,
 
-If I remember correctly this thing is critical to get the hwmod out of
-reset but I need to examine that again:
+After merging the mediatek tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-> -	hdq_reg_out(hdq_data, OMAP_HDQ_CTRL_STATUS,
-> -		OMAP_HDQ_CTRL_STATUS_CLOCKENABLE |
-> -		OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK);
-> -
-> -	/* wait for reset to complete */
-> -	ret = hdq_wait_for_flag(hdq_data, OMAP_HDQ_SYSSTATUS,
-> -		OMAP_HDQ_SYSSTATUS_RESETDONE, OMAP_HDQ_FLAG_SET, &tmp_status);
-> -	if (ret)
-> -		dev_dbg(hdq_data->dev, "timeout waiting HDQ reset, %x",
-> -				tmp_status);
-> -	else {
-> -		hdq_reg_out(hdq_data, OMAP_HDQ_CTRL_STATUS,
-> -			OMAP_HDQ_CTRL_STATUS_CLOCKENABLE |
-> -			OMAP_HDQ_CTRL_STATUS_INTERRUPTMASK |
-> -			hdq_data->mode);
-> -		hdq_reg_out(hdq_data, OMAP_HDQ_SYSCONFIG,
-> -			OMAP_HDQ_SYSCONFIG_AUTOIDLE);
-> -	}
-> -
-> -	return ret;
-> -}
+drivers/soc/mediatek/mtk-scpsys.c:773:4: error: 'const struct scp_domain_da=
+ta' has no member named 'subsys_clk_prefix'
+  773 |   .subsys_clk_prefix =3D "isp",
+      |    ^~~~~~~~~~~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:773:24: warning: initialization of 'unsig=
+ned int' from 'char *' makes integer from pointer without a cast [-Wint-con=
+version]
+  773 |   .subsys_clk_prefix =3D "isp",
+      |                        ^~~~~
+drivers/soc/mediatek/mtk-scpsys.c:773:24: note: (near initialization for 's=
+cp_domain_data_mt6765[3].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:774:4: error: 'const struct scp_domain_da=
+ta' has no member named 'bp_table'
+  774 |   .bp_table =3D {
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:775:4: error: implicit declaration of fun=
+ction 'BUS_PROT' [-Werror=3Dimplicit-function-declaration]
+  775 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:775:13: error: 'IFR_TYPE' undeclared here=
+ (not in a function)
+  775 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
+      |             ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:777:13: error: 'SMI_TYPE' undeclared here=
+ (not in a function)
+  777 |    BUS_PROT(SMI_TYPE, 0x3C4, 0x3C8, 0, 0x3C0,
+      |             ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:787:4: error: 'const struct scp_domain_da=
+ta' has no member named 'basic_clk_id'
+  787 |   .basic_clk_id =3D {"mm"},
+      |    ^~~~~~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:787:3: warning: braces around scalar init=
+ializer
+  787 |   .basic_clk_id =3D {"mm"},
+      |   ^
+drivers/soc/mediatek/mtk-scpsys.c:787:3: note: (near initialization for 'sc=
+p_domain_data_mt6765[1].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:787:20: warning: initialization of 'u32' =
+{aka 'unsigned int'} from 'char *' makes integer from pointer without a cas=
+t [-Wint-conversion]
+  787 |   .basic_clk_id =3D {"mm"},
+      |                    ^~~~
+drivers/soc/mediatek/mtk-scpsys.c:787:20: note: (near initialization for 's=
+cp_domain_data_mt6765[1].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:788:4: error: 'const struct scp_domain_da=
+ta' has no member named 'subsys_clk_prefix'
+  788 |   .subsys_clk_prefix =3D "mm",
+      |    ^~~~~~~~~~~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:788:24: error: cannot initialize array of=
+ 'enum clk_id' from a string literal with type array of 'char'
+  788 |   .subsys_clk_prefix =3D "mm",
+      |                        ^~~~
+drivers/soc/mediatek/mtk-scpsys.c:788:24: note: (near initialization for 's=
+cp_domain_data_mt6765[1].clk_id')
+drivers/soc/mediatek/mtk-scpsys.c:789:4: error: 'const struct scp_domain_da=
+ta' has no member named 'bp_table'
+  789 |   .bp_table =3D {
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:789:3: warning: braces around scalar init=
+ializer
+  789 |   .bp_table =3D {
+      |   ^
+drivers/soc/mediatek/mtk-scpsys.c:789:3: note: (near initialization for 'sc=
+p_domain_data_mt6765[1].caps')
+drivers/soc/mediatek/mtk-scpsys.c:792:4: warning: excess elements in scalar=
+ initializer
+  792 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:792:4: note: (near initialization for 'sc=
+p_domain_data_mt6765[1].caps')
+drivers/soc/mediatek/mtk-scpsys.c:794:4: warning: excess elements in scalar=
+ initializer
+  794 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:794:4: note: (near initialization for 'sc=
+p_domain_data_mt6765[1].caps')
+drivers/soc/mediatek/mtk-scpsys.c:804:4: error: 'const struct scp_domain_da=
+ta' has no member named 'bp_table'
+  804 |   .bp_table =3D {
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:804:3: warning: braces around scalar init=
+ializer
+  804 |   .bp_table =3D {
+      |   ^
+drivers/soc/mediatek/mtk-scpsys.c:804:3: note: (near initialization for 'sc=
+p_domain_data_mt6765[0].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:807:4: warning: excess elements in scalar=
+ initializer
+  807 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:807:4: note: (near initialization for 'sc=
+p_domain_data_mt6765[0].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:809:4: warning: excess elements in scalar=
+ initializer
+  809 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:809:4: note: (near initialization for 'sc=
+p_domain_data_mt6765[0].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:819:4: error: 'const struct scp_domain_da=
+ta' has no member named 'basic_clk_id'
+  819 |   .basic_clk_id =3D {"mfg"},
+      |    ^~~~~~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:819:3: warning: braces around scalar init=
+ializer
+  819 |   .basic_clk_id =3D {"mfg"},
+      |   ^
+drivers/soc/mediatek/mtk-scpsys.c:819:3: note: (near initialization for 'sc=
+p_domain_data_mt6765[2].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:819:20: warning: initialization of 'u32' =
+{aka 'unsigned int'} from 'char *' makes integer from pointer without a cas=
+t [-Wint-conversion]
+  819 |   .basic_clk_id =3D {"mfg"},
+      |                    ^~~~~
+drivers/soc/mediatek/mtk-scpsys.c:819:20: note: (near initialization for 's=
+cp_domain_data_mt6765[2].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:827:4: error: 'const struct scp_domain_da=
+ta' has no member named 'bp_table'
+  827 |   .bp_table =3D {
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:827:3: warning: braces around scalar init=
+ializer
+  827 |   .bp_table =3D {
+      |   ^
+drivers/soc/mediatek/mtk-scpsys.c:827:3: note: (near initialization for 'sc=
+p_domain_data_mt6765[4].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:830:4: warning: excess elements in scalar=
+ initializer
+  830 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
+      |    ^~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:830:4: note: (near initialization for 'sc=
+p_domain_data_mt6765[4].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:840:4: error: 'const struct scp_domain_da=
+ta' has no member named 'subsys_clk_prefix'
+  840 |   .subsys_clk_prefix =3D "cam",
+      |    ^~~~~~~~~~~~~~~~~
+drivers/soc/mediatek/mtk-scpsys.c:840:24: warning: initialization of 'unsig=
+ned int' from 'char *' makes integer from pointer without a cast [-Wint-con=
+version]
+  840 |   .subsys_clk_prefix =3D "cam",
+      |                        ^~~~~
+drivers/soc/mediatek/mtk-scpsys.c:840:24: note: (near initialization for 's=
+cp_domain_data_mt6765[6].bus_prot_mask')
+drivers/soc/mediatek/mtk-scpsys.c:841:4: error: 'const struct scp_domain_da=
+ta' has no member named 'bp_table'
+  841 |   .bp_table =3D {
+      |    ^~~~~~~~
 
-I will probably do more testing the next days.
+Caused by commit
 
-Regards,
-Andreas
+  3742fd77013f ("soc: mediatek: add MT6765 scpsys and subdomain support")
+
+I have used the mediatek tree from next-20191213 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2rdamvqKBDcBqSxPN4w/jiD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32rbkACgkQAVBC80lX
+0GyYJggAobtbP+e+RQMr+snhsxsaJfFeBH/qaT/4329nxAD7LvUVDxSfx7EshPnj
+1Jqu7RZDLD5s/q/zuO5UDGzjAkl12W2LUVLuC8rJwxSudzMFsJqH1iKanlAdJ1QW
+gxnuYcCrF+rna2jnFwQykrHqf8KddKr73+nzXpiZ4qgk0vlnfs2Oh5L6PGUvuBSM
+IstKR5284NKoqQkr80JvGjYPLQKfkraldwDgXChWkM9qsO+tV1BXS3aChOk5X5RW
+DDv+3Tu7bwNWBbYxOaoIGg8KFWr13oYUHYW9hlZ6dyoO+XIPTVkirWyYYHDf0Tui
+lFa19+h7Wo+toATEAaot+fL4wYBl9g==
+=ODgc
+-----END PGP SIGNATURE-----
+
+--Sig_/2rdamvqKBDcBqSxPN4w/jiD--
