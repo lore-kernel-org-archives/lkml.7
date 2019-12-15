@@ -2,91 +2,116 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88053C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA227C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F71524679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB7224679
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DUvMIF0Q"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cV5bO+pK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLOT4a (ORCPT
+        id S1726514AbfLOT7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:56:30 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44945 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOT43 (ORCPT
+        Sun, 15 Dec 2019 14:59:07 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:40382 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfLOT7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:56:29 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so2407143pgl.11
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:56:27 -0800 (PST)
+        Sun, 15 Dec 2019 14:59:07 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bZwp2V5gz9vZ6L
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:59:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rPITfd9syBNr for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 13:59:06 -0600 (CST)
+Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bZwp1Jzlz9vZ6Q
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 13:59:06 -0600 (CST)
+Received: by mail-yw1-f71.google.com with SMTP id q130so4118267ywh.11
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xVlHo/nlCMF/qBOiT/VWeXY0vmm1o3tLmTZcUn6/oaU=;
-        b=DUvMIF0QFOTQxH81JOUzG93EnqkGo8iYo7Lrg7rDp7kmCy6fNi6LPYdGbuqMmmu2S/
-         vMk5R1Tekf+KM6khmVWfEBHeKGd+Wcv2jCAhovSwh8RjJZaRBfk28pjyuiMG8HNghhN+
-         RGpRL7jhtzoad+EEq+rR/V5hOa4pErRPSq+SaZBigyAKRf6YXqLM1hQ5euCCFf5xtp/Z
-         YTgjPnsFknNsrc1ov6fL8oK+ABWoNVAW7bwwxEeErIJKhQ5iJrzk2MqKPm/NVGCgIcbt
-         bXcJnvnnxPH+i+AGlY8aIW2Iout+LDUg9YYF2Yw9Oe3rgYWimi2IYVB3vRIfTrBbz3yN
-         9hiQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8TUcX1RfgZ492tOYJ5s68irOhl6zZB85wQRSq77/peo=;
+        b=cV5bO+pKRY3btcUkVNBJcD4tq59cy1Fw6Mlknr43a6PVbLbDvgGPoljM6wBB31iIpc
+         GccTGzcaJFMK+3ciJ0/vehKwYAKe2k10CyxyUOykIzZvsAlFGOumqum5zzu2IZo8dpaf
+         8EU+bceJKoUvtPFzXXVDlI2OpZT0FAJIjiHWHSpv65KIHuVKTmMhO4++QXY/aqByf/YM
+         cFkpC8M45swPp8XtL3huRukcVd+wbtMXpS1L4p1icFdHEQ4TGu+9+zCUcPnDK6+PqOtF
+         MyzvvX5jQ1++SHaKIWskUqeJj73fcBFv4ltA2E30iv9uJdI4QGD9IauPZ1j5gGOoOQ77
+         1vIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xVlHo/nlCMF/qBOiT/VWeXY0vmm1o3tLmTZcUn6/oaU=;
-        b=Dl870ldUsoFGLfo+aWsYK98GXbn8QXUKrdlEIc5weKtauvQMLxPe3DOXs1Sq8UY7+y
-         /lJfPMJQtsAl0MRTXdcE3JkIObVDeihBRSAf7QogR6NaU4JJLHpduIM8wxwiXcdaQbxA
-         OpOD63qbGy9fsW4r8MlMF7Og3BLODCjwvhwpnQEsXxDKQkI4EUYggIzEyH2IO3nd7+qF
-         muT1v0Y+GDhCSPGr8w6H2VvXIYZuAk8Tc1jqQCotnfcFQXAnrnrcy/FV6LGmcoWo0aU3
-         Dx5LgdB5bNEyoWpneuv2Do85ttyEc2MCD/KaF9Rq2jGGKYzYRMdoJyOhnjVc+Zj8OeWL
-         GK8Q==
-X-Gm-Message-State: APjAAAXMlO4ya8CB9WZxKv6BpxRCguM4UHAkPlSXA/v0SiD48bBgxd9K
-        1Xrp+ozNDrcmWGKU6uLSPNOU2A==
-X-Google-Smtp-Source: APXvYqxEKsNxK2ArifpMSeV3q5mX++F0jrdmxTOyWcJDZYYNJOVdT9sdTwJBe4gGIhdguz3qVIfILA==
-X-Received: by 2002:a62:8205:: with SMTP id w5mr12272097pfd.136.1576439787225;
-        Sun, 15 Dec 2019 11:56:27 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id i3sm19528061pfg.94.2019.12.15.11.56.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8TUcX1RfgZ492tOYJ5s68irOhl6zZB85wQRSq77/peo=;
+        b=uF/PcFHb8p8W1NODxNg+WiKm9P/2+xk93mhttXZfcjW6+AnEwMQyat/KQQnrDCEO7p
+         0aHRLiN0kqgvIRynikmbj67Zk4BsJTBL5S7MaMLBUvqLqfAPyBgr/MVjdrT2bm2ySd5w
+         VciAY7/FChoFMrl1fxBZ+32GspYz/nrd0ePQaMm3OHJiUpULvr5UBuLThYOygQtQhWwy
+         Trtu3OhrxAyX/bwVlO2zooQFaLMjBbDKIutbKnbDj7CzaK1je4tDt6Nh6iByThaFb21r
+         /INDKRCmT3mmzgLxfU7RQg/m3D18+6XtniVE5n3g2R/wUZiNmnDp429ljudrMPfTfeKY
+         S8dg==
+X-Gm-Message-State: APjAAAWwpwBEAQrmbcGF6W9+UOxnt/RO9zkyx47N6sxipQ1TOpZR9RhU
+        mKubYSJhsduQNR9xraEMf3OSvlNMZrmn6SRjS+eTfmMr8sX/vwVtP1F/yblxWCcSBpQI1X8qddf
+        xG73uEAEOcXH70KG5pj8fPrqZW6p9
+X-Received: by 2002:a25:3009:: with SMTP id w9mr6023070ybw.47.1576439945685;
+        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy5IqUJNnB0dOatc0l9p5iHfoI+NtpfRKhivnJlbv9QIJmKpopWGOVWyNhfXIUi8AuGJKEmdg==
+X-Received: by 2002:a25:3009:: with SMTP id w9mr6023058ybw.47.1576439945472;
+        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id d126sm1059071ywf.28.2019.12.15.11.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:56:26 -0800 (PST)
-Date:   Sun, 15 Dec 2019 11:56:23 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-cc:     yash.shah@sifive.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, allison@lohutok.net,
-        alexios.zavras@intel.com, Atish Patra <Atish.Patra@wdc.com>,
-        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Sun, 15 Dec 2019 11:59:05 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] riscv: cacheinfo: Add support to determine no. of
- L2 cache way enabled
-In-Reply-To: <mhng-a1ba4b8a-4c6a-43e9-a87a-f8bbbe3555d8@palmerdabbelt-glaptop>
-Message-ID: <alpine.DEB.2.21.9999.1912151155010.64438@viisi.sifive.com>
-References: <1575890706-36162-3-git-send-email-yash.shah@sifive.com>  <1575890706-36162-1-git-send-email-yash.shah@sifive.com> <mhng-a1ba4b8a-4c6a-43e9-a87a-f8bbbe3555d8@palmerdabbelt-glaptop>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+Subject: [PATCH] orinoco: avoid assertion in case of NULL pointer
+Date:   Sun, 15 Dec 2019 13:58:58 -0600
+Message-Id: <20191215195900.6109-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019, Palmer Dabbelt wrote:
+In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+in ezusb_probe can handle the error and print the failure message.
+The patch replaces the BUG_ON call to error return.
 
-> I thought the plan was to get this stuff out of arch/riscv?  It looks like it
-> only got half-way done.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-That's still the plan.  Will probably send that one upstream in v5.5-rc.  
+diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+index 40a8b941ad5c..813de06c03de 100644
+--- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+@@ -1361,7 +1361,8 @@ static int ezusb_init(struct hermes *hw)
+ 	int retval;
+ 
+ 	BUG_ON(in_interrupt());
+-	BUG_ON(!upriv);
++	if (!upriv)
++		return -EINVAL;
+ 
+ 	upriv->reply_count = 0;
+ 	/* Write the MAGIC number on the simulated registers to keep
+-- 
+2.20.1
 
-Am not a huge fan of moving it to drivers/soc, for a few different 
-reasons, but some people seem to feel very passionately about it.
-
-
-- Paul
