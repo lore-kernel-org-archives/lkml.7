@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8953FC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEF2C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D4B24671
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8EF20726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfLOQB2 (ORCPT
+        id S1726735AbfLOQBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:01:28 -0500
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44502 "EHLO
+        Sun, 15 Dec 2019 11:01:20 -0500
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44506 "EHLO
         saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfLOQBU (ORCPT
+        with ESMTP id S1726219AbfLOQBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 15 Dec 2019 11:01:20 -0500
+X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 11:01:19 EST
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id B7B3B9E76A6;
-        Sun, 15 Dec 2019 15:55:08 +0000 (GMT)
-Date:   Sun, 15 Dec 2019 15:55:07 +0000
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id C746B9E7C73;
+        Sun, 15 Dec 2019 15:52:48 +0000 (GMT)
+Date:   Sun, 15 Dec 2019 15:52:47 +0000
 From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 117/350] iio: dac: ad7303: replace mlock
- with own lock
-Message-ID: <20191215155507.08026268@archlinux>
-In-Reply-To: <20191210210735.9077-78-sashal@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.4 074/350] iio: proximity: sx9500: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20191215155247.66ea5412@archlinux>
+In-Reply-To: <20191210210735.9077-35-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
-        <20191210210735.9077-78-sashal@kernel.org>
+        <20191210210735.9077-35-sashal@kernel.org>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,22 +46,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:03:42 -0500
+On Tue, 10 Dec 2019 16:02:59 -0500
 Sasha Levin <sashal@kernel.org> wrote:
 
 > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > 
-> [ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
+> [ Upstream commit 3cfd6464fe23deb45bb688df66184b3f32fefc16 ]
 > 
-> This change replaces indio_dev's mlock with the driver's own lock. The lock
-> is mostly needed to protect state when changing the `dac_cache` info.
-> The lock has been extended to `ad7303_read_raw()`, to make sure that the
-> cache is updated if an SPI-write is already in progress.
-This is not a fix.  It's undoing some slightly nasty layer violations
-that we are trying to drive out of IIO, but as far as I know there
-is no actual bug with what was there before.
+> The iio_triggered_buffer_predisable() should be called last, to detach the
+> poll func after the devices has been suspended.
+> 
+> This change re-organizes things a bit so that the postenable & predisable
+> are symmetrical. It also converts the preenable() to a postenable().
+> 
+> Not stable material as there is no known problem with the current
+> code, it's just not consistent with the form we would like all the
+> IIO drivers to adopt so as to allow subsystem wide changes.
 
-I won't do any harm though other than adding noise.
+See comment.
 
 Jonathan
 
@@ -69,70 +72,63 @@ Jonathan
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/iio/dac/ad7303.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+>  drivers/iio/proximity/sx9500.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-> index 8de9f40226e62..14bbac6bee982 100644
-> --- a/drivers/iio/dac/ad7303.c
-> +++ b/drivers/iio/dac/ad7303.c
-> @@ -41,6 +41,7 @@ struct ad7303_state {
->  	struct regulator *vdd_reg;
->  	struct regulator *vref_reg;
->  
-> +	struct mutex lock;
->  	/*
->  	 * DMA (thus cache coherency maintenance) requires the
->  	 * transfer buffers to live in their own cache lines.
-> @@ -79,7 +80,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
->  	if (ret)
->  		return ret;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  
->  	if (pwr_down)
->  		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
-> @@ -90,7 +91,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
->  	 * mode, so just write one of the DAC channels again */
->  	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
->  
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  	return len;
+> diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
+> index 612f79c53cfc6..287d288e40c27 100644
+> --- a/drivers/iio/proximity/sx9500.c
+> +++ b/drivers/iio/proximity/sx9500.c
+> @@ -675,11 +675,15 @@ static irqreturn_t sx9500_trigger_handler(int irq, void *private)
+>  	return IRQ_HANDLED;
 >  }
 >  
-> @@ -116,7 +117,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
+> -static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
+> +static int sx9500_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct sx9500_data *data = iio_priv(indio_dev);
+>  	int ret = 0, i;
 >  
->  	switch (info) {
->  	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&st->lock);
->  		*val = st->dac_cache[chan->channel];
-> +		mutex_unlock(&st->lock);
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
->  		vref_uv = ad7303_get_vref(st, chan);
-> @@ -144,11 +147,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
->  		if (val >= (1 << chan->scan_type.realbits) || val < 0)
->  			return -EINVAL;
->  
-> -		mutex_lock(&indio_dev->mlock);
-> +		mutex_lock(&st->lock);
->  		ret = ad7303_write(st, chan->address, val);
->  		if (ret == 0)
->  			st->dac_cache[chan->channel] = val;
-> -		mutex_unlock(&indio_dev->mlock);
-> +		mutex_unlock(&st->lock);
->  		break;
->  	default:
->  		ret = -EINVAL;
-> @@ -211,6 +214,8 @@ static int ad7303_probe(struct spi_device *spi)
->  
->  	st->spi = spi;
->  
-> +	mutex_init(&st->lock);
+> +	ret = iio_triggered_buffer_postenable(indio_dev);
+> +	if (ret)
+> +		return ret;
 > +
->  	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
->  	if (IS_ERR(st->vdd_reg))
->  		return PTR_ERR(st->vdd_reg);
+>  	mutex_lock(&data->mutex);
+>  
+>  	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+> @@ -696,6 +700,9 @@ static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
+>  
+>  	mutex_unlock(&data->mutex);
+>  
+> +	if (ret)
+> +		iio_triggered_buffer_predisable(indio_dev);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -704,8 +711,6 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+>  	struct sx9500_data *data = iio_priv(indio_dev);
+>  	int ret = 0, i;
+>  
+> -	iio_triggered_buffer_predisable(indio_dev);
+> -
+>  	mutex_lock(&data->mutex);
+>  
+>  	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+> @@ -722,12 +727,13 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+>  
+>  	mutex_unlock(&data->mutex);
+>  
+> +	iio_triggered_buffer_predisable(indio_dev);
+> +
+>  	return ret;
+>  }
+>  
+>  static const struct iio_buffer_setup_ops sx9500_buffer_setup_ops = {
+> -	.preenable = sx9500_buffer_preenable,
+> -	.postenable = iio_triggered_buffer_postenable,
+> +	.postenable = sx9500_buffer_postenable,
+>  	.predisable = sx9500_buffer_predisable,
+>  };
+>  
 
