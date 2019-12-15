@@ -2,161 +2,432 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAEFC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952B3C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2EB206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DDE20726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="SkK/RVcL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lenSNMdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfLOPH0 (ORCPT
+        id S1726488AbfLOPNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:07:26 -0500
-Received: from mout.web.de ([212.227.15.14]:48669 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfLOPHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:07:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576422432;
-        bh=GnIzcTEvdq/ok4EhyO4z+DWoEPJ/qPc8ZlaySopFQUc=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=SkK/RVcL4vEW4C2FTaRN46W71yPI+/y+UEMGRqjPrfeaLNBLSitTycqQKlzkXd+Pc
-         5XJ+fWcvaK7NdHMChDKJdxb5yznEX/3monTaWibBvaWZ57YlzX69eEMFxJTZTxc5on
-         22WNNOwuWuoogv2jfMWHEIzv+mwe6YMGaLmydxyc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.76.50]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmLOE-1i6tow2nqs-00ZtMa; Sun, 15
- Dec 2019 16:07:12 +0100
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Navid Emamdoost <emamd001@umn.edu>
-References: <20191215013306.18880-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] staging: comedi: drivers: Fix memory leak in
- gsc_hpdi_auto_attach
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <69f03714-c10e-8ff9-ae64-7b35b6a5fae9@web.de>
-Date:   Sun, 15 Dec 2019 16:07:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sun, 15 Dec 2019 10:13:11 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:52436 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfLOPNL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 10:13:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d1Z55TEja9aq/4PdxxNR3cWbHV3uQcSZDRPMiv/6eLM=; b=lenSNMdb8zzZCAU5U4INVho3e
+        qC6Mh5B5KzbAjOKap9F/wxe/gq/zWRe6Ju50Kp4m9MkR2dPHQyKOE/JW1LeJKcjJetLso1N0Eo5O5
+        B+phD0/UjaMwlfdOmmGqZrjKQ/5E/PmITrl190zOaJ3JuMK8lJ9UfTZnY3Rj+KqPUfcXy0zJ0Rj2Y
+        dd7ptpHDDCnuVk0ZkKaghOV+1uheadUWkQEp72aprNZLLUVc0Hpq9C+nAxq9w5Jynjn8cYppMzvQi
+        k4iDkFhkaHGYmw6PxpbWIDsiyC/W/fI8kV5BAHDxDNMk2dLx/kP3YFPy9qJzDzY7KhmKEDgFzR9Ir
+        hqXv9F/uQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53360)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1igVZm-0001RY-PT; Sun, 15 Dec 2019 15:12:54 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1igVZh-0001VO-E5; Sun, 15 Dec 2019 15:12:49 +0000
+Date:   Sun, 15 Dec 2019 15:12:49 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Milind Parab <mparab@cadence.com>
+Cc:     nicolas.nerre@microchip.com, andrew@lunn.ch,
+        antoine.tenart@bootlin.com, f.fainelli@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, dkangude@cadence.com,
+        a.fatoum@pengutronix.de, brad.mouring@ni.com, pthombar@cadence.com
+Subject: Re: [PATCH v2 3/3] net: macb: add support for high speed interface
+Message-ID: <20191215151249.GA25745@shell.armlinux.org.uk>
+References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
+ <1576230177-11404-1-git-send-email-mparab@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20191215013306.18880-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lhBIYc6fG3ILpnG8gx6fjslwn8J8Y+O0t9sgEcIVRjwTRmgOf6D
- hzxs3sa+2sZixeDokmfChOLYHEibTcxI7M+iba+fzXf8J2rThDNg/OPwdq44u6OSkBaHUd1
- 9EAfdc8R7a6vPG9/sM+NlBjyJNRfB5SIkO27gCfqDkCp8Nqcu7/IcPgP42zj3XvPNMWVIWU
- KBUPSXTAWbm1GP7qKRLhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H/a0YwD1GW0=:OWoMtpeCPj3aM8Bu1+Aa4Z
- 7JeRx+jbiwFwhXwrecVDMqHyNjwIfQmrrXYHj1RnQugJ0v3xJli2WrqYJOLrW5oxUGCKmING3
- EO/We3uUZ1tAWSgYpyTnVvmjQ9QOoKouJx7oWERjgTyP0lTiCcSaKzN0/mkSEICU9A6cJ6pwg
- ihLasnP+0ZaH1YMPV9O3XbAWBkgoi9MB9Dtb4LTNtb3buMi6KPOCq2S82iB/dlQxixnmDHny0
- QycE56qmx5NlLJQOkClcpb/xuL9BMeqlJED5tT5Fnl6PWpDa3tEpGd4qBXq+rQnbUxYbycMZm
- KMNbiYU8vaqgqUD/pHqR/cAuT/tBd8bQmbjfDjfdFNmGIAXNLSBV5NyR2I3G/quNx7IKU1RV4
- 5gEAo2zywyhqvSJmSbHv39bcTo4lzrrYhzWNXIyB1HS20PLjQVJUH66YoqffVShW+lu6hD04j
- NcaWf6RLdvtn0SI83mQ7Q4Bo/HHRp05KkDoGPLEsYNSgOBYz6JPf5TB5NgAJeOWYKw7stiVwY
- Mdne0ozvlYQCcpPscvxG7HyP+E9wr1g7BMXFK85W7upDzW65LZJzEYucBcRAu2xklcfSHQtk4
- OcyfTeZ8HJKVzZgLdbbME2p9vcWtpDRyKdUbwihR46dAI2EJnNhAdcuwIP2/adSP0gOTMOAfy
- Zra49sDd/VOAnVKAhNRVwOJn4yjVxugQOi4J1CDkEPRkwqKcizd+UmFtk2aShjvXWc5yZK3rw
- TPLsCRkPOR2gnyaTqC7h+WA5zZCTR07zTBeAPvwY48iFaG0L2ZKHyv23wG83Hkz4+KliJOriX
- mZe669sImev8qNpbNjHOYuUjsr7Tdi1B8hsc2P7ev371kzX2+2/YnfTQo6tst/2hix1j6o1qX
- 73naRgqQIi7bmpmr6XHBjGhsweHDfPQ6pDt6Qxb6KWiAvk9OrC5UShpCbSYm1mZY06NvXn1WH
- OHHXNkumF+E20JTDD3WvtzwHsE8TUcFNn40KxBlx5fXeqVOAnb9ITXH3YLA7kJZBriHdka/CQ
- 5cbtm+3HOQmNEwYz0ULx6UTyXg3A9kFEsCA7nonPXFloyLQUHkUc/nvKmGEgXYs8sPrPzXqWy
- ndshgwN4H0vtKGqe5KIfLQX6siT/PGUMI12X5JqqvXfH82aWZGOLgfaCqIuYvr/ktk/6Fa+VY
- gKFbksUiDL9T5727yOUHJD9NMyBb7Zmv0jXAwFNyk16nYEmw2uHrI2J64rVOANLH39NJaBtqB
- g2Mb97iYWILEq7lK9N2SdO9qxIn1JgrJD51QmAgDS37K4yYZOGQ4dF20I9Og=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576230177-11404-1-git-send-email-mparab@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In the implementation of gsc_hpdi_auto_attach(), the allocated dma
-> description is leaks in case of alignment error, =E2=80=A6
-
-Please avoid a typo in this change message.
-
-
-=E2=80=A6
-+++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
-=E2=80=A6
-> @@ -660,6 +661,15 @@ static int gsc_hpdi_auto_attach(struct comedi_devic=
-e *dev,
->  	s->cancel	=3D gsc_hpdi_cancel;
->
->  	return gsc_hpdi_init(dev);
+On Fri, Dec 13, 2019 at 09:42:57AM +0000, Milind Parab wrote:
+> This patch add support for high speed USXGMII PCS and 10G
+> speed in Cadence ethernet controller driver.
+> 
+> Signed-off-by: Milind Parab <mparab@cadence.com>
+> ---
+>  drivers/net/ethernet/cadence/macb.h      |  50 ++++++++
+>  drivers/net/ethernet/cadence/macb_main.c | 138 ++++++++++++++++++++---
+>  2 files changed, 170 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> index dbf7070fcdba..b731807d1c49 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -76,10 +76,12 @@
+>  #define MACB_RBQPH		0x04D4
+>  
+>  /* GEM register offsets. */
+> +#define GEM_NCR			0x0000 /* Network Control */
+>  #define GEM_NCFGR		0x0004 /* Network Config */
+>  #define GEM_USRIO		0x000c /* User IO */
+>  #define GEM_DMACFG		0x0010 /* DMA Configuration */
+>  #define GEM_JML			0x0048 /* Jumbo Max Length */
+> +#define GEM_HS_MAC_CONFIG	0x0050 /* GEM high speed config */
+>  #define GEM_HRB			0x0080 /* Hash Bottom */
+>  #define GEM_HRT			0x0084 /* Hash Top */
+>  #define GEM_SA1B		0x0088 /* Specific1 Bottom */
+> @@ -164,6 +166,9 @@
+>  #define GEM_DCFG7		0x0298 /* Design Config 7 */
+>  #define GEM_DCFG8		0x029C /* Design Config 8 */
+>  #define GEM_DCFG10		0x02A4 /* Design Config 10 */
+> +#define GEM_DCFG12		0x02AC /* Design Config 12 */
+> +#define GEM_USX_CONTROL		0x0A80 /* USXGMII control register */
+> +#define GEM_USX_STATUS		0x0A88 /* USXGMII status register */
+>  
+>  #define GEM_TXBDCTRL	0x04cc /* TX Buffer Descriptor control register */
+>  #define GEM_RXBDCTRL	0x04d0 /* RX Buffer Descriptor control register */
+> @@ -270,11 +275,19 @@
+>  #define MACB_IRXFCS_OFFSET	19
+>  #define MACB_IRXFCS_SIZE	1
+>  
+> +/* GEM specific NCR bitfields. */
+> +#define GEM_ENABLE_HS_MAC_OFFSET	31
+> +#define GEM_ENABLE_HS_MAC_SIZE		1
 > +
-> +release_dma_desc:
-> +	if (devpriv->dma_desc)
-> +		dma_free_coherent(&pcidev->dev,
-> +				  sizeof(struct plx_dma_desc) *
-> +				NUM_DMA_DESCRIPTORS,
-> +				devpriv->dma_desc,
-> +				devpriv->dma_desc_phys_addr);
-> +	return retval;
+>  /* GEM specific NCFGR bitfields. */
+> +#define GEM_FD_OFFSET		1 /* Full duplex */
+> +#define GEM_FD_SIZE		1
+>  #define GEM_GBE_OFFSET		10 /* Gigabit mode enable */
+>  #define GEM_GBE_SIZE		1
+>  #define GEM_PCSSEL_OFFSET	11
+>  #define GEM_PCSSEL_SIZE		1
+> +#define GEM_PAE_OFFSET		13 /* Pause enable */
+> +#define GEM_PAE_SIZE		1
+>  #define GEM_CLK_OFFSET		18 /* MDC clock division */
+>  #define GEM_CLK_SIZE		3
+>  #define GEM_DBW_OFFSET		21 /* Data bus width */
+> @@ -455,11 +468,17 @@
+>  #define MACB_REV_OFFSET				0
+>  #define MACB_REV_SIZE				16
+>  
+> +/* Bitfield in HS_MAC_CONFIG */
+> +#define GEM_HS_MAC_SPEED_OFFSET			0
+> +#define GEM_HS_MAC_SPEED_SIZE			3
+> +
+>  /* Bitfields in DCFG1. */
+>  #define GEM_IRQCOR_OFFSET			23
+>  #define GEM_IRQCOR_SIZE				1
+>  #define GEM_DBWDEF_OFFSET			25
+>  #define GEM_DBWDEF_SIZE				3
+> +#define GEM_NO_PCS_OFFSET			0
+> +#define GEM_NO_PCS_SIZE				1
+>  
+>  /* Bitfields in DCFG2. */
+>  #define GEM_RX_PKT_BUFF_OFFSET			20
+> @@ -494,6 +513,34 @@
+>  #define GEM_RXBD_RDBUFF_OFFSET			8
+>  #define GEM_RXBD_RDBUFF_SIZE			4
+>  
+> +/* Bitfields in DCFG12. */
+> +#define GEM_HIGH_SPEED_OFFSET			26
+> +#define GEM_HIGH_SPEED_SIZE			1
+> +
+> +/* Bitfields in USX_CONTROL. */
+> +#define GEM_USX_CTRL_SPEED_OFFSET		14
+> +#define GEM_USX_CTRL_SPEED_SIZE			3
+> +#define GEM_SERDES_RATE_OFFSET			12
+> +#define GEM_SERDES_RATE_SIZE			2
+> +#define GEM_RX_SCR_BYPASS_OFFSET		9
+> +#define GEM_RX_SCR_BYPASS_SIZE			1
+> +#define GEM_TX_SCR_BYPASS_OFFSET		8
+> +#define GEM_TX_SCR_BYPASS_SIZE			1
+> +#define GEM_RX_SYNC_RESET_OFFSET		2
+> +#define GEM_RX_SYNC_RESET_SIZE			1
+> +#define GEM_TX_EN_OFFSET			1
+> +#define GEM_TX_EN_SIZE				1
+> +#define GEM_SIGNAL_OK_OFFSET			0
+> +#define GEM_SIGNAL_OK_SIZE			1
+> +
+> +/* Bitfields in USX_STATUS. */
+> +#define GEM_USX_TX_FAULT_OFFSET			28
+> +#define GEM_USX_TX_FAULT_SIZE			1
+> +#define GEM_USX_RX_FAULT_OFFSET			27
+> +#define GEM_USX_RX_FAULT_SIZE			1
+> +#define GEM_USX_BLOCK_LOCK_OFFSET		0
+> +#define GEM_USX_BLOCK_LOCK_SIZE			1
+> +
+>  /* Bitfields in TISUBN */
+>  #define GEM_SUBNSINCR_OFFSET			0
+>  #define GEM_SUBNSINCRL_OFFSET			24
+> @@ -656,6 +703,8 @@
+>  #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+>  #define MACB_CAPS_SG_DISABLED			0x40000000
+>  #define MACB_CAPS_MACB_IS_GEM			0x80000000
+> +#define MACB_CAPS_PCS				0x01000000
+> +#define MACB_CAPS_HIGH_SPEED			0x02000000
+>  
+>  /* LSO settings */
+>  #define MACB_LSO_UFO_ENABLE			0x01
+> @@ -724,6 +773,7 @@
+>  	})
+>  
+>  #define MACB_READ_NSR(bp)	macb_readl(bp, NSR)
+> +#define GEM_READ_USX_STATUS(bp)	gem_readl(bp, USX_STATUS)
+>  
+>  /* struct macb_dma_desc - Hardware DMA descriptor
+>   * @addr: DMA address of data buffer
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index ced32d2a85e1..5963a60d54b9 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -81,6 +81,14 @@ struct sifive_fu540_macb_mgmt {
+>  #define MACB_WOL_HAS_MAGIC_PACKET	(0x1 << 0)
+>  #define MACB_WOL_ENABLED		(0x1 << 1)
+>  
+> +#define HS_MAC_SPEED_100M	0
+> +#define HS_MAC_SPEED_1000M	1
+> +#define HS_MAC_SPEED_2500M	2
+> +#define HS_MAC_SPEED_5000M	3
+> +#define HS_MAC_SPEED_10000M	4
+> +
+> +#define MACB_SERDES_RATE_10G	1
+> +
+>  /* Graceful stop timeouts in us. We should allow up to
+>   * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
+>   */
+> @@ -90,6 +98,8 @@ struct sifive_fu540_macb_mgmt {
+>  
+>  #define MACB_MDIO_TIMEOUT	1000000 /* in usecs */
+>  
+> +#define MACB_USX_BLOCK_LOCK_TIMEOUT	1000000 /* in usecs */
+> +
+>  /* DMA buffer descriptor might be different size
+>   * depends on hardware configuration:
+>   *
+> @@ -506,6 +516,7 @@ static void macb_validate(struct phylink_config *config,
+>  	    state->interface != PHY_INTERFACE_MODE_RMII &&
+>  	    state->interface != PHY_INTERFACE_MODE_GMII &&
+>  	    state->interface != PHY_INTERFACE_MODE_SGMII &&
+> +	    state->interface != PHY_INTERFACE_MODE_USXGMII &&
+>  	    !phy_interface_mode_is_rgmii(state->interface)) {
+>  		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+>  		return;
+> @@ -518,6 +529,13 @@ static void macb_validate(struct phylink_config *config,
+>  		return;
+>  	}
+>  
+> +	if (state->interface == PHY_INTERFACE_MODE_USXGMII &&
+> +	    !(bp->caps & MACB_CAPS_HIGH_SPEED &&
+> +	      bp->caps & MACB_CAPS_PCS)) {
+> +		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+> +		return;
+> +	}
+> +
+>  	phylink_set_port_modes(mask);
+>  	phylink_set(mask, Autoneg);
+>  	phylink_set(mask, Asym_Pause);
+> @@ -527,6 +545,22 @@ static void macb_validate(struct phylink_config *config,
+>  	phylink_set(mask, 100baseT_Half);
+>  	phylink_set(mask, 100baseT_Full);
+>  
+> +	if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE &&
+> +	    (state->interface == PHY_INTERFACE_MODE_NA ||
+> +	     state->interface == PHY_INTERFACE_MODE_USXGMII)) {
+> +		phylink_set(mask, 10000baseCR_Full);
+> +		phylink_set(mask, 10000baseER_Full);
+> +		phylink_set(mask, 10000baseKR_Full);
+> +		phylink_set(mask, 10000baseLR_Full);
+> +		phylink_set(mask, 10000baseLRM_Full);
+> +		phylink_set(mask, 10000baseSR_Full);
+> +		phylink_set(mask, 10000baseT_Full);
+> +		phylink_set(mask, 5000baseT_Full);
+> +		phylink_set(mask, 2500baseX_Full);
+> +		phylink_set(mask, 1000baseX_Full);
+> +		phylink_set(mask, 1000baseT_Full);
+> +	}
+> +
+>  	if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE &&
+>  	    (state->interface == PHY_INTERFACE_MODE_NA ||
+>  	     state->interface == PHY_INTERFACE_MODE_GMII ||
+> @@ -544,6 +578,60 @@ static void macb_validate(struct phylink_config *config,
+>  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
 >  }
->
->  static void gsc_hpdi_detach(struct comedi_device *dev)
+>  
+> +static int gem_mac_usx_configure(struct macb *bp,
+> +				 const struct phylink_link_state *state)
+> +{
+> +	u32 speed, config, val;
+> +	int ret;
+> +
+> +	val = gem_readl(bp, NCFGR);
+> +	val = GEM_BIT(PCSSEL) | (~GEM_BIT(SGMIIEN) & val);
+> +	if (state->pause & MLO_PAUSE_TX)
+> +		val |= GEM_BIT(PAE);
+> +	gem_writel(bp, NCFGR, val);
+> +	gem_writel(bp, NCR, gem_readl(bp, NCR) | GEM_BIT(ENABLE_HS_MAC));
+> +	gem_writel(bp, NCFGR, gem_readl(bp, NCFGR) | GEM_BIT(FD));
+> +	config = gem_readl(bp, USX_CONTROL);
+> +	config = GEM_BFINS(SERDES_RATE, MACB_SERDES_RATE_10G, config);
+> +	config &= ~GEM_BIT(TX_SCR_BYPASS);
+> +	config &= ~GEM_BIT(RX_SCR_BYPASS);
+> +	gem_writel(bp, USX_CONTROL, config | GEM_BIT(TX_EN));
+> +	config = gem_readl(bp, USX_CONTROL);
+> +	gem_writel(bp, USX_CONTROL, config | GEM_BIT(SIGNAL_OK));
+> +	ret = readx_poll_timeout(GEM_READ_USX_STATUS, bp, val,
+> +				 val & GEM_BIT(USX_BLOCK_LOCK),
+> +				 1, MACB_USX_BLOCK_LOCK_TIMEOUT);
+> +	if (ret < 0) {
+> +		netdev_warn(bp->dev, "USXGMII block lock failed");
+> +		return -ETIMEDOUT;
+> +	}
 
-I got the impression that return values from calls of the function =E2=80=
-=9Cdma_alloc_coherent=E2=80=9D
-should be checked before.
-* Would you like to add null pointer checks at other source code places?
-* Should the jump targets be accordingly adjusted then for the completion
-  of the desired exception handling?
+I mentioned this last time around, so I'm a little surprised it's
+still here.  As I already stated, there is no requirement that the
+USXGMII locks before any of these functions return.
 
-Regards,
-Markus
+You're also waiting for up to a second in a work queue, which is not
+nice behaviour.
+
+> +
+> +	switch (state->speed) {
+> +	case SPEED_10000:
+> +		speed = HS_MAC_SPEED_10000M;
+> +		break;
+> +	case SPEED_5000:
+> +		speed = HS_MAC_SPEED_5000M;
+> +		break;
+> +	case SPEED_2500:
+> +		speed = HS_MAC_SPEED_2500M;
+> +		break;
+> +	case SPEED_1000:
+> +		speed = HS_MAC_SPEED_1000M;
+> +		break;
+> +	default:
+> +	case SPEED_100:
+> +		speed = HS_MAC_SPEED_100M;
+> +		break;
+
+macb_validate() goes down to 10Mbps, but you don't handle that here.
+If it isn't supported, then macb_validate() shouldn't allow it for this
+mode.
+
+> +	}
+> +
+> +	gem_writel(bp, HS_MAC_CONFIG, GEM_BFINS(HS_MAC_SPEED, speed,
+> +						gem_readl(bp, HS_MAC_CONFIG)));
+> +	gem_writel(bp, USX_CONTROL, GEM_BFINS(USX_CTRL_SPEED, speed,
+> +					      gem_readl(bp, USX_CONTROL)));
+> +	return 0;
+> +}
+> +
+>  static void macb_mac_pcs_get_state(struct phylink_config *config,
+>  				   struct phylink_link_state *state)
+>  {
+> @@ -565,30 +653,39 @@ static void macb_mac_config(struct phylink_config *config, unsigned int mode,
+>  
+>  	spin_lock_irqsave(&bp->lock, flags);
+>  
+> -	old_ctrl = ctrl = macb_or_gem_readl(bp, NCFGR);
+> +	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
+
+Why bp->phy_interface and not state->interface?
+
+If you don't support selecting between USXGMII and other modes at
+runtime, should macb_validate() be allowing ethtool link modes for
+it when it's different from the configured setting?
+
+> +		if (gem_mac_usx_configure(bp, state) < 0) {
+> +			spin_unlock_irqrestore(&bp->lock, flags);
+> +			phylink_mac_change(bp->phylink, false);
+
+I guess this is the reason you're waiting for the USXGMII block
+to lock - do you not have any way to raise an interrupt when
+something changes with the USXGMII (or for that matter SGMII)
+blocks?  Without that, you're fixed to a single speed.
+
+> +			return;
+> +		}
+> +	} else {
+> +		old_ctrl = ctrl = macb_or_gem_readl(bp, NCFGR);
+>  
+> -	/* Clear all the bits we might set later */
+> -	ctrl &= ~(GEM_BIT(GBE) | MACB_BIT(SPD) | MACB_BIT(FD) | MACB_BIT(PAE) |
+> -		  GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
+> +		/* Clear all the bits we might set later */
+> +		ctrl &= ~(GEM_BIT(GBE) | MACB_BIT(SPD) |
+> +			  MACB_BIT(FD) | MACB_BIT(PAE) |
+> +			  GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
+>  
+> -	if (state->speed == SPEED_1000)
+> -		ctrl |= GEM_BIT(GBE);
+> -	else if (state->speed == SPEED_100)
+> -		ctrl |= MACB_BIT(SPD);
+> +		if (state->speed == SPEED_1000)
+> +			ctrl |= GEM_BIT(GBE);
+> +		else if (state->speed == SPEED_100)
+> +			ctrl |= MACB_BIT(SPD);
+>  
+> -	if (state->duplex)
+> -		ctrl |= MACB_BIT(FD);
+> +		if (state->duplex)
+> +			ctrl |= MACB_BIT(FD);
+>  
+> -	/* We do not support MLO_PAUSE_RX yet */
+> -	if (state->pause & MLO_PAUSE_TX)
+> -		ctrl |= MACB_BIT(PAE);
+> +		/* We do not support MLO_PAUSE_RX yet */
+> +		if (state->pause & MLO_PAUSE_TX)
+> +			ctrl |= MACB_BIT(PAE);
+>  
+> -	if (state->interface == PHY_INTERFACE_MODE_SGMII)
+> -		ctrl |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
+> +		if (state->interface == PHY_INTERFACE_MODE_SGMII)
+> +			ctrl |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
+>  
+> -	/* Apply the new configuration, if any */
+> -	if (old_ctrl ^ ctrl)
+> -		macb_or_gem_writel(bp, NCFGR, ctrl);
+> +		/* Apply the new configuration, if any */
+> +		if (old_ctrl ^ ctrl)
+> +			macb_or_gem_writel(bp, NCFGR, ctrl);
+> +	}
+>  
+>  	bp->speed = state->speed;
+>  
+> @@ -3407,6 +3504,11 @@ static void macb_configure_caps(struct macb *bp,
+>  		dcfg = gem_readl(bp, DCFG1);
+>  		if (GEM_BFEXT(IRQCOR, dcfg) == 0)
+>  			bp->caps |= MACB_CAPS_ISR_CLEAR_ON_WRITE;
+> +		if (GEM_BFEXT(NO_PCS, dcfg) == 0)
+> +			bp->caps |= MACB_CAPS_PCS;
+> +		dcfg = gem_readl(bp, DCFG12);
+> +		if (GEM_BFEXT(HIGH_SPEED, dcfg) == 1)
+> +			bp->caps |= MACB_CAPS_HIGH_SPEED;
+>  		dcfg = gem_readl(bp, DCFG2);
+>  		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
+>  			bp->caps |= MACB_CAPS_FIFO_MODE;
+> -- 
+> 2.17.1
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
