@@ -2,173 +2,149 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE1BC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A3C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873E120726
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF99320726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KL5DwCvY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQnKpsiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLOQio (ORCPT
+        id S1726373AbfLOQlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:38:44 -0500
-Received: from mail-dm6nam10on2106.outbound.protection.outlook.com ([40.107.93.106]:4570
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726135AbfLOQin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:38:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HRflOwsvUHsQN2bhi9w+6j6Jq1gJQ0Jxd1lVxgg5hRJmu5qghOuON+vbNL3W4fFDeynNuxqCdrbA65T0CM0M+omxaC4E2kkVgLdiTYOoOYISU5qQbwWTe6s0aMXBT01EXbTDWLNoX65JNqcV4CAUkTUYAKiDKjG6TFrUmdydekZfmEl1Qo6+SkvAYD/5HAo5nlo1N6lZrlVu1SX/+wGCdyG8TCi1gjNHRo26iD5484foMKxyRZdmSaYqebzCxfXG6i0c9k8qV3eDrDiI5W1Gq0gY3Dkf2s6tj6t+zxQLRyrMl9jq28Tt7zVGPmoBjbH6aNOsVhqb2aaEH0jYo4jkhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h4ORSuNMdu2nInMBcaUapu5Su1cZYaqI5wyr0UO4iEs=;
- b=ENAY/70Xc/R4Txq+NEBXKVK9U4aK2aIoK/Wfd9p0b/6iMnAmHKBdjVZJmulecC26LCz+SykFt+Sh2HLTgQyCSE2tEiYde9mbJFydLBt0+EzJijI8hNJ+uHfLXLOqLcydIqUgKImebIOEyEHfl4a4hp8F2QZFxZENAf+1xLX7foPXDFFhOV7GJrOv6Bh4qht6zGY19CqkG/krApRTt6wumU1fLjE5HHcahQYzPWWBH6q0t76Wb13FlcMV7Lp9ZsQNZHnZTNEn5eXTF8zbZiPWyTvo7NbOHrzy6lRqp9kFVuXKQPPVH6KqKx3Q4k8xbb6u4OVoFgtnTtOQG6rw/YCUkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h4ORSuNMdu2nInMBcaUapu5Su1cZYaqI5wyr0UO4iEs=;
- b=KL5DwCvYKk/8vF4bsVs4Dc/XxgxFkIQBmK7I+CtQahYQf4GO89Oz2A8s/kMJTLG1UHtiKk4ofRS6dJQLN71F9+gHa8oExPVKLfzC+VPzTt4yCvkbkECWRMIpzUWZf6vwl1jDPRXw6WR0b6C8HIFKKinY6b+UOCz3uMwWxWKPvDo=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1166.namprd21.prod.outlook.com (20.178.255.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.7; Sun, 15 Dec 2019 16:38:00 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::d15a:1864:efcd:6215]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::d15a:1864:efcd:6215%9]) with mapi id 15.20.2559.012; Sun, 15 Dec 2019
- 16:38:00 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2,net] hv_netvsc: Fix tx_table init in
- rndis_set_subchannel()
-Thread-Topic: [PATCH v2,net] hv_netvsc: Fix tx_table init in
- rndis_set_subchannel()
-Thread-Index: AQHVsHIPR2S1RqkKpkGOALob+Zz3Eae6CPmAgAFYy9A=
-Date:   Sun, 15 Dec 2019 16:38:00 +0000
-Message-ID: <MN2PR21MB1375F30B3BEEF42DFDB3D39ECA560@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
- <20191214113025.363f21e2@cakuba.netronome.com>
-In-Reply-To: <20191214113025.363f21e2@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-15T16:37:58.2733489Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9b19c3e4-ad91-4479-b77b-ed5e79b48d5c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8a616f74-1a60-47b5-9341-08d7817d25f6
-x-ms-traffictypediagnostic: MN2PR21MB1166:|MN2PR21MB1166:|MN2PR21MB1166:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB1166BC1ACC28CBC6B633F8BCCA560@MN2PR21MB1166.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02524402D6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(136003)(39860400002)(199004)(189003)(13464003)(10290500003)(2906002)(55016002)(8676002)(26005)(6916009)(7696005)(76116006)(66476007)(52536014)(478600001)(81166006)(81156014)(66446008)(66556008)(54906003)(33656002)(5660300002)(9686003)(4326008)(66946007)(316002)(86362001)(8936002)(64756008)(53546011)(6506007)(186003)(71200400001)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1166;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qUnMXtxmnoYp2pNGuCvkaOKgrexZev7QoZf/v5vwQIXNSXMktpGz7sFEMaJC9IQ4Jv4qJmkB9P5sKEyxo2vi/+Ic9KZTqzVVsObMzBy66rgywiODgYQylLjiG8+dEzamsHlpAip46i+mD3CdNb+71zP4NlHLvWgTFQM8pzpJ7DQ4dUvBTyLf/ayjP7ZZlayfOgvjVeAutklpfTW3dLzdj7ORF5szOTguQouZseldsl9/BMzCAIvpg7Dk6vEVlSpxvead5H38quBC1Hj/zOZFaiLt5kGi1kf31QhtKVNA5ouDTqD5KRuUvUbi7Sjj2DCMFhXWEKzjBDdpc4CiglttTbjl1rzil8buuwczDsKrQYFwliHe/zEht/9M6Lq2DFjxljY6MnhK+P+i2ykG8daKoyLl/f8NWfYpD5dd6v/N40k2WnkOdpMvHqbAXOUaRMFhuRR5LC0AvxvKljlnfptfFCG6YlUVsGE7usHgGtnDd7qBUsstqgxvpFuOUZowEj0z
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 15 Dec 2019 11:41:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39800 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726136AbfLOQlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:41:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576428073;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pZXNOLSmIO4QRRkxs/U8mDeREkMLpc0KHW6n8y5dmes=;
+        b=iQnKpsiNwCVyxdauVzUGl25a9dq7P4hOpGJvW4/zaYQNiKaEODdjFcRbvGSObKjeuTAR2R
+        R1PvBkCCBgnckfQr3YyNTycqvxcLNgRz9O4gsmJkH8qOvcslE3M+vPOtbtq03GJUgyY7TB
+        HDfBJuBAH26rUUuLrrWOEzL6Qd8fyDY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-hzEcZ-MNO0qIj_904EWVPg-1; Sun, 15 Dec 2019 11:41:09 -0500
+X-MC-Unique: hzEcZ-MNO0qIj_904EWVPg-1
+Received: by mail-wr1-f70.google.com with SMTP id f10so2415000wro.14
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 08:41:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pZXNOLSmIO4QRRkxs/U8mDeREkMLpc0KHW6n8y5dmes=;
+        b=cabKi4J4Z6pbdu/wIWGj4ind1chK3gigq7Zf1+hh48YZrqLsSD4YonltM17H8ErF4x
+         xKcJop+JnmG5GUaO8KpLw5hVLMtLqPbzUsgWcZn2mqbTIZTWwOHU5HsuoOEFw3i5aoTx
+         LcekRJLMbwDBkRh3JZf8M+GODoMZQ8ZOUR8oCDoKetF4A5oFRiu8iwJQxmC5yfVKI02Y
+         rMLWbSh9C6LEyKAoOfUsl4+MYlURrUi7ThUvK8AKGUte0f1ljbtqaWzk0pdk2JHn9yAW
+         8DYAbDg4E1wqGllDqbleP2vr5X8zcFWvdtdT6EoUBufzByc1JXi9PmQ3juToOGCnE2i7
+         X2Jg==
+X-Gm-Message-State: APjAAAVzWNpBiWr0J/YAV6s6chnroLSWpCeJmJ8nxeNj05s5S9SeMWEb
+        A4EVvQcuWZjxKaYOoUgs4QgcNK7WrJGXN50ezUVrPio7AblEAghNlX8vC1BkTcFrgoVE2Dq0755
+        aPpBh2zckVdZoIcHBqf5walSF
+X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr26179936wru.150.1576428068031;
+        Sun, 15 Dec 2019 08:41:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxZpHMRDXlQMMSABQl81Zs6vH911Sv5c05gA8+uaC03Yib3ITofNGLMXO4++fjZuO82cMlHjA==
+X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr26179919wru.150.1576428067834;
+        Sun, 15 Dec 2019 08:41:07 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id x10sm18280784wrv.60.2019.12.15.08.41.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2019 08:41:07 -0800 (PST)
+Subject: Re: [PATCH] usb: dwc3: use proper initializers for property entries
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191213174623.GA20267@dtor-ws>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2a8a5e6b-9372-978e-03d0-350ab65a2d0a@redhat.com>
+Date:   Sun, 15 Dec 2019 17:41:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a616f74-1a60-47b5-9341-08d7817d25f6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2019 16:38:00.1367
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AvoJVNH0KxaK+vCW6WFvObT2pbCZCL4Hj1SXuJmlWElo9de6AA6m2gBdLVg6lBJHPw6gw3ssUKnzITGEZxWMRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1166
+In-Reply-To: <20191213174623.GA20267@dtor-ws>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On 13-12-2019 18:46, Dmitry Torokhov wrote:
+> We should not be reaching into property entries and initialize them by
+> hand, but rather use proper initializer macros. This way we can alter
+> internal representation of property entries with no visible changes to
+> their users.
+> 
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> 
+> It would be good if this could go through Rafael's tree as it is needed
+> for the rest of my software_node/property_entry rework patch series
+> which I would love not to delay till 5.6.
+
+Patch looks good to me:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
 
 
-> -----Original Message-----
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Sent: Saturday, December 14, 2019 2:30 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
-rg;
-> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in rndis_set_sub=
-channel()
->=20
-> On Wed, 11 Dec 2019 14:26:27 -0800, Haiyang Zhang wrote:
-> > Host can provide send indirection table messages anytime after RSS is
-> > enabled by calling rndis_filter_set_rss_param(). So the host provided
-> > table values may be overwritten by the initialization in
-> > rndis_set_subchannel().
-> >
-> > To prevent this problem, move the tx_table initialization before callin=
-g
-> > rndis_filter_set_rss_param().
-> >
-> > Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after
-> subchannels open")
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
->=20
-> Applied, but there are two more problems with this code:
->  - you should not reset the indirection table if it was configured by
->    the user to something other than the default (use the
->    netif_is_rxfh_configured() helper to check for that)
-
-For Send indirection table (tx_table) ethtool doesn't have the option=20
-to set it, and it's usually provided by the host. So we always initialize=20
-it...
-But, yes, for Receive indirection table (rx_table), I will make a fix, so=20
-it will be set to default only for new devices, or changing the number=20
-of channels; otherwise it will remain the same during operations like=20
-changing MTU, ringparam.
 
 
->  - you should use the ethtool_rxfh_indir_default() wrapper
-For rx_table, we already use it:
-                rndis_device->rx_table[i] =3D ethtool_rxfh_indir_default(
-For tx_table, I know it's the same operation (%, mod), but this wrapper=20
-function's name is for rx_table. Should we use it for tx_table too?
-
->=20
-> Please fix the former problem in the net tree, and after net is merged
-> into linux/master and net-next in a week or two please follow up with
-> the fix for the latter for net-next.
-
-Sure.
-
-Thanks,
-- Haiyang
+> 
+> Thanks!
+> 
+>   drivers/usb/dwc3/host.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+> index 5567ed2cddbec..fa252870c926f 100644
+> --- a/drivers/usb/dwc3/host.c
+> +++ b/drivers/usb/dwc3/host.c
+> @@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+>   	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+>   
+>   	if (dwc->usb3_lpm_capable)
+> -		props[prop_idx++].name = "usb3-lpm-capable";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
+>   
+>   	if (dwc->usb2_lpm_disable)
+> -		props[prop_idx++].name = "usb2-lpm-disable";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+>   
+>   	/**
+>   	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+> @@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+>   	 * This following flag tells XHCI to do just that.
+>   	 */
+>   	if (dwc->revision <= DWC3_REVISION_300A)
+> -		props[prop_idx++].name = "quirk-broken-port-ped";
+> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+>   
+>   	if (prop_idx) {
+>   		ret = platform_device_add_properties(xhci, props);
+> 
 
