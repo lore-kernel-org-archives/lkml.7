@@ -2,70 +2,55 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2FDC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E00CC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B9F20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D800E2467B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:33:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="xJxXeatC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="fV42WMmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLOTcM (ORCPT
+        id S1726539AbfLOTd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:32:12 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44699 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfLOTcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:32:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so2389371pgl.11
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=SD6710XuCGfLCRjEaTIYpMnkGtQ6zZzJk7TYgaQ/Siw=;
-        b=xJxXeatCAJCU30I9wwZmedY0avOrIT77KoTok0JQ/JbFO9lmaK+0DfZ89kJwB0PnQH
-         vuqLgph7k+ofwTsPyEL9u2khQekl5nD5+qrkeNIqdcOguBAfTjcQsMOuQ3Gq4fdzpp50
-         2uwVakow0BOR4CG59dBrETZ2NnXytgiVlYinqOvoy8gANeId4a4KH7WxV1aHKvk1zbyT
-         n7LuQeeW+7Y1v1j9HVLAbRjTt0poRRMSVVpQ7lsQUyZL86mK6mCiEzrioyaGxJT9Cs6H
-         y9jM9vZnshGS8Ay/Xhicf9E5k0Kk7JKMW5CvYpLz36LKYETiZL81fF59+LD3MStjEGre
-         dd5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=SD6710XuCGfLCRjEaTIYpMnkGtQ6zZzJk7TYgaQ/Siw=;
-        b=SWwyVrpL/30U+Mm4ZUvs9PxsNq2U5KVJZzIdQdbBgAzCemIYIBcuGjX1GjbeGEmTEt
-         Isa2j7zO7UfKi543DSLqB4gc4pn4ZpjFVOusby3eT5cGjwKiY7Kn4Zid4rWOLIA0DcgO
-         xqPAhksRZnW6Xw4qyCE2F22306Xln94x2K5K1tr1k0TRW9azn88E1ocE3pplJqb70pQj
-         NPd01nB0cPborfEAqYnFM8+ic5dt3cqICDApgb/w2LgINmm+EPZEgSdbaED3q/zKc3bY
-         Y2puN29lFvfzzQsL9LQKbZAbXlUvB1CZgChDH7FsCHYpsY9aZdJ2qMtzpBBjilW8anD4
-         DExg==
-X-Gm-Message-State: APjAAAUmRUWl5Q/7Lrp1Rt7dUtSZ5J6yQ7GpIaLyRoJgWw2oj0kSqV21
-        21GrBpNFgN2+RovXWxywXaKlww==
-X-Google-Smtp-Source: APXvYqxYeiVnRfIk5g9EJ6vrTN8Y+jTHPgtnkXSmDuJTA/McKpsjUR7LQKN3ZfU+1S+Sk+mQAszwLg==
-X-Received: by 2002:a62:fc93:: with SMTP id e141mr11845222pfh.262.1576438331400;
-        Sun, 15 Dec 2019 11:32:11 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id d23sm18846406pfo.176.2019.12.15.11.32.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:32:11 -0800 (PST)
-Date:   Sun, 15 Dec 2019 11:32:08 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Cristian Birsan <cristian.birsan@microchip.com>
-Cc:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: usb: lan78xx: Fix error message format specifier
-Message-ID: <20191215113208.7378295b@cakuba.netronome.com>
-In-Reply-To: <20191213163311.8319-1-cristian.birsan@microchip.com>
-References: <20191213163311.8319-1-cristian.birsan@microchip.com>
-Organization: Netronome Systems, Ltd.
+        Sun, 15 Dec 2019 14:33:29 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:45884 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfLOTd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 14:33:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=66GL6uEMhL/IBdQ3j8dGFVszWMz92MKvrMh/IitWSgw=; b=fV42WMmwbpzdggy7SHL6TptND+
+        u/3IjtbOdXfdoFhjGGeq5gihZoRGVv6xSZ2uposkH3gyBB324LvG+MArY+4ePRDymXqevik2o0PLp
+        F+UUKL4+o/+jsCLNz/U8WYXvZw4YHtX1jr2t+hBx3ptQsqQHBr+8ITCZ63f+AZDFXCXs=;
+Received: from p200300ccff4bb7001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff4b:b700:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1igZdr-00014T-ND; Sun, 15 Dec 2019 20:33:24 +0100
+Date:   Sun, 15 Dec 2019 20:33:19 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20191215203319.2874ac04@aktux>
+In-Reply-To: <20191215173817.47918-1-tony@atomide.com>
+References: <20191215173817.47918-1-tony@atomide.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -74,10 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 18:33:11 +0200, Cristian Birsan wrote:
-> Display the return code as decimal integer.
-> 
-> Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+On Sun, 15 Dec 2019 09:38:17 -0800
+Tony Lindgren <tony@atomide.com> wrote:
 
-Applied to net, thank you!
+> We've had generic code handling module sysconfig and OCP reset registers
+> for omap variants for many years now and all the drivers really needs to
+> do is just call runtime PM functions.
+> 
+> Looks like the omap-hdq driver got only partially updated over the years
+> to use runtime PM, and still has lots of custom PM code left.
+> 
+> We can replace all the custom code for sysconfig, OCP reset, and PM with
+> just a few lines of runtime PM autosuspend code.
+> 
+> Note that the earlier driver specific usage count limit of four seems
+> completely artificial and should not be an issue in normal use.
+> 
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Andrew F. Davis <afd@ti.com>
+> Cc: Andreas Kemnade <andreas@kemnade.info>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Vignesh R <vigneshr@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+> 
+> 
+> Can you guys please review and and test on gta04 and torpedo?
+> 
+I tried this after booting with init=/bin/bash and mounting kernel
+filesystems (no off mode enabled):
+root@(none):/# echo on >/sys/bus/platform/devices/480b2000.1w/power/control
+root@(none):/# modprobe omap_hdq
+[   49.590820] Driver for 1-wire Dallas network protocol.
+[   49.598327] omap_hdq 480b2000.1w: OMAP HDQ Hardware Rev 0.5. Driver in Interrupt mode
+root@(none):/# [   49.624572] w1_master_driver w1_bus_master1: Attaching one wire slave 01.000000000000 crc 3d
+[   49.660980] power_supply bq27000-battery: power_supply_get_battery_info currently only supports devicetree
+
+root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
+0
+
+real    0m2.561s
+user    0m0.008s
+sys     0m0.002s
+root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
+0
+
+real    0m12.601s
+user    0m0.010s
+sys     0m0.002s
+root@(none):/# time cat /sys/class/power_supply/bq27000-battery/voltage_now 
+0
+
+real    0m12.601s
+user    0m0.010s
+sys     0m0.002s
+root@(none):/# 
+
+No data could be read but some detection work seem to be done.
+Of course, I also tried without that forced power on.
+
+I hope I can find more time to analyze.
+Looks like a nice cleanup but needs some work.
+
+Regards,
+Andreas
