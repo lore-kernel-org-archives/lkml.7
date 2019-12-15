@@ -1,151 +1,73 @@
-Return-Path: <SRS0=X3/1=2E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D54C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 23:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C704C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 00:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F81C206E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Dec 2019 23:56:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="bGI6A9XL";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="bGI6A9XL"
+	by mail.kernel.org (Postfix) with ESMTP id 4F87D214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 00:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576368913;
+	bh=2AVr/3T/8zCyT1jUqHdrzREhHmMssaywUFhCSP591m0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Eo9Fxm7ctZjGxJc+2Oc+Z+O7Y9oOfB2pAJu9TsLstSXBMt71W/1qLhVy0yXfyGVlf
+	 1YI6yHYdemC8xTopNL402gnSZLMHEVHCX5G6yaSO+c7PYVzb1CzIE7H2ldTMgb/5Jy
+	 5DwjjEt0w5mfMyqy3XzVtltXfX0TDT/a1Mz5Bglo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfLNX4L (ORCPT
+        id S1727144AbfLOAPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 18:56:11 -0500
-Received: from node.akkea.ca ([192.155.83.177]:38590 "EHLO node.akkea.ca"
+        Sat, 14 Dec 2019 19:15:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfLNX4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 18:56:10 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 7475F4E201A;
-        Sat, 14 Dec 2019 23:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576367770; bh=BO3TEYl21sA/wMKA0yRtarf1F3XV3vT6Pf1Un5gTO5Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=bGI6A9XLGa6MrFrHhC6w/It3fZHvDUlVHSpv4YH6UM5fB8ANQqkwUddkNT6j6jelp
-         uQuj/bSMwKUWYQp0eC7K9dq6NWoCoVvxlFDe8OQWbc0bWgRDd8pVfwDmVaOyTYyY37
-         1i4dDF9W1EHREi8eiYhxD96w1Tctfebkff6ep59A=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JAx7lS-p9mz6; Sat, 14 Dec 2019 23:56:10 +0000 (UTC)
-Received: from thinkpad-tablet.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id EFB2D4E2006;
-        Sat, 14 Dec 2019 23:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576367770; bh=BO3TEYl21sA/wMKA0yRtarf1F3XV3vT6Pf1Un5gTO5Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=bGI6A9XLGa6MrFrHhC6w/It3fZHvDUlVHSpv4YH6UM5fB8ANQqkwUddkNT6j6jelp
-         uQuj/bSMwKUWYQp0eC7K9dq6NWoCoVvxlFDe8OQWbc0bWgRDd8pVfwDmVaOyTYyY37
-         1i4dDF9W1EHREi8eiYhxD96w1Tctfebkff6ep59A=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2 1/2] sound: codecs: gtm601: add Broadmobi bm818 sound profile
-Date:   Sat, 14 Dec 2019 15:55:49 -0800
-Message-Id: <20191214235550.31257-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191214235550.31257-1-angus@akkea.ca>
-References: <20191214235550.31257-1-angus@akkea.ca>
+        id S1726823AbfLOAPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Dec 2019 19:15:12 -0500
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.5-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576368911;
+        bh=2AVr/3T/8zCyT1jUqHdrzREhHmMssaywUFhCSP591m0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ecHOMWuoVVESX8lpwCkNbfj+9eQ9FODmAgHHYG1hY+Adacc8gJPqtKmalbo3yYLBt
+         yzSGgKyxodgvF/gvH3vWTGYqYmpxWwNnns2PfN/AHbNn8fwNJyw3zigOGgyn7rc68P
+         UOgICh6Bxoc9WpuA/1vBU8NJc0lJ8icoO5uRoNBw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191214200709.GA20124@embeddedor>
+References: <20191214200709.GA20124@embeddedor>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191214200709.GA20124@embeddedor>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
+ tags/Wimplicit-fallthrough-5.5-rc2
+X-PR-Tracked-Commit-Id: 3d519d6d388ba4f9a75d0e0b6f60d890987bc096
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 510c9788991c58827373bca719d8cffa4d65f846
+Message-Id: <157636891171.21229.8559220059254711187.pr-tracker-bot@kernel.org>
+Date:   Sun, 15 Dec 2019 00:15:11 +0000
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Broadmobi bm818 uses stereo sound at 48Khz sample rate
+The pull request you sent on Sat, 14 Dec 2019 14:07:09 -0600:
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- sound/soc/codecs/gtm601.c | 46 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 8 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.5-rc2
 
-diff --git a/sound/soc/codecs/gtm601.c b/sound/soc/codecs/gtm601.c
-index d454294c8d06..44cdbd016761 100644
---- a/sound/soc/codecs/gtm601.c
-+++ b/sound/soc/codecs/gtm601.c
-@@ -37,7 +37,7 @@ static struct snd_soc_dai_driver gtm601_dai = {
- 		.channels_max = 1,
- 		.rates = SNDRV_PCM_RATE_8000,
- 		.formats = SNDRV_PCM_FMTBIT_S16_LE,
--		},
-+	},
- 	.capture = {
- 		.stream_name = "Capture",
- 		.channels_min = 1,
-@@ -47,6 +47,24 @@ static struct snd_soc_dai_driver gtm601_dai = {
- 	},
- };
- 
-+static struct snd_soc_dai_driver bm818_dai = {
-+	.name = "bm818",
-+	.playback = {
-+		.stream_name = "Playback",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+};
-+
- static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
- 	.dapm_widgets		= gtm601_dapm_widgets,
- 	.num_dapm_widgets	= ARRAY_SIZE(gtm601_dapm_widgets),
-@@ -58,20 +76,32 @@ static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
- 	.non_legacy_dai_naming	= 1,
- };
- 
--static int gtm601_platform_probe(struct platform_device *pdev)
--{
--	return devm_snd_soc_register_component(&pdev->dev,
--			&soc_component_dev_gtm601, &gtm601_dai, 1);
--}
--
- #if defined(CONFIG_OF)
- static const struct of_device_id gtm601_codec_of_match[] = {
--	{ .compatible = "option,gtm601", },
-+	{ .compatible = "option,gtm601", .data = (void *)&gtm601_dai },
-+	{ .compatible = "broadmobi,bm818", .data = (void *)&bm818_dai },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, gtm601_codec_of_match);
- #endif
- 
-+static int gtm601_platform_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct snd_soc_dai_driver *dai_driver = &gtm601_dai;
-+	const struct of_device_id *id;
-+
-+#if defined(CONFIG_OF)
-+	if (np) {
-+		id = of_match_node(gtm601_codec_of_match, pdev->dev.of_node);
-+		dai_driver = id->data;
-+	}
-+#endif
-+
-+	return devm_snd_soc_register_component(&pdev->dev,
-+			&soc_component_dev_gtm601, dai_driver, 1);
-+}
-+
- static struct platform_driver gtm601_codec_driver = {
- 	.driver = {
- 		.name = "gtm601",
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/510c9788991c58827373bca719d8cffa4d65f846
+
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
