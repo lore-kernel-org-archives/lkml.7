@@ -2,110 +2,90 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B15C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AEEC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8508A21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA81822B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 11:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576411054;
+	bh=dXNRUshaJSlqrNGldhEWNyYOku7yZOP3CnQOh1OnmBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2gr7jT8m9ZZq31i0KCEggknkSXpBfXhCnmZmO6HwZniNWn2ps5qGoPy9z9GdJXE3M
+	 4USn6+ZfIzL2bcT796Q+wCerd9Cuk4aMVhYKPfom8kMzZ3NopVo0YVLDGRehvwVUYF
+	 nLqNcLNwYaEBDISrlq+KxOoO2Jt6VKY8ZKSK8mtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfLOLxo (ORCPT
+        id S1726207AbfLOL5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 06:53:44 -0500
-Received: from mga18.intel.com ([134.134.136.126]:55004 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfLOLxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 06:53:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 03:53:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,317,1571727600"; 
-   d="scan'208";a="416159519"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Dec 2019 03:53:41 -0800
-Received: from [10.251.95.214] (abudanko-mobl.ccr.corp.intel.com [10.251.95.214])
-        by linux.intel.com (Postfix) with ESMTP id 1FB7658044E;
-        Sun, 15 Dec 2019 03:53:36 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
- Perf users groups
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Andi Kleen <ak@linux.intel.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>
-References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
- <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
- <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
- <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
- <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
- <16e9e399-2ebf-261f-eee5-cf9ace2a82b9@schaufler-ca.com>
- <20191211203648.GA862919@tassilo.jf.intel.com>
- <d2095e4a-261b-b561-2a2c-cf00fd416503@tycho.nsa.gov>
-Organization: Intel Corp.
-Message-ID: <533d0954-25ce-9df0-6324-3ff00d1ee042@linux.intel.com>
-Date:   Sun, 15 Dec 2019 14:53:35 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Sun, 15 Dec 2019 06:57:33 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42546 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfLOL5d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 06:57:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so2723860edv.9;
+        Sun, 15 Dec 2019 03:57:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3bFRjA9UFM72dx5MZDZ0tLg6rOZz8LMmXjc51eyWHQw=;
+        b=LORjAGDMBD4G92L6A+18TwkKXPDsotX/LoXS9FsmfuEr2sfuGrrpxXJzR27mPZg4IH
+         I9t7+PXKJ6RrwYyNE2gr3BABRRtVZqxWhVGkW/mvI3uk5nhulJ2DyB3nR6LS8tO7fMhr
+         9xA/gsSp1MifN47pUhQA/4J946N0vTZ1VnU+jrotNSX0DRAaZwJUqNC0aVILC2jri8xe
+         g7mAIfTIXsl3F24wHWLlSFwtT94FtOhG0llkzZTyoIHcLFkFUQ6uL9QaNvwUDvmJoskt
+         JUjzW9o8T+xRZpgtcBxy2j6uRBFXgAKZmb6D6COZIRuS5t46FkN+yaQSE+u/zKK6yknz
+         Ob/A==
+X-Gm-Message-State: APjAAAUqPL1Vt+B4mEbBC94TcLvKAxJmU1u/es7/oRIar6lXrL+hnEeY
+        m1FlJGFB2BAo8CpocVN25NmOhfoe
+X-Google-Smtp-Source: APXvYqwZaqP3BPfUD1WWLgwtYw1XJJ7Zy4zkrjF1M4qRiNjNshTKEWnoyc7zscsZ5R0wuEWiJvnvIw==
+X-Received: by 2002:aa7:d306:: with SMTP id p6mr26042390edq.72.1576411050586;
+        Sun, 15 Dec 2019 03:57:30 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id l18sm663825edw.59.2019.12.15.03.57.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Dec 2019 03:57:29 -0800 (PST)
+Date:   Sun, 15 Dec 2019 12:57:27 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl,
+        john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, kgene@kernel.org, mripard@kernel.org,
+        wens@csie.org, ssantosh@kernel.org, jun.nie@linaro.org,
+        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 02/10] soc: samsung: convert to
+ devm_platform_ioremap_resource
+Message-ID: <20191215115727.GB30973@kozik-lap>
+References: <20191214175447.25482-1-tiny.windzz@gmail.com>
+ <20191214175447.25482-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d2095e4a-261b-b561-2a2c-cf00fd416503@tycho.nsa.gov>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20191214175447.25482-2-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Dec 14, 2019 at 05:54:39PM +0000, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/soc/samsung/exynos-pmu.c | 4 +---
 
-On 12.12.2019 17:24, Stephen Smalley wrote:
-> On 12/11/19 3:36 PM, Andi Kleen wrote:
->>>> In this circumstances CAP_SYS_PERFMON looks like smart balanced advancement that
->>>> trade-offs between perf_events subsystem extensions, required level of control
->>>> and configurability of perf_events, existing users adoption effort, and it brings
->>>> security hardening benefits of decreasing attack surface for the existing users
->>>> and use cases.
->>>
->>> I'm not 100% opposed to CAP_SYS_PERFMON. I am 100% opposed to new capabilities
->>> that have a single use. Surely there are other CAP_SYS_ADMIN users that [cs]ould
->>> be converted to CAP_SYS_PERFMON as well. If there is a class of system performance
->>> privileged operations, say a dozen or so, you may have a viable argument.
->>
->> perf events is not a single use. It has a bazillion of sub functionalities,
->> including hardware tracing, software tracing, pmu counters, software counters,
->> uncore counters, break points and various other stuff in its PMU drivers.
->>
->> See it more as a whole quite heterogenous driver subsystem.
->>
->> I guess CAP_SYS_PERFMON is not a good name because perf is much more
->> than just Perfmon. Perhaps call it CAP_SYS_PERF_EVENTS
-> 
-> That seems misleading since it isn't being checked for all perf_events operations IIUC (CAP_SYS_ADMIN is still required for some?) and it is even more specialized than CAP_SYS_PERFMON, making it less likely that we could ever use this capability as a check for other kernel performance monitoring facilities beyond perf_events.
-> 
-> I'm not as opposed to fine-grained capabilities as Casey is but I do recognize that there are a limited number of available bits (although we do have a fair number of unused ones currently given the extension to 64-bits) and that it would be easy to consume them all if we allocated one for every kernel feature.  That said, this might be a sufficiently important use case to justify it.
-> 
-> Obviously I'd encourage you to consider leveraging SELinux as well but I understand that you are looking for a solution that doesn't depend on a distro using a particular LSM or a particular policy.  I will note that SELinux doesn't suffer from the limited bits problem because one can always define a new SELinux security class with its own access vector permissions bitmap, as has been done for the recently added LSM/SELinux perf_event hooks.
-> 
-> I don't know who actually gets to decide when/if a new capability is allocated.  Maybe Serge and/or James as capabilities and LSM maintainers.
-> 
-> I have no objections to these patches from a SELinux POV.
+Thanks, applied.
 
-Stephen, thanks for meaningful input!
+Best regards,
+Krzysztof
 
-~Alexey
