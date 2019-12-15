@@ -2,182 +2,344 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B55C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B1C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAC424679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50ED224671
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CzxlV34n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKV7iVkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfLORdJ (ORCPT
+        id S1726537AbfLORej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:33:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbfLORdJ (ORCPT
+        Sun, 15 Dec 2019 12:34:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35971 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfLORei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:33:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576431187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=J6eLuoIH1PYARRdiL90lhVsYJtyjHYLmUjrrQQDPe7E=;
-        b=CzxlV34np9k3UEhMnNHvlZ/abfc3QqqDSifgUvK84Mn9hB/RVtKSzsFYU5B1Eoa7ygsHXv
-        xIJUGztF5l0ZtXtd1D8clVzr3L2Px6oqzPqqcGEb7H8G1JDrAajvJIAI90QYlUH1VrF/zH
-        hEJNyt8Bf3dBnek98SZAtoO+Nk4Y5F8=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-UXQBTVKqM0O4UaBotsSrfQ-1; Sun, 15 Dec 2019 12:33:05 -0500
-X-MC-Unique: UXQBTVKqM0O4UaBotsSrfQ-1
-Received: by mail-qv1-f72.google.com with SMTP id ec1so3752597qvb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:33:05 -0800 (PST)
+        Sun, 15 Dec 2019 12:34:38 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x184so4323635pfb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:34:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6ujSsSDcBK3n4Bqga7fblzha00kGWmWX/mW5knjSwJI=;
+        b=fKV7iVkg13oi3VruUvio7vqK8Q2GWFGCtNPCZ0HOvf1in8V7rly04vSo4vslMzhp06
+         D2KT5fcASGtjlxvFvUuy+dPePqli/AWrf7usu7sXa5Hi2yZD6N3SfMAFgK1Q2btTli3u
+         seQC10OwxDddTwndiPRo0qfBsNqHSBhMeJ2twxVULPp3y+6Vv9fGsz5sghc9VhuymnN0
+         zyqkdkRg5YDRGs2DIBvCUIPs099QX0kWhU+EOE6jBNvieO4yX1rtGTiQoOhblZDKxaYW
+         SUtN0CeytIh2QeBni/yLEIairIY8jrRh9AgcK+oQJRkwePC6+yaJfbbm/LKdL9a9BZmN
+         CznQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6eLuoIH1PYARRdiL90lhVsYJtyjHYLmUjrrQQDPe7E=;
-        b=lungjJtzZQHNF3R1jxr4q2+LlMCcPBU5kg8gh6wCXGKD3YkUUOWIozblUjIe2dM59J
-         49GBbqUXN9pGdJ6xYMaoiWoWoAV9RV1ZVJIeH8aizzr4FxlEBD8qyfGwrXdJddes58PQ
-         HfA6iUdFmFQSRMXA+eRvX3w0O27hcoRgTLvHyk1Usy0zw/yEGyeKC53obhkAOc6hi69b
-         YQnrRosnHMYOXY84IRTgfkhQxLtHmj2ECnYq798U8c4gfJpcn+nSS1zzqAgNdAUJNR4L
-         3UgjUE+jp9f8b4PyQO/gMNf1Sojgj+YfTBXS4Pi6KBEoqu1P8/4OY8k3tZhF5rZjdWwg
-         /5xQ==
-X-Gm-Message-State: APjAAAWpZTT5z6uDy6yrCHgxiNYyn5KpajK1GJd4EktsWEdsk+6E03O2
-        UAuPB6G1RfAPh0nA/rN3i5RU7M7gl1TAnY0WVw05s1W7rlNW3NnIjQInjDDGP0JqI+dM05Cmyeu
-        YCcqt3ow3vJ1CU1PXabQ7wMD6
-X-Received: by 2002:a0c:c250:: with SMTP id w16mr22513196qvh.24.1576431184771;
-        Sun, 15 Dec 2019 09:33:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxo9sJEBR+EsX1bmgGKr8ThSL07V3VdYoGvHnp9UXySXWBJwJocU2y448wh+xjezZzZwrACMw==
-X-Received: by 2002:a0c:c250:: with SMTP id w16mr22513173qvh.24.1576431184495;
-        Sun, 15 Dec 2019 09:33:04 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c0:3f::2])
-        by smtp.gmail.com with ESMTPSA id p126sm5093766qke.108.2019.12.15.09.33.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 09:33:03 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:33:02 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191215173302.GB83861@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <20191211063830-mutt-send-email-mst@kernel.org>
- <20191211205952.GA5091@xz-x1>
- <20191211172713-mutt-send-email-mst@kernel.org>
- <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
+        bh=6ujSsSDcBK3n4Bqga7fblzha00kGWmWX/mW5knjSwJI=;
+        b=Ej7BDr1gf3zlzTap5TvwhquwXsR4hFwS4fgWCMAsYFFkqi3WWwt/FKvJQGKXM+p6Dm
+         +bM2NB388JJp4g70VogJTSSjbE/IJ0hXpy4Y1pnZeskUVywYXXAT0f8N/5EGkVjNIx4C
+         1XoqZRgy4SZyQTCAzDHmGz6OR6nEQc1GUr1/gFOHSoHDo/mF1fV/lcsNaathhbtw3eYc
+         Uw8dqg8gx0zgZ/tbuRD4TcysBjr3qD91qXr/6f7kGe+YYq+D8GLTZaz2olRsHhWFcP1i
+         8OPgdJSxL1wjYsUhwlFHefkaVNBTgdPM1vjW8bt4SEV90XIwoZC90AmfB6+qg4BGpxCZ
+         Vrwg==
+X-Gm-Message-State: APjAAAVIVzW6kRrOzgd+M9R3XO1k1KVP2oNpW/858MY8oemFF8Utb0bC
+        uO0OZYJDK4WAHU0dp4AA65Co
+X-Google-Smtp-Source: APXvYqwwXd8GtkKGFw4dphFWy1z9O5IvZPRJrfF08u65UmzJenhFAZT/srpftlljFJd8KFgNGCFA0Q==
+X-Received: by 2002:a63:7045:: with SMTP id a5mr13479457pgn.49.1576431277135;
+        Sun, 15 Dec 2019 09:34:37 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:78f:3e30:ad66:df45:6a09:a260])
+        by smtp.gmail.com with ESMTPSA id q21sm18928635pff.105.2019.12.15.09.34.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Dec 2019 09:34:35 -0800 (PST)
+Date:   Sun, 15 Dec 2019 23:04:27 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 1/5] media: i2c: imx290: Add support for 2 data lanes
+Message-ID: <20191215173427.GA11427@Mani-XPS-13-9360>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-2-manivannan.sadhasivam@linaro.org>
+ <20191203084520.GP833@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191203084520.GP833@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
-> >>> What depends on what here? Looks suspicious ...
-> >>
-> >> Hmm, I think maybe it can be removed because the entry pointer
-> >> reference below should be an ordering constraint already?
+Hi Sakari,
+
+On Tue, Dec 03, 2019 at 10:45:20AM +0200, Sakari Ailus wrote:
+> Hi Manivannan,
 > 
-> entry->xxx depends on ring->reset_index.
-
-Yes that's true, but...
-
-        entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
-        /* barrier? */
-        next_slot = READ_ONCE(entry->slot);
-        next_offset = READ_ONCE(entry->offset);
-
-... I think entry->xxx depends on entry first, then entry depends on
-reset_index.  So it seems fine because all things have a dependency?
-
+> Thanks for the patchset.
 > 
-> >>> what's the story around locking here? Why is it safe
-> >>> not to take the lock sometimes?
-> >>
-> >> kvm_dirty_ring_push() will be with lock==true only when the per-vm
-> >> ring is used.  For per-vcpu ring, because that will only happen with
-> >> the vcpu context, then we don't need locks (so kvm_dirty_ring_push()
-> >> is called with lock==false).
-> 
-> FWIW this will be done much more nicely in v2.
-> 
-> >>>> +	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> >>>> +	if (!page) {
-> >>>> +		r = -ENOMEM;
-> >>>> +		goto out_err_alloc_page;
-> >>>> +	}
-> >>>> +	kvm->vm_run = page_address(page);
-> >>>
-> >>> So 4K with just 8 bytes used. Not as bad as 1/2Mbyte for the ring but
-> >>> still. What is wrong with just a pointer and calling put_user?
-> >>
-> >> I want to make it the start point for sharing fields between
-> >> user/kernel per-vm.  Just like kvm_run for per-vcpu.
-> 
-> This page is actually not needed at all.  Userspace can just map at
-> KVM_DIRTY_LOG_PAGE_OFFSET, the indices reside there.  You can drop
-> kvm_vm_run completely.
-
-I changed it because otherwise we use one entry of the padding, and
-all the rest of paddings are a waste of memory because we can never
-really use the padding as new fields only for the 1st entry which
-overlaps with the indices.  IMHO that could even waste more than 4k.
-
-(for now we only "waste" 4K for per-vm, kvm_run is already mapped so
- no waste there, not to say potentially I still think we can use the
- kvm_vm_run in the future)
-
-> 
-> >>>> +	} else {
-> >>>> +		/*
-> >>>> +		 * Put onto per vm ring because no vcpu context.  Kick
-> >>>> +		 * vcpu0 if ring is full.
-> >>>
-> >>> What about tasks on vcpu 0? Do guests realize it's a bad idea to put
-> >>> critical tasks there, they will be penalized disproportionally?
-> >>
-> >> Reasonable question.  So far we can't avoid it because vcpu exit is
-> >> the event mechanism to say "hey please collect dirty bits".  Maybe
-> >> someway is better than this, but I'll need to rethink all these
-> >> over...
+> On Sat, Nov 30, 2019 at 12:35:37AM +0530, Manivannan Sadhasivam wrote:
+> > The IMX290 sensor can output frames with 2/4 CSI2 data lanes. This commit
+> > adds support for 2 lane mode in addition to the 4 lane and also
+> > configuring the data lane settings in the driver based on system
+> > configuration.
 > > 
-> > Maybe signal an eventfd, and let userspace worry about deciding what to
-> > do.
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/media/i2c/imx290.c | 130 ++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 121 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> > index f7678e5a5d87..1d49910937fb 100644
+> > --- a/drivers/media/i2c/imx290.c
+> > +++ b/drivers/media/i2c/imx290.c
+> > @@ -25,7 +25,18 @@
+> >  #define IMX290_STANDBY 0x3000
+> >  #define IMX290_REGHOLD 0x3001
+> >  #define IMX290_XMSTA 0x3002
+> > +#define IMX290_FR_FDG_SEL 0x3009
+> >  #define IMX290_GAIN 0x3014
+> > +#define IMX290_HMAX_LOW 0x301c
+> > +#define IMX290_HMAX_HIGH 0x301d
+> > +#define IMX290_PHY_LANE_NUM 0x3407
+> > +#define IMX290_CSI_LANE_MODE 0x3443
+> > +
+> > +/* HMAX fields */
+> > +#define IMX290_HMAX_2_1920 0x1130
+> > +#define IMX290_HMAX_4_1920 0x0898
+> > +#define IMX290_HMAX_2_720 0x19C8
+> > +#define IMX290_HMAX_4_720 0x0CE4
+> >  
+> >  #define IMX290_DEFAULT_LINK_FREQ 445500000
+> >  
+> > @@ -56,6 +67,7 @@ struct imx290 {
+> >  	struct device *dev;
+> >  	struct clk *xclk;
+> >  	struct regmap *regmap;
+> > +	int nlanes;
 > 
-> This has to be done synchronously.  But the vm ring should be used very
-> rarely (it's for things like kvmclock updates that write to guest memory
-> outside a vCPU), possibly a handful of times in the whole run of the VM.
-
-I've summarized a list of callers who might dirty guest memory in the
-other thread, it seems to me that even the kvm clock is using per-vcpu
-contexts.
-
+> You're using u8 for another small (unsigned) integer later. How about u8
+> here?
 > 
-> >>> KVM_DIRTY_RING_MAX_ENTRIES is not part of UAPI.
-> >>> So how does userspace know what's legal?
-> >>> Do you expect it to just try?
-> >>
-> >> Yep that's what I thought. :)
+
+Yeah, this is a left over. I was initially trying to use some error
+checking with this! Will change it to u8.
+
+> >  
+> >  	struct v4l2_subdev sd;
+> >  	struct v4l2_fwnode_endpoint ep;
+> > @@ -89,14 +101,11 @@ static const struct regmap_config imx290_regmap_config = {
+> >  
+> >  static const struct imx290_regval imx290_global_init_settings[] = {
+> >  	{ 0x3007, 0x00 },
+> > -	{ 0x3009, 0x00 },
+> >  	{ 0x3018, 0x65 },
+> >  	{ 0x3019, 0x04 },
+> >  	{ 0x301a, 0x00 },
+> > -	{ 0x3443, 0x03 },
+> >  	{ 0x3444, 0x20 },
+> >  	{ 0x3445, 0x25 },
+> > -	{ 0x3407, 0x03 },
+> >  	{ 0x303a, 0x0c },
+> >  	{ 0x3040, 0x00 },
+> >  	{ 0x3041, 0x00 },
+> > @@ -169,7 +178,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+> >  	{ 0x3164, 0x1a },
+> >  	{ 0x3480, 0x49 },
+> >  	/* data rate settings */
+> > -	{ 0x3009, 0x01 },
+> >  	{ 0x3405, 0x10 },
+> >  	{ 0x3446, 0x57 },
+> >  	{ 0x3447, 0x00 },
+> > @@ -187,8 +195,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+> >  	{ 0x3453, 0x00 },
+> >  	{ 0x3454, 0x17 },
+> >  	{ 0x3455, 0x00 },
+> > -	{ 0x301c, 0x98 },
+> > -	{ 0x301d, 0x08 },
+> >  };
+> >  
+> >  static const struct imx290_regval imx290_720p_settings[] = {
+> > @@ -210,7 +216,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+> >  	{ 0x3164, 0x1a },
+> >  	{ 0x3480, 0x49 },
+> >  	/* data rate settings */
+> > -	{ 0x3009, 0x01 },
+> >  	{ 0x3405, 0x10 },
+> >  	{ 0x3446, 0x4f },
+> >  	{ 0x3447, 0x00 },
+> > @@ -228,8 +233,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+> >  	{ 0x3453, 0x00 },
+> >  	{ 0x3454, 0x17 },
+> >  	{ 0x3455, 0x00 },
+> > -	{ 0x301c, 0xe4 },
+> > -	{ 0x301d, 0x0c },
+> >  };
+> >  
+> >  static const struct imx290_regval imx290_10bit_settings[] = {
+> > @@ -522,6 +525,25 @@ static int imx290_write_current_format(struct imx290 *imx290,
+> >  	return 0;
+> >  }
+> >  
+> > +static int imx290_set_hmax(struct imx290 *imx290, u32 val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = imx290_write_reg(imx290, IMX290_HMAX_LOW, (val & 0xff));
+> > +	if (ret) {
+> > +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = imx290_write_reg(imx290, IMX290_HMAX_HIGH, ((val >> 8) & 0xff));
+> > +	if (ret) {
+> > +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /* Start streaming */
+> >  static int imx290_start_streaming(struct imx290 *imx290)
+> >  {
+> > @@ -551,6 +573,40 @@ static int imx290_start_streaming(struct imx290 *imx290)
+> >  		return ret;
+> >  	}
+> >  
+> > +	switch (imx290->nlanes) {
+> > +	case 2:
+> > +		if (imx290->current_mode->width == 1920) {
+> > +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_1920);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +		} else {
+> > +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_720);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +		}
+> > +
+> > +		break;
+> > +	case 4:
+> > +		if (imx290->current_mode->width == 1920) {
+> > +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_1920);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +		} else {
+> > +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_720);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +		}
+> > +
+> > +		break;
+> > +	default:
+> > +		/*
+> > +		 * We should never hit this since the data lane count is
+> > +		 * validated in probe itself
+> > +		 */
+> > +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	/* Apply customized values from user */
+> >  	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
+> >  	if (ret) {
+> > @@ -607,6 +663,49 @@ static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
+> >  				       imx290->supplies);
+> >  }
+> >  
+> > +static int imx290_set_data_lanes(struct imx290 *imx290)
+> > +{
+> > +	int ret = 0, laneval, frsel;
+> > +
+> > +	switch (imx290->nlanes) {
+> > +	case 2:
+> > +		laneval = 0x01;
+> > +		frsel = 0x02;
+> > +		break;
+> > +	case 4:
+> > +		laneval = 0x03;
+> > +		frsel = 0x01;
+> > +		break;
+> > +	default:
+> > +		/*
+> > +		 * We should never hit this since the data lane count is
+> > +		 * validated in probe itself
+> > +		 */
+> > +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> > +		ret = -EINVAL;
+> > +		goto exit;
+> > +	}
+> > +
+> > +	ret = imx290_write_reg(imx290, IMX290_PHY_LANE_NUM, laneval);
+> > +	if (ret) {
+> > +		dev_err(imx290->dev, "Error setting Physical Lane number register\n");
+> > +		goto exit;
+> > +	}
+> > +
+> > +	ret = imx290_write_reg(imx290, IMX290_CSI_LANE_MODE, laneval);
+> > +	if (ret) {
+> > +		dev_err(imx290->dev, "Error setting CSI Lane mode register\n");
+> > +		goto exit;
+> > +	}
+> > +
+> > +	ret = imx290_write_reg(imx290, IMX290_FR_FDG_SEL, frsel);
+> > +	if (ret)
+> > +		dev_err(imx290->dev, "Error setting FR/FDG SEL register\n");
+> > +
+> > +exit:
+> > +	return ret;
+> > +}
+> > +
+> >  static int imx290_power_on(struct device *dev)
+> >  {
+> >  	struct i2c_client *client = to_i2c_client(dev);
+> > @@ -703,6 +802,16 @@ static int imx290_probe(struct i2c_client *client)
+> >  		goto free_err;
+> >  	}
+> >  
+> > +	/* Get number of data lanes */
+> > +	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
+> > +	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
+> > +		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
+> > +		ret = -EINVAL;
+> > +		goto free_err;
+> > +	}
+> > +
+> > +	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
+> > +
+> >  	if (!imx290->ep.nr_of_link_frequencies) {
+> >  		dev_err(dev, "link-frequency property not found in DT\n");
+> >  		ret = -EINVAL;
+> > @@ -822,6 +931,9 @@ static int imx290_probe(struct i2c_client *client)
+> >  		goto free_entity;
+> >  	}
+> >  
+> > +	/* Set data lane count */
+> > +	imx290_set_data_lanes(imx290);
 > 
-> We should return it for KVM_CHECK_EXTENSION.
+> The sensor is likely (but not necessarily) about to be powered off here.
+> Wouldn't this also belong to be put to the power on sequence?
+> 
 
-OK.  I'll drop the versioning.
+Agree, will add.
 
--- 
-Peter Xu
+Thanks,
+Mani
 
+> > +
+> >  	pm_runtime_set_active(dev);
+> >  	pm_runtime_enable(dev);
+> >  	pm_runtime_idle(dev);
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
