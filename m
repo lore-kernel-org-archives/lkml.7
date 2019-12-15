@@ -2,122 +2,78 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6225AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4ECC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3051D2467B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27A920726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EYxQ6HYb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8sFC6+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfLOXFV (ORCPT
+        id S1726540AbfLOXHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 18:05:21 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50453 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfLOXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 18:05:21 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bg3f0NzNz9sP6;
-        Mon, 16 Dec 2019 10:05:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576451118;
-        bh=784n75LssZqq0BD3ApIFwrO1v+2m+UVROA25VXJx33c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EYxQ6HYbpWD7HWKYQfMZ3cbBsxopENyiUXSGZhH4eWyT4jaYDxVi2HwL1nKIgAzFn
-         i8K5iYzU2u7Hyk3/Vb90ZAHGS3Kdy4o1Wze+gxS7khziWLZq5DFGLv1fCCQEdwg1Xc
-         YxuvN2SEulRjXslGODI6jhIU61qIfJtadJ/SnkyDUmBfJF2dCWwvFQOwPKsdZYAANH
-         MEdob+BuIZ/nE4Gol3flCXZZpTN2ErgKY0A5BfUElzOwVQ080SwgtQ5uhXT450koow
-         M3EMaw+eoZsrpYiyecWzYWQbzGRyV7DFRRgC1be+uDHhuu/382gNe+odviKnaDtc92
-         nzRhK3Gk/MYJA==
-Date:   Mon, 16 Dec 2019 10:05:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20191216100516.22d2d85f@canb.auug.org.au>
+        Sun, 15 Dec 2019 18:07:49 -0500
+Received: from mail-io1-f48.google.com ([209.85.166.48]:43885 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfLOXHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 18:07:49 -0500
+Received: by mail-io1-f48.google.com with SMTP id s2so4965632iog.10;
+        Sun, 15 Dec 2019 15:07:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=6kzFgmpoKa4eJKzshTXvk6xaL09WxEEorGAF72I+lSA=;
+        b=t8sFC6+hu4YVQkqiYXMPtKg/xQR1sNqq7uwI3MBtZtbn7CNJ2rVpGs3SSzmqa0HIw7
+         Ey0N1i/kxBuDMvQ3MozGQxt4Wvx3LpIcnYjUWsLA6XQc0Ch/byIPyIijupypR94VT/lH
+         H11gLe0YxVz23ecgIAR48+CJvTTf+MQrKxPzMFwWwDSSBWpoMg0bxGUYvnGUQ6Ysbayu
+         algqeP/5kEzAuFQIrOIOFxujuJJgcKQOz+ulXQyDD6UDdeQK9sWk1XYPRcHZ7Ts8WM3C
+         p8yHTZqgZEYIE62rJqWBd0iSVIBeOm201kjWvODr/WEgZq9BiW45VuH9XrJShB2A7OIF
+         dv4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=6kzFgmpoKa4eJKzshTXvk6xaL09WxEEorGAF72I+lSA=;
+        b=RF15eJoAEq7qLwihPInn+F4nNJbTW1C2QMQcQIrimwOAExaBAqEWe+d9+IMyqEPBoN
+         YRwrkctAXA9UEdFBY3YsrUIkStcxONCQtZdpO7+q/ncKL3n9rx8JATZ7slrHHV7/1i2C
+         zY2Yp1AHkNKhPAEMCvokQyHEiL1pJPKf+pob62M+5Zdno/OAebWq9td7iZkPMSpL6h2c
+         UBAbHE4wu2YVF5CjGTAd7/C8rFsM/oJbiSL3I6OHw0Dwcqu2er+bB+DeNwTYjgG9K9zC
+         axAKlGxSAs082bEajn0RtvUBF56ErzA0X8PCg6bPxK2UTo4IwUWyQ8hTlgqsmB6OHhzS
+         iQKg==
+X-Gm-Message-State: APjAAAUdZm7ZQOxYXPGIu7hpxxVv0gOoEgS/CSsPcjGAVEfW3n1dRZq+
+        z9Ofq2DRokeBVuK+Qfivp3Ln9DTRV1JqoOxycqCAjA==
+X-Google-Smtp-Source: APXvYqwIdQR9g6ipiw9JT7HYBN0+ANqAQU1uN3fqhDItUbq74QvaH6OSgNWa068/88Z6NU3Hpl1DUC+zldPaRFacXbk=
+X-Received: by 2002:a02:3b14:: with SMTP id c20mr9787617jaa.10.1576451268237;
+ Sun, 15 Dec 2019 15:07:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kO=0q4ENmladIFze3Wkvczy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: by 2002:ac0:aafc:0:0:0:0:0 with HTTP; Sun, 15 Dec 2019 15:07:47
+ -0800 (PST)
+From:   JH <jupiter.hce@gmail.com>
+Date:   Mon, 16 Dec 2019 10:07:47 +1100
+Message-ID: <CAA=hcWSbSWEqVYFBXga4SpLwohjUWv9=rKStj=4GfVCtJ_Eo4w@mail.gmail.com>
+Subject: Which LTS support Lily W1 WiFi module?
+To:     linux-wireless@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kO=0q4ENmladIFze3Wkvczy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+I am going to install Linux to an embedded device which has a uBlox
+Lily Wifi W1 module, I am using kernel module mwifiex_sdio, mwifiex
+and mrvl/sd8887 firmware, Appreciate tips if anyone is able to run
+Lily W1 in version 4.19, if not, is it supported by 5.4?
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Thank you.
 
-  drivers/net/ethernet/amazon/ena/ena_netdev.c
+Kind regards,
 
-between commit:
-
-  24dee0c7478d ("net: ena: fix napi handler misbehavior when the napi budge=
-t is zero")
-
-from the net tree and commit:
-
-  548c4940b9f1 ("net: ena: Implement XDP_TX action")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 948583fdcc28,26954fde4766..000000000000
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@@ -1237,9 -1861,8 +1861,8 @@@ static int ena_io_poll(struct napi_stru
-  {
-  	struct ena_napi *ena_napi =3D container_of(napi, struct ena_napi, napi);
-  	struct ena_ring *tx_ring, *rx_ring;
--=20
- -	u32 tx_work_done;
- -	u32 rx_work_done;
- +	int tx_work_done;
- +	int rx_work_done =3D 0;
-  	int tx_budget;
-  	int napi_comp_call =3D 0;
-  	int ret;
-
---Sig_/kO=0q4ENmladIFze3Wkvczy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32vCwACgkQAVBC80lX
-0GzjWgf/fhKAC7ROSD+Ay7jyW01YhtFCfStpWnu2JvaxGC32ZACZbK+DMxnhQuqR
-UnvHWnzfq8qnUHZp3Jw8DmseaXc/Z0RU3wK3VyojTL8exsnAjW8DNYQ6SkpM7wNW
-uFTD1qF1VSax5cuLhh4QX0876qwbECeA3gqiP8vM7t15jvbGtTmvGUeEa4S1DxsZ
-U2ZNoXrpdmEk9FZrmcTn1OmOIlgpn/pKfA6uwERgWHcOX9lOEI1k6mo5Xe+JXAQT
-vqq+1BIcgR2XBa6SRiwoDFEEPuQlJUtomQ11CpM4ShyZNN9nGACEW1sLJJBXFq4B
-1329RiHXQQwyxKo+ohPFahwtiffS/Q==
-=SXQM
------END PGP SIGNATURE-----
-
---Sig_/kO=0q4ENmladIFze3Wkvczy--
+- jh
