@@ -2,92 +2,132 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B82BC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F64C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FCD2053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AE824673
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfLOVo5 (ORCPT
+        id S1726485AbfLOVt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 16:44:57 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:44088 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfLOVo5 (ORCPT
+        Sun, 15 Dec 2019 16:49:29 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:41856 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfLOVt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 16:44:57 -0500
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 651E515103188;
-        Sun, 15 Dec 2019 13:44:55 -0800 (PST)
-Date:   Sun, 15 Dec 2019 13:44:52 -0800 (PST)
-Message-Id: <20191215.134452.1354053731963113491.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v3 06/15] net: macsec: add nla support for
- changing the offloading selection
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191213154844.635389-7-antoine.tenart@bootlin.com>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
-        <20191213154844.635389-7-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 15 Dec 2019 16:49:29 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ca19so2092854pjb.8;
+        Sun, 15 Dec 2019 13:49:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1Nok0OYxBUITJBFgjopuLvaYc0uEMTryXxMGYnCkmXI=;
+        b=Dj71gVmItrD6gT70ldyH6++3GmYjclHB/zxw02/WvCU5NNc7EHftpVITqi3wmARorw
+         R/1PliS4njMEJLzndeS9mGNog6EGDmYzP/F4Efo6M2vnzyvvJzuUt9Boba4E4wtcR69I
+         IOtGjlgYV6+fsh5aEwNU6Xqn9Xr80yLTeG3a35fh/IWX2NxbXmdlrlnQNwZXmwQxOBov
+         foagLnlcvQu2mqU9GM2cGGSwRBZC5SaV6CHMjtdFY3hLxgJnuoIol5F9dbXuwnGHoqMB
+         j/bnTAYWYRXC879GlXb4DnsGnhCnJDo7zAqu4RrtunHfyblhOoajnH14/8SnQ/cnT/A1
+         nPZw==
+X-Gm-Message-State: APjAAAXq/HcYw53/qGkpE8fL/GR8c8vDHChwPXTRFb/mL5Kp2i0YgXn2
+        AMlbWxk1iryBV1Ir/sH12NkxlPD6fGY=
+X-Google-Smtp-Source: APXvYqwmzt5YZdb9GscOzVHOdIgF4ILZNIjovGqd41GxGwrb7htBIXMD7H1mR5MLyHreg0nqFwh2Dw==
+X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr14182089pjb.56.1576446568112;
+        Sun, 15 Dec 2019 13:49:28 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:110a:d014:2a0a:ea98:f50e? ([2601:647:4000:110a:d014:2a0a:ea98:f50e])
+        by smtp.gmail.com with ESMTPSA id i4sm16614949pjd.19.2019.12.15.13.49.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2019 13:49:27 -0800 (PST)
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, cang@codeaurora.org
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
+ <20191212045357.GA415177@yoga>
+ <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
+ <20191212063703.GC415177@yoga>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
+Date:   Sun, 15 Dec 2019 13:49:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191212063703.GC415177@yoga>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 15 Dec 2019 13:44:56 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Fri, 13 Dec 2019 16:48:35 +0100
+On 2019-12-11 22:37, Bjorn Andersson wrote:
+> It's the asymmetry that I don't like.
+> 
+> Perhaps if you instead make ufshcd platform_device_register_data() the
+> bsg device you would solve the probe ordering, the remove will be
+> symmetric and module autoloading will work as well (although then you
+> need a MODULE_ALIAS of platform:device-name).
 
-> +static int macsec_upd_offload(struct sk_buff *skb, struct genl_info *info)
-> +{
+Hi Bjorn,
 
-This function is over the top and in fact confusing.
+From Documentation/driver-api/driver-model/platform.rst:
+"Platform devices are devices that typically appear as autonomous
+entities in the system. This includes legacy port-based devices and
+host bridges to peripheral buses, and most controllers integrated
+into system-on-chip platforms.  What they usually have in common
+is direct addressing from a CPU bus.  Rarely, a platform_device will
+be connected through a segment of some other kind of bus; but its
+registers will still be directly addressable."
 
-Really, if you want to make semantics sane, you have to require that no
-rules are installed when enabling offloading.  The required sequence of
-events if "enable offloading, add initial rules".
+Do you agree that the above description is not a good match for the
+ufs-bsg kernel module?
 
-> +	/* Check the physical interface isn't offloading another interface
-> +	 * first.
-> +	 */
-> +	for_each_net(loop_net) {
-> +		for_each_netdev(loop_net, loop_dev) {
-> +			struct macsec_dev *priv;
-> +
-> +			if (!netif_is_macsec(loop_dev))
-> +				continue;
-> +
-> +			priv = macsec_priv(loop_dev);
-> +
-> +			if (!macsec_check_offload(MACSEC_OFFLOAD_PHY, priv))
-> +				continue;
-> +
-> +			if (priv->offload != MACSEC_OFFLOAD_OFF)
-> +				return -EBUSY;
-> +		}
-> +	}
+Thanks,
 
-You are rejecting the enabling of offloading on one interface if any
-interface in the entire system is doing macsec offload?  That doesn't
-make any sense at all.
-
-Really, just require that a macsec interface is "clean" (no rules installed
-yet) in order to enable offloading.
-
-Then you don't have to check anything else at all.
+Bart.
