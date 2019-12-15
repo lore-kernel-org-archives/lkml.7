@@ -2,127 +2,88 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78645C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6462C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5091324679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DFE24682
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IQ2bT4OF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A+1AZUbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfLOUoc (ORCPT
+        id S1726504AbfLOUsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:44:32 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40201 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOUoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:44:32 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so6273647oto.7;
-        Sun, 15 Dec 2019 12:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zt9xL93I8MsKs6Socqd2NmMVjNPgCRRv4tjGDgdBCSw=;
-        b=IQ2bT4OFZQWWliGC6Q+V6Kf26jnuzpQACPXwyY6cwPMUJe0lD7BDA0rJLHRc9AXQ+7
-         nUEzp1ASKVPv7h6zeGDoll31LQwdkrQtAcIN2+6nx5WZny6yhUJOnqiwFNTkut6yFTA1
-         kMeckmsoC3tLNdBKledAnfZnx8cHXghd3aBmZLI7ZhyyT7sXyrt14wocHkFxe9A4kW/J
-         SThbE0Mx/WoCntEioF+6KZz/gHL1umZFXDjGJA0WjPEcfmhgXl2Jo3YntsteRQfjRX/4
-         ZPaNmW+HeQ2+x76oRGia3CS2jcc7ASMO27s5yHqdVri5kjws8+FioaxM5SYJmTl3k36V
-         MjAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zt9xL93I8MsKs6Socqd2NmMVjNPgCRRv4tjGDgdBCSw=;
-        b=YsOZ8p23FujVJpt6g83z7C+/UmbsFuZj4MjSEb5jmPLv67I0g5zjYH+xPvRe73Hq0a
-         Xz2VKS90KDsl0Sa2dI2BpHgTjEN9THK1f+A2dzOUOwFgKLt8mTQ7VkPECbl6jneGOyxD
-         drj9leeoFi68jb96Zlr1f5swARTu4dmpTSvP/tytgEHrH0BGLyYdcANujRda5bD/oCkW
-         xgHwYqLSa9JomxLbzNviN1CTbV4iMhlErCkPlpzXFfVVfoXdEAsxm4m7vIxn4KUO7aH3
-         WpYU/BSTOCscxppv1VEL8nLpjqL6Ll+jb2hqif37+fKyiBhbxMLwcdiWg2D37wBDWUT0
-         Ab1w==
-X-Gm-Message-State: APjAAAW2KGwmOhvKtzvONpv0fh/der++C5hn889UjuIcguyB9v5R523P
-        Z+Mcxbi7LGI065mvDmiYdn0xY8IhonhdqH2CsCU=
-X-Google-Smtp-Source: APXvYqzTskIRt2Xw6EqKZjSVIvxiX/lSFCf08HAZcNVOCGDv9OhkOltw6Or9ek9Mtm4/ItWI9/ZSUmrTMq6qqm+Z6UI=
-X-Received: by 2002:a9d:6a4c:: with SMTP id h12mr28669493otn.81.1576442671149;
- Sun, 15 Dec 2019 12:44:31 -0800 (PST)
+        Sun, 15 Dec 2019 15:48:46 -0500
+Received: from ozlabs.org ([203.11.71.1]:51645 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbfLOUsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 15:48:46 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bc233HQqz9sP3;
+        Mon, 16 Dec 2019 07:48:43 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576442923;
+        bh=zIIWc7HmThOLOR+cqusbgAbs44tHwrZUKgrea6L6OPk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=A+1AZUbZuqqzhYYuN1LH6fFajrnslMDvqhj7jhba1A089b8E5J3dPdHBdULioyEx5
+         nLnViccMuLIp0OZ42vccymgu8YiEsB18VDNsQYWOBg7w2llVenN62ZH0quQh2CaFcQ
+         XlYaH6SlSp9inm1wZt19e7xBunGseiOWobLHkZ2TEZIrriZuZKVTFvf7odxWhNkawT
+         Y+UOd144gcrfYakpI/zp6vMt96E1yxwD1ZJwcdXm0AHb/ypj6YEhuTnmgyI+IbWq8A
+         eE7F9d5IdY2KT30vdGStz79AUV+Kgy8QX+E9JJAkGOuNaiT5gTGDS51bAvnUH3E9F2
+         ynnrW0ajR1dZA==
+Date:   Mon, 16 Dec 2019 07:48:36 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the vhost tree
+Message-ID: <20191216074836.3b0bc0a7@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191208210320.15539-1-repk@triplefau.lt> <1jpngxew6l.fsf@starbuckisacylon.baylibre.com>
- <20191215113634.GB7304@voidbox>
-In-Reply-To: <20191215113634.GB7304@voidbox>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 15 Dec 2019 21:44:20 +0100
-Message-ID: <CAFBinCC+i5nFdyHGZkaV0gm3Qkn6OA8xR91iQJAK1SGUBRMJTw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] PCI: amlogic: Make PCIe working reliably on AXG platforms
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        jianxin.pan@amlogic.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/GwKOCVXK1PQG.pZTTBLt+4c";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Remi,
+--Sig_/GwKOCVXK1PQG.pZTTBLt+4c
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 15, 2019 at 12:28 PM Remi Pommarel <repk@triplefau.lt> wrote:
->
-> On Mon, Dec 09, 2019 at 09:32:18AM +0100, Jerome Brunet wrote:
-> >
-> > On Sun 08 Dec 2019 at 22:03, Remi Pommarel <repk@triplefau.lt> wrote:
-> >
-> > > PCIe device probing failures have been seen on some AXG platforms and were
-> > > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> > > solved the problem. After being contacted about this, vendor reported that
-> > > this bit was linked to PCIe PLL CML output.
-> >
-> > Thanks for reporting the problem.
-> >
-> > As Martin pointed out, the CML outputs already exist in the AXG clock
-> > controller but are handled using HHI_PCIE_PLL_CNTL6. Although
-> > incomplete, it seems to be aligned with the datasheet I have (v0.9)
-> >
-> > According to the same document, HHI_MIPI_CNTL0 belong to the MIPI Phy.
-> > Unfortunately bit 26 is not documented
-> >
-> > AFAICT, the clock controller is not appropriate driver to deal with this
-> > register/bit
-> >
->
-> Regarding both @Martin's and your remark.
->
-> Unfortunately the documentation I have and vendor feedback are a bit
-> vague to me. I do agree that CLKID_PCIE_PLL_CML_ENABLE is not a proper
-> name for this bit because this register is MIPI related.
->
-> Here is the information I got from the vendor [1]. As you can see
-> HHI_MIPI_CNTL0[29] and HHI_MIPI_CNTL0[26] are related together, and
-> HHI_MIPI_CNTL0[29] is implemented in the clock controller as
-> axg_mipi_enable which is why I used this driver for HHI_MIPI_CNTL0[26].
-I agree, the details you got so far are unfortunately pretty vague
-(with my knowledge at least)
-from my experience Amlogic has very good documentation internally, so
-I'm sure that more details are available.
+Hi all,
 
-Yue Wang (the Amlogic PCIe controller maintainer) is already Cc'ed and
-I added Jianxin. I hope that they can explain the meaning of bis 26
-and 29 in HHI_MIPI_CNTL0 on the AXG SoCs (assuming Remi's contact at
-Amlogic can't) and how they are related to the PCIe controller (even
-though they're in a MIPI related register).
+Commit
 
+  6bd262d5eafc ("Revert "vhost/net: add an option to test new code"")
 
-Martin
+is missing a Signed-off-by from its author and committer.
+
+Reverts are commits as well (and should have reasonable commit messages).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GwKOCVXK1PQG.pZTTBLt+4c
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32nCQACgkQAVBC80lX
+0Gz55AgAnuO3Qj5L2bm2Xe/j6HjtmYZtslZWRmO1tMLMOTGiPxZdtv1tQiI3xdNM
+5tysstmsW1fUVYmT/kIjLHVEJFkuXbPBYX5EJu5n9PIiNmxUhkbNiNobYp2sfRNM
+5uAfMhwSB1Vq0+ROBZ/+l4wni01eywvJ5LAv7XFoRKCFeGaSO6wlssWigWe2nj9B
+ooaPLg1QLG0hOUvqWjQSlUfdPbxAxrhmVKOpEyiSABc8YjLEugA5zzPFootSRp5M
+HlFJvUtayz9ok7W6KmzH7ntUnEzlgbH5Eupz1BkLOOnt4rikRoRU2wLREVyik0P6
+/v1veNc29o3LkoNGINxn7iWwFU+sPA==
+=T3+z
+-----END PGP SIGNATURE-----
+
+--Sig_/GwKOCVXK1PQG.pZTTBLt+4c--
