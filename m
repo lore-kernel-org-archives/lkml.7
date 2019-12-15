@@ -2,149 +2,116 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A3C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25D2C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF99320726
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C34B20726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQnKpsiN"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="geLxmcZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfLOQlP (ORCPT
+        id S1726260AbfLOQq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:41:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39800 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726136AbfLOQlO (ORCPT
+        Sun, 15 Dec 2019 11:46:26 -0500
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:55074 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfLOQq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:41:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576428073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pZXNOLSmIO4QRRkxs/U8mDeREkMLpc0KHW6n8y5dmes=;
-        b=iQnKpsiNwCVyxdauVzUGl25a9dq7P4hOpGJvW4/zaYQNiKaEODdjFcRbvGSObKjeuTAR2R
-        R1PvBkCCBgnckfQr3YyNTycqvxcLNgRz9O4gsmJkH8qOvcslE3M+vPOtbtq03GJUgyY7TB
-        HDfBJuBAH26rUUuLrrWOEzL6Qd8fyDY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-hzEcZ-MNO0qIj_904EWVPg-1; Sun, 15 Dec 2019 11:41:09 -0500
-X-MC-Unique: hzEcZ-MNO0qIj_904EWVPg-1
-Received: by mail-wr1-f70.google.com with SMTP id f10so2415000wro.14
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 08:41:09 -0800 (PST)
+        Sun, 15 Dec 2019 11:46:26 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47bVfT5cKxz9vKZD
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 16:46:25 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3XO2GuLoB92c for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 10:46:25 -0600 (CST)
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47bVfT4TFxz9vKZ4
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 10:46:25 -0600 (CST)
+Received: by mail-yb1-f197.google.com with SMTP id x186so4648642yba.6
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 08:46:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qe+Uav0n6Sb4lk25AgUnese0gA+AsOsF8bWtX8C1yxg=;
+        b=geLxmcZCOawsEqsPRQUBN+/+zKoVbXdbZUPrh4w0BeJxhJLLy4PkzAZgGBIxCmGrhI
+         BC5kuVlKVF6URRzJ3kvupYBS7s+u6TShLmsEd7NObNdnM1/aDvX6YlORBzvP+pE0C3Kz
+         OJVgjLIhA/BxACFlDbIAagX68/bLyW69AqNwrFjMGJJFC1XcLSMB4khfN4Y656nGVGTK
+         dmaXkSzj5uyj2pGDfw/9nxMA8g4J4/O0AVxfUcARKwfGdObnLbA4/jcTKkr5edBj+kSM
+         lt/iYPNozm1BziQe3yK17ASpFOCRgocFxOk0y2jpGNV8eBIM2JHTZ+70mBRal9lmyX7P
+         7s2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pZXNOLSmIO4QRRkxs/U8mDeREkMLpc0KHW6n8y5dmes=;
-        b=cabKi4J4Z6pbdu/wIWGj4ind1chK3gigq7Zf1+hh48YZrqLsSD4YonltM17H8ErF4x
-         xKcJop+JnmG5GUaO8KpLw5hVLMtLqPbzUsgWcZn2mqbTIZTWwOHU5HsuoOEFw3i5aoTx
-         LcekRJLMbwDBkRh3JZf8M+GODoMZQ8ZOUR8oCDoKetF4A5oFRiu8iwJQxmC5yfVKI02Y
-         rMLWbSh9C6LEyKAoOfUsl4+MYlURrUi7ThUvK8AKGUte0f1ljbtqaWzk0pdk2JHn9yAW
-         8DYAbDg4E1wqGllDqbleP2vr5X8zcFWvdtdT6EoUBufzByc1JXi9PmQ3juToOGCnE2i7
-         X2Jg==
-X-Gm-Message-State: APjAAAVzWNpBiWr0J/YAV6s6chnroLSWpCeJmJ8nxeNj05s5S9SeMWEb
-        A4EVvQcuWZjxKaYOoUgs4QgcNK7WrJGXN50ezUVrPio7AblEAghNlX8vC1BkTcFrgoVE2Dq0755
-        aPpBh2zckVdZoIcHBqf5walSF
-X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr26179936wru.150.1576428068031;
-        Sun, 15 Dec 2019 08:41:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZpHMRDXlQMMSABQl81Zs6vH911Sv5c05gA8+uaC03Yib3ITofNGLMXO4++fjZuO82cMlHjA==
-X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr26179919wru.150.1576428067834;
-        Sun, 15 Dec 2019 08:41:07 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id x10sm18280784wrv.60.2019.12.15.08.41.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Dec 2019 08:41:07 -0800 (PST)
-Subject: Re: [PATCH] usb: dwc3: use proper initializers for property entries
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191213174623.GA20267@dtor-ws>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2a8a5e6b-9372-978e-03d0-350ab65a2d0a@redhat.com>
-Date:   Sun, 15 Dec 2019 17:41:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        bh=qe+Uav0n6Sb4lk25AgUnese0gA+AsOsF8bWtX8C1yxg=;
+        b=b7FDehXmLT7Alnr+vMFzGnERx4GU4iMZgqn0e9ZjouxZoBQACLiqZTbcOrNzNZXvST
+         OVvK8YPOcUku3oAqFGH8rJ4ODKO7DgFD5JDphLl8ibYCGJYRkNbqXMT6RW0Kq2qZ3wVu
+         LAyHtaIqHkmVBCj2Pe6aJ18T/qj45soz3Z8LI74dI76nGUYyvGLCoZnlOfVBLT7mIGI3
+         xSzvXb2AUqJGHjGo3DlOQFtJqMtijXDL1rEw0IMm1q+OxTsJNecCAsCn3Y8rKbABh3um
+         6dUkLGITUnQT+cnGfFCU6cM082Lyl/56QyN1JaSq6QOQvtSrbwKWrrjQQ7curb/ROD4l
+         w50Q==
+X-Gm-Message-State: APjAAAVADvZJYW/aM58YCjgKjnWSyDroH1GszGmDExscJ31M3Fl5YdoK
+        MPXxlw+dtHdl/4etF2i1sgh8j584w/FbUJS4XMEzpYMD9NXr/LpzXc5q4XgKVR9/uDFoG51UcQJ
+        PaK4NP+FTXZQ6lC1lP8Y+YI1nY5CQ
+X-Received: by 2002:a81:3a0b:: with SMTP id h11mr16718848ywa.217.1576428385132;
+        Sun, 15 Dec 2019 08:46:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz0he0c+V89zl40cSAULuSQ6fzVPtpuzFAtxEGcaiXM5OmacimtBQk2SMZ+2yDZrAXlQvxdkg==
+X-Received: by 2002:a81:3a0b:: with SMTP id h11mr16718840ywa.217.1576428384872;
+        Sun, 15 Dec 2019 08:46:24 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id i81sm6961408ywa.103.2019.12.15.08.46.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 08:46:24 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] gfs2: remove assertion when journal_info is not empty
+Date:   Sun, 15 Dec 2019 10:46:21 -0600
+Message-Id: <20191215164621.25828-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191213174623.GA20267@dtor-ws>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In gfs2_trans_begin, avoid crashing when current->journal_info
+is not empty. The patch fixes  the error by returning -EINVAL
+instead of crashing.
 
-On 13-12-2019 18:46, Dmitry Torokhov wrote:
-> We should not be reaching into property entries and initialize them by
-> hand, but rather use proper initializer macros. This way we can alter
-> internal representation of property entries with no visible changes to
-> their users.
-> 
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> 
-> It would be good if this could go through Rafael's tree as it is needed
-> for the rest of my software_node/property_entry rework patch series
-> which I would love not to delay till 5.6.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ fs/gfs2/trans.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Patch looks good to me:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Thanks!
-> 
->   drivers/usb/dwc3/host.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-> index 5567ed2cddbec..fa252870c926f 100644
-> --- a/drivers/usb/dwc3/host.c
-> +++ b/drivers/usb/dwc3/host.c
-> @@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
->   	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
->   
->   	if (dwc->usb3_lpm_capable)
-> -		props[prop_idx++].name = "usb3-lpm-capable";
-> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
->   
->   	if (dwc->usb2_lpm_disable)
-> -		props[prop_idx++].name = "usb2-lpm-disable";
-> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
->   
->   	/**
->   	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
-> @@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
->   	 * This following flag tells XHCI to do just that.
->   	 */
->   	if (dwc->revision <= DWC3_REVISION_300A)
-> -		props[prop_idx++].name = "quirk-broken-port-ped";
-> +		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
->   
->   	if (prop_idx) {
->   		ret = platform_device_add_properties(xhci, props);
-> 
+diff --git a/fs/gfs2/trans.c b/fs/gfs2/trans.c
+index 9d4227330de4..cef8816ae0b4 100644
+--- a/fs/gfs2/trans.c
++++ b/fs/gfs2/trans.c
+@@ -31,7 +31,9 @@ int gfs2_trans_begin(struct gfs2_sbd *sdp, unsigned int blocks,
+ 	struct gfs2_trans *tr;
+ 	int error;
+ 
+-	BUG_ON(current->journal_info);
++	if (current->journal_info)
++		return -EINVAL;
++
+ 	BUG_ON(blocks == 0 && revokes == 0);
+ 
+ 	if (!test_bit(SDF_JOURNAL_LIVE, &sdp->sd_flags))
+-- 
+2.20.1
 
