@@ -2,239 +2,152 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B348C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D0FC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452E02467A
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61ACE20726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 22:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y2GvNnd7"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JPa0Dnjm";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fwDSd7T3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLOWDv (ORCPT
+        id S1726504AbfLOWI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 17:03:51 -0500
-Received: from ozlabs.org ([203.11.71.1]:60089 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfLOWDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 17:03:51 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bdhf6PTbz9sPW;
-        Mon, 16 Dec 2019 09:03:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576447427;
-        bh=LKOQjoyP/DytLKa5tScoJIiXOC4BgSHniwnQS2sOOw4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y2GvNnd74mbrIdjVwvleyccdLLN72P7Ul47lLnlWHCJgp0YJwHWMoKbQgtWqkR4AL
-         g+gXQbhzXqipsXkySi6M9zZ17pFtCZyQ/ps6tD36zFFJ7PUuEzWRP7IQLRjWO1KIFc
-         AdMbLs5qdxwS7BVCvHTIns3rx0Ipxal2yAeOJpAelz3MvMSlNpIrE4f+B+NMkjx+Os
-         /fEXrbe11Lmbo6BQZMz32+pWEfQGwbx+W3TpBxdQhWSZ3m7CQHxcuH1tCO5R3fb3Sj
-         t/lc598AhhrMufR8jf8NCqTz8uqfA43CNUWURii2UFV+bQApiIpP9iaGFvwdEefn9x
-         QDP+8e5cV7H0w==
-Date:   Mon, 16 Dec 2019 09:03:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>
-Subject: linux-next: build failure after merge of the mediatek tree
-Message-ID: <20191216090337.4b4cfb42@canb.auug.org.au>
+        Sun, 15 Dec 2019 17:08:29 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:30138 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726260AbfLOWI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 17:08:28 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id xBFM3S5U000342;
+        Sun, 15 Dec 2019 14:08:12 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=6DPaZGt8Vdi5NQcN0iSeVFiMfCYG49ufF53XZVbyyoE=;
+ b=JPa0DnjmAz6xRizKC37mB1sVXQxiZlUPaPVqvuv49jIbZ+mNsvFhcCNsklCue2Sr3H8e
+ RtjDeYUeTo+dqq9eOrruCErUycViOMYB4iq2gzpVuv90i+k3cEYvpqBFZpABTFYAJm4v
+ qcy9Cg8tlqGrDKG/0646FxO26hvyNE5iuzc= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2wvv9wvhgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 15 Dec 2019 14:08:12 -0800
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Sun, 15 Dec 2019 14:08:10 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Sun, 15 Dec 2019 14:08:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G/hYGCs6d8Tp56cv6Q5xSuTxfPQGFKqq8NjRyIexzJes1iGUPb2YWmBL38lVscW2jueR6dUTxMHQoDnU2pLzGh4dfUDGAWpuiYUIT7a/qb29Sx4ciQOHvmoCFZ8Epr4sQgljSakleLpACu1aMriXKxPV1IqDC8E1Tea9AAFS8PiRqXfBK1+qgvL3jcRx7AT7+7ni6bZL2rUXph+TVt5ZCpwxrslKCpYN61+25NZXuF0DcL0e3P6/imohhw3ype51fakz6Fbmr71MR5BbLk5sNP8XwO60jkDLgL3TJiaYgFN89L1s0ZbslvbU59X7L/irwUlrMPpcs4/BMlsGFRFANQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6DPaZGt8Vdi5NQcN0iSeVFiMfCYG49ufF53XZVbyyoE=;
+ b=C/cVQZqoiSsyRSbc6UJgR6e2iSboNTXX/U82MH+/yLtZ2UXScZKrLajiLn7erW8LdjEZTOy1ja/3H2GEsK/KaihUzAK6+b7957+mrltjtV/cPYo7sOZfWH2G1s9D6Fjn233yT+HSRmXFiVrCw296MBL7c2wyC306xz9obqyezVNW/c0Y8ydg861hTycgfFpz64C9s951RFhbgXUfWB0/GqFJK/P6d9fSprHmt8+mn8QYDL+9kzSKNnH9uAeTI59cmRwpbYBkmpL072zL5f4ae7qbZGAYwOzh/Vidoi/iE5D/Y4K5qBKsFkL0DpZn3Ed9xQC31b4zIoABgGtE8JRjKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6DPaZGt8Vdi5NQcN0iSeVFiMfCYG49ufF53XZVbyyoE=;
+ b=fwDSd7T3sn8A0i+NcJ7WvLH9ntfwQ+afmmwADk3ZyXz9y3ZCUqJ2CrwLvITwrZg8OseZG+OACQiw+VTku/V+MCWjEzX2MdvvwTNYuRrsSArEIzkwkCysHl85exx7slFdglpXK7yk7lk4MlNT2fb4008RZDR0EV/gSrm+UEY8V2s=
+Received: from DM5PR15MB1675.namprd15.prod.outlook.com (10.175.107.145) by
+ DM5PR15MB1659.namprd15.prod.outlook.com (10.175.110.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.14; Sun, 15 Dec 2019 22:08:09 +0000
+Received: from DM5PR15MB1675.namprd15.prod.outlook.com
+ ([fe80::2844:b18d:c296:c23]) by DM5PR15MB1675.namprd15.prod.outlook.com
+ ([fe80::2844:b18d:c296:c23%8]) with mapi id 15.20.2538.019; Sun, 15 Dec 2019
+ 22:08:09 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Aditya Pakki <pakki001@umn.edu>
+CC:     "kjlu@umn.edu" <kjlu@umn.edu>, Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: Replace BUG_ON when fp_old is NULL
+Thread-Topic: [PATCH] bpf: Replace BUG_ON when fp_old is NULL
+Thread-Index: AQHVs16TPZ+OnI1FI0KP8/3dYOxfaqe7wWcA
+Date:   Sun, 15 Dec 2019 22:08:08 +0000
+Message-ID: <98c13b9c-a73a-6203-4ea1-6b1180d87d97@fb.com>
+References: <20191215154432.22399-1-pakki001@umn.edu>
+In-Reply-To: <20191215154432.22399-1-pakki001@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR02CA0014.namprd02.prod.outlook.com
+ (2603:10b6:300:4b::24) To DM5PR15MB1675.namprd15.prod.outlook.com
+ (2603:10b6:3:11f::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::fcac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2b301c33-b7b4-48d6-2c15-08d781ab44ae
+x-ms-traffictypediagnostic: DM5PR15MB1659:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR15MB16599CBEA050E3C708E4E852D3560@DM5PR15MB1659.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 02524402D6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(366004)(39860400002)(376002)(199004)(189003)(2616005)(6512007)(66946007)(66476007)(53546011)(66556008)(2906002)(64756008)(66446008)(54906003)(4744005)(6486002)(4326008)(186003)(71200400001)(52116002)(6506007)(8936002)(5660300002)(6916009)(81156014)(81166006)(86362001)(478600001)(31696002)(31686004)(8676002)(36756003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1659;H:DM5PR15MB1675.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0qm7lvJI12UK7Zq0gkWdekZsGdsSb8Fs/ywFjV3tgsP+CxEFuwaBR7HAgpdqYglXj6m1Y3HPFyykT25vPISj3qJscsc3EXxVW1z+bSBjPGnXGru+aE7CvbN3mhr3yXcw7J+DOmYf/bTRqhRfnf20/LN3w7ycvpYdpR2BGloDYkA3d+m+Z4VIlZAc/pbmlz/3DAzd2UXOo3YL78cmvsopDqwGNaEtkQ42yPePeGHnlduUdlUkCdCqw3DRVK+M0KRjPOnRp2dti1gyBxdCGPAumoTd1qhrqKsNlhlBmNJ+mO+EoyCA9si3SZY0nRBvfLywYqH0S5HrHQvSxH4EGsRRCv5TUNResAmIiHIO7cGR7C1L68LglT07Xxrzp+tcBPy7P/jhI4XabLphzkqKj+J7G1JYkc89/nqUiX70E3Mq8GVobKAHmOprc4ny/7bFKDcm
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <51F8FA48EBAEDD41953C1930BF1D1617@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2rdamvqKBDcBqSxPN4w/jiD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b301c33-b7b4-48d6-2c15-08d781ab44ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2019 22:08:09.0599
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a+a+d0+tjeBFpXf4gUz5kadOdaQYdhXm0m5Ewc8byq1bFiIJ0i8B59hYW+4VcDLF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1659
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-15_06:2019-12-13,2019-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=750
+ suspectscore=0 spamscore=0 mlxscore=0 clxscore=1011 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912150206
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2rdamvqKBDcBqSxPN4w/jiD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the mediatek tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
-
-drivers/soc/mediatek/mtk-scpsys.c:773:4: error: 'const struct scp_domain_da=
-ta' has no member named 'subsys_clk_prefix'
-  773 |   .subsys_clk_prefix =3D "isp",
-      |    ^~~~~~~~~~~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:773:24: warning: initialization of 'unsig=
-ned int' from 'char *' makes integer from pointer without a cast [-Wint-con=
-version]
-  773 |   .subsys_clk_prefix =3D "isp",
-      |                        ^~~~~
-drivers/soc/mediatek/mtk-scpsys.c:773:24: note: (near initialization for 's=
-cp_domain_data_mt6765[3].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:774:4: error: 'const struct scp_domain_da=
-ta' has no member named 'bp_table'
-  774 |   .bp_table =3D {
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:775:4: error: implicit declaration of fun=
-ction 'BUS_PROT' [-Werror=3Dimplicit-function-declaration]
-  775 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:775:13: error: 'IFR_TYPE' undeclared here=
- (not in a function)
-  775 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
-      |             ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:777:13: error: 'SMI_TYPE' undeclared here=
- (not in a function)
-  777 |    BUS_PROT(SMI_TYPE, 0x3C4, 0x3C8, 0, 0x3C0,
-      |             ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:787:4: error: 'const struct scp_domain_da=
-ta' has no member named 'basic_clk_id'
-  787 |   .basic_clk_id =3D {"mm"},
-      |    ^~~~~~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:787:3: warning: braces around scalar init=
-ializer
-  787 |   .basic_clk_id =3D {"mm"},
-      |   ^
-drivers/soc/mediatek/mtk-scpsys.c:787:3: note: (near initialization for 'sc=
-p_domain_data_mt6765[1].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:787:20: warning: initialization of 'u32' =
-{aka 'unsigned int'} from 'char *' makes integer from pointer without a cas=
-t [-Wint-conversion]
-  787 |   .basic_clk_id =3D {"mm"},
-      |                    ^~~~
-drivers/soc/mediatek/mtk-scpsys.c:787:20: note: (near initialization for 's=
-cp_domain_data_mt6765[1].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:788:4: error: 'const struct scp_domain_da=
-ta' has no member named 'subsys_clk_prefix'
-  788 |   .subsys_clk_prefix =3D "mm",
-      |    ^~~~~~~~~~~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:788:24: error: cannot initialize array of=
- 'enum clk_id' from a string literal with type array of 'char'
-  788 |   .subsys_clk_prefix =3D "mm",
-      |                        ^~~~
-drivers/soc/mediatek/mtk-scpsys.c:788:24: note: (near initialization for 's=
-cp_domain_data_mt6765[1].clk_id')
-drivers/soc/mediatek/mtk-scpsys.c:789:4: error: 'const struct scp_domain_da=
-ta' has no member named 'bp_table'
-  789 |   .bp_table =3D {
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:789:3: warning: braces around scalar init=
-ializer
-  789 |   .bp_table =3D {
-      |   ^
-drivers/soc/mediatek/mtk-scpsys.c:789:3: note: (near initialization for 'sc=
-p_domain_data_mt6765[1].caps')
-drivers/soc/mediatek/mtk-scpsys.c:792:4: warning: excess elements in scalar=
- initializer
-  792 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:792:4: note: (near initialization for 'sc=
-p_domain_data_mt6765[1].caps')
-drivers/soc/mediatek/mtk-scpsys.c:794:4: warning: excess elements in scalar=
- initializer
-  794 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:794:4: note: (near initialization for 'sc=
-p_domain_data_mt6765[1].caps')
-drivers/soc/mediatek/mtk-scpsys.c:804:4: error: 'const struct scp_domain_da=
-ta' has no member named 'bp_table'
-  804 |   .bp_table =3D {
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:804:3: warning: braces around scalar init=
-ializer
-  804 |   .bp_table =3D {
-      |   ^
-drivers/soc/mediatek/mtk-scpsys.c:804:3: note: (near initialization for 'sc=
-p_domain_data_mt6765[0].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:807:4: warning: excess elements in scalar=
- initializer
-  807 |    BUS_PROT(IFR_TYPE, 0x2A8, 0x2AC, 0, 0x258,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:807:4: note: (near initialization for 'sc=
-p_domain_data_mt6765[0].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:809:4: warning: excess elements in scalar=
- initializer
-  809 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:809:4: note: (near initialization for 'sc=
-p_domain_data_mt6765[0].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:819:4: error: 'const struct scp_domain_da=
-ta' has no member named 'basic_clk_id'
-  819 |   .basic_clk_id =3D {"mfg"},
-      |    ^~~~~~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:819:3: warning: braces around scalar init=
-ializer
-  819 |   .basic_clk_id =3D {"mfg"},
-      |   ^
-drivers/soc/mediatek/mtk-scpsys.c:819:3: note: (near initialization for 'sc=
-p_domain_data_mt6765[2].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:819:20: warning: initialization of 'u32' =
-{aka 'unsigned int'} from 'char *' makes integer from pointer without a cas=
-t [-Wint-conversion]
-  819 |   .basic_clk_id =3D {"mfg"},
-      |                    ^~~~~
-drivers/soc/mediatek/mtk-scpsys.c:819:20: note: (near initialization for 's=
-cp_domain_data_mt6765[2].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:827:4: error: 'const struct scp_domain_da=
-ta' has no member named 'bp_table'
-  827 |   .bp_table =3D {
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:827:3: warning: braces around scalar init=
-ializer
-  827 |   .bp_table =3D {
-      |   ^
-drivers/soc/mediatek/mtk-scpsys.c:827:3: note: (near initialization for 'sc=
-p_domain_data_mt6765[4].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:830:4: warning: excess elements in scalar=
- initializer
-  830 |    BUS_PROT(IFR_TYPE, 0x2A0, 0x2A4, 0, 0x228,
-      |    ^~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:830:4: note: (near initialization for 'sc=
-p_domain_data_mt6765[4].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:840:4: error: 'const struct scp_domain_da=
-ta' has no member named 'subsys_clk_prefix'
-  840 |   .subsys_clk_prefix =3D "cam",
-      |    ^~~~~~~~~~~~~~~~~
-drivers/soc/mediatek/mtk-scpsys.c:840:24: warning: initialization of 'unsig=
-ned int' from 'char *' makes integer from pointer without a cast [-Wint-con=
-version]
-  840 |   .subsys_clk_prefix =3D "cam",
-      |                        ^~~~~
-drivers/soc/mediatek/mtk-scpsys.c:840:24: note: (near initialization for 's=
-cp_domain_data_mt6765[6].bus_prot_mask')
-drivers/soc/mediatek/mtk-scpsys.c:841:4: error: 'const struct scp_domain_da=
-ta' has no member named 'bp_table'
-  841 |   .bp_table =3D {
-      |    ^~~~~~~~
-
-Caused by commit
-
-  3742fd77013f ("soc: mediatek: add MT6765 scpsys and subdomain support")
-
-I have used the mediatek tree from next-20191213 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2rdamvqKBDcBqSxPN4w/jiD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32rbkACgkQAVBC80lX
-0GyYJggAobtbP+e+RQMr+snhsxsaJfFeBH/qaT/4329nxAD7LvUVDxSfx7EshPnj
-1Jqu7RZDLD5s/q/zuO5UDGzjAkl12W2LUVLuC8rJwxSudzMFsJqH1iKanlAdJ1QW
-gxnuYcCrF+rna2jnFwQykrHqf8KddKr73+nzXpiZ4qgk0vlnfs2Oh5L6PGUvuBSM
-IstKR5284NKoqQkr80JvGjYPLQKfkraldwDgXChWkM9qsO+tV1BXS3aChOk5X5RW
-DDv+3Tu7bwNWBbYxOaoIGg8KFWr13oYUHYW9hlZ6dyoO+XIPTVkirWyYYHDf0Tui
-lFa19+h7Wo+toATEAaot+fL4wYBl9g==
-=ODgc
------END PGP SIGNATURE-----
-
---Sig_/2rdamvqKBDcBqSxPN4w/jiD--
+DQoNCk9uIDEyLzE1LzE5IDc6NDQgQU0sIEFkaXR5YSBQYWtraSB3cm90ZToNCj4gSWYgZnBfb2xk
+IGlzIE5VTEwgaW4gYnBmX3Byb2dfcmVhbGxvYywgdGhlIHByb2dyYW0gZG9lcyBhbiBhc3NlcnRp
+b24NCj4gYW5kIGNyYXNoZXMuIEhvd2V2ZXIsIHdlIGNhbiBjb250aW51ZSBleGVjdXRpb24gYnkg
+cmV0dXJuaW5nIE5VTEwgdG8NCj4gdGhlIHVwcGVyIGNhbGxlcnMuIFRoZSBwYXRjaCBmaXhlcyB0
+aGlzIGlzc3VlLg0KDQpDb3VsZCB5b3Ugc2hhcmUgaG93IHRvIHJlcHJvZHVjZSB0aGUgYXNzZXJ0
+aW9uIGFuZCBjcmFzaD8gSSB3b3VsZA0KbGlrZSB0byB1bmRlcnN0YW5kIHRoZSBwcm9ibGVtIGZp
+cnN0IGJlZm9yZSBtYWtpbmcgY2hhbmdlcyBpbiB0aGUgY29kZS4NClRoYW5rcyENCg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogQWRpdHlhIFBha2tpIDxwYWtraTAwMUB1bW4uZWR1Pg0KPiAtLS0NCj4g
+ICBrZXJuZWwvYnBmL2NvcmUuYyB8IDMgKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9icGYvY29y
+ZS5jIGIva2VybmVsL2JwZi9jb3JlLmMNCj4gaW5kZXggNDllMzJhY2FkN2Q4Li40YjQ2NjU0ZmIy
+NmIgMTAwNjQ0DQo+IC0tLSBhL2tlcm5lbC9icGYvY29yZS5jDQo+ICsrKyBiL2tlcm5lbC9icGYv
+Y29yZS5jDQo+IEBAIC0yMjIsNyArMjIyLDggQEAgc3RydWN0IGJwZl9wcm9nICpicGZfcHJvZ19y
+ZWFsbG9jKHN0cnVjdCBicGZfcHJvZyAqZnBfb2xkLCB1bnNpZ25lZCBpbnQgc2l6ZSwNCj4gICAJ
+dTMyIHBhZ2VzLCBkZWx0YTsNCj4gICAJaW50IHJldDsNCj4gICANCj4gLQlCVUdfT04oZnBfb2xk
+ID09IE5VTEwpOw0KPiArCWlmICghZnBfb2xkKQ0KPiArCQlyZXR1cm4gTlVMTDsNCj4gICANCj4g
+ICAJc2l6ZSA9IHJvdW5kX3VwKHNpemUsIFBBR0VfU0laRSk7DQo+ICAgCXBhZ2VzID0gc2l6ZSAv
+IFBBR0VfU0laRTsNCj4gDQo=
