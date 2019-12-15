@@ -2,158 +2,171 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E05AC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EBEC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2973206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="DL3JMZnf"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA922253D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576426734;
+	bh=3gWrFECQ4JB7+4udxE5anmcclq9pSjQUlEM5geJjlQQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MkwQ33BT3yVPm+n5Vd4r31LfAxzYtBkWexSxdyPBAa2BgIeEpuWMJk+/GiPfol7iq
+	 BjQ9Ip4ZERekSx5/MnmoQwTmIMsEjnCitKYOPjH6hlRBvwkboruTF8liFAOoLpRVmC
+	 kchXDBkS92Wu9Hjc97yhyNSJspIXXVV9flMjb71g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfLOQO7 (ORCPT
+        id S1726232AbfLOQSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:14:59 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:59756 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbfLOQO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:14:58 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bTy94gSGz9vZ5y
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 16:14:57 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8OeuDhLou9z7 for <linux-kernel@vger.kernel.org>;
-        Sun, 15 Dec 2019 10:14:57 -0600 (CST)
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 15 Dec 2019 11:18:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfLOQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:18:53 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bTy93Klqz9vZ5l
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 10:14:57 -0600 (CST)
-Received: by mail-yb1-f199.google.com with SMTP id g132so4565124ybf.21
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 08:14:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gpouca8jqDFr8BHpnbtfPrT2Ta2ckDjVl8T1ZQEgkC8=;
-        b=DL3JMZnf2Pp3CLccrKKH0lblDNSv/m7F52ij0QxV9ZThYqPKJWScvPEd1SjK8PU+qh
-         Udp2rWKF3Pomakz4zSEMbGffFrmTm7Nbo0T4/k4wATzmxjhMYISzZMg5kiyMuBL44pkK
-         c8JsCxHoijJcRQ35DHZIv5k6c25nIDbiIEFbmvZ6LURhUkYjFveHy1KieZdrv57LvnaL
-         YWaowyeyTtoG4z56+Pj+7L9G6qKmIVeg/R9O7rdudP8m6CuUkAVBGkL3thO/G8lL3S+Y
-         rJd9tdaLpo3dxP5JWzEJ7IjinBDpDp+ELvqAFNzHnF0Bc397uNpYM/GVHwg4YAF2UdO+
-         SBGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gpouca8jqDFr8BHpnbtfPrT2Ta2ckDjVl8T1ZQEgkC8=;
-        b=JHLjRkogMPYj5ZnssHvkybrClVb28VSWz5az6y19wZ9UxR6aGv5I9wUEW/fkXj5XAv
-         1kA7D8CdjKzixit4ZMrQ4W2lMkDQ6z1BM7bdo6OMjUk8XNJecFz/xGA+x+YgPMQk45uF
-         UTphORCmWT4/ANoc3oooqURR+M32l00UYLmyvR4SyetZfy7ObHYQMo+VsvFYxhurMeqq
-         Kuwcgk4gfYDIw46wyd4Gnes4zueT+Ns8gv8OmdmScIezt8xEIsrxFfvZ+WkD8ZO5LURt
-         2eXAzQSaqkVN5TfqTWS+Xt9lfH0kloqD0+RtBO3iHqxOmdYRTVAtE47P68TQ3Sck0qWL
-         umMQ==
-X-Gm-Message-State: APjAAAUDCl96QgAturt5oL7XGIKhWTFZgog9nHBCj8VQq88oPQmUTI1M
-        N41ehq/G3PGLce3RaKDNQQsVZ8l45ctdW4iTkgz8IVEAYWiGno5MSh/tDdms2QhBt9uf/bEJfmr
-        +PzlClO13JJS+sysIboLmmX2iBUi4
-X-Received: by 2002:a81:984f:: with SMTP id p76mr15512634ywg.346.1576426496862;
-        Sun, 15 Dec 2019 08:14:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw75t1xFCOcVUpu4w5BNjONs2rWreOwnnmCOphU2WWakVMiD5dMHUhT+fZQhYCBT70ebyNogQ==
-X-Received: by 2002:a81:984f:: with SMTP id p76mr15512617ywg.346.1576426496604;
-        Sun, 15 Dec 2019 08:14:56 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id s31sm7036304ywa.30.2019.12.15.08.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 08:14:56 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fore200e: Fix incorrect checks of NULL pointer dereference
-Date:   Sun, 15 Dec 2019 10:14:51 -0600
-Message-Id: <20191215161451.24221-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CE1A206D7;
+        Sun, 15 Dec 2019 16:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576426731;
+        bh=3gWrFECQ4JB7+4udxE5anmcclq9pSjQUlEM5geJjlQQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AYfbrtGFK7MIaOhIBC04U7fy1WDOjWhQpr2zNYle7kYM+HzKBWPemGjd9Qul6SjeS
+         vNhxhzaaXOpkOaSDwuH6+/9wGsWyGJsaYDOAY6yRc+lfeuFMpl2yQRoKqzjulnM943
+         KTI6P2Vmj/onOUjoIk9GCGmk4QN8XYKqXlIeY49g=
+Date:   Sun, 15 Dec 2019 16:18:47 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Subject: Re: [PATCH 1/5] iio: gyro: adi16136: construct adis data on probe
+ vs static on driver
+Message-ID: <20191215161847.21c67f00@archlinux>
+In-Reply-To: <20191213160312.1834-1-alexandru.ardelean@analog.com>
+References: <20191213160312.1834-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fore200e_send and fore200e_close, the pointers from the arguments
-are dereferenced in the variable declaration block and then checked
-for NULL. The patch fixes these issues by avoiding NULL pointer
-dereferences.
+On Fri, 13 Dec 2019 18:03:08 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+> This change is done in preparation of adding an `struct adis_timeout` typ=
+e.
+> Some ADIS drivers support multiple drivers, with various combinations of
+> timeouts. Creating static tables for each driver is possible, but that al=
+so
+> creates quite a lot of duplication.
+>=20
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
-index f1a500205313..8fbd36eb8941 100644
---- a/drivers/atm/fore200e.c
-+++ b/drivers/atm/fore200e.c
-@@ -1414,12 +1414,14 @@ fore200e_open(struct atm_vcc *vcc)
- static void
- fore200e_close(struct atm_vcc* vcc)
- {
--    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
-     struct fore200e_vcc*    fore200e_vcc;
-+    struct fore200e*        fore200e;
-     struct fore200e_vc_map* vc_map;
-     unsigned long           flags;
- 
-     ASSERT(vcc);
-+    fore200e = FORE200E_DEV(vcc->dev);
-+
-     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
-     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
- 
-@@ -1464,10 +1466,10 @@ fore200e_close(struct atm_vcc* vcc)
- static int
- fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
- {
--    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
--    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
-+    struct fore200e*        fore200e;
-+    struct fore200e_vcc*    fore200e_vcc;
-     struct fore200e_vc_map* vc_map;
--    struct host_txq*        txq          = &fore200e->host_txq;
-+    struct host_txq*        txq;
-     struct host_txq_entry*  entry;
-     struct tpd*             tpd;
-     struct tpd_haddr        tpd_haddr;
-@@ -1480,9 +1482,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
-     unsigned char*          data;
-     unsigned long           flags;
- 
--    ASSERT(vcc);
--    ASSERT(fore200e);
--    ASSERT(fore200e_vcc);
-+    if (!vcc)
-+        return -EINVAL;
-+
-+    fore200e = FORE200E_DEV(vcc->dev);
-+    fore200e_vcc = FORE200E_VCC(vcc);
-+
-+    if (!fore200e)
-+        return -EINVAL;
-+
-+    txq = &fore200e->host_txq;
-+    if (!fore200e_vcc)
-+        return -EINVAL;
- 
-     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
- 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
--- 
-2.20.1
+There are considerable advantages to using constant structures,
+(security - not that relevant here probably, XiP, general readability)
+
+So to take a series like this I want to see evidence that it makes
+a significant difference.  So far you just have cases where we end up
+with a worse result.  More code, harder to read...
+
+Hence it will take a lot to persuade me to take this series without
+the follow up patches where I assume significant advantages are seen.
+
+Jonathan
+
+
+> ---
+>  drivers/iio/gyro/adis16136.c | 49 ++++++++++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/drivers/iio/gyro/adis16136.c b/drivers/iio/gyro/adis16136.c
+> index f10c4f173898..129de2bd5845 100644
+> --- a/drivers/iio/gyro/adis16136.c
+> +++ b/drivers/iio/gyro/adis16136.c
+> @@ -465,24 +465,6 @@ static const char * const adis16136_status_error_msg=
+s[] =3D {
+>  	[ADIS16136_DIAG_STAT_FLASH_CHKSUM_FAIL] =3D "Flash checksum error",
+>  };
+> =20
+> -static const struct adis_data adis16136_data =3D {
+> -	.diag_stat_reg =3D ADIS16136_REG_DIAG_STAT,
+> -	.glob_cmd_reg =3D ADIS16136_REG_GLOB_CMD,
+> -	.msc_ctrl_reg =3D ADIS16136_REG_MSC_CTRL,
+> -
+> -	.self_test_mask =3D ADIS16136_MSC_CTRL_SELF_TEST,
+> -	.startup_delay =3D 80,
+> -
+> -	.read_delay =3D 10,
+> -	.write_delay =3D 10,
+> -
+> -	.status_error_msgs =3D adis16136_status_error_msgs,
+> -	.status_error_mask =3D BIT(ADIS16136_DIAG_STAT_FLASH_UPDATE_FAIL) |
+> -		BIT(ADIS16136_DIAG_STAT_SPI_FAIL) |
+> -		BIT(ADIS16136_DIAG_STAT_SELF_TEST_FAIL) |
+> -		BIT(ADIS16136_DIAG_STAT_FLASH_CHKSUM_FAIL),
+> -};
+> -
+>  enum adis16136_id {
+>  	ID_ADIS16133,
+>  	ID_ADIS16135,
+> @@ -509,11 +491,36 @@ static const struct adis16136_chip_info adis16136_c=
+hip_info[] =3D {
+>  	},
+>  };
+> =20
+> +static struct adis_data *adis16136_adis_data_alloc(struct adis16136 *st,
+> +						   struct device *dev)
+> +{
+> +	struct adis_data *data;
+> +
+> +	data =3D devm_kzalloc(dev, sizeof(struct adis_data), GFP_KERNEL);
+> +	if (!data)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	data->msc_ctrl_reg =3D ADIS16136_REG_MSC_CTRL;
+> +	data->glob_cmd_reg =3D ADIS16136_REG_GLOB_CMD;
+> +	data->diag_stat_reg =3D ADIS16136_REG_DIAG_STAT;
+> +	data->self_test_mask =3D ADIS16136_MSC_CTRL_SELF_TEST;
+> +	data->read_delay =3D 10;
+> +	data->write_delay =3D 10;
+> +	data->status_error_msgs =3D adis16136_status_error_msgs;
+> +	data->status_error_mask =3D BIT(ADIS16136_DIAG_STAT_FLASH_UPDATE_FAIL) |
+> +				BIT(ADIS16136_DIAG_STAT_SPI_FAIL) |
+> +				BIT(ADIS16136_DIAG_STAT_SELF_TEST_FAIL) |
+> +				BIT(ADIS16136_DIAG_STAT_FLASH_CHKSUM_FAIL);
+> +
+> +	return data;
+> +}
+> +
+>  static int adis16136_probe(struct spi_device *spi)
+>  {
+>  	const struct spi_device_id *id =3D spi_get_device_id(spi);
+>  	struct adis16136 *adis16136;
+>  	struct iio_dev *indio_dev;
+> +	const struct adis_data *adis16136_data;
+>  	int ret;
+> =20
+>  	indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*adis16136));
+> @@ -532,7 +539,11 @@ static int adis16136_probe(struct spi_device *spi)
+>  	indio_dev->info =3D &adis16136_info;
+>  	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> =20
+> -	ret =3D adis_init(&adis16136->adis, indio_dev, spi, &adis16136_data);
+> +	adis16136_data =3D adis16136_adis_data_alloc(adis16136, &spi->dev);
+> +	if (IS_ERR(adis16136_data))
+> +		return PTR_ERR(adis16136_data);
+> +
+> +	ret =3D adis_init(&adis16136->adis, indio_dev, spi, adis16136_data);
+>  	if (ret)
+>  		return ret;
+> =20
 
