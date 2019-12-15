@@ -2,124 +2,123 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E5FC2D0CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3742C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B40206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADD6206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="bae0QB32";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nOf164TK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLOPWU (ORCPT
+        id S1726863AbfLOPWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:22:20 -0500
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:37770 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfLOPWS (ORCPT
+        Sun, 15 Dec 2019 10:22:37 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38764 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726380AbfLOPWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:22:18 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07526354|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.63799-0.012238-0.349772;DS=CONTINUE|ham_system_inform|0.345318-0.00103386-0.653648;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GHej-BA_1576423303;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHej-BA_1576423303)
-          by smtp.aliyun-inc.com(10.147.42.22);
-          Sun, 15 Dec 2019 23:21:51 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v4 1/4] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Sun, 15 Dec 2019 23:21:34 +0800
-Message-Id: <1576423297-12710-3-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576423297-12710-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576423297-12710-1-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sun, 15 Dec 2019 10:22:37 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id F2E238EE163;
+        Sun, 15 Dec 2019 07:22:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576423356;
+        bh=kvuqPPhoUhuej+greuJFdVimHdta1pVopykZYNvvk88=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=bae0QB32kC9fsngp2gNoYx4TAeRJ5+X4z/u5ftK5bYoCuUCFyRnw6y0UNyNRFz7FC
+         AzrCZyFAyDeDtReiJs2xq9KyzSDpVDl+wSXrO0UTsBt7KLUlnorTM9CpKjTvL78OPN
+         gttRi3oYH6FjSB9Z+sBauGI+gJA07WwzoyTKx7a0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id I8ldxVfxBjL5; Sun, 15 Dec 2019 07:22:35 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B40BF8EE0E2;
+        Sun, 15 Dec 2019 07:22:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576423355;
+        bh=kvuqPPhoUhuej+greuJFdVimHdta1pVopykZYNvvk88=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=nOf164TKANgBuxswIn2wJAvvRPXcx99Pf6Xel6lvyD9HDorh9ylJ4k9/rI0YCExFn
+         tT786CGvGB6FaQMaLA6Oex2jUa8EBWg0xi8u+kyLZ7sYYg5L43QMTzVmNbdrRIoYIA
+         aFt5quqpd0NJsgQ69gRmzzHcXly5AWR9TKksw3EQ=
+Message-ID: <1576423353.3343.3.camel@HansenPartnership.com>
+Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
+ keys
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Sun, 15 Dec 2019 07:22:33 -0800
+In-Reply-To: <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
+References: <20191213171827.28657-1-nramas@linux.microsoft.com>
+         <20191213171827.28657-3-nramas@linux.microsoft.com>
+         <1576257955.8504.20.camel@HansenPartnership.com>
+         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+On Fri, 2019-12-13 at 09:31 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/13/19 9:25 AM, James Bottomley wrote:
+> 
+> Hi James,
+> 
+> > 
+> > There's no locking around the ima_process_keys flag.  If you get
+> > two policy updates in quick succession can't this flag change as
+> > you're processing the second update meaning you lose it because the
+> > flag was false when you decided to build it for the queue but
+> > becomes true before you check above whether you need to queue it?
+> > 
+> > Note you don't need locking to fix this, you just need to ensure
+> > that you use the same copy of the flag value for both tests.
+> > 
+> > James
+> > 
+> 
+> Same flag (ima_process_keys) is used for making the queuing decision.
+> 
+> Taking a lock to access ima_process_keys is required only if the flag
+> is false. That is handled in ima_queue_key() and
+> ima_process_queued_keys() functions.
+> 
+> Queued keys are processed when the first policy update occurs. 
+> Subsequently, the keys are processed immediately (not queued).
+> 
+> Could you please review those functions in this patch and let me know
+> if you see a problem?
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+This is the problem:
 
-Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
-    
-    v3->v4:
-    Remove the spinlock around ingenic_cgu_gate_get().
+if (!flag)
+    pre()
+.
+.
+.
+if (!flag)
+    post()
 
- drivers/clk/ingenic/cgu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+And your pre and post function either have to both run or neither must.
+ However, the flag is set asynchronously, so if it gets set while
+another thread is running through the above code, it can change after
+pre is run but before post is.
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e96303..ab1302a 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
-@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	unsigned long flags;
- 	int enabled = 1;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 
--	if (clk_info->type & CGU_CLK_GATE) {
--		spin_lock_irqsave(&cgu->lock, flags);
-+	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
--		spin_unlock_irqrestore(&cgu->lock, flags);
--	}
- 
- 	return enabled;
- }
--- 
-2.7.4
+James
+
+
 
