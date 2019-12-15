@@ -2,117 +2,109 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11915C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C25C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D395F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED42322B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gASw7z/I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJYW3YG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfLOQfc (ORCPT
+        id S1726267AbfLOQiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:35:32 -0500
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:44046 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfLOQfc (ORCPT
+        Sun, 15 Dec 2019 11:38:19 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46162 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726145AbfLOQiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:35:32 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47bVPv4VQ6z9vYfQ
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 16:35:31 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 927-zLuvbqkw for <linux-kernel@vger.kernel.org>;
-        Sun, 15 Dec 2019 10:35:31 -0600 (CST)
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 15 Dec 2019 11:38:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576427897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0xv0+3tSKNk/ps0C2flwuIl5hdVqRnVV8Q2tM73ssjw=;
+        b=OJYW3YG4KvPdhXAHFuqUGXGE7ZcrxGQZAJABdcuJF51hj98ibC2eM12R5eiFUY4g00rQab
+        VhZXKJcQML4766C7uXOs5aKgNECQKK/HFyc4wum7y/ES08L+NyRnqsVnD75NIeYb+N7K1e
+        ME0TymY6eUqyV/eh83tvb0zIZXwBK5I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-5CKBZr4SNwe0EMgtsxAapA-1; Sun, 15 Dec 2019 11:38:16 -0500
+X-MC-Unique: 5CKBZr4SNwe0EMgtsxAapA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47bVPv3M0jz9vYfL
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 10:35:31 -0600 (CST)
-Received: by mail-yw1-f71.google.com with SMTP id y188so2834476ywa.4
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 08:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RtqtAENkikt2OwSsUAKI6q95l8UgBNbet4mLKXhPLPc=;
-        b=gASw7z/I0SjFUTMduO0mrbXnhtLKxXhWkOF1hA/NCG12Ch6gDZFEqMnbJIwzzEPoou
-         +xH47X1jCoab581xt65AVJdaT3JqBWycPK5jVlQq0+xGLTyro0BNAy6T6oB1/wt/dles
-         ag7qhX3VwtoyqJFRO+djy8VltI5NtuvPH+NoE3e2pZl1gm9KBPs0tNtqIYIV9YV+iP7j
-         BHNwjeLz35FgXSkYJz0vrOhsE/tvHIKDsss25zHf4nVDcqCbzb7gM6ATSy0cbmgug3Q2
-         XTlMUOK0GYYiGZRDWz5Esl0NS0AozgZJ4ge0Ve6AbtJCcyVVNp8l9cAL4TZxrmk86wn2
-         VLQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RtqtAENkikt2OwSsUAKI6q95l8UgBNbet4mLKXhPLPc=;
-        b=HmjJ4V7jgk4DL53OCh/hvo3VEip2XJc0Nafj/WxmKjO019S5FfGFhZmzp5R+OxG6xl
-         3eQAGxfPkkhgFUVnEJ5ihOtDKIC2dvJud3Zt+4qGeeq/E/K5q9ZPegrQ4ePbVipQ+c4r
-         w+D1DRTNozL0uwisGXe2mzYTx2r6Ux2JCLPxxDt2bkCiKJTe2DgU95l07DIlswdOETsS
-         Sy/ArTehh2BBaVhp0p7hanXo+DcQXxpkEI7K5fv53AdI6Q7pgi7mPk8lyu4BTBXPqyQn
-         olhbXKQVuxaemJCbxNdUkxpZdfU2k0sR85aWHTFr/TmTQaTbbxWaOsUwm7cwfX2LpS0j
-         yliw==
-X-Gm-Message-State: APjAAAV4TCp0NuSaj0P1+W7jA1ISf4vFPXg0cvOgc+0Fiwk0NKQ+OQau
-        n9OiKlJeJCuE/nkQVr8dVc1nwJYFYOCm6jZISEzU7XrlH4cgi2+qhRo4ZoTe4R8/pL96Zaa3aiQ
-        3bL8kaGRU8fUQbJwkqiANhFi8jrs9
-X-Received: by 2002:a0d:cc4c:: with SMTP id o73mr16970362ywd.482.1576427730955;
-        Sun, 15 Dec 2019 08:35:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz926INkyG4z0GFI/Np7oPSQT09p97e6twIqiathpPSkhQbrht1R/pRTZ9FNegpZbKOIIU6sA==
-X-Received: by 2002:a0d:cc4c:: with SMTP id o73mr16970343ywd.482.1576427730693;
-        Sun, 15 Dec 2019 08:35:30 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id y9sm7261560ywc.19.2019.12.15.08.35.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 08:35:30 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Ilya Dryomov <idryomov@gmail.com>,
-        Sage Weil <sage@redhat.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Jens Axboe <axboe@kernel.dk>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rbd: Avoid calling BUG() when object_map is not empty
-Date:   Sun, 15 Dec 2019 10:35:27 -0600
-Message-Id: <20191215163527.25203-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30625477;
+        Sun, 15 Dec 2019 16:38:14 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-49.ams2.redhat.com [10.36.116.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 08C605D9C9;
+        Sun, 15 Dec 2019 16:38:11 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable GPIOs from VBT
+Date:   Sun, 15 Dec 2019 17:38:05 +0100
+Message-Id: <20191215163810.52356-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In __rbd_object_map_load, if object_map contains data, return
-error -EINVAL upstream, instead of crashing, via BUG. The patch
-fixes this issue.
+Hi All,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/block/rbd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This is a new (completely rewritten) version of my patches to make the
+i915 code control the SoC panel- and backlight-enable GPIOs on Bay Trail
+devices when the VBT indicates that the SoC should be used for backlight
+control. This fixes the panel not lighting up on various devices when
+booted with a HDMI monitor connected, in which case the firmware skips
+initializing the panel as it inits the HDMI instead.
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index 2b184563cd32..6e9a11f32a94 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -1892,7 +1892,8 @@ static int __rbd_object_map_load(struct rbd_device *rbd_dev)
- 	int num_pages;
- 	int ret;
- 
--	rbd_assert(!rbd_dev->object_map && !rbd_dev->object_map_size);
-+	if (rbd_dev->object_map || rbd_dev->object_map_size)
-+		return -EINVAL;
- 
- 	num_objects = ceph_get_num_objects(&rbd_dev->layout,
- 					   rbd_dev->mapping.size);
--- 
-2.20.1
+This series has been tested on; and fixes this issue on; the following mo=
+dels:
+
+Peaq C1010
+Point of View MOBII TAB-P800W
+Point of View MOBII TAB-P1005W
+Terra Pad 1061
+Thundersoft TST178
+Yours Y8W81
+
+Linus, this series starts with the already discussed pinctrl change to
+export the function to unregister a pinctrl-map. We can either merge this
+through drm-intel, or you could pick it up and then provide an immutable
+branch with it for merging into drm-intel-next. Which option do you prefe=
+r?
+
+Lee, I know you don't like this, but unfortunately this series introcudes
+some (other) changes to drivers/mfd/intel_soc_pmic_core.c. The GPIO subsy=
+s
+allows only one mapping-table per consumer, so in hindsight adding the co=
+de
+which adds the mapping for the PMIC panel-enable pin to the PMIC mfd driv=
+er
+was a mistake, as the PMIC code is a provider where as mapping-tables are
+per consumer. The 4th patch fixes this by moving the mapping-table to the
+i915 code, so that we can also add mappings for some of the pins on the S=
+oC
+itself. Since this whole series makes change to the i915 code I plan to
+merge this mfd change to the drm-intel tree.
+
+Regards,
+
+Hans
 
