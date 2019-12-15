@@ -2,477 +2,240 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1ABC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32C5C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C408524676
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A116D2467A
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 21:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gofAVh7E"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PGFiczl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfLOVMk (ORCPT
+        id S1726536AbfLOVNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 16:12:40 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35118 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfLOVMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 16:12:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so4530806wmb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 13:12:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YvxTfJ9wAPisJby6lTrO/voo2RFqMt15KNRrFuQl4oc=;
-        b=gofAVh7E3LV7AMlQju+boAVNUTqsESxBYGoC3PCd5Xcc7DQjDmFIUzzg1MnLf3WXuP
-         W6hUL/OB6i6TGNh6n8S0DoUgZCaxG/qmiBas/WJE9AgQ/89Tz3QTW/niqIjKwZYGpfD4
-         dwmOaGDuWuRtcOJcrmLIn+PQqQ0vKnHdlMaanZCKFYOOCEnc/3IuaL+0VEquDT2SLQEU
-         FnXfSTwWiA0qyQxgX83aWLuw1Ss52WLwMf7ISoqmpysh3906ZBh9u85VtLZLtoevSOJA
-         eZ9Cp0iuIY3xIpPzftdTjsiK9dgL84d+w3Pkf7KA1a2iP5TJERGVNPR+CEI6wC2FFzjJ
-         y0Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YvxTfJ9wAPisJby6lTrO/voo2RFqMt15KNRrFuQl4oc=;
-        b=OLfG7ZViatogY3yzebxdWB5ktJ/mINCLK2lrWDPflPZ2Ggw9+I28p545TG25HSk9ke
-         ssPOf/DRmLlCkSTXymW9xCA3whpPDPD58f2yNhRseAKdzp0Qhi7DVIsph0vNG2JnJCi9
-         mza3GwHYf+7jPYl2RkyK9trk/J0w8ueTMuU3PkY8k7qGMARzNrMc4Vq45eZNBO77PGx6
-         4hmqF+T8mvtgRKL+fRUgEyaFYxz4k2na4EFCnpQGahPBbb0lGnzCTsdjKWDubzfBKJHP
-         ttIEmUBEhDiNEY5vEwenlfO0+reLRATigWkLPx4lVOqVAn7L8zk+4CJwpA7kaj4J5pCh
-         /y+w==
-X-Gm-Message-State: APjAAAUOsdreQRpVs9+MHAzcHLQB/iqvz/XO3wyifs4RWDUwNsVp1jGA
-        YHlBdd/6X2jEshxEEJm2ydI=
-X-Google-Smtp-Source: APXvYqzE5yctGypDK+jMi10fbP+6wUA32vTmj94TkTVC09WUi1pReUQGyifbpSofl8x5m6sodwwiIg==
-X-Received: by 2002:a7b:c3d2:: with SMTP id t18mr27298610wmj.90.1576444356203;
-        Sun, 15 Dec 2019 13:12:36 -0800 (PST)
-Received: from localhost.localdomain (p200300F1370FCC00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:370f:cc00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id j12sm19888598wrw.54.2019.12.15.13.12.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 13:12:35 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     yuq825@gmail.com, dri-devel@lists.freedesktop.org,
-        lima@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        tomeu.vizoso@collabora.com, robh@kernel.org, steven.price@arm.com,
-        alyssa.rosenzweig@collabora.com, linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, wens@csie.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC v1 1/1] drm/lima: Add optional devfreq support
-Date:   Sun, 15 Dec 2019 22:12:23 +0100
-Message-Id: <20191215211223.1451499-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
-References: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
+        Sun, 15 Dec 2019 16:13:47 -0500
+Received: from mout.web.de ([212.227.15.3]:54833 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfLOVNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 16:13:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576444416;
+        bh=xOWzP9Gln5b1oRl6klarBFIKtlakp0sGWp8BUl3lAIo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=PGFiczl85OwMUJBb0uhXnxkL+UuAW5101PT88pMVGRzkvaw1lhtg7cgM4stFYbzKv
+         ogtUnnWGQaDhPc5TusEWgs6XnA+tijcFQaBVfXV1ssHaluGJWLEkqJDZo4l6duI+pg
+         zRbzwE68qEhVnq5arsBxs1V3wNBrsmeNshWshe04=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.138.206]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MQ63n-1ibwVA3sLz-005JlB; Sun, 15
+ Dec 2019 22:13:36 +0100
+Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Anand Moon <linux.amoon@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org
+References: <cover.1575932654.git.robin.murphy@arm.com>
+ <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
+ <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
+ <2681192.H4ySjFOPB8@diego>
+From:   Soeren Moch <smoch@web.de>
+Autocrypt: addr=smoch@web.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <96384fa0-e1c0-85c2-4851-e5bbbb0cc6a7@web.de>
+Date:   Sun, 15 Dec 2019 22:13:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2681192.H4ySjFOPB8@diego>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:wTgrkWWE4LS/k1z6lM8mW4sR8CfSAsGe2RIS+NTVDsU5riYhg/C
+ t9Fz6+i7CEocVHNBCEUCxCo58sF2rGJFosdTuUf65gajnWW7vvNr+1PWdGkL8fSAir3bfgW
+ 3oHCccaullRyF0OhjYS4pCITHuyd/gpaM5MEZ4nktx1TRAi3wO30byjoYrT/Mbweo+23pMW
+ NNKi1PE5YiZVENg+u9H6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wYJjH93+FVU=:5vF4Jj6ELMbjfDbRF9ANdL
+ HebGo4+Z+F26WwBX+CTZEffZo9JTHl/AqucpTn+8dxES3EerjdAKb7oGUDAL3/X0tGsX4ZIrT
+ 9vkVaamiK2eCRNHjiMZk1CAwts3VCQHPZyh2vXG9ORbl3X6uaRkcuMLHK9d5QKmAnhgzKFwT0
+ F0fOetv44xgzmZ3Sv2/E4rnQv2fDPJFX6T1B1VdYbgm8G3/vwyoMoGxmObmtTukXgyJLhkPqW
+ bkdW7QgX9aphTjneD1oxMU8KIvhogc6iEv4I3Z70F53GsihYBDZSWkjyzZ8FzpW8cfic6lf/X
+ zCRV74mrBvAs6TwImJzK2IkZaZ2i0rrgIxithHEr4Re3Bi6dUwQCOpYLtas+gMDFmU8zYvp7D
+ oMZns6hgn/xTjkS+f3jBj9AfjVgclKuQS9NI4wEPsI5j0sd3WfoCQfL6MgC27sNPnF2XB90lx
+ Z1v4J3LX0dproiR+iWM3V9a3orUh5DY+vpo4NowNo1Tfz5fGmyIkEEj/Z7RBbq0Bfn7IRaGKk
+ ToIrIm6Am9hLFSgiJ3Tl57wB5msRwdTnBBYLtr1qZq/w6jWPVbeOATP0bHzW22NQwG8ubWNuk
+ ITb0Goo4b9woAD6utluGTRel3OTy6pNrdwcGaAMPRIV6kh4H67P4731MiVPl1L0Xm8fJ32ATq
+ N2gqB/BCj5eLk9ez5lfpd7PYS8QR3zRHvmVafWIpU4DWsb9S5WZtUxen/Az5WuWA3pT7GGae0
+ E3RsLJuvHwjTCDu0NvzVT3cSMpYjEv9ROz3HJ2/zBq5lisvTcbiEepj9cqnG167Uy9xgiL5ZW
+ 8S1xEdVCxZLElkYbTk7x03jQxzxbCJtPwSQay0TaE7qsxqUcG+n3K8NDcCBs1NpkV88JTokv+
+ 1CL2P1SXKRNHkE89hypCzYQDYnUXEUmdsKqKMlDo3aDBzt+WwZpNYTjFO2ln9G3Xjd8oqAxMe
+ CyW5L5O8q8kTkj8ZfVjQbsbTnye27dsD5vuLWR1bT2y3RGnN/d+M3dcXC0RTl3uLg4HHS4Wm9
+ 4oZ2iSkukZfssWtiZ9F8nnQ6UGo+O7881BqVu3cVVtcHi4gpAHUoXZmLqutFrXv0WkOtzlfk/
+ r+4s0HBYDTAAT2gScRT133IXjp8k2i1ID2Xfm3K1b4jq1A4n9YRtcS9kgYatyAG4I94X4ItRY
+ fsX5p00XGidzRcRhGAo7gVAAlUVhj/nA6XWVQ/QHB6kX1jlnLH/E1+zEuBXudDZOkCazGZGpx
+ ELuSNVDR2tkfNV+T4tvzV2LnWZi49wf4Db6YW5EZ5+jy/EKc+rNNU3gbI3XRy+gV6b5gwCfKy
+ Ze21PFysdjmcwnPWevwxVm0JhyPd2jqgIBMawsGkSsKYS4zFZcm2vzu0AFvWE9ebLg+q1ANv6
+ 7fUaMNuJlVQB4W2u6Ipvma9d6wY9biTdnoVbCZ9yJo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most platforms with a Mali-400 or Mali-450 GPU also have support for
-changing the GPU clock frequency. Add devfreq support so the GPU clock
-rate is updated based on the actual GPU usage when the
-"operating-points-v2" property is present in the board.dts.
+On 15.12.19 21:27, Heiko St=C3=BCbner wrote:
+> Hi Anand,
+>
+> Am Sonntag, 15. Dezember 2019, 19:51:50 CET schrieb Anand Moon:
+>> On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wrot=
+e:
+>>> RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK81=
+7,
+>>> so it makes little sense for the driver to have to have two completel=
+y
+>>> different mechanisms to handle essentially the same thing. Bring RK80=
+5
+>>> in line with the RK809/RK817 flow to clean things up.
+>>>
+>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>> ---
+> [...]
+>
+>> I am sill getting the kernel warning on issue poweroff see below.
+>> on my Rock960 Model A
+>> I feel the reason for this is we now have two poweroff callback
+>> 1  pm_power_off =3D rk808_device_shutdown
+>> 2  rk8xx_syscore_shutdown
+> Nope, the issue is just the i2c subsystem complaining that the
+> Rocckhip i2c drives does not provide an atomic-transfer function, see
+> 	"No atomic I2C transfer handler for 'i2c-0'"
+> in your warning.
+>
+> Somewhere it was suggested that the current transfer function just
+> works as atomic as well.
+I suggested to declare this function as "atomic" in a sense that it can
+be used for power-off (this is what the i2c core expects from atomic
+xfer functions, they are not used for anything else).
+The current transfer function is not strictly atomic, since it expects
+to get a completion interrupt. But nobody cares about the delivery of
+such interrupt when the board is already switched off.
 
-The actual devfreq code is taken from panfrost_devfreq.c.
+So the naming xfer_atomic is disadvantageous, if it had be named
+xfer_poweroff instead there would be no doubt that the existing function
+can be marked this way.
+>> In my investigation earlier common function for shutdown solve
+>> the issue of clean shutdown.
+> This is simply a result of your syscore-shutdown function running way t=
+o
+> early, before the i2c subsystem switched to using atomic transfers.
+>
+> This also indicates that this would really be way to early, as other pa=
+rts
+> of the kernel could also still be running.
+Exactly. So I still think that my simple patch does the right thing, and
+this warning can be safely ignored.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/gpu/drm/lima/Kconfig        |   1 +
- drivers/gpu/drm/lima/Makefile       |   3 +-
- drivers/gpu/drm/lima/lima_devfreq.c | 162 ++++++++++++++++++++++++++++
- drivers/gpu/drm/lima/lima_devfreq.h |  15 +++
- drivers/gpu/drm/lima/lima_device.c  |   4 +
- drivers/gpu/drm/lima/lima_device.h  |  11 ++
- drivers/gpu/drm/lima/lima_drv.c     |  14 ++-
- drivers/gpu/drm/lima/lima_sched.c   |   7 ++
- drivers/gpu/drm/lima/lima_sched.h   |   3 +
- 9 files changed, 217 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
+Soeren
+>
+> Heiko
+>
+>
+>> for *rockchip,system-power-controller* dts property
+>> we can used flags if check if this property support clean shutdown
+>> for that device.
+>>
+>> [  565.009291] xhci-hcd xhci-hcd.0.auto: USB bus 5 deregistered
+>> [  565.010179] reboot: Power down
+>> [  565.010536] ------------[ cut here ]------------
+>> [  565.010940] No atomic I2C transfer handler for 'i2c-0'
+>> [  565.011437] WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40
+>> i2c_transfer+0xe4/0xf8
+>> [  565.012126] Modules linked in: snd_soc_hdmi_codec dw_hdmi_i2s_audio=
 
-diff --git a/drivers/gpu/drm/lima/Kconfig b/drivers/gpu/drm/lima/Kconfig
-index 571dc369a7e9..cdd24b68b5d4 100644
---- a/drivers/gpu/drm/lima/Kconfig
-+++ b/drivers/gpu/drm/lima/Kconfig
-@@ -10,5 +10,6 @@ config DRM_LIMA
-        depends on OF
-        select DRM_SCHED
-        select DRM_GEM_SHMEM_HELPER
-+       select PM_DEVFREQ
-        help
-          DRM driver for ARM Mali 400/450 GPUs.
-diff --git a/drivers/gpu/drm/lima/Makefile b/drivers/gpu/drm/lima/Makefile
-index a85444b0a1d4..5e5c29875e9c 100644
---- a/drivers/gpu/drm/lima/Makefile
-+++ b/drivers/gpu/drm/lima/Makefile
-@@ -14,6 +14,7 @@ lima-y := \
- 	lima_sched.o \
- 	lima_ctx.o \
- 	lima_dlbu.o \
--	lima_bcast.o
-+	lima_bcast.o \
-+	lima_devfreq.o
- 
- obj-$(CONFIG_DRM_LIMA) += lima.o
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.c b/drivers/gpu/drm/lima/lima_devfreq.c
-new file mode 100644
-index 000000000000..9cefce6352db
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2019 Collabora ltd. */
-+/* Copyright 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com> */
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/devfreq_cooling.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+
-+#include "lima_device.h"
-+#include "lima_devfreq.h"
-+
-+static void lima_devfreq_update_utilization(struct lima_device *ldev)
-+{
-+	ktime_t now;
-+	ktime_t last;
-+
-+	if (!ldev->devfreq.devfreq)
-+		return;
-+
-+	now = ktime_get();
-+	last = ldev->devfreq.time_last_update;
-+
-+	if (atomic_read(&ldev->devfreq.busy_count) > 0)
-+		ldev->devfreq.busy_time += ktime_sub(now, last);
-+	else
-+		ldev->devfreq.idle_time += ktime_sub(now, last);
-+
-+	ldev->devfreq.time_last_update = now;
-+}
-+
-+static int lima_devfreq_target(struct device *dev, unsigned long *freq,
-+			       u32 flags)
-+{
-+	struct dev_pm_opp *opp;
-+	int err;
-+
-+	opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(opp))
-+		return PTR_ERR(opp);
-+	dev_pm_opp_put(opp);
-+
-+	err = dev_pm_opp_set_rate(dev, *freq);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static void lima_devfreq_reset(struct lima_device *ldev)
-+{
-+	ldev->devfreq.busy_time = 0;
-+	ldev->devfreq.idle_time = 0;
-+	ldev->devfreq.time_last_update = ktime_get();
-+}
-+
-+static int lima_devfreq_get_dev_status(struct device *dev,
-+				       struct devfreq_dev_status *status)
-+{
-+	struct lima_device *ldev = dev_get_drvdata(dev);
-+
-+	lima_devfreq_update_utilization(ldev);
-+
-+	status->current_frequency = clk_get_rate(ldev->clk_gpu);
-+	status->total_time = ktime_to_ns(ktime_add(ldev->devfreq.busy_time,
-+						   ldev->devfreq.idle_time));
-+
-+	status->busy_time = ktime_to_ns(ldev->devfreq.busy_time);
-+
-+	lima_devfreq_reset(ldev);
-+
-+	dev_dbg(ldev->dev, "busy %lu total %lu %lu %% freq %lu MHz\n",
-+		status->busy_time, status->total_time,
-+		status->busy_time / (status->total_time / 100),
-+		status->current_frequency / 1000 / 1000);
-+
-+	return 0;
-+}
-+
-+static struct devfreq_dev_profile lima_devfreq_profile = {
-+	.polling_ms = 50, /* ~3 frames */
-+	.target = lima_devfreq_target,
-+	.get_dev_status = lima_devfreq_get_dev_status,
-+};
-+
-+int lima_devfreq_init(struct lima_device *ldev)
-+{
-+	struct thermal_cooling_device *cooling;
-+	struct device *dev = &ldev->pdev->dev;
-+	struct devfreq *devfreq;
-+	struct dev_pm_opp *opp;
-+	unsigned long cur_freq;
-+	int ret;
-+
-+	ldev->devfreq.opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(ldev->devfreq.opp_table))
-+		return PTR_ERR(ldev->devfreq.opp_table);
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret == -ENODEV) /* Optional, continue without devfreq */
-+		return 0;
-+	else if (ret)
-+		return ret;
-+
-+	lima_devfreq_reset(ldev);
-+
-+	cur_freq = clk_get_rate(ldev->clk_gpu);
-+
-+	opp = devfreq_recommended_opp(dev, &cur_freq, 0);
-+	if (IS_ERR(opp))
-+		return PTR_ERR(opp);
-+
-+	lima_devfreq_profile.initial_freq = cur_freq;
-+	dev_pm_opp_put(opp);
-+
-+	devfreq = devm_devfreq_add_device(dev, &lima_devfreq_profile,
-+					  DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
-+	if (IS_ERR(devfreq)) {
-+		dev_err(dev, "Couldn't initialize GPU devfreq\n");
-+		dev_pm_opp_of_remove_table(dev);
-+		return PTR_ERR(devfreq);
-+	}
-+
-+	ldev->devfreq.devfreq = devfreq;
-+
-+	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
-+	if (IS_ERR(cooling))
-+		dev_info(dev, "Failed to register cooling device\n");
-+	else
-+		ldev->devfreq.cooling = cooling;
-+
-+	return 0;
-+}
-+
-+void lima_devfreq_fini(struct lima_device *ldev)
-+{
-+	if (ldev->devfreq.cooling)
-+		devfreq_cooling_unregister(ldev->devfreq.cooling);
-+
-+	if (ldev->devfreq.opp_table) {
-+		dev_pm_opp_put_clkname(ldev->devfreq.opp_table);
-+		ldev->devfreq.opp_table = NULL;
-+	}
-+
-+	dev_pm_opp_of_remove_table(&ldev->pdev->dev);
-+}
-+
-+void lima_devfreq_record_busy(struct lima_device *ldev)
-+{
-+	lima_devfreq_update_utilization(ldev);
-+	atomic_inc(&ldev->devfreq.busy_count);
-+}
-+
-+void lima_devfreq_record_idle(struct lima_device *ldev)
-+{
-+	int count;
-+
-+	lima_devfreq_update_utilization(ldev);
-+	count = atomic_dec_if_positive(&ldev->devfreq.busy_count);
-+	WARN_ON(count < 0);
-+}
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.h b/drivers/gpu/drm/lima/lima_devfreq.h
-new file mode 100644
-index 000000000000..fe4f8a437033
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com> */
-+
-+#ifndef __LIMA_DEVFREQ_H__
-+#define __LIMA_DEVFREQ_H__
-+
-+struct lima_device;
-+
-+int lima_devfreq_init(struct lima_device *ldev);
-+void lima_devfreq_fini(struct lima_device *ldev);
-+
-+void lima_devfreq_record_busy(struct lima_device *ldev);
-+void lima_devfreq_record_idle(struct lima_device *ldev);
-+
-+#endif
-diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
-index 19829b543024..7f1f7a1c03e5 100644
---- a/drivers/gpu/drm/lima/lima_device.c
-+++ b/drivers/gpu/drm/lima/lima_device.c
-@@ -214,6 +214,8 @@ static int lima_init_gp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_gp;
- 	int err;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "gp");
- 	if (err)
- 		return err;
-@@ -244,6 +246,8 @@ static int lima_init_pp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
- 	int err, i;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "pp");
- 	if (err)
- 		return err;
-diff --git a/drivers/gpu/drm/lima/lima_device.h b/drivers/gpu/drm/lima/lima_device.h
-index 31158d86271c..9a3ab7e3169c 100644
---- a/drivers/gpu/drm/lima/lima_device.h
-+++ b/drivers/gpu/drm/lima/lima_device.h
-@@ -5,6 +5,7 @@
- #define __LIMA_DEVICE_H__
- 
- #include <drm/drm_device.h>
-+#include <linux/atomic.h>
- #include <linux/delay.h>
- 
- #include "lima_sched.h"
-@@ -94,6 +95,16 @@ struct lima_device {
- 
- 	u32 *dlbu_cpu;
- 	dma_addr_t dlbu_dma;
-+
-+	struct {
-+		struct devfreq *devfreq;
-+		struct opp_table *opp_table;
-+		struct thermal_cooling_device *cooling;
-+		ktime_t busy_time;
-+		ktime_t idle_time;
-+		ktime_t time_last_update;
-+		atomic_t busy_count;
-+	} devfreq;
- };
- 
- static inline struct lima_device *
-diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-index 124efe4fa97b..b64b1777f220 100644
---- a/drivers/gpu/drm/lima/lima_drv.c
-+++ b/drivers/gpu/drm/lima/lima_drv.c
-@@ -10,6 +10,7 @@
- #include <drm/drm_prime.h>
- #include <drm/lima_drm.h>
- 
-+#include "lima_devfreq.h"
- #include "lima_drv.h"
- #include "lima_gem.h"
- #include "lima_vm.h"
-@@ -296,18 +297,26 @@ static int lima_pdev_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_out1;
- 
-+	err = lima_devfreq_init(ldev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Fatal error during devfreq init\n");
-+		goto err_out2;
-+	}
-+
- 	/*
- 	 * Register the DRM device with the core and the connectors with
- 	 * sysfs.
- 	 */
- 	err = drm_dev_register(ddev, 0);
- 	if (err < 0)
--		goto err_out2;
-+		goto err_out3;
- 
- 	return 0;
- 
--err_out2:
-+err_out3:
- 	lima_device_fini(ldev);
-+err_out2:
-+	lima_devfreq_fini(ldev);
- err_out1:
- 	drm_dev_put(ddev);
- err_out0:
-@@ -321,6 +330,7 @@ static int lima_pdev_remove(struct platform_device *pdev)
- 	struct drm_device *ddev = ldev->ddev;
- 
- 	drm_dev_unregister(ddev);
-+	lima_devfreq_fini(ldev);
- 	lima_device_fini(ldev);
- 	drm_dev_put(ddev);
- 	lima_sched_slab_fini();
-diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
-index f522c5f99729..851c496a168b 100644
---- a/drivers/gpu/drm/lima/lima_sched.c
-+++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -5,6 +5,7 @@
- #include <linux/slab.h>
- #include <linux/xarray.h>
- 
-+#include "lima_devfreq.h"
- #include "lima_drv.h"
- #include "lima_sched.h"
- #include "lima_vm.h"
-@@ -213,6 +214,8 @@ static struct dma_fence *lima_sched_run_job(struct drm_sched_job *job)
- 	 */
- 	ret = dma_fence_get(task->fence);
- 
-+	lima_devfreq_record_busy(pipe->ldev);
-+
- 	pipe->current_task = task;
- 
- 	/* this is needed for MMU to work correctly, otherwise GP/PP
-@@ -280,6 +283,8 @@ static void lima_sched_handle_error_task(struct lima_sched_pipe *pipe,
- 	pipe->current_vm = NULL;
- 	pipe->current_task = NULL;
- 
-+	lima_devfreq_record_idle(pipe->ldev);
-+
- 	drm_sched_resubmit_jobs(&pipe->base);
- 	drm_sched_start(&pipe->base, true);
- }
-@@ -348,6 +353,8 @@ void lima_sched_pipe_fini(struct lima_sched_pipe *pipe)
- 
- void lima_sched_pipe_task_done(struct lima_sched_pipe *pipe)
- {
-+	lima_devfreq_record_idle(pipe->ldev);
-+
- 	if (pipe->error)
- 		schedule_work(&pipe->error_work);
- 	else {
-diff --git a/drivers/gpu/drm/lima/lima_sched.h b/drivers/gpu/drm/lima/lima_sched.h
-index 928af91c1118..9ae7df7d7fbb 100644
---- a/drivers/gpu/drm/lima/lima_sched.h
-+++ b/drivers/gpu/drm/lima/lima_sched.h
-@@ -6,6 +6,7 @@
- 
- #include <drm/gpu_scheduler.h>
- 
-+struct lima_device;
- struct lima_vm;
- 
- struct lima_sched_task {
-@@ -41,6 +42,8 @@ struct lima_sched_pipe {
- 	u32 fence_seqno;
- 	spinlock_t fence_lock;
- 
-+	struct lima_device *ldev;
-+
- 	struct lima_sched_task *current_task;
- 	struct lima_vm *current_vm;
- 
--- 
-2.24.1
+>> rockchipdrm nvme analogix_dp nvme_core brcmfmac hci_uart dw_mipi_dsi
+>> dw_hdmi btbcm cec panfrost bluetooth drm_kms_helper brcmutil gpu_sched=
+
+>> cfg80211 crct10dif_ce snd_soc_rockchip_i2s snd_soc_simple_card drm
+>> ecdh_generic snd_soc_rockchip_pcm snd_soc_simple_card_utils
+>> phy_rockchip_pcie ecc rtc_rk808 rfkill rockchip_thermal
+>> pcie_rockchip_host ip_tables x_tables ipv6 nf_defrag_ipv6
+>> [  565.015578] CPU: 0 PID: 1 Comm: shutdown Not tainted
+>> 5.5.0-rc1-00292-gd46dd6369c55 #7
+>> [  565.016260] Hardware name: 96boards Rock960 (DT)
+>> [  565.016666] pstate: 60000085 (nZCv daIf -PAN -UAO)
+>> [  565.017087] pc : i2c_transfer+0xe4/0xf8
+>> [  565.017425] lr : i2c_transfer+0xe4/0xf8
+>> [  565.017762] sp : ffff80001004baf0
+>> [  565.018052] x29: ffff80001004baf0 x28: ffff00007d208000
+>> [  565.018517] x27: 0000000000000000 x26: 0000000000000000
+>> [  565.018982] x25: 0000000000000008 x24: 0000000000000000
+>> [  565.019447] x23: ffff00007d208000 x22: ffff80001004bc64
+>> [  565.019912] x21: ffff80001004bb48 x20: 0000000000000002
+>> [  565.020377] x19: ffff000078502080 x18: 0000000000000010
+>> [  565.020842] x17: 0000000000000001 x16: 0000000000000019
+>> [  565.021307] x15: ffff00007d208470 x14: ffffffffffffffff
+>> [  565.021772] x13: ffff80009004b857 x12: ffff80001004b860
+>> [  565.022237] x11: ffff800011841000 x10: ffff800011a10658
+>> [  565.022702] x9 : 0000000000000000 x8 : ffff800011a11000
+>> [  565.023167] x7 : ffff800010697c78 x6 : 0000000000000262
+>> [  565.023632] x5 : 0000000000000000 x4 : 0000000000000000
+>> [  565.024096] x3 : 00000000ffffffff x2 : ffff800011841ab8
+>> [  565.024561] x1 : 7b11701b0ae78800 x0 : 0000000000000000
+>> [  565.025027] Call trace:
+>> [  565.025246]  i2c_transfer+0xe4/0xf8
+>> [  565.025556]  regmap_i2c_read+0x5c/0xa0
+>> [  565.025886]  _regmap_raw_read+0xcc/0x138
+>> [  565.026230]  _regmap_bus_read+0x3c/0x70
+>> [  565.026568]  _regmap_read+0x60/0xe0
+>> [  565.026875]  _regmap_update_bits+0xc8/0x108
+>> [  565.027241]  regmap_update_bits_base+0x60/0x90
+>> [  565.027633]  rk808_device_shutdown+0x6c/0x88
+>> [  565.028010]  machine_power_off+0x24/0x30
+>> [  565.028356]  kernel_power_off+0x64/0x70
+>> [  565.028693]  __do_sys_reboot+0x15c/0x240
+>> [  565.029038]  __arm64_sys_reboot+0x20/0x28
+>> [  565.029390]  el0_svc_common.constprop.0+0x68/0x160
+>> [  565.029811]  el0_svc_handler+0x20/0x80
+>> [  565.030141]  el0_sync_handler+0x10c/0x180
+>> [  565.030493]  el0_sync+0x140/0x180
+>> [  565.030785] ---[ end trace 5167e842ce15f686 ]---
+>>
+>> -Anand
+>>
+>
+>
+>
+
 
