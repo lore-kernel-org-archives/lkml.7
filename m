@@ -2,161 +2,275 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E34EC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DCEC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745B024689
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576430396;
-	bh=aTFw+ue28k3fWWpmU7kl52EDBOR30STcBywtYtrnGF0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N66fX6+/PS+OuEgGg3OSZwDXdWESuoKJkghdso6udP/SGyVCbD3/rafxsZCLgLEj2
-	 QIo4nFbXKK4KioPneoKlGGtXmgUPB3duTOZLjItwHVgRay7D1n1mAltm3iXMnBeNhq
-	 iIWM5T9XO2n8cBuK+ejpGjD8XwhvkW/jkp1GXTBY=
+	by mail.kernel.org (Postfix) with ESMTP id 0782B24671
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FygM01nF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfLORTz (ORCPT
+        id S1726504AbfLORVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:19:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbfLORTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:19:55 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD6102465E;
-        Sun, 15 Dec 2019 17:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576430393;
-        bh=aTFw+ue28k3fWWpmU7kl52EDBOR30STcBywtYtrnGF0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=j4r4yhx31Xgac1qbS50FGIx+Z95MtzryAfqk6mzcfRvNkpDr5PX2PZ0ljNvSk95lu
-         V6Sc10+aZcik5533OOqz9+tD1ByYkqBgfCv1Q20d2Xf+6db0c4HxSZ8MEzTvH6NdKJ
-         WSOYoIPO2DV/NKCEebae4sARRrWQX0g+EwcXk33Y=
-Date:   Sun, 15 Dec 2019 17:19:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     ruantu <mtwget@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: iio: chemical: Add bindings for
- Dynament Premier series single gas sensor
-Message-ID: <20191215171949.1b817a40@archlinux>
-In-Reply-To: <20191210053744.732093-1-mtwget@gmail.com>
-References: <20191210053744.732093-1-mtwget@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Dec 2019 12:21:32 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28915 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726204AbfLORVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 12:21:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576430490;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ADBtJPMiOqroMyMBBwifechFlOzJVQXPXEIkpj00sng=;
+        b=FygM01nF1zErX5EQtn8vn2Oqx33hyUFx0oQPGOleFmSSMrVCzcISCFGrCSevRKBLz47bvc
+        croty4ZUeCqA1wJ+Ihc1FU2kWtIDmsn2WufIr5iB1M39Svwt+4WUAAH+EOBMyo76RCbtTc
+        /a+PfxOZbcTFOZIdMymvAgMu8JDgHLA=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-dFw6EviNOUeSswm_lPGn8g-1; Sun, 15 Dec 2019 12:21:28 -0500
+X-MC-Unique: dFw6EviNOUeSswm_lPGn8g-1
+Received: by mail-qk1-f197.google.com with SMTP id n128so3169814qke.19
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:21:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ADBtJPMiOqroMyMBBwifechFlOzJVQXPXEIkpj00sng=;
+        b=gmurJ+MoNU+z3fF7C4QQK6MsejN7voZdmoXaTFU5ywDNVMb34Y2Sj2R9C9ZB2Fh28K
+         XE+qwC1ur3LLkqc9tkxhEtCzwG1w6C+D7YqvtVPhiHoj45V5UxTKcu8NAT9a0Pr5IkUI
+         6hc+FDqtcvf39Katdi/TUtFUg0ic40dAClxq4uWrr3oLdH5HH2AQzLF8XBCycpxFyj9g
+         TV3kLAfltKcX0YEhoeq6sA4J5Rt75vgKtg4DsM58gCYB4rALuEuZm6qv9RXisPB7sB0D
+         rmVQw+4LI0dB3oS4Fk2EcC4GGBgYhF8a1eAqgdLRapxdVi9FLWKTH5YaEYj3wW8FnwZU
+         r/AQ==
+X-Gm-Message-State: APjAAAXKtNyhWSgdxsKeg6BWdxqmDV1hPfYN55U/Xx32ItrAJbwM/5mk
+        avh5iFSADFSyIL+j7M9bz+E5V1nDfswtlCbXlB7viUF9+yPRbN+JScvBYOm3PRlF2OUIU2JfEDV
+        +mF1BtoB1hf5+91FIoehWfo5x
+X-Received: by 2002:a37:9807:: with SMTP id a7mr23404936qke.213.1576430488296;
+        Sun, 15 Dec 2019 09:21:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxAoCdS8FnRIEzT0hJRh8zcgHR/NRA7BSO3cylgFHiFStVv1aVyM+Hl7l32HAXtz86pLxtWuQ==
+X-Received: by 2002:a37:9807:: with SMTP id a7mr23404919qke.213.1576430487861;
+        Sun, 15 Dec 2019 09:21:27 -0800 (PST)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id e19sm4902428qtc.75.2019.12.15.09.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 09:21:26 -0800 (PST)
+Date:   Sun, 15 Dec 2019 12:21:24 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191215172124.GA83861@xz-x1>
+References: <20191202201036.GJ4063@linux.intel.com>
+ <20191202211640.GF31681@xz-x1>
+ <20191202215049.GB8120@linux.intel.com>
+ <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
+ <20191203184600.GB19877@linux.intel.com>
+ <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
+ <20191209215400.GA3352@xz-x1>
+ <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
+ <20191210155259.GD3352@xz-x1>
+ <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 13:37:44 +0800
-ruantu <mtwget@gmail.com> wrote:
-
-> Dynament Premier series single gas sensor.
+On Tue, Dec 10, 2019 at 06:09:02PM +0100, Paolo Bonzini wrote:
+> On 10/12/19 16:52, Peter Xu wrote:
+> > On Tue, Dec 10, 2019 at 11:07:31AM +0100, Paolo Bonzini wrote:
+> >>> I'm thinking whether I can start
+> >>> to use this information in the next post on solving an issue I
+> >>> encountered with the waitqueue.
+> >>>
+> >>> Current waitqueue is still problematic in that it could wait even with
+> >>> the mmu lock held when with vcpu context.
+> >>
+> >> I think the idea of the soft limit is that the waiting just cannot
+> >> happen.  That is, the number of dirtied pages _outside_ the guest (guest
+> >> accesses are taken care of by PML, and are subtracted from the soft
+> >> limit) cannot exceed hard_limit - (soft_limit + pml_size).
+> > 
+> > So the question go backs to, whether this is guaranteed somehow?  Or
+> > do you prefer us to keep the warn_on_once until it triggers then we
+> > can analyze (which I doubt..)?
 > 
-> Signed-off-by: ruantu <mtwget@gmail.com>
-> ---
->  .../iio/chemical/dynament,premier.yaml        | 43 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  1 +
->  3 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> Yes, I would like to keep the WARN_ON_ONCE just because you never know.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> new file mode 100644
-> index 000000000000..076ae9d90cee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> Of course it would be much better to audit the calls to kvm_write_guest
+> and figure out how many could trigger (e.g. two from the operands of an
+> emulated instruction, 5 from a nested EPT walk, 1 from a page walk, etc.).
 
-The dt maintainers are asking if possible for all new bindings to be dual licensed
-with BSD as it makes them easier to reuse outside linux.
+I would say we'd better either figure out all the caller's sites to
+prove it will never overflow, or, I think we'll need the waitqueue at
+least.  The problem is if we release a kvm with WARN_ON_ONCE and at
+last we found that it can be triggered and ring full can't be avoided,
+then it means the interface and design is broken, and it could even be
+too late to fix it after the interface is published.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dynament Premier series single gas sensor
-> +
-> +maintainers:
-> +  - ruantu <mtwget@gmail.com>
-> +
-> +description: |
-> +  single gas sensor capable of measuring gas concentration of dust
-> +  particles, multi-gas sensor are not supported.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - dynament,premier
-> +
-> +  vcc-supply:
-> +    description: regulator that provides power to the sensor
-> +
-> +  reset-gpios:
-> +    description: GPIO connected to the RESET line
-> +    maxItems: 1
-Good to have the regulator and reset defined from the start.  It may be worth adding
-the regulator enable to the driver.  Reset is actually optional I assume whereas
-power isn't (it's just a question of whether it is already turned on or not!)
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    serial {
-> +      single-gas-sensor {
-> +        compatible = "dynament,premier";
-> +        vcc-supply = <&reg_vcc5v0>;
-> +      };
-> +    };
-Bindings have indented in multiples of 4 spaces I believe.  That needs tidying
-up in this example.
+(Actually I was not certain on previous clear_dirty interface where we
+ introduced a new capability for it.  I'm not sure whether that can be
+ avoided because after all the initial version is not working at all,
+ and we fixed it up without changing the interface.  However for this
+ one if at last we prove the design wrong, then we must introduce
+ another capability for it IMHO, and the interface is prone to change
+ too)
+
+So, with the hope that we could avoid the waitqueue, I checked all the
+callers of mark_page_dirty_in_slot().  Since this initial work is only
+for x86, I didn't look more into other archs, assuming that can be
+done later when it is implemented for other archs (and this will for
+sure also cover the common code):
+
+    mark_page_dirty_in_slot calls, per-vm (x86 only)
+        __kvm_write_guest_page
+            kvm_write_guest_page
+                init_rmode_tss
+                    vmx_set_tss_addr
+                        kvm_vm_ioctl_set_tss_addr [*]
+                init_rmode_identity_map
+                    vmx_create_vcpu [*]
+                vmx_write_pml_buffer
+                    kvm_arch_write_log_dirty [&]
+                kvm_write_guest
+                    kvm_hv_setup_tsc_page
+                        kvm_guest_time_update [&]
+                    nested_flush_cached_shadow_vmcs12 [&]
+                    kvm_write_wall_clock [&]
+                    kvm_pv_clock_pairing [&]
+                    kvmgt_rw_gpa [?]
+                    kvm_write_guest_offset_cached
+                        kvm_steal_time_set_preempted [&]
+                        kvm_write_guest_cached
+                            pv_eoi_put_user [&]
+                            kvm_lapic_sync_to_vapic [&]
+                            kvm_setup_pvclock_page [&]
+                            record_steal_time [&]
+                            apf_put_user [&]
+                kvm_clear_guest_page
+                    init_rmode_tss [*] (see above)
+                    init_rmode_identity_map [*] (see above)
+                    kvm_clear_guest
+                        synic_set_msr
+                            kvm_hv_set_msr [&]
+        kvm_write_guest_offset_cached [&] (see above)
+        mark_page_dirty
+            kvm_hv_set_msr_pw [&]
+
+We should only need to look at the leaves of the traces because
+they're where the dirty request starts.  I'm marking all the leaves
+with below criteria then it'll be easier to focus:
+
+Cases with [*]: should not matter much
+           [&]: actually with a per-vcpu context in the upper layer
+           [?]: uncertain...
+
+I'm a bit amazed after I took these notes, since I found that besides
+those that could probbaly be ignored (marked as [*]), most of the rest
+per-vm dirty requests are actually with a vcpu context.
+
+Although now because we have kvm_get_running_vcpu() all cases for [&]
+should be fine without changing anything, but I tend to add another
+patch in the next post to convert all the [&] cases explicitly to pass
+vcpu pointer instead of kvm pointer to be clear if no one disagrees,
+then we verify that against kvm_get_running_vcpu().
+
+So the only uncertainty now is kvmgt_rw_gpa() which is marked as [?].
+Could this happen frequently?  I would guess the answer is we don't
+know (which means it can).
+
+> 
+> > One thing to mention is that for with-vcpu cases, we probably can even
+> > stop KVM_RUN immediately as long as either the per-vm or per-vcpu ring
+> > reaches the softlimit, then for vcpu case it should be easier to
+> > guarantee that.  What I want to know is the rest of cases like ioctls
+> > or even something not from the userspace (which I think I should read
+> > more later..).
+> 
+> Which ioctls?  Most ioctls shouldn't dirty memory at all.
+
+init_rmode_tss or init_rmode_identity_map.  But I've marked them as
+unimportant because they should only happen once at boot.
+
+> 
+> >>> And if we see if the mark_page_dirty_in_slot() is not with a vcpu
+> >>> context (e.g. kvm_mmu_page_fault) but with an ioctl context (those
+> >>> cases we'll use per-vm dirty ring) then it's probably fine.
+> >>>
+> >>> My planned solution:
+> >>>
+> >>> - When kvm_get_running_vcpu() != NULL, we postpone the waitqueue waits
+> >>>   until we finished handling this page fault, probably in somewhere
+> >>>   around vcpu_enter_guest, so that we can do wait_event() after the
+> >>>   mmu lock released
+> >>
+> >> I think this can cause a race:
+> >>
+> >> 	vCPU 1			vCPU 2		host
+> >> 	---------------------------------------------------------------
+> >> 	mark page dirty
+> >> 				write to page
+> >> 						treat page as not dirty
+> >> 	add page to ring
+> >>
+> >> where vCPU 2 skips the clean-page slow path entirely.
+> > 
+> > If we're still with the rule in userspace that we first do RESET then
+> > collect and send the pages (just like what we've discussed before),
+> > then IMHO it's fine to have vcpu2 to skip the slow path?  Because
+> > RESET happens at "treat page as not dirty", then if we are sure that
+> > we only collect and send pages after that point, then the latest
+> > "write to page" data from vcpu2 won't be lost even if vcpu2 is not
+> > blocked by vcpu1's ring full?
+> 
+> Good point, the race would become
+> 
+>  	vCPU 1			vCPU 2		host
+>  	---------------------------------------------------------------
+>  	mark page dirty
+>  				write to page
+> 						reset rings
+> 						  wait for mmu lock
+>  	add page to ring
+> 	release mmu lock
+> 						  ...do reset...
+> 						  release mmu lock
+> 						page is now dirty
+
+Hmm, the page will be dirty after the reset, but is that an issue?
+
+Or, could you help me to identify what I've missed?
+
+> 
+> > Maybe we can also consider to let mark_page_dirty_in_slot() return a
+> > value, then the upper layer could have a chance to skip the spte
+> > update if mark_page_dirty_in_slot() fails to mark the dirty bit, so it
+> > can return directly with RET_PF_RETRY.
+> 
+> I don't think that's possible, most writes won't come from a page fault
+> path and cannot retry.
+
+Yep, maybe I should say it in the other way round: we only wait if
+kvm_get_running_vcpu() == NULL.  Then in somewhere near
+vcpu_enter_guest(), we add a check to wait if per-vcpu ring is full.
+Would that work?
 
 Thanks,
 
-Jonathan
-
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6046f4555852..5afca0586c41 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -261,6 +261,8 @@ patternProperties:
->      description: Dragino Technology Co., Limited
->    "^dserve,.*":
->      description: dServe Technology B.V.
-> +  "^dynament,.*":
-> +    description: Dynament, Ltd.
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebs-systart,.*":
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 18c26558ddfe..84592789e01b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13137,6 +13137,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
->  M:	ruantu <mtwget@gmail.com>
->  S:	Maintained
->  F:	drivers/iio/chemical/premier.c
-> +F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->  
->  PLANTOWER PMS7003 AIR POLLUTION SENSOR DRIVER
->  M:	Tomasz Duszynski <tduszyns@gmail.com>
+-- 
+Peter Xu
 
