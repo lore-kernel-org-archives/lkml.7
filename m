@@ -2,117 +2,267 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5C4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14008C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6959206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:42:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNI7zL5B"
+	by mail.kernel.org (Postfix) with ESMTP id D50332253D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576424603;
+	bh=w/1w2CSjcG8E0nrmqQ36AgipbA2Tq99pvBzkPq64Hp4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fCxbWNxT7GTKG3AhZ/80a4QU5shgqE00VAgOwHpOkllBRTfHdfmg7WBwZ93M35+J7
+	 yy4TRIHKWJwDhk+p2i4lOrgxNAyv13L/KjSdKZjG5a3uZTNZIqSHD7ekq9f/SHBscp
+	 nANxv/4wVCH3ZHXGhiiwdXkiCQVtQUA1bSgOvgIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLOPmW (ORCPT
+        id S1726668AbfLOPnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:42:22 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37228 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbfLOPmV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:42:21 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so2725811ioc.4;
-        Sun, 15 Dec 2019 07:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0Sj9K/Fg/Lp6+H1dkSUhFxjPXudhpqL7Gotq9vKzF4I=;
-        b=aNI7zL5BW90R+OYPkdGKAQQHwnE+TTd3rXHfLCytAOHAVtTaoyLJQ+BAI3gs+I0wiC
-         EI0qLinJcWxwssodkMC4IbXDKTCUKCVgRKvE5+V9xI1KDc+Wy73hOIxHvpJQH3PVOC0q
-         b9VfJ9DReaRmr0cy3VJcMYl7DART9zbvLziDREuOypti1CqLHjkfGCDVBijwA0s5yhl7
-         8z/R7UlTf4eASf1crwDP+3OBqr/cq3qoZTEl204qRTn66rgFSzmBIEBMD/2DEpkSPlk1
-         cxSJkjxrsRo7XsbJoAPY5d9/M7ogOEjXcMuZQrIXL+xaQ4DvxXxdcXe8xULCrlA078bU
-         i9Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0Sj9K/Fg/Lp6+H1dkSUhFxjPXudhpqL7Gotq9vKzF4I=;
-        b=WrYnmfzkA9/WYZTxtAaJXbnWfCzmyWCjlUuH5zV1ub2FgkTcOyGTpboM2Tgb85M4ar
-         4/+xqD9/3ign/LcAUjKmbXlzU5N7A9PPxdPT8KvaW1VDiqX6WimPtGl3zfnKdcDRkJPi
-         Ay+ym72uSbXqHPELPnkIH8h9TxqTXZEmaVjlia/0guSqML3dQSHNMN9OWHMIP97whwv6
-         O0iz5DUulwVdA54tYzsY4ti/9tCCcee/OrTU50vknVl/igr62t352BlVcePr3Pcw5bnt
-         CUXazcB1H0MoRR9jASCS03AZInzzayBKLGT0rvIBXpg5Q+niu0aKho/MLizhX6vgaHDT
-         fe2Q==
-X-Gm-Message-State: APjAAAU3GABadS/AoQNypoYOJwr/V28JPws6ILYRzjeocXvPOUdHfU+u
-        nU+A0lbaA0WOc2YKdr+NNb/7mUTs4YTDza18S30=
-X-Google-Smtp-Source: APXvYqws70XxM0JoLHNpgvw5pBBvXrE4HabAxu+lsW18wz8a5sI525dN+rR4EXNq0736nWqzgu37UyiDgIYx3jFXEM4=
-X-Received: by 2002:a02:c611:: with SMTP id i17mr8752837jan.28.1576424540734;
- Sun, 15 Dec 2019 07:42:20 -0800 (PST)
+        Sun, 15 Dec 2019 10:43:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbfLOPnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 10:43:22 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9328F206E0;
+        Sun, 15 Dec 2019 15:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576424601;
+        bh=w/1w2CSjcG8E0nrmqQ36AgipbA2Tq99pvBzkPq64Hp4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k65LwjU2OjtKLNMNPsM2wZAnm+bG313f4Z6OOKy9mSTTb+DyH/c2qy43YvTRt+egs
+         yNiOo2409sH6WeDf8w3UJzw4BD7dz9gNtkmPrPqDLpdvwDGKIFk73BX1vz4S/jOKV5
+         0WoP/t3bVAHLLvIDa5NkuBcVrB8CqGuiEq4vjtqM=
+Date:   Sun, 15 Dec 2019 15:43:16 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "djunho@gmail.com" <djunho@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v2 4/4] iio: adc: ad7923: Add support for the
+ ad7908/ad7918/ad7928
+Message-ID: <20191215154316.158c341d@archlinux>
+In-Reply-To: <e3e9d03c9679144612f5949eb32565e9b8f119d7.camel@analog.com>
+References: <20191210150811.3429-1-djunho@gmail.com>
+        <20191210150811.3429-5-djunho@gmail.com>
+        <e3e9d03c9679144612f5949eb32565e9b8f119d7.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191214181130.25808-1-tiny.windzz@gmail.com> <CAGTfZH2CS6o-zaHXReKJXzxsU_jfYKg2WL7uGpzyaFNhgTSVbg@mail.gmail.com>
-In-Reply-To: <CAGTfZH2CS6o-zaHXReKJXzxsU_jfYKg2WL7uGpzyaFNhgTSVbg@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sun, 15 Dec 2019 23:42:09 +0800
-Message-ID: <CAEExFWs7YejweJLDxcx9bECgVRFAVx6xL2T+_76Z239Pa-XyNA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PM / devfreq: rockchip-dfi: add missing of_node_put()
-To:     Chanwoo Choi <chanwoo@kernel.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 11:31 PM Chanwoo Choi <chanwoo@kernel.org> wrote:
->
-> 2019=EB=85=84 12=EC=9B=94 15=EC=9D=BC (=EC=9D=BC) =EC=98=A4=EC=A0=84 3:12=
-, Yangtao Li <tiny.windzz@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >
-> > of_node_put needs to be called when the device node which is got
-> > from of_parse_phandle has finished using.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+On Wed, 11 Dec 2019 07:46:04 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+
+> On Tue, 2019-12-10 at 12:08 -0300, Daniel Junho wrote:
+> > [External]
+> > 
+> > The ad7928 is software compatible with the ad7923.
+> > The ad7908 and ad7918 are the 8 and 10-bit versions of the ad7928.
+> >   
+> 
+> The patch looks good.
+> Comments mostly about namimg.
+> One about channel numbers.
+> 
+> 
+> > Signed-off-by: Daniel Junho <djunho@gmail.com>
 > > ---
-> >  drivers/devfreq/event/rockchip-dfi.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/eve=
-nt/rockchip-dfi.c
-> > index 5d1042188727..45b190e443d8 100644
-> > --- a/drivers/devfreq/event/rockchip-dfi.c
-> > +++ b/drivers/devfreq/event/rockchip-dfi.c
-> > @@ -200,6 +200,7 @@ static int rockchip_dfi_probe(struct platform_devic=
-e *pdev)
-> >         node =3D of_parse_phandle(np, "rockchip,pmu", 0);
-> >         if (node) {
-> >                 data->regmap_pmu =3D syscon_node_to_regmap(node);
-> > +               of_node_put(node);
-> >                 if (IS_ERR(data->regmap_pmu))
-> >                         return PTR_ERR(data->regmap_pmu);
-> >         }
-> > --
-> > 2.17.1
-> >
->
-> Applied it. Better to use the capital letter for first char of sentence.
+> >  drivers/iio/adc/ad7923.c | 62 +++++++++++++++++++++++++++++++++-------
+> >  1 file changed, 51 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7923.c b/drivers/iio/adc/ad7923.c
+> > index 6d56fa0b9e30..ae807fcaad76 100644
+> > --- a/drivers/iio/adc/ad7923.c
+> > +++ b/drivers/iio/adc/ad7923.c
+> > @@ -1,6 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /*
+> > - * AD7904/AD7914/AD7923/AD7924 SPI ADC driver
+> > + * AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 SPI ADC driver
+> >   *
+> >   * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
+> >   * Copyright 2012 CS Systemes d'Information
+> > @@ -29,11 +29,14 @@
+> >  #define AD7923_PM_MODE_AS	(1)		/* auto shutdown */
+> >  #define AD7923_PM_MODE_FS	(2)		/* full shutdown */
+> >  #define AD7923_PM_MODE_OPS	(3)		/* normal operation */
+> > -#define AD7923_SEQUENCE_OFF	(0)		/* no sequence fonction
+> > */
+> > -#define AD7923_SEQUENCE_PROTECT	(2)		/* no interrupt
+> > write cycle */
+> > -#define AD7923_SEQUENCE_ON	(3)		/* continuous sequence */
+> >  
+> > -#define AD7923_MAX_CHAN		4
+> > +#define AD7923_SEQUENCE_OFF	(0x00)		/* no sequence function
+> > */
+> > +#define AD7923_SEQUENCE_SHADOW	(0x01)		/* use the shadow
+> > register
+> > +						 * for programming
+> > +						 * (only AD7908/7918/7928)  
+> 
+> 
+> [1] Since this reg is only available on these 3 chips, you could rename
+> this to AD7908_SEQUENCE_SHADOW  and use it for these 3 chips only.
+> That way, you don't need to mention via comment "(only AD7908/7918/7928)"
+> 
+> 
+> > +						 */
+> > +#define AD7923_SEQUENCE_PROTECT	(0x10)		/* no interrupt
+> > write cycle */
+> > +#define AD7923_SEQUENCE_ON	(0x11)		/* continuous sequence */
+> >  
+> >  #define AD7923_PM_MODE_WRITE(mode)	((mode) << 4)	 /* write mode */
+> >  #define AD7923_CHANNEL_WRITE(channel)	((channel) << 6) /* write
+> > channel */
+> > @@ -74,6 +77,9 @@ enum ad7923_id {
+> >  	AD7904,
+> >  	AD7914,
+> >  	AD7924,
+> > +	AD7908,
+> > +	AD7918,
+> > +	AD7928
+> >  };
+> >  
+> >  #define AD7923_V_CHAN(index, bits)					\
+> > @@ -93,7 +99,7 @@ enum ad7923_id {
+> >  		},							\
+> >  	}
+> >  
+> > -#define DECLARE_AD7923_CHANNELS(name, bits) \
+> > +#define DECLARE_AD7923_4CHANNELS(name, bits) \
+> >  const struct iio_chan_spec name ## _channels[] = { \
+> >  	AD7923_V_CHAN(0, bits), \
+> >  	AD7923_V_CHAN(1, bits), \
+> > @@ -102,9 +108,25 @@ const struct iio_chan_spec name ## _channels[] = { \
+> >  	IIO_CHAN_SOFT_TIMESTAMP(4), \
+> >  }
+> >  
+> > -static DECLARE_AD7923_CHANNELS(ad7904, 8);
+> > -static DECLARE_AD7923_CHANNELS(ad7914, 10);
+> > -static DECLARE_AD7923_CHANNELS(ad7924, 12);
+> > +#define DECLARE_AD7923_8CHANNELS(name, bits) \  
+> 
+> Same comments as [1], you could leave DECLARE_AD7923_CHANNELS and declare
+> DECLARE_AD7908_CHANNELS which has 8 channels and use for the 3 new chips.
+> 
+> > +const struct iio_chan_spec name ## _channels[] = { \
+> > +	AD7923_V_CHAN(0, bits), \
+> > +	AD7923_V_CHAN(1, bits), \
+> > +	AD7923_V_CHAN(2, bits), \
+> > +	AD7923_V_CHAN(3, bits), \
+> > +	AD7923_V_CHAN(4, bits), \
+> > +	AD7923_V_CHAN(5, bits), \
+> > +	AD7923_V_CHAN(6, bits), \
+> > +	AD7923_V_CHAN(7, bits), \
+> > +	IIO_CHAN_SOFT_TIMESTAMP(8), \
+> > +}
+> > +
+> > +static DECLARE_AD7923_4CHANNELS(ad7904, 8);
+> > +static DECLARE_AD7923_4CHANNELS(ad7914, 10);
+> > +static DECLARE_AD7923_4CHANNELS(ad7924, 12);
+> > +static DECLARE_AD7923_8CHANNELS(ad7908, 8);
+> > +static DECLARE_AD7923_8CHANNELS(ad7918, 10);
+> > +static DECLARE_AD7923_8CHANNELS(ad7928, 12);
+> >  
+> >  static const struct ad7923_chip_info ad7923_chip_info[] = {
+> >  	[AD7904] = {
+> > @@ -119,6 +141,18 @@ static const struct ad7923_chip_info
+> > ad7923_chip_info[] = {
+> >  		.channels = ad7924_channels,
+> >  		.num_channels = ARRAY_SIZE(ad7924_channels),
+> >  	},
+> > +	[AD7908] = {
+> > +		.channels = ad7908_channels,
+> > +		.num_channels = ARRAY_SIZE(ad7908_channels),
+> > +	},
+> > +	[AD7918] = {
+> > +		.channels = ad7918_channels,
+> > +		.num_channels = ARRAY_SIZE(ad7918_channels),
+> > +	},
+> > +	[AD7928] = {
+> > +		.channels = ad7928_channels,
+> > +		.num_channels = ARRAY_SIZE(ad7928_channels),
+> > +	},
+> >  };
+> >  
+> >  /**
+> > @@ -131,7 +165,7 @@ static int ad7923_update_scan_mode(struct iio_dev
+> > *indio_dev,
+> >  	int i, cmd, len;
+> >  
+> >  	len = 0;
+> > -	for_each_set_bit(i, active_scan_mask, AD7923_MAX_CHAN) {
+> > +	for_each_set_bit(i, active_scan_mask, indio_dev->num_channels - 1)   
+> 
+> I got the idea about 'indio_dev->num_channel - 1'.
+> This makes the assumption that the number of IIO channels is always HW-
+> channels + 1 timestamp channel [which for now is true].
+> I'm not sure if this is ok.
+> 
+> I think Jonathan would be a bit better here to comment.
 
-Thx!
+It is a driver specific assumption so we don't need it to be true
+in general.  Perhaps add a comment along the lines of
+/* 
+ * For this driver the last channel is always the software timestamp so
+ * skip that one.
+ */
 
-Yangtao
 
->
-> --
-> Best Regards,
-> Chanwoo Choi
+> 
+> > {
+> >  		cmd = AD7923_WRITE_CR | AD7923_CHANNEL_WRITE(i) |
+> >  			AD7923_SEQUENCE_WRITE(AD7923_SEQUENCE_OFF) |
+> >  			st->settings;
+> > @@ -344,6 +378,9 @@ static const struct spi_device_id ad7923_id[] = {
+> >  	{"ad7914", AD7914},
+> >  	{"ad7923", AD7924},
+> >  	{"ad7924", AD7924},
+> > +	{"ad7908", AD7908},
+> > +	{"ad7918", AD7918},
+> > +	{"ad7928", AD7928},
+> >  	{}
+> >  };
+> >  MODULE_DEVICE_TABLE(spi, ad7923_id);
+> > @@ -353,6 +390,9 @@ static const struct of_device_id ad7923_of_match[] =
+> > {
+> >  	{ .compatible = "adi,ad7914", },
+> >  	{ .compatible = "adi,ad7923", },
+> >  	{ .compatible = "adi,ad7924", },
+> > +	{ .compatible = "adi,ad7908", },
+> > +	{ .compatible = "adi,ad7918", },
+> > +	{ .compatible = "adi,ad7928", },
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, ad7923_of_match);
+> > @@ -370,5 +410,5 @@ module_spi_driver(ad7923_driver);
+> >  
+> >  MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> >  MODULE_AUTHOR("Patrick Vasseur <patrick.vasseur@c-s.fr>");
+> > -MODULE_DESCRIPTION("Analog Devices AD7904/AD7914/AD7923/AD7924 ADC");
+> > +MODULE_DESCRIPTION("Analog Devices
+> > AD7904/AD7914/AD7923/AD7924/AD7908/AD7918/AD7928 ADC");  
+> 
+> This description is becoming long.
+> Maybe simplify to 
+> MODULE_DESCRIPTION("Analog Devices AD7923 and similar ADC");
+> 
+> >  MODULE_LICENSE("GPL v2");  
+
