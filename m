@@ -2,134 +2,251 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232B6C2D0CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D8C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA3320866
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576412996;
-	bh=2l6Be057Q7FKP+fhTZ0hbvUe6NBP4LC0WK/+kFX+Qzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Gfi5X1qCahSzHahtnO9oY1TF5lTGmYjw+cY8sWxyD+6lIZaSuCWeEE3G4Ms9tqj8M
-	 OHkObjm5a8dBnNHK7u/2RLjX5aKwkDjVmRTf7YI3RJ3hufUzvwt9qIO+dN+/Rk4uWp
-	 joT3VmToJt5jy9QFc99d+ZJ+ck4InwX0NAL+ZfDw=
+	by mail.kernel.org (Postfix) with ESMTP id DE49F22B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfLOM3y (ORCPT
+        id S1726267AbfLOMfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:29:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfLOM3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:29:54 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 15 Dec 2019 07:35:05 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:41034 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfLOMfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 07:35:04 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F14205C9;
-        Sun, 15 Dec 2019 12:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576412993;
-        bh=2l6Be057Q7FKP+fhTZ0hbvUe6NBP4LC0WK/+kFX+Qzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nVrMJK9o/bHwLle8h8ijpAz587lP5+UzFmyLzVpLfTk03WtVsGSd0loHEyynmYNq5
-         ZO+RG0dI/Kx+fn9QH1NyD5MnPsvXc/87YDMePY13Ank41Tf5vh/jWPNIlaByRYCDFY
-         LtYFkKZ5ESKhTJfvAY6m8xnv8KxC7oWcCIvH9fXk=
-Date:   Sun, 15 Dec 2019 12:29:48 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v4 12/12] iio: adc: qcom-vadc-common: use
- <linux/units.h> helpers
-Message-ID: <20191215122948.773bbc42@archlinux>
-In-Reply-To: <1576386975-7941-13-git-send-email-akinobu.mita@gmail.com>
-References: <1576386975-7941-1-git-send-email-akinobu.mita@gmail.com>
-        <1576386975-7941-13-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47bP4P1TWdzQk8j;
+        Sun, 15 Dec 2019 13:35:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id uAfNvh4N5EDU; Sun, 15 Dec 2019 13:34:56 +0100 (CET)
+Date:   Sun, 15 Dec 2019 23:34:43 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] openat2: switch to __attribute__((packed)) for open_how
+Message-ID: <20191215123443.jmfnrtgbscdwfohc@yavin.dot.cyphar.com>
+References: <20191213222351.14071-1-cyphar@cyphar.com>
+ <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uvrtjxp4z3rdqsxa"
+Content-Disposition: inline
+In-Reply-To: <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Dec 2019 14:16:15 +0900
-Akinobu Mita <akinobu.mita@gmail.com> wrote:
 
-> This switches the qcom-vadc-common to use milli_kelvin_to_millicelsius()
-> in <linux/units.h>.
-> 
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+--uvrtjxp4z3rdqsxa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On 2019-12-14, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+> On 13/12/2019 23.23, Aleksa Sarai wrote:
+> > The design of the original open_how struct layout was such that it
+> > ensured that there would be no un-labelled (and thus potentially
+> > non-zero) padding to avoid issues with struct expansion, as well as
+> > providing a uniform representation on all architectures (to avoid
+> > complications with OPEN_HOW_SIZE versioning).
+> >=20
+> > However, there were a few other desirable features which were not
+> > fulfilled by the previous struct layout:
+> >=20
+> >  * Adding new features (other than new flags) should always result in
+> >    the struct getting larger. However, by including a padding field, it
+> >    was possible for new fields to be added without expanding the
+> >    structure. This would somewhat complicate version-number based
+> >    checking of feature support.
+> >=20
+> >  * A non-zero bit in __padding yielded -EINVAL when it should arguably
+> >    have been -E2BIG (because the padding bits are effectively
+> >    yet-to-be-used fields). However, the semantics are not entirely clear
+> >    because userspace may expect -E2BIG to only signify that the
+> >    structure is too big. It's much simpler to just provide the guarantee
+> >    that new fields will always result in a struct size increase, and
+> >    -E2BIG indicates you're using a field that's too recent for an older
+> >    kernel.
+>=20
+> And when the first extension adds another u64 field, that padding has to
+> be added back in and checked for being 0, at which point the padding is
+> again yet-to-be-used fields.
 
-Thanks,
+Maybe I'm missing something, but what is the issue with
 
+  struct open_how {
+    u64 flags;
+    u64 resolve;
+    u16 mode;
+	u64 next_extension;
+  } __attribute__((packed));
 
-> ---
-> * v4
-> - add Reviewed-by tag
-> 
->  drivers/iio/adc/qcom-vadc-common.c | 6 +++---
->  drivers/iio/adc/qcom-vadc-common.h | 1 -
->  2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/qcom-vadc-common.c b/drivers/iio/adc/qcom-vadc-common.c
-> index dcd7fb5..2bb78d1 100644
-> --- a/drivers/iio/adc/qcom-vadc-common.c
-> +++ b/drivers/iio/adc/qcom-vadc-common.c
-> @@ -6,6 +6,7 @@
->  #include <linux/log2.h>
->  #include <linux/err.h>
->  #include <linux/module.h>
-> +#include <linux/units.h>
->  
->  #include "qcom-vadc-common.h"
->  
-> @@ -236,8 +237,7 @@ static int qcom_vadc_scale_die_temp(const struct vadc_linear_graph *calib_graph,
->  		voltage = 0;
->  	}
->  
-> -	voltage -= KELVINMIL_CELSIUSMIL;
-> -	*result_mdec = voltage;
-> +	*result_mdec = milli_kelvin_to_millicelsius(voltage);
->  
->  	return 0;
->  }
-> @@ -325,7 +325,7 @@ static int qcom_vadc_scale_hw_calib_die_temp(
->  {
->  	*result_mdec = qcom_vadc_scale_code_voltage_factor(adc_code,
->  				prescale, data, 2);
-> -	*result_mdec -= KELVINMIL_CELSIUSMIL;
-> +	*result_mdec = milli_kelvin_to_millicelsius(*result_mdec);
->  
->  	return 0;
->  }
-> diff --git a/drivers/iio/adc/qcom-vadc-common.h b/drivers/iio/adc/qcom-vadc-common.h
-> index bbb1fa0..e074902a 100644
-> --- a/drivers/iio/adc/qcom-vadc-common.h
-> +++ b/drivers/iio/adc/qcom-vadc-common.h
-> @@ -38,7 +38,6 @@
->  #define VADC_AVG_SAMPLES_MAX			512
->  #define ADC5_AVG_SAMPLES_MAX			16
->  
-> -#define KELVINMIL_CELSIUSMIL			273150
->  #define PMIC5_CHG_TEMP_SCALE_FACTOR		377500
->  #define PMIC5_SMB_TEMP_CONSTANT			419400
->  #define PMIC5_SMB_TEMP_SCALE_FACTOR		356
+It was my understanding that __aligned_u64 was used to ensure consistent
+layouts, not that it was needed for safety against unaligned accesses.
 
+> So what exactly is the problem with returning EINVAL now?
+
+I would argue that -EINVAL was the wrong choice of return code from the
+outset (and if we do keep the padding, I will send a patch to switch it
+to -E2BIG -- see below). The purpose of -E2BIG for the newer
+"extensible" syscalls is to differentiate between using an unsupported
+extension field and an unsupported (or invalid) flag.
+
+This will be useful for a few other extension ideas for these types of
+syscalls (related to allowing userspace to more efficiently figure out
+what flags are supported by the kernel without having to try each one
+separately).
+
+> >  * The padding wasted space needlessly, and would very likely not be
+> >    used up entirely by future extensions for a long time (because it
+> >    couldn't fit a u64).
+>=20
+> Who knows, it does fit a u32. And if the struct is to be 8-byte aligned
+> (see below), it doesn't actually waste space.
+
+Yeah, though giving it some more thought I think this might be a better
+layout to avoid this problem:
+
+  struct open_how {
+    __aligned_u64 flags;
+    __aligned_u64 resolve;
+    __u16 mode;
+	__u16 __padding[3]; /* must be zero */
+  };
+
+That way, we won't end up with a u16 which we never use (and we won't
+have multiple __padding fields in the future).
+
+> > diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> > index d886bdb585e4..0e070c7f568a 100644
+> > --- a/include/uapi/linux/fcntl.h
+> > +++ b/include/uapi/linux/fcntl.h
+> > @@ -109,17 +109,16 @@
+> >   * O_TMPFILE} are set.
+> >   *
+> >   * @flags: O_* flags.
+> > - * @mode: O_CREAT/O_TMPFILE file mode.
+> >   * @resolve: RESOLVE_* flags.
+> > + * @mode: O_CREAT/O_TMPFILE file mode.
+> >   */
+> >  struct open_how {
+> > -	__aligned_u64 flags;
+> > +	__u64 flags;
+> > +	__u64 resolve;
+> >  	__u16 mode;
+> > -	__u16 __padding[3]; /* must be zeroed */
+> > -	__aligned_u64 resolve;
+> > -};
+> > +} __attribute__((packed));
+>=20
+> IIRC, gcc assumes such a struct has alignment 1, which means that it
+> will generate horrible code to access it. So if you do this (and I don't
+> think it's a good idea), I think you'd also want to include a
+> __attribute__((__aligned__(8))) - or perhaps that can be accomplished by
+> just keeping flags as an explicitly aligned member. But that will of
+> course bump its sizeof() back to 24, at which point it seems better to
+> just make the padding explicit.
+
+Yeah, you're quite right -- I was aware that GCC generated "less than
+great" code for aligned(1) structures, but wasn't sure whether it would
+be seen as being a serious enough issue to NACK the change.
+
+There is an additional problem -- unfortunately, having the struct be
+__attribute__((aligned(8))) doesn't solve the Rust representation
+problem because Rust can't represent a struct as both being
+#[repr(packed)] and #[repr(align(n))]. Obviously the kernel doesn't
+really care about Rust language restrictions, but given one of the main
+users of how->resolve will be libpathrs, I'd prefer to not make my own
+life any harder if possible. ;)
+
+So, given all of the above, I suggest that instead I send something like
+this instead:
+
+diff --git a/fs/open.c b/fs/open.c
+index 50a46501bcc9..6c97f52453fe 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -994,7 +994,7 @@ static inline int build_open_flags(const struct open_ho=
+w *how,
+        if (how->resolve & ~VALID_RESOLVE_FLAGS)
+                return -EINVAL;
+        if (memchr_inv(how->__padding, 0, sizeof(how->__padding)))
+-               return -EINVAL;
++               return -E2BIG;
+=20
+        /* Deal with the mode. */
+        if (WILL_CREATE(flags)) {
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index d886bdb585e4..c307640071c8 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -114,9 +114,9 @@
+  */
+ struct open_how {
+        __aligned_u64 flags;
++       __aligned_u64 resolve;
+        __u16 mode;
+        __u16 __padding[3]; /* must be zeroed */
+-       __aligned_u64 resolve;
+ };
+=20
+ #define OPEN_HOW_SIZE_VER0     24 /* sizeof first published struct */
+diff --git a/tools/testing/selftests/openat2/openat2_test.c b/tools/testing=
+/selftests/openat2/openat2_test.c
+index 0b64fedc008b..88e3614cbb3a 100644
+--- a/tools/testing/selftests/openat2/openat2_test.c
++++ b/tools/testing/selftests/openat2/openat2_test.c
+@@ -61,15 +61,15 @@ void test_openat2_struct(void)
+                { .name =3D "normal struct (non-zero padding[0])",
+                  .arg.inner.flags =3D O_RDONLY,
+                  .arg.inner.__padding =3D {0xa0, 0x00, 0x00},
+-                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
++                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
+                { .name =3D "normal struct (non-zero padding[1])",
+                  .arg.inner.flags =3D O_RDONLY,
+                  .arg.inner.__padding =3D {0x00, 0x1a, 0x00},
+-                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
++                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
+                { .name =3D "normal struct (non-zero padding[2])",
+                  .arg.inner.flags =3D O_RDONLY,
+                  .arg.inner.__padding =3D {0x00, 0x00, 0xef},
+-                 .size =3D sizeof(struct open_how_ext), .err =3D -EINVAL },
++                 .size =3D sizeof(struct open_how_ext), .err =3D -E2BIG },
+=20
+                /* TODO: Once expanded, check zero-padding. */
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--uvrtjxp4z3rdqsxa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfYoVwAKCRCdlLljIbnQ
+EvN7AQDwo4/O9nZFcp0yersckNBPVj7BMZ9v79JCcI1aurRDfAEAwe9HeP+jGXMh
+oYq9nIRg+RvL03iTvyD9Q/4gIXDqoA8=
+=PES2
+-----END PGP SIGNATURE-----
+
+--uvrtjxp4z3rdqsxa--
