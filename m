@@ -2,56 +2,41 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BFFC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C6DC2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D482324671
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 15:58:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576425532;
-	bh=Lb6bRogCAQv2A8z1QGFmErVearjfTXEt+fi8X/hIV3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gHXihxS1LwAVqI1a0SWPdRkkrKcd8Vpt3jwi9fvWPfnx+XAIS49R6t1rxTl4eTwPt
-	 /Ue1RTO//3sRqhpDktUpgMvxsvZwLRjw5EhAkAh8or3sYY4oHC0ESkjUvR/oseemiL
-	 WuhYItzUqkjqosKXWUG6t4IUB6rH8qmweAGwq+Tg=
+	by mail.kernel.org (Postfix) with ESMTP id 0C10A20726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLOP6w (ORCPT
+        id S1726769AbfLOQBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 10:58:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfLOP6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 10:58:51 -0500
+        Sun, 15 Dec 2019 11:01:21 -0500
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44500 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfLOQBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:01:20 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54FE520726;
-        Sun, 15 Dec 2019 15:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576425530;
-        bh=Lb6bRogCAQv2A8z1QGFmErVearjfTXEt+fi8X/hIV3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eeOosFvPk/n7icpTEC8v9UXeXmYfrIU23xsFDE6TAH62kVouNipzAT0CIXqvbCrGB
-         MxgQ71NI47mD4qeVTTUujc1rUfP0YcO2jIqUuaBNu+g4VmFb3iC/jVmSNjTlHy9E3r
-         ueGwASHh83GfvPqGbxJKOqejw+O02ao7O00Lr/zU=
-Date:   Sun, 15 Dec 2019 15:58:46 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id B153B9E7D76;
+        Sun, 15 Dec 2019 15:53:30 +0000 (GMT)
+Date:   Sun, 15 Dec 2019 15:53:29 +0000
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 192/350] iio: dln2-adc: fix
- iio_triggered_buffer_postenable() position
-Message-ID: <20191215155846.37c85c2e@archlinux>
-In-Reply-To: <20191210210735.9077-153-sashal@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.4 105/350] iio: chemical: atlas-ph-sensor: fix
+ iio_triggered_buffer_predisable() position
+Message-ID: <20191215155329.4c71ad53@archlinux>
+In-Reply-To: <20191210210735.9077-66-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
-        <20191210210735.9077-153-sashal@kernel.org>
+        <20191210210735.9077-66-sashal@kernel.org>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,104 +46,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:04:57 -0500
+On Tue, 10 Dec 2019 16:03:30 -0500
 Sasha Levin <sashal@kernel.org> wrote:
 
 > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > 
-> [ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
+> [ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
 > 
-> The iio_triggered_buffer_postenable() hook should be called first to
-> attach the poll function. The iio_triggered_buffer_predisable() hook is
-> called last (as is it should).
+> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> the poll functions.
 > 
-> This change moves iio_triggered_buffer_postenable() to be called first. It
-> adds iio_triggered_buffer_predisable() on the error paths of the postenable
-> hook.
-> For the predisable hook, some code-paths have been changed to make sure
-> that the iio_triggered_buffer_predisable() hook gets called in case there
-> is an error before it.
+> The iio_triggered_buffer_predisable() should be called last, to detach the
+> poll func after the devices has been suspended.
+> 
+> The position of iio_triggered_buffer_postenable() is correct.
+> 
+> Note this is not stable material. It's a fix in the logical
+> model rather fixing an actual bug.  These are being tidied up
+> throughout the subsystem to allow more substantial rework that
+> was blocked by variations in how things were done.
 
-Again, fixing logic to allow a more generic rework rather than actual bug.
-
-I didn't do a very good job of adding notes to all of these to indicate
-they weren't stable material. Sorry about that.
-
-Note I am fairly careful about tagging fixes that should go to stable...
-
-Jonathan
+See comment.  This is not what I would consider stable material.
 
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+>  drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-> index 5fa78c273a258..65c7c9329b1c3 100644
-> --- a/drivers/iio/adc/dln2-adc.c
-> +++ b/drivers/iio/adc/dln2-adc.c
-> @@ -524,6 +524,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  	u16 conflict;
->  	unsigned int trigger_chan;
+> diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
+> index 3a20cb5d9bffc..6c175eb1c7a7f 100644
+> --- a/drivers/iio/chemical/atlas-ph-sensor.c
+> +++ b/drivers/iio/chemical/atlas-ph-sensor.c
+> @@ -323,16 +323,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
+>  	struct atlas_data *data = iio_priv(indio_dev);
+>  	int ret;
 >  
-> +	ret = iio_triggered_buffer_postenable(indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	mutex_lock(&dln2->mutex);
->  
->  	/* Enable ADC */
-> @@ -537,6 +541,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  				(int)conflict);
->  			ret = -EBUSY;
->  		}
-> +		iio_triggered_buffer_predisable(indio_dev);
+> -	ret = iio_triggered_buffer_predisable(indio_dev);
+> +	ret = atlas_set_interrupt(data, false);
+>  	if (ret)
 >  		return ret;
->  	}
 >  
-> @@ -550,6 +555,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  		mutex_unlock(&dln2->mutex);
->  		if (ret < 0) {
->  			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-> +			iio_triggered_buffer_predisable(indio_dev);
->  			return ret;
->  		}
->  	} else {
-> @@ -557,12 +563,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  		mutex_unlock(&dln2->mutex);
->  	}
+> -	ret = atlas_set_interrupt(data, false);
+> +	pm_runtime_mark_last_busy(&data->client->dev);
+> +	ret = pm_runtime_put_autosuspend(&data->client->dev);
+>  	if (ret)
+>  		return ret;
 >  
-> -	return iio_triggered_buffer_postenable(indio_dev);
-> +	return 0;
+> -	pm_runtime_mark_last_busy(&data->client->dev);
+> -	return pm_runtime_put_autosuspend(&data->client->dev);
+> +	return iio_triggered_buffer_predisable(indio_dev);
 >  }
 >  
->  static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
->  {
-> -	int ret;
-> +	int ret, ret2;
->  	struct dln2_adc *dln2 = iio_priv(indio_dev);
->  
->  	mutex_lock(&dln2->mutex);
-> @@ -577,12 +583,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
->  	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
->  
->  	mutex_unlock(&dln2->mutex);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-> -		return ret;
-> -	}
->  
-> -	return iio_triggered_buffer_predisable(indio_dev);
-> +	ret2 = iio_triggered_buffer_predisable(indio_dev);
-> +	if (ret == 0)
-> +		ret = ret2;
-> +
-> +	return ret;
->  }
->  
->  static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
+>  static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
 
