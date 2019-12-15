@@ -2,100 +2,98 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34CFC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7ECC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8542B2465B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D32F2465B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 03:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M6RPoHdB"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="y8KYw7nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfLOD4q (ORCPT
+        id S1726683AbfLOD5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Dec 2019 22:56:46 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59863 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725933AbfLOD4q (ORCPT
+        Sat, 14 Dec 2019 22:57:13 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35174 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfLOD5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Dec 2019 22:56:46 -0500
-X-UUID: bd32002ec29549f8b1e57599c5ff4c02-20191215
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=94xcQ2Z3dMqXswcxMI8M18CsZNx5V6+VkyJZm38GJdA=;
-        b=M6RPoHdBWCLhl7GGdPO2fAIPyIgHq8iYFcyKkoQDhlSTJ+fbVd3uBqBsUKEtmGArRipAvuYCx2woY9rJ4XRQCoK2RDScr4ToifTnL1foKHzUODPE5W+Ar108oBhQYrGXhvQX/kYac+9xixRTg7LRp7CZU7mceDz89koUmnKLFWo=;
-X-UUID: bd32002ec29549f8b1e57599c5ff4c02-20191215
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1202441300; Sun, 15 Dec 2019 11:56:37 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 15 Dec 2019 11:56:35 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 15 Dec 2019 11:56:22 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     Roy Luo <royluo@google.com>, <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
-        Shayne Chen <shayne.chen@mediatek.com>
-Subject: [PATCH 2/2] mt76: mt7615: add set_antenna callback
-Date:   Sun, 15 Dec 2019 11:56:32 +0800
-Message-ID: <6b3ac6736c0cfa12492f383ec9cfcaad91bfb965.1576381077.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <d3d47e29e2a39c42adfcf912a27b9d19a01d5010.1576381077.git.ryder.lee@mediatek.com>
-References: <d3d47e29e2a39c42adfcf912a27b9d19a01d5010.1576381077.git.ryder.lee@mediatek.com>
+        Sat, 14 Dec 2019 22:57:13 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b19so3716826pfo.2
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Dec 2019 19:57:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=mD0Q7oQYjKwsMg2M4wabWtadHwqClbEf7Ae0x/K5NMQ=;
+        b=y8KYw7nx/0imlHvkK8hcfnQhZoBnj7jpKV5qC1x6NGQC8eB6n7vZakzNmuQ1Le2rT8
+         agP7oca0AxBdWDhYoxNvY2OReccDjAirKrxfSQe1ea23vsV+UQPVtVWpipKNC/dRAHRi
+         CkJNBil5RyOEiEHC+hCZxmFIPWvmqoUxgPPEGH7DvA2sW9+jN5yIafikJvTjBwQ19zoy
+         8gHmrVTo9uFx2nuIBH+IA2pFGIxOKK/czJux9fkqNLWH/p11Fo4wMGjAnN2Oyi9Nx6pS
+         dy1WWvUZVAMkG2vqw1mDgzzhTveYPjVy2PeYEe4GV3BxfbiPQNtCU0jE3dciKcuq1NYK
+         reFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=mD0Q7oQYjKwsMg2M4wabWtadHwqClbEf7Ae0x/K5NMQ=;
+        b=EFvA61ozsKJbDhb+iXmkVy0Pcsyi/2zOKCSTeN7ZyXDYbOUnmhOpOI3PVSsperOWxK
+         EGDF1JdUz+P+ijidknazW8AWWKFWKcoZPIuGJrWMZpB4Y+Rs8J5m8DJGpuxrGHtyraOn
+         18QJ6qUc133UGpX2q4yLM3UhHnRdDFb8KyCjGxarlkoumqcxeT+hENXXhzdz2n7Bo/uE
+         7k9W5/hUOAf3Q80pPHilo2laxSCQ2QoIKm0FvH0zqthYwCRbHTqwFB/neI5Iud35F4L5
+         b4bn6G97TOzAPyymFpBpWmJnBAx/SuFQMNd31QNpEviuLG5rwTfpek6KPIiJ4GUOT1dC
+         uSPA==
+X-Gm-Message-State: APjAAAUEJDDpUHMMDb3W+H9fdH8Dumskj3JpygO+9DgBj7loBLlgTlYd
+        EoIueEL5JDUEfI2RHqT04OqzwV9Hdfs=
+X-Google-Smtp-Source: APXvYqz6bI5msW42zqMqJa8ChbziLHm3II8lGoaSQd+3pIZ6B3/oPn44cKmVhrQtb357WidS/Q2wLQ==
+X-Received: by 2002:a63:fc01:: with SMTP id j1mr10175899pgi.220.1576382232363;
+        Sat, 14 Dec 2019 19:57:12 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id y144sm17828042pfb.188.2019.12.14.19.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 19:57:12 -0800 (PST)
+Date:   Sat, 14 Dec 2019 19:57:08 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Paolo Pisati <paolo.pisati@canonical.com>
+Subject: Re: [PATCH] selftests: net: tls: remove recv_rcvbuf test
+Message-ID: <20191214195708.0f69a0a9@cakuba.netronome.com>
+In-Reply-To: <20191213103903.29777-1-cascardo@canonical.com>
+References: <20191213103903.29777-1-cascardo@canonical.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 57E95DD40047F0123CF19775E0D27F7C3250BF6C281BF99FAF626FD033563F632000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGEgc2V0X2FudGVubmEgY2FsbGJhY2sgdG8gc2V0dXAgcGVyIHBoeSB0eC9yeCBzdHJlYW1z
-Lg0KDQpTaWduZWQtb2ZmLWJ5OiBTaGF5bmUgQ2hlbiA8c2hheW5lLmNoZW5AbWVkaWF0ZWsuY29t
-Pg0KU2lnbmVkLW9mZi1ieTogUnlkZXIgTGVlIDxyeWRlci5sZWVAbWVkaWF0ZWsuY29tPg0KLS0t
-DQogLi4uL25ldC93aXJlbGVzcy9tZWRpYXRlay9tdDc2L210NzYxNS9tYWluLmMgIHwgMzAgKysr
-KysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9tZWRpYXRlay9tdDc2L210NzYxNS9tYWlu
-LmMgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9tZWRpYXRlay9tdDc2L210NzYxNS9tYWluLmMNCmlu
-ZGV4IDc1OWE2Njk5N2M2Zi4uNzA3OTE1NDRhMDg4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQv
-d2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbWFpbi5jDQorKysgYi9kcml2ZXJzL25ldC93
-aXJlbGVzcy9tZWRpYXRlay9tdDc2L210NzYxNS9tYWluLmMNCkBAIC00OCw2ICs0OCw4IEBAIHN0
-YXRpYyBpbnQgbXQ3NjE1X3N0YXJ0KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3KQ0KIAkJbXQ3NjE1
-X21jdV9zZXRfbWFjX2VuYWJsZShkZXYsIDEsIHRydWUpOw0KIAl9DQogDQorCW10NzYxNV9tY3Vf
-c2V0X2NoYW5faW5mbyhwaHksIE1DVV9FWFRfQ01EX1NFVF9SWF9QQVRIKTsNCisNCiAJc2V0X2Jp
-dChNVDc2X1NUQVRFX1JVTk5JTkcsICZwaHktPm10NzYtPnN0YXRlKTsNCiANCiAJaWYgKHJ1bm5p
-bmcpDQpAQCAtNjM1LDYgKzYzNywzMyBAQCBtdDc2MTVfc2V0X2NvdmVyYWdlX2NsYXNzKHN0cnVj
-dCBpZWVlODAyMTFfaHcgKmh3LCBzMTYgY292ZXJhZ2VfY2xhc3MpDQogCW10NzYxNV9tYWNfc2V0
-X3RpbWluZyhwaHkpOw0KIH0NCiANCitzdGF0aWMgaW50DQorbXQ3NjE1X3NldF9hbnRlbm5hKHN0
-cnVjdCBpZWVlODAyMTFfaHcgKmh3LCB1MzIgdHhfYW50LCB1MzIgcnhfYW50KQ0KK3sNCisJc3Ry
-dWN0IG10NzYxNV9kZXYgKmRldiA9IG10NzYxNV9od19kZXYoaHcpOw0KKwlzdHJ1Y3QgbXQ3NjE1
-X3BoeSAqcGh5ID0gbXQ3NjE1X2h3X3BoeShodyk7DQorCWludCBtYXhfbnNzID0gaHdlaWdodDgo
-aHctPndpcGh5LT5hdmFpbGFibGVfYW50ZW5uYXNfdHgpOw0KKwlib29sIGV4dF9waHkgPSBwaHkg
-IT0gJmRldi0+cGh5Ow0KKw0KKwlpZiAoIXR4X2FudCB8fCB0eF9hbnQgIT0gcnhfYW50IHx8IGZm
-cyh0eF9hbnQpID4gbWF4X25zcykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoKEJJVCho
-d2VpZ2h0OCh0eF9hbnQpKSAtIDEpICE9IHR4X2FudCkNCisJCXR4X2FudCA9IEJJVChmZnModHhf
-YW50KSAtIDEpIC0gMTsNCisNCisJbXV0ZXhfbG9jaygmZGV2LT5tdDc2Lm11dGV4KTsNCisNCisJ
-cGh5LT5tdDc2LT5hbnRlbm5hX21hc2sgPSB0eF9hbnQ7DQorCXBoeS0+Y2hhaW5tYXNrID0gZXh0
-X3BoeSA/IHR4X2FudCA8PCAyIDogdHhfYW50Ow0KKw0KKwltdDc2X3NldF9zdHJlYW1fY2Fwcygm
-ZGV2LT5tdDc2LCB0cnVlKTsNCisJbXQ3NjE1X21jdV9zZXRfY2hhbl9pbmZvKHBoeSwgTUNVX0VY
-VF9DTURfU0VUX1JYX1BBVEgpOw0KKw0KKwltdXRleF91bmxvY2soJmRldi0+bXQ3Ni5tdXRleCk7
-DQorDQorCXJldHVybiAwOw0KK30NCisNCiBjb25zdCBzdHJ1Y3QgaWVlZTgwMjExX29wcyBtdDc2
-MTVfb3BzID0gew0KIAkudHggPSBtdDc2MTVfdHgsDQogCS5zdGFydCA9IG10NzYxNV9zdGFydCwN
-CkBAIC02NTksNSArNjg4LDYgQEAgY29uc3Qgc3RydWN0IGllZWU4MDIxMV9vcHMgbXQ3NjE1X29w
-cyA9IHsNCiAJLmNoYW5uZWxfc3dpdGNoX2JlYWNvbiA9IG10NzYxNV9jaGFubmVsX3N3aXRjaF9i
-ZWFjb24sDQogCS5nZXRfc3VydmV5ID0gbXQ3Nl9nZXRfc3VydmV5LA0KIAkuZ2V0X2FudGVubmEg
-PSBtdDc2X2dldF9hbnRlbm5hLA0KKwkuc2V0X2FudGVubmEgPSBtdDc2MTVfc2V0X2FudGVubmEs
-DQogCS5zZXRfY292ZXJhZ2VfY2xhc3MgPSBtdDc2MTVfc2V0X2NvdmVyYWdlX2NsYXNzLA0KIH07
-DQotLSANCjIuMTguMA0K
+On Fri, 13 Dec 2019 07:39:02 -0300, Thadeu Lima de Souza Cascardo wrote:
+> This test only works when [1] is applied, which was rejected.
+> 
+> Basically, the errors are reported and cleared. In this particular case of
+> tls sockets, following reads will block.
+> 
+> The test case was originally submitted with the rejected patch, but, then,
+> was included as part of a different patchset, possibly by mistake.
+> 
+> [1] https://lore.kernel.org/netdev/20191007035323.4360-2-jakub.kicinski@netronome.com/#t
+> 
+> Thanks Paolo Pisati for pointing out the original patchset where this
+> appeared.
+> 
+> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Fixes: 65190f77424d (selftests/tls: add a test for fragmented messages)
+> Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
+Applied to net and queued for stable, thank you!
