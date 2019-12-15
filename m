@@ -2,115 +2,143 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF227C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C4CC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E84206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D0E206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHPlmjxe"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="SKPoVh4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfLORGM (ORCPT
+        id S1726295AbfLORLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:06:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48688 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbfLORGM (ORCPT
+        Sun, 15 Dec 2019 12:11:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43243 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfLORLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:06:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576429570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HEv91kLJC9ETqzd67UpOFEgC9D5e9yBJ8rM6VNAM6/0=;
-        b=BHPlmjxe6EscIu0yrQUB3Kl/BvQYNBJEp0yWHA7VLInScMuKOJVhAFG8fEEnG7hUOYXGIH
-        LOfuvOb8xZYsbaLWBO6KEGfYFd7gQncRBfbk6yd/dhNWX6/0Qs6ueiO7ftLVC5i6wesi0y
-        ACNkX+pyQpgBNd8XK7YV2AiA4chTcGk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-0Q0brOK4PdiyCiMNpib7jw-1; Sun, 15 Dec 2019 12:06:06 -0500
-X-MC-Unique: 0Q0brOK4PdiyCiMNpib7jw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2C3918543A0;
-        Sun, 15 Dec 2019 17:06:05 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-116.rdu2.redhat.com [10.10.120.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 400DE7A5FD;
-        Sun, 15 Dec 2019 17:06:05 +0000 (UTC)
-Subject: Re: [PATCH 4/5] locking/lockdep: Reuse free chain_hlocks entries
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20191212223525.1652-1-longman@redhat.com>
- <20191212223525.1652-5-longman@redhat.com>
- <20191213102525.GA2844@hirez.programming.kicks-ass.net>
- <20191213105042.GJ2871@hirez.programming.kicks-ass.net>
- <9a79ef1a-96e0-1fd7-97e8-ef854b08524d@redhat.com>
- <20191213181255.GF2844@hirez.programming.kicks-ass.net>
- <7ca26a9a-003f-6f24-08e4-f01b80e3e962@redhat.com>
- <20191213184759.GH2844@hirez.programming.kicks-ass.net>
- <2763959e-b0e9-a8cd-3468-232d128c8260@redhat.com>
-Organization: Red Hat
-Message-ID: <1f680c85-c338-6a9e-01f4-d1f6a36e0c6f@redhat.com>
-Date:   Sun, 15 Dec 2019 12:06:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 15 Dec 2019 12:11:30 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so2288982pga.10
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 09:11:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gIhKjqXFZFihOuTqCYQ9SMFzjz9Xta5r8J8lgbXYpgY=;
+        b=SKPoVh4mDvHViOs7XKg3U0rBm8HOrt5iWnSjK1E83GV7RiEfUC8/+gB00diouZlOTc
+         +WpLcbbcWKfnp7dXFYm16Q7hRaMvQyDBUlT2G7MVbb/lt56UOHp6RXPtbwmjPQMtwVdI
+         Al4WgZdcw4ME/icYtaPl9/OjsnyPPLrhfHIcPLHH3qm9GA5UWqEN08O3pJHanvvsIiQ9
+         Y88bHL5nAOwHkWz/WZIq2g0Ge6PArgBtxSlbCAKYoCBi/VV5WWHjhGt76s273FGhaE+R
+         BGwoVdmAd1yQrakfrgtoFTtlIlzuoas/uuPOkdP7OkUfiDUS6//zkhqfJwWDVleZlW72
+         edAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gIhKjqXFZFihOuTqCYQ9SMFzjz9Xta5r8J8lgbXYpgY=;
+        b=MtxX4NtCDBvhSoPUMRBwMt8QW8QbIUCG02xaWdx2+nChhfnl0DnnMu23br122l8lbJ
+         ZQIIxBAH8DA+8BiSVgzXQa4cl8iZ6ikR/sNFFd4GaQmnIo5803EcPnoDjzxfxhc4MdeW
+         n0qGH0jpAB2+yWR27AdNn/oepi8+uF06Suu2zU90is/EW53Iyhka/QaGYUKTjdEJKNfx
+         xGZKLnlhk6/Dg8dNOut4twr7RrWMP5mc4et+YqoYuzmf7XcQQTTLi97UlCUmxzwD4lU/
+         qoeoH6AEv4jL4BXQHH1Sa/RsizJMrP7cOTMo+I2JH5mmlCCtxF1lD79QAN05XzFS0K4K
+         XvUg==
+X-Gm-Message-State: APjAAAXqfXQ+a0xrWxF4Sv/ggBgYfBtapriAaYufmQUbrnNLzougCsNL
+        3O7+0gFvp4om5Qe92u5CnsNFmg==
+X-Google-Smtp-Source: APXvYqyEf/392Icr1o5JSGcmxYTTTRzsvWVgWW0xiuqgFihnu5/rq+BxN+5JgU25+nnQe9ICy5wzJA==
+X-Received: by 2002:a62:e50d:: with SMTP id n13mr11209412pff.201.1576429889133;
+        Sun, 15 Dec 2019 09:11:29 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id in6sm15877804pjb.8.2019.12.15.09.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 09:11:28 -0800 (PST)
+Date:   Sun, 15 Dec 2019 09:11:20 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in
+ rndis_set_subchannel()
+Message-ID: <20191215091120.24e581e1@hermes.lan>
+In-Reply-To: <MN2PR21MB1375F30B3BEEF42DFDB3D39ECA560@MN2PR21MB1375.namprd21.prod.outlook.com>
+References: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
+        <20191214113025.363f21e2@cakuba.netronome.com>
+        <MN2PR21MB1375F30B3BEEF42DFDB3D39ECA560@MN2PR21MB1375.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <2763959e-b0e9-a8cd-3468-232d128c8260@redhat.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 3:08 PM, Waiman Long wrote:
-> On 12/13/19 1:47 PM, Peter Zijlstra wrote:
->> On Fri, Dec 13, 2019 at 01:35:05PM -0500, Waiman Long wrote:
->>> On 12/13/19 1:12 PM, Peter Zijlstra wrote:
->>>>> In this way, the wasted space will be k bytes where k is the number of
->>>>> 1-entry chains. I don't think merging adjacent blocks will be that
->>>>> useful at this point. We can always add this capability later on if it
->>>>> is found to be useful.
->>>> I'm thinking 1 entry isn't much of a chain. My brain is completely fried
->>>> atm, but are we really storing single entry 'chains' ? It seems to me we
->>>> could skip that.
->>>>
->>> Indeed, the current code can produce a 1-entry chain. I also thought
->>> that a chain had to be at least 2 entries. I got tripped up assuming
->>> that. It could be a bug somewhere that allow a 1-entry chain to happen,
->>> but I am not focusing on that right now.
->> If we need the minimum 2 entry granularity, it might make sense to spend
->> a little time on that. If we can get away with single entry markers,
->> then maybe write a comment so we'll not forget about it.
->>
-> I will take a look at why an 1-entry chain happes and see if it is a bug
-> that need to be fixed.
+On Sun, 15 Dec 2019 16:38:00 +0000
+Haiyang Zhang <haiyangz@microsoft.com> wrote:
 
-New lock chains are stored as part of the validate_chain() call from
-__lock_acquire(). So for a n-entry lock chain, all previous n-1, n-2,
-... 1 entry lock chains are stored as well. That may not be the most
-efficient way to store the information, but it is simple. When booting
-up a 2-socket x86-64 system, I saw about 800 1-entry lock chains being
-stored.
-
-Since I am planning to enforce a minimum of 2 chain_hlocks entry
-allocation, we can theoretically allow a 1-entry chain to share the same
-storage with a 2-entry chains with the same starting lock. That will add
-a bit more code in the allocation and freeing path. I am not planning to
-do that for this patchset, but may consider it as a follow up patch.
-
-Cheers,
-Longman
-
+> > -----Original Message-----
+> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > Sent: Saturday, December 14, 2019 2:30 PM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
+> > KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
+> > <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
+> > <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
+> > 
+> > On Wed, 11 Dec 2019 14:26:27 -0800, Haiyang Zhang wrote:  
+> > > Host can provide send indirection table messages anytime after RSS is
+> > > enabled by calling rndis_filter_set_rss_param(). So the host provided
+> > > table values may be overwritten by the initialization in
+> > > rndis_set_subchannel().
+> > >
+> > > To prevent this problem, move the tx_table initialization before calling
+> > > rndis_filter_set_rss_param().
+> > >
+> > > Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after  
+> > subchannels open")  
+> > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>  
+> > 
+> > Applied, but there are two more problems with this code:
+> >  - you should not reset the indirection table if it was configured by
+> >    the user to something other than the default (use the
+> >    netif_is_rxfh_configured() helper to check for that)  
+> 
+> For Send indirection table (tx_table) ethtool doesn't have the option 
+> to set it, and it's usually provided by the host. So we always initialize 
+> it...
+> But, yes, for Receive indirection table (rx_table), I will make a fix, so 
+> it will be set to default only for new devices, or changing the number 
+> of channels; otherwise it will remain the same during operations like 
+> changing MTU, ringparam.
+> 
+> 
+> >  - you should use the ethtool_rxfh_indir_default() wrapper  
+> For rx_table, we already use it:
+>                 rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
+> For tx_table, I know it's the same operation (%, mod), but this wrapper 
+> function's name is for rx_table. Should we use it for tx_table too?
+> 
+> > 
+> > Please fix the former problem in the net tree, and after net is merged
+> > into linux/master and net-next in a week or two please follow up with
+> > the fix for the latter for net-next.  
+> 
+> Sure.
+> 
+> Thanks,
+> - Haiyang
+> 
+As Haiyang said, this send indirection table is unique to Hyper-V it is not part of
+any of the other device models. It is not supported by ethtool. It would not be
+appropriate to repurpose the existing indirection tool; the device already uses
+the receive indirection table for RSS.
