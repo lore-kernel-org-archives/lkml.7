@@ -2,98 +2,99 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F0DC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EBAC2D0CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7776420866
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF86120726
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 12:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576412005;
-	bh=kEXVJBS/UwSqT3Pg74eUT2ImW/zfE9tpz4hx6T3Exhc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TYPTAMskmsTzTJN85bSRxcYiys+zZF6uRWVsvzcwF8OSn/FpfCzSPpSYmqUfPvFk1
-	 h+3yZO+CeUpNvd91Qb77XBYWbXVhp7fTjk1VQLUwiQxqZCWqFf1d5YQTmQb1m1I2Bt
-	 NBWm0DIYnoTTDii9+ZbuJ5mqLyvf0UWNqqHd1mSA=
+	s=default; t=1576412422;
+	bh=HSM3kjnBrmViAteF1Ui9aJjj67DF4kRB2tovXrQ0mBU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YMAPYGsC/7dVAY4cKhRujSw+1xw4hvCGH5j1QOcqbQ9OT6aDNVj/x0wsCs9axI/na
+	 r+TqazG+510bY72s7FyeMZ0ktkihg28bc7Q3AUE9zy+sgJ+1R4jCmwCmx0CXSyXAXh
+	 6ZnBjceTXFcvHDDLRRYf/E+8TDsPjX8UQD+7dXe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfLOMNY (ORCPT
+        id S1726194AbfLOMUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:13:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
+        Sun, 15 Dec 2019 07:20:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfLOMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:13:23 -0500
-Received: from localhost.localdomain (unknown [194.230.155.234])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726099AbfLOMUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 07:20:20 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 078D524654;
-        Sun, 15 Dec 2019 12:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A861F2054F;
+        Sun, 15 Dec 2019 12:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576412003;
-        bh=kEXVJBS/UwSqT3Pg74eUT2ImW/zfE9tpz4hx6T3Exhc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SJx6ZiaWnXXF3Zdx0oLlUaOw1bKAIEIIWgnsMajl5s0Hy4sLaK4cFIXYn++eZlMx0
-         pcaexBmHxoMhXBXT4/XalZNLjxv4r7a+d2R168iY6YacNpBTwV3q95VaCda6eNeoJJ
-         5vz6+1jCxsD+hA86MqXSCLQRe7fOKAYAqseIzct8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: exynos: Fixes for v5.5
-Date:   Sun, 15 Dec 2019 13:13:16 +0100
-Message-Id: <20191215121316.32091-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1576412420;
+        bh=HSM3kjnBrmViAteF1Ui9aJjj67DF4kRB2tovXrQ0mBU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BKLPJDnXCefdxeDeWugRF4NcYVsItDmAfNaVKXhiFK/cNXDSAusKqKPPoLPVA/4CG
+         Q/U0JnC1Yh1WnWieSWvXGmcqJA9QOSCANtPlmlzSkjOfxUV6sLszVKZsJDTTHzCJfw
+         DkZZsrUhKD5meTAP2WPkUCc/5sXCfh9DvwKaNY+I=
+Date:   Sun, 15 Dec 2019 12:20:14 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v6 2/2] dt-bindings: iio: accel: add binding
+ documentation for ADIS16240
+Message-ID: <20191215122014.1e6ce604@archlinux>
+In-Reply-To: <20191213191036.GA28558@bogus>
+References: <20191207045339.9186-1-rodrigorsdc@gmail.com>
+        <20191207045339.9186-2-rodrigorsdc@gmail.com>
+        <20191213191036.GA28558@bogus>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 13 Dec 2019 13:10:36 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Three fix-related patches for current cycle.
+> On Sat,  7 Dec 2019 01:53:39 -0300, Rodrigo Carvalho wrote:
+> > This patch add device tree binding documentation for ADIS16240.
+> > 
+> > Signed-off-by: Rodrigo Carvalho <rodrigorsdc@gmail.com>
+> > ---
+> > V6:
+> >   - Update SPDX license identifier
+> > 
+> >  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> >   
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-Best regards,
-Krzysztof
+Applied to the togreg branch of iio.git, picking up Rob's tag from v5.
 
+Pushed out as testing for the autobuilders to poke at it.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Thanks,
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+Jonathan
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-fixes-5.5
-
-for you to fetch changes up to a2315d3aea5976acd919d3d3fcf82f752562c25b:
-
-  ARM: exynos_defconfig: Restore debugfs support (2019-12-09 18:59:54 +0100)
-
-----------------------------------------------------------------
-Samsung fixes for v5.5
-
-1. Restore debugfs support in exynos_defconfig (as now it is not
-   selected as dependency of tracing).  Debugfs is required by systemd
-   and several tests.
-2. Maintainers updates.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (1):
-      MAINTAINERS: Include Samsung SoC serial driver in Samsung SoC entry
-
-Lukasz Luba (1):
-      MAINTAINERS: Update Lukasz Luba's email address
-
-Marek Szyprowski (1):
-      ARM: exynos_defconfig: Restore debugfs support
-
- .mailmap                          | 1 +
- MAINTAINERS                       | 3 ++-
- arch/arm/configs/exynos_defconfig | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
