@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1D3C47409
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A34C2D0CD
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F5B22B48
+	by mail.kernel.org (Postfix) with ESMTP id 2899424671
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1576429176;
-	bh=2HvYCOg9JIsgIj4BOPEnWKWDtaJsP2z/GYbgmDwmqNw=;
+	bh=MFr4r0CtVaXDpNF9mGw8EkkRQEEHSJia0THm3nYQ5t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uPmtgt+vkio4bsp/BvIO6j0471xuglGifnEhgTMKN+gZRvXiYDKQVPSES1PBZnOma
-	 pGZyMrkXhWRC7E2fAhAKv3tH9FyqVTiKuLmuThnQZGYi2ily8tC7y/JLVdefWxK3S8
-	 Pd2QvfcJK7pFurAByKbGlTACuAXSqutXCim8hBgk=
+	b=hxenOv1r7hN5VYfWtnCLRlOJBIEayrRY8MMX0ErkQ5disTDI/2oh7hLyne/fTdf4U
+	 liVS2xYlr7zx8O58nIJX/VWBV5aFj86Ji9/VO6jRZf/fL5tXG+39BVwKe/8CLFEGoI
+	 AvfwKpa6mWUu8TSX6k8AbVAx9oMW5AvQmVATwfmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLOQ7f (ORCPT
+        id S1726808AbfLOQ7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:59:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55122 "EHLO mail.kernel.org"
+        Sun, 15 Dec 2019 11:59:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfLOQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726530AbfLOQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 15 Dec 2019 11:59:32 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB9E2467D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E4A724681;
         Sun, 15 Dec 2019 16:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576429171;
-        bh=2HvYCOg9JIsgIj4BOPEnWKWDtaJsP2z/GYbgmDwmqNw=;
+        bh=MFr4r0CtVaXDpNF9mGw8EkkRQEEHSJia0THm3nYQ5t0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R27jcToGRL+lsE9KhkS+b9kJsgcMxW/mcACduEJdBkspVYezS/MfYqQLFonqqJKc+
-         y+aL2h9GYXGKSYag1paOupscaZJRze034RYmdZvkF/Agko/Io4jo02no3Q1TNXMWyg
-         WHr5rxr13Afcq2OBDXZfCyAu6XmbCxcAzLB3lA2I=
+        b=D9ZQd6ZMMz7jiffsSEXfvTw73DPNirugBVvPAUXOy/paHURs42gUWPq9YCCZTyzGE
+         73uNV3nPw7bbPIHMPyjst+QdtEmUD/DDNyKIglZ0HhFAMrc4/gdXRRGFY8MWK6cvtK
+         F2H83Iyd4O2Vtcw1WBWq4dXJMVFg8Jf+MV/kpmhM=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 47DAC5FD28; Mon, 16 Dec 2019 00:59:26 +0800 (CST)
+        id 603815FD9D; Mon, 16 Dec 2019 00:59:26 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -50,9 +50,9 @@ To:     Maxime Ripard <mripard@kernel.org>,
 Cc:     Chen-Yu Tsai <wens@kernel.org>, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 05/14] media: sun4i-csi: Deal with DRAM offset
-Date:   Mon, 16 Dec 2019 00:59:15 +0800
-Message-Id: <20191215165924.28314-6-wens@kernel.org>
+Subject: [PATCH 07/14] ARM: dts: sun4i: Add CSI1 controller and pinmux options
+Date:   Mon, 16 Dec 2019 00:59:17 +0800
+Message-Id: <20191215165924.28314-8-wens@kernel.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191215165924.28314-1-wens@kernel.org>
 References: <20191215165924.28314-1-wens@kernel.org>
@@ -65,61 +65,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-On Allwinner SoCs, some high memory bandwidth devices do DMA directly
-over the memory bus (called MBUS), instead of the system bus. These
-devices include the CSI camera sensor interface, video (codec) engine,
-display subsystem, etc.. The memory bus has a different addressing
-scheme without the DRAM starting offset.
+The CSI controller driver now supports the second CSI controller, CSI1.
 
-Deal with this using the "interconnects" property from the device tree,
-or if that is not available, set dev->dma_pfn_offset to PHYS_PFN_OFFSET.
+Add a device node for it. Pinmuxing options for the MCLK output, the
+standard 8-bit interface, and a secondary 24-bit interface are included.
 
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 35 ++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-index f36dc6258900..b8b07c1de2a8 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-@@ -155,6 +156,27 @@ static int sun4i_csi_probe(struct platform_device *pdev)
- 	subdev = &csi->subdev;
- 	vdev = &csi->vdev;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 4c268b70b735..bf531efc0610 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -624,6 +624,16 @@ ohci1: usb@1c1c400 {
+ 			status = "disabled";
+ 		};
  
-+	/*
-+	 * On Allwinner SoCs, some high memory bandwidth devices do DMA
-+	 * directly over the memory bus (called MBUS), instead of the
-+	 * system bus. The memory bus has a different addressing scheme
-+	 * without the DRAM starting offset.
-+	 *
-+	 * In some cases this can be described by an interconnect in
-+	 * the device tree. In other cases where the hardware is not
-+	 * fully understood and the interconnect is left out of the
-+	 * device tree, fall back to a default offset.
-+	 */
-+	if (of_find_property(csi->dev->of_node, "interconnects", NULL)) {
-+		ret = of_dma_configure(csi->dev, csi->dev->of_node, true);
-+		if (ret)
-+			return ret;
-+	} else {
-+#ifdef PHYS_PFN_OFFSET
-+		csi->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-+#endif
-+	}
++		csi1: csi@1c1d000 {
++			compatible = "allwinner,sun4i-a10-csi1";
++			reg = <0x01c1d000 0x1000>;
++			interrupts = <43>;
++			clocks = <&ccu CLK_AHB_CSI1>, <&ccu CLK_DRAM_CSI1>;
++			clock-names = "bus", "ram";
++			resets = <&ccu RST_CSI1>;
++			status = "disabled";
++		};
 +
- 	csi->mdev.dev = csi->dev;
- 	strscpy(csi->mdev.model, "Allwinner Video Capture Device",
- 		sizeof(csi->mdev.model));
+ 		spi3: spi@1c1f000 {
+ 			compatible = "allwinner,sun4i-a10-spi";
+ 			reg = <0x01c1f000 0x1000>;
+@@ -670,6 +680,31 @@ can0_ph_pins: can0-ph-pins {
+ 				function = "can";
+ 			};
+ 
++			/omit-if-no-ref/
++			csi1_8bits_pg_pins: csi1-8bits-pg-pins {
++				pins = "PG0", "PG2", "PG3", "PG4", "PG5",
++				       "PG6", "PG7", "PG8", "PG9", "PG10",
++				       "PG11";
++				function = "csi1";
++			};
++
++			/omit-if-no-ref/
++			csi1_24bits_ph_pins: csi1-24bits-ph-pins {
++				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
++				       "PH5", "PH6", "PH7", "PH8", "PH9",
++				       "PH10", "PH11", "PH12", "PH13", "PH14",
++				       "PH15", "PH16", "PH17", "PH18", "PH19",
++				       "PH20", "PH21", "PH22", "PH23", "PH24",
++				       "PH25", "PH26", "PH27";
++				function = "csi1";
++			};
++
++			/omit-if-no-ref/
++			csi1_clk_pg_pin: csi1-clk-pg-pin {
++				pins = "PG1";
++				function = "csi1";
++			};
++
+ 			emac_pins: emac0-pins {
+ 				pins = "PA0", "PA1", "PA2",
+ 				       "PA3", "PA4", "PA5", "PA6",
 -- 
 2.24.0
 
