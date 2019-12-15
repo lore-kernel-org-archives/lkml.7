@@ -2,133 +2,67 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEF2C2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0512C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8EF20726
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A587B205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 16:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLOQBU (ORCPT
+        id S1726282AbfLOQEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:01:20 -0500
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:44506 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfLOQBU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 11:01:20 -0500
-X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 11:01:19 EST
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id C746B9E7C73;
-        Sun, 15 Dec 2019 15:52:48 +0000 (GMT)
-Date:   Sun, 15 Dec 2019 15:52:47 +0000
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 074/350] iio: proximity: sx9500: fix
- iio_triggered_buffer_{predisable,postenable} positions
-Message-ID: <20191215155247.66ea5412@archlinux>
-In-Reply-To: <20191210210735.9077-35-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
-        <20191210210735.9077-35-sashal@kernel.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Dec 2019 11:04:47 -0500
+Received: from mx2.cyber.ee ([193.40.6.72]:50637 "EHLO mx2.cyber.ee"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfLOQEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:04:47 -0500
+Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+To:     Woody Suwalski <terraluna977@gmail.com>
+Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+From:   Meelis Roos <mroos@linux.ee>
+Message-ID: <1e6a6ccb-a7a0-4173-d667-a53eb99b8699@linux.ee>
+Date:   Sun, 15 Dec 2019 18:04:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:02:59 -0500
-Sasha Levin <sashal@kernel.org> wrote:
+15.12.19 05:17 Woody Suwalski wrote:
+> Regression in 5.4 kernel on 32-bit Radeon IBM T40
+> triggered by
+> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Thu Aug 15 09:27:00 2019 +0200
+> 
+> Howdy,
+> The above patch has triggered a display problem on IBM Thinkpad T40, where the screen is covered with a lots of random short black horizontal lines, or distorted letters in X terms.
+> 
+> The culprit seems to be that the dma_get_required_mask() is returning a value 0x3fffffff
+> which is smaller than dma_get_mask()0xffffffff.That results in dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma instead of 32-bits.
 
-> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> 
-> [ Upstream commit 3cfd6464fe23deb45bb688df66184b3f32fefc16 ]
-> 
-> The iio_triggered_buffer_predisable() should be called last, to detach the
-> poll func after the devices has been suspended.
-> 
-> This change re-organizes things a bit so that the postenable & predisable
-> are symmetrical. It also converts the preenable() to a postenable().
-> 
-> Not stable material as there is no known problem with the current
-> code, it's just not consistent with the form we would like all the
-> IIO drivers to adopt so as to allow subsystem wide changes.
+I have the same problem on 32-bit Dell Latitude D600.
 
-See comment.
+> If I hardcode "1" as the last parameter to ttm_bo_device_init() in place of a call to dma_addressing_limited(),the problem goes away.
 
-Jonathan
+Tried this on top on 5.4.0 and it helped here too.
 
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/iio/proximity/sx9500.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
-> index 612f79c53cfc6..287d288e40c27 100644
-> --- a/drivers/iio/proximity/sx9500.c
-> +++ b/drivers/iio/proximity/sx9500.c
-> @@ -675,11 +675,15 @@ static irqreturn_t sx9500_trigger_handler(int irq, void *private)
->  	return IRQ_HANDLED;
->  }
->  
-> -static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
-> +static int sx9500_buffer_postenable(struct iio_dev *indio_dev)
->  {
->  	struct sx9500_data *data = iio_priv(indio_dev);
->  	int ret = 0, i;
->  
-> +	ret = iio_triggered_buffer_postenable(indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	mutex_lock(&data->mutex);
->  
->  	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
-> @@ -696,6 +700,9 @@ static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
->  
->  	mutex_unlock(&data->mutex);
->  
-> +	if (ret)
-> +		iio_triggered_buffer_predisable(indio_dev);
-> +
->  	return ret;
->  }
->  
-> @@ -704,8 +711,6 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
->  	struct sx9500_data *data = iio_priv(indio_dev);
->  	int ret = 0, i;
->  
-> -	iio_triggered_buffer_predisable(indio_dev);
-> -
->  	mutex_lock(&data->mutex);
->  
->  	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
-> @@ -722,12 +727,13 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
->  
->  	mutex_unlock(&data->mutex);
->  
-> +	iio_triggered_buffer_predisable(indio_dev);
-> +
->  	return ret;
->  }
->  
->  static const struct iio_buffer_setup_ops sx9500_buffer_setup_ops = {
-> -	.preenable = sx9500_buffer_preenable,
-> -	.postenable = iio_triggered_buffer_postenable,
-> +	.postenable = sx9500_buffer_postenable,
->  	.predisable = sx9500_buffer_predisable,
->  };
->  
+-- 
+Meelis Roos <mroos@linux.ee>
+
+
+
+
 
