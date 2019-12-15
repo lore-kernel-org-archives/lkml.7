@@ -6,96 +6,121 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81747C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806E5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E392467F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B55924676
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 23:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="VTbj5pMF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gMw2MLwR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pOXVjKCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfLOXdV (ORCPT
+        id S1726526AbfLOXim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 18:33:21 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35323 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726299AbfLOXdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 18:33:21 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E2EF822348;
-        Sun, 15 Dec 2019 18:33:19 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 15 Dec 2019 18:33:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=lzvbMSFkVBR+nAocAB/eyxxphB8B1S4
-        O1CMOCvIRkYg=; b=VTbj5pMFSVZMVT7DLLhNqZee/qfUdpnNDdx36+SC/dzZoul
-        i6gJqNcdAXdAD7yXYiMZxGQ90NOYdWI+2m1rqljGkGtNtXAvtxTlgw5wIbG9f9sq
-        XbS47Q53S0MIvRphJfNoVpVBG6iaR5/MA1C5JPyK1+6Di/BBMxSBg7ObycblOvH7
-        /cwaSIp0lw33SYMBhyU1gDM+xnBaSA/0+PM8uimxpV0uVnPPfBPDX3eTAwcTd7ig
-        E8jRLPAVr/aEp+g/nUsfbkrc9ktVmU5I+gM2oarsRqus72w1YfZJ80xz8xWA5YiI
-        EDoLx1IKzrCzEAWrQUFkM0pgrVQcTyT1w9ZfLog==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=lzvbMS
-        FkVBR+nAocAB/eyxxphB8B1S4O1CMOCvIRkYg=; b=gMw2MLwRV8HiPZPynrJvdp
-        QFfd/wzjfxOiBSkUWVsAOcI739DKAuCe3x3dqIgCHRIgc8Q9ZM/7UxOzsykIN6uB
-        utST9rch5vnvj9BApLN7Ysy1AfSTh32mb25RBNeYwZFcm1lqZz6rLbzuJ48kHTnX
-        18zw5NNymXzMLFJJQxtydvu5wdd4qL6gGEI8mAaaP9+Jh23qSHcrBWe49Nz80kdP
-        5LHVdqwqr42uVnJquUplkZIzjIh95y43kvvoeRAGaiSqRitmSN5Ftf1/l1D/GGa1
-        n4BSk91Kk8d1JPdkkzwJffc2WMBqTa1U3rlZswIwshnYB8ZcXToByiIGhEPPISvQ
-        ==
-X-ME-Sender: <xms:vsL2XeKfNhmf3dE2gzpbzSs86ap6GIT2CTE7EPK6YQnAElmTyqdjZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgedgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:vsL2XQFldtGw-XBJ4xn4Sr5zMs6iCzbRlpQm8X6rp4tuqn3GhBl4VA>
-    <xmx:vsL2XQnx8qCojcex_yzhvksBdgoI8_Oc_QIClvjdvJZucVCPsybWXw>
-    <xmx:vsL2Xe01UqS1qt5wLIomDWeSscJlJ1dcSYXP7sFVH6wmLv1McK_Svg>
-    <xmx:v8L2XS1LxoMGXcASWDNuCFtSobL8cOMOIezDEfUBHtK3xKa7FlhVfA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AE86EE00A2; Sun, 15 Dec 2019 18:33:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-680-g58d4e90-fmstable-20191213v1
-Mime-Version: 1.0
-Message-Id: <8017a61e-e579-41ea-816a-4a76a6dc41e9@www.fastmail.com>
-In-Reply-To: <20191213135131.GA1822@cnn>
-References: <20191213135131.GA1822@cnn>
-Date:   Mon, 16 Dec 2019 10:05:02 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
-        "Joel Stanley" <joel@jms.id.au>
-Cc:     "Sai Dasari" <sdasari@fb.com>, "Vijay Khemka" <vijaykhemka@fb.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v5] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Content-Type: text/plain
+        Sun, 15 Dec 2019 18:38:42 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43657 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbfLOXim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 18:38:42 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bgp63K7Hz9sP3;
+        Mon, 16 Dec 2019 10:38:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576453120;
+        bh=LWwx46X/jK+HwaSLc5VFTlSHwQrlPJp/QnBR0I2tYV4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pOXVjKCjN4hLjtbRJ1D7SxprD1wYlQwO4HuY9wtzLoZx9d4mVNwVEOwCqVGcfLOMq
+         xviZOORu1gwywR1q+mJRPXKCBEVfajZwYG9eQ5Oc2rrufoaGYNb3L8FC+r698SJm9D
+         lcipo3E+JvywVnMepC31K9cy5l3xP5NeA2a4PE6tYlQzYYMOaeFVRC5VlCHxxRlOK1
+         vdZM55nLtHh0urlgLGRd166zaXTIAWwQK6WBxTOf3Sy3C0CAG/TNyMLaHT3Rw/G1jI
+         kxwszBr+lyI+m+24CWO3NhdMmV3aTZ3esOyW9l51wRdVwwW5/NZasQJCk+OqBTH66d
+         0+W5IOu/PL8fw==
+Date:   Mon, 16 Dec 2019 10:38:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Sabrina Dubroca <sd@queasysnail.net>
+Subject: linux-next: manual merge of the ipsec-next tree with the net-next
+ tree
+Message-ID: <20191216103837.6b5d856b@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/89HXB6vvh2nRwNy5pbK5wEX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019, at 00:21, Manikandan Elumalai wrote:
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
-> 
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
-> 
-> Signed-off-by : Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Acked-by        : Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
+--Sig_/89HXB6vvh2nRwNy5pbK5wEX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In the future, don't worry about aligning parts of the tag text. Single space is
-the custom (and is less effort!)
+Hi all,
 
-Andrew
+Today's linux-next merge of the ipsec-next tree got a conflict in:
+
+  net/unix/af_unix.c
+
+between commit:
+
+  3c32da19a858 ("unix: Show number of pending scm files of receive queue in=
+ fdinfo")
+
+from the net-next tree and commit:
+
+  b50b0580d27b ("net: add queue argument to __skb_wait_for_more_packets and=
+ __skb_{,try_}recv_datagram")
+
+from the ipsec-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/unix/af_unix.c
+index 6756a3ccc392,a7f707fc4cac..000000000000
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@@ -2100,8 -2058,8 +2100,8 @@@ static int unix_dgram_recvmsg(struct so
+  		mutex_lock(&u->iolock);
+ =20
+  		skip =3D sk_peek_offset(sk, flags);
+- 		skb =3D __skb_try_recv_datagram(sk, flags, scm_stat_del,
+- 					      &skip, &err, &last);
++ 		skb =3D __skb_try_recv_datagram(sk, &sk->sk_receive_queue, flags,
+ -					      NULL, &skip, &err, &last);
+++					      scm_stat_del, &skip, &err, &last);
+  		if (skb)
+  			break;
+ =20
+
+--Sig_/89HXB6vvh2nRwNy5pbK5wEX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32w/0ACgkQAVBC80lX
+0GystAf/VW5r7ZW8n2KvN/QoaDD3atlYHHPaVY3sZUYjfd16rUrPjF/9+3gL1TUb
+xeuYtzjX5+BjTyODk5MPmvjm7Y7XDtzq343xLCpUGvF3IUj2rbaiMx/qdoZDUU80
+7j3Ed42pxJ3S+ORoj/n6Z9Kq1z1mzQDMAXa0/XgchkzisduGy9Jdi+BSZEjdmM0c
+Ow8GA0CnFCi9UgfRx9xRjgqKPO+YL0n6mJEBq03LUY57/cMVHwjOlWQrF4KpX5Ef
+UaMAn2fpp94BalTyf/fSodtDi/kcZZskOC2ENvDgMSXMcAadPBPJgTAwglQDhqAR
+F8Tgu1WOWML+fzL7ejWWUshJmEsnMw==
+=p8Wu
+-----END PGP SIGNATURE-----
+
+--Sig_/89HXB6vvh2nRwNy5pbK5wEX--
