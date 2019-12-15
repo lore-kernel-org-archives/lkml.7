@@ -2,101 +2,172 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0721CC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9042CC2D0CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBC5206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62151206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 17:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPR1bcxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfLORmz (ORCPT
+        id S1726512AbfLORpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:42:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54948 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726260AbfLORmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 12:42:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D11A6AFC6;
-        Sun, 15 Dec 2019 17:42:52 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: remove BUG_ON used as assertions
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191215171237.27482-1-pakki001@umn.edu>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <38c5aa97-675b-b4fa-14ab-04988a9c6a39@suse.com>
-Date:   Sun, 15 Dec 2019 19:42:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191215171237.27482-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 15 Dec 2019 12:45:32 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38136 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfLORpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 12:45:32 -0500
+Received: by mail-pg1-f194.google.com with SMTP id a33so2327573pgm.5;
+        Sun, 15 Dec 2019 09:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=Q2WwaFCyRQa/w8Apj3A/MtAf1w2f53OCqsqyZSE7hvI=;
+        b=UPR1bcxPy9Vjxp9/EG7tvaBtkGYkH8V33DwNjpuuBrBYihO6kXOTNdFc7uu8WzNBJo
+         iXzJa5jV5DOkYYrxDgU2Hxocxq2RPziX5w4ffiiclSOMXuE5dxkKJB5dYiCTpBkXKcAI
+         uqXjz9c2kjSF7QUqT3NP8XZWsuEwq7ik0vVC/yfWpj29k9l0IyzcHeLh6LoSpqIHgeMG
+         cYsyjgNnFgUUnCh2jOqjxusVM8fISB2k1s7znnzdCqgsBLM+92ij3mJwdmS2seNWd+JT
+         P03JYYrdmS6dD3g+J3s4WGB6OFJd2WLBr0O/aFyGLmq/Bd/C+0DWI5LIwdKyLoQ2Yglw
+         r1sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=Q2WwaFCyRQa/w8Apj3A/MtAf1w2f53OCqsqyZSE7hvI=;
+        b=s/eUA99AhPQGkmgjF2tKkzbcXGGpqKwhg1+d69IALtkEakuqeE7txhs1PKIbEwB43r
+         OiU6nQojk+VkSEA7jYS2KSE8eZ6O2Fms2F+zIk4B1SAWSyiS/WPmuHEwCC5JFFDAvp4M
+         lOxCBtwCaQ9zzqjlz1qVV2vhTXfF1IBhudpeny0VwaC087cOd9aLnzz+W+BeMSEmJ9MU
+         n4y86QTiUjhy64GkgpabhX0V2cSsTJA2zdXYO6bwHQcKLHK3ThQ/WU7IZ1VXef5JoMwD
+         RL5vbQavricPg7h7ebtnZu48XUqPg4dBEByG78kVJ1e7RUpXxJnva6pFzWLCztsjviql
+         KWag==
+X-Gm-Message-State: APjAAAUWmghPVQC0QikWKfFoNbK0NCPgVJZ05iAgXfO47chMPjHKC0ua
+        OEdKqzHHMxrsoW2Ke9EgL0gJjk7R
+X-Google-Smtp-Source: APXvYqxFiGWefbEIVcCYPhTCh7gewfvdKWTZpN6PJaI72C82uKc+6+kT+IXgGZB8J1d7lmkA1bTqhw==
+X-Received: by 2002:a63:4503:: with SMTP id s3mr13240195pga.311.1576431930324;
+        Sun, 15 Dec 2019 09:45:30 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i3sm19335361pfg.94.2019.12.15.09.45.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Dec 2019 09:45:29 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     linux-hwmon@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v2 0/1] Summary: hwmon driver for temperature sensors on SATA drives
+Date:   Sun, 15 Dec 2019 09:45:08 -0800
+Message-Id: <20191215174509.1847-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the past, several attempts have been made to add support for reporting
+SCSI/[S]ATA drive temperatures to the Linux kernel. This is desirable to
+have a means to report drive temperatures to userspace without root
+privileges and in a standard format, but also to be able to tie reported
+temperatures with the thermal subsystem.
 
+The most recent attempt was [1] by Linus Walleij. It went through a total
+of seven iterations. At the end, it was rejected for a number of reasons;
+see the provided link for details. This implementation resides in the
+SCSI core. It originally resided in libata but was moved to SCSI per
+maintainer request, where it was ultimately rejected.
 
-On 15.12.19 г. 19:12 ч., Aditya Pakki wrote:
-> alloc_extent_state_atomic() allocates extents via GFP_ATOMIC flag
-> and cannot fail. There are multiple invocations of BUG_ON on the
-> return value to check for failure. The patch replaces certain
-> invocations of BUG_ON by returning the error upstream.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+The feedback on this approach suggests to use the SCSI Temperature log page
+[0x0d] as means to access drive temperature information. It is unknown
+if this is implemented in any real SCSI drive. The feedback also suggests to
+obtain temperature from ATA drives, convert it into the SCSI temperature log
+page in libata-scsi, and to use that information in a hardware monitoring
+driver. The format and method to do this is documented in [3]. This is not
+currently implemented in the Linux kernel.
 
-Have you actually audited all callers of __set_extent_bit whether they
-correctly handle failures?
+An earlier submission of a driver to report SCSI/SATA drive temperatures
+was made back in 2009 by Constantin Baranov [2]. This submission resides
+in the hardware monitoring subsystem. It does not rely on changes in the
+SCSI subsystem or in libata-scsi. Instead, it registers itself with the
+SCSI subsystem using scsi_register_interface(). It was rejected primarily
+because it executes ATA passthrough commands without verification that it
+is actually connected to an ATA drive.
+
+Both submissions use SMART attributes to read drive temperature information.
+[1] also tries to identify temperature limits from those attributes.
+Unfortunately, SMART attributes are not well defined, resulting in relative
+complex code trying to identify the exact format of the reported data.
+
+With the available information and feedback, we can make a number of
+observations and conclusions.
+a) Using available (S)ATA drive temperature information and convert it to
+   a SCSI log page is an interesting idea. On the downside, it would add a
+   substantial amount of complexity to libata-scsi. The code would either
+   have to be optional, or it would have to be built into the kernel even
+   if it is never used on a given system. Without access to SCSI drives
+   supporting this feature, it would be all but impossible to test the code
+   against such a drive. It would neither be possible to test correctness
+   of the code in libata-scsi nor in the driver using that information.
+   Overall it would be much easier and much less risky to implement such
+   code on the receiving side (ie in a driver reporting the temperatures)
+   instead of trying to convert the information from one format to another
+   first. In summary, it is neither practical nor feasible. On top of that,
+   there is no guarantee that code implementing this functionality would
+   ever be accepted into the kernel for this very reason.
+b) The code needed to read and analyze SCSI temperature log pages is quite
+   complex (see smartmontools [5]). There is no existing support code
+   in the Linux kernel; such code would have to be written. This makes
+   the approach discussed in a) even more risky and less practical.
+c) Overall, any attempt to report temperature information for anything
+   but SATA drives in the kernel is not practical due to the complexity
+   involved, and due to the inability to test the resulting code with
+   non-SATA drives.
+d) Using SMART data for anything but basic temperature reporting is not
+   really feasible due to the lack of standardization. Any attempt to do
+   this would add a substantial amount of code, ambiguity, and risk.
+
+This submission implements a driver to report the temperature of SATA
+drives through the hardware monitoring subsystem. It is implemented as
+stand-alone driver in the hardware monitoring subsystem. The driver uses
+the mechanism from submission [1] to register with the SCSI subsystem.
+By using this mechanism, changes in the SCSI or ATA subsystems are not
+required.  To reduce risk and complexity, it only instantiates after
+reliably validating that it is connected to a SATA drive. It does not
+attempt to report the temperature of non-SATA drives.
+
+The driver uses the SCT Command Transport feature set as specified in
+ATA8-ACS [4] to read and report the temperature as well as temperature
+limits and lowest/highest temperature information (if available) for
+SATA drives. If a drive does not support SCT Command Transport, the driver
+attempts to access a limited set of well known SMART attributes to read
+the drive temperature. In that case, only the current drive temperature
+is reported.
+
+---
+v2: scsi_cmd variable is no longer static
+    Fixed drive name in Kconfig 
+    Describe heuristics used to select SCT or SMART in commit message
+    Added Reviewed-by: from Linus Walleij
+
+Note:
+    I thought about waiting for more feedback, but maybe improvements
+    can be made with follow-up patches.
+
+---
+References:
+[1] https://patchwork.kernel.org/patch/10688021/
+[2] https://lore.kernel.org/lkml/20090913040104.ab1d0b69.const@mimas.ru/
+[3] http://www.t10.org/cgi-bin/ac.pl?t=f&f=sat5r02.pdf
+    Information technology - SCSI / ATA Translation - 5 (SAT-5),
+    section 10.3.8 (Temperature log page).
+[4] http://www.t13.org/documents/uploadeddocuments/docs2008/d1699r6a-ata8-acs.pdf
+    ANS T13/1699-D "Information technology - AT Attachment 8 - ATA/ATAPI Command
+    Set (ATA8-ACS)"
+[5] https://github.com/mirror/smartmontools.git
