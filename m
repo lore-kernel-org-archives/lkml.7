@@ -2,86 +2,78 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B8C43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3198BC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AFD206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCB8206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 18:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="k9UFG8SI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6iJOrGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfLOSj6 (ORCPT
+        id S1726445AbfLOSnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 13:39:58 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:45658 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfLOSj5 (ORCPT
+        Sun, 15 Dec 2019 13:43:39 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36072 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbfLOSnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 13:39:57 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47bY9S4fVVz9vZ5m
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 18:39:56 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id b-cHsML4a5R8 for <linux-kernel@vger.kernel.org>;
-        Sun, 15 Dec 2019 12:39:56 -0600 (CST)
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47bY9S3F2lz9vZ6L
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 12:39:56 -0600 (CST)
-Received: by mail-yb1-f197.google.com with SMTP id 7so4856018ybc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 10:39:56 -0800 (PST)
+        Sun, 15 Dec 2019 13:43:39 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so4305319ljg.3;
+        Sun, 15 Dec 2019 10:43:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N+KGvwvA/QLzHWvp6n2dKVOBnMZ8T8c04n2Q8O++CA0=;
-        b=k9UFG8SIcRKaX4Q2iSTbtora6HGKeDMpq1Gl7bDKhRSLYwEv55fyevMBuftxXYBvM9
-         mwVbBP2zzaVpB26jKOLryFH2LUR8U2/ljiWua+dMHn6BfHYt8M5UysZBq7kSkAd0LaHG
-         HSZYrpgFyGOcud4VqxASd1VkQpyDyJH2Uz2cd7fJ2NHT6n607isZZfA1In0qDcXD+RGO
-         D8j51XSAWRNKTS+9w/dxT6kH/J+Rpq9XxNsRRCvfpVClgOfVhE22ptfPpFv2Wmx7Ajt+
-         MTP5ka1ORNG6rL2Z/8hvsXsHl2sE/FwJqGmAPEdnC7J5SMkGfGdD32S+ePhtHxLV/ck0
-         wI4w==
+        bh=LH/0zcyS2tN4td5pD8aR0i/TpwaV4FiJpG/372fyzp8=;
+        b=J6iJOrGMCWuVVZsHSjxKG56ysHXvOD3mqWNDhq38TP97+e39sE5hShC0qV6eX0JE9/
+         /bX2dDdIZ6q98cOw6u6ZOJzlBQPBgq65j81vgbrqyGpHGKACda+1Q6OMiqrDvCEjX+tl
+         lu2Eg+GTJVM92RnyQk0FMFaVvrYVmYX/fQGMp/Mv+HlnoBBloISkJtv4xQbsutbZR9iO
+         tIOK2+ZSi0boHuagmqN3BQGpcbYl78BaztV35hQZmKhwyZn8Q4HwFmoCx2ihjO8h7Ib3
+         1kLorHCUBXtUEttOI4r9KG0SbdZR+4EbGIBZVnbFt5K2K6qdymV2cxikiF7BLiubiGwo
+         4CmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N+KGvwvA/QLzHWvp6n2dKVOBnMZ8T8c04n2Q8O++CA0=;
-        b=Il0+Cno4jmuaegU0M2WwyqFELlXDUUfm0PzsgwCMHzmT0VORUBdap8zn28DwcGbpdn
-         0T2nU7PI4u/UQCjzjIYN4kdPBwI3KOXZT+ycYBcsAf0zmF5u1fY+hEwV885TJihR2IKH
-         hQXm6/Kl7/m24mgUiV4AnqcKrfDwcj/hHPiG5MB2mHP5VlvU6U74pv8YH+PUCyy9tkuG
-         Or4JOKSO8kxu3pxewLncnMonxKWe8soZga8QOVYlP61Ri2A8pYNCaShkCH7L6AnblJk4
-         eY+x0osbiX/DhB19pz0LF2+anNyRnV7OMy0cmjnCIWFWDirPp4iFP/bz4YEVAO8TKhH5
-         GiPQ==
-X-Gm-Message-State: APjAAAWkkniXqmzdokeWIn5/VqPaGV2LMrVg0z+iX2yVXNCDJt6lQ7x0
-        GfiRvsxd+a5FAh8XO7dFLPwksBbQNk5dZ+DTYzf/fnTVvDhGSlkdDfrCitP5yPwmPPUj4APGVwR
-        9pCacb+QP1ha8HcZDCO0leDfOjvBm
-X-Received: by 2002:a81:6084:: with SMTP id u126mr16439883ywb.97.1576435195932;
-        Sun, 15 Dec 2019 10:39:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwj2HFxz2fPas9IoLih/XHlVctmKxdKuWBWm3U9W2JlelS+XBP+BNvOtNVMi5xtiygok2RAFA==
-X-Received: by 2002:a81:6084:: with SMTP id u126mr16439870ywb.97.1576435195705;
-        Sun, 15 Dec 2019 10:39:55 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id n142sm5873159ywd.26.2019.12.15.10.39.54
+        bh=LH/0zcyS2tN4td5pD8aR0i/TpwaV4FiJpG/372fyzp8=;
+        b=lh0YB+9grb9aJBu4CRWe6VONfNO5fU2nkeVExI3FMs+i5aJJ/pHO8QFBMCjZE1s7Pb
+         uyMFSztXiKXBJbdztl+t8YN2WhJYRQgbuOzxlrXpCdwoOKmsF+baTBgRFIjD+KCFpoZH
+         NK9zr4z8ax9aZRE+cyfbdMA8waGHEr4XWNUwY/1ARruCGhZj4VOi30x1+NDTtfVzpQSt
+         BQtF0mmfuE99hEsfEiPPo9QTJ3Or4Ywwk+KcIp2E22u/l3Y1AeFX5r5WaKtgFjz4umlh
+         5hOwCajp6yheDLi3BfYWjQ1q1raPzjCXmdp3CDoKN/ESYElzoOQIWGbp01ITewY8J6oZ
+         Vv5w==
+X-Gm-Message-State: APjAAAVp+p7CjUP2fA1vhUuNsa7gVBuNeSzuh5gvvkiXFl2ZgWEEU3Ir
+        nIEw81pINev+HREyfO4wMAI=
+X-Google-Smtp-Source: APXvYqxfsMaK41jJkcs7vssL2EU4WHp3FndAzOUnht3wmhFCnObcwoYSdbTmLzYwX6sWSAO6pqVKqw==
+X-Received: by 2002:a2e:9e19:: with SMTP id e25mr6107941ljk.179.1576435416835;
+        Sun, 15 Dec 2019 10:43:36 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id k5sm7455513lfd.86.2019.12.15.10.43.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 10:39:55 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sun, 15 Dec 2019 10:43:36 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] regmap: replace multiple BUG_ON assertions with error return code
-Date:   Sun, 15 Dec 2019 12:39:52 -0600
-Message-Id: <20191215183952.689-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+Subject: [PATCH v1] brcmfmac: Keep OOB wake-interrupt disabled when it shouldn't be enabled
+Date:   Sun, 15 Dec 2019 21:42:24 +0300
+Message-Id: <20191215184224.11827-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,59 +81,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various register operations check for the validity of cache_ops
-struct and crash in case of failure. However, by returning the error
-to the callers, instead of assert, these functions can avoid the crash.
+NVIDIA Tegra SoCs do not like when OOB wake is enabled and WiFi interface
+is in DOWN state during suspend. This results in a CPU hang on programming
+OOB wake-up state of the GPIO controller during of system's suspend.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+The solution is trivial: don't enable wake for the OOB interrupt when it
+should be disabled.
+
+This fixes hang on Tegra20 (Acer A500) and Tegra30 (Nexus 7) devices which
+are using BCM4329 and BCM4330 WiFi chips respectively.
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/base/regmap/regcache.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c  | 10 +++++-----
+ .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.h    |  1 -
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
-index a93cafd7be4f..855fa25ae595 100644
---- a/drivers/base/regmap/regcache.c
-+++ b/drivers/base/regmap/regcache.c
-@@ -238,7 +238,8 @@ int regcache_read(struct regmap *map,
- 	if (map->cache_type == REGCACHE_NONE)
- 		return -ENOSYS;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+index 96fd8e2bf773..b5088379b595 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+@@ -119,7 +119,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+ 			brcmf_err("enable_irq_wake failed %d\n", ret);
+ 			return ret;
+ 		}
+-		sdiodev->irq_wake = true;
++		disable_irq_wake(pdata->oob_irq_nr);
  
--	BUG_ON(!map->cache_ops);
-+	if (!map->cache_ops)
-+		return -EINVAL;
+ 		sdio_claim_host(sdiodev->func1);
  
- 	if (!regmap_volatile(map, reg)) {
- 		ret = map->cache_ops->read(map, reg, value);
-@@ -267,7 +268,8 @@ int regcache_write(struct regmap *map,
- 	if (map->cache_type == REGCACHE_NONE)
- 		return 0;
+@@ -178,10 +178,6 @@ void brcmf_sdiod_intr_unregister(struct brcmf_sdio_dev *sdiodev)
+ 		sdio_release_host(sdiodev->func1);
  
--	BUG_ON(!map->cache_ops);
-+	if (!map->cache_ops)
-+		return -EINVAL;
+ 		sdiodev->oob_irq_requested = false;
+-		if (sdiodev->irq_wake) {
+-			disable_irq_wake(pdata->oob_irq_nr);
+-			sdiodev->irq_wake = false;
+-		}
+ 		free_irq(pdata->oob_irq_nr, &sdiodev->func1->dev);
+ 		sdiodev->irq_en = false;
+ 		sdiodev->oob_irq_requested = false;
+@@ -1167,6 +1163,10 @@ static int brcmf_ops_sdio_resume(struct device *dev)
+ 		if (ret)
+ 			brcmf_err("Failed to probe device on resume\n");
+ 	} else {
++		if (sdiodev->wowl_enabled &&
++		    sdiodev->settings->bus.sdio.oob_irq_supported)
++			disable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
++
+ 		brcmf_sdiod_freezer_off(sdiodev);
+ 	}
  
- 	if (!regmap_volatile(map, reg))
- 		return map->cache_ops->write(map, reg, value);
-@@ -343,7 +345,8 @@ int regcache_sync(struct regmap *map)
- 	const char *name;
- 	bool bypass;
- 
--	BUG_ON(!map->cache_ops);
-+	if (!map->cache_ops)
-+		return -EINVAL;
- 
- 	map->lock(map->lock_arg);
- 	/* Remember the initial bypass state */
-@@ -412,7 +415,8 @@ int regcache_sync_region(struct regmap *map, unsigned int min,
- 	const char *name;
- 	bool bypass;
- 
--	BUG_ON(!map->cache_ops);
-+	if (!map->cache_ops)
-+		return -EINVAL;
- 
- 	map->lock(map->lock_arg);
- 
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
+index 0bd47c119dae..163fd664780a 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.h
+@@ -178,7 +178,6 @@ struct brcmf_sdio_dev {
+ 	bool sd_irq_requested;
+ 	bool irq_en;			/* irq enable flags */
+ 	spinlock_t irq_en_lock;
+-	bool irq_wake;			/* irq wake enable flags */
+ 	bool sg_support;
+ 	uint max_request_size;
+ 	ushort max_segment_count;
 -- 
-2.20.1
+2.24.0
 
