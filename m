@@ -2,143 +2,150 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E188C2D0CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA661C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD7824676
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADE624676
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfLOU1X (ORCPT
+        id S1726526AbfLOU1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 15:27:23 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:51232 "EHLO mail.bugwerft.de"
+        Sun, 15 Dec 2019 15:27:47 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:49584 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOU1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 15:27:23 -0500
-Received: from [192.168.178.200] (p57BC9BBE.dip0.t-ipconnect.de [87.188.155.190])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 0143A2E79BE;
-        Sun, 15 Dec 2019 20:20:57 +0000 (UTC)
-Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
-        pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-9-daniel@zonque.org>
- <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
- <20191212163315.GA3932@kunai>
-From:   Daniel Mack <daniel@zonque.org>
-Autocrypt: addr=daniel@zonque.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-Date:   Sun, 15 Dec 2019 21:27:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726470AbfLOU1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 15:27:47 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1igaUO-00045X-OG; Sun, 15 Dec 2019 21:27:40 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
+Date:   Sun, 15 Dec 2019 21:27:40 +0100
+Message-ID: <2681192.H4ySjFOPB8@diego>
+In-Reply-To: <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
+References: <cover.1575932654.git.robin.murphy@arm.com> <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com> <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212163315.GA3932@kunai>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Anand,
 
-Thanks for the review!
+Am Sonntag, 15. Dezember 2019, 19:51:50 CET schrieb Anand Moon:
+> On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK817,
+> > so it makes little sense for the driver to have to have two completely
+> > different mechanisms to handle essentially the same thing. Bring RK805
+> > in line with the RK809/RK817 flow to clean things up.
+> >
+> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> > ---
 
-On 12/12/2019 5:33 pm, Wolfram Sang wrote:
-> Hi Luca,
+[...]
+
+> I am sill getting the kernel warning on issue poweroff see below.
+> on my Rock960 Model A
+> I feel the reason for this is we now have two poweroff callback
+> 1  pm_power_off = rk808_device_shutdown
+> 2  rk8xx_syscore_shutdown
+
+Nope, the issue is just the i2c subsystem complaining that the
+Rocckhip i2c drives does not provide an atomic-transfer function, see
+	"No atomic I2C transfer handler for 'i2c-0'"
+in your warning.
+
+Somewhere it was suggested that the current transfer function just
+works as atomic as well.
+
+
+> In my investigation earlier common function for shutdown solve
+> the issue of clean shutdown.
+
+This is simply a result of your syscore-shutdown function running way to
+early, before the i2c subsystem switched to using atomic transfers.
+
+This also indicates that this would really be way to early, as other parts
+of the kernel could also still be running.
+
+Heiko
+
+
+> for *rockchip,system-power-controller* dts property
+> we can used flags if check if this property support clean shutdown
+> for that device.
 > 
-> thanks for the review!
+> [  565.009291] xhci-hcd xhci-hcd.0.auto: USB bus 5 deregistered
+> [  565.010179] reboot: Power down
+> [  565.010536] ------------[ cut here ]------------
+> [  565.010940] No atomic I2C transfer handler for 'i2c-0'
+> [  565.011437] WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40
+> i2c_transfer+0xe4/0xf8
+> [  565.012126] Modules linked in: snd_soc_hdmi_codec dw_hdmi_i2s_audio
+> rockchipdrm nvme analogix_dp nvme_core brcmfmac hci_uart dw_mipi_dsi
+> dw_hdmi btbcm cec panfrost bluetooth drm_kms_helper brcmutil gpu_sched
+> cfg80211 crct10dif_ce snd_soc_rockchip_i2s snd_soc_simple_card drm
+> ecdh_generic snd_soc_rockchip_pcm snd_soc_simple_card_utils
+> phy_rockchip_pcie ecc rtc_rk808 rfkill rockchip_thermal
+> pcie_rockchip_host ip_tables x_tables ipv6 nf_defrag_ipv6
+> [  565.015578] CPU: 0 PID: 1 Comm: shutdown Not tainted
+> 5.5.0-rc1-00292-gd46dd6369c55 #7
+> [  565.016260] Hardware name: 96boards Rock960 (DT)
+> [  565.016666] pstate: 60000085 (nZCv daIf -PAN -UAO)
+> [  565.017087] pc : i2c_transfer+0xe4/0xf8
+> [  565.017425] lr : i2c_transfer+0xe4/0xf8
+> [  565.017762] sp : ffff80001004baf0
+> [  565.018052] x29: ffff80001004baf0 x28: ffff00007d208000
+> [  565.018517] x27: 0000000000000000 x26: 0000000000000000
+> [  565.018982] x25: 0000000000000008 x24: 0000000000000000
+> [  565.019447] x23: ffff00007d208000 x22: ffff80001004bc64
+> [  565.019912] x21: ffff80001004bb48 x20: 0000000000000002
+> [  565.020377] x19: ffff000078502080 x18: 0000000000000010
+> [  565.020842] x17: 0000000000000001 x16: 0000000000000019
+> [  565.021307] x15: ffff00007d208470 x14: ffffffffffffffff
+> [  565.021772] x13: ffff80009004b857 x12: ffff80001004b860
+> [  565.022237] x11: ffff800011841000 x10: ffff800011a10658
+> [  565.022702] x9 : 0000000000000000 x8 : ffff800011a11000
+> [  565.023167] x7 : ffff800010697c78 x6 : 0000000000000262
+> [  565.023632] x5 : 0000000000000000 x4 : 0000000000000000
+> [  565.024096] x3 : 00000000ffffffff x2 : ffff800011841ab8
+> [  565.024561] x1 : 7b11701b0ae78800 x0 : 0000000000000000
+> [  565.025027] Call trace:
+> [  565.025246]  i2c_transfer+0xe4/0xf8
+> [  565.025556]  regmap_i2c_read+0x5c/0xa0
+> [  565.025886]  _regmap_raw_read+0xcc/0x138
+> [  565.026230]  _regmap_bus_read+0x3c/0x70
+> [  565.026568]  _regmap_read+0x60/0xe0
+> [  565.026875]  _regmap_update_bits+0xc8/0x108
+> [  565.027241]  regmap_update_bits_base+0x60/0x90
+> [  565.027633]  rk808_device_shutdown+0x6c/0x88
+> [  565.028010]  machine_power_off+0x24/0x30
+> [  565.028356]  kernel_power_off+0x64/0x70
+> [  565.028693]  __do_sys_reboot+0x15c/0x240
+> [  565.029038]  __arm64_sys_reboot+0x20/0x28
+> [  565.029390]  el0_svc_common.constprop.0+0x68/0x160
+> [  565.029811]  el0_svc_handler+0x20/0x80
+> [  565.030141]  el0_sync_handler+0x10c/0x180
+> [  565.030493]  el0_sync+0x140/0x180
+> [  565.030785] ---[ end trace 5167e842ce15f686 ]---
 > 
->> good, but I think there's a problem in this function. A "normal"
->> master_xfer function issues a repeated start between one msg and the
->> next one, at least in the typical case where all msgs have the same
->> slave address. Your implementation breaks repeated start. At first sight
->> we might need more complex code here to coalesce all consecutive msgs
->> with the same address into a single i2c_transfer() call.
+> -Anand
 > 
-> Note that it is by far the standard case that all messages in a transfer
-> have the same client address (99,999%?). But technically, this is not a
-> requirement and the repeated start on the bus is totally independent of
-> the addresses used. It is just a master wanting to send without being
-> interrupted by another master.
-
-I'm not quite sure I understand.
-
-Let's assume the following setup. An i2c client (some driver code) is
-sending a list of messages to the a2b xfer function, which in turn is
-logically connected to a 'real' i2c bus master that'll put the data on
-the wire.
-
-The a2b code has to tell the 'master node' the final destination of the
-payload by programming registers on its primary i2c address, and then
-forwards the messages to its secondary i2c address. The layout of the
-messages don't change, and neither do the flags; i2c messages are being
-sent as i2c messages, except their addresses are changed, a bit like NAT
-in networking. That procedure is described on page 3-4 of the TRM,
-"Remote Peripheral I2C Accesses".
-
-The 'real' i2c master that handles the hardware bus is responsible for
-adding start conditions, and as the messages as such are untouched, I
-believe it should do the right thing. The code in my xfer functions
-merely suppresses reprogramming remote addresses by remembering the last
-one that was used, but that is independent of the start conditions on
-the wire.
-
-Maybe I'm missing anything. Could you provide an example that explains
-in which case this approach would leads to issues?
 
 
-Thanks,
-Daniel
+
+
