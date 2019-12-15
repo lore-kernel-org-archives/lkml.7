@@ -2,132 +2,82 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B8AC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2FDC43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEAD20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B9F20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQMgThpc"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="xJxXeatC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfLOTbC (ORCPT
+        id S1726559AbfLOTcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:31:02 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46384 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfLOTbC (ORCPT
+        Sun, 15 Dec 2019 14:32:12 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44699 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfLOTcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:31:02 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 38so3957562qtb.13;
-        Sun, 15 Dec 2019 11:31:01 -0800 (PST)
+        Sun, 15 Dec 2019 14:32:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so2389371pgl.11
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:32:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BjP8HELsIsX5By51jIuxfXXGXh1QbgEGgtOsuZGRL0M=;
-        b=TQMgThpcoVuVJLZtkZShTFA/9wrwkFck9yI7Rv3ZjRD4Phf7BdW9xRjTrNPD4REwBm
-         H6kiVGtYVDtWNR9Gv7MplIOBn9RZcOkTNIml0Vhsi52XdlL5S5rHGmJ7GKkGcge8/Cnx
-         c/BDzNYvSk36kOGyatKY2PlsVAJrwGM08RxezNut+yzLcs6dTgkMmJ2hH++vMIgPck6j
-         91oj18I2ylXSpyAXAfgO/0K99weOLV8qcrc+iNQ2wEoy0AzDMOEgYlJtz0Ri1121g+i6
-         14RKnyHWMYIXxYCNW0XMTpM2fDxgJe8m2f2sizgQ2oyds90Sb0xQGagY3Y3HohSThVEp
-         z1Vw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=SD6710XuCGfLCRjEaTIYpMnkGtQ6zZzJk7TYgaQ/Siw=;
+        b=xJxXeatCAJCU30I9wwZmedY0avOrIT77KoTok0JQ/JbFO9lmaK+0DfZ89kJwB0PnQH
+         vuqLgph7k+ofwTsPyEL9u2khQekl5nD5+qrkeNIqdcOguBAfTjcQsMOuQ3Gq4fdzpp50
+         2uwVakow0BOR4CG59dBrETZ2NnXytgiVlYinqOvoy8gANeId4a4KH7WxV1aHKvk1zbyT
+         n7LuQeeW+7Y1v1j9HVLAbRjTt0poRRMSVVpQ7lsQUyZL86mK6mCiEzrioyaGxJT9Cs6H
+         y9jM9vZnshGS8Ay/Xhicf9E5k0Kk7JKMW5CvYpLz36LKYETiZL81fF59+LD3MStjEGre
+         dd5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BjP8HELsIsX5By51jIuxfXXGXh1QbgEGgtOsuZGRL0M=;
-        b=HXdx/PjdyADeIe1oRUT7fE41lI9EiVIugyByRbJZsw0Vqm1PNsQLHGu/m8Sw1bdau8
-         3ltA+smhelg0taVADc29uTqF94fhRm9WQG4bzfp+vCshE5YVzxtYbkr1sy5qfYtnS3Ei
-         u5eqvpeDT6qzrOzY6MKD+NLQZvv2z0225ZIExEphn9s4OouHU0GpS1bg0Q/MD4zQ7P2L
-         z5yPiV2pfjtCo0yTf8/RSMjX3az63dHfTvQYHBD2WVz4IVOPti0b5+crHqos/ACTWEp6
-         A055gj2Z3NESL9/SlFLU1p9mFd10SrvZAPncmosFsTIunW/CZXNkQsJio085SYB0mTl7
-         AXpA==
-X-Gm-Message-State: APjAAAVek9NRM6cgcb1MssMAOjv7/jVMbSLUNII/xBVjJ+U2r4cSMLFX
-        6mi308vaxb28dFdSQSBUEvY=
-X-Google-Smtp-Source: APXvYqy5wp9ETUh/e2UVGHP0aCkuLaRAj4hWy4GeKfE5NHGl0J2LOqkkOanUVmrVK+B7QNCbvuuZYg==
-X-Received: by 2002:ac8:33a5:: with SMTP id c34mr21919830qtb.359.1576438261023;
-        Sun, 15 Dec 2019 11:31:01 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q25sm5233756qkq.88.2019.12.15.11.30.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=SD6710XuCGfLCRjEaTIYpMnkGtQ6zZzJk7TYgaQ/Siw=;
+        b=SWwyVrpL/30U+Mm4ZUvs9PxsNq2U5KVJZzIdQdbBgAzCemIYIBcuGjX1GjbeGEmTEt
+         Isa2j7zO7UfKi543DSLqB4gc4pn4ZpjFVOusby3eT5cGjwKiY7Kn4Zid4rWOLIA0DcgO
+         xqPAhksRZnW6Xw4qyCE2F22306Xln94x2K5K1tr1k0TRW9azn88E1ocE3pplJqb70pQj
+         NPd01nB0cPborfEAqYnFM8+ic5dt3cqICDApgb/w2LgINmm+EPZEgSdbaED3q/zKc3bY
+         Y2puN29lFvfzzQsL9LQKbZAbXlUvB1CZgChDH7FsCHYpsY9aZdJ2qMtzpBBjilW8anD4
+         DExg==
+X-Gm-Message-State: APjAAAUmRUWl5Q/7Lrp1Rt7dUtSZ5J6yQ7GpIaLyRoJgWw2oj0kSqV21
+        21GrBpNFgN2+RovXWxywXaKlww==
+X-Google-Smtp-Source: APXvYqxYeiVnRfIk5g9EJ6vrTN8Y+jTHPgtnkXSmDuJTA/McKpsjUR7LQKN3ZfU+1S+Sk+mQAszwLg==
+X-Received: by 2002:a62:fc93:: with SMTP id e141mr11845222pfh.262.1576438331400;
+        Sun, 15 Dec 2019 11:32:11 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id d23sm18846406pfo.176.2019.12.15.11.32.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:31:00 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 15 Dec 2019 14:30:58 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH 10/10] efi/libstub/x86: avoid thunking for native
- firmware calls
-Message-ID: <20191215193054.GA2187004@rani.riverdale.lan>
-References: <20191214175735.22518-1-ardb@kernel.org>
- <20191214175735.22518-11-ardb@kernel.org>
+        Sun, 15 Dec 2019 11:32:11 -0800 (PST)
+Date:   Sun, 15 Dec 2019 11:32:08 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Cristian Birsan <cristian.birsan@microchip.com>
+Cc:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: usb: lan78xx: Fix error message format specifier
+Message-ID: <20191215113208.7378295b@cakuba.netronome.com>
+In-Reply-To: <20191213163311.8319-1-cristian.birsan@microchip.com>
+References: <20191213163311.8319-1-cristian.birsan@microchip.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191214175735.22518-11-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 06:57:35PM +0100, Ard Biesheuvel wrote:
->  
-> @@ -232,7 +232,7 @@ static inline bool efi_is_native(void)
->  #define efi_table_attr(table, attr, instance) ({			\
->  	__typeof__(((table##_t *)0)->attr) __ret;			\
->  	if (efi_is_native()) {						\
-> -		__ret = ((table##_t *)instance)->attr;			\
-> +		__ret = instance->attr;					\
->  	} else {							\
->  		__typeof__(((table##_32_t *)0)->attr) at;		\
->  		at = (((table##_32_t *)(unsigned long)instance)->attr);	\
+On Fri, 13 Dec 2019 18:33:11 +0200, Cristian Birsan wrote:
+> Display the return code as decimal integer.
+> 
+> Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 
-Is there a reason we didn't remove this cast for native-mode earlier in
-the series?
-
-> @@ -242,19 +242,25 @@ static inline bool efi_is_native(void)
->  })
->  
->  #define efi_call_proto(protocol, f, instance, ...)			\
-> -	__efi_early()->call((unsigned long)				\
-> +	efi_is_native()							\
-> +		? instance->f(instance, ##__VA_ARGS__)			\
-> +		: efi64_thunk((unsigned long)				\
->  				efi_table_attr(protocol, f, instance),	\
-> -		instance, ##__VA_ARGS__)
-> +			instance, ##__VA_ARGS__)
->  
->  #define efi_call_early(f, ...)						\
-> -	__efi_early()->call((unsigned long)				\
-> +	efi_is_native()							\
-> +		? __efi_early()->boot_services->f(__VA_ARGS__)		\
-> +		: efi64_thunk((unsigned long)				\
->  				efi_table_attr(efi_boot_services, f,	\
-> -		__efi_early()->boot_services), __VA_ARGS__)
-> +			__efi_early()->boot_services), __VA_ARGS__)
->  
->  #define efi_call_runtime(f, ...)					\
-> -	__efi_early()->call((unsigned long)				\
-> +	efi_is_native()							\
-> +		? __efi_early()->runtime_services->f(__VA_ARGS__)	\
-> +		: efi64_thunk((unsigned long)				\
->  				efi_table_attr(efi_runtime_services, f,	\
-> -		__efi_early()->runtime_services), __VA_ARGS__)
-> +			__efi_early()->runtime_services), __VA_ARGS__)
->  
->  extern bool efi_reboot_required(void);
->  extern bool efi_is_table_address(unsigned long phys_addr);
-
-For the efi_call macros, their definition should be enclosed in
-parentheses now that it's a ternary operator.
+Applied to net, thank you!
