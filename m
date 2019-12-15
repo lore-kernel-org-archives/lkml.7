@@ -2,131 +2,126 @@ Return-Path: <SRS0=qvRn=2F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4339AC43603
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F97C43603
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1056E24679
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9422467B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Dec 2019 19:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KPaGTI+a"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="XwkLQ/E+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLOTUe (ORCPT
+        id S1726292AbfLOTVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:20:34 -0500
-Received: from mout.web.de ([217.72.192.78]:40985 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfLOTUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 14:20:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576437611;
-        bh=VPrI4TCYPFYoecrPJ4eNzLm2QqOlyfyBZWKErxdrdJ8=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=KPaGTI+abg937Rv4Xj9IbAb5cT7UFKxcJVRu/OlO3yQ1ezzfpi7M+Tb2kxRqaqA0Y
-         j+1fomE3gNfKGWwO2J+AALgQMjwFtz42Lmif71MHcAPgkArjLTMwYBNAH853E5RdKz
-         Du/SgsmWkgYHaiQmWsk7rssQtJZjYb3Fc85sTaEM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.76.50]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MTPn1-1iEtOm0HsF-00SQEM; Sun, 15
- Dec 2019 20:20:11 +0100
-Cc:     linux-kernel@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Kangjie Lu <kjlu@umn.edu>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
+        Sun, 15 Dec 2019 14:21:39 -0500
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:51400 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfLOTVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 14:21:38 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47bZ5Y2WMsz9vYVX
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:21:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ONH_mUIW0FTK for <linux-kernel@vger.kernel.org>;
+        Sun, 15 Dec 2019 13:21:37 -0600 (CST)
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47bZ5Y1D6xz9vYVj
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 13:21:37 -0600 (CST)
+Received: by mail-yb1-f197.google.com with SMTP id l8so77119ybm.22
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 11:21:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1vHOqiJl20VaJGpwJ/DttRyIXYs0oZzT4qiDHtKALOA=;
+        b=XwkLQ/E+DIobu7olpQXcCUCO7xgWE16Wa+sqh198+1y2rWLsbgYeAtZPo4ATxLWAqT
+         T8vWLEWjUe4KqkXBKyC+62kbzFkuOtkxer4fq23IUHJbGAQDj64DFtHm+kpNe2oxX208
+         e0dQ2BD9rXOPFMFn+1qabFkqPlI6WfG901cX3YmXLLUpviJ2C1BobnEpvHhM1iUMTriA
+         Y3KHs/XW6wbjL24W84XLn/BzdiuXAtj0vjMQOW9Q6frQFA9uX5oRnLOXXf5v0Bas8ABO
+         llFVO7zrOHwm8kcPgz+6hu9y73wBkNIJ5L00KdVC3M6VfX8KW6MHmKm9A3W7UEqpOfWo
+         RW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1vHOqiJl20VaJGpwJ/DttRyIXYs0oZzT4qiDHtKALOA=;
+        b=DN/fXSCbPn9VtD4Py7XBr1U0kQJgNf5iBTSEqTQwlaYIBpWKbLORGS9yI/pDk3ezB6
+         52yzW87UbmcR9SQY+ZXv/BsAkUL64frUAqts9SXu8rdJU55fBKm28mVShZRv7mTfzZdw
+         Gvsd1EKSZ0gbCUfrQ16v3xxIqpT1WrVRO5WSszNNw92oLLkT8ITk8xMcpTkIkKuRcGdp
+         aaiAzIjCAbHeB4U0TOALf8eqtbgM9CSZa/69AO7nBxhhosK30OhhHWwcmWbKAftb5rRu
+         mp/NKKeTjDigshNoZPW8CxPDsbF2zvyF/bsleemS8Z4fqyeQRk2UKgfrBK5Lm5v8P/NZ
+         fd7w==
+X-Gm-Message-State: APjAAAV4LCNn3wMPBpMifzaQODK+n/TQ+bZl9tc/h1WboZ2p1An3/Khx
+        u5hpRl6E5r1AzQtvPa3QjEJpYu/PBuy/oNA/GdyUaqj0iLGfZ+V6++IV+j6szQrQHgxJXoagGe/
+        Itu9CQJGTD4vsSAF1KIZjVDMV47AU
+X-Received: by 2002:a25:ca03:: with SMTP id a3mr16801066ybg.326.1576437696609;
+        Sun, 15 Dec 2019 11:21:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyaR6yQwrbYT3Z38wr+UIe4edmcqRkTgpqg+r4yw4b+9er5V3fIAM9v8isICn729UCWrJAffw==
+X-Received: by 2002:a25:ca03:: with SMTP id a3mr16801054ybg.326.1576437696352;
+        Sun, 15 Dec 2019 11:21:36 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id a12sm7488523ywa.95.2019.12.15.11.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 11:21:36 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20191215190805.2491-1-pakki001@umn.edu>
-Subject: Re: [PATCH] media: cx231xx: replace BUG_ON with recovery code
-To:     Aditya Pakki <pakki001@umn.edu>, linux-media@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <035989c6-17a7-12bf-d850-cca16e4c60d7@web.de>
-Date:   Sun, 15 Dec 2019 20:20:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: saa7146: Avoid using BUG_ON as an assertion
+Date:   Sun, 15 Dec 2019 13:21:33 -0600
+Message-Id: <20191215192133.3765-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191215190805.2491-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TDmpZc174pB6lucvolhspth02A1n3l1qDxlxggY5GNp72VeSL6Y
- edcqqiWUHS20RpTWfQN7gTbwMhQex1FEq40dlE2bNhNVAwRTKsZh94JT3N1OM74mAgLjpDW
- 3x9wUz8bTseWEz4cMF77rxc1Ygp8rI11UfEkh4BOMUn/g1ke5mBwfRD7ZgdC+044ty+y/48
- C3bZ7ag58D8Mf4aplTTaw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jxK8NYw5P5o=:aFcGnD+MKdBBe53DfLL2HX
- 6KstARxkWyS5Drk3xf4UqM711y80QHT3B1ecfLLEFLgsTPJfvA+l4NiAudsLmbx8Lx0gM+sln
- W4k4jI5EyAVzJXzgFnL1u/JMilUigGm5pRlcdBE9zPvr5GSA+aprvjtyVdxbHEeBtn7W86Uud
- ARY4AxAdaRS/owSqEBGE5efJjw84SeNcKHEhUl6JjA+gkqVzdwk7gTWCdixwAZ/oa8lLePEB5
- LfVjowbHzOCoTjaVyOzfph7DUB0OiFK/bHY53WhexOboJuiwOg51tsOrI2zqnWc/RM3FURAr7
- pOqBZHhD4VgFtkMRX/Ljj69kX0hcR1ytZ0zu+m/Fz+IDY1Ub2YIOcBL4R/4Vm9muAMBK09cfs
- qjR9rc5h3C30NU0+xk/17HB+i5XOblkgmwxpjI8DE/AqrWzigGglLHH8M56la3qjsP6LGtel6
- r0TEDpalLi8dYJDeqfotHwdWlH2oO7FFRIE4IovaOQCB3I6H/fqsQetrD5asUlc/f4Yo04kFF
- CV8CaaDgRxRgVLa79RdS0QtX5g1p3IZMIeTe7IaMmSly6eG7Wj85xEgTblyX0+uawBG+bU/an
- Kmjo4eA2Cql1SD976BpEFhcV50u3V6stNrmNcSqpuabvhYENGCCviSZ7sqGbtGYO6tsXv4t4o
- Qd9mfT2Yv6fSYeeiZY7rzOIBVkfqIVCd5QaECvvLxmbN4whO0gn4DAY80Y48PDNjk+/My8o/1
- is8elLJBRWs3NOi3y6giSfrYujdjMk1glKKOmeTMfAMBdfPFiai6x/nfQaiYOIslMLii/gYKW
- 2ybwbm7UkpuXEgFS7tpPNKZhC3EnSjror1RBHDZhp2J9GutG7lfZKK7wNFpBU5TGB/KSkYZtQ
- rRbvBdVBd9TKsmewKKHsCJYTLPGXRQ8fkw2a7ApMO0WNclcWjpcS98wtUYox++xpYdfKvSo+g
- IXs3M+nCrxQCwpIv2o2IPwLm9PRqn9GT/JTou6/P9hUB9J4NANGaY+TpfI4mFHx4llU/HxCVn
- mSid32890Tssa4Ltot5vcJt4P/snPslHgk4KZ3OCVo/Dj5ruqu0GxF5CdFBwqD3H+w60AV8xJ
- xCHAHzaA4Pe51Ofwjd1Goq++2AawNbKTCJ0WJTwNDMZ513bqbN6dcJQFIcEE+5K301b+KjxCY
- NEY/KzlIn/rvG2NZTU+xyCL3sfNEnR/YrdB59GqIdApnYII61uWw54dEAdAIF0//k7yR0rwsI
- kqYZ2Z90uNyCRsjLJ+eYS1C3PKsidfB75FToHtPST7TcHPYDNt8EDMYNdy0Y=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The patch fixes this issue.
+In video_begin and video_end, saa7146_format_by_fourcc can return
+NULL and is checked via BUG_ON. However, by returning the error
+to the callers upstream, we can avoid the crash and handle it via
+recovery code.
 
-Please replace this sentence by the tag =E2=80=9CFixes=E2=80=9D.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/media/common/saa7146/saa7146_video.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Regards,
-Markus
+diff --git a/drivers/media/common/saa7146/saa7146_video.c b/drivers/media/common/saa7146/saa7146_video.c
+index d16122039b0c..1b6b5d43ad3e 100644
+--- a/drivers/media/common/saa7146/saa7146_video.c
++++ b/drivers/media/common/saa7146/saa7146_video.c
+@@ -345,7 +345,8 @@ static int video_begin(struct saa7146_fh *fh)
+ 
+ 	fmt = saa7146_format_by_fourcc(dev, vv->video_fmt.pixelformat);
+ 	/* we need to have a valid format set here */
+-	BUG_ON(NULL == fmt);
++	if (NULL == fmt)
++		return -EINVAL;
+ 
+ 	if (0 != (fmt->flags & FORMAT_IS_PLANAR)) {
+ 		resource = RESOURCE_DMA1_HPS|RESOURCE_DMA2_CLP|RESOURCE_DMA3_BRS;
+@@ -398,7 +399,8 @@ static int video_end(struct saa7146_fh *fh, struct file *file)
+ 
+ 	fmt = saa7146_format_by_fourcc(dev, vv->video_fmt.pixelformat);
+ 	/* we need to have a valid format set here */
+-	BUG_ON(NULL == fmt);
++	if (NULL == fmt)
++		return -EINVAL;
+ 
+ 	if (0 != (fmt->flags & FORMAT_IS_PLANAR)) {
+ 		resource = RESOURCE_DMA1_HPS|RESOURCE_DMA2_CLP|RESOURCE_DMA3_BRS;
+-- 
+2.20.1
+
