@@ -2,239 +2,111 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B061AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20957C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF3F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2D820665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Lew8wZjT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9FsYCC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfLPMIu (ORCPT
+        id S1727678AbfLPMJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:08:50 -0500
-Received: from mail-mw2nam12on2049.outbound.protection.outlook.com ([40.107.244.49]:6149
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727383AbfLPMIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:08:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CNJOg6bpp/wMpKrvtRWYe5/WrfjE57nEAdgLB5Or+rIwXIRKgTYW+FUvbs+ImJKU4Zjcz0VTfr7jeKjeXY1C0Nn+bj0F5HKBTdkRtMBg6CZmj9NT30TqXA1oQRamvll55cw8C/lgY/jKAwGyqdVxITGcTMTIsZClyP+uAEtKSwUGVVaPIWmA2JaOlxyNppH41WJjy6uKHXDCf3lTJal0iJGdzR+oJpOGfGbs+ylS9ta+Q4PTUdao+09pxA2sRGPvG8U/B28Q7MQ97HnC+6WQsDtvUHxzCxw7oC8pjurhCBoP8gHxv6Beak1lRhKFKJ1qOZk12yRLuYrJHJni1rlekg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IBCFQwd3d+v8DAd6a0gpnoZB48tO0AIfG5VoTw6oApA=;
- b=GjkwUt7hsb6mjZ5cVS04mppaspbreFYPxRnZMWwceW9ivPFnqSHiIVnH2N+5kMGy43dXxPXn7WtYNh5dipDUF4svN1sQ7nUd5DcwABx7Hw9rpzYs3OA/U3cCDMHw76hu8m4VeIs2uH5WBUCEtuLyh9Xgsw1x/xSk8ge6sZSZp3+5sfcmOMWXkNj5XLf6Wc3nhvAv4zpVL97/eb/tkqVlAp8mVb5Qo/O7Gq3jNgf5DKZyqHe2upl/u2eA5JqytFvi3bDFR/yJ/dl/1D2wQwPHwnWJ/4Bppl5JNNZi9IzjROx5rXmIM2Ud1NoFZBE8U1xm19lj1A3L7odHnEzgBPBbwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=xhdpunnaia40.localdomain; dmarc=none action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Mon, 16 Dec 2019 07:09:41 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36898 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbfLPMJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:09:40 -0500
+Received: by mail-vs1-f66.google.com with SMTP id x18so3951795vsq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 04:09:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IBCFQwd3d+v8DAd6a0gpnoZB48tO0AIfG5VoTw6oApA=;
- b=Lew8wZjTbTjkoPj9YNExK4jrmkiyBhFXAtg9uYLZKCh89PzXofX4sprZVQjFNSj5brYl+WXGz0dZAA5ANsojpU57DmSI19W5PIRPRQCdoyZPylq2tzeyEOwHkKkhNm+Fz9U4Xy4hyGHBC3+kVEQI+O3aaYZbVod3+VbDFEZllJA=
-Received: from DM6PR06CA0019.namprd06.prod.outlook.com (2603:10b6:5:120::32)
- by SN6PR02MB4366.namprd02.prod.outlook.com (2603:10b6:805:a6::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18; Mon, 16 Dec
- 2019 12:08:39 +0000
-Received: from CY1NAM02FT031.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:120:cafe::8) by DM6PR06CA0019.outlook.office365.com
- (2603:10b6:5:120::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18 via Frontend
- Transport; Mon, 16 Dec 2019 12:08:39 +0000
-Authentication-Results: spf=none (sender IP is 149.199.60.83)
- smtp.mailfrom=xhdpunnaia40.localdomain; vger.kernel.org; dkim=none (message
- not signed) header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=xilinx.com;
-Received-SPF: None (protection.outlook.com: xhdpunnaia40.localdomain does not
- designate permitted sender hosts)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT031.mail.protection.outlook.com (10.152.75.180) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
- via Frontend Transport; Mon, 16 Dec 2019 12:08:39 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1igpAz-0001lB-FS; Mon, 16 Dec 2019 04:08:37 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1igpAt-0000wj-QK; Mon, 16 Dec 2019 04:08:31 -0800
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBGC8Ur0024884;
-        Mon, 16 Dec 2019 04:08:31 -0800
-Received: from [10.140.184.180] (helo=xhdpunnaia40.localdomain)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1igpAs-0000wO-Bp; Mon, 16 Dec 2019 04:08:30 -0800
-Received: by xhdpunnaia40.localdomain (Postfix, from userid 13245)
-        id 916481053CF; Mon, 16 Dec 2019 17:38:29 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     davem@davemloft.net, michal.simek@xilinx.com
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH net-next 3/3] net: emaclite: Fix arm64 compilation warnings
-Date:   Mon, 16 Dec 2019 17:38:10 +0530
-Message-Id: <1576498090-1277-4-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576498090-1277-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1576498090-1277-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R41bi6yGX1iFZADmCtGFAtslTM1p//RJUgDUHlg61M4=;
+        b=f9FsYCC6hzMCeJ2TsROTECko+3MS0vbiOrA9N1RR5183cjmeTiP9e9Q7D3ysfb1CKi
+         GP4eeMR4lOF5HpP4h7G1gGF6Tozadvflj2EwnEY07TrIQRRU7xQd5BUlWKbP1khStots
+         TacxY60AnMM6HvZqiS4yy51nkGFlxH9T0CbirWXCaG2VU7yNUbXTRklnduKGN4so/r2Y
+         IjMmpJnQ8FMC8pK0+J9qhQJSNIhPFC4RBARtyLEdZvVcdpFTgFYshG1BMv4UKTHK6Y1s
+         7gHFfy9afxxhsdqnoi6mOTAXdietwZ6YK1kq+oJQVeR8QtFs0V1N1RP6Uf9a8xNHA5kG
+         unVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R41bi6yGX1iFZADmCtGFAtslTM1p//RJUgDUHlg61M4=;
+        b=e+zOpRF6uP5NolMqGYqg/xS12i0meGS3OfXR1SS36kEpU4P1tZqul5zXmZJObPqMQh
+         QC3T4CjAXpuk/wdhSZUtNzBzO9LVvymytwuQkyAsGkuwH3i9jnpXPiiD4/lw8OJ8DFCj
+         nlMXJUJoFqr/btWLbpF5Kt8Q9MGmGHmo1qExoZwtfH14P22mnxMjBb+ap/XSpjp8swKV
+         fOs4Qj48vyGbJZvJfHRrqMiGw4uN8rSgEfnYT63baYrTPYamebXLnzAYkg7msvnNq38p
+         DsHv+SYUAkmZuuijI+VTAuoSkYzzJXXYaseJzU8z8bvn1IW7B++ohLynGoN6DtM38GVn
+         FBCA==
+X-Gm-Message-State: APjAAAUfoUJci79c5YnO1VbUl/leUhWIfsJXHWtfw+wndkq6t0xccYiz
+        voDpAWp+4npm3QOX13RdX4jgmAypHCqW7wHRlEJLNQ==
+X-Google-Smtp-Source: APXvYqyM+BFHKKpccM+ztT4sO4U92WldyDbTPLgrN1RbEanMHjp2bB6PAG89agGyNwpzRp5oUphcx23VDVg4tfX63sQ=
+X-Received: by 2002:a67:b649:: with SMTP id e9mr20077581vsm.34.1576498179745;
+ Mon, 16 Dec 2019 04:09:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No-1.563-7.0-31-1
-X-imss-scan-details: No-1.563-7.0-31-1;No-1.563-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(428003)(249900001)(199004)(189003)(356004)(70206006)(6666004)(70586007)(5660300002)(6636002)(2616005)(498600001)(107886003)(42186006)(316002)(8936002)(81156014)(81166006)(2906002)(336012)(8676002)(450100002)(4326008)(42882007)(6266002)(36756003)(26005)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4366;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;A:0;MX:0;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57c84f0b-36ad-4cae-667a-08d78220af9d
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4366:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4366064C3F1A7990AF2BE0D4D5510@SN6PR02MB4366.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:167;
-X-Forefront-PRVS: 02530BD3AA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JruE5Vt8+rtnK6KRhEZ6utrHJJTNN6XWA7BaMxKg/ebrm32yakyjx3/uD2uA9H7/hVKRUwc7yf+ZByY+rae0nqeMqa5kArK+3c+EAn0JoVzhA2tRJTI7en/mqZ860Mv4HHfbn95uQS7eHMxzyz+3UNSXEPMDfJqDuYRaXkUOZU1WguKFsPAdIJzYuuKOFfhos7iWjV7IHLNPi6uWSKtqldSg8tXFfyxSgPsbs0oURRmmbL+XLG7xNemXCqeBLRVjk5Os2ie82ddbkMks6HcFgiP5d94fJYi20/9H/sq5YCdP32CeATsD1EpWUuXcANcL73WUyorBQu0zruY3tEn0/n6YRO0DTRDIj3W8Yk1XlyEUVx4lcLaOjVVGFwMST0sidocmBdFaPSOXhywIGJlA5QSNUeoaDFF1BZjbrj7TmzFUqPnOJU9ji8R/SPG639trpaOahzbILCtI2Sql0NB/8B5XLlJJlKkeeCpqd7tqpJpyKGq5CFWMwvkUyl/UBOZJ
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2019 12:08:39.1375
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57c84f0b-36ad-4cae-667a-08d78220af9d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4366
+References: <0101016ea738eb52-8c362755-205a-4383-9181-1a867e82eeed-000000@us-west-2.amazonses.com>
+ <CAPDyKFqdFc1RMNu38d7b+s2Bpr49v-w18frGsPSxsYf924HLWg@mail.gmail.com> <0101016ef47b4d25-49791932-586b-456e-b9a7-6f9a6f95babf-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef47b4d25-49791932-586b-456e-b9a7-6f9a6f95babf-000000@us-west-2.amazonses.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 16 Dec 2019 13:09:03 +0100
+Message-ID: <CAPDyKFqk75n9GE9JELgg=bnwjRHhTNkOMFLL01Y0X1NwgFgOYw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: Correct the offset and value for
+ DDR_CONFIG register
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+On Wed, 11 Dec 2019 at 11:22, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+>
+> On 12/10/2019 3:21 PM, Ulf Hansson wrote:
+> > On Tue, 26 Nov 2019 at 11:19, Veerabhadrarao Badiganti
+> > <vbadigan@codeaurora.org> wrote:
+> >> The DDR_CONFIG register offset got updated after a specific
+> >> minor version of sdcc V4. This offset change has not been properly
+> >> taken care of while updating register changes for sdcc V5.
+> >>
+> >> Correcting proper offset for this register.
+> >> Also updating this register value to reflect the recommended RCLK
+> >> delay.
+> >>
+> >> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> > I have applied this for fixes, however it seems like this should also
+> > be tagged for stable, right?
+>
+>   Thank you. Yes, I agree.
+>
+> >
+> > Is there a specific commit this fixes or should we just find the
+> > version it applies to?
+>
+> It fixes the bug introduced by commit:
+>
+> f153588 (mmc: sdhci-msm: Define new Register address map)
 
-Recast pointers with ulong instead of u32 for arm64.
-This patch fixes these compilation warnings:
+Great, thanks added a fixes/stable tag.
 
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:
-In function =E2=80=98xemaclite_send_data=E2=80=99:
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:335:35:
-warning: cast from pointer to integer of different size [-Wpointer-to-int=
--cast]
-   addr =3D (void __iomem __force *)((u32 __force)addr ^
-                                   ^
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:335:10:
-warning: cast to pointer from integer of different size [-Wint-to-pointer=
--cast]
-   addr =3D (void __iomem __force *)((u32 __force)addr ^
-          ^
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:
-In function =E2=80=98xemaclite_recv_data=E2=80=99:
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:397:36:
-warning: cast from pointer to integer of different size [-Wpointer-to-int=
--cast]
-    addr =3D (void __iomem __force *)((u32 __force)addr ^
-                                    ^
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:397:11:
-warning: cast to pointer from integer of different size [-Wint-to-pointer=
--cast]
-    addr =3D (void __iomem __force *)((u32 __force)addr ^
-           ^
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:
-In function =E2=80=98xemaclite_rx_handler=E2=80=99:
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:97:42:
-warning: cast from pointer to integer of different size [-Wpointer-to-int=
--cast]
- #define BUFFER_ALIGN(adr) ((ALIGNMENT - ((u32)adr)) % ALIGNMENT)
-                                          ^
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:612:10:
-note: in expansion of macro =E2=80=98BUFFER_ALIGN=E2=80=99
-  align =3D BUFFER_ALIGN(skb->data);
-          ^~~~~~~~~~~~
-In file included from ./include/linux/dma-mapping.h:7,
-                 from ./include/linux/skbuff.h:31,
-                 from ./include/linux/if_ether.h:19,
-                 from ./include/uapi/linux/ethtool.h:19,
-                 from ./include/linux/ethtool.h:18,
-                 from ./include/linux/netdevice.h:37,
-                 from drivers/net/ethernet/xilinx/xilinx_emaclite.c:12:
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:
-In function =E2=80=98xemaclite_of_probe=E2=80=99:
-drivers/net/ethernet/xilinx/xilinx_emaclite.c:1191:4:
-warning: cast from pointer to integer of different size [-Wpointer-to-int=
--cast]
-    (unsigned int __force)lp->base_addr, ndev->irq);
-    ^
-./include/linux/device.h:1780:33: note: in definition of macro =E2=80=98d=
-ev_info=E2=80=99
-  _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
-                                 ^~~~~~~~~~~
+[...]
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
- drivers/net/ethernet/xilinx/xilinx_emaclite.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/=
-ethernet/xilinx/xilinx_emaclite.c
-index 4aa6752..cfb051a 100644
---- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-@@ -94,7 +94,7 @@
- #define ALIGNMENT		4
-=20
- /* BUFFER_ALIGN(adr) calculates the number of bytes to the next alignmen=
-t. */
--#define BUFFER_ALIGN(adr) ((ALIGNMENT - ((u32)adr)) % ALIGNMENT)
-+#define BUFFER_ALIGN(adr) ((ALIGNMENT - ((ulong)adr)) % ALIGNMENT)
-=20
- #ifdef __BIG_ENDIAN
- #define xemaclite_readl		ioread32be
-@@ -332,7 +332,7 @@ static int xemaclite_send_data(struct net_local *drvd=
-ata, u8 *data,
- 		 * if it is configured in HW
- 		 */
-=20
--		addr =3D (void __iomem __force *)((u32 __force)addr ^
-+		addr =3D (void __iomem __force *)((ulong __force)addr ^
- 						 XEL_BUFFER_OFFSET);
- 		reg_data =3D xemaclite_readl(addr + XEL_TSR_OFFSET);
-=20
-@@ -394,7 +394,7 @@ static u16 xemaclite_recv_data(struct net_local *drvd=
-ata, u8 *data, int maxlen)
- 		 * will correct on subsequent calls
- 		 */
- 		if (drvdata->rx_ping_pong !=3D 0)
--			addr =3D (void __iomem __force *)((u32 __force)addr ^
-+			addr =3D (void __iomem __force *)((ulong __force)addr ^
- 							 XEL_BUFFER_OFFSET);
- 		else
- 			return 0;	/* No data was available */
-@@ -1186,9 +1186,9 @@ static int xemaclite_of_probe(struct platform_devic=
-e *ofdev)
- 	}
-=20
- 	dev_info(dev,
--		 "Xilinx EmacLite at 0x%08X mapped to 0x%08X, irq=3D%d\n",
-+		 "Xilinx EmacLite at 0x%08X mapped to 0x%08lX, irq=3D%d\n",
- 		 (unsigned int __force)ndev->mem_start,
--		 (unsigned int __force)lp->base_addr, ndev->irq);
-+		 (unsigned long __force)lp->base_addr, ndev->irq);
- 	return 0;
-=20
- error:
---=20
-2.7.4
-
+Kind regards
+Uffe
