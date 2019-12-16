@@ -2,53 +2,56 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08889C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BCAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B1020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA2D20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521442;
-	bh=HgIBv7vYljcoymvSM8gL33YyVXFJK4cPOimdyTJAuTI=;
+	s=default; t=1576521447;
+	bh=Tgt3hYhn2Vbxqxu5CwkS5iRqCOUt0A3BTITnlSbICao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSqKeEm8ajyGwo7zn7D6oV4McIx/0h3krbM2l50MWPs6nWU391/LWskwoe4b8goUC
-	 m4dMwW8MYOyFUTyhdT9xfqaoOMo1uBYikxs36HBsgIfHz64N5+vwBnDs8ZvaILZn36
-	 yxeUgHztvjp1z5tTXLchzPkKvyA6ul0EhqezzknU=
+	b=ef0mK1JrgCIxticfawKb2RQj+ZttvyfFYTSVKNB5FQUX17hg2Eg84ep+tbY5ezGbd
+	 1iW0zXYB+KsEGx6DH/jMZJc52vu/a1ybOPUludvTxfvcLXvvWfqvpMVR35/4k5qTdX
+	 6+Yv13HtAX3lFSKGicv0dzRvVEDUvNzm4SMzdh8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfLPSGS (ORCPT
+        id S1730225AbfLPShZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:37:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbfLPSGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:16 -0500
+        id S1729953AbfLPSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 943A0206E0;
-        Mon, 16 Dec 2019 18:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1A782072B;
+        Mon, 16 Dec 2019 18:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519575;
-        bh=HgIBv7vYljcoymvSM8gL33YyVXFJK4cPOimdyTJAuTI=;
+        s=default; t=1576519577;
+        bh=Tgt3hYhn2Vbxqxu5CwkS5iRqCOUt0A3BTITnlSbICao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thPk1oP2QCO6hiAwf3Kv9RVR6tIZklqegqXyRqbRBSvz1uSZygAf7wtGOschKRYWf
-         1sT3FH7SRNwVjcc6UsciKT43sW6BH/aMKkUNcrNX8NGzy8rBk9nsEwWCBD5oLvNTA/
-         Bfiidn276ih5etG7q5vtbjJ03uH6m2i0+wk1/gG4=
+        b=YVcZ2C67IKL3HChYGwD86I/MpQnddJVxfeRIP2LVUgtnBpNat93CCsItJaDScaeUF
+         mnwvRcv/2MwcfK10nng+M7BFdGiKKQ8p/XM0Psz44h+Yp5iF58uJrKcD2S9ASx508p
+         SutISMlXeCgjqktFvr43LqY8XCB4nemfLDRa6u/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/140] scsi: hisi_sas: Reject setting programmed minimum linkrate > 1.5G
-Date:   Mon, 16 Dec 2019 18:49:49 +0100
-Message-Id: <20191216174822.583600427@linuxfoundation.org>
+        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 122/140] x86/MCE/AMD: Turn off MC4_MISC thresholding on all family 0x15 models
+Date:   Mon, 16 Dec 2019 18:49:50 +0100
+Message-Id: <20191216174822.819543339@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,75 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Shirish S <Shirish.S@amd.com>
 
-[ Upstream commit eb44e4d7b5a3090f0114927f42ae575c29664a09 ]
+[ Upstream commit c95b323dcd3598dd7ef5005d6723c1ba3b801093 ]
 
-The SAS controller cannot support a programmed minimum linkrate of > 1.5G
-(it will always negotiate to 1.5G at least), so just reject it.
+MC4_MISC thresholding is not supported on all family 0x15 processors,
+hence skip the x86_model check when applying the quirk.
 
-This solves a strange situation where the PHY negotiated linkrate may be
-less than the programmed minimum linkrate.
+ [ bp: massage commit message. ]
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Shirish S <shirish.s@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1547106849-3476-2-git-send-email-shirish.s@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 0ad8875c30e8e..f35c56217694b 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -886,7 +886,7 @@ static int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags)
- 	return hisi_sas_task_exec(task, gfp_flags, 0, NULL);
- }
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index fee118b3b69fd..a0bc7f7570814 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1632,11 +1632,10 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 			mce_flags.overflow_recov = 1;
  
--static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
-+static int hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 			struct sas_phy_linkrates *r)
- {
- 	struct sas_phy_linkrates _r;
-@@ -895,6 +895,9 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	enum sas_linkrate min, max;
- 
-+	if (r->minimum_linkrate > SAS_LINK_RATE_1_5_GBPS)
-+		return -EINVAL;
-+
- 	if (r->maximum_linkrate == SAS_LINK_RATE_UNKNOWN) {
- 		max = sas_phy->phy->maximum_linkrate;
- 		min = r->minimum_linkrate;
-@@ -902,7 +905,7 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 		max = r->maximum_linkrate;
- 		min = sas_phy->phy->minimum_linkrate;
- 	} else
--		return;
-+		return -EINVAL;
- 
- 	_r.maximum_linkrate = max;
- 	_r.minimum_linkrate = min;
-@@ -914,6 +917,8 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 	msleep(100);
- 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
- 	hisi_hba->hw->phy_start(hisi_hba, phy_no);
-+
-+	return 0;
- }
- 
- static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
-@@ -939,8 +944,7 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
- 		break;
- 
- 	case PHY_FUNC_SET_LINK_RATE:
--		hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
--		break;
-+		return hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
- 	case PHY_FUNC_GET_EVENTS:
- 		if (hisi_hba->hw->get_events) {
- 			hisi_hba->hw->get_events(hisi_hba, phy_no);
+ 		/*
+-		 * Turn off MC4_MISC thresholding banks on those models since
++		 * Turn off MC4_MISC thresholding banks on all models since
+ 		 * they're not supported there.
+ 		 */
+-		if (c->x86 == 0x15 &&
+-		    (c->x86_model >= 0x10 && c->x86_model <= 0x1f)) {
++		if (c->x86 == 0x15) {
+ 			int i;
+ 			u64 hwcr;
+ 			bool need_toggle;
 -- 
 2.20.1
 
