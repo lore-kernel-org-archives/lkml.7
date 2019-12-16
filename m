@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20DBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267FCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C6F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDD6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521325;
-	bh=5fLDD5kXfqmNfszHj/dxVtJZScXrkLT2oIRKa31FBy8=;
+	s=default; t=1576521330;
+	bh=0rD7MgaY+Rxy506GfE+dkKBLWlAL7MEsrEITqTq89Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpljry1uRcWLKt3dxzmi37To/XahGFDp9zwwBma+kA4s3WOJLL2FBqCv/d+aWj7tx
-	 9BqRxK8cUOd7CEbUSXH+uuWI0uV2AG4LBw0nn+ynD4YBjFTB1gnsrTT+pvYxCU5grr
-	 FWtqGJVHXtMQIyzJAwt16KIpzsF0THSlcseD6zBI=
+	b=AvW78buk6POao3C34aio+GePz6h/hZGiaiKKAkKSZftsgSSAwCcK0TV43OrizyhuZ
+	 5Eiuzplo7S5HrClTvlRIin9DPgTpx91mbyxOx/z/2iSbXXl4mPj96ELqY9SoCymV0T
+	 IA9kkH3KZamLOdZyfq/P3R+vV+00U+paf0RFrKgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbfLPSfX (ORCPT
+        id S1730208AbfLPSIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:35:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbfLPSIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:07 -0500
+        id S1727541AbfLPSHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 139C1206E0;
-        Mon, 16 Dec 2019 18:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F042072D;
+        Mon, 16 Dec 2019 18:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519686;
-        bh=5fLDD5kXfqmNfszHj/dxVtJZScXrkLT2oIRKa31FBy8=;
+        s=default; t=1576519674;
+        bh=0rD7MgaY+Rxy506GfE+dkKBLWlAL7MEsrEITqTq89Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CsPmrdzsrKAlgD+Uw33AcQK4j+Y5beF/mkU9qfb7CSkPhMGAncoHGICEwL3aAdrBN
-         lKbMiTec/gDAF97/FaMmgWUqxgGbo2/XbCPIXRxGzs3RlBBDUr2V5Lf+9WqzXztU0d
-         jM4MvhT2kqhrDEhB7k1Vi1auHKpeqDTLdE2ex8b4=
+        b=mvVN4qMrgEGvkx8qHHR/l0FNzO0LhmgCWbKyKqr/RS0zp5Kmkjxzi0JD67DAn88mD
+         TLi7mwrMuwfAo9uNSrKV6u2InNVd5RaAml0RJxcqeRrypxY0VjPiFk3EoVqr7iRt1O
+         4eWU/2e6HsMW1/MKGD3/L9UgtrV8s62aPHZIe4sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.3 027/180] ARM: dts: pandora-common: define wl1251 as child node of mmc3
-Date:   Mon, 16 Dec 2019 18:47:47 +0100
-Message-Id: <20191216174812.287133213@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Hou-hsun" <hou-hsun.lee@intel.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 5.3 022/180] xhci: fix USB3 device initiated resume race with roothub autosuspend
+Date:   Mon, 16 Dec 2019 18:47:42 +0100
+Message-Id: <20191216174811.005821669@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,81 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 4f9007d692017cef38baf2a9b82b7879d5b2407b upstream.
+commit 057d476fff778f1d3b9f861fdb5437ea1a3cfc99 upstream.
 
-Since v4.7 the dma initialization requires that there is a
-device tree property for "rx" and "tx" channels which is
-not provided by the pdata-quirks initialization.
+A race in xhci USB3 remote wake handling may force device back to suspend
+after it initiated resume siganaling, causing a missed resume event or warm
+reset of device.
 
-By conversion of the mmc3 setup to device tree this will
-finally allows to remove the OpenPandora wlan specific omap3
-data-quirks.
+When a USB3 link completes resume signaling and goes to enabled (UO)
+state a interrupt is issued and the interrupt handler will clear the
+bus_state->port_remote_wakeup resume flag, allowing bus suspend.
 
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+If the USB3 roothub thread just finished reading port status before
+the interrupt, finding ports still in suspended (U3) state, but hasn't
+yet started suspending the hub, then the xhci interrupt handler will clear
+the flag that prevented roothub suspend and allow bus to suspend, forcing
+all port links back to suspended (U3) state.
+
+Example case:
+usb_runtime_suspend() # because all ports still show suspended U3
+  usb_suspend_both()
+    hub_suspend();   # successful as hub->wakeup_bits not set yet
+==> INTERRUPT
+xhci_irq()
+  handle_port_status()
+    clear bus_state->port_remote_wakeup
+    usb_wakeup_notification()
+      sets hub->wakeup_bits;
+        kick_hub_wq()
+<== END INTERRUPT
+      hcd_bus_suspend()
+        xhci_bus_suspend() # success as port_remote_wakeup bits cleared
+
+Fix this by increasing roothub usage count during port resume to prevent
+roothub autosuspend, and by making sure bus_state->port_remote_wakeup
+flag is only cleared after resume completion is visible, i.e.
+after xhci roothub returned U0 or other non-U3 link state link on a
+get port status request.
+
+Issue rootcaused by Chiasheng Lee
+
+Cc: <stable@vger.kernel.org>
+Cc: Lee, Hou-hsun <hou-hsun.lee@intel.com>
+Reported-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191211142007.8847-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap3-pandora-common.dtsi |   36 ++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-hub.c  |   10 ++++++++++
+ drivers/usb/host/xhci-ring.c |    3 +--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
-@@ -226,6 +226,17 @@
- 		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* GPIO_164 */
- 	};
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -920,11 +920,13 @@ static void xhci_get_usb3_port_status(st
+ {
+ 	struct xhci_bus_state *bus_state;
+ 	struct xhci_hcd	*xhci;
++	struct usb_hcd *hcd;
+ 	u32 link_state;
+ 	u32 portnum;
  
-+	/* wl1251 wifi+bt module */
-+	wlan_en: fixed-regulator-wg7210_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vwlan";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <50000>;
-+		enable-active-high;
-+		gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	/* wg7210 (wifi+bt module) 32k clock buffer */
- 	wg7210_32k: fixed-regulator-wg7210_32k {
- 		compatible = "regulator-fixed";
-@@ -522,9 +533,30 @@
- 	/*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/	/* GPIO_127 */
- };
+ 	bus_state = &port->rhub->bus_state;
+ 	xhci = hcd_to_xhci(port->rhub->hcd);
++	hcd = port->rhub->hcd;
+ 	link_state = portsc & PORT_PLS_MASK;
+ 	portnum = port->hcd_portnum;
  
--/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
- &mmc3 {
--	status = "disabled";
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wifi@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
- };
+@@ -952,6 +954,14 @@ static void xhci_get_usb3_port_status(st
+ 			bus_state->suspended_ports &= ~(1 << portnum);
+ 	}
  
- /* bluetooth*/
++	/* remote wake resume signaling complete */
++	if (bus_state->port_remote_wakeup & (1 << portnum) &&
++	    link_state != XDEV_RESUME &&
++	    link_state != XDEV_RECOVERY) {
++		bus_state->port_remote_wakeup &= ~(1 << portnum);
++		usb_hcd_end_port_resume(&hcd->self, portnum);
++	}
++
+ 	xhci_hub_report_usb3_link_state(xhci, status, portsc);
+ 	xhci_del_comp_mod_timer(xhci, portsc, portnum);
+ }
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1624,7 +1624,6 @@ static void handle_port_status(struct xh
+ 		slot_id = xhci_find_slot_id_by_port(hcd, xhci, hcd_portnum + 1);
+ 		if (slot_id && xhci->devs[slot_id])
+ 			xhci->devs[slot_id]->flags |= VDEV_PORT_ERROR;
+-		bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+ 	}
+ 
+ 	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_RESUME) {
+@@ -1644,6 +1643,7 @@ static void handle_port_status(struct xh
+ 			 */
+ 			bus_state->port_remote_wakeup |= 1 << hcd_portnum;
+ 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
++			usb_hcd_start_port_resume(&hcd->self, hcd_portnum);
+ 			xhci_set_link_state(xhci, port, XDEV_U0);
+ 			/* Need to wait until the next link state change
+ 			 * indicates the device is actually in U0.
+@@ -1684,7 +1684,6 @@ static void handle_port_status(struct xh
+ 		if (slot_id && xhci->devs[slot_id])
+ 			xhci_ring_device(xhci, slot_id);
+ 		if (bus_state->port_remote_wakeup & (1 << hcd_portnum)) {
+-			bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+ 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
+ 			usb_wakeup_notification(hcd->self.root_hub,
+ 					hcd_portnum + 1);
 
 
