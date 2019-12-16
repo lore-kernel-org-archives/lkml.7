@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F153FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15160C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B3020726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCFB21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519302;
-	bh=bHY+hH+oy5H5ZMf0BwWbtEFg6DNlTY265tdURzve4P8=;
+	s=default; t=1576519304;
+	bh=rxoZOuPi8FYcQwk8HJHMY0NpyXgfqvZ4ggIwplk5InI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eelh1WF3c3FggMgdTEZU+dSlDwHYPQxokGtCUIS5E8l5QOiLY+c2IoypL2Jqi5Wzk
-	 M8WnPPx5p5tas3yPREUa2nuTQdDV7CmglUDcz7C5OrS1A+x2h/dpANjZlgby0WDqYO
-	 v1sjvkHQKzQyEMiGLPB6KR4w8QLO1GZ9WQO0H9xs=
+	b=D580PzM7nwBVnnpTc67tfs5CtmsQp0B20VTV+YmozsSuyGiPy7HTHEk31nvtfqaGT
+	 XEpK7+b4HVMiA0Tp+mBkLYnoKpsIWopHSloqhC3ZA1k/1cCbSdz9OTvQ64YFzV66LK
+	 jktI/9wDKnzXVu1PWaGS+utvWZMbhaN/dBEM+Tqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfLPSBl (ORCPT
+        id S1729212AbfLPSBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:01:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbfLPSBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:39 -0500
+        id S1727711AbfLPSBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8F32072D;
-        Mon, 16 Dec 2019 18:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E1B02176D;
+        Mon, 16 Dec 2019 18:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519299;
-        bh=bHY+hH+oy5H5ZMf0BwWbtEFg6DNlTY265tdURzve4P8=;
+        s=default; t=1576519301;
+        bh=rxoZOuPi8FYcQwk8HJHMY0NpyXgfqvZ4ggIwplk5InI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDToMEgJskIG7qHqTCJiKRJOA5JGlnZEKsaxRnhoYFQLmgRzpjyFw/XPZSDARZQ76
-         J8WkyxyLGIXJS+SxQNgO+YvmAXSdi9W31ITN1yMdaH/r5pXrk4K0j7RGNsrLfZXBT6
-         iWeBy66HvEO9pN5d0jGz6varSBMloGm11f4xVJk4=
+        b=Jofuv5/4tfXSDeITEosJ2NuFB+fRIF6zm4RPuGeUA10XXu3b9HuyaddP4To2ZFc/1
+         hgUY2cl2SOcbWPKGIZ8z5Epl4xHc5zgNYkQniNhx/YdSUBFeP7JrQkZKxTnk5PLpOb
+         ZLHPEe338cS3hCzqps4A5J2vzrJCNbnuAbGOBt00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 4.19 002/140] usb: gadget: pch_udc: fix use after free
-Date:   Mon, 16 Dec 2019 18:47:50 +0100
-Message-Id: <20191216174748.287062615@linuxfoundation.org>
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 003/140] scsi: qla2xxx: Fix driver unload hang
+Date:   Mon, 16 Dec 2019 18:47:51 +0100
+Message-Id: <20191216174748.887845533@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -59,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit 66d1b0c0580b7f1b1850ee4423f32ac42afa2e92 upstream.
+commit dd322b7f3efc8cda085bb60eadc4aee6324eadd8 upstream.
 
-Remove pointer dereference after free.
+This patch fixes driver unload hang by removing msleep()
 
-pci_pool_free doesn't care about contents of td.
-It's just a void* for it
-
-Addresses-Coverity-ID: 1091173 ("Use after free")
+Fixes: d74595278f4ab ("scsi: qla2xxx: Add multiple queue pair functionality.")
 Cc: stable@vger.kernel.org
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20191106202821.GA20347@embeddedor
+Link: https://lore.kernel.org/r/20191105150657.8092-5-hmadhani@marvell.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/pch_udc.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_init.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/usb/gadget/udc/pch_udc.c
-+++ b/drivers/usb/gadget/udc/pch_udc.c
-@@ -1520,7 +1520,6 @@ static void pch_udc_free_dma_chain(struc
- 		td = phys_to_virt(addr);
- 		addr2 = (dma_addr_t)td->next;
- 		dma_pool_free(dev->data_requests, td, addr);
--		td->next = 0x00;
- 		addr = addr2;
- 	}
- 	req->chain_len = 1;
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -8725,8 +8725,6 @@ int qla2xxx_delete_qpair(struct scsi_qla
+ 	struct qla_hw_data *ha = qpair->hw;
+ 
+ 	qpair->delete_in_progress = 1;
+-	while (atomic_read(&qpair->ref_count))
+-		msleep(500);
+ 
+ 	ret = qla25xx_delete_req_que(vha, qpair->req);
+ 	if (ret != QLA_SUCCESS)
 
 
