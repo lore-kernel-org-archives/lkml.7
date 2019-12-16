@@ -2,180 +2,149 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7CEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2336BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5332C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC18207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eIhOJkZA"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="isCPi/8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfLPBTx (ORCPT
+        id S1726526AbfLPBXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 20:19:53 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:55653 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfLPBTx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 20:19:53 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191216011948epoutp04881f471045fe381049b86f8b2c62040d~gtUeJgOk70931709317epoutp04P
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:19:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191216011948epoutp04881f471045fe381049b86f8b2c62040d~gtUeJgOk70931709317epoutp04P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576459188;
-        bh=8giqkkhX+t6iZYeFY9KVtwUMjXYwL+oSsLFbg5OEA7o=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=eIhOJkZALNTMtDxyg576IiTryvOQsM4A+bcPWPbeih6DqwzyVlxVTIg5rUSYxPdra
-         OhNue7eiHffeUvy4MBWYj46xdGTY3KPteBOPxmRwwP9kBu5VQ22ISuJ1oo2+B0AFYe
-         xUit4FFSJSJGKEDjclMJDd6gcoRMxlkRGG8RiXeY=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191216011947epcas1p39934fdf7cfd680c3b7ff966262e8f539~gtUdm8D3P2543125431epcas1p3J;
-        Mon, 16 Dec 2019 01:19:47 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47bk2n23rgzMqYkc; Mon, 16 Dec
-        2019 01:19:45 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5A.8A.48019.EABD6FD5; Mon, 16 Dec 2019 10:19:42 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191216011942epcas1p47aab213d18e13e805056d1e7be2fb729~gtUYNJG0P2204522045epcas1p4c;
-        Mon, 16 Dec 2019 01:19:42 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191216011942epsmtrp257955c838efed5a502a6b714b474cdcd~gtUYMjyxz2826028260epsmtrp2W;
-        Mon, 16 Dec 2019 01:19:42 +0000 (GMT)
-X-AuditID: b6c32a38-257ff7000001bb93-80-5df6dbaec84b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        11.DC.06569.DABD6FD5; Mon, 16 Dec 2019 10:19:41 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191216011941epsmtip2393d421082fd5ab53a31ee10a37df9a2~gtUX_XoVs1339113391epsmtip2a;
-        Mon, 16 Dec 2019 01:19:41 +0000 (GMT)
-Subject: Re: [PATCH] extcon: sm5502: remove unneeded semicolon
-To:     Xu Wang <vulab@iscas.ac.cn>, myungjoo.ham@samsung.com
-Cc:     linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6e94aa1e-2669-621b-d70b-f4780ed6705a@samsung.com>
-Date:   Mon, 16 Dec 2019 10:26:17 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Sun, 15 Dec 2019 20:23:38 -0500
+Received: from ozlabs.org ([203.11.71.1]:50125 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbfLPBXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 20:23:37 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bk784hz8z9sP6;
+        Mon, 16 Dec 2019 12:23:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576459414;
+        bh=bFoEp0Oze1uoHC2r3Fp1CEYcJF/UHb71fRXsGtfYZIY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=isCPi/8AXANwUAv7CIHOP3YyUqe1M13CxS7FNwVn5LSnOYxaShAHu6U4KV7L8BEiI
+         kCBNwYRS40ivvFQUmwcR7LZjzhhddVeBBkJaPj1MkaMBsBgoGVDQwvqOwxNW6G96x/
+         0+LbVYrLtZhQo12LRpH75E0gr4AkkwSfufYRTZjnL1KceqqeJ11wUU82rC+vaKg32Q
+         3KyGMKSI0kfWHS4dz62eEMLjq15DkSfKyOWtklUXKi44Ng1u2FmxDh/V3xrHIiNnC8
+         4C6DjdvGRFSa27gZ1U9G2vVNi7pLyVNp2L0QmhRfYIRxqQn8zBilHXJhk19SZxz36s
+         Zbp884+wsJXZA==
+Date:   Mon, 16 Dec 2019 12:23:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20191216122331.43c766f1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1576230514-5049-1-git-send-email-vulab@iscas.ac.cn>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3a367Va3abmaUHNG0JO1F3nbNpmr5SSoBD1obB1mTdn7o3d
-        TdK+GGQti0gsypGpVOJWNFBTs0xSywwRZfhCZgRKWKJWllhRtOst8tvvnOf8z3n+z3MITFaK
-        y4l8q5N1WBkzha8UN3fFqOIejC3kqOofR2kDbTdx7diZelzrLW0X78TSn7Y2ovTLTT6UPt+w
-        KRs7UqAzsUwu61CwVqMtN9+ap6cOHDTsMWiSVXQcnaLdRimsjIXVU3szs+P25ZuDgyhFIWN2
-        BVPZDMdRCWk6h83lZBUmG+fUU6w912xPscdzjIVzWfPijTZLKq1SJWqChccLTNUzg2J745pT
-        vpnoEnRrVRkKJYBMgkF/RUgZWknIyFYE5W8qRULwBcH74VqJECwgCPjcIf8kc+cfYsJBO4K6
-        35+QEMwh6HvxEi9DBBFGpkHdkyJeEE6mQMNAt4RnjFTAj7cNS4yTSuiYGsV5XktGwdDiBOJZ
-        GpR+fV4ZwrcRk9HwdKiQT0eQh6G3+ezfknXQWzkp5jmU3AUd09dxoX0kvJ6sFgm8GVpmbi7d
-        E8huHNyfRzDBwF7wXmxDAofBx56mv8bkMD/bjgt8Gry93bggdiNo6hiQCAdq6LhbIeIvh5Ex
-        4G9LENJR8OhnFRIGr4HZb5ckfAmQUnCfkwklWyDwblwk8Aa4ff4CfgVRnmV2PMsseJZZ8Pwf
-        VoPEPrSetXOWPJaj7UnL/7oBLa2gUtuKnvRndiKSQNRq6ZRpIUcmYQq5IksnAgKjwqVs7HyO
-        TJrLFBWzDpvB4TKzXCfSBB+7HJNHGG3BhbY6DbQmUa1Wa5PoZA1NU5FSYnEwR0bmMU62gGXt
-        rOOfTkSEykuQfTy87Hvffelwwr1D1TVUZsHVkKreGztGambQlVjpqCL16LXXK37FWLtaTmjL
-        a3e6vTX39/vqfr81ver3GzOms7b6/JszirnUyGllmuhCWLEWTh6Lntg+ldG3cZve/MB7x+Df
-        /bFiN1Vi+JBf9awzgF/U6dye8tJhSU9t4UTWWUrMmRhaiTk45g/0cy2+mAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSvO7a299iDdp/Wlhc3jWHzeJ24wo2
-        i5Wte1kcmD327djM6NG3ZRWjx+dNcgHMUVw2Kak5mWWpRfp2CVwZ899eZCnYzFex6q1qA+M8
-        7i5GTg4JAROJ9+1bmbsYuTiEBHYzSnxd9JAVIiEpMe3iUaAEB5AtLHH4cDFEzVtGiXlvZrGC
-        xIUF7CSW7akEKRcRsJTYdOEIWCuzgILEr3ubWCHqpzBK/Fq6hwUkwSagJbH/xQ02EJtfQFHi
-        6o/HjCA2L9CcL0dnsoPMZBFQldh3tQwkLCoQJrFzyWMmiBJBiZMzn4CN4RRwlNj/ejobxC51
-        iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnUguLc9NxiwwKj
-        vNRyveLE3OLSvHS95PzcTYzgaNDS2sF44kT8IUYBDkYlHl6H7G+xQqyJZcWVuYcYJTiYlUR4
-        U7U/xwrxpiRWVqUW5ccXleakFh9ilOZgURLnlc8/FikkkJ5YkpqdmlqQWgSTZeLglGpgdNk6
-        ocL3mdL3o263Sp6qnlwupKuwq0aB7+izWI9ngqdNEzJfWPdd2/JQ4KPr7I9eq5d/s5O9fOBf
-        0saCZZ7GX+KmKz/yjDdmZQwJWvxvgf6C/Q31Z0/P3nju+cRzTlMXbfrgd3zRVTbltLWHfivZ
-        qOiFJ51afZ8n4kelZua9WNa/e9NN+/PXLVViKc5INNRiLipOBACGlHsAggIAAA==
-X-CMS-MailID: 20191216011942epcas1p47aab213d18e13e805056d1e7be2fb729
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191213094853epcas1p4459d16e88cbf5f12f7f682efddd993e7
-References: <CGME20191213094853epcas1p4459d16e88cbf5f12f7f682efddd993e7@epcas1p4.samsung.com>
-        <1576230514-5049-1-git-send-email-vulab@iscas.ac.cn>
+Content-Type: multipart/signed; boundary="Sig_/zeyYGkAXi=.XMxUHhTLcnmI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 6:48 PM, Xu Wang wrote:
-> remove unneeded semicolon
-> This is detected by coccinelle.
-> 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->  drivers/extcon/extcon-sm5502.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-> index bcf65aa..106d4da 100644
-> --- a/drivers/extcon/extcon-sm5502.c
-> +++ b/drivers/extcon/extcon-sm5502.c
-> @@ -249,7 +249,7 @@ static int sm5502_muic_set_path(struct sm5502_muic_info *info,
->  		dev_err(info->dev, "Unknown DM_CON/DP_CON switch type (%d)\n",
->  				con_sw);
->  		return -EINVAL;
-> -	};
-> +	}
->  
->  	switch (vbus_sw) {
->  	case VBUSIN_SWITCH_OPEN:
-> @@ -268,7 +268,7 @@ static int sm5502_muic_set_path(struct sm5502_muic_info *info,
->  	default:
->  		dev_err(info->dev, "Unknown VBUS switch type (%d)\n", vbus_sw);
->  		return -EINVAL;
-> -	};
-> +	}
->  
->  	return 0;
->  }
-> @@ -357,13 +357,13 @@ static unsigned int sm5502_muic_get_cable_type(struct sm5502_muic_info *info)
->  				"cannot identify the cable type: adc(0x%x)\n",
->  				adc);
->  			return -EINVAL;
-> -		};
-> +		}
->  		break;
->  	default:
->  		dev_err(info->dev,
->  			"failed to identify the cable type: adc(0x%x)\n", adc);
->  		return -EINVAL;
-> -	};
-> +	}
->  
->  	return cable_type;
->  }
-> @@ -405,7 +405,7 @@ static int sm5502_muic_cable_handler(struct sm5502_muic_info *info,
->  		dev_dbg(info->dev,
->  			"cannot handle this cable_type (0x%x)\n", cable_type);
->  		return 0;
-> -	};
-> +	}
->  
->  	/* Change internal hardware path(DM_CON/DP_CON, VBUSIN) */
->  	ret = sm5502_muic_set_path(info, con_sw, vbus_sw, attached);
-> 
+--Sig_/zeyYGkAXi=.XMxUHhTLcnmI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied it. Better to use the capital letter for first char
-on patch title.
+Hi all,
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/gpu/drm/bridge/analogix/analogix-anx6345.c: In function 'anx6345_i2=
+c_probe':
+drivers/gpu/drm/bridge/analogix/analogix-anx6345.c:738:30: error: implicit =
+declaration of function 'i2c_new_dummy' [-Werror=3Dimplicit-function-declar=
+ation]
+  738 |    anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
+      |                              ^~~~~~~~~~~~~
+drivers/gpu/drm/bridge/analogix/analogix-anx6345.c:738:28: warning: assignm=
+ent to 'struct i2c_client *' from 'int' makes pointer from integer without =
+a cast [-Wint-conversion]
+  738 |    anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
+      |                            ^
+
+Caused by commit
+
+  6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
+
+interacting with commit
+
+  2c2f00ab1641 ("i2c: remove i2c_new_dummy() API")
+
+=46rom Linus' tree.
+
+I have applied the following fix up patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 16 Dec 2019 12:11:19 +1100
+Subject: [PATCH] drm/bridge: fix up for removal of i2c_new_dummy()
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/g=
+pu/drm/bridge/analogix/analogix-anx6345.c
+index 9917ce0d86a0..56f55c53abfd 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+@@ -735,13 +735,13 @@ static int anx6345_i2c_probe(struct i2c_client *clien=
+t,
+ 	/* Map slave addresses of ANX6345 */
+ 	for (i =3D 0; i < I2C_NUM_ADDRESSES; i++) {
+ 		if (anx6345_i2c_addresses[i] >> 1 !=3D client->addr)
+-			anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
++			anx6345->i2c_clients[i] =3D i2c_new_dummy_device(client->adapter,
+ 						anx6345_i2c_addresses[i] >> 1);
+ 		else
+ 			anx6345->i2c_clients[i] =3D client;
+=20
+-		if (!anx6345->i2c_clients[i]) {
+-			err =3D -ENOMEM;
++		if (IS_ERR(anx6345->i2c_clients[i])) {
++			err =3D PTR_ERR(anx6345->i2c_clients[i]);
+ 			DRM_ERROR("Failed to reserve I2C bus %02x\n",
+ 				  anx6345_i2c_addresses[i]);
+ 			goto err_unregister_i2c;
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zeyYGkAXi=.XMxUHhTLcnmI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl323JMACgkQAVBC80lX
+0GxN4QgAj7cSKYl22karaXz89XosCJqL4gvGd9bkeZ5Xb+s0IxEa+wWqHBlypzSK
+CgwKRM52IvdDillgu4OrUswwU3uOnGVwpDzhaAEPud2MlVHwW8FUVpVWXMS/R0T9
+ioq2BZghynAVV4bk7BtJbqGT4/NWyLOLqMNRJc87ab314NQ/ndHVhND9dRRnarka
+iDuQJA9LeT8a2nAVjK7h3eaX2kwBVOARZuOY5nODMeRyKzaYyWo4RVn4B5bCR+gY
+wBugDDotCKnOgI3ZwdLySA9A5cPbySMuIXK5d30QDptp6vH0YzbI8nFc+/S7XFQm
+RnTk93uuVVln84h0daNEeovw8VE/nQ==
+=ycV+
+-----END PGP SIGNATURE-----
+
+--Sig_/zeyYGkAXi=.XMxUHhTLcnmI--
