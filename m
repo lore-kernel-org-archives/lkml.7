@@ -2,240 +2,163 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9218C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A363EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773EC2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7947F2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="UTOAgPsO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gSN3UzMB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDWKV1Io"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLPTpO (ORCPT
+        id S1727282AbfLPTsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:45:14 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41765 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbfLPTpO (ORCPT
+        Mon, 16 Dec 2019 14:48:18 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38027 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLPTsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:45:14 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 466455D4D;
-        Mon, 16 Dec 2019 14:45:12 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 16 Dec 2019 14:45:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=D
-        jvFrxDSCUB8eHUxPxhWbB5MN/QXEIpJKqGs29bik/g=; b=UTOAgPsOjSc+PDzq2
-        TbV6VqaDsig1q/9HC0HZls8uW/UfF92M6kz8uVaYweaShAQ86mt3HUi+6xgIBtSS
-        IN81PFgUCVp1R4u/b+GbHcnrbQ+BNhlcz6am7yjqD8jqTRC962j7P1kEJBG3O4sr
-        r4J6UypswoxE5dgHG8gH4Ti09ujX/ZHfx25SEH/XigHNjsxAtzZKOSCCuUPwHRzg
-        ZTmuNgKtAl7MGqz8TiaumGtfQw24xhdrRLoymswgzbnoduHe4ZNvDT31OZRkwuz1
-        QRnm70bxu0bhEmaeNlbhxIrJtJrZBanakVxM2tlk6szU2P19jWvIrLYuZDl6A9Vl
-        1+d8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=DjvFrxDSCUB8eHUxPxhWbB5MN/QXEIpJKqGs29bik
-        /g=; b=gSN3UzMBPqefR5puzS2Eoul+JnCupRGeA3+Mn1i3BbrRkPWk4eyWteLFB
-        +UfODa3iFvIGgJZddtqcozNUmz/nISHp/I08itXnmkzjODvEK6xuDwmsOq5V0VER
-        961d8duFPgrc0mORchgTTTVEAZYxdi2EbULJuky/sD01xgRe383sjQ8Dg63YFtZS
-        8gW0YUYoJawuZjxTCFHsA+KcwI/TbH6q4Y7BzbsE0OVzRdIbNBLUU05LlliW4Oue
-        /oegQHBNZ5XTftx3+WNQL3MhFQBQ3FnNaqhXGUA7KOq02EKGG3T8pIpj/t5IRHKB
-        31FAwfssmDnWaJmmZ/QS7Q/oEcKlw==
-X-ME-Sender: <xms:xd73XZS8AFm5-oK7L4gysz86ed_XseCLVKRzGzEpEOkZz8D3O0M6og>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedguddvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
-    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
-    ffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeejtddrudefhedrudeg
-    kedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrg
-    hnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xd73XWtslmQDVjFi9lufQzu1iJwpxInNF_j5RUC4VnpwjWVYk8sUtw>
-    <xmx:xd73XX5KS_VJ1EqaXUq84fnyy1KnNRJvIP9NT-glll3Uc6A71PDWKQ>
-    <xmx:xd73XZhzyr7B5ADOnIFlz9ZS3hAojyzhc3ibEFMF5ERI6_rj7Q8eKw>
-    <xmx:yN73XUCJ4FpkwtUkmMecIXBKBLhJLWsPPYbHvRUtJ_wlEKfy-ReDbQ>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1B15C80061;
-        Mon, 16 Dec 2019 14:45:09 -0500 (EST)
-Subject: Re: [PATCH v5 2/8] dt-bindings: mailbox: Add a sun6i message box
- binding
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20191215042455.51001-1-samuel@sholland.org>
- <20191215042455.51001-3-samuel@sholland.org>
- <20191216140422.on4bredklgdxywbw@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <d3a1c7c2-953a-cbfe-970e-c00f9a9f5742@sholland.org>
-Date:   Mon, 16 Dec 2019 13:45:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 14:48:18 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u2so576435wmc.3;
+        Mon, 16 Dec 2019 11:48:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=gMs5W1B63XydDPv1tVZEyDdvd/VWBIUBICPv+r011Yo=;
+        b=oDWKV1IoySg+nhCOWvkfbTQ21os1U6ZYFlQAmwQQNFdVsSggyfyO2YWarnIgoNfpQU
+         ijwK7h5bZayF3Czku/FbgiXCXtAMATIl5HVTeElZ8R/2IJvklOOzxWaIMCxnKXdYUiVQ
+         q8MVHSDvuv/EmNuoHQSyRedXPpbNyOHPVlmPtRGVwv/gxHCThFgej+lCuRzNIcPQgVIK
+         zrHMCgRrwASTi6kg3j/lb/jZRldu409u152RyF3tvWFFSTBuqwUmUNDw0XoCtn7yCzh+
+         liamY6Hppjo73pmXIfInCD0aogCKSmS/R7WfM8dKbMQunMXB3cSw4aJcTkr0BlLGNzKq
+         L4dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=gMs5W1B63XydDPv1tVZEyDdvd/VWBIUBICPv+r011Yo=;
+        b=dew2dMKQ8F1PG1vdntzVQHEdJW9tlMijkTpIgYrkwRmf2fD4rGsrqizDeOZnBgQb0Y
+         bDCIusiSzFbxaO77AvHQvxnmhqHre3J9NL/NqUg+T74r3jABaY3eJiZNjjtAZhSBhUSi
+         BXmSeeJC6V9W7NTiiEDhWBAlGwDZvAFILQnSkWg2Xd7fYz0WNmj+uIgjkZyHLNNkjqKF
+         /3W81jWF+6IeXeLFuuPDGB/HRMMJ3TwbTpKINH8Q4YHtnM/S7EYNXJBqxWc1uw2rZ3Ey
+         RQqrMi60j90X4+4+Q8AX9v1BjlmMlpFIpTd9ehy5p7AxTEgqlk45lXzsjGwKZ3C+c5pJ
+         5Hgg==
+X-Gm-Message-State: APjAAAXrp2K1xBT2HAyKl0T++cnWVJ1v0sDEfpmKyBdfGHFmdMEPBxaO
+        LO0ABJJ4uSsg80Sokh/nuvw=
+X-Google-Smtp-Source: APXvYqwLhSBt4MHodunA12ZJ4ZkVWkxRKGvHezgwEV5gjv9/Oag3A1y057CeAUk+IRolbEUx7Az53A==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr766192wmg.92.1576525695695;
+        Mon, 16 Dec 2019 11:48:15 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id c4sm459672wml.7.2019.12.16.11.48.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Dec 2019 11:48:15 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     jgross@suse.com
+Cc:     axboe@kernel.dk, konrad.wilk@oracle.com, roger.pau@citrix.com,
+        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org,
+        pdurrant@amazon.com, sj38.park@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a memory pressure is detected
+Date:   Mon, 16 Dec 2019 20:48:03 +0100
+Message-Id: <20191216194803.6294-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <20191216140422.on4bredklgdxywbw@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2ad62cc8-ae78-6087-f277-923dc076383a@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
 
-On 12/16/19 8:04 AM, Maxime Ripard wrote:
-> Hi,
-> 
-> On Sat, Dec 14, 2019 at 10:24:49PM -0600, Samuel Holland wrote:
->> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
->> sun50i SoCs. Add a device tree binding for it. As it has only been
->> tested on the A83T, A64, H3/H5, and H6 SoCs, only those compatibles are
->> included.
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
->> ---
->>  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 78 +++++++++++++++++++
->>  1 file changed, 78 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->> new file mode 100644
->> index 000000000000..dd746e07acfd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->> @@ -0,0 +1,78 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Allwinner sunxi Message Box
->> +
->> +maintainers:
->> +  - Samuel Holland <samuel@sholland.org>
->> +
->> +description: |
->> +  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
->> +  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
->> +  is raised for received messages, but software must poll to know when a
->> +  transmitted message has been acknowledged by the remote user. Each FIFO can
->> +  hold four 32-bit messages; when a FIFO is full, clients must wait before
->> +  attempting more transmissions.
->> +
->> +  Refer to ./mailbox.txt for generic information about mailbox device-tree
->> +  bindings.
->> +
->> +properties:
->> +  compatible:
->> +     items:
->> +      - enum:
->> +          - allwinner,sun8i-a83t-msgbox
->> +          - allwinner,sun8i-h3-msgbox
->> +          - allwinner,sun50i-a64-msgbox
->> +          - allwinner,sun50i-h6-msgbox
->> +      - const: allwinner,sun6i-a31-msgbox
-> 
-> This will fail for the A31, since it won't have two compatibles but
-> just one.
+> On 16.12.19 17:15, SeongJae Park wrote:
+> > On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> > 
+> >> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> >>
+> >>> From: SeongJae Park <sjpark@amazon.de>
+> >>>
+> > [...]
+> >>> --- a/drivers/block/xen-blkback/xenbus.c
+> >>> +++ b/drivers/block/xen-blkback/xenbus.c
+> >>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
+> >>>   }
+> >>>   
+> >>>   
+> >>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
+> >>> +static unsigned int buffer_squeeze_duration_ms = 10;
+> >>> +module_param_named(buffer_squeeze_duration_ms,
+> >>> +		buffer_squeeze_duration_ms, int, 0644);
+> >>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
+> >>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
+> >>> +
+> >>> +/*
+> >>> + * Callback received when the memory pressure is detected.
+> >>> + */
+> >>> +static void reclaim_memory(struct xenbus_device *dev)
+> >>> +{
+> >>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
+> >>> +
+> >>> +	be->blkif->buffer_squeeze_end = jiffies +
+> >>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+> >>
+> >> This callback might race with 'xen_blkbk_probe()'.  The race could result in
+> >> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
+> >> 'be' to the 'dev'.  Please _don't merge_ this patch now!
+> >>
+> >> I will do more test and share results.  Meanwhile, if you have any opinion,
+> >> please let me know.
 
-You asked me earlier to only include compatibles that had been tested, so I did.
-This hasn't been tested on the A31, so there's no A31-only compatible.
+I reduced system memory and attached bunch of devices in short time so that
+memory pressure occurs while device attachments are ongoing.  Under this
+circumstance, I was able to see the race.
 
-> You can have something like this if you want to do it with an enum:
+> > 
+> > Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
+> > concurrency issues could be in other drivers in their way, I suggest to change
+> > the reclaim callback ('->reclaim_memory') to be called for each driver instead
+> > of each device.  Then, each driver could be able to deal with its concurrency
+> > issues by itself.
 > 
-> compatible:
->   oneOf:
->     - const: allwinner,sun6i-a31-msgbox
->     - items:
->       - enum:
->         - allwinner,sun8i-a83t-msgbox
->         - allwinner,sun8i-h3-msgbox
->         - allwinner,sun50i-a64-msgbox
->         - allwinner,sun50i-h6-msgbox
->       - const: allwinner,sun6i-a31-msgbox
-> 
->> +  reg:
->> +    items:
->> +      - description: MMIO register range
-> 
-> There's no need for an obvious description like this.
-> Just set it to maxItems: 1
+> Hmm, I don't like that. This would need to be changed back in case we
+> add per-guest quota.
 
-Will do for v6.
+Extending this callback in that way would be still not too hard.  We could use
+the argument to the callback.  I would keep the argument of the callback to
+'struct device *' as is, and will add a comment saying 'NULL' value of the
+argument means every devices.  As an example, xenbus would pass NULL-ending
+array of the device pointers that need to free its resources.
 
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: bus clock
->> +
->> +  resets:
->> +    maxItems: 1
->> +    description: bus reset
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +    description: controller interrupt
+After seeing this race, I am now also thinking it could be better to delegate
+detailed control of each device to its driver, as some drivers have some
+complicated and unique relation with its devices.
+
 > 
-> Ditto, you can drop the description here.
+> Wouldn't a get_device() before calling the callback and a put_device()
+> afterwards avoid that problem?
 
-Will do for v6.
+I didn't used the reference count manipulation operations because other similar
+parts also didn't.  But, if there is no implicit reference count guarantee, it
+seems those operations are indeed necessary.
 
->> +  '#mbox-cells':
->> +    const: 1
-> 
-> However, you should document what the argument is about?
+That said, as get/put operations only adjust the reference count, those will
+not make the callback to wait until the linking of the 'backend' and 'blkif' to
+the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
+Or, am I missing something?
 
-Ok. "Number of cells used to encode a mailbox specifier" should work.
+I also modified the code to do 'get_device()' and 'put_device()' as you
+suggested and did test, but the race was still reproducible.
 
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - resets
->> +  - interrupts
->> +  - '#mbox-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/sun8i-h3-ccu.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/reset/sun8i-h3-ccu.h>
->> +
->> +    msgbox: mailbox@1c17000 {
->> +            compatible = "allwinner,sun8i-h3-msgbox",
->> +                         "allwinner,sun6i-a31-msgbox";
->> +            reg = <0x01c17000 0x1000>;
->> +            clocks = <&ccu CLK_BUS_MSGBOX>;
->> +            resets = <&ccu RST_BUS_MSGBOX>;
->> +            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->> +            #mbox-cells = <1>;
->> +    };
-> 
-> Look good otherwise, thanks!
-> Maxime
-> 
 
 Thanks,
-Samuel
+SeongJae Park
+
+> 
+> 
+> Juergen
