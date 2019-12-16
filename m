@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C98C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAB6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7AA206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B279120733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519082;
-	bh=2e8/UuLvJLNecZgC8ChFnpt7Ilo18ui9cPMWigdrHKs=;
+	s=default; t=1576519087;
+	bh=lYslgjAVeGe36565v2xmC1jA/tC+3dsA1uoVGkImutY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCMy4a+mbgSIHhcYElxmJ0RMB5Fh/INjCM8hnEZE2BROvuBRkC5hwNIaoVLTsoc6G
-	 31A5Xg24MFTZuM4WgsZCU9aMRXIUC+GGfI6ExCVf70SwGirhrnbVLhLKXixa92Ag6X
-	 jd4mXloyrjybLB/zZ7fMaDfD2P6jiH/oE6+5E4rQ=
+	b=d0E0Ld+DpjOWD2CdaEag96ckDTYISEV2IL+07dVL7gWxbR6sTOX0PNX6d1MW9hshl
+	 bBJjZNgAVylrJTrRIA1CPQmP/S6+eqk6eDfE9h8lQCQmzhJndbSB6dsVM1cXKRSzAT
+	 ZSBgc+kKbZGaMTMVTPz57ZV8Yj4Juxd9xs+KdS8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfLPR6B (ORCPT
+        id S1726646AbfLPR6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:58:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbfLPR56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:58 -0500
+        id S1728569AbfLPR6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED18E205ED;
-        Mon, 16 Dec 2019 17:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C84D0205ED;
+        Mon, 16 Dec 2019 17:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519078;
-        bh=2e8/UuLvJLNecZgC8ChFnpt7Ilo18ui9cPMWigdrHKs=;
+        s=default; t=1576519083;
+        bh=lYslgjAVeGe36565v2xmC1jA/tC+3dsA1uoVGkImutY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHwyUURrJdSHNvH+nij4hUT84zieEIwCVNiS48B5zMh36TXXjIFq928SJ1Qr8CmgA
-         nMl1ySgXR6+8UIPZ0GdGmc2axFVroS5+YzvmNWYp3NwJAGOI0aL1YXU5ex4mSH6uvE
-         Y/x63fUzJ+iBp5RNDc/p+pDxAW1oeSZcJW56+ros=
+        b=dT5lAuKAu4VSlSxfGRE0Evv/6tUXYmd8lNgXnm9dh1WT5+YraJrsX4wI2iCcZvZX6
+         kkoohqG4nvXUcoQTtu1+S9OV7OZNosjSnTHZKHsDHUZSfaeS2mpRmKtD6Gn+hH8qPT
+         I4zpO4VV9gbJ3bFO2VJ0n1x/3Bd60Eg9UPIJ1n5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 146/267] crypto: ecdh - fix big endian bug in ECC library
-Date:   Mon, 16 Dec 2019 18:47:52 +0100
-Message-Id: <20191216174910.473333138@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 148/267] spi: atmel: Fix CS high support
+Date:   Mon, 16 Dec 2019 18:47:54 +0100
+Message-Id: <20191216174910.582230758@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,42 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit f398243e9fd6a3a059c1ea7b380c40628dbf0c61 upstream.
+commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
 
-The elliptic curve arithmetic library used by the EC-DH KPP implementation
-assumes big endian byte order, and unconditionally reverses the byte
-and word order of multi-limb quantities. On big endian systems, the byte
-reordering is not necessary, while the word ordering needs to be retained.
+Until a few years ago, this driver was only used with CS GPIO. The
+only exception is CS0 on AT91RM9200 which has to use internal CS. A
+limitation of the internal CS is that they don't support CS High.
 
-So replace the __swab64() invocation with a call to be64_to_cpu() which
-should do the right thing for both little and big endian builds.
+So by using the CS GPIO the CS high configuration was available except
+for the particular case CS0 on RM9200.
 
-Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
-Cc: <stable@vger.kernel.org> # v4.9+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+When the support for the internal chip-select was added, the check of
+the CS high support was not updated. Due to this the driver accepts
+this configuration for all the SPI controller v2 (used by all SoCs
+excepting the AT91RM9200) whereas the hardware doesn't support it for
+infernal CS.
+
+This patch fixes the test to match the hardware capabilities.
+
+Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/ecc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-atmel.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/crypto/ecc.c
-+++ b/crypto/ecc.c
-@@ -898,10 +898,11 @@ static void ecc_point_mult(struct ecc_po
- static inline void ecc_swap_digits(const u64 *in, u64 *out,
- 				   unsigned int ndigits)
- {
-+	const __be64 *src = (__force __be64 *)in;
- 	int i;
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -1150,10 +1150,8 @@ static int atmel_spi_setup(struct spi_de
+ 	as = spi_master_get_devdata(spi->master);
  
- 	for (i = 0; i < ndigits; i++)
--		out[i] = __swab64(in[ndigits - 1 - i]);
-+		out[i] = be64_to_cpu(src[ndigits - 1 - i]);
- }
+ 	/* see notes above re chipselect */
+-	if (!atmel_spi_is_v2(as)
+-			&& spi->chip_select == 0
+-			&& (spi->mode & SPI_CS_HIGH)) {
+-		dev_dbg(&spi->dev, "setup: can't be active-high\n");
++	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
++		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
+ 		return -EINVAL;
+ 	}
  
- static int __ecc_is_key_valid(const struct ecc_curve *curve,
 
 
