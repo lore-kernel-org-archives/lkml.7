@@ -2,92 +2,107 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E371AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC38F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DB7206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIElbB20"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alIV0owQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbfLPSsO (ORCPT
+        id S1727847AbfLPSsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:48:14 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40318 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfLPSsK (ORCPT
+        Mon, 16 Dec 2019 13:48:19 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45219 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfLPRyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:48:10 -0500
-Received: by mail-qk1-f194.google.com with SMTP id c17so5287932qkg.7;
-        Mon, 16 Dec 2019 10:48:10 -0800 (PST)
+        Mon, 16 Dec 2019 12:54:25 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so4210753wrj.12;
+        Mon, 16 Dec 2019 09:54:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=d/igsJxqxIH045Qz270VUKi+p6ksbRkZVV5S40MrKR0=;
-        b=aIElbB20MoCu/or0OwrNw58y+Pg3hIIlkOwBtccZPvB4GFLh3s6oDd1lzbEkQfOmcM
-         pruMrgmKjg4ERFO3kP0Cv4ulwcsKojU/ZxOyJ/Jf95ZuyM44Yzs87kA56E1kx4oWGldu
-         +6mw96JYiFfzPk4jbibswXQfyTHTbQdKY33o7wWH+auioeMDoPp2QRWq1uZCUa/+mRmX
-         WBal1dDIzfIRe98HdKtXkyJW1g9qImdUl0YDmvsxUoPWx5h90u4YxLpIj/qrNJLzZpEa
-         cs8mNp1fCsN30L3LtYiB6JX22XNLkNjATFx/r5Pym1QPvofhCCWLm8K1b1GewA5qRB9F
-         Oh+A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=/ADs60hbOFeV91Nal7IRwSibD1PvyjxPHFpLiwg56pU=;
+        b=alIV0owQs+4Tj0VrignHQenjkrJKJPddVpY38ar5e0/9GAS/qdZp6IvmaUQifxORdi
+         vpeh8DL4t32X85EhODF52sW1LIOeD8Ta6eGaZT8XpAILRK/kiKN+m5zag1FI97NCYtw9
+         J9c0B++M2fsp2z27my6fre4P9s7PAH6Af+JzD6+6mU5UAVDeuvr5VbdS6JkI5oiO9yjc
+         mXbpuQZDsY8EKFXUtHtJU/jbi3yoc6GLejAUNlPVmlQCq5l246PQg6KjH4143AmyZ1+d
+         KmveWgkLxo0l0AdNlv/U4Fu4Y7AH8GE1kA8Plk4sLr+ejkdSODixOPOZk75OSvvubQTJ
+         BgtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=d/igsJxqxIH045Qz270VUKi+p6ksbRkZVV5S40MrKR0=;
-        b=mKLT29Jrrf/KR1AwdFCJ4dTlnj5bMJrgrjqJmtrU4Ti8hrJp6rhjl2d2RqTmSgkCZD
-         aAQo4XNxD6S1yAWPLv4AEsDr5O86C9EI4XJUl/6OGdt73pnOmXjN4B5xIFoVOMks8cwT
-         0AKbMuOsVmKoxkK/zR+aOOb7lTrws64W7PTCLW9EMn47Yo5rJyTh+S1fc9iHF834whjk
-         CwV8qu3HL3x3P7l8UqqcoB3x/dbwnIw6fJkHFGCKprO1MRBUCzNlP4IByofCN6ILAstz
-         dRbV46ict/k6nMhx453AGN+UpwJxWv/5qgk7jA2KjeDb+hG8gLLdS9sEvoArz5vKW8Ts
-         PbYA==
-X-Gm-Message-State: APjAAAVL66ggbCUxxtyAhiwtWJcE0+22fh5XwDLASeczOB7Q4cqAZZO/
-        b+0sKxNVZT6Jy6CMj28svZ8=
-X-Google-Smtp-Source: APXvYqwu1Nj38YMaqxbNMuATZpIQW7jHHzmLSWJBFyAMPr6tHGWaL7q4jbeEj8hy7h3hDnEw/949oA==
-X-Received: by 2002:a37:4a0d:: with SMTP id x13mr807474qka.332.1576522089932;
-        Mon, 16 Dec 2019 10:48:09 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id u24sm6315073qkm.40.2019.12.16.10.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 10:48:09 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:48:08 -0500
-Message-ID: <20191216134808.GB2070741@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, rmk+kernel@armlinux.org.uk,
-        ioana.ciornei@nxp.com, olteanv@gmail.com,
-        jakub.kicinski@netronome.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: Make PHYLINK related function static
- again
-In-Reply-To: <20191216183248.16309-1-f.fainelli@gmail.com>
-References: <20191216183248.16309-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=/ADs60hbOFeV91Nal7IRwSibD1PvyjxPHFpLiwg56pU=;
+        b=LAccXNwtaUJK4TZfY7TsYSdeavEzrWn9PP63NKKpb+bC8arDjhcyi3lwwEoKbSi52p
+         gwEp1R1fYPdr5UjGKCr05E1onLFrdMFiyUqPcpgnR2pBUw2PQ1bz0aPu1w4bPs8JZ+CW
+         ukZgiScIAs5abuRKuDl+iMXemB5GiiAwCWkcwJLIy5xW6uU8pqvD8TJMx8qCCAKTpSqd
+         i0qP71yokq5ti5gBgA3H6KsvCRyjvdDUdaIaRvvSIJBi1pJXElcqJbaEq1vYCLuKXgIJ
+         frKQb4L75xsg6PcE+pck3dQ8DQk8JsmezZ0jiwN5vaHSPT/YbO+dW77dMPWsBvWy1J5+
+         2uZg==
+X-Gm-Message-State: APjAAAVwk43g/HO3SQxdACmTWL0mj8MnbHsajHXjMETUcdM7Z+57H7Oo
+        UyWv6DUI3qgje1E98Sn9ibE=
+X-Google-Smtp-Source: APXvYqzLvZWcCouTgjODTUh4a7Ne/akkw8fCqL5aQfJbgy+SUlUUEvXNo8P6tp8tTVtgRDgaZ54HHA==
+X-Received: by 2002:adf:f88c:: with SMTP id u12mr33319322wrp.323.1576518863678;
+        Mon, 16 Dec 2019 09:54:23 -0800 (PST)
+Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id a16sm22341245wrt.37.2019.12.16.09.54.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 09:54:23 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>
+Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
+Subject: [PATCH] NFSv4: open() should try lease recovery on NFS4ERR_EXPIRED
+Date:   Mon, 16 Dec 2019 17:54:22 -0000
+Message-ID: <05c201d5b439$d99083c0$8cb18b40$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdW0MuhLiOKK2wGRQLycz+SVs0XJrQ==
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 10:32:47 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Commit 77373d49de22 ("net: dsa: Move the phylink driver calls into
-> port.c") moved and exported a bunch of symbols, but they are not used
-> outside of net/dsa/port.c at the moment, so no reason to export them.
-> 
-> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open,
+we return EIO to applications without even trying to recover.
+
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+---
+ fs/nfs/nfs4proc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index aad65dd..04e6a13 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct nfs_server
+*server,
+ 						stateid);
+ 				goto wait_on_recovery;
+ 			}
++			if (state == NULL) {
++				nfs4_schedule_lease_recovery(clp);
++				goto wait_on_recovery;
++			}
+ 			/* Fall through */
+ 		case -NFS4ERR_OPENMODE:
+ 			if (inode) {
+-- 
+1.8.3.1
+
+
