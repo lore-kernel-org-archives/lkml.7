@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A6CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A781C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE646206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E41B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521932;
-	bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+	s=default; t=1576521935;
+	bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQLpuvjU05rc8SzmLypKYX7+gXfOrAo1l3BprMsSNPydCIhSWZ2RYhKjVDbVcg6hc
-	 IaPRBM2QassoceARHN38nDsMuZhTu43Wh2QGrOY4ceOheyOncS3FV5U5psvmuws2qU
-	 qTwx2QRQeroT8R1Hz/jLB+VEELEgHuNNmjEgIDng=
+	b=V2ZJUUfuVb7wJZkFRKlopuoi+zY1q2zzXBHTClIcm6BV7oVumcZUaPXpeoS/elJhB
+	 Sjqmqx8YeJMRWNkTozMPZOxo4vbmR7Yhwjm7dnsXJCft7CUGdGUtSk/V3ojd3aitUB
+	 XNerI3BGw53vYb7FsyVYS5J/fIxUqG8KgW0ha7RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLPSpb (ORCPT
+        id S1728391AbfLPR5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:45:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbfLPR5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:17 -0500
+        id S1727066AbfLPR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74C13206B7;
-        Mon, 16 Dec 2019 17:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4581206B7;
+        Mon, 16 Dec 2019 17:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519036;
-        bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+        s=default; t=1576519027;
+        bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqaToXXZ4hEhLTw/k1uo0Eoz9iDO8G98OF9PIJv1kRIzFlrJynwBU/rQwW+OnZKpZ
-         Hmd+v7lcMotDU2/rRYPFR92a8gCqxqpRVMEC+/1J2up59P6iciZ62PZ/2XZmk4hMJd
-         XN31D4SRZOCegSiPq+fU7f7zTnNvAxz4YcWyJBsY=
+        b=GpJ8LpCwW2QI4BTLvAlWrSPj7aLqRJdVdXFLf7aUvR5Qe5X/X3b+KTdLN/f4Umlau
+         DyEuOWT4IELsR2tx8LgtQrZaFC6t5clrKplPnHjnBmPQ7nSrQMwQll1BnDEfv54+pD
+         ecA79ZdOPeg2DHMMGttRPtLoLEik4g48Qaxl1FA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 169/267] staging: gigaset: add endpoint-type sanity check
-Date:   Mon, 16 Dec 2019 18:48:15 +0100
-Message-Id: <20191216174911.761701488@linuxfoundation.org>
+Subject: [PATCH 4.14 165/267] staging: rtl8188eu: fix interface sanity check
+Date:   Mon, 16 Dec 2019 18:48:11 +0100
+Message-Id: <20191216174911.543956751@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,49 +60,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
+commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
 
-Add missing endpoint-type sanity checks to probe.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-This specifically prevents a warning in USB core on URB submission when
-fuzzing USB descriptors.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
+Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
+Cc: stable <stable@vger.kernel.org>     # 3.12
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
+Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/isdn/gigaset/usb-gigaset.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/isdn/gigaset/usb-gigaset.c
-+++ b/drivers/isdn/gigaset/usb-gigaset.c
-@@ -708,6 +708,12 @@ static int gigaset_probe(struct usb_inte
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -78,7 +78,7 @@ static struct dvobj_priv *usb_dvobj_init
+ 	phost_conf = pusbd->actconfig;
+ 	pconf_desc = &phost_conf->desc;
  
- 	endpoint = &hostif->endpoint[0].desc;
+-	phost_iface = &usb_intf->altsetting[0];
++	phost_iface = usb_intf->cur_altsetting;
+ 	piface_desc = &phost_iface->desc;
  
-+	if (!usb_endpoint_is_bulk_out(endpoint)) {
-+		dev_err(&interface->dev, "missing bulk-out endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
- 	ucs->bulk_out_size = buffer_size;
- 	ucs->bulk_out_epnum = usb_endpoint_num(endpoint);
-@@ -727,6 +733,12 @@ static int gigaset_probe(struct usb_inte
- 
- 	endpoint = &hostif->endpoint[1].desc;
- 
-+	if (!usb_endpoint_is_int_in(endpoint)) {
-+		dev_err(&interface->dev, "missing int-in endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	ucs->busy = 0;
- 
- 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
+ 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
 
 
