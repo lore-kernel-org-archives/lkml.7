@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF5FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F7C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8779D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCD7206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520728;
-	bh=pm2cQGMCeE/U1M1ZNd+RFAp2veHPU25WymHFRQgKUQA=;
+	s=default; t=1576520733;
+	bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ocpHsRlUhmCHv0oS4fd3u8TEOhlKElxOGy7qvUYcHaMNnnhH8wn3Anxc/+IEB2t7O
-	 kkzA9VSVFdG9JfcC0mj6qPnzOyfloc2qnZxfz3Id27kkBFIXHGjozf0lw9zAuUdxiS
-	 g35HU4/b+K/2DNPi+K+MRlM3FHzRRs+Pe2ElSDq0=
+	b=xXU5NxG8qYHtcqpWwoiwABPMHPVXz3kzx8X2Q+SIndYi7XXBWgSYcOr+XHZKiL2hx
+	 qZICDH5bEqwjepnORc9udPTPhJTPHifW729m4tNMy1X45PLoaB4NnF4gqFvcvBS8UK
+	 P8S66XK3rhqwnqYg9LeSxP/HOCogHnZlphQie1oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbfLPSZX (ORCPT
+        id S1731375AbfLPSSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:25:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:18:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbfLPSSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:09 -0500
+        id S1730727AbfLPSR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186B0206E0;
-        Mon, 16 Dec 2019 18:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D0D52166E;
+        Mon, 16 Dec 2019 18:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520288;
-        bh=pm2cQGMCeE/U1M1ZNd+RFAp2veHPU25WymHFRQgKUQA=;
+        s=default; t=1576520278;
+        bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjwoEDP+TujWZVTBJ3SVvyROBjcV7iBlKs+dmDRCaYQrwAb1yA7uvJoiiI8ltjD+e
-         pHD+GH5E6oO2VHNG98k6LmV5bAsobIO6soF2RLQ1bRiuN6gx3tUDTGLPXv+sCH7MRl
-         EHyA3JkHptU25L95Mkx78nJzTqA2JaQLlE6Km6pY=
+        b=E5VI4YOJJMsLnuwNPZys4FOpLdb7bTy8yY1blTa0L6BEmZLIQ2xOWOnhMsH29imh+
+         /R75Rx2c5iy46u+TOwOxCf1QS7zurS48Mr/DJcfZoAbOye2/1C59hbENTtMPhi3Fr5
+         Y1ml/POfZhDOc/RLhSJLs0YaD0ZEn7gNj4ypwSVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Denis Efremov <efremov@linux.com>
-Subject: [PATCH 5.4 094/177] wil6210: check len before memcpy() calls
-Date:   Mon, 16 Dec 2019 18:49:10 +0100
-Message-Id: <20191216174839.462805451@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>
+Subject: [PATCH 5.4 049/177] usb: core: urb: fix URB structure initialization function
+Date:   Mon, 16 Dec 2019 18:48:25 +0100
+Message-Id: <20191216174830.277679565@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,54 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Emiliano Ingrassia <ingrassia@epigenesys.com>
 
-commit 2c840676be8ffc624bf9bb4490d944fd13c02d71 upstream.
+commit 1cd17f7f0def31e3695501c4f86cd3faf8489840 upstream.
 
-memcpy() in wmi_set_ie() and wmi_update_ft_ies() is called with
-src == NULL and len == 0. This is an undefined behavior. Fix it
-by checking "ie_len > 0" before the memcpy() calls.
+Explicitly initialize URB structure urb_list field in usb_init_urb().
+This field can be potentially accessed uninitialized and its
+initialization is coherent with the usage of list_del_init() in
+usb_hcd_unlink_urb_from_ep() and usb_giveback_urb_bh() and its
+explicit initialization in usb_hcd_submit_urb() error path.
 
-As suggested by GCC documentation:
-"The pointers passed to memmove (and similar functions in <string.h>)
-must be non-null even when nbytes==0, so GCC can use that information
-to remove the check after the memmove call." [1]
-
-[1] https://gcc.gnu.org/gcc-4.9/porting_to.html
-
-Cc: Maya Erez <merez@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191127160355.GA27196@ingrassia.epigenesys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/wil6210/wmi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/core/urb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -2505,7 +2505,8 @@ int wmi_set_ie(struct wil6210_vif *vif,
- 	cmd->mgmt_frm_type = type;
- 	/* BUG: FW API define ieLen as u8. Will fix FW */
- 	cmd->ie_len = cpu_to_le16(ie_len);
--	memcpy(cmd->ie_info, ie, ie_len);
-+	if (ie_len)
-+		memcpy(cmd->ie_info, ie, ie_len);
- 	rc = wmi_send(wil, WMI_SET_APPIE_CMDID, vif->mid, cmd, len);
- 	kfree(cmd);
- out:
-@@ -2541,7 +2542,8 @@ int wmi_update_ft_ies(struct wil6210_vif
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -45,6 +45,7 @@ void usb_init_urb(struct urb *urb)
+ 	if (urb) {
+ 		memset(urb, 0, sizeof(*urb));
+ 		kref_init(&urb->kref);
++		INIT_LIST_HEAD(&urb->urb_list);
+ 		INIT_LIST_HEAD(&urb->anchor_list);
  	}
- 
- 	cmd->ie_len = cpu_to_le16(ie_len);
--	memcpy(cmd->ie_info, ie, ie_len);
-+	if (ie_len)
-+		memcpy(cmd->ie_info, ie, ie_len);
- 	rc = wmi_send(wil, WMI_UPDATE_FT_IES_CMDID, vif->mid, cmd, len);
- 	kfree(cmd);
- 
+ }
 
 
