@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B881AC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC46DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E1B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B147921739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519532;
-	bh=MKyl0gKesEgMEYBiDy75wdvVTVZlDkSAwpBgTUQzn88=;
+	s=default; t=1576519535;
+	bh=Nl8f/aIRObO7yJvoCvPr4jZpKNKQEVV98/Vp4dxNuIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bq5pdGP6/4fAbYlGSBwnuyq5+J84ba4oCFohh87feMdMj0MRArb41P5MP9T8m/DL5
-	 Kd/GT9Fv/Amh5Ll+FW3LMQEF74Bp9Oy6OKFoXEsgpbql+qoG/17ajCP4yr/9yiByFN
-	 fEX6BLl6CcSykj4xebpZFTCucLSq4y7/77QvU7po=
+	b=MCMUQlNZFykRiQP4CwYve4DSr+lzEZL0enKO9qdhgsH8fgdz2fsIAv8sDTtbWpLSw
+	 d0AQyVgxi/NotaTb+HSsRQDRHZxbSK8/YzIjNyGVQ46OMqCNI8o48xHbu/lBMU1niD
+	 j5Xn96KVmUl6EgedfID6m5bpBNjDFwSljrlqHT80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfLPSFb (ORCPT
+        id S1729098AbfLPSFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbfLPSF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:27 -0500
+        id S1729830AbfLPSF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F412E20700;
-        Mon, 16 Dec 2019 18:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B093206EC;
+        Mon, 16 Dec 2019 18:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519526;
-        bh=MKyl0gKesEgMEYBiDy75wdvVTVZlDkSAwpBgTUQzn88=;
+        s=default; t=1576519528;
+        bh=Nl8f/aIRObO7yJvoCvPr4jZpKNKQEVV98/Vp4dxNuIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsufllJMiqBiQc/wvfBAKcpqFSf9HHAE/+VuOFHG6HC9Uj63AsZTL+8laffHc0UL9
-         SNgMVIuYgsn7cyY3X7nXarf3C+eKDRhEDmDkfbiL+yhEmsQgtwil3bT8y03QSdkZ/E
-         r6rjOLWuBBScmvoM8eg87vf10+Y3ODGVHovyc14s=
+        b=B6LThLkEq4rCT/2YH+jgwviQ3pMHqghOzn6T7aNL6EgWiZ2D1a6RprmBRMy7FFMZO
+         1PpRJZCQIjNgNp4zlJNHMbZKASuZCo/kFTJfO4hSSvUFhFcTE3/oSRoSs+WoPtd5oI
+         aKo7pRET4YAAVM774xqnXokhZCS0/P8NAr8dmqlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>, Lee Duncan <lduncan@suse.com>,
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/140] scsi: qla2xxx: Fix message indicating vectors used by driver
-Date:   Mon, 16 Dec 2019 18:49:31 +0100
-Message-Id: <20191216174815.384947838@linuxfoundation.org>
+Subject: [PATCH 4.19 104/140] scsi: qla2xxx: Fix SRB leak on switch command timeout
+Date:   Mon, 16 Dec 2019 18:49:32 +0100
+Message-Id: <20191216174815.476101672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,44 +62,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit da48b82425b8bf999fb9f7c220e967c4d661b5f8 ]
+[ Upstream commit af2a0c51b1205327f55a7e82e530403ae1d42cbb ]
 
-This patch updates log message which indicates number of vectors used by
-the driver instead of displaying failure to get maximum requested
-vectors. Driver will always request maximum vectors during
-initialization. In the event driver is not able to get maximum requested
-vectors, it will adjust the allocated vectors. This is normal and does not
-imply failure in driver.
+when GPSC/GPDB switch command fails, driver just returns without doing a
+proper cleanup. This patch fixes this memory leak by calling sp->free() in
+the error path.
 
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Link: https://lore.kernel.org/r/20191105150657.8092-4-hmadhani@marvell.com
 Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Link: https://lore.kernel.org/r/20190830222402.23688-2-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_gs.c   |  2 +-
+ drivers/scsi/qla2xxx/qla_init.c | 11 +++++------
+ drivers/scsi/qla2xxx/qla_mbx.c  |  4 ----
+ drivers/scsi/qla2xxx/qla_mid.c  | 11 ++++-------
+ drivers/scsi/qla2xxx/qla_os.c   |  7 ++++++-
+ 5 files changed, 16 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 8fa7242dbb437..afe15b3e45fbf 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -3418,10 +3418,8 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
- 		    ha->msix_count, ret);
- 		goto msix_out;
- 	} else if (ret < ha->msix_count) {
--		ql_log(ql_log_warn, vha, 0x00c6,
--		    "MSI-X: Failed to enable support "
--		     "with %d vectors, using %d vectors.\n",
--		    ha->msix_count, ret);
-+		ql_log(ql_log_info, vha, 0x00c6,
-+		    "MSI-X: Using %d vectors\n", ret);
- 		ha->msix_count = ret;
- 		/* Recalculate queue values */
- 		if (ha->mqiobase && (ql2xmqsupport || ql2xnvmeenable)) {
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index b8d3403c3c85a..f621cb55ccfb2 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3264,7 +3264,7 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
+ 	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
+ 
+ 	if (res == QLA_FUNCTION_TIMEOUT)
+-		return;
++		goto done;
+ 
+ 	if (res == (DID_ERROR << 16)) {
+ 		/* entry status error */
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 9cb5527d3d8f1..e6f3a0f5188c4 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -982,13 +982,11 @@ void qla24xx_async_gpdb_sp_done(void *s, int res)
+ 	    "Async done-%s res %x, WWPN %8phC mb[1]=%x mb[2]=%x \n",
+ 	    sp->name, res, fcport->port_name, mb[1], mb[2]);
+ 
+-	if (res == QLA_FUNCTION_TIMEOUT) {
+-		dma_pool_free(sp->vha->hw->s_dma_pool, sp->u.iocb_cmd.u.mbx.in,
+-			sp->u.iocb_cmd.u.mbx.in_dma);
+-		return;
+-	}
+-
+ 	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
++
++	if (res == QLA_FUNCTION_TIMEOUT)
++		goto done;
++
+ 	memset(&ea, 0, sizeof(ea));
+ 	ea.event = FCME_GPDB_DONE;
+ 	ea.fcport = fcport;
+@@ -996,6 +994,7 @@ void qla24xx_async_gpdb_sp_done(void *s, int res)
+ 
+ 	qla2x00_fcport_event_handler(vha, &ea);
+ 
++done:
+ 	dma_pool_free(ha->s_dma_pool, sp->u.iocb_cmd.u.mbx.in,
+ 		sp->u.iocb_cmd.u.mbx.in_dma);
+ 
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 128fcff24f1be..b01f69dd4b283 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -6131,17 +6131,13 @@ int qla24xx_send_mb_cmd(struct scsi_qla_host *vha, mbx_cmd_t *mcp)
+ 	case  QLA_SUCCESS:
+ 		ql_dbg(ql_dbg_mbx, vha, 0x119d, "%s: %s done.\n",
+ 		    __func__, sp->name);
+-		sp->free(sp);
+ 		break;
+ 	default:
+ 		ql_dbg(ql_dbg_mbx, vha, 0x119e, "%s: %s Failed. %x.\n",
+ 		    __func__, sp->name, rval);
+-		sp->free(sp);
+ 		break;
+ 	}
+ 
+-	return rval;
+-
+ done_free_sp:
+ 	sp->free(sp);
+ done:
+diff --git a/drivers/scsi/qla2xxx/qla_mid.c b/drivers/scsi/qla2xxx/qla_mid.c
+index d620f4bebcd0d..516fccdbcebd4 100644
+--- a/drivers/scsi/qla2xxx/qla_mid.c
++++ b/drivers/scsi/qla2xxx/qla_mid.c
+@@ -931,7 +931,7 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
+ 
+ 	sp = qla2x00_get_sp(base_vha, NULL, GFP_KERNEL);
+ 	if (!sp)
+-		goto done;
++		return rval;
+ 
+ 	sp->type = SRB_CTRL_VP;
+ 	sp->name = "ctrl_vp";
+@@ -946,7 +946,7 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
+ 		ql_dbg(ql_dbg_async, vha, 0xffff,
+ 		    "%s: %s Failed submission. %x.\n",
+ 		    __func__, sp->name, rval);
+-		goto done_free_sp;
++		goto done;
+ 	}
+ 
+ 	ql_dbg(ql_dbg_vport, vha, 0x113f, "%s hndl %x submitted\n",
+@@ -962,16 +962,13 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
+ 	case QLA_SUCCESS:
+ 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s done.\n",
+ 		    __func__, sp->name);
+-		goto done_free_sp;
++		break;
+ 	default:
+ 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s Failed. %x.\n",
+ 		    __func__, sp->name, rval);
+-		goto done_free_sp;
++		break;
+ 	}
+ done:
+-	return rval;
+-
+-done_free_sp:
+ 	sp->free(sp);
+ 	return rval;
+ }
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 183bfda8f5d11..bb20a4a228cfe 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1029,7 +1029,7 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
+ 		ql_dbg(ql_dbg_io + ql_dbg_verbose, vha, 0x3078,
+ 		    "Start scsi failed rval=%d for cmd=%p.\n", rval, cmd);
+ 		if (rval == QLA_INTERFACE_ERROR)
+-			goto qc24_fail_command;
++			goto qc24_free_sp_fail_command;
+ 		goto qc24_host_busy_free_sp;
+ 	}
+ 
+@@ -1044,6 +1044,11 @@ qc24_host_busy:
+ qc24_target_busy:
+ 	return SCSI_MLQUEUE_TARGET_BUSY;
+ 
++qc24_free_sp_fail_command:
++	sp->free(sp);
++	CMD_SP(cmd) = NULL;
++	qla2xxx_rel_qpair_sp(sp->qpair, sp);
++
+ qc24_fail_command:
+ 	cmd->scsi_done(cmd);
+ 
 -- 
 2.20.1
 
