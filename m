@@ -2,211 +2,114 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A86C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C161C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A81206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE2B206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACbNbFsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLPMQc (ORCPT
+        id S1727609AbfLPMQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:16:32 -0500
-Received: from mga05.intel.com ([192.55.52.43]:21728 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfLPMQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:16:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 04:16:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="247007129"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Dec 2019 04:16:28 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1igpIa-0006TK-Ah; Mon, 16 Dec 2019 14:16:28 +0200
-Date:   Mon, 16 Dec 2019 14:16:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+        Mon, 16 Dec 2019 07:16:36 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34527 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727587AbfLPMQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:16:33 -0500
+Received: by mail-ua1-f67.google.com with SMTP id w20so1990613uap.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 04:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g6hMK4zvmiSQXDEVIro/DLpNW8Dnq2eeAYZqmv+C7n4=;
+        b=ACbNbFswU1bSLXpKw7frBiJCD6yT6A648nS5mwhOnzZ/oCoWad3p+XghmD1WWzlVJm
+         txMzHtwXkBDWokJ/qZ+h2NJNPo9VbjuBgNeD2ooLabCNucUnCK0laHcbbaDut7vIo027
+         DGIbWg5yK8l48N2llclSO2ZAL85UBWtMaooZlHhG8lnHmOvHVcS+QEgB/B532FqJdWQh
+         Ud6qSt1MTC7AD4yTbOkjMO5VSHEg7XmLrE6VGezhugDqk9s7SNpN9mJC+dL9rWjyTL+v
+         ag2YGxtfHBMl2JzSpFfkRk+npQR6zGCl2dRnuhF+/nv3CFHdQT4l5R3tgcRsFnEci7bQ
+         ONyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g6hMK4zvmiSQXDEVIro/DLpNW8Dnq2eeAYZqmv+C7n4=;
+        b=eLge88J+WPYP/JilcoqZB1zi9JTiODSM2BTvH9tnho6/hMUdzwE8fCQc9zTopbl71d
+         fVpKknonkpv5A7rc+oDWkRdYwuu2haXntw0T5o7Elh8KJ+/oT5j04uK12rGXKDDwnkgM
+         h54TymXp187ASq7ouIo3aX6+4+0cDqQnXByV0V8YbEsrwfEVxPflrKQtgxS0Pt8dK/zE
+         VF9a4e2uAqjZTZd3BWcpbCFbwTkZgTInyGkTm6KDiUD/WajAd2mNUUeVk3MeJXmjipc8
+         sooXbmiBIYEArGDv/0U/10La35FbUYyQlIm5zf+FxEEd0P3Q49GEwLrxvF17wmuItO/J
+         iYaA==
+X-Gm-Message-State: APjAAAV8r79swpY23S/dQ+XwYInhG7zC3B/lgaIT2FZCBSVK6p5K1Opo
+        4aCnV7Y2xTHEXi7SVAGqQFbHhaMnSSWvZ7bPrhNkUg==
+X-Google-Smtp-Source: APXvYqxgrIn4al26ZnFpKqCL0TxyFBEwhX8AWXeCD4bBS7Ttf4sGA8fJ1Pg64Ke5L5GoUz3YDXkMxfaBaYcspaOS/YE=
+X-Received: by 2002:ab0:1c0a:: with SMTP id a10mr22825812uaj.140.1576498591580;
+ Mon, 16 Dec 2019 04:16:31 -0800 (PST)
+MIME-Version: 1.0
+References: <20191215163810.52356-1-hdegoede@redhat.com> <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+ <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+In-Reply-To: <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 13:16:20 +0100
+Message-ID: <CACRpkdaYgpY=Anem00tPS=HPCD5XUrfWmWjvPkszggnHCpgK2Q@mail.gmail.com>
+Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs from VBT
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
- lookup from mfd to the i915 driver
-Message-ID: <20191216121628.GR32742@smile.fi.intel.com>
-References: <20191215163810.52356-1-hdegoede@redhat.com>
- <20191215163810.52356-5-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 05:38:09PM +0100, Hans de Goede wrote:
-> Move the Crystal Cove PMIC panel GPIO lookup-table from
-> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
-> 
-> The moved looked-up table is adding a GPIO lookup to the i915 PCI
-> device and the GPIO subsys allows only one lookup table per device,
-> 
-> The intel_soc_pmic_core.c code only adds lookup-table entries for the
-> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
-> able to access some GPIOs on the SoC itself, which requires entries for
-> these GPIOs in the lookup-table.
-> 
-> Since the lookup-table is attached to the i915 PCI device it really
-> should be part of the i915 driver, this will also allow us to extend
-> it with GPIOs from other sources when necessary.
+On Mon, Dec 16, 2019 at 12:11 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-One nit below.
+> Ugh, taking one last look at the "pinctrl: Export pinctrl_unregister_mappings"
+> patch it is no good, sorry.
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
->  drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
->  2 files changed, 22 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> index 027970348b22..847f04eec2a1 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> @@ -25,6 +25,7 @@
->   */
->  
->  #include <linux/gpio/consumer.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/mfd/intel_soc_pmic.h>
->  #include <linux/slab.h>
->  
-> @@ -686,8 +687,18 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
->  
->  /*
->   * On some BYT/CHT devs some sequences are incomplete and we need to manually
-> - * control some GPIOs.
-> + * control some GPIOs. We need to add a GPIO lookup table before we get these.
->   */
-> +static struct gpiod_lookup_table pmic_panel_gpio_table = {
-> +	/* Intel GFX is consumer */
-> +	.dev_id = "0000:00:02.0",
-> +	.table = {
-> +		/* Panel EN/DISABLE */
-> +		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
+Ooops!
 
-> +		{ },
+> Linus, can you please drop this from your -next ?
 
-Usually we don't put comma in terminator kind of lines. (Yes I see that it is
-in original code, but we may have a chance to fix it without additional churn).
-Rationale is to prevent some weird issues (like wrong conflict resolution)
-where record may appear after terminator line and will be compiled correctly.
+Sure, done.
 
-> +	},
-> +};
-> +
->  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  {
->  	struct drm_device *dev = intel_dsi->base.base.dev;
-> @@ -697,6 +708,8 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  
->  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
->  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
-> +		gpiod_add_lookup_table(&pmic_panel_gpio_table);
-> +
->  		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
->  		if (IS_ERR(intel_dsi->gpio_panel)) {
->  			DRM_ERROR("Failed to own gpio for panel control\n");
-> @@ -707,8 +720,16 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  
->  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
->  {
-> +	struct drm_device *dev = intel_dsi->base.base.dev;
-> +	struct drm_i915_private *dev_priv = to_i915(dev);
-> +	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
-> +
->  	if (intel_dsi->gpio_panel) {
->  		gpiod_put(intel_dsi->gpio_panel);
->  		intel_dsi->gpio_panel = NULL;
->  	}
-> +
-> +	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
-> +	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
-> +		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
->  }
-> diff --git a/drivers/mfd/intel_soc_pmic_core.c b/drivers/mfd/intel_soc_pmic_core.c
-> index 47188df3080d..ddd64f9e3341 100644
-> --- a/drivers/mfd/intel_soc_pmic_core.c
-> +++ b/drivers/mfd/intel_soc_pmic_core.c
-> @@ -9,8 +9,6 @@
->   */
->  
->  #include <linux/acpi.h>
-> -#include <linux/gpio/consumer.h>
-> -#include <linux/gpio/machine.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> @@ -25,17 +23,6 @@
->  #define BYT_CRC_HRV		2
->  #define CHT_CRC_HRV		3
->  
-> -/* Lookup table for the Panel Enable/Disable line as GPIO signals */
-> -static struct gpiod_lookup_table panel_gpio_table = {
-> -	/* Intel GFX is consumer */
-> -	.dev_id = "0000:00:02.0",
-> -	.table = {
-> -		/* Panel EN/DISABLE */
-> -		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
-> -		{ },
-> -	},
-> -};
-> -
->  /* PWM consumed by the Intel GFX */
->  static struct pwm_lookup crc_pwm_lookup[] = {
->  	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL),
-> @@ -96,9 +83,6 @@ static int intel_soc_pmic_i2c_probe(struct i2c_client *i2c,
->  	if (ret)
->  		dev_warn(dev, "Can't enable IRQ as wake source: %d\n", ret);
->  
-> -	/* Add lookup table binding for Panel Control to the GPIO Chip */
-> -	gpiod_add_lookup_table(&panel_gpio_table);
-> -
->  	/* Add lookup table for crc-pwm */
->  	pwm_add_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
->  
-> @@ -121,9 +105,6 @@ static int intel_soc_pmic_i2c_remove(struct i2c_client *i2c)
->  
->  	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
->  
-> -	/* Remove lookup table for Panel Control from the GPIO Chip */
-> -	gpiod_remove_lookup_table(&panel_gpio_table);
-> -
->  	/* remove crc-pwm lookup table */
->  	pwm_remove_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
->  
-> -- 
-> 2.23.0
-> 
+> So I see 2 options:
+> 1) Add an orig_map member to maps_node and use that in the comparison,
+> this is IMHO somewhat ugly
+>
+> 2) Add a new pinctrl_register_mappings_no_dup helper and document in
+> pinctrl_unregister_mappings kdoc that it can only be used together
+> with the no_dup variant.
+>
+> I believe that 2 is by far the best option. Linus do you agree or
+> do you have any other suggestions?
 
--- 
-With Best Regards,
-Andy Shevchenko
+What about (3) look for all calls to pinctrl_register_mappings()
+in the kernel.
 
+Hey it is 2 places in total:
+arch/arm/mach-u300/core.c:      pinctrl_register_mappings(u300_pinmux_map,
+drivers/pinctrl/cirrus/pinctrl-madera-core.c:           ret =
+pinctrl_register_mappings(pdata->gpio_configs,
 
+Delete  __initdata from the u300 table, the other one seems
+safe. Fold this into your patch.
+
+Go with the original idea.
+
+Yours,
+Linus Walleij
