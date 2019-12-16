@@ -2,249 +2,139 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F86C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF80C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1804C2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6AB206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VxLUt1mV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLPKWZ (ORCPT
+        id S1727499AbfLPKWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:22:25 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:43777 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKWY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:22:24 -0500
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mdevh-1i7Slb1FYH-00ZetK; Mon, 16 Dec 2019 11:22:22 +0100
-Received: by mail-qv1-f50.google.com with SMTP id d17so2506779qvs.2;
-        Mon, 16 Dec 2019 02:22:21 -0800 (PST)
-X-Gm-Message-State: APjAAAVnixKY2K1AijPtPI8cn5PBubZxuBTsML7F40/fB/Yd/AGqYu4x
-        UwgunJK4+kd1JmgWGcwoLb1NJWGzX6Cm02dbXAE=
-X-Google-Smtp-Source: APXvYqxPGSK6LeyO+gRi/v38BhaWvjYVHEXiuyvyhofiGg3YMMrBq53W9Xc9WoTfO3zKoL1kD1MAvEvJdd8d1f9tMg8=
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr3192857qvo.222.1576491740858;
- Mon, 16 Dec 2019 02:22:20 -0800 (PST)
+        Mon, 16 Dec 2019 05:22:46 -0500
+Received: from mout.web.de ([212.227.17.12]:37281 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbfLPKWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:22:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576491755;
+        bh=XW4ppRz99iZQYIyfelvMcGJOQPe7rhgDPnBgmb3T10k=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=VxLUt1mVD58vJ48Ow5avfuS0AxqrpnBCVY0EG3C4lEh+v3bn+mEc2mfiUCCFoCzgd
+         Pit328fp7xobq4O2vrTnY8lBoq0gO5sW9VMuVmi+CizUERkRjGeVCZ86O0DHWfE6ud
+         UjxOsQb43NZ9Oq5kUDxo6T9Z0XZNtvWoz+q641Ww=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MWj2N-1iDJT60JD9-00XvDk; Mon, 16
+ Dec 2019 11:22:35 +0100
+To:     Aditya Pakki <pakki001@umn.edu>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20191215192133.3765-1-pakki001@umn.edu>
+Subject: Re: [PATCH] media: saa7146: Avoid using BUG_ON as an assertion
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5f75a571-c3f7-4bc1-9f43-a2d0460dab16@web.de>
+Date:   Mon, 16 Dec 2019 11:22:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <CA+G9fYuO7vMjsqkyXHZSU-pKEk0L0t9kQTfnd5xopVADyGwprw@mail.gmail.com>
-In-Reply-To: <CA+G9fYuO7vMjsqkyXHZSU-pKEk0L0t9kQTfnd5xopVADyGwprw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Dec 2019 11:22:04 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
-Message-ID: <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
-Subject: Re: mainline-5.5.0-rc1: do_mount_root+0x6c/0x10d - kernel crash while
- mounting rootfs
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:skxAi3myck29pudFFtj7zTCUAssaNOTHAcJszHz89Z8cvZ8g8KM
- 2WJZAaKR7U6VpPJFQ18WMfcUKjqgxSYM+muAwKsh94vvSXeMDR9QkrtVWY3VPB3lYpoPo1W
- oQLclGQqX/YhymFmwK4rVNT/9X6vG6zvqNiFAN4RM2OFkvgA5dM3WZZJ4uHeXBg/S0vOkDp
- Fv6Vvqa3cfZ9WY76gpTng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o04HCeEeGtw=:nqN2I7636F+bGurANvbLYF
- gauWg/sMYpQcGbzCdS/VQ/xPDikArki9PXQpoWJzq+S0diOB7vTSh5SSzzFIlU3FWE2If1JXG
- JKUeFHiH1X3qdv3ONxfVA9GQ6qDvxLY3fN7eVjsqtCiRkep30G7CKzuNLSopsNjAp/2SI1UpF
- 0fokUBbY8fEKLTBXTtbVNevYBZYlgcCRhO5xF+VfSsWsG75TkURUSinNLSDFuSdKbTrNvSyPW
- W0Nu5VAGmtkHihwNwdsSoi6ett5mmJ5iNNzRU50npV5DsOnMkGuXo/0yEiH+MVDbl+oQZ6C4Q
- HqDUCnIZXQpLePgsDGbPUAFMzet41A7w/6q4xlPd9qjbgjrK1miLsQ1ethJSgS/BvVsyc98nh
- jrxrpXqnMHjywN/RQNHHXC2+5IWYfgCx1SjAgS4n8PYVDkvhzGyBbpDocQEUmh3HTVppPR9Qy
- pYpH/Wj7oazaJ4yHvBJOFGzuH0PS72t2gJoI4XMd45yZKRsYsJ7bzK9wYCC+ddBs7csMs5h4b
- yYl+0KPGedh2MHkVrU0KkUgrv6pK8iBB8apktQhD3hTSDbM4FBw0gUNdIEaHRyB3N4kXi9gry
- Q5ciO94hOlTs84qWqaTiy1sCYNJBwZJeuL3oT6ZzbnX28kqOTAwZgh3F/07Yd7jd+TsEXvN1p
- 5O723T+TVvB5GlJaRw15jlcp1C2SQk5MW9lWYjhMuhdt1UyOHttyQPhZ9y9kw5GK/oK6EOLA2
- ttpaOOKlE9nKko3BaZQmfcbX7wnK8tpofM4gl7buOSZYB6w2zSeyPF62JNlQawiQ6S77siL8+
- 7LvlVZZjNKtuIz/lVuDuNQEUeGlipU3Pt3YEwIyMrGvo9lnJjXhrT11r/rdiuvHFUKRDCwfgh
- dX7/AWyjsp0FCmsG6pMw==
+In-Reply-To: <20191215192133.3765-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CsfqwkCGjvqZPleVtWehdFpwljyylF/KDrnJoP15AhZZFyQTZQ6
+ g9H2oddTC706EjRCOJ/8LP/+lpRdBmR2TdHR2LTSMFf28w3G+D7G6KJ1fgxUe2cr8UTeGpc
+ 5j8nLReixiARaXU1Gw6MpTwUXEjmiUdwplHnOkXcU3L5f0LBqERr/pOPACHt0mrf42fPGbg
+ rqZW0WqGMLai/ODbFAdyA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sQzsNtfielM=:niL/J81CQspw1wTdi8vFTZ
+ vFUZlc/cptixL8s+HB1uSS/pa0TJhqT09ctQcYYAjwat5ljkFm2cdIqU9igAk3b3eHgMFjmmL
+ EwsXodhv8M7xCl4MApKH2nM1KfIbN4KAIaT7LB5GeX/alriAfe4+xDctW1N9kdcDMjW/GI5Bc
+ MLLvaTsYpAGzYXmsugC8CgpV6YN6GrxvWWnSSBeDQxNOjqpp7NrWNdQETjIEc67J48RKxCj3H
+ qZbiilIYgNeGaon9rxn3pPklELaSgT4YZudeNKoVL+wWly2I0CeCg1Bo+IHSfYzfdRiNY+awq
+ Jqxd2zFHt5RzqXFDI9n9kkhsF7ZqPUxo4XOndH5YT5SxOKCnhv8BKmAdz9/q/ly96uIoIDubf
+ hHxIr0qAFtaIwMHDV7+vB1h8GyrI3l6+xH4yed0iwtzGc3fYXeZKNEkEv4Zzc2qvU/ExEs4E3
+ gWpoMqUfzjR81eq/njCMttlZIssM35E45Ja83Pj8+V9RKcPWOzIGKv2uAon8dCytw/1Tv4ojL
+ 2Gxgx0Ml6w7lUJUwKn9yDewA7jsgp/jLeTt/9MB1CRQ5yF8F3sRc1mNx/714IuFIS8sKi/CE/
+ BrZq2pX/lpYCZE+fEWCmrRr6DG92Na+uApe5I1F+4PULawiv3VX8LSNmUR96y4Y4JWpFVJtua
+ RUNgd8XTa/G7/v+Z+YayEL6ZvrrEul/vhvmK4UghIswqyAjnuS4MIz51d8tmVgXWUy25czr1k
+ rbWqWU1RZ2viqpAudQszFEzZOPgOU+XofER4RABKY3o+g4yx1zwb3rKOHZerjPmsSb7tRKqUB
+ HUkvu+9nx2ezCF4ZeMKpQaBnGy4Wg8wFok8pbejwdz7HBM0fcux13Nc5o+TEw8IVs1iIQFXLh
+ BkU6I2urGIHKBJsIsv26MB9joz/xznyKpZi9jFGjCqtCmfsSZNMWnvTiGmoACJzS+kUWVSGxq
+ SyFXwcD0nSrZnTI+UyesHDraa4n82h2IcisSXoOKt38G/JrwEeDDK3xIcpbK5jLmCkURC91Fw
+ VSAGXNRgBA4wuFcsd/zvQUEkupRyb2wuWDADYKb9KDSrj9PTeCqkysKv3Ork+qu6dRytlsNMM
+ xzGppCq1midN1NsVJ0XfuraqTB9kq/m7RC5wQ55zNNHuWea8jjq08KGseo7isnOysO5Umk22M
+ Hqz5iuYNzK01bLupn6QglAWnu1dVKXm/9QP+h3B6qI5/1bUVipUD2vNSX5kxuB/tTcjRLKlrx
+ eRmZftdOpuFa+YODOt3CQZxO1noGAd8b239upY2J4So/uonzPIbom/89C0dU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:15 AM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> The following kernel crash reported on qemu_x86_64 boot running
-> 5.5.0-rc1 mainline kernel.
+=E2=80=A6
+> +++ b/drivers/media/common/saa7146/saa7146_video.c
+@@ -345,7 +345,8 @@ static int video_begin(struct saa7146_fh *fh)
+=E2=80=A6
+-	BUG_ON(NULL =3D=3D fmt);
++	if (NULL =3D=3D fmt)
+=E2=80=A6
 
-I looked for too long at v5.5-rc1 completely puzzled by how you got to this
-object code before realizing that this is a git snapshot between -rc1 and -rc2.
+Would you like to express a null pointer check in a succinct way?
 
-The code in question was changed by a recent series from Dominik Brodowski,
-the main difference being commit cccaa5e33525 ("init: use do_mount() instead
-of ksys_mount()").
++	if (!fmt)
 
-It looks like the NULL-check in ksys_mount()/copy_mount_options() is missing
-from the new mount_block_root, so it passes a NULL pointer into strncpy().
 
-Something like this should fix it (not tested):
+Will the tag =E2=80=9CFixes=E2=80=9D become helpful for the change descrip=
+tion?
 
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index f55cbd9cb818..be6c8dae6ec0 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -392,16 +392,20 @@ static int __init do_mount_root(const char
-*name, const char *fs,
- {
-        struct super_block *s;
-        char *data_page;
--       struct page *p;
-+       struct page *p = NULL;
-        int ret;
-
--       /* do_mount() requires a full page as fifth argument */
--       p = alloc_page(GFP_KERNEL);
--       if (!p)
--               return -ENOMEM;
-+       if (data) {
-+               /* do_mount() requires a full page as fifth argument */
-+               p = alloc_page(GFP_KERNEL);
-+               if (!p)
-+                       return -ENOMEM;
-
--       data_page = page_address(p);
--       strncpy(data_page, data, PAGE_SIZE - 1);
-+               data_page = page_address(p);
-+               strncpy(data_page, data, PAGE_SIZE - 1);
-+       } else {
-+               data_page = NULL;
-+       }
-
-        ret = do_mount(name, "/root", fs, flags, data_page);
-        if (ret)
-@@ -417,7 +421,9 @@ static int __init do_mount_root(const char *name,
-const char *fs,
-               MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
-
- out:
--       put_page(p);
-+       if (p)
-+               put_page(p);
-+
-        return ret;
- }
-
-> Regressions detected on arm64, arm, qemu_x86_64, and qemu_i386.
-> Where as x86_64 and i386 boot pass on devices.
->
-> qemu_x86_64 kernel crash log,
-> -------------------------------------------
-> [    1.680229] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [    1.681148] #PF: supervisor read access in kernel mode
-> [    1.681150] #PF: error_code(0x0000) - not-present page
-> [    1.681150] PGD 0 P4D 0
-> [    1.681150] Oops: 0000 [#1] SMP NOPTI
-> [    1.681150] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1 #1
-> [    1.681150] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.12.0-1 04/01/2014
-> [    1.681150] RIP: 0010:strncpy+0x12/0x30
-> [    1.681150] Code: 89 e5 48 83 c6 01 0f b6 4e ff 48 83 c2 01 84 c9
-> 88 4a ff 75 ed 5d c3 90 55 48 85 d2 48 89 f8 48 89 e5 74 1e 48 01 fa
-> 48 89 f9 <44> 0f b6 06 41 80 f8 01 44 88 01 48 83 de ff 48 83 c1 01 48
-> 39 d1
-> [    1.681150] RSP: 0018:ffffacea40013e00 EFLAGS: 00010286
-> [    1.681150] RAX: ffff9eff78f4f000 RBX: ffffd91104e3d3c0 RCX: ffff9eff78f4f000
-> [    1.681150] RDX: ffff9eff78f4ffff RSI: 0000000000000000 RDI: ffff9eff78f4f000
-> [    1.681150] RBP: ffffacea40013e00 R08: ffff9eff78f4f000 R09: 0000000000000000
-> [    1.681150] R10: ffffd91104e3d3c0 R11: 0000000000000000 R12: 0000000000008001
-> [    1.681150] R13: 00000000fffffff4 R14: ffffffffa5d9aa89 R15: ffff9eff78f4e000
-> [    1.681150] FS:  0000000000000000(0000) GS:ffff9eff7bc00000(0000)
-> knlGS:0000000000000000
-> [    1.681150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.681150] CR2: 0000000000000000 CR3: 0000000113010000 CR4: 00000000003406f0
-> [    1.681150] Call Trace:
-> [    1.681150]  do_mount_root+0x6c/0x10d
-> [    1.681150]  mount_block_root+0x103/0x226
-> [    1.681150]  ? do_mknodat+0x16e/0x200
-> [    1.681150]  ? set_debug_rodata+0x17/0x17
-> [    1.681150]  mount_root+0x114/0x133
-> [    1.681150]  prepare_namespace+0x139/0x16a
-> [    1.681150]  kernel_init_freeable+0x21b/0x22f
-> [    1.681150]  ? rest_init+0x250/0x250
-> [    1.681150]  kernel_init+0xe/0x110
-> [    1.681150]  ret_from_fork+0x27/0x50
-> [    1.681150] Modules linked in:
-> [    1.681150] CR2: 0000000000000000
-> [    1.681150] ---[ end trace d7ad8453a7546454 ]---
-> [    1.681150] RIP: 0010:strncpy+0x12/0x30
-> [    1.681150] Code: 89 e5 48 83 c6 01 0f b6 4e ff 48 83 c2 01 84 c9
-> 88 4a ff 75 ed 5d c3 90 55 48 85 d2 48 89 f8 48 89 e5 74 1e 48 01 fa
-> 48 89 f9 <44> 0f b6 06 41 80 f8 01 44 88 01 48 83 de ff 48 83 c1 01 48
-> 39 d1
-> [    1.681150] RSP: 0018:ffffacea40013e00 EFLAGS: 00010286
-> [    1.681150] RAX: ffff9eff78f4f000 RBX: ffffd91104e3d3c0 RCX: ffff9eff78f4f000
-> [    1.681150] RDX: ffff9eff78f4ffff RSI: 0000000000000000 RDI: ffff9eff78f4f000
-> [    1.681150] RBP: ffffacea40013e00 R08: ffff9eff78f4f000 R09: 0000000000000000
-> [    1.681150] R10: ffffd91104e3d3c0 R11: 0000000000000000 R12: 0000000000008001
-> [    1.681150] R13: 00000000fffffff4 R14: ffffffffa5d9aa89 R15: ffff9eff78f4e000
-> [    1.681150] FS:  0000000000000000(0000) GS:ffff9eff7bc00000(0000)
-> knlGS:0000000000000000
-> [    1.681150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.681150] CR2: 0000000000000000 CR3: 0000000113010000 CR4: 00000000003406f0
-> [    1.681150] BUG: sleeping function called from invalid context at
-> /usr/src/kernel/include/linux/percpu-rwsem.h:38
-> [    1.681150] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
-> 1, name: swapper/0
-> [    1.681150] INFO: lockdep is turned off.
-> [    1.681150] irq event stamp: 2360074
-> [    1.681150] hardirqs last  enabled at (2360073):
-> [<ffffffffa48f4c8c>] get_page_from_freelist+0x21c/0x1430
-> [    1.681150] hardirqs last disabled at (2360074):
-> [<ffffffffa4601eab>] trace_hardirqs_off_thunk+0x1a/0x1c
-> [    1.681150] softirqs last  enabled at (2359990):
-> [<ffffffffa5800338>] __do_softirq+0x338/0x43a
-> [    1.681150] softirqs last disabled at (2359975):
-> [<ffffffffa4701828>] irq_exit+0xb8/0xc0
-> [    1.681150] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G      D
->   5.5.0-rc1 #1
-> [    1.681150] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.12.0-1 04/01/2014
-> [    1.681150] Call Trace:
-> [    1.681150]  dump_stack+0x7a/0xa5
-> [    1.681150]  ___might_sleep+0x163/0x250
-> [    1.681150]  __might_sleep+0x4a/0x80
-> [    1.681150]  exit_signals+0x33/0x2d0
-> [    1.681150]  do_exit+0xb6/0xcd0
-> [    1.681150]  ? prepare_namespace+0x139/0x16a
-> [    1.681150]  ? kernel_init_freeable+0x21b/0x22f
-> [    1.681150]  ? rest_init+0x250/0x250
-> [    1.681150]  rewind_stack_do_exit+0x17/0x20
-> [    1.736632] Kernel panic - not syncing: Attempted to kill init!
-> exitcode=0x00000009
-> [    1.737579] Kernel Offset: 0x23600000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->
-> Full log,
-> qemu_x86_64,
-> https://lkft.validation.linaro.org/scheduler/job/1054430#L573
-> qemu_i386:
-> https://lkft.validation.linaro.org/scheduler/job/1054335#L571
->
-> metadata:
->   git branch: master
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   git commit: 9603e22104439ddfa6a077f1a0e5d8c662beec6c
->   git describe: v5.5-rc1-308-g9603e2210443
->   make_kernelversion: 5.5.0-rc1
->   kernel-config:
-> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2325/config
->   build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/2325/
->   build-location:
-> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2325
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+Regards,
+Markus
