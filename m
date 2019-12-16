@@ -2,51 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAC6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBBFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506C620717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FE7206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520994;
-	bh=40qkxjhWCccXDQIPoVhHJt3I9NYsDbe/8jQ7XFJETiM=;
+	s=default; t=1576521003;
+	bh=9sbwwmIHqMFlv0Ii6t+1Pf0NwP7cv8fe1f5qXa8+hiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tx6ExLLb9+jLD78NSbbxPr8K5tUtaVlC5dSOkW+dYlN2thxhg4T90hlByKL5rABf+
-	 n9ndGq91jh7prk493zkJe3ZThVPqXcQi5mMgNHRN8VqwRoinW8sb8TYH5Ry72UYUpd
-	 ik6TAk9FTEQ0/xs2p6Fh4p+cpQqMLmszltzc/uu8=
+	b=Gm/UufiJdjJebkKbvPZ5ElOIeIViIROFS3rKOAaUDB5ntw3mISVdL5ih5tSg2N/Ps
+	 roYjASVHsDIEmLccef2fdQw90qsOvKjZD4ejOtfjBKSWQNCkfvXNXiaZeWaGG3ms/e
+	 FDDk3D/mu211Ki05935BjKDUwfXR6cB6k6/WADkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfLPS3t (ORCPT
+        id S1731133AbfLPSaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:29:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59778 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:30:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbfLPSN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:28 -0500
+        id S1731063AbfLPSNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0601C207FF;
-        Mon, 16 Dec 2019 18:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0544C206E0;
+        Mon, 16 Dec 2019 18:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520008;
-        bh=40qkxjhWCccXDQIPoVhHJt3I9NYsDbe/8jQ7XFJETiM=;
+        s=default; t=1576519986;
+        bh=9sbwwmIHqMFlv0Ii6t+1Pf0NwP7cv8fe1f5qXa8+hiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XcHxzzm0H1WfFsJBVe4Fp0VM6mjjBXrTmS8UgW0BjUCLvdfgkR5BTrsnZrZ5QrQLu
-         Nvd0xsmytjqD2xt79iSc+T7kF+tCWMcUa01OmaHPhV2cmhBiv15TqxoPolVHXpUdLA
-         BzHc2S4Ow3+v0mmGaFbfMB/DYeDTMQtpoxyqDkZw=
+        b=DLOauvQ30sM/TnAIw4b6MbOUSWS/2NwF2KZmhqTlIEFR7gNTLlG9XM/LrRVZyfXbH
+         M29TNEnlD0LRlZsptQMsraDijlkZ4Y7AtBDlxH7M4eYF7e7f0wQRDXFTRMCTENJax1
+         xZTxuYHFxwycDkm7Jlo8JeDj97ul462EesWsLVdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.3 120/180] RDMA/core: Fix ib_dma_max_seg_size()
-Date:   Mon, 16 Dec 2019 18:49:20 +0100
-Message-Id: <20191216174840.759185995@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 149/180] scsi: qla2xxx: Make sure that aborted commands are freed
+Date:   Mon, 16 Dec 2019 18:49:49 +0100
+Message-Id: <20191216174843.955211336@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,65 +63,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bart Van Assche <bvanassche@acm.org>
 
-commit ecdfdfdbe4d4c74029f2b416b7ee6d0aeb56364a upstream.
+[ Upstream commit 0dcec41acb85da33841c2ab56dbf337ed00a3914 ]
 
-If dev->dma_device->params == NULL then the maximum DMA segment size is 64
-KB. See also the dma_get_max_seg_size() implementation. This patch fixes
-the following kernel warning:
+The LIO core requires that the target driver callback functions
+.queue_data_in() and .queue_status() call target_put_sess_cmd() or
+transport_generic_free_cmd(). These calls may happen synchronously or
+asynchronously. Make sure that one of these LIO functions is called in case
+a command has been aborted. This patch avoids that the code for removing a
+session hangs due to commands that do not make progress.
 
-  DMA-API: infiniband rxe0: mapping sg segment longer than device claims to support [len=126976] [max=65536]
-  WARNING: CPU: 4 PID: 4848 at kernel/dma/debug.c:1220 debug_dma_map_sg+0x3d9/0x450
-  RIP: 0010:debug_dma_map_sg+0x3d9/0x450
-  Call Trace:
-   srp_queuecommand+0x626/0x18d0 [ib_srp]
-   scsi_queue_rq+0xd02/0x13e0 [scsi_mod]
-   __blk_mq_try_issue_directly+0x2b3/0x3f0
-   blk_mq_request_issue_directly+0xac/0xf0
-   blk_insert_cloned_request+0xdf/0x170
-   dm_mq_queue_rq+0x43d/0x830 [dm_mod]
-   __blk_mq_try_issue_directly+0x2b3/0x3f0
-   blk_mq_request_issue_directly+0xac/0xf0
-   blk_mq_try_issue_list_directly+0xb8/0x170
-   blk_mq_sched_insert_requests+0x23c/0x3b0
-   blk_mq_flush_plug_list+0x529/0x730
-   blk_flush_plug_list+0x21f/0x260
-   blk_mq_make_request+0x56b/0xf20
-   generic_make_request+0x196/0x660
-   submit_bio+0xae/0x290
-   blkdev_direct_IO+0x822/0x900
-   generic_file_direct_write+0x110/0x200
-   __generic_file_write_iter+0x124/0x2a0
-   blkdev_write_iter+0x168/0x270
-   aio_write+0x1c4/0x310
-   io_submit_one+0x971/0x1390
-   __x64_sys_io_submit+0x12a/0x390
-   do_syscall_64+0x6f/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Link: https://lore.kernel.org/r/20191025225830.257535-2-bvanassche@acm.org
-Cc: <stable@vger.kernel.org>
-Fixes: 0b5cb3300ae5 ("RDMA/srp: Increase max_segment_size")
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
+Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/qla2xxx/qla_target.c  | 13 ++++++++-----
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c |  4 ++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -3978,9 +3978,7 @@ static inline void ib_dma_unmap_sg_attrs
-  */
- static inline unsigned int ib_dma_max_seg_size(struct ib_device *dev)
- {
--	struct device_dma_parameters *p = dev->dma_device->dma_parms;
--
--	return p ? p->max_segment_size : UINT_MAX;
-+	return dma_get_max_seg_size(dev->dma_device);
- }
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 7c44f84a58e92..0b8ec4218d6bd 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -3237,7 +3237,8 @@ int qlt_xmit_response(struct qla_tgt_cmd *cmd, int xmit_type,
+ 	if (!qpair->fw_started || (cmd->reset_count != qpair->chip_reset) ||
+ 	    (cmd->sess && cmd->sess->deleted)) {
+ 		cmd->state = QLA_TGT_STATE_PROCESSED;
+-		return 0;
++		res = 0;
++		goto free;
+ 	}
  
- /**
+ 	ql_dbg_qp(ql_dbg_tgt, qpair, 0xe018,
+@@ -3248,9 +3249,8 @@ int qlt_xmit_response(struct qla_tgt_cmd *cmd, int xmit_type,
+ 
+ 	res = qlt_pre_xmit_response(cmd, &prm, xmit_type, scsi_status,
+ 	    &full_req_cnt);
+-	if (unlikely(res != 0)) {
+-		return res;
+-	}
++	if (unlikely(res != 0))
++		goto free;
+ 
+ 	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
+ 
+@@ -3270,7 +3270,8 @@ int qlt_xmit_response(struct qla_tgt_cmd *cmd, int xmit_type,
+ 			vha->flags.online, qla2x00_reset_active(vha),
+ 			cmd->reset_count, qpair->chip_reset);
+ 		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
+-		return 0;
++		res = 0;
++		goto free;
+ 	}
+ 
+ 	/* Does F/W have an IOCBs for this request */
+@@ -3373,6 +3374,8 @@ out_unmap_unlock:
+ 	qlt_unmap_sg(vha, cmd);
+ 	spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
+ 
++free:
++	vha->hw->tgt.tgt_ops->free_cmd(cmd);
+ 	return res;
+ }
+ EXPORT_SYMBOL(qlt_xmit_response);
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+index d15412d3d9bd2..0bb06e33ecab4 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+@@ -620,6 +620,7 @@ static int tcm_qla2xxx_queue_data_in(struct se_cmd *se_cmd)
+ {
+ 	struct qla_tgt_cmd *cmd = container_of(se_cmd,
+ 				struct qla_tgt_cmd, se_cmd);
++	struct scsi_qla_host *vha = cmd->vha;
+ 
+ 	if (cmd->aborted) {
+ 		/* Cmd can loop during Q-full.  tcm_qla2xxx_aborted_task
+@@ -632,6 +633,7 @@ static int tcm_qla2xxx_queue_data_in(struct se_cmd *se_cmd)
+ 			cmd->se_cmd.transport_state,
+ 			cmd->se_cmd.t_state,
+ 			cmd->se_cmd.se_cmd_flags);
++		vha->hw->tgt.tgt_ops->free_cmd(cmd);
+ 		return 0;
+ 	}
+ 
+@@ -659,6 +661,7 @@ static int tcm_qla2xxx_queue_status(struct se_cmd *se_cmd)
+ {
+ 	struct qla_tgt_cmd *cmd = container_of(se_cmd,
+ 				struct qla_tgt_cmd, se_cmd);
++	struct scsi_qla_host *vha = cmd->vha;
+ 	int xmit_type = QLA_TGT_XMIT_STATUS;
+ 
+ 	if (cmd->aborted) {
+@@ -672,6 +675,7 @@ static int tcm_qla2xxx_queue_status(struct se_cmd *se_cmd)
+ 		    cmd, kref_read(&cmd->se_cmd.cmd_kref),
+ 		    cmd->se_cmd.transport_state, cmd->se_cmd.t_state,
+ 		    cmd->se_cmd.se_cmd_flags);
++		vha->hw->tgt.tgt_ops->free_cmd(cmd);
+ 		return 0;
+ 	}
+ 	cmd->bufflen = se_cmd->data_length;
+-- 
+2.20.1
+
 
 
