@@ -7,46 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915D2C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EEFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF4D2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2221E207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520432;
-	bh=E1eH4V28AhDSPxwzREWDAeBIRwVTvqP+aN8l9PpGcgA=;
+	s=default; t=1576520435;
+	bh=EwT10ETY9MI/NdSUuESri3Es+yuKxE44eF/VBhE5Dkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RFqGnxNhfVdBnLU6JCBuiuAwkCunos5itGH6aVAKpKHuwEI5hCws/zsm4K+d7r0wY
-	 ZBkYiZttzpPE8XqMCBHjR9SiURcMkuu2eF7s5reCR9PYTscx4fAMcGp45fdlNapX7k
-	 CF3OuJGoT4/oWnhYf0Wd4LCI5Q0WKMt46XfspM/E=
+	b=Nb/hmx81PJ5xUhNs/dl0dPtWoWhCjGNOzvjCxaiE8g/tTq5t5/wy1zA6QEn2/i3oH
+	 X4XmxXSDmER+/X9GPgDcmYj960Z+9FC5YvpiDV99KTML3jMFNx3IAp+x4s4MpSGILs
+	 0AVYQf7PVSgA4jwsaiQdV/CWB3C3X+thetyEGMUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732100AbfLPSUb (ORCPT
+        id S1731926AbfLPSUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732080AbfLPSU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:27 -0500
+        id S1732088AbfLPSUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B6FD206EC;
-        Mon, 16 Dec 2019 18:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B9720717;
+        Mon, 16 Dec 2019 18:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520426;
-        bh=E1eH4V28AhDSPxwzREWDAeBIRwVTvqP+aN8l9PpGcgA=;
+        s=default; t=1576520429;
+        bh=EwT10ETY9MI/NdSUuESri3Es+yuKxE44eF/VBhE5Dkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GmdR15D15LDehOGem4wLswtqeBi17NcbxLH0JqfgDBCIt1gsFIjlJyKpLdj30IpLd
-         WcE578YkSVvM4IacjoewBeHAEW/Xe0s6QfaloIVZ+Vpg1QWFrOLfWOadg4Hmc0lAvp
-         wgA0anDuSSEBOgUjHSjS2U/pRrLcgq4FP10iq1XQ=
+        b=GodSTTnSBZhzF6WptlEJxHxmtcwN4qGjGeNdbNk2h9/61X8I32euIuPj8sHacT5K2
+         /Iqmqa7bhm+FEkaoGqdpOqCCYPVTALPieMjpmZhkyLn/L/UvH5INbVrwVCGqopOCcr
+         zwG5SjOz4nhGZ2JVJuLlSHLd+3SjlVovMxgi9tcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.4 150/177] ext2: check err when partial != NULL
-Date:   Mon, 16 Dec 2019 18:50:06 +0100
-Message-Id: <20191216174847.857628809@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 151/177] seccomp: avoid overflow in implicit constant conversion
+Date:   Mon, 16 Dec 2019 18:50:07 +0100
+Message-Id: <20191216174847.985672730@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,41 +69,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit e705f4b8aa27a59f8933e8f384e9752f052c469c upstream.
+commit 223e660bc7638d126a0e4fbace4f33f2895788c4 upstream.
 
-Check err when partial == NULL is meaningless because
-partial == NULL means getting branch successfully without
-error.
+USER_NOTIF_MAGIC is assigned to int variables in this test so set it to INT_MAX
+to avoid warnings:
 
-CC: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191105045100.7104-1-cgxu519@mykernel.net
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Signed-off-by: Jan Kara <jack@suse.cz>
+seccomp_bpf.c: In function ‘user_notification_continue’:
+seccomp_bpf.c:3088:26: warning: overflow in implicit constant conversion [-Woverflow]
+ #define USER_NOTIF_MAGIC 116983961184613L
+                          ^
+seccomp_bpf.c:3572:15: note: in expansion of macro ‘USER_NOTIF_MAGIC’
+  resp.error = USER_NOTIF_MAGIC;
+               ^~~~~~~~~~~~~~~~
+
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+Cc: stable@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+Link: https://lore.kernel.org/r/20190920083007.11475-3-christian.brauner@ubuntu.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/inode.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/testing/selftests/seccomp/seccomp_bpf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ext2/inode.c
-+++ b/fs/ext2/inode.c
-@@ -701,10 +701,13 @@ static int ext2_get_blocks(struct inode
- 		if (!partial) {
- 			count++;
- 			mutex_unlock(&ei->truncate_mutex);
--			if (err)
--				goto cleanup;
- 			goto got_it;
- 		}
-+
-+		if (err) {
-+			mutex_unlock(&ei->truncate_mutex);
-+			goto cleanup;
-+		}
- 	}
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -35,6 +35,7 @@
+ #include <stdbool.h>
+ #include <string.h>
+ #include <time.h>
++#include <limits.h>
+ #include <linux/elf.h>
+ #include <sys/uio.h>
+ #include <sys/utsname.h>
+@@ -3077,7 +3078,7 @@ static int user_trap_syscall(int nr, uns
+ 	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
+ }
  
- 	/*
+-#define USER_NOTIF_MAGIC 116983961184613L
++#define USER_NOTIF_MAGIC INT_MAX
+ TEST(user_notification_basic)
+ {
+ 	pid_t pid;
 
 
