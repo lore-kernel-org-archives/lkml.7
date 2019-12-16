@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2267C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379ACC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0F7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022C32082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521268;
-	bh=K0O0fJrGWr8JYMaBAwhKQId7RgwS9oiMPA2ryRrCwd8=;
+	s=default; t=1576521273;
+	bh=CXGhR5YD6QWVFxsBymmyI/D4aJ77GB7VXaUAYRKw6q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kIzrYAkDx55ZDkLAe76dpRaWzhGyvXDYTsTHCycJr+u64+nosApif6pJmVO+7CJG1
-	 Wi+aaqGgnBRf5HdArK4aCEsLbINaTXBGayWf6goA8fRO/wx7C8QTk8a0t32kQHOmSA
-	 rAwjHBTQYSyDDRjIWvidJup6LrlhWsxgzXaihWM8=
+	b=FnEGY7HD8rVkjX46Pg8bHeaaAwxou1rw5S6FWhd6Ll996qPBrJVGP3KOy3Hubk2LE
+	 HCi/XnViWoaR8ElkGbhIELvF2gX0lieB+yD4tnKB0xUiuhUEJY3QZb3i5uHSXZ+MpQ
+	 sQVqv1yEmUSXOTZR/6f05b7tOMNc4rr/LEmVlxR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfLPSJE (ORCPT
+        id S1730594AbfLPSec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50962 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:34:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfLPSJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:00 -0500
+        id S1727864AbfLPSI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBE5120700;
-        Mon, 16 Dec 2019 18:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B85206E0;
+        Mon, 16 Dec 2019 18:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519740;
-        bh=K0O0fJrGWr8JYMaBAwhKQId7RgwS9oiMPA2ryRrCwd8=;
+        s=default; t=1576519737;
+        bh=CXGhR5YD6QWVFxsBymmyI/D4aJ77GB7VXaUAYRKw6q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fSmW5SK/DVJsGs3h5Swg05aLOLdIcMqdP+dLpi46HmYDXW4n4aI9p5SRPrTQgAQHL
-         YTghaJGwAGVrY9DZq/y9gpmgf5OivYP8rkpEcIjfQSnkPU51VRly0yx7uCq+dED2Hy
-         /jZBmBlry/B2AF2BLoUXrpwIf7ZewQY+Bgl368ZQ=
+        b=aDVPNOs6o9XS9iIS+CM/ZGsnunZcTp2j9GuPq/zCA+QuEkICMTLUKqMNWffHMxR8j
+         nySiQ2YrqjEnlgG2kjb1F6iFivj2PHyZj3uxz6shuMDentTyDxzoZgSy4cB29km+Ei
+         YyBgWpA5/AAvSYmU4hDMYyncyXJPGJ5TVUX6EOD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejas Joglekar <joglekar@synopsys.com>,
+        stable@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.3 049/180] usb: dwc3: gadget: Fix logical condition
-Date:   Mon, 16 Dec 2019 18:48:09 +0100
-Message-Id: <20191216174822.512153908@linuxfoundation.org>
+Subject: [PATCH 5.3 048/180] usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
+Date:   Mon, 16 Dec 2019 18:48:08 +0100
+Message-Id: <20191216174820.395455365@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,36 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 8c7d4b7b3d43c54c0b8c1e4adb917a151c754196 upstream.
+commit 3c3caae4cd6e122472efcf64759ff6392fb6bce2 upstream.
 
-This patch corrects the condition to kick the transfer without
-giving back the requests when either request has remaining data
-or when there are pending SGs. The && check was introduced during
-spliting up the dwc3_gadget_ep_cleanup_completed_requests() function.
+The original ID that was added for Comet Lake PCH was
+actually for the -LP (low power) variant even though the
+constant for it said CMLH. Changing that while at it.
 
-Fixes: f38e35dd84e2 ("usb: dwc3: gadget: split dwc3_gadget_ep_cleanup_completed_requests()")
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191212093713.60614-1-heikki.krogerus@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/dwc3-pci.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2471,7 +2471,7 @@ static int dwc3_gadget_ep_cleanup_comple
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -29,7 +29,8 @@
+ #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
+ #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
+ #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
+-#define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
++#define PCI_DEVICE_ID_INTEL_CMLLP		0x02ee
++#define PCI_DEVICE_ID_INTEL_CMLH		0x06ee
+ #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
+ #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
+ #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
+@@ -308,6 +309,9 @@ static const struct pci_device_id dwc3_p
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
+ 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
  
- 	req->request.actual = req->request.length - req->remaining;
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLLP),
++	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
+ 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
  
--	if (!dwc3_gadget_ep_request_completed(req) &&
-+	if (!dwc3_gadget_ep_request_completed(req) ||
- 			req->num_pending_sgs) {
- 		__dwc3_gadget_kick_transfer(dep);
- 		goto out;
 
 
