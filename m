@@ -2,168 +2,202 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26414C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895F0C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E676820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D952067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="icziZlzR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JA0txClZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfLPQOA (ORCPT
+        id S1726181AbfLPQQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:14:00 -0500
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:31686 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726571AbfLPQN6 (ORCPT
+        Mon, 16 Dec 2019 11:16:11 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38043 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfLPQQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:13:58 -0500
-Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
-        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id xBGG9eCE008464;
-        Mon, 16 Dec 2019 16:12:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=jan2016.eng;
- bh=TlJtzvSQJY2PpRhXQCFBBcMUtctaSu6LA6YjngOX+UQ=;
- b=icziZlzR56P+iT9L8NT3+VAG4RQyiBAd/YOq5pI4YpuFW0t1+HL5RIYnzx6GmtTAd6ay
- 2W0g2L4CYbMW4aPkTepW2fw28kdpei+5r4SIwX1d6PzJD06IB9Qdy6fJUnT2xu4uB8+1
- A1tXCJxmb3TMWcLptpeJYYPl1/+0yBcNMB3ydQApyuTuu9lJuXBheAJMBDGdqWx/S5Nl
- dXlhuEEeoS8fLZmF3qLYptE1Mr0fzi3i8TE4jBePnmj4Dgmc8Vqk+Nnl0LvmJuj91bEy
- qYl0PEE6IyrHlIkNJLQ/S2SjRE5gFgRb0pP6PWjzLToJOULkz2toJBCkQd7Aw2vwnXCq hg== 
-Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
-        by m0050096.ppops.net-00190b01. with ESMTP id 2wvs1d0e6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 16:12:52 +0000
-Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
-        by prod-mail-ppoint6.akamai.com (8.16.0.27/8.16.0.27) with SMTP id xBGFp46N000594;
-        Mon, 16 Dec 2019 11:12:52 -0500
-Received: from email.msg.corp.akamai.com ([172.27.165.112])
-        by prod-mail-ppoint6.akamai.com with ESMTP id 2wvuxydunk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 11:12:51 -0500
-Received: from ustx2ex-dag1mb6.msg.corp.akamai.com (172.27.165.124) by
- ustx2ex-dag1mb5.msg.corp.akamai.com (172.27.165.123) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Mon, 16 Dec 2019 10:12:50 -0600
-Received: from ustx2ex-dag1mb6.msg.corp.akamai.com ([172.27.165.124]) by
- ustx2ex-dag1mb6.msg.corp.akamai.com ([172.27.165.124]) with mapi id
- 15.00.1473.005; Mon, 16 Dec 2019 08:12:50 -0800
-From:   "Lubashev, Igor" <ilubashe@akamai.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>
-CC:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        "Stephane Eranian" <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bgregg@netflix.com" <bgregg@netflix.com>,
-        Song Liu <songliubraving@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 2/7] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-Thread-Topic: [PATCH v2 2/7] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-Thread-Index: AQHVs+CfzGj9uMUtGUC4IRZHidt5Zae87MsA
-Date:   Mon, 16 Dec 2019 16:12:50 +0000
-Message-ID: <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
-References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
- <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
-In-Reply-To: <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.19.113.150]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 11:16:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so7345344wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:16:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4KWg0LiMX7EL3TUgZyeZC4KqXcBsdzCDrVE6UGWPRZQ=;
+        b=JA0txClZqFCt5d+0MZN27cPp6eAnruisccaSI/2QQDg4OZrxgT6uGFm3/TxP7zPhRW
+         eFYnTKr0O7niWSQKazgr/IomLyCTSgikAJrAx1flHRBbQ8EJvv5cpE9ArAOLHrQH5vHi
+         ZsX3PD1MZFgTBtf8UJwGWhaP5wiwFMvihqb+z2SiZuvH+9RTSD+ROcORZe50TGBLMlfM
+         ozz34xsIndKjvl6dUOe5TwblAgjevVmL3cOfX6bVqDcd59rWm/AtwuaX67ZYBufbXrU+
+         PYXyKPbqoZZVjPg+IEXAqBxIajX7q7zJzXd2lfzb4TWtyB4TAS3xqRWG1m+jPbGe/B7E
+         ahUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4KWg0LiMX7EL3TUgZyeZC4KqXcBsdzCDrVE6UGWPRZQ=;
+        b=lyosgGj934ykOW5YHLFRRvLZlUnykqETBQ0VyIXJwHo4SpQn50oam5cWNdjBwj7kpi
+         cXHEEm4rmJhPzfOUFcywa5hdfyP2NrDzD6YOZ2Ai73SjgZaPnhiIOs1tsqKOgsKDFxkd
+         xR9QUGoalwuT2DekgDaLO2sJ6WJ4XYK8XT5pcNJEVMWV8Ai1fAz/6zu4tAJFdpGT7Ynh
+         trwoKJZgvu6z4N0UfoJ6lnAT5n11uCkDMEGKzoav+KAZiLemSekU74LgOayLf/h1LhZV
+         bbPMGuk/8Zwufu4iyZa447IiNxTdZ8oD9pvH1L6vfvdxao63bbxMiFi/gIYqgMytURpL
+         lacw==
+X-Gm-Message-State: APjAAAXoO4TE6/yX9EbsNHsbir948En+OhZ+h15HoLoQ4xRzwQKRWmpl
+        h2Pm2dvtSwXHmshdNOdCUkWue3Fca2c=
+X-Google-Smtp-Source: APXvYqys27lbtpqQOpy2AoSAhIOwi94ngxwMHkVF8FaHZa9KJ0Y17M9gDQPwppIh+kBbe/eS+n3Q7A==
+X-Received: by 2002:a05:600c:48a:: with SMTP id d10mr15253063wme.87.1576512968734;
+        Mon, 16 Dec 2019 08:16:08 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:44d6:972c:f996:2f15? ([2a01:e34:ed2f:f020:44d6:972c:f996:2f15])
+        by smtp.googlemail.com with ESMTPSA id v20sm21889756wmj.32.2019.12.16.08.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 08:16:08 -0800 (PST)
+Subject: Re: [RESEND PATCH] thermal: rockchip: enable hwmon
+To:     schaecsn@gmx.net, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191212061702.BFE2D6E85603@corona.crabdance.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3f3e1fcd-f4e5-efe6-ff84-bc46db15137e@linaro.org>
+Date:   Mon, 16 Dec 2019 17:16:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912160139
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_06:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1011
- adultscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160141
+In-Reply-To: <20191212061702.BFE2D6E85603@corona.crabdance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCBEZWMgMTYsIDIwMTkgYXQgMjoxNSBBTSwgQWxleGV5IEJ1ZGFua292IDxhbGV4ZXku
-YnVkYW5rb3ZAbGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9wZW4gYWNjZXNzIHRvIHBl
-cmZfZXZlbnRzIG1vbml0b3JpbmcgZm9yIENBUF9TWVNfUEVSRk1PTiBwcml2aWxlZ2VkDQo+IHBy
-b2Nlc3Nlcy4NCj4gRm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgcmVhc29ucyBhY2Nlc3MgdG8g
-cGVyZl9ldmVudHMgc3Vic3lzdGVtIHJlbWFpbnMNCj4gb3BlbiBmb3IgQ0FQX1NZU19BRE1JTiBw
-cml2aWxlZ2VkIHByb2Nlc3NlcyBidXQgQ0FQX1NZU19BRE1JTiB1c2FnZQ0KPiBmb3Igc2VjdXJl
-IHBlcmZfZXZlbnRzIG1vbml0b3JpbmcgaXMgZGlzY291cmFnZWQgd2l0aCByZXNwZWN0IHRvDQo+
-IENBUF9TWVNfUEVSRk1PTiBjYXBhYmlsaXR5Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQWxleGV5
-IEJ1ZGFua292IDxhbGV4ZXkuYnVkYW5rb3ZAbGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gIGlu
-Y2x1ZGUvbGludXgvcGVyZl9ldmVudC5oIHwgOSArKysrKystLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9saW51eC9wZXJmX2V2ZW50LmggYi9pbmNsdWRlL2xpbnV4L3BlcmZfZXZlbnQuaCBpbmRl
-eA0KPiAzNGM3YzY5MTAwMjYuLjUyMzEzZDJjYzM0MyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9s
-aW51eC9wZXJmX2V2ZW50LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9wZXJmX2V2ZW50LmgNCj4g
-QEAgLTEyODUsNyArMTI4NSw4IEBAIHN0YXRpYyBpbmxpbmUgaW50IHBlcmZfaXNfcGFyYW5vaWQo
-dm9pZCkNCj4gDQo+ICBzdGF0aWMgaW5saW5lIGludCBwZXJmX2FsbG93X2tlcm5lbChzdHJ1Y3Qg
-cGVyZl9ldmVudF9hdHRyICphdHRyKSAgew0KPiAtCWlmIChzeXNjdGxfcGVyZl9ldmVudF9wYXJh
-bm9pZCA+IDEgJiYgIWNhcGFibGUoQ0FQX1NZU19BRE1JTikpDQo+ICsJaWYgKHN5c2N0bF9wZXJm
-X2V2ZW50X3BhcmFub2lkID4gMSAmJg0KPiArCSAgICEoY2FwYWJsZShDQVBfU1lTX1BFUkZNT04p
-IHx8IGNhcGFibGUoQ0FQX1NZU19BRE1JTikpKQ0KPiAgCQlyZXR1cm4gLUVBQ0NFUzsNCj4gDQo+
-ICAJcmV0dXJuIHNlY3VyaXR5X3BlcmZfZXZlbnRfb3BlbihhdHRyLCBQRVJGX1NFQ1VSSVRZX0tF
-Uk5FTCk7IEBADQo+IC0xMjkzLDcgKzEyOTQsOCBAQCBzdGF0aWMgaW5saW5lIGludCBwZXJmX2Fs
-bG93X2tlcm5lbChzdHJ1Y3QNCj4gcGVyZl9ldmVudF9hdHRyICphdHRyKQ0KPiANCj4gIHN0YXRp
-YyBpbmxpbmUgaW50IHBlcmZfYWxsb3dfY3B1KHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIgKmF0dHIp
-ICB7DQo+IC0JaWYgKHN5c2N0bF9wZXJmX2V2ZW50X3BhcmFub2lkID4gMCAmJiAhY2FwYWJsZShD
-QVBfU1lTX0FETUlOKSkNCj4gKwlpZiAoc3lzY3RsX3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAwICYm
-DQo+ICsJICAgICEoY2FwYWJsZShDQVBfU1lTX1BFUkZNT04pIHx8IGNhcGFibGUoQ0FQX1NZU19B
-RE1JTikpKQ0KPiAgCQlyZXR1cm4gLUVBQ0NFUzsNCj4gDQo+ICAJcmV0dXJuIHNlY3VyaXR5X3Bl
-cmZfZXZlbnRfb3BlbihhdHRyLCBQRVJGX1NFQ1VSSVRZX0NQVSk7IEBAIC0NCj4gMTMwMSw3ICsx
-MzAzLDggQEAgc3RhdGljIGlubGluZSBpbnQgcGVyZl9hbGxvd19jcHUoc3RydWN0IHBlcmZfZXZl
-bnRfYXR0cg0KPiAqYXR0cikNCj4gDQo+ICBzdGF0aWMgaW5saW5lIGludCBwZXJmX2FsbG93X3Ry
-YWNlcG9pbnQoc3RydWN0IHBlcmZfZXZlbnRfYXR0ciAqYXR0cikgIHsNCj4gLQlpZiAoc3lzY3Rs
-X3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAtMSAmJiAhY2FwYWJsZShDQVBfU1lTX0FETUlOKSkNCj4g
-KwlpZiAoc3lzY3RsX3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAtMSAmJg0KPiArCSAgICAhKGNhcGFi
-bGUoQ0FQX1NZU19QRVJGTU9OKSB8fCBjYXBhYmxlKENBUF9TWVNfQURNSU4pKSkNCj4gIAkJcmV0
-dXJuIC1FUEVSTTsNCj4gDQo+ICAJcmV0dXJuIHNlY3VyaXR5X3BlcmZfZXZlbnRfb3BlbihhdHRy
-LCBQRVJGX1NFQ1VSSVRZX1RSQUNFUE9JTlQpOw0KPiAtLQ0KPiAyLjIwLjENCg0KVGhhbmtzLiAg
-SSBsaWtlIHRoZSBpZGVhIG9mIENBUF9TWVNfUEVSRk1PTiB0aGF0IGRvZXMgbm90IHJlcXVpcmUg
-Q0FQX1NZU19BRE1JTi4gIEl0IG1ha2VzIGdyYW50aW5nIHVzZXJzIGFiaWxpdHkgdG8gcnVuIHBl
-cmYgYSBiaXQgc2FmZXIuDQoNCkkgc2VlIGEgbG90IG9mICIoY2FwYWJsZShDQVBfU1lTX1BFUkZN
-T04pIHx8IGNhcGFibGUoQ0FQX1NZU19BRE1JTikiIGNvbnN0cnVjdHMgbm93LiAgTWF5YmUgd3Jh
-cHBpbmcgaXQgaW4gYW4gIiBpbmxpbmUgYm9vbCBwZXJmbW9uX2NhcGFibGUoKSIgZGVmaW5lZCBz
-b21ld2hlcmUgKGxpa2UgaW4gL2luY2x1ZGUvbGludXgvY2FwYWJpbGl0eS5oKT8NCg0KLSBJZ29y
-DQo=
+On 12/12/2019 07:17, Stefan Schaeckeler wrote:
+> By default, of-based thermal drivers do not enable hwmon.
+> Explicitly enable hwmon for both, the soc and gpu temperature
+> sensor.
+> 
+> Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+
+Applied, and took the opportunity to test it.
+
+(for patchwork)
+
+Tested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+> ---
+>  drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> index 343c2f5c5a25..e47c60010259 100644
+> --- a/drivers/thermal/rockchip_thermal.c
+> +++ b/drivers/thermal/rockchip_thermal.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/pinctrl/consumer.h>
+> 
+> +#include "thermal_hwmon.h"
+> +
+>  /**
+>   * If the temperature over a period of time High,
+>   * the resulting TSHUT gave CRU module,let it reset the entire chip,
+> @@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+> 
+>  	thermal->chip->control(thermal->regs, true);
+> 
+> -	for (i = 0; i < thermal->chip->chn_num; i++)
+> +	for (i = 0; i < thermal->chip->chn_num; i++) {
+>  		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+> +		thermal->sensors[i].tzd->tzp->no_hwmon = false;
+> +		error = thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
+> +		if (error)
+> +			dev_warn(&pdev->dev,
+> +				 "failed to register sensor %d with hwmon: %d\n",
+> +				 i, error);
+> +	}
+> 
+>  	platform_set_drvdata(pdev, thermal);
+> 
+> @@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_device *pdev)
+>  	for (i = 0; i < thermal->chip->chn_num; i++) {
+>  		struct rockchip_thermal_sensor *sensor = &thermal->sensors[i];
+> 
+> +		thermal_remove_hwmon_sysfs(sensor->tzd);
+>  		rockchip_thermal_toggle_sensor(sensor, false);
+>  	}
+> 
+> --
+> 2.24.0
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
