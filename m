@@ -2,147 +2,301 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07200C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C41C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1159206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:32:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Uk02i/mP"
+	by mail.kernel.org (Postfix) with ESMTP id 014A6206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfLPLcd (ORCPT
+        id S1727385AbfLPLdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:32:33 -0500
-Received: from mout.web.de ([217.72.192.78]:44481 "EHLO mout.web.de"
+        Mon, 16 Dec 2019 06:33:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:51114 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbfLPLcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:32:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576495930;
-        bh=ScEN8n3GV+WMJgfH5FlVtKpqjsLsOHIgy5pLVHm/22g=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=Uk02i/mPN6wHepBgQQm5RBJeoOiV2O9+Xig6UE17gqutji+xUxBRsldobOydiYx1X
-         L8kZ5qBy7EjJZYESZHiIprQISEiYXDT9jCV2CNZ5N4eYg4cE/++qKM0gSkdyxNsyVU
-         g3Ev7W5su/RdRfSUbjKIhWAQidE8N/0Ay15IbO+s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MUW7T-1iFUBG48l1-00RIWn; Mon, 16
- Dec 2019 12:32:10 +0100
-To:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, chao@kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-References: <20191216062806.112361-1-yuchao0@huawei.com>
-Subject: Re: [RFC PATCH v5] f2fs: support data compression
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <594c3b59-b6f0-0e87-6acb-04161e555d7e@web.de>
-Date:   Mon, 16 Dec 2019 12:32:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1727138AbfLPLdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:33:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB4CE1FB;
+        Mon, 16 Dec 2019 03:33:43 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C27D3F6CF;
+        Mon, 16 Dec 2019 03:33:42 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>, julien@xen.org,
+        Steven Price <steven.price@arm.com>
+Subject: [PATCH v2] arm64: cpufeature: Export matrix and other features to userspace
+Date:   Mon, 16 Dec 2019 11:33:37 +0000
+Message-Id: <20191216113337.13882-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191216062806.112361-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7pip56QvaNsPXkcUF8CD2nIcFfLq1yUdoc94D3eknuvUIUmZ5hl
- WreGNVq7+OTt1xYhZOGybwdZ0pv2os1vFLGY9W99loHzr7nGIgffrJfFVW1B8V1fN6DpfSA
- vEDtoTXCJLt5T4rMrmKozbBPct0r5sA9t3u/iHovH/JFigD0i9sTiWBv6aENcSSCS+LT4Kj
- 8RyYztQEvzLR1pomAn50w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bEnQUXtpG2M=:o/KpONtZB0jc6lMeB5oAsl
- bUAdfrA07oALR0urToFJH9zI2tHnpMHCt1+fhkWb6dSjiJnSfZkW6t56QzBVuSd87vrCllvrB
- wMP6Xo3Wvt1dxqwFZeYgJAbMoLHhr+lx+XBQoccQNnWtU3b+2oLy3t/BgOkaSRxwdtmTbDpJu
- 1fvfQKWR1I2xcRpjyhrcE/Dmm9pYGWJHTLZRgYSU+8I8HGvihiehkw6u7TZ00Yq5/X5Jm0TXq
- yrszz+AICqdv/fIsRbfaf6okw5wF/e8vIN2zvP2jI8U+k4/HteWaWcoQKYzs3w4rVArYT27NF
- 6R8vPrZzyxbTSeiN0KzQyjC2a2K2tSZnesRyyjE9PpOvzaf5Oso9rAU+tQWeciBe5kavV9//o
- e7jMvb/N+E7FkWzMkKyfJacGkB0095y9yr9dNblOIjLUY6Gwi4FFqf86X+IlY8p8H5AX/dZEO
- 5xrRENSorKPwDmbUPy1gzbCqsLGZOy22ot/ROV0Ku/qS2pbJpK6any7FX5H6di+brSzu3UKRg
- e8le+GW5o7mAp/MBaoOZwzobPztJOLpS9q80z3iX5l0vuJIfFz6gmMy4qe3j4t+lZ+1W93j3a
- +o+cFe88OLgueltdCjq+171eMdKeZM37uJIfE7iVWIUnDx/ZsP67KOqudjhF77ujZbS3hP3nk
- A5aBDkXj74/NBM7k01MYpm5Z+TY0yMti27JYNH6EqqCHHY0nnKVVVzWLuPo2fW/vVcobq45J8
- 4cEEh7xWfgh9TMtstFKTGHGfC14PfCJB0ERFFi1mFgpodtzTt5aD3PGeWlv5MDxyOqIjOLMfn
- K7E+NReNCyGYBb4EkexNhmV444QD4ELdr9VY0gm9nKhWksa97KLsIA3wllvKWKN1vubF+14y9
- 5fwdNU0Jekc/6nTZ+fI+SDY2hF/YtFoBT1AMNmMDWrzF3cmudu/0CRxId0JsZ12BZtQOfNlif
- odL0HSCLJnbeXQzbK/u0Pxua+WfAqHTgqUFgYskqdM1/mpxr3E1UTYJkXbWugcRD49H+GcHzD
- BwbDPvRa6JT2fuYwVD4VFwdD5mrS9boaq3AOVd0ygPmGavDKdlXZ1Bptp+2YzRbH5cmMw9APN
- lBNJQnOmgBOa8fqO6Vx/VlkQwZ2ANxGLmqiESHwzHNXez7deYGYmOHE9+A6kaVMZ4ZiPecioQ
- YFQ/Y74C6bObuwhraTlv1XwvP65lPdwDo5gJHpEJuZcxx2zVUINKypmF3blYRkR7i/MlrsDLW
- xb+7eRALnAF7s6XnjQzz7sc3y9ih810f/8yLeRr0zFwz96hj54nBHrXR6VPg=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/f2fs/compress.c
-> @@ -0,0 +1,1139 @@
-=E2=80=A6
-> +bool f2fs_is_compressed_page(struct page *page)
-> +{
-> +	if (!PagePrivate(page))
-> +		return false;
-> +	if (!page_private(page))
-> +		return false;
-> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
-> +		return false;
-=E2=80=A6
+Export the features introduced as part of ARMv8.6 exposed in the
+ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1 registers. This introduces the
+Matrix features (ARMv8.2-I8MM, ARMv8.2-F64MM and ARMv8.2-F32MM) along
+with BFloat16 (Armv8.2-BF16), speculation invalidation (SPECRES) and
+Data Gathering Hint (ARMv8.0-DGH).
 
-How do you think about to combine condition checks like the following?
+Signed-off-by: Julien Grall <julien.grall@arm.com>
+[Added other features in those registers]
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+This is a v2 of Julien's patch[1] extended to export all the new
+features contained within the ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1
+registers.
 
-+	if (!PagePrivate(page) || !page_private(page) ||
-+	    IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
-+		return false;
+[1] https://lore.kernel.org/linux-arm-kernel/20191025171056.30641-1-julien.grall@arm.com/
 
+ Documentation/arm64/cpu-feature-registers.rst | 16 ++++++++++
+ Documentation/arm64/elf_hwcaps.rst            | 31 +++++++++++++++++++
+ arch/arm64/include/asm/hwcap.h                |  8 +++++
+ arch/arm64/include/asm/sysreg.h               | 12 +++++++
+ arch/arm64/include/uapi/asm/hwcap.h           |  8 +++++
+ arch/arm64/kernel/cpufeature.c                | 20 ++++++++++++
+ arch/arm64/kernel/cpuinfo.c                   |  8 +++++
+ 7 files changed, 103 insertions(+)
 
-Would you like to apply similar transformations at other source code place=
-s?
+diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
+index b6e44884e3ad..5382981533f8 100644
+--- a/Documentation/arm64/cpu-feature-registers.rst
++++ b/Documentation/arm64/cpu-feature-registers.rst
+@@ -200,6 +200,14 @@ infrastructure:
+      +------------------------------+---------+---------+
+      | Name                         |  bits   | visible |
+      +------------------------------+---------+---------+
++     | I8MM                         | [55-52] |    y    |
++     +------------------------------+---------+---------+
++     | DGH                          | [51-48] |    y    |
++     +------------------------------+---------+---------+
++     | BF16                         | [47-44] |    y    |
++     +------------------------------+---------+---------+
++     | SPECRES                      | [43-40] |    y    |
++     +------------------------------+---------+---------+
+      | SB                           | [39-36] |    y    |
+      +------------------------------+---------+---------+
+      | FRINTTS                      | [35-32] |    y    |
+@@ -234,10 +242,18 @@ infrastructure:
+      +------------------------------+---------+---------+
+      | Name                         |  bits   | visible |
+      +------------------------------+---------+---------+
++     | F64MM                        | [59-56] |    y    |
++     +------------------------------+---------+---------+
++     | F32MM                        | [55-52] |    y    |
++     +------------------------------+---------+---------+
++     | I8MM                         | [47-44] |    y    |
++     +------------------------------+---------+---------+
+      | SM4                          | [43-40] |    y    |
+      +------------------------------+---------+---------+
+      | SHA3                         | [35-32] |    y    |
+      +------------------------------+---------+---------+
++     | BF16                         | [23-20] |    y    |
++     +------------------------------+---------+---------+
+      | BitPerm                      | [19-16] |    y    |
+      +------------------------------+---------+---------+
+      | AES                          | [7-4]   |    y    |
+diff --git a/Documentation/arm64/elf_hwcaps.rst b/Documentation/arm64/elf_hwcaps.rst
+index 7fa3d215ae6a..183ba86ad46e 100644
+--- a/Documentation/arm64/elf_hwcaps.rst
++++ b/Documentation/arm64/elf_hwcaps.rst
+@@ -204,6 +204,37 @@ HWCAP2_FRINT
+ 
+     Functionality implied by ID_AA64ISAR1_EL1.FRINTTS == 0b0001.
+ 
++HWCAP2_SVEI8MM
++
++    Functionality implied by ID_AA64ZFR0_EL1.I8MM == 0b0001.
++
++HWCAP2_SVEF32MM
++
++    Functionality implied by ID_AA64ZFR0_EL1.F32MM == 0b0001.
++
++HWCAP2_SVEF64MM
++
++    Functionality implied by ID_AA64ZFR0_EL1.F64MM == 0b0001.
++
++HWCAP2_SVEBF16
++
++    Functionality implied by ID_AA64ZFR0_EL1.BF16 == 0b0001.
++
++HWCAP2_I8MM
++
++    Functionality implied by ID_AA64ISAR1_EL1.I8MM == 0b0001.
++
++HWCAP2_BF16
++
++    Functionality implied by ID_AA64ISAR1_EL1.BF16 == 0b0001.
++
++HWCAP2_DGH
++
++    Functionality implied by ID_AA64ISAR1_EL1.DGH == 0b0001.
++
++HWCAP2_SPECRES
++
++    Functionality implied by ID_AA64ISAR1_EL1.SPECRES == 0b0001.
+ 
+ 4. Unused AT_HWCAP bits
+ -----------------------
+diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
+index 3d2f2472a36c..ac7180b2c20b 100644
+--- a/arch/arm64/include/asm/hwcap.h
++++ b/arch/arm64/include/asm/hwcap.h
+@@ -86,6 +86,14 @@
+ #define KERNEL_HWCAP_SVESM4		__khwcap2_feature(SVESM4)
+ #define KERNEL_HWCAP_FLAGM2		__khwcap2_feature(FLAGM2)
+ #define KERNEL_HWCAP_FRINT		__khwcap2_feature(FRINT)
++#define KERNEL_HWCAP_SVEI8MM		__khwcap2_feature(SVEI8MM)
++#define KERNEL_HWCAP_SVEF32MM		__khwcap2_feature(SVEF32MM)
++#define KERNEL_HWCAP_SVEF64MM		__khwcap2_feature(SVEF64MM)
++#define KERNEL_HWCAP_SVEBF16		__khwcap2_feature(SVEBF16)
++#define KERNEL_HWCAP_I8MM		__khwcap2_feature(I8MM)
++#define KERNEL_HWCAP_DGH		__khwcap2_feature(DGH)
++#define KERNEL_HWCAP_BF16		__khwcap2_feature(BF16)
++#define KERNEL_HWCAP_SPECRES		__khwcap2_feature(SPECRES)
+ 
+ /*
+  * This yields a mask that user programs can use to figure out what
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 6e919fafb43d..f56c4a02a127 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -553,6 +553,10 @@
+ #define ID_AA64ISAR0_AES_SHIFT		4
+ 
+ /* id_aa64isar1 */
++#define ID_AA64ISAR1_I8MM_SHIFT		52
++#define ID_AA64ISAR1_DGH_SHIFT		48
++#define ID_AA64ISAR1_BF16_SHIFT		44
++#define ID_AA64ISAR1_SPECRES_SHIFT	40
+ #define ID_AA64ISAR1_SB_SHIFT		36
+ #define ID_AA64ISAR1_FRINTTS_SHIFT	32
+ #define ID_AA64ISAR1_GPI_SHIFT		28
+@@ -605,12 +609,20 @@
+ #define ID_AA64PFR1_SSBS_PSTATE_INSNS	2
+ 
+ /* id_aa64zfr0 */
++#define ID_AA64ZFR0_F64MM_SHIFT		56
++#define ID_AA64ZFR0_F32MM_SHIFT		52
++#define ID_AA64ZFR0_I8MM_SHIFT		44
+ #define ID_AA64ZFR0_SM4_SHIFT		40
+ #define ID_AA64ZFR0_SHA3_SHIFT		32
++#define ID_AA64ZFR0_BF16_SHIFT		20
+ #define ID_AA64ZFR0_BITPERM_SHIFT	16
+ #define ID_AA64ZFR0_AES_SHIFT		4
+ #define ID_AA64ZFR0_SVEVER_SHIFT	0
+ 
++#define ID_AA64ZFR0_F64MM		0x1
++#define ID_AA64ZFR0_F32MM		0x1
++#define ID_AA64ZFR0_I8MM		0x1
++#define ID_AA64ZFR0_BF16		0x1
+ #define ID_AA64ZFR0_SM4			0x1
+ #define ID_AA64ZFR0_SHA3		0x1
+ #define ID_AA64ZFR0_BITPERM		0x1
+diff --git a/arch/arm64/include/uapi/asm/hwcap.h b/arch/arm64/include/uapi/asm/hwcap.h
+index a1e72886b30c..8f3f1b66f7b2 100644
+--- a/arch/arm64/include/uapi/asm/hwcap.h
++++ b/arch/arm64/include/uapi/asm/hwcap.h
+@@ -65,5 +65,13 @@
+ #define HWCAP2_SVESM4		(1 << 6)
+ #define HWCAP2_FLAGM2		(1 << 7)
+ #define HWCAP2_FRINT		(1 << 8)
++#define HWCAP2_SVEI8MM		(1 << 9)
++#define HWCAP2_SVEF32MM		(1 << 10)
++#define HWCAP2_SVEF64MM		(1 << 11)
++#define HWCAP2_SVEBF16		(1 << 12)
++#define HWCAP2_I8MM		(1 << 13)
++#define HWCAP2_BF16		(1 << 14)
++#define HWCAP2_DGH		(1 << 15)
++#define HWCAP2_SPECRES		(1 << 16)
+ 
+ #endif /* _UAPI__ASM_HWCAP_H */
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 04cf64e9f0c9..bf9e9e09da0d 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -135,6 +135,10 @@ static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+ };
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64isar1[] = {
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_I8MM_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_DGH_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_BF16_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SPECRES_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SB_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_FRINTTS_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_PTR_AUTH),
+@@ -176,10 +180,18 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
+ };
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
++	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
++		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_F64MM_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
++		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_F32MM_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
++		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_I8MM_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+ 		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_SM4_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+ 		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_SHA3_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
++		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_BF16_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+ 		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_BITPERM_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+@@ -1651,6 +1663,10 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_LRCPC_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, KERNEL_HWCAP_ILRCPC),
+ 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_FRINTTS_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_FRINT),
+ 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SB_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SB),
++	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SPECRES_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SPECRES),
++	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_BF16_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_BF16),
++	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_DGH_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_DGH),
++	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_I8MM_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_I8MM),
+ 	HWCAP_CAP(SYS_ID_AA64MMFR2_EL1, ID_AA64MMFR2_AT_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_USCAT),
+ #ifdef CONFIG_ARM64_SVE
+ 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_SVE_SHIFT, FTR_UNSIGNED, ID_AA64PFR0_SVE, CAP_HWCAP, KERNEL_HWCAP_SVE),
+@@ -1658,8 +1674,12 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_AES_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_AES, CAP_HWCAP, KERNEL_HWCAP_SVEAES),
+ 	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_AES_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_AES_PMULL, CAP_HWCAP, KERNEL_HWCAP_SVEPMULL),
+ 	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_BITPERM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_BITPERM, CAP_HWCAP, KERNEL_HWCAP_SVEBITPERM),
++	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_BF16_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_BF16, CAP_HWCAP, KERNEL_HWCAP_SVEBF16),
+ 	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_SHA3_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_SHA3, CAP_HWCAP, KERNEL_HWCAP_SVESHA3),
+ 	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_SM4_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_SM4, CAP_HWCAP, KERNEL_HWCAP_SVESM4),
++	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_I8MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_I8MM, CAP_HWCAP, KERNEL_HWCAP_SVEI8MM),
++	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_F32MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_F32MM, CAP_HWCAP, KERNEL_HWCAP_SVEF32MM),
++	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_F64MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_F64MM, CAP_HWCAP, KERNEL_HWCAP_SVEF64MM),
+ #endif
+ 	HWCAP_CAP(SYS_ID_AA64PFR1_EL1, ID_AA64PFR1_SSBS_SHIFT, FTR_UNSIGNED, ID_AA64PFR1_SSBS_PSTATE_INSNS, CAP_HWCAP, KERNEL_HWCAP_SSBS),
+ #ifdef CONFIG_ARM64_PTR_AUTH
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 56bba746da1c..1eaf4dc0c5a0 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -84,6 +84,14 @@ static const char *const hwcap_str[] = {
+ 	"svesm4",
+ 	"flagm2",
+ 	"frint",
++	"svei8mm",
++	"svef32mm",
++	"svef64mm",
++	"svebf16",
++	"i8mm",
++	"bf16",
++	"dgh",
++	"specres",
+ 	NULL
+ };
+ 
+-- 
+2.20.1
 
-Regards,
-Markus
