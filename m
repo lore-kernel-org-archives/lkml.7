@@ -2,129 +2,150 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BE7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10BC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFB624672
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P8jFen51"
+	by mail.kernel.org (Postfix) with ESMTP id B220620665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576532044;
+	bh=g246O6lku9jrBHP+EmFMoKjMp2vLypJYvUbQNJKo0TY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nze21VUWrTO28ziTke/QP5qNSNX3PgewbmB5zo9vtQTWVm1HOFJNyyXVHQyBt31dT
+	 oaVbbsGJfWrv6ex/5nsJHOQ8bsvoLzOEbn80aowsu5HlSTyPzQ4CD6eqnX3LyppGQc
+	 Mr9XI3aN8fE/Q9IHg/lYgolY9Z84t/zFf7no7dGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLPVbf (ORCPT
+        id S1727428AbfLPVeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:31:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56035 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727110AbfLPVbc (ORCPT
+        Mon, 16 Dec 2019 16:34:03 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36725 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfLPVeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:31:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576531892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RH1+AViO4EoL9+jCeRxJJWq+wAQu3tyekrBf+r+c33M=;
-        b=P8jFen51V+FCK97fQEEo/eU+U4/YgGB81BpnRVcRljIbHZJKoTVOARnd0aRXeX2aqMCb3Q
-        wN/bYSWs1bPFLqMu3sk3sDcPW13Etoa4Vjfp3dZ8eHPB6hSrJ3/3B+GYmhP+rMpXAOzuKS
-        DF9hP406aj2b2BDaW/4nkXUlTTr2H5E=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-r-1ApwKBPMGdmo2Ya6bEFQ-1; Mon, 16 Dec 2019 16:31:31 -0500
-X-MC-Unique: r-1ApwKBPMGdmo2Ya6bEFQ-1
-Received: by mail-qk1-f200.google.com with SMTP id g28so5531058qkl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:31:31 -0800 (PST)
+        Mon, 16 Dec 2019 16:34:03 -0500
+Received: by mail-qv1-f68.google.com with SMTP id m14so2806988qvl.3;
+        Mon, 16 Dec 2019 13:34:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=gilqVXjewwhIA+/H+uhFEXgFGjhc0Nb4bpY0xnskfZw=;
+        b=p8mPv5jm1Qu39lGJzVKgWbKLmF4XT3ywrXoYnisUT6RfJ3zxPyPFFlGcq3BlKpjqCV
+         iFxOM697VUQ2O/DZE08qCIvNPUcb3ADyUfKCFflVwrPBKrJB2B5Lh/Pf9umEqDrccOGI
+         5fyTNR4QcPWVWGyGs1+xMsb10wIYRC2gX1iSX3/55XdW28jU602keEhwTNuF3lx3vzGk
+         OQF2mqjNz3WYv393+dcMviQJCxLu1cQtNLCHkW4xU/J0no/uhHkXqDHZJZ1+z6pJp4l0
+         RuqwUkI6BglPfm61QEnznU0lPzRWxUPUVRMcT8uML+Vwae7spIo7s11Z1Drl5+Op2cuP
+         fuDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RH1+AViO4EoL9+jCeRxJJWq+wAQu3tyekrBf+r+c33M=;
-        b=dJ17QBiczF3qAwOFyw6AK6JFlgQeFK99YAXUHAXCBW93LA6sdpFH/xE7CGfIW+jBSA
-         14twEnf0Luynl8YEUVqh8rBWbN25PDHLgmYwbA18rmLFjghXJMAJQMkCseHq5D3QKEYL
-         DqinOU7YR6/LhXyKtAsa35y4Nvl7OdNCr5Ao3J3ZEhzpDyObQ/17c0GoOHC5EXoSl22q
-         41BzLrl25AXkpTNHS64Lf8byaFD7Y3T3EPfT7t6qMgYG1VlGc1JWMF0Qjbkw1K6WLcFY
-         9qejqYO4q7X8vIpHFAnccQZ3Q8wMujNGnuUOnSKJToBfsaNAb0cWQk6g6BSvDg0qHgyK
-         SFgA==
-X-Gm-Message-State: APjAAAWPoLmDurfWB2x2PQqBLPY1DfwOM4+ABPBeZwer5gRSr5LVZKSt
-        PQb80EwBMspuFKwwXE/XFbxvpAKDRHqmG9ARbCO++DlelUjQ4zU74nOCcwKyuGkic7bj6dlgHoo
-        IcXoAN2ZJppnwwL4aAdgdBTRe
-X-Received: by 2002:aed:30e2:: with SMTP id 89mr1467484qtf.355.1576531890419;
-        Mon, 16 Dec 2019 13:31:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzs/VMYgoqhoiLGAmOXY5S9INg3jdWsZ9ngLkLfrfQtS12COJC294q65nOffgqO/bYEKrj+aQ==
-X-Received: by 2002:aed:30e2:: with SMTP id 89mr1467475qtf.355.1576531890253;
-        Mon, 16 Dec 2019 13:31:30 -0800 (PST)
-Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id y184sm6321943qkd.128.2019.12.16.13.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 13:31:29 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>, peterx@redhat.com,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 2/3] MIPS: smp: Remove tick_broadcast_count
-Date:   Mon, 16 Dec 2019 16:31:24 -0500
-Message-Id: <20191216213125.9536-3-peterx@redhat.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191216213125.9536-1-peterx@redhat.com>
-References: <20191216213125.9536-1-peterx@redhat.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=gilqVXjewwhIA+/H+uhFEXgFGjhc0Nb4bpY0xnskfZw=;
+        b=uOaCUX5D9+GA8hjVgWcdEpaLGTJRFZgREW+1fpQnYuyU0tpEGO05WL7jzRTlBQ6X86
+         iUNx2sFz5glY0kw1+hbNBuPFFuLyln8UEsD4q3IOZBN/KqtA2UslycWPmABScak9T7vQ
+         0IX30Buqc6b+0sD8PudrfmpcUYj43A/TM+ap7c5+BagS1NyZJcV6/pZdBGMUioI+n6mV
+         UlPByaTlGDgUAZxFUKEpvXoh9prFkBj/OhziYsCsQl6XXIx2gsQfTfT4Qh7YDRE7n5M8
+         so/2F5MQGl8K0Wr8Djm72vHLfx0trh3+B1fFzT0cNgp7CTfJLxsSahS6tSOLyY1NVqkJ
+         393w==
+X-Gm-Message-State: APjAAAVtRoORgRU5IoAYVHdY0HtS+ckb7yOr6uXOVgbIeDgZjfdx2/eA
+        8XCsb1aMi76+PZpyncUxOb4=
+X-Google-Smtp-Source: APXvYqyCSOyoc/1RZy+2Lilir6hKHpBGg7MaSuEoNOqlVDgneUC9Fdu2VSBsn/TjzAe6KYAssdyoBw==
+X-Received: by 2002:a0c:8a21:: with SMTP id 30mr1589603qvt.240.1576532042226;
+        Mon, 16 Dec 2019 13:34:02 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::d63d])
+        by smtp.gmail.com with ESMTPSA id i28sm7467761qtc.57.2019.12.16.13.34.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 13:34:01 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:34:00 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH block/for-5.5-fixes] iocost: over-budget forced IOs should
+ schedule async delay
+Message-ID: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now smp_call_function_single_async() provides the protection that
-we'll return with -EBUSY if the csd object is still pending, then we
-don't need the tick_broadcast_count counter any more.
+When over-budget IOs are force-issued through root cgroup,
+iocg_kick_delay() adjusts the async delay accordingly but doesn't
+actually schedule async throttle for the issuing task.  This bug is
+pretty well masked because sooner or later the offending threads are
+gonna get directly throttled on regular IOs or have async delay
+scheduled by mem_cgroup_throttle_swaprate().
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
+However, it can affect control quality on filesystem metadata heavy
+operations.  Let's fix it by invoking blkcg_schedule_throttle() when
+iocg_kick_delay() says async delay is needed.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org
+Reported-by: Josef Bacik <josef@toxicpanda.com>
 ---
- arch/mips/kernel/smp.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ block/blk-iocost.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
-index f510c00bda88..0678901c214d 100644
---- a/arch/mips/kernel/smp.c
-+++ b/arch/mips/kernel/smp.c
-@@ -696,21 +696,16 @@ EXPORT_SYMBOL(flush_tlb_one);
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index e01267f99183..27ca68621137 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1212,7 +1212,7 @@ static enum hrtimer_restart iocg_waitq_timer_fn(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
  
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 
--static DEFINE_PER_CPU(atomic_t, tick_broadcast_count);
- static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd);
- 
- void tick_broadcast(const struct cpumask *mask)
+-static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
++static bool iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
  {
--	atomic_t *count;
- 	call_single_data_t *csd;
- 	int cpu;
- 
- 	for_each_cpu(cpu, mask) {
--		count = &per_cpu(tick_broadcast_count, cpu);
- 		csd = &per_cpu(tick_broadcast_csd, cpu);
--
--		if (atomic_inc_return(count) == 1)
--			smp_call_function_single_async(cpu, csd);
-+		smp_call_function_single_async(cpu, csd);
+ 	struct ioc *ioc = iocg->ioc;
+ 	struct blkcg_gq *blkg = iocg_to_blkg(iocg);
+@@ -1229,11 +1229,11 @@ static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
+ 	/* clear or maintain depending on the overage */
+ 	if (time_before_eq64(vtime, now->vnow)) {
+ 		blkcg_clear_delay(blkg);
+-		return;
++		return false;
  	}
+ 	if (!atomic_read(&blkg->use_delay) &&
+ 	    time_before_eq64(vtime, now->vnow + vmargin))
+-		return;
++		return false;
+ 
+ 	/* use delay */
+ 	if (cost) {
+@@ -1250,10 +1250,11 @@ static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
+ 	oexpires = ktime_to_ns(hrtimer_get_softexpires(&iocg->delay_timer));
+ 	if (hrtimer_is_queued(&iocg->delay_timer) &&
+ 	    abs(oexpires - expires) <= margin_ns / 4)
+-		return;
++		return true;
+ 
+ 	hrtimer_start_range_ns(&iocg->delay_timer, ns_to_ktime(expires),
+ 			       margin_ns / 4, HRTIMER_MODE_ABS);
++	return true;
  }
  
-@@ -718,7 +713,6 @@ static void tick_broadcast_callee(void *info)
- {
- 	int cpu = smp_processor_id();
- 	tick_receive_broadcast();
--	atomic_set(&per_cpu(tick_broadcast_count, cpu), 0);
- }
+ static enum hrtimer_restart iocg_delay_timer_fn(struct hrtimer *timer)
+@@ -1739,7 +1740,9 @@ static void ioc_rqos_throttle(struct rq_qos *rqos, struct bio *bio)
+ 	 */
+ 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
+ 		atomic64_add(abs_cost, &iocg->abs_vdebt);
+-		iocg_kick_delay(iocg, &now, cost);
++		if (iocg_kick_delay(iocg, &now, cost))
++			blkcg_schedule_throttle(rqos->q,
++					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
+ 		return;
+ 	}
  
- static int __init tick_broadcast_init(void)
--- 
-2.23.0
-
