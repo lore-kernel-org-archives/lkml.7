@@ -2,279 +2,517 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521E3C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151A3206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C428206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:44:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pdne5z84"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f3El6H1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLPIoc (ORCPT
+        id S1727047AbfLPIov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:44:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57112 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbfLPIob (ORCPT
+        Mon, 16 Dec 2019 03:44:51 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46702 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPIou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:44:31 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBG8Y0Db017279;
-        Mon, 16 Dec 2019 09:44:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=PJqSVGtMd6PUNoyoHJdaGLduaNwj7hJN0wsA7xo1/94=;
- b=pdne5z84gtgpxXRktsXb4F+rtlwA9UQQ+B2R0Dzw7lIMYHpPdZ4gSmGbFz9JuZIuPSe0
- bHKsG713AUuO2j/CHmUhuKc2uBdza2qZCjEX4JdVaMJN7QpMPo568bokRW5PGU0iqB7Z
- K3zUpsX0h+qthruKdkRDwGQNdPy02ps4MpHVAp+aWd44DLBhHLpJgigT5mr13PTWhxlG
- db4wZsjPc6wSv2Z9yp3HNiH4Eree73v4VXff+QwS/KJD0MAXmu3VmKQ6TpDaPFzIDBtE
- H/P8fZ51mvrxWthrDXXa6B6FKPrF1I9ZhIZ3xgbFeuTWRusjT/i6kvD0yQfkbfL35iLl LA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvqgpg3gx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 09:44:17 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 42482100039;
-        Mon, 16 Dec 2019 09:44:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 33C082B5463;
-        Mon, 16 Dec 2019 09:44:16 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 09:44:15 +0100
-Subject: Re: [PATCH] dt-bindings: stm32: convert mlahb to json-schema
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-References: <20191128154603.6911-1-arnaud.pouliquen@st.com>
- <20191213213916.GA1292@bogus>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <7ac83aa6-0ec6-db4f-556d-a17c28d2bcab@st.com>
-Date:   Mon, 16 Dec 2019 09:44:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 03:44:50 -0500
+Received: by mail-io1-f66.google.com with SMTP id t26so5610635ioi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:44:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zyt9AGP8R9qNwT464SMtM661TFsq7X2MjwNSpjhezDo=;
+        b=f3El6H1u8ne1vZps79V7/JuDry5rAc6C6emgreIw501hMB1c27cRvOBc634SM4Y14o
+         T5xqJYJwDuJKQmlfamd2CUJDbDC/ssEQrTw0RnbNNtlfXbv/gCiCg8HArTVcWsY4mAAC
+         yQR5iasWbqcSFmfimDY9+u1WZE2zst35xnoQw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zyt9AGP8R9qNwT464SMtM661TFsq7X2MjwNSpjhezDo=;
+        b=XTkNxVFxoLMXvplj3zC1yqx++sTkFY2ArqeBPh0Tp9t6dFh+dlY8lLRvFG9bM5t8o5
+         EHFN+6sW4fr34mfla/tv/0JD7Vtw9cSq+SW39uG5HXG9zjkXBWXADze3OMju6Quy2PD8
+         d6ugWLUos/I0Eug7my6EsQ2DN+GutFB1HUZI+Zz0sbmt0hpxSCrxpY32hLRQhdTo5mk6
+         RjoJG3I2EHMi98nFqNN/Qf+yzsxslGFhAEQNagSliV3ioBA4V7sdyiQTDHBwlbmbntLk
+         aZLrla9wYI83F4hR+L3U1j9vAhkJVc4H1Irtd1kY2K7psV8ZDlL4fLk1IR6pI3iFg59U
+         9AUA==
+X-Gm-Message-State: APjAAAV4z8CgZH0RkRlkHf5LsG+q0UKAU9tbeCn1mqTJ5IQfUtKcTDYk
+        A3ndAsUQI8l35o28mSV7Xtvdl9HRdeKH3Ire5Pe26w==
+X-Google-Smtp-Source: APXvYqzoTvSszt6gxvUcc5nlM0TwsLAqXrLojwKuPq/AdoQRZ88qEaTeqjvFbrn1COtyPfKjrqqg2cfxF4lG6QsCxWA=
+X-Received: by 2002:a5d:9c10:: with SMTP id 16mr16757226ioe.150.1576485889482;
+ Mon, 16 Dec 2019 00:44:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213213916.GA1292@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_01:2019-12-16,2019-12-16 signatures=0
+References: <20191211061911.238393-1-hsinyi@chromium.org> <20191211061911.238393-5-hsinyi@chromium.org>
+ <20191213223341.GR4860@pendragon.ideasonboard.com>
+In-Reply-To: <20191213223341.GR4860@pendragon.ideasonboard.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 16 Dec 2019 16:44:23 +0800
+Message-ID: <CAJMQK-igdVBk-wg87K9Bn4D9RtSZCHKP4EKMoU+UK6xTycCM8g@mail.gmail.com>
+Subject: Re: [PATCH RESEND 4/4] drm: bridge: Generic GPIO mux driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Rob,
-
-On 12/13/19 10:39 PM, Rob Herring wrote:
-> On Thu, Nov 28, 2019 at 04:46:03PM +0100, Arnaud Pouliquen wrote:
->> Convert the ML-AHB bus bindings to DT schema format using json-schema
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->> Notice that this patch requests an update of the simple-bus schema to add
->> the support of the "dma-ranges" property.
->> A Pull request has been sent in parallel to the dt-schema github repo:
->> https://github.com/devicetree-org/dt-schema/pull/30
->>
->> To remind the topic around the use of "dma-ranges" please
->> refer to following discussion: https://lkml.org/lkml/2019/4/3/1261
->> ---
->>  .../devicetree/bindings/arm/stm32/mlahb.txt   | 37 ----------
->>  .../bindings/arm/stm32/st,mlahb.yaml          | 69 +++++++++++++++++++
->>  2 files changed, 69 insertions(+), 37 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->> deleted file mode 100644
->> index 25307aa1eb9b..000000000000
->> --- a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->> +++ /dev/null
->> @@ -1,37 +0,0 @@
->> -ML-AHB interconnect bindings
->> -
->> -These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
->> -a Cortex-M subsystem with dedicated memories.
->> -The MCU SRAM and RETRAM memory parts can be accessed through different addresses
->> -(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
->> -Cortex-M firmware accesses among those ports allows to tune the system
->> -performance.
->> -
->> -[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
->> -[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
->> -
->> -Required properties:
->> -- compatible: should be "simple-bus"
->> -- dma-ranges: describes memory addresses translation between the local CPU and
->> -	   the remote Cortex-M processor. Each memory region, is declared with
->> -	   3 parameters:
->> -		 - param 1: device base address (Cortex-M processor address)
->> -		 - param 2: physical base address (local CPU address)
->> -		 - param 3: size of the memory region.
->> -
->> -The Cortex-M remote processor accessed via the mlahb interconnect is described
->> -by a child node.
->> -
->> -Example:
->> -mlahb {
->> -	compatible = "simple-bus";
->> -	#address-cells = <1>;
->> -	#size-cells = <1>;
->> -	dma-ranges = <0x00000000 0x38000000 0x10000>,
->> -		     <0x10000000 0x10000000 0x60000>,
->> -		     <0x30000000 0x30000000 0x60000>;
->> -
->> -	m4_rproc: m4@10000000 {
->> -		...
->> -	};
->> -};
->> diff --git a/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
->> new file mode 100644
->> index 000000000000..8ad3f7c7f9ab
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
->> @@ -0,0 +1,69 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/arm/stm32/st,mlahb.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: STMicroelectronics STM32 ML-AHB interconnect bindings
->> +
->> +maintainers:
->> +  - Fabien Dessenne <fabien.dessenne@st.com>
->> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> +
->> +description: |
->> +  These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
->> +  a Cortex-M subsystem with dedicated memories. The MCU SRAM and RETRAM memory
->> +  parts can be accessed through different addresses (see "RAM aliases" in [1])
->> +  using different buses (see [2]): balancing the Cortex-M firmware accesses
->> +  among those ports allows to tune the system performance.
->> +  [1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
->> +  [2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
->> +
->> +allOf:
->> + - $ref: /schemas/simple-bus.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    contains:
->> +      enum:
->> +        - st,mlahb
->> +
->> +  dma-ranges:
->> +    description: |
->> +      Describe memory addresses translation between the local CPU and the
->> +      remote Cortex-M processor. Each memory region, is declared with
->> +      3 parameters:
->> +      - param 1: device base address (Cortex-M processor address)
->> +      - param 2: physical base address (local CPU address)
->> +      - param 3: size of the memory region.
->> +    maxItems: 3
->> +
->> +  '#address-cells':
->> +    const: 1
->> +
->> +  '#size-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - '#address-cells'
->> +  - '#size-cells'
->> +  - dma-ranges
->> +
->> +examples:
->> +  - |
->> +    mlahb: ahb {
->> +      compatible = "st,mlahb", "simple-bus";
->> +      #address-cells = <1>;
->> +      #size-cells = <1>;
->> +      reg = <0x10000000 0x40000>;
->> +      dma-ranges = <0x00000000 0x38000000 0x10000>,
->> +                   <0x10000000 0x10000000 0x60000>,
->> +                   <0x30000000 0x30000000 0x60000>;
->> +
-> 
-> Fails to build:
-> 
-> builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/stm32/st,mlahb.example.dt.yaml: 
-> ahb: 'ranges' is a required property
-> 
-> Run 'make dt_binding_check'
-
-Yes, that why i posted in parallel the PR on the tool:
-https://github.com/devicetree-org/dt-schema/pull/30. 
-
-I don't know if you saw my answer on this post so i copy/paste  it here:
-
-How to describe the stm32mp1 coprocessor mapping and translations based on this "ranges" requirement?
-
-On stm32mp1 we have 2 RAM memories accessible by the Cortex-A7 running Linux and used by the Cortex-M4 coprocessor to run its code. Each Cortex has a specific mapping of the memories. Some memory translations are needed by:
-
-- rproc driver to load the Cortex-M4 firmware in RAMs
-- rpmsg & virtio frameworks for shared memory
-
-Here is the memory mapping:
-
-- RETRAM (64 kB);
-  - Cortex-A7 @ : 0x38000000
-  - Cortex-M4 @: 0x00000000
-- MCUSRAM (up to 384 kB)
-  - Cortex-A7 @ : 0x30000000 or 0x10000000 ( 2 addresses for the same memory)
-  - Cortex-M4 @: 0x30000000 or 0x10000000 ( 2 addresses for the same memory)
-  =>addresses used on both side depend on the MCURAM access optimization
-
-Today our upstreamed solution is based on dma-range only (https://lkml.org/lkml/2019/4/3/1261)
-
-What about adding an "unused" ranges property in DT to match the requirement?
-
-	mlahb {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges = <0 0x38000000 0x10000>,
-			       <1 0x10000000 0x60000>,
-			       <2 0x30000000 0x60000>;
-		dma-ranges = <0x00000000 0x38000000 0x10000>,
-			     <0x10000000 0x10000000 0x60000>,
-			     <0x30000000 0x30000000 0x60000>;
-
-		m4_rproc: m4@10000000 {
-		        ---
-		};
-	};
-
-Thanks in advance for your feedback.
-Regards,
-Arnaud
-
-> 
->> +      m4_rproc: m4@10000000 {
->> +       reg = <0x10000000 0x40000>;
->> +      };
->> +    };
->> +
->> +...
->> -- 
->> 2.17.1
->>
+On Sat, Dec 14, 2019 at 6:33 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Hsin-Yi and Nicolas,
+>
+> Thank you for the patch.
+>
+> On Wed, Dec 11, 2019 at 02:19:11PM +0800, Hsin-Yi Wang wrote:
+> > From: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > This driver supports single input, 2 output display mux (e.g.
+> > HDMI mux), that provide its status via a GPIO.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> >  drivers/gpu/drm/bridge/Kconfig            |  10 +
+> >  drivers/gpu/drm/bridge/Makefile           |   1 +
+> >  drivers/gpu/drm/bridge/generic-gpio-mux.c | 306 ++++++++++++++++++++++
+> >  3 files changed, 317 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/generic-gpio-mux.c
+> >
+> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> > index 1f3fc6bec842..4734f6993858 100644
+> > --- a/drivers/gpu/drm/bridge/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > @@ -54,6 +54,16 @@ config DRM_DUMB_VGA_DAC
+> >         Support for non-programmable RGB to VGA DAC bridges, such as ADI
+> >         ADV7123, TI THS8134 and THS8135 or passive resistor ladder DACs.
+> >
+> > +config DRM_GENERIC_GPIO_MUX
+> > +     tristate "Generic GPIO-controlled mux"
+> > +     depends on OF
+> > +     select DRM_KMS_HELPER
+> > +     ---help---
+> > +       This bridge driver models a GPIO-controlled display mux with one
+> > +       input, 2 outputs (e.g. an HDMI mux). The hardware decides which output
+> > +       is active, reports it as a GPIO, and the driver redirects calls to the
+> > +       appropriate downstream bridge (if any).
+>
+> My understanding of the issue was that the mux was controllable by a
+> GPIO, not that the GPIO would report its status. This changes a few
+> things. How is the mux controlled then ?
+>
+There's a hardware that would control the gpio to active if HDMI is
+plugged. The mux driver registered a irq for this gpio, and handle
+cases depending on gpio status.
+> >  config DRM_LVDS_ENCODER
+> >       tristate "Transparent parallel to LVDS encoder support"
+> >       depends on OF
+> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > index 7a1e0ec032e6..1c0c92667ac4 100644
+> > --- a/drivers/gpu/drm/bridge/Makefile
+> > +++ b/drivers/gpu/drm/bridge/Makefile
+> > @@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+> >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+> >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+> > +obj-$(CONFIG_DRM_GENERIC_GPIO_MUX) += generic-gpio-mux.o
+> >  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+> >  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+> >  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+> > diff --git a/drivers/gpu/drm/bridge/generic-gpio-mux.c b/drivers/gpu/drm/bridge/generic-gpio-mux.c
+> > new file mode 100644
+> > index 000000000000..ba08321dcc17
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/generic-gpio-mux.c
+> > @@ -0,0 +1,306 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Generic gpio mux bridge driver
+> > + *
+> > + * Copyright 2016 Google LLC
+> > + */
+> > +
+> > +
+>
+> One blank line is enough.
+>
+> > +#include <linux/gpio.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/of_graph.h>
+>
+> Could you please sort these headers alphabetically ?
+>
+> > +#include <drm/drm_bridge.h>
+> > +#include <drm/drm_crtc_helper.h>
+> > +#include <drm/drm_probe_helper.h>
+> > +
+> > +struct gpio_display_mux {
+> > +     struct device *dev;
+> > +
+> > +     struct gpio_desc *gpiod_detect;
+> > +     int detect_irq;
+> > +
+> > +     struct drm_bridge bridge;
+> > +
+> > +     struct drm_bridge *next[2];
+> > +};
+> > +
+> > +static inline struct gpio_display_mux *bridge_to_gpio_display_mux(
+> > +             struct drm_bridge *bridge)
+> > +{
+> > +     return container_of(bridge, struct gpio_display_mux, bridge);
+> > +}
+> > +
+> > +static irqreturn_t gpio_display_mux_det_threaded_handler(int unused, void *data)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux = data;
+>
+> gpio_display_mux is a long variable name. You can shorten it to mux here
+> and below.
+>
+> > +     int active = gpiod_get_value(gpio_display_mux->gpiod_detect);
+> > +
+> > +     dev_dbg(gpio_display_mux->dev, "Interrupt %d!\n", active);
+> > +
+> > +     if (gpio_display_mux->bridge.dev)
+> > +             drm_kms_helper_hotplug_event(gpio_display_mux->bridge.dev);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int gpio_display_mux_attach(struct drm_bridge *bridge)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +                     bridge_to_gpio_display_mux(bridge);
+> > +     struct drm_bridge *next;
+> > +     int i;
+>
+> i never takes negative values, you can make it an unsigned int.
+>
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
+> > +             next = gpio_display_mux->next[i];
+> > +             if (next)
+> > +                     next->encoder = bridge->encoder;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static bool gpio_display_mux_mode_fixup(struct drm_bridge *bridge,
+> > +                             const struct drm_display_mode *mode,
+> > +                             struct drm_display_mode *adjusted_mode)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     int active;
+> > +     struct drm_bridge *next;
+> > +
+> > +     active = gpiod_get_value(gpio_display_mux->gpiod_detect);
+>
+> What if the value of the GPIO changes between, let's say, this operation
+> and gpio_display_mux_mode_set() ? This doesn't seem very stable to me.
+> DRM/KMS hasn't been designed to have the output routing configured
+> externally without any control from the drivers.
+>
+We will fix it to store the gpio status in struct instead of reading
+in each bridge functions. Only in irq handler function the gpio status
+will be updated.
+> > +     next = gpio_display_mux->next[active];
+>
+> This will crash if gpiod_get_value() returns an error. Same for the
+> other functions below.
+>
+Will add check for this in irq handler function.
+> > +
+> > +     if (next && next->funcs->mode_fixup)
+> > +             return next->funcs->mode_fixup(next, mode, adjusted_mode);
+> > +     else
+> > +             return true;
+> > +}
+> > +
+> > +static void gpio_display_mux_mode_set(struct drm_bridge *bridge,
+> > +                             struct drm_display_mode *mode,
+> > +                             struct drm_display_mode *adjusted_mode)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     int active;
+> > +     struct drm_bridge *next;
+> > +
+> > +     active = gpiod_get_value(gpio_display_mux->gpiod_detect);
+> > +     next = gpio_display_mux->next[active];
+> > +
+> > +     if (next && next->funcs->mode_set)
+> > +             next->funcs->mode_set(next, mode, adjusted_mode);
+> > +}
+> > +
+> > +/**
+>
+> This isn't kerneldoc, the comment should start with /*. Same comment
+> below.
+>
+> > + * Since this driver _reacts_ to mux changes, we need to make sure all
+> > + * downstream bridges are pre-enabled.
+>
+> I'm afraid the problem scope seems bigger than I initially anticipated
+> :-( We're in the hack territory here, and I think we need to search for
+> a proper solution. We need to start with a detailed description of the
+> hardware and the use cases.
+>
+We are considering making this mux driver mt8173 oak board specific,
+since it seems that only this board have such design and we only have
+this board for testing. If so, we also only need mode_fixup bridge
+function. And the endpoint is anx7688 and hdmi connector. What do you
+think?
+> > + */
+> > +static void gpio_display_mux_pre_enable(struct drm_bridge *bridge)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     struct drm_bridge *next;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
+> > +             next = gpio_display_mux->next[i];
+> > +             if (next && next->funcs->pre_enable)
+> > +                     next->funcs->pre_enable(next);
+> > +     }
+> > +}
+> > +
+> > +static void gpio_display_mux_post_disable(struct drm_bridge *bridge)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     struct drm_bridge *next;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
+> > +             next = gpio_display_mux->next[i];
+> > +             if (next && next->funcs->post_disable)
+> > +                     next->funcs->post_disable(next);
+> > +     }
+> > +}
+> > +
+> > +/**
+> > + * In an ideal mux driver, only the currently selected bridge should be enabled.
+> > + * For the sake of simplicity, we just just enable/disable all downstream
+> > + * bridges at the same time.
+> > + */
+> > +static void gpio_display_mux_enable(struct drm_bridge *bridge)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     struct drm_bridge *next;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
+> > +             next = gpio_display_mux->next[i];
+> > +             if (next && next->funcs->enable)
+> > +                     next->funcs->enable(next);
+> > +     }
+> > +}
+> > +
+> > +static void gpio_display_mux_disable(struct drm_bridge *bridge)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux =
+> > +             bridge_to_gpio_display_mux(bridge);
+> > +     struct drm_bridge *next;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
+> > +             next = gpio_display_mux->next[i];
+> > +             if (next && next->funcs->disable)
+> > +                     next->funcs->disable(next);
+> > +     }
+> > +}
+> > +
+> > +static const struct drm_bridge_funcs gpio_display_mux_bridge_funcs = {
+> > +     .attach = gpio_display_mux_attach,
+> > +     .mode_fixup = gpio_display_mux_mode_fixup,
+> > +     .disable = gpio_display_mux_disable,
+> > +     .post_disable = gpio_display_mux_post_disable,
+> > +     .mode_set = gpio_display_mux_mode_set,
+> > +     .pre_enable = gpio_display_mux_pre_enable,
+> > +     .enable = gpio_display_mux_enable,
+> > +};
+> > +
+> > +static int gpio_display_mux_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct gpio_display_mux *gpio_display_mux;
+> > +     struct device_node *port, *ep, *remote;
+> > +     int ret;
+> > +     u32 reg;
+> > +
+> > +     gpio_display_mux = devm_kzalloc(dev, sizeof(*gpio_display_mux),
+> > +                                     GFP_KERNEL);
+> > +     if (!gpio_display_mux)
+> > +             return -ENOMEM;
+> > +
+> > +     platform_set_drvdata(pdev, gpio_display_mux);
+> > +     gpio_display_mux->dev = &pdev->dev;
+> > +
+> > +     gpio_display_mux->bridge.of_node = dev->of_node;
+> > +
+> > +     gpio_display_mux->gpiod_detect =
+> > +             devm_gpiod_get(dev, "detect", GPIOD_IN);
+> > +     if (IS_ERR(gpio_display_mux->gpiod_detect))
+> > +             return PTR_ERR(gpio_display_mux->gpiod_detect);
+> > +
+> > +     gpio_display_mux->detect_irq =
+> > +             gpiod_to_irq(gpio_display_mux->gpiod_detect);
+> > +     if (gpio_display_mux->detect_irq < 0) {
+> > +             dev_err(dev, "Failed to get output irq %d\n",
+> > +                     gpio_display_mux->detect_irq);
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     port = of_graph_get_port_by_id(dev->of_node, 1);
+> > +     if (!port) {
+> > +             dev_err(dev, "Missing output port node\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     for_each_child_of_node(port, ep) {
+> > +             if (!ep->name || (of_node_cmp(ep->name, "endpoint") != 0)) {
+> > +                     of_node_put(ep);
+> > +                     continue;
+> > +             }
+> > +
+> > +             if (of_property_read_u32(ep, "reg", &reg) < 0 ||
+> > +                             reg >= ARRAY_SIZE(gpio_display_mux->next)) {
+> > +                     dev_err(dev,
+> > +                         "Missing/invalid reg property for endpoint %s\n",
+> > +                             ep->full_name);
+> > +                     of_node_put(ep);
+> > +                     of_node_put(port);
+> > +                     return -EINVAL;
+> > +             }
+> > +
+> > +             remote = of_graph_get_remote_port_parent(ep);
+> > +             if (!remote) {
+> > +                     dev_err(dev,
+> > +                         "Missing connector/bridge node for endpoint %s\n",
+> > +                             ep->full_name);
+> > +                     of_node_put(ep);
+> > +                     of_node_put(port);
+> > +                     return -EINVAL;
+> > +             }
+> > +             of_node_put(ep);
+> > +
+> > +             if (of_device_is_compatible(remote, "hdmi-connector")) {
+> > +                     of_node_put(remote);
+> > +                     continue;
+> > +             }
+>
+> This special case makes me think that something is wrong. I believe the
+> connector driver from
+> https://patchwork.freedesktop.org/patch/344477/?series=63328&rev=59
+> could help.
+>
+Thanks for pointing this, we can remove the special case (hdmi) handling here.
+> > +
+> > +             gpio_display_mux->next[reg] = of_drm_find_bridge(remote);
+>
+> What if the connected device is a panel and not a bridge ?
+>
+If this is oak specific, then we don't need to handle panel case.
+> > +             if (!gpio_display_mux->next[reg]) {
+> > +                     dev_err(dev, "Waiting for external bridge %s\n",
+> > +                             remote->name);
+> > +                     of_node_put(remote);
+> > +                     of_node_put(port);
+> > +                     return -EPROBE_DEFER;
+> > +             }
+> > +
+> > +             of_node_put(remote);
+> > +     }
+> > +     of_node_put(port);
+> > +
+> > +     gpio_display_mux->bridge.funcs = &gpio_display_mux_bridge_funcs;
+> > +     drm_bridge_add(&gpio_display_mux->bridge);
+> > +
+> > +     ret = devm_request_threaded_irq(dev, gpio_display_mux->detect_irq,
+> > +                             NULL,
+> > +                             gpio_display_mux_det_threaded_handler,
+> > +                             IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+> > +                                     IRQF_ONESHOT,
+> > +                             "gpio-display-mux-det", gpio_display_mux);
+> > +     if (ret) {
+> > +             dev_err(dev, "Failed to request MUX_DET threaded irq\n");
+> > +             goto err_bridge_remove;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +err_bridge_remove:
+> > +     drm_bridge_remove(&gpio_display_mux->bridge);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int gpio_display_mux_remove(struct platform_device *pdev)
+> > +{
+> > +     struct gpio_display_mux *gpio_display_mux = platform_get_drvdata(pdev);
+> > +
+> > +     drm_bridge_remove(&gpio_display_mux->bridge);
+>
+> If the GPIO IRQ is triggered here you'll have trouble. You need to
+> disable the IRQ, or free it, before removing the bridge.
+>
+Will fix this. Thanks
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct of_device_id gpio_display_mux_match[] = {
+> > +     { .compatible = "gpio-display-mux", },
+> > +     {},
+> > +};
+> > +
+> > +struct platform_driver gpio_display_mux_driver = {
+> > +     .probe = gpio_display_mux_probe,
+> > +     .remove = gpio_display_mux_remove,
+> > +     .driver = {
+> > +             .name = "gpio-display-mux",
+> > +             .of_match_table = gpio_display_mux_match,
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(gpio_display_mux_driver);
+> > +
+> > +MODULE_DESCRIPTION("GPIO-controlled display mux");
+> > +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
+> > +MODULE_LICENSE("GPL v2");
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
