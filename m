@@ -2,123 +2,65 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25914C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2135DC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE3B206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576505870;
-	bh=IQNavyKi0vrFitwEWkaIaMNA22XrAI9Jh2hXEfJH/S0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zuy5iQhh+Pr8bQYeLRAg9kFohIRNs5WOvqbHVWC3GTnDq0r2p1sMYVrg0+tKbzzMp
-	 fm7RHJveuAsUIhHJECzBPNwiEu1SKNLfFJiObKVjwg1HW3rczYosobn278E/ft7tVb
-	 APumLKDH2qxE7O0Oi/TxUhwPaal8lrIIKiKaPa1c=
+	by mail.kernel.org (Postfix) with ESMTP id 0314C206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfLPORt (ORCPT
+        id S1728090AbfLPOTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:17:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 09:19:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:56950 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbfLPORr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:17:47 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B54202072B;
-        Mon, 16 Dec 2019 14:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576505866;
-        bh=IQNavyKi0vrFitwEWkaIaMNA22XrAI9Jh2hXEfJH/S0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0UAzFff7wvUvbN58awlwQRh/zutRHMnzsFZ/J+0f6XS+7/84/k6W5/crv1KG05rHj
-         xSPmTeMqSd/hxVbpfe4BS2z4en5pg9XCm1GD9o6NexACE0quInxp2lBpSFeNeBLcLo
-         EZdEcXem8f1KOemOfxNOFGjwuFoSL3Iacll6YJzA=
-Received: by mail-qt1-f182.google.com with SMTP id t17so5852562qtr.7;
-        Mon, 16 Dec 2019 06:17:46 -0800 (PST)
-X-Gm-Message-State: APjAAAXii65COQOmdKJ20nfOCpic2fR6OysbGL9QwIDpLfHD70oq+Bn/
-        OsrFiGlRJq7XvN+SgjJQdmqbgh5tRXHPv9z7dQ==
-X-Google-Smtp-Source: APXvYqz2f5Gs15/ox6X7o2WZBhM9ygGDGyp6eAHEdmJvScGaM+GL2FIGu82kDvhjbzebssozOwhOMq161rtPybRoLuw=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr24605834qtg.110.1576505865893;
- Mon, 16 Dec 2019 06:17:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20191202133332.178110-1-amirmizi6@gmail.com> <20191202133332.178110-5-amirmizi6@gmail.com>
- <20191213223623.GA14809@bogus> <CAMHTsUW5dH-5LCW9GYzDnWEcqPt-Ch_21efQVpAKMdSvCXB00Q@mail.gmail.com>
-In-Reply-To: <CAMHTsUW5dH-5LCW9GYzDnWEcqPt-Ch_21efQVpAKMdSvCXB00Q@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 16 Dec 2019 08:17:34 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+7Wnh7pXBGtMZ=b2TD4zcY-8n-58OzrvCKx0Rc+1gpGw@mail.gmail.com>
-Message-ID: <CAL_Jsq+7Wnh7pXBGtMZ=b2TD4zcY-8n-58OzrvCKx0Rc+1gpGw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: tpm: Add YAML schema for TPM TIS I2C options
-To:     Amir Mizinski <amirmizi6@gmail.com>
-Cc:     Eyal.Cohen@nuvoton.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Alexander Steffen <alexander.steffen@infineon.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, ayna@linux.vnet.ibm.com,
-        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Content-Type: text/plain; charset="UTF-8"
+        id S1728012AbfLPOTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:19:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DADE1FB;
+        Mon, 16 Dec 2019 06:19:21 -0800 (PST)
+Received: from e123648.arm.com (unknown [10.37.12.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 71AE03F718;
+        Mon, 16 Dec 2019 06:19:19 -0800 (PST)
+From:   lukasz.luba@arm.com
+To:     linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
+Cc:     amit.kucheria@verdurent.com, lukasz.luba@arm.com,
+        dietmar.eggemann@arm.com
+Subject: [PATCH 0/2] Thermal devfreq cooling small updates
+Date:   Mon, 16 Dec 2019 14:19:07 +0000
+Message-Id: <20191216141909.30063-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 7:53 AM Amir Mizinski <amirmizi6@gmail.com> wrote:
->
-> On Sat, Dec 14, 2019 at 12:36 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Dec 02, 2019 at 03:33:31PM +0200, amirmizi6@gmail.com wrote:
-> > > From: Amir Mizinski <amirmizi6@gmail.com>
-> > >
-> > > Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c PTP based physical layer.
-> >
-> > Wrap your commmit message. And TPM, TIS?, and I2C should be capitalized.
->
-> Thanks,  ill fix that.
->
-> >
-> > >
-> > > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> > > ---
-> > >  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 38 ++++++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> >
-> > Please read my comments on v1 (The first v1 from 11/10, not the 2nd v1
-> > you sent).
->
-> I sent a follow up comment regarding this:
-> https://patchwork.kernel.org/patch/11236253/
-> (2nd v1 was sent by mistake. sorry about that)
+From: Lukasz Luba <lukasz.luba@arm.com>
 
-Sorry I missed your reply. However, you didn't address these comments:
+Hi all,
 
-> There's a bigger issue that the h/w here is more than just an I2C
-> protocol. The chip may have multiple power supplies, clocks, reset
-> lines, etc. HID over I2C seems like a similar case. Does the spec define
-> *all* of that? If not, you need chip specific compatibles. You can keep
-> this as a fallback though.
+This patch set adds small changes to devfreq cooling:
+- updating the license to SPDX and copyright to 2019
+- reclaiming the device node in registration function
 
-To rephrase this, a protocol does not fully describe the h/w and DT
-should describe the h/w.
+It is based on the current work in thermal branch thermal/linux-next
+https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/linux-next
 
-Also, you should include the interrupt whether you use it in the
-driver currently or not. Again, it's about describing the h/w, not
-what a driver happens to use ATM.
+Regards,
+Lukasz Luba
 
-Rob
+Lukasz Luba (2):
+  thermal: devfreq_cooling: Change license header to SPDX
+  thermal: devfreq_cooling: Add device node reclaiming in
+    devfreq_cooling_register()
+
+ drivers/thermal/devfreq_cooling.c | 33 ++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
