@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E840C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2636D206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D17820700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519800;
-	bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
+	s=default; t=1576519802;
+	bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7t51gkzEyszn+iPo8xOMVBU3UnVJeoEp/1ab2y7Qc9kfmzLv4agsXBAnaDsI2hfI
-	 abkjpO8z5jArklL8j6QCema8LjW9KPyO3WVQB6CTBJXK7EEbFYCmQTCmlQGZoTnk6q
-	 nY5qjko8stR6NzbtGQfLQmFGpU5STn8gAwgAzw/A=
+	b=jJ1k//ab+UB9jXGbGR9ZE+p23wDEj8PQ4yMouq4VBfdQ373McX3gXHkUO4+Hjnv7w
+	 I3wElE9/2xI6sHVE4MzVbKc6DN+pum8u7eRpbfKMmnUQOtSkkPE8XfegoeFrNz6UBT
+	 ZTVM9yrtB4016jFGPVeQgvBhmNjoXJzOdvWane3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbfLPSJ6 (ORCPT
+        id S1730547AbfLPSKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730188AbfLPSJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:56 -0500
+        id S1730178AbfLPSJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:09:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E5C206B7;
-        Mon, 16 Dec 2019 18:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28350206EC;
+        Mon, 16 Dec 2019 18:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519796;
-        bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
+        s=default; t=1576519798;
+        bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZhIR+LP0UYnKwUljIK73GZJgLpq3mk3VJMrALT6w3bZ7NIghxu7kIzcnjq8CxQfa1
-         H4pNM+UBLC3+is68JiuvK/MxpRK7xALN61FZlp8IjzlxJaUV6e3uUM0UQzcNGnR9ke
-         /NXrioLc/qhdmK10s2uv2CLBIBshsxgHqirRnEZE=
+        b=f6/J5QEmmw2c6y2ptCI6bpe1zw40it43KTDYK9Y3nBWhHafAu7WCNm69JPS+s4HY2
+         BDe3b7s0tQU70xvYbumbUoAA/uNR1QO3GooCUYWCglWYkNwpNrOYPNw+EoFX+cmb03
+         FeUsTBb5hO8Oc5SJjrk7gibY7xGHdR8goQdlfwMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.3 070/180] hwrng: omap - Fix RNG wait loop timeout
-Date:   Mon, 16 Dec 2019 18:48:30 +0100
-Message-Id: <20191216174830.209592374@linuxfoundation.org>
+        stable@vger.kernel.org, Maged Mokhtar <mmokhtar@petasan.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.3 071/180] dm writecache: handle REQ_FUA
+Date:   Mon, 16 Dec 2019 18:48:31 +0100
+Message-Id: <20191216174830.280901804@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,49 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+From: Maged Mokhtar <mmokhtar@petasan.org>
 
-commit be867f987a4e1222114dd07a01838a17c26f3fff upstream.
+commit c1005322ff02110a4df7f0033368ea015062b583 upstream.
 
-Existing RNG data read timeout is 200us but it doesn't cover EIP76 RNG
-data rate which takes approx. 700us to produce 16 bytes of output data
-as per testing results. So configure the timeout as 1000us to also take
-account of lack of udelay()'s reliability.
+Call writecache_flush() on REQ_FUA in writecache_map().
 
-Fixes: 383212425c92 ("hwrng: omap - Add device variant for SafeXcel IP-76 found in Armada 8K")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable@vger.kernel.org # 4.18+
+Signed-off-by: Maged Mokhtar <mmokhtar@petasan.org>
+Acked-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hw_random/omap-rng.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/md/dm-writecache.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/char/hw_random/omap-rng.c
-+++ b/drivers/char/hw_random/omap-rng.c
-@@ -66,6 +66,13 @@
- #define OMAP4_RNG_OUTPUT_SIZE			0x8
- #define EIP76_RNG_OUTPUT_SIZE			0x10
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -1218,7 +1218,8 @@ bio_copy:
+ 			}
+ 		} while (bio->bi_iter.bi_size);
  
-+/*
-+ * EIP76 RNG takes approx. 700us to produce 16 bytes of output data
-+ * as per testing results. And to account for the lack of udelay()'s
-+ * reliability, we keep the timeout as 1000us.
-+ */
-+#define RNG_DATA_FILL_TIMEOUT			100
-+
- enum {
- 	RNG_OUTPUT_0_REG = 0,
- 	RNG_OUTPUT_1_REG,
-@@ -176,7 +183,7 @@ static int omap_rng_do_read(struct hwrng
- 	if (max < priv->pdata->data_size)
- 		return 0;
- 
--	for (i = 0; i < 20; i++) {
-+	for (i = 0; i < RNG_DATA_FILL_TIMEOUT; i++) {
- 		present = priv->pdata->data_present(priv);
- 		if (present || !wait)
- 			break;
+-		if (unlikely(wc->uncommitted_blocks >= wc->autocommit_blocks))
++		if (unlikely(bio->bi_opf & REQ_FUA ||
++			     wc->uncommitted_blocks >= wc->autocommit_blocks))
+ 			writecache_flush(wc);
+ 		else
+ 			writecache_schedule_autocommit(wc);
 
 
