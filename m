@@ -2,108 +2,136 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A92CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A4AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E85821835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="aSfRXbx1"
+	by mail.kernel.org (Postfix) with ESMTP id 39F00206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLPRVj (ORCPT
+        id S1726719AbfLPRWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:21:39 -0500
-Received: from mickerik.phytec.de ([195.145.39.210]:60736 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLPRVj (ORCPT
+        Mon, 16 Dec 2019 12:22:25 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37100 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLPRWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:21:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1576515982; x=1579107982;
-        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wgGOn0shs177g7kPo1CpR8L7E8Z8ys8t8NgHwI7xOoY=;
-        b=aSfRXbx1NPySNFC/FR5FWMfvZCTigdICW6KeihmRyA+EptIj3cDcX2YXmf4DPGm1
-        TsXu2hqU1Xku2uUx3BJctjd8I8qo+ftw8MH6K1zLQ3weeU7Bq/2kHl1GD7EHWHLr
-        B91J9SdJFlx2mFLAIhzJmKKzq28LA2iHTDjl/K4kpI4=;
-X-AuditID: c39127d2-df9ff7000000408f-0c-5df7b98d928d
-Received: from idefix.phytec.de (Unknown_Domain [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 9E.1C.16527.D89B7FD5; Mon, 16 Dec 2019 18:06:21 +0100 (CET)
-Received: from augenblix2.phytec.de ([172.16.0.56])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2019121618062158-25361 ;
-          Mon, 16 Dec 2019 18:06:21 +0100 
-From:   Robert Karszniewicz <r.karszniewicz@phytec.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 1/1] regulator: of: Hide wrong warning regarding suspend state configuration
-Date:   Mon, 16 Dec 2019 18:06:21 +0100
-Message-Id: <1576515981-77867-2-git-send-email-r.karszniewicz@phytec.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576515981-77867-1-git-send-email-r.karszniewicz@phytec.de>
-References: <1576515981-77867-1-git-send-email-r.karszniewicz@phytec.de>
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 16.12.2019 18:06:21,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 16.12.2019 18:06:21,
-        Serialize complete at 16.12.2019 18:06:21
-X-TNEFEvaluated: 1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJMWRmVeSWpSXmKPExsWyRoCBS7d35/dYg1mPbSymPnzCZvHtSgeT
-        xeVdc9gcmD12zrrL7rFpVSebx+dNcgHMUVw2Kak5mWWpRfp2CVwZPdfXMxa85KhoXcbWwLiZ
-        vYuRk0NCwETi8/YvQDYXh5DAVkaJy9euMUM45xglOrs3soBUsQFV7W6+xQxiiwgoSGzufcYK
-        YjMLeEh0POkDs4UFYiSat/4Bs1kEVCU2fHvKBGLzAtVcfXkIapucxM1znWBzOAU8Jd5uXAA2
-        Xwiopvn+RyaImkYmicaZEhC2kMTpxWeZJzDyLWBkWMUolJuZnJ1alJmtV5BRWZKarJeSuokR
-        GCqHJ6pf2sHYN8fjECMTB+MhRgkOZiUR3h0K32OFeFMSK6tSi/Lji0pzUosPMUpzsCiJ827g
-        LQkTEkhPLEnNTk0tSC2CyTJxcEo1MO6b0sTZfnwW00+fA58C0uVnV+nVSIZM4ax39vjT0+fs
-        f3ud2WzxNln5OM6Db+7YW++U7lQVS/u57uTmiB2f5/j4LInXeZdxOHR+nPrC+CMhB05Ny/c+
-        rcSxU23JaeXey/LT733fflD8Y4V4iqr+1N5169KUZncd+JH+5OrE1fHFz5+WWD45s1WJpTgj
-        0VCLuag4EQBYzJDOAwIAAA==
+        Mon, 16 Dec 2019 12:22:24 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep17so3263065pjb.4;
+        Mon, 16 Dec 2019 09:22:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v2qcov+FADvqNKCZLTTFv4XXmMDQ6mSro4B3OA7yDB4=;
+        b=YLApVkzXcoH9sYQXo6mubykVkMquzm4hPnOO2VYMdFTpdtjkwLBqLxMy5aRo/fpYiw
+         z199KvvkQzFkZxcukgOia5eV+SjGDcqP7CioizzE6UMFy6q/yrBwgqbZUasv8DeIAKnk
+         +EsZYxdbsRZKe7F1x+AcoLBQMJrvhe3IgL7xvsA2m0XMctCMGuHl+IRFvic48fE3fFL4
+         UJkKpttLNafXzX+/LYI48JaLKjhzlJWufz0ycibsaM86sHvaoPsYS1soW8GU5XZXEXyT
+         qB/qKYKefZtDb+xtWhWwJLBpWWcZlI6duU00/RE014KUUM133nr4bZmvMNWV9x3Ilw2w
+         qmPQ==
+X-Gm-Message-State: APjAAAX4vy2EicBRyoO73LzQVVDQ89uGpHD/THtu/2gNFvdFrNEuB8+4
+        qVxJ1TLoWuzU+q/9kmH2r0wkdhf4yYA=
+X-Google-Smtp-Source: APXvYqxldVMknpdg/eYJWmUNo2cFG3KPf6KXVYwf96AKErLg1KEQQefR53J33LuhjIbPJ3XNpWpZ0A==
+X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr66257pju.137.1576516943602;
+        Mon, 16 Dec 2019 09:22:23 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id c8sm23384328pfo.163.2019.12.16.09.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 09:22:22 -0800 (PST)
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+To:     cang@codeaurora.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
+ <20191212045357.GA415177@yoga>
+ <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
+ <20191212063703.GC415177@yoga> <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
+ <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
+Date:   Mon, 16 Dec 2019 09:22:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A "No configuration" warning is falsely emitted in the case when the
-of-property regulator-always-on is set but regulator-(on|off)-in-suspend
-isn't set.
-This patch fixes the warning by explicitly setting always-on regulator's
-states to ENABLE_IN_SUSPEND.
+On 12/15/19 8:36 PM, cang@codeaurora.org wrote:
+> On 2019-12-16 05:49, Bart Van Assche wrote:
+>> On 2019-12-11 22:37, Bjorn Andersson wrote:
+>>> It's the asymmetry that I don't like.
+>>>
+>>> Perhaps if you instead make ufshcd platform_device_register_data() the
+>>> bsg device you would solve the probe ordering, the remove will be
+>>> symmetric and module autoloading will work as well (although then you
+>>> need a MODULE_ALIAS of platform:device-name).
+>>
+>> Hi Bjorn,
+>>
+>> From Documentation/driver-api/driver-model/platform.rst:
+>> "Platform devices are devices that typically appear as autonomous
+>> entities in the system. This includes legacy port-based devices and
+>> host bridges to peripheral buses, and most controllers integrated
+>> into system-on-chip platforms.  What they usually have in common
+>> is direct addressing from a CPU bus.  Rarely, a platform_device will
+>> be connected through a segment of some other kind of bus; but its
+>> registers will still be directly addressable."
+>>
+>> Do you agree that the above description is not a good match for the
+>> ufs-bsg kernel module?
+>
+> I missed this one.
+> How about making it a plain device and add it from ufs driver?
 
-Signed-off-by: Robert Karszniewicz <r.karszniewicz@phytec.de>
----
-Tested on v4.19.67, applies cleanly on v5.5-rc2.
+Hi Can,
 
- drivers/regulator/of_regulator.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Since the ufs_bsg kernel module already creates one device node under 
+/dev/bsg for each UFS host I don't think that we need to create any 
+additional device nodes for ufs-bsg devices. My proposal is to modify 
+the original patch 2/3 from this series as follows:
+* Use module_init() instead of late_initcall_sync().
+* Remove the ufshcd_get_hba_list_lock() and
+   ufshcd_put_hba_list_unlock() functions.
+* Implement a notification mechanism in the UFS core that invokes a
+   callback function after an UFS host has been created and also after an
+   UFS host has been removed.
+* Register for these notifications from inside the ufs-bsg driver.
+* During registration for notifications, invoke the UFS host creation
+   callback function for all known UFS hosts.
+* If the UFS core is unloaded, invoke the UFS host removal callback
+   function for all known UFS hosts.
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 210fc20..3acb1571 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -188,8 +188,14 @@ static void of_get_regulation_constraints(struct device_node *np,
- 			continue;
- 		}
- 
-+		if (!suspend_state)
-+			continue;
-+
-+		if (constraints->always_on)
-+			suspend_state->enabled = ENABLE_IN_SUSPEND;
-+
- 		suspend_np = of_get_child_by_name(np, regulator_states[i]);
--		if (!suspend_np || !suspend_state)
-+		if (!suspend_np)
- 			continue;
- 
- 		if (!of_property_read_u32(suspend_np, "regulator-mode",
--- 
-2.7.4
+I think there are several examples of similar notification mechanisms in 
+the Linux kernel, e.g. the probe and remove callback functions in struct 
+pci_driver.
 
+Bart.
