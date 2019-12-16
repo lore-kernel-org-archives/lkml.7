@@ -2,193 +2,228 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E09C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DADC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C72E20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142AF24650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:26:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DZLHVKXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfLPIZh (ORCPT
+        id S1726900AbfLPI0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:25:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62830 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbfLPIZh (ORCPT
+        Mon, 16 Dec 2019 03:26:31 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47390 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLPI0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:25:37 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBG8Mhvm100595
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 03:25:36 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdpy184h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 03:25:35 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 16 Dec 2019 08:25:33 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Dec 2019 08:25:26 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBG8PPQ143647108
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 08:25:25 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91DDAA405B;
-        Mon, 16 Dec 2019 08:25:25 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7EEEA405F;
-        Mon, 16 Dec 2019 08:25:24 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.212])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 08:25:24 +0000 (GMT)
-Subject: Re: [PATCH v3 00/15] KVM: Dynamically size memslot arrays
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>
-References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
- <20191203221433.GK19877@linux.intel.com>
- <20191213200151.GF31552@linux.intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 16 Dec 2019 09:25:24 +0100
+        Mon, 16 Dec 2019 03:26:30 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8QH4V073483;
+        Mon, 16 Dec 2019 02:26:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576484777;
+        bh=5LJD3BaNdpDqu2z7AYf9ZaOq2CWCjaTXL7atRrYN3cI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DZLHVKXk810t3N8MZMb6HMv/0QUDWc3z+uzXBFx1qkTJhJQvSd8lwSwCsCUCUF6/s
+         cjwWCcNqn8Wl4pO5J6xRDORlm7LITd/VID4WHjwZYKu38umhAb5yuIIcxu/nLyHubP
+         OQJPupJvI/ZnjFbJhQddN8Cv6k5RwRrM938RHHUA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8QGYo039352
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 02:26:16 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 02:26:16 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 02:26:16 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8QCt3052187;
+        Mon, 16 Dec 2019 02:26:13 -0600
+Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
+ devices
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
+        <tony@atomide.com>
+References: <20191210095151.15441-1-faiz_abbas@ti.com>
+ <20191210095151.15441-3-faiz_abbas@ti.com>
+ <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
+Date:   Mon, 16 Dec 2019 13:57:21 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191213200151.GF31552@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121608-0008-0000-0000-000003414B55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121608-0009-0000-0000-00004A6156B0
-Message-Id: <ca928a38-4bc0-88cd-dc70-62aec8695c77@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_01:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160075
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Adrian,
 
-
-On 13.12.19 21:01, Sean Christopherson wrote:
-> On Tue, Dec 03, 2019 at 02:14:33PM -0800, Sean Christopherson wrote:
->> On Thu, Oct 24, 2019 at 04:07:29PM -0700, Sean Christopherson wrote:
->>> The end goal of this series is to dynamically size the memslot array so
->>> that KVM allocates memory based on the number of memslots in use, as
->>> opposed to unconditionally allocating memory for the maximum number of
->>> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
->>> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
->>> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
->>> the memory footprint from 90k to ~2.6k bytes.
->>>
->>> The changes required to support dynamic sizing are relatively small,
->>> e.g. are essentially contained in patches 14/15 and 15/15.  Patches 1-13
->>> clean up the memslot code, which has gotten quite crusty, especially
->>> __kvm_set_memory_region().  The clean up is likely not strictly necessary
->>> to switch to dynamic sizing, but I didn't have a remotely reasonable
->>> level of confidence in the correctness of the dynamic sizing without first
->>> doing the clean up.
->>>
->>> Christoffer, I added your Tested-by to the patches that I was confident
->>> would be fully tested based on the desription of what you tested.  Let me
->>> know if you disagree with any of 'em.
->>>
->>> v3:
->>>   - Fix build errors on PPC and MIPS due to missed params during
->>>     refactoring [kbuild test robot].
->>>   - Rename the helpers for update_memslots() and add comments describing
->>>     the new algorithm and how it interacts with searching [Paolo].
->>>   - Remove the unnecessary and obnoxious warning regarding memslots being
->>>     a flexible array [Paolo].
->>>   - Fix typos in the changelog of patch 09/15 [Christoffer].
->>>   - Collect tags [Christoffer].
->>>
->>> v2:
->>>   - Split "Drop kvm_arch_create_memslot()" into three patches to move
->>>     minor functional changes to standalone patches [Janosch].
->>>   - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
->>>   - Collect an Acked-by and a Reviewed-by
+On 12/12/19 6:25 pm, Adrian Hunter wrote:
+> On 10/12/19 11:51 am, Faiz Abbas wrote:
+>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
 >>
->> Paolo, do you want me to rebase this to the latest kvm/queue?
+>> Some standard SD host controllers can support both external dma
+>> controllers as well as ADMA/SDMA in which the SD host controller
+>> acts as DMA master. TI's omap controller is the case as an example.
+>>
+>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+>> the host controller but does not have any support for external DMA
+>> controllers implemented using dmaengine, meaning that custom code is
+>> needed for any systems that use an external DMA controller with SDHCI.
+>>
+>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+>> 1. Map scatterlists before dmaengine_prep_slave_sg()
+>> 2. Use dma_async() functions inside of the send_command() path and call
+>> terminate_sync() in non-atomic context in case of an error.
+>>
+>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+...
+>>  {
+>> @@ -1379,12 +1562,19 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>>  	}
+>>  
+>>  	host->cmd = cmd;
+>> +	host->data_timeout = 0;
+>>  	if (sdhci_data_line_cmd(cmd)) {
+>>  		WARN_ON(host->data_cmd);
+>>  		host->data_cmd = cmd;
+>> +		sdhci_set_timeout(host, cmd);
+>>  	}
+>>  
+>> -	sdhci_prepare_data(host, cmd);
+>> +	if (cmd->data) {
+>> +		if (host->use_external_dma)
+>> +			sdhci_external_dma_prepare_data(host, cmd);
+>> +		else
+>> +			sdhci_prepare_data(host, cmd);
+>> +	}
 > 
-> Ping.
+> Please make the 3 changes above and the corresponding changes
+> sdhci_prepare_data into a separate patch i.e.
+
+Ok. And I agree with all your style change requests above this. Will fix
+in v4.
+
+>> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>>  	if (host->flags & SDHCI_REQ_USE_DMA) {
+>>  		struct mmc_data *data = mrq->data;
+>>  
+>> +		spin_unlock_irqrestore(&host->lock, flags);
+>> +
+>> +		/* Terminate and synchronize dma in case of an error */
+>> +		if (data && (mrq->cmd->error || data->error) &&
+>> +		    host->use_external_dma) {
+>> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
+>> +									  data);
+>> +			dmaengine_terminate_sync(chan);
+>> +		}
+>> +
+>> +		spin_lock_irqsave(&host->lock, flags);
+>> +
 > 
-> Applies cleanly on the current kvm/queue and nothing caught fire in
-> testing (though I only re-tested the series as a whole).
+> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
+> and put it back again to be consistent with the remaining code. Also put
+> host->use_external_dma as the first condition i.e.
+> 
+> 		if (host->use_external_dma && data &&
+> 		    (mrq->cmd->error || data->error)) {
+> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
+> 
+> 			host->mrqs_done[i] = NULL;
+> 			spin_unlock_irqrestore(&host->lock, flags);
+> 			dmaengine_terminate_sync(chan);
+> 			spin_lock_irqsave(&host->lock, flags);
+> 			sdhci_set_mrq_done(host, mrq);
+> 		}
+> 
+> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
+> 
+> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
+> {
+> 	int i;
+> 
+> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+> 		if (host->mrqs_done[i] == mrq) {
+> 			WARN_ON(1);
+> 			return;
+> 		}
+> 	}
+> 
+> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+> 		if (!host->mrqs_done[i]) {
+> 			host->mrqs_done[i] = mrq;
+> 			break;
+> 		}
+> 	}
+> 
+> 	WARN_ON(i >= SDHCI_MAX_MRQS);
+> }
+> 
+> sdhci_set_mrq_done() can be made in the refactoring patch.
+Haven't we already done the sdhci_set_mrq_done() part in
+__sdhci_finish_mrq()?
 
-Do you have the latest version somewhere on a branch? The version on the
-list no longer applies cleanly.  
+We are picking up an already "done" mrq, looking at whether it had any
+error and then sychronizing with external dma. Or at least that is my
+understanding.
 
+> 
+>>  		if (data && data->host_cookie == COOKIE_MAPPED) {
+>>  			if (host->bounce_buffer) {
+>>  				/*
+>> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>  		       mmc_hostname(mmc), host->version);
+>>  	}
+>>  
+>> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
+>> +	if (host->use_external_dma) {
+>> +		ret = sdhci_external_dma_init(host);
+>> +		if (ret == -EPROBE_DEFER)
+>> +			goto unreg;
+>> +
+>> +		/*
+>> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
+>> +		 * instead of external DMA devices.
+>> +		 */
+>> +		if (ret)
+>> +			sdhci_switch_external_dma(host, false);
+>> +	}
+>> +
+>> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
+>>  		host->flags |= SDHCI_USE_SDMA;
+>> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
+>> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
+>>  		DBG("Controller doesn't have SDMA capability\n");
+>> -	else
+>> +	} else if (host->use_external_dma) {
+>> +		/* Using dma-names to detect external dma capability */
+> 
+> What is this change for?  Do you expect for SDHCI_USE_SDMA and
+> SDHCI_USE_ADMA flags to be clear?
+
+Yes. Today the code enables SDMA by default (in the else part below
+this). I want it to not enable SDMA in the external dma case.
+
+Thanks,
+Faiz
