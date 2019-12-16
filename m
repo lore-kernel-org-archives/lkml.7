@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F178C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E095EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D10207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79AE24680
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521551;
-	bh=klIdzkzvFKDWvvLxvjoRckTHmAjYSgP6WS1tO3GbRjI=;
+	s=default; t=1576521555;
+	bh=7sFZgH0GHz1uqutiu9syMlI4HQ+LzFR3DWImJL7Q/4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIr0M8LByClZrvNyPO0iElYOOJ3eeHc5i+26MjChnRMmXQ16+qQK4dFrB+Me4aGIX
-	 8mvK/Pwb/HDRBy4dc47DpK+7GdPsICYQ0kqWtp/4rGxOdv+5/viPJFQ3bUdWvYjJDN
-	 bcBT2qNXi3g2GV3CBMXW+97Xp6hXE8tppuhDtWy0=
+	b=yvFjsw7NBc2NOXgNXeIDubNAIiuERq/Q6PcdAmNLvtJ3iBiW6lh/s7jkt059bATMj
+	 kvUBJUZ3bdc67x7n8PaLJ1qcfDTbiB5rwlotI+q8eqbvFPP5RHZtd9VbLwvwWsYPKm
+	 US4F8omO+rwxZXcUxtUm5B469e0ZIkLFte+QGL3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfLPSDy (ORCPT
+        id S1729570AbfLPSDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40884 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfLPSDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:51 -0500
+        id S1728949AbfLPSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4116207FF;
-        Mon, 16 Dec 2019 18:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7FA320700;
+        Mon, 16 Dec 2019 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519431;
-        bh=klIdzkzvFKDWvvLxvjoRckTHmAjYSgP6WS1tO3GbRjI=;
+        s=default; t=1576519426;
+        bh=7sFZgH0GHz1uqutiu9syMlI4HQ+LzFR3DWImJL7Q/4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9lzD2/VE5skrv5Rf5XcPY9l8Dq8lc0EmdstVAUZ292EKHE3TyugjVBHoY0z+hPnB
-         jmCoc1TeEI5aD60lkaHV0HIdCO24UxY0zfOz8z7woLOas3mgyuDTFXsAs/8g5CXimk
-         mPHqosOT3nbBAyrmprw9gwNcI5isHUW8U3dhyLmE=
+        b=mTgWUEwxGrWiAWEOV0XTaqO9E9eej/bk7RLtJRHeaCWXp5uSOkYec7oemWE9EEGeU
+         UYHE8C6+Pd3olJHOsu5gsFjMHOYfQ3AH/ALGHBqJ9EY5ETbJzRGuoifK5Y3+U4DUKu
+         5i5uUNoQbAaowIUuZWHhK7cWZbBZUAoRHVEljNOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Matti Aaltonen <matti.j.aaltonen@nokia.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.19 064/140] media: radio: wl1273: fix interrupt masking on release
-Date:   Mon, 16 Dec 2019 18:48:52 +0100
-Message-Id: <20191216174805.217646045@linuxfoundation.org>
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 062/140] s390/mm: properly clear _PAGE_NOEXEC bit when it is not supported
+Date:   Mon, 16 Dec 2019 18:48:50 +0100
+Message-Id: <20191216174804.746911582@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -62,40 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit 1091eb830627625dcf79958d99353c2391f41708 upstream.
+commit ab874f22d35a8058d8fdee5f13eb69d8867efeae upstream.
 
-If a process is interrupted while accessing the radio device and the
-core lock is contended, release() could return early and fail to update
-the interrupt mask.
+On older HW or under a hypervisor, w/o the instruction-execution-
+protection (IEP) facility, and also w/o EDAT-1, a translation-specification
+exception may be recognized when bit 55 of a pte is one (_PAGE_NOEXEC).
 
-Note that the return value of the v4l2 release file operation is
-ignored.
+The current code tries to prevent setting _PAGE_NOEXEC in such cases,
+by removing it within set_pte_at(). However, ptep_set_access_flags()
+will modify a pte directly, w/o using set_pte_at(). There is at least
+one scenario where this can result in an active pte with _PAGE_NOEXEC
+set, which would then lead to a panic due to a translation-specification
+exception (write to swapped out page):
 
-Fixes: 87d1a50ce451 ("[media] V4L2: WL1273 FM Radio: TI WL1273 FM radio driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.38
-Cc: Matti Aaltonen <matti.j.aaltonen@nokia.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+do_swap_page
+  pte = mk_pte (with _PAGE_NOEXEC bit)
+  set_pte_at   (will remove _PAGE_NOEXEC bit in page table, but keep it
+                in local variable pte)
+  vmf->orig_pte = pte (pte still contains _PAGE_NOEXEC bit)
+  do_wp_page
+    wp_page_reuse
+      entry = vmf->orig_pte (still with _PAGE_NOEXEC bit)
+      ptep_set_access_flags (writes entry with _PAGE_NOEXEC bit)
+
+Fix this by clearing _PAGE_NOEXEC already in mk_pte_phys(), where the
+pgprot value is applied, so that no pte with _PAGE_NOEXEC will ever be
+visible, if it is not supported. The check in set_pte_at() can then also
+be removed.
+
+Cc: <stable@vger.kernel.org> # 4.11+
+Fixes: 57d7f939e7bd ("s390: add no-execute support")
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/radio/radio-wl1273.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/s390/include/asm/pgtable.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/radio/radio-wl1273.c
-+++ b/drivers/media/radio/radio-wl1273.c
-@@ -1156,8 +1156,7 @@ static int wl1273_fm_fops_release(struct
- 	if (radio->rds_users > 0) {
- 		radio->rds_users--;
- 		if (radio->rds_users == 0) {
--			if (mutex_lock_interruptible(&core->lock))
--				return -EINTR;
-+			mutex_lock(&core->lock);
- 
- 			radio->irq_flags &= ~WL1273_RDS_EVENT;
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1150,8 +1150,6 @@ void gmap_pmdp_idte_global(struct mm_str
+ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+ 			      pte_t *ptep, pte_t entry)
+ {
+-	if (!MACHINE_HAS_NX)
+-		pte_val(entry) &= ~_PAGE_NOEXEC;
+ 	if (pte_present(entry))
+ 		pte_val(entry) &= ~_PAGE_UNUSED;
+ 	if (mm_has_pgste(mm))
+@@ -1168,6 +1166,8 @@ static inline pte_t mk_pte_phys(unsigned
+ {
+ 	pte_t __pte;
+ 	pte_val(__pte) = physpage + pgprot_val(pgprot);
++	if (!MACHINE_HAS_NX)
++		pte_val(__pte) &= ~_PAGE_NOEXEC;
+ 	return pte_mkyoung(__pte);
+ }
  
 
 
