@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B1FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1937C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9CC20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD44520726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519416;
-	bh=/L3ZLsmnkEAzY4IF0kVxdx6uxvNTHirXKdj/uKXUDC0=;
+	s=default; t=1576519420;
+	bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUNkNt175blX9/RNFg7N4T4DrfzcptJsACrDgYk/Ay9K2MFkJHk6VaOxB+clR1dPH
-	 tSz5IdhIcLggZUDV9yLUJv0V+w0UXzpN48ezWsW3OlxvHNXp/xbOIHlS+ycCn70w0l
-	 sGn0BPf8xySPaYhWz5U4erHfshGA8WsHBR5Q7u3A=
+	b=ynPAnHu3iQM+SxvuuA2GOYyvXjc4Ga62KU3YEZGLBLqa3JDzNnwtA/l3O4VflU7sr
+	 8YU2wECOcuM7sjdj5sRkxZz+2VOztNTUvL/feOcJUUItWjIEF8zerR8D4phYn5yyqC
+	 lOP+Bxp8PoeVlpmT9K/SwM1rycotQOVp6nkbAPBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfLPSDe (ORCPT
+        id S1729537AbfLPSDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40132 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbfLPSDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:25 -0500
+        id S1729522AbfLPSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015492072D;
-        Mon, 16 Dec 2019 18:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCB0520733;
+        Mon, 16 Dec 2019 18:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519404;
-        bh=/L3ZLsmnkEAzY4IF0kVxdx6uxvNTHirXKdj/uKXUDC0=;
+        s=default; t=1576519414;
+        bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUODlBDT+FNHgjHWBFo2++p/2qhIvxT6ilOEv//JsIR2YpDRde/Z6o2OJW27s/6G9
-         lco13sB0ZuKpaHt0PgdWwtS6MBx3ql26DVqImbtZoXY40OdTc4ojwoEmKjJonOp2L6
-         d437A57sj5ZMtSRoTBMo9MIjLESPOA8c56bBGqq8=
+        b=hVp5f+tKESyqbN94VLOemAZoDz5HtyvT3VEiDJ9niEfmIjK66BFTqG04U/f6XYFTs
+         fpxXAGipiqWQ1muzQSOSqxmfGeqpPTcgFgzZLRZUdvMJhIcXCR+SgKTVg4ypdbfTPP
+         S/Asag+b/cDDS94J2154Cxif8R3J3aWlNBkghcvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 015/140] xhci: Fix memory leak in xhci_add_in_port()
-Date:   Mon, 16 Dec 2019 18:48:03 +0100
-Message-Id: <20191216174754.580118549@linuxfoundation.org>
+        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 057/140] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
+Date:   Mon, 16 Dec 2019 18:48:45 +0100
+Message-Id: <20191216174803.777135697@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,91 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
 
-commit ce91f1a43b37463f517155bdfbd525eb43adbd1a upstream.
+commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
 
-When xHCI is part of Alpine or Titan Ridge Thunderbolt controller and
-the xHCI device is hot-removed as a result of unplugging a dock for
-example, the driver leaks memory it allocates for xhci->usb3_rhub.psi
-and xhci->usb2_rhub.psi in xhci_add_in_port() as reported by kmemleak:
+Check for existance of jack before tracing.
+NULL pointer dereference has been reported by KASAN while unloading
+machine driver (snd_soc_cnl_rt274).
 
-unreferenced object 0xffff922c24ef42f0 (size 16):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 16 bytes):
-    21 00 0c 00 12 00 dc 05 23 00 e0 01 00 00 00 00  !.......#.......
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
-unreferenced object 0xffff922c24ef3318 (size 8):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 8 bytes):
-    34 01 05 00 35 41 0a 00                          4...5A..
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
-
-Fix this by calling kfree() for the both psi objects in
-xhci_mem_cleanup().
-
-Cc: <stable@vger.kernel.org> # 4.4+
-Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-2-mathias.nyman@linux.intel.com
+Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mem.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/soc-jack.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1909,13 +1909,17 @@ no_bw:
- 	xhci->usb3_rhub.num_ports = 0;
- 	xhci->num_active_eps = 0;
- 	kfree(xhci->usb2_rhub.ports);
-+	kfree(xhci->usb2_rhub.psi);
- 	kfree(xhci->usb3_rhub.ports);
-+	kfree(xhci->usb3_rhub.psi);
- 	kfree(xhci->hw_ports);
- 	kfree(xhci->rh_bw);
- 	kfree(xhci->ext_caps);
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -100,10 +100,9 @@ void snd_soc_jack_report(struct snd_soc_
+ 	unsigned int sync = 0;
+ 	int enable;
  
- 	xhci->usb2_rhub.ports = NULL;
-+	xhci->usb2_rhub.psi = NULL;
- 	xhci->usb3_rhub.ports = NULL;
-+	xhci->usb3_rhub.psi = NULL;
- 	xhci->hw_ports = NULL;
- 	xhci->rh_bw = NULL;
- 	xhci->ext_caps = NULL;
+-	trace_snd_soc_jack_report(jack, mask, status);
+-
+ 	if (!jack)
+ 		return;
++	trace_snd_soc_jack_report(jack, mask, status);
+ 
+ 	dapm = &jack->card->dapm;
+ 
 
 
