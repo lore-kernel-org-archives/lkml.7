@@ -3,56 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7FEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A549207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF799206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfLPO54 (ORCPT
+        id S1728241AbfLPO6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:57:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 09:58:55 -0500
+Received: from muru.com ([72.249.23.125]:48456 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbfLPO54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:57:56 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629E2206E0;
-        Mon, 16 Dec 2019 14:57:55 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 09:57:53 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Prateek Sood <prsood@codeaurora.org>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        kaushalk@codeaurora.org
-Subject: Re: [PATCH v3] tracing: Fix lock inversion in
- trace_event_enable_tgid_record()
-Message-ID: <20191216095753.29300f1a@gandalf.local.home>
-In-Reply-To: <0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com>
-References: <20191209142314.4f3e04d6@gandalf.local.home>
-        <0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728008AbfLPO6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:58:55 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7D591810D;
+        Mon, 16 Dec 2019 14:59:33 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 06:58:51 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Message-ID: <20191216145851.GN35479@atomide.com>
+References: <20191215173817.47918-1-tony@atomide.com>
+ <20191215230331.645b9064@aktux>
+ <20191216030948.GL35479@atomide.com>
+ <20191216031637.GM35479@atomide.com>
+ <20191216130536.5935a587@kemnade.info>
+ <CAHCN7xJ-ndGxz0DYSwnuDi+4Hu349RTCzHjsspx2evMvLDtDqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xJ-ndGxz0DYSwnuDi+4Hu349RTCzHjsspx2evMvLDtDqA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 09:15:16 +0000
-Prateek Sood <prsood@codeaurora.org> wrote:
-
-> Hi Steve,
+* Adam Ford <aford173@gmail.com> [191216 13:58]:
+> On Mon, Dec 16, 2019 at 7:48 AM Andreas Kemnade <andreas@kemnade.info> wrote:
+> >
+> > On Sun, 15 Dec 2019 19:16:37 -0800
+> > Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > > * Tony Lindgren <tony@atomide.com> [191216 03:10]:
+> > > > Hi,
+> > > >
+> > > > * Andreas Kemnade <andreas@kemnade.info> [191215 22:04]:
+> > > > > On Sun, 15 Dec 2019 09:38:17 -0800
+> > > > > If I remember correctly this thing is critical to get the hwmod out of
+> > > > > reset but I need to examine that again:
+> > > >
+> > > > Thanks for testing, yes that's what I thought might cause it
+> > > > too, but nope :)
+> > > >
+> > > > We currently disable interrupts for some reason after
+> > > > the first read. That won't play with runtime PM autosuspend
+> > > > at all as we never enable them again until the device has
+> > > > idled. Can you try the following additional patch on top?
+> > >
+> > > And we should probably do the following too to make sure
+> > > the mode is initialized before we call runtime PM.
+> > >
+> > CM_FCLKEN1/IDLEST1_CORE seem to behave, reading also works
+> >
+> > With these two additional patches this deserves a
+> > Tested-By: Andreas Kemnade <andreas@kemnade.info> # gta04
 > 
-> Are you suggesting something like below?
+> Tony,
 > 
->
+> Any way you can do a V2 patch with the other stuff added?  Pulling the
+> patches from gmail doesn't work.  I think G-mail does something weird
+> because they don't apply cleanly, so I have to download the patches
+> from patchwork.  I should be able to test it today.
 
-Thanks for a reminder, I'll take a look.
+OK sent out v2 with the two change folded in. The ti,mode = "1w"
+still needs to be tested if anybody has a sensor to test with.
+I verified the battery ds2502 gets properly detected on droid4 battery,
+in "1w" mode, but so far no luck actually reading the nvmem with the
+newish w1_ds250x driver.
 
--- Steve
+Regards,
+
+Tony
