@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018C1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCB9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE805206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2D12082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521468;
-	bh=Xp4VK4g8z7ehO2iTZkFT1vXBhhdanHJk21j08fBiBs4=;
+	s=default; t=1576521482;
+	bh=5wPe1zfmgXAfL4GHwHfIRSHG7jlmHZY836We0VKOCag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWAsFLV6CXqQijQ8VqzYulFRGYlm0cx/aW77xHk4uVAL7BLHrghrs8Iy5vhaXODPS
-	 A3inQ/FTVFklcFgUCYAc0XTfqk7jn0JC/vVc7P0Xgmk9NpUXH+apZHy7XuW85HdOz/
-	 9dbrfq7Y0qjg/4fPgl7c2vQiKpPJG4Nh0PqFje0c=
+	b=iwWvVs7KO2u4shJRyh5Y3yYuhSehopfGZNBIsLEPJT2ItYegVduYD5aF9RHhlorpM
+	 azeweRG75SWDhShUxEqV8QKJqWSEQwIR/gcAtftRZs1Y+CHb1kCNZtQ8VT7o72bvBa
+	 vi+E11RVC5hay+eGrINgwumXhnxEylgVVTdIVVNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfLPSFu (ORCPT
+        id S1729767AbfLPSiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:38:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbfLPSFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:48 -0500
+        id S1727020AbfLPSFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC3AB2072D;
-        Mon, 16 Dec 2019 18:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF8D20717;
+        Mon, 16 Dec 2019 18:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519548;
-        bh=Xp4VK4g8z7ehO2iTZkFT1vXBhhdanHJk21j08fBiBs4=;
+        s=default; t=1576519531;
+        bh=5wPe1zfmgXAfL4GHwHfIRSHG7jlmHZY836We0VKOCag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v8KFpcIXLp1nO+z5ITuiTgxeIRYM++tglrzlnX0aCdG5kdjsJNgBylCCEHW+5xdg4
-         QU0z+v7oqCmFk73tLcvFop8TfxjIGPxJSEYWJa7gqSDTuPP21UHbdbXon5JFvx5cbd
-         sUQ4ZxgLRC+IuXJGQ3LlBzS52Q2Q7HN5ReWZ2igM=
+        b=VBNzhT2Qj8x7+BPpIEIuB+YzUI8gfCIb4knZbcMeu62RZPVdt6u2/l3WAeDTNPc/J
+         IlOQek7t7bX6siJcb9pdbyCa1C0K/LVUZGWX9zWjQxLeQP7eHPIoljWk8Y98B3DbP3
+         Lr2Pw643Rf/CXjOUYK231lThMiWCYWLtKs6EWPJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/140] scsi: lpfc: Correct topology type reporting on G7 adapters
-Date:   Mon, 16 Dec 2019 18:49:39 +0100
-Message-Id: <20191216174816.975135592@linuxfoundation.org>
+Subject: [PATCH 4.19 105/140] xhci: make sure interrupts are restored to correct state
+Date:   Mon, 16 Dec 2019 18:49:33 +0100
+Message-Id: <20191216174815.585823609@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,58 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-[ Upstream commit 76558b25733140a0c6bd53ea8af04b2811c92ec3 ]
+[ Upstream commit bd82873f23c9a6ad834348f8b83f3b6a5bca2c65 ]
 
-Driver missed classifying the chip type for G7 when reporting supported
-topologies. This resulted in loop being shown as supported on FC links that
-are not supported per the standard.
+spin_unlock_irqrestore() might be called with stale flags after
+reading port status, possibly restoring interrupts to a incorrect
+state.
 
-Add the chip classifications to the topology checks in the driver.
+If a usb2 port just finished resuming while the port status is read
+the spin lock will be temporary released and re-acquired in a separate
+function. The flags parameter is passed as value instead of a pointer,
+not updating flags properly before the final spin_unlock_irqrestore()
+is called.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: <stable@vger.kernel.org> # v3.12+
+Fixes: 8b3d45705e54 ("usb: Fix xHCI host issues on remote wakeup.")
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191211142007.8847-7-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_attr.c | 5 +++--
- drivers/scsi/lpfc/lpfc_mbox.c | 6 +++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/usb/host/xhci-hub.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index 1e9002138d31c..fe084d47ed9e5 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -3849,8 +3849,9 @@ lpfc_topology_store(struct device *dev, struct device_attribute *attr,
- 				val);
- 			return -EINVAL;
- 		}
--		if (phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC &&
--			val == 4) {
-+		if ((phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC ||
-+		     phba->pcidev->device == PCI_DEVICE_ID_LANCER_G7_FC) &&
-+		    val == 4) {
- 			lpfc_printf_vlog(vport, KERN_ERR, LOG_INIT,
- 				"3114 Loop mode not supported\n");
- 			return -EINVAL;
-diff --git a/drivers/scsi/lpfc/lpfc_mbox.c b/drivers/scsi/lpfc/lpfc_mbox.c
-index deb094fdbb793..e6bf5e8bc7670 100644
---- a/drivers/scsi/lpfc/lpfc_mbox.c
-+++ b/drivers/scsi/lpfc/lpfc_mbox.c
-@@ -513,9 +513,9 @@ lpfc_init_link(struct lpfc_hba * phba,
- 		break;
- 	}
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 333f9202ec8be..02843c16f9c78 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -831,7 +831,7 @@ static u32 xhci_get_ext_port_status(u32 raw_port_status, u32 port_li)
+ static u32 xhci_get_port_status(struct usb_hcd *hcd,
+ 		struct xhci_bus_state *bus_state,
+ 	u16 wIndex, u32 raw_port_status,
+-		unsigned long flags)
++		unsigned long *flags)
+ 	__releases(&xhci->lock)
+ 	__acquires(&xhci->lock)
+ {
+@@ -917,12 +917,12 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
+ 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
+ 			xhci_set_link_state(xhci, port, XDEV_U0);
  
--	if (phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC &&
--		mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
--		/* Failover is not tried for Lancer G6 */
-+	if ((phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC ||
-+	     phba->pcidev->device == PCI_DEVICE_ID_LANCER_G7_FC) &&
-+	    mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
- 		mb->un.varInitLnk.link_flags = FLAGS_TOPOLOGY_MODE_PT_PT;
- 		phba->cfg_topology = FLAGS_TOPOLOGY_MODE_PT_PT;
- 	}
+-			spin_unlock_irqrestore(&xhci->lock, flags);
++			spin_unlock_irqrestore(&xhci->lock, *flags);
+ 			time_left = wait_for_completion_timeout(
+ 					&bus_state->rexit_done[wIndex],
+ 					msecs_to_jiffies(
+ 						XHCI_MAX_REXIT_TIMEOUT_MS));
+-			spin_lock_irqsave(&xhci->lock, flags);
++			spin_lock_irqsave(&xhci->lock, *flags);
+ 
+ 			if (time_left) {
+ 				slot_id = xhci_find_slot_id_by_port(hcd,
+@@ -1076,7 +1076,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		}
+ 		trace_xhci_get_port_status(wIndex, temp);
+ 		status = xhci_get_port_status(hcd, bus_state, wIndex, temp,
+-					      flags);
++					      &flags);
+ 		if (status == 0xffffffff)
+ 			goto error;
+ 
 -- 
 2.20.1
 
