@@ -2,54 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD69C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08889C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62A620684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B1020684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521438;
-	bh=jA44QCIhfUGgFcdIpEBSy+fLut9ArALwt49l6lBca3o=;
+	s=default; t=1576521442;
+	bh=HgIBv7vYljcoymvSM8gL33YyVXFJK4cPOimdyTJAuTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LdQIdLLkP5WbryQnLS/1cXzq3ihRxdqNo0FLhnHHh2LRD3ZL0MjwAjAqEwu7u03j7
-	 0Qb3+w2AzvqQQSmTSpnqkhUG8+lRX6iTmZ0zWyG/b8onAoAo9Uzzmi4N9SzGjSDH7V
-	 l+tMMiO/Ovc6yeK45QBGLDVNb0Brj+dFxQiX7Fg0=
+	b=FSqKeEm8ajyGwo7zn7D6oV4McIx/0h3krbM2l50MWPs6nWU391/LWskwoe4b8goUC
+	 m4dMwW8MYOyFUTyhdT9xfqaoOMo1uBYikxs36HBsgIfHz64N5+vwBnDs8ZvaILZn36
+	 yxeUgHztvjp1z5tTXLchzPkKvyA6ul0EhqezzknU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfLPShR (ORCPT
+        id S1729940AbfLPSGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:37:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729700AbfLPSG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:27 -0500
+        id S1729947AbfLPSGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883552072B;
-        Mon, 16 Dec 2019 18:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 943A0206E0;
+        Mon, 16 Dec 2019 18:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519587;
-        bh=jA44QCIhfUGgFcdIpEBSy+fLut9ArALwt49l6lBca3o=;
+        s=default; t=1576519575;
+        bh=HgIBv7vYljcoymvSM8gL33YyVXFJK4cPOimdyTJAuTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKNxZ3jLFjuOE3aQdgQzdgD3mGtTeYZXYqdIBVRGlslM8BdZoBpu2z0HpzkBglbd/
-         JxM4rsdXpvl4BJmgJfNMBmbMqNBlEVu2mODFUQH1g9je0mGNTx/JStFSrpBIf4REOD
-         RX3hQ9xbbf3cX5NBTsZyepYcTZhiILK5lrVFfKww=
+        b=thPk1oP2QCO6hiAwf3Kv9RVR6tIZklqegqXyRqbRBSvz1uSZygAf7wtGOschKRYWf
+         1sT3FH7SRNwVjcc6UsciKT43sW6BH/aMKkUNcrNX8NGzy8rBk9nsEwWCBD5oLvNTA/
+         Bfiidn276ih5etG7q5vtbjJ03uH6m2i0+wk1/gG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/140] media: vimc: fix component match compare
-Date:   Mon, 16 Dec 2019 18:49:54 +0100
-Message-Id: <20191216174825.133286225@linuxfoundation.org>
+Subject: [PATCH 4.19 121/140] scsi: hisi_sas: Reject setting programmed minimum linkrate > 1.5G
+Date:   Mon, 16 Dec 2019 18:49:49 +0100
+Message-Id: <20191216174822.583600427@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -62,59 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit ee1c71a8e1456ab53fe667281d855849edf26a4d ]
+[ Upstream commit eb44e4d7b5a3090f0114927f42ae575c29664a09 ]
 
-If the system has other devices being registered in the component
-framework, the compare function will be called with a device that
-doesn't belong to vimc.
-This device is not necessarily a platform_device, nor have a
-platform_data (which causes a NULL pointer dereference error) and if it
-does have a pdata, it is not necessarily type of struct vimc_platform_data.
-So casting to any of these types is wrong.
+The SAS controller cannot support a programmed minimum linkrate of > 1.5G
+(it will always negotiate to 1.5G at least), so just reject it.
 
-Instead of expecting a given pdev with a given pdata, just expect for
-the device it self. vimc-core is the one who creates them, we know in
-advance exactly which object to expect in the match.
+This solves a strange situation where the PHY negotiated linkrate may be
+less than the programmed minimum linkrate.
 
-Fixes: 4a29b7090749 ("[media] vimc: Subdevices as modules")
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Tested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-core.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index 27db8835c2410..8548fa93bcf65 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -243,10 +243,7 @@ static void vimc_comp_unbind(struct device *master)
- 
- static int vimc_comp_compare(struct device *comp, void *data)
- {
--	const struct platform_device *pdev = to_platform_device(comp);
--	const char *name = data;
--
--	return !strcmp(pdev->dev.platform_data, name);
-+	return comp == data;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 0ad8875c30e8e..f35c56217694b 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -886,7 +886,7 @@ static int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags)
+ 	return hisi_sas_task_exec(task, gfp_flags, 0, NULL);
  }
  
- static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
-@@ -276,7 +273,7 @@ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
- 		}
+-static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
++static int hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 			struct sas_phy_linkrates *r)
+ {
+ 	struct sas_phy_linkrates _r;
+@@ -895,6 +895,9 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
+ 	enum sas_linkrate min, max;
  
- 		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
--				    (void *)vimc->pipe_cfg->ents[i].name);
-+				    &vimc->subdevs[i]->dev);
- 	}
++	if (r->minimum_linkrate > SAS_LINK_RATE_1_5_GBPS)
++		return -EINVAL;
++
+ 	if (r->maximum_linkrate == SAS_LINK_RATE_UNKNOWN) {
+ 		max = sas_phy->phy->maximum_linkrate;
+ 		min = r->minimum_linkrate;
+@@ -902,7 +905,7 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 		max = r->maximum_linkrate;
+ 		min = sas_phy->phy->minimum_linkrate;
+ 	} else
+-		return;
++		return -EINVAL;
  
- 	return match;
+ 	_r.maximum_linkrate = max;
+ 	_r.minimum_linkrate = min;
+@@ -914,6 +917,8 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 	msleep(100);
+ 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
+ 	hisi_hba->hw->phy_start(hisi_hba, phy_no);
++
++	return 0;
+ }
+ 
+ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
+@@ -939,8 +944,7 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
+ 		break;
+ 
+ 	case PHY_FUNC_SET_LINK_RATE:
+-		hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
+-		break;
++		return hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
+ 	case PHY_FUNC_GET_EVENTS:
+ 		if (hisi_hba->hw->get_events) {
+ 			hisi_hba->hw->get_events(hisi_hba, phy_no);
 -- 
 2.20.1
 
