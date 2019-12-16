@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA25C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36B8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62331206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D58206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521024;
-	bh=/oYdgNYhk8Lv5klb/fdBxyt09HNKyYtpdnKzGykVzPw=;
+	s=default; t=1576521027;
+	bh=AXCS24bMiz5Bb0xzUxIt8oDfRwDtdzooXWjmdPF5MMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qni2tOD0wtR+DY0y2N6K2e7md15T2pNuX43Kb5aWsL/leOU4xHivjTE0uXKftRwQR
-	 +pylBuOnICNRZD5geEgi0XhULqo+WcYdmJmTHi1+faUubffPzzeoK1sAEc9hFF1jvr
-	 /dfQsxtTpv3rppJYHVnvLtH2MGmixxMb/gJ/h5eY=
+	b=G4DMB785MpYH44CictOfuzojq4hJwXKnEf9sGYOg6OOUyledLHVKal5ym/eePpZIi
+	 9ITLLoYBhpx7/RNE9tQ0eX6Z+/L409Jxpn1l6q98xiqkzvzbevd3sQe6H+/uIRggg3
+	 T7nLZ9kqrZKMbkafG+/nQ904dU5dyQ7ltOUKMAc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbfLPSaX (ORCPT
+        id S1731017AbfLPSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:30:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731016AbfLPSMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 13:12:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730993AbfLPSMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D1DC2166E;
-        Mon, 16 Dec 2019 18:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9E5F21582;
+        Mon, 16 Dec 2019 18:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519971;
-        bh=/oYdgNYhk8Lv5klb/fdBxyt09HNKyYtpdnKzGykVzPw=;
+        s=default; t=1576519964;
+        bh=AXCS24bMiz5Bb0xzUxIt8oDfRwDtdzooXWjmdPF5MMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zw20mGB1S95MlXSQAE1YBEHaY/LIIYP8Si5T/R8/bHblYtRVHcjJuQHj7/BgC9Rwc
-         7eywBcbSRYAWmcgJLgjZir6L9iT6GypPC1+EO9+yW4DhIlVH1lHcOLCWKcLDSIS3Ko
-         LdjyaAdPw0d0pvPRGnbvuT6RA94XZxr19o6KxrAY=
+        b=YgCAg100FfxCvyj7YyG764Zerannu28cnfBUnMTbpPg6odq3Xl0WwNjyhubuibtOS
+         JbgGTAWS0ONsIlV7oq40KmUSSG1yi1kK2q5oDxbRVYoQr0GiP35cyCseZ2MNi/y0aU
+         8FyADy+tEtcb6StD/KgE67y3VFijfq/fY0iuWcCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 144/180] scsi: qla2xxx: Really fix qla2xxx_eh_abort()
-Date:   Mon, 16 Dec 2019 18:49:44 +0100
-Message-Id: <20191216174843.370017056@linuxfoundation.org>
+Subject: [PATCH 5.3 141/180] scsi: qla2xxx: Fix NVMe port discovery after a short device port loss
+Date:   Mon, 16 Dec 2019 18:49:41 +0100
+Message-Id: <20191216174843.037897728@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,86 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit 8dd9593cc07ad7d999bef81b06789ef873a94881 ]
+[ Upstream commit 9e744591ef1b8df27c25c68dac858dada8688f77 ]
 
-I'm not sure how this happened but the patch that was intended to fix abort
-handling was incomplete. This patch fixes that patch as follows:
+The following sequence of event leads to NVME port disappearing:
 
- - If aborting the SCSI command failed, wait until the SCSI command
-   completes.
+    - device port shut
+    - nvme_fc_unregister_remoteport
+    - device port online
+    - remote port delete completes
+    - relogin is scheduled
+    - "post gidpn" message appears due to rscn generation # mismatch
 
- - Return SUCCESS instead of FAILED if an abort attempt races with SCSI
-   command completion.
+In short, if a device comes back online sooner than an unregister
+completion, a mismatch in rscn generation number occurs, which is not
+handled correctly during device relogin. Fix this by starting with a redo
+of GNL.
 
- - Since qla2xxx_eh_abort() increments the sp reference count by calling
-   sp_get(), decrement the sp reference count before returning.
+When ql2xextended_error_logging is enabled, the re-plugged device's
+discovery stops with the following messages printed:
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Fixes: 219d27d7147e ("scsi: qla2xxx: Fix race conditions in the code for aborting SCSI commands")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+--8<--
+qla2xxx [0000:41:00.0]-480d:3: Relogin scheduled.
+qla2xxx [0000:41:00.0]-4800:3: DPC handler sleeping.
+qla2xxx [0000:41:00.0]-2902:3: qla24xx_handle_relogin_event 21:00:00:24:ff:17:9e:91 DS 0 LS 7 P 0 del 2 cnfl
+   (null) rscn 1|2 login 1|2 fl 1
+qla2xxx [0000:41:00.0]-28e9:3: qla24xx_handle_relogin_event 1666 21:00:00:24:ff:17:9e:91 post gidpn
+qla2xxx [0000:41:00.0]-480e:3: Relogin end.
+--8<--
+
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/scsi/qla2xxx/qla_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 82f6ae4dcfc0b..0f51387ceebdf 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1274,6 +1274,7 @@ static int
- qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- {
- 	scsi_qla_host_t *vha = shost_priv(cmd->device->host);
-+	DECLARE_COMPLETION_ONSTACK(comp);
- 	srb_t *sp;
- 	int ret;
- 	unsigned int id;
-@@ -1309,6 +1310,7 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 		return SUCCESS;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index a75a40b14140a..2c617a34ae1e7 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1712,9 +1712,9 @@ void qla24xx_handle_relogin_event(scsi_qla_host_t *vha,
  	}
  
-+	/* Get a reference to the sp and drop the lock. */
- 	if (sp_get(sp)){
- 		/* ref_count is already 0 */
- 		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
-@@ -1336,6 +1338,23 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 		sp->done(sp, DID_ABORT << 16);
- 		ret = SUCCESS;
- 		break;
-+	case QLA_FUNCTION_PARAMETER_ERROR: {
-+		/* Wait for the command completion. */
-+		uint32_t ratov = ha->r_a_tov/10;
-+		uint32_t ratov_j = msecs_to_jiffies(4 * ratov * 1000);
-+
-+		WARN_ON_ONCE(sp->comp);
-+		sp->comp = &comp;
-+		if (!wait_for_completion_timeout(&comp, ratov_j)) {
-+			ql_dbg(ql_dbg_taskm, vha, 0xffff,
-+			    "%s: Abort wait timer (4 * R_A_TOV[%d]) expired\n",
-+			    __func__, ha->r_a_tov);
-+			ret = FAILED;
-+		} else {
-+			ret = SUCCESS;
-+		}
-+		break;
-+	}
- 	default:
- 		/*
- 		 * Either abort failed or abort and completion raced. Let
-@@ -1345,6 +1364,8 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 		break;
+ 	if (fcport->last_rscn_gen != fcport->rscn_gen) {
+-		ql_dbg(ql_dbg_disc, vha, 0x20e9, "%s %d %8phC post gidpn\n",
++		ql_dbg(ql_dbg_disc, vha, 0x20e9, "%s %d %8phC post gnl\n",
+ 		    __func__, __LINE__, fcport->port_name);
+-
++		qla24xx_post_gnl_work(vha, fcport);
+ 		return;
  	}
  
-+	sp->comp = NULL;
-+	atomic_dec(&sp->ref_count);
- 	ql_log(ql_log_info, vha, 0x801c,
- 	    "Abort command issued nexus=%ld:%d:%llu -- %x.\n",
- 	    vha->host_no, id, lun, ret);
 -- 
 2.20.1
 
