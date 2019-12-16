@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8547CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B09C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589252166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFD620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520197;
-	bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
+	s=default; t=1576520200;
+	bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPntdV2bZPww6fVcImliulUvBE74T3Y3NORpWxG9fiUlkTY0H1sKK9YiFqonjyPTW
-	 McNppPRapuktSjYDWwIAk7Gb0HiFAAV2qNyEhscgwcNEYpGIpapOHPg2pmSzJygOWg
-	 XiBoiwAi6TK6VKW4p3Y4pLKzkzMOk5Iag/DeX7X4=
+	b=NouW8gtF5g22xHuYabWVH5paDdMT/+Itqs3QKdZux1jtwzTnm0v69Y6nqNUVrHSk1
+	 /+KRYOO/KRpm+MktMpQHPYCepqEgtOJOtAi9HO0Eb2uI/XeP9kwj0vFJhHxhQYk4AO
+	 qAvlGrtW942ZIccSoivAEltlGzYDibE52VyPiKqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfLPSQg (ORCPT
+        id S1731577AbfLPSQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:16:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731555AbfLPSQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:34 -0500
+        id S1731565AbfLPSQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DCD7207FF;
-        Mon, 16 Dec 2019 18:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B35720717;
+        Mon, 16 Dec 2019 18:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520193;
-        bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
+        s=default; t=1576520195;
+        bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LguArqz6HD8EGQz3FAoYLkfGBOy63+YwaGeDOWnza9H/CoBjGMRp1p1dvCpM/hU7p
-         Ib7JhBcgatppi/UQET7mOAH1dOz4GIZnJCkupXOnQhlowG1okh/uysUD92GRUbu0KV
-         5BwvtYdndwBDgeK8N+SNhY54DesyvvW1h8/d8094=
+        b=u5VK1s4Q21uAxr++srpoDvaQesU8kHpbrsuJPKk3QSBHQsBCem+dVtTWeaZ677oCS
+         07GOofPmCNd/k/JwCcATASNifkFIzBkh5oqBuoU4oE43l0AA5m2Lz2UjJQ1EyW7g7h
+         JkwyJHbz2w/JkQhBIsQyj3PVvHYqsIbc1SjP5tdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.4 055/177] mtd: spear_smi: Fix Write Burst mode
-Date:   Mon, 16 Dec 2019 18:48:31 +0100
-Message-Id: <20191216174830.814576815@linuxfoundation.org>
+        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 056/177] mtd: rawnand: Change calculating of position page containing BBM
+Date:   Mon, 16 Dec 2019 18:48:32 +0100
+Message-Id: <20191216174830.950339631@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,107 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Piotr Sroka <piotrs@cadence.com>
 
-commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
+commit a3c4c2339f8948b0f578e938970303a7372e60c0 upstream.
 
-Any write with either dd or flashcp to a device driven by the
-spear_smi.c driver will pass through the spear_smi_cpy_toio()
-function. This function will get called for chunks of up to 256 bytes.
-If the amount of data is smaller, we may have a problem if the data
-length is not 4-byte aligned. In this situation, the kernel panics
-during the memcpy:
+Change calculating of position page containing BBM
 
-    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
-    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
-    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
-    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
-    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
-    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
-    [...]
-    PC is at memcpy+0xcc/0x330
+If none of BBM flags are set then function nand_bbm_get_next_page
+reports EINVAL. It causes that BBM is not read at all during scanning
+factory bad blocks. The result is that the BBT table is build without
+checking factory BBM at all. For Micron flash memories none of these
+flags are set if page size is different than 2048 bytes.
 
-The above error occurs because the implementation of memcpy_toio()
-tries to optimize the number of I/O by writing 4 bytes at a time as
-much as possible, until there are less than 4 bytes left and then
-switches to word or byte writes.
+Address this regression by:
+- adding NAND_BBM_FIRSTPAGE chip flag without any condition. It solves
+  issue only for Micron devices.
+- changing the nand_bbm_get_next_page_function. It will return 0
+  if no of BBM flag is set and page parameter is 0. After that modification
+  way of discovering factory bad blocks will work similar as in kernel
+  version 5.1.
 
-Unfortunately, the specification states about the Write Burst mode:
-
-        "the next AHB Write request should point to the next
-	incremented address and should have the same size (byte,
-	half-word or word)"
-
-This means ARM architecture implementation of memcpy_toio() cannot
-reliably be used blindly here. Workaround this situation by update the
-write path to stick to byte access when the burst length is not
-multiple of 4.
-
-Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>
 Cc: stable@vger.kernel.org
+Fixes: f90da7818b14 (mtd: rawnand: Support bad block markers in first, second or last page)
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/raw/nand_base.c   |    8 ++++++--
+ drivers/mtd/nand/raw/nand_micron.c |    4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/devices/spear_smi.c
-+++ b/drivers/mtd/devices/spear_smi.c
-@@ -592,6 +592,26 @@ static int spear_mtd_read(struct mtd_inf
- 	return 0;
- }
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -292,12 +292,16 @@ int nand_bbm_get_next_page(struct nand_c
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	int last_page = ((mtd->erasesize - mtd->writesize) >>
+ 			 chip->page_shift) & chip->pagemask;
++	unsigned int bbm_flags = NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE
++		| NAND_BBM_LASTPAGE;
  
-+/*
-+ * The purpose of this function is to ensure a memcpy_toio() with byte writes
-+ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
-+ * which also does single byte writes but cannot be used here as this is just an
-+ * implementation detail and not part of the API. Not mentioning the comment
-+ * stating that _memcpy_toio() should be optimized.
-+ */
-+static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
-+				    const void *src, size_t len)
-+{
-+	const unsigned char *from = src;
++	if (page == 0 && !(chip->options & bbm_flags))
++		return 0;
+ 	if (page == 0 && chip->options & NAND_BBM_FIRSTPAGE)
+ 		return 0;
+-	else if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
++	if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
+ 		return 1;
+-	else if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
++	if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
+ 		return last_page;
+ 
+ 	return -EINVAL;
+--- a/drivers/mtd/nand/raw/nand_micron.c
++++ b/drivers/mtd/nand/raw/nand_micron.c
+@@ -446,8 +446,10 @@ static int micron_nand_init(struct nand_
+ 	if (ret)
+ 		goto err_free_manuf_data;
+ 
++	chip->options |= NAND_BBM_FIRSTPAGE;
 +
-+	while (len) {
-+		len--;
-+		writeb(*from, dest);
-+		from++;
-+		dest++;
-+	}
-+}
-+
- static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
- 		void __iomem *dest, const void *src, size_t len)
- {
-@@ -614,7 +634,23 @@ static inline int spear_smi_cpy_toio(str
- 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
- 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
+ 	if (mtd->writesize == 2048)
+-		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
++		chip->options |= NAND_BBM_SECONDPAGE;
  
--	memcpy_toio(dest, src, len);
-+	/*
-+	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
-+	 * - incremental
-+	 * - of the same size
-+	 * The ARM implementation of memcpy_toio() will optimize the number of
-+	 * I/O by using as much 4-byte writes as possible, surrounded by
-+	 * 2-byte/1-byte access if:
-+	 * - the destination is not 4-byte aligned
-+	 * - the length is not a multiple of 4-byte.
-+	 * Avoid this alternance of write access size by using our own 'byte
-+	 * access' helper if at least one of the two conditions above is true.
-+	 */
-+	if (IS_ALIGNED(len, sizeof(u32)) &&
-+	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
-+		memcpy_toio(dest, src, len);
-+	else
-+		spear_smi_memcpy_toio_b(dest, src, len);
- 
- 	writel(ctrlreg1, dev->io_base + SMI_CR1);
+ 	ondie = micron_supports_on_die_ecc(chip);
  
 
 
