@@ -2,224 +2,145 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A74C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9DEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0832146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uj7+qkol"
+	by mail.kernel.org (Postfix) with ESMTP id 08D772146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfLPUBD (ORCPT
+        id S1727499AbfLPUDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:01:03 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40683 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbfLPUBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576526462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xa61T8y0JraKLOEIfs1XX0hxvV12aD4G8wd1zxbgSRI=;
-        b=Uj7+qkol6uM3K/FMY2c8EFJ2YPPergVItRW4zz0FijQOhbkx/EHF85vO3nm0vZX9RKONzH
-        CHP+SI5nbeMzAs8tRkv75RXoP1SGMn/CDWH5Y+x4kS0GgEICTBHkIHzR92ceqCKtEDaMI1
-        5X/WpbrzxQDDRwQn28wHv+2J4eGvY8c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-MBiXdzYWMd63jkwrNbXKiA-1; Mon, 16 Dec 2019 15:01:00 -0500
-X-MC-Unique: MBiXdzYWMd63jkwrNbXKiA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04CBA91230;
-        Mon, 16 Dec 2019 20:00:59 +0000 (UTC)
-Received: from localhost (ovpn-116-90.gru2.redhat.com [10.97.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E64260933;
-        Mon, 16 Dec 2019 20:00:56 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 19:27:02 -0300
-From:   Eduardo Habkost <ehabkost@redhat.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, konrad.wilk@oracle.com
-Subject: Re: [PATCH 1/3] KVM: x86: fix reporting of AMD speculation bug CPUID
- leaf
-Message-ID: <20191213222702.GH498046@habkost.net>
-References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
- <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
- <20191130232731.GA9495@sol.localdomain>
+        Mon, 16 Dec 2019 15:03:16 -0500
+Received: from mga03.intel.com ([134.134.136.65]:59187 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726907AbfLPUDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:03:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 12:03:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
+   d="scan'208";a="365130694"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 16 Dec 2019 12:03:09 -0800
+Received: from [10.251.95.214] (abudanko-mobl.ccr.corp.intel.com [10.251.95.214])
+        by linux.intel.com (Postfix) with ESMTP id 50EA5580342;
+        Mon, 16 Dec 2019 12:03:01 -0800 (PST)
+Subject: [PATCH v3 4/7] drm/i915/perf: open access for CAP_SYS_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org,
+        Brendan Gregg <bgregg@netflix.com>, songliubraving@fb.com,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <bc5b2a0d-a185-91b6-5deb-a4b6e1dc3d3e@linux.intel.com>
+Date:   Mon, 16 Dec 2019 23:03:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191130232731.GA9495@sol.localdomain>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 03:27:31PM -0800, Eric Biggers wrote:
-> Hi Paolo,
-> 
-> On Wed, Aug 21, 2019 at 10:26:40AM +0200, Paolo Bonzini wrote:
-> > The AMD_* bits have to be set from the vendor-independent
-> > feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
-> > about the vendor and they should be set on Intel processors as well.
-> > On top of this, SSBD, STIBP and AMD_SSB_NO bit were not set, and
-> > VIRT_SSBD does not have to be added manually because it is a
-> > cpufeature that comes directly from the host's CPUID bit.
-> > 
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c | 21 +++++++++++++--------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index 22c2720cd948..43caeb6059b9 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -729,18 +729,23 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
-> >  			g_phys_as = phys_as;
-> >  		entry->eax = g_phys_as | (virt_as << 8);
-> >  		entry->edx = 0;
-> > +		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-> > +		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
-> >  		/*
-> > -		 * IBRS, IBPB and VIRT_SSBD aren't necessarily present in
-> > -		 * hardware cpuid
-> > +		 * AMD has separate bits for each SPEC_CTRL bit.
-> > +		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-> > +		 * record that in cpufeatures so use them.
-> >  		 */
-> > -		if (boot_cpu_has(X86_FEATURE_AMD_IBPB))
-> > +		if (boot_cpu_has(X86_FEATURE_IBPB))
-> >  			entry->ebx |= F(AMD_IBPB);
-> > -		if (boot_cpu_has(X86_FEATURE_AMD_IBRS))
-> > +		if (boot_cpu_has(X86_FEATURE_IBRS))
-> >  			entry->ebx |= F(AMD_IBRS);
-> > -		if (boot_cpu_has(X86_FEATURE_VIRT_SSBD))
-> > -			entry->ebx |= F(VIRT_SSBD);
-> > -		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-> > -		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
-> > +		if (boot_cpu_has(X86_FEATURE_STIBP))
-> > +			entry->ebx |= F(AMD_STIBP);
-> > +		if (boot_cpu_has(X86_FEATURE_SSBD))
-> > +			entry->ebx |= F(AMD_SSBD);
-> > +		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-> > +			entry->ebx |= F(AMD_SSB_NO);
-> >  		/*
-> >  		 * The preference is to use SPEC CTRL MSR instead of the
-> >  		 * VIRT_SPEC MSR.
-> 
-> This patch started causing a warning about an unchecked MSR access, when
-> starting a VM.
-> 
-> Processor is: "AMD Ryzen Threadripper 1950X 16-Core Processor"
-> 
-> The warning appears both in the host and guest kernel logs.
-> 
-> On the host:
-> 
-> 	[   12.121802] unchecked MSR access error: RDMSR from 0x48 at rIP: 0xffffffff8b049765 (svm_vcpu_run+0x6a5/0x720)
-> 	[   12.121806] Call Trace:
-> 	[   12.121812]  ? kvm_arch_vcpu_ioctl_run+0x902/0x1b70
-> 	[   12.121814]  ? kvm_vm_ioctl_irq_line+0x1e/0x30
-> 	[   12.121817]  ? kvm_vcpu_ioctl+0x21e/0x560
-> 	[   12.121821]  ? vfs_writev+0xc0/0xf0
-> 	[   12.121824]  ? do_vfs_ioctl+0x41d/0x690
-> 	[   12.121826]  ? ksys_ioctl+0x59/0x90
-> 	[   12.121827]  ? __x64_sys_ioctl+0x11/0x20
-> 	[   12.121828]  ? do_syscall_64+0x43/0x130
-> 	[   12.121832]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-For reference, this is:
+Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged processes.
+For backward compatibility reasons access to i915_perf subsystem remains open
+for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+i915_perf monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
 
-	/*
-	 * We do not use IBRS in the kernel. If this vCPU has used the
-	 * SPEC_CTRL MSR it may have left it on; save the value and
-	 * turn it off. This is much more efficient than blindly adding
-	 * it to the atomic save/restore list. Especially as the former
-	 * (Saving guest MSRs on vmexit) doesn't even exist in KVM.
-	 *
-	 * For non-nested case:
-	 * If the L01 MSR bitmap does not intercept the MSR, then we need to
-	 * save it.
-	 *
-	 * For nested case:
-	 * If the L02 MSR bitmap does not intercept the MSR, then we need to
-	 * save it.
-	 */
-	if (unlikely(!msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL)))
-		svm->spec_ctrl = native_read_msr(MSR_IA32_SPEC_CTRL);
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-This code looks suspicious.  I don't see anything that would
-prevent the kernel from trying to read the MSR on CPUs that don't
-have X86_FEATURE_AMD_SSBD (CPUID[0x80000008].EBX[24]) set.
-
-Maybe it's a preexisting bug being triggered by the failing WRMSR
-below:
-
-> 
-> On the guest:
-> 
-> 	[    0.799090] unchecked MSR access error: WRMSR to 0x48 (tried to write 0x0000000000000004) at rIP: 0xffffffff81028272 (speculation_ctrl_update+0x132/0x2c0)
-
-It looks like WRMSR is being rejected because of:
-
-		if (!msr->host_initiated &&
-		    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS) &&
-		    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-			return 1;
-
-My guess is that the actual bug is at do_cpuid_7_mask(), which
-enables SPEC_CTRL and SPEC_CTRL_SSBD even on AMD hosts, while the
-SVM MSR emulation code won't let guests write to
-MSR_IA32_SPEC_CTRL.  I don't understand why it was not causing
-any problems before commit 4c6903a0f9d76, though
-
-Can you show output of 'x86info -r' and /proc/cpuinfo in both the
-host and the guest?
-
-
-> 	[    0.801823] Call Trace:
-> 	[    0.801831]  ? seccomp_set_mode_filter+0x18d/0x800
-> 	[    0.801833]  speculation_ctrl_update_current+0x21/0x30
-> 	[    0.801837]  task_update_spec_tif+0x1d/0x20
-> 	[    0.801839]  ssb_prctl_set+0xb5/0xd0
-> 	[    0.801841]  arch_seccomp_spec_mitigate+0x2a/0x50
-> 	[    0.801843]  seccomp_set_mode_filter+0x788/0x800
-> 	[    0.801845]  do_seccomp+0x34/0x200
-> 	[    0.801849]  __x64_sys_seccomp+0x15/0x20
-> 	[    0.801852]  do_syscall_64+0x4a/0x1f0
-> 	[    0.809349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 	[    0.810548] RIP: 0033:0x7f431db92e9d
-> 	[    0.811528] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b3 5f 0c 00 f7 d8 64 89 01 48
-> 	[    0.814754] RSP: 002b:00007ffca5506788 EFLAGS: 00000246 ORIG_RAX: 000000000000013d
-> 	[    0.816075] RAX: ffffffffffffffda RBX: 0000556956c07580 RCX: 00007f431db92e9d
-> 	[    0.817367] RDX: 0000556956c023e0 RSI: 0000000000000000 RDI: 0000000000000001
-> 	[    0.818698] RBP: 0000556956c023e0 R08: 0000000000000007 R09: 0000556956b73730
-> 	[    0.819948] R10: 0000556956b7101a R11: 0000000000000246 R12: 000000000000002d
-> 	[    0.821184] R13: 0040000000002001 R14: 00007f431d9b4898 R15: 0000000000000000
-> 
-> The VM still boots though.
-> 
-> I've actually been seeing this for a while but haven't had a chance to bisect it
-> until now.
-> 
-> Reverting the commit (4c6903a0f9d76) on mainline makes the warnings go away.
-> 
-> Any ideas?  Presumably something isn't working as intended.
-> 
-> - Eric
-> 
-
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index e42b86827d6b..e2697f8d04de 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -2748,10 +2748,10 @@ i915_perf_open_ioctl_locked(struct drm_i915_private *dev_priv,
+ 	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
+ 	 * we check a dev.i915.perf_stream_paranoid sysctl option
+ 	 * to determine if it's ok to access system wide OA counters
+-	 * without CAP_SYS_ADMIN privileges.
++	 * without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges.
+ 	 */
+ 	if (privileged_op &&
+-	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	    i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to open system-wide i915 perf stream\n");
+ 		ret = -EACCES;
+ 		goto err_ctx;
+@@ -2939,9 +2939,8 @@ static int read_properties_unlocked(struct drm_i915_private *dev_priv,
+ 			} else
+ 				oa_freq_hz = 0;
+ 
+-			if (oa_freq_hz > i915_oa_max_sample_rate &&
+-			    !capable(CAP_SYS_ADMIN)) {
+-				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
++			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
++				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges\n",
+ 					  i915_oa_max_sample_rate);
+ 				return -EACCES;
+ 			}
+@@ -3328,7 +3327,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
+ 		return -EACCES;
+ 	}
+@@ -3474,7 +3473,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
+ 		return -EACCES;
+ 	}
 -- 
-Eduardo
+2.20.1
+
 
