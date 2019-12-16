@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2804C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEABC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2FA24683
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E679E20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521566;
-	bh=Ry2NG3S3kKwh6GZVYQzjgd6nEGjX5EXezKwnS9n90oE=;
+	s=default; t=1576521572;
+	bh=YOwGTA8bggtg9EB37TCIHVOeLJOVKCJIfA3AfeYnd68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7uvqOvuwrcIverNt8fXbM9tPkzXN9vFmkJUQy3wcIkesGdbuWSTtN2r63LrAaqJH
-	 MlgYFOgPWIYcxhmx41H5lnWvPR2KPqOYmcH/6XwdKCZsb189sYclRepbx5Xh8LgJIN
-	 CspEhBZXtxALRBBci2W8dPUeyUSw4c3QEx75MFzc=
+	b=iC5QeStj1dIxSu269I1LMlwTno3bblX43vytf9qXDnLw+G1kE60ByNAiodFXV2me4
+	 GRK6NGTC88K/T4cJh/7uzYlfTkJbAjv0VJ+aqL5jEEdqjHl1xxomfFuMEzZw73vcH3
+	 TKNJBNrTNoAdySRL7nmHjsPVjKibww5lbIa9SNN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfLPSjZ (ORCPT
+        id S1729636AbfLPSja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:39:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbfLPSDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:37 -0500
+        id S1729253AbfLPSDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D7A20733;
-        Mon, 16 Dec 2019 18:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C97420726;
+        Mon, 16 Dec 2019 18:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519416;
-        bh=Ry2NG3S3kKwh6GZVYQzjgd6nEGjX5EXezKwnS9n90oE=;
+        s=default; t=1576519411;
+        bh=YOwGTA8bggtg9EB37TCIHVOeLJOVKCJIfA3AfeYnd68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UBR1pxRucOtrfqMvkooTtBXzi73KEQWEoy95nXsaK4EAeymMtH0fO6koBXKayWFY1
-         26nYwwROnVz+14p1S3ehwhzrpU3VPiiCqObSk3J/QL9Yle2bi5afotxpWa2ZUM6Hae
-         4xoqknRjMTsSFmY2G5GAeMti/gcHn5huueGE+vNk=
+        b=M3fzI+AUgQ2NlfFQE65IlOc2ZYhvsydE42r4MZvmsHTb0NFWZ5+GHytm4mjefRrPH
+         r8aER92QoOceFZIiGL5KzO4NVOShPnr6KoDVPLbm9fBOPzpp6qT5qJlEot712xnxpj
+         RGJFIM54dS62WkVfoOc5iZJ7rVOgQHxY3lWu/l4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        David Jeffery <djeffery@redhat.com>, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.19 058/140] md: improve handling of bio with REQ_PREFLUSH in md_flush_request()
-Date:   Mon, 16 Dec 2019 18:48:46 +0100
-Message-Id: <20191216174803.958690455@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 048/140] ovl: fix corner case of non-unique st_dev;st_ino
+Date:   Mon, 16 Dec 2019 18:48:36 +0100
+Message-Id: <20191216174801.803159477@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,182 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Jeffery <djeffery@redhat.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 775d78319f1ceb32be8eb3b1202ccdc60e9cb7f1 upstream.
+commit 9c6d8f13e9da10a26ad7f0a020ef86e8ef142835 upstream.
 
-If pers->make_request fails in md_flush_request(), the bio is lost. To
-fix this, pass back a bool to indicate if the original make_request call
-should continue to handle the I/O and instead of assuming the flush logic
-will push it to completion.
+On non-samefs overlay without xino, non pure upper inodes should use a
+pseudo_dev assigned to each unique lower fs and pure upper inodes use the
+real upper st_dev.
 
-Convert md_flush_request to return a bool and no longer calls the raid
-driver's make_request function.  If the return is true, then the md flush
-logic has or will complete the bio and the md make_request call is done.
-If false, then the md make_request function needs to keep processing like
-it is a normal bio. Let the original call to md_handle_request handle any
-need to retry sending the bio to the raid driver's make_request function
-should it be needed.
+It is fine for an overlay pure upper inode to use the same st_dev;st_ino
+values as the real upper inode, because the content of those two different
+filesystem objects is always the same.
 
-Also mark md_flush_request and the make_request function pointer as
-__must_check to issue warnings should these critical return values be
-ignored.
+In this case, however:
+ - two filesystems, A and B
+ - upper layer is on A
+ - lower layer 1 is also on A
+ - lower layer 2 is on B
 
-Fixes: 2bc13b83e629 ("md: batch flush requests.")
-Cc: stable@vger.kernel.org # # v4.19+
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: David Jeffery <djeffery@redhat.com>
-Reviewed-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Non pure upper overlay inode, whose origin is in layer 1 will have the same
+st_dev;st_ino values as the real lower inode. This may result with a false
+positive results of 'diff' between the real lower and copied up overlay
+inode.
+
+Fix this by using the upper st_dev;st_ino values in this case.  This breaks
+the property of constant st_dev;st_ino across copy up of this case. This
+breakage will be fixed by a later patch.
+
+Fixes: 5148626b806a ("ovl: allocate anon bdev per unique lower fs")
+Cc: stable@vger.kernel.org # v4.17+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md-linear.c    |    5 ++---
- drivers/md/md-multipath.c |    5 ++---
- drivers/md/md.c           |   11 +++++++++--
- drivers/md/md.h           |    4 ++--
- drivers/md/raid0.c        |    5 ++---
- drivers/md/raid1.c        |    5 ++---
- drivers/md/raid10.c       |    5 ++---
- drivers/md/raid5.c        |    4 ++--
- 8 files changed, 23 insertions(+), 21 deletions(-)
+ fs/overlayfs/inode.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/md/md-linear.c
-+++ b/drivers/md/md-linear.c
-@@ -252,10 +252,9 @@ static bool linear_make_request(struct m
- 	sector_t start_sector, end_sector, data_offset;
- 	sector_t bio_sector = bio->bi_iter.bi_sector;
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -203,8 +203,14 @@ int ovl_getattr(const struct path *path,
+ 			if (ovl_test_flag(OVL_INDEX, d_inode(dentry)) ||
+ 			    (!ovl_verify_lower(dentry->d_sb) &&
+ 			     (is_dir || lowerstat.nlink == 1))) {
+-				stat->ino = lowerstat.ino;
+ 				lower_layer = ovl_layer_lower(dentry);
++				/*
++				 * Cannot use origin st_dev;st_ino because
++				 * origin inode content may differ from overlay
++				 * inode content.
++				 */
++				if (samefs || lower_layer->fsid)
++					stat->ino = lowerstat.ino;
+ 			}
  
--	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
--		md_flush_request(mddev, bio);
-+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-+	    && md_flush_request(mddev, bio))
- 		return true;
--	}
- 
- 	tmp_dev = which_dev(mddev, bio_sector);
- 	start_sector = tmp_dev->end_sector - tmp_dev->rdev->sectors;
---- a/drivers/md/md-multipath.c
-+++ b/drivers/md/md-multipath.c
-@@ -112,10 +112,9 @@ static bool multipath_make_request(struc
- 	struct multipath_bh * mp_bh;
- 	struct multipath_info *multipath;
- 
--	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
--		md_flush_request(mddev, bio);
-+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-+	    && md_flush_request(mddev, bio))
- 		return true;
--	}
- 
- 	mp_bh = mempool_alloc(&conf->pool, GFP_NOIO);
- 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -487,7 +487,13 @@ static void md_submit_flush_data(struct
- 	}
- }
- 
--void md_flush_request(struct mddev *mddev, struct bio *bio)
-+/*
-+ * Manages consolidation of flushes and submitting any flushes needed for
-+ * a bio with REQ_PREFLUSH.  Returns true if the bio is finished or is
-+ * being finished in another context.  Returns false if the flushing is
-+ * complete but still needs the I/O portion of the bio to be processed.
-+ */
-+bool md_flush_request(struct mddev *mddev, struct bio *bio)
- {
- 	ktime_t start = ktime_get_boottime();
- 	spin_lock_irq(&mddev->lock);
-@@ -512,9 +518,10 @@ void md_flush_request(struct mddev *mdde
- 			bio_endio(bio);
- 		else {
- 			bio->bi_opf &= ~REQ_PREFLUSH;
--			mddev->pers->make_request(mddev, bio);
-+			return false;
- 		}
- 	}
-+	return true;
- }
- EXPORT_SYMBOL(md_flush_request);
- 
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -532,7 +532,7 @@ struct md_personality
- 	int level;
- 	struct list_head list;
- 	struct module *owner;
--	bool (*make_request)(struct mddev *mddev, struct bio *bio);
-+	bool __must_check (*make_request)(struct mddev *mddev, struct bio *bio);
- 	/*
- 	 * start up works that do NOT require md_thread. tasks that
- 	 * requires md_thread should go into start()
-@@ -684,7 +684,7 @@ extern void md_error(struct mddev *mddev
- extern void md_finish_reshape(struct mddev *mddev);
- 
- extern int mddev_congested(struct mddev *mddev, int bits);
--extern void md_flush_request(struct mddev *mddev, struct bio *bio);
-+extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
- extern void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
- 			   sector_t sector, int size, struct page *page);
- extern int md_super_wait(struct mddev *mddev);
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -580,10 +580,9 @@ static bool raid0_make_request(struct md
- 	unsigned chunk_sects;
- 	unsigned sectors;
- 
--	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
--		md_flush_request(mddev, bio);
-+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-+	    && md_flush_request(mddev, bio))
- 		return true;
--	}
- 
- 	if (unlikely((bio_op(bio) == REQ_OP_DISCARD))) {
- 		raid0_handle_discard(mddev, bio);
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1537,10 +1537,9 @@ static bool raid1_make_request(struct md
- {
- 	sector_t sectors;
- 
--	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
--		md_flush_request(mddev, bio);
-+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-+	    && md_flush_request(mddev, bio))
- 		return true;
--	}
- 
- 	/*
- 	 * There is a limit to the maximum size, but
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1562,10 +1562,9 @@ static bool raid10_make_request(struct m
- 	int chunk_sects = chunk_mask + 1;
- 	int sectors = bio_sectors(bio);
- 
--	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
--		md_flush_request(mddev, bio);
-+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-+	    && md_flush_request(mddev, bio))
- 		return true;
--	}
- 
- 	if (!md_write_start(mddev, bio))
- 		return false;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5590,8 +5590,8 @@ static bool raid5_make_request(struct md
- 		if (ret == 0)
- 			return true;
- 		if (ret == -ENODEV) {
--			md_flush_request(mddev, bi);
--			return true;
-+			if (md_flush_request(mddev, bi))
-+				return true;
- 		}
- 		/* ret == -EAGAIN, fallback */
- 		/*
+ 			/*
 
 
