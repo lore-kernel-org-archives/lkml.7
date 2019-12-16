@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B51CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B221C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A88821582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FECA206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518796;
-	bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
+	s=default; t=1576518800;
+	bh=r2NVtKImI41IpFVzW8C0UM8Dw0QN0YHq4bm0R0hfP8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhXdlNNbSIt+FfHtNKp8Ay0uD1uE/snFvf4e5XEAuuhgH5l2TMvpE51RPumAcMzs9
-	 Y/NuGZodWjhPMdTHDWQ3JlWgPX+W84oqBnRrq4HB9aIqTNLR0O1wuQSxCfHuQszSKm
-	 pp4TMyFJurMgz2WH3b8qKcX4Bo9E+r2OWoS4vOqU=
+	b=mK+Ex2KhZN5eAtU4OCCvBJajQbBld8SM/H4OVQOn3lPcbndTVcGa5G+TmQPxlcjl2
+	 MzuEmMF2NoXfuxuwH5r4p/eXV1eDEM5fbFDnygCJ+JFXl63f+xaLOHk65PSqzgYt0Q
+	 95mzAebRbkv0m0IOiepxhqLNwVH4nfIpzfOIKErI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfLPRxP (ORCPT
+        id S1727725AbfLPRxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:53:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46482 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfLPRxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:10 -0500
+        id S1726959AbfLPRxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:53:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3416221582;
-        Mon, 16 Dec 2019 17:53:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 907AA2166E;
+        Mon, 16 Dec 2019 17:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518789;
-        bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
+        s=default; t=1576518792;
+        bh=r2NVtKImI41IpFVzW8C0UM8Dw0QN0YHq4bm0R0hfP8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbaIbYDko0CvmvFHEfvSj4tqZ0v+1HCRWS8WC/i03pd23hQTxfg5W23H+Iv/3Gjh8
-         RgwCNAI6ecMKw9BUm03gKNBiGPW7B7/LGUx5+FLdALrCLUVNuCCQW9DEYvXj5dwPHs
-         i4CrIv9lhR4JmPsiWIgsi8gfct6kGDE2O4+KQ1D0=
+        b=EncvrwtZBNVLDtklcet6Lr8EL9sl94Mrz9HkiVl1232xLm26Ab5/TC1teQcKxWfNl
+         cF2Effnhlyz+fgNuPstDhXbGTh1VWJXclfr1gwR3pWyLnDEHDws4sZrmgNWiEf0EVR
+         g4bS7uLO3FBwMlrtdT9a/R9oklWnuMhDRjK4fQnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, paulhsia <paulhsia@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 018/267] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
-Date:   Mon, 16 Dec 2019 18:45:44 +0100
-Message-Id: <20191216174851.027832266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 061/267] dmaengine: dw-dmac: implement dma protection control setting
+Date:   Mon, 16 Dec 2019 18:46:27 +0100
+Message-Id: <20191216174855.674306439@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,51 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: paulhsia <paulhsia@chromium.org>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
+[ Upstream commit 7b0c03ecc42fb223baf015877fee9d517c2c8af1 ]
 
-If the nullity check for `substream->runtime` is outside of the lock
-region, it is possible to have a null runtime in the critical section
-if snd_pcm_detach_substream is called right before the lock.
+This patch adds a new device-tree property that allows to
+specify the dma protection control bits for the all of the
+DMA controller's channel uniformly.
 
-Signed-off-by: paulhsia <paulhsia@chromium.org>
-Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Setting the "correct" bits can have a huge impact on the
+PPC460EX and APM82181 that use this DMA engine in combination
+with a DesignWare' SATA-II core (sata_dwc_460ex driver).
+
+In the OpenWrt Forum, the user takimata reported that:
+|It seems your patch unleashed the full power of the SATA port.
+|Where I was previously hitting a really hard limit at around
+|82 MB/s for reading and 27 MB/s for writing, I am now getting this:
+|
+|root@OpenWrt:/mnt# time dd if=/dev/zero of=tempfile bs=1M count=1024
+|1024+0 records in
+|1024+0 records out
+|real    0m 13.65s
+|user    0m 0.01s
+|sys     0m 11.89s
+|
+|root@OpenWrt:/mnt# time dd if=tempfile of=/dev/null bs=1M count=1024
+|1024+0 records in
+|1024+0 records out
+|real    0m 8.41s
+|user    0m 0.01s
+|sys     0m 4.70s
+|
+|This means: 121 MB/s reading and 75 MB/s writing!
+|
+|The drive is a WD Green WD10EARX taken from an older MBL Single.
+|I repeated the test a few times with even larger files to rule out
+|any caching, I'm still seeing the same great performance. OpenWrt is
+|now completely on par with the original MBL firmware's performance.
+
+Another user And.short reported:
+|I can report that your fix worked! Boots up fine with two
+|drives even with more partitions, and no more reboot on
+|concurrent disk access!
+
+A closer look into the sata_dwc_460ex code revealed that
+the driver did initally set the correct protection control
+bits. However, this feature was lost when the sata_dwc_460ex
+driver was converted to the generic DMA driver framework.
+
+BugLink: https://forum.openwrt.org/t/wd-mybook-live-duo-two-disks/16195/55
+BugLink: https://forum.openwrt.org/t/wd-mybook-live-duo-two-disks/16195/50
+Fixes: 8b3444852a2b ("sata_dwc_460ex: move to generic DMA driver")
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/dma/dw/core.c                | 2 ++
+ drivers/dma/dw/platform.c            | 6 ++++++
+ drivers/dma/dw/regs.h                | 4 ++++
+ include/linux/platform_data/dma-dw.h | 6 ++++++
+ 4 files changed, 18 insertions(+)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index 729a85a6211d6..80453266a2def 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -1803,11 +1803,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime;
- 	unsigned long flags;
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 0f389e008ce64..055d83b6cb68a 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -160,12 +160,14 @@ static void dwc_initialize_chan_idma32(struct dw_dma_chan *dwc)
  
--	if (PCM_RUNTIME_CHECK(substream))
-+	if (snd_BUG_ON(!substream))
- 		return;
--	runtime = substream->runtime;
+ static void dwc_initialize_chan_dw(struct dw_dma_chan *dwc)
+ {
++	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+ 	u32 cfghi = DWC_CFGH_FIFO_MODE;
+ 	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
+ 	bool hs_polarity = dwc->dws.hs_polarity;
  
- 	snd_pcm_stream_lock_irqsave(substream, flags);
-+	if (PCM_RUNTIME_CHECK(substream))
-+		goto _unlock;
-+	runtime = substream->runtime;
+ 	cfghi |= DWC_CFGH_DST_PER(dwc->dws.dst_id);
+ 	cfghi |= DWC_CFGH_SRC_PER(dwc->dws.src_id);
++	cfghi |= DWC_CFGH_PROTCTL(dw->pdata->protctl);
+ 
+ 	/* Set polarity of handshake interface */
+ 	cfglo |= hs_polarity ? DWC_CFGL_HS_DST_POL | DWC_CFGL_HS_SRC_POL : 0;
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index bc31fe8020619..46a519e07195c 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -162,6 +162,12 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 			pdata->multi_block[tmp] = 1;
+ 	}
+ 
++	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
++		if (tmp > CHAN_PROTCTL_MASK)
++			return NULL;
++		pdata->protctl = tmp;
++	}
 +
- 	if (!snd_pcm_running(substream) ||
- 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
- 		goto _end;
-@@ -1818,6 +1821,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- #endif
-  _end:
- 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
-+ _unlock:
- 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ 	return pdata;
  }
- EXPORT_SYMBOL(snd_pcm_period_elapsed);
+ #else
+diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
+index 09e7dfdbb7907..646c9c960c071 100644
+--- a/drivers/dma/dw/regs.h
++++ b/drivers/dma/dw/regs.h
+@@ -200,6 +200,10 @@ enum dw_dma_msize {
+ #define DWC_CFGH_FCMODE		(1 << 0)
+ #define DWC_CFGH_FIFO_MODE	(1 << 1)
+ #define DWC_CFGH_PROTCTL(x)	((x) << 2)
++#define DWC_CFGH_PROTCTL_DATA	(0 << 2)	/* data access - always set */
++#define DWC_CFGH_PROTCTL_PRIV	(1 << 2)	/* privileged -> AHB HPROT[1] */
++#define DWC_CFGH_PROTCTL_BUFFER	(2 << 2)	/* bufferable -> AHB HPROT[2] */
++#define DWC_CFGH_PROTCTL_CACHE	(4 << 2)	/* cacheable  -> AHB HPROT[3] */
+ #define DWC_CFGH_DS_UPD_EN	(1 << 5)
+ #define DWC_CFGH_SS_UPD_EN	(1 << 6)
+ #define DWC_CFGH_SRC_PER(x)	((x) << 7)
+diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
+index 896cb71a382cb..1a1d58ebffbf1 100644
+--- a/include/linux/platform_data/dma-dw.h
++++ b/include/linux/platform_data/dma-dw.h
+@@ -49,6 +49,7 @@ struct dw_dma_slave {
+  * @data_width: Maximum data width supported by hardware per AHB master
+  *		(in bytes, power of 2)
+  * @multi_block: Multi block transfers supported by hardware per channel.
++ * @protctl: Protection control signals setting per channel.
+  */
+ struct dw_dma_platform_data {
+ 	unsigned int	nr_channels;
+@@ -65,6 +66,11 @@ struct dw_dma_platform_data {
+ 	unsigned char	nr_masters;
+ 	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
+ 	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
++#define CHAN_PROTCTL_PRIVILEGED		BIT(0)
++#define CHAN_PROTCTL_BUFFERABLE		BIT(1)
++#define CHAN_PROTCTL_CACHEABLE		BIT(2)
++#define CHAN_PROTCTL_MASK		GENMASK(2, 0)
++	unsigned char	protctl;
+ };
+ 
+ #endif /* _PLATFORM_DATA_DMA_DW_H */
 -- 
 2.20.1
 
