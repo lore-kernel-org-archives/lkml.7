@@ -2,145 +2,99 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C26C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931DAC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52BC206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BAD206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLPQWx (ORCPT
+        id S1726536AbfLPQXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:22:53 -0500
-Received: from mga05.intel.com ([192.55.52.43]:38295 "EHLO mga05.intel.com"
+        Mon, 16 Dec 2019 11:23:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55622 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfLPQWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:22:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 08:22:53 -0800
-X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
-   d="scan'208";a="217212376"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 08:22:52 -0800
-Message-ID: <9eb9173278370dd604c4cefd30ed10be36600854.camel@linux.intel.com>
-Subject: Re: [PATCH v15 3/7] mm: Add function __putback_isolated_page
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Mon, 16 Dec 2019 08:22:52 -0800
-In-Reply-To: <cb49bbc7-b0c0-65cc-1d9d-a3aaef075650@redhat.com>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-         <20191205162230.19548.70198.stgit@localhost.localdomain>
-         <cb49bbc7-b0c0-65cc-1d9d-a3aaef075650@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        id S1726077AbfLPQXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:23:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 43EF2B229;
+        Mon, 16 Dec 2019 16:23:49 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a
+ memory pressure is detected
+To:     SeongJae Park <sjpark@amazon.com>, axboe@kernel.dk,
+        konrad.wilk@oracle.com, roger.pau@citrix.com
+Cc:     pdurrant@amazon.com, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org,
+        sj38.park@gmail.com
+References: <20191216161549.26976-1-sjpark@amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <2ad62cc8-ae78-6087-f277-923dc076383a@suse.com>
+Date:   Mon, 16 Dec 2019 17:23:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191216161549.26976-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-16 at 12:36 +0100, David Hildenbrand wrote:
+On 16.12.19 17:15, SeongJae Park wrote:
+> On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> 
+>> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+>>
+>>> From: SeongJae Park <sjpark@amazon.de>
+>>>
 > [...]
-> > +/**
-> > + * __putback_isolated_page - Return a now-isolated page back where we got it
-> > + * @page: Page that was isolated
-> > + * @order: Order of the isolated page
-> > + *
-> > + * This function is meant to return a page pulled from the free lists via
-> > + * __isolate_free_page back to the free lists they were pulled from.
-> > + */
-> > +void __putback_isolated_page(struct page *page, unsigned int order)
-> > +{
-> > +	struct zone *zone = page_zone(page);
-> > +	unsigned long pfn;
-> > +	unsigned int mt;
-> > +
-> > +	/* zone lock should be held when this function is called */
-> > +	lockdep_assert_held(&zone->lock);
-> > +
-> > +	pfn = page_to_pfn(page);
-> > +	mt = get_pfnblock_migratetype(page, pfn);
+>>> --- a/drivers/block/xen-blkback/xenbus.c
+>>> +++ b/drivers/block/xen-blkback/xenbus.c
+>>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
+>>>   }
+>>>   
+>>>   
+>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
+>>> +static unsigned int buffer_squeeze_duration_ms = 10;
+>>> +module_param_named(buffer_squeeze_duration_ms,
+>>> +		buffer_squeeze_duration_ms, int, 0644);
+>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
+>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
+>>> +
+>>> +/*
+>>> + * Callback received when the memory pressure is detected.
+>>> + */
+>>> +static void reclaim_memory(struct xenbus_device *dev)
+>>> +{
+>>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
+>>> +
+>>> +	be->blkif->buffer_squeeze_end = jiffies +
+>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+>>
+>> This callback might race with 'xen_blkbk_probe()'.  The race could result in
+>> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
+>> 'be' to the 'dev'.  Please _don't merge_ this patch now!
+>>
+>> I will do more test and share results.  Meanwhile, if you have any opinion,
+>> please let me know.
 > 
-> IMHO get_pageblock_migratetype() would be nicer - I guess the compiler
-> will optimize out the double page_to_pfn().
+> Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
+> concurrency issues could be in other drivers in their way, I suggest to change
+> the reclaim callback ('->reclaim_memory') to be called for each driver instead
+> of each device.  Then, each driver could be able to deal with its concurrency
+> issues by itself.
 
-The thing is I need the page_to_pfn call already in order to pass the
-value to __free_one_page. With that being the case why not juse use
-get_pfnblock_migratetype?
+Hmm, I don't like that. This would need to be changed back in case we
+add per-guest quota.
 
-Also there are some scenarios where __page_to_pfn is not that simple a
-call with us having to get the node ID so we can find the pgdat structure
-to perform the calculation. I'm not sure the compiler would be ble to
-figure out that the result is the same for both calls, so it is better to
-make it explicit.
+Wouldn't a get_device() before calling the callback and a put_device()
+afterwards avoid that problem?
 
-> > +
-> > +	/* Return isolated page to tail of freelist. */
-> > +	__free_one_page(page, pfn, zone, order, mt);
-> > +}
-> > +
-> >  /*
-> >   * Update NUMA hit/miss statistics
-> >   *
-> > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> > index 04ee1663cdbe..d93d2be0070f 100644
-> > --- a/mm/page_isolation.c
-> > +++ b/mm/page_isolation.c
-> > @@ -134,13 +134,11 @@ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
-> >  		__mod_zone_freepage_state(zone, nr_pages, migratetype);
-> >  	}
-> >  	set_pageblock_migratetype(page, migratetype);
-> > +	if (isolated_page)
-> > +		__putback_isolated_page(page, order);
-> >  	zone->nr_isolate_pageblock--;
-> >  out:
-> >  	spin_unlock_irqrestore(&zone->lock, flags);
-> > -	if (isolated_page) {
-> > -		post_alloc_hook(page, order, __GFP_MOVABLE);
-> > -		__free_pages(page, order);
-> > -	}
-> 
-> So If I get it right:
-> 
-> post_alloc_hook() does quite some stuff like
-> - arch_alloc_page(page, order);
-> - kernel_map_pages(page, 1 << order, 1)
-> - kasan_alloc_pages()
-> - kernel_poison_pages(1)
-> - set_page_owner()
-> 
-> Which free_pages_prepare() will undo, like
-> - reset_page_owner()
-> - kernel_poison_pages(0)
-> - arch_free_page()
-> - kernel_map_pages()
-> - kasan_free_nondeferred_pages()
-> 
-> Both would be skipped now - which sounds like the right thing to do IMHO
-> (and smells like quite a performance improvement). I haven't verified if
-> actually everything we skip in free_pages_prepare() is safe (I think it
-> is, it seems to be mostly relevant for actually used/allocated pages).
 
-That was kind of my thought on this. Basically the logic I was following
-was that the code path will call move_freepages_block that bypasses all of
-the above mentioned calls if the pages it is moving will not be merged. If
-it is safe in that case my assumption is that it should be safe to just
-call __putback_isolated_page in such a case as it also bypasses the block
-above, but it supports merging the page with other pages that are already
-on the freelist.
-
+Juergen
