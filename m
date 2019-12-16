@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FF9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97483C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F388207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A762072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519285;
-	bh=i4gAvKs121LiDWofI0Qx/fKnNA3MI2OySE18wyl/BxI=;
+	s=default; t=1576519289;
+	bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rE3BdUSkPRPH7VYFcVC51jYALBH+3pSdt6y/LrGRPvgmwNCs/jHuE0jk/vJ0ooQI6
-	 EKBASOYlC+s19f7jOAIZyDNzCajpMPDkN6VpIFCM9n+nrp1m4FddQp9zVgxNSyDbhM
-	 fFeZhrQmfnVvXbVZoZPqsWXOUC+KC5pHKCFMhD44=
+	b=LUJIQTcuEf9YoD33Rx4TG25z4tvY/bIEKEbQ7+OHfJKmt2fDZiJNxxFkWXfQnlqYA
+	 vxZ3zq0THs6G9OdKATIHoGN3DlgbFlDyZFudbHst0B+wy9NW//AK4eh+z2UkZrJ2Yr
+	 Srxc8NHxMJTslOA/ALRSCZYuudc4UqqgOkgZjRZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfLPSBZ (ORCPT
+        id S1729160AbfLPSB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:01:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbfLPSBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:20 -0500
+        id S1729139AbfLPSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35FCF206B7;
-        Mon, 16 Dec 2019 18:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0679A2082E;
+        Mon, 16 Dec 2019 18:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519279;
-        bh=i4gAvKs121LiDWofI0Qx/fKnNA3MI2OySE18wyl/BxI=;
+        s=default; t=1576519284;
+        bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nr+No7/wndnr/VN4SQtd5lMN4VlMMIJSC92zx4jvNKgyT/pC9Qb7Z+ZEeEI7Me0ot
-         0PcIKU1Jbc3FlQv3WcoXwKbvZE1dxjvCJ3NVK6CVowIswYM5nb7FDw7hFw0X4CCSpA
-         1qt7y7mKLjsm4AbX2H9LV9jGj17SEsvFspg/afcs=
+        b=NH0gVYb6wr2pG7gXrzbtjbwdConPO1akIv7BdojkefedxNJf8255xjOZyvmqDZJMv
+         8BnLKZRtFkHXZHxw0P+Yyr8VyJy9o3yguf8CcUnn4IWIzzZfYRWRyJonUf+ZGyRmGK
+         ebCbaNer0FwhqdxXqxGygGI/F0Ka8UwOvkAziUH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
         Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 232/267] quota: Check that quota is not dirty before release
-Date:   Mon, 16 Dec 2019 18:49:18 +0100
-Message-Id: <20191216174915.269272193@linuxfoundation.org>
+Subject: [PATCH 4.14 234/267] quota: fix livelock in dquot_writeback_dquots
+Date:   Mon, 16 Dec 2019 18:49:20 +0100
+Message-Id: <20191216174915.376508843@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,83 +63,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-commit df4bb5d128e2c44848aeb36b7ceceba3ac85080d upstream.
+commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
 
-There is a race window where quota was redirted once we drop dq_list_lock inside dqput(),
-but before we grab dquot->dq_lock inside dquot_release()
+Write only quotas which are dirty at entry.
 
-TASK1                                                       TASK2 (chowner)
-->dqput()
-  we_slept:
-    spin_lock(&dq_list_lock)
-    if (dquot_dirty(dquot)) {
-          spin_unlock(&dq_list_lock);
-          dquot->dq_sb->dq_op->write_dquot(dquot);
-          goto we_slept
-    if (test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
-          spin_unlock(&dq_list_lock);
-          dquot->dq_sb->dq_op->release_dquot(dquot);
-                                                            dqget()
-							    mark_dquot_dirty()
-							    dqput()
-          goto we_slept;
-        }
-So dquot dirty quota will be released by TASK1, but on next we_sleept loop
-we detect this and call ->write_dquot() for it.
-XFSTEST: https://github.com/dmonakhov/xfstests/commit/440a80d4cbb39e9234df4d7240aee1d551c36107
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
 
-Link: https://lore.kernel.org/r/20191031103920.3919-2-dmonakhov@openvz.org
+Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
 CC: stable@vger.kernel.org
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/quota_global.c  |    2 +-
- fs/quota/dquot.c         |    2 +-
- include/linux/quotaops.h |   10 ++++++++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/quota/dquot.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/fs/ocfs2/quota_global.c
-+++ b/fs/ocfs2/quota_global.c
-@@ -727,7 +727,7 @@ static int ocfs2_release_dquot(struct dq
- 
- 	mutex_lock(&dquot->dq_lock);
- 	/* Check whether we are not racing with some other dqget() */
--	if (atomic_read(&dquot->dq_count) > 1)
-+	if (dquot_is_busy(dquot))
- 		goto out;
- 	/* Running from downconvert thread? Postpone quota processing to wq */
- 	if (current == osb->dc_task) {
 --- a/fs/quota/dquot.c
 +++ b/fs/quota/dquot.c
-@@ -491,7 +491,7 @@ int dquot_release(struct dquot *dquot)
+@@ -617,7 +617,7 @@ EXPORT_SYMBOL(dquot_scan_active);
+ /* Write all dquot structures to quota files */
+ int dquot_writeback_dquots(struct super_block *sb, int type)
+ {
+-	struct list_head *dirty;
++	struct list_head dirty;
+ 	struct dquot *dquot;
+ 	struct quota_info *dqopt = sb_dqopt(sb);
+ 	int cnt;
+@@ -631,9 +631,10 @@ int dquot_writeback_dquots(struct super_
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
+ 		spin_lock(&dq_list_lock);
+-		dirty = &dqopt->info[cnt].dqi_dirty_list;
+-		while (!list_empty(dirty)) {
+-			dquot = list_first_entry(dirty, struct dquot,
++		/* Move list away to avoid livelock. */
++		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
++		while (!list_empty(&dirty)) {
++			dquot = list_first_entry(&dirty, struct dquot,
+ 						 dq_dirty);
  
- 	mutex_lock(&dquot->dq_lock);
- 	/* Check whether we are not racing with some other dqget() */
--	if (atomic_read(&dquot->dq_count) > 1)
-+	if (dquot_is_busy(dquot))
- 		goto out_dqlock;
- 	if (dqopt->ops[dquot->dq_id.type]->release_dqblk) {
- 		ret = dqopt->ops[dquot->dq_id.type]->release_dqblk(dquot);
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -51,6 +51,16 @@ static inline struct dquot *dqgrab(struc
- 	atomic_inc(&dquot->dq_count);
- 	return dquot;
- }
-+
-+static inline bool dquot_is_busy(struct dquot *dquot)
-+{
-+	if (test_bit(DQ_MOD_B, &dquot->dq_flags))
-+		return true;
-+	if (atomic_read(&dquot->dq_count) > 1)
-+		return true;
-+	return false;
-+}
-+
- void dqput(struct dquot *dquot);
- int dquot_scan_active(struct super_block *sb,
- 		      int (*fn)(struct dquot *dquot, unsigned long priv),
+ 			WARN_ON(!test_bit(DQ_ACTIVE_B, &dquot->dq_flags));
 
 
