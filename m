@@ -2,52 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B038C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229E6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E4B20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3D4218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519352;
-	bh=RyVyHX5MP+hvyFuV/2fAADMX1ycY5ZEMPHXFdKpKjfw=;
+	s=default; t=1576519356;
+	bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hhqbSVyOMogFeGRtYTUt60/4SXvW3mlikkzxzwlDk6wZxOZ+1WOVwzeZiD3KdzH+Q
-	 6G89pmrCCfiqVahQ8vHdT//YFZ7WtDrD1KaTBRuY1Hf26+VpitB+WQgWBfx1RnEV8/
-	 6osD/pdaBWE/zVQrkgPMouczx/WpAjFbVZNL+n2Q=
+	b=0NrOGEq3bkrVclRe8MIsmTUXwiyn1HhWi4+CZltK75G3ZT0jtnUflGN85hYiy8IYc
+	 apkkRcFyKUaBOqSgc3ZQwPUy7wirMU65QTMOFOwII/S/wOJKlXfrWuIdlOYBNTLswb
+	 uNR8UHkbnhqCuP7n+HsVBCEkee8PQ1MgS77JKtAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfLPSCb (ORCPT
+        id S1729366AbfLPSCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbfLPSC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:28 -0500
+        id S1729054AbfLPSCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A07FC20733;
-        Mon, 16 Dec 2019 18:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A271218AC;
+        Mon, 16 Dec 2019 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519348;
-        bh=RyVyHX5MP+hvyFuV/2fAADMX1ycY5ZEMPHXFdKpKjfw=;
+        s=default; t=1576519350;
+        bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ju+IcJDpMMVwTozhEDTF/0hkXT+BvHE0Z2lhobsjAFXReLqUSzDViNhQQ1gXJvmTo
-         B7Kd62eBa1FXYZQL6W0WAP3LUUhwlvteHs45CbyEH5jhMO+tCY7D4kRgBrWQJyqBgK
-         TTaqffzftUP5i6R2DKSmY+nD7+fsZQflfNMXQxMQ=
+        b=mEGGMCCBodKZ+IGLPqUonZS2CSjCWdVY0eiI5BH6eH7WPBqdEEeCLHu4F0xXh6g+E
+         TMYqJp9KCoFLbbEsdrgXnYwCKhKlXeBdWrCWJ8Gc5p7nxmgev45tAEUYm4rxLB88hf
+         s/aQMsNRVLVbUHfrmz5Ej6C9TAkoNmKlOIs4ltiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tadeusz Struk <tadeusz.struk@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 4.19 029/140] tpm: add check after commands attribs tab allocation
-Date:   Mon, 16 Dec 2019 18:48:17 +0100
-Message-Id: <20191216174757.744044348@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.19 030/140] mtd: spear_smi: Fix Write Burst mode
+Date:   Mon, 16 Dec 2019 18:48:18 +0100
+Message-Id: <20191216174757.854872981@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,37 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tadeusz Struk <tadeusz.struk@intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit f1689114acc5e89a196fec6d732dae3e48edb6ad upstream.
+commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
 
-devm_kcalloc() can fail and return NULL so we need to check for that.
+Any write with either dd or flashcp to a device driven by the
+spear_smi.c driver will pass through the spear_smi_cpy_toio()
+function. This function will get called for chunks of up to 256 bytes.
+If the amount of data is smaller, we may have a problem if the data
+length is not 4-byte aligned. In this situation, the kernel panics
+during the memcpy:
 
+    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
+    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
+    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
+    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
+    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
+    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
+    [...]
+    PC is at memcpy+0xcc/0x330
+
+The above error occurs because the implementation of memcpy_toio()
+tries to optimize the number of I/O by writing 4 bytes at a time as
+much as possible, until there are less than 4 bytes left and then
+switches to word or byte writes.
+
+Unfortunately, the specification states about the Write Burst mode:
+
+        "the next AHB Write request should point to the next
+	incremented address and should have the same size (byte,
+	half-word or word)"
+
+This means ARM architecture implementation of memcpy_toio() cannot
+reliably be used blindly here. Workaround this situation by update the
+write path to stick to byte access when the burst length is not
+multiple of 4.
+
+Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>
 Cc: stable@vger.kernel.org
-Fixes: 58472f5cd4f6f ("tpm: validate TPM 2.0 commands")
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm2-cmd.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -938,6 +938,10 @@ static int tpm2_get_cc_attrs_tbl(struct
+--- a/drivers/mtd/devices/spear_smi.c
++++ b/drivers/mtd/devices/spear_smi.c
+@@ -592,6 +592,26 @@ static int spear_mtd_read(struct mtd_inf
+ 	return 0;
+ }
  
- 	chip->cc_attrs_tbl = devm_kcalloc(&chip->dev, 4, nr_commands,
- 					  GFP_KERNEL);
-+	if (!chip->cc_attrs_tbl) {
-+		rc = -ENOMEM;
-+		goto out;
++/*
++ * The purpose of this function is to ensure a memcpy_toio() with byte writes
++ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
++ * which also does single byte writes but cannot be used here as this is just an
++ * implementation detail and not part of the API. Not mentioning the comment
++ * stating that _memcpy_toio() should be optimized.
++ */
++static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
++				    const void *src, size_t len)
++{
++	const unsigned char *from = src;
++
++	while (len) {
++		len--;
++		writeb(*from, dest);
++		from++;
++		dest++;
 +	}
++}
++
+ static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
+ 		void __iomem *dest, const void *src, size_t len)
+ {
+@@ -614,7 +634,23 @@ static inline int spear_smi_cpy_toio(str
+ 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
+ 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
  
- 	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
- 	if (rc)
+-	memcpy_toio(dest, src, len);
++	/*
++	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
++	 * - incremental
++	 * - of the same size
++	 * The ARM implementation of memcpy_toio() will optimize the number of
++	 * I/O by using as much 4-byte writes as possible, surrounded by
++	 * 2-byte/1-byte access if:
++	 * - the destination is not 4-byte aligned
++	 * - the length is not a multiple of 4-byte.
++	 * Avoid this alternance of write access size by using our own 'byte
++	 * access' helper if at least one of the two conditions above is true.
++	 */
++	if (IS_ALIGNED(len, sizeof(u32)) &&
++	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
++		memcpy_toio(dest, src, len);
++	else
++		spear_smi_memcpy_toio_b(dest, src, len);
+ 
+ 	writel(ctrlreg1, dev->io_base + SMI_CR1);
+ 
 
 
