@@ -2,126 +2,111 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01018C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C801E2146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E622146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSAySRZr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NkfeIT/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLPT5T (ORCPT
+        id S1727456AbfLPT5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:57:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23505 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726942AbfLPT5S (ORCPT
+        Mon, 16 Dec 2019 14:57:50 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2973 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfLPT5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:57:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576526237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=DOwHvAlU3+FqtDr78ifXP7sbVzpoMf0fWDCOTmcOuvI=;
-        b=QSAySRZrzDdywDR3+4YDcapB+L0yL140ikPY3rS9GN8orfvnbOZVk7wPOaR4MDW9hbcZ3g
-        pCi4GUTQ6Tx8hf6/ZckOoht3AB58PToaZcQXh27vRJ6x3dRe7q/XMTEXSUJCyimlDb+L5P
-        Qbp7YFiEY8zaBKC2gJR3WjEWuruVsbE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-eEeQpdfhOOOBWj4NOr0hvQ-1; Mon, 16 Dec 2019 14:57:14 -0500
-X-MC-Unique: eEeQpdfhOOOBWj4NOr0hvQ-1
-Received: by mail-qt1-f199.google.com with SMTP id y7so5389192qto.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 11:57:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DOwHvAlU3+FqtDr78ifXP7sbVzpoMf0fWDCOTmcOuvI=;
-        b=FcF3YFzyQ3l2Rh42mlhmu6mCfGeI6hPODL7NYsibCiMa9elRvQ8u8Io3sLMbhc0ISS
-         J4w07Q4d4lsz0H2mrVfof+5tzNmgEYOl/K3AX5j9wNVHNmW3CZ30aGNnSLcKJSwGO6PD
-         VmTBXo53NzdQP2d2uWzy3BU2G/8fg8JINv5y2tuZYiDPMbYoXZ+C5lqgZ+L1BTqSBU2C
-         rrWf1JLWqNO+Q+bhkHL3rkXo7EVjrEXQC6zW5UmoNSwv/z+M9o0Yu1QgAh+BhYR3vdrS
-         7K9pAkLXQO8sy2ElrtcnG8COjY7E+Li6mVcuU1nPHUb0ToxyBTa92wc0ITi6wMAtkn8U
-         t0aQ==
-X-Gm-Message-State: APjAAAVZF9uR/XmfUEuIpFw72Jtq8MCzMRFqMjhS2nTYSHmXORITiZRU
-        aDXolINadokW6b/3TF3xj9jWD9+vz3O65n/rFWrc5TbC/3RRdzSg9RfiXujBuKzBLAmFbr7aoC2
-        8SelRhUlBssEaBvVUxmJrZi65
-X-Received: by 2002:a05:620a:8d7:: with SMTP id z23mr1058255qkz.15.1576526233977;
-        Mon, 16 Dec 2019 11:57:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzi8KLE4Tfi0bIypfD9lAkeARlwnwMobt4XlMVrtWmvcOC3qmyFs2WIu9NMmJevqYjejrRNlQ==
-X-Received: by 2002:a05:620a:8d7:: with SMTP id z23mr1058223qkz.15.1576526233634;
-        Mon, 16 Dec 2019 11:57:13 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id f26sm7068038qtv.77.2019.12.16.11.57.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 11:57:12 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:57:12 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Juri Lelli <juri.lelli@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Xu <peterx@redhat.com>
-Subject: Kernel-managed IRQ affinity (cont)
-Message-ID: <20191216195712.GA161272@xz-x1>
+        Mon, 16 Dec 2019 14:57:50 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df7e1a10000>; Mon, 16 Dec 2019 11:57:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Dec 2019 11:57:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 16 Dec 2019 11:57:49 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
+ 2019 19:57:47 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 16 Dec 2019 19:57:46 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df7e1ba0001>; Mon, 16 Dec 2019 11:57:46 -0800
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH v5 0/2] mm/hmm/test: add self tests for HMM
+Date:   Mon, 16 Dec 2019 11:57:31 -0800
+Message-ID: <20191216195733.28353-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576526242; bh=c+0LXJAAa4iRvvJNP9qW63zka2XWJ3Ad+NBLnq3STuE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=NkfeIT/CqWvjl9YCstxoAo/Cp2YpQXzJ6AmaYmvVM/lGETvUvAMSy8JPXNMsFbPYv
+         BtUoyxmNG62NEOngT+mnmbWQr7hXpVOE3eC9otPZXDY9UgQm6vhuwNH71XneyqYWwN
+         3g38pUhvIUCRmKkTDMNxf3EJ1tYmFdSrVQCUripY34UC0ku28MfYOifsmESGXA4vNb
+         lN2q9coCR+Dy9pUdxZqIq8lC5yDRu/fa1ryEBua9HSk5FZ70TrLqAogrCF2DqHKUK/
+         4lu5UipdSVUQI7zSclCiO5Svep2aeby/yjwvj6vpReFgocU/+GoBrmIAswdDWU998r
+         P+TWVIoDuosQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Thomas,
+This series adds basic self tests for HMM and mmu interval notifiers so
+that changes can be validated. It is based on linux-5.5.0-rc1 and is for
+Jason's rdma/hmm tree since I believe he is planning some interval
+notifier changes.  Patch 2 was last posted as part of [1] but the other
+patches in that series have been merged and this version of the HMM tests
+is modified to address Jason's concern over using both process wide MMU
+notifiers in combination with MMU interval notifiers. Therefore, patch 1
+adds some core functionality to allow intervals to be updated from within
+the invalidation() callback so that MMU_NOTIFY_UNMAP events can update
+the range being tracked.
 
-(Sorry I must have lost the discussion during an email migration, so
- I'll start with a new one)
+[1] https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia=
+.com
 
-This is a continued discussion of previous one on kernel managed IRQ
-affinity [1].  I think at that time the conclusion is that we don't
-have a usage scenario to change current policy [2].  However recently
-I noticed that it is probably a very fundamental requirement for some
-real-time scenarios, even when there's no multi-queue involved.
+Ralph Campbell (2):
+  mm/mmu_notifier: make interval notifier updates safe
+  mm/hmm/test: add self tests for HMM
 
-In my test case, it was a very common realtime guest with 10 vcpus,
-0-1 are housekeeping vcpus, 2-9 are realtime vcpus.  The guest has one
-virtio-blk device as boot disk.  With a distribution very close to
-latest upstream, we can observe high spikes, probably due to the IRQs.
+ MAINTAINERS                            |    3 +
+ include/linux/mmu_notifier.h           |   15 +
+ lib/Kconfig.debug                      |   11 +
+ lib/Makefile                           |    1 +
+ lib/test_hmm.c                         | 1367 ++++++++++++++++++++++++
+ mm/mmu_notifier.c                      |  196 +++-
+ tools/testing/selftests/vm/.gitignore  |    1 +
+ tools/testing/selftests/vm/Makefile    |    3 +
+ tools/testing/selftests/vm/config      |    2 +
+ tools/testing/selftests/vm/hmm-tests.c | 1360 +++++++++++++++++++++++
+ tools/testing/selftests/vm/run_vmtests |   16 +
+ tools/testing/selftests/vm/test_hmm.sh |   97 ++
+ 12 files changed, 3047 insertions(+), 25 deletions(-)
+ create mode 100644 lib/test_hmm.c
+ create mode 100644 tools/testing/selftests/vm/hmm-tests.c
+ create mode 100755 tools/testing/selftests/vm/test_hmm.sh
 
-To guarantee realtime responsiveness, we need to make sure the IRQs
-will be managable, say, when I run a real-time workload on vcpu9, we
-should be able to move all the IRQs from vcpu9 to the other vcpus
-(most probably vcpu0 and vcpu1).  However with the kernel managed IRQs
-we can't echo to /proc/irq/N/smp_affinity.  Here, vcpu9 gets IRQ 38
-from the virtio-blk device:
-
-  # cat /proc/interrupts | grep -w 38
-  38: 0 0 0 0 0 0 0 0 0 15206 PCI-MSI 2621441-edge virtio2-req.0
-  # cat /proc/irq/38/smp_affinity
-  3ff
-  # cat /proc/irq/38/effective_affinity
-  200
-
-Meanwhile, I don't think there's anything special for VMs, so this
-issue should exist even for hosts as long as the IRQ is managed in the
-same way here as the virtio-blk device.
-
-As Ming has mentioned in previous discussions [3], I think it would be
-at least good if the kernel IRQ system can respect "irqaffinity=" when
-assigning IRQs to the cores.  Currently it's not.  What would you
-suggest in this case?  Do you think this is a valid user scenario?
-
-Thanks,
-
-[1] https://lkml.org/lkml/2019/3/18/15
-[2] https://lkml.org/lkml/2019/3/25/562
-[3] https://lkml.org/lkml/2019/3/25/308
-
--- 
-Peter Xu
+--=20
+2.20.1
 
