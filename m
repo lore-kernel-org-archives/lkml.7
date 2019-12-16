@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1F5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9806206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1F0206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521081;
-	bh=HacWDGMaqW5A2Weut8VIS+309yFPzbKi/eyzlpxs6sI=;
+	s=default; t=1576521094;
+	bh=KO3vXSYLDbK8UNt87SuJS8TyyPyYA34rfIsJRPBk7ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTin362YUsNXQbLOuA5PymcgO9flZh4nz0JX5h7srT+QnLkCfA9BeMoN9ZyhVNw+B
-	 Tk0VTY34SkG4paP9z6u/plLCMKb3LxGkfxVeH2W4dR6/g9w2/O/GTjdMCzCuOH/fzB
-	 2pVsDPxR9JA9vzPwSQW1yeG+nDafzqS2mmbOZock=
+	b=lI38Un6RRbZrQoZrSinLLQMXvPuMgauuZr5u2FARz6jsBO6mxuaxP5J+3mAPlu358
+	 Be4wkIShnDJqpr/jsN+uJxU+KFz3P/+wE9s6dIZSZD6GSRBjzSOs5CIPQW+rv5rnyb
+	 qYecX5TDE1t0cPbbxs+KwGSG1bC5q4fmxYDCZpR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfLPSbU (ORCPT
+        id S1730754AbfLPSLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:31:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbfLPSLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:41 -0500
+        id S1730338AbfLPSLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E202072D;
-        Mon, 16 Dec 2019 18:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F05A2072D;
+        Mon, 16 Dec 2019 18:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519901;
-        bh=HacWDGMaqW5A2Weut8VIS+309yFPzbKi/eyzlpxs6sI=;
+        s=default; t=1576519871;
+        bh=KO3vXSYLDbK8UNt87SuJS8TyyPyYA34rfIsJRPBk7ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVYPOPTbYJgqhfOB2lUQ6rN2X70vvFrE80E0/Xn4yRKj4lEvKTBDbZ7snDhxSs5Ic
-         igUGzT1ggvFf1amvcekLXIAjoAm3uch3rZxDXuuG7WnoCnX+5FezunLqK956M9VdKs
-         Q5AcB1z+cY+hh3+lWF+RYag+EWRi6vHB4OWuKRac=
+        b=KQdZPT/8vB+a5dA3E9cTMHkPpNGG9QO/VbXXlrJD6F2hD2E6GUVoBX0X0aFdY8Erh
+         ieNK16ZydFpSYqNFV2QK1IIMtg72jbp1kYpOSPj1/AlkrsOUin0+MGuBBm8w410+BR
+         NxLT3L/OWFV3yLymSO+PT8XLf/ewPT9JgqDF0cVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.3 113/180] pinctrl: samsung: Add of_node_put() before return in error path
-Date:   Mon, 16 Dec 2019 18:49:13 +0100
-Message-Id: <20191216174839.132768457@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 102/180] ALSA: oxfw: fix return value in error path of isochronous resources reservation
+Date:   Mon, 16 Dec 2019 18:49:02 +0100
+Message-Id: <20191216174836.660116804@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,39 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 3d2557ab75d4c568c79eefa2e550e0d80348a6bd upstream.
+commit 59a126aa3113fc23f03fedcafe3705f1de5aff50 upstream.
 
-Each iteration of for_each_child_of_node puts the previous node, but in
-the case of a return from the middle of the loop, there is no put, thus
-causing a memory leak. Hence add an of_node_put before the return of
-exynos_eint_wkup_init() error path.
-Issue found with Coccinelle.
+Even if isochronous resources reservation fails, error code doesn't return
+in pcm.hw_params callback.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc: <stable@vger.kernel.org>
-Fixes: 14c255d35b25 ("pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: <stable@vger.kernel.org> #5.3+
+Fixes: 4f380d007052 ("ALSA: oxfw: configure packet format in pcm.hw_params callback")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191209151655.GA8090@workstation
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/firewire/oxfw/oxfw-pcm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -486,8 +486,10 @@ int exynos_eint_wkup_init(struct samsung
- 		if (match) {
- 			irq_chip = kmemdup(match->data,
- 				sizeof(*irq_chip), GFP_KERNEL);
--			if (!irq_chip)
-+			if (!irq_chip) {
-+				of_node_put(np);
- 				return -ENOMEM;
-+			}
- 			wkup_np = np;
- 			break;
- 		}
+--- a/sound/firewire/oxfw/oxfw-pcm.c
++++ b/sound/firewire/oxfw/oxfw-pcm.c
+@@ -255,7 +255,7 @@ static int pcm_playback_hw_params(struct
+ 		mutex_unlock(&oxfw->mutex);
+ 	}
+ 
+-	return 0;
++	return err;
+ }
+ 
+ static int pcm_capture_hw_free(struct snd_pcm_substream *substream)
 
 
