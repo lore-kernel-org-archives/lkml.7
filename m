@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168B9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99CEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF42D21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21B321582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519066;
-	bh=Bcyfsom547QGU5e7VQvQpY+Cvi9D3GQGIU6yVL4/iB0=;
+	s=default; t=1576519070;
+	bh=M1JzpKtZpN9DJmcRO5JXbqZWhucdZ+QA9NRbNBHcyQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uy8QWQwNAt7OKp9P3LADhfNwYXr43Ye8Y8YXYCv72nfepUC0hu88aLR7RDS6wm039
-	 q7G8UlldvhZvN7B6H2y1iF3vixP+kiBzT6LNz4T9mv2nYPMUsrjELdQvQ12L+xD4vN
-	 AGKjo74YpseSwUvalVYpR4YOiG+xBGdQI4jxxwQ4=
+	b=YUpTSvHjOQRwiM7AO+05rvAVNLwiFN0ocvrOJfdzAxAcIVrsKf62BMk2ZkjOueALD
+	 U8WUL3aUfJRIkqq3/z7fs2qIq0LIsYDAN2cTPuajTrNk9ncH7CSKt4UM0ChHcpicwT
+	 VZs1+xxBjWB+IYHuRS4Wo9VMo90bLPrkDsZkifEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfLPR5p (ORCPT
+        id S1727872AbfLPR5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56746 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfLPR5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:41 -0500
+        id S1728282AbfLPR5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC7592166E;
-        Mon, 16 Dec 2019 17:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC0352166E;
+        Mon, 16 Dec 2019 17:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519061;
-        bh=Bcyfsom547QGU5e7VQvQpY+Cvi9D3GQGIU6yVL4/iB0=;
+        s=default; t=1576519066;
+        bh=M1JzpKtZpN9DJmcRO5JXbqZWhucdZ+QA9NRbNBHcyQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXjjA/Xf3DeJDliSfFhobCM3NpTFqFvvvI6a3U6PFuPndWxcC45ag9LrgBB/dc56/
-         6Mz3LxNFrLI9ySU364lN0IoTLy86RZI65d8q6kGBLw1EThO8gqQgKkj0b9CyNMHHlX
-         QGDqtoXIqtcVB58mgC+rcsaeFyHT+73zDY5YhLzQ=
+        b=sidro71qzSCuhQtIADqmlB8/RuKgDP3F3/b1EcrEvoS1KP/3tpMCIRUGbBc7U2Cqj
+         CgsmfEp09ffp3/tH589P+5CUouopUnOoTrnToWNktWx50LQN1mSeyDyrBWvGsc8IHC
+         Zk6DwdKBAy5v0La9bVkgct3lB+tq596cghaDQSrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 178/267] USB: adutux: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:48:24 +0100
-Message-Id: <20191216174912.253212531@linuxfoundation.org>
+        stable@vger.kernel.org, Pete Zaitcev <zaitcev@redhat.com>,
+        syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.14 180/267] usb: mon: Fix a deadlock in usbmon between mmap and read
+Date:   Mon, 16 Dec 2019 18:48:26 +0100
+Message-Id: <20191216174912.361705501@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -58,36 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Pete Zaitcev <zaitcev@redhat.com>
 
-commit 3c11c4bed02b202e278c0f5c319ae435d7fb9815 upstream.
+commit 19e6317d24c25ee737c65d1ffb7483bdda4bb54a upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+The problem arises because our read() function grabs a lock of the
+circular buffer, finds something of interest, then invokes copy_to_user()
+straight from the buffer, which in turn takes mm->mmap_sem. In the same
+time, the callback mon_bin_vma_fault() is invoked under mm->mmap_sem.
+It attempts to take the fetch lock and deadlocks.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+This patch does away with protecting of our page list with any
+semaphores, and instead relies on the kernel not close the device
+while mmap is active in a process.
 
-Fixes: 03270634e242 ("USB: Add ADU support for Ontrak ADU devices")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-3-johan@kernel.org
+In addition, we prohibit re-sizing of a buffer while mmap is active.
+This way, when (now unlocked) fault is processed, it works with the
+page that is intended to be mapped-in, and not some other random page.
+Note that this may have an ABI impact, but hopefully no legitimate
+program is this wrong.
+
+Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 46eb14a6e158 ("USB: fix usbmon BUG trigger")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191204203941.3503452b@suzdal.zaitcev.lan
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/adutux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/mon/mon_bin.c |   32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -671,7 +671,7 @@ static int adu_probe(struct usb_interfac
- 	init_waitqueue_head(&dev->read_wait);
- 	init_waitqueue_head(&dev->write_wait);
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1038,12 +1038,18 @@ static long mon_bin_ioctl(struct file *f
  
--	res = usb_find_common_endpoints_reverse(&interface->altsetting[0],
-+	res = usb_find_common_endpoints_reverse(interface->cur_altsetting,
- 			NULL, NULL,
- 			&dev->interrupt_in_endpoint,
- 			&dev->interrupt_out_endpoint);
+ 		mutex_lock(&rp->fetch_lock);
+ 		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+ 		spin_unlock_irqrestore(&rp->b_lock, flags);
+ 		mutex_unlock(&rp->fetch_lock);
+ 		}
+@@ -1215,13 +1221,21 @@ mon_bin_poll(struct file *file, struct p
+ static void mon_bin_vma_open(struct vm_area_struct *vma)
+ {
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ static void mon_bin_vma_close(struct vm_area_struct *vma)
+ {
++	unsigned long flags;
++
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ /*
+@@ -1233,16 +1247,12 @@ static int mon_bin_vma_fault(struct vm_f
+ 	unsigned long offset, chunk_idx;
+ 	struct page *pageptr;
+ 
+-	mutex_lock(&rp->fetch_lock);
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+ 		return VM_FAULT_SIGBUS;
+-	}
+ 	chunk_idx = offset / CHUNK_SIZE;
+ 	pageptr = rp->b_vec[chunk_idx].pg;
+ 	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+ 	vmf->page = pageptr;
+ 	return 0;
+ }
 
 
