@@ -2,88 +2,220 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2DCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB280C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C37C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576487072;
-	bh=JZKi27/ADaNAzPibrndV9zbPjqCG/CF7QSyH9Sw9OOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=euzupZZJAhRlcr7bqxfovwplPm7u4UgJFVTSaeBs9USukuqDr2d66lUuck8Gtuee2
-	 V0q+mm4FF6klY85kDsn23lm2eauvauVnHola8UBNkUI5XUAETpN/KxLPLKCCaajXLQ
-	 a36X+IeoVYhIXcOZC26pc735zvAq+G8X3FrXPKqg=
+	by mail.kernel.org (Postfix) with ESMTP id 9D554206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLPJEb (ORCPT
+        id S1726935AbfLPJNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:04:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfLPJEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:04:30 -0500
-Received: from localhost (unknown [5.29.147.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B95320725;
-        Mon, 16 Dec 2019 09:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576487070;
-        bh=JZKi27/ADaNAzPibrndV9zbPjqCG/CF7QSyH9Sw9OOg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBify21WH5NuGIv32G3ec1YFei8ezros3sCjbqD0guUjT1sUfjxBuABgAmXTRt73S
-         qTbAb4L8PChAfeJCMXgxYCF4dM2muGBeKIN6un2odFUdRJBnSmASyAZFrZQbx1s2N+
-         bRF9pdjeNMi0qNqL41bG04Ck4uVyBkKx4YoU3D+E=
-Date:   Mon, 16 Dec 2019 11:04:26 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     info@metux.net, linux-kernel@vger.kernel.org, jchapman@katalix.com,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] net: l2tp: remove unneeded MODULE_VERSION() usage
-Message-ID: <20191216090426.GA66555@unreal>
-References: <20191212133613.25376-1-info@metux.net>
- <20191212.110354.354662228217900367.davem@davemloft.net>
+        Mon, 16 Dec 2019 04:13:01 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:40639 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfLPJNA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:13:00 -0500
+Received: from localhost.localdomain ([78.238.229.36]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1N2mWA-1hiNnh2uwG-0135b5; Mon, 16 Dec 2019 10:12:25 +0100
+From:   Laurent Vivier <laurent@vivier.eu>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Laurent Vivier <laurent@vivier.eu>
+Subject: [PATCH v8 0/1] ns: introduce binfmt_misc namespace
+Date:   Mon, 16 Dec 2019 10:12:19 +0100
+Message-Id: <20191216091220.465626-1-laurent@vivier.eu>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212.110354.354662228217900367.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:87erVMzseOgOq1+NCqB8h9zdzPz/usHcwM74mVHHLYJgPINvz1I
+ 4p2EIyP8sBdOkV7xN+Q3V0GlLjAc5IZXE7tkfIlghPy38CQaG09SRjLrftWYVbPeKKepmAa
+ zlpKicj5Z+WYzCsgj3vLh6xlRrdSnwIWYjU4H0v2YBVC1kz2rMxpNqkwu3Gyu5QzURfT2Um
+ LpLxiLyPJ7SeS0zyKE0mA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Qi+EoN1Os8U=:LP6kvOZ8/UDrL83mt3d8LE
+ A4CXIENmzdORL0XSoCqrhLfy0ClyhR8GGUuI4D29IoX3q0pbWi4Q/Cq2TumFhQ+0vnVqO31r2
+ 26TBKimwCFVBn8o4o5F4YeDvB6UzWb0WRVQbPgon9iqL3jYE1ZU2MLdXUSf4ob3nQBCOLCnva
+ m62VmZtc8eJA5TIcfV/yWsLLmSQeQRZWuzb2+isgrwr2p4CcsCjAVTkJ/IssSxHvO6aJkIrZp
+ kXh2Aj/U+coFOrVdvwmgB6GL11ozXwSPnaugdAqaUKoNvmFmMwVik/jEJKxr7TgDHG5LCS663
+ SwVNW5qIdDR31owTA/VIsI6dPb0HEXos2hOFJxY/+JfopY4E7Qgyww6FATcdbopq2exN/Qvly
+ LZyMi3UbrQK4rC5m4b6yE7Zy5ui8PboFYOj5C74T+lufdIK1Am74gir9oWrWYW1YT7aed5tHs
+ Al52gotJuQwZcK6ay41eW2duiiWmIzTsneHOxBdBKLbzk+v1utpHZAX+kAtXU1cfnXbYDFqeg
+ S3IgDQE3HYfzqLlWO0ghIJnE+QIb5jEqKde3DHSdEeWgsge1eQJS77Is+XoZVQv/kC0MIVuHm
+ dFJUO5UNPwOPwbQpd+eJ48fSP1PhInpQtqa1PTFT7HOeUM0lsXCdavoh3tnWT/l/XhT/aTrwd
+ MrgoYnjF+rPjEFIU+v5ufN/8WStWCNfceGkL+a1LgL4PXRGnhWuhxvQ4sn/6GIxNW3MEM5yYw
+ AJ4kWZ4fmXHw44EsYG3cutM/ZTw5VKN8HT/ciCoTtUuB9gQ7yXE7lXbTnOqTR9LS61h/XWEth
+ OHx5oVbYWaiFI+jSE9TmD6bX64vR/xiWQYy219ostqwyx0Z56ZSQDM2XhvZv4/zxQifwbkcBu
+ yEVWHogJznZESi6Em4zg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:03:54AM -0800, David Miller wrote:
-> From: "Enrico Weigelt, metux IT consult" <info@metux.net>
-> Date: Thu, 12 Dec 2019 14:36:13 +0100
->
-> > Remove MODULE_VERSION(), as it isn't needed at all: the only version
-> > making sense is the kernel version.
-> >
-> > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
->
-> Is there a plan to remove MODULE_VERSION across the entire kernel tree?
->
-> Where is that documented?
->
-> Otherwise what gave you the reason to make this change in the first place?
+v8: s/file->f_path.dentry/file_dentry(file)/
 
-Dave, see this conversation which I had two years ago with positive
-responses from many respectable developers.
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-June/004421.html
+v7: Use the new mount API
 
-Greg's response:
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-June/004441.html
-Linus's response:
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-June/004426.html
+    Replace
 
-Thanks
+      static struct dentry *bm_mount(struct file_system_type *fs_type,
+                            int flags, const char *dev_name, void *data)
+      {
+               struct user_namespace *ns = current_user_ns();
 
->
-> No context, no high level explanation of what's going on, so it's hard
-> to review and decide whether to accept your change sorry.
->
-> At the least, you will have to write a more complete commit log message.
+               return mount_ns(fs_type, flags, data, ns, ns,
+                               bm_fill_super);
+      }
+
+    by
+
+      static void bm_free(struct fs_context *fc)
+      {
+             if (fc->s_fs_info)
+                     put_user_ns(fc->s_fs_info);
+      }
+
+      static int bm_get_tree(struct fs_context *fc)
+      {
+              return get_tree_keyed(fc, bm_fill_super, get_user_ns(fc->user_ns));
+      }
+
+      static const struct fs_context_operations bm_context_ops = {
+              .free           = bm_free,
+              .get_tree       = bm_get_tree,
+      };
+
+      static int bm_init_fs_context(struct fs_context *fc)
+      {
+              fc->ops = &bm_context_ops;
+              return 0;
+      }
+
+v6: Return &init_binfmt_ns instead of NULL in binfmt_ns()
+    This should never happen, but to stay safe return a
+    value we can use.
+    change subject from "RFC" to "PATCH"
+
+v5: Use READ_ONCE()/WRITE_ONCE()
+    move mount pointer struct init to bm_fill_super() and add smp_wmb()
+    remove useless NULL value init
+    add WARN_ON_ONCE()
+
+v4: first user namespace is initialized with &init_binfmt_ns,
+    all new user namespaces are initialized with a NULL and use
+    the one of the first parent that is not NULL. The pointer
+    is initialized to a valid value the first time the binfmt_misc
+    fs is mounted in the current user namespace.
+    This allows to not change the way it was working before:
+    new ns inherits values from its parent, and if parent value is modified
+    (or parent creates its own binfmt entry by mounting the fs) child
+    inherits it (unless it has itself mounted the fs).
+
+v3: create a structure to store binfmt_misc data,
+    add a pointer to this structure in the user_namespace structure,
+    in init_user_ns structure this pointer points to an init_binfmt_ns
+    structure. And all new user namespaces point to this init structure.
+    A new binfmt namespace structure is allocated if the binfmt_misc
+    filesystem is mounted in a user namespace that is not the initial
+    one but its binfmt namespace pointer points to the initial one.
+    add override_creds()/revert_creds() around open_exec() in
+    bm_register_write()
+
+v2: no new namespace, binfmt_misc data are now part of
+    the mount namespace
+    I put this in mount namespace instead of user namespace
+    because the mount namespace is already needed and
+    I don't want to force to have the user namespace for that.
+    As this is a filesystem, it seems logic to have it here.
+
+This allows to define a new interpreter for each new container.
+
+But the main goal is to be able to chroot to a directory
+using a binfmt_misc interpreter without being root.
+
+I have a modified version of unshare at:
+
+  https://github.com/vivier/util-linux.git branch unshare-chroot
+
+with some new options to unshare binfmt_misc namespace and to chroot
+to a directory.
+
+If you have a directory /chroot/powerpc/jessie containing debian for powerpc
+binaries and a qemu-ppc interpreter, you can do for instance:
+
+ $ uname -a
+ Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 x86_64 x86_64 x86_64 GNU/Linux
+ $ ./unshare --map-root-user --fork --pid \
+   --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/qemu-ppc:OC" \
+   --root=/chroot/powerpc/jessie /bin/bash -l
+ # uname -a
+ Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 ppc GNU/Linux
+ # id
+uid=0(root) gid=0(root) groups=0(root),65534(nogroup)
+ # ls -l
+total 5940
+drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 bin
+drwxr-xr-x.   2 nobody nogroup    4096 Jun 17 20:26 boot
+drwxr-xr-x.   4 nobody nogroup    4096 Aug 12 00:08 dev
+drwxr-xr-x.  42 nobody nogroup    4096 Sep 28 07:25 etc
+drwxr-xr-x.   3 nobody nogroup    4096 Sep 28 07:25 home
+drwxr-xr-x.   9 nobody nogroup    4096 Aug 12 00:58 lib
+drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 media
+drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 mnt
+drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 13:09 opt
+dr-xr-xr-x. 143 nobody nogroup       0 Sep 30 23:02 proc
+-rwxr-xr-x.   1 nobody nogroup 6009712 Sep 28 07:22 qemu-ppc
+drwx------.   3 nobody nogroup    4096 Aug 12 12:54 root
+drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 00:08 run
+drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 sbin
+drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 srv
+drwxr-xr-x.   2 nobody nogroup    4096 Apr  6  2015 sys
+drwxrwxrwt.   2 nobody nogroup    4096 Sep 28 10:31 tmp
+drwxr-xr-x.  10 nobody nogroup    4096 Aug 12 00:08 usr
+drwxr-xr-x.  11 nobody nogroup    4096 Aug 12 00:08 var
+
+If you want to use the qemu binary provided by your distro, you can use
+
+    --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/bin/qemu-ppc-static:OCF"
+
+With the 'F' flag, qemu-ppc-static will be then loaded from the main root
+filesystem before switching to the chroot.
+
+Another example is to use the 'P' flag in one chroot and not in another one (useful in a test
+environment to test different configurations of the same interpreter):
+
+./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-noargv0:OCF" --root=/chroot/powerpc/jessie /bin/bash -l
+root@localhost:/# sh -c 'echo $0'
+/bin/sh
+
+./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-argv0:OCFP" --root=/chroot/powerpc/jessie /bin/bash -l
+root@localhost:/# sh -c 'echo $0'
+sh
+
+Laurent Vivier (1):
+  ns: add binfmt_misc to the user namespace
+
+ fs/binfmt_misc.c               | 115 +++++++++++++++++++++++++--------
+ include/linux/user_namespace.h |  15 +++++
+ kernel/user.c                  |  14 ++++
+ kernel/user_namespace.c        |   3 +
+ 4 files changed, 119 insertions(+), 28 deletions(-)
+
+-- 
+2.23.0
+
