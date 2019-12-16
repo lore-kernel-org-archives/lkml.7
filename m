@@ -2,81 +2,98 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C73C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCC9C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D9921D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FCE2465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:07:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8lbUXIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfLPVEL (ORCPT
+        id S1727211AbfLPVHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:04:11 -0500
-Received: from muru.com ([72.249.23.125]:48520 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfLPVEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:04:10 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 84397810D;
-        Mon, 16 Dec 2019 21:04:49 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 13:04:07 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-Message-ID: <20191216210407.GR35479@atomide.com>
-References: <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
- <20191119183247.GN35479@atomide.com>
- <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
- <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
- <20191119192029.GP35479@atomide.com>
- <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
- <20191119194425.GQ35479@atomide.com>
- <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
- <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+        Mon, 16 Dec 2019 16:07:38 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37024 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLPVHi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 16:07:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id h19so358218oih.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:07:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xf+PaVfK+fxzSPWZXkO3BuD6UEDzGPf8/U5sJKPnSqc=;
+        b=j8lbUXIylU6AeuPYIm+5uxBq5U6RJpNmZZMLo5ctDECJri01nRMDpJ5qRfxwwPLKRh
+         oumhJo/nkLVN3J+uYBGhFb7psH4p92UqoS8mv3UClvK2Rj8Hfce7HwlbKt3mkFhRdAkP
+         TnIu+WS+NFDon5qVreiiJZ9yN5AOPtE73Nw0iuHl+i9MUoZYD5COw6VuUSjQ31RCI8BC
+         FrP54MUwtkLp1q8MMg6IunDKh79oT6fC7Af9xdCCICHERafZPC+KyUgtaj6kxewFTu4n
+         /mDrkysePXG5mRQudXLKdRO6CdfBN6Fb/JcCBLQ58167AzGCHTZf2a5HXnOT/ZA3qYSe
+         7LSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xf+PaVfK+fxzSPWZXkO3BuD6UEDzGPf8/U5sJKPnSqc=;
+        b=b0LC3zVkEJCP1Paakyn7RcDVkhOX+mame5v1Z0UYtnujPTJgBnnuWaUhr79jyHJ+TR
+         JUS+h5K+NOxTEosj/s3oi+8iFZTJ+iff491bDYLMfrA/BzmOI6wKHaqcGieczuF215Da
+         6vtnq8vyYaOVNbBMfmAM8TeKCDg01+XoP8KGWB1kdw5nQigyfdDLC1rxK3gYyAW4puZO
+         7nFpeC5XHw9LWU5rWNaKh6F8zX/Qv0YWoie6ktV+WodZH9YZVQ6jrRSHYcfoJOgMkcFJ
+         2Y+vb3BbmZ3HDR93vbk2paEWNuC5ZFSXPTsFfn4IMFzEffCbnGEUk6SM14+zs2gsqjIa
+         1gsQ==
+X-Gm-Message-State: APjAAAXsfxwJv42tHZMGYmYWS8GP5vbFqOe9h0rTVh/gDIxub4fvsk2s
+        wg7T2OBh1URegqjy/cUEp4i6tjHvUXwCtmiACjP+/Q==
+X-Google-Smtp-Source: APXvYqzWzDWclkNVDspqgaIn1PCLoKAhYWLJAEqeDwyrdeQGyKLOwB+UvmXjFNWeRKfvZFp0VvkubgYEQrTULqVw92E=
+X-Received: by 2002:aca:c551:: with SMTP id v78mr600481oif.161.1576530457340;
+ Mon, 16 Dec 2019 13:07:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191216161059.269492-1-colin.king@canonical.com>
+In-Reply-To: <20191216161059.269492-1-colin.king@canonical.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 16 Dec 2019 13:07:26 -0800
+Message-ID: <CALAqxLVsFr6LLKvz9a5CRdddqhmMXUwKmfwqf3LRBbhksk5gHg@mail.gmail.com>
+Subject: Re: [PATCH][next] dma-buf: fix resource leak on -ENOTTY error return path
+To:     Colin King <colin.king@canonical.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Sandeep Patil <sspatil@android.com>,
+        linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, kernel-janitors@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [191216 20:57]:
-> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
-> looks like it may get kicked out. arm_smccc_smc() will remain only for
-> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
-> too opposed upstream.
+On Mon, Dec 16, 2019 at 8:11 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The -ENOTTY error return path does not free the allocated
+> kdata as it returns directly. Fix this by returning via the
+> error handling label err.
+>
+> Addresses-Coverity: ("Resource leak")
+> Fixes: c02a81fba74f ("dma-buf: Add dma-buf heaps framework")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Yes so it seems.
+Acked-by: John Stultz <john.stultz@linaro.org>
 
-> Either way this patch would still be valid as when OP-TEE is present
-> then arm_smccc_smc() will be the right call to make, how we handle the
-> legacy calls can be sorted out later if a generic SMC call is implemented.
+Thanks so much for submitting this!
 
-Please see my comment regarding this patch earlier in this thread
-pasted below for convenience:
+Sumit, do you mind queueing this up for drm-misc-next?
 
-* Tony Lindgren <tony@atomide.com> [191119 16:22]:
-> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
-> only once during init. I'm not sure how much checking for
-> "/firmware/optee" helps here, sounds like we have a broken system
-> if the firmware is not there while the arm_smccc_smc() should
-> still work just fine :)
-
-So only check once during init. And during init, you should probably
-also check that arm_smccc_smc() actually infd optee if
-"/firmware/optee" is set, and only then set set the right function
-pointer or some flag.
-
-Regards,
-
-Tony
+thanks
+-john
