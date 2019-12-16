@@ -2,178 +2,92 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE9BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362DFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF5021582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057E021582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kdLKoTmc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KR7WwK07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLPU4e (ORCPT
+        id S1726959AbfLPU6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:56:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50890 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfLPU4e (ORCPT
+        Mon, 16 Dec 2019 15:58:03 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37034 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726275AbfLPU6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:56:34 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGKuS7U072912;
-        Mon, 16 Dec 2019 14:56:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576529788;
-        bh=HbeVMB6LPXMwO1eiEhfGjS8GhC3Lp6KRPVkA0Q8dXnY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=kdLKoTmcSpymDQMLowlHoKCYmsXTwfGshaG2OEOFQKxZiN5rudDLep+33WaUmpcFc
-         hPqcYwThgoJrQJsgVwRstNBff18Py4XL+obGQVu1PecRw+NmKYpHC1v+ywuKTakxwD
-         oog2eB7EqBM8SbO9V76DAT7Y5W4EevNllZa5MOHk=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGKuSgk115333
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 14:56:28 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 14:56:27 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 14:56:27 -0600
-Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGKuR2c102326;
-        Mon, 16 Dec 2019 14:56:27 -0600
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
- <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
- <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
- <20191119183247.GN35479@atomide.com>
- <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
- <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
- <20191119192029.GP35479@atomide.com>
- <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
- <20191119194425.GQ35479@atomide.com>
- <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
-Message-ID: <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
-Date:   Mon, 16 Dec 2019 15:56:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 15:58:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576529882;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type; bh=grtorLDue+Atr16b7VawQ97nR0ZCI76hZCAvkSUnQVk=;
+        b=KR7WwK07Y4AeS1up2re9tv74tYMFMWfZVtiUFNY0qMXbd3WnKiv98hrEuyK0GGM7uDPbhA
+        3rMDaWA85Q/qdxXrtrxAjlRJ9AfavnXQvgTIu+Pdc2aLqJV8g+wPGN9MTeazTh0nbPgxKb
+        1C8kZMtKWhJQSPYJjJ88rv59Uyc1Ouc=
+Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com
+ [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-ud7rSE1dNKObFw9bmjLnjw-1; Mon, 16 Dec 2019 15:58:00 -0500
+X-MC-Unique: ud7rSE1dNKObFw9bmjLnjw-1
+Received: by mail-yw1-f71.google.com with SMTP id r75so162017ywg.19
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:58:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:mime-version:content-disposition;
+        bh=grtorLDue+Atr16b7VawQ97nR0ZCI76hZCAvkSUnQVk=;
+        b=eopiC3Dlrd9roF1wkyP0qytjvVCEe0p1H+acKLBAySTxMu/0p78EO2rEmyvdelllxB
+         eSKaVJlkEOoXiMSeZpRBOwLugD8aK+Yz1eHKwi/CMlCWsq8sMAI4yYf+H1FnB16vlziZ
+         9B7mKz2Q3w7iOo8aj5ym0Xn35r6i0nwWXfkAqovxXEZHCek/cp7j0dpvlntJSFKocxfP
+         maakFXfS1MdKef5+BZDSWpKeMDFfX90QnDdvoGjwvkeWtnlfcgRmu0WlMTj8h601Kd8I
+         FxPjo7lqeYrW7ATIxClVzW9ISpLsTgxEbZ3gw+FW3ohP4ZAviFfmI52hK13EHabhaiE0
+         OUvA==
+X-Gm-Message-State: APjAAAXJW21BKXwKvtahCzh7OGbMFnqmhkj5jTZJpJkP0DZ7jcdMSMFD
+        BBDfNjo79HnjUPwEUGZU30tKsqN/0VxBlDK89aBS+6XwTZwPYLSmDmD48lg6eo22nRttzXEl+8R
+        5jaF7jRAhs4tQS6XznhYF6jdm
+X-Received: by 2002:a0d:cb53:: with SMTP id n80mr13704396ywd.405.1576529880007;
+        Mon, 16 Dec 2019 12:58:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx+OKdhPZQjA6xun6338qOULi2wP5YUfJvWUvCQuUfX5vn1GAiZni7I+dtFM/7KCqX1whgSqg==
+X-Received: by 2002:a0d:cb53:: with SMTP id n80mr13704382ywd.405.1576529879712;
+        Mon, 16 Dec 2019 12:57:59 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id s68sm2425938ywg.69.2019.12.16.12.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 12:57:59 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:57:57 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: panic in dmar_remove_one_dev_info
+Message-ID: <20191216205757.x4hewnduopbo4mpv@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-In-Reply-To: <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 2:59 PM, Andrew F. Davis wrote:
-> On 11/19/19 2:44 PM, Tony Lindgren wrote:
->> * Andrew F. Davis <afd@ti.com> [191119 19:36]:
->>> On 11/19/19 2:20 PM, Tony Lindgren wrote:
->>>> * Andrew F. Davis <afd@ti.com> [191119 19:13]:
->>>>> On 11/19/19 2:07 PM, Tony Lindgren wrote:
->>>>>> * Andrew F. Davis <afd@ti.com> [191119 18:51]:
->>>>>>> On 11/19/19 1:32 PM, Tony Lindgren wrote:
->>>>>>>> It would allow us to completely change over to using
->>>>>>>> arm_smccc_smc() and forget the custom calls.
->>>>>>>
->>>>>>> We would need more than just the r12 quirk to replace all our custom SMC
->>>>>>> handlers, we would need quirks for omap_smc2 which puts process ID in r1
->>>>>>> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
->>>>>>> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
->>>>>>> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
->>>>>>> legacy ROM no matter how much we hack at it :(
->>>>>>
->>>>>> We would just have omap_smc2() call arm_smccc_smc() and in that
->>>>>> case. And omap_smc2() would still deal with saving and restoring
->>>>>> the registers.
->>>>>
->>>>> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
->>>>> function, all it needs to do after loading the registers and saving the
->>>>> right ones is issue an "smc #0" instruction, why would we want to
->>>>> instead call into some other function to re-save registers and issue the
->>>>> exact same instruction?
->>>>
->>>> To use Linux generic API for smc calls where possible.
->>>
->>> But we are not using generic API calls, we are using omap_smcx() which
->>> cannot call into arm_smccc_smc(). For all the above reasons plus
->>> arm_smccc_smc() uses r12 to save the stack pointer, our ROM expects r12
->>> to store the function ID.
->>
->> Saving and restoring r12 could be handled by the arm_smccc_smc() quirk
->> for the non-optee case.
->>
->> Then we could get rid of omap_smc1() and arm_smccc_smc() should work
->> for the optee case and non-optee case, right.
->>
-> 
-> 
-> Yes, we could have both cases working if we could get the quirk in.
-> 
-> 
->>>>>> Certainly the wrapper functions calling arm_smccc_smc() can deal
->>>>>> with r12 too if the r12-quirk version and the plain version are
->>>>>> never needed the same time on a booted SoC.
->>>>>>
->>>>>> Are they ever needed the same time on a booted SoC or not?
->>
->>> They should not be needed at the same time, either OP-TEE is on the
->>> secure side or ROM is there.
->>
->> OK thanks. So we could just modify the code dynamically on boot
->> based on if optee is found or not. The quirk could be done along
->> the lines of the qcom quirk but only for the non-optee case:
->>
-> 
-> 
-> We wouldn't have to patch anything if we could get the quirk in. One has
-> to state they wish to use the quirk version in a structure passed into
-> arm_smccc_smc_quirk(), in which case for all legacy user we just fill
-> out this quirk struct. OP-TEE uses the same arm_smccc_smc() but without
-> the quirk struct and so it uses the compliant call.
-> 
-> The issue is still the same, I tried adding this, I got NAKd, if you
-> want to convince Mark to change his mind and allow us the quirk then we
-> can go down this path. Otherwise this will remain a dead end.
-> 
+HP is seeing a panic on gen9 dl360 and dl560 while testing these other
+changes we've been eorking on. I just took an initial look, but have
+to run to a dentist appointment so couldn't dig too deep. It looks
+like the device sets dev->archdata.iommu to DEFER_DEVICE_DOMAIN_INFO
+in intel_iommu_add_device, and then it needs a private domain so
+dmar_remove_one_dev_info gets called. That code path ends up trying to
+use DEFER_DEVICE_DOMAIN_INFO as a pointer.  I don't need if there just
+needs to be a check in there to bail out if it sees
+DEFER_DEVICE_DOMAIN_INFO, or if something more is needed. I'll look
+at it some more when I get back home.
 
+Regards,
+Jerry
 
-Hi Tony,
-
-Looks like the TI quirk idea is not moving forward, even the QCOM quirk
-looks like it may get kicked out. arm_smccc_smc() will remain only for
-SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
-too opposed upstream.
-
-Either way this patch would still be valid as when OP-TEE is present
-then arm_smccc_smc() will be the right call to make, how we handle the
-legacy calls can be sorted out later if a generic SMC call is implemented.
-
-Thanks,
-Andrew
-
-
-> Andrew
-> 
-> 
->> $ git grep -C10 ARM_SMCCC_QUIRK_QCOM_A6
->>
->> Regards,
->>
->> Tony
->>
