@@ -2,94 +2,128 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67873C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF1CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499C120665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F11B2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYemngY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfLPPjc (ORCPT
+        id S1728579AbfLPPkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:39:32 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728417AbfLPPjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:39:32 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B4EE5CC4E77E0A584EE6;
-        Mon, 16 Dec 2019 23:39:28 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Dec 2019 23:39:18 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tao Xu <tao3.xu@intel.com>,
-        Brice Goglin <brice.goglin@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH V6 7/7] docs: mm: numaperf.rst Add brief description for access class 1.
-Date:   Mon, 16 Dec 2019 23:38:09 +0800
-Message-ID: <20191216153809.105463-8-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
-References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
+        Mon, 16 Dec 2019 10:40:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35125 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728395AbfLPPkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:40:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so7836427wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aMcR8IvhqwKdqvk3MOsa4sjnCibF6aBm6/rKYId8yOU=;
+        b=aYemngY8sm3R+2gECU80Pbl0HOOlN6o06z/NUXwrdu0PyIkLRmYO+UOoyiah7BBfE2
+         fEfUdpJMcVhsPLGDiIX95S+Gd4837h9qPLAsR0UJUvwRkoCBm9KlMJLYNlexqBRTmgFv
+         1rDtuv1aVdu24JT2Qje03YAiu93Ls0llB1Am0O3Rw1CwuTlGY+6l/vMEPOf7lJj/omHS
+         77q58xghbmWK0T/pZiCvvltNmeLpFcMkZj8/hLSHr3s0AUI0pwpFcUR3VL0KTFrMIabX
+         gtjTJk3iQ38HjQvUZkr9pEk2eGyIeYoS69J/HBXPnRoqlirIIuhj+dPaeo93KyCbvT6c
+         DPHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aMcR8IvhqwKdqvk3MOsa4sjnCibF6aBm6/rKYId8yOU=;
+        b=PBfwkq/A/AE72VjCPF2bLZ+MHJOK4JvB7yZ+FQ6eaBH+JSviS64yk/5rpjwKPccr00
+         pL8/Y/aubo6l+m0YcOvoUPBA1FWNPwNM/VFlW46Kc8xIcgqDHHo41ydRTAAdLMTOoLRa
+         wseYliLwllq7YLcEOcvjijnBMKvRD2VVmqIle+UaZ0lYayvSBQKrEyQilvEauTSczkwB
+         hfE+Y4bHc5WVdaef5Zp8HQmM2rO17bkkNsY8eVw4Jug5is1qeXQKR/nHtQNjZ9Bv8F/z
+         IAxOoMbDehBNWNIbBgLTMugfEkcS2zxZZfOCKo+hirXpP3u5xyBmGx/IPUcwPAbV/UHj
+         rzbw==
+X-Gm-Message-State: APjAAAXP3DYZfMAaTfbdk3yOduk1ZLwGLlXwUfBeLQtUeGqewOnrZGU5
+        Ki/K2ZazvWrtT8hHpohydQ==
+X-Google-Smtp-Source: APXvYqz1HW3jI0abUFjkNtrzG17hAYe+n0BOF4YTLhBJSmgVD71P1zeLJz+yC1ay/UhACnzoEMSHZw==
+X-Received: by 2002:adf:f1d0:: with SMTP id z16mr29913158wro.209.1576510803796;
+        Mon, 16 Dec 2019 07:40:03 -0800 (PST)
+Received: from ninjahub.lan (host-92-15-174-53.as43234.net. [92.15.174.53])
+        by smtp.googlemail.com with ESMTPSA id u24sm14504514wml.10.2019.12.16.07.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:40:03 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     boqun.feng@gmail.com
+Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] kernel: locking: add releases(lock) annotation
+Date:   Mon, 16 Dec 2019 15:39:52 +0000
+Message-Id: <20191216153952.37038-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Try to make minimal changes to the document which already describes
-access class 0 in a generic fashion (including IO initiatiors that
-are not CPUs).
+Add releases(lock) annotation to remove issue detected by sparse tool.
+warning: context imbalance in xxxxxxx() - unexpected unlock
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- Documentation/admin-guide/mm/numaperf.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/locking/spinlock.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
-index a80c3c37226e..327c0d72692d 100644
---- a/Documentation/admin-guide/mm/numaperf.rst
-+++ b/Documentation/admin-guide/mm/numaperf.rst
-@@ -56,6 +56,11 @@ nodes' access characteristics share the same performance relative to other
- linked initiator nodes. Each target within an initiator's access class,
- though, do not necessarily perform the same as each other.
+diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+index 0ff08380f531..bb088fcf2be5 100644
+--- a/kernel/locking/spinlock.c
++++ b/kernel/locking/spinlock.c
+@@ -187,6 +187,7 @@ EXPORT_SYMBOL(_raw_spin_unlock);
  
-+The access class "1" is used to allow differentiation between initiators
-+that are CPUs and hence suitable for generic task scheduling, and
-+IO initiators such as GPUs and CPUs.  Unlike access class 0, only
-+nodes containing CPUs are considered.
-+
- ================
- NUMA Performance
- ================
-@@ -88,6 +93,9 @@ The latency attributes are provided in nanoseconds.
- The values reported here correspond to the rated latency and bandwidth
- for the platform.
+ #ifndef CONFIG_INLINE_SPIN_UNLOCK_IRQRESTORE
+ void __lockfunc _raw_spin_unlock_irqrestore(raw_spinlock_t *lock, unsigned long flags)
++	__releases(lock)
+ {
+ 	__raw_spin_unlock_irqrestore(lock, flags);
+ }
+@@ -203,6 +204,7 @@ EXPORT_SYMBOL(_raw_spin_unlock_irq);
  
-+Access class 0, takes the same form, but only includes values for CPU to
-+memory activity.
-+
- ==========
- NUMA Cache
- ==========
+ #ifndef CONFIG_INLINE_SPIN_UNLOCK_BH
+ void __lockfunc _raw_spin_unlock_bh(raw_spinlock_t *lock)
++	__releases(lock)
+ {
+ 	__raw_spin_unlock_bh(lock);
+ }
+@@ -275,6 +277,7 @@ EXPORT_SYMBOL(_raw_read_unlock_irq);
+ 
+ #ifndef CONFIG_INLINE_READ_UNLOCK_BH
+ void __lockfunc _raw_read_unlock_bh(rwlock_t *lock)
++	__releases(lock)
+ {
+ 	__raw_read_unlock_bh(lock);
+ }
+@@ -331,6 +334,7 @@ EXPORT_SYMBOL(_raw_write_unlock);
+ 
+ #ifndef CONFIG_INLINE_WRITE_UNLOCK_IRQRESTORE
+ void __lockfunc _raw_write_unlock_irqrestore(rwlock_t *lock, unsigned long flags)
++	__releases(lock)
+ {
+ 	__raw_write_unlock_irqrestore(lock, flags);
+ }
+@@ -347,6 +351,7 @@ EXPORT_SYMBOL(_raw_write_unlock_irq);
+ 
+ #ifndef CONFIG_INLINE_WRITE_UNLOCK_BH
+ void __lockfunc _raw_write_unlock_bh(rwlock_t *lock)
++	__releases(lock)
+ {
+ 	__raw_write_unlock_bh(lock);
+ }
 -- 
-2.19.1
+2.23.0
 
