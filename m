@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18D1C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7776AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B908D20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F5B206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522218;
-	bh=eTo713KajGFpyrEjBNsGc8l6w4uNxEjiiZCsS6+O9fs=;
+	s=default; t=1576522229;
+	bh=SQ+63E8dRGVFKoxnKVDyx3YwGbAdRpIHTG3O4filuZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trjVsrtQXwC3p76owmDqJyL32Ud7CmxrfkfpocbhuT/x/oVvHnEPQq6UZPzMOjIXP
-	 on4769W6Pc/tu8rTvFu48GJWTf6DukEgML16uOr837x4C1lH6OvtYgFEZOLmCbI3Cc
-	 xoCu20lpGjytj6Ntuz0FPtEYYzUwkKJxGmORo2Ak=
+	b=WFBuWfx+dtwWBgaL/OxcvufqNwUJ0IGAxvw9o9+PrPdd87l7mwrtpho98uq9ebQPp
+	 cyiMpl6GfweP9A/h6p+OfvhNXZ6YYUcwRGmcLJgATjAURE2PfcI49bsLjdIyKp5k5Q
+	 FD5BPUNgYCxHbrbH13Gc+jQLeGdF2ZSMK9TfhixY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfLPRv4 (ORCPT
+        id S1727831AbfLPSu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:51:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:50:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfLPRvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:51:52 -0500
+        id S1727024AbfLPRvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A9720700;
-        Mon, 16 Dec 2019 17:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C42206EC;
+        Mon, 16 Dec 2019 17:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518712;
-        bh=eTo713KajGFpyrEjBNsGc8l6w4uNxEjiiZCsS6+O9fs=;
+        s=default; t=1576518697;
+        bh=SQ+63E8dRGVFKoxnKVDyx3YwGbAdRpIHTG3O4filuZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qb8TEenevbBxqdqLd8dPz5i7BvYeh/BlDDWCvPgEi+EvRgQgu1vJ4EoatooWj2QDr
-         nj3i4QzhBCQ1El7puH5wk7Dfyob73bheT3B7b8eXsRowwOtFZrH4arot6m9WZBUEc0
-         qLrWBqsU6jWPc+V3ual26Jn2fApcTZuKjQC/OgLA=
+        b=vyjE06+Oszy3e0sG4+hjd03zqxSFaxhN5Z9VC3VTcG0hVLPIaQBRMRpGdrMy1SbPa
+         50yEQLpLYSjm4qsMJcYSA4Q8zZQed3UWI3Vk/RDqzwlEL6ZtEQUyJg65Si13jvy7c/
+         Bz2CgIhx/2RuLxgxIjlzZH8yZqFMiUBbDRZEv3fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Keeping <john@metanate.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 036/267] ARM: dts: rockchip: Fix rk3288-rock2 vcc_flash name
-Date:   Mon, 16 Dec 2019 18:46:02 +0100
-Message-Id: <20191216174852.959702699@linuxfoundation.org>
+Subject: [PATCH 4.14 030/267] extcon: max8997: Fix lack of path setting in USB device mode
+Date:   Mon, 16 Dec 2019 18:45:56 +0100
+Message-Id: <20191216174852.220072682@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Keeping <john@metanate.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 03d9f8fa2bfdc791865624d3adc29070cf67814e ]
+[ Upstream commit a2dc50914744eea9f83a70a5db0486be625e5dc0 ]
 
-There is no functional change from this, but it is confusing to find two
-copies of vcc_sys and no vcc_flash when looking in
-/sys/class/regulator/*/name.
+MAX8997 driver disables automatic path selection from MicroUSB connector
+and manually sets path to either UART or USB lines. However the code for
+setting USB path worked only for USB host mode (when ID pin is set
+to ground). When standard USB cable (USB device mode) is connected, path
+registers are not touched. This means that once the non-USB accessory is
+connected to MAX8997-operated micro USB port, the path is no longer set
+to USB and USB device mode doesn't work. This patch fixes it by setting
+USB path both for USB and USB host modes.
 
-Signed-off-by: John Keeping <john@metanate.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288-rock2-som.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/extcon/extcon-max8997.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-index b9c471fcbd42b..862c2248fcb6d 100644
---- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -63,7 +63,7 @@
+diff --git a/drivers/extcon/extcon-max8997.c b/drivers/extcon/extcon-max8997.c
+index 4a0612fb9c070..b9b48d45a6dc4 100644
+--- a/drivers/extcon/extcon-max8997.c
++++ b/drivers/extcon/extcon-max8997.c
+@@ -321,12 +321,10 @@ static int max8997_muic_handle_usb(struct max8997_muic_info *info,
+ {
+ 	int ret = 0;
  
- 	vcc_flash: flash-regulator {
- 		compatible = "regulator-fixed";
--		regulator-name = "vcc_sys";
-+		regulator-name = "vcc_flash";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		startup-delay-us = <150>;
+-	if (usb_type == MAX8997_USB_HOST) {
+-		ret = max8997_muic_set_path(info, info->path_usb, attached);
+-		if (ret < 0) {
+-			dev_err(info->dev, "failed to update muic register\n");
+-			return ret;
+-		}
++	ret = max8997_muic_set_path(info, info->path_usb, attached);
++	if (ret < 0) {
++		dev_err(info->dev, "failed to update muic register\n");
++		return ret;
+ 	}
+ 
+ 	switch (usb_type) {
 -- 
 2.20.1
 
