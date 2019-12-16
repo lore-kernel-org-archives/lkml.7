@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C74C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B26C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DA7206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BDD206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521125;
-	bh=zvMDwGEEflLv0ci+1PJN1E1X3hZPcRLx42HGE3CfK80=;
+	s=default; t=1576521134;
+	bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRR1jCBLWF+A/oYSb+kxInFcTSWpFxAOccwcyKjCYg0CbNPk2XL+Vtn+/C0KOeWkB
-	 2DUZdImC6jnqEkdKyi3kvqI1v0ozBku+QBxwjO2klTxS0pl191a9sMAbKZD0X+ITlZ
-	 ggpFRxJcLCEEdmUkSqk2AuR87GhnCXa7+JuPNIO8=
+	b=sm4H7sdwhUDYWxYELuxv+Atvb/QVvHOqCc2sAcYLoBsLpOIf1F8ca3ns3xZhdDNsd
+	 MmnPDql106badGFSm+p1RPTOPHP2bjw+L5q5GCgK2eqnhTt6glT2IIwpDzosuw7mhv
+	 jkqXlaYUI6lWdKqq2k0C2Ln3HRwiOcr7a4tAPft8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfLPScD (ORCPT
+        id S1730621AbfLPSKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:32:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54188 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730660AbfLPSKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:48 -0500
+        id S1730396AbfLPSK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B471206B7;
-        Mon, 16 Dec 2019 18:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BAF42072D;
+        Mon, 16 Dec 2019 18:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519847;
-        bh=zvMDwGEEflLv0ci+1PJN1E1X3hZPcRLx42HGE3CfK80=;
+        s=default; t=1576519827;
+        bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6VcmqrQuWSa0D5GFrzWk5Mg/313Fkz84X7TnbAHO23XBgvgVvr7b3QM+NWdgIQmR
-         iDxd07uoKTryaeNfwq/AnSZyaaIGKMz2lyMM2Gx/QCvIlXyR3ik8hSDRJryYSQ9xdd
-         crC9PO+EuFP3l78Zb/nWTbn0BHWqJSB5Eq4OwBuI=
+        b=S/FXttodZrdM6IWs4rgZToktgM4+l2Hea8wI4/Dx34vcjLRT6d9XmdRUyXHYrFJIQ
+         /MTiPAX7zvmefm4Hv3FfeNFLq5t6D+q8Ix8rgnY2WxtJaPt0VaKiWKBRFm5t0qpRNh
+         qlbdstgLvxNc78V/+5RcuTDTRq4F3uG3yKY+bgKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 093/180] cpuidle: teo: Fix "early hits" handling for disabled idle states
-Date:   Mon, 16 Dec 2019 18:48:53 +0100
-Message-Id: <20191216174834.905902973@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 5.3 086/180] media: bdisp: fix memleak on release
+Date:   Mon, 16 Dec 2019 18:48:46 +0100
+Message-Id: <20191216174832.697768595@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,102 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 159e48560f51d9c2aa02d762a18cd24f7868ab27 upstream.
+commit 11609a7e21f8cea42630350aa57662928fa4dc63 upstream.
 
-The TEO governor uses idle duration "bins" defined in accordance with
-the CPU idle states table provided by the driver, so that each "bin"
-covers the idle duration range between the target residency of the
-idle state corresponding to it and the target residency of the closest
-deeper idle state.  The governor collects statistics for each bin
-regardless of whether or not the idle state corresponding to it is
-currently enabled.
+If a process is interrupted while accessing the video device and the
+device lock is contended, release() could return early and fail to free
+related resources.
 
-In particular, the "early hits" metric measures the likelihood of a
-situation in which the idle duration measured after wakeup falls into
-to given bin, but the time till the next timer (sleep length) falls
-into a bin corresponding to one of the deeper idle states.  It is
-used when the "hits" and "misses" metrics indicate that the state
-"matching" the sleep length should not be selected, so that the state
-with the maximum "early hits" value is selected instead of it.
+Note that the return value of the v4l2 release file operation is
+ignored.
 
-If the idle state corresponding to the given bin is disabled, it
-cannot be selected and if it turns out to be the one that should be
-selected, a shallower idle state needs to be used instead of it.
-Nevertheless, the metrics collected for the bin corresponding to it
-are still valid and need to be taken into account as though that
-state had not been disabled.
-
-As far as the "early hits" metric is concerned, teo_select() tries to
-take disabled states into account, but the state index corresponding
-to the maximum "early hits" value computed by it may be incorrect.
-Namely, it always uses the index of the previous maximum "early hits"
-state then, but there may be enabled idle states closer to the
-disabled one in question.  In particular, if the current candidate
-state (whose index is the idx value) is closer to the disabled one
-and the "early hits" value of the disabled state is greater than the
-current maximum, the index of the current candidate state (idx)
-should replace the "maximum early hits state" index.
-
-Modify the code to handle that case correctly.
-
-Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: 5.1+ <stable@vger.kernel.org> # 5.1+
+Fixes: 28ffeebbb7bd ("[media] bdisp: 2D blitter driver using v4l2 mem2mem framework")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpuidle/governors/teo.c |   35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -285,18 +285,35 @@ static int teo_select(struct cpuidle_dri
- 			hits = cpu_data->states[i].hits;
- 			misses = cpu_data->states[i].misses;
+--- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+@@ -651,8 +651,7 @@ static int bdisp_release(struct file *fi
  
-+			if (early_hits >= cpu_data->states[i].early_hits ||
-+			    idx < 0)
-+				continue;
-+
-+			/*
-+			 * If the current candidate state has been the one with
-+			 * the maximum "early hits" metric so far, the "early
-+			 * hits" metric of the disabled state replaces the
-+			 * current "early hits" count to avoid selecting a
-+			 * deeper state with lower "early hits" metric.
-+			 */
-+			if (max_early_idx == idx) {
-+				early_hits = cpu_data->states[i].early_hits;
-+				continue;
-+			}
-+
- 			/*
--			 * If the "early hits" metric of a disabled state is
--			 * greater than the current maximum, it should be taken
--			 * into account, because it would be a mistake to select
--			 * a deeper state with lower "early hits" metric.  The
--			 * index cannot be changed to point to it, however, so
--			 * just increase the "early hits" count alone and let
--			 * the index still point to a shallower idle state.
-+			 * The current candidate state is closer to the disabled
-+			 * one than the current maximum "early hits" state, so
-+			 * replace the latter with it, but in case the maximum
-+			 * "early hits" state index has not been set so far,
-+			 * check if the current candidate state is not too
-+			 * shallow for that role.
- 			 */
--			if (max_early_idx >= 0 &&
--			    early_hits < cpu_data->states[i].early_hits)
-+			if (!(tick_nohz_tick_stopped() &&
-+			      drv->states[idx].target_residency < TICK_USEC)) {
- 				early_hits = cpu_data->states[i].early_hits;
-+				max_early_idx = idx;
-+			}
+ 	dev_dbg(bdisp->dev, "%s\n", __func__);
  
- 			continue;
- 		}
+-	if (mutex_lock_interruptible(&bdisp->lock))
+-		return -ERESTARTSYS;
++	mutex_lock(&bdisp->lock);
+ 
+ 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+ 
 
 
