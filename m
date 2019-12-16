@@ -2,98 +2,179 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B55C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ABC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F012082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C19B2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kiHB4903"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nMPFxrJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLPK2X (ORCPT
+        id S1727499AbfLPK2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:28:23 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44312 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPK2X (ORCPT
+        Mon, 16 Dec 2019 05:28:51 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:49241 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727099AbfLPK2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:28:23 -0500
-Received: by mail-lj1-f194.google.com with SMTP id c19so6164985lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:28:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
-        b=kiHB4903z0YwS4JpJ1gi73s6446AzmG+vycJ0iyY97WttaKy2iGzEj3edupk5Ytma4
-         sCWlfm/Rxehb/LtxMP5pO00Ufe/6xX1+VMPoaDeUggEsVuap1N9u4sw7ssD3nbDI/zFh
-         dN0zfPlhE1/4zMCaBTzL/gd9KQ3DvH4mEM32gjjNxRSpoB6R1nRyhA3M6oK/nQo8S0NQ
-         IxawwPGhTYhsIrtUIcc1o6o8DCCkp8JVlAAqXKt4UrN8hIBxIyWOi9e1SeoGO6OAwRyX
-         KOtMAorX9TkHU5jRK9asVCmhp7qr+l3dHawUJqq667yore78GofGrl8Kxmz4Z39tnvKd
-         72fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
-        b=AXum59s4mJex2YYSvtlvLJhHXoBKNPuf8d3TSb4Go3lT5MOgb+Fk2ICN9xfqQWTmn9
-         aF87dMvh7IjgJcI6+k0L8bcufvwt9wihZJK9fWvyI3V89pMNWzuHQEsgMn4mK0xQ7xHx
-         1EHQVorpfvAFYqnTv3CmnO0guMRqfUThZesvpxC5msWtNGCGxt7jD7pxC3ZYwGcWvii9
-         9UsWyX7P2MY4nLrVv/wcGPjyOCmt5/BwEfo1GIuRRj3eJJAPgw9LU+W8m+NFBeWvMzJO
-         nY77wk5iOd9D++sWqtVU1xgOf99xA9jRrxRo5rqOcEzzRPkhWqgr+aNMPtAlgI10lCmE
-         L4Hw==
-X-Gm-Message-State: APjAAAVwCgVe0HCotHXkRp4FzwPVNdngqVeXj8ns8Im60A2qV6NMB94a
-        Q2L+GJ+M6XP/8aNp1v1rDoTFXKKnsX0YYjZA/fQL0Q==
-X-Google-Smtp-Source: APXvYqzIK3/hH2FPyLoT1jp9cAXyv3Rqw/xnQY9Cr/V3d9Y+7lqo0CgT1RLffzK4WqPw4AE1exyAkY88bA5xiNu7h+g=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr18088445ljh.42.1576492100956;
- Mon, 16 Dec 2019 02:28:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-4-hdegoede@redhat.com>
-In-Reply-To: <20191215163810.52356-4-hdegoede@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:28:09 +0100
-Message-ID: <CACRpkdYpg-fE3Kf=VSKpC1VaCzHjt5n31jfqOgRgWzFZ9HYtsA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
- LCD is initially off
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Mon, 16 Dec 2019 05:28:51 -0500
+Received: from [IPv6:2001:983:e9a7:1:319d:6a65:b2d0:e9e9]
+ ([IPv6:2001:983:e9a7:1:319d:6a65:b2d0:e9e9])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id gncMiGMZ7TsDegncNitaAo; Mon, 16 Dec 2019 11:28:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1576492128; bh=QPnekEio2eThFzmwX19CtbP8Vk3CElMRXAog+X32YZc=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=nMPFxrJ/YFHqsdP4cNnu+1macDSQfWE+HLP79rXsmms6eLpCN8k0qJEkMHWIFivSJ
+         CvUopW9erOyGwYFnwm/6/ELVQNP570NdFdKv6BJ0vAn1Qda4SfgZmt3GjpH0uC5tDy
+         TVabtbV1AjJQclI7ctF8WfnQuTW88AI0BJHkv3Tf2tUSFJZKNPBFq95HgbQUVLNjcN
+         zSUSQG53h9cz7YMPgm4pCHj1hRFeAgh9//WIG5yAz9UocaiLDvhlX+egyFlY15wpJY
+         VKX9OLmtgVz6w4jacNdfu/11+NNMw1MdUxIWmwJ2SnB2PIzs9AkvdKYUfsjoqkkuW0
+         5kTxNCk+aT3mg==
+Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
+ time64 ABI
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        me@zv.io
+References: <20191126161824.337724-1-arnd@arndb.de>
+ <20191126161824.337724-7-arnd@arndb.de>
+ <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
+ <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
+ <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
+ <0843718f-1391-3379-38be-41fa9558ea6d@xs4all.nl>
+ <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
+ <bfc18778-0777-ad49-619b-39e1b9b536f3@xs4all.nl>
+ <CAK8P3a0ZwMgXqjAjh7P8B2BR4THd-rMZM0jt5KvxHtxNF_8Nqw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <064e8099-9b5d-94cc-a69a-0a71cb814cfb@xs4all.nl>
+Date:   Mon, 16 Dec 2019 11:28:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a0ZwMgXqjAjh7P8B2BR4THd-rMZM0jt5KvxHtxNF_8Nqw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOCDUoACuLeAN0RcNpJFyKptLoOMQoeUitQXe5r7jp33g/qsigpDCzIIhiL7ei3U0QLm9SGujcz7rAVcA16LMvdS9C5nQt5apaM65nyDMmkyycKW3BC5
+ vdUYvtidyJ1y9erJfUxQqPBnToKxZ7OT6TMR1PipPlZIJZSWa0iGRtLeyKcfkf5zzOeJUKUARrRwRxmDw2HN9SXiivcbhe0H5QQainS9/luxovizi4PZkNmn
+ FyGb4TZFKJ5cR/9Moenx+KThjNmQ1rcRi50dWr5hXMj+CxFbLNHsoz2G0VpSnE8qJHM3ADUOr8sS1ErdfdxhOks8yDitEOb6ZmSex5Wrgp9G+UulUZkp+5u7
+ G2QF1elEEgr0p2QbwpcYbKc7eMqfL3Sho0rOnaoFGGdhfQifLhyoV5/ieGOCewTNm9zUQgja
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On 12/16/19 10:29 AM, Arnd Bergmann wrote:
+> On Sun, Dec 15, 2019 at 6:26 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> Ah, great, that worked, after applying the patch below.
+>>
+>> Both struct v4l2_buffer32 and v4l2_event32 need to be packed, otherwise you would
+>> get an additional 4 bytes since the 64 bit compiler wants to align the 8 byte tv_secs
+>> to an 8 byte boundary. But that's not what the i686 compiler does.
+> 
+> Thanks so much for the testing and finding this issue. It would be much more
+> embarrassing to find it later, given that I explained how it's supposed to work
+> in the comment above v4l2_event32 and in the documentation I just submitted
+> but got it wrong anyway ;-)
+> 
+>> If I remember correctly, packed is only needed for CONFIG_X86_64.
+> 
+> Correct.
+> 
+>> diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>> index 3bbf47d950e0..c01492cf6160 100644
+>> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+>> @@ -492,7 +492,11 @@ struct v4l2_buffer32 {
+>>         __u32                   length;
+>>         __u32                   reserved2;
+>>         __s32                   request_fd;
+>> +#ifdef CONFIG_X86_64
+>> +} __attribute__ ((packed));
+>> +#else
+>>  };
+>> +#endif
+> 
+> I would prefer to write it like this instead to avoid the #ifdef, the
+> effect should
+> be the same:
+> 
+> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> @@ -475,8 +475,8 @@ struct v4l2_buffer32 {
+>         __u32                   flags;
+>         __u32                   field;  /* enum v4l2_field */
+>         struct {
+> -               long long       tv_sec;
+> -               long long       tv_usec;
+> +               compat_s64      tv_sec;
+> +               compat_s64      tv_usec;
+>         }                       timestamp;
+>         struct v4l2_timecode    timecode;
+>         __u32                   sequence;
+> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> @@ -1277,7 +1277,10 @@ struct v4l2_event32 {
+>         } u;
+>         __u32                           pending;
+>         __u32                           sequence;
+> -       struct __kernel_timespec        timestamp;
+> +       struct {
+> +               compat_s64              tv_sec;
+> +               compat_s64              tv_usec;
+> +       } timestamp;
+>         __u32                           id;
+>         __u32                           reserved[8];
+>  };
+> 
+> If you agree, I'll push out a modified branch with that version and send out
+> that series to the list again.
 
-> When the LCD has not been turned on by the firmware/GOP, because e.g. the
-> device was booted with an external monitor connected over HDMI, we should
-> not turn on the panel-enable GPIO when we request it.
->
-> Turning on the panel-enable GPIO when we request it, means we turn it on
-> too early in the init-sequence, which causes some panels to not correctly
-> light up.
->
-> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
-> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
->
-> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
-> booted with an external monitor connected over HDMI.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+That's fine. I did a quick test with this and it looks fine.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> There is one more complication that I just noticed: The "struct v4l2_buffer32"
+> definition has always been defined in a way that works for i386 user space
+> but is broken for x32 user space. The version I used accidentally fixed x32
+> while breaking i386. With the change above, it's back to missing x32 support
+> (so nothing changed).
+> 
+> There is no way to fix the uapi definition of v4l2_buffer to have x32 and i386
+> use the same format, because applications may be using old headers, but
+> I suppose I could add yet another version of the struct to correctly deal with
+> x32, or just add a comment like
+> 
+> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> @@ -468,6 +468,10 @@ struct v4l2_plane32 {
+>         __u32                   reserved[11];
+>  };
+> 
+> +/*
+> + * This is correct for all architectures including i386, but not x32,
+> + * which has different alignment requirements for timestamp
+> + */
+>  struct v4l2_buffer32 {
+>         __u32                   index;
+>         __u32                   type;   /* enum v4l2_buf_type */
+> 
+> 
+>       Arnd
+> 
 
-Yours,
-Linus Walleij
+Go with a comment. We've never tested with x32 to be honest. There were discussions
+about a year ago of dropping x32 altogether, but that hasn't happened yet.
+
+Regards,
+
+	Hans
