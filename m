@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2343C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F2BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7574621582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCED206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519073;
-	bh=DXDA4Lq4acHcggXVh/4++Hr9oR4iVnfHrAAnjEEAhiw=;
+	s=default; t=1576519077;
+	bh=8txS9mJL9J6Lew5YvRFGxoiMpn2Y4GzBC6UtL/Z2LXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCgiiqIOc44G0IMK3FQaZIqoUBwYX6OevIlgDhahXpEqOkZD2fFnuHBc2rNegxFMz
-	 9WxlLogQT6aiPaoGQT+zKKdBvH6xZygyYPMXaDyjsDjYI4ot/ziNR1KJ/mC/qIBCms
-	 dRXWHm60t8qpNNRlhcpb2wDdCC2mLsiGjeMXjMp4=
+	b=Hvz9aPGd8ygox0pGU5WI+UN6bzvSs+41O6xgH8jUxFs22OAx1/3vaXzDT5PRs6Uo8
+	 sTPsN6KVWnLCDDm5vPilIb4g+NLl4ifigb6p5c9S4K/JwrtquLO9wazy+/fEPl0IOA
+	 nJozBPhhO+2jDeU0+mpYF5mD7Ups0t52lahiV5X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfLPR5w (ORCPT
+        id S1728093AbfLPR5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfLPR5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:49 -0500
+        id S1727443AbfLPR5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374B5205ED;
-        Mon, 16 Dec 2019 17:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A58882166E;
+        Mon, 16 Dec 2019 17:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519068;
-        bh=DXDA4Lq4acHcggXVh/4++Hr9oR4iVnfHrAAnjEEAhiw=;
+        s=default; t=1576519071;
+        bh=8txS9mJL9J6Lew5YvRFGxoiMpn2Y4GzBC6UtL/Z2LXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=haOIuDREjegheu1zlxMNs2WIPPfEGk/1LJub39lwbRAwU0CLjevF7NcJjdBetxrAp
-         H5MajEz2aIy2vrYOwH4EXT527molyCsCq1ALo18l70BTOnLSowfhJhyCLAWBW67+Rv
-         ETjlYCOLM1hP7Sldr4LTaCxDRlm4OZ9t7PvHbPh8=
+        b=dPFaHVROTfr2HAdjIRSd42dgzLZpzx9rHWWxKUqaXKPlWsB3pbdnLlIyfFKIRTLeT
+         dGDSMurqUo22PSq6A5sUVU4PNroaLOyFwMshgmVHCQf6nokmsqjxtae9b0NtLrnXrO
+         D0mjh+LTxPMW7SNT/LcFdlCCiz/M3RAXBrXjsQs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahaj Sarup <sahajsarup@gmail.com>,
-        Mark Salter <msalter@redhat.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 145/267] crypto: ccp - fix uninitialized list head
-Date:   Mon, 16 Dec 2019 18:47:51 +0100
-Message-Id: <20191216174910.419981328@linuxfoundation.org>
+        stable@vger.kernel.org, Tadeusz Struk <tadeusz.struk@intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.14 181/267] tpm: add check after commands attribs tab allocation
+Date:   Mon, 16 Dec 2019 18:48:27 +0100
+Message-Id: <20191216174912.414990948@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,87 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Salter <msalter@redhat.com>
+From: Tadeusz Struk <tadeusz.struk@intel.com>
 
-commit 691505a803a7f223b2af621848d581259c61f77d upstream.
+commit f1689114acc5e89a196fec6d732dae3e48edb6ad upstream.
 
-A NULL-pointer dereference was reported in fedora bz#1762199 while
-reshaping a raid6 array after adding a fifth drive to an existing
-array.
+devm_kcalloc() can fail and return NULL so we need to check for that.
 
-[   47.343549] md/raid:md0: raid level 6 active with 3 out of 5 devices, algorithm 2
-[   47.804017] md0: detected capacity change from 0 to 7885289422848
-[   47.822083] Unable to handle kernel read from unreadable memory at virtual address 0000000000000000
-...
-[   47.940477] CPU: 1 PID: 14210 Comm: md0_raid6 Tainted: G        W         5.2.18-200.fc30.aarch64 #1
-[   47.949594] Hardware name: AMD Overdrive/Supercharger/To be filled by O.E.M., BIOS ROD1002C 04/08/2016
-[   47.958886] pstate: 00400085 (nzcv daIf +PAN -UAO)
-[   47.963668] pc : __list_del_entry_valid+0x2c/0xa8
-[   47.968366] lr : ccp_tx_submit+0x84/0x168 [ccp]
-[   47.972882] sp : ffff00001369b970
-[   47.976184] x29: ffff00001369b970 x28: ffff00001369bdb8
-[   47.981483] x27: 00000000ffffffff x26: ffff8003b758af70
-[   47.986782] x25: ffff8003b758b2d8 x24: ffff8003e6245818
-[   47.992080] x23: 0000000000000000 x22: ffff8003e62450c0
-[   47.997379] x21: ffff8003dfd6add8 x20: 0000000000000003
-[   48.002678] x19: ffff8003e6245100 x18: 0000000000000000
-[   48.007976] x17: 0000000000000000 x16: 0000000000000000
-[   48.013274] x15: 0000000000000000 x14: 0000000000000000
-[   48.018572] x13: ffff7e000ef83a00 x12: 0000000000000001
-[   48.023870] x11: ffff000010eff998 x10: 00000000000019a0
-[   48.029169] x9 : 0000000000000000 x8 : ffff8003e6245180
-[   48.034467] x7 : 0000000000000000 x6 : 000000000000003f
-[   48.039766] x5 : 0000000000000040 x4 : ffff8003e0145080
-[   48.045064] x3 : dead000000000200 x2 : 0000000000000000
-[   48.050362] x1 : 0000000000000000 x0 : ffff8003e62450c0
-[   48.055660] Call trace:
-[   48.058095]  __list_del_entry_valid+0x2c/0xa8
-[   48.062442]  ccp_tx_submit+0x84/0x168 [ccp]
-[   48.066615]  async_tx_submit+0x224/0x368 [async_tx]
-[   48.071480]  async_trigger_callback+0x68/0xfc [async_tx]
-[   48.076784]  ops_run_biofill+0x178/0x1e8 [raid456]
-[   48.081566]  raid_run_ops+0x248/0x818 [raid456]
-[   48.086086]  handle_stripe+0x864/0x1208 [raid456]
-[   48.090781]  handle_active_stripes.isra.0+0xb0/0x278 [raid456]
-[   48.096604]  raid5d+0x378/0x618 [raid456]
-[   48.100602]  md_thread+0xa0/0x150
-[   48.103905]  kthread+0x104/0x130
-[   48.107122]  ret_from_fork+0x10/0x18
-[   48.110686] Code: d2804003 f2fbd5a3 eb03003f 54000320 (f9400021)
-[   48.116766] ---[ end trace 23f390a527f7ad77 ]---
-
-ccp_tx_submit is passed a dma_async_tx_descriptor which is contained in
-a ccp_dma_desc and adds it to a ccp channel's pending list:
-
-	list_del(&desc->entry);
-	list_add_tail(&desc->entry, &chan->pending);
-
-The problem is that desc->entry may be uninitialized in the
-async_trigger_callback path where the descriptor was gotten
-from ccp_prep_dma_interrupt which got it from ccp_alloc_dma_desc
-which doesn't initialize the desc->entry list head. So, just
-initialize the list head to avoid the problem.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Sahaj Sarup <sahajsarup@gmail.com>
-Signed-off-by: Mark Salter <msalter@redhat.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable@vger.kernel.org
+Fixes: 58472f5cd4f6f ("tpm: validate TPM 2.0 commands")
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-dmaengine.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/tpm/tpm2-cmd.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/crypto/ccp/ccp-dmaengine.c
-+++ b/drivers/crypto/ccp/ccp-dmaengine.c
-@@ -341,6 +341,7 @@ static struct ccp_dma_desc *ccp_alloc_dm
- 	desc->tx_desc.flags = flags;
- 	desc->tx_desc.tx_submit = ccp_tx_submit;
- 	desc->ccp = chan->ccp;
-+	INIT_LIST_HEAD(&desc->entry);
- 	INIT_LIST_HEAD(&desc->pending);
- 	INIT_LIST_HEAD(&desc->active);
- 	desc->status = DMA_IN_PROGRESS;
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -1029,6 +1029,10 @@ static int tpm2_get_cc_attrs_tbl(struct
+ 
+ 	chip->cc_attrs_tbl = devm_kzalloc(&chip->dev, 4 * nr_commands,
+ 					  GFP_KERNEL);
++	if (!chip->cc_attrs_tbl) {
++		rc = -ENOMEM;
++		goto out;
++	}
+ 
+ 	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+ 	if (rc)
 
 
