@@ -2,53 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6D8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C648C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62D62072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13838207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519621;
-	bh=hCm49ixH9qgaC/IlarKFknZYUmfa3I2iczh9XewCJVk=;
+	s=default; t=1576519624;
+	bh=hNtLZPPYElyILnGJ4tBu7iMDtUQCsXgFwYlYjXpjskM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RX3iKxF60UsThkUtLBw5+xKDFDA78SrQ5fBPcCn1rA5KW8AOikcSjdzNbyut1F4+B
-	 ZupkGvucpMZpVBiRkN+nQTbfu7Tfzy7mx3LrcWcq2rSctTZTmq8V0PxkHtJnTzz8SK
-	 pSpw4Skn+Bvrh2/68DF4W7EN7lsGGBweWXUhFuMk=
+	b=GGFSuinX2IN26HkxJVWUK7YFRBSjqnTRH3OkjLM8POWmFklrwOMVVQNCLIrpnnNcC
+	 eBwpL2CTWGvHb642m7NboOVuJs6594yNR2cpnqijMXFqyrcNEgPQRitIf11K1pS1tC
+	 Ir221XjfRWqlD4iMmXg6gOeH2YRG0hnBind0uqDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbfLPSHA (ORCPT
+        id S1729834AbfLPSHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730071AbfLPSG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:59 -0500
+        id S1730071AbfLPSHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAEA206EC;
-        Mon, 16 Dec 2019 18:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE69206EC;
+        Mon, 16 Dec 2019 18:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519618;
-        bh=hCm49ixH9qgaC/IlarKFknZYUmfa3I2iczh9XewCJVk=;
+        s=default; t=1576519620;
+        bh=hNtLZPPYElyILnGJ4tBu7iMDtUQCsXgFwYlYjXpjskM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxT7BsaLlAB6gFYtoIYfUKCjAieZNoITca5Tx80R6yaQ39yvshSDQTvCRZoL+KGrt
-         5uWbwLbzbahTwxBXmA67JhTi0SKg6ALzDDx4fZziOgOd7gHS0iDl4J+cePT2f/cv+S
-         lwt8p1hlj3qe45ObOcd3tbDpgFjay7h81LZ77a7w=
+        b=qYo3XO80eWfh9WqNVXCHNGrfbg9UKKcMHW4wGuv/10ISam+eioNHJtn5psSQvip6R
+         zcKTg2dxBaQdKRrZQE5umM1gGevDHW8T3aK4nEbEGyTwpRMWoknmqcTLJayb4T8QHd
+         po7PBz+9/62XrgJHyeZdAHeV1Avmx5QGewjvEOzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/140] scsi: qla2xxx: Fix session lookup in qlt_abort_work()
-Date:   Mon, 16 Dec 2019 18:49:28 +0100
-Message-Id: <20191216174812.937778790@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.19 091/140] quota: Check that quota is not dirty before release
+Date:   Mon, 16 Dec 2019 18:49:19 +0100
+Message-Id: <20191216174811.351993708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,48 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-[ Upstream commit ac452b8e79320c9e90c78edf32ba2d42431e4daf ]
+commit df4bb5d128e2c44848aeb36b7ceceba3ac85080d upstream.
 
-Pass the correct session ID to find_sess_by_s_id() instead of passing an
-uninitialized variable.
+There is a race window where quota was redirted once we drop dq_list_lock inside dqput(),
+but before we grab dquot->dq_lock inside dquot_release()
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Fixes: 2d70c103fd2a ("[SCSI] qla2xxx: Add LLD target-mode infrastructure for >= 24xx series") # v3.5.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+TASK1                                                       TASK2 (chowner)
+->dqput()
+  we_slept:
+    spin_lock(&dq_list_lock)
+    if (dquot_dirty(dquot)) {
+          spin_unlock(&dq_list_lock);
+          dquot->dq_sb->dq_op->write_dquot(dquot);
+          goto we_slept
+    if (test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
+          spin_unlock(&dq_list_lock);
+          dquot->dq_sb->dq_op->release_dquot(dquot);
+                                                            dqget()
+							    mark_dquot_dirty()
+							    dqput()
+          goto we_slept;
+        }
+So dquot dirty quota will be released by TASK1, but on next we_sleept loop
+we detect this and call ->write_dquot() for it.
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/440a80d4cbb39e9234df4d7240aee1d551c36107
+
+Link: https://lore.kernel.org/r/20191031103920.3919-2-dmonakhov@openvz.org
+CC: stable@vger.kernel.org
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_target.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/ocfs2/quota_global.c  |    2 +-
+ fs/quota/dquot.c         |    2 +-
+ include/linux/quotaops.h |   10 ++++++++++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 078d124533247..2a03d097da7b6 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -6062,7 +6062,6 @@ static void qlt_abort_work(struct qla_tgt *tgt,
- 	struct qla_hw_data *ha = vha->hw;
- 	struct fc_port *sess = NULL;
- 	unsigned long flags = 0, flags2 = 0;
--	uint32_t be_s_id;
- 	uint8_t s_id[3];
- 	int rc;
+--- a/fs/ocfs2/quota_global.c
++++ b/fs/ocfs2/quota_global.c
+@@ -728,7 +728,7 @@ static int ocfs2_release_dquot(struct dq
  
-@@ -6075,8 +6074,7 @@ static void qlt_abort_work(struct qla_tgt *tgt,
- 	s_id[1] = prm->abts.fcp_hdr_le.s_id[1];
- 	s_id[2] = prm->abts.fcp_hdr_le.s_id[0];
+ 	mutex_lock(&dquot->dq_lock);
+ 	/* Check whether we are not racing with some other dqget() */
+-	if (atomic_read(&dquot->dq_count) > 1)
++	if (dquot_is_busy(dquot))
+ 		goto out;
+ 	/* Running from downconvert thread? Postpone quota processing to wq */
+ 	if (current == osb->dc_task) {
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -491,7 +491,7 @@ int dquot_release(struct dquot *dquot)
  
--	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha,
--	    (unsigned char *)&be_s_id);
-+	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha, s_id);
- 	if (!sess) {
- 		spin_unlock_irqrestore(&ha->tgt.sess_lock, flags2);
- 
--- 
-2.20.1
-
+ 	mutex_lock(&dquot->dq_lock);
+ 	/* Check whether we are not racing with some other dqget() */
+-	if (atomic_read(&dquot->dq_count) > 1)
++	if (dquot_is_busy(dquot))
+ 		goto out_dqlock;
+ 	if (dqopt->ops[dquot->dq_id.type]->release_dqblk) {
+ 		ret = dqopt->ops[dquot->dq_id.type]->release_dqblk(dquot);
+--- a/include/linux/quotaops.h
++++ b/include/linux/quotaops.h
+@@ -54,6 +54,16 @@ static inline struct dquot *dqgrab(struc
+ 	atomic_inc(&dquot->dq_count);
+ 	return dquot;
+ }
++
++static inline bool dquot_is_busy(struct dquot *dquot)
++{
++	if (test_bit(DQ_MOD_B, &dquot->dq_flags))
++		return true;
++	if (atomic_read(&dquot->dq_count) > 1)
++		return true;
++	return false;
++}
++
+ void dqput(struct dquot *dquot);
+ int dquot_scan_active(struct super_block *sb,
+ 		      int (*fn)(struct dquot *dquot, unsigned long priv),
 
 
