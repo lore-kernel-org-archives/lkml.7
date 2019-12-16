@@ -2,238 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DBFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B9EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F18C2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADECB2465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfLPCeE (ORCPT
+        id S1726548AbfLPCkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 21:34:04 -0500
-Received: from regular1.263xmail.com ([211.150.70.205]:36250 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfLPCeE (ORCPT
+        Sun, 15 Dec 2019 21:40:03 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:45328 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfLPCkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 21:34:04 -0500
-X-Greylist: delayed 371 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 21:34:02 EST
-Received: from localhost (unknown [192.168.167.8])
-        by regular1.263xmail.com (Postfix) with ESMTP id D931830B;
-        Mon, 16 Dec 2019 10:27:27 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [192.168.30.14] (42.17.110.36.static.bjtelecom.net [36.110.17.42])
-        by smtp.263.net (postfix) whith ESMTP id P17319T140438588901120S1576463244936062_;
-        Mon, 16 Dec 2019 10:27:28 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <342511b45ad3cafeca5a7222a80a4930>
-X-RL-SENDER: chengang@emindsoft.com.cn
-X-SENDER: chengang@emindsoft.com.cn
-X-LOGIN-NAME: chengang@emindsoft.com.cn
-X-FST-TO: lvlisong@emindsoft.com.cn
-X-SENDER-IP: 36.110.17.42
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 5
-Subject: Re: [PATCH] drivers: tty: serial: 8250: fintek: Can enable or disable
- irq sharing based on isa or pci bus
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, sr@denx.de,
-        mika.westerberg@linux.intel.com, yegorslists@googlemail.com,
-        yuehaibing@huawei.com, haolee.swjtu@gmail.com, dsterba@suse.com,
-        mojha@codeaurora.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lv Li-song <lvlisong@emindsoft.com.cn>
-References: <20191213051717.2058-1-chengang@emindsoft.com.cn>
- <20191213105033.GT32742@smile.fi.intel.com>
-From:   Chen Gang <chengang@emindsoft.com.cn>
-Message-ID: <758a0ca9-8f81-1a10-d9e1-11f86fac3de1@emindsoft.com.cn>
-Date:   Mon, 16 Dec 2019 10:27:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 15 Dec 2019 21:40:02 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r11so2287448pjp.12;
+        Sun, 15 Dec 2019 18:40:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=m8jv1ZjcwuWUckxPyANOJEGlpioaHtVIEdToSkgWcBM=;
+        b=lUsvZ0CcXGO8tN/htois4hbCAxXEZJlR7I6uZxpGV10IjGAyZIcvBcDxhfFZVYK7mE
+         fY7KuRJiB8AkIxhvdYSQzVY53lzAYw6XS4BxKyjGELoXw9xtZm6E66v+rfm7prdE6j4u
+         OdbW6xrno8G1QDtMFTxcXcA9FQBFl6JqT1DLT+AujjVA6r8Ew0iMgltx2CJiaEqY6V4x
+         HULEiGumWM/DhGCq8f28P8HOdjHJlyvFhTZBt6mck4im7Y2W/oOI2d6qC1pzpaFlEMmk
+         Me1/IoH/pZ98Kzdz98Moltr0JxV1mq9b0kVnXug4lToXTvYzypPmnq+A21qBefuJBGhx
+         2b+w==
+X-Gm-Message-State: APjAAAX8xvAVLukrp2EtE9W5eJGIPpc672l/1UfRqaZILifUEQOO0mXR
+        0AXtBrM+bb2DXhuti7qFQ34YjZPchlw=
+X-Google-Smtp-Source: APXvYqwJDUhssX/SuN57Ic6JCCHkDENoNeQa++sZpuJpvRW3O9NlveTRQkNwVjKj559BLHCsr0vEdw==
+X-Received: by 2002:a17:90a:508:: with SMTP id h8mr15041273pjh.91.1576464001834;
+        Sun, 15 Dec 2019 18:40:01 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:110a:d014:2a0a:ea98:f50e? ([2601:647:4000:110a:d014:2a0a:ea98:f50e])
+        by smtp.gmail.com with ESMTPSA id k16sm20101291pfh.97.2019.12.15.18.39.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2019 18:40:00 -0800 (PST)
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+To:     cang@codeaurora.org
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <5aa3a266e3db3403e663b36ddfdc4d60@codeaurora.org>
+ <2956b9c7-b019-e2b3-7a1b-7b796b724add@acm.org>
+ <3afbe71cc9f0626edf66f7bc13b331f4@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <5b77c25f-3cc7-f90b-fcd7-dd4c1e2f46d2@acm.org>
+Date:   Sun, 15 Dec 2019 18:39:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191213105033.GT32742@smile.fi.intel.com>
+In-Reply-To: <3afbe71cc9f0626edf66f7bc13b331f4@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your reply.
+On 2019-12-15 17:34, cang@codeaurora.org wrote:
+> This is applied to 5.5/scsi-queue. The two changes I patsed from you are
+> not merged yet, I am still doing code review to them, so there is no
+> blk_cleanup_queue() calls in my code base. I am just saying you may move
+> your blk_cleanup_queue() calls below cancel_work_sync(&hba->eh_work) if
+> my change applies. How do you think?
+> 
+> scsi_host_put() was there before but explicitly removed by
+> afa3dfd42d205b106787476647735aa1de1a5d02. I agree with you, without this
+> change, there is memory leak.
 
-I guess, this patch has to be refactored to match the related linux
-versions. And excuse me, my orignal hardware environments has been gone,
-so I can not give the new refactored patch additional test.
+Hi Can,
 
-It is necessary to continue discussing and reviewing this patch to let
-it be known completely, but I guess I am not the suitable persion to
-refactor the patch.
+Since your patch restores a call that was removed earlier, please
+consider adding a Fixes: tag to your patch.
 
-After finish discussing and reviewing, if anyone still wants me to
-refactor the patch, please let me know, I shall try.
+Please also have a look at
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/log/?h=5.6/scsi-queue.
+As one can see my patches that introduce blk_cleanup_queue() and
+blk_mq_free_tag_set() calls have already been queued on Martin's
+5.6/scsi-queue branch.
 
-The contents below are my reply, pelease check, thanks.
-
-On 2019/12/13 下午6:50, Andy Shevchenko wrote:
-> On Fri, Dec 13, 2019 at 01:17:17PM +0800, chengang@emindsoft.com.cn wrote:
->> From: Chen Gang <chengang@emindsoft.com.cn>
->> Sorry for this patch being too late, which is for linux-next 20151127 (
->> about linux 4.4-rc2).  After 4 years, much things have been changed. But
->> I think it might be still valuable for some old versions. Welcome anyone
->> to refact this patch for their own.
-> 
-> This part should go after '---' line below.
-> 
->> Fintek serial ports can share irq, but they need be enabled firstly, so
->> enable or disable irq sharing based on isa or pci bus. From kconfig, it
-> 
-> irq -> IRQ
-> isa -> ISA
-> pci -> PCI
-> kconfig -> Kconfig
-> 
->> can be configured.
->>
->> For integrated 8250 drivers, kernel always calls pnp driver, which will
->> not use integrated fintek driver for ever. So let pnp driver try the
-> 
-> fintek -> Fintek or Fintek 8250
-> 
->> other drivers firstly (e.g. fintek), if fail, try pnp driver its own.
-> 
-> Ditto.
-> 
-
-OK, thanks.
-
-> 
->> --- a/drivers/tty/serial/8250/8250.h
->> +++ b/drivers/tty/serial/8250/8250.h
->> @@ -14,6 +14,7 @@
->>  #include <linux/serial_8250.h>
->>  #include <linux/serial_reg.h>
->>  #include <linux/dmaengine.h>
-> 
->> +#include <linux/pnp.h>
-> 
-> The changes below doesn't require a header.
-> Pointers are known to the compiler. Names of data structures can be forward
-> declared. Moreover, these declarations may go inside respective #ifdef.
-> 
-
-OK. I guess, originally, I forgot to remove it.
-
-> 
->> +#if IS_ENABLED(CONFIG_SERIAL_8250_FINTEK_IRQ_SHARING)
->> +
->> +static void set_icsr(u16 base_port, u8 index)
->> +{
->> +	uint8_t icsr = 0;
->> +
->> +	outb(LDN, base_port + ADDR_PORT);
->> +	outb(index, base_port + DATA_PORT);
->> +	outb(ICSR, base_port + ADDR_PORT);
->> +	icsr = inb(base_port + DATA_PORT);
->> +
->> +	if (icsr != 0xff) {
-> 
-> 	if (icsr == 0xff)
-> 		return;
-> 
-
-It'll be OK.
-
-> 
->> +		icsr |= IRQ_SHARING_MOD;
->> +#if IS_ENABLED(CONFIG_SERIAL_8250_FINTEK_IRQ_SHARING_ISA)
->> +		icsr |= ISA_IRQ_SHARING;
->> +#else
->> +		icsr |= PCI_IRQ_SHARING;
->> +#endif
->> +		outb(ICSR, base_port + ADDR_PORT);
->> +		outb(icsr, base_port + DATA_PORT);
->> +	}
->> +}
->> +
->> +#endif
-> 
-> ..
-> 
->>  				aux |= inb(addr[i] + DATA_PORT) << 8;
->>  				if (aux != io_address)
->>  					continue;
-> 
->> -
-> 
-> What the point?
-> 
->> +#if IS_ENABLED(CONFIG_SERIAL_8250_FINTEK_IRQ_SHARING)
->> +				set_icsr(addr[i], k);
->> +#endif
->>  				fintek_8250_exit_key(addr[i]);
->>  				*key = keys[j];
->>  				*index = k;
->> @@ -179,53 +212,6 @@ static int fintek_8250_base_port(u16 io_address, u8 *key, u8 *index)
->>  	return -ENODEV;
->>  }
->>  
-
-In my case at that time, for fintex irq sharing, it needed additional
-initinalization, or it could not work well. I wrote the related code
-based on the fintek data-sheet which was downloaded from internet.
-
->> -static int
->> -fintek_8250_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
-> 
-> Why did you move this function?
-> It's now not only hard to follow what has been changed, and to review.
-> 
->> --- a/drivers/tty/serial/8250/8250_pnp.c
->> +++ b/drivers/tty/serial/8250/8250_pnp.c
->> @@ -438,8 +438,13 @@ static int
->>  serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
->>  {
->>  	struct uart_8250_port uart, *port;
->> -	int ret, line, flags = dev_id->driver_data;
->> +	int ret, line, flags;
->>  
-> 
-
-I thought locating the main probe function at the end of the source file
-was better for normal code reading (maybe it need be a seperate patch).
-But if we don't mind, we can still remain its orignal position.
-
->> +#if IS_BUILTIN(CONFIG_SERIAL_8250_FINTEK)
->> +	if (!fintek_8250_probe(dev, dev_id))
->> +		return 0;
->> +#endif
->> +	flags = dev_id->driver_data;
-> 
-> Oh, I don't like this.
-> It needs a bit more refactoring done first.
-> 
-> The idea that we are not going to pollute generic driver(s) with quirks anymore
-> (only when it's really unavoidable).
-> 
-
-At that time, for me, I could not get any new better ways in a short
-time, and the issue had to be fixed in time, so the code was not good
-engough.
-
-At present, Linux version has been changed much, welcome any one to
-refactor it for current linux version or another related old linux
-versions if this patch is valuable more or less.
-
-
-Thanks.
-
-
+Bart.
