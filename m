@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6549C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42681C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E836206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D2D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520315;
-	bh=RV3klUc/PIvQCfSU2SpZoIO+Xo2pIu/8ydn60yThLWc=;
+	s=default; t=1576520320;
+	bh=C7Ze3NBdBCHJQ2Dnv2NK7SWehMitoG8432abZh5D8XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKY9JxFHF3gxDcU1zugxAo8+9jEUCMS7G0DakEPoNkq9yl+0LrQ9uOGnAx5ZzYbUm
-	 3Z+lDIUvKxlVnDrVnHZxVcQpBN1V2LXFht41aWU8+eFdyPKRxTV2soeGYpLl9rwmiZ
-	 fta4JPEaC9H+/DZjUIA98eHbwgWY9hI6PFVYGuLk=
+	b=qG39BKU/SYGVu9RyflHlcwyfgBcWqn3ob8UpHL7kJRk53gDk/nrq/zei0LPo14ZGs
+	 mmnNhH+utPiSBY0G50mJbDxqROSDDm7YbJvE4tgpWi4EzCUsKcINPRTT/ysAzFx7bF
+	 onC8/wnvZH1dCXLHvQlWeQtMKv6Ntqv8W8QnthRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731824AbfLPSSe (ORCPT
+        id S1731257AbfLPSSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:18:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:18:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731057AbfLPSSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:31 -0500
+        id S1731818AbfLPSSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:18:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 118CC20CC7;
-        Mon, 16 Dec 2019 18:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B99206EC;
+        Mon, 16 Dec 2019 18:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520310;
-        bh=RV3klUc/PIvQCfSU2SpZoIO+Xo2pIu/8ydn60yThLWc=;
+        s=default; t=1576520312;
+        bh=C7Ze3NBdBCHJQ2Dnv2NK7SWehMitoG8432abZh5D8XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCx5wK2YsSDOyw7K8sOE20SHB3xGXZA5CGPEK9SJkYETqBz7V+D1UlntOGZCcIER8
-         o+kxBSVOjr52izO+SydQYYd6gKsrYaT0trCWtB46XYBoWE1NrOUXPl9Pde06y0F1Z9
-         OSdDWbHzWsOKxBG308GpQMPsnYiDRv1QyduLAP5g=
+        b=YktSKVSASE2lWGq/Xdenc2d6yoEby2TyLv7roFfb+JtA7UPTOQQ6G9aKZAwrMDMLN
+         EAzatMCP6ODlhSiui5/rk9/2bPt7NDV9dz8rgzYpr3ZVOCjZVpHRnq6n2S1vtBDOPj
+         +KCecV3+TcaHgzW2YW/tUobjsq5/usHG6y6cLLAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jiunn Chang <c0d1n61at3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.4 103/177] media: cec.h: CEC_OP_REC_FLAG_ values were swapped
-Date:   Mon, 16 Dec 2019 18:49:19 +0100
-Message-Id: <20191216174841.251525133@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>,
+        NeilBrown <neilb@suse.de>
+Subject: [PATCH 5.4 086/177] workqueue: Fix pwq ref leak in rescuer_thread()
+Date:   Mon, 16 Dec 2019 18:49:02 +0100
+Message-Id: <20191216174838.186912096@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,35 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Tejun Heo <tj@kernel.org>
 
-commit 806e0cdfee0b99efbb450f9f6e69deb7118602fc upstream.
+commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
 
-CEC_OP_REC_FLAG_NOT_USED is 0 and CEC_OP_REC_FLAG_USED is 1, not the
-other way around.
+008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
+the rescuer worker requeue the pwq immediately if there may be more
+work items which need rescuing instead of waiting for the next mayday
+timer expiration.  Unfortunately, it doesn't check whether the pwq is
+already on the mayday list and unconditionally gets the ref and moves
+it onto the list.  This doesn't corrupt the list but creates an
+additional reference to the pwq.  It got queued twice but will only be
+removed once.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Jiunn Chang <c0d1n61at3@gmail.com>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This leak later can trigger pwq refcnt warning on workqueue
+destruction and prevent freeing of the workqueue.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: stable@vger.kernel.org # v3.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/cec.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/workqueue.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/include/uapi/linux/cec.h
-+++ b/include/uapi/linux/cec.h
-@@ -768,8 +768,8 @@ struct cec_event {
- #define CEC_MSG_SELECT_DIGITAL_SERVICE			0x93
- #define CEC_MSG_TUNER_DEVICE_STATUS			0x07
- /* Recording Flag Operand (rec_flag) */
--#define CEC_OP_REC_FLAG_USED				0
--#define CEC_OP_REC_FLAG_NOT_USED			1
-+#define CEC_OP_REC_FLAG_NOT_USED			0
-+#define CEC_OP_REC_FLAG_USED				1
- /* Tuner Display Info Operand (tuner_display_info) */
- #define CEC_OP_TUNER_DISPLAY_INFO_DIGITAL		0
- #define CEC_OP_TUNER_DISPLAY_INFO_NONE			1
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2532,8 +2532,14 @@ repeat:
+ 			 */
+ 			if (need_to_create_worker(pool)) {
+ 				spin_lock(&wq_mayday_lock);
+-				get_pwq(pwq);
+-				list_move_tail(&pwq->mayday_node, &wq->maydays);
++				/*
++				 * Queue iff we aren't racing destruction
++				 * and somebody else hasn't queued it already.
++				 */
++				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
++					get_pwq(pwq);
++					list_add_tail(&pwq->mayday_node, &wq->maydays);
++				}
+ 				spin_unlock(&wq_mayday_lock);
+ 			}
+ 		}
+@@ -4652,7 +4658,8 @@ static void show_pwq(struct pool_workque
+ 	pr_info("  pwq %d:", pool->id);
+ 	pr_cont_pool_info(pool);
+ 
+-	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
++	pr_cont(" active=%d/%d refcnt=%d%s\n",
++		pwq->nr_active, pwq->max_active, pwq->refcnt,
+ 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ 
+ 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
 
 
