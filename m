@@ -2,106 +2,90 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED848C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62731C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2866207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z9FknNNf"
+	by mail.kernel.org (Postfix) with ESMTP id 386C3207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLPJRa (ORCPT
+        id S1727024AbfLPJSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:17:30 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36649 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfLPJRa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:17:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so5849738wma.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:17:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=ympWuvVHTsyQisGFsJE6wNDGlF/BBCJa5n1XjqeTn0M=;
-        b=z9FknNNfh6oxBP9msMi4VEbjlqa3qy68J30GAW/tCYFxV0uy+7uMZCI0ZHCwEHt6YK
-         c/ahqRY/6HR5sEG+IJJTGcnUaYKMALkFB5dCK29eKZ0Ikn98GTodFNyjGLt+HrBxmDjI
-         Sji6eAmYkZ2bbpv6YY+V43m2n5vLUxb7JrWmuALxEJBKxBuRQwChomjkSofJhs/Rvihf
-         Cv2KA2orkiR8gADcIBF7nIYrJLpHR/l1bjkp3eBCoojaycERuYNaAAzaJasrQylpp/Lf
-         1YfUdVv6KT3wMuK8k7KLM+hx8sFJ72qZQxYOMBeq+HNmi982jr8wro9euBnzO7fTq1rw
-         5mXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=ympWuvVHTsyQisGFsJE6wNDGlF/BBCJa5n1XjqeTn0M=;
-        b=G/Z7Q8f36rCW2x0FdEan9dmDhKieihO6ge68hXW8nAPD4o/6VnKLIAHzeJ6JR1FnAr
-         JqIZXmXrK8QsMB3ZPRUAWc8CU7UVAxnIVCtggun0J/lCknEbECy2ySudI5mighGWlcxf
-         iIQccZfid4RbweBv6C3uVz96Ferp3KWQtzMLUKULaLyOdkHXV2NJK5icddlF/2lRlW4O
-         cIQvgnq2cdoaDk9ntZ9jfmeEFmYUcKfkHEubxg64iOUNBipNUbBKPnGqryYmx0MaomGt
-         sPl6/AtVV9um1Tf6RA2RsYnE4/KeEbKBSrjp3I8ehaNoPhxCm7zVWHwi3HAdu7gGd+T+
-         u9uw==
-X-Gm-Message-State: APjAAAWEX29dohs8IpTHoMvGioB53h2tfJEXOpKo9A4LEdNaSlsvWEX3
-        H5s1SkWtk3DWkjsFIU+NdRT7Eg==
-X-Google-Smtp-Source: APXvYqzU8Tsr5oYK5LGn7OcfoU1jW/4JBvMiYIGT9Wfohalc0a4Io77U2njn9tjcLYyBn3aCc5QqIg==
-X-Received: by 2002:a7b:cf21:: with SMTP id m1mr28670265wmg.170.1576487848048;
-        Mon, 16 Dec 2019 01:17:28 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id n67sm20894797wmb.8.2019.12.16.01.17.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 01:17:26 -0800 (PST)
-References: <20190924123954.31561-1-jbrunet@baylibre.com> <1jv9r27kzn.fsf@starbuckisacylon.baylibre.com> <20191203090516.1A03B20661@mail.kernel.org>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] clk: let clock perform allocation in init
-In-reply-to: <20191203090516.1A03B20661@mail.kernel.org>
-Date:   Mon, 16 Dec 2019 10:17:25 +0100
-Message-ID: <1jpngobpei.fsf@starbuckisacylon.baylibre.com>
+        Mon, 16 Dec 2019 04:18:51 -0500
+Received: from mail1.ugh.no ([178.79.162.34]:51510 "EHLO mail1.ugh.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726875AbfLPJSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:18:50 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail1.ugh.no (Postfix) with ESMTP id 54E8A24E3BA;
+        Mon, 16 Dec 2019 10:18:49 +0100 (CET)
+Received: from mail1.ugh.no ([127.0.0.1])
+        by localhost (catastrophix.ugh.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id cDpM2SCLA60o; Mon, 16 Dec 2019 10:18:48 +0100 (CET)
+Received: from [10.255.64.11] (unknown [185.176.245.143])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: andre@tomt.net)
+        by mail.ugh.no (Postfix) with ESMTPSA id 9C9ED24E3B3;
+        Mon, 16 Dec 2019 10:18:48 +0100 (CET)
+Subject: Re: [PATCH 4.19 153/306] block: fix the DISCARD request merge
+ (4.19.87+ crash)
+To:     Jack Wang <jack.wang.usish@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+References: <20191127203114.766709977@linuxfoundation.org>
+ <20191127203126.845809286@linuxfoundation.org>
+ <aabbc521-b263-2d5f-efc6-72d500ab5c71@tomt.net>
+ <CA+res+RtrAOfiVLeg1QE7V1Xjs6029y3tVmh0vfy+B71_bhsUw@mail.gmail.com>
+From:   Andre Tomt <andre@tomt.net>
+Message-ID: <4d8343e0-f38a-3e08-edf6-3346b3011ddf@tomt.net>
+Date:   Mon, 16 Dec 2019 10:18:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CA+res+RtrAOfiVLeg1QE7V1Xjs6029y3tVmh0vfy+B71_bhsUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 16.12.2019 08:42, Jack Wang wrote:
+> Andre Tomt <andre@tomt.net> 于2019年12月14日周六 下午3:24写道：
+>>
+>> 4.19.87, 4.19.88, 4.19.89 all lock up frequently on some of my systems.
+>> The same systems run 5.4.3 fine, so the newer trees are probably OK.
+>> Reverting this commit on top of 4.19.87 makes everything stable.
+>>
+>> To trigger it all I have to do is re-rsyncing a directory tree with some
+>> changed files churn, it will usually crash in 10 to 30 minutes.
+>>
+>> The systems crashing has ext4 filesystem on a two ssd md raid1 mounted
+>> with the mount option discard. If mounting it without discard, the
+>> crashes no longer seem to occur.
+>>
+>> No oops/panic made it to the ipmi console. I suspect the console is just
+>> misbehaving and it didnt really livelock. At one point one line of the
+>> crash made it to the console (kernel BUG at block/blk-core.c:1776), and
+>> it was enough to pinpoint this commit. Note that the line number might
+>> be off, as I was attempting a bisect at the time.
+>>
+>> This commit also made it to 4.14.x, but I have not tested it.
+> Hi Andre,
+> 
+> I noticed one fix is missing for discard merge in 4.19.y
+> 2a5cf35cd6c5 ("block: fix single range discard merge")
+> 
+> Can you try if it helps? just "git cherry-pick 2a5cf35cd6c5"
 
-On Tue 03 Dec 2019 at 10:05, Stephen Boyd <sboyd@kernel.org> wrote:
+Indeed, adding this commit on top a clean 4.19.89 fixes the issue. So 
+far survived about an hour of rsyncing file churn.
 
-> Quoting Jerome Brunet (2019-11-29 07:36:28)
->> 
->> On Tue 24 Sep 2019 at 14:39, Jerome Brunet <jbrunet@baylibre.com> wrote:
->> 
->> > This patchset is a follow up on this pinky swear [0].
->> > Its purpose is:
->> >  * Clarify the acceptable use of clk_ops init() callback
->> >  * Let the init() callback return an error code in case anything
->> >    fail.
->> >  * Add the terminate() counter part of of init() to release the
->> >    resources which may have been claimed in init()
->> >
->> > After discussing with Stephen at LPC, I decided to drop the 2 last patches
->> > of the RFC [1]. I can live without it for now and nobody expressed a
->> > critical need to get the proposed placeholder.
->> >
->> > [0]: https://lkml.kernel.org/r/CAEG3pNB-143Pr_xCTPj=tURhpiTiJqi61xfDGDVdU7zG5H-2tA@mail.gmail.com
->> > [1]: https://lkml.kernel.org/r/20190828102012.4493-1-jbrunet@baylibre.com
->> >
->> 
->> Hi Stephen,
->> 
->> Do you think we can fit this into the incoming cycle ?
->> 
->
-> Sorry I missed this one. I'll apply it soon but won't be for this merge
-> window.
-
-No worries, I was referring to the v5.6 cycle, not the v5.5 merge
-window. 
