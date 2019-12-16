@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E840C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA799206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2636D206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519797;
-	bh=c+qMZz+4LQ98rQvO6c0U67L6JaEmdi0MzflveXY0soQ=;
+	s=default; t=1576519800;
+	bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJ63sBAV5/s1S73pbxPVBPLt552uYE5vrzYPHX9o+O/pCq4g0sA1mACvjL+onVvR0
-	 QpSW/kSXOKdAM5INMloWbimgEohAzbRyn8dXv3CM/xpYk8n8FyW9WprHncpYP8i1lp
-	 DULzqg37HlEwWyaAh+t4IpdgVfdX7i4UugdUWp/g=
+	b=t7t51gkzEyszn+iPo8xOMVBU3UnVJeoEp/1ab2y7Qc9kfmzLv4agsXBAnaDsI2hfI
+	 abkjpO8z5jArklL8j6QCema8LjW9KPyO3WVQB6CTBJXK7EEbFYCmQTCmlQGZoTnk6q
+	 nY5qjko8stR6NzbtGQfLQmFGpU5STn8gAwgAzw/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfLPSJz (ORCPT
+        id S1730300AbfLPSJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52600 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbfLPSJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:54 -0500
+        id S1730188AbfLPSJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:09:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5445620700;
-        Mon, 16 Dec 2019 18:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E5C206B7;
+        Mon, 16 Dec 2019 18:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519793;
-        bh=c+qMZz+4LQ98rQvO6c0U67L6JaEmdi0MzflveXY0soQ=;
+        s=default; t=1576519796;
+        bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kXqxsSg1bZvvMwclLEUhMZp97qS71KOHfyNZZ9rINQLKe2615ZieSNEugs8cJpVh
-         BiG8v4fvDjJ3K7Ia96uGndESHD4CLrWmg5CLJgFGJ5pq2X3PiYKCF6/P8GT68t+YnZ
-         3kVorxzefrs6RtWtUS2nc2J9FZKtCHFV4Nd/xX+g=
+        b=ZhIR+LP0UYnKwUljIK73GZJgLpq3mk3VJMrALT6w3bZ7NIghxu7kIzcnjq8CxQfa1
+         H4pNM+UBLC3+is68JiuvK/MxpRK7xALN61FZlp8IjzlxJaUV6e3uUM0UQzcNGnR9ke
+         /NXrioLc/qhdmK10s2uv2CLBIBshsxgHqirRnEZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com,
-        Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 069/180] ovl: relax WARN_ON() on rename to self
-Date:   Mon, 16 Dec 2019 18:48:29 +0100
-Message-Id: <20191216174830.135531745@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.3 070/180] hwrng: omap - Fix RNG wait loop timeout
+Date:   Mon, 16 Dec 2019 18:48:30 +0100
+Message-Id: <20191216174830.209592374@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
 
-commit 6889ee5a53b8d969aa542047f5ac8acdc0e79a91 upstream.
+commit be867f987a4e1222114dd07a01838a17c26f3fff upstream.
 
-In ovl_rename(), if new upper is hardlinked to old upper underneath
-overlayfs before upper dirs are locked, user will get an ESTALE error
-and a WARN_ON will be printed.
+Existing RNG data read timeout is 200us but it doesn't cover EIP76 RNG
+data rate which takes approx. 700us to produce 16 bytes of output data
+as per testing results. So configure the timeout as 1000us to also take
+account of lack of udelay()'s reliability.
 
-Changes to underlying layers while overlayfs is mounted may result in
-unexpected behavior, but it shouldn't crash the kernel and it shouldn't
-trigger WARN_ON() either, so relax this WARN_ON().
-
-Reported-by: syzbot+bb1836a212e69f8e201a@syzkaller.appspotmail.com
-Fixes: 804032fabb3b ("ovl: don't check rename to self")
-Cc: <stable@vger.kernel.org> # v4.9+
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 383212425c92 ("hwrng: omap - Add device variant for SafeXcel IP-76 found in Armada 8K")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/dir.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/hw_random/omap-rng.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -1170,7 +1170,7 @@ static int ovl_rename(struct inode *oldd
- 	if (newdentry == trap)
- 		goto out_dput;
+--- a/drivers/char/hw_random/omap-rng.c
++++ b/drivers/char/hw_random/omap-rng.c
+@@ -66,6 +66,13 @@
+ #define OMAP4_RNG_OUTPUT_SIZE			0x8
+ #define EIP76_RNG_OUTPUT_SIZE			0x10
  
--	if (WARN_ON(olddentry->d_inode == newdentry->d_inode))
-+	if (olddentry->d_inode == newdentry->d_inode)
- 		goto out_dput;
++/*
++ * EIP76 RNG takes approx. 700us to produce 16 bytes of output data
++ * as per testing results. And to account for the lack of udelay()'s
++ * reliability, we keep the timeout as 1000us.
++ */
++#define RNG_DATA_FILL_TIMEOUT			100
++
+ enum {
+ 	RNG_OUTPUT_0_REG = 0,
+ 	RNG_OUTPUT_1_REG,
+@@ -176,7 +183,7 @@ static int omap_rng_do_read(struct hwrng
+ 	if (max < priv->pdata->data_size)
+ 		return 0;
  
- 	err = 0;
+-	for (i = 0; i < 20; i++) {
++	for (i = 0; i < RNG_DATA_FILL_TIMEOUT; i++) {
+ 		present = priv->pdata->data_present(priv);
+ 		if (present || !wait)
+ 			break;
 
 
