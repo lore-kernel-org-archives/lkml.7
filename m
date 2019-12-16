@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00A4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7354206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C557B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520874;
-	bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
+	s=default; t=1576520877;
+	bh=/tj0gDX0fkh+RFZbiR/QISLXCPBGQ1w4WHMffeu0LKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RKhVCsBgG+ehEalYaTk1xUrP4PsmKNpcG68NwSKweXzlNN509uHL/pMvlX4KDnHP2
-	 AsFHJ786ZrMKaVeSmxrntwImo/dKCrWV0eB+ufNBjf1t1RM86DrxOEwaIjiq7992Hp
-	 d0IcTlnGmsn1q5wkjlHtYLBEQsl+jQIoKX9Z6OY8=
+	b=OVfqCP0/mW8/6iH4pmLLd53mel9miL9MByuKtI0IS6JqCmXRYcra093rDW1kN90bU
+	 aa+h6r7aEzUYHIoWqcJhxM6lQpMcnY1pwJL84AleKPGJEyrLM1pLq+BM3vR4ixMZAT
+	 U2BrhUD7A97qHVE+FPVx04ClKcAe/OE9bsUHEm8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfLPSPV (ORCPT
+        id S1731687AbfLPS14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:15:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35838 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:27:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731343AbfLPSPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:13 -0500
+        id S1731371AbfLPSPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8AE20717;
-        Mon, 16 Dec 2019 18:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 194E820717;
+        Mon, 16 Dec 2019 18:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520113;
-        bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
+        s=default; t=1576520120;
+        bh=/tj0gDX0fkh+RFZbiR/QISLXCPBGQ1w4WHMffeu0LKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXaCKEDaGYQX4EeFlpaGh51gHZmtT5SWqyvm35QZp8SEueF/ZT4F6boz6aZEprZGm
-         kYzmOUYiOpP6pjSApFVDQmUUUZ/l72McNrqwGwYQ71ou38gsV37Y36z0JfUiaiuuuh
-         5ldNwX8rgfmfwx4VP0Bomesb7InKi/ok2lqeYWEI=
+        b=CBq58XQj/Nmt7fDT56tUfNybSG/Cd66VzPNm7TOJ0mA6fvbNTU9/pYEu88kaAiJqF
+         QvOAJ4ponMeDhnJE+ZlKtA6oLEVabuSoCwemilDe9BqiDHlkN9/2Ks6+/UoCoDjCxW
+         zL6Rgsmyo1FIUXWBDHae07ettjM0W/s5e4ucg5dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 021/177] staging: rtl8188eu: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:47:57 +0100
-Message-Id: <20191216174817.345744414@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com,
+        Hansjoerg Lipp <hjlipp@web.de>,
+        Tilman Schmidt <tilman@imap.cc>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 024/177] staging: gigaset: fix general protection fault on probe
+Date:   Mon, 16 Dec 2019 18:48:00 +0100
+Message-Id: <20191216174819.912279527@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,34 +64,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
+commit 53f35a39c3860baac1e5ca80bf052751cfb24a99 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Fix a general protection fault when accessing the endpoint descriptors
+which could be triggered by a malicious device due to missing sanity
+checks on the number of endpoints.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
-Cc: stable <stable@vger.kernel.org>     # 3.12
+Reported-by: syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+Fixes: 07dc1f9f2f80 ("[PATCH] isdn4linux: Siemens Gigaset drivers - M105 USB DECT adapter")
+Cc: stable <stable@vger.kernel.org>     # 2.6.17
+Cc: Hansjoerg Lipp <hjlipp@web.de>
+Cc: Tilman Schmidt <tilman@imap.cc>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
+Link: https://lore.kernel.org/r/20191202085610.12719-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/isdn/gigaset/usb-gigaset.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -70,7 +70,7 @@ static struct dvobj_priv *usb_dvobj_init
- 	phost_conf = pusbd->actconfig;
- 	pconf_desc = &phost_conf->desc;
+--- a/drivers/staging/isdn/gigaset/usb-gigaset.c
++++ b/drivers/staging/isdn/gigaset/usb-gigaset.c
+@@ -685,6 +685,11 @@ static int gigaset_probe(struct usb_inte
+ 		return -ENODEV;
+ 	}
  
--	phost_iface = &usb_intf->altsetting[0];
-+	phost_iface = usb_intf->cur_altsetting;
- 	piface_desc = &phost_iface->desc;
++	if (hostif->desc.bNumEndpoints < 2) {
++		dev_err(&interface->dev, "missing endpoints\n");
++		return -ENODEV;
++	}
++
+ 	dev_info(&udev->dev, "%s: Device matched ... !\n", __func__);
  
- 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
+ 	/* allocate memory for our device state and initialize it */
 
 
