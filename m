@@ -2,336 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D086C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1401AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42105206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E7821835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rzU7HVYF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="csuyG/cC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfLPWZo (ORCPT
+        id S1727580AbfLPWeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:25:44 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11884 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbfLPWZl (ORCPT
+        Mon, 16 Dec 2019 17:34:16 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34100 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfLPWeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:25:41 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df8045b0000>; Mon, 16 Dec 2019 14:25:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 16 Dec 2019 14:25:40 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 16 Dec 2019 14:25:40 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 22:25:39 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 22:25:39 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 16 Dec 2019 22:25:39 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df804630001>; Mon, 16 Dec 2019 14:25:39 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-Date:   Mon, 16 Dec 2019 14:25:12 -0800
-Message-ID: <20191216222537.491123-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 16 Dec 2019 17:34:14 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGMY8Aj039879;
+        Mon, 16 Dec 2019 16:34:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576535648;
+        bh=EnqJnVYZz+faeK6XiG5eCtHJXBU9SazPb4iIs6/0beY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=csuyG/cCjtXJYYbJPlQHicQKdY3F3ZS0S//Gf4x7LgnX9+rRdxDk5DtJa3RFN4bmS
+         RRRR9anCMs+nU2zk8lJPpC6cs2VAAXY/M5NkYFZiMZKcxW/Mutne5fhSFBkCUNkIvm
+         x1zPGpq+I3Azh3clC0d6xjg95c7uoirVIxF2geIY=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGMY8bc043385
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 16:34:08 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 16:34:07 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 16:34:07 -0600
+Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGMY6jg028590;
+        Mon, 16 Dec 2019 16:34:07 -0600
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
+ <20191119183247.GN35479@atomide.com>
+ <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+ <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+ <20191119194425.GQ35479@atomide.com>
+ <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+ <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+ <20191216210407.GR35479@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <9adad579-98b4-f228-caf3-f4996dcaecda@ti.com>
+Date:   Mon, 16 Dec 2019 17:34:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576535131; bh=kXZgebWOzv1eD/Ow2mzRQKWqAbiWjhBemb2nahCMdfs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=rzU7HVYFkQqLDEekcbNlZ7U9kWPrLZdc8v5rOtl3A/lvoezqPcu+V0KtJFNgfPPsc
-         6DHoc0ogw3MwkbgdOUoUJcEMpknUsr0Gy51jZVrUKOjsry7e+Ygpfzym1D5BUlG5oP
-         9puJA+Q5DJeVeEJ9McmJCEuT5wqguoEAHJcWyRSb4227weMCpnyLENCfFe2Lj0xD5o
-         Qeb0SzZGjvV1Gttwrq9R/yC2rDSBuNXuDYyeHyAoDmYNjuGLcMW5R+xuGezgtVN86U
-         uOfXfLZsswxEFeodfLwN8oAPQ1N7jhZH6+T3di/eHdxkJhuG6eh+wUZc4HbZF4xXvG
-         VKc61q3+Yatpg==
+In-Reply-To: <20191216210407.GR35479@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 12/16/19 4:04 PM, Tony Lindgren wrote:
+> * Andrew F. Davis <afd@ti.com> [191216 20:57]:
+>> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
+>> looks like it may get kicked out. arm_smccc_smc() will remain only for
+>> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
+>> too opposed upstream.
+> 
+> Yes so it seems.
+> 
+>> Either way this patch would still be valid as when OP-TEE is present
+>> then arm_smccc_smc() will be the right call to make, how we handle the
+>> legacy calls can be sorted out later if a generic SMC call is implemented.
+> 
+> Please see my comment regarding this patch earlier in this thread
+> pasted below for convenience:
+> 
+> * Tony Lindgren <tony@atomide.com> [191119 16:22]:
+>> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
+>> only once during init. I'm not sure how much checking for
+>> "/firmware/optee" helps here, sounds like we have a broken system
+>> if the firmware is not there while the arm_smccc_smc() should
+>> still work just fine :)
+> 
+> So only check once during init. And during init, you should probably
+> also check that arm_smccc_smc() actually infd optee if
+> "/firmware/optee" is set, and only then set set the right function
+> pointer or some flag.
+> 
 
-This implements an API naming change (put_user_page*() -->
-unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
-extends that tracking to a few select subsystems. More subsystems will
-be added in follow up work.
+Okay, I'll check only once and make sure the node is "okay".
 
-Christoph Hellwig, a point of interest:
+I'll do the check during the first call to an SMC caller, I wouldn't
+want to pollute the OMAP generic init code for something that is only
+called on HS platforms, plus these SMC calls are rare (only 3 calls
+during boot of AM57x for instance) so performance is not critical, so I
+don't want to do anything fancy like code patching :), I'll just use a flag.
 
-a) I've moved the bulk of the code out of the inline functions, as
-   requested, for the devmap changes (patch 4: "mm: devmap: refactor
-   1-based refcounting for ZONE_DEVICE pages").
+Thanks,
+Andrew
 
-Changes since v10: Remaining fixes resulting from Jan Kara's reviews:
 
-* Shifted to using the sign bit in page_dma_pinned() to allow accurate
-  results even in the overflow case. See the comments in that routine
-  for details. This allowed getting rid of the new
-  page_ref_zero_or_close_to_bias_overflow(), in favor of a simple
-  sign check via "page_ref_count() <=3D 0").
-
-* Simplified some of the huge_memory.c changes, and simplified a gup.c
-  WARN invocation.
-
-* Now using a standard -ENOMEM for most try_grab_page() failures.
-
-* Got rid of tabs in the comment headers (I had thought they were
-  required there, but it's actually the reverse: they are not
-  allowed there).
-
-* Rebased against 5.5-rc2 and retested.
-
-* Added Jan Kara's reviewed-by tag for patch 23 (the main patch of the
-  series).
-
-Changes since v9: Fixes resulting from Jan Kara's and Jonathan Corbet's
-reviews:
-
-* Removed reviewed-by tags from the "mm/gup: track FOLL_PIN pages" (those
-  were improperly inherited from the much smaller refactoring patch that
-  was merged into it).
-
-* Made try_grab_compound_head() and try_grab_page() behavior similar in
-  their behavior with flags, in order to avoid "gotchas" later.
-
-* follow_trans_huge_pmd(): moved the try_grab_page() to earlier in the
-  routine, in order to avoid having to undo mlock_vma_page().
-
-* follow_hugetlb_page(): removed a refcount overflow check that is now
-  extraneous (and weaker than what try_grab_page() provides a few lines
-  further down).
-
-* Fixed up two Documentation flaws, pointed out by Jonathan Corbet's
-  review.
-
-Changes since v8:
-
-* Merged the "mm/gup: pass flags arg to __gup_device_* functions" patch
-  into the "mm/gup: track FOLL_PIN pages" patch, as requested by
-  Christoph and Jan.
-
-* Changed void grab_page() to bool try_grab_page(), and handled errors
-  at the call sites. (From Jan's review comments.) try_grab_page()
-  attempts to avoid page refcount overflows, even when counting up with
-  GUP_PIN_COUNTING_BIAS increments.
-
-* Fixed a bug that I'd introduced, when changing a BUG() to a WARN().
-
-* Added Jan's reviewed-by tag to the " mm/gup: allow FOLL_FORCE for
-  get_user_pages_fast()" patch.
-
-* Documentation: pin_user_pages.rst: fixed an incorrect gup_benchmark
-  invocation, left over from the pin_longterm days, spotted while preparing
-  this version.
-
-* Rebased onto today's linux.git (-rc1), and re-tested.
-
-Changes since v7:
-
-* Rebased onto Linux 5.5-rc1
-
-* Reworked the grab_page() and try_grab_compound_head(), for API
-  consistency and less diffs (thanks to Jan Kara's reviews).
-
-* Added Leon Romanovsky's reviewed-by tags for two of the IB-related
-  patches.
-
-* patch 4 refactoring changes, as mentioned above.
-
-There is a git repo and branch, for convenience:
-
-    git@github.com:johnhubbard/linux.git pin_user_pages_tracking_v8
-
-For the remaining list of "changes since version N", those are all in
-v7, which is here:
-
-  https://lore.kernel.org/r/20191121071354.456618-1-jhubbard@nvidia.com
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Overview:
-
-This is a prerequisite to solving the problem of proper interactions
-between file-backed pages, and [R]DMA activities, as discussed in [1],
-[2], [3], and in a remarkable number of email threads since about
-2017. :)
-
-A new internal gup flag, FOLL_PIN is introduced, and thoroughly
-documented in the last patch's Documentation/vm/pin_user_pages.rst.
-
-I believe that this will provide a good starting point for doing the
-layout lease work that Ira Weiny has been working on. That's because
-these new wrapper functions provide a clean, constrained, systematically
-named set of functionality that, again, is required in order to even
-know if a page is "dma-pinned".
-
-In contrast to earlier approaches, the page tracking can be
-incrementally applied to the kernel call sites that, until now, have
-been simply calling get_user_pages() ("gup"). In other words, opt-in by
-changing from this:
-
-    get_user_pages() (sets FOLL_GET)
-    put_page()
-
-to this:
-    pin_user_pages() (sets FOLL_PIN)
-    unpin_user_page()
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Testing:
-
-* I've done some overall kernel testing (LTP, and a few other goodies),
-  and some directed testing to exercise some of the changes. And as you
-  can see, gup_benchmark is enhanced to exercise this. Basically, I've
-  been able to runtime test the core get_user_pages() and
-  pin_user_pages() and related routines, but not so much on several of
-  the call sites--but those are generally just a couple of lines
-  changed, each.
-
-  Not much of the kernel is actually using this, which on one hand
-  reduces risk quite a lot. But on the other hand, testing coverage
-  is low. So I'd love it if, in particular, the Infiniband and PowerPC
-  folks could do a smoke test of this series for me.
-
-  Runtime testing for the call sites so far is pretty light:
-
-    * io_uring: Some directed tests from liburing exercise this, and
-                they pass.
-    * process_vm_access.c: A small directed test passes.
-    * gup_benchmark: the enhanced version hits the new gup.c code, and
-                     passes.
-    * infiniband: ran "ib_write_bw", which exercises the umem.c changes,
-                  but not the other changes.
-    * VFIO: compiles (I'm vowing to set up a run time test soon, but it's
-                      not ready just yet)
-    * powerpc: it compiles...
-    * drm/via: compiles...
-    * goldfish: compiles...
-    * net/xdp: compiles...
-    * media/v4l2: compiles...
-
-[1] Some slow progress on get_user_pages() (Apr 2, 2019): https://lwn.net/A=
-rticles/784574/
-[2] DMA and get_user_pages() (LPC: Dec 12, 2018): https://lwn.net/Articles/=
-774411/
-[3] The trouble with get_user_pages() (Apr 30, 2018): https://lwn.net/Artic=
-les/753027/
-
-Dan Williams (1):
-  mm: Cleanup __put_devmap_managed_page() vs ->page_free()
-
-John Hubbard (24):
-  mm/gup: factor out duplicate code from four routines
-  mm/gup: move try_get_compound_head() to top, fix minor issues
-  mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
-  goldish_pipe: rename local pin_user_pages() routine
-  mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
-  vfio: fix FOLL_LONGTERM use, simplify get_user_pages_remote() call
-  mm/gup: allow FOLL_FORCE for get_user_pages_fast()
-  IB/umem: use get_user_pages_fast() to pin DMA pages
-  mm/gup: introduce pin_user_pages*() and FOLL_PIN
-  goldish_pipe: convert to pin_user_pages() and put_user_page()
-  IB/{core,hw,umem}: set FOLL_PIN via pin_user_pages*(), fix up ODP
-  mm/process_vm_access: set FOLL_PIN via pin_user_pages_remote()
-  drm/via: set FOLL_PIN via pin_user_pages_fast()
-  fs/io_uring: set FOLL_PIN via pin_user_pages()
-  net/xdp: set FOLL_PIN via pin_user_pages()
-  media/v4l2-core: set pages dirty upon releasing DMA buffers
-  media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page()
-    conversion
-  vfio, mm: pin_user_pages (FOLL_PIN) and put_user_page() conversion
-  powerpc: book3s64: convert to pin_user_pages() and put_user_page()
-  mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding
-    "1"
-  mm, tree-wide: rename put_user_page*() to unpin_user_page*()
-  mm/gup: track FOLL_PIN pages
-  mm/gup_benchmark: support pin_user_pages() and related calls
-  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
-    coverage
-
- Documentation/core-api/index.rst            |   1 +
- Documentation/core-api/pin_user_pages.rst   | 232 ++++++++
- arch/powerpc/mm/book3s64/iommu_api.c        |  10 +-
- drivers/gpu/drm/via/via_dmablit.c           |   6 +-
- drivers/infiniband/core/umem.c              |  19 +-
- drivers/infiniband/core/umem_odp.c          |  13 +-
- drivers/infiniband/hw/hfi1/user_pages.c     |   4 +-
- drivers/infiniband/hw/mthca/mthca_memfree.c |   8 +-
- drivers/infiniband/hw/qib/qib_user_pages.c  |   4 +-
- drivers/infiniband/hw/qib/qib_user_sdma.c   |   8 +-
- drivers/infiniband/hw/usnic/usnic_uiom.c    |   4 +-
- drivers/infiniband/sw/siw/siw_mem.c         |   4 +-
- drivers/media/v4l2-core/videobuf-dma-sg.c   |   8 +-
- drivers/nvdimm/pmem.c                       |   6 -
- drivers/platform/goldfish/goldfish_pipe.c   |  35 +-
- drivers/vfio/vfio_iommu_type1.c             |  35 +-
- fs/io_uring.c                               |   6 +-
- include/linux/mm.h                          | 155 ++++-
- include/linux/mmzone.h                      |   2 +
- include/linux/page_ref.h                    |  10 +
- mm/gup.c                                    | 626 +++++++++++++++-----
- mm/gup_benchmark.c                          |  74 ++-
- mm/huge_memory.c                            |  29 +-
- mm/hugetlb.c                                |  38 +-
- mm/memremap.c                               |  76 ++-
- mm/process_vm_access.c                      |  28 +-
- mm/swap.c                                   |  24 +
- mm/vmstat.c                                 |   2 +
- net/xdp/xdp_umem.c                          |   4 +-
- tools/testing/selftests/vm/gup_benchmark.c  |  21 +-
- tools/testing/selftests/vm/run_vmtests      |  22 +
- 31 files changed, 1145 insertions(+), 369 deletions(-)
- create mode 100644 Documentation/core-api/pin_user_pages.rst
-
---
-2.24.1
-
+> Regards,
+> 
+> Tony
+> 
