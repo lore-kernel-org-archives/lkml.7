@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FFBC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAA1206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA5C218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520165;
-	bh=uvmuwkss42ULQYKZk7SlI3MEFf+rMhPfU9Iz/mewulQ=;
+	s=default; t=1576520166;
+	bh=cEZh9YHc/EX4a5v+m12JLY6mEnJM216KP215sTVz/CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJDvmjJvLxxpmp11T5uvM61B1afaSByYf27PE27MPaF4T63uoV/6qzuLRN2i9IH0L
-	 cENqqLcVOR7d2SVqHSA92QVZRH9LclPiPZ9kOSRozKwsRm5ZGgcDoGJmGMyhpCViMa
-	 mqKdcKW2XY3dcikpQgEIGyF5fJ4xIJaSntVay55o=
+	b=TI5JA/Azk5bQ8RaO0A27rf+wpWxzjW51pVecQEcOD7khmkAxQlEl4W9g5WpbWTzSS
+	 0l794uiAwMRjjIGLCKS1ZrSnEriVQ6x+w133VDcBXPYaw39CJ1NBZYHJmuCBzpQ/12
+	 9AZMQOoKFf4oDWOFOJ2ha/rLQiSiuPOsYXnVxgag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbfLPSQD (ORCPT
+        id S1731461AbfLPSQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37674 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbfLPSPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:54 -0500
+        id S1731447AbfLPSQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E830C2082E;
-        Mon, 16 Dec 2019 18:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A25D206E0;
+        Mon, 16 Dec 2019 18:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520154;
-        bh=uvmuwkss42ULQYKZk7SlI3MEFf+rMhPfU9Iz/mewulQ=;
+        s=default; t=1576520161;
+        bh=cEZh9YHc/EX4a5v+m12JLY6mEnJM216KP215sTVz/CQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYR2Hlu4Q7SeK9m9KVPzUGbZKvHLK78IiwWr8wjrxtmgOXADcSU60PchAjiB3AQdC
-         pi6FST86+fhgsh8+nrxMl23Rb3HLkOfYUgvZf8dd0mqs/WNqrQynpU5BmMyAlADvPN
-         nuLlwy7YNp4vuDESkXATH8L1+Xz8m4FE4ZO57lpQ=
+        b=uQ48wwmxf7d/hfXKorrkVxighjbaMv5/oL1yk6JeTl6tVnBVeDrB1cptanpOoACQx
+         LwGaJXNgC1tR8UwX0DxxpbpxYjw5QXkTwowbxLJ4KwCFP886OWsfEtP6yaUo0VPcIm
+         I3c1ohq4hqJKympALslmLwV0LygIi7V63/OFND6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 037/177] iio: adis16480: Add debugfs_reg_access entry
-Date:   Mon, 16 Dec 2019 18:48:13 +0100
-Message-Id: <20191216174828.760843408@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.4 004/177] Revert "nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T"
+Date:   Mon, 16 Dec 2019 18:47:40 +0100
+Message-Id: <20191216174812.052920441@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,34 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nuno Sá <nuno.sa@analog.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 4c35b7a51e2f291471f7221d112c6a45c63e83bc upstream.
+commit 655e7aee1f0398602627a485f7dca6c29cc96cae upstream.
 
-The driver is defining debugfs entries by calling
-`adis16480_debugfs_init()`. However, those entries are attached to the
-iio_dev debugfs entry which won't exist if no debugfs_reg_access
-callback is provided.
+Since e045fa29e893 ("PCI/MSI: Fix incorrect MSI-X masking on resume") is
+merged, we can revert the previous quirk now.
 
-Fixes: 2f3abe6cbb6c ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This reverts commit 19ea025e1d28c629b369c3532a85b3df478cc5c6.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Fixes: 19ea025e1d28 ("nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T")
+Link: https://lore.kernel.org/r/20191031093408.9322-1-jian-hong@endlessm.com
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/core.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -919,6 +919,7 @@ static const struct iio_info adis16480_i
- 	.read_raw = &adis16480_read_raw,
- 	.write_raw = &adis16480_write_raw,
- 	.update_scan_mode = adis_update_scan_mode,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2406,16 +2406,6 @@ static const struct nvme_core_quirk_entr
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+-	},
+-	{
+-		/*
+-		 * This Kingston E8FK11.T firmware version has no interrupt
+-		 * after resume with actions related to suspend to idle
+-		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
+-		 */
+-		.vid = 0x2646,
+-		.fr = "E8FK11.T",
+-		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+ 	}
  };
  
- static int adis16480_stop_device(struct iio_dev *indio_dev)
 
 
