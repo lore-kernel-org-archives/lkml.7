@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C70C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7099C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F110821835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A114121582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520006;
-	bh=v5su6fnUr8EnZiCDMpwqDj7YLp3ThB+376ZBNPvSNWU=;
+	s=default; t=1576520008;
+	bh=GPmgw5NZ3Wo99UcsvM0MofrYXw6eZWUQgcBxGmh+Jp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2n48Wr7vOBDlcDN1IZykVga7bpZYtwiSgpq/NWfJ/capXOFqzfK/bCD/tE7aPOEK
-	 lJ/VydKyPooeGrwetmQtQsM3TQAyj40cSvDR+b993Q3+bWKbtwgSQmCqfnkfi/hdqO
-	 sWzJRx3hWnwajZ3HAndS2i6aZUN0H5ld6AysjvFk=
+	b=X3OJFWZDkswKzp/6PmySy+eBA6uHWvwIqTPCpeq22+TV5hde5cAP3atEcgbRAC2vq
+	 zKE6e9BetEEDYv1yzPls+BlyqvpvD2EhoJmrHsjw++F486aJ7Cxtbsal8KCPVTKZZh
+	 WcNPN/6J7vrjMO6eMgdPm5Ce/DqtvVTWVU5UNk2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfLPSNY (ORCPT
+        id S1731101AbfLPSN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbfLPSNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:14 -0500
+        id S1731082AbfLPSNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5283B2082E;
-        Mon, 16 Dec 2019 18:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C392D207FF;
+        Mon, 16 Dec 2019 18:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519993;
-        bh=v5su6fnUr8EnZiCDMpwqDj7YLp3ThB+376ZBNPvSNWU=;
+        s=default; t=1576519996;
+        bh=GPmgw5NZ3Wo99UcsvM0MofrYXw6eZWUQgcBxGmh+Jp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u8xpBZSVtoH0Zk+KNFa+ulrWx8+Lzh/5HTkfLeKAOnKe3UouSbDgoj3d+Dpu7EXBD
-         sHOZhMrEz/BOWsjUqQJJydkrGL+0hw9Ruzppitq4dj9GTRdplS/KJp3kSQnn34kKxR
-         vvWPyJ960CWM8RFJiSkE2MyXo8PDoMnGnYc2Qins=
+        b=doh11DFFG6bcbfyUKDV9mBhllnIpEJM773L5UWFCvUkumLSpFNAnQYEt0LDzmR8cY
+         taamyFwPqH0s+THNhCiZDts8kX2yIpQ8ZkQlkCeUC4dk1fH3/761hZ+p8a8/DYR3WP
+         NCricn9vLBlim7KhIFwQdKLQ+wz0eIB5pIYUS6EY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Ewan D. Milne" <emilne@redhat.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 152/180] scsi: qla2xxx: Fix flash read for Qlogic ISPs
-Date:   Mon, 16 Dec 2019 18:49:52 +0100
-Message-Id: <20191216174844.337049340@linuxfoundation.org>
+Subject: [PATCH 5.3 153/180] scsi: qla2xxx: Fix driver reload for ISP82xx
+Date:   Mon, 16 Dec 2019 18:49:53 +0100
+Message-Id: <20191216174844.448888662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,88 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit cb92cb1657c438efe7c88c9759f40c0a9d46c353 ]
+[ Upstream commit 32a13df21668b92f70f0673387f29251e0f285ec ]
 
-Use adapter specific callback to read flash instead of ISP adapter
-specific.
+HINT_MBX_INT_PENDING is not guaranteed to be cleared by firmware. Remove
+check that prevent driver load with ISP82XX.
 
 Signed-off-by: Quinn Tran <qutran@marvell.com>
 Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Link: https://lore.kernel.org/r/20190830222402.23688-3-hmadhani@marvell.com
+Link: https://lore.kernel.org/r/20190830222402.23688-4-hmadhani@marvell.com
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 4 ++--
- drivers/scsi/qla2xxx/qla_nx.c   | 1 +
- drivers/scsi/qla2xxx/qla_sup.c  | 8 ++++----
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 16 ++--------------
+ drivers/scsi/qla2xxx/qla_nx.c  |  3 ++-
+ 2 files changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index f4ed061b96886..fb9095179fc59 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -8385,7 +8385,7 @@ qla81xx_nvram_config(scsi_qla_host_t *vha)
- 		    active_regions.aux.vpd_nvram == QLA27XX_PRIMARY_IMAGE ?
- 		    "primary" : "secondary");
- 	}
--	qla24xx_read_flash_data(vha, ha->vpd, faddr, ha->vpd_size >> 2);
-+	ha->isp_ops->read_optrom(vha, ha->vpd, faddr << 2, ha->vpd_size);
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index ac4640f456786..45548628c6f3e 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -253,21 +253,9 @@ qla2x00_mailbox_command(scsi_qla_host_t *vha, mbx_cmd_t *mcp)
+ 	if ((!abort_active && io_lock_on) || IS_NOPOLLING_TYPE(ha)) {
+ 		set_bit(MBX_INTR_WAIT, &ha->mbx_cmd_flags);
  
- 	/* Get NVRAM data into cache and calculate checksum. */
- 	faddr = ha->flt_region_nvram;
-@@ -8397,7 +8397,7 @@ qla81xx_nvram_config(scsi_qla_host_t *vha)
- 	    "Loading %s nvram image.\n",
- 	    active_regions.aux.vpd_nvram == QLA27XX_PRIMARY_IMAGE ?
- 	    "primary" : "secondary");
--	qla24xx_read_flash_data(vha, ha->nvram, faddr, ha->nvram_size >> 2);
-+	ha->isp_ops->read_optrom(vha, ha->nvram, faddr << 2, ha->nvram_size);
- 
- 	dptr = (uint32_t *)nv;
- 	for (cnt = 0, chksum = 0; cnt < ha->nvram_size >> 2; cnt++, dptr++)
+-		if (IS_P3P_TYPE(ha)) {
+-			if (RD_REG_DWORD(&reg->isp82.hint) &
+-				HINT_MBX_INT_PENDING) {
+-				ha->flags.mbox_busy = 0;
+-				spin_unlock_irqrestore(&ha->hardware_lock,
+-					flags);
+-
+-				atomic_dec(&ha->num_pend_mbx_stage2);
+-				ql_dbg(ql_dbg_mbx, vha, 0x1010,
+-				    "Pending mailbox timeout, exiting.\n");
+-				rval = QLA_FUNCTION_TIMEOUT;
+-				goto premature_exit;
+-			}
++		if (IS_P3P_TYPE(ha))
+ 			WRT_REG_DWORD(&reg->isp82.hint, HINT_MBX_INT_PENDING);
+-		} else if (IS_FWI2_CAPABLE(ha))
++		else if (IS_FWI2_CAPABLE(ha))
+ 			WRT_REG_DWORD(&reg->isp24.hccr, HCCRX_SET_HOST_INT);
+ 		else
+ 			WRT_REG_WORD(&reg->isp.hccr, HCCR_SET_HOST_INT);
 diff --git a/drivers/scsi/qla2xxx/qla_nx.c b/drivers/scsi/qla2xxx/qla_nx.c
-index c760ae354174c..6ce0f026debb1 100644
+index 6ce0f026debb1..3a23827e0f0bc 100644
 --- a/drivers/scsi/qla2xxx/qla_nx.c
 +++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -2288,6 +2288,7 @@ qla82xx_disable_intrs(struct qla_hw_data *ha)
+@@ -2287,7 +2287,8 @@ qla82xx_disable_intrs(struct qla_hw_data *ha)
+ {
  	scsi_qla_host_t *vha = pci_get_drvdata(ha->pdev);
  
- 	qla82xx_mbx_intr_disable(vha);
-+
+-	qla82xx_mbx_intr_disable(vha);
++	if (ha->interrupts_on)
++		qla82xx_mbx_intr_disable(vha);
+ 
  	spin_lock_irq(&ha->hardware_lock);
  	if (IS_QLA8044(ha))
- 		qla8044_wr_reg(ha, LEG_INTR_MASK_OFFSET, 1);
-diff --git a/drivers/scsi/qla2xxx/qla_sup.c b/drivers/scsi/qla2xxx/qla_sup.c
-index 1eb82384d933c..81c5d3de666b0 100644
---- a/drivers/scsi/qla2xxx/qla_sup.c
-+++ b/drivers/scsi/qla2xxx/qla_sup.c
-@@ -680,8 +680,8 @@ qla2xxx_get_flt_info(scsi_qla_host_t *vha, uint32_t flt_addr)
- 
- 	ha->flt_region_flt = flt_addr;
- 	wptr = (uint16_t *)ha->flt;
--	qla24xx_read_flash_data(vha, (void *)flt, flt_addr,
--	    (sizeof(struct qla_flt_header) + FLT_REGIONS_SIZE) >> 2);
-+	ha->isp_ops->read_optrom(vha, (void *)flt, flt_addr << 2,
-+	    (sizeof(struct qla_flt_header) + FLT_REGIONS_SIZE));
- 
- 	if (le16_to_cpu(*wptr) == 0xffff)
- 		goto no_flash_data;
-@@ -948,11 +948,11 @@ qla2xxx_get_fdt_info(scsi_qla_host_t *vha)
- 	struct req_que *req = ha->req_q_map[0];
- 	uint16_t cnt, chksum;
- 	uint16_t *wptr = (void *)req->ring;
--	struct qla_fdt_layout *fdt = (void *)req->ring;
-+	struct qla_fdt_layout *fdt = (struct qla_fdt_layout *)req->ring;
- 	uint8_t	man_id, flash_id;
- 	uint16_t mid = 0, fid = 0;
- 
--	qla24xx_read_flash_data(vha, (void *)fdt, ha->flt_region_fdt,
-+	ha->isp_ops->read_optrom(vha, fdt, ha->flt_region_fdt << 2,
- 	    OPTROM_BURST_DWORDS);
- 	if (le16_to_cpu(*wptr) == 0xffff)
- 		goto no_flash_data;
 -- 
 2.20.1
 
