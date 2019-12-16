@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E7CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E504C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4273321739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5569A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520231;
-	bh=364GGQrlE6OQHEpJXW3US8s53v1PHNi3/gNpEqfS8gU=;
+	s=default; t=1576520236;
+	bh=8Zq4DPHZWhYTXypB/u/8KmEgA6SgVcttkjX8RIwVA84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WyJ/7n2PftdgpvbMGTK3F7k8XD7+i7e9BbPg5FH9SQpZG6udKz3Z/fNPmZck26SIU
-	 Y8VTF4oqFf1DXk1gD9uSRIh/li7527SWfFK8H8snBgMv2Qre0ftkSrkq6QTM+wtTwE
-	 982EzfmnXMTEl5fHdgQWaMxwbUwCGnvNyIi2jzqM=
+	b=ci3KcedjvvQLgDcTxF7YDJf7hMMuaXFXxkPiQujnAC88yyKLeEs0DsPc682e4FaEy
+	 j5mUfqtc8xkrEA2Q5p8Loavu4vheMo5TKdglXUpnDM2YMJ6xx0WkMT6QWEeJXig8H6
+	 6ReBrrIYkuePtVDsj44E+hcdxAwgXMEKIKxtfhps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731634AbfLPSRJ (ORCPT
+        id S1731640AbfLPSRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:17:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:17:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731429AbfLPSRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:17:06 -0500
+        id S1731622AbfLPSRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4399206E0;
-        Mon, 16 Dec 2019 18:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 802BA207FF;
+        Mon, 16 Dec 2019 18:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520225;
-        bh=364GGQrlE6OQHEpJXW3US8s53v1PHNi3/gNpEqfS8gU=;
+        s=default; t=1576520223;
+        bh=8Zq4DPHZWhYTXypB/u/8KmEgA6SgVcttkjX8RIwVA84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mn5bD9t5VvkkbRJNOEKBt27mYm+UBmmihhtcdrp2OqAkjTGUYp82NODhFAxJbj6RF
-         vu3tNl0QvD4E58rBeGLQBANi8ocSN4Wa0YUzLujy/exa82bH5K1wsKwL8YovrVmTS9
-         xSf342SEkWIXXtBUZ4U1mweVKf410W5fbaBB1JOE=
+        b=MXfnzcqPkYVNGG07VMsVTu6esCUWbvLxFSBOsSTakt+OhlNFFmVpbuZlnNIeSumJt
+         yGfUcpF2M59wcyaAxeGamtjyC3mWEdm+qM79s1f/2Po8oRGydvQCxU23mkll4bsx/J
+         iM8Wjr+ZSGehsOf6CpUKiN/1Ya8M26V5aaqn13P8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 067/177] btrfs: use btrfs_block_group_cache_done in update_block_group
-Date:   Mon, 16 Dec 2019 18:48:43 +0100
-Message-Id: <20191216174834.482657428@linuxfoundation.org>
+Subject: [PATCH 5.4 066/177] btrfs: check page->mapping when loading free space cache
+Date:   Mon, 16 Dec 2019 18:48:42 +0100
+Message-Id: <20191216174834.408988203@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,41 +63,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit a60adce85f4bb5c1ef8ffcebadd702cafa2f3696 upstream.
+commit 3797136b626ad4b6582223660c041efdea8f26b2 upstream.
 
-When free'ing extents in a block group we check to see if the block
-group is not cached, and then cache it if we need to.  However we'll
-just carry on as long as we're loading the cache.  This is problematic
-because we are dirtying the block group here.  If we are fast enough we
-could do a transaction commit and clear the free space cache while we're
-still loading the space cache in another thread.  This truncates the
-free space inode, which will keep it from loading the space cache.
+While testing 5.2 we ran into the following panic
 
-Fix this by using the btrfs_block_group_cache_done helper so that we try
-to load the space cache unconditionally here, which will result in the
-caller waiting for the fast caching to complete and keep us from
-truncating the free space inode.
+[52238.017028] BUG: kernel NULL pointer dereference, address: 0000000000000001
+[52238.105608] RIP: 0010:drop_buffers+0x3d/0x150
+[52238.304051] Call Trace:
+[52238.308958]  try_to_free_buffers+0x15b/0x1b0
+[52238.317503]  shrink_page_list+0x1164/0x1780
+[52238.325877]  shrink_inactive_list+0x18f/0x3b0
+[52238.334596]  shrink_node_memcg+0x23e/0x7d0
+[52238.342790]  ? do_shrink_slab+0x4f/0x290
+[52238.350648]  shrink_node+0xce/0x4a0
+[52238.357628]  balance_pgdat+0x2c7/0x510
+[52238.365135]  kswapd+0x216/0x3e0
+[52238.371425]  ? wait_woken+0x80/0x80
+[52238.378412]  ? balance_pgdat+0x510/0x510
+[52238.386265]  kthread+0x111/0x130
+[52238.392727]  ? kthread_create_on_node+0x60/0x60
+[52238.401782]  ret_from_fork+0x1f/0x30
+
+The page we were trying to drop had a page->private, but had no
+page->mapping and so called drop_buffers, assuming that we had a
+buffer_head on the page, and then panic'ed trying to deref 1, which is
+our page->private for data pages.
+
+This is happening because we're truncating the free space cache while
+we're trying to load the free space cache.  This isn't supposed to
+happen, and I'll fix that in a followup patch.  However we still
+shouldn't allow those sort of mistakes to result in messing with pages
+that do not belong to us.  So add the page->mapping check to verify that
+we still own this page after dropping and re-acquiring the page lock.
+
+This page being unlocked as:
+btrfs_readpage
+  extent_read_full_page
+    __extent_read_full_page
+      __do_readpage
+        if (!nr)
+	   unlock_page  <-- nr can be 0 only if submit_extent_page
+			    returns an error
 
 CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+[ add callchain ]
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/block-group.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/free-space-cache.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -2662,7 +2662,7 @@ int btrfs_update_block_group(struct btrf
- 		 * is because we need the unpinning stage to actually add the
- 		 * space back to the block group, otherwise we will leak space.
- 		 */
--		if (!alloc && cache->cached == BTRFS_CACHE_NO)
-+		if (!alloc && !btrfs_block_group_cache_done(cache))
- 			btrfs_cache_block_group(cache, 1);
- 
- 		byte_in_group = bytenr - cache->key.objectid;
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -385,6 +385,12 @@ static int io_ctl_prepare_pages(struct b
+ 		if (uptodate && !PageUptodate(page)) {
+ 			btrfs_readpage(NULL, page);
+ 			lock_page(page);
++			if (page->mapping != inode->i_mapping) {
++				btrfs_err(BTRFS_I(inode)->root->fs_info,
++					  "free space cache page truncated");
++				io_ctl_drop_pages(io_ctl);
++				return -EIO;
++			}
+ 			if (!PageUptodate(page)) {
+ 				btrfs_err(BTRFS_I(inode)->root->fs_info,
+ 					   "error reading free space cache");
 
 
