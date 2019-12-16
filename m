@@ -6,86 +6,95 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D58C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB14C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFB5206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95ECE20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfLPNSu (ORCPT
+        id S1727869AbfLPNTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:18:50 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:58335 "EHLO
+        Mon, 16 Dec 2019 08:19:35 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:36633 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfLPNSu (ORCPT
+        with ESMTP id S1727653AbfLPNTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:18:50 -0500
+        Mon, 16 Dec 2019 08:19:35 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MWAay-1iDpDe1QGw-00XZaa; Mon, 16 Dec 2019 14:18:32 +0100
+ 1Myb8N-1hmQPH0w85-00yyN5; Mon, 16 Dec 2019 14:19:06 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: udc: tegra: select USB_ROLE_SWITCH
-Date:   Mon, 16 Dec 2019 14:18:18 +0100
-Message-Id: <20191216131831.3228566-1-arnd@arndb.de>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mt76: fix LED link time failure
+Date:   Mon, 16 Dec 2019 14:18:42 +0100
+Message-Id: <20191216131902.3251040-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iBAyh2aepRVjDzUHSRkhSaityaozSfjOvz/3hlx/Mpqhf8J4AxQ
- Uf/0sG2EYK+Lptc9AmPIDXMpN73RgaDRXkidU3rilcVglu/pDHV+5ky76jM+0vrJIqqZzW7
- CGbOpEEFbwv+sPVmBHdal/QDPJknTz0yj9MYJH2fCaveL0F125KvFOM3QIoa4PbOA3eRYaT
- eDi03mKUD2zI8yZRQ0jgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M9mEog0+Evw=:bvzboCNou9h8w+yMuyev8P
- 20f8JCS3mlDXYbRm2afgz4pOSUBwrKMHHRdn9fzm7vPDQomhi3PtyYFpMzN7BhyskSqK8HRjK
- e2H1GUldqWV1W+chnMRCgDBywtC16CRUlMgs0GTMknIAoxuTiZtAh1+GE0VKxGc3RHZMvMFP7
- QOr0sr/FiArcneGcpkdKjUbuAGvTfl3RPOAriA1EWNjHhTe/rOiC5QDUUVP+iz8KTQit88gDa
- KWtQfR5SmV2qDT4gSeuDERzLarljQktcW0LX9e2aMWqUDYJuedZjRorp0zkjCLkVy/6UNmB33
- R0GGEJ8b0XEAN94lcjzRsoMLK/bylMkNtivzSe1B7M4bX2Gf2FgQznBtbDUnFhPzHdHW+5xcZ
- MMbvf4MbD/LREL9eBAGqcPmwMffiCklE0YIZD65OI/75rVGhH6jgvCXYqDzAhmdDwZPZ1PdC3
- HSotZXpjjavhCk2GdTwlCgrTPSN5Amy8mcZA4Sht+2KTOi8EaOMvOoxSXpJRgk7TVF5A69gyA
- iOsXGEqhDtzyNW90H2f2ucbE0RaZDbUc+0NACsmZezu88W2hkRr1FyfUvYjOZ9mrgF/HM7VZC
- cPKn9jyIRv1z3KUmjardhi1zNXnz82I9adYOVENBQk9H0TUjiXV9k2x6dvmuJY2gFcSUAt04D
- pyvqFLPsXSh0x4IF1Ofb1cX3u231XSvjU32yc4mbIy04sZjSGKvGKKrCjJF4ACEk+4hw4Smkl
- lHD6f0tMF7WTY8zQkHk4aIi2BcMVhZj5ulGevegYsE9dgz8I9rIps0ypLD+uMtdlXE3DXINty
- 3R9Pp/tXZdNcHx+kN59HZszSFmE2iA+F/wzmsssriJ0Gxm9dwH95xjaP3MzUMYgCegxTYOG+8
- rXr9RGX66hwVaFndPymA==
+X-Provags-ID: V03:K1:FfIXsVXcNeBt8DM3/oD14gV9AaEg1kuMd8THyqz4/RSYXt8bzol
+ VT4nBhvNIR65oxPVAJBoQCx0Mg5xsmZZG4yY3iGDfIiztAFr9RRwyuwPZKCC1hP2Ebc2X1g
+ FX+vENnYZfUQsOedDzvoVbIxv6rRVM10x3+jQQ75bdj2i/k+bC7y4tgiHPKrg398sgXI1Hk
+ CLe6qn9H88bpgLmlWv4pw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iAZnidCZDMU=:WDeq3eS82GM9y63nrZiRmo
+ 3JUG+UEbatz6cBmivM2B7+tBfsLXMZPjHyLnrYgr8AQyO4VWAWkAXvdINXftuV1yV9kOT2rJu
+ rFD+Nb3NkNJP8T0W6aM3QVe+3hkwqidu4Qhbd7gcSGqEBJEJ1wEmoI5q3AWpjo4SVRh8BY/n8
+ 1+v+yWdQEGSsYoAMpz0Q1pIWrsWpqQH59RXvBqCkFqpBg55DuFUvLAKZEnScfkj0zIDN9Sgh9
+ y8edPkXPZocBM/alaots63k5Bc2TPiRiRqRs+U63biMkj68b47s3D6euxclI+ZalStQg9kw+t
+ ltbSCk2Y5gaZ0nKKOX9lNNTof0DsU+auYJNy6RLT9k0pOwQ4VA2fXM1jzReLUS0jM/krpArf8
+ uWGrdBr2/oEAAhhmoD7+dtqG+po7AwkTWOJYCDELxbGHPkKCDKPL7nOScNrIVqIO9hJA3XFwx
+ OwY458CCIgKVJrBZKeI4EqLCmBs0J33fFkJcFCHjT1OWO8EBfmbv4nij7kY56kIynKxQRLJi6
+ EbqKgPjtXCx92W+gDjbgHclBHuonNeSJXn1wm1FG2xglOPqs3qH5324sYq6NlZeehhTGpudYM
+ gyV9UmJ+mEXBCI2NyjMtMLnyfRn72odkyFt6/CC82Lz4MCI3EKl8sWGx1y8G9G41Vj2GPmPUN
+ pNjMciMVw6LVfiIKdJFboThBK+H2qcvbEszQ69sDfbLW3KUmmjMRmksX3R5XlgWcO/1lWCQnk
+ h7NruKmPzsF471JVvfDsgChsoHsHBMUZQN3WT7y3wNhZtPFNmNa7aQovOOtyklkh7XhJHfyaJ
+ nFkOl56Fng8tuNQkCDI+XFmo/EQGsS8UfUm8JRGCi1clYe0Kv1fT8B8zoCvK+9Wy7uvds+1QB
+ fTcUteDG3KZFdJlzhPOw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this, this new driver fails to link:
+The mt76_led_cleanup() function is called unconditionally, which
+leads to a link error when CONFIG_LEDS is a loadable module or
+disabled but mt76 is built-in:
 
-drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_remove':
-tegra-xudc.c:(.text+0x19d4): undefined reference to `usb_role_switch_unregister'
-drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_probe':
-tegra-xudc.c:(.text+0x2a34): undefined reference to `usb_role_switch_register'
-drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_usb_role_sw_work':
-tegra-xudc.c:(.text+0x4b64): undefined reference to `usb_role_switch_get_role'
+drivers/net/wireless/mediatek/mt76/mac80211.o: In function `mt76_unregister_device':
+mac80211.c:(.text+0x2ac): undefined reference to `led_classdev_unregister'
 
-Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
+Use the same trick that is guarding the registration, using an
+IS_ENABLED() check for the CONFIG_MT76_LEDS symbol that indicates
+whether LEDs can be used or not.
+
+Fixes: 36f7e2b2bb1d ("mt76: do not use devm API for led classdev")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/usb/gadget/udc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/mediatek/mt76/mac80211.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index a0ddec0bb7fe..435f3597ff20 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -446,6 +446,7 @@ config USB_TEGRA_XUDC
- 	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on PHY_TEGRA_XUSB
-+	select USB_ROLE_SWITCH
- 	help
- 	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
+diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
+index b9f2a401041a..96018fd65779 100644
+--- a/drivers/net/wireless/mediatek/mt76/mac80211.c
++++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
+@@ -378,7 +378,8 @@ void mt76_unregister_device(struct mt76_dev *dev)
+ {
+ 	struct ieee80211_hw *hw = dev->hw;
  
+-	mt76_led_cleanup(dev);
++	if (IS_ENABLED(CONFIG_MT76_LEDS))
++		mt76_led_cleanup(dev);
+ 	mt76_tx_status_check(dev, NULL, true);
+ 	ieee80211_unregister_hw(hw);
+ }
 -- 
 2.20.0
 
