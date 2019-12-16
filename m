@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686E721582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794F220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518903;
-	bh=98Jbf77nAwt1fSG0qBVGdDEDkG9mLiiWzrCEKzaMeNg=;
+	s=default; t=1576518907;
+	bh=aWlTSsAz5pIPz3sdH4Px6OlGakCFM7rgFREkQ+ye7i4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ON0TO13af+fpGMZVUiANUqh8camMJNtXIlfvDsYe6rOSWk8hf2r9+69Ka5Sp0nHKH
-	 jutLDygIlw345NQN8o+BNS/3FRblfV1EN7KCVjVniFAsWQ6jBFE637leuRZHaaNRl3
-	 /moevrMNLGUmKLNkWYSOafEOZSeW4jqvvQ3T3GUk=
+	b=NSR9uqpLYVo2oB9RuxUk9an2UlLKmwVQ+D0cLg2F5KYUuuKbIHYRHFbkSh4oaGKMD
+	 n589LReDFT5DXp6/AsMKKu+Yt2+bwNXWRKfTJF/nU+wuVR4aKjjGrsgPBeaULD4KcE
+	 wX+dpliKJemTo8QTzXyd5Wmrkqyb0jKN6kuAifVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbfLPRzB (ORCPT
+        id S1727983AbfLPRzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51706 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfLPRy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:59 -0500
+        id S1727982AbfLPRzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FEF42053B;
-        Mon, 16 Dec 2019 17:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 992CC20663;
+        Mon, 16 Dec 2019 17:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518898;
-        bh=98Jbf77nAwt1fSG0qBVGdDEDkG9mLiiWzrCEKzaMeNg=;
+        s=default; t=1576518901;
+        bh=aWlTSsAz5pIPz3sdH4Px6OlGakCFM7rgFREkQ+ye7i4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ev4ZZJeY/1avEM3eP9DTtrInwyFqMi5POwblEQP3Ci/i1ofbW5OyxyPIjwf+fBJx2
-         j243nxuyI+w4NgbIlcjrD5zlQSPL7NjLoUcHsvmUz3mUfIZm0I7IUDQHuXy7xs64NI
-         CX5K/lOk+2InkuSrbLqWXiggTD8DrU89fCU2rwrE=
+        b=QTJC0pHY5oYWABp9XUvJBcfL9oD3jelfoE1tyBeOvXqjEvcvLwUQabPp5xBoqdOzE
+         LAYv1XU/e44S/QvQvV0GkBCjpV4G+4NcxyXikkmrYdb1XSER430jW+9nMAg9yIK+oF
+         cy3XhZm/mqmf1RzM4angsPRi1kVeg+5TXtP38vBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary Leshner <Gary.S.Leshner@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/267] IB/hfi1: Close VNIC sdma_progress sleep window
-Date:   Mon, 16 Dec 2019 18:47:19 +0100
-Message-Id: <20191216174902.903414276@linuxfoundation.org>
+Subject: [PATCH 4.14 114/267] mlx4: Use snprintf instead of complicated strcpy
+Date:   Mon, 16 Dec 2019 18:47:20 +0100
+Message-Id: <20191216174902.956744923@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,88 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Qian Cai <cai@gmx.us>
 
-[ Upstream commit 18912c4524385dd6532c682cb9d4f6aa39ba8d47 ]
+[ Upstream commit 0fbc9b8b4ea3f688a5da141a64f97aa33ad02ae9 ]
 
-The call to sdma_progress() is called outside the wait lock.
+This fixes a compilation warning in sysfs.c
 
-In this case, there is a race condition where sdma_progress() can return
-false and the sdma_engine can idle.  If that happens, there will be no
-more sdma interrupts to cause the wakeup and the vnic_sdma xmit will hang.
+drivers/infiniband/hw/mlx4/sysfs.c:360:2: warning: 'strncpy' output may be
+truncated copying 8 bytes from a string of length 31
+[-Wstringop-truncation]
 
-Fix by moving the lock to enclose the sdma_progress() call.
+By eliminating the temporary stack buffer.
 
-Also, delete the tx_retry. The need for this was removed by:
-commit bcad29137a97 ("IB/hfi1: Serve the most starved iowait entry first")
-
-Fixes: 64551ede6cd1 ("IB/hfi1: VNIC SDMA support")
-Reviewed-by: Gary Leshner <Gary.S.Leshner@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Qian Cai <cai@gmx.us>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/vnic_sdma.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/infiniband/hw/mlx4/sysfs.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/vnic_sdma.c b/drivers/infiniband/hw/hfi1/vnic_sdma.c
-index c3c96c5869ed4..718dcdef946ee 100644
---- a/drivers/infiniband/hw/hfi1/vnic_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/vnic_sdma.c
-@@ -57,7 +57,6 @@
+diff --git a/drivers/infiniband/hw/mlx4/sysfs.c b/drivers/infiniband/hw/mlx4/sysfs.c
+index e219093d27645..d2da28d613f2c 100644
+--- a/drivers/infiniband/hw/mlx4/sysfs.c
++++ b/drivers/infiniband/hw/mlx4/sysfs.c
+@@ -353,16 +353,12 @@ err:
  
- #define HFI1_VNIC_TXREQ_NAME_LEN   32
- #define HFI1_VNIC_SDMA_DESC_WTRMRK 64
--#define HFI1_VNIC_SDMA_RETRY_COUNT 1
- 
- /*
-  * struct vnic_txreq - VNIC transmit descriptor
-@@ -67,7 +66,6 @@
-  * @pad: pad buffer
-  * @plen: pad length
-  * @pbc_val: pbc value
-- * @retry_count: tx retry count
-  */
- struct vnic_txreq {
- 	struct sdma_txreq       txreq;
-@@ -77,8 +75,6 @@ struct vnic_txreq {
- 	unsigned char           pad[HFI1_VNIC_MAX_PAD];
- 	u16                     plen;
- 	__le64                  pbc_val;
+ static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
+ {
+-	char base_name[9];
 -
--	u32                     retry_count;
- };
+-	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n */
+-	strlcpy(name, pci_name(dev->dev->persist->pdev), max);
+-	strncpy(base_name, name, 8); /*till xxxx:yy:*/
+-	base_name[8] = '\0';
+-	/* with no ARI only 3 last bits are used so when the fn is higher than 8
++	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n
++	 * with no ARI only 3 last bits are used so when the fn is higher than 8
+ 	 * need to add it to the dev num, so count in the last number will be
+ 	 * modulo 8 */
+-	sprintf(name, "%s%.2d.%d", base_name, (i/8), (i%8));
++	snprintf(name, max, "%.8s%.2d.%d", pci_name(dev->dev->persist->pdev),
++		 i / 8, i % 8);
+ }
  
- static void vnic_sdma_complete(struct sdma_txreq *txreq,
-@@ -196,7 +192,6 @@ int hfi1_vnic_send_dma(struct hfi1_devdata *dd, u8 q_idx,
- 	ret = build_vnic_tx_desc(sde, tx, pbc);
- 	if (unlikely(ret))
- 		goto free_desc;
--	tx->retry_count = 0;
- 
- 	ret = sdma_send_txreq(sde, &vnic_sdma->wait, &tx->txreq,
- 			      vnic_sdma->pkts_sent);
-@@ -238,14 +233,14 @@ static int hfi1_vnic_sdma_sleep(struct sdma_engine *sde,
- 	struct hfi1_vnic_sdma *vnic_sdma =
- 		container_of(wait, struct hfi1_vnic_sdma, wait);
- 	struct hfi1_ibdev *dev = &vnic_sdma->dd->verbs_dev;
--	struct vnic_txreq *tx = container_of(txreq, struct vnic_txreq, txreq);
- 
--	if (sdma_progress(sde, seq, txreq))
--		if (tx->retry_count++ < HFI1_VNIC_SDMA_RETRY_COUNT)
--			return -EAGAIN;
-+	write_seqlock(&dev->iowait_lock);
-+	if (sdma_progress(sde, seq, txreq)) {
-+		write_sequnlock(&dev->iowait_lock);
-+		return -EAGAIN;
-+	}
- 
- 	vnic_sdma->state = HFI1_VNIC_SDMA_Q_DEFERRED;
--	write_seqlock(&dev->iowait_lock);
- 	if (list_empty(&vnic_sdma->wait.list))
- 		iowait_queue(pkts_sent, wait, &sde->dmawait);
- 	write_sequnlock(&dev->iowait_lock);
+ struct mlx4_port {
 -- 
 2.20.1
 
