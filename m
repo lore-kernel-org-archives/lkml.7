@@ -2,110 +2,157 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BF0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79821C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B422A24650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4E4207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:37:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U8y3kVJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLPUg2 (ORCPT
+        id S1726939AbfLPUhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:36:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46718 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfLPUg1 (ORCPT
+        Mon, 16 Dec 2019 15:37:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51538 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfLPUhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:36:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so8856621wrl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:36:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JF5j2QhBPiKVEsszO1fwNIEf5ztIBBW8hIVMIyB6TX8=;
-        b=bT5EI8xjAl1zI9LOqE1cUECcoz/mB2+w9BRUZfvhOU4DFz/05VW3Xs/1L6p9KKonfh
-         yXvOrsrzmycDu7dQMYSZZaTSqEv+yMEtzX/x3hI01pUCt7GMuYaBlkQrqG9cYrDtKGxQ
-         Rf7mXpWANR19BzUwF9YKIqEAKB9r446EJMFBbcSpfVgiO8K8WyeXF7cSGAawVFZRR9US
-         w5vEuglSBXdqsRO9ZKq9YStwahtyOpsfdGfU8LLPTMr+j9M9CzcnjTqE+sg2Bb1uM6bW
-         g7rTIt917fqxymLmfk/lnVBjxX+SC1R2bS5K5rLdZFjV9jc3nZM6TDlP2vZFFO9/rnqM
-         C9GA==
-X-Gm-Message-State: APjAAAVrlayhPz1C4jR0bUX6W4/5C1ErkZVwjYKzX2K+ZwOX3OzwjV0c
-        g94FzO3u74s9zCzNPgSLJbI=
-X-Google-Smtp-Source: APXvYqz9kOCrk7TdGWR+j99RWSQ6+KDeJJaAl/3DJBRD938fSrWXpjD853kqh1J0TmYUVY6y872K+A==
-X-Received: by 2002:a5d:6305:: with SMTP id i5mr33173920wru.119.1576528585567;
-        Mon, 16 Dec 2019 12:36:25 -0800 (PST)
-Received: from a483e7b01a66.ant.amazon.com (cpc91200-cmbg18-2-0-cust94.5-4.cable.virginm.net. [81.100.41.95])
-        by smtp.gmail.com with ESMTPSA id v8sm22540503wrw.2.2019.12.16.12.36.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 12:36:24 -0800 (PST)
-Subject: Re: [PATCH v4 1/6] arm/arm64/xen: hypercall.h add includes guards
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
-        xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
-        andrew.cooper3@citrix.com
-References: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
- <20191204232058.2500117-2-pasha.tatashin@soleen.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <c5dcf342-90f4-beb5-d2b1-4a37ccedfe42@xen.org>
-Date:   Mon, 16 Dec 2019 20:36:23 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Mon, 16 Dec 2019 15:37:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V2Wr+PrRLO4ouxkEO1xZARgw+sE31819/S81jh+OXe4=; b=U8y3kVJBqDbPJtNPAzOyGlFkw
+        9/Z9+20PQcR8xTpFTx/g5/+GX4VQNxCF9/c7z9QetQ/HV8qkGCG175fGpXzVZdrWLPzmBexE2EdVl
+        nXPGAXaN+4ksrT1/UBummsH64GxmW9iuy6InaLWiQrEWtx6oPaiUfovcNWitziAXdQPi4NY1ddAMN
+        JqJcegFmSq7DwC/hYiZJBjeWrXFWeJFri/k6n64aV3T05WepItZ/KI/27eJ6uhueyMsAKqwxOiRiS
+        qj+JtylhLdTE3pW6wZftlDz0yZIYMuGorQZ3ImLD4h8RgXC+3JPuNFOIMeVr+clilfHgFAEtKgFkS
+        UmI2H36HA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igx74-0000Lk-VT; Mon, 16 Dec 2019 20:37:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B051A301747;
+        Mon, 16 Dec 2019 21:35:42 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0C8E92B2AF233; Mon, 16 Dec 2019 21:37:05 +0100 (CET)
+Date:   Mon, 16 Dec 2019 21:37:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] smp: Allow smp_call_function_single_async() to insert
+ locked csd
+Message-ID: <20191216203705.GV2844@hirez.programming.kicks-ass.net>
+References: <20191204204823.1503-1-peterx@redhat.com>
+ <20191211154058.GO2827@hirez.programming.kicks-ass.net>
+ <20191211162925.GD48697@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20191204232058.2500117-2-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211162925.GD48697@xz-x1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 04/12/2019 23:20, Pavel Tatashin wrote:
-> The arm and arm64 versions of hypercall.h are missing the include
-> guards. This is needed because C inlines for privcmd_call are going to
-> be added to the files.
+On Wed, Dec 11, 2019 at 11:29:25AM -0500, Peter Xu wrote:
+> This is also true.
 > 
-> Also fix a comment.
+> Here's the statistics I mentioned:
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->   arch/arm/include/asm/assembler.h       | 2 +-
->   arch/arm/include/asm/xen/hypercall.h   | 4 ++++
->   arch/arm64/include/asm/xen/hypercall.h | 4 ++++
->   include/xen/arm/hypercall.h            | 6 +++---
->   4 files changed, 12 insertions(+), 4 deletions(-)
+> =================================================
 > 
-> diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-> index 99929122dad7..8e9262a0f016 100644
-> --- a/arch/arm/include/asm/assembler.h
-> +++ b/arch/arm/include/asm/assembler.h
-> @@ -480,7 +480,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
->   	.macro	uaccess_disable, tmp, isb=1
->   #ifdef CONFIG_CPU_SW_DOMAIN_PAN
->   	/*
-> -	 * Whenever we re-enter userspace, the domains should always be
-> +	 * Whenever we re-enter kernel, the domains should always be
+> (1) Implemented the same counter mechanism on the caller's:
+> 
+> *** arch/mips/kernel/smp.c:
+> tick_broadcast[713]            smp_call_function_single_async(cpu, csd);
+> *** drivers/cpuidle/coupled.c:
+> cpuidle_coupled_poke[336]      smp_call_function_single_async(cpu, csd);
+> *** kernel/sched/core.c:
+> hrtick_start[298]              smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
+> 
+> (2) Cleared the csd flags before calls:
+> 
+> *** arch/s390/pci/pci_irq.c:
+> zpci_handle_fallback_irq[185]  smp_call_function_single_async(cpu, &cpu_data->csd);
+> *** block/blk-mq.c:
+> __blk_mq_complete_request[622] smp_call_function_single_async(ctx->cpu, &rq->csd);
+> *** block/blk-softirq.c:
+> raise_blk_irq[70]              smp_call_function_single_async(cpu, data);
+> *** drivers/net/ethernet/cavium/liquidio/lio_core.c:
+> liquidio_napi_drv_callback[735] smp_call_function_single_async(droq->cpu_id, csd);
+> 
+> (3) Others:
+> 
+> *** arch/mips/kernel/process.c:
+> raise_backtrace[713]           smp_call_function_single_async(cpu, csd);
 
-This feels unrelated from the rest of the patch and probably want an 
-explanation. So I think this want to be in a separate patch.
+per-cpu csd data, seems perfectly fine usage.
 
-The rest of the patch looks good to me.
+> *** arch/x86/kernel/cpuid.c:
+> cpuid_read[85]                 err = smp_call_function_single_async(cpu, &csd);
+> *** arch/x86/lib/msr-smp.c:
+> rdmsr_safe_on_cpu[182]         err = smp_call_function_single_async(cpu, &csd);
 
-Cheers,
+These two have csd on stack and wait with a completion. seems fine.
 
--- 
-Julien Grall
+> *** include/linux/smp.h:
+> bool[60]                       int smp_call_function_single_async(int cpu, call_single_data_t *csd);
+
+this is the declaration, your grep went funny
+
+> *** kernel/debug/debug_core.c:
+> kgdb_roundup_cpus[272]         ret = smp_call_function_single_async(cpu, csd);
+> *** net/core/dev.c:
+> net_rps_send_ipi[5818]         smp_call_function_single_async(remsd->cpu, &remsd->csd);
+
+Both percpu again.
+
+> 
+> =================================================
+> 
+> For (1): These probably justify more on that we might want a patch
+>          like this to avoid reimplementing it everywhere.
+
+I can't quite parse that, but if you're saying we should fix the
+callers, then I agree.
+
+> For (2): If I read it right, smp_call_function_single_async() is the
+>          only place where we take a call_single_data_t structure
+>          rather than the (smp_call_func_t, void *) tuple.
+
+That's on purpose; by supplying csd we allow explicit concurrency. If
+you do as proposed here:
+
+>		I could
+>          miss something important, but otherwise I think it would be
+>          good to use the tuple for smp_call_function_single_async() as
+>          well, then we move call_single_data_t out of global header
+>          but move into smp.c to avoid callers from toucing it (which
+>          could be error-prone).  In other words, IMHO it would be good
+>          to have all these callers fixed.
+
+Then you could only ever have 1 of then in flight at the same time.
+Which would break things.
+
+> For (3): I didn't dig, but I think some of them (or future users)
+>          could still suffer from the same issue on retriggering the
+>          WARN_ON... 
+
+They all seem fine.
+
+So I'm thinking your patch is good, but please also fix all 1).
