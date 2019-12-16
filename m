@@ -2,52 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7306BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA476C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4934D24655
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985A7205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518976;
-	bh=ve+3iNDqCTuyOdRt5L/xzqgglC4MCykNyOpj+ObyHM8=;
+	s=default; t=1576518979;
+	bh=sSQGXtUBwq1HgWZiNGj8oNP9wbdZB0MTUIajG+SdqIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHS6cUgl5syINUJe698JZGmUpEaV/KCvfGO9OK72+1WxI/kvSBhTxG3ndgwxkB1Bg
-	 mgt7PPQ45xHNAH1ih5c0MGuycYk/sLVR296Thv7PyHF1/zxPNCfU/JCEeT0vg/Fjy5
-	 8KmM4BpJHZc0Z1naSSu+EkROTJY6g8eObhIvFVbM=
+	b=yfiyviUauZIkM8GZb9Vdb+5Rc2nWPXiRd3knAiaNaI/nrKKXthEiOfpNY2tlb68NX
+	 GIiXe27fkiV8rp8Nn3FJTRluBka6u53fNOxgq4+yGibOSMCEh83KaAXARVx2a6ZsIU
+	 X8Zx0UEyBIA8M7rQCi8YD0F8fYEdaJhX+NOehfXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfLPR4P (ORCPT
+        id S1728188AbfLPR4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfLPR4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:11 -0500
+        id S1727790AbfLPR4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC09721582;
-        Mon, 16 Dec 2019 17:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583F0205ED;
+        Mon, 16 Dec 2019 17:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518971;
-        bh=ve+3iNDqCTuyOdRt5L/xzqgglC4MCykNyOpj+ObyHM8=;
+        s=default; t=1576518973;
+        bh=sSQGXtUBwq1HgWZiNGj8oNP9wbdZB0MTUIajG+SdqIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nBb8zlH/izUzX1Zf/6WMDa1wqfqvhGAbJ8GSgwzbYaZE0LvhJAbixIF8uMmDCY0Ht
-         Iz7wSSMY+vj9KVbCWJva7g0KWcEIb4LyxNz7c2/8+BfNpVB4a71YeQOOvYkj1rA8q5
-         yRAqqi0tgnWrEfsAzE02vI4ZBblXqXGfGBKeV4Zo=
+        b=NOBAAE7cZjZLpDcffcP3vB3w5DG4RAy7ZhZmUb/CGest0gZhDMPD8fIPTZQkSPATq
+         iV/x0WEN09LdwHe1Ar4z/mKLsdQmeAa/FR9WnZNsHoTBiLqhGv+yXpddcNSenUCOCQ
+         rOiwS0TE4FCOKWTJKCcK7HznCFyCFuULYtGLwDCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH 4.14 140/267] KVM: arm/arm64: vgic: Dont rely on the wrong pending table
-Date:   Mon, 16 Dec 2019 18:47:46 +0100
-Message-Id: <20191216174910.154735152@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/267] clk: renesas: r8a77995: Correct parent clock of DU
+Date:   Mon, 16 Dec 2019 18:47:11 +0100
+Message-Id: <20191216174902.474889166@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,54 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit ca185b260951d3b55108c0b95e188682d8a507b7 upstream.
+[ Upstream commit 515b2915ee08060ad4f6a3b3de38c5c2c5258e8b ]
 
-It's possible that two LPIs locate in the same "byte_offset" but target
-two different vcpus, where their pending status are indicated by two
-different pending tables.  In such a scenario, using last_byte_offset
-optimization will lead KVM relying on the wrong pending table entry.
-Let us use last_ptr instead, which can be treated as a byte index into
-a pending table and also, can be vcpu specific.
+According to the R-Car Gen3 Hardware Manual Rev 1.00, the parent clock
+of the DU module clocks on R-Car D3 is S1D1.
 
-Fixes: 280771252c1b ("KVM: arm64: vgic-v3: KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20191029071919.177-4-yuzenghui@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d71e851d82c6cfe5 ("clk: renesas: cpg-mssr: Add R8A77995 support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-v3.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/clk/renesas/r8a77995-cpg-mssr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -331,8 +331,8 @@ retry:
- int vgic_v3_save_pending_tables(struct kvm *kvm)
- {
- 	struct vgic_dist *dist = &kvm->arch.vgic;
--	int last_byte_offset = -1;
- 	struct vgic_irq *irq;
-+	gpa_t last_ptr = ~(gpa_t)0;
- 	int ret;
- 	u8 val;
- 
-@@ -352,11 +352,11 @@ int vgic_v3_save_pending_tables(struct k
- 		bit_nr = irq->intid % BITS_PER_BYTE;
- 		ptr = pendbase + byte_offset;
- 
--		if (byte_offset != last_byte_offset) {
-+		if (ptr != last_ptr) {
- 			ret = kvm_read_guest_lock(kvm, ptr, &val, 1);
- 			if (ret)
- 				return ret;
--			last_byte_offset = byte_offset;
-+			last_ptr = ptr;
- 		}
- 
- 		stored = val & (1U << bit_nr);
+diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
+index e594cf8ee63b6..8434d5530fb15 100644
+--- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
+@@ -141,8 +141,8 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
+ 	DEF_MOD("vspbs",		 627,	R8A77995_CLK_S0D1),
+ 	DEF_MOD("ehci0",		 703,	R8A77995_CLK_S3D2),
+ 	DEF_MOD("hsusb",		 704,	R8A77995_CLK_S3D2),
+-	DEF_MOD("du1",			 723,	R8A77995_CLK_S2D1),
+-	DEF_MOD("du0",			 724,	R8A77995_CLK_S2D1),
++	DEF_MOD("du1",			 723,	R8A77995_CLK_S1D1),
++	DEF_MOD("du0",			 724,	R8A77995_CLK_S1D1),
+ 	DEF_MOD("lvds",			 727,	R8A77995_CLK_S2D1),
+ 	DEF_MOD("vin7",			 804,	R8A77995_CLK_S1D2),
+ 	DEF_MOD("vin6",			 805,	R8A77995_CLK_S1D2),
+-- 
+2.20.1
+
 
 
