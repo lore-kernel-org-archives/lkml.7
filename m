@@ -2,83 +2,143 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABFFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE192C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF8A222D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44B62072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Q7/FsZxq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Pj6hI+Gq";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sm2n9QN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLPGrX (ORCPT
+        id S1726610AbfLPGxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 01:47:23 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33167 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfLPGrW (ORCPT
+        Mon, 16 Dec 2019 01:53:33 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49828 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbfLPGxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 01:47:22 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so3119617pgk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 22:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
-        b=Q7/FsZxqSwMa+BzKGhf/87FEkHKFRHq6bnEriH4r/8faI2wq55Pf+hh6Dn/1A1L1hE
-         QpDC8Tw2cEi1FMh9isaL5Wm2ZOPxXOZWcDiADyPoncHeRi4uNuQVZ3vevcMF6Zmy/s06
-         xmkVNHiSNCCl1q561PMnqZFynvhDCjvRPKlbXzMKMW6IL5ryRPiH7VvsfdkMe7Zfg23b
-         ZInoD7zU0DqJdxovEj9bVs8SpG+oMV7T58xRpRHQNmDSFiQ6/cgLseuSCkkXC5Tjb9Rc
-         15Kg06QdQIh1L0juCm+0Wblblnt87P6qJKU6kJsjsSXtxS5uEzMSMllQ/53QAInBoJnm
-         HzYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
-        b=KD5ukfWdhHS3vKpgGXneOlX2oMJ0ZvIfVE/wsxQ7kvavHKbQ1W6LHw6VDNfAAFjJjy
-         aoTIVGSYA3lN/rGg98RzwPz4GBvWEpHBgCs3uAYWb37jnzRoo7oTsZUHWAhsVijeoIoP
-         zEAHe4XjFF7YLRcBE6Mu0H3G/p4iQ9rTqZzOntmMdNntPNnlpe9L2HzOq3nvBUOOsMPS
-         qdhXjjit9w3HLV4SugvBj+qAtOyA4VwVPi/fekbwkG2ZPqkHPGQIXMJYnz/hD1nWaZc/
-         E6g9Ky1MEv+DWhtJRmeAHHfn9F3xINIb58vkDE8iSKKzjflXveiZpCDMrOIla/HReAc9
-         lIXw==
-X-Gm-Message-State: APjAAAXlZIoVXZ/AJGKNlsSFHNY0kzGHRMQDQ84rE1O3E48KQYbT8za5
-        x7QBoe98kAddOoCwk/SiuQfdAQ==
-X-Google-Smtp-Source: APXvYqzcXDlL9EfEPDbT8ec8JfIiOjcIeAoXu12dG22SBfYFW7LzFWn8hWSWuniHIINm1Ku+0eA7YQ==
-X-Received: by 2002:a63:753:: with SMTP id 80mr15150274pgh.95.1576478842024;
-        Sun, 15 Dec 2019 22:47:22 -0800 (PST)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id g7sm20758515pfq.33.2019.12.15.22.47.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 22:47:21 -0800 (PST)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     nsaenzjulienne@suse.de
-Cc:     andrew.murray@arm.com, bcm-kernel-feedback-list@broadcom.com,
-        devicetree@vger.kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        james.quinlan@broadcom.com, jeremy.linton@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        mark.rutland@arm.com, maz@kernel.org, mbrugger@suse.com,
-        phil@raspberrypi.org, robh+dt@kernel.org, wahrenst@gmx.net,
-        linux@endlessm.com
-Subject: Re: [PATCH v4 2/8] ARM: dts: bcm2711: Enable PCIe controller
-Date:   Mon, 16 Dec 2019 14:46:38 +0800
-Message-Id: <20191216064638.5067-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191203114743.1294-3-nsaenzjulienne@suse.de>
-References: <20191203114743.1294-3-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 01:53:33 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 3E7D78EE163;
+        Sun, 15 Dec 2019 22:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576479212;
+        bh=Ub9QRo79yJlVnlr2oeZdZ301Q6v8WTDU9BOX4gLpaag=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Pj6hI+GqatQ04MmhUIj5idZNzTAYUcr0vIioF1HglrD4I3aK/E563yo3NwlnPl9jN
+         +umghs3f0tWrH6vfulqjmBtERnVMd0OROGVlNyh4pAAGumW2KrFht267MVR0a5gWH3
+         fttWODWrFMnpxdyoPPeKTwvF+AXk8BZ5Y8uNIJ+Y=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0dI3UALlt898; Sun, 15 Dec 2019 22:53:32 -0800 (PST)
+Received: from [10.30.62.156] (unknown [103.5.140.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 014C38EE0E2;
+        Sun, 15 Dec 2019 22:53:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576479211;
+        bh=Ub9QRo79yJlVnlr2oeZdZ301Q6v8WTDU9BOX4gLpaag=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sm2n9QN7+7rGuZJ4JiWOff5A6+cy2uc0c+kxLSutr4ywCpenJU3C1m9G3eeAsw7/c
+         1LkilIWP+skklUmF+C3rMIiaEGcM+4HLZCWcBFHBODDDmJheRLW6VJ0NIlgMzDcv2S
+         PWzHoFLlJeAkhcA1ZixJlDl8+0LrAhJurTtNXFbI=
+Message-ID: <1576479187.3784.1.camel@HansenPartnership.com>
+Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
+ keys
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Mon, 16 Dec 2019 15:53:07 +0900
+In-Reply-To: <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
+References: <20191213171827.28657-1-nramas@linux.microsoft.com>
+         <20191213171827.28657-3-nramas@linux.microsoft.com>
+         <1576257955.8504.20.camel@HansenPartnership.com>
+         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
+         <1576423353.3343.3.camel@HansenPartnership.com>
+         <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your effort! System can have USB with this patch series, if the device tree is modified properly.
-Here is the question: Will not the device tree "scb/ranges" in this patch conflict with commit be8af7a9e3cc ("ARM: dts: bcm2711-rpi-4: Enable GENET support")?
+On Sun, 2019-12-15 at 17:12 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/15/2019 7:22 AM, James Bottomley wrote:
+> 
+> Hi James,
+> 
+> > 
+> > This is the problem:
+> > 
+> > if (!flag)
+> >      pre()
+> > .
+> > .
+> > .
+> > if (!flag)
+> >      post()
+> > 
+> > And your pre and post function either have to both run or neither
+> > must.
+> >   However, the flag is set asynchronously, so if it gets set while
+> > another thread is running through the above code, it can change
+> > after
+> > pre is run but before post is.
+> > 
+> > James
+> 
+> The pre() and post() functions you have referenced above including
+> the 
+> check for the flag are executed with the mutex held.
+> 
+> Please see Mimi's response to the v3 email. I have copied it below:
+> 
+> ************************************
+> Reading the flag IS lock protected, just spread across two functions.
+> For performance, ima_post_key_create_or_update() checks
+> ima_process_keys, before calling ima_queue_key(), which takes the
+> mutex before checking ima_process_keys again.
+> 
+> As long as both the reader and writer, take the mutex before checking
+> the flag, the locking is fine.  The additional check, before taking
+> the mutex, is simply for performance.
+> ************************************
+> 
+> The flag is checked with the mutex held in the "reader" - 
+> ima_queue_key(). The key is queued with the mutex held only if the
+> flag 
+> is false.
+> 
+> The flag is protected in the "writer" also -
+> ima_process_queued_keys(). 
+> The flag is checked with the mutex held, set to true, and queued
+> keys 
+> (if any) are transferred to the temp list.
+> 
+> As Mimi has pointed out the additional check of the flag, before
+> taking 
+> the mutex in ima_post_key_create_or_update() and in 
+> ima_process_queued_keys(), is for performance reason.
+> 
+> If the flag is true, there is no need to take the mutex to check it 
+> again in those functions.
 
-Jian-Hong Pan
+That doesn't matter ... the question is, is the input assumption that
+both pre/post have to be called or neither must correct?  If so, the
+code is wrong, if not, explain why.
+
+James
+
