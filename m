@@ -2,109 +2,158 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55637C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAB220733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521382;
-	bh=ZZCNl37csOKpEgVnThWHBvPhhL0/QSl1yVvj8Y5NkzY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgsHlFmd5tVlQfZmz/hxrhpc3Mj+C027WLd/wtJLVqKidJcQzXDktQgXfQ9YiaV+h
-	 MIy8Hk8W17ViV2Z2w5LVJO7FdKYrKUh7FQu1uat0y+5J8O/jRX33zc3MJsfF1p8Cub
-	 btRPirYS4vUCaIZeeTILwvSwTfaPngC4Jkygc67M=
+	by mail.kernel.org (Postfix) with ESMTP id A4E1F20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJc4xur6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbfLPSG7 (ORCPT
+        id S1729782AbfLPSg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfLPSG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:56 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CACB206EC;
-        Mon, 16 Dec 2019 18:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519616;
-        bh=ZZCNl37csOKpEgVnThWHBvPhhL0/QSl1yVvj8Y5NkzY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnxeaD8TN1bclfoY7rIyhaDbgC87VXSUn/Ubbf8IuJaxswJEFl3v/FVdbfsPa3x3s
-         nQKT4qKicr+hyjezYXhZHqrCk/1xsXbfAiAbhq0OU7aOmtUyw1Cngj31RVKITjvB4d
-         7xjyEen5CP3FRjHz0PQgV/Lf57ElGCrcMBbGHTrg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/140] scsi: qla2xxx: Fix hang in fcport delete path
-Date:   Mon, 16 Dec 2019 18:49:27 +0100
-Message-Id: <20191216174812.764367641@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
-References: <20191216174747.111154704@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:36:28 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:37893 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729173AbfLPSgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:36:25 -0500
+Received: by mail-wr1-f48.google.com with SMTP id y17so8549802wrh.5;
+        Mon, 16 Dec 2019 10:36:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=n2qqlU8y47E11EtZZTk3mdHYschbNhKlAx4Tv92JWbw=;
+        b=WJc4xur6U3glMB60pMU4XO9v+245vNsJytGPjYbg0LwblPPkJa1HSeemsmLFiFcpCn
+         LAcyh1ukqB7WKa1n4vl8sE2Ya4GaKFSabh5rx+Xsk7GjtE+msa3BVGMb0uqPsqHOsDvS
+         q6r9553ITNyW0GTqZ+d8/3ay/tBmKMSso2HbWCgsWpNJTdNJREXLnGQFl7L+LgzsUFgn
+         10RZn2z+/Cg9/MTMV9rE0OhMF53lCryofs7Eg+2oZrDU21Vt3BC1cdNU/WWv3SgmWmgd
+         j202Sy/DO/vXTuIOT++IQ75saKOlxobMplE1P2VBAQwKlJ8OkzWi8dr3rnXprzlPkSgL
+         H3mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=n2qqlU8y47E11EtZZTk3mdHYschbNhKlAx4Tv92JWbw=;
+        b=qMHnKgNV1HoFjvxKaPLcetx8B8tKqFn6jVAn01xi7F23cU67rZMWqndiIY+3PAOjnN
+         +oofNHpjphW1FfOW7uWffQMzyPq2/3P47M6yxO2QLYO0t0HTSWFi6B2enl6L75cWR9jW
+         5lCsKP+O0P+NCrBbRmyFoq6VldzVM6PHYVVQT4hR++P+3tTLzjqBbr1iK61iTHjCbXk+
+         EWLEBvMpuiQrOVfwGRHiNwZj8dqsIIRHWUxUtR4NV1IJftmN1lRmV13RDdabfmms9FRP
+         0NoEdU6FeRcmLnZ2wRidT3KNy/s3YQvyob7X6vNIPWaJCpvX1ING4cHxsGpQ2GcFAGdR
+         Zhvw==
+X-Gm-Message-State: APjAAAUFgahkqN0Zb6439+8P+BIiXXCgAlXX8JdSkqTd3/jqLjrYv1aq
+        bSL44XsYECqeBEbpTP8Eoqk=
+X-Google-Smtp-Source: APXvYqyJvxNWgk08b47ovHhUu1IK6g2hbNz1Tr/JugUMGcQRPeifWcr/kX2LSUSLw3+7+9D2S76wfg==
+X-Received: by 2002:adf:93c6:: with SMTP id 64mr30320970wrp.212.1576521384254;
+        Mon, 16 Dec 2019 10:36:24 -0800 (PST)
+Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id o7sm260635wmh.11.2019.12.16.10.36.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 10:36:23 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>
+Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+In-Reply-To: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+Subject: RE: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Mon, 16 Dec 2019 18:36:23 -0000
+Message-ID: <05cd01d5b43f$b7d88f60$2789ae20$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIkbnQjyymuSgNjdVHy4DQRhOG+0qcfnHIA
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+Hi,
 
-[ Upstream commit f00b3428a801758243693e046b34226e92bc56b3 ]
+If a sub-filesystem (nfsv4 mirror mount) gets unmounted and then mounted
+again (by accessing it) the nfs4_do_fsinfo() function is called,
+which currently assumes implicit lease renewal. I believe this is no
+compliant with the RFC.
 
-A hang was observed in the fcport delete path when the device was
-responding slow and an issue-lip path (results in session termination) was
-taken.
+I've managed to trigger the issue by two different methods:
 
-Fix this by issuing logo requests unconditionally.
+1) in prod
 
-PID: 19491  TASK: ffff8e23e67bb150  CPU: 0   COMMAND: "kworker/0:0"
- #0 [ffff8e2370297bf8] __schedule at ffffffffb4f7dbb0
- #1 [ffff8e2370297c88] schedule at ffffffffb4f7e199
- #2 [ffff8e2370297c98] schedule_timeout at ffffffffb4f7ba68
- #3 [ffff8e2370297d40] msleep at ffffffffb48ad9ff
- #4 [ffff8e2370297d58] qlt_free_session_done at ffffffffc0c32052 [qla2xxx]
- #5 [ffff8e2370297e20] process_one_work at ffffffffb48bcfdf
- #6 [ffff8e2370297e68] worker_thread at ffffffffb48bdca6
- #7 [ffff8e2370297ec8] kthread at ffffffffb48c4f81
+If there is an NFSv4 filesystem mounted with sub-mounts (similar setup as
+below), after nfs_mountpoint_expiry_timeout of inactivity, 
+Each submount will be unmounted. If now it gets accessed again it will be
+automatically mounted again which will result currently
+in implicit lease renewal on the client side which in turn can result in a
+relatively small window where the client thinks its lease
+is still valid while an nfs server has already expired the lease.
 
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/qla2xxx/qla_init.c | 3 ---
- 1 file changed, 3 deletions(-)
+2) manual unmount
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index df91847d20cd0..9cb5527d3d8f1 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -291,9 +291,6 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
- 	struct srb_iocb *lio;
- 	int rval = QLA_FUNCTION_FAILED;
- 
--	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT))
--		return rval;
--
- 	fcport->flags |= FCF_ASYNC_SENT;
- 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
- 	if (!sp)
--- 
-2.20.1
+# cat /etc/exports
+/ *(rw,sync)
+/var *(rw,sync)
 
+
+On a Linux NFS client:
+
+# mount -o vers=4 10.50.2.59:/ /mnt/3
+$ head /mnt/3/var/log/vmware-vmsvc.log >/dev/null
+$ df -h | tail -2
+10.50.2.59:/                                                  29G   25G
+2.3G  92% /mnt/3
+10.50.2.59:/var                                               20G  2.2G
+16G  13% /mnt/3/var
+
+# while [ 1 ]; do date; umount /mnt/3/var; ls /mnt/3/var >/dev/null; sleep
+10; done
+...
+
+By constantly unmounting the sub-filesystem (/var) and then accessing it so
+it gets mounted again (which triggers the nfs4_do_fsinfo()),
+the cl_last_renewal is set to now on the client which prevents RENEW
+operations from being send, and eventually the NFS server
+will expire the lease (common defaults are 60s on Linux and 90s on Solaris
+servers).
+
+In testing I confirmed that both Linux and Solaris NFSv4 servers will not do
+an implicit lease renewal in this case
+(nfs4_do_fsinfo() results in GETATTR operations being send), in which case
+the lease might expire and both Linux and Solaris
+NFS servers will return NFS4ERR_EXPIRED.
+
+The error is not handled correctly either and will result in EIO propagated
+to an application issuing open().
+See my other email with subject: [PATCH] NFSv4: open() should try lease
+recovery on NFS4ERR_EXPIRED
+which contains a fix for the NFS4ERR_EXPIRED handling.
+
+This patch however fixes the issue with implicit lease renewal by not
+setting the cl_last_renewal to now,
+unless there is no lease set yet.
+
+This was tested with 5.5.0-rc2 and the provided patch is applied on top of
+the 5.5.0-rc2 as well.
+
+
+btw: Recent ONTAP versions return NFS4ERR_STALE_CLIENTID which is handled
+correctly - Linux client will try to renew its lease and if successful it
+will retry open().
+     
+
+
+Best regards,
+ Robert Milkowski
 
 
