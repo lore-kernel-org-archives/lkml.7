@@ -2,147 +2,72 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1328C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AFFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B766820409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503766;
-	bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lELAo9zE5PUO4ny4O5MySDn00vvTox2818KHPhjOpUEQcSXW25Mf63b4R2gNcsogS
-	 Pt1RKGISoYRtTLIfzsF/Hi1KYM4r5SLL+YXoK/qk8auUNv5eQVXtBF1OCJzZVhgD0C
-	 Smd77nxKvM1OCEP8JoNouYbO4BNbs+xPhfjKdcuY=
+	by mail.kernel.org (Postfix) with ESMTP id 91229206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfLPNmp (ORCPT
+        id S1727962AbfLPNnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:42:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbfLPNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:42:45 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17008206A5;
-        Mon, 16 Dec 2019 13:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503764;
-        bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ruVVJXDbduFLcwmSg679iQNeoDdg2lFWVI2v2BkPye/QTPMzJtCbNQkVk3HdtCzPL
-         vIiVV5+GGHi5bfDHgRz48mDmGjUs3RWbjuphkSYfuT5JxVD5AGMfaCaPQ6crSKK8AE
-         62YZgGLK9jZFrziJ90Rr9otNwUAt5e96ZzUklCbo=
-Received: by mail-wr1-f48.google.com with SMTP id c14so7319027wrn.7;
-        Mon, 16 Dec 2019 05:42:44 -0800 (PST)
-X-Gm-Message-State: APjAAAWsLxbqC14UVWQuMgu0FjBjhzC6g4pZQ71b46AkAqZWXv72Ct2J
-        XaTgpMVryadG39CbgowZSDxA7DoenaqKrFrk14k=
-X-Google-Smtp-Source: APXvYqxPODUBwPoRDFD7zdAeQAap8dbisfaU0qDmq581xzIb9kxHBDLrHbRDpofwtqywSNRWgqebLus37HOu3FGBw5s=
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr31556564wrx.288.1576503762492;
- Mon, 16 Dec 2019 05:42:42 -0800 (PST)
+        Mon, 16 Dec 2019 08:43:06 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48610 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727807AbfLPNnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:43:06 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A6562513F75AAEF470C6;
+        Mon, 16 Dec 2019 21:43:00 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 16 Dec 2019 21:42:53 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <afd@ti.com>, <sumit.semwal@linaro.org>,
+        <benjamin.gaignard@linaro.org>
+CC:     <labbott@redhat.com>, <Brian.Starkey@arm.com>,
+        <john.stultz@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <zhongjiang@huawei.com>
+Subject: [PATCH v2] dma-heap: Make the symbol 'dma_heap_ioctl_cmds' static
+Date:   Mon, 16 Dec 2019 21:38:31 +0800
+Message-ID: <1576503511-27500-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
+References: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
 MIME-Version: 1.0
-References: <20191215165924.28314-1-wens@kernel.org> <20191215165924.28314-12-wens@kernel.org>
- <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-In-Reply-To: <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 16 Dec 2019 21:42:30 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
-Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
-Subject: Re: [PATCH 11/14] ARM: dts: sun8i: r40: Add device node for CSI0
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 9:39 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 12:59:21AM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The CSI0 and CSI1 blocks are the same as found on the A20. However only
-> > CSI0 is supported upstream right now.
-> >
-> > Add a device node for CSI0 using the A20 compatible as a fallback, and
-> > the standard pinctrl options. Also add the MBUS interconnect.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > index 82ea0b5b0710..2d1e97cc4155 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > @@ -180,6 +180,20 @@ nmi_intc: interrupt-controller@1c00030 {
-> >                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> >               };
-> >
-> > +             csi0: csi@1c09000 {
-> > +                     compatible = "allwinner,sun8i-r40-csi0",
-> > +                                  "allwinner,sun7i-a20-csi0";
-> > +                     reg = <0x01c09000 0x1000>;
-> > +                     interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks = <&ccu CLK_BUS_CSI0>, <&ccu CLK_CSI_SCLK>,
-> > +                              <&ccu CLK_DRAM_CSI0>;
-> > +                     clock-names = "bus", "isp", "ram";
-> > +                     resets = <&ccu RST_BUS_CSI0>;
-> > +                     interconnects = <&mbus 5>;
-> > +                     interconnect-names = "dma-mem";
-> > +                     status = "disabled";
-> > +             };
-> > +
-> >               mmc0: mmc@1c0f000 {
-> >                       compatible = "allwinner,sun8i-r40-mmc",
-> >                                    "allwinner,sun50i-a64-mmc";
-> > @@ -355,6 +369,20 @@ clk_out_a_pin: clk-out-a-pin {
-> >                               function = "clk_out_a";
-> >                       };
-> >
-> > +                     /omit-if-no-ref/
-> > +                     csi0_8bits_pins: csi0-8bits-pins {
-> > +                             pins = "PE0", "PE2", "PE3", "PE4", "PE5",
-> > +                                    "PE6", "PE7", "PE8", "PE9", "PE10",
-> > +                                    "PE11";
-> > +                             function = "csi0";
-> > +                     };
-> > +
-> > +                     /omit-if-no-ref/
-> > +                     csi0_mclk_pin: csi0-mclk-pin {
-> > +                             pins = "PE1";
-> > +                             function = "csi0";
-> > +                     };
-> > +
-> >                       gmac_rgmii_pins: gmac-rgmii-pins {
-> >                               pins = "PA0", "PA1", "PA2", "PA3",
-> >                                      "PA4", "PA5", "PA6", "PA7",
-> > @@ -624,6 +652,14 @@ gmac_mdio: mdio {
-> >                       };
-> >               };
-> >
-> > +             mbus: dram-controller@1c62000 {
-> > +                     compatible = "allwinner,sun8i-r40-mbus";
-> > +                     reg = <0x01c62000 0x1000>;
-> > +                     clocks = <&ccu 155>;
->
-> We should export the clock too?
+Fix the following sparse warning.
 
-I meant to do it separately. Haven't gotten to it though.
+drivers/dma-buf/dma-heap.c:109:14: warning: symbol 'dma_heap_ioctl_cmds' was not declared. Should it be static?
 
-ChenYu
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ drivers/dma-buf/dma-heap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index 4f04d10..da2090e 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -106,7 +106,7 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
+ 	return 0;
+ }
+ 
+-unsigned int dma_heap_ioctl_cmds[] = {
++static unsigned int dma_heap_ioctl_cmds[] = {
+ 	DMA_HEAP_IOC_ALLOC,
+ };
+ 
+-- 
+1.7.12.4
+
