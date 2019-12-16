@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A8FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93F5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABD22166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919972166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519019;
-	bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
+	s=default; t=1576519020;
+	bh=35yKDkiE8KL4FQ6IGuKiSvQsrdEoHklWw7BgukhTtfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXgWSHt9D6IljWz4TixkM5Tu/oET1w7tyfT9IHDh5aABy7FZpgbcVDSVYv9CcUVtS
-	 uhYG1UohpnQXbBesbl6QtDQ/+HC+zCQlcAskOAXgsEZ1bcnKzvdx4f7lAAJHdpwqVI
-	 rmkB6KpFawW94z/Tzrd17I/iAYwNlByDF6JCsfg4=
+	b=T6pelGcXckEW+6Tdfjb302KvX9OqVmj9oGr+gdtLcH5J6Xvh2SIL2ZFDVodStU0s6
+	 bAK51JIqXnroNnwKynTbvJPilG/5oJCbW5zEMr8RG4CywEok0KY9B31LRTWhXtVkMl
+	 Xe40L4oWmyfBkDyhTsdmSMtxF2zll82bGUqgDiVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfLPR46 (ORCPT
+        id S1728350AbfLPR47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55388 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfLPR4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:55 -0500
+        id S1728085AbfLPR46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18CF21582;
-        Mon, 16 Dec 2019 17:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A7020733;
+        Mon, 16 Dec 2019 17:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519015;
-        bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
+        s=default; t=1576519017;
+        bh=35yKDkiE8KL4FQ6IGuKiSvQsrdEoHklWw7BgukhTtfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQW6VmBUZpQSP/PsUOUZTbKInYNJStLG9oaWAP5xbey/l/d1JPLCyIpxDM13D8HNn
-         5ZIv7tBhkKWY8GCHXtTuYjo7SqOs1UPbylWOxbTNmCSP4HtTR9cNptHYc4BEoWTY5j
-         JoiZp/BH+7uPabomWQUsdnkXiYu79MZoK6etSwQY=
+        b=UL+tO/Uv1tTJjCzU32BEVg+HV4PYzIkqP4/JqF2omZsTK/jYmvBdC+dtJKHzOT8Xm
+         JfaoH5aN+g9//wlSvp5u3QbaJn9/3iDIiEJglDTwBMpZeBDoy0gNTWRRJoRL3aovUz
+         AiXIg4BnC7BSy1jRUI/DPZcRSmPHZQMxnyGZeHs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 143/267] crypto: crypto4xx - fix double-free in crypto4xx_destroy_sdr
-Date:   Mon, 16 Dec 2019 18:47:49 +0100
-Message-Id: <20191216174910.313908922@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.14 161/267] USB: uas: honor flag to avoid CAPACITY16
+Date:   Mon, 16 Dec 2019 18:48:07 +0100
+Message-Id: <20191216174911.324131759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,43 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 746c908c4d72e49068ab216c3926d2720d71a90d upstream.
+commit bff000cae1eec750d62e265c4ba2db9af57b17e1 upstream.
 
-This patch fixes a crash that can happen during probe
-when the available dma memory is not enough (this can
-happen if the crypto4xx is built as a module).
+Copy the support over from usb-storage to get feature parity
 
-The descriptor window mapping would end up being free'd
-twice, once in crypto4xx_build_pdr() and the second time
-in crypto4xx_destroy_sdr().
-
-Fixes: 5d59ad6eea82 ("crypto: crypto4xx - fix crypto4xx_build_pdr, crypto4xx_build_sdr leak")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191114112758.32747-2-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_core.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/usb/storage/uas.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -399,12 +399,8 @@ static u32 crypto4xx_build_sdr(struct cr
- 		dma_alloc_coherent(dev->core_dev->device,
- 			dev->scatter_buffer_size * PPC4XX_NUM_SD,
- 			&dev->scatter_buffer_pa, GFP_ATOMIC);
--	if (!dev->scatter_buffer_va) {
--		dma_free_coherent(dev->core_dev->device,
--				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
--				  dev->sdr, dev->sdr_pa);
-+	if (!dev->scatter_buffer_va)
- 		return -ENOMEM;
--	}
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -832,6 +832,10 @@ static int uas_slave_configure(struct sc
+ 		sdev->wce_default_on = 1;
+ 	}
  
- 	sd_array = dev->sdr;
- 
++	/* Some disks cannot handle READ_CAPACITY_16 */
++	if (devinfo->flags & US_FL_NO_READ_CAPACITY_16)
++		sdev->no_read_capacity_16 = 1;
++
+ 	/*
+ 	 * Some disks return the total number of blocks in response
+ 	 * to READ CAPACITY rather than the highest block number.
 
 
