@@ -2,68 +2,69 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194E2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD15C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8807206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156FC206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F0GxQQ/+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DLLKLxUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfLPPko (ORCPT
+        id S1728443AbfLPPpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:40:44 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37478 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfLPPko (ORCPT
+        Mon, 16 Dec 2019 10:45:02 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33661 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728399AbfLPPpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:40:44 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so7217260wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:40:42 -0800 (PST)
+        Mon, 16 Dec 2019 10:45:01 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d139so171154wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:44:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qnirk3kwPjK1aw7LnYJRIDrNoNKyYmgUV2qjS7jQepc=;
-        b=F0GxQQ/+ZYgthC4ZKGTIetHe0XolPq03HVw88RnlKX2TqUSHlwTSQX1MSNmA0DkRhv
-         q0DCLve4jDBoOTBCJGSA4tAblhc1XTACvWdOJs+CdAZ++MI6U9A5Rj6sbrMy+G/TE2uR
-         BcehV2RPIC+ROHbTKyflOKq7Fb1GQrKOXLh2g1+SxlpuMYMOb96awZUE3MN3MaYwNRDy
-         oSAqvKtHfTW0X/Ttjl3nS8L0IJY7colzzFJk5BpDuklIKLspLrFhWPbK8fDbGKH5Hp4n
-         iInrSYHyFdkqc0epC+1l213spwg3/9Qv/1RrY/bQKZ2duDgBj2lSB+1tTkCZScNxengk
-         Wq+w==
+        bh=t78O/sHoDiuGPtxdAbBx7V4J3Cxi3U7o9fq7ypbtNjM=;
+        b=DLLKLxUIJI/iexWg79uTe6L2gQXXNFyuI93jXJgRyCUPeYk9ljXTUwJgJovjY62yO/
+         ZaFM1gwYFRAqLRQiRQNsZcX7Y/PwBq+OySF5QYHitzerYU0Tf4VaEo8EDyj7re4zcVAa
+         kFQdUfEiQmdITHI8EXHcLvfy9A8SQJpxqdN/1LQnKJiUjwiK69jtgbb4/nW6jsdbBMXz
+         ig0yCKbu8uA6Y8wvBDgvUAaYBFko09Q2pOxiwR259dNg0FlM0tQH6Vg/dTPt9y3yvjWX
+         sUJzFyLxnteQPNhBb4ofZrkRa6TZkdAv2CmAuN/Dsie35NoQJAMgi23/ppC215vDkQCd
+         ddpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Qnirk3kwPjK1aw7LnYJRIDrNoNKyYmgUV2qjS7jQepc=;
-        b=ACRSjNsXWlrXoZaZw0ki/nuq9+p1uZ/36+tNR2SPETidkeiDfIm9udz0vY5zLI3jOE
-         LPkVG8VYyyd8ds1iYeqEKP/eV6Gnci84b1V4ynJUqwf0FcLCFDTtGUrOJjla7hV+6Lcq
-         Y58/rCf8UQu1OQKbeLCX6TV4uqewJ+GyRCDQ68Y+I31/sLPKDgaP3m0SBJvtEbJcDcy5
-         rI19uh6wx3RbwL86VEvZeDtaKhCg+3R3Ug7sk4WJCjKdKTqv6WHDN6Os7uVhKUJYUnnq
-         8EF93G/0jPDpwLFdriHoRQ5bztDENFyMgXRAVsp44hXTEyuTSRL5CwsNE2oTrNuHW+No
-         Crlg==
-X-Gm-Message-State: APjAAAUzymK32PWvCM01yitRWcyxNGMBhIkOwMjW/gIuL6zrc3S22qbe
-        6yJ0zl/Uc+JanfnlSrNwpeW0uK8wrHQ=
-X-Google-Smtp-Source: APXvYqwhSGYei5/Ou8oAoa0w6Qv/beF+6otG+sMZB1qAdQl21W+3U0rT2c6jlPFfesyOUf+O79MlBw==
-X-Received: by 2002:a1c:7e02:: with SMTP id z2mr4691560wmc.25.1576510841104;
-        Mon, 16 Dec 2019 07:40:41 -0800 (PST)
+        bh=t78O/sHoDiuGPtxdAbBx7V4J3Cxi3U7o9fq7ypbtNjM=;
+        b=SI9dhkrnH3fYJSWiVbFBehiql5IunhR/Olco7lcX7rXjYVbyE4WnUlmiJuJoAn2TnI
+         pMcxlGorGoWYpsAts0rIgxdZHX6k/3GdKR30yIe9lc2V4WrjxvS4K0BlZlgA+oHUp+vi
+         sPsQTdtEhvfLqNg0JEek4ZwH2a1er+HU1wWcgKmD/XXcBfbr0x6wFQorapX8Ve4+C0HB
+         l1SSODFmKNJ8ZbpVQcK1FodCb4UyRlke10O+4SK7LOU+SoiiwQLNFmzwN27/Y+Quiowp
+         UTXeVS6ytjzD8qglJdOnB+1PcjlCk5EgQZM5J7lz883T7DNW61Tqc1FGKRk1XHJiNzGM
+         vjIg==
+X-Gm-Message-State: APjAAAWMGxxLXsxmRIXo01OpSlaNU75dHrX0g8wn8MMdh1d/zBk2woUs
+        X7JkhkjKnNtqIY8yR0QzpIjzjrmxoT4=
+X-Google-Smtp-Source: APXvYqxJMZd/6K9ce64sf7V+owuZ78/WspKZ4vg29IA1lWfuqGA+1hoMKCoSH1ZjcPQz9jsLifqBUA==
+X-Received: by 2002:a1c:6585:: with SMTP id z127mr30929628wmb.113.1576511098324;
+        Mon, 16 Dec 2019 07:44:58 -0800 (PST)
 Received: from ?IPv6:2a01:e34:ed2f:f020:44d6:972c:f996:2f15? ([2a01:e34:ed2f:f020:44d6:972c:f996:2f15])
-        by smtp.googlemail.com with ESMTPSA id x1sm21920489wru.50.2019.12.16.07.40.40
+        by smtp.googlemail.com with ESMTPSA id q3sm5089492wmc.47.2019.12.16.07.44.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 07:40:40 -0800 (PST)
-Subject: Re: [PATCH 1/3] clocksource: em_sti: convert to
+        Mon, 16 Dec 2019 07:44:57 -0800 (PST)
+Subject: Re: [PATCH] cpuidle: clps711x: convert to
  devm_platform_ioremap_resource
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     tglx@linutronix.de,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191215151707.31264-1-tiny.windzz@gmail.com>
- <ceabec4e-0b4b-ee31-e99b-ac62a03e3aeb@linaro.org>
- <CAEExFWugke0PnqtSAOV6eWBRb1CB5qf+umiNBC3d+GQiGaREtw@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Cc:     shc_work@mail.ru, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191215130206.30265-1-tiny.windzz@gmail.com>
+ <5309821.Xs2qqjuCkx@kreacher>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
@@ -119,12 +120,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
  X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
  fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <1b402e32-64e8-3a6d-727c-96f7672a6f29@linaro.org>
-Date:   Mon, 16 Dec 2019 16:40:39 +0100
+Message-ID: <19ceef1b-1f70-9a2b-3610-a8389b72f0cc@linaro.org>
+Date:   Mon, 16 Dec 2019 16:44:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAEExFWugke0PnqtSAOV6eWBRb1CB5qf+umiNBC3d+GQiGaREtw@mail.gmail.com>
+In-Reply-To: <5309821.Xs2qqjuCkx@kreacher>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -133,24 +134,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/12/2019 16:27, Frank Lee wrote:
-> On Mon, Dec 16, 2019 at 9:44 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
+On 16/12/2019 12:20, Rafael J. Wysocki wrote:
+> On Sunday, December 15, 2019 2:02:05 PM CET Yangtao Li wrote:
+>> Use devm_platform_ioremap_resource() to simplify code.
 >>
->> On 15/12/2019 16:17, Yangtao Li wrote:
->>> Use devm_platform_ioremap_resource() to simplify code.
+>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>> ---
+>>  drivers/cpuidle/cpuidle-clps711x.c | 5 +----
+>>  1 file changed, 1 insertion(+), 4 deletions(-)
 >>
->> Even if the change is obvious, elaborate a bit the changelog.
+>> diff --git a/drivers/cpuidle/cpuidle-clps711x.c b/drivers/cpuidle/cpuidle-clps711x.c
+>> index 6e36740f5719..fc22c59b6c73 100644
+>> --- a/drivers/cpuidle/cpuidle-clps711x.c
+>> +++ b/drivers/cpuidle/cpuidle-clps711x.c
+>> @@ -37,10 +37,7 @@ static struct cpuidle_driver clps711x_idle_driver = {
+>>  
+>>  static int __init clps711x_cpuidle_probe(struct platform_device *pdev)
+>>  {
+>> -	struct resource *res;
+>> -
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	clps711x_halt = devm_ioremap_resource(&pdev->dev, res);
+>> +	clps711x_halt = devm_platform_ioremap_resource(pdev, 0);
+>>  	if (IS_ERR(clps711x_halt))
+>>  		return PTR_ERR(clps711x_halt);
+>>  
 >>
->>> BTW, do another small cleanup.
->>
->> Keep one change per patch.
 > 
-> OK... My fault.
-> 
-> Any comments on the other two?
+> Daniel, any concerns here?
 
-They are fine for me.
+I'm fine with those changes also. Maybe a bit more elaborated changelog,
+but not sure it is worth to resend a new patch for that. May be you can
+just update it with an answer and Rafael can take it into account.
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 -- 
  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
