@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1224C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3ABC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742512072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF47205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519238;
-	bh=TrE3X/sVzFQzP/TNSPD+qtrx90TpPubFW52PJryieCw=;
+	s=default; t=1576519242;
+	bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFEvgJWPI24QVJ4mVyEhCRMa9SDcoam6QL2TaErKrsOvOKH5pJWEs8lZni7LBFp9Q
-	 u5NjaKfIJ9JYvL1ljEbHZlIDTyTNqfnQ1Tz778k2EuSPgHwG6z7oWIoLzdSlddqueS
-	 60YnhTaC8lB5tX457RbD7Upn8gNsOAerahwvNT+A=
+	b=Sc/7ysmz9T43yclU7ACeWMj5vjZdUbt9xrmSi5ClTwsqIqg73Tu0RzT7tWAk6Tb6P
+	 jcJtkwR48O0ySTR20z2Yfx0kRByPComLVN1aoMjzUOa1b5DcP/Q7n1BWJuG/gkgnxW
+	 vk/Zb2rhfLjDO07NzFn8UkYGMXO46BHL4z42vAWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfLPSAh (ORCPT
+        id S1728988AbfLPSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34638 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbfLPSAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:32 -0500
+        id S1728949AbfLPSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0078320726;
-        Mon, 16 Dec 2019 18:00:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E668E20726;
+        Mon, 16 Dec 2019 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519231;
-        bh=TrE3X/sVzFQzP/TNSPD+qtrx90TpPubFW52PJryieCw=;
+        s=default; t=1576519236;
+        bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FyFyheR4NWiHGtEOeozbc2/IAXclCH5YxQqZm91kVLkroMbPJX/UlofbkfgtTgwyt
-         eVEe7uTSJG6Ox/9WIx5tLyihFbAvNuSs8qjTfjyJ+aOsTfoQSx3eCDlc9vGklLrrNd
-         4z87Q7zdzl8YdsC947y2Zcb1KNfuA0cOstNUEKIw=
+        b=gf1btnJqWDowtrwAc1dtxVG+tUsbW6t3CQFjqGJg7XITq0WhWeMEQDi833zWIHutX
+         JsRDQsX+bEM8eA/NNZGSSS3Rq/UfsvMCvj/YV9jXWynYStP0L5Ogq55KGMrVFz1Jgz
+         /p38FbL2zyvmfwznxF0spn+9fgGt64T+4Au0PmFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 249/267] scsi: lpfc: Cap NPIV vports to 256
-Date:   Mon, 16 Dec 2019 18:49:35 +0100
-Message-Id: <20191216174916.243549675@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 251/267] drbd: Change drbd_request_detach_interruptibles return type to int
+Date:   Mon, 16 Dec 2019 18:49:37 +0100
+Message-Id: <20191216174916.378746725@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,85 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8b47ae69e049ae0b3373859d901f0334322f9fe9 ]
+[ Upstream commit 5816a0932b4fd74257b8cc5785bc8067186a8723 ]
 
-Depending on the chipset, the number of NPIV vports may vary and be in
-excess of what most switches support (256). To avoid confusion with the
-users, limit the reported NPIV vports to 256.
+Clang warns when an implicit conversion is done between enumerated
+types:
 
-Additionally correct the 16G adapter which is reporting a bogus NPIV vport
-number if the link is down.
+drivers/block/drbd/drbd_state.c:708:8: warning: implicit conversion from
+enumeration type 'enum drbd_ret_code' to different enumeration type
+'enum drbd_state_rv' [-Wenum-conversion]
+                rv = ERR_INTR;
+                   ~ ^~~~~~~~
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+drbd_request_detach_interruptible's only call site is in the return
+statement of adm_detach, which returns an int. Change the return type of
+drbd_request_detach_interruptible to match, silencing Clang's warning.
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h      |  3 ++-
- drivers/scsi/lpfc/lpfc_attr.c | 12 ++++++++++--
- drivers/scsi/lpfc/lpfc_init.c |  3 +++
- 3 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/block/drbd/drbd_state.c | 6 ++----
+ drivers/block/drbd/drbd_state.h | 3 +--
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 03e95a3216c8c..5fc41aa53ceb3 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -969,7 +969,8 @@ struct lpfc_hba {
- 	struct list_head port_list;
- 	struct lpfc_vport *pport;	/* physical lpfc_vport pointer */
- 	uint16_t max_vpi;		/* Maximum virtual nports */
--#define LPFC_MAX_VPI 0xFFFF		/* Max number of VPI supported */
-+#define LPFC_MAX_VPI	0xFF		/* Max number VPI supported 0 - 0xff */
-+#define LPFC_MAX_VPORTS	0x100		/* Max vports per port, with pport */
- 	uint16_t max_vports;            /*
- 					 * For IOV HBAs max_vpi can change
- 					 * after a reset. max_vports is max
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index 82ce5d1930189..f447355cc9c04 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -1478,6 +1478,9 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
- 		max_vpi = (bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) > 0) ?
- 			(bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) - 1) : 0;
+diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
+index 0813c654c8938..b452359b6aae8 100644
+--- a/drivers/block/drbd/drbd_state.c
++++ b/drivers/block/drbd/drbd_state.c
+@@ -688,11 +688,9 @@ request_detach(struct drbd_device *device)
+ 			CS_VERBOSE | CS_ORDERED | CS_INHIBIT_MD_IO);
+ }
  
-+		/* Limit the max we support */
-+		if (max_vpi > LPFC_MAX_VPI)
-+			max_vpi = LPFC_MAX_VPI;
- 		if (mvpi)
- 			*mvpi = max_vpi;
- 		if (avpi)
-@@ -1493,8 +1496,13 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
- 			*axri = pmb->un.varRdConfig.avail_xri;
- 		if (mvpi)
- 			*mvpi = pmb->un.varRdConfig.max_vpi;
--		if (avpi)
--			*avpi = pmb->un.varRdConfig.avail_vpi;
-+		if (avpi) {
-+			/* avail_vpi is only valid if link is up and ready */
-+			if (phba->link_state == LPFC_HBA_READY)
-+				*avpi = pmb->un.varRdConfig.avail_vpi;
-+			else
-+				*avpi = pmb->un.varRdConfig.max_vpi;
-+		}
- 	}
+-enum drbd_state_rv
+-drbd_request_detach_interruptible(struct drbd_device *device)
++int drbd_request_detach_interruptible(struct drbd_device *device)
+ {
+-	enum drbd_state_rv rv;
+-	int ret;
++	int ret, rv;
  
- 	mempool_free(pmboxq, phba->mbox_mem_pool);
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index c69c2a2b2eadf..9fc5507ee39e7 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -7643,6 +7643,9 @@ lpfc_sli4_read_config(struct lpfc_hba *phba)
- 			bf_get(lpfc_mbx_rd_conf_xri_base, rd_config);
- 		phba->sli4_hba.max_cfg_param.max_vpi =
- 			bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config);
-+		/* Limit the max we support */
-+		if (phba->sli4_hba.max_cfg_param.max_vpi > LPFC_MAX_VPORTS)
-+			phba->sli4_hba.max_cfg_param.max_vpi = LPFC_MAX_VPORTS;
- 		phba->sli4_hba.max_cfg_param.vpi_base =
- 			bf_get(lpfc_mbx_rd_conf_vpi_base, rd_config);
- 		phba->sli4_hba.max_cfg_param.max_rpi =
+ 	drbd_suspend_io(device); /* so no-one is stuck in drbd_al_begin_io */
+ 	wait_event_interruptible(device->state_wait,
+diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
+index b2a390ba73a05..f87371e55e682 100644
+--- a/drivers/block/drbd/drbd_state.h
++++ b/drivers/block/drbd/drbd_state.h
+@@ -162,8 +162,7 @@ static inline int drbd_request_state(struct drbd_device *device,
+ }
+ 
+ /* for use in adm_detach() (drbd_adm_detach(), drbd_adm_down()) */
+-enum drbd_state_rv
+-drbd_request_detach_interruptible(struct drbd_device *device);
++int drbd_request_detach_interruptible(struct drbd_device *device);
+ 
+ enum drbd_role conn_highest_role(struct drbd_connection *connection);
+ enum drbd_role conn_highest_peer(struct drbd_connection *connection);
 -- 
 2.20.1
 
