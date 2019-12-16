@@ -2,117 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7139C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4159C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC03206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521106;
-	bh=LIdc/Ky4bIZV7jaCh27m9/rLPKNcEEgcB2fhg7yU7wM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ov/TzM6eFDydPFcIua5dhbgEJnvMMBnBnQ/+7figoBG2u8eKi+q/ctnu6xn1P3UXA
-	 OOe+MOF/U8JKzJIbbpPwg1O8EZCOwhElMeL0NwLG919ZNXqMfQksB2lq9inw2JCCId
-	 pHRCVulVrjmmkYqZlD0hTXer0dSeVXFRHEmG+fFY=
+	by mail.kernel.org (Postfix) with ESMTP id 9D239206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oHAUq9CJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfLPSLF (ORCPT
+        id S1730696AbfLPSbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbfLPSLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93DB0206E0;
-        Mon, 16 Dec 2019 18:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519862;
-        bh=LIdc/Ky4bIZV7jaCh27m9/rLPKNcEEgcB2fhg7yU7wM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBiZA9zBjTEiCXVYvB1Fu3FjlF9g/4ffW0ReNK3JuyD2qqeslD152hDWGu3DFZ7/R
-         R5V7zMPCd+os9UNtl5NQnnA3us6W0XJitaPZeEJilEjQEf2lA7BCilYmO0YQOQ2shl
-         8MyZyvhzzhUHkhYIu7RIDqMRR7jchQVlz+mjaE+4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 5.3 099/180] PM / devfreq: Lock devfreq in trans_stat_show
-Date:   Mon, 16 Dec 2019 18:48:59 +0100
-Message-Id: <20191216174835.841861395@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
-References: <20191216174806.018988360@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:31:48 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46505 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730365AbfLPSbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:31:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so4169492pgb.13;
+        Mon, 16 Dec 2019 10:31:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=q6wgY7fQy1m4FBOYKfnwYqVpu2I96z7LmDo1JYpVKmA=;
+        b=oHAUq9CJWPu2x9rms0fDdTAm6ul0RPmQhldrsN5OLylWRT0QAkNMoiBg+qldjqhuVE
+         pC01WYcRZcqbql2Xk1TZeLGh/t9abXxANyNKi6ScykT5hqJ6VQHqIoyeOhIiNsnNxpmS
+         gYVIr9ogXexsFc5vP2kdujTRDAnuhVX8OcC9sEQ3WCLX2/0G6DBgAMnxj4EZpxH1fsiJ
+         h8Ue9p1vYopiP2M3k2mG90lwVZbF4bPwEoIWprXHXcRoHTevhwMdiHw/kN99BtaNLFV9
+         8WPiL2i0bskE5hz4kpEgdKG2o9zplIG0/a6L5jR8VjF6CCUgEF6hvVUUVjElXwucWa7n
+         fatg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=q6wgY7fQy1m4FBOYKfnwYqVpu2I96z7LmDo1JYpVKmA=;
+        b=jbi2ICbbxcMiGyE7fkzeyiNIjORZHo/VI8XIHIng9mAUg6Gbs2BFM3SGOa7KuQZ66n
+         uONJKdr2nrtvNaB2gmvhycPov+CvcjqURAsuVM4imhTI61nMV2/1u2stXP1YBQQjofU2
+         IeMWvMTnQuNusiPhkwY6BYBbrp/oQX2InswApC0nywEQup63/54gFmJDG5nt79NC+1ac
+         b7eC+tKE7Z5CfCwqM4uP8RnTs/ZirrurmyCNOpHp9Jt25FHa0n1nEf57lnpdm3YG0v2l
+         YM4o4tu+JG0j+9LhyABlVQqWNorV639P7XL7YXRvWicdrJFwP8x+5HVudTwxuQldRG/y
+         DuZg==
+X-Gm-Message-State: APjAAAVUY3efypcKyRyhbFhzhd+bt10liHxrIqrNp/PX/AI0mN5L+bdB
+        DG8PzjCvvgufWtJZy05brEbBe6jh0dvBXqTAWUBNnQ==
+X-Google-Smtp-Source: APXvYqxsNamYDluy4MU6SGf4xgUn04QcfrEm+7mgsyXt1Aa1RCnnLKK8DURIStGo/unIqvJuRCAO2zGEMOPD6Nn2h30=
+X-Received: by 2002:a63:364d:: with SMTP id d74mr19952282pga.408.1576521103641;
+ Mon, 16 Dec 2019 10:31:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191216174747.111154704@linuxfoundation.org> <20191216174815.749524432@linuxfoundation.org>
+In-Reply-To: <20191216174815.749524432@linuxfoundation.org>
+Reply-To: andrea.merello@gmail.com
+From:   Andrea Merello <andrea.merello@gmail.com>
+Date:   Mon, 16 Dec 2019 19:31:31 +0100
+Message-ID: <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
+ "readback"-handling code
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+Something nasty seems happening here: it looks like the commit message
+and the actual diff have nothing to do one wrt the other; the commit
+message is from one of my patches, the diff is against some unrelated
+file.
 
-commit 2abb0d5268ae7b5ddf82099b1f8d5aa8414637d4 upstream.
-
-There is no locking in this sysfs show function so stats printing can
-race with a devfreq_update_status called as part of freq switching or
-with initialization.
-
-Also add an assert in devfreq_update_status to make it clear that lock
-must be held by caller.
-
-Fixes: 39688ce6facd ("PM / devfreq: account suspend/resume for stats")
-Cc: stable@vger.kernel.org
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/devfreq/devfreq.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -160,6 +160,7 @@ int devfreq_update_status(struct devfreq
- 	int lev, prev_lev, ret = 0;
- 	unsigned long cur_time;
- 
-+	lockdep_assert_held(&devfreq->lock);
- 	cur_time = jiffies;
- 
- 	/* Immediately exit if previous_freq is not initialized yet. */
-@@ -1397,12 +1398,17 @@ static ssize_t trans_stat_show(struct de
- 	int i, j;
- 	unsigned int max_state = devfreq->profile->max_state;
- 
--	if (!devfreq->stop_polling &&
--			devfreq_update_status(devfreq, devfreq->previous_freq))
--		return 0;
- 	if (max_state == 0)
- 		return sprintf(buf, "Not Supported.\n");
- 
-+	mutex_lock(&devfreq->lock);
-+	if (!devfreq->stop_polling &&
-+			devfreq_update_status(devfreq, devfreq->previous_freq)) {
-+		mutex_unlock(&devfreq->lock);
-+		return 0;
-+	}
-+	mutex_unlock(&devfreq->lock);
-+
- 	len = sprintf(buf, "     From  :   To\n");
- 	len += sprintf(buf + len, "           :");
- 	for (i = 0; i < max_state; i++)
-
-
+Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> ha scritto:
+>
+> From: Meng Li <Meng.Li@windriver.com>
+>
+> [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
+>
+> The device could be configured to spit out also the configuration word
+> while reading the AD result value (in the same SPI xfer) - this is called
+> "readback" in the device datasheet.
+>
+> The driver checks if readback is enabled and it eventually adjusts the SPI
+> xfer length and it applies proper shifts to still get the data, discarding
+> the configuration word.
+>
+> The readback option is actually never enabled (the driver disables it), so
+> the said checks do not serve for any purpose.
+>
+> Since enabling the readback option seems not to provide any advantage (the
+> driver entirely sets the configuration word without relying on any default
+> value), just kill the said, unused, code.
+>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/edac/altera_edac.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index 56de378ad13dc..c9108906bcdc0 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
+>         .reg_read = s10_protected_reg_read,
+>         .reg_write = s10_protected_reg_write,
+>         .use_single_rw = true,
+> +       .fast_io = true,
+>  };
+>
+>  static int altr_s10_sdram_probe(struct platform_device *pdev)
+> --
+> 2.20.1
+>
+>
+>
