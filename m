@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027AAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ADCC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1182146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612C321582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518851;
-	bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
+	s=default; t=1576518856;
+	bh=URVkprWfAJWhyxcjKilsS7zegySLeavygfZpeHY4j3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sg69i3BQy8LzdhEqDNAAJCJynCO2XemKWX3wCqSgqANsH6O4ICzOI6MzhLVOshAeH
-	 AbdSzqbXLTXcD+s+qEifjHI+AMHapLS6iR7kn/wyLjmsTYT6dsXBQ709flSU8jAhhx
-	 vxa1f7cQmWmzOfoQ7C7vNUwbK/ic3ZdlPtuVK6g0=
+	b=HTFhXNEmBDyQdLMPWniMltc+B5vRtta+hb7DdyV2j2o3PndBI3JVrOgWy8TAk6Qdp
+	 uifhSZ7XUZEiKT/ma0DrnQcXuvgFOPWfMTRwiodnreRF6LMnclhipX9ngq1Oyu06A/
+	 BkBSwr3T0XPThV70tBmyvrnDUBAA78hBvwro567w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLPRyK (ORCPT
+        id S1727435AbfLPRyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbfLPRyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:07 -0500
+        id S1727486AbfLPRyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 052CF2146E;
-        Mon, 16 Dec 2019 17:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7C8206D3;
+        Mon, 16 Dec 2019 17:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518847;
-        bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
+        s=default; t=1576518845;
+        bh=URVkprWfAJWhyxcjKilsS7zegySLeavygfZpeHY4j3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/Bc6NmwK66nqk5CxpdnKZmZUfo7Xi2gJMmpN7HJSRg/iXvvXve7EjI2NKrdSfK1K
-         ecQxNJcn0Vm174Jj7qVbapqCUR5pQuxKAdRFnTg9F08b07wglJwZXQZGVr0slyK9Tx
-         RYrr2PjL+Zo4VsqjVfE+LSOmWkOJb+Szs4PzQ6Fg=
+        b=jJWtfuUuGJxZRBiaXlsL8elQkEBxJYg0hceXrDARLSb0EUYjoSs4//vZQa4anmRH0
+         zs85zgdNiPsjRN8kPWdYhOOLaq/6XWk227Zw6Eh0hRfqEGKU7Y1d2UdEhAwy5bJ6l9
+         ZbCpywNUw+bMQFTAOX3FrPtqXOu+fZxtzyLFmvwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/267] ARM: dts: mmp2: fix the gpio interrupt cell number
-Date:   Mon, 16 Dec 2019 18:46:56 +0100
-Message-Id: <20191216174858.003147462@linuxfoundation.org>
+Subject: [PATCH 4.14 063/267] usb: dwc3: dont log probe deferrals; but do log other error codes
+Date:   Mon, 16 Dec 2019 18:46:29 +0100
+Message-Id: <20191216174855.820358372@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 400583983f8a8e95ec02c9c9e2b50188753a87fb ]
+[ Upstream commit 408d3ba006af57380fa48858b39f72fde6405031 ]
 
-gpio-pxa uses two cell to encode the interrupt source: the pin number
-and the trigger type. Adjust the device node accordingly.
+It's not very useful to repeat a bunch of probe deferral errors. And
+it's also not very useful to log "failed" without telling the error
+code.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 47e5b63339d18..e95deed6a7973 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -180,7 +180,7 @@
- 				clocks = <&soc_clocks MMP2_CLK_GPIO>;
- 				resets = <&soc_clocks MMP2_CLK_GPIO>;
- 				interrupt-controller;
--				#interrupt-cells = <1>;
-+				#interrupt-cells = <2>;
- 				ranges;
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 48755c501201d..a497b878c3e2b 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1261,7 +1261,8 @@ static int dwc3_probe(struct platform_device *pdev)
  
- 				gcb0: gpio@d4019000 {
+ 	ret = dwc3_core_init(dwc);
+ 	if (ret) {
+-		dev_err(dev, "failed to initialize core\n");
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to initialize core: %d\n", ret);
+ 		goto err4;
+ 	}
+ 
 -- 
 2.20.1
 
