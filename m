@@ -2,53 +2,51 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0A0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB28DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54B4206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1AC24687
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519573;
-	bh=oc9ro4LAIuQXzg9PbT00l/mg0NDEym0x4weUm2An9AY=;
+	s=default; t=1576519577;
+	bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o25FGgvHBpBTZiW5SnC0dee1UDeQC5oLbzTU1CftgHJADZ4DCMVi8ufKt0pFiHgwt
-	 x/WsE+5zJLORM0vn1aF5sz/oNpu5ZXgyW+hkdA6Lu3XJTYnWOrPh8VZI9Jd2ulh7rx
-	 dK9QPhgk6nRIkjqXBsEsAvfD2sOUw4fsoOMeUZw8=
+	b=l6cF/yTKHUQJpdlf5Fw3ZqTQYOX3CT0CV4DQxbg7pjnPwePuafwadZz07wQHp2kQh
+	 CXk5iAsLA2F1OIJhUs6HCyog4hGQsj5q0xwM/qnde4Irq7uT4K+iRQeVOt+jfVbeHM
+	 4P+uOItbiUpfEYrx9sEBHIK+sLwnYmEjh56ZsDJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfLPSGM (ORCPT
+        id S1729712AbfLPSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45718 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729940AbfLPSGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:11 -0500
+        id S1729940AbfLPSGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B04FD2072D;
-        Mon, 16 Dec 2019 18:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE3821739;
+        Mon, 16 Dec 2019 18:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519570;
-        bh=oc9ro4LAIuQXzg9PbT00l/mg0NDEym0x4weUm2An9AY=;
+        s=default; t=1576519572;
+        bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uMFfXW9TepkB6sgL/dT4Vxi5k6/8XzGvVxh6/WlukwmOHKtXZev5WwHAaNH1fJY99
-         0gdv4ChExIMlLcgAzpk2fpMUDtc/oTGiFQKp971wTKYmhLSlZhB8oKQ/zihOeiUJOv
-         p/6iWjbu5Sga1UBqRiOdOxCZb9izowoCe6tNRUao=
+        b=y6i6OnIY4net4JbjZcQAz4auY6CxTfkDJ0GFwzXuT+fZ/mmA+3m23BI+pPcPSIODh
+         GlxzK9urQbI5aNUHknEcZIjCycvNu9sxNQqRXHkbclz9lrdQlFDMHIttWyxWbYBBpJ
+         fOTcYaBrv1I8pTEQJ1ZE4MqvAriI3WeGPsk+fAr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/140] scsi: hisi_sas: send primitive NOTIFY to SSP situation only
-Date:   Mon, 16 Dec 2019 18:49:48 +0100
-Message-Id: <20191216174820.382069598@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 094/140] ext4: Fix credit estimate for final inode freeing
+Date:   Mon, 16 Dec 2019 18:49:22 +0100
+Message-Id: <20191216174811.816124544@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,121 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 569eddcf3a0f4efff4ef96a7012010e0f7daa8b4 ]
+commit 65db869c754e7c271691dd5feabf884347e694f5 upstream.
 
-Send primitive NOTIFY to SSP situation only, or it causes underflow issue
-when sending IO. Also rename hisi_sas_hw.sl_notify() to hisi_sas_hw.
-sl_notify_ssp().
+Estimate for the number of credits needed for final freeing of inode in
+ext4_evict_inode() was to small. We may modify 4 blocks (inode & sb for
+orphan deletion, bitmap & group descriptor for inode freeing) and not
+just 3.
 
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ Fixed minor whitespace nit. -- TYT ]
+
+Fixes: e50e5129f384 ("ext4: xattr-in-inode support")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-6-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/hisi_sas/hisi_sas.h       | 2 +-
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 3 ++-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 4 ++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 4 ++--
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 4 ++--
- 5 files changed, 9 insertions(+), 8 deletions(-)
+ fs/ext4/inode.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
-index 6c7d2e201abed..d499c44661661 100644
---- a/drivers/scsi/hisi_sas/hisi_sas.h
-+++ b/drivers/scsi/hisi_sas/hisi_sas.h
-@@ -220,7 +220,7 @@ struct hisi_sas_hw {
- 	int (*slot_index_alloc)(struct hisi_hba *hisi_hba, int *slot_idx,
- 				struct domain_device *device);
- 	struct hisi_sas_device *(*alloc_dev)(struct domain_device *device);
--	void (*sl_notify)(struct hisi_hba *hisi_hba, int phy_no);
-+	void (*sl_notify_ssp)(struct hisi_hba *hisi_hba, int phy_no);
- 	int (*get_free_slot)(struct hisi_hba *hisi_hba, struct hisi_sas_dq *dq);
- 	void (*start_delivery)(struct hisi_sas_dq *dq);
- 	void (*prep_ssp)(struct hisi_hba *hisi_hba,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index f478d1f50dfc0..0ad8875c30e8e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -716,7 +716,8 @@ static void hisi_sas_phyup_work(struct work_struct *work)
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	int phy_no = sas_phy->id;
- 
--	hisi_hba->hw->sl_notify(hisi_hba, phy_no); /* This requires a sleep */
-+	if (phy->identify.target_port_protocols == SAS_PROTOCOL_SSP)
-+		hisi_hba->hw->sl_notify_ssp(hisi_hba, phy_no);
- 	hisi_sas_bytes_dmaed(hisi_hba, phy_no);
- }
- 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index 410eccf0bc5eb..8aa3222fe4865 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -834,7 +834,7 @@ static void phys_init_v1_hw(struct hisi_hba *hisi_hba)
- 	mod_timer(timer, jiffies + HZ);
- }
- 
--static void sl_notify_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
-+static void sl_notify_ssp_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -196,7 +196,12 @@ void ext4_evict_inode(struct inode *inod
  {
- 	u32 sl_control;
+ 	handle_t *handle;
+ 	int err;
+-	int extra_credits = 3;
++	/*
++	 * Credits for final inode cleanup and freeing:
++	 * sb + inode (ext4_orphan_del()), block bitmap, group descriptor
++	 * (xattr block freeing), bitmap, group descriptor (inode freeing)
++	 */
++	int extra_credits = 6;
+ 	struct ext4_xattr_inode_array *ea_inode_array = NULL;
  
-@@ -1822,7 +1822,7 @@ static struct scsi_host_template sht_v1_hw = {
- static const struct hisi_sas_hw hisi_sas_v1_hw = {
- 	.hw_init = hisi_sas_v1_init,
- 	.setup_itct = setup_itct_v1_hw,
--	.sl_notify = sl_notify_v1_hw,
-+	.sl_notify_ssp = sl_notify_ssp_v1_hw,
- 	.clear_itct = clear_itct_v1_hw,
- 	.prep_smp = prep_smp_v1_hw,
- 	.prep_ssp = prep_ssp_v1_hw,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index c4774d63d5d04..ebc984ffe6a22 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1584,7 +1584,7 @@ static void phys_init_v2_hw(struct hisi_hba *hisi_hba)
- 	}
- }
+ 	trace_ext4_evict_inode(inode);
+@@ -252,8 +257,12 @@ void ext4_evict_inode(struct inode *inod
+ 	if (!IS_NOQUOTA(inode))
+ 		extra_credits += EXT4_MAXQUOTAS_DEL_BLOCKS(inode->i_sb);
  
--static void sl_notify_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
-+static void sl_notify_ssp_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
- {
- 	u32 sl_control;
- 
-@@ -3575,7 +3575,7 @@ static const struct hisi_sas_hw hisi_sas_v2_hw = {
- 	.setup_itct = setup_itct_v2_hw,
- 	.slot_index_alloc = slot_index_alloc_quirk_v2_hw,
- 	.alloc_dev = alloc_dev_quirk_v2_hw,
--	.sl_notify = sl_notify_v2_hw,
-+	.sl_notify_ssp = sl_notify_ssp_v2_hw,
- 	.get_wideport_bitmap = get_wideport_bitmap_v2_hw,
- 	.clear_itct = clear_itct_v2_hw,
- 	.free_device = free_device_v2_hw,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index a7407d5376ba2..ce2f232b3df38 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -827,7 +827,7 @@ static void phys_init_v3_hw(struct hisi_hba *hisi_hba)
- 	}
- }
- 
--static void sl_notify_v3_hw(struct hisi_hba *hisi_hba, int phy_no)
-+static void sl_notify_ssp_v3_hw(struct hisi_hba *hisi_hba, int phy_no)
- {
- 	u32 sl_control;
- 
-@@ -2127,7 +2127,7 @@ static const struct hisi_sas_hw hisi_sas_v3_hw = {
- 	.get_wideport_bitmap = get_wideport_bitmap_v3_hw,
- 	.complete_hdr_size = sizeof(struct hisi_sas_complete_v3_hdr),
- 	.clear_itct = clear_itct_v3_hw,
--	.sl_notify = sl_notify_v3_hw,
-+	.sl_notify_ssp = sl_notify_ssp_v3_hw,
- 	.prep_ssp = prep_ssp_v3_hw,
- 	.prep_smp = prep_smp_v3_hw,
- 	.prep_stp = prep_ata_v3_hw,
--- 
-2.20.1
-
++	/*
++	 * Block bitmap, group descriptor, and inode are accounted in both
++	 * ext4_blocks_for_truncate() and extra_credits. So subtract 3.
++	 */
+ 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE,
+-				 ext4_blocks_for_truncate(inode)+extra_credits);
++			 ext4_blocks_for_truncate(inode) + extra_credits - 3);
+ 	if (IS_ERR(handle)) {
+ 		ext4_std_error(inode->i_sb, PTR_ERR(handle));
+ 		/*
 
 
