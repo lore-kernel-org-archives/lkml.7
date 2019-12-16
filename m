@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F74C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80204C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2352166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5959921739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520060;
-	bh=qONlitSrMg/KdcPLAt0yizWuwMCNALHE+k/dQ5GPIws=;
+	s=default; t=1576520064;
+	bh=KKOOWSfLI1WXzw4IKwROjHSV2uTd6wYbIRXD1uV/5Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpWQ5K75cotDyBsln1p9Erct8njAT1gys9ab+1rgtCsaqNq7nEOr4jDn4dEFt27tR
-	 glG1LY14QiBFcppzOHDu8wKdw+EtOSPI7uSZ/7LCtr8Du867snCD2aTrbLD8HkSvKo
-	 vxV5BZiNNCed9WT1P0NsTm4sLaCmavBUKvwgGqeM=
+	b=W9ZADqp//A6GgBsg6p3IlNXvLGqIYzjC94xtAv9d7SvZGzHkEkJ+r2guW7SSHRlv6
+	 TyRZudxyBLpixss3KUi/i/63V0Xqz6F+73xzN3xEqAwZMQXIQsh6a4VBTFda3otNvt
+	 YHw7f//kpa1TX/wvgL6vKMIjNki3rqmW+Ket49rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbfLPSOT (ORCPT
+        id S1731213AbfLPSOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32988 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731184AbfLPSOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:07 -0500
+        id S1731059AbfLPSOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D3820CC7;
-        Mon, 16 Dec 2019 18:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4285F21835;
+        Mon, 16 Dec 2019 18:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520047;
-        bh=qONlitSrMg/KdcPLAt0yizWuwMCNALHE+k/dQ5GPIws=;
+        s=default; t=1576520054;
+        bh=KKOOWSfLI1WXzw4IKwROjHSV2uTd6wYbIRXD1uV/5Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0dBeumuSG4/x3smzfq0z1dm9bJvUsstJtv/dbyo/k3tdy/KxZHgR9QBLXrgvbGvhp
-         J+aFB1ePdGQZ8zHVj0uxQZjY+DhWfgXuVhZuT2spkjRpinMjqnrfUbAXW3mqGJdFIM
-         76N+A2BiF9eNVxF7qt7LL3eV1ZzCzv5M565ZB2fM=
+        b=XgG6vWaQZSlmG1J40TXwINyM8PUkOst3OyWbC9SOJ/Mf+zBzT5vHDBlCb6zHG0bJ5
+         jVtC3bE/X5GsW7259rpF1dmZv3o1yYXvYKjRKCRwkRFmZSJdci8b4T4mHFLIzrury2
+         cQVXbNi1ZBuZel9MU6Moer9+G3oRVV565/l/iLLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 176/180] s390/kaslr: store KASLR offset for early dumps
-Date:   Mon, 16 Dec 2019 18:50:16 +0100
-Message-Id: <20191216174848.194661636@linuxfoundation.org>
+        syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.3 178/180] rtc: disable uie before setting time and enable after
+Date:   Mon, 16 Dec 2019 18:50:18 +0100
+Message-Id: <20191216174848.429026013@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,65 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-commit a9f2f6865d784477e1c7b59269d3a384abafd9ca upstream.
+commit 7e7c005b4b1f1f169bcc4b2c3a40085ecc663df2 upstream.
 
-The KASLR offset is added to vmcoreinfo in arch_crash_save_vmcoreinfo(),
-so that it can be found by crash when processing kernel dumps.
+When setting the time in the future with the uie timer enabled,
+rtc_timer_do_work will loop for a while because the expiration of the uie
+timer was way before the current RTC time and a new timer will be enqueued
+until the current rtc time is reached.
 
-However, arch_crash_save_vmcoreinfo() is called during a subsys_initcall,
-so if the kernel crashes before that, we have no vmcoreinfo and no KASLR
-offset.
+If the uie timer is enabled, disable it before setting the time and enable
+it after expiring current timers (which may actually be an alarm).
 
-Fix this by storing the KASLR offset in the lowcore, where the vmcore_info
-pointer will be stored, and where it can be found by crash. In order to
-make it distinguishable from a real vmcore_info pointer, mark it as uneven
-(KASLR offset itself is aligned to THREAD_SIZE).
+This is the safest thing to do to ensure the uie timer is still
+synchronized with the RTC, especially in the UIE emulation case.
 
-When arch_crash_save_vmcoreinfo() stores the real vmcore_info pointer in
-the lowcore, it overwrites the KASLR offset. At that point, the KASLR
-offset is not yet added to vmcoreinfo, so we also need to move the
-mem_assign_absolute() behind the vmcoreinfo_append_str().
-
-Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+Fixes: 6610e0893b8b ("RTC: Rework RTC code to use timerqueue for events")
+Link: https://lore.kernel.org/r/20191020231320.8191-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/boot/startup.c         |    5 +++++
- arch/s390/kernel/machine_kexec.c |    2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/rtc/interface.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
---- a/arch/s390/boot/startup.c
-+++ b/arch/s390/boot/startup.c
-@@ -164,6 +164,11 @@ void startup_kernel(void)
- 		handle_relocs(__kaslr_offset);
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -125,7 +125,7 @@ EXPORT_SYMBOL_GPL(rtc_read_time);
  
- 	if (__kaslr_offset) {
-+		/*
-+		 * Save KASLR offset for early dumps, before vmcore_info is set.
-+		 * Mark as uneven to distinguish from real vmcore_info pointer.
-+		 */
-+		S390_lowcore.vmcore_info = __kaslr_offset | 0x1UL;
- 		/* Clear non-relocated kernel */
- 		if (IS_ENABLED(CONFIG_KERNEL_UNCOMPRESSED))
- 			memset(img, 0, vmlinux.image_size);
---- a/arch/s390/kernel/machine_kexec.c
-+++ b/arch/s390/kernel/machine_kexec.c
-@@ -254,10 +254,10 @@ void arch_crash_save_vmcoreinfo(void)
- 	VMCOREINFO_SYMBOL(lowcore_ptr);
- 	VMCOREINFO_SYMBOL(high_memory);
- 	VMCOREINFO_LENGTH(lowcore_ptr, NR_CPUS);
--	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
- 	vmcoreinfo_append_str("SDMA=%lx\n", __sdma);
- 	vmcoreinfo_append_str("EDMA=%lx\n", __edma);
- 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
-+	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
+ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ {
+-	int err;
++	int err, uie;
+ 
+ 	err = rtc_valid_tm(tm);
+ 	if (err != 0)
+@@ -137,6 +137,17 @@ int rtc_set_time(struct rtc_device *rtc,
+ 
+ 	rtc_subtract_offset(rtc, tm);
+ 
++#ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
++	uie = rtc->uie_rtctimer.enabled || rtc->uie_irq_active;
++#else
++	uie = rtc->uie_rtctimer.enabled;
++#endif
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 0);
++		if (err)
++			return err;
++	}
++
+ 	err = mutex_lock_interruptible(&rtc->ops_lock);
+ 	if (err)
+ 		return err;
+@@ -153,6 +164,12 @@ int rtc_set_time(struct rtc_device *rtc,
+ 	/* A timer might have just expired */
+ 	schedule_work(&rtc->irqwork);
+ 
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 1);
++		if (err)
++			return err;
++	}
++
+ 	trace_rtc_set_time(rtc_tm_to_time64(tm), err);
+ 	return err;
  }
- 
- void machine_shutdown(void)
 
 
