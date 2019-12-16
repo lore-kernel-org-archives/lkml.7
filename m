@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7479DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD20C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0FC21582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0CA2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519537;
-	bh=i3SKMPZGX2kcISt1DIStMe09VN88qHoD/EJ9Rd1LWYw=;
+	s=default; t=1576519540;
+	bh=UOc/FJlJ+vBa71ybe5UqQhEaD33njVr12Vobl8SZBx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgO5h4A1R3zq8W7YI+Yowpps48YhMkK09DCch4ouk1klRUHAzcsISkrVFxj+U61oe
-	 tMnXaxEfHYDZAJXkRnzj79/cg0Lsy1zbFK4IIMpbfeJdSbVnSkH34vIKQZs6LgcjAq
-	 K6kRVi1B82ipiiVoIvMJxXRDqkL0Lomg1auyrN9k=
+	b=hdlk/5ObYGu3U3miIdS1OXSh4uU3xf/55lerJhostj3M4zqj5UrEp9y7h8cl9fKjT
+	 HIxp9WBZUEwEf46SyAhPQh8zsnXU2siBDkfDVU0KDuM5UWMQmJSkOOpbjGxjQeC7iz
+	 Qvjt6xBJCIaup3Sh27xhgbEOa+lnlUFkv28eBP9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfLPSFg (ORCPT
+        id S1729850AbfLPSFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44094 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfLPSFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:34 -0500
+        id S1727459AbfLPSFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4041820700;
-        Mon, 16 Dec 2019 18:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC3202166E;
+        Mon, 16 Dec 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519533;
-        bh=i3SKMPZGX2kcISt1DIStMe09VN88qHoD/EJ9Rd1LWYw=;
+        s=default; t=1576519536;
+        bh=UOc/FJlJ+vBa71ybe5UqQhEaD33njVr12Vobl8SZBx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fZxY1Udk1Ok8t2+zAlAxUxmH1b5J8CBHQf2NwR+Uzu/2Nz3gyYAHCxGz0SjRGvKy
-         DcJcgXQpmIpaG8u2pGFftatr+Z5Pfli/elhiLu97KX5mX+TKE2+5QOkq0/SVD4usW6
-         jU3Gm0PhxA2uJ+iIs78HfPbQIc1cccQAU3uR9KV8=
+        b=S7G2aWN92uHE3nc3Mja17MYMPPhnCijFoXC8ocjWcZXd2Cmmh0J06CxuEaTcn/5Ho
+         OB2Kqw5NnUmp7pTVELCD+peAO7lSBIlwyiZ6X3ubdq3Iq/jWGIYRhEmwGyHerOB9HH
+         8NnB7BdzWUB15MzKuJLC9UJNqXwCCCGp+t8APK1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/140] iio: ad7949: kill pointless "readback"-handling code
-Date:   Mon, 16 Dec 2019 18:49:34 +0100
-Message-Id: <20191216174815.749524432@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        linux-usb@vger.kernel.org,
+        =?UTF-8?q?Heikki=20Krogerus=C2=A0?= 
+        <heikki.krogerus@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 107/140] usb: typec: fix use after free in typec_register_port()
+Date:   Mon, 16 Dec 2019 18:49:35 +0100
+Message-Id: <20191216174815.842184472@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Meng Li <Meng.Li@windriver.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
+[ Upstream commit 5c388abefda0d92355714010c0199055c57ab6c7 ]
 
-The device could be configured to spit out also the configuration word
-while reading the AD result value (in the same SPI xfer) - this is called
-"readback" in the device datasheet.
+We can't use "port->sw" and/or "port->mux" after it has been freed.
 
-The driver checks if readback is enabled and it eventually adjusts the SPI
-xfer length and it applies proper shifts to still get the data, discarding
-the configuration word.
-
-The readback option is actually never enabled (the driver disables it), so
-the said checks do not serve for any purpose.
-
-Since enabling the readback option seems not to provide any advantage (the
-driver entirely sets the configuration word without relying on any default
-value), just kill the said, unused, code.
-
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 23481121c81d ("usb: typec: class: Don't use port parent for getting mux handles")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20191126140452.14048-1-wenyang@linux.alibaba.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/altera_edac.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/typec/class.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 56de378ad13dc..c9108906bcdc0 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
- 	.reg_read = s10_protected_reg_read,
- 	.reg_write = s10_protected_reg_write,
- 	.use_single_rw = true,
-+	.fast_io = true,
- };
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 00141e05bc724..1916ee1600b47 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -1589,14 +1589,16 @@ struct typec_port *typec_register_port(struct device *parent,
  
- static int altr_s10_sdram_probe(struct platform_device *pdev)
+ 	port->sw = typec_switch_get(&port->dev);
+ 	if (IS_ERR(port->sw)) {
++		ret = PTR_ERR(port->sw);
+ 		put_device(&port->dev);
+-		return ERR_CAST(port->sw);
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	port->mux = typec_mux_get(&port->dev, "typec-mux");
+ 	if (IS_ERR(port->mux)) {
++		ret = PTR_ERR(port->mux);
+ 		put_device(&port->dev);
+-		return ERR_CAST(port->mux);
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	ret = device_add(&port->dev);
 -- 
 2.20.1
 
