@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF5DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D855AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA1D20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DC820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519093;
-	bh=8NeGkRWnW/JfCOlPSnmQiqjjVtKxoXbqxNWWSoVFY5c=;
+	s=default; t=1576519094;
+	bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFBquf7KrOAnn2ZD/jBE6UF6DIKcIfW7Ccc7OaYgTGNrLcpURQXlwbMXmsJ/dvkiz
-	 QsZz0mqhQhgMlsrlhRZwGmW2t/BQplnO4n1FYC1Ga0rPAAJ4RS2fn/qJV7N42fm1VT
-	 4oT+IihpY3A+FIDWwwmm3noPfC8LzblCr/VTw1Xw=
+	b=uLbqTg3yeHI655rC1qTRrHJXmIXaBYpEJYUM0rqTXOPhUj7gK5PokIOPwmhRRWSaW
+	 lqIgniX295INchA/Tyz1B/s2ToCIRDrOR1ZxJYROXnds4LEntqbxSuakzSItnv+4mV
+	 CDZ+wxGWfJ5t57w+8iuRpW3EecLrOJlIyFnS511E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfLPR6M (ORCPT
+        id S1728581AbfLPR6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:58:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728569AbfLPR6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:08 -0500
+        id S1728575AbfLPR6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1CB5206B7;
-        Mon, 16 Dec 2019 17:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C8F205ED;
+        Mon, 16 Dec 2019 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519088;
-        bh=8NeGkRWnW/JfCOlPSnmQiqjjVtKxoXbqxNWWSoVFY5c=;
+        s=default; t=1576519085;
+        bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVcAAMTMWi90DMpdbegPtLnJAZVt7uHWbTktIl+mQZj27yQ7tQxeBT9czdQ+6RZ5U
-         AXWqPHCrPXsVv2HRX7/vAnEY5loznk6od8vA6nvXHCcET16wdHkYfOuUSx35GznuVK
-         OtHaQGvp0EBxUZJVm6jfMC0Ld5ruhgGzpdSurkJA=
+        b=2Vv/OV4ir2v2pxr5sXbyG200/DvKyQob6zQquIFJKXaieSEaKOdNWt5eS8kSxJvRT
+         DuPm+Xq5fM6KHTESiDm4BHRhSW8o6fz6sBMKzWQGHx2a2ivJeVPwCOJQizwyXREFHx
+         qZhvZZI/mnTyD2LMwzY14cqDX/kmPKDsNrbZNwes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com,
-        Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.14 150/267] iomap: Fix pipe page leakage during splicing
-Date:   Mon, 16 Dec 2019 18:47:56 +0100
-Message-Id: <20191216174910.702182080@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 149/267] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Mon, 16 Dec 2019 18:47:55 +0100
+Message-Id: <20191216174910.648241558@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,52 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6 upstream.
+commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 upstream.
 
-When splicing using iomap_dio_rw() to a pipe, we may leak pipe pages
-because bio_iov_iter_get_pages() records that the pipe will have full
-extent worth of data however if file size is not block size aligned
-iomap_dio_rw() returns less than what bio_iov_iter_get_pages() set up
-and splice code gets confused leaking a pipe page with the file tail.
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-Handle the situation similarly to the old direct IO implementation and
-revert iter to actually returned read amount which makes iter consistent
-with value returned from iomap_dio_rw() and thus the splice code is
-happy.
+Protect against that by always validating the show/store callbacks.
 
-Fixes: ff6a9292e6f6 ("iomap: implement direct I/O")
-CC: stable@vger.kernel.org
-Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/iomap.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -1053,8 +1053,15 @@ iomap_dio_rw(struct kiocb *iocb, struct
- 		}
- 		pos += ret;
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
--		if (iov_iter_rw(iter) == READ && pos >= dio->i_size)
-+		if (iov_iter_rw(iter) == READ && pos >= dio->i_size) {
-+			/*
-+			 * We only report that we've read data up to i_size.
-+			 * Revert iter to a state corresponding to that as
-+			 * some callers (such as splice code) rely on it.
-+			 */
-+			iov_iter_revert(iter, pos - dio->i_size);
- 			break;
-+		}
- 	} while ((count = iov_iter_count(iter)) > 0);
- 	blk_finish_plug(&plug);
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
+ }
+ 
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
  
 
 
