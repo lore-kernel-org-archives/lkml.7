@@ -2,214 +2,120 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7C2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A7CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026B1206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4304B206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeVz2eRO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFSw4NDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfLPPH0 (ORCPT
+        id S1728309AbfLPPIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:07:26 -0500
-Received: from mail-pj1-f47.google.com ([209.85.216.47]:46450 "EHLO
-        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfLPPHZ (ORCPT
+        Mon, 16 Dec 2019 10:08:02 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59517 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728109AbfLPPIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:07:25 -0500
-Received: by mail-pj1-f47.google.com with SMTP id z21so3090055pjq.13;
-        Mon, 16 Dec 2019 07:07:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w1x7CdwPpFB9tMt33QAUdGJiRC4Yu2yWQ6k7waNcRdI=;
-        b=FeVz2eROru6DQX/nbODTLrCvI1/LYkFVgb8VIUbu7KTae83OLIUal1rn4pvEwTP25Y
-         uCX154JAX3OHR8eHE51N1x3/9REPoMXQFApqciyk8UO9H4dCpcnWzoQG5VWGpyqoSDlz
-         hMLG1OcpH41lVNiInelo9veSWUrtMlPypgtYSp2DHlsQmphEZgr/hYtus6QdfgNJUnBm
-         PnOxAbJbMmftPNP5wcGF+ivkNxcKqXPYVETiZt2tNnOgH8Zu0NAgfyiaRFfOg/hSg6JA
-         bafjaZ63W2AnEKZW+007GQwp/WhU+xrgJKimKTJreTOglA1FhIJvVPid1f4Zv5++JWhB
-         KTcg==
+        Mon, 16 Dec 2019 10:08:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576508880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AaYS2d/uqJ46OLZ/1yehXsn/hccZMKnfSM509Os6C9g=;
+        b=VFSw4NDthCFlshRJzj/ySHqpxi7Lla4Yc9u4AiLJP5DTNrfWmmMy3WJDagPvzVe0BDkQc1
+        j0V6fFuwJPUI798zwzAUvvW04yWB8qeODJ5BAgs23f0qCvF5sZdzOXNP9XkdiUEFhkusUU
+        rKkahV/Ib7PyDZ3QU1tmkKE82KNOjhg=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-zveWtJhwOGuRg1iqWa_FSg-1; Mon, 16 Dec 2019 10:07:55 -0500
+X-MC-Unique: zveWtJhwOGuRg1iqWa_FSg-1
+Received: by mail-qt1-f200.google.com with SMTP id l4so4765500qte.18
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:07:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w1x7CdwPpFB9tMt33QAUdGJiRC4Yu2yWQ6k7waNcRdI=;
-        b=ui7ARdiNtywYKqnaPB9YEloA61HKhkZg4+IU7gsc7cfHNiWe79ryufnE4F4NaDve/J
-         Gg1GTUo4uZ2Rq9h14bbuIRWYAHz5OKsS6Rkd+OJj/+3raDvnuNamVLMqAgoh9ZN7QXen
-         XqWMd7S4CoyBuzKT7pKhv0nVYa60nkUDtoPjREzZhIRYnYoArma103TC5FflwXgW65jv
-         kG/8QoLVhxgJ2zFLGav3SQMqFsU+XmsQJNlvUByRBrZHFID5/evE2s5v8DGpql9mayPl
-         Z7wNbvTXTlNP4B1Us3EQDj4hu5otRxpZZBt22O0nEGrbD0+afRWatBQkPZZhptMgBy+L
-         Bs8w==
-X-Gm-Message-State: APjAAAUPZic5DgSlJGrYuOeLRAotT2wUch554ndBvxEJcDrZ27dyKQTr
-        RxrMqFBeIwa2NI43RRtk1XE=
-X-Google-Smtp-Source: APXvYqyy7fW1pFDv6HA8QWJwGAqSosA/SFusVWFRFXnkLTe2VKpi9vY/N/A1eTLAhPAc4RUz2JaU6A==
-X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr16117764plv.331.1576508844251;
-        Mon, 16 Dec 2019 07:07:24 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id e6sm23024144pfh.32.2019.12.16.07.07.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AaYS2d/uqJ46OLZ/1yehXsn/hccZMKnfSM509Os6C9g=;
+        b=IC98AC2eqXt9ABWWZyFdRfFtmH4RQRpTi9xZa4+SJx8BSDEhQ131ubAmPK5RaZrvFB
+         XVxRgWyaMCoSoHdzRgeTQP/gz8k0t6uO5HO8VJDlb4GGt0HnZ4yoBh0spKwCqiPj1WM7
+         5SjKMD7hOzQxzS7Md6QzGUf5bEr/0bY0REVcBpS6pp42ZHMLdzYrrRvxvvdKhoiv37Ds
+         X0Rk35w9DcHk34wmovOJtiOne+N7UAMhXuut/hjqxCIo9ukVUO0J09qn/PGvmmWYv0CD
+         4zlT39C7C85QADZ1YK3i5bnIYKs28gKg+fyrpG1WS79b/S979J6cb+1pr51vb6mhUL0q
+         4DYw==
+X-Gm-Message-State: APjAAAXGIQeZhRjxpJTdbXh2v2gUXyw2DLKRCliiq6ltB4bRQF+fod42
+        uzhXsHrWVRLyYIVL8ayBTTLujaWXEcxaU/eV37AlFfoukdB8IQZyTcfA+yxG2UX10GKwtsKqyBm
+        ZUQ+0+zKBetWrGwHFkWHmpqas
+X-Received: by 2002:ac8:787:: with SMTP id l7mr18610234qth.99.1576508875502;
+        Mon, 16 Dec 2019 07:07:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwYfnL3o3dLmvysdxBkpTp3PrdiWzj1LMSkxOlgD/ePz+FfCYUR507X8Dna+HG79+AXJS7/Tg==
+X-Received: by 2002:ac8:787:: with SMTP id l7mr18610206qth.99.1576508875250;
+        Mon, 16 Dec 2019 07:07:55 -0800 (PST)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id w1sm5343645qtk.31.2019.12.16.07.07.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:07:23 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 661EA40352; Mon, 16 Dec 2019 12:07:20 -0300 (-03)
-Date:   Mon, 16 Dec 2019 12:07:20 -0300
-To:     dwarves@vger.kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Jan Engelhardt <jengelh@inai.de>,
-        Domenico Andreoli <cavok@debian.org>,
-        Matthias Schwarzott <zzam@gentoo.org>,
-        David Seifert <soap@gentoo.org>,
-        Pavel Borzenkov <pavel.borzenkov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@fb.com>, Yonghong Song <yhs@fb.com>,
-        Gareth Lloyd <gareth.lloyd@uk.ibm.com>,
-        Martin Cermak <mcermak@redhat.com>,
-        William Cohen <wcohen@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: ANNOUNCE: pahole v1.16 (Fixes + BTF_KIND_FUNC)
-Message-ID: <20191216150720.GA18669@kernel.org>
-References: <20190626211613.GE3902@kernel.org>
+        Mon, 16 Dec 2019 07:07:54 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:07:54 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191216150754.GC83861@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <20191211063830-mutt-send-email-mst@kernel.org>
+ <20191211205952.GA5091@xz-x1>
+ <20191211172713-mutt-send-email-mst@kernel.org>
+ <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
+ <20191215173302.GB83861@xz-x1>
+ <20191216044619-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190626211613.GE3902@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20191216044619-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Dec 16, 2019 at 04:47:36AM -0500, Michael S. Tsirkin wrote:
+> On Sun, Dec 15, 2019 at 12:33:02PM -0500, Peter Xu wrote:
+> > On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
+> > > >>> What depends on what here? Looks suspicious ...
+> > > >>
+> > > >> Hmm, I think maybe it can be removed because the entry pointer
+> > > >> reference below should be an ordering constraint already?
+> > > 
+> > > entry->xxx depends on ring->reset_index.
+> > 
+> > Yes that's true, but...
+> > 
+> >         entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
+> >         /* barrier? */
+> >         next_slot = READ_ONCE(entry->slot);
+> >         next_offset = READ_ONCE(entry->offset);
+> > 
+> > ... I think entry->xxx depends on entry first, then entry depends on
+> > reset_index.  So it seems fine because all things have a dependency?
+> 
+> Is reset_index changed from another thread then?
+> If yes then you want to read reset_index with READ_ONCE.
+> That includes a dependency barrier.
 
-	The v1.16 release of pahole and its friends is out, available at
-the usual places:
+There're a few readers, but only this function will change it
+(kvm_dirty_ring_reset).  Thanks,
 
-Main git repo:
+-- 
+Peter Xu
 
-   git://git.kernel.org/pub/scm/devel/pahole/pahole.git
-
-Mirror git repo:
-
-   https://github.com/acmel/dwarves.git
-
-tarball + gpg signature:
-
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.16.tar.xz
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.16.tar.bz2
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.16.tar.sign
-
-Best Regards,
-
-- Arnaldo
-
-v1.16 changes:
-
-BTF encoder:
-
-  Andrii Nakryiko <andriin@fb.com>:
-
-  - Preserve and encode exported functions as BTF_KIND_FUNC.
-
-    Add encoding of DWARF's DW_TAG_subprogram_type into BTF's BTF_KIND_FUNC
-    (plus corresponding BTF_KIND_FUNC_PROTO). Only exported functions are converted
-    for now. This allows to capture all the exported kernel functions, same subset
-    that's exposed through /proc/kallsyms.
-
-BTF loader:
-
-  Arnaldo Carvalho de Melo <acme@redhat.com>
-
-  - Add support for BTF_KIND_FUNC
-
-    Some changes to the fprintf routines were needed, as BTF has as the
-    function type just a BTF_KIND_FUNC_PROTO, while DWARF has as the type for a
-    function its return value type. With a function->btf flag this was overcome and
-    all the other goodies in pfunct are present.
-
-Pretty printer:
-
-  Arnaldo Carvalho de Melo:
-
-  - Account inline type __aligned__ member types for spacing:
-
-              union {
-                      refcount_t         rcu_users;            /*  2568     4 */
-                      struct callback_head rcu __attribute__((__aligned__(8))); /*  2568    16 */
-      -       } __attribute__((__aligned__(8)));                                               /*  2568    16 */
-      +       } __attribute__((__aligned__(8)));               /*  2568    16 */
-              struct pipe_inode_info *   splice_pipe;          /*  2584     8 */
-
-  - Fix alignment of class members that are structs/enums/unions
-
-    E.g. look at that 'completion' member in this struct:
-
-       struct cpu_stop_done {
-              atomic_t                   nr_todo;              /*     0     4 */
-              int                        ret;                  /*     4     4 */
-      -       struct completion  completion;                   /*     8    32 */
-      +       struct completion          completion;           /*     8    32 */
-
-              /* size: 40, cachelines: 1, members: 3 */
-              /* last cacheline: 40 bytes */
-
-  - Fixup handling classes with no members, solving a NULL deref.
-
-  Gareth Lloyd <gareth.lloyd@uk.ibm.com>:
-
-  - Avoid infinite loop trying to determine type with static data member of its own type.
-
-RPM spec file.
-
-Jiri Olsa <jolsa@redhat.com>
-
-    Add dwarves dependency on libdwarves1.
-
-pfunct:
-
-  Arnaldo Carvalho de Melo <acme@redhat.com>
-
-  - type->type == 0 is void, fix --compile for that
-
-    We were using the fall back for that, i.e. 'return 0;' was being emitted
-    for a function returning void, noticed with using BTF as the format.
-
-pdwtags:
-
-    - Print DW_TAG_subroutine_type as well
-
-      So that we can see at least via pdwtags those tags, be it from DWARF of BTF.
-
-core:
-
-  Arnaldo Carvalho de Melo <acme@redhat.com>
-
-    Fix ptr_table__add_with_id() handling of pt->nr_entries, covering how
-    BTF variables IDs are encoded.
-
-
-pglobal:
-
-  Arnaldo Carvalho de Melo <acme@redhat.com>:
-
-  - Allow passing the format path specifier, to use with BTF
-
-    I.e. now we can, just like with pahole, use:
-
-      pglobal -F btf --variable foo.o
-
-    To get the global variables.
-
-Tree wide:
-
-  Arnaldo Carvalho de Melo <acme@redhat.com>:
-
-  - Fixup issues pointed out by various coverity reports.
