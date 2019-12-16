@@ -2,98 +2,75 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C50C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A83C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CE9206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kkH8LCw6"
+	by mail.kernel.org (Postfix) with ESMTP id 6B9F1206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfLPPWn (ORCPT
+        id S1728325AbfLPPWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:22:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38905 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfLPPWn (ORCPT
+        Mon, 16 Dec 2019 10:22:47 -0500
+Received: from mailgw-01.dd24.net ([193.46.215.41]:43648 "EHLO
+        mailgw-01.dd24.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbfLPPWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:22:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so7760496wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:22:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qLjeAIGdVG2CAGqrqkDVZm71lWq9H9Eq0kShaFA5C18=;
-        b=kkH8LCw60Q4gtYMmg4us/7jO+sM6+roSBcF2Q6uyA+jQZ3cULiu6CqYEB55pDtjCPp
-         tlHbIYxoXQ52On9zJgaLJ0+w0M/RG4Bw61a15MYPv/j+Qzsv8Zy07iy3cetlHdZroJKW
-         rwlUpvP36tCOUlbDM9Us1RMnXeHWGvWXxMsOlfsWVTuUZ512BbX9D9H7IpMZCgZAGMLP
-         91Fp5ooQjGBMo9vZ8mHYD5wJQ4YdfyrsyqYmlRXdsaV+njbGMj+McmdU3MQgtPJbW3Ua
-         v4esrLjpptQmVawCAFP9AKgRLGtU5U2xere4vUxM98aMD77XxZmGCFxc2n6uZTkts0A9
-         O1aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qLjeAIGdVG2CAGqrqkDVZm71lWq9H9Eq0kShaFA5C18=;
-        b=MyttmHhscjUXTCQCB+hhU4ZdxDg8VMVt43pNOzbZG0TZdZTBEFSLu0Yy1tyjmoP/d2
-         iUDhGMNjF8cb9VSapeGgsREMsHi6UnxeNeFpl4LIHvTiHkWx8gmnuGDb9/YIoguqCkSj
-         VJvF7ZYMJb4P/VrZg+vGwsB5PVTCDsHJX2CgFMBdD2guKOZZfQVJ4AnwYVM++djOeIdo
-         FiAsgj4MbcgJokszSXH8L38SuS1R+CW8E8RJJ+3iH1Ggil1lpvGOg9G0gVt2dGgyHv1y
-         6egxx+q56/TWjWy2u5WSd8YSWqXeOjtMrfb18tfEVP42GK1hPkd6Ji0NIRB9fHLwwi1P
-         T7YQ==
-X-Gm-Message-State: APjAAAXnC8Nu197cw6DXbnSlbkvsz9G4JC3/U8IGBAzU8yPWWXjjRk9Z
-        123ncKr3+rJTylX1ujxXV9T6eA==
-X-Google-Smtp-Source: APXvYqwqcvX/5Yl6rT4Ou+vaTqr6E/+0/LcKrmUU3eQtD677huDYJ6VQOAwdzpeO5hEPA8AhyLoJkA==
-X-Received: by 2002:adf:d848:: with SMTP id k8mr29961381wrl.328.1576509761304;
-        Mon, 16 Dec 2019 07:22:41 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id b17sm21923340wrp.49.2019.12.16.07.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:22:40 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:22:40 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH] mfd: ab8500: Fix ab8500-clk typo
-Message-ID: <20191216152240.GG2369@dell>
-References: <20191211114639.748463-1-linus.walleij@linaro.org>
+        Mon, 16 Dec 2019 10:22:45 -0500
+X-Greylist: delayed 394 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 10:22:44 EST
+Received: from mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-02.live.igb.homer.key-systems.net [192.168.1.27])
+        by mailgw-01.dd24.net (Postfix) with ESMTP id 21E8960020
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 15:16:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at
+        mailpolicy-02.live.igb.homer.key-systems.net
+Received: from smtp.dd24.net ([192.168.1.35])
+        by mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-02.live.igb.homer.key-systems.net [192.168.1.25]) (amavisd-new, port 10235)
+        with ESMTP id QUHTJEXb1be9 for <linux-kernel@vger.kernel.org>;
+        Mon, 16 Dec 2019 15:16:06 +0000 (UTC)
+Received: from gar-nb-etp23.garching.physik.uni-muenchen.de (unknown [141.84.41.131])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp.dd24.net (Postfix) with ESMTPSA
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 15:16:06 +0000 (UTC)
+Message-ID: <d05aba2742ae42783788c954e2a380e7fcb10830.camel@scientia.net>
+Subject: from 5.2->5.3 lets the system run at considerably higher
+ temperatures
+From:   Christoph Anton Mitterer <calestyo@scientia.net>
+To:     linux-kernel@vger.kernel.org
+Date:   Mon, 16 Dec 2019 16:15:50 +0100
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2+b1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191211114639.748463-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Linus Walleij wrote:
+Hey.
 
-> Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
-> has a typo error renaming "ab8500-clk" to "abx500-clk"
-> with the result att ALSA SoC audio broke as the clock
-> driver was not probing anymore. Fixed it up.
-> 
-> Cc: Stephan Gerhold <stephan@gerhold.net>
-> Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/ab8500-core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Since I've upgraded from kernel 5.2 to 5.3 my system runs a
+considerably higher temperatures (like 10°C or more).
+This happens even when it's effectively idle (top shows basically
+nothing).
+Downgrading again to 5.2 and high temperatures go away.
 
-Applied, thanks.
+I did some more detailed description here:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=945055
+but really have no clue where to start debugging.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+It could be that it's somehow graphics related, as when I switch away
+from X/Cinnamon to the virtual console, temperatures decrease
+considerably.
+
+
+Anyone else seeing something similar or having some idea how to track
+this down?
+
+
+Thanks,
+Chris.
+
