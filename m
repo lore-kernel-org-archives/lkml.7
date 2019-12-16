@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D16C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0D4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7914F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D19E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521817;
-	bh=zyNlqw6jJ6qg9js0GhHFIqJdmR13Z9w1iavST+dBeFQ=;
+	s=default; t=1576521821;
+	bh=rf2JFvwPekkwXf59/gAHINLFJXaZsk3nYBMj1lVaYFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9hWjnsw3bvvE8/JXMFCufrBJAulIH1+6hFTiUx6BtsGRE1O7CLsdaydw+eUOEEQU
-	 i+GdGKmYlReD6sSbqsDgo0iuhS+ks8ArV8/bedCCW2KJJWaGLlASZ7S7B9IZe5lhkR
-	 J6Ey1CWWGHBglj6tBgG3EGpAeKXW59E0DJ0/LxN8=
+	b=hvz0vBVSk9m+5Au9dpaMauClpUlIHKcFJinaKZHOAs6tWatuVz4SvzIAJZEpiO56u
+	 L+wmrtsLJqVO3HGzMPd1w9z+zXX80pNEUBv74qDdSf84HS+E+85CyLvtVhoSpzEub1
+	 GZKaiUr4+I1m0XTEqaAzpsR9jtgeYWITEbKyYfgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfLPSng (ORCPT
+        id S1728737AbfLPR7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:43:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728742AbfLPR7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:19 -0500
+        id S1728547AbfLPR7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CCD205ED;
-        Mon, 16 Dec 2019 17:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D40FD205ED;
+        Mon, 16 Dec 2019 17:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519158;
-        bh=zyNlqw6jJ6qg9js0GhHFIqJdmR13Z9w1iavST+dBeFQ=;
+        s=default; t=1576519151;
+        bh=rf2JFvwPekkwXf59/gAHINLFJXaZsk3nYBMj1lVaYFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJy27Pbdr1lxYjK26OV601Zjr3WgES6izgn+T6K29Fmm3+lRGy+SsyglNe9JAJNFR
-         LRl76WDZ/RigeVdI0dEmWgYQHbAVo0t6Acht/NmVaSRUpg+OVmOyReiDHd26NnWiyV
-         cD+Ekmwj8kkcq78BeGazBiS7L5KLHUxygLwdh7qI=
+        b=W4MzAmS0FGAUO+Pf+FiG+YsczCCgpDyXE4sSBF+F60Titm7ageMbSdsse/rIWb+kG
+         3SAeeyP+V0kxjd/69FA590dpYp27evjKrqS1SZY827rxdektRNJYyyxtpm0NvYc4Tw
+         knfuQ9Hxyr5Uf4LSh+AIDQioP/Xa8nx82HOxuqko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 218/267] ACPI: bus: Fix NULL pointer check in acpi_bus_get_private_data()
-Date:   Mon, 16 Dec 2019 18:49:04 +0100
-Message-Id: <20191216174914.501153972@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 4.14 215/267] PM / devfreq: Lock devfreq in trans_stat_show
+Date:   Mon, 16 Dec 2019 18:49:01 +0100
+Message-Id: <20191216174914.338186083@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,59 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-commit 627ead724eff33673597216f5020b72118827de4 upstream.
+commit 2abb0d5268ae7b5ddf82099b1f8d5aa8414637d4 upstream.
 
-kmemleak reported backtrace:
-    [<bbee0454>] kmem_cache_alloc_trace+0x128/0x260
-    [<6677f215>] i2c_acpi_install_space_handler+0x4b/0xe0
-    [<1180f4fc>] i2c_register_adapter+0x186/0x400
-    [<6083baf7>] i2c_add_adapter+0x4e/0x70
-    [<a3ddf966>] intel_gmbus_setup+0x1a2/0x2c0 [i915]
-    [<84cb69ae>] i915_driver_probe+0x8d8/0x13a0 [i915]
-    [<81911d4b>] i915_pci_probe+0x48/0x160 [i915]
-    [<4b159af1>] pci_device_probe+0xdc/0x160
-    [<b3c64704>] really_probe+0x1ee/0x450
-    [<bc029f5a>] driver_probe_device+0x142/0x1b0
-    [<d8829d20>] device_driver_attach+0x49/0x50
-    [<de71f045>] __driver_attach+0xc9/0x150
-    [<df33ac83>] bus_for_each_dev+0x56/0xa0
-    [<80089bba>] driver_attach+0x19/0x20
-    [<cc73f583>] bus_add_driver+0x177/0x220
-    [<7b29d8c7>] driver_register+0x56/0xf0
+There is no locking in this sysfs show function so stats printing can
+race with a devfreq_update_status called as part of freq switching or
+with initialization.
 
-In i2c_acpi_remove_space_handler(), a leak occurs whenever the
-"data" parameter is initialized to 0 before being passed to
-acpi_bus_get_private_data().
+Also add an assert in devfreq_update_status to make it clear that lock
+must be held by caller.
 
-This is because the NULL pointer check in acpi_bus_get_private_data()
-(condition->if(!*data)) returns EINVAL and, in consequence, memory is
-never freed in i2c_acpi_remove_space_handler().
-
-Fix the NULL pointer check in acpi_bus_get_private_data() to follow
-the analogous check in acpi_get_data_full().
-
-Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-[ rjw: Subject & changelog ]
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 39688ce6facd ("PM / devfreq: account suspend/resume for stats")
+Cc: stable@vger.kernel.org
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/bus.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -196,7 +196,7 @@ int acpi_bus_get_private_data(acpi_handl
- {
- 	acpi_status status;
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -133,6 +133,7 @@ int devfreq_update_status(struct devfreq
+ 	int lev, prev_lev, ret = 0;
+ 	unsigned long cur_time;
  
--	if (!*data)
-+	if (!data)
- 		return -EINVAL;
++	lockdep_assert_held(&devfreq->lock);
+ 	cur_time = jiffies;
  
- 	status = acpi_get_data(handle, acpi_bus_private_data_handler, data);
+ 	/* Immediately exit if previous_freq is not initialized yet. */
+@@ -1161,12 +1162,17 @@ static ssize_t trans_stat_show(struct de
+ 	int i, j;
+ 	unsigned int max_state = devfreq->profile->max_state;
+ 
+-	if (!devfreq->stop_polling &&
+-			devfreq_update_status(devfreq, devfreq->previous_freq))
+-		return 0;
+ 	if (max_state == 0)
+ 		return sprintf(buf, "Not Supported.\n");
+ 
++	mutex_lock(&devfreq->lock);
++	if (!devfreq->stop_polling &&
++			devfreq_update_status(devfreq, devfreq->previous_freq)) {
++		mutex_unlock(&devfreq->lock);
++		return 0;
++	}
++	mutex_unlock(&devfreq->lock);
++
+ 	len = sprintf(buf, "     From  :   To\n");
+ 	len += sprintf(buf + len, "           :");
+ 	for (i = 0; i < max_state; i++)
 
 
