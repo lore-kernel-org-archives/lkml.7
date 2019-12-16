@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94181C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5641C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618FE21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7809B21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QXAdTwcc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ipUKROua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfLPW1s (ORCPT
+        id S1728335AbfLPW2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:27:48 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12012 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbfLPWZv (ORCPT
+        Mon, 16 Dec 2019 17:28:37 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12079 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727967AbfLPWZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 17:25:51 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df8044b0003>; Mon, 16 Dec 2019 14:25:15 -0800
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df8045d0002>; Mon, 16 Dec 2019 14:25:33 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
+  by hqpgpgate101.nvidia.com (PGP Universal service);
   Mon, 16 Dec 2019 14:25:42 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 16 Dec 2019 14:25:42 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 22:25:40 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 16 Dec 2019 22:25:40 +0000
+        by hqpgpgate101.nvidia.com on Mon, 16 Dec 2019 14:25:42 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
+ 2019 22:25:41 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 16 Dec 2019 22:25:41 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df804630009>; Mon, 16 Dec 2019 14:25:39 -0800
+        id <B5df804650004>; Mon, 16 Dec 2019 14:25:41 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -55,11 +55,12 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Michal Hocko <mhocko@suse.com>,
         Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
         Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
         <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
         <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
@@ -67,12 +68,10 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH v11 08/25] mm/gup: allow FOLL_FORCE for get_user_pages_fast()
-Date:   Mon, 16 Dec 2019 14:25:20 -0800
-Message-ID: <20191216222537.491123-9-jhubbard@nvidia.com>
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v11 21/25] mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding "1"
+Date:   Mon, 16 Dec 2019 14:25:33 -0800
+Message-ID: <20191216222537.491123-22-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216222537.491123-1-jhubbard@nvidia.com>
 References: <20191216222537.491123-1-jhubbard@nvidia.com>
@@ -81,57 +80,90 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576535116; bh=GaMDdkBzZd758P08B9WL3o0IFRnACAccvNSYo6PPuaE=;
+        t=1576535133; bh=QtH6vY6OEO3Be/+XPl0nLNSuin0ZowwCu4OyNgllrWs=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=QXAdTwccKga9vn0Eu3DMHlN4BquUlZRfk/oLZq8SKdZF9sx08rlOj9+8HB3obIsGd
-         /nsGoLvvn2opb5h9uhCPpwefAFbeA0bX/wesy1/zEZl1gAyGzTQ038RW4jXFA9cQFR
-         pUFUb659b/NBkqjib4mtgQjfkGg/S854AS30YrPYWG1V6Z6KPUeLhT6l/OXHg42EmL
-         Y0jngoM35MxaF2z36HhTzbz61wbe0EamYax7nqLSixujZ6fJy/yuaUTaYgKZU2GElA
-         358s9WfEUbvzlhfQaZklqm0gp50An+wwE4Or6ayAAyT6qb5Pg7U1x7SMqoBFTTSvwc
-         sYa5cxuyNe/vA==
+        b=ipUKROuaRhOUwigc8Y92jCYwr+O2agysriz835cn/x0NmJMR2VX8WJlN1HjP0wEoC
+         yHatSg9uf87R8hOvY/JCyOt6sc2Sw064NFUeptqY4N0z9GF81AWMlv31QiMcszYM02
+         xqs5QshE1UlrtM3wJtWlJr5zVSEA+mKyJLWipnuy50YYNLPtbfKSgRgp75TTWlic2H
+         8O+1YKA6bJZIjnQrd1yIYT4xuwRatSLHmPWSDkSC8T0g+XDTKrEBbEckofkJB+hBMD
+         3OuehKJnQnrTyX7MJJHSY0GcfD35B8a1rjjBumii4TMVVxaFDpX1ctCh4+x0gYI82l
+         yvPWHTxZCWsuQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 817be129e6f2 ("mm: validate get_user_pages_fast flags") allowed
-only FOLL_WRITE and FOLL_LONGTERM to be passed to get_user_pages_fast().
-This, combined with the fact that get_user_pages_fast() falls back to
-"slow gup", which *does* accept FOLL_FORCE, leads to an odd situation:
-if you need FOLL_FORCE, you cannot call get_user_pages_fast().
+Fix the gup benchmark flags to use the symbolic FOLL_WRITE,
+instead of a hard-coded "1" value.
 
-There does not appear to be any reason for filtering out FOLL_FORCE.
-There is nothing in the _fast() implementation that requires that we
-avoid writing to the pages. So it appears to have been an oversight.
+Also, clean up the filtering of gup flags a little, by just doing
+it once before issuing any of the get_user_pages*() calls. This
+makes it harder to overlook, instead of having little "gup_flags & 1"
+phrases in the function calls.
 
-Fix by allowing FOLL_FORCE to be set for get_user_pages_fast().
-
-Fixes: 817be129e6f2 ("mm: validate get_user_pages_fast flags")
-Cc: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- mm/gup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/gup_benchmark.c                         | 9 ++++++---
+ tools/testing/selftests/vm/gup_benchmark.c | 6 +++++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index c0c56888e7cc..958ab0757389 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2414,7 +2414,8 @@ int get_user_pages_fast(unsigned long start, int nr_p=
-ages,
- 	unsigned long addr, len, end;
- 	int nr =3D 0, ret =3D 0;
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 7dd602d7f8db..7fc44d25eca7 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -48,18 +48,21 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 			nr =3D (next - addr) / PAGE_SIZE;
+ 		}
 =20
--	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
-+	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
-+				       FOLL_FORCE)))
- 		return -EINVAL;
++		/* Filter out most gup flags: only allow a tiny subset here: */
++		gup->flags &=3D FOLL_WRITE;
++
+ 		switch (cmd) {
+ 		case GUP_FAST_BENCHMARK:
+-			nr =3D get_user_pages_fast(addr, nr, gup->flags & 1,
++			nr =3D get_user_pages_fast(addr, nr, gup->flags,
+ 						 pages + i);
+ 			break;
+ 		case GUP_LONGTERM_BENCHMARK:
+ 			nr =3D get_user_pages(addr, nr,
+-					    (gup->flags & 1) | FOLL_LONGTERM,
++					    gup->flags | FOLL_LONGTERM,
+ 					    pages + i, NULL);
+ 			break;
+ 		case GUP_BENCHMARK:
+-			nr =3D get_user_pages(addr, nr, gup->flags & 1, pages + i,
++			nr =3D get_user_pages(addr, nr, gup->flags, pages + i,
+ 					    NULL);
+ 			break;
+ 		default:
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index 485cf06ef013..389327e9b30a 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -18,6 +18,9 @@
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
 =20
- 	start =3D untagged_addr(start) & PAGE_MASK;
++/* Just the flags we need, copied from mm.h: */
++#define FOLL_WRITE	0x01	/* check pte is writable */
++
+ struct gup_benchmark {
+ 	__u64 get_delta_usec;
+ 	__u64 put_delta_usec;
+@@ -85,7 +88,8 @@ int main(int argc, char **argv)
+ 	}
+=20
+ 	gup.nr_pages_per_call =3D nr_pages;
+-	gup.flags =3D write;
++	if (write)
++		gup.flags |=3D FOLL_WRITE;
+=20
+ 	fd =3D open("/sys/kernel/debug/gup_benchmark", O_RDWR);
+ 	if (fd =3D=3D -1)
 --=20
 2.24.1
 
