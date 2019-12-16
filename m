@@ -2,95 +2,131 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715E7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5216D2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CF92067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfLPQbW (ORCPT
+        id S1726536AbfLPQb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:31:22 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:47097 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQbW (ORCPT
+        Mon, 16 Dec 2019 11:31:28 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfLPQb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:31:22 -0500
-Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N33AR-1hi1pd1iLl-013NI2; Mon, 16 Dec 2019 17:31:20 +0100
-Received: by mail-qt1-f179.google.com with SMTP id j5so6222442qtq.9;
-        Mon, 16 Dec 2019 08:31:20 -0800 (PST)
-X-Gm-Message-State: APjAAAX8r4JFFfDb+URF2+0dv9wpxYsfc6tPwgTB3pNYceSUqK5U8lM1
-        mEzo1YaW1xqu1O1Nuwo+LboE3ILCP3ehXEgiyv0=
-X-Google-Smtp-Source: APXvYqyDdl4YObPLYJ8R0MeObOKirvavLeNWBoY3j+5T4cY33rojfyImnRl+bBhsXB9ZfA7RUwOnAcwR4yfhS80V0kU=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr82497qtr.142.1576513879287;
- Mon, 16 Dec 2019 08:31:19 -0800 (PST)
+        Mon, 16 Dec 2019 11:31:28 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGGSEOW041449;
+        Mon, 16 Dec 2019 11:31:18 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdpykqc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 11:31:18 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGGV7DK031265;
+        Mon, 16 Dec 2019 16:31:17 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2wvqc69ta1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 16:31:17 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGGVFTL54657466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Dec 2019 16:31:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9E93B205F;
+        Mon, 16 Dec 2019 16:31:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 691C0B2066;
+        Mon, 16 Dec 2019 16:31:14 +0000 (GMT)
+Received: from [9.152.96.21] (unknown [9.152.96.21])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Dec 2019 16:31:14 +0000 (GMT)
+Subject: Re: [PATCH v2 6/6] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+To:     dsterba@suse.cz, Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191209152948.37080-1-zaslonko@linux.ibm.com>
+ <20191209152948.37080-7-zaslonko@linux.ibm.com>
+ <97b3a11d-2e52-c710-ee25-157e562eb3d0@linux.ibm.com>
+ <20191213173526.GC3929@twin.jikos.cz>
+Cc:     "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>
+From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Message-ID: <9068869f-1ec2-f8c1-c2e2-4d38e62572cf@linux.ibm.com>
+Date:   Mon, 16 Dec 2019 17:31:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-10-arnd@arndb.de>
- <20191213211840.GM99875@magnolia>
-In-Reply-To: <20191213211840.GM99875@magnolia>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Dec 2019 17:31:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0x6E7PjtFVi9UW9_61c_AQbRVSyU=+YGaVTn2W0PgtzQ@mail.gmail.com>
-Message-ID: <CAK8P3a0x6E7PjtFVi9UW9_61c_AQbRVSyU=+YGaVTn2W0PgtzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 19/24] xfs: rename compat_time_t to old_time32_t
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Nick Bowler <nbowler@draconx.ca>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:H7fMeyzbYOCqjgAcpR4WxQVcP/KjmTWIG1zY7p7sRuMOpcB6XxH
- TloYBnCEJ4TYVnRd5j1tco6aDGOFgBSI8S1G3mK6bAVgwWG5ZzwhsMM3xzQb0ESbiqGWufH
- SsoVynB9iLdphoRpUicOQtoquSvwK/z/bpmGjnlb2Rqh5WRvMoTyo+P0mzT06gmvmd9biw1
- MyqRHBTf6U759Bu7njsYw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ioG57M6zXYo=:ZK4QKZDKnhV4rm+cisNDRP
- RuNCYDi5icTgReDFx9cXUQTiBj2PhBNeCFh72HwoGcvVbbFF5HQqDChnPlKH7WMH5taEcFiyl
- t4639rW00EptkkwTjEEVvnxc8A49qoWagofrI0PFsIfEabJ9WROpulxKba6Tq6QJc1FjEjwX9
- mJ/ZAhkFlxm89YXCkFzxHDjh4sAQITGmAq0ViSHo3OWI+jY/0r/s3+7t/y6PuoLrBB8hoMSpr
- 6zN5gxYVTS+LVIqtJ7OsHq2g0u7nUoDYvaLZInXzb5kUYRrqaCuN2xedrmwy6HHZBOP+Tm55O
- Z/r5AiYPXq+qVeNLB6lcmsT/49v2cNnKBkGQvJ2+xiXzIFzUlfAGR25Vz/M/8PBLBV9o2rRJH
- nogbJLyp8EOULb1RuQ1bSs9UQFalu9HwnE5zSDznaVSKbrkzZTjobs4gD4A48Td9dcvllfZiI
- IpKc8rtPUcnEzqmpKk402Nmw7p/rnn1Ek2l3ekglAhNwga+1nJ+4sqGTCx6Z15xkgHJmDyApN
- znAVVSmEeVH8TcdQihpcVeWuGcDFsvHqHJZ9DZx87cKEJMptojjWij2T59VcujDyiBAHs4bdg
- v1AYOBTa9DBSl1bx6iiqoI8LbFLYFZ+G7vVhRE69vLFfZRi7w4npE/IFFhfjKcYrr56qiwsqw
- iwdShckXCCqFiLWUlIN9bmxTN+wTuz+SdXVTe2Nr7TDMHTa6CRUffI6Jbh2QUpOBTffyMGLYJ
- AGjs7foTcjJfc4MyUFTuJXKur3R3LKcoO5HPF4oFy3XDpNpD58aEsZ4IGlkzyuYQpMgsdBCvx
- eAZylywPDUJOrjIIfD3uRNjDhH7NfIecab6a1FwGWPLLqeb8icbDEgztlATGrbCrSOkThIGuI
- h+pjUe627bXK47Ds9tjQ==
+In-Reply-To: <20191213173526.GC3929@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-16_06:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912160145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:18 PM Darrick J. Wong
-<darrick.wong@oracle.com> wrote:
->
-> On Fri, Dec 13, 2019 at 09:53:47PM +0100, Arnd Bergmann wrote:
-> > The compat_time_t type has been removed everywhere else,
-> > as most users rely on old_time32_t for both native and
-> > compat mode handling of 32-bit time_t.
-> >
-> > Remove the last one in xfs.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Looks fine to me, assuming that compat_time_t -> old_time32_t.
+Hi David,
 
-Yes, that's the idea. Christoph asked for the global change last year
-as a cleanup,
-but I left out xfs and a few others at the time when I was missing
-other patches.
+On 13.12.2019 18:35, David Sterba wrote:
+> On Fri, Dec 13, 2019 at 05:10:10PM +0100, Zaslonko Mikhail wrote:
+>> Hello,
+>>
+>> Could you please review the patch for btrfs below.
+>>
+>> Apart from falling back to 1 page, I have set the condition to allocate 
+>> 4-pages zlib workspace buffer only if s390 Deflate-Conversion facility
+>> is installed and enabled. Thus, it will take effect on s390 architecture
+>> only.
+>>
+>> Currently in zlib_compress_pages() I always copy input pages to the workspace
+>> buffer prior to zlib_deflate call. Would that make sense, to pass the page
+>> itself, as before, based on the workspace buf_size (for 1-page buffer)?
+> 
+> Doesn't the copy back and forth kill the improvements brought by the
+> hw supported decompression?
 
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Well, I'm not sure how to avoid this copy step here. As far as I understand
+the input data in btrfs_compress_pages() doesn't always represent continuous 
+pages, so I copy input pages to a continuous buffer prior to a compression call.   
+But even with this memcpy in place, the hw supported compression shows
+significant improvements.
+What I can definitely do is to skip the copy if no s390 hardware compression
+support enabled.
 
-Thanks,
+> 
+>> As for calling zlib_deflate with Z_FINISH flush parameter in a loop until
+>> Z_STREAM_END is returned, that comes in agreement with the zlib manual.
+> 
+> The concerns are about zlib stream that take 4 pages on input and on the
+> decompression side only 1 page is available for the output. Ie. as if
+> the filesystem was created on s390 with dflcc then opened on x86 host.
 
-     Arnd
+I'm not sure I fully understand the concern here. If we talk of backward 
+compatibility, I do not see side effects of using larger buffers. Data in 
+the compressed state might differ indeed, but it will sill conform to zlib
+standard and thus can be decompressed. The smaller out buffer would just 
+take more zlib calls to flush the output.
+
+
+> The zlib_deflate(Z_FINISH) happens on the compresission side.
+> 
