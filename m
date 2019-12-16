@@ -3,91 +3,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A781C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E41B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9572B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521935;
-	bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2ZJUUfuVb7wJZkFRKlopuoi+zY1q2zzXBHTClIcm6BV7oVumcZUaPXpeoS/elJhB
-	 Sjqmqx8YeJMRWNkTozMPZOxo4vbmR7Yhwjm7dnsXJCft7CUGdGUtSk/V3ojd3aitUB
-	 XNerI3BGw53vYb7FsyVYS5J/fIxUqG8KgW0ha7RM=
+	s=default; t=1576521942;
+	bh=fpaCt0GYwvbYwJ3eh6N+PCq5xTQcRR4ff/NnakrUkAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=feLGhxBThOVvaJNOofSqQ2VuOjd/xRhmh4HBuExgxZK/0g5j4b4YaxaDv0o7kf8k2
+	 lgYJzbYhehR8g0qLmYdy7A9v+UT1u5+N+/Ujx+fGgb078A1/69trJD3xcHKEngfl4c
+	 euTa+H52xlXuC3y7/B6+Kmbt/SsDtWSlvvMQyxH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfLPR5L (ORCPT
+        id S1728180AbfLPSpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfLPR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:07 -0500
+        id S1726227AbfLPSpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:45:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4581206B7;
-        Mon, 16 Dec 2019 17:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67990206A5;
+        Mon, 16 Dec 2019 18:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519027;
-        bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GpJ8LpCwW2QI4BTLvAlWrSPj7aLqRJdVdXFLf7aUvR5Qe5X/X3b+KTdLN/f4Umlau
-         DyEuOWT4IELsR2tx8LgtQrZaFC6t5clrKplPnHjnBmPQ7nSrQMwQll1BnDEfv54+pD
-         ecA79ZdOPeg2DHMMGttRPtLoLEik4g48Qaxl1FA8=
+        s=default; t=1576521938;
+        bh=fpaCt0GYwvbYwJ3eh6N+PCq5xTQcRR4ff/NnakrUkAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u2lJ/upO8pc5vU1W1k3LwrOjCXrYbiPDcHR42ey+AuN6WlF3gHneTNxagBNrs0egb
+         lfvXXxf8xoYmlw2vGmTq0sTYsgwjKMZLyp3jaAUdwd96rtR3fFAAfYHQoLxkPBpwbk
+         twPfXANYfK27HEOZMrfhwcOacLxa94BZOu8Y2y5o=
+Date:   Mon, 16 Dec 2019 19:45:36 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 165/267] staging: rtl8188eu: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:48:11 +0100
-Message-Id: <20191216174911.543956751@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
-References: <20191216174848.701533383@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Andrea Merello <andrea.merello@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
+ "readback"-handling code
+Message-ID: <20191216184536.GB2411653@kroah.com>
+References: <20191216174747.111154704@linuxfoundation.org>
+ <20191216174815.749524432@linuxfoundation.org>
+ <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+On Mon, Dec 16, 2019 at 07:31:31PM +0100, Andrea Merello wrote:
+> Something nasty seems happening here: it looks like the commit message
+> and the actual diff have nothing to do one wrt the other; the commit
+> message is from one of my patches, the diff is against some unrelated
+> file.
+> 
+> Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> ha scritto:
+> >
+> > From: Meng Li <Meng.Li@windriver.com>
+> >
+> > [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
+> >
+> > The device could be configured to spit out also the configuration word
+> > while reading the AD result value (in the same SPI xfer) - this is called
+> > "readback" in the device datasheet.
+> >
+> > The driver checks if readback is enabled and it eventually adjusts the SPI
+> > xfer length and it applies proper shifts to still get the data, discarding
+> > the configuration word.
+> >
+> > The readback option is actually never enabled (the driver disables it), so
+> > the said checks do not serve for any purpose.
+> >
+> > Since enabling the readback option seems not to provide any advantage (the
+> > driver entirely sets the configuration word without relying on any default
+> > value), just kill the said, unused, code.
+> >
+> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  drivers/edac/altera_edac.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> > index 56de378ad13dc..c9108906bcdc0 100644
+> > --- a/drivers/edac/altera_edac.c
+> > +++ b/drivers/edac/altera_edac.c
+> > @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
+> >         .reg_read = s10_protected_reg_read,
+> >         .reg_write = s10_protected_reg_write,
+> >         .use_single_rw = true,
+> > +       .fast_io = true,
+> >  };
+> >
+> >  static int altr_s10_sdram_probe(struct platform_device *pdev)
+> > --
+> > 2.20.1
+> >
+> >
+> >
 
-commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
+Wow, something went wrong.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Sasha, can you look into this?
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+thanks,
 
-Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
-Cc: stable <stable@vger.kernel.org>     # 3.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -78,7 +78,7 @@ static struct dvobj_priv *usb_dvobj_init
- 	phost_conf = pusbd->actconfig;
- 	pconf_desc = &phost_conf->desc;
- 
--	phost_iface = &usb_intf->altsetting[0];
-+	phost_iface = usb_intf->cur_altsetting;
- 	piface_desc = &phost_iface->desc;
- 
- 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
-
-
+greg k-h
