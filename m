@@ -2,130 +2,99 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D873DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9FFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF7A20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519732;
-	bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTLpEvfeG756DwZnGUs3olT3RvnL6qIskMhcfL51uWdrjnyctsoAN0s7bk3GbvMUg
-	 jMrpn0ozsXUabxF+XUfKWf08lvtyc8bgSkxlMrD/S/XK1A1Px3cNaNceeA/KnRbOLW
-	 wix3hO2JlcTMC5xywp4gHaQ+Gkz8GTmtLxFRr5dQ=
+	by mail.kernel.org (Postfix) with ESMTP id D7183207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="sTxC35+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbfLPSIv (ORCPT
+        id S1730351AbfLPSI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50614 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:56 -0500
+Received: from nbd.name ([46.4.11.11]:35344 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbfLPSIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB49206E0;
-        Mon, 16 Dec 2019 18:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519728;
-        bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVXm/7N2K7l67qlhJTfu+S4/Hf8h86z5sxf4FvGs24cJ1081snRWuoDy1plOJpnQW
-         s0bN1RVqqxuePgK8YvTybFudr3gcbbakX8q30aRTRrm358ean2eXTFO503Z4QOyg3U
-         BDCxzX5/BF2TYS8zw6E8SASwZZXEvnaC9d9BdIOE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.3 045/180] mtd: rawnand: Change calculating of position page containing BBM
-Date:   Mon, 16 Dec 2019 18:48:05 +0100
-Message-Id: <20191216174819.918551533@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
-References: <20191216174806.018988360@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730322AbfLPSIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RUMFaI4CEo7DlvBHv1ccL8MoXo+yyDJGppBym2tES8I=; b=sTxC35+kOxbi3fl8lfAhb/fJwu
+        l22U++CgSUDV6mUyQpM1bu6Kpz5wQyXSZjtgD63qW6Z4wLsdYkQmr25+kk6tjoIP86nNNKeM3Rtfc
+        vYnhn7BCXf/iX1+SGUsm7ceaB6nclikYm1FUkrH26lxx1VmDMfsKnN0SbAcYuUgYx+/w=;
+Received: from p4ff13e83.dip0.t-ipconnect.de ([79.241.62.131] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1igunQ-0000HK-Ad; Mon, 16 Dec 2019 19:08:40 +0100
+Subject: Re: [PATCH 07/55] staging: wfx: ensure that retry policy always
+ fallbacks to MCS0 / 1Mbps
+To:     =?UTF-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <20191216170302.29543-8-Jerome.Pouiller@silabs.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <0777ef33-e1f4-148a-40cb-cfe7b42d5364@nbd.name>
+Date:   Mon, 16 Dec 2019 19:08:39 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191216170302.29543-8-Jerome.Pouiller@silabs.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Piotr Sroka <piotrs@cadence.com>
+On 2019-12-16 18:03, Jérôme Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> When not using HT mode, minstrel always includes 1Mbps as fallback rate.
+> But, when using HT mode, this fallback is not included. Yet, it seems
+> that it could save some frames. So, this patch add it unconditionally.
+> 
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Are you sure that's a good idea? Sometimes a little packet loss can be
+preferable over a larger amount of airtime wasted through using really
+low rates. Especially when you consider bufferbloat.
 
-commit a3c4c2339f8948b0f578e938970303a7372e60c0 upstream.
-
-Change calculating of position page containing BBM
-
-If none of BBM flags are set then function nand_bbm_get_next_page
-reports EINVAL. It causes that BBM is not read at all during scanning
-factory bad blocks. The result is that the BBT table is build without
-checking factory BBM at all. For Micron flash memories none of these
-flags are set if page size is different than 2048 bytes.
-
-Address this regression by:
-- adding NAND_BBM_FIRSTPAGE chip flag without any condition. It solves
-  issue only for Micron devices.
-- changing the nand_bbm_get_next_page_function. It will return 0
-  if no of BBM flag is set and page parameter is 0. After that modification
-  way of discovering factory bad blocks will work similar as in kernel
-  version 5.1.
-
-Cc: stable@vger.kernel.org
-Fixes: f90da7818b14 (mtd: rawnand: Support bad block markers in first, second or last page)
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mtd/nand/raw/nand_base.c   |    8 ++++++--
- drivers/mtd/nand/raw/nand_micron.c |    4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -292,12 +292,16 @@ int nand_bbm_get_next_page(struct nand_c
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	int last_page = ((mtd->erasesize - mtd->writesize) >>
- 			 chip->page_shift) & chip->pagemask;
-+	unsigned int bbm_flags = NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE
-+		| NAND_BBM_LASTPAGE;
- 
-+	if (page == 0 && !(chip->options & bbm_flags))
-+		return 0;
- 	if (page == 0 && chip->options & NAND_BBM_FIRSTPAGE)
- 		return 0;
--	else if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
-+	if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
- 		return 1;
--	else if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
-+	if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
- 		return last_page;
- 
- 	return -EINVAL;
---- a/drivers/mtd/nand/raw/nand_micron.c
-+++ b/drivers/mtd/nand/raw/nand_micron.c
-@@ -446,8 +446,10 @@ static int micron_nand_init(struct nand_
- 	if (ret)
- 		goto err_free_manuf_data;
- 
-+	chip->options |= NAND_BBM_FIRSTPAGE;
-+
- 	if (mtd->writesize == 2048)
--		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
-+		chip->options |= NAND_BBM_SECONDPAGE;
- 
- 	ondie = micron_supports_on_die_ecc(chip);
- 
-
-
+- Felix
