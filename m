@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894FCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0F7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615D2207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012DB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520257;
-	bh=h6h2iKDlws2XsM3EJFa8ad3Lcnw7rBJHFhzCA/7wLyg=;
+	s=default; t=1576520263;
+	bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFwy4ulzQ0Y8dvu68QTNMdXCzMhtaaqFECvaVZrUJ90Tv8Q8zEhyCTcjg4iHjx1Qb
-	 xtnaqKV2+sW4DxhAKPN4He885FkepATN6d3wRDt2IBbC4mRqa0G4rxyhyGf2ZpkEfH
-	 7gI4QJcN4BJ7TMxiaW5PGpjoa+KfM2SK7qFps4H0=
+	b=o3LCOmarjf08+Ku1OtO23LrhVdxtcka4xZZFLMopJUJWvGDfDIx9Fuw/DFB4z+os8
+	 ZK9tZhRXpxN+MMrpulL+YcTsrVoC8kWRUfyQkLmwW4P5soi/tkZPeVXaX6FtZa4rkf
+	 gQmcV+rfbLTooouy3t4YBw0ZUZBIc2i96KCViHps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbfLPSRf (ORCPT
+        id S1731569AbfLPSRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731359AbfLPSRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:17:25 -0500
+        id S1731670AbfLPSRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E79720717;
-        Mon, 16 Dec 2019 18:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 245FE206E0;
+        Mon, 16 Dec 2019 18:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520245;
-        bh=h6h2iKDlws2XsM3EJFa8ad3Lcnw7rBJHFhzCA/7wLyg=;
+        s=default; t=1576520254;
+        bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N2ohEk6nNTvaidl6n5EHFj0GA4lHmw0YVYtp4WFvZd4Kh8cfuUWByLp7QRUV3f/9+
-         2R80CwPgUNpw1ceLG6M7aV8uubA3xL72r8JwF8FFxRWEuXS6rymTKzoT0JFe89A5Bg
-         1jinT71E4QeKyD510/aI5a18MT7Wm4VdOsRks3fY=
+        b=Btck0qHFFapIsGM3nE/j0HlQK3WAQxCe3xdXHNuA1CvT6D8gyjEU4cHESB7UQ9Jf9
+         qVUNcUWezlDNwtGqQfH8SlkSIaJIXzF+wYD9SOxvGXRlpEaomaXZxcqDSwcXsTjB0a
+         DqIGvOR1WfbUWiXD15a5dsvgHGOATnvyzqqlbJms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 074/177] btrfs: record all roots for rename exchange on a subvol
-Date:   Mon, 16 Dec 2019 18:48:50 +0100
-Message-Id: <20191216174835.561413372@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 078/177] lib: raid6: fix awk build warnings
+Date:   Mon, 16 Dec 2019 18:48:54 +0100
+Message-Id: <20191216174836.455110074@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,43 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 3e1740993e43116b3bc71b0aad1e6872f6ccf341 upstream.
+commit 702600eef73033ddd4eafcefcbb6560f3e3a90f7 upstream.
 
-Testing with the new fsstress support for subvolumes uncovered a pretty
-bad problem with rename exchange on subvolumes.  We're modifying two
-different subvolumes, but we only start the transaction on one of them,
-so the other one is not added to the dirty root list.  This is caught by
-btrfs_cow_block() with a warning because the root has not been updated,
-however if we do not modify this root again we'll end up pointing at an
-invalid root because the root item is never updated.
+Newer versions of awk spit out these fun warnings:
+	awk: ../lib/raid6/unroll.awk:16: warning: regexp escape sequence `\#' is not a known regexp operator
 
-Fix this by making sure we add the destination root to the trans list,
-the same as we do with normal renames.  This fixes the corruption.
+As commit 700c1018b86d ("x86/insn: Fix awk regexp warnings") showed, it
+turns out that there are a number of awk strings that do not need to be
+escaped and newer versions of awk now warn about this.
 
-Fixes: cdd1fedf8261 ("btrfs: add support for RENAME_EXCHANGE and RENAME_WHITEOUT")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fix the string up so that no warning is produced.  The exact same kernel
+module gets created before and after this patch, showing that it wasn't
+needed.
+
+Link: https://lore.kernel.org/r/20191206152600.GA75093@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    3 +++
- 1 file changed, 3 insertions(+)
+ lib/raid6/unroll.awk |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9554,6 +9554,9 @@ static int btrfs_rename_exchange(struct
- 		goto out_notrans;
+--- a/lib/raid6/unroll.awk
++++ b/lib/raid6/unroll.awk
+@@ -13,7 +13,7 @@ BEGIN {
+ 	for (i = 0; i < rep; ++i) {
+ 		tmp = $0
+ 		gsub(/\$\$/, i, tmp)
+-		gsub(/\$\#/, n, tmp)
++		gsub(/\$#/, n, tmp)
+ 		gsub(/\$\*/, "$", tmp)
+ 		print tmp
  	}
- 
-+	if (dest != root)
-+		btrfs_record_root_in_trans(trans, dest);
-+
- 	/*
- 	 * We need to find a free sequence number both in the source and
- 	 * in the destination directory for the exchange.
 
 
