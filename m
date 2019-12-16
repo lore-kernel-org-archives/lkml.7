@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA146C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB04C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97A921739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900F2206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519170;
-	bh=IUtYO+uS0Eddzxw4xtQEOjWU5msvKA9bePjJTUT7/rY=;
+	s=default; t=1576519175;
+	bh=sRaGSy+8FdAqGaH6XBe/JTP4pm6si35gdWrw7STTI28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0zZ9pJu8Ieqc2bIXimf59qJx4FvGvhTXiBRSw5+6s72RXyuaNgz6Iay2FrYIgMMDo
-	 5fFg8hBzyr1kj2qWTQcPjKhCdliYfTSvUwGp5wl42BqcdCmVsdLWx3IHm/bmH0Vb5O
-	 5l5pBsqb+O2w81R0SiDUvk8pEiR7m6/aVLbPcMEw=
+	b=R9Fq9lOioDz2JnwOPIadYMPuozG5xsiux3mQNNlga7LasFVtqPuNu6xhzzHv76H8G
+	 TLJkWb+ZB3IH/0AMBmHTFC5GM91LfHuTJhNECiHL/ozcIhkJAixUPRuiI/qHK/lheZ
+	 QMAoUBBbn+cgdxCklA4n0vOqj1qUTxX/ehM6nbow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbfLPR7a (ORCPT
+        id S1728443AbfLPR7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbfLPR70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:26 -0500
+        id S1728769AbfLPR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DBE21582;
-        Mon, 16 Dec 2019 17:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F5A21582;
+        Mon, 16 Dec 2019 17:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519165;
-        bh=IUtYO+uS0Eddzxw4xtQEOjWU5msvKA9bePjJTUT7/rY=;
+        s=default; t=1576519168;
+        bh=sRaGSy+8FdAqGaH6XBe/JTP4pm6si35gdWrw7STTI28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aEqhN3ookliFY7kg80nlSjFpufSG/PGgki9FyBCtS+cVlUd6Z18GMQpy4vjANmg3F
-         dbjlLG2LgUgSlJ+VslqsFc3xjhHXWpn1xpkzPbiN89VSom3mY0YJP+B+2CrPjmM5La
-         3nZUTDsY+yZaihgFyolGiN7L1wML/KobW2+9TruY=
+        b=ctKBsIcwAj/o5gL2+LVKeDK2hghtAG2kV9aUl/kkcFTVfJN8pJ6dcEQ9KCWlSE63r
+         1PRbZTn6x0ciRsQp9NV8jSTGoYR8S14VS9f/p1lQ7AiwExW1zERHLJB1DzTRgT34a2
+         bev6kcSNKCe/cIbTh5qzvSlzehEAqURx8ifiK4DE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.14 221/267] pinctrl: samsung: Fix device node refcount leaks in S3C24xx wakeup controller init
-Date:   Mon, 16 Dec 2019 18:49:07 +0100
-Message-Id: <20191216174914.666558196@linuxfoundation.org>
+Subject: [PATCH 4.14 222/267] pinctrl: samsung: Fix device node refcount leaks in init code
+Date:   Mon, 16 Dec 2019 18:49:08 +0100
+Message-Id: <20191216174914.720020696@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,50 +60,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 6fbbcb050802d6ea109f387e961b1dbcc3a80c96 upstream.
+commit a322b3377f4bac32aa25fb1acb9e7afbbbbd0137 upstream.
 
-In s3c24xx_eint_init() the for_each_child_of_node() loop is used with a
-break to find a matching child node.  Although each iteration of
+Several functions use for_each_child_of_node() loop with a break to find
+a matching child node.  Although each iteration of
 for_each_child_of_node puts the previous node, but early exit from loop
 misses it.  This leads to leak of device node.
 
 Cc: <stable@vger.kernel.org>
-Fixes: af99a7507469 ("pinctrl: Add pinctrl-s3c24xx driver")
+Fixes: 9a2c1c3b91aa ("pinctrl: samsung: Allow grouping multiple pinmux/pinconf nodes")
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/samsung/pinctrl-samsung.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-+++ b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-@@ -495,8 +495,10 @@ static int s3c24xx_eint_init(struct sams
- 		return -ENODEV;
- 
- 	eint_data = devm_kzalloc(dev, sizeof(*eint_data), GFP_KERNEL);
--	if (!eint_data)
-+	if (!eint_data) {
-+		of_node_put(eint_np);
- 		return -ENOMEM;
-+	}
- 
- 	eint_data->drvdata = d;
- 
-@@ -508,12 +510,14 @@ static int s3c24xx_eint_init(struct sams
- 		irq = irq_of_parse_and_map(eint_np, i);
- 		if (!irq) {
- 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
-+			of_node_put(eint_np);
- 			return -ENXIO;
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -277,6 +277,7 @@ static int samsung_dt_node_to_map(struct
+ 						&reserved_maps, num_maps);
+ 		if (ret < 0) {
+ 			samsung_dt_free_map(pctldev, *map, *num_maps);
++			of_node_put(np);
+ 			return ret;
  		}
- 
- 		eint_data->parents[i] = irq;
- 		irq_set_chained_handler_and_data(irq, handlers[i], eint_data);
  	}
-+	of_node_put(eint_np);
- 
- 	bank = d->pin_banks;
- 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+@@ -761,8 +762,10 @@ static struct samsung_pmx_func *samsung_
+ 		if (!of_get_child_count(cfg_np)) {
+ 			ret = samsung_pinctrl_create_function(dev, drvdata,
+ 							cfg_np, func);
+-			if (ret < 0)
++			if (ret < 0) {
++				of_node_put(cfg_np);
+ 				return ERR_PTR(ret);
++			}
+ 			if (ret > 0) {
+ 				++func;
+ 				++func_cnt;
+@@ -773,8 +776,11 @@ static struct samsung_pmx_func *samsung_
+ 		for_each_child_of_node(cfg_np, func_np) {
+ 			ret = samsung_pinctrl_create_function(dev, drvdata,
+ 						func_np, func);
+-			if (ret < 0)
++			if (ret < 0) {
++				of_node_put(func_np);
++				of_node_put(cfg_np);
+ 				return ERR_PTR(ret);
++			}
+ 			if (ret > 0) {
+ 				++func;
+ 				++func_cnt;
 
 
