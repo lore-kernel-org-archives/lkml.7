@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333CAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027B620733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCBC2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519147;
-	bh=8a0LVrUeYJrCBt7mRarGDW1PqmFJFC3phvmzeydgbQ0=;
+	s=default; t=1576519150;
+	bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rhRauGD6Qro7FxC555xePIQzYD9td5TnKupFCFujiCOGpCn4LhcD+CxfXC3/iNWIg
-	 WtnMLGJbFpZJ1IcrOnfcimEgbmb5ZxZCihcsUbm/zECV5IaOpd+EnosIHXpMbwsbV2
-	 CX5vzZa4XpjIz8u2r3WuP5YeP0KGJXTbZPVYsJ/A=
+	b=0/eBpig5iZFvA/uP1giKv300BFG06iknlgpr3LDYCZGu3FT5OOiAfmynUQk5uq0nj
+	 4x1Ifdvzzx3nadut0VOl4P9EOdSLs21TLqFS2ia96utzCXle7t6zIdofZ/yGgQYL8M
+	 PGEVM19f0gYJozCMHGE2W8y+O4KXfJ1lpbqAtbK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfLPR7F (ORCPT
+        id S1728373AbfLPR7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728671AbfLPR65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:57 -0500
+        id S1728685AbfLPR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 579EA24687;
-        Mon, 16 Dec 2019 17:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C005C21739;
+        Mon, 16 Dec 2019 17:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519136;
-        bh=8a0LVrUeYJrCBt7mRarGDW1PqmFJFC3phvmzeydgbQ0=;
+        s=default; t=1576519139;
+        bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCwaOnQ3ZkUkibZq9eJFmdi6kBM5FKiwPabDPUT7BoP3WhAvRhjg8t9pvgOi1hy63
-         18XjPbpzRZnxrlCuqqPN8fkAUcOcPMnK8Y+XEbhBVxZykiSOd95EO+valWJUlIhhQn
-         6fzevqr+a02v+9me9BPjRwjDhToG+bd4w7l68CMc=
+        b=ttPNKmEvoXbOY/pQWpOcvEoLtzCpHkH/mQeCultiaJ+LPQ9AfNrkrQjk0K7rYMJUT
+         Ce0cC+5gSccTC6EWrtBIHW3Pz8LWwIv+PhwwfA1Evyv+u56yu9POcZAlAVbPbDYh7U
+         enfDuSdAtAuDdjNxPwx7KvRJOxASeI00s1vh2t08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jiunn Chang <c0d1n61at3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 210/267] media: cec.h: CEC_OP_REC_FLAG_ values were swapped
-Date:   Mon, 16 Dec 2019 18:48:56 +0100
-Message-Id: <20191216174914.050523306@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 211/267] cpuidle: Do not unset the driver if it is there already
+Date:   Mon, 16 Dec 2019 18:48:57 +0100
+Message-Id: <20191216174914.109393338@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,35 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-commit 806e0cdfee0b99efbb450f9f6e69deb7118602fc upstream.
+commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
 
-CEC_OP_REC_FLAG_NOT_USED is 0 and CEC_OP_REC_FLAG_USED is 1, not the
-other way around.
+Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
+a driver different from drv already and, if so, return -EBUSY before
+updating any cpuidle_drivers per-CPU pointers.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Jiunn Chang <c0d1n61at3@gmail.com>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
+Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/cec.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpuidle/driver.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/include/uapi/linux/cec.h
-+++ b/include/uapi/linux/cec.h
-@@ -789,8 +789,8 @@ struct cec_event {
- #define CEC_MSG_SELECT_DIGITAL_SERVICE			0x93
- #define CEC_MSG_TUNER_DEVICE_STATUS			0x07
- /* Recording Flag Operand (rec_flag) */
--#define CEC_OP_REC_FLAG_USED				0
--#define CEC_OP_REC_FLAG_NOT_USED			1
-+#define CEC_OP_REC_FLAG_NOT_USED			0
-+#define CEC_OP_REC_FLAG_USED				1
- /* Tuner Display Info Operand (tuner_display_info) */
- #define CEC_OP_TUNER_DISPLAY_INFO_DIGITAL		0
- #define CEC_OP_TUNER_DISPLAY_INFO_NONE			1
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -62,24 +62,23 @@ static inline void __cpuidle_unset_drive
+  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
+  * @drv: a valid pointer to a struct cpuidle_driver
+  *
+- * For each CPU in the driver's cpumask, unset the registered driver per CPU
+- * to @drv.
+- *
+- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
++ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
++ * different from drv already.
+  */
+ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ {
+ 	int cpu;
+ 
+ 	for_each_cpu(cpu, drv->cpumask) {
++		struct cpuidle_driver *old_drv;
+ 
+-		if (__cpuidle_get_cpu_driver(cpu)) {
+-			__cpuidle_unset_driver(drv);
++		old_drv = __cpuidle_get_cpu_driver(cpu);
++		if (old_drv && old_drv != drv)
+ 			return -EBUSY;
+-		}
++	}
+ 
++	for_each_cpu(cpu, drv->cpumask)
+ 		per_cpu(cpuidle_drivers, cpu) = drv;
+-	}
+ 
+ 	return 0;
+ }
 
 
