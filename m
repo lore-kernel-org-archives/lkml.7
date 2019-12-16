@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1467C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B51CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09AE2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A88821582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518790;
-	bh=LK+imRXJ2WRS7W7VOz9UN8uyaqyJJMgDk/Yvasde5FU=;
+	s=default; t=1576518796;
+	bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+8VDSFPG34WSIQzJMZMysoAnd0ITijwAQ1HTcfPwQZUjzYz90t7DrcSThZbDnDe/
-	 loVrinGEN2e1rxG/1++3hogrQN0FKLtx90+AMi8bmh1KJTFH7bHclXuBnInYCMZ527
-	 FKp+CBYjVMFTdDqmnPXW9WbkhrsoM8Su+gOegVYc=
+	b=GhXdlNNbSIt+FfHtNKp8Ay0uD1uE/snFvf4e5XEAuuhgH5l2TMvpE51RPumAcMzs9
+	 Y/NuGZodWjhPMdTHDWQ3JlWgPX+W84oqBnRrq4HB9aIqTNLR0O1wuQSxCfHuQszSKm
+	 pp4TMyFJurMgz2WH3b8qKcX4Bo9E+r2OWoS4vOqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfLPRxJ (ORCPT
+        id S1727710AbfLPRxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:53:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:53:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfLPRxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:05 -0500
+        id S1727105AbfLPRxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:53:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5770E2166E;
-        Mon, 16 Dec 2019 17:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3416221582;
+        Mon, 16 Dec 2019 17:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518784;
-        bh=LK+imRXJ2WRS7W7VOz9UN8uyaqyJJMgDk/Yvasde5FU=;
+        s=default; t=1576518789;
+        bh=C+M+dkqlPuWxaT4c3/MwIJpUvrvzuALHtnCxEPl+/7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnsRKzePurTlQ2JlQYYgks11MKp1LXEeMa9r25d0W03k3BI7Qxcb3nATfQ1Anv2Dy
-         j9sEH9/Y2xz9FRw7xW7/RDt90J1YlXAIud3vOdIKppWBTcI45WUbVOY14wrLrnGI2i
-         u6vqhKlM/i/wk8wbRyIWdkKhHmwGiHPGNWlWSw1k=
+        b=dbaIbYDko0CvmvFHEfvSj4tqZ0v+1HCRWS8WC/i03pd23hQTxfg5W23H+Iv/3Gjh8
+         RgwCNAI6ecMKw9BUm03gKNBiGPW7B7/LGUx5+FLdALrCLUVNuCCQW9DEYvXj5dwPHs
+         i4CrIv9lhR4JmPsiWIgsi8gfct6kGDE2O4+KQ1D0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 026/267] ARM: 8813/1: Make aligned 2-byte getuser()/putuser() atomic on ARMv6+
-Date:   Mon, 16 Dec 2019 18:45:52 +0100
-Message-Id: <20191216174851.777689290@linuxfoundation.org>
+        stable@vger.kernel.org, paulhsia <paulhsia@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 018/267] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+Date:   Mon, 16 Dec 2019 18:45:44 +0100
+Message-Id: <20191216174851.027832266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,170 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: paulhsia <paulhsia@chromium.org>
 
-[ Upstream commit 344eb5539abf3e0b6ce22568c03e86450073e097 ]
+[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
 
-getuser() and putuser() (and there underscored variants) use two
-strb[t]/ldrb[t] instructions when they are asked to get/put 16-bits.
-This means that the read/write is not atomic even when performed to a
-16-bit-aligned address.
+If the nullity check for `substream->runtime` is outside of the lock
+region, it is possible to have a null runtime in the critical section
+if snd_pcm_detach_substream is called right before the lock.
 
-This leads to problems with vhost: vhost uses __getuser() to read the
-vring's 16-bit avail.index field, and if it happens to observe a partial
-update of the index, wrong descriptors will be used which will lead to a
-breakdown of the virtio communication.  A similar problem exists for
-__putuser() which is used to write to the vring's used.index field.
-
-The reason these functions use strb[t]/ldrb[t] is because strht/ldrht
-instructions did not exist until ARMv6T2/ARMv7.  So we should be easily
-able to fix this on ARMv7.  Also, since all ARMv6 processors also don't
-actually use the unprivileged instructions anymore for uaccess (since
-CONFIG_CPU_USE_DOMAINS is not used) we can easily fix them too.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: paulhsia <paulhsia@chromium.org>
+Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess.h | 18 ++++++++++++++++++
- arch/arm/lib/getuser.S         | 11 +++++++++++
- arch/arm/lib/putuser.S         | 20 ++++++++++----------
- 3 files changed, 39 insertions(+), 10 deletions(-)
+ sound/core/pcm_lib.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-index a5807b67ca8a3..fe47d24955ea0 100644
---- a/arch/arm/include/asm/uaccess.h
-+++ b/arch/arm/include/asm/uaccess.h
-@@ -349,6 +349,13 @@ do {									\
- #define __get_user_asm_byte(x, addr, err)			\
- 	__get_user_asm(x, addr, err, ldrb)
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 729a85a6211d6..80453266a2def 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1803,11 +1803,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime;
+ 	unsigned long flags;
  
-+#if __LINUX_ARM_ARCH__ >= 6
+-	if (PCM_RUNTIME_CHECK(substream))
++	if (snd_BUG_ON(!substream))
+ 		return;
+-	runtime = substream->runtime;
+ 
+ 	snd_pcm_stream_lock_irqsave(substream, flags);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto _unlock;
++	runtime = substream->runtime;
 +
-+#define __get_user_asm_half(x, addr, err)			\
-+	__get_user_asm(x, addr, err, ldrh)
-+
-+#else
-+
- #ifndef __ARMEB__
- #define __get_user_asm_half(x, __gu_addr, err)			\
- ({								\
-@@ -367,6 +374,8 @@ do {									\
- })
+ 	if (!snd_pcm_running(substream) ||
+ 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
+ 		goto _end;
+@@ -1818,6 +1821,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
  #endif
- 
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- #define __get_user_asm_word(x, addr, err)			\
- 	__get_user_asm(x, addr, err, ldr)
- #endif
-@@ -442,6 +451,13 @@ do {									\
- #define __put_user_asm_byte(x, __pu_addr, err)			\
- 	__put_user_asm(x, __pu_addr, err, strb)
- 
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+#define __put_user_asm_half(x, __pu_addr, err)			\
-+	__put_user_asm(x, __pu_addr, err, strh)
-+
-+#else
-+
- #ifndef __ARMEB__
- #define __put_user_asm_half(x, __pu_addr, err)			\
- ({								\
-@@ -458,6 +474,8 @@ do {									\
- })
- #endif
- 
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- #define __put_user_asm_word(x, __pu_addr, err)			\
- 	__put_user_asm(x, __pu_addr, err, str)
- 
-diff --git a/arch/arm/lib/getuser.S b/arch/arm/lib/getuser.S
-index 746e7801dcdf7..b2e4bc3a635e2 100644
---- a/arch/arm/lib/getuser.S
-+++ b/arch/arm/lib/getuser.S
-@@ -42,6 +42,12 @@ _ASM_NOKPROBE(__get_user_1)
- 
- ENTRY(__get_user_2)
- 	check_uaccess r0, 2, r1, r2, __get_user_bad
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+2: TUSER(ldrh)	r2, [r0]
-+
-+#else
-+
- #ifdef CONFIG_CPU_USE_DOMAINS
- rb	.req	ip
- 2:	ldrbt	r2, [r0], #1
-@@ -56,6 +62,9 @@ rb	.req	r0
- #else
- 	orr	r2, rb, r2, lsl #8
- #endif
-+
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- 	mov	r0, #0
- 	ret	lr
- ENDPROC(__get_user_2)
-@@ -145,7 +154,9 @@ _ASM_NOKPROBE(__get_user_bad8)
- .pushsection __ex_table, "a"
- 	.long	1b, __get_user_bad
- 	.long	2b, __get_user_bad
-+#if __LINUX_ARM_ARCH__ < 6
- 	.long	3b, __get_user_bad
-+#endif
- 	.long	4b, __get_user_bad
- 	.long	5b, __get_user_bad8
- 	.long	6b, __get_user_bad8
-diff --git a/arch/arm/lib/putuser.S b/arch/arm/lib/putuser.S
-index 38d660d3705f4..515eeaa9975c6 100644
---- a/arch/arm/lib/putuser.S
-+++ b/arch/arm/lib/putuser.S
-@@ -41,16 +41,13 @@ ENDPROC(__put_user_1)
- 
- ENTRY(__put_user_2)
- 	check_uaccess r0, 2, r1, ip, __put_user_bad
--	mov	ip, r2, lsr #8
--#ifdef CONFIG_THUMB2_KERNEL
--#ifndef __ARMEB__
--2: TUSER(strb)	r2, [r0]
--3: TUSER(strb)	ip, [r0, #1]
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+2: TUSER(strh)	r2, [r0]
-+
- #else
--2: TUSER(strb)	ip, [r0]
--3: TUSER(strb)	r2, [r0, #1]
--#endif
--#else	/* !CONFIG_THUMB2_KERNEL */
-+
-+	mov	ip, r2, lsr #8
- #ifndef __ARMEB__
- 2: TUSER(strb)	r2, [r0], #1
- 3: TUSER(strb)	ip, [r0]
-@@ -58,7 +55,8 @@ ENTRY(__put_user_2)
- 2: TUSER(strb)	ip, [r0], #1
- 3: TUSER(strb)	r2, [r0]
- #endif
--#endif	/* CONFIG_THUMB2_KERNEL */
-+
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
- 	mov	r0, #0
- 	ret	lr
- ENDPROC(__put_user_2)
-@@ -91,7 +89,9 @@ ENDPROC(__put_user_bad)
- .pushsection __ex_table, "a"
- 	.long	1b, __put_user_bad
- 	.long	2b, __put_user_bad
-+#if __LINUX_ARM_ARCH__ < 6
- 	.long	3b, __put_user_bad
-+#endif
- 	.long	4b, __put_user_bad
- 	.long	5b, __put_user_bad
- 	.long	6b, __put_user_bad
+  _end:
+ 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
++ _unlock:
+ 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ }
+ EXPORT_SYMBOL(snd_pcm_period_elapsed);
 -- 
 2.20.1
 
