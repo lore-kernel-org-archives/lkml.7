@@ -2,104 +2,199 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBF7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D01C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F02206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576498257;
-	bh=E6GDnobX0hs/eJuDG0WReNb9IeFOloPE6cOn/QltNuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FODG8t0BGJsBm4mpmuqkZf5hA5hms9j1YnlC/r7NhPj3t1JJMBSIeUIOV2Gll8GHQ
-	 PrClDzdjbpNuBwvxA6KLOorllJ+Knqe16vvI1nwszU5ZD7Y7QoxVyjSygamKpaOjKS
-	 W9iiJYITkuJSQICi9Mi81PkQQrFhAoRTUP83gyIk=
+	by mail.kernel.org (Postfix) with ESMTP id A47F5206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfLPMK4 (ORCPT
+        id S1727504AbfLPMND convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:10:56 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41001 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfLPMK4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:10:56 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so4033267lfp.8;
-        Mon, 16 Dec 2019 04:10:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sr1hrtMKkls88LsnLuMmgz2a9nF+WC42j/GNFnp1e0k=;
-        b=uSQtrYUbZD/FxXqgdbSRBbnZQRZMel/V/oQkiyTPjM+U8kQEoqtL3uUl5Y9grf91dF
-         iaiXII4XU79C087HcQ975NMhQmnwxub6jKhme4c3LSLNq7tRln+deEwAYx2ERKphRtVU
-         w/lBlxM6Y/wSh0SP8LTWDyf5vP1p+RjT+fwjDNbxXRuQ+paXUBaPQWdHQ366gkBBDo5H
-         qOXNcpbXPIB04w/UD9knBRTOMSMGMffAgaN3njBf/BQPeqRg8Qs42r4LHmQtCUWU4+qX
-         oFDnJG12QYVWSDsdcsbrArQdsNcm6cvD7IBzo7al1gfrc5OqasAuPybpTgS4SO7+mEZ2
-         INfg==
-X-Gm-Message-State: APjAAAW1d3MxGsQnjh71EeGNiFNVSufVWKXIn7vF+/1lIwUPnXw8gI4z
-        vG5GDwPBjyU2EDL0KgvPxio=
-X-Google-Smtp-Source: APXvYqyHuIzLNWPXPczWyUkoi3mlK606LCK1TehDuUooG5xaaJOLl5MEOdxk4UPrY6Rfom3APXH2Hg==
-X-Received: by 2002:ac2:485c:: with SMTP id 28mr16443739lfy.118.1576498254061;
-        Mon, 16 Dec 2019 04:10:54 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id p4sm10627846lji.107.2019.12.16.04.10.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 04:10:53 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1igpD8-0003l3-Rr; Mon, 16 Dec 2019 13:10:50 +0100
-Date:   Mon, 16 Dec 2019 13:10:50 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 33/58] serial/f81534: Don't check port->sysrq
-Message-ID: <20191216121050.GD22665@localhost>
-References: <20191213000657.931618-1-dima@arista.com>
- <20191213000657.931618-34-dima@arista.com>
+        Mon, 16 Dec 2019 07:13:03 -0500
+Received: from smtp.h3c.com ([60.191.123.56]:26811 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfLPMND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:13:03 -0500
+Received: from DAG2EX04-BASE.srv.huawei-3com.com ([10.8.0.67])
+        by h3cspam01-ex.h3c.com with ESMTPS id xBGCBufv027054
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 20:11:56 +0800 (GMT-8)
+        (envelope-from li.kai4@h3c.com)
+Received: from DAG2EX07-IDC.srv.huawei-3com.com (10.8.0.70) by
+ DAG2EX04-BASE.srv.huawei-3com.com (10.8.0.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 16 Dec 2019 20:12:00 +0800
+Received: from DAG2EX07-IDC.srv.huawei-3com.com ([::1]) by
+ DAG2EX07-IDC.srv.huawei-3com.com ([fe80::c439:37f7:8e24:31c4%9]) with mapi id
+ 15.01.1713.004; Mon, 16 Dec 2019 20:12:00 +0800
+From:   Likai <li.kai4@h3c.com>
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        "mark@fasheh.com" <mark@fasheh.com>,
+        "jlbec@evilplan.org" <jlbec@evilplan.org>,
+        "chge@linux.alibaba.com" <chge@linux.alibaba.com>
+CC:     "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ocfs2: call journal flush to mark journal as empty
+ after journal recovery when mount
+Thread-Topic: [PATCH v2] ocfs2: call journal flush to mark journal as empty
+ after journal recovery when mount
+Thread-Index: AQHVsLF+fHlMp3IiE02yjxgB9B140g==
+Date:   Mon, 16 Dec 2019 12:12:00 +0000
+Message-ID: <57197a96b6e145bf8f992f103157cb1f@h3c.com>
+References: <20191212060000.930-1-li.kai4@h3c.com>
+ <7cf9e23b-04a1-09a0-77a6-fe31f7a6a1b5@linux.alibaba.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.125.108.72]
+x-sender-location: DAG2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213000657.931618-34-dima@arista.com>
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com xBGCBufv027054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:06:32AM +0000, Dmitry Safonov wrote:
-> usb_serial_handle_sysrq_char() already checks it.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  drivers/usb/serial/f81534.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/serial/f81534.c b/drivers/usb/serial/f81534.c
-> index 2b39bda035c7..67a8e343eba1 100644
-> --- a/drivers/usb/serial/f81534.c
-> +++ b/drivers/usb/serial/f81534.c
-> @@ -1238,10 +1238,8 @@ static void f81534_process_per_serial_block(struct usb_serial_port *port,
->  			schedule_work(&port_priv->lsr_work);
->  		}
->  
-> -		if (port->port.console && port->sysrq) {
-> -			if (usb_serial_handle_sysrq_char(port, data[i]))
-> -				continue;
-> -		}
-> +		if (usb_serial_handle_sysrq_char(port, data[i]))
-> +			continue;
+On 2019/12/16 18:02, Joseph Qi wrote:
+>
+> On 19/12/12 14:00, Kai Li wrote:
+>> If journal is dirty when mount, it will be replayed but jbd2 sb
+>> log tail cannot be updated to mark a new start because
+>> journal->j_flag has already been set with JBD2_ABORT first
+>> in journal_init_common. When a new transaction is committed, it
+>> will be recored in block 1 first(journal->j_tail is set to 1 in
+>> journal_reset).If emergency restart happens again before journal
+>> super block is updated unfortunately, the new recorded trans will
+>> not be replayed in the next mount.
+>>
+>> The following steps describe this procedure in detail.
+>> 1. mount and touch some files
+>> 2. these transactions are committed to journal area but not checkpointed
+>> 3. emergency restart
+>> 4. mount again and its journals are replayed
+>> 5. journal super block's first s_start is 1, but its s_seq is not updated
+>> 6. touch a new file and its trans is committed but not checkpointed
+>> 7. emergency restart again
+>> 8. mount and journal is dirty, but trans committed in 6 will not be
+>> replayed.
+>>
+>> This exception happens easily when this lun is used by only one node. If it
+>> is used by multi-nodes, other node will replay its journal and its
+>> journal super block will be updated after recovery like what this patch
+>> does.
+>>
+>> ocfs2_recover_node->ocfs2_replay_journal.
+>>
+>> The following jbd2 journal can be generated by touching a new file after
+>> journal is replayed, and seq 15 is the first valid commit, but first seq
+>> is 13 in journal super block.
+>> logdump:
+>> Block 0: Journal Superblock
+>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+>> First Commit ID: 13   Start Log Blknum: 1
+>> Error: 0
+>> Feature Compat: 0
+>> Feature Incompat: 2 block64
+>> Feature RO compat: 0
+>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+>> Per Txn Block Limit    Journal: 0    Data: 0
+>>
+>> Block 1: Journal Commit Block
+>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+>>
+>> Block 2: Journal Descriptor
+>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+>> No. Blocknum        Flags
+>>  0. 587             none
+>> UUID: 00000000000000000000000000000000
+>>  1. 8257792         JBD2_FLAG_SAME_UUID
+>>  2. 619             JBD2_FLAG_SAME_UUID
+>>  3. 24772864        JBD2_FLAG_SAME_UUID
+>>  4. 8257802         JBD2_FLAG_SAME_UUID
+>>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+>> ...
+>> Block 7: Inode
+>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+>> FS Generation: 2839773110 (0xa9437fb6)
+>> CRC32: 00000000   ECC: 0000
+>> Type: Regular   Attr: 0x0   Flags: Valid
+>> Dynamic Features: (0x1) InlineData
+>> User: 0 (root)   Group: 0 (root)   Size: 7
+>> Links: 1   Clusters: 0
+>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+>> ...
+>> Block 9: Journal Commit Block
+>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+>>
+>> The following is jouranl recovery log when recovering the upper jbd2
+>> journal when mount again.
+>> syslog:
+>> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+>>
+>> Due to first commit seq 13 recorded in journal super is not consistent
+>> with the value recorded in block 1(seq is 14), journal recovery will be
+>> terminated before seq 15 even though it is an unbroken commit, inode
+>> 8257802 is a new file and it will be lost.
+>>
+>> Signed-off-by: Kai Li <li.kai4@h3c.com>
+>> ---
+>>  fs/ocfs2/journal.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+>> index 1afe57f425a0..5c7a489f47b0 100644
+>> --- a/fs/ocfs2/journal.c
+>> +++ b/fs/ocfs2/journal.c
+>> @@ -1066,6 +1066,15 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+>>  
+>>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+>>  
+>> +	if (replayed) {
+>> +		mlog(ML_NOTICE, "journal recovery complete");
+> I don't think this log is appropriate, or we can change it to something like:
+> "Journal is dirty, wipe it first"?
+>
+> Thanks,
+> Joseph
+This log is not used to interpret journal flush's purpose and calling
+journal flush to make jbd2 super block become normal should be a
+requisite operation internally,
+maybe a mark should be better I think if necessary.
+In addition,  ocfs2 prints a log like 'ocfs2: File system on device (%s)
+was not  unmounted cleanly, recovering it' before,
+and  journal has already been replayed in
+jbd2_journal_load->jbd2_journal_recover,  this log just means that it is
+done here.
+So I don't think it is inappropriate,  could you think abort my proposal
+again?
 
-This is unrelated to the rest of the series.
+Thanks
+>> +		jbd2_journal_lock_updates(journal->j_journal);
+>> +		status = jbd2_journal_flush(journal->j_journal);
+>> +		jbd2_journal_unlock_updates(journal->j_journal);
+>> +		if (status < 0)
+>> +			mlog_errno(status);
+>> +	}
+>> +
+>>  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+>>  	if (status < 0) {
+>>  		mlog_errno(status);
+>>
 
-Please break all usb-serial patches out of this series and submit them
-to me and the usb list for review.
-
-Johan
