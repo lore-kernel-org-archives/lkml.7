@@ -2,87 +2,114 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F15C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8C8206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05490206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:53:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srMiz4eI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfLPNwo (ORCPT
+        id S1727974AbfLPNxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:52:44 -0500
-Received: from uidappmx01.nottingham.ac.uk ([128.243.43.124]:54275 "EHLO
-        uidappmx01.nottingham.ac.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727984AbfLPNwn (ORCPT
+        Mon, 16 Dec 2019 08:53:50 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36227 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfLPNxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:52:43 -0500
-X-Greylist: delayed 324 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 08:52:42 EST
-Received: from uidappmx01.nottingham.ac.uk (localhost.localdomain [127.0.0.1])
-        by localhost (Email Security Appliance) with SMTP id B0A543C464F_DF78AE4B
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:47:16 +0000 (GMT)
-Received: from smtp4.nottingham.ac.uk (smtp4.nottingham.ac.uk [128.243.220.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by uidappmx01.nottingham.ac.uk (Sophos Email Appliance) with ESMTPS id 7CA343D412A_DF78AE4F
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:47:16 +0000 (GMT)
-Received: from celebrex.eee.nottingham.ac.uk ([128.243.74.16])
-        by smtp4.nottingham.ac.uk with esmtpsa (TLSv1.2:DHE-RSA-AES128-SHA:128)
-        (Exim 4.85)
-        (envelope-from <ppxwh2@nottingham.ac.uk>)
-        id 1igqiS-0002nX-9S; Mon, 16 Dec 2019 13:47:16 +0000
-To:     wslkml@gmail.com
-Cc:     linux-kernel@vger.kernel.org
-References: <CAJJUZdw-mB486+Kckq4waE8sa=JD58789Nkt=5-S65XCVDeYcw@mail.gmail.com>
-Subject: Re: driver compilation problem / rdtsc error
-From:   Will Hardiman <william.hardiman@nottingham.ac.uk>
-Message-ID: <4e02196c-215a-b647-8d0b-ce8cd60ad443@nottingham.ac.uk>
-Date:   Mon, 16 Dec 2019 13:47:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 08:53:49 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x184so5636107pfb.3;
+        Mon, 16 Dec 2019 05:53:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xgYwA15dG8l4/wpZxWioQV4WW+kSKdvUXyu4yhTQhow=;
+        b=srMiz4eIHwRt4AcKl94JS4sGdCgPVQsffWApQLSTrRA79QvkgaG79feUeSX0NrNwJm
+         WrGhPNr8BqkrhOnvK46V6PSKm2RGReFTD5aA8cAFBdZ4rcqHBAT4v1rprJd9e3vq2V+L
+         ap1RVlPQc6Wzn0SINx9L7yw8MX/FdKRxNBKcBgbwj9FhRDZ99NET6QateR8+cYFutQJG
+         7+IC4cNhOZErZjm8gwiL3wA1GZL/+plRTMJ867PLgNLshaipadQ6n6xxKhRI7nrHsmvN
+         B8bldV/Fk4m2SEepyOaACzyVEbAXyjnUe6fsCqHEgVZRpvzlCfgBsQpUGjB/Pg0CVXog
+         427A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xgYwA15dG8l4/wpZxWioQV4WW+kSKdvUXyu4yhTQhow=;
+        b=Pfb3sl+l47nNAma9EzJOuMCdogDDh1o9BLAG1ozmj/YyRoWNx3lM1T3DNS1l4Ru9vN
+         qFjHb2xAu1+e1qpsNZW6UTAd4wKi/vTDHgiGg1AAm2bLcOPVa/oPc+5wJt3lHd499Bn6
+         7eRokh2S4OPvkVjeJyBvkZEvU+/b0b/qUAnew2IbrADhDz/0NO0zoyh0nFaEAQNFWmv+
+         H+CjzDjXXMyspRV9uKg33TKxoh48c//vxpMwxbmBMWwlZVCDZ4K+HUzAap+HIxoO2VsP
+         mlmDvGM7Hon3Cg4/+3Y/WMiT06MJBuHUT5Cmls1bG3i/+gvh5HSEKYjVtjL5t0tOuGwf
+         ORAA==
+X-Gm-Message-State: APjAAAXk88iQEp0EAMGX7vIhes+Bju1v9YYRJBrYkUjBNBbvZc4aEcU6
+        TvAZOn7dZp3Xw6DiifKHqRbRmBXOrRrMFvzXpP0=
+X-Google-Smtp-Source: APXvYqydiSRLoIrO5tJIaDzEjthd12WbO2NO97JKasfyed/B32rvFQzDeiRf2fqpRNXZjFV6ZOujHqCMwIujhCKpeBg=
+X-Received: by 2002:a63:e0f:: with SMTP id d15mr18174165pgl.255.1576504428809;
+ Mon, 16 Dec 2019 05:53:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAJJUZdw-mB486+Kckq4waE8sa=JD58789Nkt=5-S65XCVDeYcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-SASI-RCODE: 200
+References: <20191202133332.178110-1-amirmizi6@gmail.com> <20191202133332.178110-5-amirmizi6@gmail.com>
+ <20191213223623.GA14809@bogus>
+In-Reply-To: <20191213223623.GA14809@bogus>
+From:   Amir Mizinski <amirmizi6@gmail.com>
+Date:   Mon, 16 Dec 2019 15:53:48 +0200
+Message-ID: <CAMHTsUW5dH-5LCW9GYzDnWEcqPt-Ch_21efQVpAKMdSvCXB00Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: tpm: Add YAML schema for TPM TIS I2C options
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eyal.Cohen@nuvoton.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, ayna@linux.vnet.ibm.com,
+        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Dec 14, 2019 at 12:36 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Dec 02, 2019 at 03:33:31PM +0200, amirmizi6@gmail.com wrote:
+> > From: Amir Mizinski <amirmizi6@gmail.com>
+> >
+> > Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c PTP based physical layer.
+>
+> Wrap your commmit message. And TPM, TIS?, and I2C should be capitalized.
 
-I am having the same problem with the pi_stage kernel module, using 
-kernel v5.0.0-37, how did you solve your problem?
+Thanks,  ill fix that.
 
-Thanks,
+>
+> >
+> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> > ---
+> >  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 38 ++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+>
+> Please read my comments on v1 (The first v1 from 11/10, not the 2nd v1
+> you sent).
 
-Will
+I sent a follow up comment regarding this:
+https://patchwork.kernel.org/patch/11236253/
+(2nd v1 was sent by mistake. sorry about that)
 
--- 
-Will Hardiman
+>
+> Rob
 
-PhD student in Bio Optics, Optics and Photonics Group,
-Faculty of Engineering,
-University of Nottingham
-
-
-
-
-This message and any attachment are intended solely for the addressee
-and may contain confidential information. If you have received this
-message in error, please contact the sender and delete the email and
-attachment. 
-
-Any views or opinions expressed by the author of this email do not
-necessarily reflect the views of the University of Nottingham. Email
-communications with the University of Nottingham may be monitored 
-where permitted by law.
-
-
-
-
+Amir Mizinski
