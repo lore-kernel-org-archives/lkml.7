@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EDAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5557C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D242166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC364206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519206;
-	bh=UcBzhBx6DdGjHx8V3cCwPDgOBb8aEiT3Oud8Pl78L+Q=;
+	s=default; t=1576519212;
+	bh=kQtCxx+0nKbASP2IPskD48N7LpyYoYrh6ldzJmm0QsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sMqkntz9P2/LMb8TwreCtoaBZKIqa0GeYTjaWf0kyfLh6MEcrsYM1eIvHMX3YPiEp
-	 yYAuoz8qwdzttMcfRQ5kcCBLWc8J5tARZ2vnRiT7ufFpllhr/qNfRJYoNYlGUcskc/
-	 nXXpl13/Vn1N4bkCH7XnvxnkBPjr6wKpmUOi+vY8=
+	b=GgjWVsG5Zgj7ClmDYnTcg9QdY5gei6cXGubAhaY+FqppMTKwp0g23frLsbM0OF1nF
+	 5EEau58+NOjtvgD5Oh6Pe5uYoNkTLgIUR9VbaKH6DYKU4ek4GlEM/3EvmtwtMxxRF6
+	 51sRaSD2kJ7Jk37HQeuE3M7TNaGLFsTADxocYZ7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfLPSAF (ORCPT
+        id S1728895AbfLPSAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbfLPSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:02 -0500
+        id S1728886AbfLPSAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EBD2072D;
-        Mon, 16 Dec 2019 18:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B97B20717;
+        Mon, 16 Dec 2019 18:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519202;
-        bh=UcBzhBx6DdGjHx8V3cCwPDgOBb8aEiT3Oud8Pl78L+Q=;
+        s=default; t=1576519209;
+        bh=kQtCxx+0nKbASP2IPskD48N7LpyYoYrh6ldzJmm0QsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqS9tNliL8f/YpbUAFTOoxYkJMWBH8+q0cpzf5r8nfcLh7bJgdnn/RUeDfbNriaB1
-         VUAFDv92qW1SYbpDgUpGjLERbsTbvTOFdluN8kg67aYRTy0kCttT7Kjklxh3PPDNdD
-         Bf67k7ReS0upMY+fi5HOtOignCSuAmDxLT/kEtSg=
+        b=ftSCYyIt4pPkpokEVbE85LEcpA14wKyvnxD/MbVYr1JyqT1Z+E6uLA+TMqL+d38Rt
+         rLp4U4DnZUiFbzj27o943nM6JUXCKsAOUD+YbFGo8x99oWznCckfETInKdp2ebCZnn
+         x5HB/Ly+HVtJ2dXbJfe0fLVwdvpw6YeMs0DwGDZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 238/267] scsi: zfcp: trace channel log even for FCP command responses
-Date:   Mon, 16 Dec 2019 18:49:24 +0100
-Message-Id: <20191216174915.589961011@linuxfoundation.org>
+Subject: [PATCH 4.14 241/267] scsi: qla2xxx: Fix qla24xx_process_bidir_cmd()
+Date:   Mon, 16 Dec 2019 18:49:27 +0100
+Message-Id: <20191216174915.757704926@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,48 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 100843f176109af94600e500da0428e21030ca7f ]
+[ Upstream commit c29282c65d1cf54daeea63be46243d7f69d72f4d ]
 
-While v2.6.26 commit b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug
-trace") is right that we don't want to flood the (payload) trace ring
-buffer, we don't trace successful FCP command responses by default.  So we
-can include the channel log for problem determination with failed responses
-of any FSF request type.
+Set the r??_data_len variables before using these instead of after.
 
-Fixes: b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug trace")
-Fixes: a54ca0f62f95 ("[SCSI] zfcp: Redesign of the debug tracing for HBA records.")
-Cc: <stable@vger.kernel.org> #2.6.38+
-Link: https://lore.kernel.org/r/e37597b5c4ae123aaa85fd86c23a9f71e994e4a9.1572018132.git.bblock@linux.ibm.com
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+This patch fixes the following Coverity complaint:
+
+const: At condition req_data_len != rsp_data_len, the value of req_data_len
+must be equal to 0.
+const: At condition req_data_len != rsp_data_len, the value of rsp_data_len
+must be equal to 0.
+dead_error_condition: The condition req_data_len != rsp_data_len cannot be
+true.
+
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: a9b6f722f62d ("[SCSI] qla2xxx: Implementation of bidirectional.") # v3.7.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_dbf.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/scsi/qla2xxx/qla_bsg.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/scsi/zfcp_dbf.c b/drivers/s390/scsi/zfcp_dbf.c
-index 599447032e50a..bc6c1d6a1c42e 100644
---- a/drivers/s390/scsi/zfcp_dbf.c
-+++ b/drivers/s390/scsi/zfcp_dbf.c
-@@ -94,11 +94,9 @@ void zfcp_dbf_hba_fsf_res(char *tag, int level, struct zfcp_fsf_req *req)
- 	memcpy(rec->u.res.fsf_status_qual, &q_head->fsf_status_qual,
- 	       FSF_STATUS_QUALIFIER_SIZE);
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 6f8c7df69f66c..c1ca21a88a096 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -1782,8 +1782,8 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 	uint16_t nextlid = 0;
+ 	uint32_t tot_dsds;
+ 	srb_t *sp = NULL;
+-	uint32_t req_data_len = 0;
+-	uint32_t rsp_data_len = 0;
++	uint32_t req_data_len;
++	uint32_t rsp_data_len;
  
--	if (req->fsf_command != FSF_QTCB_FCP_CMND) {
--		rec->pl_len = q_head->log_length;
--		zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
--				  rec->pl_len, "fsf_res", req->req_id);
--	}
-+	rec->pl_len = q_head->log_length;
-+	zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
-+			  rec->pl_len, "fsf_res", req->req_id);
+ 	/* Check the type of the adapter */
+ 	if (!IS_BIDI_CAPABLE(ha)) {
+@@ -1888,6 +1888,9 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
  
- 	debug_event(dbf->hba, level, rec, sizeof(*rec));
- 	spin_unlock_irqrestore(&dbf->hba_lock, flags);
++	req_data_len = bsg_job->request_payload.payload_len;
++	rsp_data_len = bsg_job->reply_payload.payload_len;
++
+ 	if (req_data_len != rsp_data_len) {
+ 		rval = EXT_STATUS_BUSY;
+ 		ql_log(ql_log_warn, vha, 0x70aa,
+@@ -1895,10 +1898,6 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
+ 
+-	req_data_len = bsg_job->request_payload.payload_len;
+-	rsp_data_len = bsg_job->reply_payload.payload_len;
+-
+-
+ 	/* Alloc SRB structure */
+ 	sp = qla2x00_get_sp(vha, &(vha->bidir_fcport), GFP_KERNEL);
+ 	if (!sp) {
 -- 
 2.20.1
 
