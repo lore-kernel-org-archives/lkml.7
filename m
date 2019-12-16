@@ -2,107 +2,156 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45442C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DB7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alIV0owQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7E3206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576522104;
+	bh=wIj8gMp24TWB2JPYURolixV89zLKt1lP8418gUBTlAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GPbKNoUG5db81WqmTikwO20ilz/yhY/Q6oZTacX6OdmjIFBFKft+J03HDtCT8hwqc
+	 Ceh9LfHRbDCTkXQQWc2gm0m8gD43hvWXU3t0T5FPvfo3BWFiRBQWbei81VHcuHncGS
+	 x+bSsCcAl98Y42x0Nm2h1/P5v7pHZgSKMt6EwMu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfLPSsT (ORCPT
+        id S1727904AbfLPRyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:48:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45219 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfLPRyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so4210753wrj.12;
-        Mon, 16 Dec 2019 09:54:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=/ADs60hbOFeV91Nal7IRwSibD1PvyjxPHFpLiwg56pU=;
-        b=alIV0owQs+4Tj0VrignHQenjkrJKJPddVpY38ar5e0/9GAS/qdZp6IvmaUQifxORdi
-         vpeh8DL4t32X85EhODF52sW1LIOeD8Ta6eGaZT8XpAILRK/kiKN+m5zag1FI97NCYtw9
-         J9c0B++M2fsp2z27my6fre4P9s7PAH6Af+JzD6+6mU5UAVDeuvr5VbdS6JkI5oiO9yjc
-         mXbpuQZDsY8EKFXUtHtJU/jbi3yoc6GLejAUNlPVmlQCq5l246PQg6KjH4143AmyZ1+d
-         KmveWgkLxo0l0AdNlv/U4Fu4Y7AH8GE1kA8Plk4sLr+ejkdSODixOPOZk75OSvvubQTJ
-         BgtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=/ADs60hbOFeV91Nal7IRwSibD1PvyjxPHFpLiwg56pU=;
-        b=LAccXNwtaUJK4TZfY7TsYSdeavEzrWn9PP63NKKpb+bC8arDjhcyi3lwwEoKbSi52p
-         gwEp1R1fYPdr5UjGKCr05E1onLFrdMFiyUqPcpgnR2pBUw2PQ1bz0aPu1w4bPs8JZ+CW
-         ukZgiScIAs5abuRKuDl+iMXemB5GiiAwCWkcwJLIy5xW6uU8pqvD8TJMx8qCCAKTpSqd
-         i0qP71yokq5ti5gBgA3H6KsvCRyjvdDUdaIaRvvSIJBi1pJXElcqJbaEq1vYCLuKXgIJ
-         frKQb4L75xsg6PcE+pck3dQ8DQk8JsmezZ0jiwN5vaHSPT/YbO+dW77dMPWsBvWy1J5+
-         2uZg==
-X-Gm-Message-State: APjAAAVwk43g/HO3SQxdACmTWL0mj8MnbHsajHXjMETUcdM7Z+57H7Oo
-        UyWv6DUI3qgje1E98Sn9ibE=
-X-Google-Smtp-Source: APXvYqzLvZWcCouTgjODTUh4a7Ne/akkw8fCqL5aQfJbgy+SUlUUEvXNo8P6tp8tTVtgRDgaZ54HHA==
-X-Received: by 2002:adf:f88c:: with SMTP id u12mr33319322wrp.323.1576518863678;
-        Mon, 16 Dec 2019 09:54:23 -0800 (PST)
-Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id a16sm22341245wrt.37.2019.12.16.09.54.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 09:54:23 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFSv4: open() should try lease recovery on NFS4ERR_EXPIRED
-Date:   Mon, 16 Dec 2019 17:54:22 -0000
-Message-ID: <05c201d5b439$d99083c0$8cb18b40$@gmail.com>
+        Mon, 16 Dec 2019 12:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727892AbfLPRyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D652146E;
+        Mon, 16 Dec 2019 17:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576518859;
+        bh=wIj8gMp24TWB2JPYURolixV89zLKt1lP8418gUBTlAI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=esP0r58NYLggXF1ZeJkYsOTY0FJbr7OlB8KTo9OwN6i+saHBKH8zccVkfCHcFBsF2
+         /MIyMbnBtEl1ADgy4FzuFKrM66mTrGMUJF/51FSoOisD9w/jk8pWd96cCk+CYj6+pt
+         cbZzAmBmyrENjhMIN69aHo5SgpYItpccDW2Qq1Ew=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 095/267] modpost: skip ELF local symbols during section mismatch check
+Date:   Mon, 16 Dec 2019 18:47:01 +0100
+Message-Id: <20191216174901.927306028@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdW0MuhLiOKK2wGRQLycz+SVs0XJrQ==
-Content-Language: en-gb
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open,
-we return EIO to applications without even trying to recover.
+[ Upstream commit a4d26f1a0958bb1c2b60c6f1e67c6f5d43e2647b ]
 
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+During development of a serial console driver with a gcc 8.2.0
+toolchain for RISC-V, the following modpost warning appeared:
+
+----
+WARNING: vmlinux.o(.data+0x19b10): Section mismatch in reference from the variable .LANCHOR1 to the function .init.text:sifive_serial_console_setup()
+The variable .LANCHOR1 references
+the function __init sifive_serial_console_setup()
+If the reference is valid then annotate the
+variable with __init* or __refdata (see linux/init.h) or name the variable:
+*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+----
+
+".LANCHOR1" is an ELF local symbol, automatically created by gcc's section
+anchor generation code:
+
+https://gcc.gnu.org/onlinedocs/gccint/Anchored-Addresses.html
+
+https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/varasm.c;h=cd9591a45617464946dcf9a126dde277d9de9804;hb=9fb89fa845c1b2e0a18d85ada0b077c84508ab78#l7473
+
+This was verified by compiling the kernel with -fno-section-anchors
+and observing that the ".LANCHOR1" ELF local symbol disappeared, and
+modpost no longer warned about the section mismatch.  The serial
+driver code idiom triggering the warning is standard Linux serial
+driver practice that has a specific whitelist inclusion in modpost.c.
+
+I'm neither a modpost nor an ELF expert, but naively, it doesn't seem
+useful for modpost to report section mismatch warnings caused by ELF
+local symbols by default.  Local symbols have compiler-generated
+names, and thus bypass modpost's whitelisting algorithm, which relies
+on the presence of a non-autogenerated symbol name.  This increases
+the likelihood that false positive warnings will be generated (as in
+the above case).
+
+Thus, disable section mismatch reporting on ELF local symbols.  The
+rationale here is similar to that of commit 2e3a10a1551d ("ARM: avoid
+ARM binutils leaking ELF local symbols") and of similar code already
+present in modpost.c:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/mod/modpost.c?h=v4.19-rc4&id=7876320f88802b22d4e2daf7eb027dd14175a0f8#n1256
+
+This third version of the patch implements a suggestion from Masahiro
+Yamada <yamada.masahiro@socionext.com> to restructure the code as an
+additional pattern matching step inside secref_whitelist(), and
+further improves the patch description.
+
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/mod/modpost.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index aad65dd..04e6a13 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct nfs_server
-*server,
- 						stateid);
- 				goto wait_on_recovery;
- 			}
-+			if (state == NULL) {
-+				nfs4_schedule_lease_recovery(clp);
-+				goto wait_on_recovery;
-+			}
- 			/* Fall through */
- 		case -NFS4ERR_OPENMODE:
- 			if (inode) {
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index c22041a4fc360..b6eb929899c55 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -1174,6 +1174,14 @@ static const struct sectioncheck *section_mismatch(
+  *   fromsec = text section
+  *   refsymname = *.constprop.*
+  *
++ * Pattern 6:
++ *   Hide section mismatch warnings for ELF local symbols.  The goal
++ *   is to eliminate false positive modpost warnings caused by
++ *   compiler-generated ELF local symbol names such as ".LANCHOR1".
++ *   Autogenerated symbol names bypass modpost's "Pattern 2"
++ *   whitelisting, which relies on pattern-matching against symbol
++ *   names to work.  (One situation where gcc can autogenerate ELF
++ *   local symbols is when "-fsection-anchors" is used.)
+  **/
+ static int secref_whitelist(const struct sectioncheck *mismatch,
+ 			    const char *fromsec, const char *fromsym,
+@@ -1212,6 +1220,10 @@ static int secref_whitelist(const struct sectioncheck *mismatch,
+ 	    match(fromsym, optim_symbols))
+ 		return 0;
+ 
++	/* Check for pattern 6 */
++	if (strstarts(fromsym, ".L"))
++		return 0;
++
+ 	return 1;
+ }
+ 
 -- 
-1.8.3.1
+2.20.1
+
 
 
