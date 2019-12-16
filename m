@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CECC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07017C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB442082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D069220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520932;
-	bh=QfDHfWJZkXCjKhON+mLCDIfuWvS7L2nVq4tV89VaVls=;
+	s=default; t=1576520936;
+	bh=6+Xon98xyuUDg6YRXqvsnRkbM2QYa3frpTr9C/0umUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LIdqdaPw0L+BA3K3UdOdRbVsLiv/jlsmxN7/ZEyTUO1b194Fh4Fsx2zxpN0HjgPqU
-	 uRT8O/ZXWXyk1wfRhtuuAZ+lMPRVZRMAEswA9WYr9/yoPSo3LrYk2NdmyNZo83/zVM
-	 VW1CkJstw9BxviTyf7a/ZhDztZauQiX5U8AcI3VI=
+	b=YHrYT2e2CE2E15YP6MX6BGkkgoqFM6PbxEhtfHRZcx3+aB0e5FG0c9Fda1BAegZ0F
+	 /0V6gNoQt+wRiGOpHG0+H17bJDcySsKsv3+l70sKL7wau/dr6oismrghatAbvfG6w7
+	 0gOm7vk5nkukmARpSt1WZswdgq3TSOeKOO3AvMv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbfLPSO3 (ORCPT
+        id S1731463AbfLPS2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33564 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:28:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbfLPSOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:23 -0500
+        id S1731217AbfLPSOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85BB12166E;
-        Mon, 16 Dec 2019 18:14:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2AAF206E0;
+        Mon, 16 Dec 2019 18:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520062;
-        bh=QfDHfWJZkXCjKhON+mLCDIfuWvS7L2nVq4tV89VaVls=;
+        s=default; t=1576520064;
+        bh=6+Xon98xyuUDg6YRXqvsnRkbM2QYa3frpTr9C/0umUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVF1Ntn905yZqOfDpettQERRvzUlrqzReCv3TTE2K8Ys7aIqZug1egHzLfOfY38T0
-         CCDzrYrBUzB9HFdoMZHg/dtM+rpPWdpQUS9YQJjZNzxGsNC7WEkdRylOypjhyW+nGK
-         lPjrG02hc5Euq//9WUKvtNhVkq0bI2PxKCnah/rk=
+        b=ddJs0zEuQU2xgw7BKo+sjHfS/v6WGmdJ42M7wToGYn1xfCYCfvxA8xZ0FMsbArG+i
+         wkct3uNc9zTgx33K6qtjgQq9OQT4dW1ymyg0Ep9bhGGi1kPqIgrewG7y7XiaD5jSeo
+         a9RvPV91vaOVqkn/AJZyfcLyP6gBezoPP63civwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Quinn Tran <qutran@marvell.com>, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 160/180] scsi: qla2xxx: Fix double scsi_done for abort path
-Date:   Mon, 16 Dec 2019 18:50:00 +0100
-Message-Id: <20191216174846.135572642@linuxfoundation.org>
+Subject: [PATCH 5.3 161/180] scsi: qla2xxx: Introduce the function qla2xxx_init_sp()
+Date:   Mon, 16 Dec 2019 18:50:01 +0100
+Message-Id: <20191216174846.265168496@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,332 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit f45bca8c5052e8c59bab64ee90c44441678b9a52 ]
+[ Upstream commit bdb61b9b944d1e5b7cee5a9fe21014363c55b811 ]
 
-Current code assumes abort will remove the original command from the active
-list where scsi_done will not be called. Instead, the eh_abort thread will
-do the scsi_done. That is not the case.  Instead, we have a double
-scsi_done calls triggering use after free.
+This patch does not change any functionality but makes the next patch
+easier to read.
 
-Abort will tell FW to release the command from FW possesion. The original
-command will return to ULP with error in its normal fashion via scsi_done.
-eh_abort path would wait for the original command completion before
-returning.  eh_abort path will not perform the scsi_done call.
-
-Fixes: 219d27d7147e0 ("scsi: qla2xxx: Fix race conditions in the code for aborting SCSI commands")
-Cc: stable@vger.kernel.org # 5.2
-Link: https://lore.kernel.org/r/20191105150657.8092-6-hmadhani@marvell.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_def.h  |   5 +-
- drivers/scsi/qla2xxx/qla_isr.c  |   5 ++
- drivers/scsi/qla2xxx/qla_nvme.c |   4 +-
- drivers/scsi/qla2xxx/qla_os.c   | 118 +++++++++++++++++---------------
- 4 files changed, 74 insertions(+), 58 deletions(-)
+ drivers/scsi/qla2xxx/qla_inline.h | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index ea1728fe2c768..29af738ca203e 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -531,13 +531,16 @@ typedef struct srb {
- 	 */
- 	uint8_t cmd_type;
- 	uint8_t pad[3];
--	atomic_t ref_count;
- 	struct kref cmd_kref;	/* need to migrate ref_count over to this */
- 	void *priv;
- 	wait_queue_head_t nvme_ls_waitq;
- 	struct fc_port *fcport;
- 	struct scsi_qla_host *vha;
- 	unsigned int start_timer:1;
-+	unsigned int abort:1;
-+	unsigned int aborted:1;
-+	unsigned int completed:1;
+diff --git a/drivers/scsi/qla2xxx/qla_inline.h b/drivers/scsi/qla2xxx/qla_inline.h
+index bf063c6643523..0c3d907af7692 100644
+--- a/drivers/scsi/qla2xxx/qla_inline.h
++++ b/drivers/scsi/qla2xxx/qla_inline.h
+@@ -152,6 +152,18 @@ qla2x00_chip_is_down(scsi_qla_host_t *vha)
+ 	return (qla2x00_reset_active(vha) || !vha->hw->flags.fw_started);
+ }
+ 
++static void qla2xxx_init_sp(srb_t *sp, scsi_qla_host_t *vha,
++			    struct qla_qpair *qpair, fc_port_t *fcport)
++{
++	memset(sp, 0, sizeof(*sp));
++	sp->fcport = fcport;
++	sp->iocbs = 1;
++	sp->vha = vha;
++	sp->qpair = qpair;
++	sp->cmd_type = TYPE_SRB;
++	INIT_LIST_HEAD(&sp->elem);
++}
 +
- 	uint32_t handle;
- 	uint16_t flags;
- 	uint16_t type;
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index f7458d74ae3d2..9e32a90d4d773 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -2473,6 +2473,11 @@ qla2x00_status_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, void *pkt)
- 		return;
- 	}
+ static inline srb_t *
+ qla2xxx_get_qpair_sp(scsi_qla_host_t *vha, struct qla_qpair *qpair,
+     fc_port_t *fcport, gfp_t flag)
+@@ -164,19 +176,9 @@ qla2xxx_get_qpair_sp(scsi_qla_host_t *vha, struct qla_qpair *qpair,
+ 		return NULL;
  
-+	if (sp->abort)
-+		sp->aborted = 1;
-+	else
-+		sp->completed = 1;
-+
- 	if (sp->cmd_type != TYPE_SRB) {
- 		req->outstanding_cmds[handle] = NULL;
- 		ql_dbg(ql_dbg_io, vha, 0x3015,
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index 963094b3c3007..672da9b838e52 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -227,8 +227,8 @@ static void qla_nvme_abort_work(struct work_struct *work)
- 
- 	if (ha->flags.host_shutting_down) {
- 		ql_log(ql_log_info, sp->fcport->vha, 0xffff,
--		    "%s Calling done on sp: %p, type: 0x%x, sp->ref_count: 0x%x\n",
--		    __func__, sp, sp->type, atomic_read(&sp->ref_count));
-+		    "%s Calling done on sp: %p, type: 0x%x\n",
-+		    __func__, sp, sp->type);
- 		sp->done(sp, 0);
- 		goto out;
- 	}
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 3aa2dd43945bf..ac2977bdc3595 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -716,11 +716,6 @@ qla2x00_sp_compl(void *ptr, int res)
- 	struct scsi_cmnd *cmd = GET_CMD_SP(sp);
- 	struct completion *comp = sp->comp;
- 
--	if (WARN_ON_ONCE(atomic_read(&sp->ref_count) == 0))
--		return;
+ 	sp = mempool_alloc(qpair->srb_mempool, flag);
+-	if (!sp)
+-		goto done;
 -
--	atomic_dec(&sp->ref_count);
--
- 	sp->free(sp);
- 	cmd->result = res;
- 	CMD_SP(cmd) = NULL;
-@@ -820,11 +815,6 @@ qla2xxx_qpair_sp_compl(void *ptr, int res)
- 	struct scsi_cmnd *cmd = GET_CMD_SP(sp);
- 	struct completion *comp = sp->comp;
- 
--	if (WARN_ON_ONCE(atomic_read(&sp->ref_count) == 0))
--		return;
--
--	atomic_dec(&sp->ref_count);
--
- 	sp->free(sp);
- 	cmd->result = res;
- 	CMD_SP(cmd) = NULL;
-@@ -928,7 +918,7 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 
- 	sp->u.scmd.cmd = cmd;
- 	sp->type = SRB_SCSI_CMD;
--	atomic_set(&sp->ref_count, 1);
-+
- 	CMD_SP(cmd) = (void *)sp;
- 	sp->free = qla2x00_sp_free_dma;
- 	sp->done = qla2x00_sp_compl;
-@@ -1010,11 +1000,9 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
- 
- 	sp->u.scmd.cmd = cmd;
- 	sp->type = SRB_SCSI_CMD;
--	atomic_set(&sp->ref_count, 1);
- 	CMD_SP(cmd) = (void *)sp;
- 	sp->free = qla2xxx_qpair_sp_free_dma;
- 	sp->done = qla2xxx_qpair_sp_compl;
+-	memset(sp, 0, sizeof(*sp));
+-	sp->fcport = fcport;
+-	sp->iocbs = 1;
+-	sp->vha = vha;
 -	sp->qpair = qpair;
- 
- 	rval = ha->isp_ops->start_scsi_mq(sp);
- 	if (rval != QLA_SUCCESS) {
-@@ -1207,16 +1195,6 @@ qla2x00_wait_for_chip_reset(scsi_qla_host_t *vha)
- 	return return_status;
+-	sp->cmd_type = TYPE_SRB;
+-	INIT_LIST_HEAD(&sp->elem);
+-
+-done:
+-	if (!sp)
++	if (sp)
++		qla2xxx_init_sp(sp, vha, qpair, fcport);
++	else
+ 		QLA_QPAIR_MARK_NOT_BUSY(qpair);
+ 	return sp;
  }
- 
--static int
--sp_get(struct srb *sp)
--{
--	if (!refcount_inc_not_zero((refcount_t *)&sp->ref_count))
--		/* kref get fail */
--		return ENXIO;
--	else
--		return 0;
--}
--
- #define ISP_REG_DISCONNECT 0xffffffffU
- /**************************************************************************
- * qla2x00_isp_reg_stat
-@@ -1272,6 +1250,9 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 	uint64_t lun;
- 	int rval;
- 	struct qla_hw_data *ha = vha->hw;
-+	uint32_t ratov_j;
-+	struct qla_qpair *qpair;
-+	unsigned long flags;
- 
- 	if (qla2x00_isp_reg_stat(ha)) {
- 		ql_log(ql_log_info, vha, 0x8042,
-@@ -1284,11 +1265,27 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 		return ret;
- 
- 	sp = scsi_cmd_priv(cmd);
-+	qpair = sp->qpair;
- 
--	/* Return if the command has already finished. */
--	if (sp_get(sp))
-+	if ((sp->fcport && sp->fcport->deleted) || !qpair)
- 		return SUCCESS;
- 
-+	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
-+	if (sp->completed) {
-+		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
-+		return SUCCESS;
-+	}
-+
-+	if (sp->abort || sp->aborted) {
-+		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
-+		return FAILED;
-+	}
-+
-+	sp->abort = 1;
-+	sp->comp = &comp;
-+	spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
-+
-+
- 	id = cmd->device->id;
- 	lun = cmd->device->lun;
- 
-@@ -1296,47 +1293,37 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 	    "Aborting from RISC nexus=%ld:%d:%llu sp=%p cmd=%p handle=%x\n",
- 	    vha->host_no, id, lun, sp, cmd, sp->handle);
- 
-+	/*
-+	 * Abort will release the original Command/sp from FW. Let the
-+	 * original command call scsi_done. In return, he will wakeup
-+	 * this sleeping thread.
-+	 */
- 	rval = ha->isp_ops->abort_command(sp);
-+
- 	ql_dbg(ql_dbg_taskm, vha, 0x8003,
- 	       "Abort command mbx cmd=%p, rval=%x.\n", cmd, rval);
- 
-+	/* Wait for the command completion. */
-+	ratov_j = ha->r_a_tov/10 * 4 * 1000;
-+	ratov_j = msecs_to_jiffies(ratov_j);
- 	switch (rval) {
- 	case QLA_SUCCESS:
--		/*
--		 * The command has been aborted. That means that the firmware
--		 * won't report a completion.
--		 */
--		sp->done(sp, DID_ABORT << 16);
--		ret = SUCCESS;
--		break;
--	case QLA_FUNCTION_PARAMETER_ERROR: {
--		/* Wait for the command completion. */
--		uint32_t ratov = ha->r_a_tov/10;
--		uint32_t ratov_j = msecs_to_jiffies(4 * ratov * 1000);
--
--		WARN_ON_ONCE(sp->comp);
--		sp->comp = &comp;
- 		if (!wait_for_completion_timeout(&comp, ratov_j)) {
- 			ql_dbg(ql_dbg_taskm, vha, 0xffff,
- 			    "%s: Abort wait timer (4 * R_A_TOV[%d]) expired\n",
--			    __func__, ha->r_a_tov);
-+			    __func__, ha->r_a_tov/10);
- 			ret = FAILED;
- 		} else {
- 			ret = SUCCESS;
- 		}
- 		break;
--	}
- 	default:
--		/*
--		 * Either abort failed or abort and completion raced. Let
--		 * the SCSI core retry the abort in the former case.
--		 */
- 		ret = FAILED;
- 		break;
- 	}
- 
- 	sp->comp = NULL;
--	atomic_dec(&sp->ref_count);
-+
- 	ql_log(ql_log_info, vha, 0x801c,
- 	    "Abort command issued nexus=%ld:%d:%llu -- %x.\n",
- 	    vha->host_no, id, lun, ret);
-@@ -1719,32 +1706,53 @@ static void qla2x00_abort_srb(struct qla_qpair *qp, srb_t *sp, const int res,
- 	scsi_qla_host_t *vha = qp->vha;
- 	struct qla_hw_data *ha = vha->hw;
- 	int rval;
-+	bool ret_cmd;
-+	uint32_t ratov_j;
- 
--	if (sp_get(sp))
-+	if (qla2x00_chip_is_down(vha)) {
-+		sp->done(sp, res);
- 		return;
-+	}
- 
- 	if (sp->type == SRB_NVME_CMD || sp->type == SRB_NVME_LS ||
- 	    (sp->type == SRB_SCSI_CMD && !ha->flags.eeh_busy &&
- 	     !test_bit(ABORT_ISP_ACTIVE, &vha->dpc_flags) &&
- 	     !qla2x00_isp_reg_stat(ha))) {
-+		if (sp->comp) {
-+			sp->done(sp, res);
-+			return;
-+		}
-+
- 		sp->comp = &comp;
-+		sp->abort =  1;
- 		spin_unlock_irqrestore(qp->qp_lock_ptr, *flags);
--		rval = ha->isp_ops->abort_command(sp);
- 
-+		rval = ha->isp_ops->abort_command(sp);
-+		/* Wait for command completion. */
-+		ret_cmd = false;
-+		ratov_j = ha->r_a_tov/10 * 4 * 1000;
-+		ratov_j = msecs_to_jiffies(ratov_j);
- 		switch (rval) {
- 		case QLA_SUCCESS:
--			sp->done(sp, res);
-+			if (wait_for_completion_timeout(&comp, ratov_j)) {
-+				ql_dbg(ql_dbg_taskm, vha, 0xffff,
-+				    "%s: Abort wait timer (4 * R_A_TOV[%d]) expired\n",
-+				    __func__, ha->r_a_tov/10);
-+				ret_cmd = true;
-+			}
-+			/* else FW return SP to driver */
- 			break;
--		case QLA_FUNCTION_PARAMETER_ERROR:
--			wait_for_completion(&comp);
-+		default:
-+			ret_cmd = true;
- 			break;
- 		}
- 
- 		spin_lock_irqsave(qp->qp_lock_ptr, *flags);
--		sp->comp = NULL;
-+		if (ret_cmd && (!sp->completed || !sp->aborted))
-+			sp->done(sp, res);
-+	} else {
-+		sp->done(sp, res);
- 	}
--
--	atomic_dec(&sp->ref_count);
- }
- 
- static void
-@@ -1766,7 +1774,6 @@ __qla2x00_abort_all_cmds(struct qla_qpair *qp, int res)
- 	for (cnt = 1; cnt < req->num_outstanding_cmds; cnt++) {
- 		sp = req->outstanding_cmds[cnt];
- 		if (sp) {
--			req->outstanding_cmds[cnt] = NULL;
- 			switch (sp->cmd_type) {
- 			case TYPE_SRB:
- 				qla2x00_abort_srb(qp, sp, res, &flags);
-@@ -1788,6 +1795,7 @@ __qla2x00_abort_all_cmds(struct qla_qpair *qp, int res)
- 			default:
- 				break;
- 			}
-+			req->outstanding_cmds[cnt] = NULL;
- 		}
- 	}
- 	spin_unlock_irqrestore(qp->qp_lock_ptr, flags);
 -- 
 2.20.1
 
