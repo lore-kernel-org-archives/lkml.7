@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD4BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCBC2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657E121739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519150;
-	bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
+	s=default; t=1576519153;
+	bh=RiHveqCWVdP3RSPZSPGetwtQ5nykNe6+tU/V2tKOyhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/eBpig5iZFvA/uP1giKv300BFG06iknlgpr3LDYCZGu3FT5OOiAfmynUQk5uq0nj
-	 4x1Ifdvzzx3nadut0VOl4P9EOdSLs21TLqFS2ia96utzCXle7t6zIdofZ/yGgQYL8M
-	 PGEVM19f0gYJozCMHGE2W8y+O4KXfJ1lpbqAtbK4=
+	b=fpxN8JIsDjANWvYa0rDhda4xBF3g9VgWC6l524ZnaPKnHWeFHvKTtd8Vu2C7chPvz
+	 QWuke3/WUeP9qqGi8it/HR6PwcAUuyfMZBReqTuxQxzjutGNN/ktTkWDSKpLhCo65y
+	 041Y41JFZiG7vj09bYcW+2Eoopb1gvbymdy6w2do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfLPR7J (ORCPT
+        id S1728576AbfLPR7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfLPR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:59 -0500
+        id S1728687AbfLPR7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C005C21739;
-        Mon, 16 Dec 2019 17:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3580B2166E;
+        Mon, 16 Dec 2019 17:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519139;
-        bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
+        s=default; t=1576519141;
+        bh=RiHveqCWVdP3RSPZSPGetwtQ5nykNe6+tU/V2tKOyhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttPNKmEvoXbOY/pQWpOcvEoLtzCpHkH/mQeCultiaJ+LPQ9AfNrkrQjk0K7rYMJUT
-         Ce0cC+5gSccTC6EWrtBIHW3Pz8LWwIv+PhwwfA1Evyv+u56yu9POcZAlAVbPbDYh7U
-         enfDuSdAtAuDdjNxPwx7KvRJOxASeI00s1vh2t08=
+        b=qDI9ikFRvL03rNpr+h407CJQRI44qUyWDjVi6d8GELg23IdXwY3Dk5RcCdySoXvGD
+         CqHIs5o8LjhXXOaw1CqFArxnP/cr3PVE2c/+cyEGBPrD42ME6hQi0/kcQiKe4yOZ3t
+         x4cR68Tt/89r5WIpKdaGdeAw52NxA2ePM3Kt9A9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 211/267] cpuidle: Do not unset the driver if it is there already
-Date:   Mon, 16 Dec 2019 18:48:57 +0100
-Message-Id: <20191216174914.109393338@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 212/267] intel_th: Fix a double put_device() in error path
+Date:   Mon, 16 Dec 2019 18:48:58 +0100
+Message-Id: <20191216174914.170497116@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,58 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
+commit 512592779a337feb5905d8fcf9498dbf33672d4a upstream.
 
-Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
-a driver different from drv already and, if so, return -EBUSY before
-updating any cpuidle_drivers per-CPU pointers.
+Commit a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
+factored out intel_th_subdevice_alloc() from intel_th_populate(), but got
+the error path wrong, resulting in two instances of a double put_device()
+on a freshly initialized, but not 'added' device.
 
-Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
-Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-[ rjw: Subject & changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fix this by only doing one put_device() in the error path.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
+Reported-by: Wen Yang <wenyang@linux.alibaba.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.14+
+Link: https://lore.kernel.org/r/20191120130806.44028-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpuidle/driver.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/hwtracing/intel_th/core.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -62,24 +62,23 @@ static inline void __cpuidle_unset_drive
-  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
-  * @drv: a valid pointer to a struct cpuidle_driver
-  *
-- * For each CPU in the driver's cpumask, unset the registered driver per CPU
-- * to @drv.
-- *
-- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
-+ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
-+ * different from drv already.
-  */
- static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- {
- 	int cpu;
+--- a/drivers/hwtracing/intel_th/core.c
++++ b/drivers/hwtracing/intel_th/core.c
+@@ -628,10 +628,8 @@ intel_th_subdevice_alloc(struct intel_th
+ 	}
  
- 	for_each_cpu(cpu, drv->cpumask) {
-+		struct cpuidle_driver *old_drv;
- 
--		if (__cpuidle_get_cpu_driver(cpu)) {
--			__cpuidle_unset_driver(drv);
-+		old_drv = __cpuidle_get_cpu_driver(cpu);
-+		if (old_drv && old_drv != drv)
- 			return -EBUSY;
--		}
-+	}
- 
-+	for_each_cpu(cpu, drv->cpumask)
- 		per_cpu(cpuidle_drivers, cpu) = drv;
+ 	err = intel_th_device_add_resources(thdev, res, subdev->nres);
+-	if (err) {
+-		put_device(&thdev->dev);
++	if (err)
+ 		goto fail_put_device;
 -	}
  
- 	return 0;
- }
+ 	if (subdev->type == INTEL_TH_OUTPUT) {
+ 		thdev->dev.devt = MKDEV(th->major, th->num_thdevs);
+@@ -644,10 +642,8 @@ intel_th_subdevice_alloc(struct intel_th
+ 	}
+ 
+ 	err = device_add(&thdev->dev);
+-	if (err) {
+-		put_device(&thdev->dev);
++	if (err)
+ 		goto fail_free_res;
+-	}
+ 
+ 	/* need switch driver to be loaded to enumerate the rest */
+ 	if (subdev->type == INTEL_TH_SWITCH && !req) {
 
 
