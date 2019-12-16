@@ -2,121 +2,108 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DD9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D63C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF9A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMxXZ1Nt"
+	by mail.kernel.org (Postfix) with ESMTP id A1167206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfLPRiI (ORCPT
+        id S1726546AbfLPRjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:38:08 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41344 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfLPRiH (ORCPT
+        Mon, 16 Dec 2019 12:39:25 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:42561 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfLPRjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:38:07 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so8343193wrw.8;
-        Mon, 16 Dec 2019 09:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=YvwLWoXK+n4PBW3H7wU0kExV6V4+NJ7KeyyLrWDeEGo=;
-        b=CMxXZ1NtTTIx6YqNzhPhEugHnuxKG56T7KZImLeaVY633que16ESIFstZ5I5qOYHhL
-         mJ7S7DANV3z2+N8aIcPkPIQB46EqTfDUL9ZXVXqMez4Ru7ocJDdqHz9GrjGF3izni233
-         QgAUjsd7HbFMKooEmkVXlSt5/bVBHDfqzna1pD9H2EVB/XhFRRJcjH69ZuLYs99AbaAa
-         1ue9SOV0Mp8dDSU2cPZP2B8PKt0jKPRktpKDvrNq1QuJKsNBajFlxYfzekAjDbr6M0YT
-         RGF6cSZM0VWcXYij016AKa7TtCpqjW03VbTZs7TCx59aF+BZcdP+rMavzeZWolx6oXXG
-         Prhw==
+        Mon, 16 Dec 2019 12:39:24 -0500
+Received: by mail-pj1-f67.google.com with SMTP id o11so3273841pjp.9;
+        Mon, 16 Dec 2019 09:39:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=YvwLWoXK+n4PBW3H7wU0kExV6V4+NJ7KeyyLrWDeEGo=;
-        b=g47nUDj9YOO32CzDLyneYl6LmMJ/CHn2bwSuCfKMrLEn5lKvtE5T8OZT3NmPc/W23f
-         36FcOYfdjuGZVE0gryy7MpNqfB2/8ZefhsVk/F1cGbdm+Pla2abKIO1N1JpHcJCHFfG2
-         6w/UPG8LjINISsR104CPrsK2QQGfAmw4dv7/aLhuHX01zUrowPZbnR2VnhKUyKUhu6qF
-         8BCFJ37pCHaqu4XDdgMG53yfJ6gYfIKFm42OGKgzXbTpD2sFTsgUYZAv+3Xu4RaibGWg
-         6NoDmJzgyT2wj+Eaq6du4Fzk4PPhSp4k6xcNUW3iCz//OaI+X9tFPcH4Hix9dEDD3IW0
-         Gvqw==
-X-Gm-Message-State: APjAAAW4UYbTCuiqU+gsYkykhTpT6jHRat4wXhYw0jTQ9Qu//b0c4fCD
-        6nvUR/QoaMBGhM1LW1rl/26Np6FRLdk=
-X-Google-Smtp-Source: APXvYqyiSjvep2p8o7WWZtUnyRyUhcxLDzNoUHzUhtMm9Jj/4aJftF26uKd+u5BhlkfcXe7OHM7feg==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr33137175wrs.143.1576517884942;
-        Mon, 16 Dec 2019 09:38:04 -0800 (PST)
-Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id v8sm22059274wrw.2.2019.12.16.09.38.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 09:38:04 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Mon, 16 Dec 2019 17:38:03 -0000
-Message-ID: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GAc742TonjZK6ZRxRus2d4c7ISXJOCiXeWdsz7woKMk=;
+        b=hXKb4kC3sF/z6xC09YeqWx+yKdozq1VG300IAYN5ZeLIg8KCLuXU6EOw0K1T3HJpAE
+         wNmOtthd6pQi6t3C2chuFMzl5sv5ZM9KBVI1Acx2o4xE4bfPrKVMPtgf905E+tO1STuX
+         rUHBctl4CGuOyJhyQldbJKaRouEq30CO2bQxyAJJ/9HQ961zJSMscSxmF3ACPSkdfVy0
+         JYWfV+1tjdktV9e7NtSqP+r8GtKr3h6pko3TVctGPqh7pYLqpgsJadv2B9x70zAy3P8K
+         589xf+6PzVQzjdmHgLpa8I454F6yW3jP76n+2Yj7blXjxK0Bg1g8B/DRhZ2r9wpHYyLk
+         SSwA==
+X-Gm-Message-State: APjAAAV+GYgSBUQuOh+hz+dVPtsBQGw88BMMwt6D6gGqmz/q8NQvubu0
+        lwfppIksjKpaIk24TUp134LgAZW69+0=
+X-Google-Smtp-Source: APXvYqyEDmrntW66IBtNafJyXSYOxZ/3UEVWMFZFf4MtqKJAJOK+JRyBYqfiylm8i0Nmkz98dUCldA==
+X-Received: by 2002:a17:902:d907:: with SMTP id c7mr17395567plz.40.1576517963039;
+        Mon, 16 Dec 2019 09:39:23 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id 78sm22630854pfu.65.2019.12.16.09.39.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 09:39:22 -0800 (PST)
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+To:     cang@codeaurora.org
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
+Date:   Mon, 16 Dec 2019 09:39:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdW0MytZJzbanD9yTZ+e0zLvCdtxJA==
-Content-Language: en-gb
+In-Reply-To: <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+On 12/16/19 6:31 AM, cang@codeaurora.org wrote:
+> As SCSI host is allocated in ufshcd_platform_init() during platform
+> drive probe, it is much more appropriate if platform driver calls
+> ufshcd_dealloc_host() in their own drv->remove() path. How do you
+> think if I change it as below? If it is OK to you, please ignore my
+> previous mails.
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 3d4582e..ea45756 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device 
+> *pdev)
+> 
+>          pm_runtime_get_sync(&(pdev)->dev);
+>          ufshcd_remove(hba);
+> +       ufshcd_dealloc_host(hba);
+>          return 0;
+>   }
 
-Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-NFS4 lease renewal, which is not compliant with the NFS4 specification.
-This can result in a lease being expired by NFS server which will then
-return NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+Hi Can,
 
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
----
- fs/nfs/nfs4proc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Apparently some UFS drivers call ufshcd_remove() only and others (PCIe) 
+call both ufshcd_remove() and ufshcd_dealloc_host(). I think that the 
+above change will cause trouble for the PCIe driver unless the 
+ufshcd_dealloc_host() call is removed from ufshcd_pci_remove().
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 76d3716..aad65dd 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5019,16 +5019,19 @@ static int nfs4_do_fsinfo(struct nfs_server *server,
-struct nfs_fh *fhandle, str
- 	struct nfs4_exception exception = {
- 		.interruptible = true,
- 	};
--	unsigned long now = jiffies;
-+	unsigned long last_renewal = jiffies;
- 	int err;
- 
- 	do {
- 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
- 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
- 		if (err == 0) {
-+			/* no implicit lease renewal allowed here */
-+			if (server->nfs_client->cl_last_renewal != 0)
-+				last_renewal =
-server->nfs_client->cl_last_renewal;
- 			nfs4_set_lease_period(server->nfs_client,
- 					fsinfo->lease_time * HZ,
--					now);
-+					last_renewal);
- 			break;
- 		}
- 		err = nfs4_handle_exception(server, err, &exception);
--- 
-1.8.3.1
+Thanks,
 
-
+Bart.
