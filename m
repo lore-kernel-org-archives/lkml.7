@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E55C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B352C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF7A206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244CE20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518960;
-	bh=zeWayG2rFBqR15CBczCjLXs1WpxzR0vm/6Gu3sST1iA=;
+	s=default; t=1576518965;
+	bh=ZR19IDXpPk3hAdCKhmbkx3xf7pwKHMAIoGz17JSoSRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0THglYDJZ1+uLN9+Wykxrtwn5o3P+QCjuDqJj7WmrgB7ib7zJqubSini133BqgUGE
-	 TBM8k0fuT0tZsFla490wA8VWaKC2jbe3r1RTOoeQFkSzlUgeulXJgwnBTUOcMdaxz/
-	 9ecuX0zfM46jdG5Ib8SzusA1ypuLiG4UiXjBu/As=
+	b=XHvN6D0e2kOUcYc4dkXciZddv2uLW++toHAIoVuiwlmfDe3yU9QyWpB/P1nFfLUg4
+	 x5hbnRXf43kbqk2GeSnMtWzP6JAwVcGVowfih+AhbsErkpc6y9HjSKe/NwrFHWcMk5
+	 pZj0xT24r3VKtDo3ntOBhZBcyG25rA9+5YPZYrrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfLPRz6 (ORCPT
+        id S1728151AbfLPR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbfLPRzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:55 -0500
+        id S1728132AbfLPR4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC960205ED;
-        Mon, 16 Dec 2019 17:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECCB205ED;
+        Mon, 16 Dec 2019 17:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518954;
-        bh=zeWayG2rFBqR15CBczCjLXs1WpxzR0vm/6Gu3sST1iA=;
+        s=default; t=1576518959;
+        bh=ZR19IDXpPk3hAdCKhmbkx3xf7pwKHMAIoGz17JSoSRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1f8i4Qdey3gWlMLYan0XuPaz+tY1gAu769cTWoUWtpCgdn+oqVUAlYL51amc9Spd/
-         WruhV7uWMLj5YXYIIxvCtuBCYkp0QbwV8s0cSdWQvwQ/mwxPfMHTvQv86xX9EM/xsV
-         xtdkYidm42KyriPb+QNsvBlXmcYJIJUp4iMZEhus=
+        b=YoH94wNBDeEq2FjyVDw0+jTDMp7/nB8D43WmZ07KjfHTqgilqFK89DKK08PLtA64p
+         1qwbzvU6EKq4G3M0KA1/U7cNwfq0mzo2qWyKUPvKc4jM8qaq9tQRYcXyH6J/zK17mb
+         hHGqwZMRhYwz9nfFGRYCSgy65Djo3MH7Okhn4n5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.14 134/267] CIFS: Fix SMB2 oplock break processing
-Date:   Mon, 16 Dec 2019 18:47:40 +0100
-Message-Id: <20191216174907.886539684@linuxfoundation.org>
+        stable@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        David Miller <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 4.14 136/267] can: slcan: Fix use-after-free Read in slcan_open
+Date:   Mon, 16 Dec 2019 18:47:42 +0100
+Message-Id: <20191216174908.362665521@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,67 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit fa9c2362497fbd64788063288dc4e74daf977ebb upstream.
+commit 9ebd796e24008f33f06ebea5a5e6aceb68b51794 upstream.
 
-Even when mounting modern protocol version the server may be
-configured without supporting SMB2.1 leases and the client
-uses SMB2 oplock to optimize IO performance through local caching.
+Slcan_open doesn't clean-up device which registration failed from the
+slcan_devs device list. On next open this list is iterated and freed
+device is accessed. Fix this by calling slc_free_netdev in error path.
 
-However there is a problem in oplock break handling that leads
-to missing a break notification on the client who has a file
-opened. It latter causes big latencies to other clients that
-are trying to open the same file.
+Driver/net/can/slcan.c is derived from slip.c. Use-after-free error was
+identified in slip_open by syzboz. Same bug is in slcan.c. Here is the
+trace from the Syzbot slip report:
 
-The problem reproduces when there are multiple shares from the
-same server mounted on the client. The processing code tries to
-match persistent and volatile file ids from the break notification
-with an open file but it skips all share besides the first one.
-Fix this by looking up in all shares belonging to the server that
-issued the oplock break.
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0x197/0x210 lib/dump_stack.c:118
+print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+__kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+kasan_report+0x12/0x20 mm/kasan/common.c:634
+__asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+sl_sync drivers/net/slip/slip.c:725 [inline]
+slip_open+0xecd/0x11b7 drivers/net/slip/slip.c:801
+tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
+tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
+tiocsetd drivers/tty/tty_io.c:2334 [inline]
+tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
+vfs_ioctl fs/ioctl.c:46 [inline]
+file_ioctl fs/ioctl.c:509 [inline]
+do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+__do_sys_ioctl fs/ioctl.c:720 [inline]
+__se_sys_ioctl fs/ioctl.c:718 [inline]
+__x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: ed50e1600b44 ("slcan: Fix memory leak in error path")
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: David Miller <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/can/slcan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -622,10 +622,10 @@ smb2_is_valid_oplock_break(char *buffer,
- 	spin_lock(&cifs_tcp_ses_lock);
- 	list_for_each(tmp, &server->smb_ses_list) {
- 		ses = list_entry(tmp, struct cifs_ses, smb_ses_list);
-+
- 		list_for_each(tmp1, &ses->tcon_list) {
- 			tcon = list_entry(tmp1, struct cifs_tcon, tcon_list);
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -613,6 +613,7 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	slc_free_netdev(sl->dev);
+ 	free_netdev(sl->dev);
  
--			cifs_stats_inc(&tcon->stats.cifs_stats.num_oplock_brks);
- 			spin_lock(&tcon->open_file_lock);
- 			list_for_each(tmp2, &tcon->openFileList) {
- 				cfile = list_entry(tmp2, struct cifsFileInfo,
-@@ -637,6 +637,8 @@ smb2_is_valid_oplock_break(char *buffer,
- 					continue;
- 
- 				cifs_dbg(FYI, "file id match, oplock break\n");
-+				cifs_stats_inc(
-+				    &tcon->stats.cifs_stats.num_oplock_brks);
- 				cinode = CIFS_I(d_inode(cfile->dentry));
- 				spin_lock(&cfile->file_info_lock);
- 				if (!CIFS_CACHE_WRITE(cinode) &&
-@@ -669,9 +671,6 @@ smb2_is_valid_oplock_break(char *buffer,
- 				return true;
- 			}
- 			spin_unlock(&tcon->open_file_lock);
--			spin_unlock(&cifs_tcp_ses_lock);
--			cifs_dbg(FYI, "No matching file for oplock break\n");
--			return true;
- 		}
- 	}
- 	spin_unlock(&cifs_tcp_ses_lock);
+ err_exit:
 
 
