@@ -2,123 +2,218 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0B3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64AAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022E920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A964024655
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IAdQZp4W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uc70yHje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfLPVgr (ORCPT
+        id S1727549AbfLPViE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:36:47 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:51076 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfLPVgp (ORCPT
+        Mon, 16 Dec 2019 16:38:04 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41377 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfLPViE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:36:45 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AF8B32010ACB;
-        Mon, 16 Dec 2019 13:36:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AF8B32010ACB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576532204;
-        bh=jjiUXybQ95W56LiGa6HusxKXrrEr0qSTLsY8XbVtvlA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IAdQZp4WF0DhoUzg462kj1q95OXjIIr7Pgt6M/8Pq9rp5nu4jZFhTfY3g2TEG++Ol
-         rdBvXkgMX1ZADO99zv65d1rBrdDh+dFTtjeYuW6mOPzmW7FiTSgn4KHh0P3/iewdIZ
-         L1qovoQf4wDWTkxFy454hwG87e/ffY/XcmLkLClE=
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
- <20191213171827.28657-3-nramas@linux.microsoft.com>
- <1576257955.8504.20.camel@HansenPartnership.com>
- <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
- <1576423353.3343.3.camel@HansenPartnership.com>
- <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
- <1576479187.3784.1.camel@HansenPartnership.com>
- <8844a360-6d1e-1435-db7c-fd7739487168@linux.microsoft.com>
- <1576531022.3365.6.camel@HansenPartnership.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <35a6c241-9a46-2657-51d1-0c04d32a9fae@linux.microsoft.com>
-Date:   Mon, 16 Dec 2019 13:37:11 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 16:38:04 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so6255238eds.8;
+        Mon, 16 Dec 2019 13:38:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xNgDhHMX6rfsJfALYURvNY0HaS64TFbVe1sH5c4XLy0=;
+        b=uc70yHje3PX7rHprLzhleCJeuyWvcKcKUEcg+dsD26CZ7dRZqFAef1Rjuc0npPAZmc
+         2ogAB/NP2+dfVmIj1gWH8FyanDg0kkhTI2nMZdltE1PG/Xh7MYc+QPF8+GT2WmlDNNeD
+         /sqyoyCqWY/O4erv4HceYyE7EuZs5eZVjp8eh96Mnfei6d5NOAY9WvmqZB822bjhlNaW
+         jmFwZLzxK0CCsdp5/xZysiW2srRGIk6LJRNeSD4lTNmF96yocsCi9uK9S7XxUkscwzcH
+         w3ZxKPll83oqBmpW0PHvKJGL1lunhQ2WAx32W8N1zmPaMybbaZm6ocrlK1o+k+mZMwR8
+         g/hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xNgDhHMX6rfsJfALYURvNY0HaS64TFbVe1sH5c4XLy0=;
+        b=XvnnJL5LraPUNJNiNinbFPX3G/449cMhw7EDKycXwY21ifPoTbcu/YN2ax4N6oDJEM
+         +yi44ku1F4KuM4D/Ac/mRWyRGyxWgOSJzCYI7NSJOiqx1LH9bvlb2AhcT4gMtRLqqZRH
+         d+F08IamIc4HjmzHRvRnfOR5p8Tb6PRY7uICSDBQpxbXeHVzXtrx1WxLrJJMkktPBHRd
+         uabOEPnHnjBrGyE3kRf3SXn1YEdCK4eUs+X3ZF3WiqMAqifHP0pusVnUMkPTVytBsR02
+         3QsjV2GtqWjVA3i17urm471zRjM/GNBxDXLVhk+QKo+UqODNQJmYR7grI9w1MBomETXW
+         zbAw==
+X-Gm-Message-State: APjAAAV99Ocj2Kyrlnundy9mzKx6BXP9Bib2YFAYE3vJtN+4fcJJ+YI3
+        kuJzlvldwzE3cSwyb46jpnc3LK4hDRuA9AM5MZQ=
+X-Google-Smtp-Source: APXvYqzgDmvTKiZjCyLiUi5wt8/nJwvvzadxkdlzSuUxjzZLdz7Wn4PWxPS+xqEDrQMe2JheZ0j0Z9Xoha3MAyre3tA=
+X-Received: by 2002:a17:906:3052:: with SMTP id d18mr1316604ejd.86.1576532281609;
+ Mon, 16 Dec 2019 13:38:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1576531022.3365.6.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191216183248.16309-1-f.fainelli@gmail.com>
+In-Reply-To: <20191216183248.16309-1-f.fainelli@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 16 Dec 2019 23:37:50 +0200
+Message-ID: <CA+h21hru33CpK-DOSnsSx62BEbteCYAePVjViKg4M68NAkgk4w@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: dsa: Make PHYLINK related function static again
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 16 Dec 2019 at 20:32, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Commit 77373d49de22 ("net: dsa: Move the phylink driver calls into
+> port.c") moved and exported a bunch of symbols, but they are not used
+> outside of net/dsa/port.c at the moment, so no reason to export them.
+>
+> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-On 12/16/2019 1:17 PM, James Bottomley wrote:
-> On Mon, 2019-12-16 at 11:20 -0800, Lakshmi Ramasubramanian wrote:
->>    => If the flag is false, mutex is taken and the flag is checked
->> again. If the flag changed from false to true between the above two
->> tests, that means another thread had raced to call
->> ima_process_queued_keys() and has  processed the queued keys. So
->> again, no further action is required.
-> 
-> This is the problem: in the race case you may still be adding keys to
-> the queue after the other thread has processed it. Those keys won't get
-> processed because the flag is now false in the post check so the
-> current thread won't process them either.
-> 
-> James
-> 
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
 
-I am not sure how a key could get added to the queue after another 
-thread has processed the queued keys.
-
-The flag changes from false to true only once - in 
-ima_process_queued_keys(). This change is done under the lock. The 
-thread that makes this change will process all the queued keys.
-
-Once the above change is done, ima_process_keys flag will never become 
-false again.
-
-Another thread that is trying to queue the key will wait on the mutex - 
-in ima_queue_key(). If this thread finds the flag is true after taking 
-the mutex, it will NOT queue the key.
-
-Please see my explanation below:
-
-
-"READER" functions: ima_post_key_create_or_update() and ima_queue_key()
-***********************************************************************
-In ima_post_key_create_or_update() the flag is checked first without the 
-mutex taken:
-
-  => If the flag is true, then there is no need to queue the key and it 
-can be processed immediately.
-
-     This condition means that either queued keys have already been 
-processed OR there is another thread in the middle of processing queued 
-keys. In both these conditions, the new key should NOT be queued, but 
-processed immediately.
-
-  => If the flag is false, ima_queue_key() is called. In this function, 
-the mutex is taken and flag checked again.
-
-Say, the flag changed from false to true at this point, the key will NOT 
-be queued. ima_queue_key() will return false and in response 
-ima_post_key_create_or_update() will process the key immediately.
-
-But if the flag is still false, the key will be queued by 
-ima_queue_key() and will be processed later.
+>  net/dsa/dsa_priv.h | 16 ----------------
+>  net/dsa/port.c     | 38 ++++++++++++++++----------------------
+>  2 files changed, 16 insertions(+), 38 deletions(-)
+>
+> diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+> index 2dd86d9bcda9..09ea2fd78c74 100644
+> --- a/net/dsa/dsa_priv.h
+> +++ b/net/dsa/dsa_priv.h
+> @@ -150,22 +150,6 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
+>  int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
+>  int dsa_port_link_register_of(struct dsa_port *dp);
+>  void dsa_port_link_unregister_of(struct dsa_port *dp);
+> -void dsa_port_phylink_validate(struct phylink_config *config,
+> -                              unsigned long *supported,
+> -                              struct phylink_link_state *state);
+> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
+> -                                       struct phylink_link_state *state);
+> -void dsa_port_phylink_mac_config(struct phylink_config *config,
+> -                                unsigned int mode,
+> -                                const struct phylink_link_state *state);
+> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config);
+> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
+> -                                   unsigned int mode,
+> -                                   phy_interface_t interface);
+> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
+> -                                 unsigned int mode,
+> -                                 phy_interface_t interface,
+> -                                 struct phy_device *phydev);
+>  extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
+>
+>  /* slave.c */
+> diff --git a/net/dsa/port.c b/net/dsa/port.c
+> index 46ac9ba21987..ffb5601f7ed6 100644
+> --- a/net/dsa/port.c
+> +++ b/net/dsa/port.c
+> @@ -415,9 +415,9 @@ static struct phy_device *dsa_port_get_phy_device(struct dsa_port *dp)
+>         return phydev;
+>  }
+>
+> -void dsa_port_phylink_validate(struct phylink_config *config,
+> -                              unsigned long *supported,
+> -                              struct phylink_link_state *state)
+> +static void dsa_port_phylink_validate(struct phylink_config *config,
+> +                                     unsigned long *supported,
+> +                                     struct phylink_link_state *state)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct dsa_switch *ds = dp->ds;
+> @@ -427,10 +427,9 @@ void dsa_port_phylink_validate(struct phylink_config *config,
+>
+>         ds->ops->phylink_validate(ds, dp->index, supported, state);
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_validate);
+>
+> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
+> -                                       struct phylink_link_state *state)
+> +static void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
+> +                                              struct phylink_link_state *state)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct dsa_switch *ds = dp->ds;
+> @@ -444,11 +443,10 @@ void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
+>         if (ds->ops->phylink_mac_link_state(ds, dp->index, state) < 0)
+>                 state->link = 0;
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_pcs_get_state);
+>
+> -void dsa_port_phylink_mac_config(struct phylink_config *config,
+> -                                unsigned int mode,
+> -                                const struct phylink_link_state *state)
+> +static void dsa_port_phylink_mac_config(struct phylink_config *config,
+> +                                       unsigned int mode,
+> +                                       const struct phylink_link_state *state)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct dsa_switch *ds = dp->ds;
+> @@ -458,9 +456,8 @@ void dsa_port_phylink_mac_config(struct phylink_config *config,
+>
+>         ds->ops->phylink_mac_config(ds, dp->index, mode, state);
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_config);
+>
+> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
+> +static void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct dsa_switch *ds = dp->ds;
+> @@ -470,11 +467,10 @@ void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
+>
+>         ds->ops->phylink_mac_an_restart(ds, dp->index);
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_an_restart);
+>
+> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
+> -                                   unsigned int mode,
+> -                                   phy_interface_t interface)
+> +static void dsa_port_phylink_mac_link_down(struct phylink_config *config,
+> +                                          unsigned int mode,
+> +                                          phy_interface_t interface)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct phy_device *phydev = NULL;
+> @@ -491,12 +487,11 @@ void dsa_port_phylink_mac_link_down(struct phylink_config *config,
+>
+>         ds->ops->phylink_mac_link_down(ds, dp->index, mode, interface);
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_down);
+>
+> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
+> -                                 unsigned int mode,
+> -                                 phy_interface_t interface,
+> -                                 struct phy_device *phydev)
+> +static void dsa_port_phylink_mac_link_up(struct phylink_config *config,
+> +                                        unsigned int mode,
+> +                                        phy_interface_t interface,
+> +                                        struct phy_device *phydev)
+>  {
+>         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
+>         struct dsa_switch *ds = dp->ds;
+> @@ -509,7 +504,6 @@ void dsa_port_phylink_mac_link_up(struct phylink_config *config,
+>
+>         ds->ops->phylink_mac_link_up(ds, dp->index, mode, interface, phydev);
+>  }
+> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_up);
+>
+>  const struct phylink_mac_ops dsa_port_phylink_mac_ops = {
+>         .validate = dsa_port_phylink_validate,
+> --
+> 2.17.1
+>
