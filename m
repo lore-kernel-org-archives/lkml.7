@@ -2,94 +2,222 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0AFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E039C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53096207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576492168;
-	bh=h4X6AHfGqH1fcCYhsVZLrhBRQ9DB10RQK53ZRJEGw10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A2LsrPNX/BW6Wusnv3xV9rkHkmwF6uPuy8NqtBFtmS2gUD3twQTlmxICbV76eOZl7
-	 uLqJBwKBec7mtzEBDw9UvP6Wl0c3ActWn669hlLyvZDkE8z5MMcX9dwqACgyfrrREx
-	 zFGhML3dwNcCtD2fEEmtDQ3QM9NQNA0LLFXN+mKs=
+	by mail.kernel.org (Postfix) with ESMTP id 625A620725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="dFQ0qLp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLPK31 (ORCPT
+        id S1727524AbfLPK36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:29:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfLPK30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:29:26 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        Mon, 16 Dec 2019 05:29:58 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:52467 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfLPK36 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:29:58 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8D9206CB;
-        Mon, 16 Dec 2019 10:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576492166;
-        bh=h4X6AHfGqH1fcCYhsVZLrhBRQ9DB10RQK53ZRJEGw10=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IvVcuSHVLYGMmXZVmzWjp42//mldx+pzhw6/n2ye4z+xgib3qOgAuff+SDPb42z/R
-         wfXre21OOpLxB2OAOi4I2vyhOQHvnESfd1wKswN24x4L31iE3E04U4ynLnDGD25sbv
-         V042YBfc8kD87odpp3NQW1egVmAu9toKR/kAdgAU=
-Date:   Mon, 16 Dec 2019 11:29:23 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 018D122FE5;
+        Mon, 16 Dec 2019 11:29:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1576492195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t4kAjv7YRRzabrvv/6fAB8ptr1Y7vtGS1qtFHYNcntg=;
+        b=dFQ0qLp8tLxtrzaf8lnp3rj7WZ0UbGT8K1ogwps/IdyDRNOfTy9wV2f6wyfjoxFxxBO/c7
+        F3xUHOZSXl4Dh67exbCyhfjlR7Ge9LFFIZ3rD58nk6ZvgmLXRbpm9zCtwvaBhEJUNFMkFB
+        cFG3ygRFOlPb+gBH5n7LRcCh0BstI9w=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Dec 2019 11:29:52 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 09/14] ARM: dts: sun8i: r40: Add I2C pinmux options
-Message-ID: <20191216102923.nezpk2cqastyfpsd@gilmour.lan>
-References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-10-wens@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6lkmrciahlk4lydl"
-Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-10-wens@kernel.org>
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
+In-Reply-To: <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
+References: <20191214191943.3679-1-michael@walle.cc>
+ <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
+Message-ID: <af3692dba69e85fa8136ab3d170bef39@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 018D122FE5
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         NEURAL_HAM(-0.00)[-0.678];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---6lkmrciahlk4lydl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am 2019-12-16 09:54, schrieb Vignesh Raghavendra:
+> Hi,
+> 
+> On 15/12/19 12:49 am, Michael Walle wrote:
+>> Document the new flag "no-unlock".
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>> Does the property need a prefix? I couldn't find any hint. If so, what
+>> should it be? "m25p," or "spi-nor," ?
+>> 
+>>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt 
+>> b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> index f03be904d3c2..2d305c893ed7 100644
+>> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> @@ -78,6 +78,12 @@ Optional properties:
+>>  		   cannot reboot properly if the flash is left in the "wrong"
+>>  		   state. This boolean flag can be used on such systems, to
+>>  		   denote the absence of a reliable reset mechanism.
+>> +- no-unlock : By default, linux unlocks the whole flash because there
+>> +		   are legacy flash devices which are locked by default
+>> +		   after reset. Set this flag if you don't want linux to
+>> +		   unlock the whole flash automatically. In this case you
+>> +		   can control the non-volatile bits by the
+>> +		   flash_lock/flash_unlock tools.
+>> 
+> 
+> Current SPI NOR framework unconditionally unlocks entire flash which
+> I agree is not the best thing to do, but I don't think we need
+> new DT property here. MTD cmdline partitions and DT partitions already
+> provide a way to specify that a partition should remain locked[1][2]
 
-On Mon, Dec 16, 2019 at 12:59:19AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The R40 has five I2C controllers. Currently only I2C0 has its pinmux
-> option defined.
->
-> Add the options for the remaining four, and set them as the default,
-> since each controller has only one possible pinmux configuration.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+I know that the MTD layer has the same kind of unlocking. But that
+unlocking is done on a per mtd partition basis. Eg. consider something
+like the following
 
-Applied, thanks!
-Maxime
+  mtd1 bootloader  (locked)
+  mtd2 firmware    (locked)
+  mtd3 kernel
+  mtd4 environment
 
---6lkmrciahlk4lydl
-Content-Type: application/pgp-signature; name="signature.asc"
+Further assume, that the end of mtd2 aligns with one of the possible
+locking areas which are supported by the flash chip. Eg. the first 
+quarter.
 
------BEGIN PGP SIGNATURE-----
+The mtd layer would do two (or four, if "lock" property is set) unlock()
+calls, one for mtd1 and one for mtd2.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdcgwAKCRDj7w1vZxhR
-xaLdAP9tc7Nm4GYFEAyZVooyptZNGjG4NOL1T9S7EiBgQ3Pz1AEAtO6crXWEEVFr
-ich4eYyroylJ+xW31k+yFo8klXVkSwg=
-=rMnm
------END PGP SIGNATURE-----
+My point here is, that the mtd partitions doesn't always map to the
+locking regions of the SPI flash (at least if the are not merged 
+together).
 
---6lkmrciahlk4lydl--
+> SPI NOR framework should instead set MTD_POWERUP_LOCK flags in 
+> mtd->flags
+> for flash devices that power up with lock bits set. And MTD core will
+> take care of unlocking flash regions while taking into account 
+> partition
+> flags defined by user as part of MTD partitions defined in DT or
+> via cmdline args.
+> 
+> So that change should to be set MTD_POWERUP_LOCK for
+> in SPI NOR core. Can you check below[3] (untested) diff helps?
+> This should prevent unlocking partitions that are to remain locked
+> as specified in DT/cmdline
+
+As this change may help my use-case, unlocking is skipped because the
+partitions are marked as read only; I fear that the old behaviour will
+change. See above.
+
+Mhh. thinking more about it, doesn't the calls also wear out the
+non-volatile bits in the NOR flash?
+
+In any case, I'll try your suggestion.
+
+-michael
+
+> 
+> [1] Documentation/devicetree/bindings/mtd/partition.txt
+> [2] drivers/mtd/parsers/cmdlinepart.c (see "lk" parameter)
+> 
+> [3]
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c 
+> b/drivers/mtd/spi-nor/spi-nor.c
+> index 1082b6bb1393..6adb950849f6 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -4914,23 +4914,6 @@ static int spi_nor_quad_enable(struct spi_nor 
+> *nor)
+>  	return nor->params.quad_enable(nor);
+>  }
+> 
+> -/**
+> - * spi_nor_unlock_all() - Unlocks the entire flash memory array.
+> - * @nor:	pointer to a 'struct spi_nor'.
+> - *
+> - * Some SPI NOR flashes are write protected by default after a 
+> power-on reset
+> - * cycle, in order to avoid inadvertent writes during power-up. 
+> Backward
+> - * compatibility imposes to unlock the entire flash memory array at 
+> power-up
+> - * by default.
+> - */
+> -static int spi_nor_unlock_all(struct spi_nor *nor)
+> -{
+> -	if (nor->flags & SNOR_F_HAS_LOCK)
+> -		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
+> -
+> -	return 0;
+> -}
+> -
+>  static int spi_nor_init(struct spi_nor *nor)
+>  {
+>  	int err;
+> @@ -4941,11 +4924,11 @@ static int spi_nor_init(struct spi_nor *nor)
+>  		return err;
+>  	}
+> 
+> -	err = spi_nor_unlock_all(nor);
+> -	if (err) {
+> -		dev_dbg(nor->dev, "Failed to unlock the entire flash memory 
+> array\n");
+> -		return err;
+> -	}
+> +	/*
+> +	 * Flashes may power up locked. Set this flag so that MTD core
+> +	 * takes care of unlocking partitions as required.
+> +	 */
+> +	nor->mtd.flags |= MTD_POWERUP_LOCK;
+> 
+>  	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
+>  		/*
