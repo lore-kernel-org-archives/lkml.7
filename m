@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C438DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DC8205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA8D206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519191;
-	bh=vcw8e7sa05RyMhS4Kpi3imk8mmXPeDfeCjey1rZECiw=;
+	s=default; t=1576519194;
+	bh=tlsq84Sjw04k/4K1GPsBwrxcrthZHeY7gccHOEHnC7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdEeWnhW+nSExqZIMK6CVtrXmfrZ6ClIBg7wj3bkz4wjDHVI/3k2+R+ETRMeVsXw9
-	 m9FHDNEMK2VLuaTpiFPxxAuT/t/hCtzaohYyHPsV+6Gh1VJTY/bgyy7b4eOLyAH2tg
-	 wLl2IEN4JgyXfq/CO9yHYjkklSJpJuvpcSKirDKs=
+	b=KHVb82C2CLMMTJpaBazYBI1/qNlIroGcqyYrCrhL69Q0caip8dk7zFv+Eza2J+NQa
+	 +mF07iDKjlyEn4UhtBSx2+zjDT0GVLS58G1m/voK4T0iFJzYyWyKJEyysiBhWcmOcp
+	 rO6Tz/0qZ3s+ZNvM6+mnMmOcFriAsDAbZIXU38RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfLPR7u (ORCPT
+        id S1728663AbfLPR7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbfLPR7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:48 -0500
+        id S1728646AbfLPR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF35206B7;
-        Mon, 16 Dec 2019 17:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BBD2206EC;
+        Mon, 16 Dec 2019 17:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519187;
-        bh=vcw8e7sa05RyMhS4Kpi3imk8mmXPeDfeCjey1rZECiw=;
+        s=default; t=1576519190;
+        bh=tlsq84Sjw04k/4K1GPsBwrxcrthZHeY7gccHOEHnC7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rffLCONMqvstCrFpZhKIKHyKkY7NK4LgTp+0oan1ZAYo8uCEE51m1/dwwTLFc6daI
-         pH3xLXCnmmYYgj93Di1qcHP31fnNJiClexN+s1cOtnZJdbcQKDX/J41d/gEn0JpCsm
-         Kv8x7eoARQLRHBYLiv5T8IQpkbF6ttyD1cS4LAVo=
+        b=rusY+goO97eKHBR5/OihqrIyAzmznjQQnUSkjMiSPBvG0XgCxtuouVxMz6IvX9IoY
+         8iLuc29TUyn06VRRH/758kEvds8DSlJoJNLxoyKG1fMpB9zm832vGOvaG4jqhhE96u
+         0DNG5nHg66SinJHjY67qPvvO9767cDaxkMIovNtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 190/267] btrfs: record all roots for rename exchange on a subvol
-Date:   Mon, 16 Dec 2019 18:48:36 +0100
-Message-Id: <20191216174912.935577828@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 191/267] rtlwifi: rtl8192de: Fix missing code to retrieve RX buffer address
+Date:   Mon, 16 Dec 2019 18:48:37 +0100
+Message-Id: <20191216174912.989877268@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,43 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 3e1740993e43116b3bc71b0aad1e6872f6ccf341 upstream.
+commit 0e531cc575c4e9e3dd52ad287b49d3c2dc74c810 upstream.
 
-Testing with the new fsstress support for subvolumes uncovered a pretty
-bad problem with rename exchange on subvolumes.  We're modifying two
-different subvolumes, but we only start the transaction on one of them,
-so the other one is not added to the dirty root list.  This is caught by
-btrfs_cow_block() with a warning because the root has not been updated,
-however if we do not modify this root again we'll end up pointing at an
-invalid root because the root item is never updated.
+In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
+new drivers"), a callback to get the RX buffer address was added to
+the PCI driver. Unfortunately, driver rtl8192de was not modified
+appropriately and the code runs into a WARN_ONCE() call. The use
+of an incorrect array is also fixed.
 
-Fix this by making sure we add the destination root to the trans list,
-the same as we do with normal renames.  This fixes the corruption.
-
-Fixes: cdd1fedf8261 ("btrfs: add support for RENAME_EXCHANGE and RENAME_WHITEOUT")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
+Cc: Stable <stable@vger.kernel.org> # 3.18+
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9839,6 +9839,9 @@ static int btrfs_rename_exchange(struct
- 		goto out_notrans;
- 	}
- 
-+	if (dest != root)
-+		btrfs_record_root_in_trans(trans, dest);
-+
- 	/*
- 	 * We need to find a free sequence number both in the source and
- 	 * in the destination directory for the exchange.
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
+@@ -839,13 +839,15 @@ u32 rtl92de_get_desc(u8 *p_desc, bool is
+ 			break;
+ 		}
+ 	} else {
+-		struct rx_desc_92c *pdesc = (struct rx_desc_92c *)p_desc;
+ 		switch (desc_name) {
+ 		case HW_DESC_OWN:
+-			ret = GET_RX_DESC_OWN(pdesc);
++			ret = GET_RX_DESC_OWN(p_desc);
+ 			break;
+ 		case HW_DESC_RXPKT_LEN:
+-			ret = GET_RX_DESC_PKT_LEN(pdesc);
++			ret = GET_RX_DESC_PKT_LEN(p_desc);
++			break;
++		case HW_DESC_RXBUFF_ADDR:
++			ret = GET_RX_DESC_BUFF_ADDR(p_desc);
+ 			break;
+ 		default:
+ 			WARN_ONCE(true, "rtl8192de: ERR rxdesc :%d not processed\n",
 
 
