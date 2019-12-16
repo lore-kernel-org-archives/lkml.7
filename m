@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C076C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532702082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD462082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521844;
-	bh=fueMklteLNzFhe2YRz5K1a2P6ybhG4I6ndWG3QneryI=;
+	s=default; t=1576521847;
+	bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtfVRLue0SAG45p2OKyv6Xnde/zE9yz07+wDWK6ELLUEEc8DRTTsVrtZKa3IulqRW
-	 31b854ePrsfXLpGJlPSMyAbeLe8Fvc7HxDc/uAQO8SLdUnrVyq0+kn4cFeMnZYAR6x
-	 hWp0AL+AGezBzIw9n6ctgypCYQno5nmcpseyjG1g=
+	b=ly+6QPLTxyKM8aWYHdE2tvP6/MhgqooruIbyUJPuTiLh7h3tYFaWBvNGL7lWMBRwM
+	 zPzAdajwnm8o0pMpekkeA6etN2JlC399JLu6kk73j9Ezv3uhVG8xpM64ycH1poDt55
+	 Gytk4mGiYzrCpUXf28miwX1Ruw6XuopcIMTygku0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbfLPSoD (ORCPT
+        id S1728682AbfLPR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:44:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59554 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbfLPR7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:04 -0500
+        id S1728546AbfLPR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F7F206B7;
-        Mon, 16 Dec 2019 17:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86BF02166E;
+        Mon, 16 Dec 2019 17:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519144;
-        bh=fueMklteLNzFhe2YRz5K1a2P6ybhG4I6ndWG3QneryI=;
+        s=default; t=1576519132;
+        bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CteU2BX3mxlTvspeYKdSjmBYoVeq20OhbcsPCykl86Rds5jXzmTpXxn3CuwRcV4N2
-         G4TFOdODOZI4Br9CPVZLnvGCQRV2uyPvP4voar+9xpBI0zC6k9hwbtTPZGzWey/JDv
-         mnmw72ukqy5HwYKEFYsyuXmsFYpPeFIQuc+gxfcI=
+        b=OkMQsr5wm5oMpijvDXaTNm/DwkJgae3KYU8Z663qgwPQA6qJI+j72y/90GRnlEepm
+         xahw9rtAKy10hLrxFv2JOEioH/lsPGE9y/pUNkEj7e7ZNLOXVZbGZuBT7tl29/Mn9n
+         yC7LdGn3JNPk5MWpRYlQ72D5eX1+2iqrbPLCcZT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 213/267] intel_th: pci: Add Ice Lake CPU support
-Date:   Mon, 16 Dec 2019 18:48:59 +0100
-Message-Id: <20191216174914.228225941@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.14 208/267] media: bdisp: fix memleak on release
+Date:   Mon, 16 Dec 2019 18:48:54 +0100
+Message-Id: <20191216174913.930056503@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,35 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 6a1743422a7c0fda26764a544136cac13e5ae486 upstream.
+commit 11609a7e21f8cea42630350aa57662928fa4dc63 upstream.
 
-This adds support for the Trace Hub in Ice Lake CPU.
+If a process is interrupted while accessing the video device and the
+device lock is contended, release() could return early and fail to free
+related resources.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191120130806.44028-3-alexander.shishkin@linux.intel.com
+Note that the return value of the v4l2 release file operation is
+ignored.
+
+Fixes: 28ffeebbb7bd ("[media] bdisp: 2D blitter driver using v4l2 mem2mem framework")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -194,6 +194,11 @@ static const struct pci_device_id intel_
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
- 	{
-+		/* Ice Lake CPU */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x8a29),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
-+	{
- 		/* Tiger Lake PCH */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+--- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+@@ -651,8 +651,7 @@ static int bdisp_release(struct file *fi
+ 
+ 	dev_dbg(bdisp->dev, "%s\n", __func__);
+ 
+-	if (mutex_lock_interruptible(&bdisp->lock))
+-		return -ERESTARTSYS;
++	mutex_lock(&bdisp->lock);
+ 
+ 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+ 
 
 
