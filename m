@@ -2,318 +2,273 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1927EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AFCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6634206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C895206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t6jOE56/"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Geex0bV5";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="5ngRq96t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfLPMuP (ORCPT
+        id S1727720AbfLPMuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:50:15 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55828 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfLPMuO (ORCPT
+        Mon, 16 Dec 2019 07:50:37 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:22728 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727553AbfLPMug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:50:14 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGCo5tL114860;
-        Mon, 16 Dec 2019 06:50:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576500605;
-        bh=RlMwp5ZUS8U4z0fPiE9aBb1RcLF2ZfFaDsNvc1JjsHQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=t6jOE56/zbG+qmtqL7IHe5S/4hThxJJqaOwjr/lyVW0vzf2f1CC1LpXdMkhgwrl8E
-         0mKv5tpVlUf18nOUzwU/onupnHiXp3kKjBaZP0aEm23vD1/iWd7WVd2F/z+4qKI05Y
-         TbQ5zjVwJFaze8AMuI7eQbt59/sF8NpbodJT4NEQ=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGCo5wI117262
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 06:50:05 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 06:50:05 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 06:50:05 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGCo2gn096690;
-        Mon, 16 Dec 2019 06:50:03 -0600
-Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
-References: <20191209084035.55603-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191209084035.55603-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <8d71f459-96a2-4b09-05e1-5f905e9bb3af@ti.com>
-Date:   Mon, 16 Dec 2019 18:20:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191209084035.55603-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 16 Dec 2019 07:50:36 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGCn1S5003619;
+        Mon, 16 Dec 2019 04:50:03 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=tEI7QE7nDju/ykHEg0QFS8COrGZi/cqo97a+Zg/Tmw4=;
+ b=Geex0bV5ac3GMj0BZaRYScLBQ2O5rta3TF7EFih5eAGiAG3ZlYdDnKbcPJWUqm61TJTT
+ faXW8moYTFI3tNToY6Lq2eOh8MHgF11P+WMDUOO5Ha4aJ8qO7HroBqaMxIzcXakYBge/
+ 3etphG4aBirUytcqTqTf12HRU2cdhOTCx4JXSgamUPZcc11ph4TV+rVL4JIbmKx3AtnF
+ yYMDAkxFl27aDUgxiy4U3zjvMnCakurbxGyROlByrUtN8dPmSspor1xTrEmSDSnb13AN
+ 3RIHB0cHd6cAP/ZjH9L5ENn7XrFtRwVqSMxkHMF73lSFSS07y9sIoE5qW2iTs9/pZzDn oQ== 
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2052.outbound.protection.outlook.com [104.47.36.52])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2ww1b8dbcc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 04:50:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TpGRPUoQ1JI7N+zniDlWpifdAkfCTaBkq5whAK2vFqfBn9oYelXWHese/ABFfuhiJWEgRb6FVSDOD+JhztN0DVyhTlS3cisEPYGdf9b94c8s2nX8N9P/RxT9O9LA1lrr0iCUfI9dAsMG208SY5Gjy/Di3tN/BXWUbV6gvueH/A28z5SNtw97rAE6HZ6xBA4tVRN2jf7LF4GnzVX5PhyMoEwQbFWZjaTbt5GKkQkZ1r7HoBrI/M+PFXuL00bam/qAA1DZoScu364m30oG7vx0d6IJZF1ljQLGzjJIcMzdtcleDIMfMJg/u9o50iBWj+1zsRydL9Al7kBDoVx4RM5h/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tEI7QE7nDju/ykHEg0QFS8COrGZi/cqo97a+Zg/Tmw4=;
+ b=c/+9LI7XZCV0b+SbZ5GmXTy1XLnT5AtZR+j5htjbME/FDdwUV8EIcGT112OD1sISEE9LDbPlfA0jzG+h3FjElA0U60sA052eAKZwMhkLil1tgh2iUKaJ3TWbxWkwI1gUIex1WcDb/vDQZ8Cq1w4fy/SS7g5nZ3P7rDnKMxY+X27PRXszqAQ1GWopY1rFUJPGl8cBZDWuiq2tlpiWBGVMi3HNE+7eyMPBVuwaID5Ctv/9To7HpveJgtIZxqMCpnBsGmubENmN8eHZqT/HJjZ8a19EHXKeRhhAs0UVd/PP7tv2kIQPlGibOo3zXQCOgPU2VM8DhGb06NcLGjBZkQhwig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tEI7QE7nDju/ykHEg0QFS8COrGZi/cqo97a+Zg/Tmw4=;
+ b=5ngRq96tOBmb+OyovB+lB4f0tiZOeBtmJnmWNXa9auEUqfBKoWK6SG/RZ2YfcIFQR15YunWAWAyRuAa+7uSUbUZ4VHxiOR7b/yXA7WMXe0jVjMuIUt4X0u4LySb4HFJLHWpor163D+DTQBeTBzrlq+4oHbW1V0ixy7LZtnfaGS0=
+Received: from BY5PR07MB6514.namprd07.prod.outlook.com (10.255.137.27) by
+ BY5PR07MB6625.namprd07.prod.outlook.com (10.255.137.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Mon, 16 Dec 2019 12:50:00 +0000
+Received: from BY5PR07MB6514.namprd07.prod.outlook.com
+ ([fe80::e5b3:f11f:7907:d5e7]) by BY5PR07MB6514.namprd07.prod.outlook.com
+ ([fe80::e5b3:f11f:7907:d5e7%5]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 12:50:00 +0000
+From:   Milind Parab <mparab@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
+        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
+        "brad.mouring@ni.com" <brad.mouring@ni.com>,
+        Parshuram Raju Thombare <pthombar@cadence.com>
+Subject: RE: [PATCH v2 3/3] net: macb: add support for high speed interface
+Thread-Topic: [PATCH v2 3/3] net: macb: add support for high speed interface
+Thread-Index: AQHVsZm5l82MVXLf60OyobQPmImAGae7UQaAgAACAgCAAWMWwA==
+Date:   Mon, 16 Dec 2019 12:49:59 +0000
+Message-ID: <BY5PR07MB65143D385836FF49966F5F6AD3510@BY5PR07MB6514.namprd07.prod.outlook.com>
+References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
+ <1576230177-11404-1-git-send-email-mparab@cadence.com>
+ <20191215151249.GA25745@shell.armlinux.org.uk>
+ <20191215152000.GW1344@shell.armlinux.org.uk>
+In-Reply-To: <20191215152000.GW1344@shell.armlinux.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbXBhcmFiXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctOGZlODM1MzEtMjAwMi0xMWVhLWFlY2QtZDhmMmNhNGQyNWFhXGFtZS10ZXN0XDhmZTgzNTMyLTIwMDItMTFlYS1hZWNkLWQ4ZjJjYTRkMjVhYWJvZHkudHh0IiBzej0iNzA5NSIgdD0iMTMyMjA5NzQxOTc0OTIzODYwIiBoPSJ2SWhSaEpCNHo4dTErRi9YUDkyS2hUdEJhRDA9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1adbcf5c-5a05-4320-c6ff-08d78226765c
+x-ms-traffictypediagnostic: BY5PR07MB6625:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR07MB6625EB7FB608F40E24496BFFD3510@BY5PR07MB6625.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(36092001)(9686003)(64756008)(66446008)(66946007)(66556008)(6916009)(66476007)(76116006)(7416002)(55016002)(316002)(54906003)(71200400001)(33656002)(8676002)(81166006)(7696005)(6506007)(86362001)(55236004)(5660300002)(52536014)(186003)(107886003)(478600001)(4326008)(26005)(8936002)(81156014)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6625;H:BY5PR07MB6514.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QLpRb8+V+2qx6yNKyd/PcAwObNemDM7B2/UNUnvpNhpXYhKt+m1MzCS4wK0cBmDg6qakNTVqbJ60OBNpbQRZVJCxVSMgtdrRjdmL+Nmk9r7bzceF2fcbrNY5kccem1Alj0fHjaGiizXuXxSbbprxSmYmxhWMVoWdCy1uOf5zyOhkJi5/ZHInG8mOzfn0PLCqcIw5o+QR2Ov1GgHf6cnPMpdHcpE76QhHMrpCrEIejtLS/0KKjuKs3pFkt5N6D+s3TTeu9J0kfLMX5petpUq+ASlaZLL/Qa3rUnP8j7SDUv+XWTfVuZLWfnbJzwN26fo9O+EDDqNsmofGtTcrqu9R3+sz6xr9qNBqaMU52SBaDqvoQuxVACwe/pCMQylGR5xw6VVxM/tlLxpATNL37oOiBjQRVz8f/noPZjeuHvReqNe4SSC04jkojYj6FZR/ufu06S++AZm7eZLobteUMbP0T+losWHSrFNpV1foDSnTUFHNTNz7jKCTfTZ2wjhv2YZU
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1adbcf5c-5a05-4320-c6ff-08d78226765c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 12:49:59.9775
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 73k+GEdWRz0nsFhdYFgW9xSuBUwDxunW5mDIxbk2BadQiNzIkR9OAPxTA/5lnBHX9oaX4q82Clu6+XeudlgJvh8QzpXUJ6UPEWRXp2eJgs4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6625
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-16_04:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912160115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+>> > +	if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_USXGMII) {
+>>
+>> Why bp->phy_interface and not state->interface?
 
-On 09/12/19 2:10 pm, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/spi/cadence,qspi.yaml      | 162 +++++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> new file mode 100644
-> index 000000000000..7756c34bb453
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> @@ -0,0 +1,162 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cadence,qspi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence QSPI Flash Controller support
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  Add support for the Cadence QSPI controller,This controller is
-> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-> +  has been tested On Intel's LGM SoC.
-> +
+okay, this needs to change to state->interface
 
-This looks like a commit message. Description should probably says
-something like "Binding Documentation for Cadence QSPI controller..."
+>>
+>> If you don't support selecting between USXGMII and other modes at
+>> runtime, should macb_validate() be allowing ethtool link modes for
+>> it when it's different from the configured setting?
 
-> +  - compatible : should be one of the following:
-> +        Generic default - "cdns,qspi-nor".
-> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
-> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
-> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
-> +
-> +properties:
-> +  compatible:
-> +    enum:
+We have separate SGMII and USXGMII PCS, which are enabled and programmed=20
+by MAC driver. Also, there are separate low speed (up to 1G) and high=20
+speed MAC which can be programmed though MAC driver.=20
+As long as, PHY (PMA, external to Cadence MAC controller) can handle=20
+this change, GEM can work with interface changes at a runtime.
 
-This should be:
+>>
+>> > +		if (gem_mac_usx_configure(bp, state) < 0) {
+>> > +			spin_unlock_irqrestore(&bp->lock, flags);
+>> > +			phylink_mac_change(bp->phylink, false);
+>>
+>> I guess this is the reason you're waiting for the USXGMII block
+>> to lock - do you not have any way to raise an interrupt when
+>> something changes with the USXGMII (or for that matter SGMII)
+>> blocks?  Without that, you're fixed to a single speed.
 
-  compatible:
-    oneOf:
-      - items:
-        - enum:
-           - ti,k2g-qspi
-        - const: cdns,qspi-nor
+Yes, we need to wait (poll) until USXGMII block lock is set.
+Interrupt for USXGMII block lock set event is not supported.
 
-      - items:
-        - enum:
-           - ti,am654-ospi
-        - const: cdns,qspi-nor
+>
+>BTW, if you don't have an macb_mac_pcs_get_state() implementation,
+>and from what you described last time around, I don't see how SGMII
+>nor this new addition of USXGMII can work for you. Both these
+>protocols use in-band control words, which should be read and
+>interpreted in macb_mac_pcs_get_state().
+>
+>What I think you're trying to do is to use your PCS PHY as a normal
+>PHY, or maybe you're ignoring the PCS PHY completely and relying on
+>an external PHY (and hence always using MLO_AN_PHY or MLO_AN_FIXED
+>mode.)
 
-      - items:
-        - enum:
-           - intel,lgm-qspi
-        - const: cdns,qspi-nor
+We are limiting our functionality to 10G fixed link using PCS and SFP+
+Though the Cadence MAC is a full functional ethernet MAC controller,=20
+we are not sure what PHY or PCS be used in the end system.
+Hence we are using PCS PHY as a normal PHY and not dependent on=20
+macb_mac_pcs_get_state(). Also it should be noted that we are=20
+not doing any change in SGMII. Status available in PCS is=20
+just a "status transferred" from PHY. So in case of SGMII, whether=20
+we read from PCS or from PHY, it is the same information.=20
 
-      - items:
-        - const: cdns,qspi-nor
+Below are listed all the possible use cases of Cadence GEM 10G controller
 
-> +      - cadence,qspi
+Basic MII MAC/PHY interconnect using MDIO for link status xfer.
+ +-------------+                                    +--------+
+ |             |                                    |        |
+ | GEM MAC/DMA | <------ GMII/RGMII/RMII/MII -----> |  PHY   |
+ |             |                                    |        |
+ +-------------+                                    +--------+
+       ^                                                 ^
+       |_____________________ MDIO ______________________|
 
-This wrong and does not match what you is there in description above.
-"cadence" is not a valid vendor prefix... It should be "cdns" as per
-Documentation/devicetree/bindings/vendor-prefixes.yaml
+No PHY. No status xfer required. GEM PCS responsible for auto-negotiation
+across link. Driver must interrogate PCS registers within GEM.
+ +-------------+                                    +--------+
+ |             |       |        |                   |        |
+ | GEM MAC/DMA | <---> | SerDes | <- 1000BASE-X ->  |  SFP   |
+ |    PCS      |       | (PMA)  |                   |        |
+ +-------------+                                    +--------+     =20
 
-Have you verified this yaml schema? I see bunch of errors for my platform
+SGMII MAC/PHY interconnect using MDIO for link status xfer.
+ +-------------+                                    +--------+
+ |             |       |        |                   |        |
+ | GEM MAC/DMA | <---> | SerDes | <--- SGMII --->   |  PHY   |
+ |  SGMII PCS  |       | (PMA)  |                   |        |
+ +-------------+                                    +--------+
+       ^                                                 ^
+       |_____________________ MDIO ______________________|
 
-> +      - cdns,qspi-nor
-> +      - ti,k2g-qspi
-> +      - ti,am654-ospi
-> +      - intel,lgm-qspi
-> +
-> +  reg:
-> +    description: |
-> +      Contains two entries, each of which is a tuple consisting of a
-> +      Physical address and length. The first entry is the address and
-> +      length of the controller register set. The second entry is the
-> +      address and length of the QSPI Controller data area.
+SGMII MAC/PHY interconnect using inline status xfer. Multi-rate.
+Driver must interrogate PCS registers within GEM.
+ +-------------+                                    +--------+
+ |             |       |        |                   |        |
+ | GEM MAC/DMA | <---> | SerDes | <--- SGMII --->   |  PHY   |
+ |  SGMII PCS  |       | (PMA)  |                   |        |
+ +-------------+                                    +--------+
 
-Don't you need to put a constraint here, like:
+Up to 2.5G. MAC/PHY interconnect. Rate determined by 2.5GBASE-T PHY capabil=
+ity.
+ +--------------+                                  +-----------+
+ |              |       |        |                 |           |
+ | GEM MAC/DMA  | <---> | SerDes | <-2500BASE-X->  |2.5GBASE-T |
+ |2.5GBASE-X PCS|       | (PMA)  |                 |   PHY     |
+ +--------------+                                  +-----------+
 
-maxItems: 2
+No ability for host to interrogate Optical.
+ +--------------+                                  +-----------+
+ |              |       |        |                 |  SFP+     |
+ | GEM MAC/DMA  | <---> | SerDes | <---- SFI-----> | Optical   |
+ |   USX PCS|   |       | (PMA)  |                 | Module    |
+ +--------------+                                  +-----------+
 
-> +
-> +  interrupts:
-> +    description:
-> +      Unit interrupt specifier for the controller interrupt.
-> +
+Additional 3rd party I2C IP required (not part of GEM) for module
+interrogation (MDIO to I2C handled by SW
+ +--------------+                                  +-----------+
+ |              |       |        |                 |  SFP+     |
+ | GEM MAC/DMA  | <---> | SerDes | <---- SFI-----> | Optical   |
+ |   USX PCS|   |       | (PMA)  |                 | Module    |
+ +--------------+                                  +-----------+
+                                                         ^
+        +--------+                                       |
+        | I2C    |                                       |
+        | Master | <-------------------------------------|
+        +--------+
 
-maxItems: 1??
+Rate determined by 10GBASE-T PHY capability through auto-negotiation.=20
+I2C IP required
+ +--------------+                                  +-----------+
+ |              |       |        |                 |  SFP+ to  |
+ | GEM MAC/DMA  | <---> | SerDes | <---- SFI-----> | 10GBASE-T |
+ |   USX PCS|   |       | (PMA)  |                 |           |
+ +--------------+                                  +-----------+
+                                                         ^
+        +--------+                                       |
+        | I2C    |                                       |
+        | Master | <-------------------------------------|
+        +--------+
 
-> +  clocks:
-> +    description:
-> +      phandle to the Quad SPI clock.
-> +
-
-maxItems: 1??
-
-> +  cdns,fifo-depth:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Size of the data FIFO in words.
-> +
-> +  cdns,fifo-width:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Bus width of the data FIFO in bytes.
-> +
-> +  cdns,trigger-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      32-bit indirect AHB trigger address.
-> +
-> +  cdns,is-decoded-cs:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Flag to indicate whether decoder is used or not.
-> +
-> +  cdns,rclk-en:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Flag to indicate that QSPI return clock is used to latch the read data
-> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
-> +      on the board before using this property.
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: qspi
-> +      - const: qspi-ocp
-> +
-> +# subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
-> +    type: object
-> +    description:
-> +      flash device uses the subnodes below defined properties.
-> +
-> +  cdns,read-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Delay for read capture logic, in clock cycles.
-> +
-> +  cdns,tshsl-ns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay in nanoseconds for the length that the master mode chip select
-> +      outputs are de-asserted between transactions.
-> +
-> +  cdns,tsd2d-ns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay in nanoseconds between one chip select being de-activated
-> +      and the activation of another.
-> +
-> +  cdns,tchsh-ns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay in nanoseconds between last bit of current transaction and
-> +      deasserting the device chip select (qspi_n_ss_out).
-> +
-> +  cdns,tslch-ns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay in nanoseconds between setting qspi_n_ss_out low and
-> +      first bit transfer.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-
-> +  - cdns,is-decoded-cs
-
-Not a required property as per existing DT bindings
+USXGMII PHY. Uses MDIO or equivalent for status xfer
+ +-------------+                                    +--------+
+ |             |       |        |                   |        |
+ | GEM MAC/DMA | <---> | SerDes | <--- USXGMII ---> |  PHY   |
+ |  USX PCS    |       | (PMA)  |                   |        |
+ +-------------+                                    +--------+
+       ^                                                 ^
+       |_____________________ MDIO ______________________|
 
 
-> +  - cdns,fifo-depth
-> +  - cdns,fifo-width
-> +  - cdns,trigger-address
-
-
-> +  - resets
-> +  - reset-names
-
-Again optional properties
-
-> +
-> +examples:
-> +  - |
-> +    qspi: spi@ff705000 {
-> +          compatible = "cadence,qspi", "cdns,qspi-nor";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0xff705000 0x1000>,
-> +                <0xffa00000 0x1000>;
-> +          interrupts = <0 151 4>;
-> +          clocks = <&qspi_clk>;
-> +          cdns,is-decoded-cs;
-> +          cdns,fifo-depth = <128>;
-> +          cdns,fifo-width = <4>;
-> +          cdns,trigger-address = <0x00000000>;
-> +          resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
-> +          reset-names = "qspi", "qspi-ocp";
-> +
-> +          flash0: n25q00@0 {
-> +              ...
-> +              cdns,read-delay = <4>;
-> +              cdns,tshsl-ns = <50>;
-> +              cdns,tsd2d-ns = <50>;
-> +              cdns,tchsh-ns = <4>;
-> +              cdns,tslch-ns = <4>;
-> +          };
-> +    };
-> +
-> 
-
-No blank line before EOF, please
-
--- 
-Regards
-Vignesh
+>
+>
+>
+>--
