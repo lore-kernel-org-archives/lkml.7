@@ -2,113 +2,115 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC0DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC60C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A192D206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576509691;
-	bh=okycGbmE3Ah37WAzOd/ed3zrSdNTR882moZGtJuuh20=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gp4DYA8HfYLJoImbgUr2RC40oSKtKVv1+5e535bCzbhTkaNYqJGKoUyJwBahHEGrF
-	 Bsq1iKFwNHsprRv1Se6o6jB99vxTqGR3lYbeKmmUof1nO0B98BP2CQFmPpvSsWniTl
-	 t7FBYid7g7/bLjhbXNK2E64/VnxZzJ4qZQ+jpPkA=
+	by mail.kernel.org (Postfix) with ESMTP id 377C220717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9eRHG6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfLPPVa (ORCPT
+        id S1728364AbfLPPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:21:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbfLPPVa (ORCPT
+        Mon, 16 Dec 2019 10:21:42 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41236 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfLPPVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:21:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S09ne7xBB+FzyhRmEbi4DpLN8RlKiZzIskLABcuaT+s=; b=uyOLa8pxzeg2dVT8lMYQSFa/I
-        HMKsTh03xyf5K0fXjiX7B08/wLq7EVeEcQ9ulFK4pBBBAp7P/x5OasvBSR+GjsxNHQIJdru6JQBtt
-        Y7yJyCXwpfQRAijoR0V7iRCq3l80nLBN1dtsjjN5bnjeZeY9NAPq5FJFcbsWy54uXYxmWWOhMyZOL
-        LmW59RCKg6JOamGcfFfwhHbLRIQMiB8uzABIZP9VD4947qMJOjUgB+bmtQW6Rowd576rZAUfTkYNZ
-        /pgHvXSrBwGlp/uGlQus9zDbu4w+gN48PK48mD1Ttr6qzGtZ5s5umfg4SucR5UNXfGRY8ys1KJA/w
-        J4x3CYOAw==;
-Received: from tmo-101-54.customers.d1-online.com ([80.187.101.54] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igsBa-0005pp-HP; Mon, 16 Dec 2019 15:21:26 +0000
-Date:   Mon, 16 Dec 2019 16:21:22 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        y2038@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] media: documentation: fix video_event
- description
-Message-ID: <20191216162040.6aba340b@kernel.org>
-In-Reply-To: <20191216141506.121728-2-arnd@arndb.de>
-References: <20191216141506.121728-1-arnd@arndb.de>
-        <20191216141506.121728-2-arnd@arndb.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 16 Dec 2019 10:21:41 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so7742965wrw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:21:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
+        b=l9eRHG6cELj/1PPW5EMQL8KGSpML40lgI42oonoObgVkQJpwcUpAhOzugGJ1YzDVh/
+         Xn+g5HPMl+dLsYUrlg7312P/+FNbj9QEnm2kVtOKCQdPOD447fXhj6oyX5lGi6hArYGI
+         ORKa/zBvvQR/ijSqhhv+sdOOlpsJpm4PmFmwb3UgJplzSokAD8u8b9pQ7kaUsCXJ9f9m
+         Lv/bhO/Swr+5cFJ21U8uk/Jd33llMPn0xeTlVRk8bVjXZJZrg3/QC8m5DHrKlgB4M0QV
+         osHGkfb8Z2PSqzmCGeUX3qd3TpPIq2QDjMGPHvZoY2oInrkzLxNL6LEBL8zZzqTbZKg1
+         pYfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
+        b=p9u/S9VGuyCdizR8Q6V8C9wpla5qcZWlmTg0qrmqRmt6L4RWf3E7ioSECXtzzIzv+Y
+         7h4iKEzwbh30KRwXAE/yJV1RH081XQkoIkVVdrALUhzX4GaMi0ZEQaWrbtlIFbu/mTBN
+         HxMegOYVWghtQdyPd6FEUpc/xOwPlLbIDJoJJ8ZTGxykFtSX+75JL4Uocv72UuqGJ55G
+         zKupj3KQozo6/Rs+hPoXwt26sEzDyeEib144wOpSqb6vtiiBn3CfSVBrw24g673SspJN
+         p1xOz8x+ehHLlnQVGnth7Crc1frseNtnbV0YQXkzu7j9CLz8Tlv3mjuXO4cFgSbUSMXA
+         45Mw==
+X-Gm-Message-State: APjAAAX0p2MZRYXMjW+Jll61QxxpjKa1TfwZqI82nFbc5erNE4PQORaf
+        iMb4pB9rQ0zEPYabGoJsUc+S2w==
+X-Google-Smtp-Source: APXvYqweC7S5MEqLKn13rfYs2+xIpXzL1Op8mNT8o+RON6KKvlXrllfQ92Cbjp2t7tj6nFBRu6VFaw==
+X-Received: by 2002:a5d:4b8f:: with SMTP id b15mr32672267wrt.100.1576509699617;
+        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id x10sm22076901wrv.60.2019.12.16.07.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:21:38 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Tianping Fang <tianping.fang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH v7 6/6] rtc: Add support for the MediaTek MT6358 RTC
+Message-ID: <20191216152138.GF2369@dell>
+References: <1576057435-3561-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 16 Dec 2019 15:14:59 +0100
-Arnd Bergmann <arnd@arndb.de> escreveu:
+On Wed, 11 Dec 2019, Hsin-Hsiung Wang wrote:
 
-> The type for the timestamp in video_event was changed to
-> 'long' a long time ago, change the documentation to match.
+> From: Ran Bi <ran.bi@mediatek.com>
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-This patch seems fine for me. Even if the other patches need a v7,
-let's apply this one and remove it from any future re-spin of this
-(if ever needed).
-
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
->  Documentation/media/uapi/dvb/video-get-event.rst | 2 +-
->  Documentation/media/uapi/dvb/video_types.rst     | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/media/uapi/dvb/video-get-event.rst b/Documentation/media/uapi/dvb/video-get-event.rst
-> index def6c40db601..7f03fbe3d3b0 100644
-> --- a/Documentation/media/uapi/dvb/video-get-event.rst
-> +++ b/Documentation/media/uapi/dvb/video-get-event.rst
-> @@ -81,7 +81,7 @@ for this ioctl call.
->  	#define VIDEO_EVENT_FRAME_RATE_CHANGED	2
->  	#define VIDEO_EVENT_DECODER_STOPPED 	3
->  	#define VIDEO_EVENT_VSYNC 		4
-> -		__kernel_time_t timestamp;
-> +		long timestamp;
->  		union {
->  			video_size_t size;
->  			unsigned int frame_rate;	/* in frames per 1000sec */
-> diff --git a/Documentation/media/uapi/dvb/video_types.rst b/Documentation/media/uapi/dvb/video_types.rst
-> index 479942ce6fb8..2697400ccf62 100644
-> --- a/Documentation/media/uapi/dvb/video_types.rst
-> +++ b/Documentation/media/uapi/dvb/video_types.rst
-> @@ -170,7 +170,7 @@ VIDEO_GET_EVENT call.
->      #define VIDEO_EVENT_FRAME_RATE_CHANGED  2
->      #define VIDEO_EVENT_DECODER_STOPPED     3
->      #define VIDEO_EVENT_VSYNC       4
-> -	__kernel_time_t timestamp;
-> +	long timestamp;
->  	union {
->  	    video_size_t size;
->  	    unsigned int frame_rate;    /* in frames per 1000sec */
+>  drivers/rtc/rtc-mt6397.c       | 24 ++++++++++++++++--------
 
+>  include/linux/mfd/mt6397/rtc.h | 16 +++++++++++++++-
 
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-
-Cheers,
-Mauro
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
