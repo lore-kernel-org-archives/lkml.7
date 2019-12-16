@@ -2,52 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0188C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55637C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8404A206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAB220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521373;
-	bh=8u+kKloouRp+fZXOBHVFwKcMa6g72kyl4ur9MdRpgTE=;
+	s=default; t=1576521382;
+	bh=ZZCNl37csOKpEgVnThWHBvPhhL0/QSl1yVvj8Y5NkzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SHBaKJr65iT9FxmJ2iN0cJEH4f5q9ihMB0Gs5nwBeadO1n511ITAIGmMpLPpsmleH
-	 CjUhWDLmASHXVKccyHikFIvGl5/d+SOSVZTK5bEmxCch27M/CQUWQdBlN2crBCewfX
-	 rDsUC378AzlD3VlWkqKxJEPVZ8+T0fH/704lTn+8=
+	b=LgsHlFmd5tVlQfZmz/hxrhpc3Mj+C027WLd/wtJLVqKidJcQzXDktQgXfQ9YiaV+h
+	 MIy8Hk8W17ViV2Z2w5LVJO7FdKYrKUh7FQu1uat0y+5J8O/jRX33zc3MJsfF1p8Cub
+	 btRPirYS4vUCaIZeeTILwvSwTfaPngC4Jkygc67M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfLPSHJ (ORCPT
+        id S1730072AbfLPSG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47838 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730091AbfLPSHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:06 -0500
+        id S1729686AbfLPSG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44758206EC;
-        Mon, 16 Dec 2019 18:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CACB206EC;
+        Mon, 16 Dec 2019 18:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519625;
-        bh=8u+kKloouRp+fZXOBHVFwKcMa6g72kyl4ur9MdRpgTE=;
+        s=default; t=1576519616;
+        bh=ZZCNl37csOKpEgVnThWHBvPhhL0/QSl1yVvj8Y5NkzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQU/kz01YjuK5gbmA0/Xvfem8jsP9ZTOxGB8OTsyQCGkzTQbSCcI9/8LtJTOTUs8/
-         495tjPM6iglQF0NAMFDEEllrE2cl21MWpaTMfuHtVY4/0n/dqhiv9LEhypokGUYLxH
-         iaOmZl8yeW2Su2mrosfknupDOGrB+5k+y/mLcEFA=
+        b=NnxeaD8TN1bclfoY7rIyhaDbgC87VXSUn/Ubbf8IuJaxswJEFl3v/FVdbfsPa3x3s
+         nQKT4qKicr+hyjezYXhZHqrCk/1xsXbfAiAbhq0OU7aOmtUyw1Cngj31RVKITjvB4d
+         7xjyEen5CP3FRjHz0PQgV/Lf57ElGCrcMBbGHTrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 136/140] ext4: fix a bug in ext4_wait_for_tail_page_commit
-Date:   Mon, 16 Dec 2019 18:50:04 +0100
-Message-Id: <20191216174829.442597047@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 099/140] scsi: qla2xxx: Fix hang in fcport delete path
+Date:   Mon, 16 Dec 2019 18:49:27 +0100
+Message-Id: <20191216174812.764367641@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,120 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit 565333a1554d704789e74205989305c811fd9c7a upstream.
+[ Upstream commit f00b3428a801758243693e046b34226e92bc56b3 ]
 
-No need to wait for any commit once the page is fully truncated.
-Besides, it may confuse e.g. concurrent ext4_writepage() with the page
-still be dirty (will be cleared by truncate_pagecache() in
-ext4_setattr()) but buffers has been freed; and then trigger a bug
-show as below:
+A hang was observed in the fcport delete path when the device was
+responding slow and an issue-lip path (results in session termination) was
+taken.
 
-[   26.057508] ------------[ cut here ]------------
-[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
-...
-[   26.088130] Call trace:
-[   26.088695]  ext4_writepage+0x914/0xb28
-[   26.089541]  writeout.isra.4+0x1b4/0x2b8
-[   26.090409]  move_to_new_page+0x3b0/0x568
-[   26.091338]  __unmap_and_move+0x648/0x988
-[   26.092241]  unmap_and_move+0x48c/0xbb8
-[   26.093096]  migrate_pages+0x220/0xb28
-[   26.093945]  kernel_mbind+0x828/0xa18
-[   26.094791]  __arm64_sys_mbind+0xc8/0x138
-[   26.095716]  el0_svc_common+0x190/0x490
-[   26.096571]  el0_svc_handler+0x60/0xd0
-[   26.097423]  el0_svc+0x8/0xc
+Fix this by issuing logo requests unconditionally.
 
-Run the procedure (generate by syzkaller) parallel with ext3.
+PID: 19491  TASK: ffff8e23e67bb150  CPU: 0   COMMAND: "kworker/0:0"
+ #0 [ffff8e2370297bf8] __schedule at ffffffffb4f7dbb0
+ #1 [ffff8e2370297c88] schedule at ffffffffb4f7e199
+ #2 [ffff8e2370297c98] schedule_timeout at ffffffffb4f7ba68
+ #3 [ffff8e2370297d40] msleep at ffffffffb48ad9ff
+ #4 [ffff8e2370297d58] qlt_free_session_done at ffffffffc0c32052 [qla2xxx]
+ #5 [ffff8e2370297e20] process_one_work at ffffffffb48bcfdf
+ #6 [ffff8e2370297e68] worker_thread at ffffffffb48bdca6
+ #7 [ffff8e2370297ec8] kthread at ffffffffb48c4f81
 
-void main()
-{
-	int fd, fd1, ret;
-	void *addr;
-	size_t length = 4096;
-	int flags;
-	off_t offset = 0;
-	char *str = "12345";
-
-	fd = open("a", O_RDWR | O_CREAT);
-	assert(fd >= 0);
-
-	/* Truncate to 4k */
-	ret = ftruncate(fd, length);
-	assert(ret == 0);
-
-	/* Journal data mode */
-	flags = 0xc00f;
-	ret = ioctl(fd, _IOW('f', 2, long), &flags);
-	assert(ret == 0);
-
-	/* Truncate to 0 */
-	fd1 = open("a", O_TRUNC | O_NOATIME);
-	assert(fd1 >= 0);
-
-	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
-					MAP_SHARED, fd, offset);
-	assert(addr != (void *)-1);
-
-	memcpy(addr, str, 5);
-	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
-}
-
-And the bug will be triggered once we seen the below order.
-
-reproduce1                         reproduce2
-
-...                            |   ...
-truncate to 4k                 |
-change to journal data mode    |
-                               |   memcpy(set page dirty)
-truncate to 0:                 |
-ext4_setattr:                  |
-...                            |
-ext4_wait_for_tail_page_commit |
-                               |   mbind(trigger bug)
-truncate_pagecache(clean dirty)|   ...
-...                            |
-
-mbind will call ext4_writepage() since the page still be dirty, and then
-report the bug since the buffers has been free. Fix it by return
-directly once offset equals to 0 which means the page has been fully
-truncated.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5459,11 +5459,15 @@ static void ext4_wait_for_tail_page_comm
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index df91847d20cd0..9cb5527d3d8f1 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -291,9 +291,6 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
+ 	struct srb_iocb *lio;
+ 	int rval = QLA_FUNCTION_FAILED;
  
- 	offset = inode->i_size & (PAGE_SIZE - 1);
- 	/*
--	 * All buffers in the last page remain valid? Then there's nothing to
--	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
--	 * blocksize case
-+	 * If the page is fully truncated, we don't need to wait for any commit
-+	 * (and we even should not as __ext4_journalled_invalidatepage() may
-+	 * strip all buffers from the page but keep the page dirty which can then
-+	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
-+	 * buffers). Also we don't need to wait for any commit if all buffers in
-+	 * the page remain valid. This is most beneficial for the common case of
-+	 * blocksize == PAGESIZE.
- 	 */
--	if (offset > PAGE_SIZE - i_blocksize(inode))
-+	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
- 		return;
- 	while (1) {
- 		page = find_lock_page(inode->i_mapping,
+-	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT))
+-		return rval;
+-
+ 	fcport->flags |= FCF_ASYNC_SENT;
+ 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
+ 	if (!sp)
+-- 
+2.20.1
+
 
 
