@@ -2,98 +2,93 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2CCC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF799206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48ACE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AP+6nl7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfLPO6z (ORCPT
+        id S1728271AbfLPO7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:58:55 -0500
-Received: from muru.com ([72.249.23.125]:48456 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbfLPO6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:58:55 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7D591810D;
-        Mon, 16 Dec 2019 14:59:33 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 06:58:51 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Message-ID: <20191216145851.GN35479@atomide.com>
-References: <20191215173817.47918-1-tony@atomide.com>
- <20191215230331.645b9064@aktux>
- <20191216030948.GL35479@atomide.com>
- <20191216031637.GM35479@atomide.com>
- <20191216130536.5935a587@kemnade.info>
- <CAHCN7xJ-ndGxz0DYSwnuDi+4Hu349RTCzHjsspx2evMvLDtDqA@mail.gmail.com>
+        Mon, 16 Dec 2019 09:59:16 -0500
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:41387 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbfLPO7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:59:16 -0500
+Received: by mail-pf1-f173.google.com with SMTP id s18so5723210pfd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 06:59:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XzX7HvMfI+FbqPlfhV2QEZ5DIKSU6MexUmhq7WHK0dY=;
+        b=AP+6nl7PXq2jPyHPmfVoAai/3dvZ2JGyHbWEgYA57PvuUUSNGrk9aiHkCoGvOMjEA0
+         7EAhnsqCTnRXchkXmlN7Ql5FE994ua5b2QJuWKTZbLN9R7YSN7F6LboUuZvCNvQawF/z
+         8jsgPl3quzgQzmwCHbJRpWeiruGAFCVBl9cZXV4nQ1L1dyGKgEStEsdhx9VsCS6t+eFA
+         uijFdZcAWu3UEIjszbUfp8XHQA4MmEkzJmBFGwsv0FJZqEWbCWrb3vtk/tPPA3nDha4H
+         dm79PR0l44gSvyyB2kusAPzCDCw4wnfiMdXV+teaCfhrZjAa++jIMtqUpeuH50+rdNY5
+         i7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XzX7HvMfI+FbqPlfhV2QEZ5DIKSU6MexUmhq7WHK0dY=;
+        b=lGxeukaqrPvUbJEAv6667kYtoTDv21rO4tU8jgThDXkpn4x3g/9l1HLr6dpu0a7dSh
+         M6WvQ5IqyQniQLCa821RCcHdv0pYt172x0ev8JxWC6n6QFU7dmKJiQkn1bmeIESny6DN
+         hYVXWoUQdT66FyryxX+7MbkCDDwYEOC0drXUtebUfkp77ZpCcCJb9LBNZ4vNCYRSEA7f
+         4IK+KCzuuC9gqF70qzBGaW+gw1J5eMqjzxlzk8rGfsVjQQwx3s3N58pzZ3/OlkBV8zXL
+         s8WAmndF7FgEcpJuCGJl92JbJ95MqqgZRm76l5KrtL1IzWBTo8QIRYu4yO+oUudug5c2
+         QAbg==
+X-Gm-Message-State: APjAAAX2X8F64XaHtp8YLBfhxR6+P4G9uwl0H+g/U7fijwwAbwkCAGN1
+        wUaOptSWsr95NFslctInE060Y1leiGMKhQ8usMHdNOq8
+X-Google-Smtp-Source: APXvYqzAWcJn/GX3RpowzTZXhFl+J7gwVSc0Vb1CNqW2dSxEB0yUnbpdoQqq1NY4OZ+rgF482f6/S7WksE+b5zSKIz4=
+X-Received: by 2002:a62:1d90:: with SMTP id d138mr16122258pfd.93.1576508355707;
+ Mon, 16 Dec 2019 06:59:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJ-ndGxz0DYSwnuDi+4Hu349RTCzHjsspx2evMvLDtDqA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <CAAeHK+xSWEFUA7DQyhm90uiwggx60gYa8q7QqzOWp7DX_xWSWg@mail.gmail.com>
+ <Pine.LNX.4.44L0.1912131448080.1332-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912131448080.1332-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 16 Dec 2019 15:59:04 +0100
+Message-ID: <CAAeHK+yz3dtfx0Jfd4sbOcN8tSxp8+qAvW609sP_yJC5q6vq8A@mail.gmail.com>
+Subject: Re: Re: general protection fault in usb_set_interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, mans@mansr.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191216 13:58]:
-> On Mon, Dec 16, 2019 at 7:48 AM Andreas Kemnade <andreas@kemnade.info> wrote:
-> >
-> > On Sun, 15 Dec 2019 19:16:37 -0800
-> > Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > > * Tony Lindgren <tony@atomide.com> [191216 03:10]:
-> > > > Hi,
-> > > >
-> > > > * Andreas Kemnade <andreas@kemnade.info> [191215 22:04]:
-> > > > > On Sun, 15 Dec 2019 09:38:17 -0800
-> > > > > If I remember correctly this thing is critical to get the hwmod out of
-> > > > > reset but I need to examine that again:
-> > > >
-> > > > Thanks for testing, yes that's what I thought might cause it
-> > > > too, but nope :)
-> > > >
-> > > > We currently disable interrupts for some reason after
-> > > > the first read. That won't play with runtime PM autosuspend
-> > > > at all as we never enable them again until the device has
-> > > > idled. Can you try the following additional patch on top?
+On Fri, Dec 13, 2019 at 8:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Fri, 13 Dec 2019, Andrey Konovalov wrote:
+>
+> > > > Let's retry here:
 > > >
-> > > And we should probably do the following too to make sure
-> > > the mode is initialized before we call runtime PM.
+> > > > #syz test: https://github.com/google/kasan.git f0df5c1b
 > > >
-> > CM_FCLKEN1/IDLEST1_CORE seem to behave, reading also works
+> > > This bug is already marked as fixed. No point in testing.
+> > >
 > >
-> > With these two additional patches this deserves a
-> > Tested-By: Andreas Kemnade <andreas@kemnade.info> # gta04
-> 
-> Tony,
-> 
-> Any way you can do a V2 patch with the other stuff added?  Pulling the
-> patches from gmail doesn't work.  I think G-mail does something weird
-> because they don't apply cleanly, so I have to download the patches
-> from patchwork.  I should be able to test it today.
+> > Hm, that explains some of the weirdness. It doesn't explain though
+> > neither why the patch was actually tested when Alan requested it nor
+> > why syzbot sent no reply.
+>
+> In the meantime, is there any way to get syzbot to test the new patch
+> with the old reproducer?  Perhaps tell it to re-open this bug?
 
-OK sent out v2 with the two change folded in. The ti,mode = "1w"
-still needs to be tested if anybody has a sensor to test with.
-I verified the battery ds2502 gets properly detected on droid4 battery,
-in "1w" mode, but so far no luck actually reading the nvmem with the
-newish w1_ds250x driver.
-
-Regards,
-
-Tony
+No, we can only test this manually now. I can run the reproducer for
+you. Should I revert the fix for this bug and then apply your patch?
+What's the expected result?
