@@ -2,53 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D149C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0ABC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630AC21582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2426C20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520041;
-	bh=DkCPbrmjrLhyggIsxqQ2UgaXx0IBRimw3qNKWnog8O0=;
+	s=default; t=1576520044;
+	bh=xIAUMyEs4IxOo03+cfmn9uPZNxEon7WbX0KauaAyN3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gCbxsfoZ8HFl95GDFKb/58Zqy7/wN70Ug9R/WnW7ENLFqFSg05pWs/xh6CtChHtvn
-	 12yVay1Q2wN7LtNJzqntsmcOHWEj7xBzBnNZ+uQU/jSS56ScuMFIwd4d/AcrwbewUS
-	 dv5M6omQsxPFmLkJ1KFT1W8kzVPQBpgaWjMvO8R0=
+	b=nq1XTZzIGwCif72Hai5wKXFu4fZ+6XwOmq/RSg3xLHjvKr/GPa5kUMAmBvcsy9QMm
+	 rlsEKgWWRF+k3gjhmLG8ktN5Uz/tgL8V7VfznXNgf+t0e3L76ah9Cfz+9NOGg6R4W9
+	 yc4+tNaOQ3bely57fv9dmN+0Zm0ZpC3Vj0TULqk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbfLPSN7 (ORCPT
+        id S1731174AbfLPSOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60380 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfLPSNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:46 -0500
+        id S1730830AbfLPSNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1306921582;
-        Mon, 16 Dec 2019 18:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53CAC207FF;
+        Mon, 16 Dec 2019 18:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520025;
-        bh=DkCPbrmjrLhyggIsxqQ2UgaXx0IBRimw3qNKWnog8O0=;
+        s=default; t=1576520032;
+        bh=xIAUMyEs4IxOo03+cfmn9uPZNxEon7WbX0KauaAyN3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fy8jXpkA0oBKMH7nynhGKwOoZi57/EsqnNv9MCGhCuogWj7B/H6KKJSveOs7k3Vnh
-         O+XY8wibdWZxCoocKkAC9SSBZW8iuqIF1yEt6Sl15V7gnkvIG/0iPNbq/lWf1takzu
-         LNVXHfNYk8qE7RliHQ9GIyS8LfUGP+sfp2QjKv/E=
+        b=QyFdjh+ldUz+Q1BjNf5+CMjhhxKrB6+X4Si3iUgplfDCera+5ISqC6UgN99xYkLie
+         q55yZpEtqn8bLn0CYO7lDQVgQ6Hwsq18KIh0i4DCJNrmsSAdZ72cihGW9sQCiL/ij2
+         WhB2GV5EfpwuU3SkbMrDLnMC1JL5tfjDP3Eb721c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 167/180] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-Date:   Mon, 16 Dec 2019 18:50:07 +0100
-Message-Id: <20191216174847.143009591@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Geoffray <ngeoffray@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Hugh Dickins <hughd@google.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 170/180] mm, memfd: fix COW issue on MAP_PRIVATE and F_SEAL_FUTURE_WRITE mappings
+Date:   Mon, 16 Dec 2019 18:50:10 +0100
+Message-Id: <20191216174847.528262321@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,142 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Nicolas Geoffray <ngeoffray@google.com>
 
-[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
+commit 05d351102dbe4e103d6bdac18b1122cd3cd04925 upstream.
 
-With a wl1251 child node of mmc3 in the device tree decoded
-in omap_hsmmc.c to handle special wl1251 initialization, we do
-no longer need to instantiate the mmc3 through pdata quirks.
+F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+A private mapping created after the memfd file that gets sealed with
+F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+children and parent share the same memory, even though the mapping is
+private.
 
-We also can remove the wlan regulator and reset/interrupt definitions
-and do them through device tree.
+The reason for this is due to the code below:
 
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        struct shmem_inode_info *info = SHMEM_I(file_inode(file));
+
+        if (info->seals & F_SEAL_FUTURE_WRITE) {
+                /*
+                 * New PROT_WRITE and MAP_SHARED mmaps are not allowed when
+                 * "future write" seal active.
+                 */
+                if ((vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_WRITE))
+                        return -EPERM;
+
+                /*
+                 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
+                 * read-only mapping, take care to not allow mprotect to revert
+                 * protections.
+                 */
+                vma->vm_flags &= ~(VM_MAYWRITE);
+        }
+        ...
+  }
+
+And for the mm to know if a mapping is copy-on-write:
+
+  static inline bool is_cow_mapping(vm_flags_t flags)
+  {
+        return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+  }
+
+The patch fixes the issue by making the mprotect revert protection
+happen only for shared mappings.  For private mappings, using mprotect
+will have no effect on the seal behavior.
+
+The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so v5.3.x stable
+kernels would need a backport.
+
+[akpm@linux-foundation.org: reflow comment, per Christoph]
+Link: http://lkml.kernel.org/r/20191107195355.80608-1-joel@joelfernandes.org
+Fixes: ab3948f58ff84 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
+Signed-off-by: Nicolas Geoffray <ngeoffray@google.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
- 1 file changed, 93 deletions(-)
+ mm/shmem.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index e5c99e33afae2..da21c589dbdf1 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -303,108 +303,15 @@ static void __init omap3_logicpd_torpedo_init(void)
- }
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2198,11 +2198,14 @@ static int shmem_mmap(struct file *file,
+ 			return -EPERM;
  
- /* omap3pandora legacy devices */
--#define PANDORA_WIFI_IRQ_GPIO		21
--#define PANDORA_WIFI_NRESET_GPIO	23
+ 		/*
+-		 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
+-		 * read-only mapping, take care to not allow mprotect to revert
+-		 * protections.
++		 * Since an F_SEAL_FUTURE_WRITE sealed memfd can be mapped as
++		 * MAP_SHARED and read-only, take care to not allow mprotect to
++		 * revert protections on such mappings. Do this only for shared
++		 * mappings. For private mappings, don't need to mask
++		 * VM_MAYWRITE as we still want them to be COW-writable.
+ 		 */
+-		vma->vm_flags &= ~(VM_MAYWRITE);
++		if (vma->vm_flags & VM_SHARED)
++			vma->vm_flags &= ~(VM_MAYWRITE);
+ 	}
  
- static struct platform_device pandora_backlight = {
- 	.name	= "pandora-backlight",
- 	.id	= -1,
- };
- 
--static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
--	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
--};
--
--static struct regulator_init_data pandora_vmmc3 = {
--	.constraints = {
--		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
--	},
--	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
--	.consumer_supplies	= pandora_vmmc3_supply,
--};
--
--static struct fixed_voltage_config pandora_vwlan = {
--	.supply_name		= "vwlan",
--	.microvolts		= 1800000, /* 1.8V */
--	.gpio			= PANDORA_WIFI_NRESET_GPIO,
--	.startup_delay		= 50000, /* 50ms */
--	.enable_high		= 1,
--	.init_data		= &pandora_vmmc3,
--};
--
--static struct platform_device pandora_vwlan_device = {
--	.name		= "reg-fixed-voltage",
--	.id		= 1,
--	.dev = {
--		.platform_data = &pandora_vwlan,
--	},
--};
--
--static void pandora_wl1251_init_card(struct mmc_card *card)
--{
--	/*
--	 * We have TI wl1251 attached to MMC3. Pass this information to
--	 * SDIO core because it can't be probed by normal methods.
--	 */
--	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
--		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
--		card->cccr.wide_bus = 1;
--		card->cis.vendor = 0x104c;
--		card->cis.device = 0x9066;
--		card->cis.blksize = 512;
--		card->cis.max_dtr = 24000000;
--		card->ocr = 0x80;
--	}
--}
--
--static struct omap2_hsmmc_info pandora_mmc3[] = {
--	{
--		.mmc		= 3,
--		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
--		.gpio_cd	= -EINVAL,
--		.gpio_wp	= -EINVAL,
--		.init_card	= pandora_wl1251_init_card,
--	},
--	{}	/* Terminator */
--};
--
--static void __init pandora_wl1251_init(void)
--{
--	struct wl1251_platform_data pandora_wl1251_pdata;
--	int ret;
--
--	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
--
--	pandora_wl1251_pdata.power_gpio = -1;
--
--	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
--	if (ret < 0)
--		goto fail;
--
--	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
--	if (pandora_wl1251_pdata.irq < 0)
--		goto fail_irq;
--
--	pandora_wl1251_pdata.use_eeprom = true;
--	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
--	if (ret < 0)
--		goto fail_irq;
--
--	return;
--
--fail_irq:
--	gpio_free(PANDORA_WIFI_IRQ_GPIO);
--fail:
--	pr_err("wl1251 board initialisation failed\n");
--}
--
- static void __init omap3_pandora_legacy_init(void)
- {
- 	platform_device_register(&pandora_backlight);
--	platform_device_register(&pandora_vwlan_device);
--	omap_hsmmc_init(pandora_mmc3);
--	omap_hsmmc_late_init(pandora_mmc3);
--	pandora_wl1251_init();
- }
- #endif /* CONFIG_ARCH_OMAP3 */
- 
--- 
-2.20.1
-
+ 	file_accessed(file);
 
 
