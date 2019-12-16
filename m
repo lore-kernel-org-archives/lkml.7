@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BE4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF3AC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBD5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC8B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521762;
-	bh=AS7vz4AG6dDOpzOWr7bFy+qNqjjjnghZQo+IX8vYMJ0=;
+	s=default; t=1576521766;
+	bh=goQk/I4Xym0APb84CrpGO0nBV80m32nM16OUvb9b9Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJZ0U/Y69Pd0uzrxK03Fa8me0SF9Eekpe2W3QH8rdYu4vpWKEkETkWGMV2c859pVe
-	 plsdj9m4sEj7Qis/z890OmTRq0DK/PzTiUomErexN2KX7HvvM6rPYXEJ9tBM3W+L7c
-	 DM4ZWwB1U5KBNgeKnJYy11myhimwGRLUi5/EK9z8=
+	b=t9WoAFr36hIuv0SFknSn7JbC9ehfnHs7IfzWg2yZpjppUbxDPSh2ZQD3xRuYJMdPs
+	 7Sqy9FchMfU/xumMHS7SQfkrQQf1Fxcx4Uf7iph5MAl8olhUwSFQ1lFEU55nwya567
+	 PVQkGQeIEH9GOAaAbhVO3MA8nl2ftf7slXDz0wK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfLPSml (ORCPT
+        id S1728887AbfLPSAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:42:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34142 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbfLPSAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:15 -0500
+        id S1728357AbfLPSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDDE3206EC;
-        Mon, 16 Dec 2019 18:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E2DB20700;
+        Mon, 16 Dec 2019 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519214;
-        bh=AS7vz4AG6dDOpzOWr7bFy+qNqjjjnghZQo+IX8vYMJ0=;
+        s=default; t=1576519207;
+        bh=goQk/I4Xym0APb84CrpGO0nBV80m32nM16OUvb9b9Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYLSGOYoMibt5KOzjAgvkIZGtTCnaSpL9CGLRODoyUe2PbTkDZ9cj1HwITMUa1bO0
-         aGY85Qgixdz3yXC/dWNCdV3GVWC+g9AyxjvaC1tb3N/qyGkyt0Vtz65UTg5UBduMO8
-         S5E64ehCq7S/f1AP3sNiLk3anP8UH+4WWMK0V5OM=
+        b=XEO3+e+rYph1KqashtSzjHQ4mrzH1EmVfpa6IMwn5z/oDviNuJb1Sja34+7+E9VN/
+         jZgtL2ZKdPh6D6Xb2dxFocTUpDFj+LEUsZkN1xobSBlFVF2vIYwBWpUj8IYTTcWTv7
+         +WTwxpOuVnUN5PUud3GoiD1F4Mw/vwmErO18F228=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>, Lee Duncan <lduncan@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 243/267] scsi: qla2xxx: Fix message indicating vectors used by driver
-Date:   Mon, 16 Dec 2019 18:49:29 +0100
-Message-Id: <20191216174915.865473186@linuxfoundation.org>
+Subject: [PATCH 4.14 240/267] scsi: qla2xxx: Fix session lookup in qlt_abort_work()
+Date:   Mon, 16 Dec 2019 18:49:26 +0100
+Message-Id: <20191216174915.703737343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit da48b82425b8bf999fb9f7c220e967c4d661b5f8 ]
+[ Upstream commit ac452b8e79320c9e90c78edf32ba2d42431e4daf ]
 
-This patch updates log message which indicates number of vectors used by
-the driver instead of displaying failure to get maximum requested
-vectors. Driver will always request maximum vectors during
-initialization. In the event driver is not able to get maximum requested
-vectors, it will adjust the allocated vectors. This is normal and does not
-imply failure in driver.
+Pass the correct session ID to find_sess_by_s_id() instead of passing an
+uninitialized variable.
 
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Link: https://lore.kernel.org/r/20190830222402.23688-2-hmadhani@marvell.com
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: 2d70c103fd2a ("[SCSI] qla2xxx: Add LLD target-mode infrastructure for >= 24xx series") # v3.5.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_target.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 6a76d72175154..ebca1a470e9bc 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -3369,10 +3369,8 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
- 		    ha->msix_count, ret);
- 		goto msix_out;
- 	} else if (ret < ha->msix_count) {
--		ql_log(ql_log_warn, vha, 0x00c6,
--		    "MSI-X: Failed to enable support "
--		     "with %d vectors, using %d vectors.\n",
--		    ha->msix_count, ret);
-+		ql_log(ql_log_info, vha, 0x00c6,
-+		    "MSI-X: Using %d vectors\n", ret);
- 		ha->msix_count = ret;
- 		/* Recalculate queue values */
- 		if (ha->mqiobase && ql2xmqsupport) {
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 11753ed3433ca..2f5658554275c 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -5918,7 +5918,6 @@ static void qlt_abort_work(struct qla_tgt *tgt,
+ 	struct qla_hw_data *ha = vha->hw;
+ 	struct fc_port *sess = NULL;
+ 	unsigned long flags = 0, flags2 = 0;
+-	uint32_t be_s_id;
+ 	uint8_t s_id[3];
+ 	int rc;
+ 
+@@ -5931,8 +5930,7 @@ static void qlt_abort_work(struct qla_tgt *tgt,
+ 	s_id[1] = prm->abts.fcp_hdr_le.s_id[1];
+ 	s_id[2] = prm->abts.fcp_hdr_le.s_id[0];
+ 
+-	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha,
+-	    (unsigned char *)&be_s_id);
++	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha, s_id);
+ 	if (!sess) {
+ 		spin_unlock_irqrestore(&ha->tgt.sess_lock, flags2);
+ 
 -- 
 2.20.1
 
