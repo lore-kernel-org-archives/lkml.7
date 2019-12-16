@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2E1C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C59C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6669206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC6A207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519724;
-	bh=l3oBwYvLz9ls60wuoWgre1Z4dfrdBGfWK45ZGV2kUcA=;
+	s=default; t=1576519729;
+	bh=EU7t9QC6x1Qa93dOKlmzl2pS5NWaMNioNG7xowQQfy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8DqBhkfviDlr1LOhU4l8ngeyaaV/zsPdu+88HoYBlWFsEU/e63ILCa9C1rwSnpmC
-	 qy3Vx/EN61BjI1n/N3AOusQOApPWrSD4DBgr33OtCrjfYMd6so3HG5iy1A+Fh00P+m
-	 LWxBny3BEYQXcQpNukC5DhBC6mub0JjPb+0r+zgU=
+	b=UXX9SKxb5kOigD6j/eFwww4Eesc0BcK9ete9wakIr7LlBhhV9KlBPy9Wu/1cPpYJW
+	 IKisKJEFhYfg1sqrlRfrO7I5dxO4GLiLfk8pEX3GgqlXiyiREwk7+ddbHNB2SSIs9I
+	 qq69ulZI8QqhToT82YYOts1DkjIRjT1D8aH4py8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfLPSIn (ORCPT
+        id S1730323AbfLPSIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50350 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbfLPSIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:38 -0500
+        id S1730306AbfLPSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0EE2072D;
-        Mon, 16 Dec 2019 18:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17D120700;
+        Mon, 16 Dec 2019 18:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519718;
-        bh=l3oBwYvLz9ls60wuoWgre1Z4dfrdBGfWK45ZGV2kUcA=;
+        s=default; t=1576519723;
+        bh=EU7t9QC6x1Qa93dOKlmzl2pS5NWaMNioNG7xowQQfy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGo23RFxl50yUkIvsK/s4FAivVrCtxBu9sSMLtmlt4OL6hiwQugnJnxnMaKGq/n0s
-         xGT634GlAAnCRSDVSHOdnM98kL2Z5mRdxl+uphEZnMKkSotvjxeWXMz7WjC1OlJTfJ
-         sprbfcJ5709MXlTkv7Oav1LPYr0wPXi6lU8PHf38=
+        b=vafbDHYFbCrDffzelalNH/zyZ2rMZ0GY2NKsRYkqxyS95IPrsjrICp4kaeF9kikzD
+         IC0pot1BvOkWbK8C+Z5WIu4PWa5Re+4dM7OyXGvFLbLYFr7jMDGRkE+gEfcqN1DZzu
+         rBGw52ahYryNk2PeH1fdFWyzhxh7ue12xu2mC5E8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tadeusz Struk <tadeusz.struk@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.3 041/180] tpm: add check after commands attribs tab allocation
-Date:   Mon, 16 Dec 2019 18:48:01 +0100
-Message-Id: <20191216174817.104372186@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 043/180] brcmfmac: disable PCIe interrupts before bus reset
+Date:   Mon, 16 Dec 2019 18:48:03 +0100
+Message-Id: <20191216174818.645990175@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,37 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tadeusz Struk <tadeusz.struk@intel.com>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-commit f1689114acc5e89a196fec6d732dae3e48edb6ad upstream.
+commit 5d26a6a6150c486f51ea2aaab33af04db02f63b8 upstream.
 
-devm_kcalloc() can fail and return NULL so we need to check for that.
+Keeping interrupts on could result in brcmfmac freeing some resources
+and then IRQ handlers trying to use them. That was obviously a straight
+path for crashing a kernel.
 
-Cc: stable@vger.kernel.org
-Fixes: 58472f5cd4f6f ("tpm: validate TPM 2.0 commands")
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Example:
+CPU0                           CPU1
+----                           ----
+brcmf_pcie_reset
+  brcmf_pcie_bus_console_read
+  brcmf_detach
+    ...
+    brcmf_fweh_detach
+    brcmf_proto_detach
+                               brcmf_pcie_isr_thread
+                                 ...
+                                 brcmf_proto_msgbuf_rx_trigger
+                                   ...
+                                   drvr->proto->pd
+    brcmf_pcie_release_irq
+
+[  363.789218] Unable to handle kernel NULL pointer dereference at virtual address 00000038
+[  363.797339] pgd = c0004000
+[  363.800050] [00000038] *pgd=00000000
+[  363.803635] Internal error: Oops: 17 [#1] SMP ARM
+(...)
+[  364.029209] Backtrace:
+[  364.031725] [<bf243838>] (brcmf_proto_msgbuf_rx_trigger [brcmfmac]) from [<bf2471dc>] (brcmf_pcie_isr_thread+0x228/0x274 [brcmfmac])
+[  364.043662]  r7:00000001 r6:c8ca0000 r5:00010000 r4:c7b4f800
+
+Fixes: 4684997d9eea ("brcmfmac: reset PCIe bus on a firmware crash")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm2-cmd.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -939,6 +939,10 @@ static int tpm2_get_cc_attrs_tbl(struct
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+@@ -1426,6 +1426,8 @@ static int brcmf_pcie_reset(struct devic
+ 	struct brcmf_fw_request *fwreq;
+ 	int err;
  
- 	chip->cc_attrs_tbl = devm_kcalloc(&chip->dev, 4, nr_commands,
- 					  GFP_KERNEL);
-+	if (!chip->cc_attrs_tbl) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
++	brcmf_pcie_intr_disable(devinfo);
++
+ 	brcmf_pcie_bus_console_read(devinfo, true);
  
- 	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
- 	if (rc)
+ 	brcmf_detach(dev);
 
 
