@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD0FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CE8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2588821775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7E521582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518753;
-	bh=Baj24eQ/7ZedPE3KYRQs3tANG4h9wHQN0oWST1EaHtQ=;
+	s=default; t=1576518754;
+	bh=z3rTYzIuC9db465zqs7C561jd+xtDH6SGh4K3kTwM2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hre/zM/BtGxWDCuanct+g+7O/GbLQgkhbTiKcSTz4rn5wS18Pr44MhYDJyTagIHW2
-	 66hxriYzYpugoZQDf+mG5CM6zlrIhClt5mD4FLIGrXnuv9TJ30C/hEQVnQFitZrs9O
-	 5IHeAYgY3An2c1xsZu8l2hJEglxGpFQk4kUf9k2I=
+	b=HqG+DVUEAMPZztwhMaJ5RCGz2DcuadWio7AGuFF/vrjbWWjxZVnLjw6VijJtIhSrK
+	 LjoGOtK9Vc3xiUk1yy6rVWPWjVvicN9bzmnqlH5fhDc50jX6fjAyN8hkFoiZGdxqmr
+	 jsbmPWlwR5bUng9Cifc9gMsdCL5pASnH7p/jRLws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLPRwc (ORCPT
+        id S1726794AbfLPRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727425AbfLPRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:52:21 -0500
+        id S1727473AbfLPRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBBA2072D;
-        Mon, 16 Dec 2019 17:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0991C20733;
+        Mon, 16 Dec 2019 17:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518741;
-        bh=Baj24eQ/7ZedPE3KYRQs3tANG4h9wHQN0oWST1EaHtQ=;
+        s=default; t=1576518748;
+        bh=z3rTYzIuC9db465zqs7C561jd+xtDH6SGh4K3kTwM2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0cuW7CbhIirBKuzoqkHhO0hoaCHqJLh4Pj/SBAiYXB/ydQxrzhhzDPsynzytErsfk
-         BSISPzk0WUad/RnYWXSkwk317D2lYnHr9XoMBk9Orx1MrZHCnFdt3ilVxpQV3nrl6X
-         hNjLhXOepLP4EmyHuWYzvJ4xB80dKiAY3FgsTlC4=
+        b=tXqP0sfKu+6jvh1bGB2fRzSdWolHdGPCbo7o774zgjjyZg2WJN7/JcMf0tPfBVDv1
+         B3sflvnahgL8Es3CvpD2PB1GC7mJ+GXS5U1Msa/Qeyyb0kJHeJzlV/2h2brpDBXeeU
+         RCCI5RJdvQcRjvQvHlwem/09v+2gyFfwH4sJZimg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Xue Chaojing <xuechaojing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/267] clk: rockchip: fix ID of 8ch clock of I2S1 for rk3328
-Date:   Mon, 16 Dec 2019 18:46:13 +0100
-Message-Id: <20191216174853.797965453@linuxfoundation.org>
+Subject: [PATCH 4.14 049/267] net-next/hinic:fix a bug in set mac address
+Date:   Mon, 16 Dec 2019 18:46:15 +0100
+Message-Id: <20191216174853.970651912@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,33 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Xue Chaojing <xuechaojing@huawei.com>
 
-[ Upstream commit df7b1f2e0a4ae0fceff261e29cde63dafcf2360f ]
+[ Upstream commit 9ea72dc9430306b77c73a8a21beb51437cde1d6d ]
 
-This patch fixes mistakes in HCLK_I2S1_8CH for running I2S1
-successfully.
+In add_mac_addr(), if the MAC address is a muliticast address,
+it will not be set, which causes the network card fail to receive
+the multicast packet. This patch fixes this bug.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/dt-bindings/clock/rk3328-cru.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/huawei/hinic/hinic_main.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
-index d2b26a4b43ebd..4a9db1b2669b8 100644
---- a/include/dt-bindings/clock/rk3328-cru.h
-+++ b/include/dt-bindings/clock/rk3328-cru.h
-@@ -178,7 +178,7 @@
- #define HCLK_TSP		309
- #define HCLK_GMAC		310
- #define HCLK_I2S0_8CH		311
--#define HCLK_I2S1_8CH		313
-+#define HCLK_I2S1_8CH		312
- #define HCLK_I2S2_2CH		313
- #define HCLK_SPDIF_8CH		314
- #define HCLK_VOP		315
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index a696b5b2d40e6..44c73215d0264 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -598,9 +598,6 @@ static int add_mac_addr(struct net_device *netdev, const u8 *addr)
+ 	u16 vid = 0;
+ 	int err;
+ 
+-	if (!is_valid_ether_addr(addr))
+-		return -EADDRNOTAVAIL;
+-
+ 	netif_info(nic_dev, drv, netdev, "set mac addr = %02x %02x %02x %02x %02x %02x\n",
+ 		   addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+ 
+@@ -724,6 +721,7 @@ static void set_rx_mode(struct work_struct *work)
+ {
+ 	struct hinic_rx_mode_work *rx_mode_work = work_to_rx_mode_work(work);
+ 	struct hinic_dev *nic_dev = rx_mode_work_to_nic_dev(rx_mode_work);
++	struct netdev_hw_addr *ha;
+ 
+ 	netif_info(nic_dev, drv, nic_dev->netdev, "set rx mode work\n");
+ 
+@@ -731,6 +729,9 @@ static void set_rx_mode(struct work_struct *work)
+ 
+ 	__dev_uc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
+ 	__dev_mc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
++
++	netdev_for_each_mc_addr(ha, nic_dev->netdev)
++		add_mac_addr(nic_dev->netdev, ha->addr);
+ }
+ 
+ static void hinic_set_rx_mode(struct net_device *netdev)
 -- 
 2.20.1
 
