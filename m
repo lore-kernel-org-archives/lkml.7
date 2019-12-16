@@ -2,160 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1865C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358A3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18E92465E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C522465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFFTXy2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLPDXF (ORCPT
+        id S1726690AbfLPDcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 22:23:05 -0500
-Received: from mga07.intel.com ([134.134.136.100]:13122 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfLPDXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 22:23:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 19:23:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,320,1571727600"; 
-   d="scan'208";a="212096532"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Dec 2019 19:23:04 -0800
-Received: from [10.226.38.59] (unknown [10.226.38.59])
-        by linux.intel.com (Postfix) with ESMTP id 2A22F580479;
-        Sun, 15 Dec 2019 19:23:01 -0800 (PST)
-Subject: Re: [PATCH v8 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-References: <20191212015320.20969-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191212015320.20969-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191213190819.GA19560@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <fc4a2812-56d8-3008-151a-d143993da803@linux.intel.com>
-Date:   Mon, 16 Dec 2019 11:23:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191213190819.GA19560@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Sun, 15 Dec 2019 22:32:33 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:41040 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfLPDcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 22:32:33 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ca19so2337663pjb.8;
+        Sun, 15 Dec 2019 19:32:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qpVTc4tcUglBIv/YUnNYtkmKTbZEgyX3F7tDT+7xZvU=;
+        b=cFFTXy2vz5jh9KdiKKjPPBUP5mQwXiFWt91lRJv0f35dZUzhtz5BMXvSuZoqPMBCeW
+         IeV2BqhciVRDPIBDCQz5lL0jENYLkOo5VuE45VV+bF0mx4YGJzxINbz86r+dXQ0Wkb0v
+         8EUJBQE2tul8OHHvP/6SfcGqCndOBH2lPhs6IVIqBhGj7FYLDK35VEABGez1ov2KJFHt
+         85QfmDabsYV2ZNPgZWUus/5ltcLculC5Dh0xsxdXfLuw3E06ZLTJFAhLBIvhn4CRDGu8
+         imME8XCtbptxU4NUL1ytk1IoBobv9a0oX8BG0j/v++85mcEgvPHtwbUS3y8EiGTFyDUQ
+         EJcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qpVTc4tcUglBIv/YUnNYtkmKTbZEgyX3F7tDT+7xZvU=;
+        b=ARx6tq13nvAfJMIXUnFYd1GyRMP1tnX2dNWSLvNKb3gQYD6hJxHI+6C3D3skM3YfcH
+         LVY6flwPd9qIrkLyAD8AcTsNwkckXoO+CHIEN0T1n8zBWsp4JePrjA0yhieCXNgrwAlU
+         iW8g40DEECWr5jA5WtO9syRzlnQsgx2bmcYo5wtdfb97y4NL8MVYrV82H+rfCq5ElQVv
+         srbnETMdK9YZ1jV+r74tD+UIoVqhc4RHFzita3FYTgLZmNm0BNwnLe5fdr9+c/k2elS7
+         SUV6HNcQMrQC7weJ0UA/ouMv3Ktt7lTRI2TK87h2i9LO8SBsGBQZ9OrqxIRFWhgjO6i6
+         qGOg==
+X-Gm-Message-State: APjAAAW5iQTdDkMa3rGJdDO1WdRBsJeRSfI5ONNKKFXSOnzcbVVpn2fG
+        WtFvmzpxhuXqo6aVzIs2KS8=
+X-Google-Smtp-Source: APXvYqyp9/I0lRWx3WKwBEci61s+yACCFwEJpSLYv/rp8GpXBQZNwGPKMtmRmjE3wBTDRRDGCXJaWQ==
+X-Received: by 2002:a17:902:541:: with SMTP id 59mr13821692plf.190.1576467152279;
+        Sun, 15 Dec 2019 19:32:32 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 78sm19052403pfu.65.2019.12.15.19.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 19:32:31 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Stefan Wahren <wahrenst@gmx.net>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux@armlinux.org.uk,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v3] ARM: bcm: Add missing sentinel to bcm2711_compat[]
+Date:   Sun, 15 Dec 2019 19:32:30 -0800
+Message-Id: <20191216033230.26652-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <b8f2060dacd4c4f27e0e1791cb12462ce740927d.1576396141.git.hns@goldelico.com>
+References: <b8f2060dacd4c4f27e0e1791cb12462ce740927d.1576396141.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, 15 Dec 2019 08:49:02 +0100, "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> commit 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
+> 
+> breaks boot of many other platforms (e.g. OMAP or i.MX6) if
+> CONFIG_ARCH_BCM2835 is enabled in addition to some multiplatform
+> config (e.g. omap2plus_defconfig). The symptom is that the OMAP
+> based board does not show any activity beyond "Starting Kernel ..."
+> even with earlycon.
+> 
+> Reverting the mentioned commit makes it work again.
+> 
+> The real fix is to add the missing NULL sentinel to the
+> bcm2711_compat[] variable-length array.
+> 
+> Fixes: 781fa0a95424 ("ARM: bcm: Add support for BCM2711 SoC")
+> Acked-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
 
-    Thank you for the review comments.
-
-On 14/12/2019 3:08 AM, Rob Herring wrote:
-> On Thu, Dec 12, 2019 at 09:53:19AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> eMMC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 62 ++++++++++++++++++++++
->>   1 file changed, 62 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> new file mode 100644
->> index 000000000000..aed11258d96d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> @@ -0,0 +1,62 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +description: |+
->> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
->> +  node is used to reference the base address of eMMC phy registers.
->> +
->> +  The eMMC PHY node should be the child of a syscon node with the
->> +  required property:
->> +
->> +  - compatible:         Should be one of the following:
->> +                        "intel,lgm-syscon", "syscon"
->> +  - reg:
->> +      maxItems: 1
->> +
->> +properties:
->> +  compatible:
->> +    contains:
-> You need to drop 'contains'. That implies other strings can also be
-> present.
-Sure, I will drop contains..
->> +      const: intel,lgm-emmc-phy
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    maxItems: 1
-> Drop maxItems. It should be:
->
-> const: emmcclk
->
-> Or just drop clock-names because you don't really need *-names when
-> there is only 1.
-
-Noted, fix it.
-
-With Best Regards
-Vadivel
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    sysconf: chiptop@e0200000 {
->> +      compatible = "intel,lgm-syscon", "syscon";
->> +      reg = <0xe0200000 0x100>;
->> +
->> +      emmc-phy: emmc-phy@a8 {
->> +        compatible = "intel,lgm-emmc-phy";
->> +        reg = <0x00a8 0x10>;
->> +        clocks = <&emmc>;
->> +        clock-names = "emmcclk";
->> +        #phy-cells = <0>;
->> +      };
->> +    };
->> +...
->> -- 
->> 2.11.0
->>
+Applied to soc/fixes, thanks!
+--
+Florian
