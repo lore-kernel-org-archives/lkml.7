@@ -2,72 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AFFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91229206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1FC20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R2sWXSzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfLPNnG (ORCPT
+        id S1727976AbfLPNnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:43:06 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48610 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727807AbfLPNnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:43:06 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A6562513F75AAEF470C6;
-        Mon, 16 Dec 2019 21:43:00 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Dec 2019 21:42:53 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <afd@ti.com>, <sumit.semwal@linaro.org>,
-        <benjamin.gaignard@linaro.org>
-CC:     <labbott@redhat.com>, <Brian.Starkey@arm.com>,
-        <john.stultz@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH v2] dma-heap: Make the symbol 'dma_heap_ioctl_cmds' static
-Date:   Mon, 16 Dec 2019 21:38:31 +0800
-Message-ID: <1576503511-27500-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
-References: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
+        Mon, 16 Dec 2019 08:43:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36030 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfLPNnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:43:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cLfO0FrQIKDkhgJ7+GWTEvyF1lH2jQR6D5ajAAbwWqM=; b=R2sWXSzlCi29GOXEb+/EfVweF
+        TzupiJFTCWPu3SPv0GI77HT5+VhO+cpDFybK+mZZ7pBw95JonFirMmiU1ON47gbMnu3DAw5kgY1KB
+        kmKFYVYMFR7WELulE9JhF4fT9Krom+GrZ9uX56N8ko/PERBwF4ary7alQ/z9xkLqf/ahJJQ3w/z2e
+        jetzKD6oO+/aifTtsszChK8mVO0j26XcSmKK4XOiQm9yMAY8hsZ5wTtslx0Yb8wqo+iQd5Ii8eRq8
+        S4mcEq5B0ZBO4NH59llFRLJpzqIUj3dya62Ceh6wQ3wKw9GCbKNCXX04n8uCTZ9AmvoeI+PVIp39h
+        T1Jun0TUg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igqek-0000JG-Fj; Mon, 16 Dec 2019 13:43:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 49952301747;
+        Mon, 16 Dec 2019 14:42:02 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 577332B2A00ED; Mon, 16 Dec 2019 14:43:24 +0100 (CET)
+Date:   Mon, 16 Dec 2019 14:43:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, javi.merino@kernel.org,
+        amit.kucheria@verdurent.com
+Subject: Re: [Patch v6 1/7] sched/pelt.c: Add support to track thermal
+ pressure
+Message-ID: <20191216134324.GQ2844@hirez.programming.kicks-ass.net>
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+ <1576123908-12105-2-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576123908-12105-2-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning.
+On Wed, Dec 11, 2019 at 11:11:42PM -0500, Thara Gopinath wrote:
+> The
+> difference here from rt/dl utilization tracking is that, instead of
+> tracking time spent by a cpu running a rt/dl task through util_avg, the
+> average thermal pressure is tracked through load_avg. This is because
+> thermal pressure signal is weighted "delta" capacity and is not
+> binary(util_avg is binary). "delta capacity" here means delta between the
+> actual capacity of a cpu and the decreased capacity a cpu due to a thermal
+> event.
 
-drivers/dma-buf/dma-heap.c:109:14: warning: symbol 'dma_heap_ioctl_cmds' was not declared. Should it be static?
+I'm thinking that ^, would make a nice adding to that v.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/dma-buf/dma-heap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-index 4f04d10..da2090e 100644
---- a/drivers/dma-buf/dma-heap.c
-+++ b/drivers/dma-buf/dma-heap.c
-@@ -106,7 +106,7 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
- 	return 0;
- }
- 
--unsigned int dma_heap_ioctl_cmds[] = {
-+static unsigned int dma_heap_ioctl_cmds[] = {
- 	DMA_HEAP_IOC_ALLOC,
- };
- 
--- 
-1.7.12.4
-
+> +/*
+> + * thermal:
+> + *
+> + *   load_sum = \Sum se->avg.load_sum
+> + *
+> + *   util_avg and runnable_load_avg are not supported and meaningless.
+> + *
+> + */
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +	if (___update_load_sum(now, &rq->avg_thermal,
+> +			       capacity,
+> +			       capacity,
+> +			       capacity)) {
+> +		___update_load_avg(&rq->avg_thermal, 1, 1);
+> +		trace_pelt_thermal_tp(rq);
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
