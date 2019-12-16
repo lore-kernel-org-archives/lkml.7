@@ -2,135 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEB1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C48C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950A32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521886;
-	bh=pSHDYP61tTCoS2vTKpaAdv2ZHpLWdb35Vgy0TAfaJAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjRCYUNOqSzP8jh2wtt/PZTEk/CvNnd2EQ9WthkWsuoFMyYZU7qsudXHX0AGUjzKg
-	 f/HOITxJi8T6AJOCvsfVcU4Wax0zQkvcK7cKuqRV5Cag7Ry/8Nv5lSnu+QVg73WiIq
-	 iHL5NnBHRv1mjrL7y4WJGi7l0uLJyH2P4IKF1MLE=
+	by mail.kernel.org (Postfix) with ESMTP id 2B7F92467E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAA97LcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfLPSop (ORCPT
+        id S1728575AbfLPSo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:44:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbfLPR6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEF20206B7;
-        Mon, 16 Dec 2019 17:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519093;
-        bh=pSHDYP61tTCoS2vTKpaAdv2ZHpLWdb35Vgy0TAfaJAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xIuww4AzbVA5tvywmgkuNdYBq0aHMhdD/MnXLfQ9yydrrYTClHLt/jFbUu4RrIqMs
-         XhmwOTZLFt8D9d5IWWjfDQlUxMkWbK4G4QmD6au650WM67dE6XfqKBMDHGeVN4U6wC
-         Os7mr7cuh2tqossU4JGm7XFvLBo4yaUYPH7Dz8bo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 185/267] btrfs: check page->mapping when loading free space cache
-Date:   Mon, 16 Dec 2019 18:48:31 +0100
-Message-Id: <20191216174912.655679220@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
-References: <20191216174848.701533383@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:44:58 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40363 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfLPSoz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:44:55 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so6071973pfh.7;
+        Mon, 16 Dec 2019 10:44:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=565fc6trZy4bzYebyeRmDvS9Y4aKY1nHDQfb3rsmedc=;
+        b=AAA97LcKasXFutNj5F1JGuGjWcAsQtLV8CuOAdqhawOKa6Ix8fu+Ra+L7Ns88YBaS9
+         15VMHT0pMQ8aLnrW7bHTZeUq5/Ky5t93EpLesvGEqlvtuQ0JQdSc8XLgMxQACs8sbP14
+         8EEV8Cx4zfpN7sd/YOLiGxlNEg+nTKXU30AAJfDy1f3Z3rHwM3griO2thdqdVtGa1R+x
+         D6P8lStO/sZvl8hUkjKsMkH2Tg0JRKY2dGURD/cfhUjsEMJ6r3ezDxDvXUDk0cHyshsN
+         gtABy7blMfJMJfkipxFDafTe+L0n3ViO/h8sh+tEgihKxLxxh1C0F77i3ciXwsbks5qV
+         DmcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=565fc6trZy4bzYebyeRmDvS9Y4aKY1nHDQfb3rsmedc=;
+        b=eNYXtsrWa+FFn5xIMk1NxB1kPeYkHGbY+/cWi4htj3kalK+uY69wlJRqzvScNn4her
+         nTzut7eD82sS1c4Bjlqyzi4c3CwLO39Uy/Ay/cLMwZsaLjJn/L4BfFAPGeeFJ1g4ssIF
+         1Qb6u4J9aa0CTvRMUN/oXrnqoCkwPs6hnSvv8EqPq84zkOukIjE+9yIfTVyiIa0BWWyr
+         sAf0Vuc2tHtxnlti/SZq4mLTb6m3Cw2jTSuvHt5u+FoxJ+nugdDB8dQ3wAMKGfRN4QCV
+         c3IP1gwkcUrBm6yQR2aQhajy9dBDkKGKqxYe1Dd4Ud3HUYJNHIuYQRmUhZeDlRV2tnDX
+         XCFQ==
+X-Gm-Message-State: APjAAAXZacM7Hpl+NcUIiFklPTvfbUH5QTRVFB/pDJkpn4tUZsoqWh6p
+        fgSX8zeGz0QI3zx6pB+slV/S6NOz
+X-Google-Smtp-Source: APXvYqxihnLNPEcDTkUZq/Nw6sBPnbaVIkoTnU+2z38SN+fG3whW1DDIt5Qe51JlPLBUKdW9k9t2Wg==
+X-Received: by 2002:a62:ed19:: with SMTP id u25mr17938033pfh.173.1576521894681;
+        Mon, 16 Dec 2019 10:44:54 -0800 (PST)
+Received: from [10.69.49.110] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a26sm23650190pfo.5.2019.12.16.10.44.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 10:44:53 -0800 (PST)
+Subject: Re: [PATCH] scsi: lpfc: fix build failure with DEBUGFS disabled
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191216131701.3125077-1-arnd@arndb.de>
+From:   James Smart <jsmart2021@gmail.com>
+Message-ID: <459ba3b4-8f8e-1eb1-a9d2-fb1f866db600@gmail.com>
+Date:   Mon, 16 Dec 2019 10:44:52 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216131701.3125077-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+On 12/16/2019 5:16 AM, Arnd Bergmann wrote:
+> A recent change appears to have moved an #endif by accident:
+> 
+> drivers/scsi/lpfc/lpfc_debugfs.c:5393:18: error: 'lpfc_debugfs_dumpHBASlim_open' undeclared here (not in a function); did you mean 'lpfc_debugfs_op_dumpHBASlim'?
+> drivers/scsi/lpfc/lpfc_debugfs.c:5394:18: error: 'lpfc_debugfs_lseek' undeclared here (not in a function); did you mean 'lpfc_debugfs_nvme_trc'?
+> drivers/scsi/lpfc/lpfc_debugfs.c:5395:18: error: 'lpfc_debugfs_read' undeclared here (not in a function); did you mean 'lpfc_debug_dump_q'?
+> drivers/scsi/lpfc/lpfc_debugfs.c:5396:18: error: 'lpfc_debugfs_release' undeclared here (not in a function); did you mean 'lpfc_debugfs_terminate'?
+> drivers/scsi/lpfc/lpfc_debugfs.c:5402:18: error: 'lpfc_debugfs_dumpHostSlim_open' undeclared here (not in a function); did you mean 'lpfc_debugfs_op_dumpHostSlim'?
+> 
+> Move it back to where it was previously.
+> 
+> Fixes: 95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-commit 3797136b626ad4b6582223660c041efdea8f26b2 upstream.
+Thank You
 
-While testing 5.2 we ran into the following panic
+Reviewed-by: James Smart <james.smart@broadcom.com>
 
-[52238.017028] BUG: kernel NULL pointer dereference, address: 0000000000000001
-[52238.105608] RIP: 0010:drop_buffers+0x3d/0x150
-[52238.304051] Call Trace:
-[52238.308958]  try_to_free_buffers+0x15b/0x1b0
-[52238.317503]  shrink_page_list+0x1164/0x1780
-[52238.325877]  shrink_inactive_list+0x18f/0x3b0
-[52238.334596]  shrink_node_memcg+0x23e/0x7d0
-[52238.342790]  ? do_shrink_slab+0x4f/0x290
-[52238.350648]  shrink_node+0xce/0x4a0
-[52238.357628]  balance_pgdat+0x2c7/0x510
-[52238.365135]  kswapd+0x216/0x3e0
-[52238.371425]  ? wait_woken+0x80/0x80
-[52238.378412]  ? balance_pgdat+0x510/0x510
-[52238.386265]  kthread+0x111/0x130
-[52238.392727]  ? kthread_create_on_node+0x60/0x60
-[52238.401782]  ret_from_fork+0x1f/0x30
-
-The page we were trying to drop had a page->private, but had no
-page->mapping and so called drop_buffers, assuming that we had a
-buffer_head on the page, and then panic'ed trying to deref 1, which is
-our page->private for data pages.
-
-This is happening because we're truncating the free space cache while
-we're trying to load the free space cache.  This isn't supposed to
-happen, and I'll fix that in a followup patch.  However we still
-shouldn't allow those sort of mistakes to result in messing with pages
-that do not belong to us.  So add the page->mapping check to verify that
-we still own this page after dropping and re-acquiring the page lock.
-
-This page being unlocked as:
-btrfs_readpage
-  extent_read_full_page
-    __extent_read_full_page
-      __do_readpage
-        if (!nr)
-	   unlock_page  <-- nr can be 0 only if submit_extent_page
-			    returns an error
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ add callchain ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/free-space-cache.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -398,6 +398,12 @@ static int io_ctl_prepare_pages(struct b
- 		if (uptodate && !PageUptodate(page)) {
- 			btrfs_readpage(NULL, page);
- 			lock_page(page);
-+			if (page->mapping != inode->i_mapping) {
-+				btrfs_err(BTRFS_I(inode)->root->fs_info,
-+					  "free space cache page truncated");
-+				io_ctl_drop_pages(io_ctl);
-+				return -EIO;
-+			}
- 			if (!PageUptodate(page)) {
- 				btrfs_err(BTRFS_I(inode)->root->fs_info,
- 					   "error reading free space cache");
-
+-- james
 
