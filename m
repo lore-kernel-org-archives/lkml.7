@@ -2,50 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98723C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BE9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8A621582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035EC207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520034;
-	bh=vQ+eRiIY2UwYOBrhgsHle4m1zP2RSoGVKwaTLJoB/Ug=;
+	s=default; t=1576520037;
+	bh=ZRk387PotmoBi8hh6QyD2phChBhzAMte6NFC0bi5/DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMeQY+AVJvRn4R5vPP+fe70OexRl1RNwrG4+Vk6/VHVsjexj6dqB4SSNEaBHJ+JZ/
-	 EbXlsVMwcQ9i97FaJcrsf9T+5LbaFfZvkWXJamWfa0L+TsA+4c32aBzzG9JpozpysL
-	 n9SJiosu3gwglUOKOSYfo8sHs+i2v0R8egcULWOQ=
+	b=EqFkD4rns+p0c0wtkQ46GcvxfKCNEthuspCqbtMtVGTm3lpGwwpFCfClsI066Bdvg
+	 agM4PNW81nGT6tB0Ym22OWJPuZ+ej/U3WAd4LNwqLWCJC9/dysESSI8wY3H+LAPP4H
+	 SU0y1jniPyHy5JTssSR7zhUd/E3merngpu2FzZAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbfLPSNw (ORCPT
+        id S1731163AbfLPSN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730818AbfLPSNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:41 -0500
+        id S1731109AbfLPSNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4135421775;
-        Mon, 16 Dec 2019 18:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A888D207FF;
+        Mon, 16 Dec 2019 18:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520020;
-        bh=vQ+eRiIY2UwYOBrhgsHle4m1zP2RSoGVKwaTLJoB/Ug=;
+        s=default; t=1576520023;
+        bh=ZRk387PotmoBi8hh6QyD2phChBhzAMte6NFC0bi5/DY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5MUEJly0nDTL+63zjG84zobpgpNAajSMZSkqRaeUHYjPyT0gbYYGL/qItYxEL6mX
-         NnxGtx9qG05Tn2mqkyAHAl+GDMtEHC9CgqD+Xgi+3w8/3efzcin2KxI99K3th/MUDY
-         V6I0KSEaC+hI2O18md47nb3BvTH95UnX8xykXg9M=
+        b=Cad3hahEaDAIpwV4t9oUOe720T/f8TMpwg3+lsKuyYZaWa0EL4r9V6owxejp+yoVK
+         HbcOfljxSuK6tWjP7epQSwchUEoWxcW2LtHdMtluCmYFSIS+UVzEvM0/Hxdh9RvsQv
+         FiERqjsPbE7IFawkyaarT8yiGE2P+IEu6fJdmuso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.3 115/180] pinctrl: samsung: Fix device node refcount leaks in S3C24xx wakeup controller init
-Date:   Mon, 16 Dec 2019 18:49:15 +0100
-Message-Id: <20191216174839.318881968@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 158/180] Revert "scsi: qla2xxx: Fix memory leak when sending I/O fails"
+Date:   Mon, 16 Dec 2019 18:49:58 +0100
+Message-Id: <20191216174845.614595027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,52 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit 6fbbcb050802d6ea109f387e961b1dbcc3a80c96 upstream.
+[ Upstream commit 5a993e507ee65a28eca6690ee11868555c4ca46b ]
 
-In s3c24xx_eint_init() the for_each_child_of_node() loop is used with a
-break to find a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+This reverts commit 2f856d4e8c23f5ad5221f8da4a2f22d090627f19.
 
-Cc: <stable@vger.kernel.org>
-Fixes: af99a7507469 ("pinctrl: Add pinctrl-s3c24xx driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch was found to introduce a double free regression. The issue
+it originally attempted to address was fixed in patch
+f45bca8c5052 ("scsi: qla2xxx: Fix double scsi_done for abort path").
 
+Link: https://lore.kernel.org/r/4BDE2B95-835F-43BE-A32C-2629D7E03E0A@marvell.com
+Requested-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-+++ b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-@@ -490,8 +490,10 @@ static int s3c24xx_eint_init(struct sams
- 		return -ENODEV;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 6be453985a12d..484045e4d194f 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -947,8 +947,6 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
  
- 	eint_data = devm_kzalloc(dev, sizeof(*eint_data), GFP_KERNEL);
--	if (!eint_data)
-+	if (!eint_data) {
-+		of_node_put(eint_np);
- 		return -ENOMEM;
-+	}
+ qc24_host_busy_free_sp:
+ 	sp->free(sp);
+-	CMD_SP(cmd) = NULL;
+-	qla2x00_rel_sp(sp);
  
- 	eint_data->drvdata = d;
+ qc24_host_busy:
+ 	return SCSI_MLQUEUE_HOST_BUSY;
+@@ -1038,8 +1036,6 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
  
-@@ -503,12 +505,14 @@ static int s3c24xx_eint_init(struct sams
- 		irq = irq_of_parse_and_map(eint_np, i);
- 		if (!irq) {
- 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
-+			of_node_put(eint_np);
- 			return -ENXIO;
- 		}
+ qc24_host_busy_free_sp:
+ 	sp->free(sp);
+-	CMD_SP(cmd) = NULL;
+-	qla2xxx_rel_qpair_sp(sp->qpair, sp);
  
- 		eint_data->parents[i] = irq;
- 		irq_set_chained_handler_and_data(irq, handlers[i], eint_data);
- 	}
-+	of_node_put(eint_np);
- 
- 	bank = d->pin_banks;
- 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+ qc24_host_busy:
+ 	return SCSI_MLQUEUE_HOST_BUSY;
+-- 
+2.20.1
+
 
 
