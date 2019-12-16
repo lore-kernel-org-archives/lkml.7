@@ -2,152 +2,205 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF976C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05014C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC82020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF48620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfLPNzO (ORCPT
+        id S1727990AbfLPN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:55:14 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54186 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727579AbfLPNzN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:55:13 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGDcXix110269;
-        Mon, 16 Dec 2019 08:54:33 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wwdt9c5aw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:54:33 -0500
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBGDch7m111283;
-        Mon, 16 Dec 2019 08:54:32 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wwdt9c5ak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:54:32 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGDnjqe005801;
-        Mon, 16 Dec 2019 13:54:31 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 2wvqc63gss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 13:54:31 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGDsVbl28115330
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 13:54:31 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 606F72805E;
-        Mon, 16 Dec 2019 13:54:31 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5DAB28058;
-        Mon, 16 Dec 2019 13:54:25 +0000 (GMT)
-Received: from [9.199.36.91] (unknown [9.199.36.91])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 13:54:25 +0000 (GMT)
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org> <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
- <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
-Message-ID: <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
-Date:   Mon, 16 Dec 2019 19:24:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:56:33 -0500
+Received: from mga17.intel.com ([192.55.52.151]:19359 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727609AbfLPN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:56:33 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 05:56:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="227118511"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 16 Dec 2019 05:56:28 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Dec 2019 15:56:27 +0200
+Date:   Mon, 16 Dec 2019 15:56:27 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
+ lookup from mfd to the i915 driver
+Message-ID: <20191216135627.GS1208@intel.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <20191215163810.52356-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_05:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 bulkscore=0
- suspectscore=2 adultscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160122
+In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 7:10 PM, Aneesh Kumar K.V wrote:
-> On 12/16/19 6:50 PM, Peter Zijlstra wrote:
->> On Mon, Dec 16, 2019 at 06:43:53PM +0530, Aneesh Kumar K.V wrote:
->>> On 12/16/19 6:07 PM, Peter Zijlstra wrote:
->>
->>>> I'm confused, are you saing you're happy to have PowerPC eat the extra
->>>> TLB invalidates? I thought you cared about PPC performance :-)
->>>>
->>>>
->>>
->>> Instead can we do
->>>
->>> static inline void tlb_table_invalidate(struct mmu_gather *tlb)
->>> {
->>> #ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
->>>      * Invalidate page-table caches used by hardware walkers. Then we 
->>> still
->>>      * need to RCU-sched wait while freeing the pages because software
->>>      * walkers can still be in-flight.
->>>      */
->>>     tlb_flush_mmu_tlbonly(tlb);
->>> #endif
->>> }
->>
->> How does that not break ARM/ARM64/s390 and x86 ?
->>
+On Sun, Dec 15, 2019 at 05:38:09PM +0100, Hans de Goede wrote:
+> Move the Crystal Cove PMIC panel GPIO lookup-table from
+> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
 > 
-> Hmm I missed that usage of RCU_TABLE_NO_INVALIDATE.
+> The moved looked-up table is adding a GPIO lookup to the i915 PCI
+> device and the GPIO subsys allows only one lookup table per device,
 > 
-> Ok I guess we need to revert this change that went upstream this merge 
-> window then
+> The intel_soc_pmic_core.c code only adds lookup-table entries for the
+> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
+> able to access some GPIOs on the SoC itself, which requires entries for
+> these GPIOs in the lookup-table.
 > 
-> commit 52162ec784fa05f3a4b1d8e84421279998be3773
-> Author: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Date:   Thu Oct 24 13:28:00 2019 +0530
+> Since the lookup-table is attached to the i915 PCI device it really
+> should be part of the i915 driver, this will also allow us to extend
+> it with GPIOs from other sources when necessary.
 > 
->      powerpc/mm/book3s64/radix: Use freed_tables instead of need_flush_all
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
+>  drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
+>  2 files changed, 22 insertions(+), 20 deletions(-)
 > 
-> 
-> 
-> I will review the change closely.
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> index 027970348b22..847f04eec2a1 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> @@ -25,6 +25,7 @@
+>   */
+>  
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/gpio/machine.h>
+>  #include <linux/mfd/intel_soc_pmic.h>
+>  #include <linux/slab.h>
+>  
+> @@ -686,8 +687,18 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>  
+>  /*
+>   * On some BYT/CHT devs some sequences are incomplete and we need to manually
+> - * control some GPIOs.
+> + * control some GPIOs. We need to add a GPIO lookup table before we get these.
+>   */
+> +static struct gpiod_lookup_table pmic_panel_gpio_table = {
+> +	/* Intel GFX is consumer */
+> +	.dev_id = "0000:00:02.0",
+> +	.table = {
+> +		/* Panel EN/DISABLE */
+> +		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
+> +		{ },
+> +	},
+> +};
 
+Feels like a failure in abstraction to have these irrelevant details
+exposed on the consumer side. Also slightly concerned that someone
+refactoring things in the pmic driver could now break this without
+realizing it. But if people want it done this way I can live with it.
 
-So __p*_free_tlb() routines on ppc64 just mark that we need a page walk 
-cache flush and the actual flush in done in tlb_flush_mmu. As per
+> +
+>  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  {
+>  	struct drm_device *dev = intel_dsi->base.base.dev;
+> @@ -697,6 +708,8 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+> +		gpiod_add_lookup_table(&pmic_panel_gpio_table);
+> +
+>  		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>  		if (IS_ERR(intel_dsi->gpio_panel)) {
+>  			DRM_ERROR("Failed to own gpio for panel control\n");
+> @@ -707,8 +720,16 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  
+>  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+>  {
+> +	struct drm_device *dev = intel_dsi->base.base.dev;
+> +	struct drm_i915_private *dev_priv = to_i915(dev);
+> +	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+> +
+>  	if (intel_dsi->gpio_panel) {
+>  		gpiod_put(intel_dsi->gpio_panel);
+>  		intel_dsi->gpio_panel = NULL;
+>  	}
+> +
+> +	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+> +	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
 
-d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support 
-invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
+Needless parens here as well.
 
--aneesh
+Reviewed-by: Ville Syrj�l� <ville.syrjala@linux.intel.com>
+
+> +		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
+>  }
+> diff --git a/drivers/mfd/intel_soc_pmic_core.c b/drivers/mfd/intel_soc_pmic_core.c
+> index 47188df3080d..ddd64f9e3341 100644
+> --- a/drivers/mfd/intel_soc_pmic_core.c
+> +++ b/drivers/mfd/intel_soc_pmic_core.c
+> @@ -9,8 +9,6 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> -#include <linux/gpio/consumer.h>
+> -#include <linux/gpio/machine.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+> @@ -25,17 +23,6 @@
+>  #define BYT_CRC_HRV		2
+>  #define CHT_CRC_HRV		3
+>  
+> -/* Lookup table for the Panel Enable/Disable line as GPIO signals */
+> -static struct gpiod_lookup_table panel_gpio_table = {
+> -	/* Intel GFX is consumer */
+> -	.dev_id = "0000:00:02.0",
+> -	.table = {
+> -		/* Panel EN/DISABLE */
+> -		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
+> -		{ },
+> -	},
+> -};
+> -
+>  /* PWM consumed by the Intel GFX */
+>  static struct pwm_lookup crc_pwm_lookup[] = {
+>  	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL),
+> @@ -96,9 +83,6 @@ static int intel_soc_pmic_i2c_probe(struct i2c_client *i2c,
+>  	if (ret)
+>  		dev_warn(dev, "Can't enable IRQ as wake source: %d\n", ret);
+>  
+> -	/* Add lookup table binding for Panel Control to the GPIO Chip */
+> -	gpiod_add_lookup_table(&panel_gpio_table);
+> -
+>  	/* Add lookup table for crc-pwm */
+>  	pwm_add_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
+>  
+> @@ -121,9 +105,6 @@ static int intel_soc_pmic_i2c_remove(struct i2c_client *i2c)
+>  
+>  	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+>  
+> -	/* Remove lookup table for Panel Control from the GPIO Chip */
+> -	gpiod_remove_lookup_table(&panel_gpio_table);
+> -
+>  	/* remove crc-pwm lookup table */
+>  	pwm_remove_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
+>  
+> -- 
+> 2.23.0
+
+-- 
+Ville Syrj�l�
+Intel
