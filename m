@@ -2,331 +2,245 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C78C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634AFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDC6206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE712067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmOBTB2C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="EyNlTpb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfLPO2S (ORCPT
+        id S1728147AbfLPObA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:28:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23171 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728008AbfLPO2S (ORCPT
+        Mon, 16 Dec 2019 09:31:00 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40322 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfLPOa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:28:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576506495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mqnAaSxh0pSKzbiLQ7KvpBpDD8sO/UPH/8UcK0z/vf8=;
-        b=BmOBTB2Cha+JhEN7K3RQlIIwZmKYMEnRh+nojOu8ipSS8HCz+wiUguHnsQC6POsc1k+Wse
-        kH3PWcvIDxfre/oWCqGzhLPr5ELxgJNlAi3+ESpqRpwOdqcxmcYpijJB5EeBPwiI6tt3ro
-        IU5L3x7v+WtMIg6Cx8yPCLZ2iQQedTk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-oajqK1C1P9Cx_8K5cMbUUQ-1; Mon, 16 Dec 2019 09:28:12 -0500
-X-MC-Unique: oajqK1C1P9Cx_8K5cMbUUQ-1
-Received: by mail-wr1-f69.google.com with SMTP id y7so2459305wrm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 06:28:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mqnAaSxh0pSKzbiLQ7KvpBpDD8sO/UPH/8UcK0z/vf8=;
-        b=cFtUSBHJ+cuzMUH35lxaXHqWsDwE9yWiG7dJNDhO/A1fZ4bJBOfOXthSIeSbX/FsY/
-         4jmP5CRwD9McdnfBmxokSK4x1lMOr4FS/UG2zxLL1RTqLcWltLeODQM4yOwc0YpzowOn
-         qnIh1UaQMzkJ3/Ng1B8k8//JcB8EcRk7C6qh5PcHONddAfm7NDnMnhPKbHwb15mW9gIS
-         V6buFEStgiMhf+U4mUOYky3uQb8lGGEji+jtSNLfwuWWYet5UIauaXjjJ5P3PPk3JV5u
-         HAIgjYgiWYUSN7ZdNnLkEOMcnMh5IVCEGpe/pdVILUOQR1y90V7RfBjzORoRYo+BY7Uo
-         Nm3A==
-X-Gm-Message-State: APjAAAXhrWZwDfYlaMgknn58bS/5obQGVZUPYF3cJz4dxEXqKMeV+m4X
-        XKBnbchsv1UekoezPQR4oudf0CZyWeaLzWhrpEnQw3/a1EBBdt9JGYYUmJGHNeHbRBUL6Hxfccu
-        BsQT2fwZcsUzYtegKz+5fpiwQ
-X-Received: by 2002:a7b:c216:: with SMTP id x22mr29355326wmi.51.1576506491407;
-        Mon, 16 Dec 2019 06:28:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz1cdzONxv/4mP1xQlKXrsuF/DPqXX835uoZSpIhEWRShDwrAJ8iqhJqjAy/Yiqp/DSLPbvfQ==
-X-Received: by 2002:a7b:c216:: with SMTP id x22mr29355302wmi.51.1576506491081;
-        Mon, 16 Dec 2019 06:28:11 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id r68sm16146106wmr.43.2019.12.16.06.28.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 06:28:10 -0800 (PST)
-Subject: Re: [PATCH 5/5] drm/i915/dsi: Control panel and backlight enable
- GPIOs on BYT
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20191215163810.52356-1-hdegoede@redhat.com>
- <20191215163810.52356-6-hdegoede@redhat.com>
- <20191216140427.GT1208@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <910ef405-39df-8c58-48cb-d3ee407bd60d@redhat.com>
-Date:   Mon, 16 Dec 2019 15:28:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 09:30:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rDev2XCf6QPcUaBpKlxXXgkvYM25sEPS6kO7kjMcwQk=; b=EyNlTpb6UEZAxUvMGCTPQ9ZNk
+        cxydnhdzDMVYfNj6WR4slV7CJsz8VQeyg8O6m/P//rPU7T9Z+CpPm6VBLGxd+lprpQ5lFA766b21c
+        N36kCgxuM8ITZhzNVSL8IGi530qlu8ENnoR9h69wIUANDvTLD9I5lSRVtSeFhooA/OilpWw4AVl1L
+        qjocweyH9QsAZVyAZ99StkaeybmVwHuAaa0HNnlmEqPZnk3ncduadTQZlnbqIxdQI/DoKT6MLzGJ4
+        v9iF9RK5ntZakerVHBe4+/xDsGMD9yPKTgqbszxBCppEYg67DXk8ekCfOozOUqTaPBPKLOPyWLRgC
+        Y8M+94PWg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53806)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1igrOY-00082M-1j; Mon, 16 Dec 2019 14:30:46 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1igrOS-0002TC-1z; Mon, 16 Dec 2019 14:30:40 +0000
+Date:   Mon, 16 Dec 2019 14:30:40 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Milind Parab <mparab@cadence.com>
+Cc:     "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
+        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
+        "brad.mouring@ni.com" <brad.mouring@ni.com>,
+        Parshuram Raju Thombare <pthombar@cadence.com>
+Subject: Re: [PATCH v2 3/3] net: macb: add support for high speed interface
+Message-ID: <20191216143039.GX1344@shell.armlinux.org.uk>
+References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
+ <1576230177-11404-1-git-send-email-mparab@cadence.com>
+ <20191215151249.GA25745@shell.armlinux.org.uk>
+ <20191215152000.GW1344@shell.armlinux.org.uk>
+ <BY5PR07MB65143D385836FF49966F5F6AD3510@BY5PR07MB6514.namprd07.prod.outlook.com>
+ <20191216130908.GI25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191216140427.GT1208@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216130908.GI25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 16-12-2019 15:04, Ville Syrjälä wrote:
-> On Sun, Dec 15, 2019 at 05:38:10PM +0100, Hans de Goede wrote:
->> On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
->> do not control the LCD panel- and backlight-enable GPIOs. So far, when
->> the VBT indicates we should use the SoC for backlight control, we have
->> been relying on these GPIOs being configured as output and driven high by
->> the Video BIOS (GOP) when it initializes the panel.
->>
->> This does not work when the device is booted with a HDMI monitor connected
->> as then the GOP will initialize the HDMI instead of the panel, leaving the
->> panel black, even though the i915 driver tries to output an image to it.
->>
->> Likewise on some device-models when the GOP does not initialize the DSI
->> panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
->> of muxing it to the PWM controller.
->>
->> This commit makes the DSI code control the SoC GPIOs for panel- and
->> backlight-enable on BYT, when the VBT indicates the SoC should be used
->>
->> for backlight control. It also ensures that the PWM0 pin is muxed to the
->> PWM controller in this case.
->>
->> This fixes the LCD panel not lighting up on various devices when booted
->> with a HDMI monitor connected. This has been tested to fix this on the
->> following devices:
->>
->> Peaq C1010
->> Point of View MOBII TAB-P800W
->> Point of View MOBII TAB-P1005W
->> Terra Pad 1061
->> Yours Y8W81
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/gpu/drm/i915/display/intel_dsi.h     |  3 +-
->>   drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 63 ++++++++++++++++++++
->>   2 files changed, 65 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
->> index 675771ea91aa..7481a5aa3084 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
->> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
->> @@ -45,8 +45,9 @@ struct intel_dsi {
->>   	struct intel_dsi_host *dsi_hosts[I915_MAX_PORTS];
->>   	intel_wakeref_t io_wakeref[I915_MAX_PORTS];
->>   
->> -	/* GPIO Desc for CRC based Panel control */
->> +	/* GPIO Desc for panel and backlight control */
->>   	struct gpio_desc *gpio_panel;
->> +	struct gpio_desc *gpio_backlight;
->>   
->>   	struct intel_connector *attached_connector;
->>   
->> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> index 847f04eec2a1..bd007d4f86e2 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> @@ -27,6 +27,8 @@
->>   #include <linux/gpio/consumer.h>
->>   #include <linux/gpio/machine.h>
->>   #include <linux/mfd/intel_soc_pmic.h>
->> +#include <linux/pinctrl/consumer.h>
->> +#include <linux/pinctrl/machine.h>
->>   #include <linux/slab.h>
->>   
->>   #include <asm/intel-mid.h>
->> @@ -525,11 +527,15 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
->>   {
->>   	if (seq_id == MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
->>   		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
->> +	if (seq_id == MIPI_SEQ_BACKLIGHT_ON && intel_dsi->gpio_backlight)
->> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 1);
->>   
->>   	intel_dsi_vbt_exec(intel_dsi, seq_id);
->>   
->>   	if (seq_id == MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
->>   		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
->> +	if (seq_id == MIPI_SEQ_BACKLIGHT_OFF && intel_dsi->gpio_backlight)
->> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 0);
->>   }
->>   
->>   void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
->> @@ -688,6 +694,8 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
->>   /*
->>    * On some BYT/CHT devs some sequences are incomplete and we need to manually
->>    * control some GPIOs. We need to add a GPIO lookup table before we get these.
->> + * If the GOP did not initialize the panel (HDMI inserted) we may need to also
->> + * change the pinmux for the SoC's PWM0 pin from GPIO to PWM.
->>    */
->>   static struct gpiod_lookup_table pmic_panel_gpio_table = {
->>   	/* Intel GFX is consumer */
->> @@ -699,23 +707,68 @@ static struct gpiod_lookup_table pmic_panel_gpio_table = {
->>   	},
->>   };
->>   
->> +static struct gpiod_lookup_table soc_panel_gpio_table = {
->> +	.dev_id = "0000:00:02.0",
->> +	.table = {
->> +	  GPIO_LOOKUP("INT33FC:01", 10, "backlight", GPIO_ACTIVE_HIGH),
->> +	  GPIO_LOOKUP("INT33FC:01", 11, "panel", GPIO_ACTIVE_HIGH),
->> +	  { },
+On Mon, Dec 16, 2019 at 01:09:08PM +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Dec 16, 2019 at 12:49:59PM +0000, Milind Parab wrote:
+> > >> > +	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
+> > >>
+> > >> Why bp->phy_interface and not state->interface?
+> > 
+> > okay, this needs to change to state->interface
+> > 
+> > >>
+> > >> If you don't support selecting between USXGMII and other modes at
+> > >> runtime, should macb_validate() be allowing ethtool link modes for
+> > >> it when it's different from the configured setting?
+> > 
+> > We have separate SGMII and USXGMII PCS, which are enabled and programmed 
+> > by MAC driver. Also, there are separate low speed (up to 1G) and high 
+> > speed MAC which can be programmed though MAC driver. 
+> > As long as, PHY (PMA, external to Cadence MAC controller) can handle 
+> > this change, GEM can work with interface changes at a runtime.
+> > 
+> > >>
+> > >> > +		if (gem_mac_usx_configure(bp, state) < 0) {
+> > >> > +			spin_unlock_irqrestore(&bp->lock, flags);
+> > >> > +			phylink_mac_change(bp->phylink, false);
+> > >>
+> > >> I guess this is the reason you're waiting for the USXGMII block
+> > >> to lock - do you not have any way to raise an interrupt when
+> > >> something changes with the USXGMII (or for that matter SGMII)
+> > >> blocks?  Without that, you're fixed to a single speed.
+> > 
+> > Yes, we need to wait (poll) until USXGMII block lock is set.
+> > Interrupt for USXGMII block lock set event is not supported.
 > 
-> Some kind of indent fail here.
+> You should poll for that status. We already have some polling support
+> in phylink (in the case of a fixed link using the callback, or a GPIO
+> that has no interrupt support) so it probably makes sense to extend
+> that functionality for MACs that do not provide status interrupts.
 
-Yeah, this was intentional in the previous revision because of the
-80 char limit, but this indent hack is no longer necessary, fixed for
-the v2 of this set which I'm preparing.
+And here's that extension (untested):
 
->> +	},
->> +};
->> +
->> +static const struct pinctrl_map soc_pwm_pinctrl_map[] = {
->> +	PIN_MAP_MUX_GROUP("0000:00:02.0", "soc_pwm0", "INT33FC:00",
->> +			  "pwm0_grp", "pwm"),
->> +};
->> +
->>   void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->>   {
->>   	struct drm_device *dev = intel_dsi->base.base.dev;
->>   	struct drm_i915_private *dev_priv = to_i915(dev);
->>   	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
->>   	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
->> +	bool want_backlight_gpio = false;
->> +	bool want_panel_gpio = false;
->> +	struct pinctrl *pinctrl;
->> +	int ret;
->>   
->>   	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
->>   	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
->>   		gpiod_add_lookup_table(&pmic_panel_gpio_table);
->> +		want_panel_gpio = true;
->> +	}
->> +
->> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
->> +		gpiod_add_lookup_table(&soc_panel_gpio_table);
->> +		want_panel_gpio = true;
->> +		want_backlight_gpio = true;
->>   
->> +		/* Ensure PWM0 pin is muxed as PWM instead of GPIO */
->> +		ret = pinctrl_register_mappings(soc_pwm_pinctrl_map, 1);
-> 
-> ARRAY_SIZE()?
+8<===
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH] net: phylink: add support for polling MAC PCS
 
-Ack, will fix for v2.
+Some MAC PCS blocks are unable to provide interrupts when their status
+changes. As we already have support in phylink for polling status, use
+this to provide a hook for MACs to enable polling mode.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ Documentation/networking/sfp-phylink.rst |  8 +++--
+ drivers/net/phy/phylink.c                | 44 ++++++++++++++++++------
+ include/linux/phylink.h                  |  1 +
+ 3 files changed, 40 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/networking/sfp-phylink.rst b/Documentation/networking/sfp-phylink.rst
+index a5e00a159d21..5695204be09a 100644
+--- a/Documentation/networking/sfp-phylink.rst
++++ b/Documentation/networking/sfp-phylink.rst
+@@ -115,7 +115,7 @@ this documentation.
+     * - Original function
+       - Replacement function
+     * - phy_start(phydev)
+-      - phylink_start(priv->phylink)
++      - phylink_start(priv->phylink) or phylink_start_poll(priv->phylink)
+     * - phy_stop(phydev)
+       - phylink_stop(priv->phylink)
+     * - phy_mii_ioctl(phydev, ifr, cmd)
+@@ -251,7 +251,9 @@ this documentation.
+ 	phylink_mac_change(priv->phylink, link_is_up);
+ 
+     where ``link_is_up`` is true if the link is currently up or false
+-    otherwise.
++    otherwise. If a MAC is uanble to provide these interrupts, then
++    :c:func:`phylink_start_poll` should be used in step 5.
++
+ 
+ 11. Verify that the driver does not call::
+ 
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index fc45657bb9c9..616d208b348e 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -964,15 +964,7 @@ static irqreturn_t phylink_link_handler(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-/**
+- * phylink_start() - start a phylink instance
+- * @pl: a pointer to a &struct phylink returned from phylink_create()
+- *
+- * Start the phylink instance specified by @pl, configuring the MAC for the
+- * desired link mode(s) and negotiation style. This should be called from the
+- * network device driver's &struct net_device_ops ndo_open() method.
+- */
+-void phylink_start(struct phylink *pl)
++static void __phylink_start(struct phylink *pl, bool poll)
+ {
+ 	ASSERT_RTNL();
+ 
+@@ -1014,15 +1006,47 @@ void phylink_start(struct phylink *pl)
+ 		if (irq <= 0)
+ 			mod_timer(&pl->link_poll, jiffies + HZ);
+ 	}
+-	if (pl->cfg_link_an_mode == MLO_AN_FIXED && pl->get_fixed_state)
++	if ((pl->cfg_link_an_mode == MLO_AN_FIXED && pl->get_fixed_state) ||
++	    poll)
+ 		mod_timer(&pl->link_poll, jiffies + HZ);
+ 	if (pl->phydev)
+ 		phy_start(pl->phydev);
+ 	if (pl->sfp_bus)
+ 		sfp_upstream_start(pl->sfp_bus);
+ }
++
++/**
++ * phylink_start() - start a phylink instance
++ * @pl: a pointer to a &struct phylink returned from phylink_create()
++ *
++ * Start the phylink instance specified by @pl, configuring the MAC for the
++ * desired link mode(s) and negotiation style. This should be called from the
++ * network device driver's &struct net_device_ops ndo_open() method.
++ */
++void phylink_start(struct phylink *pl)
++{
++	__phylink_start(pl, false);
++}
+ EXPORT_SYMBOL_GPL(phylink_start);
+ 
++/**
++ * phylink_start_poll() - start a phylink instance with polling
++ * @pl: a pointer to a &struct phylink returned from phylink_create()
++ *
++ * Start the phylink instance specified by @pl, as per phylink_start(), but
++ * also enable polling mode. This should be used if the MAC has no support
++ * for MAC PCS status interrupts.
++ *
++ * The MAC PCS must ensure that if it detects the link going down, that must
++ * be reported via mac_pcs_get_state() method to ensure proper update of the
++ * MAC.
++ */
++void phylink_start_poll(struct phylink *pl)
++{
++	__phylink_start(pl, true);
++}
++EXPORT_SYMBOL_GPL(phylink_start_poll);
++
+ /**
+  * phylink_stop() - stop a phylink instance
+  * @pl: a pointer to a &struct phylink returned from phylink_create()
+diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+index bedff1a217fe..529fb5ce440d 100644
+--- a/include/linux/phylink.h
++++ b/include/linux/phylink.h
+@@ -250,6 +250,7 @@ int phylink_fixed_state_cb(struct phylink *,
+ void phylink_mac_change(struct phylink *, bool up);
+ 
+ void phylink_start(struct phylink *);
++void phylink_start_poll(struct phylink *pl);
+ void phylink_stop(struct phylink *);
+ 
+ void phylink_ethtool_get_wol(struct phylink *, struct ethtool_wolinfo *);
+-- 
+2.20.1
 
 
-> 
->> +		if (ret)
->> +			DRM_ERROR("Failed to register pwm0 pinmux mapping\n");
->> +
->> +		pinctrl = devm_pinctrl_get_select(dev->dev, "soc_pwm0");
->> +		if (IS_ERR(pinctrl))
->> +			DRM_ERROR("Failed to set pinmux to PWM\n");
->> +	}
->> +
->> +	if (want_panel_gpio) {
->>   		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
->>   		if (IS_ERR(intel_dsi->gpio_panel)) {
->>   			DRM_ERROR("Failed to own gpio for panel control\n");
->>   			intel_dsi->gpio_panel = NULL;
->>   		}
->>   	}
->> +
->> +	if (want_backlight_gpio) {
->> +		intel_dsi->gpio_backlight =
->> +			gpiod_get(dev->dev, "backlight", flags);
->> +		if (IS_ERR(intel_dsi->gpio_backlight)) {
->> +			DRM_ERROR("Failed to own gpio for backlight control\n");
->> +			intel_dsi->gpio_backlight = NULL;
->> +		}
->> +	}
->>   }
->>   
->>   void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
->> @@ -729,7 +782,17 @@ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
->>   		intel_dsi->gpio_panel = NULL;
->>   	}
->>   
->> +	if (intel_dsi->gpio_backlight) {
->> +		gpiod_put(intel_dsi->gpio_backlight);
->> +		intel_dsi->gpio_backlight = NULL;
->> +	}
->> +
->>   	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
->>   	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
->>   		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
->> +
->> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
-> 
-> Slightly annoying to have these checks duplicated. Might be cleaner to
-> have a few helpers that return the correct tables and just use those in
-> both init and cleanup. OTOH those want_*_gpio flags and the pwm stuff is
-> would still be a sticking point I suppose. So maybe not cleaner in the
-> end after all.
-
-So I tried adding a helper for the if condition, since as you mention
-just returning the right table is not really helpful:
-
-static bool intel_dsi_vbt_use_pmic_backlight_ctl(struct intel_dsi *intel_dsi)
-{
-        struct drm_device *dev = intel_dsi->base.base.dev;
-        struct drm_i915_private *dev_priv = to_i915(dev);
-        struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
-
-        if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
-            (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
-        return (IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
-               mipi_config->pwm_blc == PPS_BLC_PMIC;
-}
-
-And copy and paste that for the PPS_BLC_SOC case. The result does not
-look a lot better then the original, worse actually IMHO, so I'm going
-to keep this as is for v2.
-
-> Looks all right to me:
-> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-Thanks.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> 
->> +		pinctrl_unregister_mappings(soc_pwm_pinctrl_map);
->> +		gpiod_remove_lookup_table(&soc_panel_gpio_table);
->> +	}
->>   }
->> -- 
->> 2.23.0
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
