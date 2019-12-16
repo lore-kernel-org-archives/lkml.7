@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDF5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D690C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D2E2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B17B20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520485;
-	bh=iZp58qNXZvgK6F6h9EXZCbeZ/XmPYK+/k0w3Cu9ND8M=;
+	s=default; t=1576520489;
+	bh=+TcQCskO8Yxad2UV+B9L/vAH6xNMwSDamhI/wfm7YAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=15dmAvzNTvXWUImc+SRiNLvUX1ehOMXaOSOwgrm0pbbL6pdUJyf0dWVA17MWbdCiV
-	 ZS+flxS2O+Sd+O6yv7k8ORHLRi6okjEccWKcaPyiDpTLKyj4LzzFzpLBytz3KgITvD
-	 JBU0wGPdPJcoPwx2SvlnQoBTFQOKNYPEiXoHflHs=
+	b=giQuDqYmHyWCZUyvjHoFDRSyI2QASS+Vv/LsbyfSG0nSC3dD/SLe0IeIQyjrSQczQ
+	 QLQTxNZgV4nGDjpQ4MNN5+iEn9jkTxvdIUAX0v/2OOKZdzXH2AxqAh6d/1etodQ7qq
+	 bsCwxC+OhuBSLOotMybgWi8iyTDBvBUDtlvg7qAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbfLPSVY (ORCPT
+        id S1732252AbfLPSV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:21:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:21:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731497AbfLPSVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:20 -0500
+        id S1731497AbfLPSVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C80F92176D;
-        Mon, 16 Dec 2019 18:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B02B20717;
+        Mon, 16 Dec 2019 18:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520480;
-        bh=iZp58qNXZvgK6F6h9EXZCbeZ/XmPYK+/k0w3Cu9ND8M=;
+        s=default; t=1576520485;
+        bh=+TcQCskO8Yxad2UV+B9L/vAH6xNMwSDamhI/wfm7YAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1LBgtOpevlRvJcoHRWaTYUUS/GE5yAddsPWmtXWfdbofpu/sTpQHRRdbDKlVoJ2xz
-         9rbQRRqHnk0djDZG+tC0ZtntSlk1e6D8iDsXSnuiI72//5lvRSnn3HStEvXjudks7C
-         u2YQ0wXjNAwFMAaADbpnursiefy7g6hbeu55d7Nk=
+        b=ui8aUPD37QzzR3lZL91cEjESgNoziFp50DGjIcS2LIwEO6A8mErHtFmyZfZtsG3Fa
+         ljwXmawP5g7NEWqvHJBbWToRayJfyhh4LmJYoYVlV0qjdEN5GM+AWc8wEbRdFWwgeW
+         B/6vVVFeKCWheiXQScS1W+P7QPbNftWZO3AE9Dvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 170/177] s390/kaslr: store KASLR offset for early dumps
-Date:   Mon, 16 Dec 2019 18:50:26 +0100
-Message-Id: <20191216174850.302004899@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.4 134/177] pinctrl: samsung: Fix device node refcount leaks in Exynos wakeup controller init
+Date:   Mon, 16 Dec 2019 18:49:50 +0100
+Message-Id: <20191216174844.862838184@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,65 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit a9f2f6865d784477e1c7b59269d3a384abafd9ca upstream.
+commit 5c7f48dd14e892e3e920dd6bbbd52df79e1b3b41 upstream.
 
-The KASLR offset is added to vmcoreinfo in arch_crash_save_vmcoreinfo(),
-so that it can be found by crash when processing kernel dumps.
+In exynos_eint_wkup_init() the for_each_child_of_node() loop is used
+with a break to find a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-However, arch_crash_save_vmcoreinfo() is called during a subsys_initcall,
-so if the kernel crashes before that, we have no vmcoreinfo and no KASLR
-offset.
-
-Fix this by storing the KASLR offset in the lowcore, where the vmcore_info
-pointer will be stored, and where it can be found by crash. In order to
-make it distinguishable from a real vmcore_info pointer, mark it as uneven
-(KASLR offset itself is aligned to THREAD_SIZE).
-
-When arch_crash_save_vmcoreinfo() stores the real vmcore_info pointer in
-the lowcore, it overwrites the KASLR offset. At that point, the KASLR
-offset is not yet added to vmcoreinfo, so we also need to move the
-mem_assign_absolute() behind the vmcoreinfo_append_str().
-
-Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 43b169db1841 ("pinctrl: add exynos4210 specific extensions for samsung pinctrl driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/boot/startup.c         |    5 +++++
- arch/s390/kernel/machine_kexec.c |    2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/pinctrl/samsung/pinctrl-exynos.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/s390/boot/startup.c
-+++ b/arch/s390/boot/startup.c
-@@ -170,6 +170,11 @@ void startup_kernel(void)
- 		handle_relocs(__kaslr_offset);
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -506,6 +506,7 @@ int exynos_eint_wkup_init(struct samsung
+ 				bank->nr_pins, &exynos_eint_irqd_ops, bank);
+ 		if (!bank->irq_domain) {
+ 			dev_err(dev, "wkup irq domain add failed\n");
++			of_node_put(wkup_np);
+ 			return -ENXIO;
+ 		}
  
- 	if (__kaslr_offset) {
-+		/*
-+		 * Save KASLR offset for early dumps, before vmcore_info is set.
-+		 * Mark as uneven to distinguish from real vmcore_info pointer.
-+		 */
-+		S390_lowcore.vmcore_info = __kaslr_offset | 0x1UL;
- 		/* Clear non-relocated kernel */
- 		if (IS_ENABLED(CONFIG_KERNEL_UNCOMPRESSED))
- 			memset(img, 0, vmlinux.image_size);
---- a/arch/s390/kernel/machine_kexec.c
-+++ b/arch/s390/kernel/machine_kexec.c
-@@ -254,10 +254,10 @@ void arch_crash_save_vmcoreinfo(void)
- 	VMCOREINFO_SYMBOL(lowcore_ptr);
- 	VMCOREINFO_SYMBOL(high_memory);
- 	VMCOREINFO_LENGTH(lowcore_ptr, NR_CPUS);
--	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
- 	vmcoreinfo_append_str("SDMA=%lx\n", __sdma);
- 	vmcoreinfo_append_str("EDMA=%lx\n", __edma);
- 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
-+	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
- }
+@@ -520,8 +521,10 @@ int exynos_eint_wkup_init(struct samsung
+ 		weint_data = devm_kcalloc(dev,
+ 					  bank->nr_pins, sizeof(*weint_data),
+ 					  GFP_KERNEL);
+-		if (!weint_data)
++		if (!weint_data) {
++			of_node_put(wkup_np);
+ 			return -ENOMEM;
++		}
  
- void machine_shutdown(void)
+ 		for (idx = 0; idx < bank->nr_pins; ++idx) {
+ 			irq = irq_of_parse_and_map(bank->of_node, idx);
+@@ -538,10 +541,13 @@ int exynos_eint_wkup_init(struct samsung
+ 		}
+ 	}
+ 
+-	if (!muxed_banks)
++	if (!muxed_banks) {
++		of_node_put(wkup_np);
+ 		return 0;
++	}
+ 
+ 	irq = irq_of_parse_and_map(wkup_np, 0);
++	of_node_put(wkup_np);
+ 	if (!irq) {
+ 		dev_err(dev, "irq number for muxed EINTs not found\n");
+ 		return 0;
 
 
