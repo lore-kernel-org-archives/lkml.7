@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F09C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA0EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C15F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CF3206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519848;
-	bh=iI/RkI3HDLfJrV5Yf7UTlFLrZGwH/B1OA9pA1U9tTXA=;
+	s=default; t=1576519853;
+	bh=+mUDm720vOil5NekTWtSXYLAFxEU5F0beangRkvpLQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vprCRKSrnKnmMO5jqlalzawx5c0oY7TqOUN9IeawzGlB/TU8xBI6iJtzBjvy0TvoC
-	 paNaYHM7m7vyX1f/3H9+iYZU63oViIB+/zTZEY3CnkNWoY/GGZxQXl1JQwkGGrD0B8
-	 tYtq4WBFpaNqggFVw7WJ7GypyyTXSJlNpIvgl458=
+	b=l4hwrhZnq19ZTykiBHQDnbhRSH8JG718sZSLuWDcdqUT7RKmzzrCoV3Xu9IZJkgJV
+	 dGBv9m/jHUaA1GKDxw4+ipRV6jUfYlM3/JxpxUs+IBDCNqmVri5Goh+VJwtEanTCeJ
+	 6Y53UfLNH107HNzhdj0yTN4gWIvl1HvHBYBaxkkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfLPSKq (ORCPT
+        id S1730276AbfLPSKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbfLPSKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:43 -0500
+        id S1730665AbfLPSKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E5E7206B7;
-        Mon, 16 Dec 2019 18:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7460E207FF;
+        Mon, 16 Dec 2019 18:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519842;
-        bh=iI/RkI3HDLfJrV5Yf7UTlFLrZGwH/B1OA9pA1U9tTXA=;
+        s=default; t=1576519849;
+        bh=+mUDm720vOil5NekTWtSXYLAFxEU5F0beangRkvpLQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHUt8+oYShuaspTfb9dLbBpokdRgNNfRShMrAxWC1f8WddnkYC5EPcpWvQCl//rDZ
-         oMHVyrSdgJydSUefrIw0WE9wvRjIIGTvFjtCLBTi5uG37pJSGtCO7MkPv/ApJiv+0I
-         Yr1Xf5Fwlf3iLuHcsPAFfbTvzGQ6q0OIU5hrG3S8=
+        b=t8cDNcxUVYU/NU+2dM5lLxuLsefCOmyQZOSIq2zwjcZynrpQmJUBEne60KQVKK6Mk
+         Ftg+vg8bUTVT7zGF9JR43+fyyNSTZr0hum3q5QQtc4BLkLfvtVhkpO78hujYeDweyA
+         Y1RzlwJ34Q/aZNgEJ7NrjzWR9iu6LY/JOBuhitwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        NeilBrown <neilb@suse.de>
-Subject: [PATCH 5.3 074/180] workqueue: Fix pwq ref leak in rescuer_thread()
-Date:   Mon, 16 Dec 2019 18:48:34 +0100
-Message-Id: <20191216174830.534635482@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.3 094/180] erofs: zero out when listxattr is called with no xattr
+Date:   Mon, 16 Dec 2019 18:48:54 +0100
+Message-Id: <20191216174835.001737408@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,60 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
+commit 926d1650176448d7684b991fbe1a5b1a8289e97c upstream.
 
-008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
-the rescuer worker requeue the pwq immediately if there may be more
-work items which need rescuing instead of waiting for the next mayday
-timer expiration.  Unfortunately, it doesn't check whether the pwq is
-already on the mayday list and unconditionally gets the ref and moves
-it onto the list.  This doesn't corrupt the list but creates an
-additional reference to the pwq.  It got queued twice but will only be
-removed once.
+As David reported [1], ENODATA returns when attempting
+to modify files by using EROFS as an overlayfs lower layer.
 
-This leak later can trigger pwq refcnt warning on workqueue
-destruction and prevent freeing of the workqueue.
+The root cause is that listxattr could return unexpected
+-ENODATA by mistake for inodes without xattr. That breaks
+listxattr return value convention and it can cause copy
+up failure when used with overlayfs.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
-Cc: NeilBrown <neilb@suse.de>
-Cc: stable@vger.kernel.org # v3.19+
+Resolve by zeroing out if no xattr is found for listxattr.
+
+[1] https://lore.kernel.org/r/CAEvUa7nxnby+rxK-KRMA46=exeOMApkDMAV08AjMkkPnTPV4CQ@mail.gmail.com
+Link: https://lore.kernel.org/r/20191201084040.29275-1-hsiangkao@aol.com
+Fixes: cadf1ccf1b00 ("staging: erofs: add error handling for xattr submodule")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/workqueue.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/staging/erofs/xattr.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2532,8 +2532,14 @@ repeat:
- 			 */
- 			if (need_to_create_worker(pool)) {
- 				spin_lock(&wq_mayday_lock);
--				get_pwq(pwq);
--				list_move_tail(&pwq->mayday_node, &wq->maydays);
-+				/*
-+				 * Queue iff we aren't racing destruction
-+				 * and somebody else hasn't queued it already.
-+				 */
-+				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
-+					get_pwq(pwq);
-+					list_add_tail(&pwq->mayday_node, &wq->maydays);
-+				}
- 				spin_unlock(&wq_mayday_lock);
- 			}
- 		}
-@@ -4643,7 +4649,8 @@ static void show_pwq(struct pool_workque
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -649,6 +649,8 @@ ssize_t erofs_listxattr(struct dentry *d
+ 	struct listxattr_iter it;
  
--	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
-+	pr_cont(" active=%d/%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->max_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ 	ret = init_inode_xattrs(d_inode(dentry));
++	if (ret == -ENOATTR)
++		return 0;
+ 	if (ret)
+ 		return ret;
  
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
 
 
