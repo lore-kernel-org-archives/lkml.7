@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53272C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD0FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7862166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2588821775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518748;
-	bh=6+yjYSY49o8+g1oGXaNGGFl0LCIv+8rYNvgXwSC2khc=;
+	s=default; t=1576518753;
+	bh=Baj24eQ/7ZedPE3KYRQs3tANG4h9wHQN0oWST1EaHtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IY+7F+uF7eXPp2mynF7TXiGdOpaSeios69c6o2koLlkJ73+7pgJuLbWnjcvKUsgXA
-	 /atZ0RPg55zgue25TruuJvCDn2wCuAWs+budbE5Y1yq8kVQgO3nmMXim3TmhoPrCsG
-	 TwLAsS2Sk3B6ghxO3ZcN976vzB8Mv6qoB+dm1lWo=
+	b=hre/zM/BtGxWDCuanct+g+7O/GbLQgkhbTiKcSTz4rn5wS18Pr44MhYDJyTagIHW2
+	 66hxriYzYpugoZQDf+mG5CM6zlrIhClt5mD4FLIGrXnuv9TJ30C/hEQVnQFitZrs9O
+	 5IHeAYgY3An2c1xsZu8l2hJEglxGpFQk4kUf9k2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfLPRwQ (ORCPT
+        id S1727505AbfLPRwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbfLPRwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:52:12 -0500
+        id S1727425AbfLPRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E98322072D;
-        Mon, 16 Dec 2019 17:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFBBA2072D;
+        Mon, 16 Dec 2019 17:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518731;
-        bh=6+yjYSY49o8+g1oGXaNGGFl0LCIv+8rYNvgXwSC2khc=;
+        s=default; t=1576518741;
+        bh=Baj24eQ/7ZedPE3KYRQs3tANG4h9wHQN0oWST1EaHtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=svpGD5xeclGw3pPZbLdkVdvYmGEkj4iSvcWXCOFktqw21W9YlSqxLb/ivT6dv53xe
-         OICPJdn8fIe5eHnD5mH9sMgA//IK/oBt19+lTHokDBUqhYt+YCBO8or5YsXa2bFHO3
-         Pirhn6V1N+BCAPSwrqSvMk/29nJFpmvFEMFuGJX0=
+        b=0cuW7CbhIirBKuzoqkHhO0hoaCHqJLh4Pj/SBAiYXB/ydQxrzhhzDPsynzytErsfk
+         BSISPzk0WUad/RnYWXSkwk317D2lYnHr9XoMBk9Orx1MrZHCnFdt3ilVxpQV3nrl6X
+         hNjLhXOepLP4EmyHuWYzvJ4xB80dKiAY3FgsTlC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 043/267] pinctrl: qcom: ssbi-gpio: fix gpio-hog related boot issues
-Date:   Mon, 16 Dec 2019 18:46:09 +0100
-Message-Id: <20191216174853.509421610@linuxfoundation.org>
+Subject: [PATCH 4.14 047/267] clk: rockchip: fix ID of 8ch clock of I2S1 for rk3328
+Date:   Mon, 16 Dec 2019 18:46:13 +0100
+Message-Id: <20191216174853.797965453@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,67 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 7ed07855773814337b9814f1c3e866df52ebce68 ]
+[ Upstream commit df7b1f2e0a4ae0fceff261e29cde63dafcf2360f ]
 
-When attempting to setup up a gpio hog, device probing will repeatedly
-fail with -EPROBE_DEFERED errors. It is caused by a circular dependency
-between the gpio and pinctrl frameworks. If the gpio-ranges property is
-present in device tree, then the gpio framework will handle the gpio pin
-registration and eliminate the circular dependency.
+This patch fixes mistakes in HCLK_I2S1_8CH for running I2S1
+successfully.
 
-See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
-gpio-hog related boot issues") for a detailed commit message that
-explains the issue in much more detail. The code comment in this commit
-came from Christian's commit.
-
-I did not test this change against any hardware supported by this
-particular driver, however I was able to validate this same fix works
-for pinctrl-spmi-gpio.c using a LG Nexus 5 (hammerhead) phone.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ include/dt-bindings/clock/rk3328-cru.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index 0e153bae322ee..6bed433e54205 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -762,12 +762,23 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = gpiochip_add_pin_range(&pctrl->chip,
--				     dev_name(pctrl->dev),
--				     0, 0, pctrl->chip.ngpio);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to add pin range\n");
--		goto unregister_gpiochip;
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(pctrl->dev->of_node, "gpio-ranges")) {
-+		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
-+					     0, 0, pctrl->chip.ngpio);
-+		if (ret) {
-+			dev_err(pctrl->dev, "failed to add pin range\n");
-+			goto unregister_gpiochip;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, pctrl);
+diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
+index d2b26a4b43ebd..4a9db1b2669b8 100644
+--- a/include/dt-bindings/clock/rk3328-cru.h
++++ b/include/dt-bindings/clock/rk3328-cru.h
+@@ -178,7 +178,7 @@
+ #define HCLK_TSP		309
+ #define HCLK_GMAC		310
+ #define HCLK_I2S0_8CH		311
+-#define HCLK_I2S1_8CH		313
++#define HCLK_I2S1_8CH		312
+ #define HCLK_I2S2_2CH		313
+ #define HCLK_SPDIF_8CH		314
+ #define HCLK_VOP		315
 -- 
 2.20.1
 
