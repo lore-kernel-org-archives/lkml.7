@@ -2,89 +2,69 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B04C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D878206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576517140;
-	bh=bBBiotfOFrlazG9N0s8XOUkiF0Hy12FNzxT6IZn2waQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iAKhHEtQIT2ugYvp+6RsLyWdHKbzY4ey+vP12CDnBMUKLtnQVWJ066O0wEorgF2BT
-	 0DdoYnBytIP2+d7MKyRXF7GpfZwNJPpIJbFgHt1N2ls+d3DDdXJ/Gf70DwTaJQ/YTv
-	 G1GrgQOftl1cfsZHKjmBDzLR5fAwynZBxkfk45pM=
+	by mail.kernel.org (Postfix) with ESMTP id 6C772206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BWH6k43v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLPRZj (ORCPT
+        id S1726694AbfLPR0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:25:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:34416 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 12:26:42 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:55788 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLPRZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:25:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43C031FB;
-        Mon, 16 Dec 2019 09:25:38 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4BEC3F718;
-        Mon, 16 Dec 2019 09:25:37 -0800 (PST)
-Date:   Mon, 16 Dec 2019 17:25:36 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Robert Karszniewicz <r.karszniewicz@phytec.de>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 0/1] regulator: of: Does always-on imply on-in-suspend?
-Message-ID: <20191216172536.GH4161@sirena.org.uk>
-References: <1576515981-77867-1-git-send-email-r.karszniewicz@phytec.de>
+        id S1725805AbfLPR0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:26:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LVckM27X4WE9CsOvq3vdvP2uiOX71Hj2026af52Rr7g=; b=BWH6k43vtvDb0pRqKuJh8Jlwze
+        JNujQaXAW4/v8A/Il6cgVUAOqJrkTAHmx1SD+0iyygvju51jsaR6aLuAUiu7ub1LyEtmmRLzys1ct
+        1S4EVkRm+zIMyo9N495UVAR+WcDkuRVlCViQlj0oqcJavQvQpXZXLe5oV7uKn42jwa+s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1igu8h-0007M0-1k; Mon, 16 Dec 2019 18:26:35 +0100
+Date:   Mon, 16 Dec 2019 18:26:35 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] net: ag71xx: fix compile warnings
+Message-ID: <20191216172635.GA27901@lunn.ch>
+References: <20191216064407.32310-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576515981-77867-1-git-send-email-r.karszniewicz@phytec.de>
-X-Cookie: Backed up the system lately?
+In-Reply-To: <20191216064407.32310-1-o.rempel@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 07:44:07AM +0100, Oleksij Rempel wrote:
+> drivers/net/ethernet/atheros/ag71xx.c: In function 'ag71xx_probe':
+> drivers/net/ethernet/atheros/ag71xx.c:1776:30: warning: passing argument 2 of
+>  'of_get_phy_mode' makes pointer from integer without a cast [-Wint-conversion]
+> In file included from drivers/net/ethernet/atheros/ag71xx.c:33:
+> ./include/linux/of_net.h:15:69: note: expected 'phy_interface_t *'
+>  {aka 'enum <anonymous> *'} but argument is of type 'int'
+> 
+> Fixes: 0c65b2b90d13c1 ("net: of_get_phy_mode: Change API to solve int/unit warnings")
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
---0OWHXb1mYLuhj1Ox
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-On Mon, Dec 16, 2019 at 06:06:20PM +0100, Robert Karszniewicz wrote:
-> Hi all.
->=20
-> Just to make sure; the oftree property regulator-always-on implies that f=
-or
-> every suspend state, the property regulator-on-in-suspend is implicit? Wi=
-th no
-> other side-effect? Reading the documentation, this is what I interpret.
-
-Please don't send cover letters for single patches, if there is anything
-that needs saying put it in the changelog of the patch or after the ---
-if it's administrative stuff.  This reduces mail volume and ensures that=20
-any important information is recorded in the changelog rather than being
-lost.=20
-
---0OWHXb1mYLuhj1Ox
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33vg8ACgkQJNaLcl1U
-h9Agjgf/eTBhT1IRc0gwy0fBe070mHfYubFS6opXT459S3ZMYFS/Gl4syA1p1BjN
-wmFuNHxQepJpHXtS5VmyJh+RRLRftF/4uiWrAyFhS+WLd2GYRiIPdhiDJtH1Pqi5
-ltehB/e1Nn0KAJdOD4lOck7ComjME9l0PaJcv/n7b0pDwYyQA0BdUdFDndsn0pdX
-dtVvFdBSJ5+Vc1PJfDtUE1srRssacaC9LKnfpcFsudTIst9TfRWw5iEKt1SrAi9B
-uvW5BTRzW8lCpXMJlBLSPGhTtuWj8Y0S+wxMC8QsRynUBFly5ZCgVr21B3WuGCoa
-Hyp3xGDVtgvQ53/cgcM6Gm2dkJjSHg==
-=K9AB
------END PGP SIGNATURE-----
-
---0OWHXb1mYLuhj1Ox--
+    Andrew
