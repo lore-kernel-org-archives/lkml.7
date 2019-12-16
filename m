@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423C8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1773F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EFE20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520858;
-	bh=XUGfC575xhIEqwMyg/cNDeOdlkQbMN1PMFYBybe8duE=;
+	s=default; t=1576520870;
+	bh=GBpi+2jc9TM5PgxUcdAcZ9oSk3/lTAFmaEpX0O4ukaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUzC0tXZs2caSrc79eIxA/I2q8e9mvqXSzf4Rz1XWYNLe6PaAqcOuD8snp4gQtnth
-	 My/fR+RkST5sLns9grQV2Jw/ejvXCNBAAPmUDOeF1mKAGMbofdmx5053YOY36lSc7T
-	 4fYj87HInacAWlJKJSrm72Nm57/vugGbjTFfwCBY=
+	b=HYwN4zn/GYetk7nLscxBZu5Xb3ZBRDlvsKQnZq25fpomszTmqIDxKFB1I1Fs2ebhR
+	 zg3D5B57VT5e9Ea2EqKIz6RJ1AZtSIVX5PdXNkuzxYPhbWQX5LxAcmJOgAtR2HY+4S
+	 rDkolBU4v5PwQ2z0XQ0ywbJUVIfIaQ+4V6xz3LrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfLPS1g (ORCPT
+        id S1731595AbfLPS1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37118 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:27:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbfLPSPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:42 -0500
+        id S1731095AbfLPSPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D149F206EC;
-        Mon, 16 Dec 2019 18:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 983F6206E0;
+        Mon, 16 Dec 2019 18:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520142;
-        bh=XUGfC575xhIEqwMyg/cNDeOdlkQbMN1PMFYBybe8duE=;
+        s=default; t=1576520135;
+        bh=GBpi+2jc9TM5PgxUcdAcZ9oSk3/lTAFmaEpX0O4ukaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQz/uq1loxjRsrvplRnDeSU4ic63y2oZVOI1DJqvzJ5nW3ce0rfCoJIovLTfFQw7x
-         mtsNjsCtcOzZGM/nFCk5/YKtHhft+e7QvomZkCV7/E2eTkRkHUN2idc24JQi70Xf44
-         Crtu3/G0AS2D8RTH9RqvQ24aRN1oDoeeRivXtDiY=
+        b=JccahedrrOWP+wz+oOPkt3dmSA0ww0CT5mxly/9hMDoN2Ykg39sa+ctrc0Be5Kg7f
+         xZGmQQxXUWjVjjkF338EbhvRTWx52TPOMkDVmGjE9aMQxxQKRS1c8z0Yli+uJQaLjP
+         g5zn0RVYHEXK0NnQ2DQiuRrcOMDFPd2hV0McwblI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 032/177] xhci: make sure interrupts are restored to correct state
-Date:   Mon, 16 Dec 2019 18:48:08 +0100
-Message-Id: <20191216174825.035309617@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Brunberg <ingo_brunberg@web.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.4 003/177] nvme: Namepace identification descriptor list is optional
+Date:   Mon, 16 Dec 2019 18:47:39 +0100
+Message-Id: <20191216174811.740598147@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,81 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Keith Busch <kbusch@kernel.org>
 
-commit bd82873f23c9a6ad834348f8b83f3b6a5bca2c65 upstream.
+commit 22802bf742c25b1e2473c70b3b99da98af65ef4d upstream.
 
-spin_unlock_irqrestore() might be called with stale flags after
-reading port status, possibly restoring interrupts to a incorrect
-state.
+Despite NVM Express specification 1.3 requires a controller claiming to
+be 1.3 or higher implement Identify CNS 03h (Namespace Identification
+Descriptor list), the driver doesn't really need this identification in
+order to use a namespace. The code had already documented in comments
+that we're not to consider an error to this command.
 
-If a usb2 port just finished resuming while the port status is read
-the spin lock will be temporary released and re-acquired in a separate
-function. The flags parameter is passed as value instead of a pointer,
-not updating flags properly before the final spin_unlock_irqrestore()
-is called.
+Return success if the controller provided any response to an
+namespace identification descriptors command.
 
-Cc: <stable@vger.kernel.org> # v3.12+
-Fixes: 8b3d45705e54 ("usb: Fix xHCI host issues on remote wakeup.")
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-7-mathias.nyman@linux.intel.com
+Fixes: 538af88ea7d9de24 ("nvme: make nvme_report_ns_ids propagate error back")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205679
+Reported-by: Ingo Brunberg <ingo_brunberg@web.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: stable@vger.kernel.org # 5.4+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/nvme/host/core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -806,7 +806,7 @@ static void xhci_del_comp_mod_timer(stru
- 
- static int xhci_handle_usb2_port_link_resume(struct xhci_port *port,
- 					     u32 *status, u32 portsc,
--					     unsigned long flags)
-+					     unsigned long *flags)
- {
- 	struct xhci_bus_state *bus_state;
- 	struct xhci_hcd	*xhci;
-@@ -860,11 +860,11 @@ static int xhci_handle_usb2_port_link_re
- 		xhci_test_and_clear_bit(xhci, port, PORT_PLC);
- 		xhci_set_link_state(xhci, port, XDEV_U0);
- 
--		spin_unlock_irqrestore(&xhci->lock, flags);
-+		spin_unlock_irqrestore(&xhci->lock, *flags);
- 		time_left = wait_for_completion_timeout(
- 			&bus_state->rexit_done[wIndex],
- 			msecs_to_jiffies(XHCI_MAX_REXIT_TIMEOUT_MS));
--		spin_lock_irqsave(&xhci->lock, flags);
-+		spin_lock_irqsave(&xhci->lock, *flags);
- 
- 		if (time_left) {
- 			slot_id = xhci_find_slot_id_by_port(hcd, xhci,
-@@ -967,7 +967,7 @@ static void xhci_get_usb3_port_status(st
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1727,6 +1727,8 @@ static int nvme_report_ns_ids(struct nvm
+ 		if (ret)
+ 			dev_warn(ctrl->device,
+ 				 "Identify Descriptors failed (%d)\n", ret);
++		if (ret > 0)
++			ret = 0;
+ 	}
+ 	return ret;
  }
- 
- static void xhci_get_usb2_port_status(struct xhci_port *port, u32 *status,
--				      u32 portsc, unsigned long flags)
-+				      u32 portsc, unsigned long *flags)
- {
- 	struct xhci_bus_state *bus_state;
- 	u32 link_state;
-@@ -1017,7 +1017,7 @@ static void xhci_get_usb2_port_status(st
- static u32 xhci_get_port_status(struct usb_hcd *hcd,
- 		struct xhci_bus_state *bus_state,
- 	u16 wIndex, u32 raw_port_status,
--		unsigned long flags)
-+		unsigned long *flags)
- 	__releases(&xhci->lock)
- 	__acquires(&xhci->lock)
- {
-@@ -1140,7 +1140,7 @@ int xhci_hub_control(struct usb_hcd *hcd
- 		}
- 		trace_xhci_get_port_status(wIndex, temp);
- 		status = xhci_get_port_status(hcd, bus_state, wIndex, temp,
--					      flags);
-+					      &flags);
- 		if (status == 0xffffffff)
- 			goto error;
- 
 
 
