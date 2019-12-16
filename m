@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68685C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870C1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B2A24672
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5814624672
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vllaDNO2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A2sDWiv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfLPVf4 (ORCPT
+        id S1727730AbfLPVf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:35:56 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:41523 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbfLPVfy (ORCPT
+        Mon, 16 Dec 2019 16:35:59 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:47485 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfLPVf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:35:54 -0500
-Received: by mail-pg1-f201.google.com with SMTP id r30so5963261pgm.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:35:54 -0800 (PST)
+        Mon, 16 Dec 2019 16:35:56 -0500
+Received: by mail-pg1-f202.google.com with SMTP id l15so5934179pgk.14
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:35:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=yO5WXr87Skg8elcGy+aFK+0c/WhLmUDiH+4S7sKXvKU=;
-        b=vllaDNO2qWCyrugGSdvCoPzCd/CV1azma+elGcmBBeaT7PsOCbDsG3ynkFrqdQYjR1
-         xrMxmjCTjsFRsR1FX2YIfEq3geU6/kUHgStEqvMNuIkfR7S3IGdl3bDRvpQES9Z6Yw6F
-         PkBO90ozrFElVQbZT9k2QQN2Spdnbhhc/MxcXtF88SPilsNkAmC/8f+Dh+WtRAaRPp76
-         YNtUGITRuO29EsORKGI39bm07HXDFeXokds9nn451i0uWZsxPHlI+1iB9bPHFfJtmVK3
-         zNq7TtrC2qVBzQhFbQa2O/y6XeG+RGm8FuSsaJkY3jGXBfVDF/SA3j5tQIib1yfy1Ryo
-         ipuw==
+        bh=Mr7NGohfKIO/0LLJHqW5UMZVsaNn5FVbb/vWY+9rP5E=;
+        b=A2sDWiv0ldMYscBiHQh9dHQ5MUEBID6HNSMCZKrSzSBHe5IP+x2QVF9pvCTy0Mb8vZ
+         5Ucs8s2vK3fbogLXC0Ic2aeI6Fd4RWV8xtSym8CFQpUcZP9JU6RXnDr6mDoG9MfKxkF5
+         sOuYpCTCURyIn1E5+y/Tp7nHWEDPlz+b1uEhw3tvBpJsiHqlvz4d3D0fGrOqwLwciawL
+         dYhiY/Mj8s3TJbo3kkRVHlFrbAh0FuUigZcxB5guESxALZymb+UViRMBtJLB1fKZdvod
+         fqXmmv1HZ7NP3Q8+HLC6OuPvHSSq7W9tpWdOOBgdn6R7OJV2HtLmJACC0AHw8LG/DhWZ
+         Lc+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=yO5WXr87Skg8elcGy+aFK+0c/WhLmUDiH+4S7sKXvKU=;
-        b=EQtMGSjNlx9kaAtQKevUUZXQN8zgPFjlkw53lIv9bDro0SU7B3wEyZl4dVUD4zEKZl
-         fjPhxCILQgjpTZfToyxrJAatJGhsuAmM+eXwmFJbew1WZTkDPRDKzJ+h/l36LQYRvPyK
-         gzXffHDfkRFM1/kbAqL46NodNuPEoyXAxi3Cxj5Fz3ATEQVAgsq3KYIiOFKPjfQ4F7F/
-         TncPIa7Bcs3L7bfZKsAMRjRTAAbQYyajyzpLKdkIFo3nqa2xW+pPklDiYZvnwLENsxdt
-         hi54U7eKW6gAGMa/0qTImNOBk4S93eiOS7mIopFah1lcfeaUy9ByklN0vX06KHy7uZOD
-         jrUA==
-X-Gm-Message-State: APjAAAUjf3uwdeCurQgTJrJEitTt72/xyd344jgYL2WIZXba8HPvn178
-        DJmIgDZcfPXDnweZ1RPITmFDnTWWKXdYaayGXDLBeVPpLnstw9bKn4QgbrHLBsH+XzE/NMtKAgm
-        PatvKWU6WaLN1lR3VCat/HAJRL6rsfUOYd5UAd/AsFSP9ywky/BbBDiJl9a7Yv9Y6OCFchb2w
-X-Google-Smtp-Source: APXvYqz+5BEcJuqbxFG0WxRaycz5lzfgls/pG/80QLimdxQWg2AlOkbBDfjwnUWb0VIlo8pAdikHN5OBnNcn
-X-Received: by 2002:a63:4b50:: with SMTP id k16mr21095024pgl.386.1576532153699;
- Mon, 16 Dec 2019 13:35:53 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:35:25 -0800
+        bh=Mr7NGohfKIO/0LLJHqW5UMZVsaNn5FVbb/vWY+9rP5E=;
+        b=YHiSZH9b3KHzmt0/zDtzlgWSEBMHRtja77ePYM7k/rqqYwgLKfTw8iNwMRqQjLjUGg
+         sDSUhyMwjjWkQismsELkUvwpYlGBn9+jePlunOvKRouzp7xhtd/IeRl537W/kH088wks
+         WmORwoaJOfaMQDrCWT0Io+vMzlgobRFCJzlhjdFitVdouN22aFkVOoDXhY84YpOIwiSa
+         vb4IlJfd+73S7dGcwuOFMGaGaHtJ77kYdkkohi4nBaSURwZVsbFGMleeyUqbyQLvT0dE
+         G0V6HZatiDcIQGQOR1zkIJT0nPmgh7Y5VAsGZxb86huqozoCKaFrTFoFW9qoUIi7Koeo
+         zCdA==
+X-Gm-Message-State: APjAAAXQfbbCCk2yy9T8J8iGbjxTTyJk7B1Om5oRKYMymBPBdJ+osIfD
+        ODAYN7tsJ+dp9PwL6p2B39RFvMX/hEqyrv6F9Ed6w6tV8QvXaYgtf6/TXjus8PBF23G27gYg3Fu
+        lH1tE9LzSTNee7ykboantGDHaIcJnPwaVvFCMFpcQOV9mgcKnWSvZAceP4GLg/Y7GVxQDrURr
+X-Google-Smtp-Source: APXvYqw06kZ9cCSs/wZsgCwXIpnr8tBG5tdX40Y0wfTxdez3/oaBkHCMDceobXs3YzHahMBMa1bvCejSDNxw
+X-Received: by 2002:a65:5809:: with SMTP id g9mr21313875pgr.146.1576532155836;
+ Mon, 16 Dec 2019 13:35:55 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:35:26 -0800
 In-Reply-To: <20191216213532.91237-1-bgardon@google.com>
-Message-Id: <20191216213532.91237-3-bgardon@google.com>
+Message-Id: <20191216213532.91237-4-bgardon@google.com>
 Mime-Version: 1.0
 References: <20191216213532.91237-1-bgardon@google.com>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v2 2/8] KVM: selftests: Add demand paging content to the
- demand paging test
+Subject: [PATCH v2 3/8] KVM: selftests: Add configurable demand paging delay
 From:   Ben Gardon <bgardon@google.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org
@@ -75,282 +74,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The demand paging test is currently a simple page access test which, while
-potentially useful, doesn't add much versus the existing dirty logging
-test. To improve the demand paging test, add a basic userfaultfd demand
-paging implementation.
+When running the demand paging test with the -u option, the User Fault
+FD handler essentially adds an arbitrary delay to page fault resolution.
+To enable better simulation of a real demand paging scenario, add a
+configurable delay to the UFFD handler.
 
 Signed-off-by: Ben Gardon <bgardon@google.com>
 ---
- .../selftests/kvm/demand_paging_test.c        | 177 +++++++++++++++++-
- 1 file changed, 173 insertions(+), 4 deletions(-)
+ .../selftests/kvm/demand_paging_test.c        | 32 +++++++++++++++----
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
-index 36e12db5da56b..a8f775dab7d4a 100644
+index a8f775dab7d4a..11de5b58995fb 100644
 --- a/tools/testing/selftests/kvm/demand_paging_test.c
 +++ b/tools/testing/selftests/kvm/demand_paging_test.c
-@@ -11,11 +11,14 @@
+@@ -142,12 +142,14 @@ bool quit_uffd_thread;
  
- #include <stdio.h>
- #include <stdlib.h>
-+#include <sys/syscall.h>
- #include <unistd.h>
- #include <time.h>
-+#include <poll.h>
- #include <pthread.h>
- #include <linux/bitmap.h>
- #include <linux/bitops.h>
-+#include <linux/userfaultfd.h>
+ struct uffd_handler_args {
+ 	int uffd;
++	useconds_t delay;
+ };
  
- #include "test_util.h"
- #include "kvm_util.h"
-@@ -39,6 +42,8 @@ static uint64_t host_page_size;
- static uint64_t guest_page_size;
- static uint64_t guest_num_pages;
+ static void *uffd_handler_thread_fn(void *arg)
+ {
+ 	struct uffd_handler_args *uffd_args = (struct uffd_handler_args *)arg;
+ 	int uffd = uffd_args->uffd;
++	useconds_t delay = uffd_args->delay;
+ 	int64_t pages = 0;
  
-+static char *guest_data_prototype;
-+
- /*
-  * Guest physical memory offset of the testing memory slot.
-  * This will be set to the topmost valid physical address minus
-@@ -110,13 +115,158 @@ static struct kvm_vm *create_vm(enum vm_guest_mode mode, uint32_t vcpuid,
- 	return vm;
+ 	while (!quit_uffd_thread) {
+@@ -203,6 +205,8 @@ static void *uffd_handler_thread_fn(void *arg)
+ 		if (!(msg.event & UFFD_EVENT_PAGEFAULT))
+ 			continue;
+ 
++		if (delay)
++			usleep(delay);
+ 		addr =  msg.arg.pagefault.address;
+ 		r = handle_uffd_page_request(uffd, addr);
+ 		if (r < 0)
+@@ -214,7 +218,8 @@ static void *uffd_handler_thread_fn(void *arg)
  }
  
-+static int handle_uffd_page_request(int uffd, uint64_t addr)
-+{
-+	pid_t tid;
-+	struct uffdio_copy copy;
-+	int r;
-+
-+	tid = syscall(__NR_gettid);
-+
-+	copy.src = (uint64_t)guest_data_prototype;
-+	copy.dst = addr;
-+	copy.len = host_page_size;
-+	copy.mode = 0;
-+
-+	r = ioctl(uffd, UFFDIO_COPY, &copy);
-+	if (r == -1) {
-+		DEBUG("Failed Paged in 0x%lx from thread %d with errno: %d\n",
-+		      addr, tid, errno);
-+		return r;
-+	}
-+
-+	return 0;
-+}
-+
-+bool quit_uffd_thread;
-+
-+struct uffd_handler_args {
-+	int uffd;
-+};
-+
-+static void *uffd_handler_thread_fn(void *arg)
-+{
-+	struct uffd_handler_args *uffd_args = (struct uffd_handler_args *)arg;
-+	int uffd = uffd_args->uffd;
-+	int64_t pages = 0;
-+
-+	while (!quit_uffd_thread) {
-+		struct uffd_msg msg;
-+		struct pollfd pollfd[1];
-+		int r;
-+		uint64_t addr;
-+
-+		pollfd[0].fd = uffd;
-+		pollfd[0].events = POLLIN;
-+
-+		/*
-+		 * TODO this introduces a 0.5sec delay at the end of the test.
-+		 * Reduce the timeout or eliminate it following the example in
-+		 * tools/testing/selftests/vm/userfaultfd.c
-+		 */
-+		r = poll(pollfd, 1, 500);
-+		switch (r) {
-+		case -1:
-+			DEBUG("poll err");
-+			continue;
-+		case 0:
-+			continue;
-+		case 1:
-+			break;
-+		default:
-+			DEBUG("Polling uffd returned %d", r);
-+			return NULL;
-+		}
-+
-+		if (pollfd[0].revents & POLLERR) {
-+			DEBUG("uffd revents has POLLERR");
-+			return NULL;
-+		}
-+
-+		if (!pollfd[0].revents & POLLIN)
-+			continue;
-+
-+		r = read(uffd, &msg, sizeof(msg));
-+		if (r == -1) {
-+			if (errno == EAGAIN)
-+				continue;
-+			DEBUG("Read of uffd gor errno %d", errno);
-+			return NULL;
-+		}
-+
-+		if (r != sizeof(msg)) {
-+			DEBUG("Read on uffd returned unexpected size: %d bytes",
-+			      r);
-+			return NULL;
-+		}
-+
-+		if (!(msg.event & UFFD_EVENT_PAGEFAULT))
-+			continue;
-+
-+		addr =  msg.arg.pagefault.address;
-+		r = handle_uffd_page_request(uffd, addr);
-+		if (r < 0)
-+			return NULL;
-+		pages++;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int setup_demand_paging(struct kvm_vm *vm,
-+			       pthread_t *uffd_handler_thread)
-+{
-+	int uffd;
-+	struct uffdio_api uffdio_api;
-+	struct uffdio_register uffdio_register;
-+	struct uffd_handler_args uffd_args;
-+
-+	guest_data_prototype = malloc(host_page_size);
-+	memset(guest_data_prototype, 0xAB, host_page_size);
-+
-+	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
-+	if (uffd == -1) {
-+		DEBUG("uffd creation failed\n");
-+		return -1;
-+	}
-+
-+	uffdio_api.api = UFFD_API;
-+	uffdio_api.features = 0;
-+	if (ioctl(uffd, UFFDIO_API, &uffdio_api) == -1) {
-+		DEBUG("ioctl uffdio_api failed\n");
-+		return -1;
-+	}
-+
-+	uffdio_register.range.start = (uint64_t)host_test_mem;
-+	uffdio_register.range.len = host_num_pages * host_page_size;
-+	uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
-+	if (ioctl(uffd, UFFDIO_REGISTER, &uffdio_register) == -1) {
-+		DEBUG("ioctl uffdio_register failed\n");
-+		return -1;
-+	}
-+
-+	if ((uffdio_register.ioctls & UFFD_API_RANGE_IOCTLS) !=
-+			UFFD_API_RANGE_IOCTLS) {
-+		DEBUG("unexpected userfaultfd ioctl set\n");
-+		return -1;
-+	}
-+
-+	uffd_args.uffd = uffd;
-+	pthread_create(uffd_handler_thread, NULL, uffd_handler_thread_fn,
-+		       &uffd_args);
-+
-+	return 0;
-+}
-+
+ static int setup_demand_paging(struct kvm_vm *vm,
+-			       pthread_t *uffd_handler_thread)
++			       pthread_t *uffd_handler_thread,
++			       useconds_t uffd_delay)
+ {
+ 	int uffd;
+ 	struct uffdio_api uffdio_api;
+@@ -252,6 +257,7 @@ static int setup_demand_paging(struct kvm_vm *vm,
+ 	}
+ 
+ 	uffd_args.uffd = uffd;
++	uffd_args.delay = uffd_delay;
+ 	pthread_create(uffd_handler_thread, NULL, uffd_handler_thread_fn,
+ 		       &uffd_args);
+ 
+@@ -261,7 +267,8 @@ static int setup_demand_paging(struct kvm_vm *vm,
  #define GUEST_MEM_SHIFT 30 /* 1G */
  #define PAGE_SHIFT_4K  12
  
--static void run_test(enum vm_guest_mode mode)
-+static void run_test(enum vm_guest_mode mode, bool use_uffd)
+-static void run_test(enum vm_guest_mode mode, bool use_uffd)
++static void run_test(enum vm_guest_mode mode, bool use_uffd,
++		     useconds_t uffd_delay)
  {
  	pthread_t vcpu_thread;
-+	pthread_t uffd_handler_thread;
- 	struct kvm_vm *vm;
-+	int r;
- 
- 	/*
- 	 * We reserve page table for 2 times of extra dirty mem which
-@@ -173,6 +323,14 @@ static void run_test(enum vm_guest_mode mode)
- 	/* Cache the HVA pointer of the region */
- 	host_test_mem = addr_gpa2hva(vm, (vm_paddr_t)guest_test_phys_mem);
- 
-+	if (use_uffd) {
-+		/* Set up user fault fd to handle demand paging requests. */
-+		quit_uffd_thread = false;
-+		r = setup_demand_paging(vm, &uffd_handler_thread);
-+		if (r < 0)
-+			exit(-r);
-+	}
-+
- #ifdef __x86_64__
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
- #endif
-@@ -188,6 +346,12 @@ static void run_test(enum vm_guest_mode mode)
- 	/* Wait for the vcpu thread to quit */
- 	pthread_join(vcpu_thread, NULL);
- 
-+	if (use_uffd) {
-+		/* Tell the user fault fd handler thread to quit */
-+		quit_uffd_thread = true;
-+		pthread_join(uffd_handler_thread, NULL);
-+	}
-+
- 	ucall_uninit(vm);
- 	kvm_vm_free(vm);
- }
-@@ -209,7 +373,7 @@ static void help(char *name)
+ 	pthread_t uffd_handler_thread;
+@@ -326,7 +333,8 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd)
+ 	if (use_uffd) {
+ 		/* Set up user fault fd to handle demand paging requests. */
+ 		quit_uffd_thread = false;
+-		r = setup_demand_paging(vm, &uffd_handler_thread);
++		r = setup_demand_paging(vm, &uffd_handler_thread,
++					uffd_delay);
+ 		if (r < 0)
+ 			exit(-r);
+ 	}
+@@ -373,7 +381,7 @@ static void help(char *name)
  	int i;
  
  	puts("");
--	printf("usage: %s [-h] [-m mode]\n", name);
-+	printf("usage: %s [-h] [-m mode] [-u]\n", name);
+-	printf("usage: %s [-h] [-m mode] [-u]\n", name);
++	printf("usage: %s [-h] [-m mode] [-u] [-d uffd_delay_usec]\n", name);
  	printf(" -m: specify the guest mode ID to test\n"
  	       "     (default: test all supported modes)\n"
  	       "     This option may be used multiple times.\n"
-@@ -218,6 +382,7 @@ static void help(char *name)
+@@ -382,7 +390,11 @@ static void help(char *name)
  		printf("         %d:    %s%s\n", i, vm_guest_mode_string(i),
  		       vm_guest_mode_params[i].supported ? " (supported)" : "");
  	}
-+	printf(" -u: Use User Fault FD to handle vCPU page faults.\n");
+-	printf(" -u: Use User Fault FD to handle vCPU page faults.\n");
++	printf(" -u: use User Fault FD to handle vCPU page\n"
++	       "     faults.\n");
++	printf(" -d: add a delay in usec to the User Fault\n"
++	       "     FD handler to simulate demand paging\n"
++	       "     overheads. Ignored without -u.\n");
  	puts("");
  	exit(0);
  }
-@@ -227,6 +392,7 @@ int main(int argc, char *argv[])
- 	bool mode_selected = false;
+@@ -393,6 +405,7 @@ int main(int argc, char *argv[])
  	unsigned int mode;
  	int opt, i;
-+	bool use_uffd = false;
+ 	bool use_uffd = false;
++	useconds_t uffd_delay = 0;
  
  #ifdef __x86_64__
  	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
-@@ -235,7 +401,7 @@ int main(int argc, char *argv[])
+@@ -401,7 +414,7 @@ int main(int argc, char *argv[])
  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
  #endif
  
--	while ((opt = getopt(argc, argv, "hm:")) != -1) {
-+	while ((opt = getopt(argc, argv, "hm:u")) != -1) {
+-	while ((opt = getopt(argc, argv, "hm:u")) != -1) {
++	while ((opt = getopt(argc, argv, "hm:ud:")) != -1) {
  		switch (opt) {
  		case 'm':
  			if (!mode_selected) {
-@@ -248,6 +414,9 @@ int main(int argc, char *argv[])
- 				    "Guest mode ID %d too big", mode);
- 			vm_guest_mode_params[mode].enabled = true;
+@@ -417,6 +430,11 @@ int main(int argc, char *argv[])
+ 		case 'u':
+ 			use_uffd = true;
  			break;
-+		case 'u':
-+			use_uffd = true;
++		case 'd':
++			uffd_delay = strtoul(optarg, NULL, 0);
++			TEST_ASSERT(uffd_delay >= 0,
++				    "A negative UFFD delay is not supported.");
 +			break;
  		case 'h':
  		default:
  			help(argv[0]);
-@@ -261,7 +430,7 @@ int main(int argc, char *argv[])
+@@ -430,7 +448,7 @@ int main(int argc, char *argv[])
  		TEST_ASSERT(vm_guest_mode_params[i].supported,
  			    "Guest mode ID %d (%s) not supported.",
  			    i, vm_guest_mode_string(i));
--		run_test(i);
-+		run_test(i, use_uffd);
+-		run_test(i, use_uffd);
++		run_test(i, use_uffd, uffd_delay);
  	}
  
  	return 0;
