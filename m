@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7660C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662EAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93F5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB49206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519590;
-	bh=bu9+zdzg8UDEu4byHFza+rngROkhwfxinAmlIETMOBY=;
+	s=default; t=1576519594;
+	bh=YYQ8N5EhGVGkimdEJGsZMVoD/AVRFTn8QzFLXA/pd/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RsfiOr+qx6sK4g7Udn9d1h7+aisiA1pLA3NDXwOnU2gtygtsMpgpcG5+LFXUHUFGE
-	 9mlxFawtnGmSiiULbIJO6SGgZc1EaxZHaY2FNAuBkLqpRVIIojadK28AxRBYivnj3F
-	 PDgdiWfx2Yg9sZzdXJQDprFQQ/p5C62SEWjXFW9M=
+	b=k0mMimTku6OdS8gMnnvtSOZVRjlW19NNLYg/2JT/cpuYQhGGJ57SI4YMzUJ4FWvch
+	 rvnJaY18oaH1kwYDSSe4pS02P4bxF2rPpEFTvKJOjVKFnDODu4k7lMxEkZsnCUruNW
+	 cdDbcTomUQvFq5cmODt6WeAzaE21bpjqvdh+7ZM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfLPSG3 (ORCPT
+        id S1729985AbfLPSGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46554 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729975AbfLPSGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:25 -0500
+        id S1729979AbfLPSGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F0920CC7;
-        Mon, 16 Dec 2019 18:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F39206E0;
+        Mon, 16 Dec 2019 18:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519584;
-        bh=bu9+zdzg8UDEu4byHFza+rngROkhwfxinAmlIETMOBY=;
+        s=default; t=1576519589;
+        bh=YYQ8N5EhGVGkimdEJGsZMVoD/AVRFTn8QzFLXA/pd/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnbW8VtinOKZC6BH8AnIQU+WEimGpeK7tfy8BQ36F8cNPCE2MtEwBM/K3wW3p2oTJ
-         GgueRoAlT2KL2qBNAGM86SIoHUKe2fntlCTBfy8Zj0CFYEexsadi8vItF24llsub+C
-         gl5FGylsK7jyafthj2TLDgjTLfHnfpFgefYZxNgE=
+        b=hz4HdUOfoNzH+gYKrKvCM4S6QAaCqYJg0cxJWra80xwnAkAtLI5YZLzxU+RxutTDv
+         4Gyek13ysDWi0xbrxSlM1mDYHKOgumK3ugvTiM+Cdxq7IwmmxzVgb32q2GkzQbzki4
+         hL3xHhmmMyJDh5UZLVv0Ir1VBxT1Vh368Hr0Me9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alex Veber <alexve@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/140] mlxsw: spectrum_router: Refresh nexthop neighbour when it becomes dead
-Date:   Mon, 16 Dec 2019 18:49:53 +0100
-Message-Id: <20191216174824.587088968@linuxfoundation.org>
+Subject: [PATCH 4.19 127/140] ath10k: fix fw crash by moving chip reset after napi disabled
+Date:   Mon, 16 Dec 2019 18:49:55 +0100
+Message-Id: <20191216174826.492946596@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -62,139 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 83d5782681cc12b3d485a83cb34c46b2445f510c ]
+[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
 
-The driver tries to periodically refresh neighbours that are used to
-reach nexthops. This is done by periodically calling neigh_event_send().
+On SMP platform, when continuously running wifi up/down, the napi
+poll can be scheduled during chip reset, which will call
+ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
+period, the value from FW_INDICATOR_ADDRESS register will return
+0xdeadbeef, which also be treated as fw crash. Fix the issue by
+moving chip reset after napi disabled.
 
-However, if the neighbour becomes dead, there is nothing we can do to
-return it to a connected state and the above function call is basically
-a NOP.
+ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
+ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
+ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
+ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
+ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
+ath10k_pci 0000:01:00.0: Copy Engine register dump:
+ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
+ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
+ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
+ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
+ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
+ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
+ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
+ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
+ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
+ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
+ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
+ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
 
-This results in the nexthop never being written to the device's
-adjacency table and therefore never used to forward packets.
+Tested HW: QCA9984,QCA9887,WCN3990
 
-Fix this by dropping our reference from the dead neighbour and
-associating the nexthop with a new neigbhour which we will try to
-refresh.
-
-Fixes: a7ff87acd995 ("mlxsw: spectrum_router: Implement next-hop routing")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alex Veber <alexve@mellanox.com>
-Tested-by: Alex Veber <alexve@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/mellanox/mlxsw/spectrum_router.c | 73 ++++++++++++++++++-
- 1 file changed, 70 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 44b6c2ac5961d..76960d3adfc03 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -2228,7 +2228,7 @@ static void mlxsw_sp_router_probe_unresolved_nexthops(struct work_struct *work)
- static void
- mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp *mlxsw_sp,
- 			      struct mlxsw_sp_neigh_entry *neigh_entry,
--			      bool removing);
-+			      bool removing, bool dead);
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 50a801a5d4f15..2a503aacf0c64 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -2052,6 +2052,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
  
- static enum mlxsw_reg_rauht_op mlxsw_sp_rauht_op(bool adding)
- {
-@@ -2359,7 +2359,8 @@ static void mlxsw_sp_router_neigh_event_work(struct work_struct *work)
+ 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
  
- 	memcpy(neigh_entry->ha, ha, ETH_ALEN);
- 	mlxsw_sp_neigh_entry_update(mlxsw_sp, neigh_entry, entry_connected);
--	mlxsw_sp_nexthop_neigh_update(mlxsw_sp, neigh_entry, !entry_connected);
-+	mlxsw_sp_nexthop_neigh_update(mlxsw_sp, neigh_entry, !entry_connected,
-+				      dead);
++	ath10k_pci_irq_disable(ar);
++	ath10k_pci_irq_sync(ar);
++	napi_synchronize(&ar->napi);
++	napi_disable(&ar->napi);
++
+ 	/* Most likely the device has HTT Rx ring configured. The only way to
+ 	 * prevent the device from accessing (and possible corrupting) host
+ 	 * memory is to reset the chip now.
+@@ -2065,10 +2070,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 	 */
+ 	ath10k_pci_safe_chip_reset(ar);
  
- 	if (!neigh_entry->connected && list_empty(&neigh_entry->nexthop_list))
- 		mlxsw_sp_neigh_entry_destroy(mlxsw_sp, neigh_entry);
-@@ -3323,13 +3324,79 @@ static void __mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp_nexthop *nh,
- 	nh->update = 1;
- }
+-	ath10k_pci_irq_disable(ar);
+-	ath10k_pci_irq_sync(ar);
+-	napi_synchronize(&ar->napi);
+-	napi_disable(&ar->napi);
+ 	ath10k_pci_flush(ar);
  
-+static int
-+mlxsw_sp_nexthop_dead_neigh_replace(struct mlxsw_sp *mlxsw_sp,
-+				    struct mlxsw_sp_neigh_entry *neigh_entry)
-+{
-+	struct neighbour *n, *old_n = neigh_entry->key.n;
-+	struct mlxsw_sp_nexthop *nh;
-+	bool entry_connected;
-+	u8 nud_state, dead;
-+	int err;
-+
-+	nh = list_first_entry(&neigh_entry->nexthop_list,
-+			      struct mlxsw_sp_nexthop, neigh_list_node);
-+
-+	n = neigh_lookup(nh->nh_grp->neigh_tbl, &nh->gw_addr, nh->rif->dev);
-+	if (!n) {
-+		n = neigh_create(nh->nh_grp->neigh_tbl, &nh->gw_addr,
-+				 nh->rif->dev);
-+		if (IS_ERR(n))
-+			return PTR_ERR(n);
-+		neigh_event_send(n, NULL);
-+	}
-+
-+	mlxsw_sp_neigh_entry_remove(mlxsw_sp, neigh_entry);
-+	neigh_entry->key.n = n;
-+	err = mlxsw_sp_neigh_entry_insert(mlxsw_sp, neigh_entry);
-+	if (err)
-+		goto err_neigh_entry_insert;
-+
-+	read_lock_bh(&n->lock);
-+	nud_state = n->nud_state;
-+	dead = n->dead;
-+	read_unlock_bh(&n->lock);
-+	entry_connected = nud_state & NUD_VALID && !dead;
-+
-+	list_for_each_entry(nh, &neigh_entry->nexthop_list,
-+			    neigh_list_node) {
-+		neigh_release(old_n);
-+		neigh_clone(n);
-+		__mlxsw_sp_nexthop_neigh_update(nh, !entry_connected);
-+		mlxsw_sp_nexthop_group_refresh(mlxsw_sp, nh->nh_grp);
-+	}
-+
-+	neigh_release(n);
-+
-+	return 0;
-+
-+err_neigh_entry_insert:
-+	neigh_entry->key.n = old_n;
-+	mlxsw_sp_neigh_entry_insert(mlxsw_sp, neigh_entry);
-+	neigh_release(n);
-+	return err;
-+}
-+
- static void
- mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp *mlxsw_sp,
- 			      struct mlxsw_sp_neigh_entry *neigh_entry,
--			      bool removing)
-+			      bool removing, bool dead)
- {
- 	struct mlxsw_sp_nexthop *nh;
- 
-+	if (list_empty(&neigh_entry->nexthop_list))
-+		return;
-+
-+	if (dead) {
-+		int err;
-+
-+		err = mlxsw_sp_nexthop_dead_neigh_replace(mlxsw_sp,
-+							  neigh_entry);
-+		if (err)
-+			dev_err(mlxsw_sp->bus_info->dev, "Failed to replace dead neigh\n");
-+		return;
-+	}
-+
- 	list_for_each_entry(nh, &neigh_entry->nexthop_list,
- 			    neigh_list_node) {
- 		__mlxsw_sp_nexthop_neigh_update(nh, removing);
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
 -- 
 2.20.1
 
