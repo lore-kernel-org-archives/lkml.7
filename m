@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FC4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18D1C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CB020717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B908D20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522213;
-	bh=gq4887FukYlF5vNKsQSCbTtKEEhPkVCXTdwLbsbFhMA=;
+	s=default; t=1576522218;
+	bh=eTo713KajGFpyrEjBNsGc8l6w4uNxEjiiZCsS6+O9fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uo4n580MDjKYw00oF+YmJGGPXAHKcs1dHPrYHmH7zo8YnN7hIhcwbo1W3XhMHv0Zr
-	 EFrAPIfgzk3OxbhPWLNrai0oZIykVjnhNUHp+gUrhlFIme1svbQYhc+J2LAkdND0D2
-	 0FBM1LK2NpniaCW2AuPLfZlOxrW9PwTK2Pqz+x1w=
+	b=trjVsrtQXwC3p76owmDqJyL32Ud7CmxrfkfpocbhuT/x/oVvHnEPQq6UZPzMOjIXP
+	 on4769W6Pc/tu8rTvFu48GJWTf6DukEgML16uOr837x4C1lH6OvtYgFEZOLmCbI3Cc
+	 xoCu20lpGjytj6Ntuz0FPtEYYzUwkKJxGmORo2Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfLPSuL (ORCPT
+        id S1727230AbfLPRv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:51:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbfLPRxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:24 -0500
+        id S1726383AbfLPRvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9831C206D3;
-        Mon, 16 Dec 2019 17:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A9720700;
+        Mon, 16 Dec 2019 17:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518804;
-        bh=gq4887FukYlF5vNKsQSCbTtKEEhPkVCXTdwLbsbFhMA=;
+        s=default; t=1576518712;
+        bh=eTo713KajGFpyrEjBNsGc8l6w4uNxEjiiZCsS6+O9fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBkWMp3Bmy8l97xanhxlxb9+DKDS8Vyqr+Xbd4COlu6dC3gAPeqLwUT5hd53jq3o8
-         N+7z+aOUB5cS4xl8DcrQB3Ndmw+uR7rP2x2YJHA7p8zjtf+9OYz3QhkZVvi/qvODpy
-         W2N88hhi3xBoMNNP+RUHEIygQvHY5yAwq3CZJI6s=
+        b=Qb8TEenevbBxqdqLd8dPz5i7BvYeh/BlDDWCvPgEi+EvRgQgu1vJ4EoatooWj2QDr
+         nj3i4QzhBCQ1El7puH5wk7Dfyob73bheT3B7b8eXsRowwOtFZrH4arot6m9WZBUEc0
+         qLrWBqsU6jWPc+V3ual26Jn2fApcTZuKjQC/OgLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, John Keeping <john@metanate.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/267] i2c: imx: dont print error message on probe defer
-Date:   Mon, 16 Dec 2019 18:46:40 +0100
-Message-Id: <20191216174856.778310533@linuxfoundation.org>
+Subject: [PATCH 4.14 036/267] ARM: dts: rockchip: Fix rk3288-rock2 vcc_flash name
+Date:   Mon, 16 Dec 2019 18:46:02 +0100
+Message-Id: <20191216174852.959702699@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: John Keeping <john@metanate.com>
 
-[ Upstream commit fece4978510e43f09c8cd386fee15210e8c68493 ]
+[ Upstream commit 03d9f8fa2bfdc791865624d3adc29070cf67814e ]
 
-Probe deferral is a normal operating condition in the probe function,
-so don't spam the log with an error in this case.
+There is no functional change from this, but it is confusing to find two
+copies of vcc_sys and no vcc_flash when looking in
+/sys/class/regulator/*/name.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: John Keeping <john@metanate.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-imx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index b73dd837fb533..26f83029f64ae 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1088,7 +1088,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	/* Get I2C clock */
- 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(i2c_imx->clk)) {
--		dev_err(&pdev->dev, "can't get I2C clock\n");
-+		if (PTR_ERR(i2c_imx->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "can't get I2C clock\n");
- 		return PTR_ERR(i2c_imx->clk);
- 	}
+diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+index b9c471fcbd42b..862c2248fcb6d 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+@@ -63,7 +63,7 @@
  
+ 	vcc_flash: flash-regulator {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "vcc_sys";
++		regulator-name = "vcc_flash";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 		startup-delay-us = <150>;
 -- 
 2.20.1
 
