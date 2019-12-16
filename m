@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA69C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7A2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B592082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DB92082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519371;
-	bh=pMddC1IxYZNUa4z6kDPSLVuBkG4EzoSj4SwhIGjUhYw=;
+	s=default; t=1576519374;
+	bh=qQixZ5DrkUJz8IqzDp3njeCQ3LaCkdHq0wq4v/Pznfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wk5l62HbRh/7zn/abxVBsAmM3Hd1kcCG0HthX+YxKE/09tg016w4TflhpLWeJg1Vc
-	 RrZhVikUxjp5B5/DCPBPmiEPVSflfp8+iagUXsdH/x8v+N36G0hFeMSFluwlf+76z3
-	 rezlBsWK0bG5E8NibsO4K/AgoXQvazCUMn6m4i/c=
+	b=hvWIkiiXkMp9ZkWMyBEkkcytFq5OwL2uV/FkeegGYiBZrCtgyhpUc7+0ZJIjwYwSM
+	 r5Xmaw59LpZSnO5q3froasg9bSj9aKnjYwD8tj6HhHvLvk47SSiowV9AhZUiLBijPm
+	 8/YLgmiiPChwexhfG0K+C4tTdHpbnAm19LxKbv5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbfLPSCu (ORCPT
+        id S1729410AbfLPSCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbfLPSCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:48 -0500
+        id S1729392AbfLPSCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 327C8207FF;
-        Mon, 16 Dec 2019 18:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB5F207FF;
+        Mon, 16 Dec 2019 18:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519367;
-        bh=pMddC1IxYZNUa4z6kDPSLVuBkG4EzoSj4SwhIGjUhYw=;
+        s=default; t=1576519370;
+        bh=qQixZ5DrkUJz8IqzDp3njeCQ3LaCkdHq0wq4v/Pznfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15LnTijuZD8GrpcuKWc8Ba0+PvB6qSmq037fP4YlqRJu2ZER0r4UpLguhBhbR09JD
-         RsKJY9tfd9dh2/y7pbXJcuJDWQ+vOLSu3bAMQluFCsdpSC/Iudg9D4nzlPTV1JX242
-         t6eJrn6fWadwQOBlGwbzSM9j/kHcFUhHnSLM9VMU=
+        b=bMhFrnvEeJp5Q92Jufo9FOYjRItEA8HD6U5X79a4o3nrx3cWUNd/K7PVA/iQYKwLX
+         YnKWkTtWIhCNih7ijU4ifrdaMMFMIUyxDE1oofnaavXIh5ZwPOLBh8xBc6B6q5aR4L
+         cOhpEyMy3ne+N8zXxbU8pyit2/cXh+Ohz/F3hfb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 010/140] staging: rtl8712: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:47:58 +0100
-Message-Id: <20191216174751.753302920@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 037/140] btrfs: use refcount_inc_not_zero in kill_all_nodes
+Date:   Mon, 16 Dec 2019 18:48:25 +0100
+Message-Id: <20191216174759.213503369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -58,36 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit c724f776f048538ecfdf53a52b7a522309f5c504 upstream.
+commit baf320b9d531f1cfbf64c60dd155ff80a58b3796 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+We hit the following warning while running down a different problem
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+[ 6197.175850] ------------[ cut here ]------------
+[ 6197.185082] refcount_t: underflow; use-after-free.
+[ 6197.194704] WARNING: CPU: 47 PID: 966 at lib/refcount.c:190 refcount_sub_and_test_checked+0x53/0x60
+[ 6197.521792] Call Trace:
+[ 6197.526687]  __btrfs_release_delayed_node+0x76/0x1c0
+[ 6197.536615]  btrfs_kill_all_delayed_nodes+0xec/0x130
+[ 6197.546532]  ? __btrfs_btree_balance_dirty+0x60/0x60
+[ 6197.556482]  btrfs_clean_one_deleted_snapshot+0x71/0xd0
+[ 6197.566910]  cleaner_kthread+0xfa/0x120
+[ 6197.574573]  kthread+0x111/0x130
+[ 6197.581022]  ? kthread_create_on_node+0x60/0x60
+[ 6197.590086]  ret_from_fork+0x1f/0x30
+[ 6197.597228] ---[ end trace 424bb7ae00509f56 ]---
 
-Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
-Cc: stable <stable@vger.kernel.org>     # 2.6.37
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210114751.5119-3-johan@kernel.org
+This is because the free side drops the ref without the lock, and then
+takes the lock if our refcount is 0.  So you can have nodes on the tree
+that have a refcount of 0.  Fix this by zero'ing out that element in our
+temporary array so we don't try to kill it again.
+
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add comment ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8712/usb_intf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/delayed-inode.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/rtl8712/usb_intf.c
-+++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -275,7 +275,7 @@ static uint r8712_usb_dvobj_init(struct
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -1939,12 +1939,19 @@ void btrfs_kill_all_delayed_nodes(struct
+ 		}
  
- 	pdvobjpriv->padapter = padapter;
- 	padapter->EepromAddressSize = 6;
--	phost_iface = &pintf->altsetting[0];
-+	phost_iface = pintf->cur_altsetting;
- 	piface_desc = &phost_iface->desc;
- 	pdvobjpriv->nr_endpoint = piface_desc->bNumEndpoints;
- 	if (pusbd->speed == USB_SPEED_HIGH) {
+ 		inode_id = delayed_nodes[n - 1]->inode_id + 1;
+-
+-		for (i = 0; i < n; i++)
+-			refcount_inc(&delayed_nodes[i]->refs);
++		for (i = 0; i < n; i++) {
++			/*
++			 * Don't increase refs in case the node is dead and
++			 * about to be removed from the tree in the loop below
++			 */
++			if (!refcount_inc_not_zero(&delayed_nodes[i]->refs))
++				delayed_nodes[i] = NULL;
++		}
+ 		spin_unlock(&root->inode_lock);
+ 
+ 		for (i = 0; i < n; i++) {
++			if (!delayed_nodes[i])
++				continue;
+ 			__btrfs_kill_delayed_node(delayed_nodes[i]);
+ 			btrfs_release_delayed_node(delayed_nodes[i]);
+ 		}
 
 
