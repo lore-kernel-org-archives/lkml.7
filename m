@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8212C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF6E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEC920717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520190;
-	bh=oIElqBuLqOI3RfPRIwnNyVf1rIaSkOio7IkY6dvHZIg=;
+	s=default; t=1576520192;
+	bh=o5DgSwACQn3g13+wAyuxHX+E7BQK/uk71Z4ObQXjzYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rm45chDJhTjDpmZW/xhtKu3SojdMC1BKPZGIBAe+NrC5mVt8Q+LL6tsIaPbxJYojp
-	 N+Jg+VTi1jWc509gAKvP3uV2JFKlOqmd4qXVD1oyKc5X/IZV1lISMtrZxHMj7ndqsL
-	 KI007t8Fffa1ScR+UPTFhfSjd5eR3ecmJUA93vik=
+	b=HxFFpUBbjkn4XIQmnkGy1Ns0r5qkZ4EIDbmfsfpg77C2DP/X2w8IRP+t5wdL08G/H
+	 45jdfjvL4KwNWRoO7j0e/i3aJ1n++soWjeGBmIm5y+U30SIjzmNX3lWY4ubbj5TBzn
+	 Bj6ywHRXBRtuIUJXv/MTMGGDiBZ4ngsa6iVXmgmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731543AbfLPSQ3 (ORCPT
+        id S1731552AbfLPSQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:16:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731530AbfLPSQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:27 -0500
+        id S1731535AbfLPSQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFDA9206EC;
-        Mon, 16 Dec 2019 18:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35BA8207FF;
+        Mon, 16 Dec 2019 18:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520186;
-        bh=oIElqBuLqOI3RfPRIwnNyVf1rIaSkOio7IkY6dvHZIg=;
+        s=default; t=1576520188;
+        bh=o5DgSwACQn3g13+wAyuxHX+E7BQK/uk71Z4ObQXjzYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVEPc3Ty+ho8mvwPddwUyANiBMaWCzAbeDA3c5PCzSP2+bA9mHJMQfqU/hAAM8kpc
-         Rn4HXcnpAVROpbpKwcPn/lhsWyuuedmrqAQuyslQXuxUMheZgyZU/5gVZ99tb9Ppb8
-         m/qWJuC5xmS5Fon0YVU19AEAprYIwMo8nwNIHSp8=
+        b=JZKoJYzFyKGvWckqmZcrAm/p78wFbI7zTGEVb5qVjz8jHp+r6UphP0P5LdwSE5d+P
+         /C9hSVobbxbJFxxWVBD0AvKjYXrwjmo1rjLNzqI/CpruFGS77yYONRrP/7NS2OmrNp
+         fDy5WSjXT4EdBQql//ZQcEVC0C7Ix9qrsfF/4Pdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.4 052/177] tpm: Switch to platform_get_irq_optional()
-Date:   Mon, 16 Dec 2019 18:48:28 +0100
-Message-Id: <20191216174830.514921087@linuxfoundation.org>
+        stable@vger.kernel.org, Meng Li <Meng.Li@windriver.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        James Morse <james.morse@arm.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 5.4 053/177] EDAC/altera: Use fast register IO for S10 IRQs
+Date:   Mon, 16 Dec 2019 18:48:29 +0100
+Message-Id: <20191216174830.591722289@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,41 +65,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Meng Li <Meng.Li@windriver.com>
 
-commit 9c8c5742b6af76a3fd93b4e56d1d981173cf9016 upstream.
+commit 56d9e7bd3fa0f105b6670021d167744bc50ae4fe upstream.
 
-platform_get_irq() calls dev_err() on an error. As the IRQ usage in the
-tpm_tis driver is optional, this is undesirable.
+When an IRQ occurs, regmap_{read,write,...}() is invoked in atomic
+context. Regmap must indicate register IO is fast so that a spinlock is
+used instead of a mutex to avoid sleeping in atomic context:
 
-Specifically this leads to this new false-positive error being logged:
-[    5.135413] tpm_tis MSFT0101:00: IRQ index 0 not found
+  lock_acquire
+  __mutex_lock
+  mutex_lock_nested
+  regmap_lock_mutex
+  regmap_write
+  a10_eccmgr_irq_unmask
+  unmask_irq.part.0
+  irq_enable
+  __irq_startup
+  irq_startup
+  __setup_irq
+  request_threaded_irq
+  devm_request_threaded_irq
+  altr_sdram_probe
 
-This commit switches to platform_get_irq_optional(), which does not log
-an error, fixing this.
+Mark it so.
 
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()"
-Cc: <stable@vger.kernel.org> # 5.4.x
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+ [ bp: Massage. ]
+
+Fixes: 3dab6bd52687 ("EDAC, altera: Add support for Stratix10 SDRAM EDAC")
+Reported-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: James Morse <james.morse@arm.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/1574361048-17572-2-git-send-email-thor.thayer@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm_tis.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/altera_edac.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/char/tpm/tpm_tis.c
-+++ b/drivers/char/tpm/tpm_tis.c
-@@ -286,7 +286,7 @@ static int tpm_tis_plat_probe(struct pla
- 	}
- 	tpm_info.res = *res;
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -560,6 +560,7 @@ static const struct regmap_config s10_sd
+ 	.reg_write = s10_protected_reg_write,
+ 	.use_single_read = true,
+ 	.use_single_write = true,
++	.fast_io = true,
+ };
  
--	tpm_info.irq = platform_get_irq(pdev, 0);
-+	tpm_info.irq = platform_get_irq_optional(pdev, 0);
- 	if (tpm_info.irq <= 0) {
- 		if (pdev != force_pdev)
- 			tpm_info.irq = -1;
+ /************** </Stratix10 EDAC Memory Controller Functions> ***********/
 
 
