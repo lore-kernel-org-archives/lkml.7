@@ -7,49 +7,41 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34A1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00486C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5AC20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD2520717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfLPNBv (ORCPT
+        id S1727846AbfLPNBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:01:51 -0500
+        Mon, 16 Dec 2019 08:01:53 -0500
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:42531 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727639AbfLPNBv (ORCPT
+        by vger.kernel.org with ESMTP id S1727827AbfLPNBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:01:51 -0500
+        Mon, 16 Dec 2019 08:01:52 -0500
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 16 Dec 2019 04:46:34 -0800
+ 15.0.1156.6; Mon, 16 Dec 2019 04:46:04 -0800
 Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 30E75402B8;
-        Mon, 16 Dec 2019 04:46:27 -0800 (PST)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 81168402B6;
+        Mon, 16 Dec 2019 04:45:59 -0800 (PST)
 From:   Ajay Kaher <akaher@vmware.com>
-To:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+To:     <gregkh@linuxfoundation.org>
 CC:     <torvalds@linux-foundation.org>, <punit.agrawal@arm.com>,
         <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
         <willy@infradead.org>, <will.deacon@arm.com>,
-        <mszeredi@redhat.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <srivatsab@vmware.com>,
-        <srivatsa@csail.mit.edu>, <amakhalov@vmware.com>,
-        <srinidhir@vmware.com>, <bvikas@vmware.com>, <anishs@vmware.com>,
-        <vsirnapalli@vmware.com>, <srostedt@vmware.com>,
-        <akaher@vmware.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
-Date:   Tue, 17 Dec 2019 02:15:48 +0530
-Message-ID: <1576529149-14269-9-git-send-email-akaher@vmware.com>
+        <mszeredi@redhat.com>, <stable@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <amakhalov@vmware.com>, <srinidhir@vmware.com>,
+        <bvikas@vmware.com>, <anishs@vmware.com>, <vsirnapalli@vmware.com>,
+        <srostedt@vmware.com>, <akaher@vmware.com>, <stable@kernel.org>,
+        "Vlastimil Babka" <vbabka@suse.cz>
+Subject: [PATCH v3 5/8] mm: prevent get_user_pages() from overflowing page refcount
+Date:   Tue, 17 Dec 2019 02:15:45 +0530
+Message-ID: <1576529149-14269-6-git-send-email-akaher@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576529149-14269-1-git-send-email-akaher@vmware.com>
 References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
@@ -62,93 +54,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-The x86 version of get_user_pages_fast() relies on disabled interrupts to
-synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
-a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
-releases the page. As TLB flush is done synchronously via IPI disabling
-interrupts blocks the page release, and get_page(), which assumes existing
-reference on page, is thus safe.
-However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
-no blocking thanks to disabled interrupts, and get_page() can succeed on a page
-that was already freed or even reused.
+commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
 
-We have recently seen this happen with our 4.4 and 4.12 based kernels, with
-userspace (java) that exits a thread, where mm_release() performs a futex_wake()
-on tsk->clear_child_tid, and another thread in parallel unmaps the page where
-tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
-immediately releases the page again, while it's already on a freelist. Symptoms
-include a bad page state warning, general protection faults acessing a poisoned
-list prev/next pointer in the freelist, or free page pcplists of two cpus joined
-together in a single list. Oscar has also reproduced this scenario, with a
-patch inserting delays before the get_page() to make the race window larger.
+If the page refcount wraps around past zero, it will be freed while
+there are still four billion references to it.  One of the possible
+avenues for an attacker to try to make this happen is by doing direct IO
+on a page multiple times.  This patch makes get_user_pages() refuse to
+take a new page reference if there are already more than two billion
+references to the page.
 
-Fix this by removing the dependency on TLB flush interrupts the same way as the
-generic get_user_pages_fast() code by using page_cache_add_speculative() and
-revalidating the PTE contents after pinning the page. Mainline is safe since
-4.13 where the x86 gup code was removed in favor of the common code. Accessing
-the page table itself safely also relies on disabled interrupts and TLB flush
-IPIs that don't happen with hypercalls, which was acknowledged in commit
-9e52fc2b50de ("x86/mm: Enable RCU based page table freeing
-(CONFIG_HAVE_RCU_TABLE_FREE=y)"). That commit with follups should also be
-backported for full safety, although our reproducer didn't hit a problem
-without that backport.
-
-Reproduced-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-
+Reported-by: Jann Horn <jannh@google.com>
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[ 4.4.y backport notes:
+  Ajay:     - Added local variable 'err' with-in follow_hugetlb_page()
+              from 2be7cfed995e, to resolve compilation error
+            - Added page_ref_count()
+            - Added missing refcount overflow checks on x86 and s390
+              (Vlastimil, thanks for this change)
+  Srivatsa: - Replaced call to get_page_foll() with try_get_page_foll() ]
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- arch/x86/mm/gup.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ arch/s390/mm/gup.c |  6 ++++--
+ arch/x86/mm/gup.c  |  9 ++++++++-
+ include/linux/mm.h |  5 +++++
+ mm/gup.c           | 42 +++++++++++++++++++++++++++++++++---------
+ mm/hugetlb.c       | 16 +++++++++++++++-
+ 5 files changed, 65 insertions(+), 13 deletions(-)
 
+diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
+index 7ad41be..4f7dad3 100644
+--- a/arch/s390/mm/gup.c
++++ b/arch/s390/mm/gup.c
+@@ -37,7 +37,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 			return 0;
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		if (!page_cache_get_speculative(page))
++		if (WARN_ON_ONCE(page_ref_count(page) < 0)
++		    || !page_cache_get_speculative(page))
+ 			return 0;
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+ 			put_page(page);
+@@ -76,7 +77,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	if (!page_cache_add_speculative(head, refs)) {
++	if (WARN_ON_ONCE(page_ref_count(head) < 0)
++	    || !page_cache_add_speculative(head, refs)) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
 diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
-index 6612d532e42e..6379a4883c0a 100644
+index 7d2542a..6612d53 100644
 --- a/arch/x86/mm/gup.c
 +++ b/arch/x86/mm/gup.c
-@@ -9,6 +9,7 @@
- #include <linux/vmstat.h>
- #include <linux/highmem.h>
- #include <linux/swap.h>
-+#include <linux/pagemap.h>
- 
- #include <asm/pgtable.h>
- 
-@@ -95,10 +96,23 @@ static noinline int gup_pte_range(pmd_t pmd, unsigned long addr,
+@@ -95,7 +95,10 @@ static noinline int gup_pte_range(pmd_t pmd, unsigned long addr,
  		}
  		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
  		page = pte_page(pte);
--		if (unlikely(!try_get_page(page))) {
-+
-+		if (WARN_ON_ONCE(page_ref_count(page) < 0)) {
+-		get_page(page);
++		if (unlikely(!try_get_page(page))) {
 +			pte_unmap(ptep);
 +			return 0;
 +		}
-+
-+		if (!page_cache_get_speculative(page)) {
- 			pte_unmap(ptep);
- 			return 0;
- 		}
-+
-+		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-+			put_page(page);
-+			pte_unmap(ptep);
-+			return 0;
-+		}
-+
  		SetPageReferenced(page);
  		pages[*nr] = page;
  		(*nr)++;
+@@ -132,6 +135,8 @@ static noinline int gup_huge_pmd(pmd_t pmd, unsigned long addr,
+ 
+ 	refs = 0;
+ 	head = pmd_page(pmd);
++	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
++		return 0;
+ 	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+ 	do {
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+@@ -208,6 +213,8 @@ static noinline int gup_huge_pud(pud_t pud, unsigned long addr,
+ 
+ 	refs = 0;
+ 	head = pud_page(pud);
++	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
++		return 0;
+ 	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+ 	do {
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 52edaf1..31a4500 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -488,6 +488,11 @@ static inline void get_huge_page_tail(struct page *page)
+ 
+ extern bool __get_page_tail(struct page *page);
+ 
++static inline int page_ref_count(struct page *page)
++{
++	return atomic_read(&page->_count);
++}
++
+ /* 127: arbitrary random number, small enough to assemble well */
+ #define page_ref_zero_or_close_to_overflow(page) \
+ 	((unsigned int) atomic_read(&page->_count) + 127u <= 127u)
+diff --git a/mm/gup.c b/mm/gup.c
+index 71e9d00..4c58578 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -126,8 +126,12 @@ retry:
+ 		}
+ 	}
+ 
+-	if (flags & FOLL_GET)
+-		get_page_foll(page);
++	if (flags & FOLL_GET) {
++		if (unlikely(!try_get_page_foll(page))) {
++			page = ERR_PTR(-ENOMEM);
++			goto out;
++		}
++	}
+ 	if (flags & FOLL_TOUCH) {
+ 		if ((flags & FOLL_WRITE) &&
+ 		    !pte_dirty(pte) && !PageDirty(page))
+@@ -289,7 +293,10 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 			goto unmap;
+ 		*page = pte_page(*pte);
+ 	}
+-	get_page(*page);
++	if (unlikely(!try_get_page(*page))) {
++		ret = -ENOMEM;
++		goto unmap;
++	}
+ out:
+ 	ret = 0;
+ unmap:
+@@ -1053,6 +1060,20 @@ struct page *get_dump_page(unsigned long addr)
+  */
+ #ifdef CONFIG_HAVE_GENERIC_RCU_GUP
+ 
++/*
++ * Return the compund head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int refs)
++{
++	struct page *head = compound_head(page);
++	if (WARN_ON_ONCE(atomic_read(&head->_count) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
++}
++
+ #ifdef __HAVE_ARCH_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			 int write, struct page **pages, int *nr)
+@@ -1083,6 +1104,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 
++		if (WARN_ON_ONCE(page_ref_count(page) < 0))
++			goto pte_unmap;
++
+ 		if (!page_cache_get_speculative(page))
+ 			goto pte_unmap;
+ 
+@@ -1139,8 +1163,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pmd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pmd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1185,8 +1209,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pud_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pud_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1227,8 +1251,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pgd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pgd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index fd932e7..3a1501e 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3886,6 +3886,7 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	unsigned long vaddr = *position;
+ 	unsigned long remainder = *nr_pages;
+ 	struct hstate *h = hstate_vma(vma);
++	int err = -EFAULT;
+ 
+ 	while (vaddr < vma->vm_end && remainder) {
+ 		pte_t *pte;
+@@ -3957,6 +3958,19 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 
+ 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
+ 		page = pte_page(huge_ptep_get(pte));
++
++		/*
++		 * Instead of doing 'try_get_page_foll()' below in the same_page
++		 * loop, just check the count once here.
++		 */
++		if (unlikely(page_count(page) <= 0)) {
++			if (pages) {
++				spin_unlock(ptl);
++				remainder = 0;
++				err = -ENOMEM;
++				break;
++			}
++		}
+ same_page:
+ 		if (pages) {
+ 			pages[i] = mem_map_offset(page, pfn_offset);
+@@ -3983,7 +3997,7 @@ same_page:
+ 	*nr_pages = remainder;
+ 	*position = vaddr;
+ 
+-	return i ? i : -EFAULT;
++	return i ? i : err;
+ }
+ 
+ unsigned long hugetlb_change_protection(struct vm_area_struct *vma,
 -- 
-2.23.0
+2.7.4
+
