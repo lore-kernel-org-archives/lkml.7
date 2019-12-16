@@ -2,298 +2,122 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CC1C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25116C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C572B2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1682067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="dmUcTTuA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rY1aoygr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyYKRuHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfLPC0e (ORCPT
+        id S1726528AbfLPCbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 21:26:34 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:48391 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726299AbfLPC0d (ORCPT
+        Sun, 15 Dec 2019 21:31:23 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36772 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfLPCbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 21:26:33 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 586176C38;
-        Sun, 15 Dec 2019 21:26:32 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 15 Dec 2019 21:26:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=qVRwiUxnW9dUO
-        PGmtU73LvlGD9psrupWjkCbHXotvZE=; b=dmUcTTuAEC2klN6w3zuYrdHlIlTqp
-        iAVFwjqZbv4VRvn6wQekWM7aVc/Qg28zDmJXZTPlUnbW39Y8cr52ZP1y7a3nxUWl
-        dJ6XVhOzdW4jwouGhTkP/846PprfAB3wCBLFe2mSrYObyD9fPKktbXcnPuEJW2c/
-        MttfRtlL8ebJfqK6Dr3vbFHDJf/wPq6pPx3oEcE+Gvug5jKZG96vM2jOhVcXtaPP
-        oISPdIMI73C2NFZt+RAwB2KNcOrC+FCWXNvOMj4JBsvqte6O/FxrYgFW7c2T09cD
-        ES2ixdKfOTVX+91aP9VqloW/Wk8HUslgVnZwrGVKOxGk+o8Hj5ud65RWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=qVRwiUxnW9dUOPGmtU73LvlGD9psrupWjkCbHXotvZE=; b=rY1aoygr
-        Nzb7UXWKrZBo16WF6yyELlS6E/yUquzSBetuXix0aXiAog4jvnFrPHOlOd18xjxl
-        OYvB3ZW1mVPPrT9YV18hhX9GAqs1qMcPbK99agMAaf7TM0cT7kGVY6JFImhGpjmh
-        D8PsitEh0eNuUx2mCJul7VoU8z0jI0VgTuSHv5k9NQBRgHIAmVxtejXxfa7IBeyj
-        iNzbxNdwttJ5RfmB94lImuEZeG2ViI5/Q40H55P7GvYIYKTFrAxMhEU7BGBZqCPI
-        pOpMZmADbwJnAKVcTvgfJb5fv8JUymcfGabQkhYt6zNsKrDZfguxRV8tYXgc7q8a
-        zzK1JKl1TrJnNw==
-X-ME-Sender: <xms:WOv2XVKoFX6nK60Ldsy8703KTxMIk2t0C0sd-KN5ckWDiKc1zcIcDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgedggeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
-    pedv
-X-ME-Proxy: <xmx:WOv2XfGf5JPFWDa5UQ62ujBNTrPYcGkmeX7juLBbGZBCkDD1ZI9sIg>
-    <xmx:WOv2XVQd_bkdy8Z_8LwT-oYLY2q6n5qhlONOMtdCVnuvmv1-TffodA>
-    <xmx:WOv2XTHgJhiH0OUqk4hFmKS2BNZIkHBjeMM-SYXrVDyYKOBsoUrzow>
-    <xmx:WOv2XRB5Q3_VEIQsfiJ3zy9VrrfXxNytUXLv5B9ljd5jUsnIthJXRQ>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CAB118005B;
-        Sun, 15 Dec 2019 21:26:27 -0500 (EST)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     openipmi-developer@lists.sourceforge.net
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        haiyue.wang@linux.intel.com, minyard@acm.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, joel@jms.id.au,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] ipmi: kcs: aspeed: Implement v2 bindings
-Date:   Mon, 16 Dec 2019 12:57:42 +1030
-Message-Id: <01ef3787e9ddaa9d87cfd55a2ac793053b5a69de.1576462051.git-series.andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
-References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
+        Sun, 15 Dec 2019 21:31:23 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so5400479wru.3;
+        Sun, 15 Dec 2019 18:31:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UpvyF0EdWS+Om5YRvxySlIG/mvo3QAlXjzlkgGDs+DU=;
+        b=qyYKRuHITiwOw8aoERmomP1QcHaO+ooqgl8sHMof/j+kkt5elHSOIoZoc3sZU51TTI
+         9+b/HmOBTAYfvCnIBmhDNIwQnr6rHfZp6O6CdXCSqCjqmXxS6+QyyJTmiL038YJ0Olr3
+         boxuoqeIoYyTIKv149gGeIQAmJzc1J3jHXMrGeXqfzEJCdxiGNkduZTa9PRlkKvIXBES
+         lpgoKthKfyyqdy7bsZ+Uj+LA0PgGOzsXJKQFzkBRUesKUV/wgMkC0eeudFnDFdXH/swQ
+         cOtCRrOOkQcDL9J1/RjCSvKZcvOXfgL0EpZo530ASU1N0/BUn0ev8uNJaVQdi2SM5wu7
+         WivQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UpvyF0EdWS+Om5YRvxySlIG/mvo3QAlXjzlkgGDs+DU=;
+        b=QWwVdq7a1IStvhbLtzuBf5IdiAwG7qoibB1cxz63XktlyPHMnS5u8Lz5EUMGMC8miF
+         Cdq7YNKqzU2HuROG9PyE10FHE85L6I8Ckkhqly7su6rYs9BbMTU/oHJrguSn17xs044c
+         +0ZofNxU8us5+ysmDf6OoV7oaY8KplzbnmIO9fkA+DKx1v2urWK4RSGcoIKCvtlxtFfD
+         +C/unwze/Npl9g4duC4rJpoaZg/QFDF/8m+/y1G0adGCAGdLwfZZj71PdPINodFdb4M5
+         kX0ldyiqnuPfrfYY18+smxZcQa4fLP9em/AqBMDpdk962NGhwbHLac4fjGkowUGyRoIv
+         CrJw==
+X-Gm-Message-State: APjAAAX2YDwE1u42GsDWqtv1l0RCociOs/P6TUoe66QPMjRP6nmpHmBV
+        ySY85BE3Gjy5k2CzMHzET6unQVyf8O9xvaguR5U=
+X-Google-Smtp-Source: APXvYqzanKQKeZzVCBDeRO025pcfvhaYt/GmOW9Lg/MsvSWs3HFfoyA0PsRJFAPGYRjReAgZnyTlDiteWR5qO68vSZM=
+X-Received: by 2002:adf:f847:: with SMTP id d7mr28220980wrq.35.1576463481435;
+ Sun, 15 Dec 2019 18:31:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191213000657.931618-1-dima@arista.com> <20191213000657.931618-43-dima@arista.com>
+In-Reply-To: <20191213000657.931618-43-dima@arista.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 16 Dec 2019 10:30:45 +0800
+Message-ID: <CAAfSe-vSZZcNSgcCj_OPmgVxMNKgV8f4Os6vJCHcL-SU+EVjeg@mail.gmail.com>
+Subject: Re: [PATCH 42/58] tty/serial: Migrate sprd_serial to use has_sysrq
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The v2 bindings allow us to extract the resources from the devicetree.
-The table in the driver is retained to derive the channel index, which
-removes the need for kcs_chan property from the v1 bindings. The v2
-bindings allow us to reduce the number of warnings generated by the
-existing devicetree nodes.
+On Fri, 13 Dec 2019 at 08:09, Dmitry Safonov <dima@arista.com> wrote:
+>
+> The SUPPORT_SYSRQ ifdeffery is not nice as:
+> - May create misunderstanding about sizeof(struct uart_port) between
+>   different objects
+> - Prevents moving functions from serial_core.h
+> - Reduces readability (well, it's ifdeffery - it's hard to follow)
+>
+> In order to remove SUPPORT_SYSRQ, has_sysrq variable has been added.
+> Initialise it in driver's probe and remove ifdeffery.
+>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
----
-v2: Use aspeed,lpc-io-reg based on the updated binding
+Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
 
- drivers/char/ipmi/kcs_bmc_aspeed.c | 144 +++++++++++++++++++++++++-----
- 1 file changed, 121 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bmc_aspeed.c
-index e3dd09022589..9422d55a0476 100644
---- a/drivers/char/ipmi/kcs_bmc_aspeed.c
-+++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
-@@ -12,6 +12,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/poll.h>
- #include <linux/regmap.h>
-@@ -233,38 +234,133 @@ static const struct kcs_ioreg ast_kcs_bmc_ioregs[KCS_CHANNEL_MAX] = {
- 	{ .idr = LPC_IDR4, .odr = LPC_ODR4, .str = LPC_STR4 },
- };
- 
--static int aspeed_kcs_probe(struct platform_device *pdev)
-+static struct kcs_bmc *aspeed_kcs_probe_of_v1(struct platform_device *pdev)
- {
--	struct device *dev = &pdev->dev;
- 	struct aspeed_kcs_bmc *priv;
--	struct kcs_bmc *kcs_bmc;
--	u32 chan, addr;
-+	struct device_node *np;
-+	struct kcs_bmc *kcs;
-+	u32 channel;
-+	u32 slave;
- 	int rc;
- 
--	rc = of_property_read_u32(dev->of_node, "kcs_chan", &chan);
--	if ((rc != 0) || (chan == 0 || chan > KCS_CHANNEL_MAX)) {
--		dev_err(dev, "no valid 'kcs_chan' configured\n");
--		return -ENODEV;
-+	np = pdev->dev.of_node;
-+
-+	rc = of_property_read_u32(np, "kcs_chan", &channel);
-+	if ((rc != 0) || (channel == 0 || channel > KCS_CHANNEL_MAX)) {
-+		dev_err(&pdev->dev, "no valid 'kcs_chan' configured\n");
-+		return ERR_PTR(-EINVAL);
- 	}
- 
--	rc = of_property_read_u32(dev->of_node, "kcs_addr", &addr);
-+	kcs = kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc), channel);
-+	if (!kcs)
-+		return ERR_PTR(-ENOMEM);
-+
-+	priv = kcs_bmc_priv(kcs);
-+	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(priv->map)) {
-+		dev_err(&pdev->dev, "Couldn't get regmap\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	rc = of_property_read_u32(np, "kcs_addr", &slave);
- 	if (rc) {
--		dev_err(dev, "no valid 'kcs_addr' configured\n");
--		return -ENODEV;
-+		dev_err(&pdev->dev, "no valid 'kcs_addr' configured\n");
-+		return ERR_PTR(-EINVAL);
- 	}
- 
--	kcs_bmc = kcs_bmc_alloc(dev, sizeof(*priv), chan);
--	if (!kcs_bmc)
--		return -ENOMEM;
-+	kcs->ioreg = ast_kcs_bmc_ioregs[channel - 1];
-+	aspeed_kcs_set_address(kcs, slave);
-+
-+	return 0;
-+}
-+
-+static int aspeed_kcs_calculate_channel(const struct kcs_ioreg *regs)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ast_kcs_bmc_ioregs); i++) {
-+		if (!memcmp(&ast_kcs_bmc_ioregs[i], regs, sizeof(*regs)))
-+			return i + 1;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static struct kcs_bmc *aspeed_kcs_probe_of_v2(struct platform_device *pdev)
-+{
-+	struct aspeed_kcs_bmc *priv;
-+	struct device_node *np;
-+	struct kcs_ioreg ioreg;
-+	struct kcs_bmc *kcs;
-+	const __be32 *reg;
-+	int channel;
-+	u32 slave;
-+	int rc;
- 
--	priv = kcs_bmc_priv(kcs_bmc);
--	priv->map = syscon_node_to_regmap(dev->parent->of_node);
-+	np = pdev->dev.of_node;
-+
-+	/* Don't translate addresses, we want offsets for the regmaps */
-+	reg = of_get_address(np, 0, NULL, NULL);
-+	if (!reg)
-+		return ERR_PTR(-EINVAL);
-+	ioreg.idr = be32_to_cpup(reg);
-+
-+	reg = of_get_address(np, 1, NULL, NULL);
-+	if (!reg)
-+		return ERR_PTR(-EINVAL);
-+	ioreg.odr = be32_to_cpup(reg);
-+
-+	reg = of_get_address(np, 2, NULL, NULL);
-+	if (!reg)
-+		return ERR_PTR(-EINVAL);
-+	ioreg.str = be32_to_cpup(reg);
-+
-+	channel = aspeed_kcs_calculate_channel(&ioreg);
-+	if (channel < 0)
-+		return ERR_PTR(channel);
-+
-+	kcs = kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc), channel);
-+	if (!kcs)
-+		return ERR_PTR(-ENOMEM);
-+
-+	kcs->ioreg = ioreg;
-+
-+	priv = kcs_bmc_priv(kcs);
-+	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
- 	if (IS_ERR(priv->map)) {
--		dev_err(dev, "Couldn't get regmap\n");
--		return -ENODEV;
-+		dev_err(&pdev->dev, "Couldn't get regmap\n");
-+		return ERR_PTR(-ENODEV);
- 	}
- 
--	kcs_bmc->ioreg = ast_kcs_bmc_ioregs[chan - 1];
-+	rc = of_property_read_u32(np, "aspeed,lpc-io-reg", &slave);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	aspeed_kcs_set_address(kcs, slave);
-+
-+	return kcs;
-+}
-+
-+static int aspeed_kcs_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct kcs_bmc *kcs_bmc;
-+	struct device_node *np;
-+	int rc;
-+
-+	np = pdev->dev.of_node;
-+	if (of_device_is_compatible(np, "aspeed,ast2400-kcs-bmc") ||
-+			of_device_is_compatible(np, "aspeed,ast2500-kcs-bmc"))
-+		kcs_bmc = aspeed_kcs_probe_of_v1(pdev);
-+	else if (of_device_is_compatible(np, "aspeed,ast2400-kcs-bmc-v2") ||
-+			of_device_is_compatible(np, "aspeed,ast2500-kcs-bmc-v2"))
-+		kcs_bmc = aspeed_kcs_probe_of_v2(pdev);
-+	else
-+		return -EINVAL;
-+
-+	if (IS_ERR(kcs_bmc))
-+		return PTR_ERR(kcs_bmc);
-+
- 	kcs_bmc->io_inputb = aspeed_kcs_inb;
- 	kcs_bmc->io_outputb = aspeed_kcs_outb;
- 
-@@ -274,7 +370,6 @@ static int aspeed_kcs_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(dev, kcs_bmc);
- 
--	aspeed_kcs_set_address(kcs_bmc, addr);
- 	aspeed_kcs_enable_channel(kcs_bmc, true);
- 
- 	rc = misc_register(&kcs_bmc->miscdev);
-@@ -283,9 +378,10 @@ static int aspeed_kcs_probe(struct platform_device *pdev)
- 		return rc;
- 	}
- 
--	pr_info("channel=%u addr=0x%x idr=0x%x odr=0x%x str=0x%x\n",
--		chan, addr,
--		kcs_bmc->ioreg.idr, kcs_bmc->ioreg.odr, kcs_bmc->ioreg.str);
-+	dev_dbg(&pdev->dev,
-+		"Probed KCS device %d (IDR=0x%x, ODR=0x%x, STR=0x%x)\n",
-+		kcs_bmc->channel, kcs_bmc->ioreg.idr, kcs_bmc->ioreg.odr,
-+		kcs_bmc->ioreg.str);
- 
- 	return 0;
- }
-@@ -302,6 +398,8 @@ static int aspeed_kcs_remove(struct platform_device *pdev)
- static const struct of_device_id ast_kcs_bmc_match[] = {
- 	{ .compatible = "aspeed,ast2400-kcs-bmc" },
- 	{ .compatible = "aspeed,ast2500-kcs-bmc" },
-+	{ .compatible = "aspeed,ast2400-kcs-bmc-v2" },
-+	{ .compatible = "aspeed,ast2500-kcs-bmc-v2" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ast_kcs_bmc_match);
--- 
-git-series 0.9.1
+> ---
+>  drivers/tty/serial/sprd_serial.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+> index 31df23502562..0c3b7420b01e 100644
+> --- a/drivers/tty/serial/sprd_serial.c
+> +++ b/drivers/tty/serial/sprd_serial.c
+> @@ -3,10 +3,6 @@
+>   * Copyright (C) 2012-2015 Spreadtrum Communications Inc.
+>   */
+>
+> -#if defined(CONFIG_SERIAL_SPRD_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
+> -#define SUPPORT_SYSRQ
+> -#endif
+> -
+>  #include <linux/clk.h>
+>  #include <linux/console.h>
+>  #include <linux/delay.h>
+> @@ -1227,6 +1223,7 @@ static int sprd_probe(struct platform_device *pdev)
+>         up->fifosize = SPRD_FIFO_SIZE;
+>         up->ops = &serial_sprd_ops;
+>         up->flags = UPF_BOOT_AUTOCONF;
+> +       up->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SPRD_CONSOLE);
+>
+>         ret = sprd_clk_init(up);
+>         if (ret)
+> --
+> 2.24.0
+>
