@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1937C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96788C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD44520726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC9E20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519420;
-	bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
+	s=default; t=1576519424;
+	bh=Ed1Hq/HQhuS0e/QvE5n80m20YwTftllcPIv26wDuKiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ynPAnHu3iQM+SxvuuA2GOYyvXjc4Ga62KU3YEZGLBLqa3JDzNnwtA/l3O4VflU7sr
-	 8YU2wECOcuM7sjdj5sRkxZz+2VOztNTUvL/feOcJUUItWjIEF8zerR8D4phYn5yyqC
-	 lOP+Bxp8PoeVlpmT9K/SwM1rycotQOVp6nkbAPBM=
+	b=E0r2IOwhmcXDs+2adcbJVFj9xGgNIGRS30nw4taIwu3pItFbO2/axUuQY/AmpXrzW
+	 lHiR0mYriBUAnF6ZvgbEjQw4BodLmlpp2evljuVS6KiW06bQHA0B0IlCu1/TG1IX80
+	 7Ygiyq0iSDJtXFCTHQOV3RhfntkWQOWnfw3oE+7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfLPSDj (ORCPT
+        id S1729051AbfLPSDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40442 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbfLPSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:34 -0500
+        id S1729534AbfLPSDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB0520733;
-        Mon, 16 Dec 2019 18:03:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99AF421835;
+        Mon, 16 Dec 2019 18:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519414;
-        bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
+        s=default; t=1576519419;
+        bh=Ed1Hq/HQhuS0e/QvE5n80m20YwTftllcPIv26wDuKiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVp5f+tKESyqbN94VLOemAZoDz5HtyvT3VEiDJ9niEfmIjK66BFTqG04U/f6XYFTs
-         fpxXAGipiqWQ1muzQSOSqxmfGeqpPTcgFgzZLRZUdvMJhIcXCR+SgKTVg4ypdbfTPP
-         S/Asag+b/cDDS94J2154Cxif8R3J3aWlNBkghcvg=
+        b=YUhGpeIw3nisJU1SotmZk9odFNu5eLSM8deehAVdXavVm2Ca9YAtwd0D1LFQ8NmIt
+         66EWMSyCucW1Rm3l2wmp3y7IjHf5KgYPhcnrip1a5IXZiw9ioGaiFJ/z5ddkhCvnFn
+         2G27OFpSRC+mvDV7EZ1B3N08O0leu6iPI7gQ9+v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 057/140] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
-Date:   Mon, 16 Dec 2019 18:48:45 +0100
-Message-Id: <20191216174803.777135697@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 059/140] blk-mq: avoid sysfs buffer overflow with too many CPU cores
+Date:   Mon, 16 Dec 2019 18:48:47 +0100
+Message-Id: <20191216174804.176499341@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,37 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
+commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
 
-Check for existance of jack before tracing.
-NULL pointer dereference has been reported by KASAN while unloading
-machine driver (snd_soc_cnl_rt274).
+It is reported that sysfs buffer overflow can be triggered if the system
+has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
+hctx via /sys/block/$DEV/mq/$N/cpu_list.
 
-Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Use snprintf to avoid the potential buffer overflow.
+
+This version doesn't change the attribute format, and simply stops
+showing CPU numbers if the buffer is going to overflow.
+
 Cc: stable@vger.kernel.org
+Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-jack.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ block/blk-mq-sysfs.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -100,10 +100,9 @@ void snd_soc_jack_report(struct snd_soc_
- 	unsigned int sync = 0;
- 	int enable;
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -151,20 +151,25 @@ static ssize_t blk_mq_hw_sysfs_nr_reserv
  
--	trace_snd_soc_jack_report(jack, mask, status);
--
- 	if (!jack)
- 		return;
-+	trace_snd_soc_jack_report(jack, mask, status);
+ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
+ {
++	const size_t size = PAGE_SIZE - 1;
+ 	unsigned int i, first = 1;
+-	ssize_t ret = 0;
++	int ret = 0, pos = 0;
  
- 	dapm = &jack->card->dapm;
+ 	for_each_cpu(i, hctx->cpumask) {
+ 		if (first)
+-			ret += sprintf(ret + page, "%u", i);
++			ret = snprintf(pos + page, size - pos, "%u", i);
+ 		else
+-			ret += sprintf(ret + page, ", %u", i);
++			ret = snprintf(pos + page, size - pos, ", %u", i);
++
++		if (ret >= size - pos)
++			break;
  
+ 		first = 0;
++		pos += ret;
+ 	}
+ 
+-	ret += sprintf(ret + page, "\n");
+-	return ret;
++	ret = snprintf(pos + page, size - pos, "\n");
++	return pos + ret;
+ }
+ 
+ static struct attribute *default_ctx_attrs[] = {
 
 
