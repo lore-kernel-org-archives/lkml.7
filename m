@@ -2,221 +2,268 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334B5C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536FFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AD0205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E6/7j4g+"
+	by mail.kernel.org (Postfix) with ESMTP id 1D21120725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfLPJx6 (ORCPT
+        id S1727144AbfLPJyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:53:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54922 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfLPJx5 (ORCPT
+        Mon, 16 Dec 2019 04:54:04 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:52663 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfLPJyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:53:57 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG9rqdk037242;
-        Mon, 16 Dec 2019 03:53:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576490032;
-        bh=+KyJuTpjDUe0N/qfxlbS5BhI2naVCWBHF8NYEFKw6CY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=E6/7j4g+rxc/ahxh+wVgMtneVHnMnya3pSbrCQyvFvxNzx5BYkRwgrgISvNdilJ3W
-         R0R1LtVnm2dRHKj1m269TGflDY6WmX95eDddxAHMYerGepF1rywMiL2PxjsSKhHFb/
-         wxsjGSGgHo0x7MchhcYfkNtxmNkibkH0dHPbMxp0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG9rqi3034014;
-        Mon, 16 Dec 2019 03:53:52 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 03:53:51 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 03:53:51 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG9rnZl105367;
-        Mon, 16 Dec 2019 03:53:50 -0600
-Subject: Re: [PATCH v3 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
- bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Anil Varughese <aniljoy@cadence.com>,
-        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191128104648.21894-1-kishon@ti.com>
- <20191128104648.21894-14-kishon@ti.com> <20191213210116.GA8975@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b7b455b4-8001-a80b-6620-ae1df10e6047@ti.com>
-Date:   Mon, 16 Dec 2019 15:25:07 +0530
+        Mon, 16 Dec 2019 04:54:03 -0500
+Received: from [192.168.100.1] ([78.238.229.36]) by mrelayeu.kundenserver.de
+ (mreue108 [213.165.67.119]) with ESMTPSA (Nemesis) id
+ 1MD9Ox-1iXkew36Cv-009CBO; Mon, 16 Dec 2019 10:53:32 +0100
+Subject: Re: [PATCH v8 0/1] ns: introduce binfmt_misc namespace
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Jann Horn <jannh@google.com>, Andrei Vagin <avagin@gmail.com>,
+        linux-api@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goate?= =?UTF-8?Q?r?= <clg@kaod.org>,
+        keescook@chromium.org
+References: <20191216091220.465626-1-laurent@vivier.eu>
+ <20191216094615.xlhxoze3umjn2tzy@wittgenstein>
+From:   Laurent Vivier <laurent@vivier.eu>
+Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
+ mQINBFYFJhkBEAC2me7w2+RizYOKZM+vZCx69GTewOwqzHrrHSG07MUAxJ6AY29/+HYf6EY2
+ WoeuLWDmXE7A3oJoIsRecD6BXHTb0OYS20lS608anr3B0xn5g0BX7es9Mw+hV/pL+63EOCVm
+ SUVTEQwbGQN62guOKnJJJfphbbv82glIC/Ei4Ky8BwZkUuXd7d5NFJKC9/GDrbWdj75cDNQx
+ UZ9XXbXEKY9MHX83Uy7JFoiFDMOVHn55HnncflUncO0zDzY7CxFeQFwYRbsCXOUL9yBtqLer
+ Ky8/yjBskIlNrp0uQSt9LMoMsdSjYLYhvk1StsNPg74+s4u0Q6z45+l8RAsgLw5OLtTa+ePM
+ JyS7OIGNYxAX6eZk1+91a6tnqfyPcMbduxyBaYXn94HUG162BeuyBkbNoIDkB7pCByed1A7q
+ q9/FbuTDwgVGVLYthYSfTtN0Y60OgNkWCMtFwKxRaXt1WFA5ceqinN/XkgA+vf2Ch72zBkJL
+ RBIhfOPFv5f2Hkkj0MvsUXpOWaOjatiu0fpPo6Hw14UEpywke1zN4NKubApQOlNKZZC4hu6/
+ 8pv2t4HRi7s0K88jQYBRPObjrN5+owtI51xMaYzvPitHQ2053LmgsOdN9EKOqZeHAYG2SmRW
+ LOxYWKX14YkZI5j/TXfKlTpwSMvXho+efN4kgFvFmP6WT+tPnwARAQABtCJMYXVyZW50IFZp
+ dmllciA8bGF1cmVudEB2aXZpZXIuZXU+iQI4BBMBAgAiBQJWBTDeAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAAKCRDzDDi9Py++PCEdD/oD8LD5UWxhQrMQCsUgLlXCSM7sxGLkwmmF
+ ozqSSljEGRhffxZvO35wMFcdX9Z0QOabVoFTKrT04YmvbjsErh/dP5zeM/4EhUByeOS7s6Yl
+ HubMXVQTkak9Wa9Eq6irYC6L41QNzz/oTwNEqL1weV1+XC3TNnht9B76lIaELyrJvRfgsp9M
+ rE+PzGPo5h7QHWdL/Cmu8yOtPLa8Y6l/ywEJ040IoiAUfzRoaJs2csMXf0eU6gVBhCJ4bs91
+ jtWTXhkzdl4tdV+NOwj3j0ukPy+RjqeL2Ej+bomnPTOW8nAZ32dapmu7Fj7VApuQO/BSIHyO
+ NkowMMjB46yohEepJaJZkcgseaus0x960c4ua/SUm/Nm6vioRsxyUmWd2nG0m089pp8LPopq
+ WfAk1l4GciiMepp1Cxn7cnn1kmG6fhzedXZ/8FzsKjvx/aVeZwoEmucA42uGJ3Vk9TiVdZes
+ lqMITkHqDIpHjC79xzlWkXOsDbA2UY/P18AtgJEZQPXbcrRBtdSifCuXdDfHvI+3exIdTpvj
+ BfbgZAar8x+lcsQBugvktlQWPfAXZu4Shobi3/mDYMEDOE92dnNRD2ChNXg2IuvAL4OW40wh
+ gXlkHC1ZgToNGoYVvGcZFug1NI+vCeCFchX+L3bXyLMg3rAfWMFPAZLzn42plIDMsBs+x2yP
+ +bkCDQRWBSYZARAAvFJBFuX9A6eayxUPFaEczlMbGXugs0mazbOYGlyaWsiyfyc3PStHLFPj
+ rSTaeJpPCjBJErwpZUN4BbpkBpaJiMuVO6egrC8Xy8/cnJakHPR2JPEvmj7Gm/L9DphTcE15
+ 92rxXLesWzGBbuYxKsj8LEnrrvLyi3kNW6B5LY3Id+ZmU8YTQ2zLuGV5tLiWKKxc6s3eMXNq
+ wrJTCzdVd6ThXrmUfAHbcFXOycUyf9vD+s+WKpcZzCXwKgm7x1LKsJx3UhuzT8ier1L363RW
+ ZaJBZ9CTPiu8R5NCSn9V+BnrP3wlFbtLqXp6imGhazT9nJF86b5BVKpF8Vl3F0/Y+UZ4gUwL
+ d9cmDKBcmQU/JaRUSWvvolNu1IewZZu3rFSVgcpdaj7F/1aC0t5vLdx9KQRyEAKvEOtCmP4m
+ 38kU/6r33t3JuTJnkigda4+Sfu5kYGsogeYG6dNyjX5wpK5GJIJikEhdkwcLM+BUOOTi+I9u
+ tX03BGSZo7FW/J7S9y0l5a8nooDs2gBRGmUgYKqQJHCDQyYut+hmcr+BGpUn9/pp2FTWijrP
+ inb/Pc96YDQLQA1q2AeAFv3Rx3XoBTGl0RCY4KZ02c0kX/dm3eKfMX40XMegzlXCrqtzUk+N
+ 8LeipEsnOoAQcEONAWWo1HcgUIgCjhJhBEF0AcELOQzitbJGG5UAEQEAAYkCHwQYAQIACQUC
+ VgUmGQIbDAAKCRDzDDi9Py++PCD3D/9VCtydWDdOyMTJvEMRQGbx0GacqpydMEWbE3kUW0ha
+ US5jz5gyJZHKR3wuf1En/3z+CEAEfP1M3xNGjZvpaKZXrgWaVWfXtGLoWAVTfE231NMQKGoB
+ w2Dzx5ivIqxikXB6AanBSVpRpoaHWb06tPNxDL6SVV9lZpUn03DSR6gZEZvyPheNWkvz7bE6
+ FcqszV/PNvwm0C5Ju7NlJA8PBAQjkIorGnvN/vonbVh5GsRbhYPOc/JVwNNr63P76rZL8Gk/
+ hb3xtcIEi5CCzab45+URG/lzc6OV2nTj9Lg0SNcRhFZ2ILE3txrmI+aXmAu26+EkxLLfqCVT
+ ohb2SffQha5KgGlOSBXustQSGH0yzzZVZb+HZPEvx6d/HjQ+t9sO1bCpEgPdZjyMuuMp9N1H
+ ctbwGdQM2Qb5zgXO+8ZSzwC+6rHHIdtcB8PH2j+Nd88dVGYlWFKZ36ELeZxD7iJflsE8E8yg
+ OpKgu3nD0ahBDqANU/ZmNNarBJEwvM2vfusmNnWm3QMIwxNuJghRyuFfx694Im1js0ZY3LEU
+ JGSHFG4ZynA+ZFUPA6Xf0wHeJOxGKCGIyeKORsteIqgnkINW9fnKJw2pgk8qHkwVc3Vu+wGS
+ ZiJK0xFusPQehjWTHn9WjMG1zvQ5TQQHxau/2FkP45+nRPco6vVFQe8JmgtRF8WFJA==
+Message-ID: <4225d0e8-a907-941f-69ae-c2a9150e6a98@vivier.eu>
+Date:   Mon, 16 Dec 2019 10:53:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191213210116.GA8975@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191216094615.xlhxoze3umjn2tzy@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FFFoybimB6XVIlsujiQo2NcFWKKYMunC74lXSAW62F39Nf/djKR
+ svJJHjNCLnvV2zuN55zBS4jQWZLi0WGtfMNeq4x4ie6S9q4hN3cZTvS5Rd0reb5LspLYsjG
+ 1Vxnieyin0tdHddySNU7cmpVe29eKBwPj2IDVmp2fFKhuxMODam+VPUDZs6uZTzfFfdrlh1
+ PQJUIEwOArvqm9t5F1m+w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gJLtl58NCaI=:3g+Aygy4VcO07qgiyavroV
+ nEwVnx7t6hMPzi/SuA5c04AqcAQOoXrrZJwzA3NRUMhr3FyNsHMkCzQv4tPQx8i6vyrwCz4H/
+ Nk88qc54fkXatCPDKwuBuqrguGKR3x2Pt1WBb2UDS4cURP9knRd4hzIDqswqMrmrZlfJN+uTi
+ i03iDmcQGtMYTiIB7/aQz7mDvR/4ykNDGnVnePXPMrYKjcmqoARhV7l2lg4DgWDWKcQQaspBr
+ 5le6dyrRfps9BYjZsVVU5NyOWiNw6AxiGk1wTrQU3G1hziFHvKkxKMXWmtTJXVU16JvAetCzr
+ 5pUcRSOQaJy/zjN5DOkXagf2zbSQx+J8liV5Tc+4yo3Kp3GWjE96tidlYKiXGFmDIAkMGaibB
+ tEs8A8pD+Ja1LuXroaf/jcg1AKFlFOsRWIvNHqx6uO7kP+q1FHQQyK4IMcSRP6oRMQ0uW+YPW
+ i5iP8r/AS+JxmuV2jBzLZL1wnzryaoHdI5xokzvaJyhlAXLCTZ1UOYDBw0HmA44YKV9fDISaH
+ lCDgrMZFD1Vr2mq2Ie5eXhM6CX7jZgQccXaoPx4DIcYKbWFlV0VbaJFQheus7vQzONThtVVIV
+ muQgdSeBI+IeEePDSRm6Nw56hkJEFsbv8if18JF+mhDE7Kc6jS8L6adL3AfJ21PP1W4aEe7T0
+ mNDCvX4wmfMeZjLDzB0Tvgxa6kATBfvTeosq/Dy75mbQJ0k5zaAEXfRDpwQ2mA/vFhN1r1Nji
+ U0LyaVonkNSd4Iij6+2cg3INgbrFgpkRl5snz+c4mJQku7GzIcEhJvosa+FvEpwV/joTS9oL1
+ 8kLcD752Sgm4VnihbPk1g3d1fwlvDw/d7HYQeAGMdQEGUs/HKis7j6Tf+idgNApMaKDZkFggP
+ M/UHXXi5Rqrprtul+nA+ewlu3oHqeL7PEIv0R3i5c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 14/12/19 2:31 am, Rob Herring wrote:
-> On Thu, Nov 28, 2019 at 04:16:47PM +0530, Kishon Vijay Abraham I wrote:
->> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
->> PHY but a wrapper used to configure some of the input signals to the
->> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
+Le 16/12/2019 à 10:46, Christian Brauner a écrit :
+> On Mon, Dec 16, 2019 at 10:12:19AM +0100, Laurent Vivier wrote:
+>> v8: s/file->f_path.dentry/file_dentry(file)/
 >>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
->>   SERDES]
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> ---
->>   .../bindings/phy/ti,phy-j721e-wiz.yaml        | 158 ++++++++++++++++++
->>   1 file changed, 158 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>> v7: Use the new mount API
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->> new file mode 100644
->> index 000000000000..5cd6f907f6af
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->> @@ -0,0 +1,158 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI J721E WIZ (SERDES Wrapper)
->> +
->> +maintainers:
->> +  - Kishon Vijay Abraham I <kishon@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +      enum:
->> +          - ti,j721e-wiz-16g
->> +          - ti,j721e-wiz-10g
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 3
->> +    description: clock-specifier to represent input to the WIZ
->> +
->> +  clock-names:
->> +    items:
->> +      - const: fck
->> +      - const: core_ref_clk
->> +      - const: ext_ref_clk
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 4
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 1
->> +
->> +  "#reset-cells":
->> +    const: 1
->> +
->> +  ranges: true
->> +
->> +  assigned-clocks:
->> +    maxItems: 2
->> +
->> +  assigned-clock-parents:
->> +    maxItems: 2
->> +
->> +patternProperties:
->> +  "^pll[0|1]_refclk$":
+>>     Replace
+>>
+>>       static struct dentry *bm_mount(struct file_system_type *fs_type,
+>>                             int flags, const char *dev_name, void *data)
+>>       {
+>>                struct user_namespace *ns = current_user_ns();
+>>
+>>                return mount_ns(fs_type, flags, data, ns, ns,
+>>                                bm_fill_super);
+>>       }
+>>
+>>     by
+>>
+>>       static void bm_free(struct fs_context *fc)
+>>       {
+>>              if (fc->s_fs_info)
+>>                      put_user_ns(fc->s_fs_info);
+>>       }
+>>
+>>       static int bm_get_tree(struct fs_context *fc)
+>>       {
+>>               return get_tree_keyed(fc, bm_fill_super, get_user_ns(fc->user_ns));
+>>       }
+>>
+>>       static const struct fs_context_operations bm_context_ops = {
+>>               .free           = bm_free,
+>>               .get_tree       = bm_get_tree,
+>>       };
+>>
+>>       static int bm_init_fs_context(struct fs_context *fc)
+>>       {
+>>               fc->ops = &bm_context_ops;
+>>               return 0;
+>>       }
+>>
+>> v6: Return &init_binfmt_ns instead of NULL in binfmt_ns()
+>>     This should never happen, but to stay safe return a
+>>     value we can use.
+>>     change subject from "RFC" to "PATCH"
+>>
+>> v5: Use READ_ONCE()/WRITE_ONCE()
+>>     move mount pointer struct init to bm_fill_super() and add smp_wmb()
+>>     remove useless NULL value init
+>>     add WARN_ON_ONCE()
+>>
+>> v4: first user namespace is initialized with &init_binfmt_ns,
+>>     all new user namespaces are initialized with a NULL and use
+>>     the one of the first parent that is not NULL. The pointer
+>>     is initialized to a valid value the first time the binfmt_misc
+>>     fs is mounted in the current user namespace.
+>>     This allows to not change the way it was working before:
+>>     new ns inherits values from its parent, and if parent value is modified
+>>     (or parent creates its own binfmt entry by mounting the fs) child
+>>     inherits it (unless it has itself mounted the fs).
+>>
+>> v3: create a structure to store binfmt_misc data,
+>>     add a pointer to this structure in the user_namespace structure,
+>>     in init_user_ns structure this pointer points to an init_binfmt_ns
+>>     structure. And all new user namespaces point to this init structure.
+>>     A new binfmt namespace structure is allocated if the binfmt_misc
+>>     filesystem is mounted in a user namespace that is not the initial
+>>     one but its binfmt namespace pointer points to the initial one.
+>>     add override_creds()/revert_creds() around open_exec() in
+>>     bm_register_write()
+>>
+>> v2: no new namespace, binfmt_misc data are now part of
+>>     the mount namespace
+>>     I put this in mount namespace instead of user namespace
+>>     because the mount namespace is already needed and
+>>     I don't want to force to have the user namespace for that.
+>>     As this is a filesystem, it seems logic to have it here.
+>>
+>> This allows to define a new interpreter for each new container.
+>>
+>> But the main goal is to be able to chroot to a directory
+>> using a binfmt_misc interpreter without being root.
+>>
+>> I have a modified version of unshare at:
+>>
+>>   https://github.com/vivier/util-linux.git branch unshare-chroot
+>>
+>> with some new options to unshare binfmt_misc namespace and to chroot
+>> to a directory.
+>>
+>> If you have a directory /chroot/powerpc/jessie containing debian for powerpc
+>> binaries and a qemu-ppc interpreter, you can do for instance:
+>>
+>>  $ uname -a
+>>  Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 x86_64 x86_64 x86_64 GNU/Linux
+>>  $ ./unshare --map-root-user --fork --pid \
+>>    --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/qemu-ppc:OC" \
+>>    --root=/chroot/powerpc/jessie /bin/bash -l
+>>  # uname -a
+>>  Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 ppc GNU/Linux
+>>  # id
+>> uid=0(root) gid=0(root) groups=0(root),65534(nogroup)
+>>  # ls -l
+>> total 5940
+>> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 bin
+>> drwxr-xr-x.   2 nobody nogroup    4096 Jun 17 20:26 boot
+>> drwxr-xr-x.   4 nobody nogroup    4096 Aug 12 00:08 dev
+>> drwxr-xr-x.  42 nobody nogroup    4096 Sep 28 07:25 etc
+>> drwxr-xr-x.   3 nobody nogroup    4096 Sep 28 07:25 home
+>> drwxr-xr-x.   9 nobody nogroup    4096 Aug 12 00:58 lib
+>> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 media
+>> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 mnt
+>> drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 13:09 opt
+>> dr-xr-xr-x. 143 nobody nogroup       0 Sep 30 23:02 proc
+>> -rwxr-xr-x.   1 nobody nogroup 6009712 Sep 28 07:22 qemu-ppc
+>> drwx------.   3 nobody nogroup    4096 Aug 12 12:54 root
+>> drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 00:08 run
+>> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 sbin
+>> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 srv
+>> drwxr-xr-x.   2 nobody nogroup    4096 Apr  6  2015 sys
+>> drwxrwxrwt.   2 nobody nogroup    4096 Sep 28 10:31 tmp
+>> drwxr-xr-x.  10 nobody nogroup    4096 Aug 12 00:08 usr
+>> drwxr-xr-x.  11 nobody nogroup    4096 Aug 12 00:08 var
+>>
+>> If you want to use the qemu binary provided by your distro, you can use
+>>
+>>     --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/bin/qemu-ppc-static:OCF"
+>>
+>> With the 'F' flag, qemu-ppc-static will be then loaded from the main root
+>> filesystem before switching to the chroot.
+>>
+>> Another example is to use the 'P' flag in one chroot and not in another one (useful in a test
+>> environment to test different configurations of the same interpreter):
+>>
+>> ./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-noargv0:OCF" --root=/chroot/powerpc/jessie /bin/bash -l
+>> root@localhost:/# sh -c 'echo $0'
+>> /bin/sh
+>>
+>> ./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-argv0:OCFP" --root=/chroot/powerpc/jessie /bin/bash -l
+>> root@localhost:/# sh -c 'echo $0'
+>> sh
 > 
-> Use '-' rather than '_' in node names.
+> Hey Laurent,
 > 
->> +    type: object
->> +    description: |
->> +      WIZ node should have subnodes for each of the PLLs present in
->> +      the SERDES.
-> 
-> No properties in each of these nodes? They need to be defined.
-> 
->> +
->> +  "^cmn_refclk1?_dig_div$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have subnodes for each of the PMA common refclock
->> +      provided by the SERDES.
->> +
->> +  "^refclk_dig$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have subnode for refclk_dig to select the reference
->> +      clock source for the reference clock used in the PHY and PMA digital
->> +      logic.
->> +
->> +  "^serdes@[0-9a-f]+$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have '1' subnode for the SERDES. It could be either
->> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
->> +      bindings specified in
->> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
->> +      Torrent SERDES should follow the bindings specified in
->> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
->> +
->> +required:
->> +  - compatible
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +  - num-lanes
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - "#reset-cells"
->> +  - ranges
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->> +
->> +    wiz@5000000 {
->> +           compatible = "ti,j721e-wiz-16g";
->> +           #address-cells = <1>;
->> +           #size-cells = <1>;
->> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
->> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
->> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
->> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
->> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
->> +           num-lanes = <2>;
->> +           #reset-cells = <1>;
->> +           ranges = <0x5000000 0x0 0x5000000 0x10000>;
->> +
->> +           pll0_refclk {
->> +                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
->> +                  clock-output-names = "wiz1_pll0_refclk";
-> 
-> Kind of pointless with only 1 output.
+> We have quite some time before the v5.6 merge window opens. So I would
+> really like for this new feature to come with proper testing!
 
-Okay. I'll fix all your comments in v4.
+Are there some already existing tests for binfmt_misc or namespace I can
+update to test the new feature?
 
-Thanks
-Kishon
+Thanks,
+Laurent
+
