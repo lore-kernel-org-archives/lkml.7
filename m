@@ -2,118 +2,178 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA35C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F39C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BF820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520530;
-	bh=pNacaEzUve952DMc+ojKhY/TSAljSVBx9N/TnS5BDmM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQvy2IVghHxE8JA7hJYU79c6bS4KkwgYxwGAgtzF5BQuTu4Q+YHi9LO8pjJ2pClYy
-	 B+ztGALDSMfP1TdW+qXC6aoXV4HHj8QN7Pj71MLKJ7gp5zhxdxpY4hMsCVPqt9S03m
-	 O6lBJEGR840FApPubRIiDcCoAhAfV41VohqGCU7M=
+	by mail.kernel.org (Postfix) with ESMTP id 6FC3F206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="SvBhIWUe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BLMVqORe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732320AbfLPSWB (ORCPT
+        id S1732047AbfLPSWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:22:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57289 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732301AbfLPSVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:49 -0500
+        Mon, 16 Dec 2019 13:22:14 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46655 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732160AbfLPSV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:59 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5FB283338;
+        Mon, 16 Dec 2019 13:21:58 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 16 Dec 2019 13:21:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=O
+        9KZEvUpFXncIH94Knnxniibj3heNmy7V3nd1J3VERM=; b=SvBhIWUe/V3wGngKR
+        aVLH+4eb/yehmeU3Z5t2cfVO5yTOjZWOJ8iTjEuLFcrp6C+Ve8a+9N5aiL2Ytnk1
+        WNamFozI/YCVeSzEwpmg5bpvzbWbY0jWW85HkXCLmaEsWnWdKjkxtUTwHHCcJ3mF
+        UNB07fbsk6ed38UHwOP1AXXd2nH6yqk/qtxJdOKXmxr99OLebpyGtENMUKOzle3R
+        apIGxt3njtTMeqsEM2k6ddww6Zw+gRbizIpGt9qfxyipyekjXRXglBDPlvcGDfrh
+        Lm6ontrQn3a/TXPB34QiHziAdrYnxDEhbE82ZPVK5NPUiV3FyxdsR57CuemW1ZzC
+        +3+SA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=O9KZEvUpFXncIH94Knnxniibj3heNmy7V3nd1J3VE
+        RM=; b=BLMVqOReRV4/BfImfG6xp9BloG9FkVfDh8LrxrQzF9VoYdQ9/fOfujqh+
+        6l4O2NrKl7jprwtyoI4AzqtzK3RKFMks7bQ4Jg1m7NQDkoEKAVA3Xq8oHMF17GOc
+        SsIHJ1gzuFxByaj7ZDW4GQu5r2MscmiuAT4KtgIIq7HZBgk5lGxomuMY6mTRcDVh
+        kBIGpTQGsJp9JTaBKIkRhXu2+cr5l7AsW4kqn/a7MOihe18KjwN1D3AksAGiHP1j
+        BzvCIeAsHw0D6rgE06UCZjjtRNu09bw5cFuZhkKSG5qxDc7jT36fVfnur4U/ziNo
+        l1SQamV3ks2NpUdVBuACVjCFb1nyw==
+X-ME-Sender: <xms:Rcv3XexTS_-WLsGxP1hTKHxJP9I6Ezub2DCYTnp3gUwFfSlhyHmbqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Rcv3XYLJ3d7IoCc0VW7CldZ2stYBhKt36vH2ydVPBGaXGu8_yEa09w>
+    <xmx:Rcv3XZYMJ1PjRfPhUQWvbJSx6nLqBodsiM3IARStb_u4qpG0xrSjKQ>
+    <xmx:Rcv3XVx9ScZPO5SBJ7vjQoIbYwW-x3gXvy_VjPbTQJDPkYb7KoCyLg>
+    <xmx:Rsv3Xbsakt5YFcNo1bCqFfJIcw155lJq1xBVnUEm9MC5Xuf5DLT_Bg>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D96206EC;
-        Mon, 16 Dec 2019 18:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520509;
-        bh=pNacaEzUve952DMc+ojKhY/TSAljSVBx9N/TnS5BDmM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyiNQ8ywoX2yo+CPjEMVZ2P4ouGa788stlfPvkJ3aoFdXkDyHARBzvbwgURNJQZWq
-         kP+XWP8IOcUtuTAC/sdmlcoE8jhPs0REyL7voICh2jL9MLu2Y4hui9/4Xo4BMe+Ut/
-         53m8ap8WnmNL+mouNBgmz4TQh1JdfqVO1J/PKyrw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.4 177/177] ext4: fix leak of quota reservations
-Date:   Mon, 16 Dec 2019 18:50:33 +0100
-Message-Id: <20191216174851.197443318@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-References: <20191216174811.158424118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.messagingengine.com (Postfix) with ESMTPA id B0A8680062;
+        Mon, 16 Dec 2019 13:21:56 -0500 (EST)
+Date:   Mon, 16 Dec 2019 19:06:56 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     cang@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+Message-ID: <20191216180656.GB2404915@kroah.com>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
+ <20191212045357.GA415177@yoga>
+ <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
+ <20191212063703.GC415177@yoga>
+ <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
+ <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
+ <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+On Mon, Dec 16, 2019 at 09:22:21AM -0800, Bart Van Assche wrote:
+> On 12/15/19 8:36 PM, cang@codeaurora.org wrote:
+> > On 2019-12-16 05:49, Bart Van Assche wrote:
+> > > On 2019-12-11 22:37, Bjorn Andersson wrote:
+> > > > It's the asymmetry that I don't like.
+> > > > 
+> > > > Perhaps if you instead make ufshcd platform_device_register_data() the
+> > > > bsg device you would solve the probe ordering, the remove will be
+> > > > symmetric and module autoloading will work as well (although then you
+> > > > need a MODULE_ALIAS of platform:device-name).
+> > > 
+> > > Hi Bjorn,
+> > > 
+> > > From Documentation/driver-api/driver-model/platform.rst:
+> > > "Platform devices are devices that typically appear as autonomous
+> > > entities in the system. This includes legacy port-based devices and
+> > > host bridges to peripheral buses, and most controllers integrated
+> > > into system-on-chip platforms.  What they usually have in common
+> > > is direct addressing from a CPU bus.  Rarely, a platform_device will
+> > > be connected through a segment of some other kind of bus; but its
+> > > registers will still be directly addressable."
+> > > 
+> > > Do you agree that the above description is not a good match for the
+> > > ufs-bsg kernel module?
+> > 
+> > I missed this one.
+> > How about making it a plain device and add it from ufs driver?
+> 
+> Hi Can,
+> 
+> Since the ufs_bsg kernel module already creates one device node under
+> /dev/bsg for each UFS host I don't think that we need to create any
+> additional device nodes for ufs-bsg devices. My proposal is to modify the
+> original patch 2/3 from this series as follows:
+> * Use module_init() instead of late_initcall_sync().
+> * Remove the ufshcd_get_hba_list_lock() and
+>   ufshcd_put_hba_list_unlock() functions.
+> * Implement a notification mechanism in the UFS core that invokes a
+>   callback function after an UFS host has been created and also after an
+>   UFS host has been removed.
 
-commit f4c2d372b89a1e504ebb7b7eb3e29b8306479366 upstream.
+You want to be a bus and have a device on it.
 
-Commit 8fcc3a580651 ("ext4: rework reserved cluster accounting when
-invalidating pages") moved freeing of delayed allocation reservations
-from dirty page invalidation time to time when we evict corresponding
-status extent from extent status tree. For inodes which don't have any
-blocks allocated this may actually happen only in ext4_clear_blocks()
-which is after we've dropped references to quota structures from the
-inode. Thus reservation of quota leaked. Fix the problem by clearing
-quota information from the inode only after evicting extent status tree
-in ext4_clear_inode().
+> * Register for these notifications from inside the ufs-bsg driver.
 
-Link: https://lore.kernel.org/r/20191108115420.GI20863@quack2.suse.cz
-Reported-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Fixes: 8fcc3a580651 ("ext4: rework reserved cluster accounting when invalidating pages")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+You want to be a bus.
 
----
- fs/ext4/ialloc.c |    5 -----
- fs/ext4/super.c  |    2 +-
- 2 files changed, 1 insertion(+), 6 deletions(-)
+> * During registration for notifications, invoke the UFS host creation
+>   callback function for all known UFS hosts.
 
---- a/fs/ext4/ialloc.c
-+++ b/fs/ext4/ialloc.c
-@@ -265,13 +265,8 @@ void ext4_free_inode(handle_t *handle, s
- 	ext4_debug("freeing inode %lu\n", ino);
- 	trace_ext4_free_inode(inode);
- 
--	/*
--	 * Note: we must free any quota before locking the superblock,
--	 * as writing the quota to disk may need the lock as well.
--	 */
- 	dquot_initialize(inode);
- 	dquot_free_inode(inode);
--	dquot_drop(inode);
- 
- 	is_directory = S_ISDIR(inode->i_mode);
- 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1172,9 +1172,9 @@ void ext4_clear_inode(struct inode *inod
- {
- 	invalidate_inode_buffers(inode);
- 	clear_inode(inode);
--	dquot_drop(inode);
- 	ext4_discard_preallocations(inode);
- 	ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
-+	dquot_drop(inode);
- 	if (EXT4_I(inode)->jinode) {
- 		jbd2_journal_release_jbd_inode(EXT4_JOURNAL(inode),
- 					       EXT4_I(inode)->jinode);
+You want to be a bus.
 
+> * If the UFS core is unloaded, invoke the UFS host removal callback
+>   function for all known UFS hosts.
 
+Again, a bus would do all of this for you "for free", right?
+
+Take a look at the crazy "virtual bus" code that the RDMA people are
+proposing if you want to try to use something like that, or just take
+200 lines of code and be your own bus and devices that hang off of it.
+That sounds exactly what you are looking for here.
+
+> I think there are several examples of similar notification mechanisms in the
+> Linux kernel, e.g. the probe and remove callback functions in struct
+> pci_driver.
+
+Look, a bus!  :)
+
+thanks,
+
+greg k-h
