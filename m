@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4C4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E4820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D2120717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfLPPwO (ORCPT
+        id S1727757AbfLPPwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:52:14 -0500
-Received: from sauhun.de ([88.99.104.3]:42018 "EHLO pokefinder.org"
+        Mon, 16 Dec 2019 10:52:16 -0500
+Received: from sauhun.de ([88.99.104.3]:42006 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbfLPPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728642AbfLPPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 10:52:03 -0500
 Received: from localhost (p54B33297.dip0.t-ipconnect.de [84.179.50.151])
-        by pokefinder.org (Postfix) with ESMTPSA id 99BA32C2DB6;
-        Mon, 16 Dec 2019 16:52:01 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 3E9B72C2DB8;
+        Mon, 16 Dec 2019 16:52:02 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-media@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 14/16] media: usb: dvb-usb: dib0700_devices: convert to use i2c_new_client_device()
-Date:   Mon, 16 Dec 2019 16:51:41 +0100
-Message-Id: <20191216155146.8803-15-wsa+renesas@sang-engineering.com>
+Subject: [PATCH RESEND 15/16] media: usb: dvb-usb: dw2102: convert to use i2c_new_client_device()
+Date:   Mon, 16 Dec 2019 16:51:42 +0100
+Message-Id: <20191216155146.8803-16-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191216155146.8803-1-wsa+renesas@sang-engineering.com>
 References: <20191216155146.8803-1-wsa+renesas@sang-engineering.com>
@@ -45,35 +45,36 @@ out.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++----
+ drivers/media/usb/dvb-usb/dw2102.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index ab7a100ec84f..4ef3fa98d20f 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -3772,8 +3772,8 @@ static int xbox_one_attach(struct dvb_usb_adapter *adap)
- 	info.addr = 0x18;
- 	info.platform_data = &mn88472_config;
- 	request_module(info.type);
--	client_demod = i2c_new_device(&d->i2c_adap, &info);
--	if (client_demod == NULL || client_demod->dev.driver == NULL)
-+	client_demod = i2c_new_client_device(&d->i2c_adap, &info);
-+	if (!i2c_client_has_driver(client_demod))
- 		goto fail_demod_device;
- 	if (!try_module_get(client_demod->dev.driver->owner))
- 		goto fail_demod_module;
-@@ -3800,8 +3800,8 @@ static int xbox_one_attach(struct dvb_usb_adapter *adap)
- 	info.platform_data = &tda18250_config;
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
+index b960abd00d48..8b584507dd59 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -1590,8 +1590,8 @@ static int tt_s2_4600_frontend_attach(struct dvb_usb_adapter *adap)
+ 	board_info.addr = 0x68;
+ 	board_info.platform_data = &m88ds3103_pdata;
+ 	request_module("m88ds3103");
+-	client = i2c_new_device(&d->i2c_adap, &board_info);
+-	if (client == NULL || client->dev.driver == NULL)
++	client = i2c_new_client_device(&d->i2c_adap, &board_info);
++	if (!i2c_client_has_driver(client))
+ 		return -ENODEV;
+ 	if (!try_module_get(client->dev.driver->owner)) {
+ 		i2c_unregister_device(client);
+@@ -1609,9 +1609,9 @@ static int tt_s2_4600_frontend_attach(struct dvb_usb_adapter *adap)
+ 	board_info.addr = 0x60;
+ 	board_info.platform_data = &ts2020_config;
+ 	request_module("ts2020");
+-	client = i2c_new_device(i2c_adapter, &board_info);
++	client = i2c_new_client_device(i2c_adapter, &board_info);
  
- 	request_module(info.type);
--	client_tuner = i2c_new_device(&adap->dev->i2c_adap, &info);
--	if (client_tuner == NULL || client_tuner->dev.driver == NULL)
-+	client_tuner = i2c_new_client_device(&adap->dev->i2c_adap, &info);
-+	if (!i2c_client_has_driver(client_tuner))
- 		goto fail_tuner_device;
- 	if (!try_module_get(client_tuner->dev.driver->owner))
- 		goto fail_tuner_module;
+-	if (client == NULL || client->dev.driver == NULL) {
++	if (!i2c_client_has_driver(client)) {
+ 		dvb_frontend_detach(adap->fe_adap[0].fe);
+ 		return -ENODEV;
+ 	}
 -- 
 2.20.1
 
