@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2602CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581CF21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34EB21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518987;
-	bh=E7QH1DALMVMiTDVbaIxq+PDoDMC7JVVXWQNHq71LvSU=;
+	s=default; t=1576518990;
+	bh=L1ZJnOukyG9pbLSqdTAzhSKY7W/Y+Cjvd9R5hzHLJUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncFsHNW7SIFkKXnZYhRYb+x8G4/RfZN6ZEfo1Z8viz8kRnx3JRq/CskJV6M4bwBS5
-	 /h7EVlM1A82qbu7hVqp19fnz53CBBxU6jvyRJ6V1qDHqaSPN9sVsmF0WIbAwaTBPy6
-	 l4UwVq0EOqA29ko6Ug+0Q4jRhP6+WEBiGT+dlRU8=
+	b=PBVmCN02UlFF71mX5ZATXYiwzpevQ4Oem8a5xeWda/h459g2NFk4qcLEzzxwIlF6H
+	 Y6vw8bBhSiH/dMvDi4nYMsfcVLHUdlKBx00uPhLwuyetIdMLsOG8++rMiF1gjE/jPf
+	 BNzQYfwGVBUQO2+weKDdJdd0R/U/PEVFGHK9vhrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfLPR40 (ORCPT
+        id S1728000AbfLPR42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54340 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbfLPR4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:19 -0500
+        id S1727790AbfLPR40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED5824672;
-        Mon, 16 Dec 2019 17:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A102B205ED;
+        Mon, 16 Dec 2019 17:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518978;
-        bh=E7QH1DALMVMiTDVbaIxq+PDoDMC7JVVXWQNHq71LvSU=;
+        s=default; t=1576518986;
+        bh=L1ZJnOukyG9pbLSqdTAzhSKY7W/Y+Cjvd9R5hzHLJUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otN4W2zG7Clj13EpjWgnZRCwM0fi2kZE4xq1XFlV0Ie8J8+o/7w/2HaLRmHKDjxrH
-         qDwfQx3/Y9AEHg6eaVKNJDKRb0AbtNrsaQaVCezQZk/HdYEL7b8JiWH3r71LW9jpoQ
-         1icQGSURLYYg5NT2c1i+OZ0U8czebI8KYvsbBoPM=
+        b=qVa+XKYQZFgQE7ekcwnCd0Rx/iR5PahsrlnjAulFvuKgreEaHCxxDE0trVkOOUwRg
+         18u1YS01VMoygtlST0qQVdSmblasMaQvBLzqa8Xegnz3IJPt8V0Edc8ECPuwCveUjP
+         Ie1G8tNEMjqSvieUtWqooiCABkTzl4iwFTSROcug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 107/267] nfsd: Return EPERM, not EACCES, in some SETATTR cases
-Date:   Mon, 16 Dec 2019 18:47:13 +0100
-Message-Id: <20191216174902.581497762@linuxfoundation.org>
+Subject: [PATCH 4.14 100/267] ARM: dts: realview: Fix some more duplicate regulator nodes
+Date:   Mon, 16 Dec 2019 18:47:06 +0100
+Message-Id: <20191216174902.196585623@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,55 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 255fbca65137e25b12bced18ec9a014dc77ecda0 ]
+[ Upstream commit f3b2f758ec1e6cdb13c925647cbd8ad4938b78fb ]
 
-As the man(2) page for utime/utimes states, EPERM is returned when the
-second parameter of utime or utimes is not NULL, the caller's effective UID
-does not match the owner of the file, and the caller is not privileged.
+There's a bug in dtc in checking for duplicate node names when there's
+another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
+another section. Upon removal of skeleton.dtsi, the dtb fails to build
+due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
+much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
+by renaming the nodes to something unique. In the process, drop the
+unit-address which shouldn't be present wtihout reg property.
 
-However, in a NFS directory mounted from knfsd, it will return EACCES
-(from nfsd_setattr-> fh_verify->nfsd_permission).  This patch fixes
-that.
-
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 4 ++--
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index f55527ef21e84..06d1f2edf2ec6 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -396,10 +396,23 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
- 	bool		get_write_count;
- 	bool		size_change = (iap->ia_valid & ATTR_SIZE);
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index c1fd5615ddfe3..939c108c24a6c 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -45,7 +45,7 @@
+ 	};
  
--	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME | ATTR_SIZE))
-+	if (iap->ia_valid & ATTR_SIZE) {
- 		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
--	if (iap->ia_valid & ATTR_SIZE)
- 		ftype = S_IFREG;
-+	}
-+
-+	/*
-+	 * If utimes(2) and friends are called with times not NULL, we should
-+	 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
-+	 * will return EACCESS, when the caller's effective UID does not match
-+	 * the owner of the file, and the caller is not privileged. In this
-+	 * situation, we should return EPERM(notify_change will return this).
-+	 */
-+	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME)) {
-+		accmode |= NFSD_MAY_OWNER_OVERRIDE;
-+		if (!(iap->ia_valid & (ATTR_ATIME_SET | ATTR_MTIME_SET)))
-+			accmode |= NFSD_MAY_WRITE;
-+	}
+ 	/* The voltage to the MMC card is hardwired at 3.3V */
+-	vmmc: fixedregulator@0 {
++	vmmc: regulator-vmmc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -53,7 +53,7 @@
+ 		regulator-boot-on;
+         };
  
- 	/* Callers that do fh_verify should do the fh_want_write: */
- 	get_write_count = !fhp->fh_dentry;
+-	veth: fixedregulator@0 {
++	veth: regulator-veth {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "veth";
+ 		regulator-min-microvolt = <3300000>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index e306f1cceb4ec..95037c48182de 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -145,7 +145,7 @@
+ 	};
+ 
+ 	/* The voltage to the MMC card is hardwired at 3.3V */
+-	vmmc: fixedregulator@0 {
++	vmmc: regulator-vmmc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -153,7 +153,7 @@
+ 		regulator-boot-on;
+         };
+ 
+-	veth: fixedregulator@0 {
++	veth: regulator-veth {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "veth";
+ 		regulator-min-microvolt = <3300000>;
 -- 
 2.20.1
 
