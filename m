@@ -5,101 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C007C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335EFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C4A24685
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F302467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqPgX5mF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LoQmFNUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLPAUI (ORCPT
+        id S1726481AbfLPAYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 19:20:08 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45417 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfLPAUH (ORCPT
+        Sun, 15 Dec 2019 19:24:17 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33851 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfLPAYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 19:20:07 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x1so3866764qkl.12;
-        Sun, 15 Dec 2019 16:20:06 -0800 (PST)
+        Sun, 15 Dec 2019 19:24:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f4so3802407wmj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 16:24:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7S615KofXaQ1yUG/3GM94cEkec6rvE87OWT0R1mkHVE=;
-        b=nqPgX5mFOvAOvhSP8TsLpj5UaQakaOAGyTfIYXnrJ98dEtbMpEP8y70bY2krwxvBGv
-         3sK8HR/8589X7H4aSpRQYDfPVFxXCiHAWknqhsEK4Dqnmtom1eCmt/84ndxMicvGc0tX
-         SK1DtIiUK/u/cmwstnoeopb3cfXxGD4PGhoanmWF1wQx39CgqDz+4kssxSIdbFWyWPOB
-         y63NGEJciBnX0t8sIT3OXdy/PBOf6jMsRpwBBJWBXrJ9vblwvEfFYeeNeGZ2SeNxLe1f
-         oSONG29STbtZuutO4OQ8C6uyMnSUAFvzBbOaI53Zjw4vhBWJIWjfAI2QyCTMnpNHF0F/
-         6NtA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ygwsDNhmKVfGJs/MinYk9AFY4MjB2fx/AFZvzMWfp8=;
+        b=LoQmFNUCgZ0zhhXilUbsKTpRrKQdc/E0XvpkZwcpkiZ9YA5T/l9rQt6AHdrb1RYsxn
+         9Y0GO+kfO8dtJtp75sHjED8RtO+N32Ly1gock6TDhsiUhnQP73IlQCjj58iC+RP1HBLV
+         JGLsqvBWY++cbJWD4HRyfFQdTwr/WcAc7MZhWQ7rsDMvajW4MPnlM4vHUOcm0NRFK5lb
+         MuLAiez7h3qy5GhxYDu7CbjILtY6pAuHb94qDWiPTEr8hG3ADLgjeW4nslML6JXwH76J
+         tItXOB2Vg335U1W1RrdIy0dZqa2wO71BDgqhSAxjzdkehQAd5e5FuMqwH6JEnp/sckd5
+         vbsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7S615KofXaQ1yUG/3GM94cEkec6rvE87OWT0R1mkHVE=;
-        b=qMWfwPLe3kwErVCcmZUZ1Xyr9KktPkeZVoWYve63ZsT2GdpCKj6FK5T+KtM6Lezd02
-         +H+NfxcTf8KabF2SP7Lwbl/vAHYNaoc61hEd2G/QTi/kHJpcMOO59vPCqnh9xXbzo7mu
-         eek/FIoYVOYJN2NjqO6RQC+NJkMXZ35jREDPeHsjjaCnL8c66+0r0WqFG7DQ22fcQ4Mj
-         EjvaL7lYqXFpY5FZL/rkPM3lmvKZqWQE9PFTUQIx+JWM+VoCn+ghqs4OFrt9DpCjwnhH
-         henotN2T/vW1P5g9lTXlU6mZyqgQvl0c7CuygijXYp9Jbl1s+we9f3lW6AxBXxTbQdzM
-         s5YQ==
-X-Gm-Message-State: APjAAAU5CDHpkKeBnVJidKofZm/HlP97rgEbF6ofbARS73Ttt8oMp+tp
-        06TAjRhIkj5siH4Ztfy36jo=
-X-Google-Smtp-Source: APXvYqw+Sd5f8LCDwfYgXxyt3Pq91Kobn432DMObcmpR4URJPQMO29VkBjNnlDH47LvcwB6Snoz7LA==
-X-Received: by 2002:a37:684a:: with SMTP id d71mr22545035qkc.201.1576455606206;
-        Sun, 15 Dec 2019 16:20:06 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id h1sm5312169qkc.38.2019.12.15.16.20.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Dec 2019 16:20:05 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 18F2B22442;
-        Sun, 15 Dec 2019 19:20:04 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 15 Dec 2019 19:20:04 -0500
-X-ME-Sender: <xms:s832Xf_utJ7BzzzxXT8sbRHR_jIVZkfwcioGr8KILEE-3_xWYJBHKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgedgvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgjfhgggfes
-    tdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnh
-    hgsehgmhgrihhlrdgtohhmqeenucfkphephedvrdduheehrdduuddurdejudenucfrrghr
-    rghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrg
-    hlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeep
-    ghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvnecuvehluhhsthgvrhfuihiivgepge
-X-ME-Proxy: <xmx:s832Xaf6uB8opnROUrWBVo_oq9K0wWLiPN_7SZTDlz-uaVSDV_V5-Q>
-    <xmx:s832XclLRpyr1FDzNKmXKAtYVIdNduUR00tMwI8SBw9qloS3PHxvIg>
-    <xmx:s832XVwgiH4W1-JxHD2H0dy8J1UrSR2HXikSjfrgI9BuAUt7nedTCg>
-    <xmx:tM32Xdbw_MsAUFdQXzs8LV5BQT0Fa223mJ-DPb6TdsQ2b8XitXSIMLuE1VQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 69CB980063;
-        Sun, 15 Dec 2019 19:20:03 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC 6/6] arm64: hyperv: Enable vDSO
-Date:   Mon, 16 Dec 2019 08:19:22 +0800
-Message-Id: <20191216001922.23008-7-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191216001922.23008-1-boqun.feng@gmail.com>
-References: <20191216001922.23008-1-boqun.feng@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ygwsDNhmKVfGJs/MinYk9AFY4MjB2fx/AFZvzMWfp8=;
+        b=sBjinVyNuIeTvSCwi1kM3MtqIADWA5Hjwrvm5IeIvucNOWWM/gU4NEAp8pPJH4wv59
+         iAiGjt6FYp8abXShEkEasGmbI8SXma/y34rVMCY9PBVtWCjqP2uOHWAMcqQw/eMz3HCN
+         1P0Ih3rfMMXp8ukEPJ1fhwd4SAAKkKOIGS+7dheMBT3TkgSX8nyBoSlogj2b0cA1NHDV
+         HQdU3m74wJ6XzxuVJsau8SA9DN7gN3cC5efGph1tj6FH236KuAB0qG7jRYVeRZyzqoS2
+         i+fPovEYzDs6eT125/b8Oj0U4MRINDd9xUXbIiq85idwjvdsHY8IZzCnI60gaiN8MpoZ
+         neEA==
+X-Gm-Message-State: APjAAAVOpnFtVN2MdXiJfNl2D5PGiElDbXLyWbM0bKtCVdjXP+5ZBtXm
+        1kEHQPNFxBn9NejGCCoSdw==
+X-Google-Smtp-Source: APXvYqyCjM/SUQtI8w5C26g931jLlZzpDVrQ7Vgtqh1z6PhWKuIhaeY3rBdQqYr4NpSyXxOeMaTywQ==
+X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr27646492wmm.143.1576455854611;
+        Sun, 15 Dec 2019 16:24:14 -0800 (PST)
+Received: from ninjahub.lan (host-92-15-174-53.as43234.net. [92.15.174.53])
+        by smtp.googlemail.com with ESMTPSA id e16sm19214555wrs.73.2019.12.15.16.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 16:24:14 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     bokun.feng@gmail.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] kernel: events: add releases() notation
+Date:   Mon, 16 Dec 2019 00:24:00 +0000
+Message-Id: <20191216002400.89985-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -107,80 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to x86, add a new vclock_mode VCLOCK_HVCLOCK, and reuse the
-hv_read_tsc_page() for userspace to read tsc page clocksource.
+Add releases() notation to remove issue detected by sparse
+context imbalance in perf_output_end() - unexpected unlock
 
-Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- arch/arm64/include/asm/clocksource.h       |  3 ++-
- arch/arm64/include/asm/mshyperv.h          |  2 +-
- arch/arm64/include/asm/vdso/gettimeofday.h | 19 +++++++++++++++++++
- 3 files changed, 22 insertions(+), 2 deletions(-)
+ kernel/events/ring_buffer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/clocksource.h b/arch/arm64/include/asm/clocksource.h
-index fbe80057468c..c6acd45fe748 100644
---- a/arch/arm64/include/asm/clocksource.h
-+++ b/arch/arm64/include/asm/clocksource.h
-@@ -4,7 +4,8 @@
- 
- #define VCLOCK_NONE	0	/* No vDSO clock available.		*/
- #define VCLOCK_CNTVCT	1	/* vDSO should use cntvcnt		*/
--#define VCLOCK_MAX	1
-+#define VCLOCK_HVCLOCK	2	/* vDSO should use vread_hvclock()	*/
-+#define VCLOCK_MAX	2
- 
- struct arch_clocksource_data {
- 	int vclock_mode;
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index 0afb00e3501d..7c85dd816dca 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -90,7 +90,7 @@ extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_register_output *result);
- #define hv_set_reference_tsc(val) \
- 		hv_set_vpreg(HV_REGISTER_REFERENCE_TSC, val)
- #define hv_set_clocksource_vdso(val) \
--		((val).archdata.vclock_mode = VCLOCK_NONE)
-+		((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
- 
- #if IS_ENABLED(CONFIG_HYPERV)
- #define hv_enable_stimer0_percpu_irq(irq)	enable_percpu_irq(irq, 0)
-diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-index e6e3fe0488c7..7e689b903f4d 100644
---- a/arch/arm64/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -67,6 +67,20 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
- 	return ret;
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 7ffd5c763f93..c8ad63f9faa5 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -295,6 +295,7 @@ unsigned int perf_output_skip(struct perf_output_handle *handle,
  }
  
-+#ifdef CONFIG_HYPERV_TIMER
-+/* This will override the default hv_get_raw_timer() */
-+#define hv_get_raw_timer() __arch_counter_get_cntvct()
-+#include <clocksource/hyperv_timer.h>
-+
-+extern struct ms_hyperv_tsc_page
-+_hvclock_page __attribute__((visibility("hidden")));
-+
-+static u64 vread_hvclock(void)
-+{
-+	return hv_read_tsc_page(&_hvclock_page);
-+}
-+#endif
-+
- static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
+ void perf_output_end(struct perf_output_handle *handle)
++	__releases()
  {
- 	u64 res;
-@@ -78,6 +92,11 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- 	if (clock_mode == VCLOCK_NONE)
- 		return __VDSO_USE_SYSCALL;
- 
-+#ifdef CONFIG_HYPERV_TIMER
-+	if (likely(clock_mode == VCLOCK_HVCLOCK))
-+		return vread_hvclock();
-+#endif
-+
- 	/*
- 	 * This isb() is required to prevent that the counter value
- 	 * is speculated.
+ 	perf_output_put_handle(handle);
+ 	rcu_read_unlock();
 -- 
-2.24.0
+2.23.0
 
