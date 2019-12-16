@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6549C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238F1207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E836206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520313;
-	bh=7dCGIPm6GYG4d8q0NsGFaaUy2fuhwEoIC+B+G6NlFKw=;
+	s=default; t=1576520315;
+	bh=RV3klUc/PIvQCfSU2SpZoIO+Xo2pIu/8ydn60yThLWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=li5p/PiO6brRPbTTSjxcGh7I7hP+/OrU3Elj69uKCnjsSXlbTwCm0YwTVfwQj6/SX
-	 zXRzTDqTnBWPRhO7wo5waHIyWCZLTKsdGlVRxHDCP4/Z4XLgcgofb8avdzUnoFEdHS
-	 sNVk5u9OONy6Ry3zMgtL2+IDFMb0mfnuelV2CJDY=
+	b=TKY9JxFHF3gxDcU1zugxAo8+9jEUCMS7G0DakEPoNkq9yl+0LrQ9uOGnAx5ZzYbUm
+	 3Z+lDIUvKxlVnDrVnHZxVcQpBN1V2LXFht41aWU8+eFdyPKRxTV2soeGYpLl9rwmiZ
+	 fta4JPEaC9H+/DZjUIA98eHbwgWY9hI6PFVYGuLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfLPSSc (ORCPT
+        id S1731824AbfLPSSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:18:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44114 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731623AbfLPSS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:29 -0500
+        id S1731057AbfLPSSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:18:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8B3206EC;
-        Mon, 16 Dec 2019 18:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118CC20CC7;
+        Mon, 16 Dec 2019 18:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520308;
-        bh=7dCGIPm6GYG4d8q0NsGFaaUy2fuhwEoIC+B+G6NlFKw=;
+        s=default; t=1576520310;
+        bh=RV3klUc/PIvQCfSU2SpZoIO+Xo2pIu/8ydn60yThLWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVSICPjHK6CXTbZDbpac3AAlpvROqoLo1eLTs1fUnVQKpqf5OJqGKVb8yED32frCB
-         qkOkDV+EOP7CDKfBwZaSAGc4XvRhOgJlw4xJYDlqpJM9+bd8gCijd/gkVMdJ/l1ZyN
-         T94H2VvannDueKN26g0uLzfOHEiwrY+xZhbKKpWA=
+        b=iCx5wK2YsSDOyw7K8sOE20SHB3xGXZA5CGPEK9SJkYETqBz7V+D1UlntOGZCcIER8
+         o+kxBSVOjr52izO+SydQYYd6gKsrYaT0trCWtB46XYBoWE1NrOUXPl9Pde06y0F1Z9
+         OSdDWbHzWsOKxBG308GpQMPsnYiDRv1QyduLAP5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matti Aaltonen <matti.j.aaltonen@nokia.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 5.4 102/177] media: radio: wl1273: fix interrupt masking on release
-Date:   Mon, 16 Dec 2019 18:49:18 +0100
-Message-Id: <20191216174841.159316438@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jiunn Chang <c0d1n61at3@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.4 103/177] media: cec.h: CEC_OP_REC_FLAG_ values were swapped
+Date:   Mon, 16 Dec 2019 18:49:19 +0100
+Message-Id: <20191216174841.251525133@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit 1091eb830627625dcf79958d99353c2391f41708 upstream.
+commit 806e0cdfee0b99efbb450f9f6e69deb7118602fc upstream.
 
-If a process is interrupted while accessing the radio device and the
-core lock is contended, release() could return early and fail to update
-the interrupt mask.
+CEC_OP_REC_FLAG_NOT_USED is 0 and CEC_OP_REC_FLAG_USED is 1, not the
+other way around.
 
-Note that the return value of the v4l2 release file operation is
-ignored.
-
-Fixes: 87d1a50ce451 ("[media] V4L2: WL1273 FM Radio: TI WL1273 FM radio driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.38
-Cc: Matti Aaltonen <matti.j.aaltonen@nokia.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Reported-by: Jiunn Chang <c0d1n61at3@gmail.com>
+Cc: <stable@vger.kernel.org>      # for v4.10 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/radio/radio-wl1273.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/uapi/linux/cec.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/radio/radio-wl1273.c
-+++ b/drivers/media/radio/radio-wl1273.c
-@@ -1148,8 +1148,7 @@ static int wl1273_fm_fops_release(struct
- 	if (radio->rds_users > 0) {
- 		radio->rds_users--;
- 		if (radio->rds_users == 0) {
--			if (mutex_lock_interruptible(&core->lock))
--				return -EINTR;
-+			mutex_lock(&core->lock);
- 
- 			radio->irq_flags &= ~WL1273_RDS_EVENT;
- 
+--- a/include/uapi/linux/cec.h
++++ b/include/uapi/linux/cec.h
+@@ -768,8 +768,8 @@ struct cec_event {
+ #define CEC_MSG_SELECT_DIGITAL_SERVICE			0x93
+ #define CEC_MSG_TUNER_DEVICE_STATUS			0x07
+ /* Recording Flag Operand (rec_flag) */
+-#define CEC_OP_REC_FLAG_USED				0
+-#define CEC_OP_REC_FLAG_NOT_USED			1
++#define CEC_OP_REC_FLAG_NOT_USED			0
++#define CEC_OP_REC_FLAG_USED				1
+ /* Tuner Display Info Operand (tuner_display_info) */
+ #define CEC_OP_TUNER_DISPLAY_INFO_DIGITAL		0
+ #define CEC_OP_TUNER_DISPLAY_INFO_NONE			1
 
 
