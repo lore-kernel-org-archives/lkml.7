@@ -2,239 +2,211 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3942C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7681220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="Xt0JEWx0"
+	by mail.kernel.org (Postfix) with ESMTP id 7B4FF206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576505067;
+	bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C3uCXmTl7M2gRPjdzHyMyZ9FGdgK5k/YloAuLQWDS3mdoJ3kNZhBZaarlfve21gL4
+	 jtM5436mBC6xUkL7UtlNYIvtAJKL5QzQk6uZkLrbWDaP/UtKJ8ES/EthiBazaQRHLD
+	 kq28zFaGjQvqlGfzR+CDjftvkC1oooaFKrrkXKR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfLPOEL (ORCPT
+        id S1728145AbfLPOE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:04:11 -0500
-Received: from UCOL19PA36.eemsg.mail.mil ([214.24.24.196]:19861 "EHLO
-        UCOL19PA36.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbfLPOEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:04:11 -0500
-X-EEMSG-check-017: 61521314|UCOL19PA36_ESA_OUT03.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,321,1571702400"; 
-   d="scan'208";a="61521314"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UCOL19PA36.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 16 Dec 2019 14:04:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1576505049; x=1608041049;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=U0M0tIssvGrXXr9dmiqb0cmH1xoVvn8V0R69uhizAz0=;
-  b=Xt0JEWx0eGrG7h8Ig8HlW0+ELW+o0+CLEE6h+l91OjQyb7Vu9m1SoSlO
-   +K6GvqvsuNZAjH2fgr8LuCL+MWZXYConpHHb4LIYgZoz2e7atdw9tfghH
-   P4c5xReSFanPcO1sykqhbwXn/oqidrVbEFOjarpDvUa5ruwZ/YXqKmBtj
-   KyP+unT0zd6AzLc6Y8AAFcyDRXKpZZ0C5n4gJgUVngOkZG9EBdeI28/hj
-   3kPFl17LzjjgclXvAYTTgt77V+oX/WPTGnQujuobSPDsxhEqF81dkHVwW
-   s2NyOpGyevEHpl2LaQdWZZdgypJlFm1Y04ZFR7yKJs6AllGWSq/9oeprl
-   g==;
-X-IronPort-AV: E=Sophos;i="5.69,321,1571702400"; 
-   d="scan'208";a="36782375"
-IronPort-PHdr: =?us-ascii?q?9a23=3AKPoiuhHc+V4kn8xeMmMs4J1GYnF86YWxBRYc79?=
- =?us-ascii?q?8ds5kLTJ74pcqzbnLW6fgltlLVR4KTs6sC17ON9fq4BCddsN6oizMrSNR0TR?=
- =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
- =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vIhi6txvdutUWjIdtKqs8zg?=
- =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
- =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
- =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
- =?us-ascii?q?ZdUspUUSFODJm8b48SBOQfO+hWoZT2q18XoRegAQSgAeXiwSJKiHDrx603y/?=
- =?us-ascii?q?kvHx/I3AIgHNwAvnrbo9r3O6gOXu6417XIwDfZYv9KxTvw5orFfxY8qv+MR7?=
- =?us-ascii?q?Jwds/RxFEyGQPZkFqQsYzlMC2T1u8Qrmab6vBvVeari2E5qwB6vz+ixtwxhY?=
- =?us-ascii?q?nSnY8V1lDF+jl5wIYyP9G4TlV7bsS+HJtfsCGaKZJ7T8U/SG9mvyY6z6cJuZ?=
- =?us-ascii?q?+9fCUSzZQo3RjfZv6df4iP+BLjW+CcKip7inJ9YL+zmhm//Ee6xuD8S8W4yk?=
- =?us-ascii?q?hGoyVbntXWq3wA0QHY5NKdRftn5Eih3C6C1wXU6u5ZP085jbHbK5s9wr4okZ?=
- =?us-ascii?q?oTrFjDEjf2mEroiK+WcV0p+vSy5OT9Y7Xmu4ScO5V1igH4PKQunde/DvokPQ?=
- =?us-ascii?q?QUQ2ia+fiz1L3k/UHjRrVFkuY2nbXDvJDfJMQbora1Aw5T0ok99xayFyqq3d?=
- =?us-ascii?q?sXkHUdLF9JZQiLg5bmNl3QOvz0EO+zg1G2nzdqw/DGMKfhApLILnXbi7fuYK?=
- =?us-ascii?q?195lVAyAsz0d9f55VUBqsHIPLoQED9rtPYDhgnMwCs2eboFM191p8CWWKIGq?=
- =?us-ascii?q?KWKqfSvkGH5+0xI+iAfpQauCvgJPc/4f7ujng5mUEGcKmt3JsXbm24H/t8L0?=
- =?us-ascii?q?WYZ3rsnskOEWMQsgUiS+zqjUWIUSRPaHaqQ6I8+jY7BZq+DYjdWoCinqaB3S?=
- =?us-ascii?q?agE51XYGBGBEqMHm31eIqaQfgDdTieIsh7kjwLTbKhUZMu1QmytA/mzLpqNv?=
- =?us-ascii?q?Db9TEdtZ39z9V15PPclQs09TNqC8SRyWaNT3t7nmkQXT85wLh/oVBhyleEya?=
- =?us-ascii?q?V4hv1YFdpc5/NOSQo6L4DTwPF6C9/oRgLNZMuGSFGjQt++GzE+Usoxw8MSY0?=
- =?us-ascii?q?Z6A9iijArM3yyrA7MPkbyLBZ808r/Y33frPMt9z3fG1K88j1gpWMdPNGumhr?=
- =?us-ascii?q?Jh+AjXHYLGj0KZl6Oyf6QGwCHN7HuDzXaJvExAUg5wVqLFXXYFaUvNt9j54l?=
- =?us-ascii?q?nNT7+yCbQmNAtO18iCJ7BOat3oi1VGWfjiNM7fY2K3h2e/GxKIyqmQY4rtfm?=
- =?us-ascii?q?UXxD/dB1QckwAP4XaGMhAzBj2mo23DFjxuFF3vY0T2/elgqXO7UE40whqLb0?=
- =?us-ascii?q?1ny7q65BoVieaARPMU27IOoD0hpClsHFahw9LWDMKNqBB6fKVAet4940lI1X?=
- =?us-ascii?q?jftwNjOpysNadihkQRcw5vpUPhyw13CplckcgttH4qzhB9KaeG31NabT+Xxp?=
- =?us-ascii?q?fwOqHLKmn1+RCvb7DZ21HF3daW4KgP7u84pEvlvAGxDEUi6Wln099L3HuG/Z?=
- =?us-ascii?q?XKDAsSUYrrXkkr8Bh6oqnQYjMh6IPMyX1sLa60vyfZ1N03Auslyg2tf9RBP6?=
- =?us-ascii?q?OeEg/9DckaC9KyJ+wwgVepdRIEPOFU9K47Jc+mcOGG2KGzNuZ6gD2mlXhH4J?=
- =?us-ascii?q?x60k+U6yVzUPXI0IgFwvyDxQuISzf8g028ssD5nYBLeysSEnOjxif+HoJeeq?=
- =?us-ascii?q?pyfYMTA2e0P8K33sl+h4LqW3NA716sGUkG2MC3dheJb1zyxwlQ1UAXoHyhgy?=
- =?us-ascii?q?e30zt0kzQxpKqFwCPO2/jidAYAOmNTRmliiFDsIZKuj9AbR0ildA4pmwGg5U?=
- =?us-ascii?q?nkxqhXvqN/L3PcQU1QZSj5M3liUrestrqFe8NP6pQosSFMUOumel2aUKDyrA?=
- =?us-ascii?q?Ya0yz5A2tS3iw0dzavup/hhRx1lHqdLGpvrHreYcx/3xTf6cfYRf5Q2DoGWS?=
- =?us-ascii?q?Z5hSPWBli6I9mm49GUm43fveC5UmKrTodTfjXzzYOcqCu74nVnDgOln/+pnN?=
- =?us-ascii?q?3nEBI10Sng2tllUiXIqxn8Yo312KigLe1neUxoDkfm68VmAoF+jpcwhJYI1H?=
- =?us-ascii?q?gbgpWV4GEInn3oMdVbx63zd2ACRT0RzN7Q+gfl2VdvIW6Ox4L8Tn+d2NduZ8?=
- =?us-ascii?q?GmYmMK3SIw99pFCKOK471LhyR1pEe3ohzLYfRnhTcdyfou6GUag+EKuQotyD?=
- =?us-ascii?q?6QArQTHUleICztmA6E79G4rKVLemmvdaK821Z5ndCkFLuCuB1TWG7lepc+Gi?=
- =?us-ascii?q?999sN/P0jJ0H3z6oDkZd/Qbd0Iux2XjRjAle5VJ4w1lvYQgipnI239t2U/y+?=
- =?us-ascii?q?EnlRxuwY26vI+fJmVv5q25BBhYNj3uasMc/THtiqlensKI0Iy1ApphHTALVo?=
- =?us-ascii?q?PyTf20CDISqejnNwGWHT0/tHiUB6HfEhOY6EdhrHLCCIykN3GNJHkeyNViRQ?=
- =?us-ascii?q?SdJElFjAATRjU6kYYzFhq2y8z5bEd5+jcR60bkqhtDzuJpOALyUmPepAeudz?=
- =?us-ascii?q?c0VIKfLB1Q7gFD6EbZK9GR4fxrFSFC4pKhtBCNKnCcZwlQEWEJRFaEB0zgPr?=
- =?us-ascii?q?mp/9XA7vKYBvGjL/vKYLWOr/dTV/OJxZKpz4tn8CyANsSJPnl+EfI73lBPUm?=
- =?us-ascii?q?x+G8Tcgz8PUTAYlzrRb86Hoxex4il3rsG58PT2VwPj/JCPBKVOPtVy4RC2gL?=
- =?us-ascii?q?uDNu6JiCZ8LjZXy44MxXvWx7UEwl4ShD9hdyO3HbQDqyHNVqTQlbFTDxIBbC?=
- =?us-ascii?q?NzLsRI5bom3gZRIc7bls/11rlgg/4uFVhFUV3hmse0Zc0FOGy9KlzHC1iRNL?=
- =?us-ascii?q?icJj3E3dv3YaWiRr1UlulUsAewuTmDGU/5IjuDjyXpVwyoMexUiCGbPRpeuJ?=
- =?us-ascii?q?yycxp0CmjsUsjmahulP99zljA237I0iW3QNWIGMjhzbVlNrruO4iNcmPl/HH?=
- =?us-ascii?q?ZB7nV9J+mehymZ9/XYKooRsfZzBiR0luRa4Gk1yrdM9CFLWuZ1mCXLot5zuF?=
- =?us-ascii?q?GpjPOPyiF8XRpQpTZEmpiLsV9hOarH7JlAX2jL/BYX4WWXERQKqMNvCsfztK?=
- =?us-ascii?q?BI1tjPiKXzJS9D89LS4csTGczUJNuIMHovPhvkAzrUDAoeTT63LmHTnUJdkO?=
- =?us-ascii?q?uM+XKLs5c1tIPsmJkSSr9cTFw5DPQaCl5qHNYaOpd4QiskkaKHjM4P/Xextx?=
- =?us-ascii?q?bRRN9EsZDIWfKfGvPvJyiFjblKYxsIwLz5IZ4POY383kxockN6k5jSG0rMQd?=
- =?us-ascii?q?BNpTVsbhQzoEVL/3h+Smwz21/+ZQO3+nATC/+0nhg5igZlb+Qi7y3g7EswJl?=
- =?us-ascii?q?rPvCEwilU+mc35gTCNdz78NLy/XZlYCyfvqUgxPY30QxxvYQ2xg0NkLjHESK?=
- =?us-ascii?q?xVj7d6cmBrkgDcs4NVGfFAVa1EfAMQxfaPavUs0FRcrDinxEBe6evdE5Rijg?=
- =?us-ascii?q?oqcYWwoH9bxQJjY8A6JbbKKKpK0FdQnKSOsTGs1uwrxw8ePUkN+nuIeCEUoE?=
- =?us-ascii?q?wIKqUmJy2w8+xo6AyCnSZDeWcUV/oyvv1m714yNPqezy/7175DK1uxN/CEL6?=
- =?us-ascii?q?+DvGjBlMqITUkr2UMTjUVF+qJ20chwO3aTAmkrwaucBlwjKMbLLwJScYIG/X?=
- =?us-ascii?q?zebSuf9+/QzZtzPIKjPuTpS/Ke8qcSnk+gWg0uGtJIpvwMApS2mHPZL8P8MK?=
- =?us-ascii?q?QMgUE16RjmPketDfJHYhuHnT4L5calw8kzlaBHIDgZDWI1Giyt+L/TpghijP?=
- =?us-ascii?q?fLedoyZT9OV4ABO1o1Vde8liofuG5PWn3/8+QWz0Cn6Dv6rz6YWDz9adVkTO?=
- =?us-ascii?q?2ZaRNlFJe9/jBpt+C0gFjWtJPfJHz+PPxmu9nS+aUboYqKD7VfSrw5+0XbnI?=
- =?us-ascii?q?9RXDquWm7TENi4IbD0ao8xfZr1DGq3Vhq0jDdxB932MMysIa/OnwD2RK5Vtp?=
- =?us-ascii?q?WW2HYoMsr5XhgaFgd9pqk4+KtmYhMEYoY8f1a8vh8iH6+yOgGV1pOpWWn7bX?=
- =?us-ascii?q?NURvxS1qOwYKBLyC8oY/6SyHImVZw81+Ct7UgAXooKjwmYzvGmI8FUXC7zMn?=
- =?us-ascii?q?9QYQPCoWwyjWF6Nuc0zaE42hyM+XIVKD2aPNdiaGVZsdUxHxvGKnxtB3sQXF?=
- =?us-ascii?q?SchJfN5gO2mrsbuSBamoAQmfZIqnfzlp/WZDa9XuqgrpCR+wgpaNU964h2K5?=
- =?us-ascii?q?biOYPStpbZhCbeV7HWuwiIUWi9DfUMyfZKJycNe+VFgWEoP4Q9vINF7UcgHp?=
- =?us-ascii?q?MlK6dnFLgnprfsbyFtSyEV03lKBMu7wDUej7LkiPPhnRCKfcFnaUZVvQ=3D?=
- =?us-ascii?q?=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CjAgCTjfdd/wHyM5BlHAEBAQEBBwEBEQEEBAEBgX6Bd?=
- =?us-ascii?q?IEYVSASKoQEiQOGdgaBEiWJapFFCQEBAQEBAQEBASsMAQGEQAKCODgTAhABA?=
- =?us-ascii?q?QEEAQEBAQEFAwEBbIU3DII7KQGCegEFDhUVLRQQCxgCAiYCAlcGAQwGAgEBg?=
- =?us-ascii?q?l8/AYJSJQ+uCYEyhA0BgUGDOIFIgQ4oiU+CY3mBB4E4DAOCXT6CZAOEcoJeB?=
- =?us-ascii?q?I92hxNGlyuCPoI/hGqOVgYCGYJDdIcCkA8tjh+BRocJlAsigVgrCAIYCCEPg?=
- =?us-ascii?q?ycJFjERFI1KiE+FCFUjAzABkCUBAQ?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 16 Dec 2019 14:04:07 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id xBGE37n2143708;
-        Mon, 16 Dec 2019 09:03:09 -0500
-Subject: Re: [PATCH v2 1/7] capabilities: introduce CAP_SYS_PERFMON to kernel
- and user space
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        james.bottomley@hansenpartnership.com, benh@kernel.crashing.org,
-        Casey Schaufler <casey@schaufler-ca.com>, serge@hallyn.com,
-        James Morris <jmorris@namei.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org, bgregg@netflix.com,
-        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
- <9066ae10-63d6-67a1-d472-1f22826c9ae8@linux.intel.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <81603537-023c-9b6b-06ac-384de60dbb1d@tycho.nsa.gov>
-Date:   Mon, 16 Dec 2019 09:04:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 09:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbfLPOE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:04:26 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C951C206A5;
+        Mon, 16 Dec 2019 14:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576505065;
+        bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A8aG72OOaT8znWL8+GmFhVW5bWEDI5ITGF2n2FOZQrOGAZPAK8TwebfG6yZ/idgLI
+         72X8kyE2neY4gEQpT7V7jx7S3d/A8I93FNZ7g4n7lf6lWWMvpr01tj0/lLzWy59qJT
+         uaTK+pIxRpmLZ3iLVuMB5bPe6qQRh9KJfGq2Dmw0=
+Date:   Mon, 16 Dec 2019 15:04:22 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 2/8] dt-bindings: mailbox: Add a sun6i message box
+ binding
+Message-ID: <20191216140422.on4bredklgdxywbw@gilmour.lan>
+References: <20191215042455.51001-1-samuel@sholland.org>
+ <20191215042455.51001-3-samuel@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <9066ae10-63d6-67a1-d472-1f22826c9ae8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6kpcajowhdygmdk2"
+Content-Disposition: inline
+In-Reply-To: <20191215042455.51001-3-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 2:14 AM, Alexey Budankov wrote:
-> 
-> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-> monitoring and observability operations so that CAP_SYS_PERFMON would assist
-> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
-> and other performance monitoring and observability subsystems of the kernel.
-> 
-> CAP_SYS_PERFMON intends to harden system security and integrity during
-> system performance monitoring and observability operations by decreasing
-> attack surface that is available to CAP_SYS_ADMIN privileged processes.
-> 
-> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
-> system performance monitoring and observability operations and balance amount
-> of CAP_SYS_ADMIN credentials following with the recommendations provided
-> in the capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability
-> is overloaded; see Notes to kernel developers, below."
-> 
-> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+--6kpcajowhdygmdk2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi,
+
+On Sat, Dec 14, 2019 at 10:24:49PM -0600, Samuel Holland wrote:
+> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
+> sun50i SoCs. Add a device tree binding for it. As it has only been
+> tested on the A83T, A64, H3/H5, and H6 SoCs, only those compatibles are
+> included.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > ---
->   include/uapi/linux/capability.h     | 8 +++++++-
->   security/selinux/include/classmap.h | 4 ++--
->   2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 240fdb9a60f6..7d1f8606c3e6 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
->   
->   #define CAP_AUDIT_READ		37
->   
-> +/*
-> + * Allow system performance and observability privileged operations
-> + * using perf_events, i915_perf and other kernel subsystems
-> + */
+>  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+> new file mode 100644
+> index 000000000000..dd746e07acfd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#define CAP_SYS_PERFMON		38
->   
-> -#define CAP_LAST_CAP         CAP_AUDIT_READ
-> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
->   
->   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
->   
-> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-> index 7db24855e12d..bae602c623b0 100644
-> --- a/security/selinux/include/classmap.h
-> +++ b/security/selinux/include/classmap.h
-> @@ -27,9 +27,9 @@
->   	    "audit_control", "setfcap"
->   
->   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
-> -		"wake_alarm", "block_suspend", "audit_read"
-> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
->   
-> -#if CAP_LAST_CAP > CAP_AUDIT_READ
-> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
->   #error New capability defined, please update COMMON_CAP2_PERMS.
->   #endif
->   
-> 
+> +title: Allwinner sunxi Message Box
+> +
+> +maintainers:
+> +  - Samuel Holland <samuel@sholland.org>
+> +
+> +description: |
+> +  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
+> +  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
+> +  is raised for received messages, but software must poll to know when a
+> +  transmitted message has been acknowledged by the remote user. Each FIFO can
+> +  hold four 32-bit messages; when a FIFO is full, clients must wait before
+> +  attempting more transmissions.
+> +
+> +  Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +  bindings.
+> +
+> +properties:
+> +  compatible:
+> +     items:
+> +      - enum:
+> +          - allwinner,sun8i-a83t-msgbox
+> +          - allwinner,sun8i-h3-msgbox
+> +          - allwinner,sun50i-a64-msgbox
+> +          - allwinner,sun50i-h6-msgbox
+> +      - const: allwinner,sun6i-a31-msgbox
 
+This will fail for the A31, since it won't have two compatibles but
+just one.
+
+You can have something like this if you want to do it with an enum:
+
+compatible:
+  oneOf:
+    - const: allwinner,sun6i-a31-msgbox
+    - items:
+      - enum:
+        - allwinner,sun8i-a83t-msgbox
+        - allwinner,sun8i-h3-msgbox
+        - allwinner,sun50i-a64-msgbox
+        - allwinner,sun50i-h6-msgbox
+      - const: allwinner,sun6i-a31-msgbox
+
+> +  reg:
+> +    items:
+> +      - description: MMIO register range
+
+There's no need for an obvious description like this.
+Just set it to maxItems: 1
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: bus clock
+> +
+> +  resets:
+> +    maxItems: 1
+> +    description: bus reset
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: controller interrupt
+
+Ditto, you can drop the description here.
+
+> +  '#mbox-cells':
+> +    const: 1
+
+However, you should document what the argument is about?
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - interrupts
+> +  - '#mbox-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sun8i-h3-ccu.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/reset/sun8i-h3-ccu.h>
+> +
+> +    msgbox: mailbox@1c17000 {
+> +            compatible = "allwinner,sun8i-h3-msgbox",
+> +                         "allwinner,sun6i-a31-msgbox";
+> +            reg = <0x01c17000 0x1000>;
+> +            clocks = <&ccu CLK_BUS_MSGBOX>;
+> +            resets = <&ccu RST_BUS_MSGBOX>;
+> +            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +            #mbox-cells = <1>;
+> +    };
+
+Look good otherwise, thanks!
+Maxime
+
+--6kpcajowhdygmdk2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeO5gAKCRDj7w1vZxhR
+xZz1AP4ummpThYn1v2bFsXFQFsYqcm6TRKjZ8eZz+DriVOSSjAEAgxnXw2btNZrv
+PVGRNuENk6kHsBf7eVmnaJa2MVik5Qs=
+=/Mdk
+-----END PGP SIGNATURE-----
+
+--6kpcajowhdygmdk2--
