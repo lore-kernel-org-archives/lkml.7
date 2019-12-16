@@ -2,55 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75469C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39787C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C25120717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E24421775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520467;
-	bh=xHWRJ+19x6c3KYeX1xx6iJILrAV1b4E74fByhT9T3XY=;
+	s=default; t=1576520471;
+	bh=Uv07aAKk39n58UabQhF6Iu9klPWARZ2sCElrDYxIY9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3h7wPy3WjAFdyTszGcuC5xYasHF5mCAaoxjUhMdKH4LDmzWQHMfvKQDGAJu6jO4j
-	 o4O8gp598FNk4g0naDhWVsf0K+a8UPSDzQ/S81mJAyo2v+JihzIfhViBY9CuwiZ+7B
-	 siTpFBIWWVanpifjQIgjAl8d2xM60ddogOuW0iEs=
+	b=bYAXwiXbiUzZM3Wr2GC/Saujdz1EuFgwH9zEtaUv4nymtvuMB6bJ4qfVApm5bTCDo
+	 OZ0bcnqzTiMXVXV8FVXu++fTXXUI7p/ohrB8nBALK0bmnqGqkrauXXUAh6z+TPlnGi
+	 cOEvQQZYmECPsKusSahcNXtF6VoFPgHkXIWsIjVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731877AbfLPSVG (ORCPT
+        id S1732023AbfLPSVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:21:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:21:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732174AbfLPSVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:02 -0500
+        id S1732183AbfLPSVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B0A0206EC;
-        Mon, 16 Dec 2019 18:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5252166E;
+        Mon, 16 Dec 2019 18:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520460;
-        bh=xHWRJ+19x6c3KYeX1xx6iJILrAV1b4E74fByhT9T3XY=;
+        s=default; t=1576520463;
+        bh=Uv07aAKk39n58UabQhF6Iu9klPWARZ2sCElrDYxIY9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pRX0+Nc/hPmU0N78LOKeFlyX4fwYPXimj/gYwGMmt10L5HTz7zUsRan3vpaLzQgaK
-         vSUNQQoLoAOAsZAaDG6BxGQ2jIlWerxztSdywz4o4caVy6fw/2QbKRWu5r0FdcB+dn
-         AiRd4BC/JyL5TlMJlMGhVqazk5qbGA084jRBWQls=
+        b=NlbFjfDUSI/z1+yS/mjcv0oZIoKMS800oD7IJA7L8zniNR8dRk79gK5C4wAZMF8xB
+         V2xaTkxNtgDT6R5uAO2aAZ11k5t7T1aQoLullll2EMQw+uIt4bm+o0g6f7O9dIwz2Z
+         NjgRhSxVyklgPNt3zo+tZbAzWQgncqgtgw4rikUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 163/177] powerpc: Fix vDSO clock_getres()
-Date:   Mon, 16 Dec 2019 18:50:19 +0100
-Message-Id: <20191216174849.453427596@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Geoffray <ngeoffray@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Hugh Dickins <hughd@google.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 164/177] mm, memfd: fix COW issue on MAP_PRIVATE and F_SEAL_FUTURE_WRITE mappings
+Date:   Mon, 16 Dec 2019 18:50:20 +0100
+Message-Id: <20191216174849.586463116@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -63,138 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Nicolas Geoffray <ngeoffray@google.com>
 
-[ Upstream commit 552263456215ada7ee8700ce022d12b0cffe4802 ]
+commit 05d351102dbe4e103d6bdac18b1122cd3cd04925 upstream.
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
+A private mapping created after the memfd file that gets sealed with
+F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
+children and parent share the same memory, even though the mapping is
+private.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+The reason for this is due to the code below:
 
-Fix the powerpc vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
+  static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        struct shmem_inode_info *info = SHMEM_I(file_inode(file));
 
-Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to 32 bits kernel")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-[chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+        if (info->seals & F_SEAL_FUTURE_WRITE) {
+                /*
+                 * New PROT_WRITE and MAP_SHARED mmaps are not allowed when
+                 * "future write" seal active.
+                 */
+                if ((vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_WRITE))
+                        return -EPERM;
+
+                /*
+                 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
+                 * read-only mapping, take care to not allow mprotect to revert
+                 * protections.
+                 */
+                vma->vm_flags &= ~(VM_MAYWRITE);
+        }
+        ...
+  }
+
+And for the mm to know if a mapping is copy-on-write:
+
+  static inline bool is_cow_mapping(vm_flags_t flags)
+  {
+        return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+  }
+
+The patch fixes the issue by making the mprotect revert protection
+happen only for shared mappings.  For private mappings, using mprotect
+will have no effect on the seal behavior.
+
+The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so v5.3.x stable
+kernels would need a backport.
+
+[akpm@linux-foundation.org: reflow comment, per Christoph]
+Link: http://lkml.kernel.org/r/20191107195355.80608-1-joel@joelfernandes.org
+Fixes: ab3948f58ff84 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
+Signed-off-by: Nicolas Geoffray <ngeoffray@google.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/include/asm/vdso_datapage.h  | 2 ++
- arch/powerpc/kernel/asm-offsets.c         | 2 +-
- arch/powerpc/kernel/time.c                | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 7 +++++--
- arch/powerpc/kernel/vdso64/gettimeofday.S | 7 +++++--
- 5 files changed, 14 insertions(+), 5 deletions(-)
+ mm/shmem.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-index c61d59ed3b45f..2ccb938d85447 100644
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -82,6 +82,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
- 	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
- 	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
-+	__u32 hrtimer_res;			/* hrtimer resolution */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
-@@ -103,6 +104,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;		/* hrtimer resolution */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
- 	__u32 icache_block_size;	/* L1 i-cache block size     */
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 484f54dab2475..5c0a1e17219b7 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -387,6 +387,7 @@ int main(void)
- 	OFFSET(WTOM_CLOCK_NSEC, vdso_data, wtom_clock_nsec);
- 	OFFSET(STAMP_XTIME, vdso_data, stamp_xtime);
- 	OFFSET(STAMP_SEC_FRAC, vdso_data, stamp_sec_fraction);
-+	OFFSET(CLOCK_HRTIMER_RES, vdso_data, hrtimer_res);
- 	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_data, icache_block_size);
- 	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_data, dcache_block_size);
- 	OFFSET(CFG_ICACHE_LOGBLOCKSZ, vdso_data, icache_log_block_size);
-@@ -417,7 +418,6 @@ int main(void)
- 	DEFINE(CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
- 	DEFINE(CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
- 	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
--	DEFINE(CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2213,11 +2213,14 @@ static int shmem_mmap(struct file *file,
+ 			return -EPERM;
  
- #ifdef CONFIG_BUG
- 	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 694522308cd51..619447b1b7971 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -959,6 +959,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
- 	vdso_data->stamp_xtime = xt;
- 	vdso_data->stamp_sec_fraction = frac_sec;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++(vdso_data->tb_update_count);
- }
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index becd9f8767ede..a967e795b96d9 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -156,12 +156,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
+ 		/*
+-		 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
+-		 * read-only mapping, take care to not allow mprotect to revert
+-		 * protections.
++		 * Since an F_SEAL_FUTURE_WRITE sealed memfd can be mapped as
++		 * MAP_SHARED and read-only, take care to not allow mprotect to
++		 * revert protections on such mappings. Do this only for shared
++		 * mappings. For private mappings, don't need to mask
++		 * VM_MAYWRITE as we still want them to be COW-writable.
+ 		 */
+-		vma->vm_flags &= ~(VM_MAYWRITE);
++		if (vma->vm_flags & VM_SHARED)
++			vma->vm_flags &= ~(VM_MAYWRITE);
+ 	}
  
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	__get_datapage@local	/* get data page */
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpli	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	stw	r3,TSPC32_TV_SEC(r4)
- 	stw	r5,TSPC32_TV_NSEC(r4)
- 	blr
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 07bfe33fe8745..81757f06bbd7a 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -186,12 +186,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	V_LOCAL_FUNC(__get_datapage)
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpldi	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	std	r3,TSPC64_TV_SEC(r4)
- 	std	r5,TSPC64_TV_NSEC(r4)
- 	blr
--- 
-2.20.1
-
+ 	file_accessed(file);
 
 
