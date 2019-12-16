@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A52C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284A4C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD24C206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C62206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521455;
-	bh=KiyNRWnPGiJF+WXmZXgXlZosUasZ2NlvW0XqNFnF0p0=;
+	s=default; t=1576521461;
+	bh=BdZ0yQP4HI8x/lzZSpbUwSTV0mG9B9AKkhRakrXWk5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpVNtqjNerKYkGcfjNuaWDCkMPX5mUu3NSvYK+hrr6Uovx3aHeJJO/sgri+7jMDj1
-	 hq0JtXG3cS1jujZE2c4lg89G6Ns8IRYrot0Nn1rik11KRVerZqsgZaM7gyj4vnkFk1
-	 fAHUOzd+QlfBntDevGFv9Q/eOEi1Qc3XO0710yL4=
+	b=HnJAfgEfcNnxXu5PJyPCt0YZ1eUmZpjjVUeCSncATtLnys5w8OY22ZyzETweLyC5j
+	 x3zlW1OR/3BaGYHjAMoUt/a/eALAzsvclHY+EE84Ggak2P5230+R5RIJ1MCB/b2MdU
+	 6w0y3fKxIS4AuDQubKP5yBWcGE9M4IZ0T6I0uOJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfLPShf (ORCPT
+        id S1729905AbfLPSFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:37:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729927AbfLPSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:06 -0500
+        id S1729685AbfLPSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81D02072D;
-        Mon, 16 Dec 2019 18:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B8CD2072D;
+        Mon, 16 Dec 2019 18:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519565;
-        bh=KiyNRWnPGiJF+WXmZXgXlZosUasZ2NlvW0XqNFnF0p0=;
+        s=default; t=1576519553;
+        bh=BdZ0yQP4HI8x/lzZSpbUwSTV0mG9B9AKkhRakrXWk5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ZZd4q720VcAOlaCVh6loIb8BrgT5DxMgEHEcbbm7xEXdznkF3DonfDCZlfSwQ1fN
-         KXebLk9yXE/0LBzrUJLvFXhBhSvUKu2hP0Qc6DrJA3CUXaL0nhsILtEyYeUrrNjE4/
-         a0h7N7/xWufur3NxAsfYV0yyLPbVRelMoxW8Z7R8=
+        b=F1sH7zy80RhVyV/W9ntYjhJKidzQsNYax3L7JLfDRI7JwJ85fdGZYIZQAxK7PPzaX
+         X2l08pfHCxlPgIDqdj5zbOAqSTrs8XcOKsVgqOtjjujjbI6Nq/hHpSmnNtcCRe6jys
+         CYPQTyK2fHIkXMD9FVKoBYz8MhaWzxOyF3dy8Ydg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 118/140] net: hns3: change hnae3_register_ae_dev() to int
-Date:   Mon, 16 Dec 2019 18:49:46 +0100
-Message-Id: <20191216174820.078472441@linuxfoundation.org>
+Subject: [PATCH 4.19 113/140] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
+Date:   Mon, 16 Dec 2019 18:49:41 +0100
+Message-Id: <20191216174817.376556781@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,96 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 74354140a579008fd164241e3697d9c37e5b8989 ]
+[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
 
-hnae3_register_ae_dev() may fail, and it should return a error code
-to its caller, so change hnae3_register_ae_dev() return type to int.
+Fix a static code checker warning:
+drivers/net/ethernet/intel/e100.c:1349
+ e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
 
-Also, when hnae3_register_ae_dev() return error, hns3_probe() should
-do some error handling and return the error code.
-
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.c     | 10 +++++++++-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h     |  2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c |  8 ++++++--
- 3 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/e100.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-index 2097f92e14c5c..f98bff60bec37 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-@@ -239,7 +239,7 @@ EXPORT_SYMBOL(hnae3_unregister_ae_algo);
-  * @ae_dev: the AE device
-  * NOTE: the duplicated name will not be checked
-  */
--void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
-+int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
- {
- 	const struct pci_device_id *id;
- 	struct hnae3_ae_algo *ae_algo;
-@@ -260,6 +260,7 @@ void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index 27d5f27163d2c..78b44d7876386 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -1345,8 +1345,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
  
- 		if (!ae_dev->ops) {
- 			dev_err(&ae_dev->pdev->dev, "ae_dev ops are null\n");
-+			ret = -EOPNOTSUPP;
- 			goto out_err;
- 		}
+ 	fw = e100_request_firmware(nic);
+ 	/* If it's NULL, then no ucode is required */
+-	if (!fw || IS_ERR(fw))
+-		return PTR_ERR(fw);
++	if (IS_ERR_OR_NULL(fw))
++		return PTR_ERR_OR_ZERO(fw);
  
-@@ -286,8 +287,15 @@ void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
- 				ret);
- 	}
- 
-+	mutex_unlock(&hnae3_common_lock);
-+
-+	return 0;
-+
- out_err:
-+	list_del(&ae_dev->node);
- 	mutex_unlock(&hnae3_common_lock);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(hnae3_register_ae_dev);
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index f5c7fc9c5e5cc..5e1a7ab06c63b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -513,7 +513,7 @@ struct hnae3_handle {
- #define hnae3_get_bit(origin, shift) \
- 	hnae3_get_field((origin), (0x1 << (shift)), (shift))
- 
--void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev);
-+int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev);
- void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev);
- 
- void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 4b4d9de0a6bb5..0788e78747d94 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1604,9 +1604,13 @@ static int hns3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	ae_dev->dev_type = HNAE3_DEV_KNIC;
- 	pci_set_drvdata(pdev, ae_dev);
- 
--	hnae3_register_ae_dev(ae_dev);
-+	ret = hnae3_register_ae_dev(ae_dev);
-+	if (ret) {
-+		devm_kfree(&pdev->dev, ae_dev);
-+		pci_set_drvdata(pdev, NULL);
-+	}
- 
--	return 0;
-+	return ret;
- }
- 
- /* hns3_remove - Device removal routine
+ 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
+ 		netif_err(nic, probe, nic->netdev,
 -- 
 2.20.1
 
