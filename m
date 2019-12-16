@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55E9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54A5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C77620CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831AA21582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519966;
-	bh=d12kf7wnXmN+tmehWkqrFnPeqkE4s/wDn6LeQg0ZVXQ=;
+	s=default; t=1576519970;
+	bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4iVMbeTNK7jzw0hXiL/S3iwEinoXXRJmRqaEbaofik9pgmgi3Ly4fusW9c60ipuA
-	 QH4ooZ1JlLFYM86uxqK+WmzxWRi5xSOESAZtafhsgAUOUzxHSYbYnR4oXvUSNMHmkY
-	 eB+kX+kftk9Abx2Pze/hZurfy+1i36ayJWiSc3Cc=
+	b=NhtSXaYc1Y3CXypJWl40iVUlr2JQPG+ImgN7cbknmPatO//K8doEprH7ZBwtkaHKu
+	 mSEnBHWja28+nVDXcvR+A0cQXwduS4+UKwGffZFZ56yidyXwF0Ivr0tkGywpjwt4k+
+	 8zGeFQ+JPflu8HVxb4iHSKwi1TlMA2Q5Y0h/MQCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbfLPSMp (ORCPT
+        id S1731006AbfLPSMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:12:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730985AbfLPSMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:40 -0500
+        id S1730988AbfLPSMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F392206EC;
-        Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E304206E0;
+        Mon, 16 Dec 2019 18:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519959;
-        bh=d12kf7wnXmN+tmehWkqrFnPeqkE4s/wDn6LeQg0ZVXQ=;
+        s=default; t=1576519962;
+        bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYx50u1q2Vogg3s5os/k+V+a/WpiGZLvlMznOK0DNHWSjgR0skWI+687Y7Z0eYNWN
-         KgQgkZpTG4yGGxKNhmzryP5KWh6Y8fMxGCCoaMUcg1KQ6wf+Ua26pvdYE3GtFznvR+
-         Xp3pa2Lwuwg0o6zQH3QNtx2IF69tcO/Fi51l6bq0=
+        b=wwmqZRPUEY0kOsdcaBOoKpF3uVGwvN2UZr7WgFJ2CfKGwhonMSoy60IA27pVwQ8+E
+         ES5PWU1rVsFpoq6bwAzxe+goCa2ZesqxlVSGvXTYCHW5wjlM0vhntX21rC/piXDC+N
+         Q5WtZUFgEHK7aRE2XscdvFQhVvjZQqrd9B0qN5Ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 139/180] scsi: qla2xxx: Fix DMA unmap leak
-Date:   Mon, 16 Dec 2019 18:49:39 +0100
-Message-Id: <20191216174842.792080148@linuxfoundation.org>
+Subject: [PATCH 5.3 140/180] scsi: qla2xxx: Fix different size DMA Alloc/Unmap
+Date:   Mon, 16 Dec 2019 18:49:40 +0100
+Message-Id: <20191216174842.923126364@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 5d328de64d89400dcf9911125844d8adc0db697f ]
+[ Upstream commit d376dbda187317d06d3a2d495b43a7983e4a3250 ]
 
-With debug kernel we see following wanings indicating memory leak.
+[   17.177276] qla2xxx 0000:05:00.0: DMA-API: device driver frees DMA memory
+    with different size [device address=0x00000006198b0000] [map size=32784 bytes]
+    [unmap size=8208 bytes]
+[   17.177390] RIP: 0010:check_unmap+0x7a2/0x1750
+[   17.177425] Call Trace:
+[   17.177438]  debug_dma_free_coherent+0x1b5/0x2d5
+[   17.177470]  dma_free_attrs+0x7f/0x140
+[   17.177489]  qla24xx_sp_unmap+0x1e2/0x610 [qla2xxx]
+[   17.177509]  qla24xx_async_gnnft_done+0x9c6/0x17d0 [qla2xxx]
+[   17.177535]  qla2x00_do_work+0x514/0x2200 [qla2xxx]
 
-[28809.523959] WARNING: CPU: 3 PID: 6790 at lib/dma-debug.c:978
-dma_debug_device_change+0x166/0x1d0
-[28809.523964] pci 0000:0c:00.6: DMA-API: device driver has pending DMA
-allocations while released from device [count=5]
-[28809.523964] One of leaked entries details: [device
-address=0x00000002aefe4000] [size=8208 bytes] [mapped with DMA_BIDIRECTIONAL]
-[mapped as coherent]
-
-Fix this by unmapping DMA memory.
-
+Fixes: b5f3bc39a0e8 ("scsi: qla2xxx: Fix inconsistent DMA mem alloc/free")
 Signed-off-by: Quinn Tran <qutran@marvell.com>
 Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/qla2xxx/qla_gs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index 3084c2cff7bd5..ce87bbdb30907 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -341,6 +341,8 @@ qla2x00_process_els(struct bsg_job *bsg_job)
- 		dma_map_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
- 		bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
- 	if (!req_sg_cnt) {
-+		dma_unmap_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
-+		    bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
- 		rval = -ENOMEM;
- 		goto done_free_fcport;
- 	}
-@@ -348,6 +350,8 @@ qla2x00_process_els(struct bsg_job *bsg_job)
- 	rsp_sg_cnt = dma_map_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
- 		bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
-         if (!rsp_sg_cnt) {
-+		dma_unmap_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
-+		    bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
- 		rval = -ENOMEM;
- 		goto done_free_fcport;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 9f58e591666da..ebf223cfebbc5 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -4152,7 +4152,7 @@ int qla24xx_async_gpnft(scsi_qla_host_t *vha, u8 fc4_type, srb_t *sp)
+ 								rspsz,
+ 								&sp->u.iocb_cmd.u.ctarg.rsp_dma,
+ 								GFP_KERNEL);
+-		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = sizeof(struct ct_sns_pkt);
++		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = rspsz;
+ 		if (!sp->u.iocb_cmd.u.ctarg.rsp) {
+ 			ql_log(ql_log_warn, vha, 0xffff,
+ 			    "Failed to allocate ct_sns request.\n");
 -- 
 2.20.1
 
