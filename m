@@ -2,68 +2,89 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D543C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85760C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D92206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B942206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfLPKWD (ORCPT
+        id S1727474AbfLPKWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:22:03 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8128 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727099AbfLPKWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:22:02 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A996CD52E4933C156759;
-        Mon, 16 Dec 2019 18:22:00 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Dec 2019 18:21:54 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH] drm/dp_mst: make the symbol 'drm_dp_send_clear_payload_id_table' static
-Date:   Mon, 16 Dec 2019 18:17:32 +0800
-Message-ID: <1576491452-18591-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Mon, 16 Dec 2019 05:22:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:48636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfLPKWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:22:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87D141FB;
+        Mon, 16 Dec 2019 02:22:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 010A03F6CF;
+        Mon, 16 Dec 2019 02:22:10 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:22:09 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     David Engraf <david.engraf@sysgo.com>
+Cc:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Correctly handle return code of
+ pm_runtime_get_sync()
+Message-ID: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
+References: <20191216093415.27320-1-david.engraf@sysgo.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216093415.27320-1-david.engraf@sysgo.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning.
+On Mon, Dec 16, 2019 at 10:34:15AM +0100, David Engraf wrote:
+> pm_runtime_get_sync() returns the device's usage counter. This might
+> be >0 if the device is already powered up or CONFIG_PM is disabled.
+> 
+> Abort probe function on real error only.
+> 
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
 
-drivers/gpu/drm/drm_dp_mst_topology.c:2897:6: warning: symbol 'drm_dp_send_clear_payload_id_table' was not declared. Should it be static?
+Thanks for this, looks OK to me.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As this is a fix, can you add the following fixes tag?
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index e68d230..c4976de 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2894,7 +2894,7 @@ static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
- 	return ret < 0 ? ret : changed;
- }
- 
--void drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
-+static void drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
- 					struct drm_dp_mst_branch *mstb)
- {
- 	struct drm_dp_sideband_msg_tx *txmsg;
--- 
-1.7.12.4
+Fixes: da76ba50963b ("PCI: tegra: Add power management support")
 
+And whilst doing that can you rename the subject to "PCI: tegra: Fix return
+value check of pm_runtime_get_sync" - it's slightly shorter and has the
+word fix in the title.
+
+Thanks,
+
+Andrew Murray
+
+> ---
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 673a1725ef38..090b632965e2 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  
+>  	pm_runtime_enable(pcie->dev);
+>  	err = pm_runtime_get_sync(pcie->dev);
+> -	if (err) {
+> +	if (err < 0) {
+>  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+>  		goto teardown_msi;
+>  	}
+> -- 
+> 2.17.1
+> 
