@@ -2,106 +2,125 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD5AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1D2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBE5206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E80C2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REYdlWoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfLPJ2S (ORCPT
+        id S1727363AbfLPJ2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:28:18 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59751 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727067AbfLPJ2R (ORCPT
+        Mon, 16 Dec 2019 04:28:19 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34696 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLPJ2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:28:17 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Tl3i.ek_1576488441;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tl3i.ek_1576488441)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 16 Dec 2019 17:27:21 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: [PATCH v6 09/10] mm/memcg: fold lock in lock_page_lru
-Date:   Mon, 16 Dec 2019 17:26:25 +0800
-Message-Id: <1576488386-32544-10-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
+        Mon, 16 Dec 2019 04:28:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so8417998otf.1;
+        Mon, 16 Dec 2019 01:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=REYdlWoCppoJSnQwoBaE+mlNj/PWBu2hmjNYDPB3EHKKn9ekNqeKBaqE5S+WEvj5eP
+         mIaOoJmFrZRpmT2YwDXMnszw1lDZUYFxnjs/tQVIalouwWG0HEHlE74hFo275GegcKTS
+         dIvktzgT7iSkOp5KFfHf3gICWW9UVUplMnhk+UFJ3hZAdOpZE1UoJy2hwc0ZOjTJSZW0
+         MHzZ+4sWJyuGy/MhabiLR4qrNTF25t3/9Ms5+WBAF1C/qEaz2ezxDv/XS3S6vEn2tWpU
+         vZhy3yPAcT3xNalK5FcjqBI74kSsU+6nNY1b3r9GSfsS9o4ABXvei8js/FgwPczmKU4y
+         9CMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=hHtRTBcHm8l66N7v5pfT5LGH+JATA167YOiLMj4nR11SMUTY5SiwFKhNzMD+k1sYCI
+         fVxG/YvQN+feDrq6MPKqs4kavcAQohXejV1vGkk8cvyzUnuzix4ZCvYPLBMbwfCWU3pB
+         7PiZlSUpZN2Xkj5ALst9WuNb8ncWDRTZwjc5c/YdYEYsk2H+F52nhXfWyADUYCwxfX7Q
+         745lZyYtNiRNq+oxIszHeNTjTXPYFqayWgrJ9aQfk8Z3fFxzTbj4tThi3Jhol8Yk56eW
+         4j55BOcHlqNjYk209EUiyeZFUdvlieRTEdJP8zpZidfqdL5+eDim/ufdrS+HbFPWAX0R
+         ccDQ==
+X-Gm-Message-State: APjAAAUAUK73h4B6cVsgWsTI1pEdP4bU334QWNkpnD8L3GKk0stNSXJo
+        EQ0SrU+1Ayle4TOq0Don4t+xjp5H4LitP2L8H68=
+X-Google-Smtp-Source: APXvYqyGefY4ixRGGGVDGR32f4i/isJOglkcBFAsGS3yQVb39Cm/FzUVt3sGpLUqE3PoqwHroNp3cfe6VCKqeo0YAnY=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15240871otp.44.1576488495702;
+ Mon, 16 Dec 2019 01:28:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213184627.GA169673@google.com>
+In-Reply-To: <20191213184627.GA169673@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Dec 2019 09:27:49 +0000
+Message-ID: <CA+V-a8ugehRVuV2kwYgkTVp3Vk4ftKsQVfW0=vL4L7BZbDdeNg@mail.gmail.com>
+Subject: Re: [v2 0/6] Add support for PCIe controller to work in endpoint mode
+ on R-Car SoCs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the calling path of commit_charge, the lrucare is bound
-with PageLRU, so we could just fold it under PageLRU. This has no
-functional change.
+Hi Bjorn,
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/memcontrol.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:42AM +0000, Lad Prabhakar wrote:
+>
+> > Lad, Prabhakar (6):
+> >   pci: pcie-rcar: preparation for adding endpoint support
+> >   pci: endpoint: add support to handle features of outbound memory
+> >   of: address: add support to parse PCI outbound-ranges
+> >   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+> >     controller
+> >   pci: rcar: add support for rcar pcie controller in endpoint mode
+> >   misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
+>
+> The next time you post this, please update the subject lines to match
+> existing conventions (capitalize "PCI", description is a complete
+> sentence starting with a capitalized verb, etc").  Run "git log
+> --online" on the file you're changing and make yours look the same.
+>
+>   s/pci: /PCI: /
+>   s/pcie-rcar: /rcar: /
+>   s/pcie/PCIe/
+>   s/device-id/Device ID/
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 138f298b694f..f8e279487e1d 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2621,9 +2621,10 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
- 
- static struct lruvec *lock_page_lru(struct page *page, int *isolated)
- {
--	struct lruvec *lruvec = lock_page_lruvec_irq(page);
-+	struct lruvec *lruvec = NULL;
- 
- 	if (PageLRU(page)) {
-+		lruvec = lock_page_lruvec_irq(page);
- 
- 		ClearPageLRU(page);
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
-@@ -2637,17 +2638,18 @@ static struct lruvec *lock_page_lru(struct page *page, int *isolated)
- static void unlock_page_lru(struct page *page, int isolated,
- 				struct lruvec *locked_lruvec)
- {
--	struct lruvec *lruvec;
-+	if (isolated) {
-+		struct lruvec *lruvec;
- 
--	unlock_page_lruvec_irq(locked_lruvec);
--	lruvec = lock_page_lruvec_irq(page);
-+		if (locked_lruvec)
-+			unlock_page_lruvec_irq(locked_lruvec);
-+		lruvec = lock_page_lruvec_irq(page);
- 
--	if (isolated) {
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
- 		SetPageLRU(page);
- 		add_page_to_lru_list(page, lruvec, page_lru(page));
-+		unlock_page_lruvec_irq(lruvec);
- 	}
--	unlock_page_lruvec_irq(lruvec);
- }
- 
- static void commit_charge(struct page *page, struct mem_cgroup *memcg,
--- 
-1.8.3.1
+Thank you for the review, I'll fix the above in next iteration.
 
+Cheers,
+--Prabhakar
