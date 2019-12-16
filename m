@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E904BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E65C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89C5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BB9206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522059;
-	bh=jKxl8pwLoUXEuKW0Cte+ClJeAfixsXqiRXb5el6oK3A=;
+	s=default; t=1576522062;
+	bh=R/1Pe+51lnUrSYgci/VpK5jOdqWlvHLMMjNQ13mXhUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEhV7BPgbRSEm1GtguD8JH/FG09ZosHBY8BN2Vw+Wv1EM+Mf/BwN+yfVAldoGwF1c
-	 RjQZWba4RAhXjkmcb2D9MdHJVOr+vjDsWGJWg49jsg1tWd5iB96Mx/JQQ2EBS3hs41
-	 QFyCBoj9DtXh8y12vv+/4ekzfYi1CdQmuS6VQqjI=
+	b=RSD8P3isPPqTlIt1JwsC5YsSCt43BznbCHYjgXOAG0lJiiKPS+u8CPvj/FW0JMg7H
+	 uBgHIVEaJxl5VFzHJUd6QY97lfh2As4yZyYF+JFt3f9gGZ+EujRPPMh64nXAXDVJtq
+	 BZ+nd+iVkb2P6/daomnCPNfnK5xmbppmHHX5EElI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfLPSri (ORCPT
+        id S1727975AbfLPRy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:47:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbfLPRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:04 -0500
+        id S1727684AbfLPRyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5A2206B7;
-        Mon, 16 Dec 2019 17:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60CE02053B;
+        Mon, 16 Dec 2019 17:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518903;
-        bh=jKxl8pwLoUXEuKW0Cte+ClJeAfixsXqiRXb5el6oK3A=;
+        s=default; t=1576518888;
+        bh=R/1Pe+51lnUrSYgci/VpK5jOdqWlvHLMMjNQ13mXhUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcJ98yZCDzTYY8XQyvqMJUhiBOhk4FMx0bAQcjVv9dcnMIQRi7k2WZGYVHlTbXXL3
-         V/1p3v23h85uaPtmq5wIxflzdlG1gRbr/m45ZEpMo6qQILqfqnh16wQpb4RUWR5JVl
-         2TYkhFnvdadKdZwPWTdI/MHxoOUj+Jjll82xa2Ew=
+        b=yhmYuAQW/1O9jYLmRdxtV3FiePalMStISec0Xw0nU5XgQBycLJILvLrxXZhJDBGZT
+         SsFE6/BpIVZ4NOYLeMNzHUjk8/XVvctOP40SFg/d4YlTRvR7vj6DVr792HVW0J00Bv
+         eSEqDZaB+H/czP911if9vLxGsPkR+JOTRkVPl+jE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 115/267] usb: mtu3: fix dbginfo in qmu_tx_zlp_error_handler
-Date:   Mon, 16 Dec 2019 18:47:21 +0100
-Message-Id: <20191216174903.009996904@linuxfoundation.org>
+Subject: [PATCH 4.14 101/267] dlm: fix invalid cluster name warning
+Date:   Mon, 16 Dec 2019 18:47:07 +0100
+Message-Id: <20191216174902.249335047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,39 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: David Teigland <teigland@redhat.com>
 
-[ Upstream commit f770e3bc236ee954a3b4052bdf55739e26ee25db ]
+[ Upstream commit 3595c559326d0b660bb088a88e22e0ca630a0e35 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The warning added in commit 3b0e761ba83
+  "dlm: print log message when cluster name is not set"
 
-drivers/usb/mtu3/mtu3_qmu.c: In function 'qmu_tx_zlp_error_handler':
-drivers/usb/mtu3/mtu3_qmu.c:385:22: warning:
- variable 'req' set but not used [-Wunused-but-set-variable]
+did not account for the fact that lockspaces created
+from userland do not supply a cluster name, so bogus
+warnings are printed every time a userland lockspace
+is created.
 
-It seems dbginfo original intention is print 'req' other than 'mreq'
-
-Acked-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/mtu3/mtu3_qmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/dlm/user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
-index 7d9ba8a52368f..c87947fb26940 100644
---- a/drivers/usb/mtu3/mtu3_qmu.c
-+++ b/drivers/usb/mtu3/mtu3_qmu.c
-@@ -372,7 +372,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
- 		return;
- 	}
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index 1f0c071d4a861..02de11695d0ba 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -25,6 +25,7 @@
+ #include "lvb_table.h"
+ #include "user.h"
+ #include "ast.h"
++#include "config.h"
  
--	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, mreq);
-+	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, req);
+ static const char name_prefix[] = "dlm";
+ static const struct file_operations device_fops;
+@@ -404,7 +405,7 @@ static int device_create_lockspace(struct dlm_lspace_params *params)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
  
- 	mtu3_clrbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
- 
+-	error = dlm_new_lockspace(params->name, NULL, params->flags,
++	error = dlm_new_lockspace(params->name, dlm_config.ci_cluster_name, params->flags,
+ 				  DLM_USER_LVB_LEN, NULL, NULL, NULL,
+ 				  &lockspace);
+ 	if (error)
 -- 
 2.20.1
 
