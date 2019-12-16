@@ -2,82 +2,148 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F63DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7C1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182572176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00033205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518949;
-	bh=1mV3/yNh0GSIc3le4APUDwgLnHAoG5ix4puzI6eZqdk=;
-	h=In-Reply-To:References:To:From:Subject:Date:List-ID:From;
-	b=M2UOY7WzVobI0Z5WtabFyMalTAEOk3+Ox4xrpSonOqiKeCnxz+XAZ811sKodXk5g0
-	 Lj9LyVUGYSiEDz2GiAXYOGPTrO+KZIGHN5m2cFKdZle2aQ05CnKr8tK34IGrIX2+V8
-	 JPgPLienkGLATr+hH6QGD1PvIzw3+iWYCkM3PNoc=
+	s=default; t=1576518951;
+	bh=cvPAg9I2YwVLNkWL6x0/cKoqr1AmKIBCDJShQFg1R7k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hrhTb5H5NhDD5DeHzUa1OeZOX6ECFKYCJSeZPZyVGGxmf3cufirWJIPlMkRNm7y4X
+	 7dlc7IY5TW0XC5HCZS06yIomrO1cwgPPH2spQFHwp9LpjhGcDJItGwt4hGKLDsmGoU
+	 FwqI89FHQmPJhf1yfK3OjR/wRpyju91OLNs2jgOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfLPRzs (ORCPT
+        id S1727923AbfLPRzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbfLPRzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:44 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1728074AbfLPRzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C60206B7;
-        Mon, 16 Dec 2019 17:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 370492176D;
+        Mon, 16 Dec 2019 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576518944;
-        bh=1mV3/yNh0GSIc3le4APUDwgLnHAoG5ix4puzI6eZqdk=;
-        h=In-Reply-To:References:To:From:Subject:Date:From;
-        b=fGcixwDaIx9KQmcQ0FuaB2h1kXmJF52KbQSo+72cuAAZ12ydjmYtZR9/nC1Ni4f75
-         TQbZGhEmrtrFr+1bzMU79jw16HsVPSU8DCJKfrOvsIp+RtX4PJz51qXFteOvQG61cb
-         /C4/dDxXIc1M6hx7xf6Y1Zy+G7GTThMjiaR+qUZ0=
-Content-Type: text/plain; charset="utf-8"
+        bh=cvPAg9I2YwVLNkWL6x0/cKoqr1AmKIBCDJShQFg1R7k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TZYqAloXdJsD6O/mVSJ5rS2gnuKzoHMZCp2NOLlQEYcOtuQ3MENUpyWBxUfZ7tOwF
+         FAL+1y/sJKvR95o2HRgYfK4lSwMNEWyys+e1U0ekXY+QcnuWmRgkHsvxHD+uKv2dQG
+         wk9lIP5lMSI1w2B/XGyGXe7LJAX6hqZ2Lb+tWP4Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH 4.14 130/267] coresight: etm4x: Fix input validation for sysfs.
+Date:   Mon, 16 Dec 2019 18:47:36 +0100
+Message-Id: <20191216174906.442408533@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <F2C21019-79F4-450F-A575-9621E5747C4E@walle.cc>
-References: <20191205072653.34701-1-wen.he_1@nxp.com> <20191205072653.34701-2-wen.he_1@nxp.com> <20191212221817.B7FF1206DA@mail.kernel.org> <F2C21019-79F4-450F-A575-9621E5747C4E@walle.cc>
-To:     Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        Rob Herring <robh+dt@kernel.org>, Wen He <wen.he_1@nxp.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [v11 2/2] clk: ls1028a: Add clock driver for Display output interface
-User-Agent: alot/0.8.1
-Date:   Mon, 16 Dec 2019 09:55:43 -0800
-Message-Id: <20191216175543.F2C60206B7@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Michael Walle (2019-12-12 16:06:16)
-> Am 12. Dezember 2019 23:18:16 MEZ schrieb Stephen Boyd <sboyd@kernel.org>:
-> >Quoting Wen He (2019-12-04 23:26:53)
-> >> Add clock driver for QorIQ LS1028A Display output interfaces(LCD,
-> >DPHY),
-> >> as implemented in TSMC CLN28HPM PLL, this PLL supports the
-> >programmable
-> >> integer division and range of the display output pixel clock's
-> >27-594MHz.
-> >>=20
-> >> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> >> Signed-off-by: Michael Walle <michael@walle.cc>
-> >
-> >Is Michael the author? SoB chain is backwards here.
->=20
-> the original driver was from Wen. I've just supplied some code and
-> the vco frequency stuff. so its basically a sob of us both.=20
->=20
-> -michael=20
+From: Mike Leach <mike.leach@linaro.org>
 
-Ok. That's a Co-developed-by: tag then. Thanks for letting us know.
+commit 2fe6899e36aa174abefd017887f9cfe0cb60c43a upstream.
+
+A number of issues are fixed relating to sysfs input validation:-
+
+1) bb_ctrl_store() - incorrect compare of bit select field to absolute
+value. Reworked per ETMv4 specification.
+2) seq_event_store() - incorrect mask value - register has two
+event values.
+3) cyc_threshold_store() - must mask with max before checking min
+otherwise wrapped values can set illegal value below min.
+4) res_ctrl_store() - update to mask off all res0 bits.
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Fixes: a77de2637c9eb ("coresight: etm4x: moving sysFS entries to a dedicated file")
+Cc: stable <stable@vger.kernel.org> # 4.9+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20191104181251.26732-6-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hwtracing/coresight/coresight-etm4x-sysfs.c |   21 ++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+--- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+@@ -667,10 +667,13 @@ static ssize_t cyc_threshold_store(struc
+ 
+ 	if (kstrtoul(buf, 16, &val))
+ 		return -EINVAL;
++
++	/* mask off max threshold before checking min value */
++	val &= ETM_CYC_THRESHOLD_MASK;
+ 	if (val < drvdata->ccitmin)
+ 		return -EINVAL;
+ 
+-	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
++	config->ccctlr = val;
+ 	return size;
+ }
+ static DEVICE_ATTR_RW(cyc_threshold);
+@@ -701,14 +704,16 @@ static ssize_t bb_ctrl_store(struct devi
+ 		return -EINVAL;
+ 	if (!drvdata->nr_addr_cmp)
+ 		return -EINVAL;
++
+ 	/*
+-	 * Bit[7:0] selects which address range comparator is used for
+-	 * branch broadcast control.
++	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
++	 * individual range comparators. If include then at least 1
++	 * range must be selected.
+ 	 */
+-	if (BMVAL(val, 0, 7) > drvdata->nr_addr_cmp)
++	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
+ 		return -EINVAL;
+ 
+-	config->bb_ctrl = val;
++	config->bb_ctrl = val & GENMASK(8, 0);
+ 	return size;
+ }
+ static DEVICE_ATTR_RW(bb_ctrl);
+@@ -1341,8 +1346,8 @@ static ssize_t seq_event_store(struct de
+ 
+ 	spin_lock(&drvdata->spinlock);
+ 	idx = config->seq_idx;
+-	/* RST, bits[7:0] */
+-	config->seq_ctrl[idx] = val & 0xFF;
++	/* Seq control has two masks B[15:8] F[7:0] */
++	config->seq_ctrl[idx] = val & 0xFFFF;
+ 	spin_unlock(&drvdata->spinlock);
+ 	return size;
+ }
+@@ -1597,7 +1602,7 @@ static ssize_t res_ctrl_store(struct dev
+ 	if (idx % 2 != 0)
+ 		/* PAIRINV, bit[21] */
+ 		val &= ~BIT(21);
+-	config->res_ctrl[idx] = val;
++	config->res_ctrl[idx] = val & GENMASK(21, 0);
+ 	spin_unlock(&drvdata->spinlock);
+ 	return size;
+ }
+
 
