@@ -2,103 +2,99 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61806C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8042C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C84C206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72938206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503427;
-	bh=OlLjTfGQi5/U4jUE0lWUYWNrQUVkF9ABRFYEb3H6wRM=;
+	s=default; t=1576503436;
+	bh=1StiMPO8LpGHEHAabH7gzxcFrrIg+SMyk8LcOwKzZG8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T2hENY4LlLAJI+UuTajzyMbXeRWVMmO3G3ddK6+rfw4SnplkRubB5QsOm18FeQaDh
-	 UEDJXU59/paBYGOrRocyZlCrBwcW/VmBIftxM3pwFC9m6qdUliwEYc8xDz5F1xJi6/
-	 IVzgCmWev+KI8Rc8k4ZfpjPDL87lDLAqDuIU5sJk=
+	b=jRLkTayUWrKXXZsqzA6zrzYvztFKeqvpfxbXCOpvHw4v0+jIcUbENadKIqlySWhUh
+	 CT8gT3gluTvBdz/yzylinr/focwDH+nLynEUrbXlDzjpPVpykLyxZmcRvr8vjQsjQW
+	 ZvC+3W93awmfvNw8O4iZxddRSHjE+/I+uGytUEQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfLPNhG (ORCPT
+        id S1727956AbfLPNhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:37:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfLPNhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:37:06 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E49206A5;
-        Mon, 16 Dec 2019 13:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503425;
-        bh=OlLjTfGQi5/U4jUE0lWUYWNrQUVkF9ABRFYEb3H6wRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UN3eg7bkh56gQzbPJKX92DS2oPbfzk/s8NFCYvwapn+olTsxbwocauo+FhEgEbHcQ
-         oVENs8AlxstW3j1z2VhLfYFGQ6Xhmp7LZh1iQ3H4OC9FogVfZVkmRrIBpGFIyKVQQt
-         e6d4Og6pZ0miFTtZaa0ZOojvY10otamRfSr8r9r8=
-Date:   Mon, 16 Dec 2019 14:37:03 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 04/14] media: sun4i-csi: Fix [HV]sync polarity handling
-Message-ID: <20191216133703.4udteob37py5s3ms@gilmour.lan>
-References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-5-wens@kernel.org>
+        Mon, 16 Dec 2019 08:37:15 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39933 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfLPNhP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:37:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so7277149wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:37:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cqmzVJtM8/ik+wTdyhfYBEe+JzF5iuu01jawnGqmvm4=;
+        b=tQYGGoiqAh8eGGmNFqnf1iM6QshP2ZeIsS++hg+YfTC3XN9pUVvhiGp8o7OitRXKNh
+         CHAiNfq11s3qHi8kG3J7H/stTLuv6bTa9ojTV3KoDZ7mslUBCUwrAyV77A3fXqFEvhoU
+         VjAzE28oqilPOOkeiJpRmorP0AwTPuWkMgb7at7Rb7NAmnEFkmYglHLYVMbYet5Ac8O9
+         trAmkiOkMassKcnG/xIFuC8K3NM4SGIKOgONO36Uiwo62u5OAQT/7GMUyahBruVC5bTn
+         mCJSZ3r9jCHb4BUvGFCMbLsZ1s3Zn47h1GinzrY8gexPrSrQa7YiKcXIDwpdssRQ2QeK
+         XcfQ==
+X-Gm-Message-State: APjAAAVjxRgWBAVWIrd1dVPV53ma3UcchgVYacviMrIhFnwAQ+8YL3fs
+        /VSxJqktysuP9EJukr+Jnwg=
+X-Google-Smtp-Source: APXvYqw8DoZT1xy+8BNikDeso3QARwg/9LWZQz63EgJwiBZs7Ir88Njc3Qb9TIWGZJOeNYbjbrzLyA==
+X-Received: by 2002:adf:ee88:: with SMTP id b8mr31839416wro.249.1576503433158;
+        Mon, 16 Dec 2019 05:37:13 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id x132sm22762701wmg.0.2019.12.16.05.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 05:37:12 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:37:11 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Waiman Long <longman@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        aneesh.kumar@linux.ibm.com
+Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
+Message-ID: <20191216133711.GH30281@dhcp22.suse.cz>
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+ <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+ <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+ <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
+ <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
+ <20191212190427.ouyohviijf5inhur@linux-p48b>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2fe4ttno4f4fmseg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-5-wens@kernel.org>
+In-Reply-To: <20191212190427.ouyohviijf5inhur@linux-p48b>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 12-12-19 11:04:27, Davidlohr Bueso wrote:
+> There have been deadlock reports[1, 2] where put_page is called
+> from softirq context and this causes trouble with the hugetlb_lock,
+> as well as potentially the subpool lock.
+> 
+> For such an unlikely scenario, lets not add irq dancing overhead
+> to the lock+unlock operations, which could incur in expensive
+> instruction dependencies, particularly when considering hard-irq
+> safety. For example PUSHF+POPF on x86.
+> 
+> Instead, just use a workqueue and do the free_huge_page() in regular
+> task context.
 
---2fe4ttno4f4fmseg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am afraid that work_struct is too large to be stuffed into the struct
+page array (because of the lockdep part).
 
-On Mon, Dec 16, 2019 at 12:59:14AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The Allwinner camera sensor interface has a different definition of
-> [HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
-> the note following the diagram and register names use HREF and VREF.
-> Combined they imply the hardware uses either [HV]REF or inverted
-> [HV]SYNC. There are also registers to set horizontal skip lengths
-> in pixels and vertical skip lengths in lines, also known as back
-> porches.
->
-> Fix the polarity handling by using the opposite polarity flag for
-> the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
-> match the hardware register description.
->
-> Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---2fe4ttno4f4fmseg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeIfwAKCRDj7w1vZxhR
-xRA/AP4vF6S6Kyoc+sq1NvPSmvANUDxkredIbI6JCHlMsiFG3QD9H7FUVTe0FnrF
-Al8s9SSOmN2Cb9+DM0+mq5Jb6GxZyQQ=
-=u2Iv
------END PGP SIGNATURE-----
-
---2fe4ttno4f4fmseg--
+I think that it would be just safer to make hugetlb_lock irq safe. Are
+there any other locks that would require the same?
+-- 
+Michal Hocko
+SUSE Labs
