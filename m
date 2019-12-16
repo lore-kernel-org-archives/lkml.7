@@ -2,265 +2,133 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A1EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F665C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACB4206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54795206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrqJzc+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfLPOHd (ORCPT
+        id S1728059AbfLPOLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:07:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:56638 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfLPOHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:07:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E65101FB;
-        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7983F718;
-        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:07:29 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 03/13] PCI: cadence: Add support to use custom read and
- write accessors
-Message-ID: <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-4-kishon@ti.com>
+        Mon, 16 Dec 2019 09:11:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41617 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfLPOLb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:11:31 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so6953850ljc.8;
+        Mon, 16 Dec 2019 06:11:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HhL5GMKIFDddfWEaX7NT4E3scjRhU5x3XuH72/9QCyo=;
+        b=jrqJzc+/u/LblZplRKW3eR4/Ge+b4/2IipInHNNk7BL2mZZnJtPHF2ZpEvr4zsXT1J
+         uNT59SvM5Amun90YFgy8GJzXdI5uoQJyXExaUd7leci+peFjiC7FlTNA92UA8SXbq3eU
+         MOegPJ7i/pv8To6BHlKcZOUywqyxx7q8eDcm/w8IcgvKWVKOInasra8tqfsDnbVAZCeo
+         FpIablaEjBiUFVOb5Oc0Dbr0b4mJ8ZAykZ3nLPICiBB6XgqFk8G8mN64aUBY5aLZxTf+
+         nO2neK1yMlESAkGPyxew4xii+fD4A3cY7oTtZWnvBa7G3H6/qK9o1TnCZa/65H7yPpe+
+         HIsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HhL5GMKIFDddfWEaX7NT4E3scjRhU5x3XuH72/9QCyo=;
+        b=gmfTl1Diu40j8X3EqhewKQ99dyOTAVcsxIrFljpKAgAUOFq/CnD0DxoTQZWeuxz16W
+         fAlbjPcLxHH7qq4N62UHzR/o1/Ee8tVrH98cW/8xZEmN/oIDykf4YBsxWXSpb/+v2rI9
+         5drstD3nEfMo1zkvnowEvLO+DPHR/aY93DT9rzAPOkniKhwcu2tTAyhYqVbMqmNTkRZa
+         vM8EKHYWPfLmsjHc/B3PzoNnwEJhDiK5EeftziQp3QbSFEp+COfUeX/WV8Qor0n3g7hU
+         eh//W/XGa9Em2Od0OUtx5yDsSRLoHNKhZ82CeQwnIuN26Cmv0bc/88Phtq5ATxSTJTpO
+         7ERQ==
+X-Gm-Message-State: APjAAAWGUxGmuzNr0oPQm8xyNkxmEMsvOWJr6YuFSLwWxAl7sLLn2ETz
+        TdYFbTNghitDNCD3oWitdq4fNQQe
+X-Google-Smtp-Source: APXvYqxVulbjGD7qBtkHu8dFjhoK+mY8pmMw7WHa5Lz77cd2cK6am3IF8jv4B0zPS4UWLTmlFAOg1g==
+X-Received: by 2002:a2e:9216:: with SMTP id k22mr19606187ljg.52.1576505488021;
+        Mon, 16 Dec 2019 06:11:28 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id z9sm10499851ljm.40.2019.12.16.06.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 06:11:27 -0800 (PST)
+Subject: Re: [PATCH v5 07/11] cpufreq: dt-platdev: Blacklist NVIDIA Tegra20
+ and Tegra30 SoCs
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191118164512.8676-1-digetx@gmail.com>
+ <20191118164512.8676-8-digetx@gmail.com>
+ <20191216040532.mzdovqoub5rdztwb@vireshk-i7>
+ <20191216040808.w67jxu7oapxgm7yh@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a57c80f0-59a7-c758-c914-025f12c85ba8@gmail.com>
+Date:   Mon, 16 Dec 2019 17:11:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-4-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191216040808.w67jxu7oapxgm7yh@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:37PM +0530, Kishon Vijay Abraham I wrote:
-> Add support to use custom read and write accessors. Platforms that
-> doesn't support half word or byte access or any other constraint
-
-s/doesn't/don't/
-
-> while accessing registers can use this feature to populate custom
-> read and write accessors. These custom accessors are used for both
-> standard register access and configuration space register access.
-
-You can put the following sentence underneath a --- as it's not needed
-in the commit message (but may be helpful to reviewers).
-
-> This is in preparation for adding PCIe support in TI's J721E SoC which
-> uses Cadence PCIe core.
+16.12.2019 07:08, Viresh Kumar пишет:
+> On 16-12-19, 09:35, Viresh Kumar wrote:
+>> On 18-11-19, 19:45, Dmitry Osipenko wrote:
+>>> Both NVIDIA Tegra20 and Tegra30 SoCs should be blacklisted because CPU
+>>> OPPs use supported_hw and thus platdev isn't suitable for these SoCs.
+>>> Currently cpufreq-dt driver produces a bit annoying warning splats
+>>> during boot because valid OPPs are not found, this will be fixed once
+>>> tegra20-cpufreq driver will be update to support cpufreq-dt. The warnings
+>>> will also happen on older stable kernels using newer device-trees, thus
+>>> this patch should be backported to stable kernels as well.
+>>>
+>>> Cc: <stable@vger.kernel.org>
+>>> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+>>> Fixes: 4053aa65c517 ("ARM: tegra: cardhu-a04: Add CPU Operating Performance Points")
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+>>> index f1d170dcf4d3..aba591d57c67 100644
+>>> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+>>> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+>>> @@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
+>>>  	{ .compatible = "mediatek,mt8176", },
+>>>  	{ .compatible = "mediatek,mt8183", },
+>>>  
+>>> +	{ .compatible = "nvidia,tegra20", },
+>>> +	{ .compatible = "nvidia,tegra30", },
+>>>  	{ .compatible = "nvidia,tegra124", },
+>>>  	{ .compatible = "nvidia,tegra210", },
+>>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
->  1 file changed, 90 insertions(+), 9 deletions(-)
+> Oops, pasted the wrong register here :(
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index a2b28b912ca4..d0d91c69fa1d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
->  	MSG_ROUTING_GATHER,
->  };
->  
-> +struct cdns_pcie_ops {
-> +	u32	(*read)(void __iomem *addr, int size);
-> +	void	(*write)(void __iomem *addr, int size, u32 value);
-> +};
-> +
->  /**
->   * struct cdns_pcie - private data for Cadence PCIe controller drivers
->   * @reg_base: IO mapped register base
-> @@ -239,7 +244,7 @@ struct cdns_pcie {
->  	int			phy_count;
->  	struct phy		**phy;
->  	struct device_link	**link;
-> -	const struct cdns_pcie_common_ops *ops;
-
-What was cdns_pcie_common_ops? It's not defined in the current tree is it?
-
-> +	const struct cdns_pcie_ops *ops;
->  };
->  
->  /**
-> @@ -301,21 +306,47 @@ struct cdns_pcie_ep {
->  /* Register access */
->  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
->  	writeb(value, pcie->reg_base + reg);
-
-Can you use 'addr' here instead of 'pcie->reg_base + reg'? (And similar for the
-rest of them).
-
-Thanks,
-
-Andrew Murray
-
-
->  }
->  
->  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
->  	writew(value, pcie->reg_base + reg);
->  }
->  
->  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x4, value);
-> +		return;
-> +	}
-> +
->  	writel(value, pcie->reg_base + reg);
->  }
->  
->  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x4);
-> +
->  	return readl(pcie->reg_base + reg);
->  }
->  
-> @@ -323,47 +354,97 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
->  				       u32 reg, u8 value)
->  {
-> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
-> +	writeb(value, addr);
->  }
->  
->  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->  				       u32 reg, u16 value)
->  {
-> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
-> +	writew(value, addr);
->  }
->  
->  /* Endpoint Function register access */
->  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u8 value)
->  {
-> -	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
-> +	writeb(value, addr);
->  }
->  
->  static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u16 value)
->  {
-> -	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
-> +	writew(value, addr);
->  }
->  
->  static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u32 value)
->  {
-> -	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x4, value);
-> +		return;
-> +	}
-> +
-> +	writel(value, addr);
->  }
->  
->  static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x1);
-> +
-> +	return readb(addr);
->  }
->  
->  static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x2);
-> +
-> +	return readw(addr);
->  }
->  
->  static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x4);
-> +
-> +	return readl(addr);
->  }
->  
->  #ifdef CONFIG_PCIE_CADENCE_HOST
-> -- 
-> 2.17.1
+> Applied. Thanks.
 > 
+
+Thanks!
