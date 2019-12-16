@@ -2,92 +2,80 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9E3C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1661CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFA620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576491710;
-	bh=fLTA86SADkhoMuGj9ooEAa6W0A+6O0T7iVznj+v+cGc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nUaMhuBP93wwxDyUM6zjvPJNiGTCYy4ZKhAx6w7sB6uRT1FTZzkVxhGY15clNmqg4
-	 O0qpSdyGBPGXsJBdko4sBgLrtQ79AsaPg1C6OkQtp1KaQa5rw51wOnGz5aS7xwA0rd
-	 m6JybzBF9JiTnvzL8pKrZBUWKmbJlJ5obfNTLLS4=
+	by mail.kernel.org (Postfix) with ESMTP id DC65E20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Wc1/8vqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfLPKVt convert rfc822-to-8bit (ORCPT
+        id S1727452AbfLPKV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:21:49 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36607 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfLPKVs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:21:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i4so8593409otr.3;
-        Mon, 16 Dec 2019 02:21:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OII3NjIiWl2o2u6W1B64WkC8TWJwjs+GAAq7Ye3dihk=;
-        b=IIbOK4cRCXOgtfjG35AQHaTIAKT1T0vahZnR3R8Mf0NKTDkRqR6FOy4NerkX6iv00u
-         IMKPo8XaFIK6sxFqCWGnn6BBNi4Ca5u23PLSm+syyd6pddN2eEyeoho4jryLKtKfcbNu
-         iEyySH7qzVkNb3bkEo6+82oCou6QLPsd0IYPISqJbjeZUxJZi6M/010hopctGazNZD+N
-         OzBCA+IidsDt3TEMczDTa/wXYmIs/e2+ZSGxIs92Y5f395C7xwokBA0r7fT7TkRJzbWp
-         3xDp/qy8Zjg7gqXGYk8SUKytSuBG7ILUz7CnQ1yWSNqjk57LjVA5rwgb8ByusURouCNt
-         eFdw==
-X-Gm-Message-State: APjAAAXgB+Nw9zoVwyn29DBnFdFZdhKVgD02sWSWuO9RHmrdwe7N8UsW
-        8SbrgJqz47BtPWfwvNFqTyoKOIC4GbIabZotAmEv1g==
-X-Google-Smtp-Source: APXvYqy/CCtY+rajdoo3mJyNMQycKMJhluSj2RpgiUcF+Cuuqvlk+W4loCIV1S/y+Uu1h8w1QLymsVADjv/D/Zw6LBQ=
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr31895295otd.266.1576491707961;
- Mon, 16 Dec 2019 02:21:47 -0800 (PST)
+        Mon, 16 Dec 2019 05:21:57 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54582 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfLPKV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:21:57 -0500
+Received: from zn.tnic (p4FED3450.dip0.t-ipconnect.de [79.237.52.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 27F181EC0AB5;
+        Mon, 16 Dec 2019 11:21:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576491716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PlXJ6iijV+JtLwuqUX7aC8TAlBiVTPqvWsuHuEDokPY=;
+        b=Wc1/8vqovVdNKX7aMShs61YwhJ0CrIN9t83u0kKVGJ63sZrTw0JbCfI0tZ3IOgItryA5IK
+        Ic6LOOLpXKf3UBW7/7HPZ9fLZyb0Jq1Xrnr7WRl1367OV0okKkmfHu9bqEBXhzUrRsbaZx
+        V1WLOJUG1qWCHfQrrUnKV+flU+nLobg=
+Date:   Mon, 16 Dec 2019 11:19:39 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] init: use do_mount() instead of ksys_mount()
+Message-ID: <20191216101939.GA17380@zn.tnic>
+References: <20191212181422.31033-1-linux@dominikbrodowski.net>
+ <20191212181422.31033-4-linux@dominikbrodowski.net>
+ <20191216094556.GA32241@zn.tnic>
+ <20191216095137.omiovbgt5bwjahku@isilmar-4.linta.de>
 MIME-Version: 1.0
-References: <20191211093728.4163-1-cosiekvfj@o2.pl>
-In-Reply-To: <20191211093728.4163-1-cosiekvfj@o2.pl>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 16 Dec 2019 11:21:36 +0100
-Message-ID: <CAJZ5v0hDUD+wZg__=viL6+ZsbxrzzOC7id3OmKMc1zVUJT5VYw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: acpi_video: fix typo in comment
-To:     =?UTF-8?Q?Kacper_Piwi=C5=84ski?= <cosiekvfj@o2.pl>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191216095137.omiovbgt5bwjahku@isilmar-4.linta.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:46 AM Kacper Piwiński <cosiekvfj@o2.pl> wrote:
->
-> Signed-off-by: Kacper Piwiński <cosiekvfj@o2.pl>
+On Mon, Dec 16, 2019 at 10:51:37AM +0100, Dominik Brodowski wrote:
+> Does
+> 
+> https://lore.kernel.org/lkml/CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com/
+> 
+> solve the issue?
 
-Applying as 5.6 material, thanks!
+Yap, it does.
 
-> ---
->  drivers/acpi/acpi_video.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index 4f325e47519f..9b4da4167a2b 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -2183,7 +2183,7 @@ int acpi_video_register(void)
->         if (register_count) {
->                 /*
->                  * if the function of acpi_video_register is already called,
-> -                * don't register the acpi_vide_bus again and return no error.
-> +                * don't register the acpi_video_bus again and return no error.
->                  */
->                 goto leave;
->         }
-> --
-> 2.24.0
->
+Reported-by: Borislav Petkov <bp@suse.de>
+Tested-by: Borislav Petkov <bp@suse.de>
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
