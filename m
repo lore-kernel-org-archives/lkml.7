@@ -2,156 +2,96 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D035C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7D1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A5D20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521217;
-	bh=1H4ky51eCvfkA+t3HWKdQkyac9iCEkW5S//8SSJUL58=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FKw0RFCUScAsczZetUXIrlXvKfrlA9man8Q8t26dm+WINnXlg8zstVtpw6zGQ/VOs
-	 6Ugj9S7gt0Px0yrl8J6xBNxdgHB+qs3ef93Il1b9oonVZLM/3OgXN4QTJN6iNLuddD
-	 r5RjtOj7iFLiI40z032LHg1bKxxlNfspH22/tbcE=
+	by mail.kernel.org (Postfix) with ESMTP id 10160207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfLPSdf (ORCPT
+        id S1730934AbfLPSdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:33:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:33:40 -0500
+Received: from mga12.intel.com ([192.55.52.136]:15476 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730114AbfLPSJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE59A206EC;
-        Mon, 16 Dec 2019 18:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519767;
-        bh=1H4ky51eCvfkA+t3HWKdQkyac9iCEkW5S//8SSJUL58=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lp5Samxdfr0IyWlEE+Pdkf3s/7ceLg6mkwZ+dGumGR+S5MViwS7tJxXEtiME1m80s
-         J84zWjrF80GSm4czKemiSVJowGtMxDFU99gNImy/aHGfgTbnYzB0287SLRSvJrcKtQ
-         7H8hiWsE3sGLOkBjOeUonV3jrlYWxqwHEpjwx0/8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 059/180] btrfs: Avoid getting stuck during cyclic writebacks
-Date:   Mon, 16 Dec 2019 18:48:19 +0100
-Message-Id: <20191216174828.761022157@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
-References: <20191216174806.018988360@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1730850AbfLPSdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:33:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 10:33:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
+   d="scan'208";a="389550279"
+Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.172])
+  by orsmga005.jf.intel.com with ESMTP; 16 Dec 2019 10:33:36 -0800
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     linux-pm@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, alex.hung@canonical.com,
+        linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
+        dvhart@infradead.org, Gayatri Kammela <gayatri.kammela@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Subject: [PATCH v3 1/5] acpi: dptf: Add new Tiger Lake hardware IDs to support DPTF drivers in ACPI
+Date:   Mon, 16 Dec 2019 10:31:48 -0800
+Message-Id: <887468770c82ed69ddd124529fe001598acd4e57.1576520244.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1576520244.git.gayatri.kammela@intel.com>
+References: <cover.1576520244.git.gayatri.kammela@intel.com>
+In-Reply-To: <cover.1576520244.git.gayatri.kammela@intel.com>
+References: <cover.1576520244.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+Tiger Lake has new unique hardware IDs that are needed to support
+DPTF drivers. Hence, add them.
 
-commit f7bddf1e27d18fbc7d3e3056ba449cfbe4e20b0a upstream.
-
-During a cyclic writeback, extent_write_cache_pages() uses done_index
-to update the writeback_index after the current run is over.  However,
-instead of current index + 1, it gets to to the current index itself.
-
-Unfortunately, this, combined with returning on EOF instead of looping
-back, can lead to the following pathlogical behavior.
-
-1. There is a single file which has accumulated enough dirty pages to
-   trigger balance_dirty_pages() and the writer appending to the file
-   with a series of short writes.
-
-2. balance_dirty_pages kicks in, wakes up background writeback and sleeps.
-
-3. Writeback kicks in and the cursor is on the last page of the dirty
-   file.  Writeback is started or skipped if already in progress.  As
-   it's EOF, extent_write_cache_pages() returns and the cursor is set
-   to done_index which is pointing to the last page.
-
-4. Writeback is done.  Nothing happens till balance_dirty_pages
-   finishes, at which point we go back to #1.
-
-This can almost completely stall out writing back of the file and keep
-the system over dirty threshold for a long time which can mess up the
-whole system.  We encountered this issue in production with a package
-handling application which can reliably reproduce the issue when
-running under tight memory limits.
-
-Reading the comment in the error handling section, this seems to be to
-avoid accidentally skipping a page in case the write attempt on the
-page doesn't succeed.  However, this concern seems bogus.
-
-On each page, the code either:
-
-* Skips and moves onto the next page.
-
-* Fails issue and sets done_index to index + 1.
-
-* Successfully issues and continue to the next page if budget allows
-  and not EOF.
-
-IOW, as long as it's not EOF and there's budget, the code never
-retries writing back the same page.  Only when a page happens to be
-the last page of a particular run, we end up retrying the page, which
-can't possibly guarantee anything data integrity related.  Besides,
-cyclic writes are only used for non-syncing writebacks meaning that
-there's no data integrity implication to begin with.
-
-Fix it by always setting done_index past the current page being
-processed.
-
-Note that this problem exists in other writepages too.
-
-CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- fs/btrfs/extent_io.c |   12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/acpi/dptf/dptf_power.c      | 1 +
+ drivers/acpi/dptf/int340x_thermal.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4117,7 +4117,7 @@ retry:
- 		for (i = 0; i < nr_pages; i++) {
- 			struct page *page = pvec.pages[i];
+diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+index eb58fc475a03..387f27ef3368 100644
+--- a/drivers/acpi/dptf/dptf_power.c
++++ b/drivers/acpi/dptf/dptf_power.c
+@@ -97,6 +97,7 @@ static int dptf_power_remove(struct platform_device *pdev)
+ }
  
--			done_index = page->index;
-+			done_index = page->index + 1;
- 			/*
- 			 * At this point we hold neither the i_pages lock nor
- 			 * the page lock: the page may be truncated or
-@@ -4152,16 +4152,6 @@ retry:
+ static const struct acpi_device_id int3407_device_ids[] = {
++	{"INT1047", 0},
+ 	{"INT3407", 0},
+ 	{"", 0},
+ };
+diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
+index 5c7a90186e3c..1ec7b6900662 100644
+--- a/drivers/acpi/dptf/int340x_thermal.c
++++ b/drivers/acpi/dptf/int340x_thermal.c
+@@ -13,6 +13,10 @@
  
- 			ret = __extent_writepage(page, wbc, epd);
- 			if (ret < 0) {
--				/*
--				 * done_index is set past this page,
--				 * so media errors will not choke
--				 * background writeout for the entire
--				 * file. This has consequences for
--				 * range_cyclic semantics (ie. it may
--				 * not be suitable for data integrity
--				 * writeout).
--				 */
--				done_index = page->index + 1;
- 				done = 1;
- 				break;
- 			}
-
+ #define INT3401_DEVICE 0X01
+ static const struct acpi_device_id int340x_thermal_device_ids[] = {
++	{"INT1040"},
++	{"INT1043"},
++	{"INT1044"},
++	{"INT1047"},
+ 	{"INT3400"},
+ 	{"INT3401", INT3401_DEVICE},
+ 	{"INT3402"},
+-- 
+2.17.1
 
