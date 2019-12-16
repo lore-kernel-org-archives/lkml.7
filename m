@@ -2,286 +2,132 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CE2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE7EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3F1206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D316B206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEPSExo0"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ypzzmwcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfLPJu3 (ORCPT
+        id S1727184AbfLPJvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:50:29 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33697 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfLPJu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:50:29 -0500
-Received: by mail-il1-f194.google.com with SMTP id r81so4970977ilk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:50:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JFnwZ4o2A2lK7cZDY5iJ/y1MAUb5fZXHm3bjB5soJwU=;
-        b=VEPSExo05MC7xG8P8qvhwi3HzMTW51LT6G4qNjgrxBgaWEwctD60OSjPQRuHFaaCLS
-         VgB9J4aSt7ps1woEdmplFZWUqd0hAYyn0JTAkxgKhLY2IB+L1nmoRqbZi+t0yM53ihDF
-         6WmBILhZ/cTPm27l14y6KB2cqIZ5zjhjZDANs+ubB9jNsgOfc3OQW6dMPciLQgds4tGE
-         axUd0vqU+77nJ9bMIR25t9l2qLZ9OrTt8vyoyEQJAvZ/45WQssHruius0kij5vC0U5Ye
-         MW6rnht0ds0J/YHMZhMex5h/lnOhO6FA/2embYaBw0bBrHDcqwUK0cxrbxMNMrgiYLh0
-         6XGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JFnwZ4o2A2lK7cZDY5iJ/y1MAUb5fZXHm3bjB5soJwU=;
-        b=HL+g266ag6lCcv6z2Fb4/9rZ5hlYoedcNAuegwAsiny69jHTZ2MPDm0m6Dd1kt5N/E
-         CBQLQw8V2n0JXAO6YIMVy9HfGXEyGHawsZ/+htKcs+IwZkuAwxrZAPqekWIRTYX4S4zc
-         ELYYQvF1N2pfhB7M4W7amtv0paQHR8fhHKmvRH3LX5Py2mXxJosXN0CRVKUWNfJTHOpQ
-         QJIGenYKYsqYqb0fh/TLHiM6edqYNKB221aT5OJ2DfMCMxyzpnDe8vifse+c4bQifm7d
-         Ij3e+XgYoM8ONuvTPbnmkWAB3g1sTztJj+/OktNdiyJkiL0jlf4ceatk5VTf9t0c7Htw
-         3rlg==
-X-Gm-Message-State: APjAAAXn48NuJo+I5m7C6b8kICsuLxIIr5ZrHGDscLGAPFmyX4byRJdC
-        9ir58UPHmiYKh5imOppeZH+P0cMRmutsUjSSPr4=
-X-Google-Smtp-Source: APXvYqwjJ95uvLbJt1zvSoKoXvnn7kfYXzzbdDPMQAwazYkLmCXYigbsJvy4gblzXNJlE0g8gefxC3IHExsU+71mhaM=
-X-Received: by 2002:a92:9507:: with SMTP id y7mr10996643ilh.243.1576489827802;
- Mon, 16 Dec 2019 01:50:27 -0800 (PST)
+        Mon, 16 Dec 2019 04:51:01 -0500
+Received: from mout.web.de ([217.72.192.78]:41887 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbfLPJvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:51:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576489847;
+        bh=FUer5ob7MCtjvag5eil5GrqlkSAE6mVJbS7PtyWTrtg=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=YpzzmwcyQWvfUEVs7QMOFzE3kha0DxoR3pPBpztI497TumZb/NzDYN1k37qbutUgE
+         v6XftzneJQFfV9m4zMH3+KdxpJnubpKrTwI1EBZpHuQCd4Yw81XiVV/j8WlFvYeQRg
+         EUns1F/sD64yYKsUA87W3EoYHeACMJBqsRKSnwpE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M5Oct-1hlvi40s4F-00zZIV; Mon, 16
+ Dec 2019 10:50:47 +0100
+To:     Aditya Pakki <pakki001@umn.edu>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>, Kangjie Lu <kjlu@umn.edu>
+References: <20191215195900.6109-1-pakki001@umn.edu>
+Subject: Re: [PATCH] orinoco: avoid assertion in case of NULL pointer
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <180574a2-ec2f-cbe0-3458-02b5228db51e@web.de>
+Date:   Mon, 16 Dec 2019 10:50:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <cover.1575932654.git.robin.murphy@arm.com> <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
- <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com> <2681192.H4ySjFOPB8@diego>
-In-Reply-To: <2681192.H4ySjFOPB8@diego>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 16 Dec 2019 15:20:16 +0530
-Message-ID: <CANAwSgTL-9VCFFj-+4xsLZOxKCHtjyN4P6fYnuRSOe7cZRiWew@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org
-Content-Type: multipart/mixed; boundary="0000000000002e21d20599cf249e"
+In-Reply-To: <20191215195900.6109-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rbNb/j4I4QA2q8r1n1v2kwPohwIWMgC6x0YCyZ+Q1OFzivnZZl3
+ eM+Y4Od6z/SVJzQhMKoASjbqlFCpkwDB9sTo3ndyI74CbhelRbvkzlq4evgz8FFpkBFy39K
+ Y6gcZi1zv8u5QHEPyBsHHLinmeQUUyD4l79Nmlv7TSVoBYsuarJCSP4wUF/YK/YjQCO5Vi/
+ jI9bD3d2tgx9dDc5PZVfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WqgRjg9WxEA=:UvHqcStWQbC+FCNvt30oCJ
+ 0aL84rc+Buz/ykndmWlDVaBh9oflYH7jJfSGs7VE0SU/Szs+TNWB1jJj+mFG25aZfK247JmNO
+ 4yOptYTflIp2mS/WRLyAJOmPFE1FIaU31d6TNRm7rCmKWv7o0npYY1JOC3lZlI5ljTCaRnHW1
+ hqq5+q2yNlKBd7fuq+aArO+JexJzywuoxAmQbGk7CLdR+tvTTOsMP2IA4yC4PgNoIcnM8obQT
+ 03DP3+wv4u+y+PI02NTP8/S+jKP3h0xkhv1/jgfHFdh1SPIpUBsVtFUJTnEDsvX9NNrO3n5nz
+ N/Yt+tfoHmmMPZgZyQE5xSsmEFgJsqT5nELR+70eWzylRu0scA4FlKzwX7QgQS13iFjpRjwZ6
+ eebC8KaiS92ATwMQnzEgkz03cjPk+Zpg2fQ0YX/3bWHn0mtuD8DM1Fh/WSVtHr5sk/yr8K7Iq
+ glycqJn7WGrFmWTPvfpuEkkKyRke3BYjp4ijkoVT0Zj7tl6r5kDi15I3qXrArUczjZoearoj0
+ s2eDDXlnLURozr+fFZgTEjqrBHQGPNBsR7BsZp+fZhJfJQ8kXvHx9pu2jggS+ur/y2mUKW9Us
+ S1rHfiEF/ba6LM1B74fBAhUNbxtxsMRv/34eSwnl1JeuFq9pi7klPk/tFm+tw4LAMHAH2nrAQ
+ onvdN2Ex7X96Hjq6GsK+ifMPY0JbTYKVALNFekUI4/64LI49sNRd371K9UbT1h0oRXLzWWsd6
+ RcFFqBlDWt4SzJ5ceAdX8b+qb6vuifA2l/Md7hcubi/aFeYLQhCWVW85ukJ/zHfAaoN81Svlb
+ jBJV5B4K1ZsXiEsgT2JWrupOlsTP7T/ESOyiXvlhLNenzo0PllaycLEnI7dpeYKeARdTtas2b
+ z7VVHsSDf2zJKzdIos+TLxFdbhctyZdR3oaeaO8OyPvHgUK4+58oCn/dsSs+jScKnFay6Wco5
+ b0McMpqvdevrbHZ7keU5PkHQwPBTULZev5/MEtozACdA4eCiyQX+U5xRSTo0uLGfGquCovJdy
+ J8+HiF2aPp6IfWrQnNlLmC4ntUKMlpt+ia7VMr407FPNuZ8Wd5nbtBrQP6i1XDz3K0djT4ZWw
+ p3+B6YOBbHacaCE30/WgUN1Q20AZHlVc5pY2ZAS7hd9ahMOft4leslcJMOo3m/vu+NZDQ0sQj
+ 3CHh6DixUSFd3R9woM1eM947ZWEflsJ4ApbwpvnOytom9ZDNmnFnXWK01VMiLydU6+aQnvWYn
+ Nv0XHVujz+lD8OlAiyubDRCb3c0aJbCon5NcKIXQH6Oo0BqXiAp874OLXf3c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000002e21d20599cf249e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> The patch replaces the BUG_ON call to error return.
 
-Hi Heiko / Robin / Soeren,
+Would a wording like =E2=80=9CReplace the BUG_ON() call by a return of an =
+error code
+after a null pointer check=E2=80=9D be nicer for this change description?
 
-On Mon, 16 Dec 2019 at 01:57, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
->
-> Hi Anand,
->
-> Am Sonntag, 15. Dezember 2019, 19:51:50 CET schrieb Anand Moon:
-> > On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wrote=
-:
-> > >
-> > > RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK81=
-7,
-> > > so it makes little sense for the driver to have to have two completel=
-y
-> > > different mechanisms to handle essentially the same thing. Bring RK80=
-5
-> > > in line with the RK809/RK817 flow to clean things up.
-> > >
-> > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > > ---
->
-> [...]
->
-> > I am sill getting the kernel warning on issue poweroff see below.
-> > on my Rock960 Model A
-> > I feel the reason for this is we now have two poweroff callback
-> > 1  pm_power_off =3D rk808_device_shutdown
-> > 2  rk8xx_syscore_shutdown
->
-> Nope, the issue is just the i2c subsystem complaining that the
-> Rocckhip i2c drives does not provide an atomic-transfer function, see
->         "No atomic I2C transfer handler for 'i2c-0'"
-> in your warning.
->
-> Somewhere it was suggested that the current transfer function just
-> works as atomic as well.
->
->
-> > In my investigation earlier common function for shutdown solve
-> > the issue of clean shutdown.
->
-> This is simply a result of your syscore-shutdown function running way to
-> early, before the i2c subsystem switched to using atomic transfers.
->
-> This also indicates that this would really be way to early, as other part=
-s
-> of the kernel could also still be running.
->
+Will the tag =E2=80=9CFixes=E2=80=9D become helpful here?
 
-Yes, you are correct syscore-shutdown initiates
-shutdown before all the device do clean shutdown.
-
-So for best approach for clean atomic shutdown is to use
-  /* driver model interfaces that don't relate to enumeration  */
-        void (*shutdown)(struct i2c_client *client);
-drop the registration of syscore and use core .i2c_shutdown.
-
-I have prepare this patch on top of this series for RTF
-This patch dose clean shutdown of all the devices before poweroff.
-see the log below.
-
-*Note*: This feature will likely break the clean reboot feature.
-Rockchip device do not perform clean reboot as some of the IP
-block are not released before clean reboot and it's remain stuck.
-Like PCIe and MMC, We need to look into this as well.
-
-Shutdown log of my RK3399 Rock960 Model A
-[0] https://pastebin.com/peYxmzb7
-------------------------------------------------------------------------
-[  OK  ] Stopped LVM2 metadata daemon.
-[  OK  ] Reached target Shutdown.
-[  OK  ] Reached target Final Step.
-[  OK  ] Closed LVM2 metadata daemon socket.
-[  OK  ] Started Power-Off.
-[  OK  ] Reached target Power-Off.
-[  542.715237] systemd-shutdown[1]: Syncing filesystems and block devices.
-[  543.158314] systemd-shutdown[1]: Sending SIGTERM to remaining processes.=
-..
-[  543.168469] systemd-journald[280]: Received SIGTERM from PID 1
-(systemd-shutdow).
-[  543.202968] systemd-shutdown[1]: Sending SIGKILL to remaining processes.=
-..
-[  543.212365] systemd-shutdown[1]: Unmounting file systems.
-[  543.214708] [535]: Remounting '/' read-only in with options '(null)'.
-[  543.229661] EXT4-fs (mmcblk1p1): re-mounted. Opts: (null)
-[  543.239978] systemd-shutdown[1]: All filesystems unmounted.
-[  543.240481] systemd-shutdown[1]: Deactivating swaps.
-[  543.241052] systemd-shutdown[1]: All swaps deactivated.
-[  543.241514] systemd-shutdown[1]: Detaching loop devices.
-[  543.244806] systemd-shutdown[1]: All loop devices detached.
-[  543.245307] systemd-shutdown[1]: Detaching DM devices.
-[  543.245994] systemd-shutdown[1]: All DM devices detached.
-[  543.246474] systemd-shutdown[1]: All filesystems, swaps, loop
-devices and DM devices detached.
-[  543.302732] systemd-shutdown[1]: Successfully changed into root pivot.
-[  543.303356] systemd-shutdown[1]: Returning to initrd...
-[  543.339679] shutdown[1]: Syncing filesystems and block devices.
-[  543.341084] shutdown[1]: Sending SIGTERM to remaining processes...
-[  543.348948] shutdown[1]: Sending SIGKILL to remaining processes...
-[  543.356551] shutdown[1]: Unmounting file systems.
-[  543.359097] sd-umoun[541]: Unmounting '/oldroot/sys/kernel/config'.
-[  543.361716] sd-umoun[542]: Unmounting '/oldroot/sys/kernel/debug'.
-[  543.364333] sd-umoun[543]: Unmounting '/oldroot/dev/mqueue'.
-[  543.366765] sd-umoun[544]: Unmounting '/oldroot/dev/hugepages'.
-[  543.369426] sd-umoun[545]: Unmounting '/oldroot/sys/fs/cgroup/memory'.
-[  543.372338] sd-umoun[546]: Unmounting '/oldroot/sys/fs/cgroup/perf_event=
-'.
-[  543.375030] sd-umoun[547]: Unmounting '/oldroot/sys/fs/cgroup/cpu,cpuacc=
-t'.
-[  543.377744] sd-umoun[548]: Unmounting '/oldroot/sys/fs/cgroup/pids'.
-[  543.380620] sd-umoun[549]: Unmounting '/oldroot/sys/fs/cgroup/blkio'.
-[  543.383256] sd-umoun[550]: Unmounting '/oldroot/sys/fs/cgroup/hugetlb'.
-[  543.386015] sd-umoun[551]: Unmounting '/oldroot/sys/fs/cgroup/devices'.
-[  543.389114] sd-umoun[552]: Unmounting '/oldroot/sys/fs/cgroup/cpuset'.
-[  543.391817] sd-umoun[553]: Unmounting '/oldroot/sys/fs/pstore'.
-[  543.394401] sd-umoun[554]: Unmounting '/oldroot/sys/fs/cgroup/systemd'.
-[  543.397245] sd-umoun[555]: Unmounting '/oldroot/sys/fs/cgroup/unified'.
-[  543.400083] sd-umoun[556]: Unmounting '/oldroot/sys/fs/cgroup'.
-[  543.402654] sd-umoun[557]: Unmounting '/oldroot/dev/pts'.
-[  543.405351] sd-umoun[558]: Unmounting '/oldroot/dev/shm'.
-[  543.407876] sd-umoun[559]: Unmounting '/oldroot/sys/kernel/security'.
-[  543.410313] sd-umoun[560]: Unmounting '/oldroot'.
-[  543.410886] sd-umoun[560]: Failed to unmount /oldroot: Device or
-resource busy
-[  543.413355] sd-umoun[561]: Unmounting '/oldroot/run'.
-[  543.415750] sd-umoun[562]: Unmounting '/oldroot/dev'.
-[  543.418013] sd-umoun[563]: Unmounting '/oldroot/sys'.
-[  543.420892] sd-umoun[564]: Unmounting '/oldroot/proc'.
-[  543.423833] sd-umoun[565]: Unmounting '/oldroot'.
-[  543.486268] shutdown[1]: All filesystems unmounted.
-[  543.486710] shutdown[1]: Deactivating swaps.
-[  543.487153] shutdown[1]: All swaps deactivated.
-[  543.487556] shutdown[1]: Detaching loop devices.
-[  543.490300] shutdown[1]: All loop devices detached.
-[  543.490735] shutdown[1]: Detaching DM devices.
-[  543.491382] shutdown[1]: All DM devices detached.
-[  543.491801] shutdown[1]: All filesystems, swaps, loop devices and
-DM devices detached.
-[  543.494678] shutdown[1]: Syncing filesystems and block devices.
-[  543.495770] shutdown[1]: Powering off.
-[  543.496112] kvm: exiting hardware virtualization
-
--Anand
-
---0000000000002e21d20599cf249e
-Content-Type: application/octet-stream; name="i2c_shutdown.patch"
-Content-Disposition: attachment; filename="i2c_shutdown.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k4891t990>
-X-Attachment-Id: f_k4891t990
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3JrODA4LmMgYi9kcml2ZXJzL21mZC9yazgwOC5jCmlu
-ZGV4IGU4OGJkYjg4OWQzYS4uODIzODAzZGYyZDdiIDEwMDY0NAotLS0gYS9kcml2ZXJzL21mZC9y
-azgwOC5jCisrKyBiL2RyaXZlcnMvbWZkL3JrODA4LmMKQEAgLTQ0OCwzNiArNDQ4LDcgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCByZWdtYXBfaXJxX2NoaXAgcms4MThfaXJxX2NoaXAgPSB7CiAKIHN0
-YXRpYyBzdHJ1Y3QgaTJjX2NsaWVudCAqcms4MDhfaTJjX2NsaWVudDsKIAotc3RhdGljIHZvaWQg
-cms4MDhfZGV2aWNlX3NodXRkb3duKHZvaWQpCi17Ci0JaW50IHJldDsKLQl1bnNpZ25lZCBpbnQg
-cmVnLCBiaXQ7Ci0Jc3RydWN0IHJrODA4ICpyazgwOCA9IGkyY19nZXRfY2xpZW50ZGF0YShyazgw
-OF9pMmNfY2xpZW50KTsKLQotCWlmICghcms4MDgpCi0JCXJldHVybjsKLQotCXN3aXRjaCAocms4
-MDgtPnZhcmlhbnQpIHsKLQljYXNlIFJLODA1X0lEOgotCQlyZWcgPSBSSzgwNV9ERVZfQ1RSTF9S
-RUc7Ci0JCWJpdCA9IERFVl9PRkY7Ci0JCWJyZWFrOwotCWNhc2UgUks4MDhfSUQ6Ci0JCXJlZyA9
-IFJLODA4X0RFVkNUUkxfUkVHLAotCQliaXQgPSBERVZfT0ZGX1JTVDsKLQkJYnJlYWs7Ci0JY2Fz
-ZSBSSzgxOF9JRDoKLQkJcmVnID0gUks4MThfREVWQ1RSTF9SRUc7Ci0JCWJpdCA9IERFVl9PRkY7
-Ci0JCWJyZWFrOwotCWRlZmF1bHQ6Ci0JCXJldHVybjsKLQl9Ci0JcmV0ID0gcmVnbWFwX3VwZGF0
-ZV9iaXRzKHJrODA4LT5yZWdtYXAsIHJlZywgYml0LCBiaXQpOwotCWlmIChyZXQpCi0JCWRldl9l
-cnIoJnJrODA4X2kyY19jbGllbnQtPmRldiwgIkZhaWxlZCB0byBzaHV0ZG93biBkZXZpY2UhXG4i
-KTsKLX0KLQorI2lmIDAKIHN0YXRpYyB2b2lkIHJrOHh4X3N5c2NvcmVfc2h1dGRvd24odm9pZCkK
-IHsKIAlzdHJ1Y3Qgcms4MDggKnJrODA4ID0gaTJjX2dldF9jbGllbnRkYXRhKHJrODA4X2kyY19j
-bGllbnQpOwpAQCAtNTExLDYgKzQ4Miw3IEBAIHN0YXRpYyB2b2lkIHJrOHh4X3N5c2NvcmVfc2h1
-dGRvd24odm9pZCkKIHN0YXRpYyBzdHJ1Y3Qgc3lzY29yZV9vcHMgcms4MDhfc3lzY29yZV9vcHMg
-PSB7CiAJLnNodXRkb3duID0gcms4eHhfc3lzY29yZV9zaHV0ZG93biwKIH07CisjZW5kaWYKIAog
-c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcms4MDhfb2ZfbWF0Y2hbXSA9IHsKIAl7
-IC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrODA1IiB9LApAQCAtNjQzLDggKzYxNSw5IEBAIHN0
-YXRpYyBpbnQgcms4MDhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAl9CiAKIAly
-azgwOF9pMmNfY2xpZW50ID0gY2xpZW50OworI2lmIDAKIAlyZWdpc3Rlcl9zeXNjb3JlX29wcygm
-cms4MDhfc3lzY29yZV9vcHMpOwotCisjZW5kaWYKIAlyZXQgPSBkZXZtX21mZF9hZGRfZGV2aWNl
-cygmY2xpZW50LT5kZXYsIFBMQVRGT1JNX0RFVklEX05PTkUsCiAJCQkgICAgICBjZWxscywgbnJf
-Y2VsbHMsIE5VTEwsIDAsCiAJCQkgICAgICByZWdtYXBfaXJxX2dldF9kb21haW4ocms4MDgtPmly
-cV9kYXRhKSk7CkBAIC02NTMsMTMgKzYyNiwxNiBAQCBzdGF0aWMgaW50IHJrODA4X3Byb2JlKHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCiAJCWdvdG8gZXJyX2lycTsKIAl9CiAKKyNpZiAwCiAJ
-aWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgInJvY2tjaGlwLHN5c3RlbS1wb3dlci1jb250
-cm9sbGVyIikpCiAJCXBtX3Bvd2VyX29mZiA9IHJrODA4X2RldmljZV9zaHV0ZG93bjsKLQorI2Vu
-ZGlmCiAJcmV0dXJuIDA7CiAKIGVycl9pcnE6CisjaWYgMAogCXVucmVnaXN0ZXJfc3lzY29yZV9v
-cHMoJnJrODA4X3N5c2NvcmVfb3BzKTsKKyNlbmRpZgogCXJlZ21hcF9kZWxfaXJxX2NoaXAoY2xp
-ZW50LT5pcnEsIHJrODA4LT5pcnFfZGF0YSk7CiAJcmV0dXJuIHJldDsKIH0KQEAgLTY3MCwxOCAr
-NjQ2LDQ4IEBAIHN0YXRpYyBpbnQgcms4MDhfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGll
-bnQpCiAKIAlyZWdtYXBfZGVsX2lycV9jaGlwKGNsaWVudC0+aXJxLCByazgwOC0+aXJxX2RhdGEp
-OwogCisjaWYgMAogCXVucmVnaXN0ZXJfc3lzY29yZV9vcHMoJnJrODA4X3N5c2NvcmVfb3BzKTsK
-LQogCS8qKgogCSAqIHBtX3Bvd2VyX29mZiBtYXkgcG9pbnRzIHRvIGEgZnVuY3Rpb24gZnJvbSBh
-bm90aGVyIG1vZHVsZS4KIAkgKiBDaGVjayBpZiB0aGUgcG9pbnRlciBpcyBzZXQgYnkgdXMgYW5k
-IG9ubHkgdGhlbiBvdmVyd3JpdGUgaXQuCiAJICovCiAJaWYgKHBtX3Bvd2VyX29mZiA9PSByazgw
-OF9kZXZpY2Vfc2h1dGRvd24pCiAJCXBtX3Bvd2VyX29mZiA9IE5VTEw7Ci0KKyNlbmRpZgogCXJl
-dHVybiAwOwogfQogCitzdGF0aWMgdm9pZCByazgwOF9zaHV0ZG93bihzdHJ1Y3QgaTJjX2NsaWVu
-dCAqY2xpZW50KQoreworCWludCByZXQ7CisJdW5zaWduZWQgaW50IHJlZywgYml0OworCXN0cnVj
-dCByazgwOCAqcms4MDggPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsKKworCWlmICghcms4
-MDgpCisJCXJldHVybjsKKworCXN3aXRjaCAocms4MDgtPnZhcmlhbnQpIHsKKwljYXNlIFJLODA1
-X0lEOgorCQlyZWcgPSBSSzgwNV9ERVZfQ1RSTF9SRUc7CisJCWJpdCA9IERFVl9PRkY7CisJCWJy
-ZWFrOworCWNhc2UgUks4MDhfSUQ6CisJCXJlZyA9IFJLODA4X0RFVkNUUkxfUkVHLAorCQliaXQg
-PSBERVZfT0ZGX1JTVDsKKwkJYnJlYWs7CisJY2FzZSBSSzgxOF9JRDoKKwkJcmVnID0gUks4MThf
-REVWQ1RSTF9SRUc7CisJCWJpdCA9IERFVl9PRkY7CisJCWJyZWFrOworCWRlZmF1bHQ6CisJCXJl
-dHVybjsKKwl9CisJcmV0ID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHJrODA4LT5yZWdtYXAsIHJlZywg
-Yml0LCBiaXQpOworCWlmIChyZXQpCisJCWRldl9lcnIoJnJrODA4X2kyY19jbGllbnQtPmRldiwg
-IkZhaWxlZCB0byBzaHV0ZG93biBkZXZpY2UhXG4iKTsKK30KKwogc3RhdGljIGludCBfX21heWJl
-X3VudXNlZCByazh4eF9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlzdHJ1Y3Qgcms4
-MDggKnJrODA4ID0gaTJjX2dldF9jbGllbnRkYXRhKHJrODA4X2kyY19jbGllbnQpOwpAQCAtNzM3
-LDYgKzc0Myw3IEBAIHN0YXRpYyBzdHJ1Y3QgaTJjX2RyaXZlciByazgwOF9pMmNfZHJpdmVyID0g
-ewogCX0sCiAJLnByb2JlICAgID0gcms4MDhfcHJvYmUsCiAJLnJlbW92ZSAgID0gcms4MDhfcmVt
-b3ZlLAorCS5zaHV0ZG93biAgPSByazgwOF9zaHV0ZG93biwKIH07CiAKIG1vZHVsZV9pMmNfZHJp
-dmVyKHJrODA4X2kyY19kcml2ZXIpOwo=
---0000000000002e21d20599cf249e--
+Regards,
+Markus
