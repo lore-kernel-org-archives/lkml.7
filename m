@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D533C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD6AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2E2206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C17206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519951;
-	bh=oJ9a1tnZCcKXQqFC175MTuVch94WhcBWqBAPqgXi03k=;
+	s=default; t=1576519953;
+	bh=PHBl7xJvR/pmjiITQEmO7ueYAFIPDrnVsE5yaoW6tvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoJPeCJGFv2icPg5eX519fKKnXwp3mGup5Awgo7ghQVxNpXYf1uPjhN8vhesacw5J
-	 hS00+cHFl7miYON0oPXuZ8PW3xEdH517atjn7iD/WBVkv436iuE1XNoN8TJdansjXx
-	 meSXMwwr1kooPyA8VbIBcYwoYlr2OX7kWrFE2RdM=
+	b=Z0+d7BQPH1ktudBXzobOG/HMMB6cNFQpIwOJV+T0LoHUfoVxSQ2hluZDc07yIjrN/
+	 Ie6SeOKNG4VN7/mCt29OVVyX5tn7DfhAHF+ytKjIlZZp0vQdcf1fD2y8WkUDepqnLQ
+	 NJoDzdzx3yVI055LoOnlzNisB/3WKns9+iGZZMqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbfLPSM3 (ORCPT
+        id S1730962AbfLPSMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbfLPSMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:25 -0500
+        id S1730952AbfLPSM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57191206E0;
-        Mon, 16 Dec 2019 18:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8ED62166E;
+        Mon, 16 Dec 2019 18:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519944;
-        bh=oJ9a1tnZCcKXQqFC175MTuVch94WhcBWqBAPqgXi03k=;
+        s=default; t=1576519947;
+        bh=PHBl7xJvR/pmjiITQEmO7ueYAFIPDrnVsE5yaoW6tvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRLI55MKpt23sdlpYlkfei0MiIkSLg/l1TlXqPbJfg1X1pLx+IffI2Vl8i3+33Cvs
-         F8vdnmbJCYcURSBiMJ9cnuCnOiZkkuPZhPBjXKfkObnoD7tmYKgWibajAYR+MLDGbQ
-         qkgXkgHXfFsSKacCthphB455CcTOM1shs1MBZA98=
+        b=0OFuJyExtsOUFcM8TlFU5FjsCvasOz+/1lnIPyvamiduq2Syf5q0XXyNdSWYxbgUM
+         /mYzmc8Bc90xqFNJ381YIgXc0nLY9VdzLzdnucCus/tuBe6a9zlqdp7n70yN3kd33W
+         Jmw95Xi1yPgOMpnF2vfoEHbGGK9/m2YLXk0B6FV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.3 134/180] reiserfs: fix extended attributes on the root directory
-Date:   Mon, 16 Dec 2019 18:49:34 +0100
-Message-Id: <20191216174842.201644933@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.3 117/180] pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
+Date:   Mon, 16 Dec 2019 18:49:17 +0100
+Message-Id: <20191216174839.551751721@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,197 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Mahoney <jeffm@suse.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 60e4cf67a582d64f07713eda5fcc8ccdaf7833e6 upstream.
+commit 7f028caadf6c37580d0f59c6c094ed09afc04062 upstream.
 
-Since commit d0a5b995a308 (vfs: Add IOP_XATTR inode operations flag)
-extended attributes haven't worked on the root directory in reiserfs.
+In s3c64xx_eint_eint0_init() the for_each_child_of_node() loop is used
+with a break to find a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-This is due to reiserfs conditionally setting the sb->s_xattrs handler
-array depending on whether it located or create the internal privroot
-directory.  It necessarily does this after the root inode is already
-read in.  The IOP_XATTR flag is set during inode initialization, so
-it never gets set on the root directory.
-
-This commit unconditionally assigns sb->s_xattrs and clears IOP_XATTR on
-internal inodes.  The old return values due to the conditional assignment
-are handled via open_xa_root, which now returns EOPNOTSUPP as the VFS
-would have done.
-
-Link: https://lore.kernel.org/r/20191024143127.17509-1-jeffm@suse.com
-CC: stable@vger.kernel.org
-Fixes: d0a5b995a308 ("vfs: Add IOP_XATTR inode operations flag")
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Cc: <stable@vger.kernel.org>
+Fixes: 61dd72613177 ("pinctrl: Add pinctrl-s3c64xx driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/reiserfs/inode.c     |   12 ++++++++++--
- fs/reiserfs/namei.c     |    7 +++++--
- fs/reiserfs/reiserfs.h  |    2 ++
- fs/reiserfs/super.c     |    2 ++
- fs/reiserfs/xattr.c     |   19 ++++++++++++-------
- fs/reiserfs/xattr_acl.c |    4 +---
- 6 files changed, 32 insertions(+), 14 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-s3c64xx.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/reiserfs/inode.c
-+++ b/fs/reiserfs/inode.c
-@@ -2097,6 +2097,15 @@ int reiserfs_new_inode(struct reiserfs_t
- 		goto out_inserted_sd;
- 	}
+--- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
++++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+@@ -704,8 +704,10 @@ static int s3c64xx_eint_eint0_init(struc
+ 		return -ENODEV;
  
-+	/*
-+	 * Mark it private if we're creating the privroot
-+	 * or something under it.
-+	 */
-+	if (IS_PRIVATE(dir) || dentry == REISERFS_SB(sb)->priv_root) {
-+		inode->i_flags |= S_PRIVATE;
-+		inode->i_opflags &= ~IOP_XATTR;
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+-	if (!data)
++	if (!data) {
++		of_node_put(eint0_np);
+ 		return -ENOMEM;
 +	}
-+
- 	if (reiserfs_posixacl(inode->i_sb)) {
- 		reiserfs_write_unlock(inode->i_sb);
- 		retval = reiserfs_inherit_default_acl(th, dir, dentry, inode);
-@@ -2111,8 +2120,7 @@ int reiserfs_new_inode(struct reiserfs_t
- 		reiserfs_warning(inode->i_sb, "jdm-13090",
- 				 "ACLs aren't enabled in the fs, "
- 				 "but vfs thinks they are!");
--	} else if (IS_PRIVATE(dir))
--		inode->i_flags |= S_PRIVATE;
-+	}
+ 	data->drvdata = d;
  
- 	if (security->name) {
- 		reiserfs_write_unlock(inode->i_sb);
---- a/fs/reiserfs/namei.c
-+++ b/fs/reiserfs/namei.c
-@@ -377,10 +377,13 @@ static struct dentry *reiserfs_lookup(st
+ 	for (i = 0; i < NUM_EINT0_IRQ; ++i) {
+@@ -714,6 +716,7 @@ static int s3c64xx_eint_eint0_init(struc
+ 		irq = irq_of_parse_and_map(eint0_np, i);
+ 		if (!irq) {
+ 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
++			of_node_put(eint0_np);
+ 			return -ENXIO;
+ 		}
  
- 		/*
- 		 * Propagate the private flag so we know we're
--		 * in the priv tree
-+		 * in the priv tree.  Also clear IOP_XATTR
-+		 * since we don't have xattrs on xattr files.
- 		 */
--		if (IS_PRIVATE(dir))
-+		if (IS_PRIVATE(dir)) {
- 			inode->i_flags |= S_PRIVATE;
-+			inode->i_opflags &= ~IOP_XATTR;
-+		}
+@@ -721,6 +724,7 @@ static int s3c64xx_eint_eint0_init(struc
+ 						 s3c64xx_eint0_handlers[i],
+ 						 data);
  	}
- 	reiserfs_write_unlock(dir->i_sb);
- 	if (retval == IO_ERROR) {
---- a/fs/reiserfs/reiserfs.h
-+++ b/fs/reiserfs/reiserfs.h
-@@ -1168,6 +1168,8 @@ static inline int bmap_would_wrap(unsign
- 	return bmap_nr > ((1LL << 16) - 1);
- }
++	of_node_put(eint0_np);
  
-+extern const struct xattr_handler *reiserfs_xattr_handlers[];
-+
- /*
-  * this says about version of key of all items (but stat data) the
-  * object consists of
---- a/fs/reiserfs/super.c
-+++ b/fs/reiserfs/super.c
-@@ -2046,6 +2046,8 @@ static int reiserfs_fill_super(struct su
- 	if (replay_only(s))
- 		goto error_unlocked;
- 
-+	s->s_xattr = reiserfs_xattr_handlers;
-+
- 	if (bdev_read_only(s->s_bdev) && !sb_rdonly(s)) {
- 		SWARN(silent, s, "clm-7000",
- 		      "Detected readonly device, marking FS readonly");
---- a/fs/reiserfs/xattr.c
-+++ b/fs/reiserfs/xattr.c
-@@ -122,13 +122,13 @@ static struct dentry *open_xa_root(struc
- 	struct dentry *xaroot;
- 
- 	if (d_really_is_negative(privroot))
--		return ERR_PTR(-ENODATA);
-+		return ERR_PTR(-EOPNOTSUPP);
- 
- 	inode_lock_nested(d_inode(privroot), I_MUTEX_XATTR);
- 
- 	xaroot = dget(REISERFS_SB(sb)->xattr_root);
- 	if (!xaroot)
--		xaroot = ERR_PTR(-ENODATA);
-+		xaroot = ERR_PTR(-EOPNOTSUPP);
- 	else if (d_really_is_negative(xaroot)) {
- 		int err = -ENODATA;
- 
-@@ -619,6 +619,10 @@ int reiserfs_xattr_set(struct inode *ino
- 	int error, error2;
- 	size_t jbegin_count = reiserfs_xattr_nblocks(inode, buffer_size);
- 
-+	/* Check before we start a transaction and then do nothing. */
-+	if (!d_really_is_positive(REISERFS_SB(inode->i_sb)->priv_root))
-+		return -EOPNOTSUPP;
-+
- 	if (!(flags & XATTR_REPLACE))
- 		jbegin_count += reiserfs_xattr_jcreate_nblocks(inode);
- 
-@@ -841,8 +845,7 @@ ssize_t reiserfs_listxattr(struct dentry
- 	if (d_really_is_negative(dentry))
- 		return -EINVAL;
- 
--	if (!dentry->d_sb->s_xattr ||
--	    get_inode_sd_version(d_inode(dentry)) == STAT_DATA_V1)
-+	if (get_inode_sd_version(d_inode(dentry)) == STAT_DATA_V1)
- 		return -EOPNOTSUPP;
- 
- 	dir = open_xa_dir(d_inode(dentry), XATTR_REPLACE);
-@@ -882,6 +885,7 @@ static int create_privroot(struct dentry
- 	}
- 
- 	d_inode(dentry)->i_flags |= S_PRIVATE;
-+	d_inode(dentry)->i_opflags &= ~IOP_XATTR;
- 	reiserfs_info(dentry->d_sb, "Created %s - reserved for xattr "
- 		      "storage.\n", PRIVROOT_NAME);
- 
-@@ -895,7 +899,7 @@ static int create_privroot(struct dentry
- #endif
- 
- /* Actual operations that are exported to VFS-land */
--static const struct xattr_handler *reiserfs_xattr_handlers[] = {
-+const struct xattr_handler *reiserfs_xattr_handlers[] = {
- #ifdef CONFIG_REISERFS_FS_XATTR
- 	&reiserfs_xattr_user_handler,
- 	&reiserfs_xattr_trusted_handler,
-@@ -966,8 +970,10 @@ int reiserfs_lookup_privroot(struct supe
- 	if (!IS_ERR(dentry)) {
- 		REISERFS_SB(s)->priv_root = dentry;
- 		d_set_d_op(dentry, &xattr_lookup_poison_ops);
--		if (d_really_is_positive(dentry))
-+		if (d_really_is_positive(dentry)) {
- 			d_inode(dentry)->i_flags |= S_PRIVATE;
-+			d_inode(dentry)->i_opflags &= ~IOP_XATTR;
-+		}
- 	} else
- 		err = PTR_ERR(dentry);
- 	inode_unlock(d_inode(s->s_root));
-@@ -996,7 +1002,6 @@ int reiserfs_xattr_init(struct super_blo
- 	}
- 
- 	if (d_really_is_positive(privroot)) {
--		s->s_xattr = reiserfs_xattr_handlers;
- 		inode_lock(d_inode(privroot));
- 		if (!REISERFS_SB(s)->xattr_root) {
- 			struct dentry *dentry;
---- a/fs/reiserfs/xattr_acl.c
-+++ b/fs/reiserfs/xattr_acl.c
-@@ -320,10 +320,8 @@ reiserfs_inherit_default_acl(struct reis
- 	 * would be useless since permissions are ignored, and a pain because
- 	 * it introduces locking cycles
- 	 */
--	if (IS_PRIVATE(dir)) {
--		inode->i_flags |= S_PRIVATE;
-+	if (IS_PRIVATE(inode))
- 		goto apply_umask;
--	}
- 
- 	err = posix_acl_create(dir, &inode->i_mode, &default_acl, &acl);
- 	if (err)
+ 	bank = d->pin_banks;
+ 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
 
 
