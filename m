@@ -2,61 +2,64 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CB1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CCFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207C420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EC520717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520809;
-	bh=DP4fkJYu/ZUk3CHqJSESzZrnvSYI605vdEchAwGOeKE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOpalNKsXvzUmr8RXDjVT5fpUffyr8Wmdelwjwi+4JjFAUiPtRXVgy2tqCxTugcyX
-	 wXIGcl8f3uh1WpNFyAD1exj2JdvgEMi/yBjuNeJYpJ+N9U37+U+VaoINwRGKUH8xQE
-	 SHe26j9L4s362zZZEVGWrR+1QI99gNi1ajBG/E3w=
+	s=default; t=1576520819;
+	bh=lkk1WaQZu2LfhLJ/w10BbhLLd60ESXLSqDWE0sSPCf0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mwkY1UKNzPG26bnugo1tCQrBk1Uw02x0uF80clQSq49cqnQ9yHB/WrKxdHqQgVkVr
+	 LJrt1ksJOBp3pI5thfbWjCh4l05wErYl9o+O3SJu+DK6eLqknezy9aLNImrPUqOmCh
+	 y6oR1OU44HJCCJAmAJuRDBb3t+umrJ0PLUCTqhn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfLPS0r (ORCPT
+        id S1731522AbfLPSQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:26:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39600 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbfLPSQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:42 -0500
+        id S1731507AbfLPSQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA93206E0;
-        Mon, 16 Dec 2019 18:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C1C206E0;
+        Mon, 16 Dec 2019 18:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520200;
-        bh=DP4fkJYu/ZUk3CHqJSESzZrnvSYI605vdEchAwGOeKE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4/6sUoRYehT2ZRDqx2GM0BWJ5nGLl/mpbkoc3elQ5jb8HFdwDuvvVbGyXKmkWw6V
-         8T8uUgUjaEl4USkB94WdVoeWKjhwlLY+PNkaGp/UY8hEAxGKTVIcQ+/zhR62mjLKHB
-         9rZ1d9H+9qF32jtsBnDLKOxioXJhFhPrOC3rgGHs=
+        s=default; t=1576520179;
+        bh=lkk1WaQZu2LfhLJ/w10BbhLLd60ESXLSqDWE0sSPCf0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CIc/a54/upp0txN6+qc/PRufmjS4e64zlz82FQc1Okv0GVP0oMoyqTZf2Ca4PYe6R
+         EHGRDBuN8Hc7ilkQR8sAmcxgepyS64M+0Rg2UfWnsuZItoq2RPlALpeoiR1NqLeXom
+         zrq5vBmoc5QdeL59bXeH1NuyMEt9JbKf9BbYhedQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yumei Huang <yuhuang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Igor Mammedov <imammedo@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH 5.4 058/177] virtio-balloon: fix managed page counts when migrating pages between zones
-Date:   Mon, 16 Dec 2019 18:48:34 +0100
-Message-Id: <20191216174831.218991709@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 000/177] 5.4.4-stable review
+Date:   Mon, 16 Dec 2019 18:47:36 +0100
+Message-Id: <20191216174811.158424118@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-References: <20191216174811.158424118@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.4-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.4-rc1
+X-KernelTest-Deadline: 2019-12-18T17:48+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,159 +67,767 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+This is the start of the stable review cycle for the 5.4.4 release.
+There are 177 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 63341ab03706e11a31e3dd8ccc0fbc9beaf723f0 upstream.
+Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+Anything received after that time might be too late.
 
-In case we have to migrate a ballon page to a newpage of another zone, the
-managed page count of both zones is wrong. Paired with memory offlining
-(which will adjust the managed page count), we can trigger kernel crashes
-and all kinds of different symptoms.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-One way to reproduce:
-1. Start a QEMU guest with 4GB, no NUMA
-2. Hotplug a 1GB DIMM and online the memory to ZONE_NORMAL
-3. Inflate the balloon to 1GB
-4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
-5. Observe /proc/zoneinfo
-  Node 0, zone   Normal
-    pages free     16810
-          min      24848885473806
-          low      18471592959183339
-          high     36918337032892872
-          spanned  262144
-          present  262144
-          managed  18446744073709533486
-6. Do anything that requires some memory (e.g., inflate the balloon some
-more). The OOM goes crazy and the system crashes
-  [  238.324946] Out of memory: Killed process 537 (login) total-vm:27584kB, anon-rss:860kB, file-rss:0kB, shmem-rss:00
-  [  238.338585] systemd invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
-  [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W         5.4.0-next-20191204+ #75
-  [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-  [  238.341121] Call Trace:
-  [  238.341337]  dump_stack+0x8f/0xd0
-  [  238.341630]  dump_header+0x61/0x5ea
-  [  238.341942]  oom_kill_process.cold+0xb/0x10
-  [  238.342299]  out_of_memory+0x24d/0x5a0
-  [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
-  [  238.343024]  __alloc_pages_nodemask+0x391/0x410
-  [  238.343407]  pagecache_get_page+0xc3/0x3a0
-  [  238.343757]  filemap_fault+0x804/0xc30
-  [  238.344083]  ? ext4_filemap_fault+0x28/0x42
-  [  238.344444]  ext4_filemap_fault+0x30/0x42
-  [  238.344789]  __do_fault+0x37/0x1a0
-  [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
-  [  238.345450]  handle_mm_fault+0x169/0x360
-  [  238.345790]  do_user_addr_fault+0x20d/0x490
-  [  238.346154]  do_page_fault+0x31/0x210
-  [  238.346468]  async_page_fault+0x43/0x50
-  [  238.346797] RIP: 0033:0x7f47eba4197e
-  [  238.347110] Code: Bad RIP value.
-  [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
-  [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007f47eba4197e
-  [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 0000000000000004
-  [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 0000000000000033
-  [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 0000000000000001
-  [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007ffd7c0c18c0
-  [  238.350878] Mem-Info:
-  [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
-  [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
-  [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
-  [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
-  [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
-  [  238.351085]  free:720717 free_pcp:2 free_cma:0
-  [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_file:48kB inactive_file:28kB unevictable:0kB iss
-  [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB reserved_highatomic:0KB active_anon:152kB inactivB
-  [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
-  [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB high:13052kB reserved_highatomic:0KB active_anon:0B
-  [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927865 72057594037927865
-  [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:73886371836733356kB high:147673348131571488kB reB
-  [  238.364765] lowmem_reserve[]: 0 0 0 0 0
-  [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (UM) 1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
-  [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) 2*64kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
-  [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB (UME) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
-  [  238.369184] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
-  [  238.369915] 130 total pagecache pages
-  [  238.370241] 0 pages in swap cache
-  [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
-  [  238.370981] Free swap  = 0kB
-  [  238.371239] Total swap = 0kB
-  [  238.371488] 1048445 pages RAM
-  [  238.371756] 0 pages HighMem/MovableOnly
-  [  238.372090] 306992 pages reserved
-  [  238.372376] 0 pages cma reserved
-  [  238.372661] 0 pages hwpoisoned
+thanks,
 
-In another instance (older kernel), I was able to observe this
-(negative page count :/):
-  [  180.896971] Offlined Pages 32768
-  [  182.667462] Offlined Pages 32768
-  [  184.408117] Offlined Pages 32768
-  [  186.026321] Offlined Pages 32768
-  [  187.684861] Offlined Pages 32768
-  [  189.227013] Offlined Pages 32768
-  [  190.830303] Offlined Pages 32768
-  [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages: -36920272750453009
+greg k-h
 
-In another instance (older kernel), I was no longer able to start any
-process:
-  [root@vm ~]# [  214.348068] Offlined Pages 32768
-  [  215.973009] Offlined Pages 32768
-  cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
-  [root@vm ~]# cat /proc/meminfo
-  -bash: fork: Cannot allocate memory
+-------------
+Pseudo-Shortlog of commits:
 
-Fix it by properly adjusting the managed page count when migrating if
-the zone changed. The managed page count of the zones now looks after
-unplug of the DIMM (and after deflating the balloon) just like before
-inflating the balloon (and plugging+onlining the DIMM).
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.4-rc1
 
-We'll temporarily modify the totalram page count. If this ever becomes a
-problem, we can fine tune by providing helpers that don't touch
-the totalram pages (e.g., adjust_zone_managed_page_count()).
+Jan Kara <jack@suse.cz>
+    ext4: fix leak of quota reservations
 
-Please note that fixing up the managed page count is only necessary when
-we adjusted the managed page count when inflating - only if we
-don't have VIRTIO_BALLOON_F_DEFLATE_ON_OOM. With that feature, the
-managed page count is not touched when inflating/deflating.
+yangerkun <yangerkun@huawei.com>
+    ext4: fix a bug in ext4_wait_for_tail_page_commit
 
-Reported-by: Yumei Huang <yuhuang@redhat.com>
-Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Jiang Liu <liuj97@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Igor Mammedov <imammedo@redhat.com>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Darrick J. Wong <darrick.wong@oracle.com>
+    splice: only read in as much information as there is pipe buffer space
 
----
- drivers/virtio/virtio_balloon.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+Alexandre Belloni <alexandre.belloni@bootlin.com>
+    rtc: disable uie before setting time and enable after
 
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -721,6 +721,17 @@ static int virtballoon_migratepage(struc
- 
- 	get_page(newpage); /* balloon reference */
- 
-+	/*
-+	  * When we migrate a page to a different zone and adjusted the
-+	  * managed page count when inflating, we have to fixup the count of
-+	  * both involved zones.
-+	  */
-+	if (!virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM) &&
-+	    page_zone(page) != page_zone(newpage)) {
-+		adjust_managed_page_count(page, 1);
-+		adjust_managed_page_count(newpage, -1);
-+	}
-+
- 	/* balloon's page migration 1st step  -- inflate "newpage" */
- 	spin_lock_irqsave(&vb_dev_info->pages_lock, flags);
- 	balloon_page_insert(vb_dev_info, newpage);
+Andrey Konovalov <andreyknvl@google.com>
+    USB: dummy-hcd: increase max number of devices to 32
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc: Define arch_is_kernel_initmem_freed() for lockdep
+
+Chen Jun <chenjun102@huawei.com>
+    mm/shmem.c: cast the type of unmap_start to u64
+
+Gerald Schaefer <gerald.schaefer@de.ibm.com>
+    s390/kaslr: store KASLR offset for early dumps
+
+Heiko Carstens <heiko.carstens@de.ibm.com>
+    s390/smp,vdso: fix ASCE handling
+
+Will Deacon <will@kernel.org>
+    firmware: qcom: scm: Ensure 'a0' status code is treated as signed
+
+Theodore Ts'o <tytso@mit.edu>
+    ext4: work around deleting a file with i_nlink == 0 safely
+
+Roman Gushchin <guro@fb.com>
+    mm: memcg/slab: wait for !root kmem_cache refcnt killing on root kmem_cache destruction
+
+Daniel Schultz <d.schultz@phytec.de>
+    mfd: rk808: Fix RK818 ID template
+
+Nicolas Geoffray <ngeoffray@google.com>
+    mm, memfd: fix COW issue on MAP_PRIVATE and F_SEAL_FUTURE_WRITE mappings
+
+Vincenzo Frascino <vincenzo.frascino@arm.com>
+    powerpc: Fix vDSO clock_getres()
+
+Nathan Chancellor <natechancellor@gmail.com>
+    powerpc: Avoid clang warnings around setjmp and longjmp
+
+H. Nikolaus Schaller <hns@goldelico.com>
+    omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+
+H. Nikolaus Schaller <hns@goldelico.com>
+    omap: pdata-quirks: revert pandora specific gpiod additions
+
+Andrea Merello <andrea.merello@gmail.com>
+    iio: ad7949: fix channels mixups
+
+Andrea Merello <andrea.merello@gmail.com>
+    iio: ad7949: kill pointless "readback"-handling code
+
+Martin K. Petersen <martin.petersen@oracle.com>
+    Revert "scsi: qla2xxx: Fix memory leak when sending I/O fails"
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: qla2xxx: Fix a dma_pool_free() call
+
+Quinn Tran <qutran@marvell.com>
+    scsi: qla2xxx: Fix SRB leak on switch command timeout
+
+Jeff Mahoney <jeffm@suse.com>
+    reiserfs: fix extended attributes on the root directory
+
+Jan Kara <jack@suse.cz>
+    ext4: Fix credit estimate for final inode freeing
+
+Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+    quota: fix livelock in dquot_writeback_dquots
+
+Christian Brauner <christian.brauner@ubuntu.com>
+    seccomp: avoid overflow in implicit constant conversion
+
+Chengguang Xu <cgxu519@mykernel.net>
+    ext2: check err when partial != NULL
+
+Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+    quota: Check that quota is not dirty before release
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    video/hdmi: Fix AVI bar unpack
+
+Cédric Le Goater <clg@kaod.org>
+    powerpc/xive: Skip ioremap() of ESB pages for LSI interrupts
+
+Alastair D'Silva <alastair@d-silva.org>
+    powerpc: Allow flush_icache_range to work across ranges >4GB
+
+Cédric Le Goater <clg@kaod.org>
+    powerpc/xive: Prevent page fault issues in the machine crash handler
+
+Alastair D'Silva <alastair@d-silva.org>
+    powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
+
+Yabin Cui <yabinc@google.com>
+    coresight: Serialize enabling/disabling a link device.
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    stm class: Lose the protocol driver when dropping its reference
+
+Arnd Bergmann <arnd@arndb.de>
+    ppdev: fix PPGETTIME/PPSETTIME ioctls
+
+Bart Van Assche <bvanassche@acm.org>
+    RDMA/core: Fix ib_dma_max_seg_size()
+
+Jarkko Nikula <jarkko.nikula@bitmer.com>
+    ARM: dts: omap3-tao3530: Fix incorrect MMC card detection GPIO polarity
+
+H. Nikolaus Schaller <hns@goldelico.com>
+    mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid of pandora_wl1251_init_card
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    pinctrl: samsung: Fix device node refcount leaks in init code
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    pinctrl: samsung: Fix device node refcount leaks in S3C24xx wakeup controller init
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    pinctrl: samsung: Fix device node refcount leaks in Exynos wakeup controller init
+
+Nishka Dasgupta <nishkadg.linux@gmail.com>
+    pinctrl: samsung: Add of_node_put() before return in error path
+
+Gregory CLEMENT <gregory.clement@bootlin.com>
+    pinctrl: armada-37xx: Fix irq mask access in armada_37xx_irq_set_type()
+
+Chris Brandt <chris.brandt@renesas.com>
+    pinctrl: rza2: Fix gpio name typos
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ACPI: PM: Avoid attaching ACPI PM domain to certain devices
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ACPI: EC: Rework flushing of pending work
+
+Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+    ACPI: bus: Fix NULL pointer check in acpi_bus_get_private_data()
+
+Francesco Ruggeri <fruggeri@arista.com>
+    ACPI: OSL: only free map once in osl.c
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI: LPSS: Add dmi quirk for skipping _DEP check for some device-links
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI: LPSS: Add LNXVIDEO -> BYT I2C1 to lpss_device_links
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI: LPSS: Add LNXVIDEO -> BYT I2C7 to lpss_device_links
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    ACPI / utils: Move acpi_dev_get_first_match_dev() under CONFIG_ACPI
+
+Hui Wang <hui.wang@canonical.com>
+    ALSA: hda/realtek - Line-out jack doesn't work on a Dell AIO
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: oxfw: fix return value in error path of isochronous resources reservation
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: fireface: fix return value in error path of isochronous resources reservation
+
+John Hubbard <jhubbard@nvidia.com>
+    cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
+
+Leonard Crestez <leonard.crestez@nxp.com>
+    PM / devfreq: Lock devfreq in trans_stat_show
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: pci: Add Tiger Lake CPU support
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: pci: Add Ice Lake CPU support
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: Fix a double put_device() in error path
+
+Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+    powerpc/perf: Disable trace_imc pmu
+
+Boris Brezillon <boris.brezillon@collabora.com>
+    drm/panfrost: Open/close the perfcnt BO
+
+Leo Yan <leo.yan@linaro.org>
+    perf tests: Fix out of bounds memory access
+
+Gao Xiang <xiang@kernel.org>
+    erofs: zero out when listxattr is called with no xattr
+
+Marcelo Tosatti <mtosatti@redhat.com>
+    cpuidle: use first valid target residency as poll time
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    cpuidle: teo: Fix "early hits" handling for disabled idle states
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    cpuidle: teo: Consider hits and misses metrics of disabled states
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    cpuidle: teo: Rename local variable in teo_select()
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    cpuidle: teo: Ignore disabled idle states that are too deep
+
+Zhenzhong Duan <zhenzhong.duan@oracle.com>
+    cpuidle: Do not unset the driver if it is there already
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: cec.h: CEC_OP_REC_FLAG_ values were swapped
+
+Johan Hovold <johan@kernel.org>
+    media: radio: wl1273: fix interrupt masking on release
+
+Johan Hovold <johan@kernel.org>
+    media: bdisp: fix memleak on release
+
+Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+    media: vimc: sen: remove unused kthread_sen field
+
+Francois Buergisser <fbuergisser@chromium.org>
+    media: hantro: Fix picture order count table enable
+
+Francois Buergisser <fbuergisser@chromium.org>
+    media: hantro: Fix motion vectors usage condition
+
+Ezequiel Garcia <ezequiel@collabora.com>
+    media: hantro: Fix s_fmt for dynamic resolution changes
+
+Gerald Schaefer <gerald.schaefer@de.ibm.com>
+    s390/mm: properly clear _PAGE_NOEXEC bit when it is not supported
+
+Denis Efremov <efremov@linux.com>
+    ar5523: check NULL before memcpy() in ar5523_cmd()
+
+Denis Efremov <efremov@linux.com>
+    wil6210: check len before memcpy() calls
+
+Aleksa Sarai <cyphar@cyphar.com>
+    cgroup: pids: use atomic64_t for pids->limit
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: avoid sysfs buffer overflow with too many CPU cores
+
+David Jeffery <djeffery@redhat.com>
+    md: improve handling of bio with REQ_PREFLUSH in md_flush_request()
+
+Shengjiu Wang <shengjiu.wang@nxp.com>
+    ASoC: fsl_audmix: Add spin lock to protect tdms
+
+Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+    ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
+
+Jacob Rasmussen <jacobraz@chromium.org>
+    ASoC: rt5645: Fixed typo for buddy jack support.
+
+Jacob Rasmussen <jacobraz@chromium.org>
+    ASoC: rt5645: Fixed buddy jack support.
+
+Tejun Heo <tj@kernel.org>
+    workqueue: Fix pwq ref leak in rescuer_thread()
+
+Tejun Heo <tj@kernel.org>
+    workqueue: Fix spurious sanity check failures in destroy_workqueue()
+
+Dmitry Fomichev <dmitry.fomichev@wdc.com>
+    dm zoned: reduce overhead of backing device checks
+
+Maged Mokhtar <mmokhtar@petasan.org>
+    dm writecache: handle REQ_FUA
+
+Sumit Garg <sumit.garg@linaro.org>
+    hwrng: omap - Fix RNG wait loop timeout
+
+Amir Goldstein <amir73il@gmail.com>
+    ovl: relax WARN_ON() on rename to self
+
+Amir Goldstein <amir73il@gmail.com>
+    ovl: fix corner case of non-unique st_dev;st_ino
+
+Amir Goldstein <amir73il@gmail.com>
+    ovl: fix lookup failure on multi lower squashfs
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    lib: raid6: fix awk build warnings
+
+Larry Finger <Larry.Finger@lwfinger.net>
+    rtlwifi: rtl8192de: Fix missing enable interrupt flag
+
+Larry Finger <Larry.Finger@lwfinger.net>
+    rtlwifi: rtl8192de: Fix missing callback that tests for hw release of buffer
+
+Larry Finger <Larry.Finger@lwfinger.net>
+    rtlwifi: rtl8192de: Fix missing code to retrieve RX buffer address
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: record all roots for rename exchange on a subvol
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: send, skip backreference walking for extents with many references
+
+Qu Wenruo <wqu@suse.com>
+    btrfs: Remove btrfs_bio::flags member
+
+Tejun Heo <tj@kernel.org>
+    btrfs: Avoid getting stuck during cyclic writebacks
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix negative subv_writers counter and data space leak after buffered write
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix metadata space leak on fixup worker failure to set range as delalloc
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: use refcount_inc_not_zero in kill_all_nodes
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: use btrfs_block_group_cache_done in update_block_group
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: check page->mapping when loading free space cache
+
+Johannes Berg <johannes.berg@intel.com>
+    iwlwifi: pcie: fix support for transmitting SKBs with fraglist
+
+Wen Yang <wenyang@linux.alibaba.com>
+    usb: typec: fix use after free in typec_register_port()
+
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+    phy: renesas: rcar-gen3-usb2: Fix sysfs interface of "role"
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: ep0: Clear started flag on completion
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: gadget: Clear started flag for non-IOC
+
+Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+    usb: dwc3: gadget: Fix logical condition
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
+
+David Hildenbrand <david@redhat.com>
+    virtio-balloon: fix managed page counts when migrating pages between zones
+
+Taehee Yoo <ap420073@gmail.com>
+    virt_wifi: fix use-after-free in virt_wifi_newlink()
+
+Piotr Sroka <piotrs@cadence.com>
+    mtd: rawnand: Change calculating of position page containing BBM
+
+Miquel Raynal <miquel.raynal@bootlin.com>
+    mtd: spear_smi: Fix Write Burst mode
+
+Rafał Miłecki <rafal@milecki.pl>
+    brcmfmac: disable PCIe interrupts before bus reset
+
+Meng Li <Meng.Li@windriver.com>
+    EDAC/altera: Use fast register IO for S10 IRQs
+
+Hans de Goede <hdegoede@redhat.com>
+    tpm: Switch to platform_get_irq_optional()
+
+Tadeusz Struk <tadeusz.struk@intel.com>
+    tpm: add check after commands attribs tab allocation
+
+Pete Zaitcev <zaitcev@redhat.com>
+    usb: mon: Fix a deadlock in usbmon between mmap and read
+
+Emiliano Ingrassia <ingrassia@epigenesys.com>
+    usb: core: urb: fix URB structure initialization function
+
+Johan Hovold <johan@kernel.org>
+    USB: adutux: fix interface sanity check
+
+Wen Yang <wenyang@linux.alibaba.com>
+    usb: roles: fix a potential use after free
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: io_edgeport: fix epic endpoint lookup
+
+Johan Hovold <johan@kernel.org>
+    USB: idmouse: fix interface sanity checks
+
+Johan Hovold <johan@kernel.org>
+    USB: atm: ueagle-atm: add missing endpoint check
+
+Mircea Caprioru <mircea.caprioru@analog.com>
+    iio: adc: ad7124: Enable internal reference
+
+Beniamin Bia <beniamin.bia@analog.com>
+    iio: adc: ad7606: fix reading unnecessary data from device
+
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+    iio: imu: inv_mpu6050: fix temperature reporting using bad unit
+
+Chris Lesiak <chris.lesiak@licor.com>
+    iio: humidity: hdc100x: fix IIO_HUMIDITYRELATIVE channel reporting
+
+Nuno Sá <nuno.sa@analog.com>
+    iio: adis16480: Fix scales factors
+
+Lorenzo Bianconi <lorenzo@kernel.org>
+    iio: imu: st_lsm6dsx: fix ODR check in st_lsm6dsx_write_raw
+
+Nuno Sá <nuno.sa@analog.com>
+    iio: adis16480: Add debugfs_reg_access entry
+
+H. Nikolaus Schaller <hns@goldelico.com>
+    ARM: dts: pandora-common: define wl1251 as child node of mmc3
+
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+    usb: common: usb-conn-gpio: Don't log an error on probe deferral
+
+Georgi Djakov <georgi.djakov@linaro.org>
+    interconnect: qcom: qcs404: Walk the list safely on node removal
+
+Georgi Djakov <georgi.djakov@linaro.org>
+    interconnect: qcom: sdm845: Walk the list safely on node removal
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: make sure interrupts are restored to correct state
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    xhci: Increase STS_HALT timeout in xhci_suspend()
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: fix USB3 device initiated resume race with roothub autosuspend
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    xhci: Fix memory leak in xhci_add_in_port()
+
+Henry Lin <henryl@nvidia.com>
+    usb: xhci: only set D3hot for pci device
+
+Johan Hovold <johan@kernel.org>
+    staging: gigaset: add endpoint-type sanity check
+
+Johan Hovold <johan@kernel.org>
+    staging: gigaset: fix illegal free on probe errors
+
+Johan Hovold <johan@kernel.org>
+    staging: gigaset: fix general protection fault on probe
+
+Marcelo Diop-Gonzalez <marcgonzalez@google.com>
+    staging: vchiq: call unregister_chrdev_region() when driver registration fails
+
+Johan Hovold <johan@kernel.org>
+    staging: rtl8712: fix interface sanity check
+
+Johan Hovold <johan@kernel.org>
+    staging: rtl8188eu: fix interface sanity check
+
+Brendan Higgins <brendanhiggins@google.com>
+    staging: exfat: fix multiple definition error of `rename_file'
+
+Todd Kjos <tkjos@android.com>
+    binder: fix incorrect calculation for num_valid
+
+Nagarjuna Kristam <nkristam@nvidia.com>
+    usb: host: xhci-tegra: Correct phy enable sequence
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    usb: Allow USB device to be warm reset in suspended state
+
+Oliver Neukum <oneukum@suse.com>
+    USB: documentation: flags on usb-storage versus UAS
+
+Oliver Neukum <oneukum@suse.com>
+    USB: uas: heed CAPACITY_HEURISTICS
+
+Oliver Neukum <oneukum@suse.com>
+    USB: uas: honor flag to avoid CAPACITY16
+
+Arnd Bergmann <arnd@arndb.de>
+    media: venus: remove invalid compat_ioctl32 handler
+
+Arnd Bergmann <arnd@arndb.de>
+    ceph: fix compat_ioctl for ceph_dir_operations
+
+Arnd Bergmann <arnd@arndb.de>
+    compat_ioctl: add compat_ptr_ioctl()
+
+Arun Easi <aeasi@marvell.com>
+    scsi: qla2xxx: Fix memory leak when sending I/O fails
+
+Quinn Tran <qutran@marvell.com>
+    scsi: qla2xxx: Fix double scsi_done for abort path
+
+Quinn Tran <qutran@marvell.com>
+    scsi: qla2xxx: Fix driver unload hang
+
+Quinn Tran <qutran@marvell.com>
+    scsi: qla2xxx: Do command completion on abort timeout
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: trace channel log even for FCP command responses
+
+James Smart <jsmart2021@gmail.com>
+    scsi: lpfc: Fix bad ndlp ptr in xri aborted handling
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    Revert "nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T"
+
+Keith Busch <kbusch@kernel.org>
+    nvme: Namepace identification descriptor list is optional
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    usb: gadget: pch_udc: fix use after free
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    usb: gadget: configfs: Fix missing spin_lock_init()
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt    |  22 ++--
+ Makefile                                           |   4 +-
+ arch/arm/boot/dts/omap3-pandora-common.dtsi        |  36 +++++-
+ arch/arm/boot/dts/omap3-tao3530.dtsi               |   2 +-
+ arch/arm/mach-omap2/pdata-quirks.c                 | 104 -----------------
+ arch/powerpc/include/asm/sections.h                |  14 +++
+ arch/powerpc/include/asm/vdso_datapage.h           |   2 +
+ arch/powerpc/kernel/Makefile                       |   4 +-
+ arch/powerpc/kernel/asm-offsets.c                  |   2 +-
+ arch/powerpc/kernel/misc_64.S                      |   4 +-
+ arch/powerpc/kernel/time.c                         |   1 +
+ arch/powerpc/kernel/vdso32/gettimeofday.S          |   7 +-
+ arch/powerpc/kernel/vdso64/cacheflush.S            |   4 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S          |   7 +-
+ arch/powerpc/platforms/powernv/opal-imc.c          |   9 +-
+ arch/powerpc/sysdev/xive/common.c                  |   9 ++
+ arch/powerpc/sysdev/xive/spapr.c                   |  12 +-
+ arch/powerpc/xmon/Makefile                         |   4 +-
+ arch/s390/boot/startup.c                           |   5 +
+ arch/s390/include/asm/pgtable.h                    |   4 +-
+ arch/s390/kernel/machine_kexec.c                   |   2 +-
+ arch/s390/kernel/smp.c                             |   5 +
+ block/blk-mq-sysfs.c                               |  15 ++-
+ drivers/acpi/acpi_lpss.c                           |  27 ++++-
+ drivers/acpi/bus.c                                 |   2 +-
+ drivers/acpi/device_pm.c                           |  12 +-
+ drivers/acpi/ec.c                                  |  36 +++---
+ drivers/acpi/osl.c                                 |  28 +++--
+ drivers/android/binder.c                           |   4 +-
+ drivers/char/hw_random/omap-rng.c                  |   9 +-
+ drivers/char/ppdev.c                               |  16 ++-
+ drivers/char/tpm/tpm2-cmd.c                        |   4 +
+ drivers/char/tpm/tpm_tis.c                         |   2 +-
+ drivers/cpufreq/powernv-cpufreq.c                  |  17 ++-
+ drivers/cpuidle/cpuidle.c                          |   1 +
+ drivers/cpuidle/driver.c                           |  15 ++-
+ drivers/cpuidle/governors/teo.c                    |  78 ++++++++++---
+ drivers/devfreq/devfreq.c                          |  12 +-
+ drivers/edac/altera_edac.c                         |   1 +
+ drivers/firmware/qcom_scm-64.c                     |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_drv.c            |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_gem.c            |   4 +-
+ drivers/gpu/drm/panfrost/panfrost_gem.h            |   4 +
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c        |  23 ++--
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.h        |   2 +-
+ drivers/hwtracing/coresight/coresight-funnel.c     |  36 ++++--
+ drivers/hwtracing/coresight/coresight-replicator.c |  35 +++++-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c    |  26 +++--
+ drivers/hwtracing/coresight/coresight.c            |  45 +++-----
+ drivers/hwtracing/intel_th/core.c                  |   8 +-
+ drivers/hwtracing/intel_th/pci.c                   |  10 ++
+ drivers/hwtracing/stm/policy.c                     |   4 +
+ drivers/iio/adc/ad7124.c                           |   7 +-
+ drivers/iio/adc/ad7606.c                           |   2 +-
+ drivers/iio/adc/ad7949.c                           |  49 ++++----
+ drivers/iio/humidity/hdc100x.c                     |   2 +-
+ drivers/iio/imu/adis16480.c                        |  78 +++++++------
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         |  23 ++--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h          |  16 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       |   9 +-
+ drivers/interconnect/qcom/qcs404.c                 |   8 +-
+ drivers/interconnect/qcom/sdm845.c                 |   4 +-
+ drivers/md/dm-writecache.c                         |   3 +-
+ drivers/md/dm-zoned-metadata.c                     |  29 +++--
+ drivers/md/dm-zoned-reclaim.c                      |   8 +-
+ drivers/md/dm-zoned-target.c                       |  54 ++++++---
+ drivers/md/dm-zoned.h                              |   2 +
+ drivers/md/md-linear.c                             |   5 +-
+ drivers/md/md-multipath.c                          |   5 +-
+ drivers/md/md.c                                    |  11 +-
+ drivers/md/md.h                                    |   4 +-
+ drivers/md/raid0.c                                 |   5 +-
+ drivers/md/raid1.c                                 |   5 +-
+ drivers/md/raid10.c                                |   5 +-
+ drivers/md/raid5.c                                 |   4 +-
+ drivers/media/platform/qcom/venus/vdec.c           |   3 -
+ drivers/media/platform/qcom/venus/venc.c           |   3 -
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c      |   3 +-
+ drivers/media/platform/vimc/vimc-sensor.c          |   5 -
+ drivers/media/radio/radio-wl1273.c                 |   3 +-
+ drivers/mmc/host/omap_hsmmc.c                      |  30 +++++
+ drivers/mtd/devices/spear_smi.c                    |  38 +++++-
+ drivers/mtd/nand/raw/nand_base.c                   |   8 +-
+ drivers/mtd/nand/raw/nand_micron.c                 |   4 +-
+ drivers/net/wireless/ath/ar5523/ar5523.c           |   3 +-
+ drivers/net/wireless/ath/wil6210/wmi.c             |   6 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    |   2 +
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c  |  14 +++
+ .../net/wireless/realtek/rtlwifi/rtl8192de/hw.c    |   9 +-
+ .../net/wireless/realtek/rtlwifi/rtl8192de/sw.c    |   1 +
+ .../net/wireless/realtek/rtlwifi/rtl8192de/trx.c   |  25 +++-
+ .../net/wireless/realtek/rtlwifi/rtl8192de/trx.h   |   2 +
+ drivers/net/wireless/virt_wifi.c                   |   4 +-
+ drivers/nvme/host/core.c                           |  12 +-
+ drivers/pci/hotplug/acpiphp_glue.c                 |  12 +-
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c           |   5 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |   6 +-
+ drivers/pinctrl/pinctrl-rza2.c                     |   4 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  14 ++-
+ drivers/pinctrl/samsung/pinctrl-s3c24xx.c          |   6 +-
+ drivers/pinctrl/samsung/pinctrl-s3c64xx.c          |   6 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |  10 +-
+ drivers/rtc/interface.c                            |  19 ++-
+ drivers/s390/scsi/zfcp_dbf.c                       |   8 +-
+ drivers/scsi/lpfc/lpfc_scsi.c                      |  11 +-
+ drivers/scsi/lpfc/lpfc_sli.c                       |   5 +-
+ drivers/scsi/lpfc/lpfc_sli.h                       |   3 +-
+ drivers/scsi/qla2xxx/qla_def.h                     |   6 +-
+ drivers/scsi/qla2xxx/qla_gs.c                      |   2 +-
+ drivers/scsi/qla2xxx/qla_init.c                    |  31 +++--
+ drivers/scsi/qla2xxx/qla_isr.c                     |   5 +
+ drivers/scsi/qla2xxx/qla_mbx.c                     |   4 -
+ drivers/scsi/qla2xxx/qla_mid.c                     |  11 +-
+ drivers/scsi/qla2xxx/qla_nvme.c                    |   4 +-
+ drivers/scsi/qla2xxx/qla_os.c                      | 127 +++++++++++----------
+ drivers/staging/exfat/exfat.h                      |   4 +-
+ drivers/staging/exfat/exfat_core.c                 |   4 +-
+ drivers/staging/exfat/exfat_super.c                |   4 +-
+ drivers/staging/isdn/gigaset/usb-gigaset.c         |  23 +++-
+ drivers/staging/media/hantro/hantro_g1_h264_dec.c  |  10 +-
+ drivers/staging/media/hantro/hantro_v4l2.c         |  28 +++--
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c        |   2 +-
+ drivers/staging/rtl8712/usb_intf.c                 |   2 +-
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.c  |   2 +-
+ drivers/usb/atm/ueagle-atm.c                       |  18 ++-
+ drivers/usb/common/usb-conn-gpio.c                 |   3 +-
+ drivers/usb/core/hub.c                             |   5 +-
+ drivers/usb/core/urb.c                             |   1 +
+ drivers/usb/dwc3/dwc3-pci.c                        |   6 +-
+ drivers/usb/dwc3/ep0.c                             |   8 ++
+ drivers/usb/dwc3/gadget.c                          |   5 +-
+ drivers/usb/gadget/configfs.c                      |   1 +
+ drivers/usb/gadget/udc/dummy_hcd.c                 |   2 +-
+ drivers/usb/gadget/udc/pch_udc.c                   |   1 -
+ drivers/usb/host/xhci-hub.c                        |  22 +++-
+ drivers/usb/host/xhci-mem.c                        |   4 +
+ drivers/usb/host/xhci-pci.c                        |  13 +++
+ drivers/usb/host/xhci-ring.c                       |   6 +-
+ drivers/usb/host/xhci-tegra.c                      |  25 ++--
+ drivers/usb/host/xhci.c                            |   9 +-
+ drivers/usb/host/xhci.h                            |   1 +
+ drivers/usb/misc/adutux.c                          |   2 +-
+ drivers/usb/misc/idmouse.c                         |   2 +-
+ drivers/usb/mon/mon_bin.c                          |  32 ++++--
+ drivers/usb/roles/class.c                          |   2 +-
+ drivers/usb/serial/io_edgeport.c                   |  10 +-
+ drivers/usb/storage/uas.c                          |  10 ++
+ drivers/usb/typec/class.c                          |   6 +-
+ drivers/video/hdmi.c                               |   8 +-
+ drivers/virtio/virtio_balloon.c                    |  11 ++
+ fs/btrfs/block-group.c                             |   2 +-
+ fs/btrfs/delayed-inode.c                           |  13 ++-
+ fs/btrfs/extent_io.c                               |  12 +-
+ fs/btrfs/file.c                                    |   2 +-
+ fs/btrfs/free-space-cache.c                        |   6 +
+ fs/btrfs/inode.c                                   |   9 +-
+ fs/btrfs/send.c                                    |  25 +++-
+ fs/btrfs/volumes.h                                 |   1 -
+ fs/ceph/dir.c                                      |   1 +
+ fs/ceph/file.c                                     |   2 +-
+ fs/erofs/xattr.c                                   |   2 +
+ fs/ext2/inode.c                                    |   7 +-
+ fs/ext4/ialloc.c                                   |   5 -
+ fs/ext4/inode.c                                    |  25 +++-
+ fs/ext4/namei.c                                    |  11 +-
+ fs/ext4/super.c                                    |   2 +-
+ fs/ioctl.c                                         |  35 ++++++
+ fs/ocfs2/quota_global.c                            |   2 +-
+ fs/overlayfs/dir.c                                 |   2 +-
+ fs/overlayfs/inode.c                               |   8 +-
+ fs/overlayfs/namei.c                               |   8 ++
+ fs/overlayfs/ovl_entry.h                           |   2 +
+ fs/overlayfs/super.c                               |  24 ++--
+ fs/quota/dquot.c                                   |  11 +-
+ fs/reiserfs/inode.c                                |  12 +-
+ fs/reiserfs/namei.c                                |   7 +-
+ fs/reiserfs/reiserfs.h                             |   2 +
+ fs/reiserfs/super.c                                |   2 +
+ fs/reiserfs/xattr.c                                |  19 +--
+ fs/reiserfs/xattr_acl.c                            |   4 +-
+ fs/splice.c                                        |  14 ++-
+ include/acpi/acpi_bus.h                            |   6 +-
+ include/linux/fs.h                                 |   7 ++
+ include/linux/mfd/rk808.h                          |   2 +-
+ include/linux/quotaops.h                           |  10 ++
+ include/rdma/ib_verbs.h                            |   4 +-
+ include/uapi/linux/cec.h                           |   4 +-
+ kernel/cgroup/pids.c                               |  11 +-
+ kernel/workqueue.c                                 |  37 ++++--
+ lib/raid6/unroll.awk                               |   2 +-
+ mm/shmem.c                                         |  13 ++-
+ mm/slab_common.c                                   |  12 ++
+ sound/firewire/fireface/ff-pcm.c                   |   2 +-
+ sound/firewire/oxfw/oxfw-pcm.c                     |   2 +-
+ sound/pci/hda/patch_realtek.c                      |   8 +-
+ sound/soc/codecs/rt5645.c                          |   6 +-
+ sound/soc/fsl/fsl_audmix.c                         |   6 +
+ sound/soc/fsl/fsl_audmix.h                         |   1 +
+ sound/soc/soc-jack.c                               |   3 +-
+ tools/perf/tests/backward-ring-buffer.c            |   9 ++
+ tools/testing/selftests/seccomp/seccomp_bpf.c      |   3 +-
+ 201 files changed, 1475 insertions(+), 797 deletions(-)
 
 
