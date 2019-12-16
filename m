@@ -2,85 +2,76 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8BBC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCA0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DE320725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZR1bDqm1"
+	by mail.kernel.org (Postfix) with ESMTP id A800D20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfLPIQe (ORCPT
+        id S1726777AbfLPISv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:16:34 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:47012 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfLPIQd (ORCPT
+        Mon, 16 Dec 2019 03:18:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40979 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfLPISv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:16:33 -0500
-Received: by mail-vs1-f65.google.com with SMTP id t12so3549391vso.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:16:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uNL/md3eBXURlPuzMpt+NNW2vHDC+deKynwVOIfF2jc=;
-        b=ZR1bDqm1sBrbGQOrhQCGhzMkwGgIGGPWNy0UiW+R03u70yVQeYsJ+q09N5CsZm8+H4
-         u5rqgmSwDu/1esfl/LXurubXpL+IaO6DEgbsWCM4V8Pp2qgrlRIPIukat/vWCWbUzzNy
-         7iAUp1hPK+wphwibDujKFThkphRiHjPDrpuK96gq5dWkK83EAYHTjt422DRW9Q5NHUWA
-         UVpxKcEFKlsjWFKl6H+pMIJ1PHHfnzNEx7bUvXjd8focSsTWq63mulVF0jJKU0Bj7o7P
-         KCdhgL78MZfjZHzx4bvLZKnxeIG1t8r24zj2Zq8O8hYlTdTnoe+eiQpzQWh5iXwSoLVx
-         /DSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uNL/md3eBXURlPuzMpt+NNW2vHDC+deKynwVOIfF2jc=;
-        b=cVqJSoYj1CA3PK3Bxo3k3JqsSkwyrrDDEjGDvQLAJA6TjjgWb+Bmz8SRG189VQN5hO
-         Z/+2E1i3LDSQ7l5cpEH5o0xYE9WoasrxmXcdgv1t8AvtyE2SgVNxaiN8hqoe82GwxC6J
-         h5oVh+C/icTq29GbK8ViKpjr4Oq4Yq1uwQArIFqhW5lSy2uWgL0C0iYtfAS8Ihlf7Mkx
-         fxPNCXtwkvBHHA+nVKG0CxQk9sAGUiJ6YT+6o8MOe3cuuPNq2OwlH4NBsR9F1m/2pdQG
-         sWMmVocACIueqD3r8Tfq2KZZiPd/te5r7DjBywS7sFWCxW7XUpUfyJ3SbCTAVjSYt5JV
-         Dk1g==
-X-Gm-Message-State: APjAAAUzyPQaqbF+h4uYXUaN83rZxeZFyo4hEhbEDFGHRJ2BoqaKrTmH
-        BbOFYjkfJiOCrZtzDWcHV+/pnYjK/OaZDvfVQRvSVQ==
-X-Google-Smtp-Source: APXvYqxZgmG+r2lTV8LKe+Xl0XG0KMUrLOVjhm5O5XKw+42XV8qr8FSzvIn12G9bZTlTbNGjb2WiK96uAA1oxkXvC7Y=
-X-Received: by 2002:a67:d592:: with SMTP id m18mr20632386vsj.85.1576484192909;
- Mon, 16 Dec 2019 00:16:32 -0800 (PST)
+        Mon, 16 Dec 2019 03:18:51 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iglaW-0007fX-In; Mon, 16 Dec 2019 09:18:44 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iglaV-0003S5-5C; Mon, 16 Dec 2019 09:18:43 +0100
+Date:   Mon, 16 Dec 2019 09:18:43 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        CK Hu <ck.hu@mediatek.com>, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, sj.huang@mediatek.com
+Subject: Re: [PATCH v2 1/2] pwm: fine tune pwm-mtk-disp clock control flow
+Message-ID: <20191216081843.yxe3vm674jwurwri@pengutronix.de>
+References: <20191216070123.114719-1-jitao.shi@mediatek.com>
+ <20191216070123.114719-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-References: <20191210195853.883483-1-arnd@arndb.de>
-In-Reply-To: <20191210195853.883483-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:16:22 +0100
-Message-ID: <CACRpkdb88egVZr400QaAL=B_2qx3W2FsdWPZzZMWcB1u-R0YKg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: equilibrium: add CONFIG_OF dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216070123.114719-2-jitao.shi@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 8:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hello,
 
-> Without this, randconfig builds get a link failure
->
-> drivers/pinctrl/pinctrl-equilibrium.o: In function `pinconf_generic_dt_node_to_map_all':
-> pinctrl-equilibrium.c:(.text+0x96d): undefined reference to `pinconf_generic_dt_node_to_map'
->
-> Fixes: 1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Mon, Dec 16, 2019 at 03:01:22PM +0800, Jitao Shi wrote:
+> Match pwm clock when suspend and resume.
+> Prepare and enable disp_pwm clock when disp_pwm enable.
+> Disable and unprepare disp_pwm clock when disp_pwm disable.
 
-Rahul sent an identical patch that was previously applied,
-but thanks anyways!
+Assuming you catched all clock operations (I didn't check), the patch
+looks fine. The commit log could however be improved. Additional to
+describing what the patch does, some words about the motivation would be
+good. Does this fix a bug? Is it to save some power while the PWM isn't
+in use?
 
-Yours,
-Linus Walleij
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
