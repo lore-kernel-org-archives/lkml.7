@@ -2,208 +2,127 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC23CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE7FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730D82075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDA820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJ6KAmw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLPI3b (ORCPT
+        id S1726942AbfLPIaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:29:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33036 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726846AbfLPI3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:29:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0203AD35;
-        Mon, 16 Dec 2019 08:29:27 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
- related code
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        David Miller <davem@davemloft.net>
-Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20191212135406.26229-1-pdurrant@amazon.com>
- <20191212.110513.1770889236741616001.davem@davemloft.net>
- <cefcf3a4-fc10-d62a-cac9-81f0e47710a8@suse.com>
- <9f6d296e94744ce48d3f72fe4d3fd136@EX13D32EUC003.ant.amazon.com>
- <39762aba-7c47-6b79-b931-771bc16195a2@suse.com>
- <9c943511cb6b483f8f0da6ce05a614cb@EX13D32EUC003.ant.amazon.com>
- <169af9ff-9f2a-0fd5-82b5-05e75450445e@suse.com>
- <09b986c4e89c428da3d9cdd05cd82c54@EX13D32EUC003.ant.amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <79a0e144-6e98-9a12-2ad8-89459ae2c426@suse.com>
-Date:   Mon, 16 Dec 2019 09:29:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:30:05 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:37812 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfLPIaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 03:30:03 -0500
+Received: by mail-ua1-f67.google.com with SMTP id f9so1781881ual.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:30:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kDxQhaeLo6rNMVFT3CBcpOhBFhoVMYpLfsYqZHIsllM=;
+        b=GJ6KAmw6S+sq3Ccetl/H3ixiZVhos+PR0jEMWgPCzfx0kYdnBXsUmmddRDGHKCa+IW
+         XpoIFbLS8+19HgHvj1aji88fMJFyb1lR/OZ36673QRjkhDqdlzrIFkgM8oE+oLQDArnf
+         b7+9QxLZM6bFfD0TyRkuo4e0dVkdBL0SKoIBmAyTVM1uFsJHNelZ/+e0ANXGZ4aezkeZ
+         o4gb0cTRAp9bOD/PgQ9vQbyM+lGwK9Ok7JQXcF4SJ5b4Kw9UhJJL2BCwrf0d2BtMgGGk
+         5R3A+AL4JyWngHzSseIzNmoBzR/zYQxFslU5c3tgyAMleZF6TpW7mWEL4HtKwSHPi2AZ
+         9W7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kDxQhaeLo6rNMVFT3CBcpOhBFhoVMYpLfsYqZHIsllM=;
+        b=WXjVzXGfF4pNeO8cIVUBmLDnVWB+nmRa6IEvcw0oJb6aoAnheVXaULaecdZiXgEv+Y
+         L07HOOhm02HHTibqY7J3U3dy8mBIwrn6mT4HGv+ywrBwx1tPYx8r/hpVZggWCfngRy3B
+         8tqtQi6Fhl06rkjddBfqtkX4174ncDDiTiXRL85X9vpPMUiauftV9tz8YNnaMj1zfl4K
+         ZvOSfEG+OnMge4K7bF4935pNmXYVsXtI7LNGvQ73lcFs4jsXWMs1beOYmbiLb7kUYOi/
+         gQ9OWS7Hhz03RJovO+jM7iGej7b6HNhaVf4UO+sWwkNCRD20+zjRmDhW7iEWj8210NOQ
+         n38w==
+X-Gm-Message-State: APjAAAUN5uNCPDL+XzHm7oZFBzZzwos6ilqZQpkE63AUDcXj1umkxY8/
+        dFCzcP/bdedAqC+r8JOGOMYB97s4qIOiY42afIsiBQ==
+X-Google-Smtp-Source: APXvYqwni+l6XxPCyreJYxRHqzJXidyE2iM9tvx9B737sdIeXKOHoRA6FLpVo5xoUtWtnIiiMdWW6jDBBKJSinB1wok=
+X-Received: by 2002:ab0:5512:: with SMTP id t18mr22623715uaa.128.1576485002794;
+ Mon, 16 Dec 2019 00:30:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <09b986c4e89c428da3d9cdd05cd82c54@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com> <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:29:51 +0100
+Message-ID: <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com>
+Subject: Re: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.12.19 09:18, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Jürgen Groß <jgross@suse.com>
->> Sent: 16 December 2019 08:10
->> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
->> <davem@davemloft.net>
->> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->> kernel@vger.kernel.org; netdev@vger.kernel.org
->> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
->> related code
->>
->> On 13.12.19 11:12, Durrant, Paul wrote:
->>>> -----Original Message-----
->>>> From: Jürgen Groß <jgross@suse.com>
->>>> Sent: 13 December 2019 10:02
->>>> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
->>>> <davem@davemloft.net>
->>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->>>> kernel@vger.kernel.org; netdev@vger.kernel.org
->>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old
->> udev
->>>> related code
->>>>
->>>> On 13.12.19 10:24, Durrant, Paul wrote:
->>>>>> -----Original Message-----
->>>>>> From: Jürgen Groß <jgross@suse.com>
->>>>>> Sent: 13 December 2019 05:41
->>>>>> To: David Miller <davem@davemloft.net>; Durrant, Paul
->>>>>> <pdurrant@amazon.com>
->>>>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->>>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
->>>>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old
->>>> udev
->>>>>> related code
->>>>>>
->>>>>> On 12.12.19 20:05, David Miller wrote:
->>>>>>> From: Paul Durrant <pdurrant@amazon.com>
->>>>>>> Date: Thu, 12 Dec 2019 13:54:06 +0000
->>>>>>>
->>>>>>>> In the past it used to be the case that the Xen toolstack relied
->> upon
->>>>>>>> udev to execute backend hotplug scripts. However this has not been
->>>> the
->>>>>>>> case for many releases now and removal of the associated code in
->>>>>>>> xen-netback shortens the source by more than 100 lines, and removes
->>>>>> much
->>>>>>>> complexity in the interaction with the xenstore backend state.
->>>>>>>>
->>>>>>>> NOTE: xen-netback is the only xenbus driver to have a functional
->>>>>> uevent()
->>>>>>>>           method. The only other driver to have a method at all is
->>>>>>>>           pvcalls-back, and currently pvcalls_back_uevent() simply
->>>> returns
->>>>>> 0.
->>>>>>>>           Hence this patch also facilitates further cleanup.
->>>>>>>>
->>>>>>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
->>>>>>>
->>>>>>> If userspace ever used this stuff, I seriously doubt you can remove
->>>> this
->>>>>>> even if it hasn't been used in 5+ years.
->>>>>>
->>>>>> Hmm, depends.
->>>>>>
->>>>>> This has been used by Xen tools in dom0 only. If the last usage has
->>>> been
->>>>>> in a Xen version which is no longer able to run with current Linux in
->>>>>> dom0 it could be removed. But I guess this would have to be a rather
->>>> old
->>>>>> version of Xen (like 3.x?).
->>>>>>
->>>>>> Paul, can you give a hint since which Xen version the toolstack no
->>>>>> longer relies on udev to start the hotplug scripts?
->>>>>>
->>>>>
->>>>> The udev rules were in a file called tools/hotplug/Linux/xen-
->>>> backend.rules (in xen.git), and a commit from Roger removed the NIC
->> rules
->>>> in 2012:
->>>>>
->>>>> commit 57ad6afe2a08a03c40bcd336bfb27e008e1d3e53
->>>>
->>>> Xen 4.2
->>>>
->>>>> The last commit I could find to that file modified its name to xen-
->>>> backend.rules.in, and this was finally removed by George in 2015:
->>>>>
->>>>> commit 2ba368d13893402b2f1fb3c283ddcc714659dd9b
->>>>
->>>> Xen 4.6
->>>>
->>>>> So, I think this means anyone using a version of the Xen tools within
->>>> recent memory will be having their hotplug scripts called directly by
->>>> libxl (and having udev rules present would actually be counter-
->> productive,
->>>> as George's commit states and as I discovered the hard way when the
->> change
->>>> was originally made).
->>>>
->>>> The problem are systems with either old Xen versions (before Xen 4.2)
->> or
->>>> with other toolstacks (e.g. Xen 4.4 with xend) which want to use a new
->>>> dom0 kernel.
->>>>
->>>> And I'm not sure there aren't such systems (especially in case someone
->>>> wants to stick with xend).
->>>>
->>>
->>> But would someone sticking with such an old toolstack expect to run on
->> an unmodified upstream dom0? There has to be some way in which we can
->> retire old code.
->>
->> As long as there are no hypervisor interface related issues
->> prohibiting running dom0 unmodified I think the expectation to be
->> able to use the kernel in that environment is fine.
->>
-> 
-> I think we need a better policy in future then otherwise we will only collect baggage.
+On Wed, Dec 11, 2019 at 10:47 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-The Linux kernel policy regarding user interfaces and existing use cases
-is rather clear and we should not deviate without very strong reasons.
+> Bunch of MFD sub-devices which are instantiated by MFD do not have
+> own device-tree nodes but have (for example) the GPIO consumer
+> information in parent device's DT node. Add resource managed
+> devm_gpiod_get_array() for such devices so that they can get the
+> consumer information from parent DT while still binding the GPIO
+> reservation life-time to this sub-device life time.
+>
+> If devm_gpiod_get_array is used as such - then unloading and then
+> re-loading the child device fails as the GPIOs reserved during first
+> load are not freed when driver for sub-device is unload (if parent
+> stays there).
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>
+> Changes since v5:
+> - renamed internal function (no __ - prefixes for Linus :] )
 
-> 
->> Another question coming up would be: how is this handled in a driver
->> domain running netback? Which component is starting the hotplug script
->> there? I don't think we can assume a standard Xen toolset in this case.
->> So I'd rather leave this code as it is instead of breaking some rare
->> but valid use cases.
-> 
-> I am not sure there is a standard. Do we 'support' driver domains with any sort of tools API or do they really just have to notice things via xenstore? I agree Linux running as a driver domain could indeed use udev.
+Thanks, as there are things happening in the GPIO subsystem I
+have put this one patch on an immutable branch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-devm-gpiod-get-parent-array
 
-I intend in no way to break projects like Qubes. Disaggregation is
-one of the very big advantages of Xen over KVM, Hyper-V and VMWare.
-We should not give that up "just to get rid of some code". Period.
+Please ask the maintainer (I guess Lee?) to pull this into wherever
+the rest of the patches should be merged if you want patches beyond
+this point to be applied for the next (v5.6) merge window, then this
+patch is not needed in the series.
 
-> 
->>
->>>
->>> Aside from the udev kicks though, I still think the hotplug-status/ring
->> state interaction is just bogus anyway. As I said in a previous thread,
->> the hotplug-status ought to be indicated as carrier status, if at all, so
->> I still think all that code ought to go.
->>
->> I agree regarding the future interface, but with the carrier state just
->> being in the plans to be added now, it is clearly too early to remove
->> the code with that reasoning.
-> 
-> I don't think so. Like I said, I think the hotplug status has nothing to do with the state of the shared ring. Even with the code as-is, nothing informs the frontend if the netif is subsequently closed or re-plumbed, so why must we continue to maintain this code? AFAICT it is just not fit for purpose.
-
-If it is being used that way we need to continue supporting it.
-
-
-Juergen
+Yours,
+Linus Walleij
