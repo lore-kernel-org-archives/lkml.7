@@ -2,114 +2,112 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EDCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4834C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6513E20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A413B22B48
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576472295;
+	bh=NFCDm0J/sj2gQThOrMv49pIL9bZiKnIMUEtSP1Mu9Co=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lOdzxLnb6LDON9yjMswn7MBz4gxrIoq2zHlfRlCHXEGW+Vh0wZSUitcLufpy61vzV
+	 fa6W7xitYTKHheNjgDJAeQeKtdC82dZqJkd0Y9/mPLvaA7lHCc3ppRDePeR8UPdIni
+	 ex9zK8SyU91Czifkbg4YBliMS5NAIpJz+RCrP30E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfLPE4x (ORCPT
+        id S1726808AbfLPE6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:56:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:39820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfLPE4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:56:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67E561007;
-        Sun, 15 Dec 2019 20:56:51 -0800 (PST)
-Received: from [10.163.1.75] (unknown [10.163.1.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158D03F718;
-        Sun, 15 Dec 2019 20:56:09 -0800 (PST)
-Subject: Re: [PATCH V11] mm/debug: Add tests validating architecture page
- table helpers
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d433f5a8-20a5-2862-8228-9ca72633b530@arm.com>
-Date:   Mon, 16 Dec 2019 10:27:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 15 Dec 2019 23:58:14 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:48195 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfLPE6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 23:58:14 -0500
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id xBG4vxJo014459;
+        Mon, 16 Dec 2019 13:58:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xBG4vxJo014459
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576472280;
+        bh=Dq88weXkzpxSO5QZBRSpaBLmC889uRll48tmSqUd+dI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ISSFpAE83YjJuao9B9hmKcViGQrZHFKHU+7NJKWH/x3SjUXVPyELSSuJPNr8E4ZRt
+         VTehOLYPmQ72hdgEKx9elwdROWzYPAlh8nBfEc+SNez3m/xrqcbIAGFiHhR+jFaH2/
+         gwWWX25jO/aUxclHWzuE5YgUjRbd6G/B5y+MwmX88eZjrKd0/QlP17sO9Q8ofbQbYv
+         lMk0rAnXP6Et5deFG2kHQcSRM9FZzmZUkrgJLAVQbGHnvCHYZmi98pVSZsVTZWp935
+         mahec60Wn1374Oi5xSaVxoy9bWJrLWIe5ljpiCkdwlUOlfJJCtkAbxgHXhAguyc4NS
+         ddw6qsWkitgIw==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id o42so1619960uad.10;
+        Sun, 15 Dec 2019 20:58:00 -0800 (PST)
+X-Gm-Message-State: APjAAAWRLWX0V6BWCgiatx89s/fsz/pMxGE+rzBZgMMkrv3//yrLFmco
+        FZn/zwr/kMqrOA6pQPOnMiaxZFf2dfCHghxI3FA=
+X-Google-Smtp-Source: APXvYqxuSu6UowRbWZfICDzasoVnUy8YTI38SoCo1hsIG/HEjPxaMfDL5kwzOdOdrq588Hlg2yXBrCCQjD9M7jia+zQ=
+X-Received: by 2002:ab0:63c7:: with SMTP id i7mr20713722uap.109.1576472279037;
+ Sun, 15 Dec 2019 20:57:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1575879069.git.tommyhebb@gmail.com>
+In-Reply-To: <cover.1575879069.git.tommyhebb@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 16 Dec 2019 13:57:23 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQFevjOu6bVhcfUwxCVH81WKs9O7fUH-Wa=7dF=cgwE2w@mail.gmail.com>
+Message-ID: <CAK7LNAQFevjOu6bVhcfUwxCVH81WKs9O7fUH-Wa=7dF=cgwE2w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] kconfig: rework symbol help text
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 9, 2019 at 5:19 PM Thomas Hebb <tommyhebb@gmail.com> wrote:
+>
+> This series fixes several issues with help text generated by Kconfig,
+> mainly affecting symbols that are defined in multiple places. Although
+> results of these patches are somewhat visible for the symbols in Linux,
+> what prompted me to write the series was working on U-Boot, which also
+> uses Kconfig and makes very heavy use of multiple definitions (e.g. for
+> overriding defaults). I have provided Linux examples where I could find
+> them, but the example for the biggest patch (the first one) is taken
+> from U-Boot because it was more illustrative than anything I could find
+> in Linux.
+
+Nice patch set.
+Thanks for sending it to kbuild ML first
+(then you or somebody else will backport it to U-Boot)
 
 
-On 12/03/2019 02:48 PM, Anshuman Khandual wrote:
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
-> 
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page
-> and validating them.
-> 
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
-> 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
-> 
-> Folks interested in making sure that a given platform's page table helpers
-> conform to expected generic MM semantics should enable the above config
-> which will just trigger this test during boot. Any non conformity here will
-> be reported as an warning which would need to be fixed. This test will help
-> catch any changes to the agreed upon semantics expected from generic MM and
-> enable platforms to accommodate it thereafter.
+BTW, talking about U-Boot, it abuses the multi-definition feature too much.
+This always causes broken dependency when U-Boot migrate
+CONFIG options to Kconfig.  :-/
 
-Any updates on this ?
+For my arm64 boards, I used CONFIG_POSITION_INDEPENDENT
+instead of coping with CONFIG_SYS_TEXT_BASE mess...
+
+
+
+> Thomas Hebb (4):
+>   kconfig: list all definitions of a symbol in help text
+>   kconfig: don't crash on NULL expressions in expr_eq()
+>   kconfig: distinguish between dependencies and visibility in help text
+>   kconfig: fix nesting of symbol help text
+>
+>  scripts/kconfig/expr.c |  8 +++--
+>  scripts/kconfig/expr.h |  1 +
+>  scripts/kconfig/menu.c | 75 ++++++++++++++++++++++++------------------
+>  3 files changed, 50 insertions(+), 34 deletions(-)
+>
+> --
+> 2.24.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
