@@ -2,53 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162F0C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6140C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68432082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D0220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519330;
-	bh=4FAopnWEW4sAmErItMkZw9/jbKecniXpe7hWz5Qlsvo=;
+	s=default; t=1576519331;
+	bh=jrxEsbjOLdg45dmCDYyophMwMPfemhlDqPyaE9j6xGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTMps+E7daY/c5WFN7ulDYDz7c2HEElGSGVCucAQY2vqFzndYxoSyzNHJ9hSgmhSE
-	 U+0x/MltGXxWcE/N3Fw5TSo2pr8lX4Hurccv4ygZJiQjezYylsPSRmZVOqnwItwCLP
-	 5IuUyhAsrRiiAwNWDAhnPZs85U+OpSwSEvSORpMM=
+	b=lmtugLl4xFEivPEmpWW76D+ReY/eB0c2P2Z0lg8Hzj4pMcp4tz0VO1QUrTd2Ai2Oi
+	 DXUVopV1RayghCBO+0IbDCtzECPNqnUNyNfzNjKllBqzb4J+CtvkNdIsKCynCgbNlt
+	 vCHHVaqqLtqTOIEdDtAHUC0yTZZUMc68XQM4i2AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfLPSCJ (ORCPT
+        id S1729299AbfLPSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37676 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbfLPSCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:04 -0500
+        id S1729027AbfLPSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F6F2082E;
-        Mon, 16 Dec 2019 18:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0B920726;
+        Mon, 16 Dec 2019 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519323;
-        bh=4FAopnWEW4sAmErItMkZw9/jbKecniXpe7hWz5Qlsvo=;
+        s=default; t=1576519326;
+        bh=jrxEsbjOLdg45dmCDYyophMwMPfemhlDqPyaE9j6xGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ySmp1m5NgKcB5r4a2vk3GwCSlPb+EAQAG8+RwXUmcs9Z47eTsb7ADHR8hGlQYqe6i
-         jsKakA/G/nbYniE8ZY/35w9BS1JTVmfessF+StJHwUT83g7za6Y4JIjxcFjmXGUHEc
-         eR6TuWyhbw3H4Kt9s7YSJmaFKAD95qOGnC+m0cYM=
+        b=y6wfGWHct+cMkkiuwVj4mnVO5hdqcl9fYkI4HFbtISvrIkGAyKOb6j9bN6kt5kOHF
+         pL0sD71BwmFpIxGGyao4ho4+NhHjcsm+YKQqEs0THZi5DFoqK4wa8tX3JEeXnSrvyP
+         rdLiQbeU7W+XjIxwluY8fOJbDhmkZqjhFKCiyN2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Stable@vger.kernel.org,
+        stable@vger.kernel.org,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 020/140] iio: humidity: hdc100x: fix IIO_HUMIDITYRELATIVE channel reporting
-Date:   Mon, 16 Dec 2019 18:48:08 +0100
-Message-Id: <20191216174755.991862615@linuxfoundation.org>
+Subject: [PATCH 4.19 021/140] iio: imu: inv_mpu6050: fix temperature reporting using bad unit
+Date:   Mon, 16 Dec 2019 18:48:09 +0100
+Message-Id: <20191216174756.161302520@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,34 +60,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lesiak <chris.lesiak@licor.com>
+From: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
 
-commit 342a6928bd5017edbdae376042d8ad6af3d3b943 upstream.
+commit 53eaa9c27fdc01b4f4d885223e29f97393409e7e upstream.
 
-The IIO_HUMIDITYRELATIVE channel was being incorrectly reported back
-as percent when it should have been milli percent. This is via an
-incorrect scale value being returned to userspace.
+Temperature should be reported in milli-degrees, not degrees. Fix
+scale and offset values to use the correct unit.
 
-Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Cc: <Stable@vger.kernel.org>
+This is a fix for an issue that has been present for a long time.
+The fixes tag reflects the point at which the code last changed in a
+fashion that would make this fix patch no longer apply.  Backports
+will be necessary to fix those elements that predate that patch.
+
+Fixes: 1615fe41a195 ("iio: imu: mpu6050: Fix FIFO layout for ICM20602")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/humidity/hdc100x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c |   23 ++++++++++++-----------
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |   16 ++++++++++++----
+ 2 files changed, 24 insertions(+), 15 deletions(-)
 
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -229,7 +229,7 @@ static int hdc100x_read_raw(struct iio_d
- 			*val2 = 65536;
- 			return IIO_VAL_FRACTIONAL;
- 		} else {
--			*val = 100;
-+			*val = 100000;
- 			*val2 = 65536;
- 			return IIO_VAL_FRACTIONAL;
- 		}
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -122,6 +122,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6050,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 1024,
++		.temp = {INV_MPU6050_TEMP_OFFSET, INV_MPU6050_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU6500_WHOAMI_VALUE,
+@@ -129,6 +130,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6500,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 512,
++		.temp = {INV_MPU6500_TEMP_OFFSET, INV_MPU6500_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU6515_WHOAMI_VALUE,
+@@ -136,6 +138,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6500,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 512,
++		.temp = {INV_MPU6500_TEMP_OFFSET, INV_MPU6500_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU6000_WHOAMI_VALUE,
+@@ -143,6 +146,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6050,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 1024,
++		.temp = {INV_MPU6050_TEMP_OFFSET, INV_MPU6050_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU9150_WHOAMI_VALUE,
+@@ -150,6 +154,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6050,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 1024,
++		.temp = {INV_MPU6050_TEMP_OFFSET, INV_MPU6050_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU9250_WHOAMI_VALUE,
+@@ -157,6 +162,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6500,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 512,
++		.temp = {INV_MPU6500_TEMP_OFFSET, INV_MPU6500_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_MPU9255_WHOAMI_VALUE,
+@@ -164,6 +170,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6500,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 512,
++		.temp = {INV_MPU6500_TEMP_OFFSET, INV_MPU6500_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_ICM20608_WHOAMI_VALUE,
+@@ -171,6 +178,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_6500,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 512,
++		.temp = {INV_ICM20608_TEMP_OFFSET, INV_ICM20608_TEMP_SCALE},
+ 	},
+ 	{
+ 		.whoami = INV_ICM20602_WHOAMI_VALUE,
+@@ -178,6 +186,7 @@ static const struct inv_mpu6050_hw hw_in
+ 		.reg = &reg_set_icm20602,
+ 		.config = &chip_config_6050,
+ 		.fifo_size = 1008,
++		.temp = {INV_ICM20608_TEMP_OFFSET, INV_ICM20608_TEMP_SCALE},
+ 	},
+ };
+ 
+@@ -478,12 +487,8 @@ inv_mpu6050_read_raw(struct iio_dev *ind
+ 
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		case IIO_TEMP:
+-			*val = 0;
+-			if (st->chip_type == INV_ICM20602)
+-				*val2 = INV_ICM20602_TEMP_SCALE;
+-			else
+-				*val2 = INV_MPU6050_TEMP_SCALE;
+-
++			*val = st->hw->temp.scale / 1000000;
++			*val2 = st->hw->temp.scale % 1000000;
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		default:
+ 			return -EINVAL;
+@@ -491,11 +496,7 @@ inv_mpu6050_read_raw(struct iio_dev *ind
+ 	case IIO_CHAN_INFO_OFFSET:
+ 		switch (chan->type) {
+ 		case IIO_TEMP:
+-			if (st->chip_type == INV_ICM20602)
+-				*val = INV_ICM20602_TEMP_OFFSET;
+-			else
+-				*val = INV_MPU6050_TEMP_OFFSET;
+-
++			*val = st->hw->temp.offset;
+ 			return IIO_VAL_INT;
+ 		default:
+ 			return -EINVAL;
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+@@ -109,6 +109,7 @@ struct inv_mpu6050_chip_config {
+  *  @reg:   register map of the chip.
+  *  @config:    configuration of the chip.
+  *  @fifo_size:	size of the FIFO in bytes.
++ *  @temp:	offset and scale to apply to raw temperature.
+  */
+ struct inv_mpu6050_hw {
+ 	u8 whoami;
+@@ -116,6 +117,10 @@ struct inv_mpu6050_hw {
+ 	const struct inv_mpu6050_reg_map *reg;
+ 	const struct inv_mpu6050_chip_config *config;
+ 	size_t fifo_size;
++	struct {
++		int offset;
++		int scale;
++	} temp;
+ };
+ 
+ /*
+@@ -224,16 +229,19 @@ struct inv_mpu6050_state {
+ #define INV_MPU6050_REG_UP_TIME_MIN          5000
+ #define INV_MPU6050_REG_UP_TIME_MAX          10000
+ 
+-#define INV_MPU6050_TEMP_OFFSET	             12421
+-#define INV_MPU6050_TEMP_SCALE               2941
++#define INV_MPU6050_TEMP_OFFSET	             12420
++#define INV_MPU6050_TEMP_SCALE               2941176
+ #define INV_MPU6050_MAX_GYRO_FS_PARAM        3
+ #define INV_MPU6050_MAX_ACCL_FS_PARAM        3
+ #define INV_MPU6050_THREE_AXIS               3
+ #define INV_MPU6050_GYRO_CONFIG_FSR_SHIFT    3
+ #define INV_MPU6050_ACCL_CONFIG_FSR_SHIFT    3
+ 
+-#define INV_ICM20602_TEMP_OFFSET	     8170
+-#define INV_ICM20602_TEMP_SCALE		     3060
++#define INV_MPU6500_TEMP_OFFSET              7011
++#define INV_MPU6500_TEMP_SCALE               2995178
++
++#define INV_ICM20608_TEMP_OFFSET	     8170
++#define INV_ICM20608_TEMP_SCALE		     3059976
+ 
+ /* 6 + 6 round up and plus 8 */
+ #define INV_MPU6050_OUTPUT_DATA_SIZE         24
 
 
