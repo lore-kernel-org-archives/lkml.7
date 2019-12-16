@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0F7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10081206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2161C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520694;
-	bh=cOmbo4/qfrq+kgaJc3nh1SPtgkrkOMpxSTly4wgKa3g=;
+	s=default; t=1576520700;
+	bh=HfD4S4urxDR+cnXAVaoUFQrTjdrr5ccm1GZYo4sdWo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FESIUzy1iBRzyOhQ7xPlG6SNCLh36uWZWIRMABiim5Ujhh5+JRAjKbsmnWs/el6IA
-	 5xc/3QmOhnMBjjSBrEnWSIK3tJMsjYtKH17G2kKmbdJefVHmJmk2jhpzDYoqpGTbib
-	 JHE58KVoHxp+lHJl8tTgG2NVLekr+zDSjL0RdcGc=
+	b=iZTfa2py3DAtrk17S2A3N1cwcv9J5GlqgJKknxNYnBTgiisM1tyMJR9JT49FDCb7A
+	 I9QpOAeZddq0RpCYzf64lxpOpAZ8seUUFcCKDF2pVXt5iQPt4wBsggPO+yR8+LUhCa
+	 SKr05MPYVu3yKigd34tkv9VluTqumweschkD3gDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbfLPSYx (ORCPT
+        id S1731988AbfLPSY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:24:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731853AbfLPSSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:50 -0500
+        id S1731568AbfLPSSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:18:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EEE4206EC;
-        Mon, 16 Dec 2019 18:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE1AE2082E;
+        Mon, 16 Dec 2019 18:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520330;
-        bh=cOmbo4/qfrq+kgaJc3nh1SPtgkrkOMpxSTly4wgKa3g=;
+        s=default; t=1576520325;
+        bh=HfD4S4urxDR+cnXAVaoUFQrTjdrr5ccm1GZYo4sdWo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XGMhdAKSZ1D2br1IABKfdYkX7zhevwNbtk8QYqJPRyv0vjVSLlRkof1YW69+yc9kM
-         ROwOKg3r27U4MpQWPm2MgF5HJhrRCELh4sVIW/ZRwYUPkGwXtRuQxkiliBPteBTq7G
-         +OVETrfwct+p5ICF+z7mEGaTK292qS6HqBlY/aVY=
+        b=JFhdQ/2uP4cgkdawajs7N6902V2LGotOW4iWzF9lrdZoUnJaigt4J1TM1asOzl88B
+         ENL6w8i1iuZZw4x4TVdyobk57tnn14U+emVcDjgqoLHNA7uCRvjnwJ6id164llMri3
+         d23fUb8+ALtQ+KfH6vWF5L4lSyysQrMnJq9lkGEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 5.4 110/177] erofs: zero out when listxattr is called with no xattr
-Date:   Mon, 16 Dec 2019 18:49:26 +0100
-Message-Id: <20191216174842.033203617@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 108/177] cpuidle: teo: Fix "early hits" handling for disabled idle states
+Date:   Mon, 16 Dec 2019 18:49:24 +0100
+Message-Id: <20191216174841.784914948@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,42 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 926d1650176448d7684b991fbe1a5b1a8289e97c upstream.
+commit 159e48560f51d9c2aa02d762a18cd24f7868ab27 upstream.
 
-As David reported [1], ENODATA returns when attempting
-to modify files by using EROFS as an overlayfs lower layer.
+The TEO governor uses idle duration "bins" defined in accordance with
+the CPU idle states table provided by the driver, so that each "bin"
+covers the idle duration range between the target residency of the
+idle state corresponding to it and the target residency of the closest
+deeper idle state.  The governor collects statistics for each bin
+regardless of whether or not the idle state corresponding to it is
+currently enabled.
 
-The root cause is that listxattr could return unexpected
--ENODATA by mistake for inodes without xattr. That breaks
-listxattr return value convention and it can cause copy
-up failure when used with overlayfs.
+In particular, the "early hits" metric measures the likelihood of a
+situation in which the idle duration measured after wakeup falls into
+to given bin, but the time till the next timer (sleep length) falls
+into a bin corresponding to one of the deeper idle states.  It is
+used when the "hits" and "misses" metrics indicate that the state
+"matching" the sleep length should not be selected, so that the state
+with the maximum "early hits" value is selected instead of it.
 
-Resolve by zeroing out if no xattr is found for listxattr.
+If the idle state corresponding to the given bin is disabled, it
+cannot be selected and if it turns out to be the one that should be
+selected, a shallower idle state needs to be used instead of it.
+Nevertheless, the metrics collected for the bin corresponding to it
+are still valid and need to be taken into account as though that
+state had not been disabled.
 
-[1] https://lore.kernel.org/r/CAEvUa7nxnby+rxK-KRMA46=exeOMApkDMAV08AjMkkPnTPV4CQ@mail.gmail.com
-Link: https://lore.kernel.org/r/20191201084040.29275-1-hsiangkao@aol.com
-Fixes: cadf1ccf1b00 ("staging: erofs: add error handling for xattr submodule")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+As far as the "early hits" metric is concerned, teo_select() tries to
+take disabled states into account, but the state index corresponding
+to the maximum "early hits" value computed by it may be incorrect.
+Namely, it always uses the index of the previous maximum "early hits"
+state then, but there may be enabled idle states closer to the
+disabled one in question.  In particular, if the current candidate
+state (whose index is the idx value) is closer to the disabled one
+and the "early hits" value of the disabled state is greater than the
+current maximum, the index of the current candidate state (idx)
+should replace the "maximum early hits state" index.
+
+Modify the code to handle that case correctly.
+
+Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: 5.1+ <stable@vger.kernel.org> # 5.1+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/erofs/xattr.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpuidle/governors/teo.c |   35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -649,6 +649,8 @@ ssize_t erofs_listxattr(struct dentry *d
- 	struct listxattr_iter it;
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -277,18 +277,35 @@ static int teo_select(struct cpuidle_dri
+ 			hits = cpu_data->states[i].hits;
+ 			misses = cpu_data->states[i].misses;
  
- 	ret = init_inode_xattrs(d_inode(dentry));
-+	if (ret == -ENOATTR)
-+		return 0;
- 	if (ret)
- 		return ret;
++			if (early_hits >= cpu_data->states[i].early_hits ||
++			    idx < 0)
++				continue;
++
++			/*
++			 * If the current candidate state has been the one with
++			 * the maximum "early hits" metric so far, the "early
++			 * hits" metric of the disabled state replaces the
++			 * current "early hits" count to avoid selecting a
++			 * deeper state with lower "early hits" metric.
++			 */
++			if (max_early_idx == idx) {
++				early_hits = cpu_data->states[i].early_hits;
++				continue;
++			}
++
+ 			/*
+-			 * If the "early hits" metric of a disabled state is
+-			 * greater than the current maximum, it should be taken
+-			 * into account, because it would be a mistake to select
+-			 * a deeper state with lower "early hits" metric.  The
+-			 * index cannot be changed to point to it, however, so
+-			 * just increase the "early hits" count alone and let
+-			 * the index still point to a shallower idle state.
++			 * The current candidate state is closer to the disabled
++			 * one than the current maximum "early hits" state, so
++			 * replace the latter with it, but in case the maximum
++			 * "early hits" state index has not been set so far,
++			 * check if the current candidate state is not too
++			 * shallow for that role.
+ 			 */
+-			if (max_early_idx >= 0 &&
+-			    early_hits < cpu_data->states[i].early_hits)
++			if (!(tick_nohz_tick_stopped() &&
++			      drv->states[idx].target_residency < TICK_USEC)) {
+ 				early_hits = cpu_data->states[i].early_hits;
++				max_early_idx = idx;
++			}
  
+ 			continue;
+ 		}
 
 
