@@ -2,122 +2,91 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DB8C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B72C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF1324680
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RT6fMZIf"
+	by mail.kernel.org (Postfix) with ESMTP id B9119206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521910;
+	bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EZxli7Gs0YVu4D8oUls4BBj6knkQrbOEMogt9NSQexZRD/FIVvR6ncMi0RalHDetN
+	 kyNzEe4m3Am6UABeLkZgjtI/vqkvMNwDUN/FOHtQ2IrV1JdelZW0fRFX1hYSnsKmt8
+	 ZW96tnDSDCVubzLk5YxanD2/7g0ojxZLMDd05haE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfLPSpE (ORCPT
+        id S1727313AbfLPR5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:45:04 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49103 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728015AbfLPSpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:45:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576521901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TRtADKzTFs1Qp6frXK2BKRNuHXrenGJCtn+oRTbET5s=;
-        b=RT6fMZIfAyU0ajEDL3GPn5tjwkaJqJB6b/FFZAJfZV9+J43I5eQpv60cZQSsL1pXpFmt0J
-        HVw0HENZLF6tXmcCocKSs7vsVrPDeeEKniIttJ7Bj99InPoruMRofFM2zf21z91Y97PRUS
-        SDo2khm8++EGVHCV4eNVXyv5dWrHDuo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-spawUSm_O2mMRRbRhFQ_Cw-1; Mon, 16 Dec 2019 13:44:59 -0500
-X-MC-Unique: spawUSm_O2mMRRbRhFQ_Cw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 16 Dec 2019 12:57:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728524AbfLPR5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:44 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60EB8800D41;
-        Mon, 16 Dec 2019 18:44:58 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 873A619427;
-        Mon, 16 Dec 2019 18:44:54 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
-From:   Waiman Long <longman@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        aneesh.kumar@linux.ibm.com, Jarod Wilson <jarod@redhat.com>
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
- <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
- <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
- <20191212190427.ouyohviijf5inhur@linux-p48b>
- <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
- <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
- <20191216132658.GG30281@dhcp22.suse.cz>
- <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
-Organization: Red Hat
-Message-ID: <21a92649-bb9f-b024-e52b-4ce9355f973b@redhat.com>
-Date:   Mon, 16 Dec 2019 13:44:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3EB21582;
+        Mon, 16 Dec 2019 17:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519063;
+        bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=le8qzr1KoaBIhDG0vTTjDC5COLDgHFvPey+ucJC6eMQEbAXD07fpjfZzSPipwRFEx
+         ec9gbL7OmR8ZJ+tw5QEvMtxc0MudWp1FJeGuI4yB6g+TVcHmYVBSSKQ6ZEBodA6bO1
+         lFvuz7vARrAmNb0bt0QYxOXTKputjB6mXpI7BjAI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>
+Subject: [PATCH 4.14 179/267] usb: core: urb: fix URB structure initialization function
+Date:   Mon, 16 Dec 2019 18:48:25 +0100
+Message-Id: <20191216174912.308525246@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 10:38 AM, Waiman Long wrote:
-> On 12/16/19 8:26 AM, Michal Hocko wrote:
->> On Thu 12-12-19 15:52:20, Waiman Long wrote:
->>> On 12/12/19 2:22 PM, Mike Kravetz wrote:
->>>> On 12/12/19 11:04 AM, Davidlohr Bueso wrote:
->>>>> There have been deadlock reports[1, 2] where put_page is called
->>>>> from softirq context and this causes trouble with the hugetlb_lock,
->>>>> as well as potentially the subpool lock.
->>>>>
->>>>> For such an unlikely scenario, lets not add irq dancing overhead
->>>>> to the lock+unlock operations, which could incur in expensive
->>>>> instruction dependencies, particularly when considering hard-irq
->>>>> safety. For example PUSHF+POPF on x86.
->>>>>
->>>>> Instead, just use a workqueue and do the free_huge_page() in regular
->>>>> task context.
->>>>>
->>>>> [1] https://lore.kernel.org/lkml/20191211194615.18502-1-longman@redhat.com/
->>>>> [2] https://lore.kernel.org/lkml/20180905112341.21355-1-aneesh.kumar@linux.ibm.com/
->>>>>
->>>>> Reported-by: Waiman Long <longman@redhat.com>
->>>>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>>>> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
->>>> Thank you Davidlohr.
->>>>
->>>> The patch does seem fairly simple and straight forward.  I need to brush up
->>>> on my workqueue knowledge to provide a full review.
->>>>
->>>> Longman,
->>>> Do you have a test to reproduce the issue?  If so, can you try running with
->>>> this patch.
->>> Yes, I do have a test that can reproduce the issue. I will run it with
->>> the patch and report the status tomorrow.
->> Can you extract guts of the testcase and integrate them into hugetlb
->> test suite?
+From: Emiliano Ingrassia <ingrassia@epigenesys.com>
 
-BTW, what hugetlb test suite are you talking about?
+commit 1cd17f7f0def31e3695501c4f86cd3faf8489840 upstream.
 
-Cheers,
-Longman
+Explicitly initialize URB structure urb_list field in usb_init_urb().
+This field can be potentially accessed uninitialized and its
+initialization is coherent with the usage of list_del_init() in
+usb_hcd_unlink_urb_from_ep() and usb_giveback_urb_bh() and its
+explicit initialization in usb_hcd_submit_urb() error path.
+
+Signed-off-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191127160355.GA27196@ingrassia.epigenesys.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/urb.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -45,6 +45,7 @@ void usb_init_urb(struct urb *urb)
+ 	if (urb) {
+ 		memset(urb, 0, sizeof(*urb));
+ 		kref_init(&urb->kref);
++		INIT_LIST_HEAD(&urb->urb_list);
+ 		INIT_LIST_HEAD(&urb->anchor_list);
+ 	}
+ }
+
 
