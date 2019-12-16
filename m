@@ -2,244 +2,114 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B27C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EDCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E587920725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576471908;
-	bh=+BSPgE5tR/wubr4zWKkwvTBF8pEZJbWpzkM6j64q/6I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j5Sq+V6lUDbEWy6NMsHtM/SG7042nONf8GkiL0CoWruUBgZujhV1T63ZN78FI0Qu3
-	 +R4P9FCuqid+PNS8ZcIPB23fY8ZB9K2K6G/n64hT+eInt5Y7uAJBUOGjzINIHjUTGW
-	 FjULYwqo6gFe5Ded1OUTgz8tGGS/G92Jsw2MdAes=
+	by mail.kernel.org (Postfix) with ESMTP id 6513E20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfLPEvq (ORCPT
+        id S1726798AbfLPE4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:51:46 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:21257 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfLPEvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:51:46 -0500
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xBG4pRWG032169;
-        Mon, 16 Dec 2019 13:51:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBG4pRWG032169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576471888;
-        bh=6LB9JX5u9pNojk2+Km2rVNYq+Xn8ESikPl8Zon4CPgg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e7VDOjpeBricUP/3td5eqDEasGLNdbXilA3H5/tSY2XaddDGa6w5dXE23R5YfXowN
-         nULVPfiXSjY1pIkRk+PECpHejIPdI69wfkWO0AnzZL8mc//bAF1Jm6FMGkeu90CrdM
-         rj+zAHcZ5LJANvySkZHwyBwCEfeb4fPBfSO9AcEeshXYbkmP2+raeJWgq/UNCwrbZw
-         0SWOsZScyFPfk+zA9aTfNj6LvnqELtHisjWEfeJFePe+qYhlaziZXXvyj83E7hjYA6
-         kPzKAX6BLxmvvcu3iDzU4Ss1qZoDy519gNAkhNMODphH4Rc6OfHtR2CWyzyGsOYUZG
-         H8my0ikK1YaVg==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id p6so3313589vsj.11;
-        Sun, 15 Dec 2019 20:51:28 -0800 (PST)
-X-Gm-Message-State: APjAAAXj0p0nQm1Y4X9VSkJtCdSomBuv2lP0daUxkCoDnuV+bSL5/343
-        VjS93hw4/8unl5K0iOOcp1YMZgKr1/rZ1Dsc8oA=
-X-Google-Smtp-Source: APXvYqyKu66A8VDllEdF/QRMjRmV9/NzixNZFUU1mkroxmDMqBPCkVdsyXl/FGBozMrbhcSwAZ95oAxKfSa2b1sJphM=
-X-Received: by 2002:a67:b648:: with SMTP id e8mr14104264vsm.54.1576471887217;
- Sun, 15 Dec 2019 20:51:27 -0800 (PST)
+        Sun, 15 Dec 2019 23:56:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:39820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbfLPE4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 23:56:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67E561007;
+        Sun, 15 Dec 2019 20:56:51 -0800 (PST)
+Received: from [10.163.1.75] (unknown [10.163.1.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158D03F718;
+        Sun, 15 Dec 2019 20:56:09 -0800 (PST)
+Subject: Re: [PATCH V11] mm/debug: Add tests validating architecture page
+ table helpers
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d433f5a8-20a5-2862-8228-9ca72633b530@arm.com>
+Date:   Mon, 16 Dec 2019 10:27:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <cover.1575879069.git.tommyhebb@gmail.com> <9d43c96787ecbe2a3f2917483bbc61e378a1a7cf.1575879069.git.tommyhebb@gmail.com>
-In-Reply-To: <9d43c96787ecbe2a3f2917483bbc61e378a1a7cf.1575879069.git.tommyhebb@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 16 Dec 2019 13:50:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARSJ7kgmcLed7tFj774Lpn7hp94273h71Y8xrTvGoRY+A@mail.gmail.com>
-Message-ID: <CAK7LNARSJ7kgmcLed7tFj774Lpn7hp94273h71Y8xrTvGoRY+A@mail.gmail.com>
-Subject: Re: [PATCH 3/4] kconfig: distinguish between dependencies and
- visibility in help text
-To:     Thomas Hebb <tommyhebb@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 5:19 PM Thomas Hebb <tommyhebb@gmail.com> wrote:
->
-> Kconfig makes a distinction between dependencies (defined by "depends
-> on" expressions and enclosing "if" blocks) and visibility (which
-> includes all dependencies, but also includes inline "if" expressions of
-> individual properties as well as, for prompts, "visible if" expressions
-> of enclosing menus).
->
-> Before bcdedcc1afd6 ("menuconfig: print more info for symbol without
-> prompts", the "Depends on" lines of a symbol's help text indicated the
-> visibility of the prompt property they appeared under. After
-> bcdedcc1afd, there was always only a single "Depends on" line, which
-> indicated the visibility of the first P_SYMBOL property of the symbol.
-> Since P_SYMBOLs never have inline if expressions, this was in effect the
-> same as the dependencies of the menu item that the P_SYMBOL was attached
-> to.
->
-> Neither of these situations accurately conveyed the dependencies of a
-> symbol--the first because it was actually the visibility, and the second
-> because it only showed the dependencies from a single definition.
-
-Hmm, OK.
-
-Commit bcdedcc1afd6 seemed to fix it as a side-effect,
-but you broke it by 1/4, then fixed it again by 3/4.
 
 
-Sample code:
+On 12/03/2019 02:48 PM, Anshuman Khandual wrote:
+> This adds tests which will validate architecture page table helpers and
+> other accessors in their compliance with expected generic MM semantics.
+> This will help various architectures in validating changes to existing
+> page table helpers or addition of new ones.
+> 
+> This test covers basic page table entry transformations including but not
+> limited to old, young, dirty, clean, write, write protect etc at various
+> level along with populating intermediate entries with next page table page
+> and validating them.
+> 
+> Test page table pages are allocated from system memory with required size
+> and alignments. The mapped pfns at page table levels are derived from a
+> real pfn representing a valid kernel text symbol. This test gets called
+> right after page_alloc_init_late().
+> 
+> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+> arm64. Going forward, other architectures too can enable this after fixing
+> build or runtime problems (if any) with their page table helpers.
+> 
+> Folks interested in making sure that a given platform's page table helpers
+> conform to expected generic MM semantics should enable the above config
+> which will just trigger this test during boot. Any non conformity here will
+> be reported as an warning which would need to be fixed. This test will help
+> catch any changes to the agreed upon semantics expected from generic MM and
+> enable platforms to accommodate it thereafter.
 
-menu "bar"
-       visible if BAR
-       depends on BAZ
-
-config FOO
-       bool "foo"
-
-endmenu
-
-
-Help of FOO:
-
-Before bcdedcc1afd6  ->Depends on: BAZ && BAR
-After    bcdedcc1afd6 -> Depends on: BAZ
-After   1/4                   -> Depends on: BAZ && BAR
-After   3/4                   -> Depends on: BAZ
-
-
-
-I think "Depends on BAZ" is correct
-since BAR only affects the visibility of the prompt.
-
-
-In order to not break anything,
-maybe, does it make sense to re-order, like this?
-
-2/4, 3/4, 1/4, 4/4
-
-
-
-> Now that we print a "Depends on" line for every definition (regardless
-> of whether or not it has a prompt), we can do better: this patch
-> switches the "Depends on" line for prompts to show the real dependencies
-> of the corresponding menu item and additionally adds a "Visible if" line
-> that shows the visibility only if the visibility is different from the
-> dependencies (which it isn't for most prompts in Linux).
->
-> Before:
->
->   Symbol: THUMB2_KERNEL [=n]
->   Type  : bool
->   Defined with prompt at arch/arm/Kconfig:1417
->     Prompt: Compile the kernel in Thumb-2 mode
->     Depends on: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n] && !CPU_THUMBONLY [=n]
->     Location:
->       -> Kernel Features
->     Selects: ARM_UNWIND [=n]
->
-> After:
->
->    Symbol: THUMB2_KERNEL [=n]
->    Type  : bool
->    Defined with prompt at arch/arm/Kconfig:1417
->      Prompt: Compile the kernel in Thumb-2 mode
->      Depends on: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n]
->      Visible if: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n] && !CPU_THUMBONLY [=n]
->      Location:
->        -> Kernel Features
->      Selects: ARM_UNWIND [=n]
->
-> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-> ---
->  scripts/kconfig/expr.c |  3 +--
->  scripts/kconfig/expr.h |  1 +
->  scripts/kconfig/menu.c | 12 +++++++++++-
->  3 files changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-> index 8284444cc3fa..849c574a28d5 100644
-> --- a/scripts/kconfig/expr.c
-> +++ b/scripts/kconfig/expr.c
-> @@ -13,7 +13,6 @@
->
->  #define DEBUG_EXPR     0
->
-> -static int expr_eq(struct expr *e1, struct expr *e2);
->  static struct expr *expr_eliminate_yn(struct expr *e);
->
->  struct expr *expr_alloc_symbol(struct symbol *sym)
-> @@ -250,7 +249,7 @@ void expr_eliminate_eq(struct expr **ep1, struct expr **ep2)
->   * equals some operand in the other (operands do not need to appear in the same
->   * order), recursively.
->   */
-> -static int expr_eq(struct expr *e1, struct expr *e2)
-> +int expr_eq(struct expr *e1, struct expr *e2)
->  {
->         int res, old_count;
->
-> diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-> index 017843c9a4f4..d0f17bc9c4ef 100644
-> --- a/scripts/kconfig/expr.h
-> +++ b/scripts/kconfig/expr.h
-> @@ -301,6 +301,7 @@ struct expr *expr_alloc_or(struct expr *e1, struct expr *e2);
->  struct expr *expr_copy(const struct expr *org);
->  void expr_free(struct expr *e);
->  void expr_eliminate_eq(struct expr **ep1, struct expr **ep2);
-> +int expr_eq(struct expr *e1, struct expr *e2);
->  tristate expr_calc_value(struct expr *e);
->  struct expr *expr_trans_bool(struct expr *e);
->  struct expr *expr_eliminate_dups(struct expr *e);
-> diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-> index 59fead4b8823..4d0542875d70 100644
-> --- a/scripts/kconfig/menu.c
-> +++ b/scripts/kconfig/menu.c
-> @@ -718,7 +718,17 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
->                    prop->menu->file->name, prop->menu->lineno);
->         str_printf(r, "  Prompt: %s\n", prop->text);
->
-> -       get_dep_str(r, prop->visible.expr, "  Depends on: ");
-> +       get_dep_str(r, prop->menu->dep, "  Depends on: ");
-> +       /* Most prompts in Linux have visibility that exactly matches their
-> +        * dependencies. For these, we print only the dependencies to improve
-> +        * readability. However, prompts with inline "if" expressions and
-> +        * prompts with a parent that has a "visible if" expression have
-> +        * differing dependencies and visibility. In these rare cases, we
-> +        * print both. */
-> +       if (!expr_eq(prop->menu->dep, prop->visible.expr)) {
-> +               get_dep_str(r, prop->visible.expr, "  Visible if: ");
-> +       }
-> +
-
-
-The code looks correct to me.
-
-Just a nit: could you fix up the block comment style?
-
-
-    /*
-     *  Blah, blah...
-     *  Blah, blah...
-     */
-
-
-
-
->         menu = prop->menu->parent;
->         for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
->                 bool accessible = menu_is_visible(menu);
-> --
-> 2.24.0
->
-
-
---
-Best Regards
-
-Masahiro Yamada
+Any updates on this ?
