@@ -2,99 +2,86 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C076C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E02C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD462082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B5C2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521847;
-	bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ly+6QPLTxyKM8aWYHdE2tvP6/MhgqooruIbyUJPuTiLh7h3tYFaWBvNGL7lWMBRwM
-	 zPzAdajwnm8o0pMpekkeA6etN2JlC399JLu6kk73j9Ezv3uhVG8xpM64ycH1poDt55
-	 Gytk4mGiYzrCpUXf28miwX1Ruw6XuopcIMTygku0=
+	s=default; t=1576521854;
+	bh=jmhYJRlG0dVhezOLycSJD8VQfUhuInPDwJOoYXGVzn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KHNMhNHwlcZflpFyL/okazskhvdbz7HVThud/4AllCELNZNaedvSD1O0feXnnxluu
+	 pXz6T/tUXvQib9RDRB5cKFfJwzTvF7LJ8+ymm8L1b26i5/EvjUEj2r5GeFQ42bohSb
+	 d6FVLrMY55yfj/LhUoMC7VT+eu9HLW1YM7zkaFRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfLPR66 (ORCPT
+        id S1729565AbfLPSoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:58:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59188 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:44:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbfLPR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:52 -0500
+        id S1729337AbfLPSoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:44:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BF02166E;
-        Mon, 16 Dec 2019 17:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 429272082E;
+        Mon, 16 Dec 2019 18:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519132;
-        bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkMQsr5wm5oMpijvDXaTNm/DwkJgae3KYU8Z663qgwPQA6qJI+j72y/90GRnlEepm
-         xahw9rtAKy10hLrxFv2JOEioH/lsPGE9y/pUNkEj7e7ZNLOXVZbGZuBT7tl29/Mn9n
-         yC7LdGn3JNPk5MWpRYlQ72D5eX1+2iqrbPLCcZT8=
+        s=default; t=1576521849;
+        bh=jmhYJRlG0dVhezOLycSJD8VQfUhuInPDwJOoYXGVzn8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hlx3mIjQGjt/OM4U7YMpfQ/IBw4KdIAfd+p2dTIKm2/6sctwRcfNd9YFrZN9KDxkP
+         0lT+zBT6UMB2V8HIUv+sli0MMjHKCygNskJ2J2yJ0WB55IPaxTHIjW1jrzIyaPFn7e
+         MHzhAzvadS2tH0MHir97WjYxTlCdGrqF2oPC0vvI=
+Date:   Mon, 16 Dec 2019 19:44:07 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.14 208/267] media: bdisp: fix memleak on release
-Date:   Mon, 16 Dec 2019 18:48:54 +0100
-Message-Id: <20191216174913.930056503@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
-References: <20191216174848.701533383@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.19 139/140] mm/memory.c: fix a huge pud insertion race
+ during faulting
+Message-ID: <20191216184407.GA2411653@kroah.com>
+References: <20191216174747.111154704@linuxfoundation.org>
+ <20191216174829.761116794@linuxfoundation.org>
+ <MN2PR05MB6141D3283B5D4365CBA0A497A1510@MN2PR05MB6141.namprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR05MB6141D3283B5D4365CBA0A497A1510@MN2PR05MB6141.namprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+On Mon, Dec 16, 2019 at 06:36:57PM +0000, Thomas Hellstrom wrote:
+> Greg, Sasha
+> 
+> On 12/16/19 7:07 PM, Greg Kroah-Hartman wrote:
+> > From: Thomas Hellstrom <thellstrom@vmware.com>
+> >
+> > [ Upstream commit 625110b5e9dae9074d8a7e67dd07f821a053eed7 ]
+> >
+> 
+> Just repeating to make sure it's dropped, since it re-appeared again.
+> 
+> Could we please drop this patch from -stable for now. I'll re-nominate
+> for stable with the correct dependencies when it's seen some more
+> testing. It's depending on another patch and it's touching a code path
+> we definitely don't want to break with unforeseen corner-cases.
 
-commit 11609a7e21f8cea42630350aa57662928fa4dc63 upstream.
+Ugh, somehow Sasha added this one back in :(
 
-If a process is interrupted while accessing the video device and the
-device lock is contended, release() could return early and fail to free
-related resources.
+I'll go drop it again, thanks for noticing and letting me know.
 
-Note that the return value of the v4l2 release file operation is
-ignored.
-
-Fixes: 28ffeebbb7bd ("[media] bdisp: 2D blitter driver using v4l2 mem2mem framework")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/media/platform/sti/bdisp/bdisp-v4l2.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-@@ -651,8 +651,7 @@ static int bdisp_release(struct file *fi
- 
- 	dev_dbg(bdisp->dev, "%s\n", __func__);
- 
--	if (mutex_lock_interruptible(&bdisp->lock))
--		return -ERESTARTSYS;
-+	mutex_lock(&bdisp->lock);
- 
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 
-
-
+greg k-h
