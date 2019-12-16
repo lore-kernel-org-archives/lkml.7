@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62679C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A092EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796DD206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519182;
-	bh=+KemWMjYWqW5eB6SarUG9NR0qSuKGeP0JUY4NkGsTYY=;
+	s=default; t=1576519185;
+	bh=F4vKAhEQ4KlxcVKJdkavRAZ3Pz5qXOCTJJxmKXUdaDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uvYBw0+w10Yv2T2vIlCYbMizeym0AY6+KVL8AXRz8kkNnU7tMLzpRPVxttYDjt+jw
-	 L4ku0AUQ1XDwSA/9fhvD/eKLfTIL4/1xM904+lAXNGC3uRtRW5ITsLDfUPfUQNDl+t
-	 EVi9VN1aQ1e7Dsiv4Ouf8GWVnlcITzmY+pB/VVQg=
+	b=BAc/TDJsW6wezlgX6FdEf5+sbmKKll0MEt5PPaDD84y/nNjHg+Tkh58fhy00wICXL
+	 NbwexgsJqJPH07dth2cwXw+UVGa5X9TMg0+Hk4BJi5+kzOgqsv6q6dCMgNGC8jsNpD
+	 hQNH6AWbLRqGXPhSTLSZagNBe+SRaRfYr/Sc7heA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfLPR7k (ORCPT
+        id S1727862AbfLPR7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfLPR7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:38 -0500
+        id S1728806AbfLPR7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6877D206B7;
-        Mon, 16 Dec 2019 17:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3BD020700;
+        Mon, 16 Dec 2019 17:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519177;
-        bh=+KemWMjYWqW5eB6SarUG9NR0qSuKGeP0JUY4NkGsTYY=;
+        s=default; t=1576519180;
+        bh=F4vKAhEQ4KlxcVKJdkavRAZ3Pz5qXOCTJJxmKXUdaDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMHFhTyv/gHFxKH4QiYDR9drRMM1gfLMkve1poOZsGdmYUUXQ4gKF3aVJfsJv1vrK
-         HbR7r+100Tfxhp0GQU51xLe5AldxGF2KDt67O0l5QSQV/ILEEEuMkVytSYj/nlJSP8
-         Pk8baBFj/oKzheDdELtZ01tr+6Z76di1mL8iQ10g=
+        b=Mr2INVhi34wZlob0IneQyr1bZIgHntvrdEUAyfbix+rq/737TA6sSe/n3tebFJCnO
+         C/uttmr1Wg7IeTHTOL58ziUGnIW8v3ft2V2MWJsjcXHcs17Yj+wGwOvmOV6m8VVskB
+         XNO97sEaT3G7vbV7xWiEg+hxWegKPmaPUCst59ho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.14 225/267] ARM: dts: omap3-tao3530: Fix incorrect MMC card detection GPIO polarity
-Date:   Mon, 16 Dec 2019 18:49:11 +0100
-Message-Id: <20191216174914.882537948@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 226/267] ppdev: fix PPGETTIME/PPSETTIME ioctls
+Date:   Mon, 16 Dec 2019 18:49:12 +0100
+Message-Id: <20191216174914.938862823@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,45 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@bitmer.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 287897f9aaa2ad1c923d9875914f57c4dc9159c8 upstream.
+commit 998174042da229e2cf5841f574aba4a743e69650 upstream.
 
-The MMC card detection GPIO polarity is active low on TAO3530, like in many
-other similar boards. Now the card is not detected and it is unable to
-mount rootfs from an SD card.
+Going through the uses of timeval in the user space API,
+I noticed two bugs in ppdev that were introduced in the y2038
+conversion:
 
-Fix this by using the correct polarity.
+* The range check was accidentally moved from ppsettime to
+  ppgettime
 
-This incorrect polarity was defined already in the commit 30d95c6d7092
-("ARM: dts: omap3: Add Technexion TAO3530 SOM omap3-tao3530.dtsi") in v3.18
-kernel and later changed to use defined GPIO constants in v4.4 kernel by
-the commit 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags
-cell for OMAP2+ boards").
+* On sparc64, the microseconds are in the other half of the
+  64-bit word.
 
-While the latter commit did not introduce the issue I'm marking it with
-Fixes tag due the v4.4 kernels still being maintained.
+Fix both, and mark the fix for stable backports.
 
-Fixes: 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags cell for OMAP2+ boards")
-Cc: linux-stable <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: stable@vger.kernel.org
+Fixes: 3b9ab374a1e6 ("ppdev: convert to y2038 safe")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191108203435.112759-8-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap3-tao3530.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/ppdev.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/arch/arm/boot/dts/omap3-tao3530.dtsi
-+++ b/arch/arm/boot/dts/omap3-tao3530.dtsi
-@@ -224,7 +224,7 @@
- 	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&vmmc1>;
- 	vqmmc-supply = <&vsim>;
--	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
- 	bus-width = <8>;
- };
+--- a/drivers/char/ppdev.c
++++ b/drivers/char/ppdev.c
+@@ -623,20 +623,27 @@ static int pp_do_ioctl(struct file *file
+ 		if (copy_from_user(time32, argp, sizeof(time32)))
+ 			return -EFAULT;
  
++		if ((time32[0] < 0) || (time32[1] < 0))
++			return -EINVAL;
++
+ 		return pp_set_timeout(pp->pdev, time32[0], time32[1]);
+ 
+ 	case PPSETTIME64:
+ 		if (copy_from_user(time64, argp, sizeof(time64)))
+ 			return -EFAULT;
+ 
++		if ((time64[0] < 0) || (time64[1] < 0))
++			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] >>= 32;
++
+ 		return pp_set_timeout(pp->pdev, time64[0], time64[1]);
+ 
+ 	case PPGETTIME32:
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time32[0] = ts.tv_sec;
+ 		time32[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time32[0] < 0) || (time32[1] < 0))
+-			return -EINVAL;
+ 
+ 		if (copy_to_user(argp, time32, sizeof(time32)))
+ 			return -EFAULT;
+@@ -647,8 +654,9 @@ static int pp_do_ioctl(struct file *file
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time64[0] = ts.tv_sec;
+ 		time64[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time64[0] < 0) || (time64[1] < 0))
+-			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] <<= 32;
+ 
+ 		if (copy_to_user(argp, time64, sizeof(time64)))
+ 			return -EFAULT;
 
 
