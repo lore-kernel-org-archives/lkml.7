@@ -2,52 +2,56 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A523EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2431CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793D620CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04F92072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519276;
-	bh=NJg064XV9VxiRqIe6ZJtZWzA9SXnDH5W0GUGvDVe/SM=;
+	s=default; t=1576519280;
+	bh=NhTUkNUnWlUw5sRGxbnm9ErpzftSp+1qbWU5OtIbVwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaQXHQo9J8ptN4k4DorC+cCRE1yWHxUPERZrRaEzLO7RVyp0FPuEezPe5FuZ8bM8B
-	 yu3cFQBUKx63gtKC8dR3rn6lYtR4Zl4cBAJ9CndnM63wTSG3OvY6yE3+qjsEo0g44s
-	 oTL0nz/ZU17DE9e44AjjyQM+QgEqEsMjA9OO0URM=
+	b=mRFalnYYEUns0hzMTOGnE7ny/KnvpDSBGMcYSmvR0Gvqkl1OunQ4lQnZzydQMgky3
+	 9l0lAwxNwAdNXSG53lvZS2Xaj+BHadbIlTt0UbPqysg7K7yzDSSx7mQ+I8noUU7nJ1
+	 QXkMRiDctWEzOLuqhXUDso7iwH9b2xBbBG6SzQXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfLPSBP (ORCPT
+        id S1729133AbfLPSBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729108AbfLPSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:11 -0500
+        id S1727351AbfLPSBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA82E2166E;
-        Mon, 16 Dec 2019 18:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB6CE20CC7;
+        Mon, 16 Dec 2019 18:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519270;
-        bh=NJg064XV9VxiRqIe6ZJtZWzA9SXnDH5W0GUGvDVe/SM=;
+        s=default; t=1576519277;
+        bh=NhTUkNUnWlUw5sRGxbnm9ErpzftSp+1qbWU5OtIbVwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mf+06oVzmx0sc14EUCclB9FbGVqqi6wDXutmdnosqp1JwAG2YtpOqNAyqijiHTYi
-         6tASojo29jz25mL9PXaOvAkHGclP7zMPe/RZmZPDDXJYQ1F/LyVOQyTP6CQlZJyPl/
-         tysuKseiNqia0IVhmhUvoW9Ev0L+XFpciEU1M9dE=
+        b=aaDrEdYsK4xYuW87ra74wbykAyJRtctZYbRvPE6A2/M7yOBbDEPq3Z5n0UDiWJyPw
+         6qtakkCHZtNYJ42Fnm0w46JA0/8ZxsB2sWnhzmoP26s8Tj4alfDyptnCkdZVtRwEIZ
+         kD1gcfLMikfheMGILAu5FHKrYjQHe/q93bjiD9Nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 264/267] ext4: fix a bug in ext4_wait_for_tail_page_commit
-Date:   Mon, 16 Dec 2019 18:49:50 +0100
-Message-Id: <20191216174917.289112040@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 267/267] mm/memory.c: fix a huge pud insertion race during faulting
+Date:   Mon, 16 Dec 2019 18:49:53 +0100
+Message-Id: <20191216174917.502311675@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,120 +64,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-commit 565333a1554d704789e74205989305c811fd9c7a upstream.
+[ Upstream commit 3e0a2ff638b34f322eb170b1ae4515f61cfe3b14 ]
 
-No need to wait for any commit once the page is fully truncated.
-Besides, it may confuse e.g. concurrent ext4_writepage() with the page
-still be dirty (will be cleared by truncate_pagecache() in
-ext4_setattr()) but buffers has been freed; and then trigger a bug
-show as below:
+[ Upstream commit 625110b5e9dae9074d8a7e67dd07f821a053eed7 ]
 
-[   26.057508] ------------[ cut here ]------------
-[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
-...
-[   26.088130] Call trace:
-[   26.088695]  ext4_writepage+0x914/0xb28
-[   26.089541]  writeout.isra.4+0x1b4/0x2b8
-[   26.090409]  move_to_new_page+0x3b0/0x568
-[   26.091338]  __unmap_and_move+0x648/0x988
-[   26.092241]  unmap_and_move+0x48c/0xbb8
-[   26.093096]  migrate_pages+0x220/0xb28
-[   26.093945]  kernel_mbind+0x828/0xa18
-[   26.094791]  __arm64_sys_mbind+0xc8/0x138
-[   26.095716]  el0_svc_common+0x190/0x490
-[   26.096571]  el0_svc_handler+0x60/0xd0
-[   26.097423]  el0_svc+0x8/0xc
+A huge pud page can theoretically be faulted in racing with pmd_alloc()
+in __handle_mm_fault().  That will lead to pmd_alloc() returning an
+invalid pmd pointer.
 
-Run the procedure (generate by syzkaller) parallel with ext3.
+Fix this by adding a pud_trans_unstable() function similar to
+pmd_trans_unstable() and check whether the pud is really stable before
+using the pmd pointer.
 
-void main()
-{
-	int fd, fd1, ret;
-	void *addr;
-	size_t length = 4096;
-	int flags;
-	off_t offset = 0;
-	char *str = "12345";
+Race:
+  Thread 1:             Thread 2:                 Comment
+  create_huge_pud()                               Fallback - not taken.
+                        create_huge_pud()         Taken.
+  pmd_alloc()                                     Returns an invalid pointer.
 
-	fd = open("a", O_RDWR | O_CREAT);
-	assert(fd >= 0);
+This will result in user-visible huge page data corruption.
 
-	/* Truncate to 4k */
-	ret = ftruncate(fd, length);
-	assert(ret == 0);
+Note that this was caught during a code audit rather than a real
+experienced problem.  It looks to me like the only implementation that
+currently creates huge pud pagetable entries is dev_dax_huge_fault()
+which doesn't appear to care much about private (COW) mappings or
+write-tracking which is, I believe, a prerequisite for create_huge_pud()
+falling back on thread 1, but not in thread 2.
 
-	/* Journal data mode */
-	flags = 0xc00f;
-	ret = ioctl(fd, _IOW('f', 2, long), &flags);
-	assert(ret == 0);
-
-	/* Truncate to 0 */
-	fd1 = open("a", O_TRUNC | O_NOATIME);
-	assert(fd1 >= 0);
-
-	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
-					MAP_SHARED, fd, offset);
-	assert(addr != (void *)-1);
-
-	memcpy(addr, str, 5);
-	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
-}
-
-And the bug will be triggered once we seen the below order.
-
-reproduce1                         reproduce2
-
-...                            |   ...
-truncate to 4k                 |
-change to journal data mode    |
-                               |   memcpy(set page dirty)
-truncate to 0:                 |
-ext4_setattr:                  |
-...                            |
-ext4_wait_for_tail_page_commit |
-                               |   mbind(trigger bug)
-truncate_pagecache(clean dirty)|   ...
-...                            |
-
-mbind will call ext4_writepage() since the page still be dirty, and then
-report the bug since the buffers has been free. Fix it by return
-directly once offset equals to 0 which means the page has been fully
-truncated.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20191115115808.21181-2-thomas_os@shipmail.org
+Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hugepages")
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ include/asm-generic/pgtable.h | 25 +++++++++++++++++++++++++
+ mm/memory.c                   |  6 ++++++
+ 2 files changed, 31 insertions(+)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5305,11 +5305,15 @@ static void ext4_wait_for_tail_page_comm
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 0c21014a38f23..876826240dead 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -846,6 +846,31 @@ static inline int pud_trans_huge(pud_t pud)
+ }
+ #endif
  
- 	offset = inode->i_size & (PAGE_SIZE - 1);
- 	/*
--	 * All buffers in the last page remain valid? Then there's nothing to
--	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
--	 * blocksize case
-+	 * If the page is fully truncated, we don't need to wait for any commit
-+	 * (and we even should not as __ext4_journalled_invalidatepage() may
-+	 * strip all buffers from the page but keep the page dirty which can then
-+	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
-+	 * buffers). Also we don't need to wait for any commit if all buffers in
-+	 * the page remain valid. This is most beneficial for the common case of
-+	 * blocksize == PAGESIZE.
- 	 */
--	if (offset > PAGE_SIZE - i_blocksize(inode))
-+	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
- 		return;
- 	while (1) {
- 		page = find_lock_page(inode->i_mapping,
++/* See pmd_none_or_trans_huge_or_clear_bad for discussion. */
++static inline int pud_none_or_trans_huge_or_dev_or_clear_bad(pud_t *pud)
++{
++	pud_t pudval = READ_ONCE(*pud);
++
++	if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
++		return 1;
++	if (unlikely(pud_bad(pudval))) {
++		pud_clear_bad(pud);
++		return 1;
++	}
++	return 0;
++}
++
++/* See pmd_trans_unstable for discussion. */
++static inline int pud_trans_unstable(pud_t *pud)
++{
++#if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
++	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
++	return pud_none_or_trans_huge_or_dev_or_clear_bad(pud);
++#else
++	return 0;
++#endif
++}
++
+ #ifndef pmd_read_atomic
+ static inline pmd_t pmd_read_atomic(pmd_t *pmdp)
+ {
+diff --git a/mm/memory.c b/mm/memory.c
+index 24963eee4fb03..174252bd87df8 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4054,6 +4054,7 @@ static int __handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	vmf.pud = pud_alloc(mm, p4d, address);
+ 	if (!vmf.pud)
+ 		return VM_FAULT_OOM;
++retry_pud:
+ 	if (pud_none(*vmf.pud) && __transparent_hugepage_enabled(vma)) {
+ 		ret = create_huge_pud(&vmf);
+ 		if (!(ret & VM_FAULT_FALLBACK))
+@@ -4080,6 +4081,11 @@ static int __handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+ 	if (!vmf.pmd)
+ 		return VM_FAULT_OOM;
++
++	/* Huge pud page fault raced with pmd_alloc? */
++	if (pud_trans_unstable(vmf.pud))
++		goto retry_pud;
++
+ 	if (pmd_none(*vmf.pmd) && __transparent_hugepage_enabled(vma)) {
+ 		ret = create_huge_pmd(&vmf);
+ 		if (!(ret & VM_FAULT_FALLBACK))
+-- 
+2.20.1
+
 
 
