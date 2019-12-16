@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84DCC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99F7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9ED206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830F120717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520146;
-	bh=LmkIYTRoq1puurBJPSSi6hdYB2es2hW23ta6JZXP8dM=;
+	s=default; t=1576520149;
+	bh=p/wBT6mWqigW85wIsm9D/fhIeRga+NgjGzKYgeSLtn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfKfNkk5R4+jYFS7SUMjqeTYXMjaLqpaiNBMsxiV26yOtxYva4W6YB6Nh4P9r4BCl
-	 lErODV65YFFZROqrd1rgkliC3o0cESLHp2MW8XsuC9lFT0f/MXCe903tPtpzDq34WH
-	 XnrCyn1q/njK6X5dP+cnTp3EBA93ZfDC6//oeHdE=
+	b=gXYaBNpELD9TSAz6CosERQBbyfG5FdErRnjPU6kLBgitHgdwdmWxx81Ue8SUpJ3zT
+	 ZnMdofoCx/dCb3Bbc1xScGyGxaWVindnTMNhmK349ks5wgaQ5Wmzh22WCtyIblPhQr
+	 xG9g+2bErFdLHI29jDEDUEiuAemlrv13I2DfxcwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731425AbfLPSPp (ORCPT
+        id S1731434AbfLPSPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:15:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:15:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731227AbfLPSPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:40 -0500
+        id S1731423AbfLPSPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70857206EC;
-        Mon, 16 Dec 2019 18:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B909206E0;
+        Mon, 16 Dec 2019 18:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520139;
-        bh=LmkIYTRoq1puurBJPSSi6hdYB2es2hW23ta6JZXP8dM=;
+        s=default; t=1576520144;
+        bh=p/wBT6mWqigW85wIsm9D/fhIeRga+NgjGzKYgeSLtn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0JhXlgslmnVNsucXbc6sZ9pQSQpw9h5gj+btk7MHgF8+OEjtW7SNd4PusbWk1gqhT
-         7kPKotzo771YJRNkT3glxMDKSEohDbsSGD//gC5RVIeR6sZI2wUrv+adaS8OTxfdiT
-         E/4iv0nd35GaD7tnXBSR7c+P3JPrHiwUwgb8swP8=
+        b=XIRok3IZ3MhfvbcuU3t1n6QipUTVIIHslY7MTXu8TLXWF+4CTtWtUikon6CpR3W11
+         Wg9yW9GGwN6MNNBWNRxu06z2KE2h+h1cCS21hHBd+JE6WnK9zbOiknsg863LpCwQkA
+         cUFmWTjG4pRE3epE2jCLCXkS/1Gfzt4SZ4cJv9yg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 031/177] xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
-Date:   Mon, 16 Dec 2019 18:48:07 +0100
-Message-Id: <20191216174824.601464541@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH 5.4 033/177] interconnect: qcom: sdm845: Walk the list safely on node removal
+Date:   Mon, 16 Dec 2019 18:48:09 +0100
+Message-Id: <20191216174826.474653116@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,52 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
 
-commit 7ff11162808cc2ec66353fc012c58bb449c892c3 upstream.
+commit b29b8113bb41285eb7ed55ce0c65017b5c0240f7 upstream.
 
-xhci driver claims it needs XHCI_TRUST_TX_LENGTH quirk for both
-Broadcom/Cavium and a Renesas xHC controllers.
+As we will remove items off the list using list_del(), we need to use the
+safe version of list_for_each_entry().
 
-The quirk was inteded for handling false "success" complete event for
-transfers that had data left untransferred.
-These transfers should complete with "short packet" events instead.
-
-In these two new cases the false "success" completion is reported
-after a "short packet" if the TD consists of several TRBs.
-xHCI specs 4.10.1.1.2 say remaining TRBs should report "short packet"
-as well after the first short packet in a TD, but this issue seems so
-common it doesn't make sense to add the quirk for all vendors.
-
-Turn these events into short packets automatically instead.
-
-This gets rid of the  "The WARN Successful completion on short TX for
-slot 1 ep 1: needs XHCI_TRUST_TX_LENGTH quirk" warning in many cases.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Eli Billauer <eli.billauer@gmail.com>
-Reported-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Eli Billauer <eli.billauer@gmail.com>
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-6-mathias.nyman@linux.intel.com
+Fixes: b5d2f741077a ("interconnect: qcom: Add sdm845 interconnect provider driver")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: <stable@vger.kernel.org> # v5.3+
+Link: https://lore.kernel.org/r/20191212075332.16202-3-georgi.djakov@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/interconnect/qcom/sdm845.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -2377,7 +2377,8 @@ static int handle_tx_event(struct xhci_h
- 	case COMP_SUCCESS:
- 		if (EVENT_TRB_LEN(le32_to_cpu(event->transfer_len)) == 0)
- 			break;
--		if (xhci->quirks & XHCI_TRUST_TX_LENGTH)
-+		if (xhci->quirks & XHCI_TRUST_TX_LENGTH ||
-+		    ep_ring->last_td_was_short)
- 			trb_comp_code = COMP_SHORT_PACKET;
- 		else
- 			xhci_warn_ratelimited(xhci,
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -868,9 +868,9 @@ static int qnoc_remove(struct platform_d
+ {
+ 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
+ 	struct icc_provider *provider = &qp->provider;
+-	struct icc_node *n;
++	struct icc_node *n, *tmp;
+ 
+-	list_for_each_entry(n, &provider->nodes, node_list) {
++	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
+ 		icc_node_del(n);
+ 		icc_node_destroy(n->id);
+ 	}
 
 
