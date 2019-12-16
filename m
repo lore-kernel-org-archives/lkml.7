@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BEBC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2426C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8F721775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520044;
-	bh=xIAUMyEs4IxOo03+cfmn9uPZNxEon7WbX0KauaAyN3Q=;
+	s=default; t=1576520048;
+	bh=1r5YjeyGQ+rXDX+mIuVThFKde5JhDHGx5ysOG9BpUgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nq1XTZzIGwCif72Hai5wKXFu4fZ+6XwOmq/RSg3xLHjvKr/GPa5kUMAmBvcsy9QMm
-	 rlsEKgWWRF+k3gjhmLG8ktN5Uz/tgL8V7VfznXNgf+t0e3L76ah9Cfz+9NOGg6R4W9
-	 yc4+tNaOQ3bely57fv9dmN+0Zm0ZpC3Vj0TULqk0=
+	b=m80+ZI1lb0zB54TfUR1gp4W8mB2g8Pr1VCIn37FFrdo6X4LeCfKIVFa3JPB/cdZtB
+	 IICxakZsp1Td5mJ4fkfTE5ovXCCjdCEsLcVxaJatUtlR3SYQzwgLo9usT2QsjIP4IS
+	 N3gY9Om1Dp4GAOUl0r599O9eM1IiLTLqLtU78YUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731174AbfLPSOC (ORCPT
+        id S1731182AbfLPSOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730830AbfLPSNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:53 -0500
+        id S1731165AbfLPSN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53CAC207FF;
-        Mon, 16 Dec 2019 18:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDA621775;
+        Mon, 16 Dec 2019 18:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520032;
-        bh=xIAUMyEs4IxOo03+cfmn9uPZNxEon7WbX0KauaAyN3Q=;
+        s=default; t=1576520037;
+        bh=1r5YjeyGQ+rXDX+mIuVThFKde5JhDHGx5ysOG9BpUgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QyFdjh+ldUz+Q1BjNf5+CMjhhxKrB6+X4Si3iUgplfDCera+5ISqC6UgN99xYkLie
-         q55yZpEtqn8bLn0CYO7lDQVgQ6Hwsq18KIh0i4DCJNrmsSAdZ72cihGW9sQCiL/ij2
-         WhB2GV5EfpwuU3SkbMrDLnMC1JL5tfjDP3Eb721c=
+        b=v/0hiAv1TQqR2rn/PoioplPWlEw7vumgSOfZ168J6pbZAYRKY2pR/nDxdIkAQXbve
+         92uUF483iPCkc0PgM+WSuCvQFRsHwYf/J3/lsYlaoUabq3fDJr+HdG/8xNpHJ3+wEn
+         UJ3BCYTe/gUed5ML5VFP4gmMWyDFoE6NA0uIK7Hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Geoffray <ngeoffray@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Hugh Dickins <hughd@google.com>, Shuah Khan <shuah@kernel.org>,
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 170/180] mm, memfd: fix COW issue on MAP_PRIVATE and F_SEAL_FUTURE_WRITE mappings
-Date:   Mon, 16 Dec 2019 18:50:10 +0100
-Message-Id: <20191216174847.528262321@linuxfoundation.org>
+Subject: [PATCH 5.3 172/180] mm: memcg/slab: wait for !root kmem_cache refcnt killing on root kmem_cache destruction
+Date:   Mon, 16 Dec 2019 18:50:12 +0100
+Message-Id: <20191216174847.752140627@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,90 +64,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Geoffray <ngeoffray@google.com>
+From: Roman Gushchin <guro@fb.com>
 
-commit 05d351102dbe4e103d6bdac18b1122cd3cd04925 upstream.
+commit a264df74df38855096393447f1b8f386069a94b9 upstream.
 
-F_SEAL_FUTURE_WRITE has unexpected behavior when used with MAP_PRIVATE:
-A private mapping created after the memfd file that gets sealed with
-F_SEAL_FUTURE_WRITE loses the copy-on-write at fork behavior, meaning
-children and parent share the same memory, even though the mapping is
-private.
+Christian reported a warning like the following obtained during running
+some KVM-related tests on s390:
 
-The reason for this is due to the code below:
+    WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
+    Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
+    CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
+    Hardware name: IBM 2964 NC9 712 (LPAR)
+    Workqueue: events sysfs_slab_remove_workfn
+    Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
+               R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+    Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
+               0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
+               0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
+               0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
+    Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
+               0000001529746848: 47000700            bc         0,1792
+              #000000152974684c: a7f40001            brc        15,152974684e
+              >0000001529746850: a7f4fff2            brc        15,1529746834
+               0000001529746854: 0707                bcr        0,%r7
+               0000001529746856: 0707                bcr        0,%r7
+               0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
+               000000152974685e: a738ffff            lhi        %r3,-1
+    Call Trace:
+    ([<000003e009263d00>] 0x3e009263d00)
+     [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70
+     [<0000001529b04882>] kobject_put+0xaa/0xe8
+     [<000000152918cf28>] process_one_work+0x1e8/0x428
+     [<000000152918d1b0>] worker_thread+0x48/0x460
+     [<00000015291942c6>] kthread+0x126/0x160
+     [<0000001529b22344>] ret_from_fork+0x28/0x30
+     [<0000001529b2234c>] kernel_thread_starter+0x0/0x10
+    Last Breaking-Event-Address:
+     [<000000152974684c>] percpu_ref_exit+0x4c/0x58
+    ---[ end trace b035e7da5788eb09 ]---
 
-  static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        struct shmem_inode_info *info = SHMEM_I(file_inode(file));
+The problem occurs because kmem_cache_destroy() is called immediately
+after deleting of a memcg, so it races with the memcg kmem_cache
+deactivation.
 
-        if (info->seals & F_SEAL_FUTURE_WRITE) {
-                /*
-                 * New PROT_WRITE and MAP_SHARED mmaps are not allowed when
-                 * "future write" seal active.
-                 */
-                if ((vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_WRITE))
-                        return -EPERM;
+flush_memcg_workqueue() at the beginning of kmem_cache_destroy() is
+supposed to guarantee that all deactivation processes are finished, but
+failed to do so.  It waits for an rcu grace period, after which all
+children kmem_caches should be deactivated.  During the deactivation
+percpu_ref_kill() is called for non root kmem_cache refcounters, but it
+requires yet another rcu grace period to finish the transition to the
+atomic (dead) state.
 
-                /*
-                 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
-                 * read-only mapping, take care to not allow mprotect to revert
-                 * protections.
-                 */
-                vma->vm_flags &= ~(VM_MAYWRITE);
-        }
-        ...
-  }
+So in a rare case when not all children kmem_caches are destroyed at the
+moment when the root kmem_cache is about to be gone, we need to wait
+another rcu grace period before destroying the root kmem_cache.
 
-And for the mm to know if a mapping is copy-on-write:
+This issue can be triggered only with dynamically created kmem_caches
+which are used with memcg accounting.  In this case per-memcg child
+kmem_caches are created.  They are deactivated from the cgroup removing
+path.  If the destruction of the root kmem_cache is racing with the
+removal of the cgroup (both are quite complicated multi-stage
+processes), the described issue can occur.  The only known way to
+trigger it in the real life, is to unload some kernel module which
+creates a dedicated kmem_cache, used from different memory cgroups with
+GFP_ACCOUNT flag.  If the unloading happens immediately after calling
+rmdir on the corresponding cgroup, there is some chance to trigger the
+issue.
 
-  static inline bool is_cow_mapping(vm_flags_t flags)
-  {
-        return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
-  }
-
-The patch fixes the issue by making the mprotect revert protection
-happen only for shared mappings.  For private mappings, using mprotect
-will have no effect on the seal behavior.
-
-The F_SEAL_FUTURE_WRITE feature was introduced in v5.1 so v5.3.x stable
-kernels would need a backport.
-
-[akpm@linux-foundation.org: reflow comment, per Christoph]
-Link: http://lkml.kernel.org/r/20191107195355.80608-1-joel@joelfernandes.org
-Fixes: ab3948f58ff84 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
-Signed-off-by: Nicolas Geoffray <ngeoffray@google.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Shuah Khan <shuah@kernel.org>
+Link: http://lkml.kernel.org/r/20191129025011.3076017-1-guro@fb.com
+Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/shmem.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ mm/slab_common.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2198,11 +2198,14 @@ static int shmem_mmap(struct file *file,
- 			return -EPERM;
- 
- 		/*
--		 * Since the F_SEAL_FUTURE_WRITE seals allow for a MAP_SHARED
--		 * read-only mapping, take care to not allow mprotect to revert
--		 * protections.
-+		 * Since an F_SEAL_FUTURE_WRITE sealed memfd can be mapped as
-+		 * MAP_SHARED and read-only, take care to not allow mprotect to
-+		 * revert protections on such mappings. Do this only for shared
-+		 * mappings. For private mappings, don't need to mask
-+		 * VM_MAYWRITE as we still want them to be COW-writable.
- 		 */
--		vma->vm_flags &= ~(VM_MAYWRITE);
-+		if (vma->vm_flags & VM_SHARED)
-+			vma->vm_flags &= ~(VM_MAYWRITE);
- 	}
- 
- 	file_accessed(file);
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -904,6 +904,18 @@ static void flush_memcg_workqueue(struct
+ 	 * previous workitems on workqueue are processed.
+ 	 */
+ 	flush_workqueue(memcg_kmem_cache_wq);
++
++	/*
++	 * If we're racing with children kmem_cache deactivation, it might
++	 * take another rcu grace period to complete their destruction.
++	 * At this moment the corresponding percpu_ref_kill() call should be
++	 * done, but it might take another rcu grace period to complete
++	 * switching to the atomic mode.
++	 * Please, note that we check without grabbing the slab_mutex. It's safe
++	 * because at this moment the children list can't grow.
++	 */
++	if (!list_empty(&s->memcg_params.children))
++		rcu_barrier();
+ }
+ #else
+ static inline int shutdown_memcg_caches(struct kmem_cache *s)
 
 
