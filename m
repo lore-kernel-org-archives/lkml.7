@@ -2,62 +2,231 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B997C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8EBC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4CE206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E39206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLSGVXNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfLPKGg (ORCPT
+        id S1727215AbfLPKIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:06:36 -0500
-Received: from out28-75.mail.aliyun.com ([115.124.28.75]:46129 "EHLO
-        out28-75.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbfLPKGf (ORCPT
+        Mon, 16 Dec 2019 05:08:23 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32537 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727099AbfLPKIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:06:35 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3297215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0160889-0.000375421-0.983536;DS=CONTINUE|ham_system_inform|0.00381865-0.000386367-0.995795;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GICQvrI_1576490773;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GICQvrI_1576490773)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Mon, 16 Dec 2019 18:06:18 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
-        paul@crapouillou.net, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: [PATCH v2 0/2] Add I2C support for the Ingenic X1000 SoC
-Date:   Mon, 16 Dec 2019 18:06:09 +0800
-Message-Id: <1576490771-120353-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Mon, 16 Dec 2019 05:08:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576490900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=09JiSv25cdJaJ4KBuEFbebJuRN+Qs0ExALLgw9H0+YM=;
+        b=gLSGVXNVTlE/f9aq9j2GLoTYVkhS5oucCTPDOaQKvFhnhxyrj57teLqE4uC6VTZkc+snRS
+        Fots+TQnKdrfMwkvaHSxFRb0HWmS/msZvKsXwnqpP4m1dZ/ImnKGj84IlJWK/9YL31jwPf
+        Ielzg2/JIcZi5LBkeADAr3tr0LUGi20=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-F8TcbiyTOVCyF2pT696BMQ-1; Mon, 16 Dec 2019 05:08:19 -0500
+X-MC-Unique: F8TcbiyTOVCyF2pT696BMQ-1
+Received: by mail-wr1-f69.google.com with SMTP id v17so3471572wrm.17
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:08:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=09JiSv25cdJaJ4KBuEFbebJuRN+Qs0ExALLgw9H0+YM=;
+        b=c0Q9eUunuhJljU90Fb1fSphilU0vLMWntb5sGHYjhoH7i2z59o6t+RVBzgIFA19eGZ
+         UUWC2n54X2oRBDNRdYPkwfS6d9LVl1IyepXfEpNwCADm/SAu2kfLazOdm9rf3rbq3nhi
+         0AFbBMUOIKlwydh3/uSEfLLbQZRHU0OXw8zHA7ieL6ARE76q9TMwkojkq55mQBVmVmN9
+         DjcMNhSXlOYzY4/oLeHaI8oUc4lzp4du1zkSI3uh35BonUygNxDUkC0DJy8yojWBtdkE
+         9YmksXl/8f2jie5S0rG1CrEt5abUl9GKJKuYW8Rea/pWTXHXhL6qeAIyQNx2S4j3vFlX
+         3C4g==
+X-Gm-Message-State: APjAAAVUWAAuMGnuLzCfHj+3vPwi2UYkfhagkMl6LoCl7Vo4B04oUNut
+        9OLbqvpvRsB44kMQU6kixPxXDXDQkNETZoWmSJB4QhgEs9tj5OTbZJfav2pA9qYW/zYKbrpXhNj
+        o0lx3zc2MAjiIyDV0+CuS6nnD
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr28107085wmi.51.1576490898311;
+        Mon, 16 Dec 2019 02:08:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzSe+0hde9uu9y/6Xw0eqWx6m1WenCodQYxucyi2EicOiyc0vMVkWi/pULhbKmEDqNwkYYwsw==
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr28107055wmi.51.1576490897952;
+        Mon, 16 Dec 2019 02:08:17 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:cde8:2463:95a9:1d81? ([2001:b07:6468:f312:cde8:2463:95a9:1d81])
+        by smtp.gmail.com with ESMTPSA id q6sm22169932wrx.72.2019.12.16.02.08.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 02:08:17 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+References: <20191202201036.GJ4063@linux.intel.com>
+ <20191202211640.GF31681@xz-x1> <20191202215049.GB8120@linux.intel.com>
+ <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
+ <20191203184600.GB19877@linux.intel.com>
+ <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
+ <20191209215400.GA3352@xz-x1>
+ <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
+ <20191210155259.GD3352@xz-x1>
+ <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+ <20191215172124.GA83861@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
+Date:   Mon, 16 Dec 2019 11:08:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191215172124.GA83861@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1->v2:
-Add code to check device_get_match_data(), if it return a NULL ptr,
-then print an error message and return -ENODEV.
+[Alex and Kevin: there are doubts below regarding dirty page tracking
+from VFIO and mdev devices, which perhaps you can help with]
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: I2C: Add X1000 bindings.
-  I2C: JZ4780: Add support for the X1000.
+On 15/12/19 18:21, Peter Xu wrote:
+>                 init_rmode_tss
+>                     vmx_set_tss_addr
+>                         kvm_vm_ioctl_set_tss_addr [*]
+>                 init_rmode_identity_map
+>                     vmx_create_vcpu [*]
 
- .../devicetree/bindings/i2c/i2c-jz4780.txt         |   4 +-
- drivers/i2c/busses/i2c-jz4780.c                    | 155 +++++++++++++++------
- 2 files changed, 118 insertions(+), 41 deletions(-)
+These don't matter because their content is not visible to userspace
+(the backing storage is mmap-ed by __x86_set_memory_region).  In fact, d
 
--- 
-2.7.4
+>                 vmx_write_pml_buffer
+>                     kvm_arch_write_log_dirty [&]
+>                 kvm_write_guest
+>                     kvm_hv_setup_tsc_page
+>                         kvm_guest_time_update [&]
+>                     nested_flush_cached_shadow_vmcs12 [&]
+>                     kvm_write_wall_clock [&]
+>                     kvm_pv_clock_pairing [&]
+>                     kvmgt_rw_gpa [?]
+
+This then expands (partially) to
+
+intel_gvt_hypervisor_write_gpa
+    emulate_csb_update
+        emulate_execlist_ctx_schedule_out
+            complete_execlist_workload
+                complete_current_workload
+                     workload_thread
+        emulate_execlist_ctx_schedule_in
+            prepare_execlist_workload
+                prepare_workload
+                    dispatch_workload
+                        workload_thread
+
+So KVMGT is always writing to GPAs instead of IOVAs and basically
+bypassing a guest IOMMU.  So here it would be better if kvmgt was
+changed not use kvm_write_guest (also because I'd probably have nacked
+that if I had known :)).
+
+As far as I know, there is some work on live migration with both VFIO
+and mdev, and that probably includes some dirty page tracking API.
+kvmgt could switch to that API, or there could be VFIO APIs similar to
+kvm_write_guest but taking IOVAs instead of GPAs.  Advantage: this would
+fix the GPA/IOVA confusion.  Disadvantage: userspace would lose the
+tracking of writes from mdev devices.  Kevin, are these writes used in
+any way?  Do the calls to intel_gvt_hypervisor_write_gpa covers all
+writes from kvmgt vGPUs, or can the hardware write to memory as well
+(which would be my guess if I didn't know anything about kvmgt, which I
+pretty much don't)?
+
+> We should only need to look at the leaves of the traces because
+> they're where the dirty request starts.  I'm marking all the leaves
+> with below criteria then it'll be easier to focus:
+> 
+> Cases with [*]: should not matter much
+>            [&]: actually with a per-vcpu context in the upper layer
+>            [?]: uncertain...
+> 
+> I'm a bit amazed after I took these notes, since I found that besides
+> those that could probbaly be ignored (marked as [*]), most of the rest
+> per-vm dirty requests are actually with a vcpu context.
+> 
+> Although now because we have kvm_get_running_vcpu() all cases for [&]
+> should be fine without changing anything, but I tend to add another
+> patch in the next post to convert all the [&] cases explicitly to pass
+> vcpu pointer instead of kvm pointer to be clear if no one disagrees,
+> then we verify that against kvm_get_running_vcpu().
+
+This is a good idea but remember not to convert those to
+kvm_vcpu_write_guest, because you _don't_ want these writes to touch
+SMRAM (most of the addresses are OS-controlled rather than
+firmware-controlled).
+
+> init_rmode_tss or init_rmode_identity_map.  But I've marked them as
+> unimportant because they should only happen once at boot.
+
+We need to check if userspace can add an arbitrary number of entries by
+calling KVM_SET_TSS_ADDR repeatedly.  I think it can; we'd have to
+forbid multiple calls to KVM_SET_TSS_ADDR which is not a problem in general.
+
+>>> If we're still with the rule in userspace that we first do RESET then
+>>> collect and send the pages (just like what we've discussed before),
+>>> then IMHO it's fine to have vcpu2 to skip the slow path?  Because
+>>> RESET happens at "treat page as not dirty", then if we are sure that
+>>> we only collect and send pages after that point, then the latest
+>>> "write to page" data from vcpu2 won't be lost even if vcpu2 is not
+>>> blocked by vcpu1's ring full?
+>>
+>> Good point, the race would become
+>>
+>>  	vCPU 1			vCPU 2		host
+>>  	---------------------------------------------------------------
+>>  	mark page dirty
+>>  				write to page
+>> 						reset rings
+>> 						  wait for mmu lock
+>>  	add page to ring
+>> 	release mmu lock
+>> 						  ...do reset...
+>> 						  release mmu lock
+>> 						page is now dirty
+> 
+> Hmm, the page will be dirty after the reset, but is that an issue?
+> 
+> Or, could you help me to identify what I've missed?
+
+Nothing: the race is always solved in such a way that there's no issue.
+
+>> I don't think that's possible, most writes won't come from a page fault
+>> path and cannot retry.
+> 
+> Yep, maybe I should say it in the other way round: we only wait if
+> kvm_get_running_vcpu() == NULL.  Then in somewhere near
+> vcpu_enter_guest(), we add a check to wait if per-vcpu ring is full.
+> Would that work?
+
+Yes, that should work, especially if we know that kvmgt is the only case
+that can wait.  And since:
+
+1) kvmgt doesn't really need dirty page tracking (because VFIO devices
+generally don't track dirty pages, and because kvmgt shouldn't be using
+kvm_write_guest anyway)
+
+2) the real mode TSS and identity map shouldn't even be tracked, as they
+are invisible to userspace
+
+it seems to me that kvm_get_running_vcpu() lets us get rid of the per-VM
+ring altogether.
+
+Paolo
 
