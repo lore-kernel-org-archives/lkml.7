@@ -2,150 +2,227 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B12C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B220620665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576532044;
-	bh=g246O6lku9jrBHP+EmFMoKjMp2vLypJYvUbQNJKo0TY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=nze21VUWrTO28ziTke/QP5qNSNX3PgewbmB5zo9vtQTWVm1HOFJNyyXVHQyBt31dT
-	 oaVbbsGJfWrv6ex/5nsJHOQ8bsvoLzOEbn80aowsu5HlSTyPzQ4CD6eqnX3LyppGQc
-	 Mr9XI3aN8fE/Q9IHg/lYgolY9Z84t/zFf7no7dGI=
+	by mail.kernel.org (Postfix) with ESMTP id 3CB9524655
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j86Mefoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfLPVeD (ORCPT
+        id S1727378AbfLPVfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:34:03 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:36725 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfLPVeD (ORCPT
+        Mon, 16 Dec 2019 16:35:06 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57772 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbfLPVfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:34:03 -0500
-Received: by mail-qv1-f68.google.com with SMTP id m14so2806988qvl.3;
-        Mon, 16 Dec 2019 13:34:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=gilqVXjewwhIA+/H+uhFEXgFGjhc0Nb4bpY0xnskfZw=;
-        b=p8mPv5jm1Qu39lGJzVKgWbKLmF4XT3ywrXoYnisUT6RfJ3zxPyPFFlGcq3BlKpjqCV
-         iFxOM697VUQ2O/DZE08qCIvNPUcb3ADyUfKCFflVwrPBKrJB2B5Lh/Pf9umEqDrccOGI
-         5fyTNR4QcPWVWGyGs1+xMsb10wIYRC2gX1iSX3/55XdW28jU602keEhwTNuF3lx3vzGk
-         OQF2mqjNz3WYv393+dcMviQJCxLu1cQtNLCHkW4xU/J0no/uhHkXqDHZJZ1+z6pJp4l0
-         RuqwUkI6BglPfm61QEnznU0lPzRWxUPUVRMcT8uML+Vwae7spIo7s11Z1Drl5+Op2cuP
-         fuDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=gilqVXjewwhIA+/H+uhFEXgFGjhc0Nb4bpY0xnskfZw=;
-        b=uOaCUX5D9+GA8hjVgWcdEpaLGTJRFZgREW+1fpQnYuyU0tpEGO05WL7jzRTlBQ6X86
-         iUNx2sFz5glY0kw1+hbNBuPFFuLyln8UEsD4q3IOZBN/KqtA2UslycWPmABScak9T7vQ
-         0IX30Buqc6b+0sD8PudrfmpcUYj43A/TM+ap7c5+BagS1NyZJcV6/pZdBGMUioI+n6mV
-         UlPByaTlGDgUAZxFUKEpvXoh9prFkBj/OhziYsCsQl6XXIx2gsQfTfT4Qh7YDRE7n5M8
-         so/2F5MQGl8K0Wr8Djm72vHLfx0trh3+B1fFzT0cNgp7CTfJLxsSahS6tSOLyY1NVqkJ
-         393w==
-X-Gm-Message-State: APjAAAVtRoORgRU5IoAYVHdY0HtS+ckb7yOr6uXOVgbIeDgZjfdx2/eA
-        8XCsb1aMi76+PZpyncUxOb4=
-X-Google-Smtp-Source: APXvYqyCSOyoc/1RZy+2Lilir6hKHpBGg7MaSuEoNOqlVDgneUC9Fdu2VSBsn/TjzAe6KYAssdyoBw==
-X-Received: by 2002:a0c:8a21:: with SMTP id 30mr1589603qvt.240.1576532042226;
-        Mon, 16 Dec 2019 13:34:02 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::d63d])
-        by smtp.gmail.com with ESMTPSA id i28sm7467761qtc.57.2019.12.16.13.34.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 13:34:01 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:34:00 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH block/for-5.5-fixes] iocost: over-budget forced IOs should
- schedule async delay
-Message-ID: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
+        Mon, 16 Dec 2019 16:35:05 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 41F84A34;
+        Mon, 16 Dec 2019 22:35:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576532102;
+        bh=0W0zxY2knSzySHv9r8fNX8fp00bT/DWSXaIMjThF/UE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j86Mefoe9v3RDZVHrcamnGVBkPK6H9SE+9ICTOVzpmAAK6MM7XAr1ZOURbI3WL5To
+         Bk5C684bU4YY9tZhziyUOnN/yQ4cJceRu0jEcjeYc5O/pFXyfJdpwUA4xa/E0zV+C+
+         oLBO5Xzc/4dSbDXrI7HtCSlKYgTl8L3sv66M4nJg=
+Date:   Mon, 16 Dec 2019 23:34:51 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: Re: [PATCH v5 4/6] drm: rcar-du: lvds: Allow for even and odd pixels
+ swap
+Message-ID: <20191216213451.GH4856@pendragon.ideasonboard.com>
+References: <1576527154-18391-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1576527154-18391-5-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1576527154-18391-5-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When over-budget IOs are force-issued through root cgroup,
-iocg_kick_delay() adjusts the async delay accordingly but doesn't
-actually schedule async throttle for the issuing task.  This bug is
-pretty well masked because sooner or later the offending threads are
-gonna get directly throttled on regular IOs or have async delay
-scheduled by mem_cgroup_throttle_swaprate().
+Hi Fabrizio,
 
-However, it can affect control quality on filesystem metadata heavy
-operations.  Let's fix it by invoking blkcg_schedule_throttle() when
-iocg_kick_delay() says async delay is needed.
+Thank you for the patch.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Cc: stable@vger.kernel.org
-Reported-by: Josef Bacik <josef@toxicpanda.com>
----
- block/blk-iocost.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+On Mon, Dec 16, 2019 at 08:12:32PM +0000, Fabrizio Castro wrote:
+> DT properties dual-lvds-even-pixels and dual-lvds-odd-pixels
+> can be used to work out if the driver needs to swap even
+> and odd pixels around.
+> 
+> This patch makes use of the return value from function
+> drm_of_lvds_get_dual_link_pixel_order to determine if we
+> need to swap odd and even pixels around for things to work
+> properly.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> v4->v5:
+> * Addressed comments from Laurent's review
+> 
+> v3->v4:
+> * New patch extracted from patch:
+>   "drm: rcar-du: lvds: Add dual-LVDS panels support"
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 67 +++++++++++++++++++++++++++++--------
+>  1 file changed, 53 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index 3eb208e..c6a38c3 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -37,6 +37,12 @@ enum rcar_lvds_mode {
+>  	RCAR_LVDS_MODE_VESA = 4,
+>  };
+>  
+> +enum rcar_lvds_link_type {
+> +	RCAR_LVDS_SINGLE_LINK = 0,
+> +	RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS = 1,
+> +	RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS = 2,
+> +};
+> +
+>  #define RCAR_LVDS_QUIRK_LANES		BIT(0)	/* LVDS lanes 1 and 3 inverted */
+>  #define RCAR_LVDS_QUIRK_GEN3_LVEN	BIT(1)	/* LVEN bit needs to be set on R8A77970/R8A7799x */
+>  #define RCAR_LVDS_QUIRK_PWD		BIT(2)	/* PWD bit available (all of Gen3 but E3) */
+> @@ -67,7 +73,7 @@ struct rcar_lvds {
+>  	} clocks;
+>  
+>  	struct drm_bridge *companion;
+> -	bool dual_link;
+> +	enum rcar_lvds_link_type dual_link;
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index e01267f99183..27ca68621137 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1212,7 +1212,7 @@ static enum hrtimer_restart iocg_waitq_timer_fn(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
--static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
-+static bool iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
- {
- 	struct ioc *ioc = iocg->ioc;
- 	struct blkcg_gq *blkg = iocg_to_blkg(iocg);
-@@ -1229,11 +1229,11 @@ static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
- 	/* clear or maintain depending on the overage */
- 	if (time_before_eq64(vtime, now->vnow)) {
- 		blkcg_clear_delay(blkg);
--		return;
-+		return false;
- 	}
- 	if (!atomic_read(&blkg->use_delay) &&
- 	    time_before_eq64(vtime, now->vnow + vmargin))
--		return;
-+		return false;
- 
- 	/* use delay */
- 	if (cost) {
-@@ -1250,10 +1250,11 @@ static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
- 	oexpires = ktime_to_ns(hrtimer_get_softexpires(&iocg->delay_timer));
- 	if (hrtimer_is_queued(&iocg->delay_timer) &&
- 	    abs(oexpires - expires) <= margin_ns / 4)
--		return;
-+		return true;
- 
- 	hrtimer_start_range_ns(&iocg->delay_timer, ns_to_ktime(expires),
- 			       margin_ns / 4, HRTIMER_MODE_ABS);
-+	return true;
- }
- 
- static enum hrtimer_restart iocg_delay_timer_fn(struct hrtimer *timer)
-@@ -1739,7 +1740,9 @@ static void ioc_rqos_throttle(struct rq_qos *rqos, struct bio *bio)
- 	 */
- 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
- 		atomic64_add(abs_cost, &iocg->abs_vdebt);
--		iocg_kick_delay(iocg, &now, cost);
-+		if (iocg_kick_delay(iocg, &now, cost))
-+			blkcg_schedule_throttle(rqos->q,
-+					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
- 		return;
- 	}
- 
+Do you think we should rename this to link_type (and test for
+lvds->link_type != RCAR_LVDS_SINGLE_LINK) instead of lvds->dual_link) ?
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  };
+>  
+>  #define bridge_to_rcar_lvds(b) \
+> @@ -484,12 +490,31 @@ static void rcar_lvds_atomic_enable(struct drm_bridge *bridge,
+>  	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
+>  
+>  	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
+> -		/*
+> -		 * Configure vertical stripe based on the mode of operation of
+> -		 * the connected device.
+> -		 */
+> -		rcar_lvds_write(lvds, LVDSTRIPE,
+> -				lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
+> +		u32 lvdstripe = 0;
+> +
+> +		if (lvds->dual_link) {
+> +			/*
+> +			 * By default we generate even pixels from the primary
+> +			 * encoder and odd pixels from the companion encoder.
+> +			 * Swap pixels around if the sink requires odd pixels
+> +			 * from the primary encoder and even pixels from the
+> +			 * companion encoder.
+> +			 */
+> +			bool swap_pixels = lvds->dual_link ==
+> +				RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS;
+> +
+> +			/*
+> +			 * Configure vertical stripe since we are dealing with
+> +			 * an LVDS dual-link connection.
+> +			 *
+> +			 * ST_SWAP is reserved for the companion encoder, only
+> +			 * set it in the primary encoder.
+> +			 */
+> +			lvdstripe = LVDSTRIPE_ST_ON
+> +				  | (lvds->companion && swap_pixels ?
+> +				     LVDSTRIPE_ST_SWAP : 0);
+> +		}
+> +		rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
+>  	}
+>  
+>  	/*
+> @@ -716,15 +741,26 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  	of_node_put(port0);
+>  	of_node_put(port1);
+>  
+> -	if (dual_link >= DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS)
+> -		lvds->dual_link = true;
+> -	else if (lvds->next_bridge && lvds->next_bridge->timings)
+> +	switch (dual_link) {
+> +	case DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS:
+> +		lvds->dual_link = RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS;
+> +		break;
+> +	case DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS:
+> +		lvds->dual_link = RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS;
+> +		break;
+> +	default:
+>  		/*
+>  		 * Early dual-link bridge specific implementations populate the
+> -		 * timings field of drm_bridge, read the dual_link flag off the
+> -		 * bridge directly for backward compatibility.
+> +		 * timings field of drm_bridge. If the flag is set, we assume
+> +		 * that we are expected to generate even pixels from the primary
+> +		 * encoder, and odd pixels from the companion encoder.
+>  		 */
+> -		lvds->dual_link = lvds->next_bridge->timings->dual_link;
+> +		if (lvds->next_bridge && lvds->next_bridge->timings &&
+> +		    lvds->next_bridge->timings->dual_link)
+> +			lvds->dual_link = RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS;
+> +		else
+> +			lvds->dual_link = RCAR_LVDS_SINGLE_LINK;
+> +	}
+>  
+>  	if (!lvds->dual_link) {
+>  		dev_dbg(dev, "Single-link configuration detected\n");
+> @@ -741,6 +777,9 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  		"Dual-link configuration detected (companion encoder %pOF)\n",
+>  		companion);
+>  
+> +	if (lvds->dual_link == RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS)
+> +		dev_dbg(dev, "Data swapping required\n");
+> +
+>  	/*
+>  	 * FIXME: We should not be messing with the companion encoder private
+>  	 * data from the primary encoder, we should rather let the companion
+> @@ -751,7 +790,7 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  	 * for the time being.
+>  	 */
+>  	companion_lvds = bridge_to_rcar_lvds(lvds->companion);
+> -	companion_lvds->dual_link = true;
+> +	companion_lvds->dual_link = lvds->dual_link;
+>  
+>  done:
+>  	of_node_put(companion);
+
+-- 
+Regards,
+
+Laurent Pinchart
