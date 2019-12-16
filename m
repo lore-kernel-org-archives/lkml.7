@@ -2,50 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22720C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E904BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2CB218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89C5206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522051;
-	bh=3Jr3asvrNskAxqWkPJ2PRJglhyuOHOISyuAJUre/cJE=;
+	s=default; t=1576522059;
+	bh=jKxl8pwLoUXEuKW0Cte+ClJeAfixsXqiRXb5el6oK3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=noLDVnDtgEeB+R2Q6N8bgVrBXVP4C5IgfWkPgJxNl6eoUQ0s1L1Maksl6SEriPu8H
-	 3wISwOVZbR4ihaeDpnFX5MsmdKjNpYkr7K1go7byKTk39x6E1xMZw7fMYUspweb3Ye
-	 mIMt0tILBbcZiT4w9oJcHliY/8TKmdA98+aqEfWM=
+	b=pEhV7BPgbRSEm1GtguD8JH/FG09ZosHBY8BN2Vw+Wv1EM+Mf/BwN+yfVAldoGwF1c
+	 RjQZWba4RAhXjkmcb2D9MdHJVOr+vjDsWGJWg49jsg1tWd5iB96Mx/JQQ2EBS3hs41
+	 QFyCBoj9DtXh8y12vv+/4ekzfYi1CdQmuS6VQqjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfLPSr3 (ORCPT
+        id S1728374AbfLPSri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:47:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52464 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:47:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbfLPRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:20 -0500
+        id S1727737AbfLPRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E717720663;
-        Mon, 16 Dec 2019 17:55:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5A2206B7;
+        Mon, 16 Dec 2019 17:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518920;
-        bh=3Jr3asvrNskAxqWkPJ2PRJglhyuOHOISyuAJUre/cJE=;
+        s=default; t=1576518903;
+        bh=jKxl8pwLoUXEuKW0Cte+ClJeAfixsXqiRXb5el6oK3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWzbA1t3A+IoTiWKhRwl0hxuMvnvNCyvWxX7ts2JtAx4aMpFlibYRPdmvvgP2VPlT
-         FwDZhe5ZCaji7Jl5pcDqaMHgAeJgB1WiW+uHciYzP1C+cS/WwmM8z0HSziz1aCcwkM
-         PgFuAnC0xZm+WcaVT8dKlLfaoQAB0NcBnbGOCBCU=
+        b=QcJ98yZCDzTYY8XQyvqMJUhiBOhk4FMx0bAQcjVv9dcnMIQRi7k2WZGYVHlTbXXL3
+         V/1p3v23h85uaPtmq5wIxflzdlG1gRbr/m45ZEpMo6qQILqfqnh16wQpb4RUWR5JVl
+         2TYkhFnvdadKdZwPWTdI/MHxoOUj+Jjll82xa2Ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 121/267] fuse: verify nlink
-Date:   Mon, 16 Dec 2019 18:47:27 +0100
-Message-Id: <20191216174903.344559322@linuxfoundation.org>
+        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 115/267] usb: mtu3: fix dbginfo in qmu_tx_zlp_error_handler
+Date:   Mon, 16 Dec 2019 18:47:21 +0100
+Message-Id: <20191216174903.009996904@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -58,32 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit c634da718db9b2fac201df2ae1b1b095344ce5eb upstream.
+[ Upstream commit f770e3bc236ee954a3b4052bdf55739e26ee25db ]
 
-When adding a new hard link, make sure that i_nlink doesn't overflow.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: ac45d61357e8 ("fuse: fix nlink after unlink")
-Cc: <stable@vger.kernel.org> # v3.4
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+drivers/usb/mtu3/mtu3_qmu.c: In function 'qmu_tx_zlp_error_handler':
+drivers/usb/mtu3/mtu3_qmu.c:385:22: warning:
+ variable 'req' set but not used [-Wunused-but-set-variable]
 
+It seems dbginfo original intention is print 'req' other than 'mreq'
+
+Acked-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dir.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/mtu3/mtu3_qmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -830,7 +830,8 @@ static int fuse_link(struct dentry *entr
+diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
+index 7d9ba8a52368f..c87947fb26940 100644
+--- a/drivers/usb/mtu3/mtu3_qmu.c
++++ b/drivers/usb/mtu3/mtu3_qmu.c
+@@ -372,7 +372,7 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
+ 		return;
+ 	}
  
- 		spin_lock(&fc->lock);
- 		fi->attr_version = ++fc->attr_version;
--		inc_nlink(inode);
-+		if (likely(inode->i_nlink < UINT_MAX))
-+			inc_nlink(inode);
- 		spin_unlock(&fc->lock);
- 		fuse_invalidate_attr(inode);
- 		fuse_update_ctime(inode);
+-	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, mreq);
++	dev_dbg(mtu->dev, "%s send ZLP for req=%p\n", __func__, req);
+ 
+ 	mtu3_clrbits(mbase, MU3D_EP_TXCR0(mep->epnum), TX_DMAREQEN);
+ 
+-- 
+2.20.1
+
 
 
