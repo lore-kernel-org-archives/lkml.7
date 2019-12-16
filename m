@@ -2,126 +2,218 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8A1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8ADC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416AC20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3B5206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MupdptuU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvwAEgGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLPQrb (ORCPT
+        id S1726723AbfLPQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:47:31 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39075 "EHLO
+        Mon, 16 Dec 2019 11:47:56 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35432 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfLPQra (ORCPT
+        with ESMTP id S1726092AbfLPQr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:47:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b72so5442035wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:47:28 -0800 (PST)
+        Mon, 16 Dec 2019 11:47:56 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so28059wmb.0;
+        Mon, 16 Dec 2019 08:47:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
-        b=MupdptuUoWe4nG6XWXO8Am4U5S+54eAzf2A0C0d2Y/5L2NO1Pz8TTYTYp5Oj5iY/hm
-         93t/S9vt5md+700bRha+NTqKBl6oALW4Cyyoy6nn+4F5ibH3bCyki7R/JsAZ4NHflnE+
-         ylV5xuhgvWwd1TxuaFKOb/aFAARfMBD2SMozH1sxIsh3v61V0bAF0jCcttX+d+5MsQ8a
-         N7X0BKMbj5GiVmGpbnjoYcA5U6nauymoWAe/L8NRaOKwVvAw6MyZaLOAepZg7xnyZ+Wh
-         oZqdlXigYNHIy+jwcnTQ+KhoxTXXftAxwM7ur1lCbGU4eP+IxWxLxRdYTCK5wujQtV8H
-         6qig==
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=aOmtNATovh1ggBETYGigyYuXJNCeDlmL+LT1h4FcVdo=;
+        b=QvwAEgGx52hW6s0d51bNTcuFomeFfUOPBuK7F6CIKiWsd2i07PlOw86Kf1Kc5clzeG
+         COyOQpaWNIsxbNSLohe4TrNm1zFV7BuJ8dWqway0Sr9T1VEJuSCACoKDTlvqfr+MwYnJ
+         gyYt9M1IWZHM3FVewLPfM+Ru/4/lxx1hZiHRaAqXOtyHg79hqGzGDapWOstIEdRMu8pw
+         fWXKjqtEM6hxTc+CmxlW1EtmQTtJLQUBLmDpzRPUmBBfzMhWsMVC/fKyLpThVP/BJURw
+         U9yCUWfM1aLpHerQHoxfcpDc+BjAcz1rcUmlm/me7CuSjG/yMGGJZUHbyk+0OiAi6/aE
+         xr9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
-        b=ucmwqU0kse317BIbGPr3BTP1DKI20ltlcy5ig3424JQtTS+Ck4ghNJPxYKciaJO1Nk
-         id0A3+TjF2eIzlM0c5yhOdsAIOJ9toq+9kpaIpn6mSphxJsS2fC6Xzxf42/TrE6iZh9d
-         UxUWBbT+uELZVMRPDg8Ff59OujLOAMxONYxwH1cfvHi9T4BhTo+rDjuCh8XHaLZMw3R7
-         BTl83Be1Eau4kCA0ZvYjn/31Q6f+QI5l6xj1fDdW+9hFQMYe0avhyKONaYky/Kau3dpB
-         VeFCuNVsPrrdFvWn6r6Ou2gc/cd+uu3Z+oHS+wHd+o0HlaQMPNvFVs2BvKSMuPSYrSVu
-         PGGQ==
-X-Gm-Message-State: APjAAAX5xmbkJM87zg/z5TicE0GTFl79FvXOoOiW4cH+szE9Cql/4b0d
-        +as/anPzglrHDWNKaLb2dgh8Nw==
-X-Google-Smtp-Source: APXvYqyNpItBQC+K60hdbMXgCjsSVi+l3bidixDPaRGU5wZG3XvKQQsnCfJdpNCLx9rGhg7CBCc8sw==
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr30010613wmd.38.1576514848119;
-        Mon, 16 Dec 2019 08:47:28 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id p5sm21821060wrt.79.2019.12.16.08.47.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:47:27 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:47:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 07/15] clk: bd718x7: Support ROHM BD71828 clk block
-Message-ID: <20191216164726.GD18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=aOmtNATovh1ggBETYGigyYuXJNCeDlmL+LT1h4FcVdo=;
+        b=mjnh5ZGI/tok5k1X24Z8yrcyaz9rGGHXp9qTABUzuyye454i/pngRJWDHNfDUKdTG3
+         TyK5yUWUKOGXrGbqIo5mvaY8WaXFhYdSfJAkxTneZE9jU1VOUX67ryY5fEgBiseLa2Oa
+         YXGK+1TNnKUDUHGgeRSkP89gMYpmp8cl2bF9Z0kK53oa1CwojHhsugeBg5Qz41RvIwc+
+         vJuyL86H8VUP0/BQZjrjSOnwH0/CcjLluRTB9UpU6v1ihzMKcn9dnGonp98jv8PhG2mR
+         G4T//pr4yeuW2485xVERKcZsVpldRM6UuGsWD058+YupcJocQA3rmQLlu1LQZ07n8ki8
+         d2MA==
+X-Gm-Message-State: APjAAAXhQIF1+/wrAxJTh6w7tYGxtB4EFHlOhbMAUSu23Jorn86IH9Ej
+        pqM29zR9XMaA6blhM+twKJU0BHnxBMk=
+X-Google-Smtp-Source: APXvYqzBMErQI8MMXiTDJlrcw49NkxmjcFESFyRybYnY+wYQ9T3E4dRSEcNpww3ibTxcsx14sDMrDg==
+X-Received: by 2002:a7b:cd11:: with SMTP id f17mr22586544wmj.48.1576514872645;
+        Mon, 16 Dec 2019 08:47:52 -0800 (PST)
+Received: from [192.168.43.176] ([109.126.149.134])
+        by smtp.gmail.com with ESMTPSA id w8sm408046wmd.2.2019.12.16.08.47.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 08:47:52 -0800 (PST)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+ <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
+ <a1f0a9ed-085f-dd6f-9038-62d701f4c354@kernel.dk>
+ <3a102881-3cc3-ba05-2f86-475145a87566@kernel.dk>
+ <900dbb63-ae9e-40e6-94f9-8faa1c14389e@gmail.com>
+ <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH v3] io_uring: don't wait when under-submitting
+Message-ID: <279b9435-6050-c15a-440d-c196c6184556@gmail.com>
+Date:   Mon, 16 Dec 2019 19:47:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="fia9c39BoNAzl6CFYfBiYunGN9SLhccnz"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--fia9c39BoNAzl6CFYfBiYunGN9SLhccnz
+Content-Type: multipart/mixed; boundary="6o2dx0fo4baOvOO1LsTLMrsxchoQg4tLP";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <279b9435-6050-c15a-440d-c196c6184556@gmail.com>
+Subject: Re: [PATCH v3] io_uring: don't wait when under-submitting
+References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+ <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
+ <a1f0a9ed-085f-dd6f-9038-62d701f4c354@kernel.dk>
+ <3a102881-3cc3-ba05-2f86-475145a87566@kernel.dk>
+ <900dbb63-ae9e-40e6-94f9-8faa1c14389e@gmail.com>
+ <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
+In-Reply-To: <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
 
-> BD71828GW is a single-chip power management IC for battery-powered portable
-> devices. Add support for controlling BD71828 clk using bd718x7 driver.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> No changes since v5
-> 
->  drivers/clk/Kconfig              |  6 ++---
->  drivers/clk/clk-bd718x7.c        | 38 +++++++++++++++++++++++---------
+--6o2dx0fo4baOvOO1LsTLMrsxchoQg4tLP
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
->  include/linux/mfd/rohm-bd70528.h |  6 -----
->  include/linux/mfd/rohm-bd71828.h |  4 ----
->  include/linux/mfd/rohm-bd718x7.h |  6 -----
+On 16/12/2019 00:33, Jens Axboe wrote:
+> On 12/15/19 8:48 AM, Pavel Begunkov wrote:
+>> On 15/12/2019 08:42, Jens Axboe wrote:
+>>> On 12/14/19 11:43 AM, Jens Axboe wrote:
+>>>> On 12/14/19 7:53 AM, Pavel Begunkov wrote:
+>>>>> There is no reliable way to submit and wait in a single syscall, as=
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>>>>> io_submit_sqes() may under-consume sqes (in case of an early error)=
+=2E
+>>>>> Then it will wait for not-yet-submitted requests, deadlocking the u=
+ser
+>>>>> in most cases.
+>>>>>
+>>>>> In such cases adjust min_complete, so it won't wait for more than
+>>>>> what have been submitted in the current call to io_uring_enter(). I=
+t
+>>>>> may be less than totally in-flight including previous submissions,
+>>>>> but this shouldn't do harm and up to a user.
+>>>>
+>>>> Thanks, applied.
+>>>
+>>> This causes a behavioral change where if you ask to submit 1 but
+>>> there's nothing in the SQ ring, then you would get 0 before. Now
+>>> you get -EAGAIN. This doesn't make a lot of sense, since there's no
+>>> point in retrying as that won't change anything.
+>>>
+>>> Can we please just do something like the one I sent, instead of tryin=
+g
+>>> to over-complicate it?
+>>>
+>>
+>> Ok, when I get to a compiler.
+>=20
+> Great, thanks. BTW, I noticed when a regression test failed.
+>=20
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yeah, I properly tested only the first one. Clearly, not as easy as
+I thought, and there were more to consider.
+
+I sent the next version, but that's odd basically taking your code.
+Probably, it would have been easier for you to just commit it yourself.
+
+
+--=20
+Pavel Begunkov
+
+
+--6o2dx0fo4baOvOO1LsTLMrsxchoQg4tLP--
+
+--fia9c39BoNAzl6CFYfBiYunGN9SLhccnz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl33tSMACgkQWt5b1Glr
++6WcvA//Xe9Sr6OkL35dxFzAXuY6A6E2vHGBUNdoIjJijLPZlSaGKg+GyzCEFwhw
+SwcU5sKdHETa1KgpI6p7flwm13N6oN9h6PNtIXUwEjdADD5F3b878k99Jb2tTezt
+TBarkCO6X8rPqP1I+eY6zJEYGzcNbFnJk8RkORV5q9XvM41Ph0zWd2IzBVH5MC6v
+Ow7I07mM7Wwg9fHGYv0DXbyyZvW2fCRBY01lfLmRiYXcygc00UzzbGO7bp+Z1gIG
+GVCw3es5BrqmoRta8rHD5zYGm8jgCZkrYjQJsNtutoPkOFvd1ckUqC7mT5eYfwhq
+ymynr3rmZ54XiVMcN8dS877JKD/CLKfjARCjGErW7iIKAYfxHijikxpkELX+wfGW
+aJtcNfypQABLnsW511fxl5nsl8mybNyV7oZbLvqnAo6hcjs2zBUZLv9Q247zV0Tx
+VIg7dw4Ep46Ng3S455Coa4O/4BD+jWKHk3qgksG3nJWMjRUJ615/LhLtedE+OYja
+TdqJb7qZLU91nnW3zEUYCS6kkbLtgqWvkkSabKHVHQh1ZcuwYdq6m1k1uvvltqgT
+J3+99HzrKqRZJKK5u6yuz/7COqdoUaADX2gRiq3Vq8sPLXSqL6/mj9vPoyEiFLtn
+rLEsLg9tWrjmvOn0Qij3jQcY3CH9ofbg/jwy2nc3FvW8dzMW0H0=
+=Z5S8
+-----END PGP SIGNATURE-----
+
+--fia9c39BoNAzl6CFYfBiYunGN9SLhccnz--
