@@ -3,123 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31661C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9572B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00254206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521942;
-	bh=fpaCt0GYwvbYwJ3eh6N+PCq5xTQcRR4ff/NnakrUkAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=feLGhxBThOVvaJNOofSqQ2VuOjd/xRhmh4HBuExgxZK/0g5j4b4YaxaDv0o7kf8k2
-	 lgYJzbYhehR8g0qLmYdy7A9v+UT1u5+N+/Ujx+fGgb078A1/69trJD3xcHKEngfl4c
-	 euTa+H52xlXuC3y7/B6+Kmbt/SsDtWSlvvMQyxH4=
+	s=default; t=1576521945;
+	bh=SLLA6soTRudvRmoUb9fkFaD2Y3fKHbuYA00w0PGg8UI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=coZR/sHOpDr1+hi7HK2nsGd2BG1UJgu9dmqzsP7KoFx5fmQQspq1Lxz4opocXRxJF
+	 WuCgXHg4ocsPagaN59oC1yWlJQm3ApjPDI/BsV6PTNzWOUQD+U0PeiIKObUYcF8dv9
+	 Fm9X7CZiDcwVxQ/Kptf7TdizEk/lNDJ2z8Sw4lw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfLPSpl (ORCPT
+        id S1728359AbfLPR5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfLPSpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:45:39 -0500
+        id S1728085AbfLPR5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67990206A5;
-        Mon, 16 Dec 2019 18:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8318F21582;
+        Mon, 16 Dec 2019 17:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576521938;
-        bh=fpaCt0GYwvbYwJ3eh6N+PCq5xTQcRR4ff/NnakrUkAU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u2lJ/upO8pc5vU1W1k3LwrOjCXrYbiPDcHR42ey+AuN6WlF3gHneTNxagBNrs0egb
-         lfvXXxf8xoYmlw2vGmTq0sTYsgwjKMZLyp3jaAUdwd96rtR3fFAAfYHQoLxkPBpwbk
-         twPfXANYfK27HEOZMrfhwcOacLxa94BZOu8Y2y5o=
-Date:   Mon, 16 Dec 2019 19:45:36 +0100
+        s=default; t=1576519020;
+        bh=SLLA6soTRudvRmoUb9fkFaD2Y3fKHbuYA00w0PGg8UI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YOrACA8yOJeRhU3fpDqS4MDZxuxBkWUs1uweFokndBIJc/bkj6xUmFR1X2is8ikBU
+         7l7PxkGiEZJTlsHYmPsUbav3utNx6JiS8f+mrKO4QS1QD0RZ5EN9ynRQq7XMKCOyf4
+         mmDVG/WjTyxAJhJQSOYOLwpJjxXqwAUQxOp1ko64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrea Merello <andrea.merello@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
- "readback"-handling code
-Message-ID: <20191216184536.GB2411653@kroah.com>
-References: <20191216174747.111154704@linuxfoundation.org>
- <20191216174815.749524432@linuxfoundation.org>
- <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.14 162/267] USB: uas: heed CAPACITY_HEURISTICS
+Date:   Mon, 16 Dec 2019 18:48:08 +0100
+Message-Id: <20191216174911.377392511@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 07:31:31PM +0100, Andrea Merello wrote:
-> Something nasty seems happening here: it looks like the commit message
-> and the actual diff have nothing to do one wrt the other; the commit
-> message is from one of my patches, the diff is against some unrelated
-> file.
-> 
-> Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> ha scritto:
-> >
-> > From: Meng Li <Meng.Li@windriver.com>
-> >
-> > [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
-> >
-> > The device could be configured to spit out also the configuration word
-> > while reading the AD result value (in the same SPI xfer) - this is called
-> > "readback" in the device datasheet.
-> >
-> > The driver checks if readback is enabled and it eventually adjusts the SPI
-> > xfer length and it applies proper shifts to still get the data, discarding
-> > the configuration word.
-> >
-> > The readback option is actually never enabled (the driver disables it), so
-> > the said checks do not serve for any purpose.
-> >
-> > Since enabling the readback option seems not to provide any advantage (the
-> > driver entirely sets the configuration word without relying on any default
-> > value), just kill the said, unused, code.
-> >
-> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/edac/altera_edac.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-> > index 56de378ad13dc..c9108906bcdc0 100644
-> > --- a/drivers/edac/altera_edac.c
-> > +++ b/drivers/edac/altera_edac.c
-> > @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
-> >         .reg_read = s10_protected_reg_read,
-> >         .reg_write = s10_protected_reg_write,
-> >         .use_single_rw = true,
-> > +       .fast_io = true,
-> >  };
-> >
-> >  static int altr_s10_sdram_probe(struct platform_device *pdev)
-> > --
-> > 2.20.1
-> >
-> >
-> >
+From: Oliver Neukum <oneukum@suse.com>
 
-Wow, something went wrong.
+commit 335cbbd5762d5e5c67a8ddd6e6362c2aa42a328f upstream.
 
-Sasha, can you look into this?
+There is no need to ignore this flag. We should be as close
+to storage in that regard as makes sense, so honor flags whose
+cost is tiny.
 
-thanks,
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191114112758.32747-3-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ drivers/usb/storage/uas.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -845,6 +845,12 @@ static int uas_slave_configure(struct sc
+ 		sdev->fix_capacity = 1;
+ 
+ 	/*
++	 * in some cases we have to guess
++	 */
++	if (devinfo->flags & US_FL_CAPACITY_HEURISTICS)
++		sdev->guess_capacity = 1;
++
++	/*
+ 	 * Some devices don't like MODE SENSE with page=0x3f,
+ 	 * which is the command used for checking if a device
+ 	 * is write-protected.  Now that we tell the sd driver
+
+
