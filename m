@@ -2,179 +2,180 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6B8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9FFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394F221775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:44:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ujZB/Y7X"
+	by mail.kernel.org (Postfix) with ESMTP id A7E3321835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576529268;
+	bh=AHIxHCZn5O33ir7Tz+Pc4yZfThRcdwfTHwkAQkkxnh8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=V6DpO4Wh5009vv1C925FNFT+8kitcHGmMU4UzDtT6f19gLHT/Cf53lYJYGxyfj0WU
+	 dnCdm6drjM4B74eD2SfxK+v5rVKZ1/7lfsMnQy/e/TVjcbRVYHKh1TbJs9kEILf4HL
+	 2Y+juo7/ZdCzscn42b4Afs5BYhz1I3DccxhxrfaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfLPUox (ORCPT
+        id S1726717AbfLPUrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:44:53 -0500
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:46609 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfLPUow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:44:52 -0500
-Received: by mail-lj1-f181.google.com with SMTP id z17so8259312ljk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:44:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=kMZ+ohHFSUBj4hQc2aSeFVGq7nRc0OvU5KlbiMjbC1U=;
-        b=ujZB/Y7XeISCORKzGRlgrNhWkJVmLtsJIqjQRHx5AAvtPevbVdxhj+7ZnFTqQlxnOT
-         ywCcuI6/3ZZSwDNGgUV3Z2OlRQJADA4E80r+jhBsGjIYgzeZvdKFhBIaPnBQkCaayp3k
-         cdBSUzILPpVHqmrO/HxXxeEced2weIlvXBsbrxrZ+mYWxfzBIRImf3dmopSqMVznYFL5
-         kpHJ3mdSysLwjr2pF8313eQRKgno86xab/nnqYsjc5Y2KOx3l75w9FEUi19g5rf4qh6W
-         EoB7BI5C55KXWLbLIDpQPxCraHBonknMg4SBYyPHUYJEw1mSfoz6ek5IpQq7/V4xnnym
-         ZEjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=kMZ+ohHFSUBj4hQc2aSeFVGq7nRc0OvU5KlbiMjbC1U=;
-        b=RKxbUOtuALIkAi0V9yqPQmwxt2hIwkJmLBo+ZI4gY3lTZDn4qK9CtixXABnZPcOzbp
-         bq9k2HvaiDQTimaJyzXeLg8st64mQcJjCqMkPfjoNBeBgYdVIKh83Fs0A8Qfqp8RknXT
-         gm3BZXQx4y7Tc/bOwmXVDnmPSJYJAeDXfkrGc6dG0LZwJMC4fCpQfj9cm3enmHIkXrlb
-         sCDQiu2XVKqdZ2AhQharegLSjFOkxNsuE9CUJswEw+xNi4I9VxA8G0PEyhCmvgA762nw
-         ftZMhnuKygtBw7pVWjJiXXA7zwevVN1p1Ij9LW8+cDzzjq2TnwEm7jGgIXANQRkZuuQ8
-         odIw==
-X-Gm-Message-State: APjAAAVwAgsfinqXqjyXcXLpfsPWad24jWFnespOmnxd0b9aEvkiqzlt
-        GN01E6LRU4qXOFnMpD9BfzlGmA==
-X-Google-Smtp-Source: APXvYqzSVpPLVKvizhOUuIbVJ6jUgR2LXPP3M+uhsQfJpeDvhsg9fL0joJ4evsmOLynV5Oo5+2Gp7g==
-X-Received: by 2002:a2e:556:: with SMTP id 83mr712749ljf.127.1576529090387;
-        Mon, 16 Dec 2019 12:44:50 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id k25sm11097754lji.42.2019.12.16.12.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 12:44:50 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:44:41 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Yuval Avnery <yuvalav@mellanox.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Daniel Jurgens <danielj@mellanox.com>
-Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
-Message-ID: <20191216124441.634ea8ea@cakuba.netronome.com>
-In-Reply-To: <AM6PR05MB51422CE9C249DB03F486CB63C5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
-References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
-        <20191211095854.6cd860f1@cakuba.netronome.com>
-        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211111537.416bf078@cakuba.netronome.com>
-        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211142401.742189cf@cakuba.netronome.com>
-        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211154952.50109494@cakuba.netronome.com>
-        <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191212102517.602a8a5d@cakuba.netronome.com>
-        <AM6PR05MB5142F0F18EA6B6F16C5888CEC5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191212175418.3b07b7a9@cakuba.netronome.com>
-        <AM6PR05MB514261CD6F95F104C0353A4BC5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191213100828.6767de6e@cakuba.netronome.com>
-        <AM6PR05MB51422CE9C249DB03F486CB63C5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 16 Dec 2019 15:47:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfLPUrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:47:47 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C94321775;
+        Mon, 16 Dec 2019 20:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576529266;
+        bh=AHIxHCZn5O33ir7Tz+Pc4yZfThRcdwfTHwkAQkkxnh8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=s754W1cd5pFR9BAxO/SEuXMqoJoqmOxamehyGOhQOsIjg1udllusSfzYDbzgSGMKX
+         I1vtb3hz7fXi3mJQMcLTZ72/T51khCtmpDIZPouMvy5ZjE5WPuKCqwLI+0MyqU/XnR
+         BJ6n8Guw8A/BJsRbepRSICa7O2HSkDNojiZglmJ0=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ed Maste <emaste@freebsd.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL 0/9] perf/urgent fixes
+Date:   Mon, 16 Dec 2019 17:47:29 -0300
+Message-Id: <20191216204738.12107-1-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 20:05:00 +0000, Yuval Avnery wrote:
-> > On Fri, 13 Dec 2019 03:21:02 +0000, Yuval Avnery wrote:  
-> > > > I see, is this a more fine grained capability or all or nothing for SR-IOV control?  
-> > > > I'd think that if the SmartNIC's eswitch just encapsulates all the
-> > > > frames into a
-> > > > L4 tunnel it shouldn't care about L2 addresses.  
-> > >
-> > > People keep saying that, but there are customers who wants this
-> > > capability :)  
-> > 
-> > Right, but we should have a plan for both, right? Some form of a switch
-> > between L4/no checking/ip link changes are okay vs strict checking/L2/
-> > SmartNIC provisions MAC addrs?  
-> 
-> I am not sure I understand
-> The L2 checks will be on NIC, not on the switch.
-> Packet decapsulated and forwarded to the NIC, Where the MAC matters..
+Hi Ingo/Thomas,
 
-If there is tunnelling involved where customer's L2 is not visible to
-the provider underlay why does the host ip-link not have a permission
-to change the MAC address?
+	Please consider pulling,
 
-The NIC CPU can just learn about the customer MAC change and configure
-the overlay forwarding appropriately.
+Best regards,
 
-> > > > > > What happens if the SR-IOV host changes the MAC? Is it used by
-> > > > > > HW or is the MAC provisioned by the control CPU used for things
-> > > > > > like spoof check?  
-> > > > >
-> > > > > Host shouldn't have privileges to do it.
-> > > > > If it does, then it's under the host ownership (like in non-smartnic mode).  
-> > > >
-> > > > I see so the MAC is fixed from bare metal host's PoV? And it has to
-> > > > be set  
-> > >
-> > > Yes
-> > >  
-> > > > through some high level cloud API (for live migration etc)?
-> > > > Do existing software stacks like libvirt handle not being able to
-> > > > set the MAC happily?  
-> > >
-> > > I am not sure what you mean.
-> > > What we are talking about here is the E-switch manager setting a MAC to another VF.  
-> > > When the VF driver loads it will query this MAC from the NIC. This is
-> > > the way It works today with "ip link set _vf_ mac"
-> > >
-> > > Or in other words we are replacing "ip link set _vf_ mac" and not "ip link set address"  
-> > > So that it can work from the SmartNic embedded system.
-> > > There is nothing really new here, ip link will not work from a
-> > > SmartNic, this is why need devlink subdev.  
-> > 
-> > Ack, but are we targeting the bare metal cloud scenario here or something
-> > more limited? In a bare metal cloud AFAIU the customers can use SR-IOV on
-> > the host, but the MACs need to be communicated/ /requested from the
-> > cloud management system.  
-> 
-> Yes, so the cloud management system communicates with the Control CPU, not the host,
-> Not whatever customer decides to run on the hypervisor. The host PF is powerless here (almost like VF).
-> 
-> > 
-> > IOW the ip link and the devlink APIs are in different domains of control.
-> > Customer has access to ip link and provider has access to devlink.  
-> 
-> For host VF - Customer has access to ip link exactly like in non-smartnic mode.
-> For host PF - "ip link set vf" will return error. Everything running on the host is not-trusted.
-> 
-> > 
-> > So my question is does libvirt run by the customer handle the fact that it can't
-> > poke at ip link gracefully, and if live migration is involved how is the customer
-> > supposed to ask the provider to move an address?  
-> 
-> I don't understand the question because I don't understand why is it different
-> from non-smartnic where the host hypervisor is in-charge.
- 
-The ip-link API will suddenly start returning errors which may not be
-expected to the user space. So the question is what the user space is
-you're expecting to run/testing with? _Some_ user space should prove
-this design out before we merge it.
+- Arnaldo
 
-The alternative design is to "forward" hosts ip-link requests to the
-NIC CPU and let software running there talk to the cloud back end.
-Rather than going 
-  customer -> could API -> NIC, 
-go 
-  customer -> NIC -> cloud API
-That obviously is more complex, but has the big advantage of nothing 
-on the host CPU having to change.
+
+The following changes since commit 761bfc33dd7504de951aa7b9db27a3cc5df1fde6:
+
+  Merge remote-tracking branch 'torvalds/master' into perf/urgent (2019-12-11 09:58:16 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.5-20191216
+
+for you to fetch changes up to 58b3bafff8257c6946df5d6aeb215b8ac839ed2a:
+
+  perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description (2019-12-16 13:40:26 -0300)
+
+----------------------------------------------------------------
+perf/urgent fixes:
+
+perf top:
+
+ Arnaldo Carvalho de Melo:
+
+ - Do not bail out when perf_env__read_cpuid() returns ENOSYS, which
+   has been reported happening on aarch64.
+
+perf metricgroup:
+
+  Kajol Jain:
+
+  - Fix printing event names of metric group with multiple events
+
+vendor events:
+
+x86:
+
+  Ravi Bangoria:
+
+  - Fix Kernel_Utilization metric.
+
+s390:
+
+  Ed Maste:
+
+  - Fix counter long description for DTLB1_GPAGE_WRITES and L1D_RO_EXCL_WRITES.
+
+perf header:
+
+  Michael Petlan:
+
+  - Fix false warning when there are no duplicate cache entries
+
+libtraceevent:
+
+  Sudip Mukherjee:
+
+  - Allow custom libdir path
+
+API headers:
+
+  Arnaldo Carvalho de Melo:
+
+  - Sync linux/kvm.h with the kernel sources.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (3):
+      tools headers kvm: Sync linux/kvm.h with the kernel sources
+      perf arch: Make the default get_cpuid() return compatible error
+      perf top: Do not bail out when perf_env__read_cpuid() returns ENOSYS
+
+Ed Maste (2):
+      perf vendor events s390: Fix counter long description for DTLB1_GPAGE_WRITES
+      perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
+
+Kajol Jain (1):
+      perf metricgroup: Fix printing event names of metric group with multiple events
+
+Michael Petlan (1):
+      perf header: Fix false warning when there are no duplicate cache entries
+
+Ravi Bangoria (1):
+      perf/x86/pmu-events: Fix Kernel_Utilization metric
+
+Sudip Mukherjee (1):
+      libtraceevent: Allow custom libdir path
+
+ tools/include/uapi/linux/kvm.h                     |  1 +
+ tools/lib/traceevent/Makefile                      |  5 +++--
+ tools/lib/traceevent/plugins/Makefile              |  5 +++--
+ tools/perf/builtin-top.c                           | 10 +++++++---
+ .../perf/pmu-events/arch/s390/cf_z13/extended.json |  2 +-
+ .../perf/pmu-events/arch/s390/cf_z14/extended.json |  2 +-
+ .../pmu-events/arch/x86/broadwell/bdw-metrics.json |  2 +-
+ .../arch/x86/broadwellde/bdwde-metrics.json        |  2 +-
+ .../arch/x86/broadwellx/bdx-metrics.json           |  2 +-
+ .../arch/x86/cascadelakex/clx-metrics.json         |  2 +-
+ .../pmu-events/arch/x86/haswell/hsw-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |  2 +-
+ .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |  2 +-
+ .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |  2 +-
+ .../arch/x86/sandybridge/snb-metrics.json          |  2 +-
+ .../pmu-events/arch/x86/skylake/skl-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/skylakex/skx-metrics.json  |  2 +-
+ tools/perf/util/header.c                           | 23 +++++++---------------
+ tools/perf/util/metricgroup.c                      |  7 +++++--
+ 20 files changed, 40 insertions(+), 39 deletions(-)
