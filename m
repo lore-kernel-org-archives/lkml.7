@@ -3,131 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2428CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEEAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED990206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27594206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520526;
-	bh=xQzuAvHqF81ZrpOZLPBMiu7ImwxVFZWyQDejleoc3Ls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EWDmp0kYtRIbZtL58VHcY9pcsvh4xx7TpQZ/5Po3el13BSSPXE5ydUQevGYwwvj2R
-	 rUJ/L5TlUFkhJ2bOz16+RmOeev66cpmSyqvdcdPqTs99qiRrsUCjoEfNxVklEU/9AA
-	 2qCwUmARJ5V2rjYtduHwM9LMR3VHzzhN+zhHnp68=
+	s=default; t=1576520528;
+	bh=7QcSZmxLMfOYuHnsaSlyf11HR26X7Ayx286v+ODvXhE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Kb/QITGUyZUw7tWm7OsBGPEJPAWdF1DxRYkFosyzv2j7BE65VYwGyQTz494lSQHG2
+	 rnXPa/LxmK/00zK7GWigmVF+U2aPyS90+m588sQTL6QRhY90W7GC/QdkWeCIy0GLz0
+	 ZfMjUKFey5d7sTK/zYSs+deZYjJRAxi8qcBN9cx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732335AbfLPSWE (ORCPT
+        id S1732328AbfLPSWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:22:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:22:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732153AbfLPSVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:54 -0500
+        id S1732107AbfLPSVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5619206EC;
-        Mon, 16 Dec 2019 18:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C7162176D;
+        Mon, 16 Dec 2019 18:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520514;
-        bh=xQzuAvHqF81ZrpOZLPBMiu7ImwxVFZWyQDejleoc3Ls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gwEIDApfZaMAlUG1g/t+VDDlL1gLqUSxCofBdyeR3Nc/y+pJw2/yXDA/YSKru86KG
-         O7/jK3JqilSdrreqY+IWFaXQHdInExRczu5l9e8i0uhIXqseI3dObWtgda6GmuacDF
-         iVd6EjYl470l7Z2N6mqnkH6GCLdWKOC+xYfARg9U=
-Date:   Mon, 16 Dec 2019 19:05:02 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     cang@codeaurora.org
-Cc:     Bart Van Assche <bvanassche@acm.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
-Message-ID: <20191216180502.GA2404915@kroah.com>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
- <1576328616-30404-2-git-send-email-cang@codeaurora.org>
- <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
- <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+        s=default; t=1576520511;
+        bh=7QcSZmxLMfOYuHnsaSlyf11HR26X7Ayx286v+ODvXhE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GKFY+LS2XqsIpS9WynBzE7cT9C5FOQz/NCTZ01ByE5aREr7iWRCb7nTR7qhescQki
+         vHEv4VqbnjorGKE3CVGvepWtR+kI2BMqIS9EOrFORhtc31FwH9VSaw/HEVs17UbO7T
+         hItBCB29jWnQ3FAu+LWoFAUXAqMm9Jco/9A2+dp4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chen Jun <chenjun102@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 171/177] mm/shmem.c: cast the type of unmap_start to u64
+Date:   Mon, 16 Dec 2019 18:50:27 +0100
+Message-Id: <20191216174850.407207098@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
+References: <20191216174811.158424118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:31:29PM +0800, cang@codeaurora.org wrote:
-> On 2019-12-15 02:32, Bart Van Assche wrote:
-> > On 12/14/19 8:03 AM, Can Guo wrote:
-> > > In ufshcd_remove(), after SCSI host is removed, put it once so that
-> > > its
-> > > resources can be released.
-> > > 
-> > > Signed-off-by: Can Guo <cang@codeaurora.org>
-> > > 
-> > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> > > index b5966fa..a86b0fd 100644
-> > > --- a/drivers/scsi/ufs/ufshcd.c
-> > > +++ b/drivers/scsi/ufs/ufshcd.c
-> > > @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
-> > >   	ufs_bsg_remove(hba);
-> > >   	ufs_sysfs_remove_nodes(hba->dev);
-> > >   	scsi_remove_host(hba->host);
-> > > +	scsi_host_put(hba->host);
-> > >   	/* disable interrupts */
-> > >   	ufshcd_disable_intr(hba, hba->intr_mask);
-> > >   	ufshcd_hba_stop(hba, true);
-> > 
-> > Hi Can,
-> > 
-> > The UFS driver may queue work asynchronously and that asynchronous
-> > work may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it
-> > guaranteed that all that asynchronous work has finished before
-> > scsi_host_put() is called?
-> > 
-> > Thanks,
-> > 
-> > Bart.
-> 
-> Hi Bart,
-> 
-> As SCSI host is allocated in ufshcd_platform_init() during platform
-> drive probe, it is much more appropriate if platform driver calls
-> ufshcd_dealloc_host() in their own drv->remove() path. How do you
-> think if I change it as below? If it is OK to you, please ignore my
-> previous mails.
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 3d4582e..ea45756 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device
-> *pdev)
-> 
->         pm_runtime_get_sync(&(pdev)->dev);
->         ufshcd_remove(hba);
-> +       ufshcd_dealloc_host(hba);
->         return 0;
->  }
+From: Chen Jun <chenjun102@huawei.com>
 
-Wait, why is this a platform device?  Don't you hang off of a pci
-device?  Or am I missing something earlier in this patchset?
+commit aa71ecd8d86500da6081a72da6b0b524007e0627 upstream.
 
-thanks,
+In 64bit system. sb->s_maxbytes of shmem filesystem is MAX_LFS_FILESIZE,
+which equal LLONG_MAX.
 
-greg k-h
+If offset > LLONG_MAX - PAGE_SIZE, offset + len < LLONG_MAX in
+shmem_fallocate, which will pass the checking in vfs_fallocate.
+
+	/* Check for wrap through zero too */
+	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
+		return -EFBIG;
+
+loff_t unmap_start = round_up(offset, PAGE_SIZE) in shmem_fallocate
+causes a overflow.
+
+Syzkaller reports a overflow problem in mm/shmem:
+
+  UBSAN: Undefined behaviour in mm/shmem.c:2014:10
+  signed integer overflow: '9223372036854775807 + 1' cannot be represented in type 'long long int'
+  CPU: 0 PID:17076 Comm: syz-executor0 Not tainted 4.1.46+ #1
+  Hardware name: linux, dummy-virt (DT)
+  Call trace:
+     dump_backtrace+0x0/0x2c8 arch/arm64/kernel/traps.c:100
+     show_stack+0x20/0x30 arch/arm64/kernel/traps.c:238
+     __dump_stack lib/dump_stack.c:15 [inline]
+     ubsan_epilogue+0x18/0x70 lib/ubsan.c:164
+     handle_overflow+0x158/0x1b0 lib/ubsan.c:195
+     shmem_fallocate+0x6d0/0x820 mm/shmem.c:2104
+     vfs_fallocate+0x238/0x428 fs/open.c:312
+     SYSC_fallocate fs/open.c:335 [inline]
+     SyS_fallocate+0x54/0xc8 fs/open.c:239
+
+The highest bit of unmap_start will be appended with sign bit 1
+(overflow) when calculate shmem_falloc.start:
+
+    shmem_falloc.start = unmap_start >> PAGE_SHIFT.
+
+Fix it by casting the type of unmap_start to u64, when right shifted.
+
+This bug is found in LTS Linux 4.1.  It also seems to exist in mainline.
+
+Link: http://lkml.kernel.org/r/1573867464-5107-1-git-send-email-chenjun102@huawei.com
+Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/shmem.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2745,7 +2745,7 @@ static long shmem_fallocate(struct file
+ 		}
+ 
+ 		shmem_falloc.waitq = &shmem_falloc_waitq;
+-		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
++		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
+ 		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
+ 		spin_lock(&inode->i_lock);
+ 		inode->i_private = &shmem_falloc;
+
+
