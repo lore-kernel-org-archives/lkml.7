@@ -2,123 +2,100 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4CDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D411C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F49206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152AF206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576511634;
+	bh=KewUIYX6Xb/KUGmI7ZCD6D7PdVzt41J+GOTmkmhhx98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tKlIBiDrUFOPa6IEGZ4UAOfDI0+rS3BGJKoDSL2KQeeZkwU76u5dXi2smAQclpf6Z
+	 TlOORfI+ra30qBoYY/yGdHv1bVw1ZLhP1f8CvP+fMfiPZUBDODGY1dAeyE33Ahr5zO
+	 YebzvkqnPVGe2+GAt/lBCjhCWdyGxQdst08EJfaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfLPPxg (ORCPT
+        id S1728584AbfLPPxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:53:36 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:42470 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbfLPPxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:53:36 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 6B78BFB03;
-        Mon, 16 Dec 2019 16:53:34 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yYpcNGzE6ASE; Mon, 16 Dec 2019 16:53:33 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id A743E498AE; Mon, 16 Dec 2019 16:53:32 +0100 (CET)
-Date:   Mon, 16 Dec 2019 16:53:32 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
-Message-ID: <20191216155332.GA29065@bogon.m.sigxcpu.org>
-References: <20191212135724.331342-1-linux@dominikbrodowski.net>
- <20191212135724.331342-4-linux@dominikbrodowski.net>
- <20191216013536.5wyvq4vjv5efd35n@core.my.home>
- <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+        Mon, 16 Dec 2019 10:53:53 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46659 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfLPPxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:53:52 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a124so3631936oii.13;
+        Mon, 16 Dec 2019 07:53:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/9D5bT/6tP3rVi8f9x2mTx0nceNBLJn6Pnm6PW8Q2Io=;
+        b=IMMOqhHMM4umPNXoi0CYT4A5c6zMjeP8xKsqb2W+e1P5Bi1/r4rrRY2HAouHJBScFP
+         KEo95eOWpO0mCWAX07tfkLNW98aUbgUvWS45SgM1h6Ui5MNI/2VasRUq2o7wyM7Oyv+p
+         +3VClTtYWptZT6XeUlIGhcp/nHGm12L2xtlKPihdlp/MQnsw/dMrBzyZGHjj+B63rXFD
+         OYA1hCkIHqW9C8Bn/EpdQ8Xt/LPsX96s6yqsYlulGCLbYZ2K0x1Okc/XdGy1nwUmYWah
+         oP2M2hU3GsmK1hrwmiZh0mBesrRq7YHbGpQNbYlvdo29rTI/AokFwVM3bww/7EcWdo2D
+         6yNA==
+X-Gm-Message-State: APjAAAUE38cil935cPexsEJTVbblede4JFhZQpFXq/z23Uc2oLBZVRYx
+        rhdFR9OU8CMZQcA1pZBzbA==
+X-Google-Smtp-Source: APXvYqyjwLNiOdATGwneeb/VvNya7K52309SCLgJd3wlYpmyowMytvhPIlCjsXsVJ32JPzuOA6Vxbw==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr10180489oib.36.1576511631553;
+        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e65sm6962874otb.62.2019.12.16.07.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
+Date:   Mon, 16 Dec 2019 09:53:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ran.wang_1@nxp.com,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: Re: [v5 3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr1-alt-addr' property
+Message-ID: <20191216155350.GA10941@bogus>
+References: <20191203122818.21941-1-biwen.li@nxp.com>
+ <20191203122818.21941-3-biwen.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+In-Reply-To: <20191203122818.21941-3-biwen.li@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Sun, Dec 15, 2019 at 07:50:23PM -0800, Linus Torvalds wrote:
-> On Sun, Dec 15, 2019 at 5:35 PM Ondřej Jirman <megi@xff.cz> wrote:
-> >
-> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+On Tue,  3 Dec 2019 20:28:18 +0800, Biwen Li wrote:
+> The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
+> on LS1021A
 > 
-> Duh. So much for the trivial obvious conversion.
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- none
 > 
-> It didn't take "data might be NULL" into account.
+> Change in v4:
+> 	- rename property name
+> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
 > 
-> A patch like this, perhaps? Untested..
+> Change in v3:
+>   	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
 > 
->                Linus
+> Change in v2:
+>   	- update desc of the property
+> 	  'fsl,rcpm-scfg'
+> 
+>  .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
 
->  init/do_mounts.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/init/do_mounts.c b/init/do_mounts.c
-> index f55cbd9cb818..d204f605dbce 100644
-> --- a/init/do_mounts.c
-> +++ b/init/do_mounts.c
-> @@ -391,17 +391,19 @@ static int __init do_mount_root(const char *name, const char *fs,
->  				 const int flags, const void *data)
->  {
->  	struct super_block *s;
-> -	char *data_page;
-> -	struct page *p;
-> +	struct page *p = NULL;
-> +	char *data_page = NULL;
-n>  	int ret;
->  
-> -	/* do_mount() requires a full page as fifth argument */
-> -	p = alloc_page(GFP_KERNEL);
-> -	if (!p)
-> -		return -ENOMEM;
-> -
-> -	data_page = page_address(p);
-> -	strncpy(data_page, data, PAGE_SIZE - 1);
-> +	if (data) {
-> +		/* do_mount() requires a full page as fifth argument */
-> +		p = alloc_page(GFP_KERNEL);
-> +		if (!p)
-> +			return -ENOMEM;
-> +		data_page = page_address(p);
-> +		strncpy(data_page, data, PAGE_SIZE - 1);
-> +		data_page[PAGE_SIZE - 1] = '\0';
-> +	}
->  
->  	ret = do_mount(name, "/root", fs, flags, data_page);
->  	if (ret)
-> @@ -417,7 +419,8 @@ static int __init do_mount_root(const char *name, const char *fs,
->  	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
->  
->  out:
-> -	put_page(p);
-> +	if (p)
-> +		put_page(p);
->  	return ret;
->  }
->  
-
-This unbroke tftpboot on arm64 on next-20191216 for me as well:
-
-Tested-by: Guido Günther <agx@sigxcpu.org>
-
-Cheers,
- -- Guido
+Reviewed-by: Rob Herring <robh@kernel.org>
