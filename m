@@ -2,132 +2,135 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E8EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298B3C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474B62067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FBE206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUoB7/JP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHxa+Eil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfLPObi (ORCPT
+        id S1728181AbfLPOdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:31:38 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55313 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728014AbfLPObh (ORCPT
+        Mon, 16 Dec 2019 09:33:07 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37188 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfLPOdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:31:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576506697; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=89aeAE4p0vIjzskvdLk1qVvaFpos+JuHN3FX5cvcZAc=;
- b=rUoB7/JPQv3lgx3+X5id/X494q4pamnnL7h5IEd6TqB2Qv8h7Y4jEHPP20JxPPmR4LQlBfBT
- r2CS+Ei6RSlKuyuGDdN/AZNVKY/7ZkcmFUQ/BaRHOsKXIUsS2Odoi6JkKzjBN0cWlEZHYZpa
- rXyenXClcV+jPY4E+lXj8gGabuQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df79544.7f5d70246bc8-smtp-out-n03;
- Mon, 16 Dec 2019 14:31:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 62B76C433CB; Mon, 16 Dec 2019 14:31:31 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 333BDC43383;
-        Mon, 16 Dec 2019 14:31:29 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Dec 2019 22:31:29 +0800
-From:   cang@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
-In-Reply-To: <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
- <1576328616-30404-2-git-send-email-cang@codeaurora.org>
- <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
-Message-ID: <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mon, 16 Dec 2019 09:33:06 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 21so2602386qky.4;
+        Mon, 16 Dec 2019 06:33:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iOSeUyEU1fkveiExoPDURDT6oyTtUpKpG0pS9lvxGPk=;
+        b=hHxa+EilxYDWvtczudP+0nTtwS0qAb+p90p84Vjb9WBCWj8OGqda8Zm9KRVGxct8EZ
+         fdkBWDe1TJBwYcZzY8NthMyNzOGUnZQmT6Fbu4vL99oACL6O79iQurTg5HyQW1zbP0ak
+         y5S1hc22S1aNwEEAwsLUEttXcHjJf2ndve0vF/D0oGIVbHE0+0y9DJqdkghg3zT5lKAX
+         5/+hMUS18YHlTj4pdUnuluISJ0JKClBlpcjQmlxJXsTes7j8cXdwNiyC0OV7P4qAihq8
+         Eh4MBeQ1JylT/15tJ7kyUOn35QriHjCsjsU7hUQWRbBM36wJXHEPPf5PhzClzQnyZ3V5
+         9Ldg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iOSeUyEU1fkveiExoPDURDT6oyTtUpKpG0pS9lvxGPk=;
+        b=JioUpvSnLFcpNLVUDIpwTNLzNn+p8VBLalo73fazXWD9+1RO74Q33ldrbVYp6kfImg
+         b538ZUaRpH5kEcnFJjc2++b+p7kyItmHj06sthOya4430fxhaoiv7DhMFHuQaz12mz+N
+         DahIDxalU35FxozdlE9qeTQqrxVbTz4KvziArsMtrZ7sLYo3Oa9q/CE5FxaOIqd+mcvu
+         0v26MnY5bINiI+Vl/PWGjWeuJWc+NrMYe/Sb+/kk30s27zUVaDF8v5d7k5SURRuildVF
+         F6k8VF1xxYG3nz15HmJxaBOdO1H6uFVu4/soZYh8FZS2n0Ag2odB+hQJcdQDptCPk5Mg
+         BH1w==
+X-Gm-Message-State: APjAAAX0rUue18I08XidBcz+I8ZmiGIp+wa4EJUe8RUG3+RGj6E/qaC+
+        v4Q3bmpEjLLa4C4gYbBAUKI=
+X-Google-Smtp-Source: APXvYqyvqDkwXVx1vUgCuwUdrEJNtkhmJ9S6wB4zjLnLnnzhRmbZLukDpMWiBw8mOaYKRqcgwKBDJQ==
+X-Received: by 2002:a05:620a:b06:: with SMTP id t6mr28082853qkg.373.1576506785265;
+        Mon, 16 Dec 2019 06:33:05 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id b3sm6966992qtr.86.2019.12.16.06.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 06:33:04 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v6 0/2] tps6105x add devicetree and leds support
+Date:   Mon, 16 Dec 2019 09:32:57 -0500
+Message-Id: <20191216143259.24587-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-15 02:32, Bart Van Assche wrote:
-> On 12/14/19 8:03 AM, Can Guo wrote:
->> In ufshcd_remove(), after SCSI host is removed, put it once so that 
->> its
->> resources can be released.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index b5966fa..a86b0fd 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
->>   	ufs_bsg_remove(hba);
->>   	ufs_sysfs_remove_nodes(hba->dev);
->>   	scsi_remove_host(hba->host);
->> +	scsi_host_put(hba->host);
->>   	/* disable interrupts */
->>   	ufshcd_disable_intr(hba, hba->intr_mask);
->>   	ufshcd_hba_stop(hba, true);
-> 
-> Hi Can,
-> 
-> The UFS driver may queue work asynchronously and that asynchronous
-> work may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it
-> guaranteed that all that asynchronous work has finished before
-> scsi_host_put() is called?
-> 
-> Thanks,
-> 
-> Bart.
+v5 -> v6:
+	Dan Murphy's suggestions:
+	- s/mfd/MFD/
+	- s/led/LED/
+	- Added copyright message
+	- fixed regmap_update_bits alignment
+	- added a comment to clarify that fwnode / devicetree support is
+	  optional, and device_get_next_child_node() returning NULL is
+	  supported
+	Lee Jones's suggestions:
+	- removed 'Tree:' line from commit message
+	- changed over to relative paths
 
-Hi Bart,
+v4 -> v5:
+	Added Jacek Anaszewski's Acked-by tag on both patches.
+	Added Rob Herring's Reviewed-by tag on devicetree patch.
+	Lee Jones:
+	- tweaked commit message s/led/LED/
+	- use relative paths in Devicetree binding docs, line up ':'s
 
-As SCSI host is allocated in ufshcd_platform_init() during platform
-drive probe, it is much more appropriate if platform driver calls
-ufshcd_dealloc_host() in their own drv->remove() path. How do you
-think if I change it as below? If it is OK to you, please ignore my
-previous mails.
+v3 -> v4:
+	Removed tps6105 mfd patch - it was accepted (Mark Brown).
+	
+	Use the new LED registration API - suggested by Jacek Anaszewski.
+	
+	Updated led dt bindings to document function, color usage.
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 3d4582e..ea45756 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device 
-*pdev)
+v2 -> v3:
+	Removed tps6105x regulator patch - it was accepted (Mark Brown).
+	
+	Removed devicetree/platdata bindings for tps6105x led naming.
+	I can test only with a 4.19 vendor kernel, which does not have the
+	latest led naming infrastructure (function/color). Drop devicetree/
+	fwnode/pdata led naming in favour of hard-coding to "tps6105x::torch",
+	so the patch can be tested by me, yet remains acceptable to upstream.
 
-         pm_runtime_get_sync(&(pdev)->dev);
-         ufshcd_remove(hba);
-+       ufshcd_dealloc_host(hba);
-         return 0;
-  }
+v1 -> v2:
+	Select chip operational mode by looking at subnode name, _not_ its
+	compatible property. Suggested by Mark Brown.
 
-Thanks,
+I needed led operation for this mfd chip, so I added a very simple
+driver for this.
 
-Can Guo.
+My platform (arm imx6q) is devicetree-based, so I added optional
+devicetree support for this chip and its sub-drivers.
+
+Sven Van Asbroeck (2):
+  leds: tps6105x: add driver for MFD chip LED mode
+  dt-bindings: mfd: update TI tps6105x chip bindings
+
+ .../devicetree/bindings/mfd/tps6105x.txt      | 47 +++++++++-
+ drivers/leds/Kconfig                          | 10 +++
+ drivers/leds/Makefile                         |  1 +
+ drivers/leds/leds-tps6105x.c                  | 89 +++++++++++++++++++
+ 4 files changed, 146 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
+
+-- 
+2.17.1
+
