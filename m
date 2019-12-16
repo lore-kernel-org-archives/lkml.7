@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7C1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46083C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00033205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC7620733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518951;
-	bh=cvPAg9I2YwVLNkWL6x0/cKoqr1AmKIBCDJShQFg1R7k=;
+	s=default; t=1576518954;
+	bh=bOEKlkM0Bu6aFMQUWVJmuPimpJcF6y2YbSZcnZpYxnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrhTb5H5NhDD5DeHzUa1OeZOX6ECFKYCJSeZPZyVGGxmf3cufirWJIPlMkRNm7y4X
-	 7dlc7IY5TW0XC5HCZS06yIomrO1cwgPPH2spQFHwp9LpjhGcDJItGwt4hGKLDsmGoU
-	 FwqI89FHQmPJhf1yfK3OjR/wRpyju91OLNs2jgOQ=
+	b=nBDhBo227p27Y7WQ8vaH9QMbb1JpCXfOXFyCPlsGGcyE5R6eYIxoeK+KBiSf10vXS
+	 Wy/JEc83CR7o0OxkwnGdTX3rhiLyTRs//3cUpa0rNLkA7aAbnpIdwAwkOSRcEYzC8x
+	 44GggOziaAHHgcmvgPBwIn/nkukURpQa/2mSYK1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfLPRzt (ORCPT
+        id S1726890AbfLPRzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbfLPRzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:45 -0500
+        id S1728099AbfLPRzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370492176D;
-        Mon, 16 Dec 2019 17:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DDDE21582;
+        Mon, 16 Dec 2019 17:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518944;
-        bh=cvPAg9I2YwVLNkWL6x0/cKoqr1AmKIBCDJShQFg1R7k=;
+        s=default; t=1576518949;
+        bh=bOEKlkM0Bu6aFMQUWVJmuPimpJcF6y2YbSZcnZpYxnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZYqAloXdJsD6O/mVSJ5rS2gnuKzoHMZCp2NOLlQEYcOtuQ3MENUpyWBxUfZ7tOwF
-         FAL+1y/sJKvR95o2HRgYfK4lSwMNEWyys+e1U0ekXY+QcnuWmRgkHsvxHD+uKv2dQG
-         wk9lIP5lMSI1w2B/XGyGXe7LJAX6hqZ2Lb+tWP4Q=
+        b=V5CQahxj5rKT+gRt8xL7Fm23KznkplBT1SthDbUghrd1SnrfwmsxfZmi/t68+8RK5
+         Ona5G5/nzrP9pUEam+gyeSnOKFwL25apPfJJ7BjcFJszspQIjx0D1f2UuZTe7L1lSC
+         t5mbHh/ITm3jSMZi+26BqSotswXPypOKX3I81LQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH 4.14 130/267] coresight: etm4x: Fix input validation for sysfs.
-Date:   Mon, 16 Dec 2019 18:47:36 +0100
-Message-Id: <20191216174906.442408533@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 132/267] x86/PCI: Avoid AMD FCH XHCI USB PME# from D0 defect
+Date:   Mon, 16 Dec 2019 18:47:38 +0100
+Message-Id: <20191216174907.382680758@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,90 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Leach <mike.leach@linaro.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 2fe6899e36aa174abefd017887f9cfe0cb60c43a upstream.
+commit 7e8ce0e2b036dbc6617184317983aea4f2c52099 upstream.
 
-A number of issues are fixed relating to sysfs input validation:-
+The AMD FCH USB XHCI Controller advertises support for generating PME#
+while in D0.  When in D0, it does signal PME# for USB 3.0 connect events,
+but not for USB 2.0 or USB 1.1 connect events, which means the controller
+doesn't wake correctly for those events.
 
-1) bb_ctrl_store() - incorrect compare of bit select field to absolute
-value. Reworked per ETMv4 specification.
-2) seq_event_store() - incorrect mask value - register has two
-event values.
-3) cyc_threshold_store() - must mask with max before checking min
-otherwise wrapped values can set illegal value below min.
-4) res_ctrl_store() - update to mask off all res0 bits.
+  00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+        Capabilities: [50] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Fixes: a77de2637c9eb ("coresight: etm4x: moving sysFS entries to a dedicated file")
-Cc: stable <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20191104181251.26732-6-mathieu.poirier@linaro.org
+Clear PCI_PM_CAP_PME_D0 in dev->pme_support to indicate the device will not
+assert PME# from D0 so we don't rely on it.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+Link: https://lore.kernel.org/r/20190902145252.32111-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c |   21 ++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/x86/pci/fixup.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -667,10 +667,13 @@ static ssize_t cyc_threshold_store(struc
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -589,6 +589,17 @@ static void pci_fixup_amd_ehci_pme(struc
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
  
- 	if (kstrtoul(buf, 16, &val))
- 		return -EINVAL;
+ /*
++ * Device [1022:7914]
++ * When in D0, PME# doesn't get asserted when plugging USB 2.0 device.
++ */
++static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
++{
++	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
++	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
 +
-+	/* mask off max threshold before checking min value */
-+	val &= ETM_CYC_THRESHOLD_MASK;
- 	if (val < drvdata->ccitmin)
- 		return -EINVAL;
- 
--	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
-+	config->ccctlr = val;
- 	return size;
- }
- static DEVICE_ATTR_RW(cyc_threshold);
-@@ -701,14 +704,16 @@ static ssize_t bb_ctrl_store(struct devi
- 		return -EINVAL;
- 	if (!drvdata->nr_addr_cmp)
- 		return -EINVAL;
-+
- 	/*
--	 * Bit[7:0] selects which address range comparator is used for
--	 * branch broadcast control.
-+	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
-+	 * individual range comparators. If include then at least 1
-+	 * range must be selected.
- 	 */
--	if (BMVAL(val, 0, 7) > drvdata->nr_addr_cmp)
-+	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
- 		return -EINVAL;
- 
--	config->bb_ctrl = val;
-+	config->bb_ctrl = val & GENMASK(8, 0);
- 	return size;
- }
- static DEVICE_ATTR_RW(bb_ctrl);
-@@ -1341,8 +1346,8 @@ static ssize_t seq_event_store(struct de
- 
- 	spin_lock(&drvdata->spinlock);
- 	idx = config->seq_idx;
--	/* RST, bits[7:0] */
--	config->seq_ctrl[idx] = val & 0xFF;
-+	/* Seq control has two masks B[15:8] F[7:0] */
-+	config->seq_ctrl[idx] = val & 0xFFFF;
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-@@ -1597,7 +1602,7 @@ static ssize_t res_ctrl_store(struct dev
- 	if (idx % 2 != 0)
- 		/* PAIRINV, bit[21] */
- 		val &= ~BIT(21);
--	config->res_ctrl[idx] = val;
-+	config->res_ctrl[idx] = val & GENMASK(21, 0);
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
++/*
+  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+  *
+  * Using the [mem 0x7fa00000-0x7fbfffff] region, e.g., by assigning it to
 
 
