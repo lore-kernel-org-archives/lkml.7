@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59084C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A1BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D7120CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9FB20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519568;
-	bh=5PMj/yqtHGzgZjWYt94mGTIHFko8dd9eEjjS3SQabfM=;
+	s=default; t=1576519571;
+	bh=q9fg2RGYUfCx8OVfkcI7VQQW/sZ7MeV3AOZm5gBVNBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGdO3tMUPDhCZC3lJxzoJwxZSMK/UUXpakeCxSofyqQwsxoDs5y222MhX3ZUIiqgu
-	 8q2kjUTFvFgLH+ciDl05P2rrel/faHvA5dMKESrlpCWYsDk8bDg8naKIOlds1ZCuoi
-	 GXxl/o4RBdcP2FsjkedlAx/EVczhWoiH0xGiX9mc=
+	b=FWz+poQ6q1fyNhJCyXOtAcerwDjVb0xpaVtuwLd7ku2ba/V/XtE0pM+R7H8gXkkQO
+	 luSX4lF/ULtqVfZV4tJDBk2yZ4JvsTVAG1riBPt1HcEt0SkwuGoD9nI28zlvzBxdki
+	 M4oYywVcu4XZHNC8XYL7G7Kpvzk0NQQc3ac9PyOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbfLPSGG (ORCPT
+        id S1729941AbfLPSGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfLPSGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:03 -0500
+        id S1729548AbfLPSGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA1720733;
-        Mon, 16 Dec 2019 18:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4974D20700;
+        Mon, 16 Dec 2019 18:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519562;
-        bh=5PMj/yqtHGzgZjWYt94mGTIHFko8dd9eEjjS3SQabfM=;
+        s=default; t=1576519567;
+        bh=q9fg2RGYUfCx8OVfkcI7VQQW/sZ7MeV3AOZm5gBVNBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atxHS9XfxEoGbhRPlch2lZwXHucsCcvxgwodo/c3wbqetuhgoo5VPClX9t+SCx0yA
-         bDw2LfY9h+5KvcTGyepbpDtAEqHUQWaBOfhWV/mEINcAMhYKQaFtEQo7ChV3iHRfhp
-         OIjw6iwfaxypGYshR7pTYrS/7gJHkd61JU9wVwQU=
+        b=aJXdqi5a9Zp4u2bvW54bgTwRNnfWdgANWNND8XRoz6Ra+i47tCUoJjHT6kSXhkgpp
+         Erz+VOidXkffcv0LG0lcE9UdXtMUwcWTx+eLNZOgOjA0UKKbPOR706KwSFUS+qPiA6
+         Ldjd2OKddAO/GtLfZpEVh8FiGJY04l0MKXbXPcs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 117/140] net: hns3: clear pci private data when unload hns3 driver
-Date:   Mon, 16 Dec 2019 18:49:45 +0100
-Message-Id: <20191216174819.920030072@linuxfoundation.org>
+Subject: [PATCH 4.19 119/140] net: hns3: Check variable is valid before assigning it to another
+Date:   Mon, 16 Dec 2019 18:49:47 +0100
+Message-Id: <20191216174820.206660974@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -62,33 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit ac864c2346d087dd3739435af1b8d36be5f60c75 ]
+[ Upstream commit 676131f7c53ecdd79e29fc8cfcdefe6f9f2485e8 ]
 
-When unload hns3 driver, we should clear the pci private data.
+In hnae3_register_ae_dev(), ae_algo->ops is assigned to ae_dev->ops
+before check that ae_algo->ops is valid.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+And in hnae3_register_ae_algo(), missing check for ae_algo->ops.
+
+This patch fixes them.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b2860087a7dc7..4b4d9de0a6bb5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1620,6 +1620,7 @@ static void hns3_remove(struct pci_dev *pdev)
- 		hns3_disable_sriov(pdev);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index f98bff60bec37..f9259e568fa05 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -173,8 +173,12 @@ void hnae3_register_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 		if (!id)
+ 			continue;
  
- 	hnae3_unregister_ae_dev(ae_dev);
-+	pci_set_drvdata(pdev, NULL);
- }
+-		/* ae_dev init should set flag */
++		if (!ae_algo->ops) {
++			dev_err(&ae_dev->pdev->dev, "ae_algo ops are null\n");
++			continue;
++		}
+ 		ae_dev->ops = ae_algo->ops;
++
+ 		ret = ae_algo->ops->init_ae_dev(ae_dev);
+ 		if (ret) {
+ 			dev_err(&ae_dev->pdev->dev,
+@@ -182,6 +186,7 @@ void hnae3_register_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 			continue;
+ 		}
  
- /**
++		/* ae_dev init should set flag */
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 1);
+ 
+ 		/* check the client list for the match with this ae_dev type and
+@@ -256,15 +261,13 @@ int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		if (!id)
+ 			continue;
+ 
+-		ae_dev->ops = ae_algo->ops;
+-
+-		if (!ae_dev->ops) {
+-			dev_err(&ae_dev->pdev->dev, "ae_dev ops are null\n");
++		if (!ae_algo->ops) {
++			dev_err(&ae_dev->pdev->dev, "ae_algo ops are null\n");
+ 			ret = -EOPNOTSUPP;
+ 			goto out_err;
+ 		}
++		ae_dev->ops = ae_algo->ops;
+ 
+-		/* ae_dev init should set flag */
+ 		ret = ae_dev->ops->init_ae_dev(ae_dev);
+ 		if (ret) {
+ 			dev_err(&ae_dev->pdev->dev,
+@@ -272,6 +275,7 @@ int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 			goto out_err;
+ 		}
+ 
++		/* ae_dev init should set flag */
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 1);
+ 		break;
+ 	}
 -- 
 2.20.1
 
