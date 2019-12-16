@@ -2,170 +2,97 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BDC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA104C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D4420725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF0D206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8eY0lMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfLPK1O (ORCPT
+        id S1727443AbfLPK1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:27:14 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:57866 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPK1N (ORCPT
+        Mon, 16 Dec 2019 05:27:52 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40625 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPK1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:27:13 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 5jsqDektV5BBk2+xf3w/QcqvniodKkPePiSDQucL2mBcAfnV0iyjeDQf/r2QK9nJNIrLHoHtFM
- aiELBZFR1pVJPWH2ErEzW3Ff5y0gL1/yZ1Sylm+pmkwWlgnm/ctrtFlqbc75tn/o+zyg9y7Zn7
- xjZ8RI68Ik5eX63k9atSyhnV4b7ivLHPdpW7JbP4YXrX3H9PXnP2cr3xvon0Y0eQR8zQqtAv/r
- o7vs0mcBwP6GY9pwoSklBZnMaHnLwP7ooKy2Ve2Z9dcHF8yUExUHWnpzQJsgKsMxx6TiqF6WY+
- zmc=
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="57878905"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Dec 2019 03:27:12 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 16 Dec 2019 03:27:11 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 16 Dec 2019 03:27:11 -0700
-Date:   Mon, 16 Dec 2019 11:26:56 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     David Engraf <david.engraf@sysgo.com>
-CC:     <richard.genoud@gmail.com>, <gregkh@linuxfoundation.org>,
-        <jslaby@suse.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux-serial@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] tty/serial: atmel: fix out of range clock divider
- handling
-Message-ID: <20191216102656.lkazcvuy5oai63lb@M43218.corp.atmel.com>
-Mail-Followup-To: David Engraf <david.engraf@sysgo.com>,
-        richard.genoud@gmail.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <39e4d1c7-20b0-a024-3a46-e4d4369eed8e@sysgo.com>
- <20191216085403.17050-1-david.engraf@sysgo.com>
+        Mon, 16 Dec 2019 05:27:52 -0500
+Received: by mail-lj1-f196.google.com with SMTP id s22so6184855ljs.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:27:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kc8cYBIPzK7WSX6Dhpknsv+Az7sG/90zzv4gmeMoX/I=;
+        b=W8eY0lMy6Qgx6i4PCyCCiBvKfrdmAknD/ElHqjjw1MmaCLGGVpfqimMzwD1KrZptEq
+         SmGOOMB6K3EOysXDm1NJibNn3lksuBlHSOBZrz7e9YSXZZ0/0O6PP09e6gPdiqPt3m5B
+         Mzcdx5+SQBHVInfd1/jdFHaDUeTp0P1+OMJdM1fjj5O8gEMcfmVDBZX0mnqwtI0FHoC+
+         +JUpPJrkD3KtCHDJhkPV8xNvd5tGBAAQXPgmTaEpRRoIKPhM13zRhxUl2XeCnablcB1K
+         ZJsSS4yXSWQpyFNu04ukz20OTdBlqcQ4In2zbgGsTFzFdFnwdgDL7N3EYLh7dEwVzQDp
+         aAag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kc8cYBIPzK7WSX6Dhpknsv+Az7sG/90zzv4gmeMoX/I=;
+        b=Un8m0PLnAqMFedN+SULwDMx8iX3hItqLjOnQp3vyWEbVqiXGXZVUv5I5cr7n8mU6bf
+         Kh93ELB3CnKMe1+fJMdZc1LJ3rgiOi/KlalfA+j3VS6CUQs2shb79UT9FzZ0+LQjyu8L
+         BVYY+gupRlL9SOWM0pRg3wJ/xM+QFiol4WWr0ItIb/z/ALJtqdX20ltmFVN81xKJgxDD
+         5svhqXgoizIr/1b16E7r6BrjRTGEJ6K7FvTfhmvGttwa4I9Rw3JcCW/pd07gsIlGXYp6
+         py06j1325/QU7905UNjXWExosPRpRH4oEKtOhdbhvUCqYeu5Ev5HRhEk+H7KdVPcKAcR
+         5eXA==
+X-Gm-Message-State: APjAAAXVwZOyPbK6wMrHfUMYiIrgcoWkWzrIjyeua6buDGGgVx/NWJIq
+        4duE0goopSM/9x2+BWnzZsuqqG5CRem+PVYkNLYekg==
+X-Google-Smtp-Source: APXvYqxyqyrkWKlQ1gXsP1WttRxjmUxJOJGIdWOtatnGZNr2dHpk3W2tQ6LrXKWaSo/Xkh46gNIkzci0Gfo9VddG5bc=
+X-Received: by 2002:a2e:8045:: with SMTP id p5mr18792305ljg.251.1576492069993;
+ Mon, 16 Dec 2019 02:27:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191216085403.17050-1-david.engraf@sysgo.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-3-hdegoede@redhat.com>
+In-Reply-To: <20191215163810.52356-3-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 11:27:38 +0100
+Message-ID: <CACRpkdYWi5dX8jRBoJmrA3Mrig-JUKw+qq5gth2veY3EyUALqQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] drm/i915/dsi: Move poking of panel-enable GPIO to intel_dsi_vbt.c
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 09:54:03AM +0100, David Engraf wrote:
-> Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
-> register was already written thus the clock selection is ignored.
-> 
-> Fix by doing the baud rate calulation before setting the mode.
-> 
-> Fixes: 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
-> Signed-off-by: David Engraf <david.engraf@sysgo.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Thanks for the fix
+> On some older devices (BYT, CHT) which may use v2 VBT MIPI-sequences,
+> we need to manually control the panel enable GPIO as v2 sequences do
+> not do this.
+>
+> So far we have been carrying the code to do this on BYT/CHT devices
+> with a Crystal Cove PMIC in vlv_dsi.c, but as this really is a shortcoming
+> of the VBT MIPI-sequences, intel_dsi_vbt.c is a better place for this,
+> so move it there.
+>
+> This is a preparation patch for adding panel-enable and backlight-enable
+> GPIO support for BYT devices where instead of the PMIC the SoC is used
+> for backlight control.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Regards
+The kernel looks prettier after than before and it seems correct so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> ---
-> Changes since v1:
->  - moves set baud rate block before setting the mode register because
->    ATMEL_US_RTSDIS and ATMEL_US_RTSEN depend on ATMEL_US_MR.mode
-> 
-> ---
->  drivers/tty/serial/atmel_serial.c | 43 ++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index a8dc8af83f39..1ba9bc667e13 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -2270,27 +2270,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
->                 mode |= ATMEL_US_USMODE_NORMAL;
->         }
-> 
-> -       /* set the mode, clock divisor, parity, stop bits and data size */
-> -       atmel_uart_writel(port, ATMEL_US_MR, mode);
-> -
-> -       /*
-> -        * when switching the mode, set the RTS line state according to the
-> -        * new mode, otherwise keep the former state
-> -        */
-> -       if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
-> -               unsigned int rts_state;
-> -
-> -               if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
-> -                       /* let the hardware control the RTS line */
-> -                       rts_state = ATMEL_US_RTSDIS;
-> -               } else {
-> -                       /* force RTS line to low level */
-> -                       rts_state = ATMEL_US_RTSEN;
-> -               }
-> -
-> -               atmel_uart_writel(port, ATMEL_US_CR, rts_state);
-> -       }
-> -
->         /*
->          * Set the baud rate:
->          * Fractional baudrate allows to setup output frequency more
-> @@ -2317,6 +2296,28 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
-> 
->         if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
->                 atmel_uart_writel(port, ATMEL_US_BRGR, quot);
-> +
-> +       /* set the mode, clock divisor, parity, stop bits and data size */
-> +       atmel_uart_writel(port, ATMEL_US_MR, mode);
-> +
-> +       /*
-> +        * when switching the mode, set the RTS line state according to the
-> +        * new mode, otherwise keep the former state
-> +        */
-> +       if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
-> +               unsigned int rts_state;
-> +
-> +               if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
-> +                       /* let the hardware control the RTS line */
-> +                       rts_state = ATMEL_US_RTSDIS;
-> +               } else {
-> +                       /* force RTS line to low level */
-> +                       rts_state = ATMEL_US_RTSEN;
-> +               }
-> +
-> +               atmel_uart_writel(port, ATMEL_US_CR, rts_state);
-> +       }
-> +
->         atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
->         atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN | ATMEL_US_RXEN);
->         atmel_port->tx_stopped = false;
-> --
-> 2.17.1
-> 
+Yours,
+Linus Walleij
