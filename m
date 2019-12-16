@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1287BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03160C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAC92176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBF42176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521603;
-	bh=KcBt+yw1EEX1lJ66mdf9EzMUbehHmEDYVMVolsts3S0=;
+	s=default; t=1576521606;
+	bh=RDDDlaYGN4LXkxzUGGrHx9donJGj26ia5jz00kc+6/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SZTM5nKVfOIlclTkmH6jFhnDxaDsVJ39acASaFLBmY0nCnBgoI9oltLmomb8R2eUG
-	 7bqzqxz3sf/VM8+P0c7DOfjIVo7KDk5Jze94pC3ynOT5e390ksVJzeFjuZeyZoDros
-	 0ipkHw8gxtYekH1+vA8fJR/NJXqPQ/+R7sZSdWzc=
+	b=WJZDonFfcvL3sg2A+u4uVCmMwN7CUiSlNbg1S1NaSabUa2XvBfKBuRjrNTKPnHILD
+	 hMdHl2ocL80dZ1HOJAA6qqCOHtn7sPDJXktExdD8PaxYH/uavLCmmVzJbqKOfvyc1U
+	 Ti7TiNFM4pZYk8NoH8Py1f9NQyVRq/34BWK12Nn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfLPSCn (ORCPT
+        id S1729629AbfLPSkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:40:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbfLPSCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:36 -0500
+        id S1729113AbfLPSCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C3420700;
-        Mon, 16 Dec 2019 18:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4513B207FF;
+        Mon, 16 Dec 2019 18:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519355;
-        bh=KcBt+yw1EEX1lJ66mdf9EzMUbehHmEDYVMVolsts3S0=;
+        s=default; t=1576519362;
+        bh=RDDDlaYGN4LXkxzUGGrHx9donJGj26ia5jz00kc+6/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ScZ58oZ1fSJZ7ektP6cu4pQLllEOcr2zl8Sc3VkQxbVqYQQMWcMexEyI0sJcA8PD
-         IM7smlzjfJbf4SK9AiArOoXFisFiIHnchPZUTKmKzIjownJ5qlcwiZ7ta6oMddCTLo
-         zOqe1vnjDC84bSyU2dEjjVaHZgY1eaBYVut4oCS0=
+        b=hVQZdqvyrMjddKVjuypgl17aS0byoYxA6Ta8k8sFGqnI8a9Yz1nFcdt+Qj0ukCvD7
+         SJfCiw50P2m9WB1y+iRcBNXLiehN9laiwTsyLu6QrTo078E8hE/6e4UPbLb6xricaJ
+         nfnBT4fRbmD1bm5Qs0hbe973Wvdzgu9+bAxzCwF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 032/140] usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
-Date:   Mon, 16 Dec 2019 18:48:20 +0100
-Message-Id: <20191216174758.199333810@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.19 035/140] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of "role"
+Date:   Mon, 16 Dec 2019 18:48:23 +0100
+Message-Id: <20191216174758.620659251@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 3c3caae4cd6e122472efcf64759ff6392fb6bce2 upstream.
+commit 4bd5ead82d4b877ebe41daf95f28cda53205b039 upstream.
 
-The original ID that was added for Comet Lake PCH was
-actually for the -LP (low power) variant even though the
-constant for it said CMLH. Changing that while at it.
+Since the role_store() uses strncmp(), it's possible to refer
+out-of-memory if the sysfs data size is smaller than strlen("host").
+This patch fixes it by using sysfs_streq() instead of strncmp().
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191212093713.60614-1-heikki.krogerus@linux.intel.com
+Reported-by: Pavel Machek <pavel@denx.de>
+Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/dwc3-pci.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -29,7 +29,8 @@
- #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
- #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
- #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
--#define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
-+#define PCI_DEVICE_ID_INTEL_CMLLP		0x02ee
-+#define PCI_DEVICE_ID_INTEL_CMLH		0x06ee
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-@@ -306,6 +307,9 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
- 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -23,6 +23,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/string.h>
+ #include <linux/usb/of.h>
+ #include <linux/workqueue.h>
  
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLLP),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+@@ -241,9 +242,9 @@ static ssize_t role_store(struct device
+ 	if (!ch->has_otg_pins || !ch->phy->init_count)
+ 		return -EIO;
  
+-	if (!strncmp(buf, "host", strlen("host")))
++	if (sysfs_streq(buf, "host"))
+ 		new_mode = PHY_MODE_USB_HOST;
+-	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
++	else if (sysfs_streq(buf, "peripheral"))
+ 		new_mode = PHY_MODE_USB_DEVICE;
+ 	else
+ 		return -EINVAL;
 
 
