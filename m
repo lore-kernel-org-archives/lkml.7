@@ -2,86 +2,139 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BEEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF3AC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6D3207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r186Ngrd"
+	by mail.kernel.org (Postfix) with ESMTP id 6C57A2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLPIiS (ORCPT
+        id S1726989AbfLPIio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:38:18 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:46431 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLPIiS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:38:18 -0500
-Received: by mail-ua1-f66.google.com with SMTP id l6so1304604uap.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:38:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OP2XiHV+z9XRmOc6CVIQd7a0qzdvr1/Q3scZZYxr1/c=;
-        b=r186NgrdfTPHE2tpoPDJa7x9tQuQ/QFHgodakc61Ob+nFNnXNgovHI3f1/7CUBT/1v
-         4wcw0kUA9wCRMKc6fuAe+RcZzpp3T5EIzlUrObzeRWgYp5L0/dyQfTt8+/apH0TPJ7Oc
-         2gVCCjJ9L61hrUgACxE7Gx2t7WFaRzRM7IpiJWo+wTfIg292hispYmrOsZzsBvoLMNfF
-         Ir+O1OpLqiEbXITQT6ito6EowgfIVcrr5s8cMA7qBowJYvBKBKvicFeL2es39Dvv6J+2
-         aYXnn6xwZg35oIC5h21qC/j/dgwQFtPSlC2JSprHr5rDSXU9LNIuIsQCUbktM0XaS5j7
-         bo9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OP2XiHV+z9XRmOc6CVIQd7a0qzdvr1/Q3scZZYxr1/c=;
-        b=IKa4ngQMcp5ahcoFaucAnSrdTy6RX2xmmXLRrTGl+0WU753ksa4YsCefax0LrXe2Y0
-         eGg56pCn+E+YCKR9Vcums3FegBaarqJdlhg9GIuN9sQeHtGMw8OUekFWEOxX8w0yoNzG
-         /S68F6HmDwkTC2eW6pdi/R8nV25wcMalTOQ7TrX0gZIW7FKKFEYV1vxL7rE5gamw1Qbk
-         8d5w84TKC3LeQbunOaPwru2YA9+hXNT+plHR22UqBg/mDu8hPPUDEprNy/El68jXqOfZ
-         Azi4/lvr54BVBRgSLLBMnrzTaCESaeXlMHGk2X4S6BBhY9CM42M2X31WFadI4BwSoQgE
-         UsWQ==
-X-Gm-Message-State: APjAAAVucLKPSc2PJK4NmjlEJTPC0YFFXCSOMsZZ7C6YTr5pmDGT6Q2G
-        RAceaB+cUHGmaVMRPVRY8BX8GQLAqKYVNkLYcZ07qA==
-X-Google-Smtp-Source: APXvYqxWyOGptlYcgZ8GG7DRjA0eoZhkshCQNRcbI8e/5CoIydNXg1zYY8yTVFSvvZjiGUSUFzsofLus8fU624q0t2I=
-X-Received: by 2002:ab0:5512:: with SMTP id t18mr22644336uaa.128.1576485497137;
- Mon, 16 Dec 2019 00:38:17 -0800 (PST)
+        Mon, 16 Dec 2019 03:38:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37642 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726772AbfLPIio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 03:38:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AB298AE34;
+        Mon, 16 Dec 2019 08:38:41 +0000 (UTC)
+Subject: Re: [PATCH 2/2] zonefs: Add documentation
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+References: <20191212183816.102402-1-damien.lemoal@wdc.com>
+ <20191212183816.102402-3-damien.lemoal@wdc.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <8fe28905-aae5-bfb4-d6ac-f09d7244059e@suse.de>
+Date:   Mon, 16 Dec 2019 09:38:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <0101016ef36a5c54-2907cf32-2269-4a8c-9447-b086e7c86d98-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016ef36a5c54-2907cf32-2269-4a8c-9447-b086e7c86d98-000000@us-west-2.amazonses.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:38:06 +0100
-Message-ID: <CACRpkdY9ETQRHn7x2D2XVLZ810Uo1cPQxMBqTy5LnrORRNjTVw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add new qup functions
- for sc7180
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191212183816.102402-3-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 6:24 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+On 12/12/19 7:38 PM, Damien Le Moal wrote:
+> Add the new file Documentation/filesystems/zonefs.txt to document zonefs
+> principles and user-space tool usage.
+> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
+>   Documentation/filesystems/zonefs.txt | 150 +++++++++++++++++++++++++++
+>   MAINTAINERS                          |   1 +
+>   2 files changed, 151 insertions(+)
+>   create mode 100644 Documentation/filesystems/zonefs.txt
+> 
+> diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
+> new file mode 100644
+> index 000000000000..e5d798f4087d
+> --- /dev/null
+> +++ b/Documentation/filesystems/zonefs.txt
+> @@ -0,0 +1,150 @@
+> +ZoneFS - Zone filesystem for Zoned block devices
+> +
+> +Overview
+> +========
+> +
+> +zonefs is a very simple file system exposing each zone of a zoned block device
+> +as a file. Unlike a regular file system with zoned block device support (e.g.
+> +f2fs), zonefs does not hide the sequential write constraint of zoned block
+> +devices to the user. Files representing sequential write zones of the device
+> +must be written sequentially starting from the end of the file (append only
+> +writes).
+> +
+> +As such, zonefs is in essence closer to a raw block device access interface
+> +than to a full featured POSIX file system. The goal of zonefs is to simplify
+> +the implementation of zoned block devices support in applications by replacing
+> +raw block device file accesses with a richer file API, avoiding relying on
+> +direct block device file ioctls which may be more obscure to developers. One
+> +example of this approach is the implementation of LSM (log-structured merge)
+> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices by
+> +allowing SSTables to be stored in a zone file similarly to a regular file system
+> +rather than as a range of sectors of the entire disk. The introduction of the
+> +higher level construct "one file is one zone" can help reducing the amount of
+> +changes needed in the application as well as introducing support for different
+> +application programming languages.
+> +
+> +zonefs on-disk metadata is reduced to a super block which persistently stores a
+> +magic number and optional features flags and values. On mount, zonefs uses
+> +blkdev_report_zones() to obtain the device zone configuration and populates
+> +the mount point with a static file tree solely based on this information.
+> +E.g. file sizes come from the device zone type and write pointer offset managed
+> +by the device itself.
+> +
+> +The zone files created on mount have the following characteristics.
+> +1) Files representing zones of the same type are grouped together
+> +   under the same sub-directory:
+> +  * For conventional zones, the sub-directory "cnv" is used.
+> +  * For sequential write zones, the sub-directory "seq" is used.
+> +  These two directories are the only directories that exist in zonefs. Users
+> +  cannot create other directories and cannot rename nor delete the "cnv" and
+> +  "seq" sub-directories.
+> +2) The name of zone files is the number of the file within the zone type
+> +   sub-directory, in order of increasing zone start sector.
+> +3) The size of conventional zone files is fixed to the device zone size.
+> +   Conventional zone files cannot be truncated.
+> +4) The size of sequential zone files represent the file's zone write pointer
+> +   position relative to the zone start sector. Truncating these files is
+> +   allowed only down to 0, in wich case, the zone is reset to rewind the file
+> +   zone write pointer position to the start of the zone, or up to the zone size,
+> +   in which case the file's zone is transitioned to the FULL state (finish zone
+> +   operation).
+> +5) All read and write operations to files are not allowed beyond the file zone
+> +   size. Any access exceeding the zone size is failed with the -EFBIG error.
+> +6) Creating, deleting, renaming or modifying any attribute of files and
+> +   sub-directories is not allowed.
+> +
+> +Several optional features of zonefs can be enabled at format time.
+> +* Conventional zone aggregation: ranges of contiguous conventional zones can be
+> +  agregated into a single larger file instead of the default one file per zone.
+> +* File ownership: The owner UID and GID of zone files is by default 0 (root)
+> +  but can be changed to any valid UID/GID.
+> +* File access permissions: the default 640 access permissions can be changed.
+> +
 
-> Add new qup functions for qup02/04/11 and qup13 wherein multiple
-> functions (for i2c and uart) share the same pin. This allows users
-> to identify which specific qup function for the instance one needs
-> to use for the pin.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Please mention the 'direct writes only to sequential zones' restriction.
 
-Patch applied for v5.6 with the ACKs.
+Cheers,
 
-Yours,
-Linus Walleij
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
