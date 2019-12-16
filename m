@@ -2,52 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C648C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E75C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13838207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC122072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519624;
-	bh=hNtLZPPYElyILnGJ4tBu7iMDtUQCsXgFwYlYjXpjskM=;
+	s=default; t=1576519627;
+	bh=BpIGkf7iuxgSZhgg6xR7ks/6NmXixohDVYBsKO+T/yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGFSuinX2IN26HkxJVWUK7YFRBSjqnTRH3OkjLM8POWmFklrwOMVVQNCLIrpnnNcC
-	 eBwpL2CTWGvHb642m7NboOVuJs6594yNR2cpnqijMXFqyrcNEgPQRitIf11K1pS1tC
-	 Ir221XjfRWqlD4iMmXg6gOeH2YRG0hnBind0uqDw=
+	b=OWawxmvJr4uRLvE8iAhN5ClGqiPjSzj94V+xJDbsdqVdj2d4nu2WRwdEjJjXGtqpL
+	 9r76K4FVeXGu8lesSDqR8/6CFDGzXH+p7xeyZSUmAz5Z4KL/VNrOXNaSN1RofwcnqR
+	 snGXXj0Hhq1Gx81YwjyVFBMlYmn69LtBVe9oTACM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfLPSHD (ORCPT
+        id S1730096AbfLPSHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730071AbfLPSHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:01 -0500
+        id S1729910AbfLPSHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE69206EC;
-        Mon, 16 Dec 2019 18:07:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDCAD2072D;
+        Mon, 16 Dec 2019 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519620;
-        bh=hNtLZPPYElyILnGJ4tBu7iMDtUQCsXgFwYlYjXpjskM=;
+        s=default; t=1576519623;
+        bh=BpIGkf7iuxgSZhgg6xR7ks/6NmXixohDVYBsKO+T/yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYo3XO80eWfh9WqNVXCHNGrfbg9UKKcMHW4wGuv/10ISam+eioNHJtn5psSQvip6R
-         zcKTg2dxBaQdKRrZQE5umM1gGevDHW8T3aK4nEbEGyTwpRMWoknmqcTLJayb4T8QHd
-         po7PBz+9/62XrgJHyeZdAHeV1Avmx5QGewjvEOzU=
+        b=YR48d6AGJfbxYsudKtBjXboAkLKxhIrYKXG00PO75bXMvp+a2wxrUcLic/vK59wpj
+         MF4jrpHWdEYROIJTQ409smeWueKQB3mJ/3q87y1D1vyC+Znl14MygwQJ74HDIvmze+
+         QyveF8tYV1w1EgTFt188EEeUPwTquoulWB9Sj69Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 091/140] quota: Check that quota is not dirty before release
-Date:   Mon, 16 Dec 2019 18:49:19 +0100
-Message-Id: <20191216174811.351993708@linuxfoundation.org>
+        syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com,
+        =?UTF-8?q?Andreas=20Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 4.19 135/140] splice: only read in as much information as there is pipe buffer space
+Date:   Mon, 16 Dec 2019 18:50:03 +0100
+Message-Id: <20191216174829.190526167@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,85 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-commit df4bb5d128e2c44848aeb36b7ceceba3ac85080d upstream.
+commit 3253d9d093376d62b4a56e609f15d2ec5085ac73 upstream.
 
-There is a race window where quota was redirted once we drop dq_list_lock inside dqput(),
-but before we grab dquot->dq_lock inside dquot_release()
+Andreas Grünbacher reports that on the two filesystems that support
+iomap directio, it's possible for splice() to return -EAGAIN (instead of
+a short splice) if the pipe being written to has less space available in
+its pipe buffers than the length supplied by the calling process.
 
-TASK1                                                       TASK2 (chowner)
-->dqput()
-  we_slept:
-    spin_lock(&dq_list_lock)
-    if (dquot_dirty(dquot)) {
-          spin_unlock(&dq_list_lock);
-          dquot->dq_sb->dq_op->write_dquot(dquot);
-          goto we_slept
-    if (test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
-          spin_unlock(&dq_list_lock);
-          dquot->dq_sb->dq_op->release_dquot(dquot);
-                                                            dqget()
-							    mark_dquot_dirty()
-							    dqput()
-          goto we_slept;
-        }
-So dquot dirty quota will be released by TASK1, but on next we_sleept loop
-we detect this and call ->write_dquot() for it.
-XFSTEST: https://github.com/dmonakhov/xfstests/commit/440a80d4cbb39e9234df4d7240aee1d551c36107
+Months ago we fixed splice_direct_to_actor to clamp the length of the
+read request to the size of the splice pipe.  Do the same to do_splice.
 
-Link: https://lore.kernel.org/r/20191031103920.3919-2-dmonakhov@openvz.org
-CC: stable@vger.kernel.org
-Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 17614445576b6 ("splice: don't read more than available pipe space")
+Reported-by: syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com
+Reported-by: Andreas Grünbacher <andreas.gruenbacher@gmail.com>
+Reviewed-by: Andreas Grünbacher <andreas.gruenbacher@gmail.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/quota_global.c  |    2 +-
- fs/quota/dquot.c         |    2 +-
- include/linux/quotaops.h |   10 ++++++++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/splice.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/fs/ocfs2/quota_global.c
-+++ b/fs/ocfs2/quota_global.c
-@@ -728,7 +728,7 @@ static int ocfs2_release_dquot(struct dq
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -949,12 +949,13 @@ ssize_t splice_direct_to_actor(struct fi
+ 	WARN_ON_ONCE(pipe->nrbufs != 0);
  
- 	mutex_lock(&dquot->dq_lock);
- 	/* Check whether we are not racing with some other dqget() */
--	if (atomic_read(&dquot->dq_count) > 1)
-+	if (dquot_is_busy(dquot))
- 		goto out;
- 	/* Running from downconvert thread? Postpone quota processing to wq */
- 	if (current == osb->dc_task) {
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -491,7 +491,7 @@ int dquot_release(struct dquot *dquot)
+ 	while (len) {
++		unsigned int pipe_pages;
+ 		size_t read_len;
+ 		loff_t pos = sd->pos, prev_pos = pos;
  
- 	mutex_lock(&dquot->dq_lock);
- 	/* Check whether we are not racing with some other dqget() */
--	if (atomic_read(&dquot->dq_count) > 1)
-+	if (dquot_is_busy(dquot))
- 		goto out_dqlock;
- 	if (dqopt->ops[dquot->dq_id.type]->release_dqblk) {
- 		ret = dqopt->ops[dquot->dq_id.type]->release_dqblk(dquot);
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -54,6 +54,16 @@ static inline struct dquot *dqgrab(struc
- 	atomic_inc(&dquot->dq_count);
- 	return dquot;
- }
+ 		/* Don't try to read more the pipe has space for. */
+-		read_len = min_t(size_t, len,
+-				 (pipe->buffers - pipe->nrbufs) << PAGE_SHIFT);
++		pipe_pages = pipe->buffers - pipe->nrbufs;
++		read_len = min(len, (size_t)pipe_pages << PAGE_SHIFT);
+ 		ret = do_splice_to(in, &pos, pipe, read_len, flags);
+ 		if (unlikely(ret <= 0))
+ 			goto out_release;
+@@ -1175,8 +1176,15 @@ static long do_splice(struct file *in, l
+ 
+ 		pipe_lock(opipe);
+ 		ret = wait_for_space(opipe, flags);
+-		if (!ret)
++		if (!ret) {
++			unsigned int pipe_pages;
 +
-+static inline bool dquot_is_busy(struct dquot *dquot)
-+{
-+	if (test_bit(DQ_MOD_B, &dquot->dq_flags))
-+		return true;
-+	if (atomic_read(&dquot->dq_count) > 1)
-+		return true;
-+	return false;
-+}
++			/* Don't try to read more the pipe has space for. */
++			pipe_pages = opipe->buffers - opipe->nrbufs;
++			len = min(len, (size_t)pipe_pages << PAGE_SHIFT);
 +
- void dqput(struct dquot *dquot);
- int dquot_scan_active(struct super_block *sb,
- 		      int (*fn)(struct dquot *dquot, unsigned long priv),
+ 			ret = do_splice_to(in, &offset, opipe, len, flags);
++		}
+ 		pipe_unlock(opipe);
+ 		if (ret > 0)
+ 			wakeup_pipe_readers(opipe);
 
 
