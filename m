@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0087C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3201F21582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7862821582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519984;
-	bh=3ky4ZU8tMvRV5lg3udxWMIllO9DeUCVEmcuIMNAYDU4=;
+	s=default; t=1576519987;
+	bh=Hv0Oh9AaQ8pg6MVdadsqxHvR4cfEFTO5KCAU/35Se18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ls2PpkVgxSTSCEEIFo6Z8oYv0qOqoCicfkRmtzh88ka9D5kHZAKaKdsDAxY3Q8Rye
-	 pzgNRvnZ2zJ5pr+gAP1OcBVjHGZR3TiswKFP9XHtxt1t7qrDG1xF81tGz+ybL5U3z2
-	 xNUwKzIK5PeKSaKYAutETNdXefA8MULlBPujgSFs=
+	b=mPfCO9w5sCwqqiD4qQwnYVcLqX8XetkYCfnGCrJaPR8W2FCPJVjqF7OMfYR7z3rog
+	 VcgI4HpxqQyCQ8SXOwx5dQEkzlvoc0x29Z1w86HCEI1LXbzxKb3jmCefsOSHlgszzI
+	 vF4FvPq/yj6KZGV4ns8aOQUyQp12GBVYexHfVzlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfLPSND (ORCPT
+        id S1730346AbfLPSNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58676 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731040AbfLPSM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:59 -0500
+        id S1731027AbfLPSNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE9C4206E0;
-        Mon, 16 Dec 2019 18:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2676421582;
+        Mon, 16 Dec 2019 18:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519979;
-        bh=3ky4ZU8tMvRV5lg3udxWMIllO9DeUCVEmcuIMNAYDU4=;
+        s=default; t=1576519981;
+        bh=Hv0Oh9AaQ8pg6MVdadsqxHvR4cfEFTO5KCAU/35Se18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2773ho0cPuXrOm0+/zkSFmBEi0OhGwO1usqAAZcbp2bNW6vEBXf9t1/TQhIPgGN0
-         fhdR9/tofNqEVj1TRLPP6LZ43F1oN2c5c2UH6IDKSFghqrGv+ZZGfiOCQcN0V2/zdG
-         gfHM81nkegcDeunDAI1qO4X7lKXoRwBzyJTq/U2M=
+        b=XcjLZYAlwrN4AiQbtzx1/SLTQnZQSA0cA+p34SIm0MWQdkEJWS4ZGTrqYqiwOl5uQ
+         IKoUrzjE25hN9Wz1QP8Jta2YxrZXi7w0FEpRd2GnS/So3IzFD6/par7/KGaKJSxXe6
+         soScHx0FVXk5HinF1Ht7pSTZyX4SjeolAMmEb4N0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 146/180] scsi: qla2xxx: Fix qla24xx_process_bidir_cmd()
-Date:   Mon, 16 Dec 2019 18:49:46 +0100
-Message-Id: <20191216174843.609838178@linuxfoundation.org>
+Subject: [PATCH 5.3 147/180] scsi: qla2xxx: Always check the qla2x00_wait_for_hba_online() return value
+Date:   Mon, 16 Dec 2019 18:49:47 +0100
+Message-Id: <20191216174843.717187850@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -63,66 +63,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit c29282c65d1cf54daeea63be46243d7f69d72f4d ]
+[ Upstream commit e6803efae5acd109fad9f2f07dab674563441a53 ]
 
-Set the r??_data_len variables before using these instead of after.
-
-This patch fixes the following Coverity complaint:
-
-const: At condition req_data_len != rsp_data_len, the value of req_data_len
-must be equal to 0.
-const: At condition req_data_len != rsp_data_len, the value of rsp_data_len
-must be equal to 0.
-dead_error_condition: The condition req_data_len != rsp_data_len cannot be
-true.
+This patch fixes several Coverity complaints about not always checking
+the qla2x00_wait_for_hba_online() return value.
 
 Cc: Himanshu Madhani <hmadhani@marvell.com>
-Fixes: a9b6f722f62d ("[SCSI] qla2xxx: Implementation of bidirectional.") # v3.7.
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Tested-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/scsi/qla2xxx/qla_attr.c   | 3 ++-
+ drivers/scsi/qla2xxx/qla_target.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index ce87bbdb30907..be9eeabe965e2 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -1782,8 +1782,8 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
- 	uint16_t nextlid = 0;
- 	uint32_t tot_dsds;
- 	srb_t *sp = NULL;
--	uint32_t req_data_len = 0;
--	uint32_t rsp_data_len = 0;
-+	uint32_t req_data_len;
-+	uint32_t rsp_data_len;
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 9584c5a483975..d9a0eb1d8a1d2 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -725,7 +725,8 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
+ 			break;
+ 		} else {
+ 			/* Make sure FC side is not in reset */
+-			qla2x00_wait_for_hba_online(vha);
++			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
++				     QLA_SUCCESS);
  
- 	/* Check the type of the adapter */
- 	if (!IS_BIDI_CAPABLE(ha)) {
-@@ -1888,6 +1888,9 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
- 		goto done_unmap_sg;
+ 			/* Issue MPI reset */
+ 			scsi_block_requests(vha->host);
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 7e98d1be757dc..7c44f84a58e92 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -6681,7 +6681,8 @@ qlt_enable_vha(struct scsi_qla_host *vha)
+ 	} else {
+ 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
+ 		qla2xxx_wake_dpc(base_vha);
+-		qla2x00_wait_for_hba_online(base_vha);
++		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
++			     QLA_SUCCESS);
  	}
+ 	mutex_unlock(&ha->optrom_mutex);
+ }
+@@ -6712,7 +6713,9 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
  
-+	req_data_len = bsg_job->request_payload.payload_len;
-+	rsp_data_len = bsg_job->reply_payload.payload_len;
-+
- 	if (req_data_len != rsp_data_len) {
- 		rval = EXT_STATUS_BUSY;
- 		ql_log(ql_log_warn, vha, 0x70aa,
-@@ -1895,10 +1898,6 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
- 		goto done_unmap_sg;
- 	}
+ 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+ 	qla2xxx_wake_dpc(vha);
+-	qla2x00_wait_for_hba_online(vha);
++	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
++		ql_dbg(ql_dbg_tgt, vha, 0xe081,
++		       "qla2x00_wait_for_hba_online() failed\n");
+ }
  
--	req_data_len = bsg_job->request_payload.payload_len;
--	rsp_data_len = bsg_job->reply_payload.payload_len;
--
--
- 	/* Alloc SRB structure */
- 	sp = qla2x00_get_sp(vha, &(vha->bidir_fcport), GFP_KERNEL);
- 	if (!sp) {
+ /*
 -- 
 2.20.1
 
