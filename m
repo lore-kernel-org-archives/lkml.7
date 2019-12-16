@@ -2,154 +2,135 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACBFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB903C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C977205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ED1205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXcuPiep"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oRZSc2g2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfLPP0w (ORCPT
+        id S1728396AbfLPP0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 16 Dec 2019 10:26:54 -0500
+Received: from mout.web.de ([212.227.17.11]:46573 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728259AbfLPP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 10:26:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44538 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728173AbfLPP0w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:26:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576510010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iGwZfkSSJJnwVp/7Ati+2Sz+85Pj+b7tepwX8oznNuk=;
-        b=EXcuPiepVCmoQOdqSBUA9VAzf8EVZI0IfmVD1ILFrAiPRaSW157lgp6vYt5f9JTzzjy+p4
-        3cqCeBbIRE83TYRJVqrxasZ0AgYydBMzqH0N/mTGxlrNQ+17zQTXDwvGcx/+/JUFWBymKy
-        2fFwypLv5ZQ4hz85AXXZ4Lp8wk+Jo/I=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-Mrm8-0GpNWqb7ulUkUOjIQ-1; Mon, 16 Dec 2019 10:26:48 -0500
-X-MC-Unique: Mrm8-0GpNWqb7ulUkUOjIQ-1
-Received: by mail-qt1-f198.google.com with SMTP id l4so4804979qte.18
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:26:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iGwZfkSSJJnwVp/7Ati+2Sz+85Pj+b7tepwX8oznNuk=;
-        b=qm6JnWthiV+FZsb891UelrXTndY94OBkJxXwGvcoVJa2/0/uB6FxDWrRTL9Kr2yFJZ
-         wLXVMziYTjct9HGVFI/GYBIMZIy3yLX3ug66E8UaA17iKvyURL/79Ozee6zuMu2QP/nV
-         Q2Uz8UqIDw+Y+R6hobLNtMu/30xqdr57DnOlrayElY+9j1znCHKqGvULjLMtI+0zqgqg
-         dxz6wXLF/UKL04Crrx9xJoqBCSaEcOAlOSxtqKUtJ9E4v1u8/qlJLczl4S9myMEDy+tt
-         DMCAHl5+VQzhKlxaeqTXx3arR28UV2hrUtKBUXR000uCXn4XFEH8HaOCy0iWeZAk/LVg
-         28Og==
-X-Gm-Message-State: APjAAAU1ZKgNFkrumOoU1WvAuaevCYokrIKeSnF2JEo8/Nf6eUVY/HHc
-        qpvYj52X4aEykjbLYlGE2O5GeldniqXsgX6X+7iXuH5GRYp4IFzzV/DUbq5aEQPwIAbVHwmbfVU
-        HEQmqzr4NNcNyGT+ccQ2Mpbkr
-X-Received: by 2002:ac8:5257:: with SMTP id y23mr12518064qtn.88.1576510008518;
-        Mon, 16 Dec 2019 07:26:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzjZKLtqnKl3UUpSm2cxHKwBagl6vJ99FCgj6lDTxMrEQ4zqr3hHWPw+ZrHloqvoZLMECC06A==
-X-Received: by 2002:ac8:5257:: with SMTP id y23mr12518048qtn.88.1576510008236;
-        Mon, 16 Dec 2019 07:26:48 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c0:3f::2])
-        by smtp.gmail.com with ESMTPSA id u15sm6007057qku.67.2019.12.16.07.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:26:46 -0800 (PST)
-Date:   Mon, 16 Dec 2019 10:26:47 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191216152647.GD83861@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <m1lfrihj2n.fsf@dinechin.org>
- <20191213202324.GI16429@xz-x1>
- <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
- <20191214162644.GK16429@xz-x1>
- <0f084179-2a5d-e8d9-5870-3cc428105596@redhat.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576509998;
+        bh=bX6ezpgPKnZz7gXv6Z70uAvDUPR/OQwEjr37+ely8/4=;
+        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
+        b=oRZSc2g27iG8oOUDh5xGeaHdgEhX8L5cBKVPu7AjFVKUsVhx0jyZ/UPdvHJy0SsUr
+         +9VKPAkBTW0ycfBJHsCax6rXGRrDKmYY1yqMLlPET4NYA3ftq7fTNGk/YD2fdf222W
+         u/LJEVrX3nUKcjjiim+OX6nubcIEhbePYmxPUzYY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LrJse-1hiHx42Amq-0137js; Mon, 16
+ Dec 2019 16:26:38 +0100
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
+References: <20191213055028.5574-2-namjae.jeon@samsung.com>
+Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
+ headers
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Message-ID: <4aedc5e0-17e3-f0c5-9c47-8d1300e0af3f@web.de>
+Date:   Mon, 16 Dec 2019 16:26:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20191213055028.5574-2-namjae.jeon@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0f084179-2a5d-e8d9-5870-3cc428105596@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:33DO9kAi1XCUVZ6W1UO14ulKknd/vu8psU5mBGNcHnJL8PUFSzT
+ WPcc62OcJOilaM69r69WqHLU0sdTe6C1FFZjbixRELf4ub2TSnawkjYd3HTRRp+s3WDKle8
+ GJOOgWwwEKNoF+UGqoVM9UULkVbJDk3ASkFPRbMMKd79AX8TzXczcAC+f4W1Lpz/b7DJ4W8
+ 61YfuEWIl94ow4WuUoV6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uwE6IeKaNFY=:8qCfO7melHxdnpPgUaOQSb
+ 1N0wnoAUZW/bvKSlms+w5evBLiIy0VZ2WB7hA0frgX9eJvo1cGeNnEv+rGxCTYRLsCLNWrAus
+ 0oftlMROZaXC0GUko6dK+Y7lqi/rJGvsNVMOMPPEKNEsRgrtic70LpS0P/29LczbyFRwA3b+R
+ FF4EbJL1yTyKRTsnQhEIeW+0q6qvhmwfR2GlQ4Z5jyJWwqVXEBADhP/THCS6AeP70ZTnfB9u9
+ ++uuevNg5KE0aTROrokH8Mh/H9yntIcyD5PHGAuOxvi3ZKZwWMZGWlyYkZnBpcdOaOSO1buda
+ QDfpoZ9XjgRp17b4cFlJkG93bVHfhWORFMTO5P4jMg5oF9o+l5o7SZBrFF9hG7Rse7p/Y2kU9
+ sAlRkCiD7KDF0oaTCs6I81suiXxelKp3hQc8VdnZZsifijiKwuPeNemvxL9ul6P41mcebVWyt
+ uq0gp8uI9RAz8euB9keaIyeaxBwpk4gMPtQ9dZLobnZVVFc2zgy5Wxghy2Ck0LP3SAdWS62qN
+ 9jiVUC8p5QBUO16Cd0aFwDtsd4ViWcyWrj/GDEYMAu73huFsoZ091sCpLSV1OfEvZGHnV1xBE
+ XVfRpfNbv3SKeGslxbokzoKfJRxa3xLu8O4bFR1GJcA60blrd3IFTPzB9i1PfbTFkTic2Il3V
+ BeMh35NAqD06Ouxi2x/Huh38kpBzTwOdLW5vv/wY6bkyButCFMA+smSbKtGWMaul+gzOaIhYk
+ H01Vsb9l6fSrafaIyBU6x1ZAvrAF39jbWaGiVfg8vgUQ9HpBUdHTviAH8bsv1TgnwlOuvgEeC
+ LjdtVNGcCaqKL9tCSQcbDz3haVjUX64sAiJkkvCJVhgJNARL8IGDtbJLYEbZXpskbKPJ22bau
+ yIL/xFv8hpxg+DehHq3ojGkBX6Sd90kU+ZukhvjToqkyQX34/rOfSbQ3gjMJmwwdB2xVkkwPz
+ CooblE7vTam/beFR/B6b1C/1Ci2JlgFBg6Ds2eGupYjBw8CMkqYRjKRf6KFEjiOG7NB6nKdg6
+ 75sSqkQrvQja5HBw3Ujs+hG7epy5HdeapoUffNG08jf2vxi+h5GUVsvGQQg/12BW6H5PoV/6y
+ X3nH8TCGryZ0bYrHPCYhT9D2mUvAe6hnfEtGf1vPv3JeUHmPrph3ybeLy+hioLbhPNLdkWxO7
+ WwIV9isHy0K9ztEn3C1UlgJHBPvlQ7gZrCZNx2aAdiUS+wD8BoLQv5Ujm4Q1u6+dfHSIhF/ZM
+ pH9/0b1XVtjyzI18Anjk45hbEr3z/C7ODGQoxFb/dQkISZNzoLwePcHctq+4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:29:36AM +0100, Paolo Bonzini wrote:
-> On 14/12/19 17:26, Peter Xu wrote:
-> > On Sat, Dec 14, 2019 at 08:57:26AM +0100, Paolo Bonzini wrote:
-> >> On 13/12/19 21:23, Peter Xu wrote:
-> >>>> What is the benefit of using u16 for that? That means with 4K pages, you
-> >>>> can share at most 256M of dirty memory each time? That seems low to me,
-> >>>> especially since it's sufficient to touch one byte in a page to dirty it.
-> >>>>
-> >>>> Actually, this is not consistent with the definition in the code ;-)
-> >>>> So I'll assume it's actually u32.
-> >>> Yes it's u32 now.  Actually I believe at least Paolo would prefer u16
-> >>> more. :)
-> >>
-> >> It has to be u16, because it overlaps the padding of the first entry.
-> > 
-> > Hmm, could you explain?
-> > 
-> > Note that here what Christophe commented is on dirty_index,
-> > reset_index of "struct kvm_dirty_ring", so imho it could really be
-> > anything we want as long as it can store a u32 (which is the size of
-> > the elements in kvm_dirty_ring_indexes).
-> > 
-> > If you were instead talking about the previous union definition of
-> > "struct kvm_dirty_gfns" rather than "struct kvm_dirty_ring", iiuc I've
-> > moved those indices out of it and defined kvm_dirty_ring_indexes which
-> > we expose via kvm_run, so we don't have that limitation as well any
-> > more?
-> 
-> Yeah, I meant that since the size has (had) to be u16 in the union, it
-> need not be bigger in kvm_dirty_ring.
-> 
-> I don't think having more than 2^16 entries in the *per-CPU* ring buffer
-> makes sense; lagging in recording dirty memory by more than 256 MiB per
-> CPU would mean a large pause later on resetting the ring buffers (your
-> KVM_CLEAR_DIRTY_LOG patches found the sweet spot to be around 1 GiB for
-> the whole system).
+=E2=80=A6
+> +++ b/fs/exfat/exfat_fs.h
+=E2=80=A6
+> +/* type values */
 
-That's right, 1G could probably be a "common flavor" for guests in
-that case.
+How do you think about to convert the specification =E2=80=9C#define TYPE_=
+=E2=80=A6=E2=80=9D
+into enumerations?
 
-Though I wanted to use u64 only because I wanted to prepare even
-better for future potential changes as long as it won't hurt much.
-Here I'm just afraid 16bit might not be big enough for this 64bit
-world, at the meantime I'd confess some of the requirement could be
-really unimaginable before we know it..  I'm trying to forge one here:
-what if the customer wants to handle 4G burst dirtying workload during
-a migration (besides the burst IOs, mostly idle guests), while the
-customer also want good responsiveness during the burst dirtying?  In
-that case even if we use 256MiB ring we'll still need to freqently
-pause for the harvesting, but actually this case really suites for a
-8G ring size.
-
-My example could be nonsense actually, just to show that if we can
-extend something to u64 from u16 without paying much, then why not. :-)
-
-> 
-> So I liked the union, but if you removed it you might as well align the
-> producer and consumer indices to 64 bytes so that they are in separate
-> cache lines.
-
-Yeh that I can do.  Thanks,
-
--- 
-Peter Xu
-
+Regards,
+Markus
