@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2229C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94264C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98BA20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADD424683
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519542;
-	bh=5cxpUpaQfq084JkcGhH1UyrJMKJkaD6lSDJm5jRztZo=;
+	s=default; t=1576519545;
+	bh=oBdUceBh9iji2lhiwMRLh5mwNhI8r7frfSTtgbxrcEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VU7sbn59sFR0aSlYXi6ai4O9Qm2CXxBFgVdVHQshJVANldlkQZtpqflMzWlKJ0gKA
-	 i+9SS9NaATHR0hMT/lXPyuOLKYu28thhnS9xqRdJZesewKmxEDweqYtqu+SPel8GXE
-	 XcbmDUMHySoCMbXVAoX5rk/AbzZARJqx2+CwSceY=
+	b=q30df59ndcqxcDyWlm/XTX6Mifu7fXXJb2DakFVtsmULP3nf+peSNy7eQIO/PO0qk
+	 POEuDGoZe5fzbjaeVEjpjD+uticvuQFlI/HzfDXW6TOBqX6AfXnUKXHRRpwMKlDXQv
+	 GrHDwgZzpb1QGN5qijfzSgTORzoS/ifhfLq+eJN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfLPSFl (ORCPT
+        id S1729870AbfLPSFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729846AbfLPSFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:39 -0500
+        id S1729677AbfLPSFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADED20700;
-        Mon, 16 Dec 2019 18:05:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7570A21582;
+        Mon, 16 Dec 2019 18:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519538;
-        bh=5cxpUpaQfq084JkcGhH1UyrJMKJkaD6lSDJm5jRztZo=;
+        s=default; t=1576519540;
+        bh=oBdUceBh9iji2lhiwMRLh5mwNhI8r7frfSTtgbxrcEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsD/V3StQ2tYaG56SGJbD7KLy60RP3qePjvkotv433sybn+oip+gpcAk7pSHyrPqR
-         WHwLY7HbsUYyGmVlxOunBFMTWOnLousyQRs1B3Hv4iVanQqWOHP/0lHe9slWidgYIu
-         DujauYYIljX17yQjTFSsDrpAYHusZ+5J8uQiG2Zw=
+        b=NHAGgZHGVzHgD1mSzOqG5bUIPqY/W9kdBSt/urSVU9cPeMkEusJ3buTXaGuDMLClI
+         +wtxStoeOZ98ZJEA0av59n6HVWp1QxISvqenYe4eR2HVTZMW6cCl7IX80UAzf4IDad
+         p4zzg/cXuVcBoCAul7aO0mw7jkzY9HG1K7UwX2KE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/140] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-Date:   Mon, 16 Dec 2019 18:49:36 +0100
-Message-Id: <20191216174816.194534419@linuxfoundation.org>
+Subject: [PATCH 4.19 109/140] scsi: lpfc: Cap NPIV vports to 256
+Date:   Mon, 16 Dec 2019 18:49:37 +0100
+Message-Id: <20191216174816.549065385@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,140 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
+[ Upstream commit 8b47ae69e049ae0b3373859d901f0334322f9fe9 ]
 
-With a wl1251 child node of mmc3 in the device tree decoded
-in omap_hsmmc.c to handle special wl1251 initialization, we do
-no longer need to instantiate the mmc3 through pdata quirks.
+Depending on the chipset, the number of NPIV vports may vary and be in
+excess of what most switches support (256). To avoid confusion with the
+users, limit the reported NPIV vports to 256.
 
-We also can remove the wlan regulator and reset/interrupt definitions
-and do them through device tree.
+Additionally correct the 16G adapter which is reporting a bogus NPIV vport
+number if the link is down.
 
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
- 1 file changed, 93 deletions(-)
+ drivers/scsi/lpfc/lpfc.h      |  3 ++-
+ drivers/scsi/lpfc/lpfc_attr.c | 12 ++++++++++--
+ drivers/scsi/lpfc/lpfc_init.c |  3 +++
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 7f02743edbe4c..dae7262287704 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -305,108 +305,15 @@ static void __init omap3_logicpd_torpedo_init(void)
- }
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index a62e85cb62eb2..706aca3f7c253 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -966,7 +966,8 @@ struct lpfc_hba {
+ 	struct list_head port_list;
+ 	struct lpfc_vport *pport;	/* physical lpfc_vport pointer */
+ 	uint16_t max_vpi;		/* Maximum virtual nports */
+-#define LPFC_MAX_VPI 0xFFFF		/* Max number of VPI supported */
++#define LPFC_MAX_VPI	0xFF		/* Max number VPI supported 0 - 0xff */
++#define LPFC_MAX_VPORTS	0x100		/* Max vports per port, with pport */
+ 	uint16_t max_vports;            /*
+ 					 * For IOV HBAs max_vpi can change
+ 					 * after a reset. max_vports is max
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index 3f69a5e4e470a..1e9002138d31c 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -1632,6 +1632,9 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
+ 		max_vpi = (bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) > 0) ?
+ 			(bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) - 1) : 0;
  
- /* omap3pandora legacy devices */
--#define PANDORA_WIFI_IRQ_GPIO		21
--#define PANDORA_WIFI_NRESET_GPIO	23
++		/* Limit the max we support */
++		if (max_vpi > LPFC_MAX_VPI)
++			max_vpi = LPFC_MAX_VPI;
+ 		if (mvpi)
+ 			*mvpi = max_vpi;
+ 		if (avpi)
+@@ -1647,8 +1650,13 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
+ 			*axri = pmb->un.varRdConfig.avail_xri;
+ 		if (mvpi)
+ 			*mvpi = pmb->un.varRdConfig.max_vpi;
+-		if (avpi)
+-			*avpi = pmb->un.varRdConfig.avail_vpi;
++		if (avpi) {
++			/* avail_vpi is only valid if link is up and ready */
++			if (phba->link_state == LPFC_HBA_READY)
++				*avpi = pmb->un.varRdConfig.avail_vpi;
++			else
++				*avpi = pmb->un.varRdConfig.max_vpi;
++		}
+ 	}
  
- static struct platform_device pandora_backlight = {
- 	.name	= "pandora-backlight",
- 	.id	= -1,
- };
- 
--static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
--	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
--};
--
--static struct regulator_init_data pandora_vmmc3 = {
--	.constraints = {
--		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
--	},
--	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
--	.consumer_supplies	= pandora_vmmc3_supply,
--};
--
--static struct fixed_voltage_config pandora_vwlan = {
--	.supply_name		= "vwlan",
--	.microvolts		= 1800000, /* 1.8V */
--	.gpio			= PANDORA_WIFI_NRESET_GPIO,
--	.startup_delay		= 50000, /* 50ms */
--	.enable_high		= 1,
--	.init_data		= &pandora_vmmc3,
--};
--
--static struct platform_device pandora_vwlan_device = {
--	.name		= "reg-fixed-voltage",
--	.id		= 1,
--	.dev = {
--		.platform_data = &pandora_vwlan,
--	},
--};
--
--static void pandora_wl1251_init_card(struct mmc_card *card)
--{
--	/*
--	 * We have TI wl1251 attached to MMC3. Pass this information to
--	 * SDIO core because it can't be probed by normal methods.
--	 */
--	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
--		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
--		card->cccr.wide_bus = 1;
--		card->cis.vendor = 0x104c;
--		card->cis.device = 0x9066;
--		card->cis.blksize = 512;
--		card->cis.max_dtr = 24000000;
--		card->ocr = 0x80;
--	}
--}
--
--static struct omap2_hsmmc_info pandora_mmc3[] = {
--	{
--		.mmc		= 3,
--		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
--		.gpio_cd	= -EINVAL,
--		.gpio_wp	= -EINVAL,
--		.init_card	= pandora_wl1251_init_card,
--	},
--	{}	/* Terminator */
--};
--
--static void __init pandora_wl1251_init(void)
--{
--	struct wl1251_platform_data pandora_wl1251_pdata;
--	int ret;
--
--	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
--
--	pandora_wl1251_pdata.power_gpio = -1;
--
--	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
--	if (ret < 0)
--		goto fail;
--
--	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
--	if (pandora_wl1251_pdata.irq < 0)
--		goto fail_irq;
--
--	pandora_wl1251_pdata.use_eeprom = true;
--	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
--	if (ret < 0)
--		goto fail_irq;
--
--	return;
--
--fail_irq:
--	gpio_free(PANDORA_WIFI_IRQ_GPIO);
--fail:
--	pr_err("wl1251 board initialisation failed\n");
--}
--
- static void __init omap3_pandora_legacy_init(void)
- {
- 	platform_device_register(&pandora_backlight);
--	platform_device_register(&pandora_vwlan_device);
--	omap_hsmmc_init(pandora_mmc3);
--	omap_hsmmc_late_init(pandora_mmc3);
--	pandora_wl1251_init();
- }
- #endif /* CONFIG_ARCH_OMAP3 */
- 
+ 	mempool_free(pmboxq, phba->mbox_mem_pool);
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index da63c026ba460..57510a831735b 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -7766,6 +7766,9 @@ lpfc_sli4_read_config(struct lpfc_hba *phba)
+ 			bf_get(lpfc_mbx_rd_conf_xri_base, rd_config);
+ 		phba->sli4_hba.max_cfg_param.max_vpi =
+ 			bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config);
++		/* Limit the max we support */
++		if (phba->sli4_hba.max_cfg_param.max_vpi > LPFC_MAX_VPORTS)
++			phba->sli4_hba.max_cfg_param.max_vpi = LPFC_MAX_VPORTS;
+ 		phba->sli4_hba.max_cfg_param.vpi_base =
+ 			bf_get(lpfc_mbx_rd_conf_vpi_base, rd_config);
+ 		phba->sli4_hba.max_cfg_param.max_rpi =
 -- 
 2.20.1
 
