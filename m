@@ -2,177 +2,125 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2383C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6111C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDC7206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16E4206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfLPQpL (ORCPT
+        id S1726633AbfLPQpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:45:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:52063 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQpL (ORCPT
+        Mon, 16 Dec 2019 11:45:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:38451 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPQps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:45:11 -0500
-Received: by mail-il1-f199.google.com with SMTP id x2so6842737ilk.18
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:45:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lYCE4DYk9v5Wf6F+uOmdTFaGMXO1zFGx920X5vEgeNs=;
-        b=CCOKsUQ5XNmZb9q9kaBdrurHFkUwpKaqNQJHcgMzKEIC1sED1Gau0roboElqa/63JK
-         Z63vbLTF0ezU8iwyjhpVBUx3UrGqyLqmTyedloMraFeWEDseh69KlDxr1iyUBD21HH29
-         cViIVZHGSOyUC9EgEDlBD3VKY6SV8W1J4Nmz2H11VjSTcfpMD2GEgEVhjPVCTammk4FC
-         QZo+fNgZk+nGJEOWXlf8kvYz87Cpcc+D+4AZiEX6OjhTSqHq/iH098CxdLnXy8O8o3Yq
-         YVXN6R5CeDYZzqtGynGRxjDiRRyYGvMuN1Mb9uoju1LTIfBVgOQs6hQf/3sjSiHjRC5P
-         OBFA==
-X-Gm-Message-State: APjAAAUn7uVzmmHumwKuH4ktxUKK1GcrYMGlCbsfFV63rFyJgq/QfPxV
-        dYSiYdoaP4CrbXVdyac7Th1MvklmIJPJHWu0jWBfEwX3h7DS
-X-Google-Smtp-Source: APXvYqy1I7yEO51rxG1hKtqvDQIy0iW2DrLpmcucXHBn/TItukdeNUNiMmOdkiQUfuct4lg+FQyVrt7KfL+W4MPMHYBY0eWu69Ve
+        Mon, 16 Dec 2019 11:45:48 -0500
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MJEIl-1iQkcq0MGJ-00KdpX; Mon, 16 Dec 2019 17:45:47 +0100
+Received: by mail-qt1-f170.google.com with SMTP id l12so6254831qtq.12;
+        Mon, 16 Dec 2019 08:45:46 -0800 (PST)
+X-Gm-Message-State: APjAAAViuger6gBit60jJGOPq1C9Dt1QZOzuEnqiwvPdFUEL9iZCklPa
+        JwFL4cEF330X4rgdS+obNQdO/mBrwv+olTwfKns=
+X-Google-Smtp-Source: APXvYqyNtNGvtOrieWJOqiT35oBaAfdHoFb3XM4O0PnpnAuRGShXkJ2ZEqQrbTQaSu86bkHc1+ANDnvgpR3Qr2vKo2Q=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr138947qte.204.1576514745925;
+ Mon, 16 Dec 2019 08:45:45 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:3b10:: with SMTP id i16mr13917036ila.170.1576514708986;
- Mon, 16 Dec 2019 08:45:08 -0800 (PST)
-Date:   Mon, 16 Dec 2019 08:45:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000036658f0599d4ef43@google.com>
-Subject: linux-next boot error: general protection fault in do_mount_root
-From:   syzbot <syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
-        linux@dominikbrodowski.net, pc@cjr.nz,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-11-arnd@arndb.de>
+ <20191213210509.GK99875@magnolia>
+In-Reply-To: <20191213210509.GK99875@magnolia>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Dec 2019 17:45:29 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a10wQuHGV3c2JYSkLsKLFK8t9fOmpE=fwULe8Aj41Kshg@mail.gmail.com>
+Message-ID: <CAK8P3a10wQuHGV3c2JYSkLsKLFK8t9fOmpE=fwULe8Aj41Kshg@mail.gmail.com>
+Subject: Re: [PATCH v2 20/24] xfs: disallow broken ioctls without compat-32-bit-time
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:h57ekWNpB4JlW+DfbI3eJXOF67r6gl5MO1WY/HYDe04eZOrYnwD
+ NEQvjjr8vLyKJ2Gc5MslUDSqWTDZ1afTgWWJOyDGm5NG4gyBDDdbKI9VOVzz3FB1mpMBGB7
+ kCxJd9KzuXpNZXRP7fQeRedMGQrAMx5zJXOhTtlGbzo9HyHe45yDa84i8xYTgdf/hkw0Geh
+ 9/s0xZOy/OYMRgTFLaDWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f9AkRGpJ1EU=:7690EZ12hBnd3ASWvMC1QW
+ h7PZGe5QIyJczVcgk+AEHU53ZsEHiQkTLIR+/z9xZOx2L5HZHr9iNN85SKMHwKxtZNxR/9XmI
+ ZoGueCcgYrQI3cgBfFhwa0GEqqQrrckxlmiHnaZymUVswG6etP/Zx6AoADtVkN9z0UOmW9JiK
+ y19TChTmST+UVTZjVYvA0HaRr97XiD6ynYS0nhKPRc0UqUsIE7ffMlbsma0IA7vo7dOfOTj5H
+ MqDffXJYJRXSAYbokyPnlqIlEe/fbIFiT4Ob+xqix8GNp6MRmhkRINmPa7CVmXmnnlvpQ1zQ0
+ BaAtcIikrWfV/WxMegk5R0JKFEi3H6aldoYOrIt/cgGNzHavg2O1lnzRINx4UtU7TbhAHc4tA
+ c3tgPYTeVbpi0LVLTDe4vB8xr522u1/uRXXMno4ZGWQAfEH2004DiQw9wT8u/OUlq6IPYSsCK
+ uI2RgfKQgO2X/UlrbeF+Chw1imTuREmcqK20sMUtbqpN1A/4xF7W/HlYJl1HbpWkaiwgjZ2yy
+ 24hblAxus58ini3I+IZZG3uXlMc2veN+OrKSIFUXOFSLeU3zwaWaQNYaRZdOzkTnhefxGYWRf
+ JxCgOerab4RitWrg+GF7lsuIfVHVNL4/TGjmhQtIGOtobMI677L7uIJFq1aCmDno1UO4G5rQM
+ fcm55kcFe9S5OKpdkFQwkhLR2kaviJNwvRgzrK+NMVEJb4UQV2ixDek1w/oPRjZ6PagPYVy/S
+ yTtiUF6mjNb+rCmkMVAlqDkqX1WCBOGY0PKtIqeJPNaRCQhcMu/k0k8au3hws+mFqX4Qo+oC0
+ 9xWSeUGvUuNQhj2aOoLv4/mNu8EU5etfNnXbAHtDMXGFfTFTrLPRKkONZShQ0glqAhrMIeM2a
+ bSpv55HgEeiSUMXcWNAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Dec 13, 2019 at 10:05 PM Darrick J. Wong
+<darrick.wong@oracle.com> wrote:
+>
+> On Fri, Dec 13, 2019 at 09:53:48PM +0100, Arnd Bergmann wrote:
+> > When building a kernel that disables support for 32-bit time_t
+> > system calls, it also makes sense to disable the old xfs_bstat
+> > ioctls completely, as they truncate the timestamps to 32-bit
+> > values.
+>
+> Note that current xfs doesn't support > 32-bit timestamps at all, so for
+> now the old bulkstat/swapext ioctls will never overflow.
 
-syzbot found the following crash on:
+Right, this patch originally came after my version of the 40-bit
+timestamps that I dropped from the series now.
 
-HEAD commit:    cf2be78b Add linux-next specific files for 20191216
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f505dee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=634b7ce01f79423d
-dashboard link: https://syzkaller.appspot.com/bug?extid=31f37c1dc3fd9e900602
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+I've added "... once the extended times are supported." above now.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> Granted, I melded everyone's suggestions into a more fully formed
+> 'bigtime' feature patchset that I'll dump out soon as part of my usual
+> end of year carpetbombing of the mailing list, so we likely still need
+> most of this patch anyway...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com
+What is the timeline for that work now? I'm mainly interested in
+getting the removal of 'time_t/timeval/timespec' and 'get_seconds()'
+from the kernel done for v5.6, but it would be good to also have
+this patch and the extended timestamps in the same version
+just so we can claim that "all known y2038 issues" are addressed
+in that release (I'm sure we will run into bugs we don't know yet).
 
-batman_adv: B.A.T.M.A.N. advanced 2019.5 (compatibility version 15) loaded
-openvswitch: Open vSwitch switching datapath
-NET: Registered protocol family 40
-mpls_gso: MPLS GSO support
-IPI shorthand broadcast: enabled
-AVX2 version of gcm_enc/dec engaged.
-AES CTR mode by8 optimization enabled
-sched_clock: Marking stable (12282186706, 24150593)->(12316857222,  
--10519923)
-registered taskstats version 1
-Loading compiled-in X.509 certificates
-Loaded X.509 cert 'Build time autogenerated kernel key:  
-8b22f477d966bfa6cf9a482acbda6ca1892a4acc'
-zswap: loaded using pool lzo/zbud
-Key type ._fscrypt registered
-Key type .fscrypt registered
-Btrfs loaded, crc32c=crc32c-intel
-Key type big_key registered
-Key type encrypted registered
-AppArmor: AppArmor sha1 policy hashing enabled
-ima: No TPM chip found, activating TPM-bypass!
-ima: Allocated hash algorithm: sha256
-ima: No architecture policies found
-evm: Initialising EVM extended attributes:
-evm: security.selinux
-evm: security.SMACK64
-evm: security.SMACK64EXEC
-evm: security.SMACK64TRANSMUTE
-evm: security.SMACK64MMAP
-evm: security.apparmor
-evm: security.ima
-evm: security.capability
-evm: HMAC attrs: 0x1
-PM:   Magic number: 15:311:439
-media media3: hash matches
-printk: console [netcon0] enabled
-netconsole: network logging started
-gtp: GTP module loaded (pdp ctx size 104 bytes)
-rdma_rxe: loaded
-cfg80211: Loading compiled-in X.509 certificates for regulatory database
-cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-ALSA device list:
-   #0: Dummy 1
-   #1: Loopback 1
-   #2: Virtual MIDI Card 1
-md: Waiting for all devices to be available before autodetect
-md: If you don't use raid, use raid=noautodetect
-md: Autodetecting RAID arrays.
-md: autorun ...
-md: ... autorun DONE.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191216-syzkaller  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
-Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
-89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
-38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
-RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
-RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
-R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
-R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  strncpy include/linux/string.h:326 [inline]
-  do_mount_root+0x74/0x23b init/do_mounts.c:404
-  mount_block_root+0x342/0x51a init/do_mounts.c:438
-  mount_root+0x283/0x2cd init/do_mounts.c:628
-  prepare_namespace+0x26f/0x2a7 init/do_mounts.c:687
-  kernel_init_freeable+0x557/0x570 init/main.c:1233
-  kernel_init+0x12/0x1bf init/main.c:1112
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace c645a4d31f27fe8a ]---
-RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
-Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
-89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
-38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
-RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
-RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
-R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
-R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > @@ -617,6 +618,23 @@ xfs_fsinumbers_fmt(
+> >       return xfs_ibulk_advance(breq, sizeof(struct xfs_inogrp));
+> >  }
+> >
+> > +/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
+> > +static bool xfs_have_compat_bstat_time32(unsigned int cmd)
+>
+> The v5 bulkstat ioctls follow an entirely separate path through
+> xfs_ioctl.c, so I think you don't need the @cmd parameter.
 
+The check is there to not forbid XFS_IOC_FSINUMBERS at
+the moment, since that is not affected.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > @@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
+> >       struct fd       f, tmp;
+> >       int             error = 0;
+> >
+> > +     if (xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
+>
+> if (!xfs_have...()) ?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Right, fixed now.
+
+       Arnd
