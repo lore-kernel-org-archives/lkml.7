@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0930C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A87C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF6321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0BC20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522168;
-	bh=rDrWEFPlw/zmsNcazXUyUrysqrnelma9cR2EgBlJnSg=;
+	s=default; t=1576522187;
+	bh=jDfD+CL5wDqvqEFQmPaEED4yz67Luv316LwnHkstN0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ry3KzTVx7TkcCG84aIBiuHslTvgEGTYRO1FyN2ViDk0MOXhKfR3L7WBgXnZES9AAN
-	 IHnx2hunZcKIDoCGJ+MBSlOBQ1Eemhy0Tc3QTxL8UOHpsn4XCYFVbNq4rhRxCdT1Nf
-	 B2mMGDl/XxZnxcuGU+ajNatczKhY/hLD+6JM/qtc=
+	b=T2mIKLSYoqR5mK2CgquW5w5DETS+TZyp1maYLsDPE+iqmcUACxoJ6SIjQWIrOdyHd
+	 E+8uMFRUpQx7tLY80h+IY5uiSZGHcXiFhp0uyrvyBEvZvPJBhlQ9S9R9BEfduD6xII
+	 K7AMi4Z3USV83XumYBmPovDxhZC37DtUZhrnIH9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfLPRw4 (ORCPT
+        id S1727497AbfLPRwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbfLPRwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:52:53 -0500
+        id S1726736AbfLPRwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA502166E;
-        Mon, 16 Dec 2019 17:52:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3590F20733;
+        Mon, 16 Dec 2019 17:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518772;
-        bh=rDrWEFPlw/zmsNcazXUyUrysqrnelma9cR2EgBlJnSg=;
+        s=default; t=1576518743;
+        bh=jDfD+CL5wDqvqEFQmPaEED4yz67Luv316LwnHkstN0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IRqNThU/kRYAxuu2jXW4UCQcZbOftyLBYMIer+28WR/ExCDthX8FqQZAZnxnsvKxX
-         BOb/rU7+RSdgWnBBkao/zey6ySBtpdNT3vRRHnXlsD9DBEzmjNG3VE8MVEfMOc7C7j
-         ObI7XXu4u8Uazs9d7Rp47c0eA7J0LMnmc1yOnd4E=
+        b=fS/BchNahk2mY7UeIzaUl9PwHDr9hG3A0sd61a2NlQ+rEzczZunqRSG9dnl+iOhGW
+         yyB/M4RrsnjH+y1vtffNudZJV271hA12UeIKh7hG1iZ8ymJ2JQlourI7lkp+tTjl18
+         cahiVOVjKpwS/rJKzghkz8mPa9jx76XvTMVL51aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 058/267] media: cec: report Vendor ID after initialization
-Date:   Mon, 16 Dec 2019 18:46:24 +0100
-Message-Id: <20191216174855.421885798@linuxfoundation.org>
+Subject: [PATCH 4.14 021/267] i2c: core: fix use after free in of_i2c_notify
+Date:   Mon, 16 Dec 2019 18:45:47 +0100
+Message-Id: <20191216174851.301369225@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 7f02ac77c768ba2bcdd0ce719c1fca0870ffe2fb ]
+[ Upstream commit a4c2fec16f5e6a5fee4865e6e0e91e2bc2d10f37 ]
 
-The CEC specification requires that the Vendor ID (if any) is reported
-after a logical address was claimed.
+We can't use "adap->dev" after it has been freed.
 
-This was never done, so add support for this.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 5bf4fa7daea6 ("i2c: break out OF support into separate file")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-adap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/i2c/i2c-core-of.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index f8a808d45034e..27e57915eb4d1 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1403,6 +1403,13 @@ configured:
- 			las->log_addr[i],
- 			cec_phys_addr_exp(adap->phys_addr));
- 		cec_transmit_msg_fh(adap, &msg, NULL, false);
-+
-+		/* Report Vendor ID */
-+		if (adap->log_addrs.vendor_id != CEC_VENDOR_ID_NONE) {
-+			cec_msg_device_vendor_id(&msg,
-+						 adap->log_addrs.vendor_id);
-+			cec_transmit_msg_fh(adap, &msg, NULL, false);
-+		}
- 	}
- 	adap->kthread_config = NULL;
- 	complete(&adap->config_completion);
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 8d474bb1dc157..17d727e0b8424 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -238,14 +238,14 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+ 		}
+ 
+ 		client = of_i2c_register_device(adap, rd->dn);
+-		put_device(&adap->dev);
+-
+ 		if (IS_ERR(client)) {
+ 			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
+ 				 rd->dn);
++			put_device(&adap->dev);
+ 			of_node_clear_flag(rd->dn, OF_POPULATED);
+ 			return notifier_from_errno(PTR_ERR(client));
+ 		}
++		put_device(&adap->dev);
+ 		break;
+ 	case OF_RECONFIG_CHANGE_REMOVE:
+ 		/* already depopulated? */
 -- 
 2.20.1
 
