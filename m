@@ -2,215 +2,268 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BB5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60374C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE95206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208F6206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jp7iN0m7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNe7q2ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLPSzo (ORCPT
+        id S1726705AbfLPS5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:55:44 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43534 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLPSzn (ORCPT
+        Mon, 16 Dec 2019 13:57:38 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46678 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLPS5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:55:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=D5nXa1E0/6ZK/Oj+7SvDu7WJ/3H14Kydu6+EOrBcmLU=; b=jp7iN0m7Ga7qfwxE7qJmI8Yjs
-        TJxqYe9A5t8mMiVSVdzLlOp71/999ub9/hWuyvCUXL1gxymXebRBtrY/1sN1Tdt+eEcFTu4NaLHaG
-        kUiuCEulA2c+CjqEvFw9I5FtZXJmFFdjg0ZJgWjUot+GEg4dN3qcYqfQLVGlu0XpJZndHDUUvhPwi
-        yUZcjlGsMumqlTw29B9YYqntoLtncpLJEvVFVZIPNb/D7NooX/CNUf0VhjXU6PcuffgO2oYD4ccZm
-        d1q0WGq4IorCy3qzbMfdG/z7nJLOqSE62kFmHPjMr7RHHhCCLZvVKfxufEv7Si+j1x6D8OFk3qp00
-        pHzxMncEg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42230)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1igvWp-00012Y-QC; Mon, 16 Dec 2019 18:55:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1igvWk-0002d1-9B; Mon, 16 Dec 2019 18:55:30 +0000
-Date:   Mon, 16 Dec 2019 18:55:30 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, ioana.ciornei@nxp.com, olteanv@gmail.com,
-        jakub.kicinski@netronome.com, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: Make PHYLINK related function static
- again
-Message-ID: <20191216185530.GN25745@shell.armlinux.org.uk>
-References: <20191216183248.16309-1-f.fainelli@gmail.com>
+        Mon, 16 Dec 2019 13:57:37 -0500
+Received: by mail-il1-f196.google.com with SMTP id t17so6239039ilm.13;
+        Mon, 16 Dec 2019 10:57:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fRErO3p6DkzrKjGHgI+x7pKPjZQkWFKWkX/ri5ylyrc=;
+        b=QNe7q2ni/0HbANj4xw7ZJWlzvRh6yVfNlgdg8Zk0iAZRDSdUId4MRtHuF2rxWM8Thv
+         ImFjjwLDpyVRFLfOjpBx42Wfp5TMXew8VfcBzM+AGa2DLiHD9cCyl8BGARXaG4d9w9VE
+         Kfmohs4N2J003JXOBbydKQ8RoeZa5xuR93hSAlU1uctdCxBbTyYrP/X7kQoDAX9Ui+bQ
+         PdNaSZA8AcThzurom2HFulFWHXxlq8TD4D48FE9Hc5+niaa4OArUz7tz+han43KzVyU5
+         qos5U6MeFiKgoPty2zBZRiLFO3f7WoJfxHzq803eT9vPgteiYOyXBUN/Hr7jcpJ0nU/7
+         WdwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fRErO3p6DkzrKjGHgI+x7pKPjZQkWFKWkX/ri5ylyrc=;
+        b=eckbDc3IZLp9IqjeyKnJz0jcW/PQjt0E4vhsojepfnccDmxFasClFF8X7GPhLxGNz/
+         fWWdamZ5W8x02Ecg7AKISRwyMBVYWPr1xo7l9LO0cqInG68Rc8be8xhOXBt40GnotYUh
+         LEVhWSWzBfa4DmnSeD9JS54lsJJNJxVpsSFyYKe9ApibShhvZxCkvJqbYwEQ2w6CXbeI
+         9/tsJQhvnrtb9hmTAHEBlbVzg6fZ0Byxt/8M6cuotD555EUnPhhRMKznQNqb2uOKtySb
+         0kJvvKV1qFplRfZ1ewQEatWsChFnPj5Sq5Pzo/NUi77jHkBMGoytJKn7LiWfi9EsuuOD
+         jZGw==
+X-Gm-Message-State: APjAAAWvLAk2D6KXkw4WqhDLrRix5A13dk4YUQIEugfLZh+fqse60QUd
+        kzOruR3sxQmtvY9nST8PF8OyMiAqa7J8Q9hKLDE=
+X-Google-Smtp-Source: APXvYqxaoCR3QZIQJUHBFbypBRT5pC0Du6V+0URCSBapyjSPUoxEmqYoKvzzx3VBu7ZRAjqM9PGmSPu9pHd1XKFy37s=
+X-Received: by 2002:a92:465c:: with SMTP id t89mr14007894ila.263.1576522656793;
+ Mon, 16 Dec 2019 10:57:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216183248.16309-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191112104854.20850-1-masneyb@onstation.org> <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
+ <20191113112334.GA18702@onstation.org> <20191203014006.GA7756@onstation.org>
+ <CAOCk7NpHE7kPX5tc=qUJo9qM-7Qzg2E+zmmmhBdnnVwJ+i5XLg@mail.gmail.com> <20191213024007.GA23636@onstation.org>
+In-Reply-To: <20191213024007.GA23636@onstation.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 16 Dec 2019 11:57:25 -0700
+Message-ID: <CAOCk7Np7VkuzFTN_CEqwPFwgu9thcPBMpuQpa3=KMdyahfE8uw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:32:47AM -0800, Florian Fainelli wrote:
-> Commit 77373d49de22 ("net: dsa: Move the phylink driver calls into
-> port.c") moved and exported a bunch of symbols, but they are not used
-> outside of net/dsa/port.c at the moment, so no reason to export them.
-> 
-> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Thu, Dec 12, 2019 at 7:40 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Hi Jeffrey,
+>
+> On Tue, Dec 03, 2019 at 07:18:31AM -0700, Jeffrey Hugo wrote:
+> > On Mon, Dec 2, 2019 at 6:40 PM Brian Masney <masneyb@onstation.org> wrote:
+> > > On Wed, Nov 13, 2019 at 06:23:34AM -0500, Brian Masney wrote:
+> > > > On Tue, Nov 12, 2019 at 08:38:27AM -0700, Jeffrey Hugo wrote:
+> > > > > On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > > > >
+> > > > > > Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+> > > > > > support"), command-mode panels began throwing the following errors:
+> > > > > >
+> > > > > >     msm fd900000.mdss: pp done time out, lm=0
+> > > > > >
+> > > > > > Let's fix this by enabling the autorefresh feature that's available in
+> > > > > > the MDP starting at version 1.0. This will cause the MDP to
+> > > > > > automatically send a frame to the panel every time the panel invokes
+> > > > > > the TE signal, which will trigger the PP_DONE IRQ. This requires not
+> > > > > > sending a START signal for command-mode panels.
+> > > > > >
+> > > > > > This fixes the error and gives us a counter for command-mode panels that
+> > > > > > we can use to implement async commit support for the MDP5 in a follow up
+> > > > > > patch.
+> > > > > >
+> > > > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > > > Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
+> > > > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
+> > > > > >  2 files changed, 15 insertions(+), 9 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > > > index 05cc04f729d6..539348cb6331 100644
+> > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+> > > > > > @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > > > > >  {
+> > > > > >         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+> > > > > >         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
+> > > > > > +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+> > > > > >         struct mdp5_kms *mdp5_kms = get_kms(crtc);
+> > > > > >         struct device *dev = &mdp5_kms->pdev->dev;
+> > > > > >
+> > > > > > @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+> > > > > >
+> > > > > >         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+> > > > > >
+> > > > > > -       if (mdp5_cstate->cmd_mode)
+> > > > > > +       if (mdp5_cstate->cmd_mode) {
+> > > > > >                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+> > > > > >
+> > > > > > +               /*
+> > > > > > +                * Enable autorefresh so we get regular ping/pong IRQs.
+> > > > > > +                * - Bit 31 is the enable bit
+> > > > > > +                * - Bits 0-15 represent the frame count, specifically how many
+> > > > > > +                *   TE events before the MDP sends a frame.
+> > > > > > +                */
+> > > > > > +               mdp5_write(mdp5_kms,
+> > > > > > +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
+> > > > > > +                          BIT(31) | BIT(0));
+> > > > > > +               crtc_flush_all(crtc);
+> > > > > > +       }
+> > > > > > +
+> > > > > >         mdp5_crtc->enabled = true;
+> > > > > >  }
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > > > index 030279d7b64b..aee295abada3 100644
+> > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+> > > > > > @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+> > > > > >         if (!ctl->encoder_enabled)
+> > > > > >                 return false;
+> > > > > >
+> > > > > > -       switch (intf->type) {
+> > > > > > -       case INTF_WB:
+> > > > > > -               return true;
+> > > > > > -       case INTF_DSI:
+> > > > > > -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
+> > > > > > -       default:
+> > > > > > -               return false;
+> > > > > > -       }
+> > > > > > +       return intf->type == INTF_WB;
+> > > > > >  }
+> > > > >
+> > > > > I don't think this fully works.
+> > > > >
+> > > > > The whole "flush" thing exists because the configuration is double
+> > > > > buffered.  You write to the flush register to tell the hardware to
+> > > > > pickup the new configuration, but it doesn't do that automatically.
+> > > > > It only picks up the new config on the next "vsync".  When you have a
+> > > > > video mode panel, you have the timing engine running, which drives
+> > > > > that.  With a command mode panel, you have either the start signal, or
+> > > > > the auto refresh to do the same, but you have a bit of a chicken and
+> > > > > egg situation where if you are programming the hardware from scratch,
+> > > > > autorefresh isn't already enabled to then pickup the config to enable
+> > > > > autorefresh. In this case, you'll need a single start to kick
+> > > > > everything off.  However, if say the bootloader already configured
+> > > > > things and has autorefresh running, then you need to not do that start
+> > > > > because you'll overload the DSI like you saw.
+> > > >
+> > > > As part of my testing for this work, I added a log statement to
+> > > > mdp5_crtc_pp_done_irq() and it shows that a PP_IRQ comes in consistently
+> > > > every ~0.0166 seconds, which is about 60 HZ. Without this change, plus
+> > > > the 3 commits I mentioned in an earlier email related to the async
+> > > > commit support, the PP IRQs come in at a variety of times: between every
+> > > > ~0.0140 and ~0.2224 seconds. That's why I assumed that this was working.
+> > > >
+> > > > If I call send_start_signal() inside mdp5_crtc_atomic_enable(), then the
+> > > > display does not work properly.
+> > >
+> > > I'd like to get the 'pp done time out' errors that are now occurring
+> > > upstream for command-mode panels fixed. As I mentioned above, this patch
+> > > fixes the problem on the Nexus 5 and the pp done interrupts are
+> > > delivered at approximately 60 HZ. I don't have any other command-mode
+> > > panels to test.
+> > >
+> > > I'm not sure how to proceed here since sending the start command breaks
+> > > the display. I'm likely putting that command in the wrong spot.
+> >
+> > Sorry, I didn't realize you were waiting on me,
+> >
+> > I'm traveling currently, so this is more off the top of my head than
+> > looking at the code/docs.  What I'm thinking is that we want to get
+> > autorefresh enabled, which would be simple except that the bootloader
+> > may have already enabled it for us.  Perhaps we have a state flag that
+> > indicates if autorefresh is enabled, and if so, it skips the start
+> > command (where the start command is normally in the code).  When we
+> > boot up, we check the hardware and set the flag if its already enabled
+> > (note I just realized the flag is per ping pong, so we need multiple
+> > flags I guess).  If the flag is not enabled when we go to use the
+> > start command, we issue the start, then set the flag.  The only catch
+> > is I don't know recall the exact sequence of when we configure the
+> > ping pong in the entire initialization sequence.  We may configure a
+> > bunch of stuff, but not the ping pong, flush the config (which issues
+> > a start) and then get stuck because we didn't set the autorefresh.
+>
+> I finally had a chance look into this tonight. This makes sense to me:
+> the double buffering of the configuration, the start signal, and a
+> separate flag for each of the 4 ping pongs on the MDP5.
+>
+> The part that I'm still unsure about is querying the initial state from
+> the boot loader to see if autorefresh is already enabled and whether or
+> not a single START command is needed. Here's a slightly modified snippet
+> from mdp5_crtc_atomic_enable() in my patch above:
+>
+>   if (mdp5_cstate->cmd_mode) {
+>      /* mdp5_read() returns 0 */
+>      val = mdp5_read(mdp5_kms,
+>                      REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp));
+>
+>      mdp5_write(mdp5_kms,
+>                 REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
+>                 BIT(31) | BIT(0));
+>
+>      crtc_flush_all(crtc);
+>
+>      /* mdp5_read() now returns 0x80000001 */
+>      val = mdp5_read(mdp5_kms,
+>                      REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp));
+>   }
+>
+> So I assume that the boot loader is not enabling autorefresh on this
+> board since the value from the first read is zero? Or more likely, that
+> since this is double buffered that the first mdp5_read() is reading from
+> the configuration buffer that's not active yet and it defaults to 0? Is
+> there a way to query the other configuration buffer that's currently
+> active?
 
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Sorry, catching up now that I'm back from travel
 
-Thanks.
+Its not possible to read the "shadow" registers that have the active
+config.  However, if we can trust that the bootloader is doing the
+right thing, then the configuration register you can read should match
+the shadow registers.  The only way the bootloader could screw up is
+if it didn't flush the config, but then we wouldn't have boot splash
+which would be very easy to catch.
 
-> ---
->  net/dsa/dsa_priv.h | 16 ----------------
->  net/dsa/port.c     | 38 ++++++++++++++++----------------------
->  2 files changed, 16 insertions(+), 38 deletions(-)
-> 
-> diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-> index 2dd86d9bcda9..09ea2fd78c74 100644
-> --- a/net/dsa/dsa_priv.h
-> +++ b/net/dsa/dsa_priv.h
-> @@ -150,22 +150,6 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
->  int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
->  int dsa_port_link_register_of(struct dsa_port *dp);
->  void dsa_port_link_unregister_of(struct dsa_port *dp);
-> -void dsa_port_phylink_validate(struct phylink_config *config,
-> -			       unsigned long *supported,
-> -			       struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> -					struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_config(struct phylink_config *config,
-> -				 unsigned int mode,
-> -				 const struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config);
-> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> -				    unsigned int mode,
-> -				    phy_interface_t interface);
-> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> -				  unsigned int mode,
-> -				  phy_interface_t interface,
-> -				  struct phy_device *phydev);
->  extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
->  
->  /* slave.c */
-> diff --git a/net/dsa/port.c b/net/dsa/port.c
-> index 46ac9ba21987..ffb5601f7ed6 100644
-> --- a/net/dsa/port.c
-> +++ b/net/dsa/port.c
-> @@ -415,9 +415,9 @@ static struct phy_device *dsa_port_get_phy_device(struct dsa_port *dp)
->  	return phydev;
->  }
->  
-> -void dsa_port_phylink_validate(struct phylink_config *config,
-> -			       unsigned long *supported,
-> -			       struct phylink_link_state *state)
-> +static void dsa_port_phylink_validate(struct phylink_config *config,
-> +				      unsigned long *supported,
-> +				      struct phylink_link_state *state)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct dsa_switch *ds = dp->ds;
-> @@ -427,10 +427,9 @@ void dsa_port_phylink_validate(struct phylink_config *config,
->  
->  	ds->ops->phylink_validate(ds, dp->index, supported, state);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_validate);
->  
-> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> -					struct phylink_link_state *state)
-> +static void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> +					       struct phylink_link_state *state)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct dsa_switch *ds = dp->ds;
-> @@ -444,11 +443,10 @@ void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
->  	if (ds->ops->phylink_mac_link_state(ds, dp->index, state) < 0)
->  		state->link = 0;
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_pcs_get_state);
->  
-> -void dsa_port_phylink_mac_config(struct phylink_config *config,
-> -				 unsigned int mode,
-> -				 const struct phylink_link_state *state)
-> +static void dsa_port_phylink_mac_config(struct phylink_config *config,
-> +					unsigned int mode,
-> +					const struct phylink_link_state *state)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct dsa_switch *ds = dp->ds;
-> @@ -458,9 +456,8 @@ void dsa_port_phylink_mac_config(struct phylink_config *config,
->  
->  	ds->ops->phylink_mac_config(ds, dp->index, mode, state);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_config);
->  
-> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
-> +static void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct dsa_switch *ds = dp->ds;
-> @@ -470,11 +467,10 @@ void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
->  
->  	ds->ops->phylink_mac_an_restart(ds, dp->index);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_an_restart);
->  
-> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> -				    unsigned int mode,
-> -				    phy_interface_t interface)
-> +static void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> +					   unsigned int mode,
-> +					   phy_interface_t interface)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct phy_device *phydev = NULL;
-> @@ -491,12 +487,11 @@ void dsa_port_phylink_mac_link_down(struct phylink_config *config,
->  
->  	ds->ops->phylink_mac_link_down(ds, dp->index, mode, interface);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_down);
->  
-> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> -				  unsigned int mode,
-> -				  phy_interface_t interface,
-> -				  struct phy_device *phydev)
-> +static void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> +					 unsigned int mode,
-> +					 phy_interface_t interface,
-> +					 struct phy_device *phydev)
->  {
->  	struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->  	struct dsa_switch *ds = dp->ds;
-> @@ -509,7 +504,6 @@ void dsa_port_phylink_mac_link_up(struct phylink_config *config,
->  
->  	ds->ops->phylink_mac_link_up(ds, dp->index, mode, interface, phydev);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_up);
->  
->  const struct phylink_mac_ops dsa_port_phylink_mac_ops = {
->  	.validate = dsa_port_phylink_validate,
-> -- 
-> 2.17.1
-> 
-> 
+In short, if your first read is 0, then bootloader didn't enable autorefresh.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+>
+> Why do I see the ping pong IRQs delivered consistently around 60 HZ once
+> I enable autorefresh with the patch that started this thread?
+
+Hmm.  Good question.  I would expect everything to be fine once
+autorefresh is enabled, but your initial patch leaves questions about
+how that config is taking effect in the first place.
+
+>
+> Sorry if I'm being dense here.
+>
+> Brian
