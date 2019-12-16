@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE6EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86BDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27ECB20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC1E20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519253;
-	bh=j3c5d5ilTa8VfY0xwUYro+uYnCIetXhYbAL5O2t5hd0=;
+	s=default; t=1576519255;
+	bh=+vuE0SJ/uHWQr+87i2aXr+YmFOdOSLxYkw5YQuOsSLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQmchKARFxDA52zn1epTv5TAFXDAXtB6OzEaI5rlnHAiuyttByoZwZOSnmezxMPLG
-	 kS/m+DF6R5G+R+lsLysyOvxJwyOVrvl/w1nJAG/D4QqOqf0fUHDSdT9ovySKZbJQ11
-	 OXkEVKudLBsrESXbYRIVqxc6uwD422Swn7OcPFz8=
+	b=Wb22ZfZ9nUFsOo31e+ts0pHDA+JA+/CqjXhHLCFYeX/X7oSx7Kj/ecGTzt20j9vpx
+	 agyKQoOORxsK/fBrLM8GuDBTwAxZ4IOcvlGGtrJ1E3vKkPlZBa7GXp7RRAGTryLFg7
+	 xwqF/Ow6zRyDWwxqNk3LAbumpCo/arLV+Dh65Qfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfLPSAw (ORCPT
+        id S1729037AbfLPSAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfLPSAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:49 -0500
+        id S1729014AbfLPSAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E816E2176D;
-        Mon, 16 Dec 2019 18:00:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5943020726;
+        Mon, 16 Dec 2019 18:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519248;
-        bh=j3c5d5ilTa8VfY0xwUYro+uYnCIetXhYbAL5O2t5hd0=;
+        s=default; t=1576519250;
+        bh=+vuE0SJ/uHWQr+87i2aXr+YmFOdOSLxYkw5YQuOsSLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3ARqsMgGhrZydY86ilhZD3vF26kydRVK0ckA8RxrWdBZJVlRBU2I5KoUABj3cNq6
-         fOumgzjNJ3ziXVUFcCIZBlqv4Yg0/0Cg/C+4N4L5u6+7TUwf8H82MD06y4EwVCvr16
-         ITZushDZ8tv1lkmz5zDdiZHuxmrFevq78T+5neKk=
+        b=u5VdPH7qWuBBJnydzus+pOUIjBgjRR7qb17tl51d40XfPZxKq+pNsKYMhBiqfLWhh
+         haAy3P0l/Zjaq1tkXuRoeCNwsKzPXlHJjIhjw0A15YkIgrQhM6v71Bgq9+IVQkOQXp
+         x0G4SYb2bNUtjO0ewuleiuYs2fJs9Tft9e0J/GPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alex Veber <alexve@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 256/267] mlxsw: spectrum_router: Refresh nexthop neighbour when it becomes dead
-Date:   Mon, 16 Dec 2019 18:49:42 +0100
-Message-Id: <20191216174916.718967191@linuxfoundation.org>
+Subject: [PATCH 4.14 257/267] media: vimc: fix component match compare
+Date:   Mon, 16 Dec 2019 18:49:43 +0100
+Message-Id: <20191216174916.788330411@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,139 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Helen Koike <helen.koike@collabora.com>
 
-[ Upstream commit 83d5782681cc12b3d485a83cb34c46b2445f510c ]
+[ Upstream commit ee1c71a8e1456ab53fe667281d855849edf26a4d ]
 
-The driver tries to periodically refresh neighbours that are used to
-reach nexthops. This is done by periodically calling neigh_event_send().
+If the system has other devices being registered in the component
+framework, the compare function will be called with a device that
+doesn't belong to vimc.
+This device is not necessarily a platform_device, nor have a
+platform_data (which causes a NULL pointer dereference error) and if it
+does have a pdata, it is not necessarily type of struct vimc_platform_data.
+So casting to any of these types is wrong.
 
-However, if the neighbour becomes dead, there is nothing we can do to
-return it to a connected state and the above function call is basically
-a NOP.
+Instead of expecting a given pdev with a given pdata, just expect for
+the device it self. vimc-core is the one who creates them, we know in
+advance exactly which object to expect in the match.
 
-This results in the nexthop never being written to the device's
-adjacency table and therefore never used to forward packets.
+Fixes: 4a29b7090749 ("[media] vimc: Subdevices as modules")
 
-Fix this by dropping our reference from the dead neighbour and
-associating the nexthop with a new neigbhour which we will try to
-refresh.
-
-Fixes: a7ff87acd995 ("mlxsw: spectrum_router: Implement next-hop routing")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alex Veber <alexve@mellanox.com>
-Tested-by: Alex Veber <alexve@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Tested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/mellanox/mlxsw/spectrum_router.c | 73 ++++++++++++++++++-
- 1 file changed, 70 insertions(+), 3 deletions(-)
+ drivers/media/platform/vimc/vimc-core.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 5b9a5c3834d9e..05a2006a20b9b 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -1762,7 +1762,7 @@ static void mlxsw_sp_router_probe_unresolved_nexthops(struct work_struct *work)
- static void
- mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp *mlxsw_sp,
- 			      struct mlxsw_sp_neigh_entry *neigh_entry,
--			      bool removing);
-+			      bool removing, bool dead);
+diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+index 57e5d6a020b0e..447a01ff4e23c 100644
+--- a/drivers/media/platform/vimc/vimc-core.c
++++ b/drivers/media/platform/vimc/vimc-core.c
+@@ -243,10 +243,7 @@ static void vimc_comp_unbind(struct device *master)
  
- static enum mlxsw_reg_rauht_op mlxsw_sp_rauht_op(bool adding)
+ static int vimc_comp_compare(struct device *comp, void *data)
  {
-@@ -1891,7 +1891,8 @@ static void mlxsw_sp_router_neigh_event_work(struct work_struct *work)
- 
- 	memcpy(neigh_entry->ha, ha, ETH_ALEN);
- 	mlxsw_sp_neigh_entry_update(mlxsw_sp, neigh_entry, entry_connected);
--	mlxsw_sp_nexthop_neigh_update(mlxsw_sp, neigh_entry, !entry_connected);
-+	mlxsw_sp_nexthop_neigh_update(mlxsw_sp, neigh_entry, !entry_connected,
-+				      dead);
- 
- 	if (!neigh_entry->connected && list_empty(&neigh_entry->nexthop_list))
- 		mlxsw_sp_neigh_entry_destroy(mlxsw_sp, neigh_entry);
-@@ -2535,13 +2536,79 @@ static void __mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp_nexthop *nh,
- 	nh->update = 1;
+-	const struct platform_device *pdev = to_platform_device(comp);
+-	const char *name = data;
+-
+-	return !strcmp(pdev->dev.platform_data, name);
++	return comp == data;
  }
  
-+static int
-+mlxsw_sp_nexthop_dead_neigh_replace(struct mlxsw_sp *mlxsw_sp,
-+				    struct mlxsw_sp_neigh_entry *neigh_entry)
-+{
-+	struct neighbour *n, *old_n = neigh_entry->key.n;
-+	struct mlxsw_sp_nexthop *nh;
-+	bool entry_connected;
-+	u8 nud_state, dead;
-+	int err;
-+
-+	nh = list_first_entry(&neigh_entry->nexthop_list,
-+			      struct mlxsw_sp_nexthop, neigh_list_node);
-+
-+	n = neigh_lookup(nh->nh_grp->neigh_tbl, &nh->gw_addr, nh->rif->dev);
-+	if (!n) {
-+		n = neigh_create(nh->nh_grp->neigh_tbl, &nh->gw_addr,
-+				 nh->rif->dev);
-+		if (IS_ERR(n))
-+			return PTR_ERR(n);
-+		neigh_event_send(n, NULL);
-+	}
-+
-+	mlxsw_sp_neigh_entry_remove(mlxsw_sp, neigh_entry);
-+	neigh_entry->key.n = n;
-+	err = mlxsw_sp_neigh_entry_insert(mlxsw_sp, neigh_entry);
-+	if (err)
-+		goto err_neigh_entry_insert;
-+
-+	read_lock_bh(&n->lock);
-+	nud_state = n->nud_state;
-+	dead = n->dead;
-+	read_unlock_bh(&n->lock);
-+	entry_connected = nud_state & NUD_VALID && !dead;
-+
-+	list_for_each_entry(nh, &neigh_entry->nexthop_list,
-+			    neigh_list_node) {
-+		neigh_release(old_n);
-+		neigh_clone(n);
-+		__mlxsw_sp_nexthop_neigh_update(nh, !entry_connected);
-+		mlxsw_sp_nexthop_group_refresh(mlxsw_sp, nh->nh_grp);
-+	}
-+
-+	neigh_release(n);
-+
-+	return 0;
-+
-+err_neigh_entry_insert:
-+	neigh_entry->key.n = old_n;
-+	mlxsw_sp_neigh_entry_insert(mlxsw_sp, neigh_entry);
-+	neigh_release(n);
-+	return err;
-+}
-+
- static void
- mlxsw_sp_nexthop_neigh_update(struct mlxsw_sp *mlxsw_sp,
- 			      struct mlxsw_sp_neigh_entry *neigh_entry,
--			      bool removing)
-+			      bool removing, bool dead)
- {
- 	struct mlxsw_sp_nexthop *nh;
+ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
+@@ -275,7 +272,7 @@ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
+ 		}
  
-+	if (list_empty(&neigh_entry->nexthop_list))
-+		return;
-+
-+	if (dead) {
-+		int err;
-+
-+		err = mlxsw_sp_nexthop_dead_neigh_replace(mlxsw_sp,
-+							  neigh_entry);
-+		if (err)
-+			dev_err(mlxsw_sp->bus_info->dev, "Failed to replace dead neigh\n");
-+		return;
-+	}
-+
- 	list_for_each_entry(nh, &neigh_entry->nexthop_list,
- 			    neigh_list_node) {
- 		__mlxsw_sp_nexthop_neigh_update(nh, removing);
+ 		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
+-				    (void *)vimc->pipe_cfg->ents[i].name);
++				    &vimc->subdevs[i]->dev);
+ 	}
+ 
+ 	return match;
 -- 
 2.20.1
 
