@@ -2,104 +2,553 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DBCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7076C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05003206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B05206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLPIjA (ORCPT
+        id S1726908AbfLPIkB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:39:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:33113 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfLPIi7 (ORCPT
+        Mon, 16 Dec 2019 03:40:01 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:40429 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfLPIkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:38:59 -0500
-Received: from [192.168.1.155] ([77.2.44.177]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mbkac-1i8GtY2cKk-00dEbt; Mon, 16 Dec 2019 09:38:50 +0100
-Subject: Re: [PATCH] net: l2tp: remove unneeded MODULE_VERSION() usage
-To:     David Miller <davem@davemloft.net>, info@metux.net
-Cc:     linux-kernel@vger.kernel.org, jchapman@katalix.com,
-        netdev@vger.kernel.org
-References: <20191212133613.25376-1-info@metux.net>
- <20191212.110354.354662228217900367.davem@davemloft.net>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <75d6a169-d977-441a-f9b5-292be0c9a3f1@metux.net>
-Date:   Mon, 16 Dec 2019 09:38:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 03:40:01 -0500
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E52E2240008;
+        Mon, 16 Dec 2019 08:39:56 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 09:39:55 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191216093955.177a04af@xps13>
+In-Reply-To: <20191212211434.455trhnlcvn26zl6@pengutronix.de>
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+        <20191212211434.455trhnlcvn26zl6@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191212.110354.354662228217900367.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:2CqXzjJ/9Rl87J4VRB8rGMWHTiQg+TNck86VRyWGGfMGIhsEhLc
- YvLGIyG0jCvZO3wy5RAQHLeKqWEELlQ7MkliKqSmhhT6Dr0FZkHypk0Q83op505Om8TLCco
- VhSVxW4bYHGfdE6ywonzLOd/HFEn3IOzX3W36a3Jk35WQkeofO6U0zbayqrIXL+0jpOwJuA
- tneSCDpLmGZ5pmbOkSeXA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8Nfwt0ybmJc=:A4391fXndGZ/zwrcm7kqf7
- KP/GcKlirwiXeqt0Xq5gpj3wbVesvKNygGkvJmyDXc/GhtF8mVP/Iu9gmCukA8fB5Uce9E/8a
- 1p2rwmbmsA1jel6nXi+rwRnFKc1uHykMo/PNo3brFBTniprpZSZro1RTAKleKL40vkGHMRBVs
- FxZz8hLqzE7NDMbnika8wtLikC5E81vbOTJBsqwp5Y+SDZGg25Fo7Q7Rwq9M8kXyl3EwGCFky
- Xn9OXU2N+SPboglQ+dLyYFr7Lk97aEej3XN69xOUuI+GxPutOdF5MU0mIT0WP/dLJ94xQnofp
- ak+aBMbG0nkmMlbNN6d8gxNHC3GfX3c//Fe5KlIWLbvWUZsvX8+Cot+T7DlS0rXezsXtfHdyT
- 26gE7MnsQxJOsCvn+Uhk0v5TG9j+6w0+cT+XFSAzR6HIgmeutEFQFMs3JtDGqDg1wg1DnSCdC
- OFLmSPrrUNTucqQX3Nknve/hw6of6MWmWWpM3dkEtpF57pIgbSfiAYbbIW7DGs8wIcfCKcvHV
- BjsRaJDLtjI1rtWNAqeMVEEzWBAmqeKTyMrTrrqy7sT3LU6NsZBQjUCxHL4nq2qZgQxmUwBFR
- rKq12ya6obp9GuIcUIqcpaLH2XXEvFTzY43ag7W+GmG4PbT7F8s9/XzVpG6ehps9TKRUAGisU
- em7n+fPbab4Y9NK0av/aFk3idd7D0oVyswNfri5aRz2HG775LCo7PGZyAUjyvahzp6it8J2Mv
- 6xhcQ2ib9JfZhyMsHoGFrxJ/DDw294bvyc5j0a9xF8rtF9lkwnOjzUcxmqXgt9JZfe7bga24t
- 1SkZdovYC3SBYOjwuza6WriEMwZ3dp8JqEmZN/3y3x5e7wKfiNhpEJuzPqebVH+CRF/d5uniE
- dMCl/u2s6p0D0ckMoO/Q==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.12.19 20:03, David Miller wrote:
+Hi Uwe,
 
-Hi,
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Thu, 12 Dec
+2019 22:14:34 +0100:
 
-> Is there a plan to remove MODULE_VERSION across the entire kernel tree?
+> On Fri, Nov 29, 2019 at 08:10:23PM +0100, Miquel Raynal wrote:
+> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > functions but can also manage the intensity on each of its ports with
+> > PWM. Each output is independent and may be tuned with 16 values (4
+> > bits per output). The period is always 32kHz, only the duty-cycle may
+> > be changed. One can use any output as GPIO or PWM.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> > 
+> > Changes in v4:
+> > * Fix wrong comment about register value.
+> > * Rewrite ->set_state() to make it more readable, include the fact
+> >   that the phase may blink and to limit the number of blink changes
+> >   when possible ("lazy switching" as discussed with Uwe).
+> > * Prevent using managed memory when not relevant.
+> > * Add a definition to the master intensity shift.
+> > * Rename all struct pwm_device to pwm and all struct pwm_chip as
+> >   chip. Then, struct pca953x_chip are called pca_chip instead of chip
+> >   and struct max7313_pwm are called max_pwm intead of pwm.
+> > * Enhance the comment about glitch-free hardware.
+> > * Add a plain error check at the ->pwm_probe() return location.
+> > * Rename duty_cycle to intensity when relevant.
+> > * Do not initialize the PWM in ->request(). Also do not change the
+> >   state in ->free().
+> > * New way to count enabled/disabled PWM (with a bitmap). Disable the
+> >   oscillator only when 0 PWM are in use, enable it when there is
+> >   one. Also always set the pin to output state otherwise the default
+> >   might be input.
+> > * Force state->enable to be true and drop all the boilerplate around
+> >   enable and .duty_cycle.
+> > 
+> > Changes in v3:
+> > * Added two error messages in ->request().
+> > * Protected the PWM count agains races with an additional mutex.
+> > * Dropped an useless check on the period value in ->apply().
+> > * Forced the .period to be constant.
+> > * Checked state->polarity when needed.
+> > * Used DIV_ROUND_DOWN_ULL for computing the duty_cycle.
+> > * Implemented ->get_state().
+> > * Added a comment to explain that the GPIO functionality is not harmed
+> >   by the global intensity setting.
+> > 
+> > Changes in v2:
+> > * Removed the hardcoding of PWM_CHANNELS, changed the code to use the
+> >   number of GPIO lines which is programatically known.
+> > * Used per pwm_device chip data to store the GPIO descriptors instead
+> >   of having a static array of GPIO descriptors in the private PWM
+> >   structure. It also enhanced the readability.
+> > * Rename an offset variable: s/off/shift/.
+> > * The default PWM state is now static low instead of input.
+> > * Used the GPIO as regular consumer thanks to the stored GPIO
+> >   descriptors to "make it more idiomatic" (requested by Thierry).
+> > * Used gpiochip_request_own_desc() instead of
+> >   gpio_to_desc()/gpiod_request(). This prevented the build issue and
+> >   an additional dependency that would have requested a DEPENDS ON line
+> >   in Kconfig.
+> > * Enhanced the return line of max7313_pwm_probe().
+> > 
+> > 
+> >  drivers/gpio/gpio-pca953x.c | 375 +++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 373 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> > index de5d1383f28d..347988bc630f 100644
+> > --- a/drivers/gpio/gpio-pca953x.c
+> > +++ b/drivers/gpio/gpio-pca953x.c
+> > @@ -10,20 +10,25 @@
+> >  
+> >  #include <linux/acpi.h>
+> >  #include <linux/bits.h>
+> > +#include <linux/bitmap.h>
+> >  #include <linux/gpio/driver.h>
+> >  #include <linux/gpio/consumer.h>
+> > +#include <linux/gpio/machine.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/init.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_platform.h>
+> >  #include <linux/platform_data/pca953x.h>
+> > +#include <linux/pwm.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/slab.h>
+> >  
+> >  #include <asm/unaligned.h>
+> >  
+> > +#include "gpiolib.h"
+> > +
+> >  #define PCA953X_INPUT		0x00
+> >  #define PCA953X_OUTPUT		0x01
+> >  #define PCA953X_INVERT		0x02
+> > @@ -63,11 +68,18 @@
+> >  
+> >  #define PCA_INT			BIT(8)
+> >  #define PCA_PCAL		BIT(9)
+> > +#define MAX_PWM			BIT(10)
+> >  #define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
+> >  #define PCA953X_TYPE		BIT(12)
+> >  #define PCA957X_TYPE		BIT(13)
+> >  #define PCA_TYPE_MASK		GENMASK(15, 12)
+> >  
+> > +#define MAX7313_MASTER		0x0E
+> > +#define MAX7313_CONFIGURATION	0x0F
+> > +#define MAX7313_INTENSITY	0x10
+> > +
+> > +#define MAX7313_GLOB_INTENSITY	BIT(2)
+> > +
+> >  #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
+> >  
+> >  static const struct i2c_device_id pca953x_id[] = {
+> > @@ -93,7 +105,7 @@ static const struct i2c_device_id pca953x_id[] = {
+> >  
+> >  	{ "max7310", 8  | PCA953X_TYPE, },
+> >  	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
+> > -	{ "max7313", 16 | PCA953X_TYPE | PCA_INT, },
+> > +	{ "max7313", 16 | PCA953X_TYPE | PCA_INT | MAX_PWM, },
+> >  	{ "max7315", 8  | PCA953X_TYPE | PCA_INT, },
+> >  	{ "max7318", 16 | PCA953X_TYPE | PCA_INT, },
+> >  	{ "pca6107", 8  | PCA953X_TYPE | PCA_INT, },
+> > @@ -118,6 +130,16 @@ MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
+> >  
+> >  #define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
+> >  
+> > +#define PWM_MAX_COUNT 16
+> > +#define PWM_PER_REG 2
+> > +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
+> > +#define PWM_MASTER_INTENSITY_SHIFT 4
+> > +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
+> > +
+> > +#define PWM_PERIOD_NS 31250
+> > +#define PWM_DC_STATES 16
+> > +#define PWM_OFFSET_NS (PWM_PERIOD_NS / PWM_DC_STATES)
+> > +
+> >  struct pca953x_reg_config {
+> >  	int direction;
+> >  	int output;
+> > @@ -139,6 +161,20 @@ static const struct pca953x_reg_config pca957x_regs = {
+> >  	.invert = PCA957X_INVRT,
+> >  };
+> >  
+> > +struct max7313_pwm_data {
+> > +	struct gpio_desc *desc;
+> > +};
+> > +
+> > +struct max7313_pwm {
+> > +	struct pwm_chip chip;
+> > +	/*
+> > +	 * Protect races when counting active PWMs for enabling or disabling
+> > +	 * the internal oscillator.
+> > +	 */
+> > +	struct mutex count_lock;
+> > +	DECLARE_BITMAP(active_pwm, PWM_MAX_COUNT);
+> > +};
+> > +
+> >  struct pca953x_chip {
+> >  	unsigned gpio_start;
+> >  	struct mutex i2c_lock;
+> > @@ -161,6 +197,8 @@ struct pca953x_chip {
+> >  	struct regulator *regulator;
+> >  
+> >  	const struct pca953x_reg_config *regs;
+> > +
+> > +	struct max7313_pwm pwm;
+> >  };
+> >  
+> >  static int pca953x_bank_shift(struct pca953x_chip *chip)
+> > @@ -241,8 +279,16 @@ static bool pca953x_check_register(struct pca953x_chip *chip, unsigned int reg,
+> >  static bool pca953x_readable_register(struct device *dev, unsigned int reg)
+> >  {
+> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
+> > +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
+> >  	u32 bank;
+> >  
+> > +	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> > +	    chip->driver_data & MAX_PWM) {
+> > +		if (reg >= MAX7313_MASTER &&
+> > +		    reg < (MAX7313_INTENSITY + bank_sz))
+> > +			return true;
+> > +	}
+> > +
+> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+> >  		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
+> >  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
+> > @@ -264,8 +310,16 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
+> >  static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
+> >  {
+> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
+> > +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
+> >  	u32 bank;
+> >  
+> > +	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> > +	    chip->driver_data & MAX_PWM) {
+> > +		if (reg >= MAX7313_MASTER &&
+> > +		    reg < (MAX7313_INTENSITY + bank_sz))
+> > +			return true;
+> > +	}
+> > +
+> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+> >  		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
+> >  			PCA953x_BANK_CONFIG;
+> > @@ -886,6 +940,315 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
+> >  	return ret;
+> >  }
+> >  
+> > +/*
+> > + * Max7313 PWM specific methods
+> > + *
+> > + * Limitations:
+> > + * - Does not support a disabled state
+> > + * - Period fixed to 31.25ms
+> > + * - Only supports normal polarity
+> > + * - Some glitches cannot be prevented
+> > + */
+> > +
+> > +static struct max7313_pwm *to_max7313_pwm(struct pwm_chip *chip)
+> > +{
+> > +	return container_of(chip, struct max7313_pwm, chip);
+> > +}
+> > +
+> > +static struct pca953x_chip *to_pca953x(struct max7313_pwm *chip)
+> > +{
+> > +	return container_of(chip, struct pca953x_chip, pwm);
+> > +}
+> > +
+> > +static u8 max7313_pwm_get_intensity(struct pca953x_chip *pca_chip,
+> > +				    unsigned int idx)
+> > +{
+> > +	unsigned int reg, shift, val, output;
+> > +	u8 intensity;
+> > +	bool phase;
+> > +
+> > +	/* Retrieve the intensity */
+> > +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> > +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	regmap_read(pca_chip->regmap, reg, &val);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +
+> > +	if (shift)
+> > +		val >>= shift;
+> > +
+> > +	val &= PWM_INTENSITY_MASK;
+> > +
+> > +	/* Retrieve the phase */
+> > +	reg = pca953x_recalc_addr(pca_chip, pca_chip->regs->output, idx, 0, 0);
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	regmap_read(pca_chip->regmap, reg, &output);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +
+> > +	phase = output & BIT(idx % BANK_SZ);
+> > +
+> > +	/*
+> > +	 * Register values in the [0;15] range mean a value in the [1/16;16/16]
+> > +	 * range if the phase is set, a [15/16;0/16] range otherwise.
+> > +	 */
+> > +	if (phase)
+> > +		intensity = val + 1;
+> > +	else
+> > +		intensity = PWM_INTENSITY_MASK - val;
+> > +
+> > +	return intensity;
+> > +}
+> > +
+> > +static int max7313_pwm_set_intensity(struct pca953x_chip *pca_chip,
+> > +				     unsigned int idx, u8 intensity)
+> > +{
+> > +	unsigned int reg, shift;
+> > +	u8 val, mask;
+> > +	int ret;
+> > +
+> > +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> > +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
+> > +
+> > +	mask = PWM_INTENSITY_MASK << shift;
+> > +	val = (intensity & PWM_INTENSITY_MASK) << shift;
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_write_bits(pca_chip->regmap, reg, mask, val);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/*
+> > + * For a given PWM channel, when the blink phase 0 bit is set, the intensity
+> > + * range is only [1/16;16/16]. With this range, a static low output is
+> > + * physically not possible. When the blink phase 0 bit is cleared, the intensity
+> > + * range is [15/16;0/16] which then allows a static low output but not a static
+> > + * high output.
+> > + *
+> > + * In this driver we choose to switch the blink phase only when mandatory
+> > + * because there is no way to atomically flip the register *and* change the PWM
+> > + * value at the same time so, in this case, it will produce a small glitch.
+> > + */
+> > +static int max7313_pwm_set_state(struct pca953x_chip *pca_chip,
+> > +				 struct pwm_device *pwm,
+> > +				 unsigned int intensity)
+> > +{
+> > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm);
+> > +	struct gpio_desc *desc = data->desc;
+> > +	unsigned int idx = pwm->hwpwm, reg, output;
+> > +	bool phase;
+> > +	int ret;
+> > +
+> > +	/* Retrieve the phase */
+> > +	reg = pca953x_recalc_addr(pca_chip, pca_chip->regs->output, idx, 0, 0);
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	regmap_read(pca_chip->regmap, reg, &output);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +
+> > +	phase = output & BIT(idx % BANK_SZ);
+> > +
+> > +	/* Need to blink the phase */
+> > +	if ((phase && !intensity) || (!phase && intensity == PWM_DC_STATES)) {
+> > +		phase = !phase;
+> > +		ret = gpiod_direction_output(desc, phase);
+> > +		if (ret)
+> > +			return ret;
+> > +	} else {
+> > +		/* Ensure the pin is in output state (default might be input) */
+> > +		ret = gpiod_direction_output(desc, phase);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (phase)
+> > +		intensity = intensity - 1;
+> > +	else
+> > +		intensity = PWM_INTENSITY_MASK - intensity;
+> > +
+> > +	return max7313_pwm_set_intensity(pca_chip, idx, intensity);
+> > +}
+> > +
+> > +static int max7313_pwm_set_master_intensity(struct pca953x_chip *pca_chip,
+> > +					    u8 intensity)
+> > +{
+> > +	int ret;
+> > +
+> > +	intensity &= PWM_INTENSITY_MASK;
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_write_bits(pca_chip->regmap, MAX7313_MASTER,
+> > +				PWM_INTENSITY_MASK << PWM_MASTER_INTENSITY_SHIFT,
+> > +				intensity << PWM_MASTER_INTENSITY_SHIFT);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int max7313_pwm_request(struct pwm_chip *chip,
+> > +			       struct pwm_device *pwm)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	struct max7313_pwm_data *data;
+> > +	struct gpio_desc *desc;
+> > +
+> > +	desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
+> > +					 "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
+> > +	if (IS_ERR(desc)) {
+> > +		dev_err(&pca_chip->client->dev,
+> > +			"pin already in use (probably as GPIO): %ld\n",
+> > +			PTR_ERR(desc));
+> > +		return PTR_ERR(desc);
+> > +	}
+> > +
+> > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> > +	if (!data) {
+> > +		gpiochip_free_own_desc(desc);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	data->desc = desc;
+> > +	pwm_set_chip_data(pwm, data);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void max7313_pwm_free(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm)
+> > +{
+> > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm);
+> > +
+> > +	gpiochip_free_own_desc(data->desc);
+> > +	kfree(data);
+> > +}
+> > +
+> > +static int max7313_pwm_apply(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	unsigned int intensity, active;
+> > +	int ret = 0;
+> > +
+> > +	if (!state->enabled ||
+> > +	    state->period < PWM_PERIOD_NS ||
+> > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
+> > +
+> > +	/* Convert the duty-cycle to be in the [0;16] range */
+> > +	intensity = DIV_ROUND_DOWN_ULL(state->duty_cycle,
+> > +				       state->period / PWM_DC_STATES);  
+> 
+> this looks wrong. The period must not have an influence on the selection
+> of the duty_cycle (other than duty_cycle < period). So given that the
+> period is fixed at 31.25 ms, the result of
+> 
+> 	pwm_apply_state(pwm, { .enabled = 1, .period = 2s, .duty_cycle = 16 ms })
+> 
+> must be the same as for
+> 
+> 	pwm_apply_state(pwm, { .enabled = 1, .period = 3s, .duty_cycle = 16 ms })
 
-I'm not entirely sure, but for all I know it just doesn't make sense at
-all to have it (maybe except for OOT modules) and already was removed in
-several places. For example, Greg cleansed it from the input subsys a
-few years ago:
+This was not my understanding of our previous discussion and, again, I
+don't really understand this choice but if the framework works like
+that we shall probably continue with this logic. However, all this
+should probably be explained directly in the kernel doc of each core
+helper, that would help a lot.
 
-	https://lkml.org/lkml/2017/11/22/480
+> . Also dividing by a division looses precision.
 
-Similar patch for gpio subsys was accepted recently.
+I agree but this is a problem with fixed point calculations. Maybe I
+could first multiply the numerator by a factor of 100 or 1000 to
+minimize the error. Do you have a better idea?
 
-This got my attention by some discussion on some patches introducing new
-module w/ including such macro call. The consensus from the discussion
-was that the MODULE_VERSION() shouldn't be used, so I prepared some
-patches to remove it in many places.
+> 
+> > +	/*
+> > +	 * If this is the first PWM to enable, set the master intensity to the
+> > +	 * maximum level to let individual outputs the greatest flexibility
+> > +	 * range. It also enables the internal oscillator.
+> > +	 *
+> > +	 * When shutting down the last active PWM, the oscillator is disabled.
+> > +	 *
+> > +	 * Lazy logic is applied to simplify the code: always enable the
+> > +	 * oscillator when there is 1 active pwm, always disable it when there
+> > +	 * is none.
+> > +	 */
+> > +	mutex_lock(&max_pwm->count_lock);
+> > +	if (intensity)
+> > +		set_bit(pwm->hwpwm, max_pwm->active_pwm);
+> > +	else
+> > +		clear_bit(pwm->hwpwm, max_pwm->active_pwm);
+> > +
+> > +	active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);
+> > +	if (!active)
+> > +		ret = max7313_pwm_set_master_intensity(pca_chip, 0);
+> > +	else if (active == 1)
+> > +		ret = max7313_pwm_set_master_intensity(pca_chip,
+> > +						       PWM_INTENSITY_MASK);
+> > +	mutex_unlock(&max_pwm->count_lock);
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * The hardware is supposedly glitch-free when changing the intensity,
+> > +	 * unless we need to flip the blink phase to reach an extremity or the
+> > +	 * other of the spectre (0/16 from phase 1, 16/16 from phase 0).  
+> 
+> I think you mean spectrum here, not spectre. :-)
 
-If you like to keep it in, give me a clear reject (maybe also a short
-list of other areas under your maintainership), so I can skip it out
-and don't bother you again :)
+Oops :)
 
-Personally, I believe, we shouldn't keep things that don't really serve
-any purpose. Does anybody ever actually use it ?
+> 
+> > +	 */
+> > +	return max7313_pwm_set_state(pca_chip, pwm, intensity);
+> > +}
+> > +
+> > +static void max7313_pwm_get_state(struct pwm_chip *chip,
+> > +				  struct pwm_device *pwm,
+> > +				  struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	u8 intensity;
+> > +
+> > +	state->enabled = true;
+> > +	state->period = PWM_PERIOD_NS;
+> > +	state->polarity = PWM_POLARITY_NORMAL;
+> > +
+> > +	intensity = max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
+> > +	state->duty_cycle = intensity * PWM_OFFSET_NS;  
+> 
+> I think you need to take into account the blink phase bit.
+
+It is already done by .pwm_get_intensity itself, no?
 
 
-By the way: we've got a similar thing with network devices, they've got
-a version field. But it seems not all drivers filling it.
-
-What is that used for ?
-
-
-
---mtx
-
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thanks,
+Miquèl
