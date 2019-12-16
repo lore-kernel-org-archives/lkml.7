@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C86C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA740206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F5B206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfLPPwN (ORCPT
+        id S1728637AbfLPPwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:52:13 -0500
-Received: from sauhun.de ([88.99.104.3]:42030 "EHLO pokefinder.org"
+        Mon, 16 Dec 2019 10:52:02 -0500
+Received: from sauhun.de ([88.99.104.3]:41984 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfLPPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:52:05 -0500
+        id S1728558AbfLPPv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:51:59 -0500
 Received: from localhost (p54B33297.dip0.t-ipconnect.de [84.179.50.151])
-        by pokefinder.org (Postfix) with ESMTPSA id 549DC2C2DBC;
-        Mon, 16 Dec 2019 16:52:03 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id EA0042C2DAC;
+        Mon, 16 Dec 2019 16:51:57 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-media@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Antti Palosaari <crope@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 16/16] media: v4l2-core: v4l2-i2c: convert to new API with ERRPTR
-Date:   Mon, 16 Dec 2019 16:51:43 +0100
-Message-Id: <20191216155146.8803-17-wsa+renesas@sang-engineering.com>
+Subject: [PATCH RESEND 10/16] media: usb: dvb-usb-v2: af9035: convert to use i2c_new_client_device()
+Date:   Mon, 16 Dec 2019 16:51:37 +0100
+Message-Id: <20191216155146.8803-11-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191216155146.8803-1-wsa+renesas@sang-engineering.com>
 References: <20191216155146.8803-1-wsa+renesas@sang-engineering.com>
@@ -40,54 +41,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new APIs instead of the deprecated ones.
+Use the newer API returning an ERRPTR and use the new helper to bail
+out.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
+ drivers/media/usb/dvb-usb-v2/af9035.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Change since last version:
-
-* use more new API (i2c_new_*_device)
-
- drivers/media/v4l2-core/v4l2-i2c.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-i2c.c b/drivers/media/v4l2-core/v4l2-i2c.c
-index 5bf99e7c0c09..b4acca75644b 100644
---- a/drivers/media/v4l2-core/v4l2-i2c.c
-+++ b/drivers/media/v4l2-core/v4l2-i2c.c
-@@ -74,10 +74,10 @@ struct v4l2_subdev
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 792667ee5ebc..2db286d88fa5 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -208,8 +208,8 @@ static int af9035_add_i2c_dev(struct dvb_usb_device *d, const char *type,
+ 	request_module("%s", board_info.type);
  
- 	/* Create the i2c client */
- 	if (info->addr == 0 && probe_addrs)
--		client = i2c_new_probed_device(adapter, info, probe_addrs,
--					       NULL);
-+		client = i2c_new_scanned_device(adapter, info, probe_addrs,
-+						NULL);
- 	else
--		client = i2c_new_device(adapter, info);
-+		client = i2c_new_client_device(adapter, info);
- 
- 	/*
- 	 * Note: by loading the module first we are certain that c->driver
-@@ -88,7 +88,7 @@ struct v4l2_subdev
- 	 * want to use the i2c device, so explicitly loading the module
- 	 * is the best alternative.
- 	 */
--	if (!client || !client->dev.driver)
-+	if (!i2c_client_has_driver(client))
- 		goto error;
- 
- 	/* Lock the module so we can safely get the v4l2_subdev pointer */
-@@ -110,7 +110,7 @@ struct v4l2_subdev
- 	 * If we have a client but no subdev, then something went wrong and
- 	 * we must unregister the client.
- 	 */
--	if (client && !sd)
-+	if (!IS_ERR(client) && !sd)
- 		i2c_unregister_device(client);
- 	return sd;
- }
+ 	/* register I2C device */
+-	client = i2c_new_device(adapter, &board_info);
+-	if (client == NULL || client->dev.driver == NULL) {
++	client = i2c_new_client_device(adapter, &board_info);
++	if (!i2c_client_has_driver(client)) {
+ 		ret = -ENODEV;
+ 		goto err;
+ 	}
 -- 
 2.20.1
 
