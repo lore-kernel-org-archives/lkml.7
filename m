@@ -2,194 +2,146 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE04C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D75E21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F75218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/qz53e5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpEfYV/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfLPU6k (ORCPT
+        id S1727052AbfLPVB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:58:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54543 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbfLPU6j (ORCPT
+        Mon, 16 Dec 2019 16:01:28 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32271 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726729AbfLPVB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:58:39 -0500
+        Mon, 16 Dec 2019 16:01:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576529918;
+        s=mimecast20190719; t=1576530086;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=I5pwpugbvcPhx5HIZe/i1XJaYa2LrwKg/AuycQPjBPw=;
-        b=U/qz53e5PfBSGwR+cA12LZNmsPrCDesiAex2B9sAjOJmZE+gVXpCLL7EcFB2n6g4jSDrmr
-        y6xF+QysJQ4YwcaYhnsG/J73EBXxy6iNhakqYA9yX94qept7yM/Sgvy2RPdvPuiHvFyIdC
-        J2DNxW8wb7dp76cAdCHqrJzzcCpEbcw=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-wUfTHmq0OdiAmUyda6FvbQ-1; Mon, 16 Dec 2019 15:58:37 -0500
-X-MC-Unique: wUfTHmq0OdiAmUyda6FvbQ-1
-Received: by mail-qt1-f200.google.com with SMTP id g22so5496553qtr.23
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:58:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I5pwpugbvcPhx5HIZe/i1XJaYa2LrwKg/AuycQPjBPw=;
-        b=FRUjd66leU2XImGuhLwdWFXyFSmDJLWpzc10198zGAeUWDAAd+9PXlYcHlgGORSM/+
-         CVLXyqMVsITATrUCr5yvnOcsqjJsmFwYKWViQb3phmF4aH/RdmfpP2/6kIWFXWOfNE1O
-         6yRa8Xsn/yEUE7r2XLLJwKIScwq+8b0yrVVX9xLd2atYtI5fL4LeT/kwPYryY9cCEhDP
-         ECKj9C1oiRUV2+qnGjQ2PYxDT4GuMZl00AZ89e7vDipcLTFbR3U0mTAR3fwZv/0ceNVf
-         mMZ6OMMss1CSek/lOxXBtxUX4VbTgoJqzk71OEdZPQscyJLH7bZ5x4D/omi/xB1a8DZM
-         3t6A==
-X-Gm-Message-State: APjAAAWsXNZTBCk/J/umxK09/+j8hSz1RXgUUPe09AoBlK3ZWSlmZDlk
-        6uCd5n0rXVwgRtKwVZRa2jldBhW9LE7Fhb1BDIebe4UgDyS9zbFvA7LqR11PWaxPxD9JhTMUQR9
-        9EQQLSn09xJ9pdORoUrDWlEBq
-X-Received: by 2002:a05:620a:718:: with SMTP id 24mr1375216qkc.77.1576529915759;
-        Mon, 16 Dec 2019 12:58:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyTwkyU6Q4/8odVAHhOw4zGJwJ266SrjxU7PkBPT2stY0ZvTERV5XECgK3szqPte8OvZJxskg==
-X-Received: by 2002:a05:620a:718:: with SMTP id 24mr1375199qkc.77.1576529915391;
-        Mon, 16 Dec 2019 12:58:35 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id l31sm7254803qte.30.2019.12.16.12.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 12:58:34 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:58:33 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] smp: Allow smp_call_function_single_async() to insert
- locked csd
-Message-ID: <20191216205833.GB161272@xz-x1>
-References: <20191204204823.1503-1-peterx@redhat.com>
- <20191211154058.GO2827@hirez.programming.kicks-ass.net>
- <20191211162925.GD48697@xz-x1>
- <20191216203705.GV2844@hirez.programming.kicks-ass.net>
+        bh=y2YGUzKWfrJlypL5f6IAP/q6Ohy4nUi/MZaE1v/sIbk=;
+        b=SpEfYV/xOTN6evotg1IYegCzRBRWcvYOF/+yWjw8XOkhYyATs+AAh2GCxW3GnHGjn/08n9
+        u+wKqDNPW4tC9VHO541aJPTBSp7WBp5Ki9QZMyBoAxPiKfsD3HaHo6PKwhs54BsuLvc0yM
+        vHNHP1lLI1Z6m3+B7DrjSAPUAwGJTPs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-7Pu4BB3xNt-Oq5fmzXLGmw-1; Mon, 16 Dec 2019 16:01:23 -0500
+X-MC-Unique: 7Pu4BB3xNt-Oq5fmzXLGmw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7611B801E70;
+        Mon, 16 Dec 2019 21:01:21 +0000 (UTC)
+Received: from redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7479861351;
+        Mon, 16 Dec 2019 21:01:20 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 16:01:18 -0500
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
+        pmladek@suse.com, shuah@kernel.org, live-patching@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: livepatch: Fix it to do root uid check and
+ skip
+Message-ID: <20191216210118.GA28841@redhat.com>
+References: <20191216191840.15188-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216203705.GV2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191216191840.15188-1-skhan@linuxfoundation.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 09:37:05PM +0100, Peter Zijlstra wrote:
-> On Wed, Dec 11, 2019 at 11:29:25AM -0500, Peter Xu wrote:
-> > This is also true.
-> > 
-> > Here's the statistics I mentioned:
-> > 
-> > =================================================
-> > 
-> > (1) Implemented the same counter mechanism on the caller's:
-> > 
-> > *** arch/mips/kernel/smp.c:
-> > tick_broadcast[713]            smp_call_function_single_async(cpu, csd);
-> > *** drivers/cpuidle/coupled.c:
-> > cpuidle_coupled_poke[336]      smp_call_function_single_async(cpu, csd);
-> > *** kernel/sched/core.c:
-> > hrtick_start[298]              smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
-> > 
-> > (2) Cleared the csd flags before calls:
-> > 
-> > *** arch/s390/pci/pci_irq.c:
-> > zpci_handle_fallback_irq[185]  smp_call_function_single_async(cpu, &cpu_data->csd);
-> > *** block/blk-mq.c:
-> > __blk_mq_complete_request[622] smp_call_function_single_async(ctx->cpu, &rq->csd);
-> > *** block/blk-softirq.c:
-> > raise_blk_irq[70]              smp_call_function_single_async(cpu, data);
-> > *** drivers/net/ethernet/cavium/liquidio/lio_core.c:
-> > liquidio_napi_drv_callback[735] smp_call_function_single_async(droq->cpu_id, csd);
-> > 
-> > (3) Others:
-> > 
-> > *** arch/mips/kernel/process.c:
-> > raise_backtrace[713]           smp_call_function_single_async(cpu, csd);
+On Mon, Dec 16, 2019 at 12:18:40PM -0700, Shuah Khan wrote:
+> livepatch test configures the system and debug environment to run
+> tests. Some of these actions fail without root access and test
+> dumps several permission denied messages before it exits.
 > 
-> per-cpu csd data, seems perfectly fine usage.
+> Fix test-state.sh to call setup_config instead of set_dynamic_debug
+> as suggested by Petr Mladek <pmladek@suse.com>
+> 
+> Fix it to check root uid and exit with skip code instead.
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  tools/testing/selftests/livepatch/functions.sh  | 15 ++++++++++++++-
+>  tools/testing/selftests/livepatch/test-state.sh |  3 +--
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+> index 31eb09e38729..a6e3d5517a6f 100644
+> --- a/tools/testing/selftests/livepatch/functions.sh
+> +++ b/tools/testing/selftests/livepatch/functions.sh
+> @@ -7,6 +7,9 @@
+>  MAX_RETRIES=600
+>  RETRY_INTERVAL=".1"	# seconds
+>  
+> +# Kselftest framework requirement - SKIP code is 4
+> +ksft_skip=4
+> +
+>  # log(msg) - write message to kernel log
+>  #	msg - insightful words
+>  function log() {
+> @@ -18,7 +21,16 @@ function log() {
+>  function skip() {
+>  	log "SKIP: $1"
+>  	echo "SKIP: $1" >&2
+> -	exit 4
+> +	exit $ksft_skip
+> +}
+> +
+> +# root test
+> +function is_root() {
+> +	uid=$(id -u)
+> +	if [ $uid -ne 0 ]; then
+> +		echo "skip all tests: must be run as root" >&2
+> +		exit $ksft_skip
+> +	fi
+>  }
+>  
+>  # die(msg) - game over, man
+> @@ -62,6 +74,7 @@ function set_ftrace_enabled() {
+>  #		 for verbose livepatching output and turn on
+>  #		 the ftrace_enabled sysctl.
+>  function setup_config() {
+> +	is_root
+>  	push_config
+>  	set_dynamic_debug
+>  	set_ftrace_enabled 1
+> diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
+> index dc2908c22c26..a08212708115 100755
+> --- a/tools/testing/selftests/livepatch/test-state.sh
+> +++ b/tools/testing/selftests/livepatch/test-state.sh
+> @@ -8,8 +8,7 @@ MOD_LIVEPATCH=test_klp_state
+>  MOD_LIVEPATCH2=test_klp_state2
+>  MOD_LIVEPATCH3=test_klp_state3
+>  
+> -set_dynamic_debug
+> -
+> +setup_config
+>  
+>  # TEST: Loading and removing a module that modifies the system state
+>  
+> -- 
+> 2.20.1
+> 
 
-I'm not sure whether I get the point, I just feel like it could still
-trigger as long as we do it super fast, before IPI handled,
-disregarding whether it's per-cpu csd or not.
+Thanks for fixing these, Shuah.
 
-> 
-> > *** arch/x86/kernel/cpuid.c:
-> > cpuid_read[85]                 err = smp_call_function_single_async(cpu, &csd);
-> > *** arch/x86/lib/msr-smp.c:
-> > rdmsr_safe_on_cpu[182]         err = smp_call_function_single_async(cpu, &csd);
-> 
-> These two have csd on stack and wait with a completion. seems fine.
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-Yeh this is true, then I'm confused why they don't use the sync()
-helpers..
-
-> 
-> > *** include/linux/smp.h:
-> > bool[60]                       int smp_call_function_single_async(int cpu, call_single_data_t *csd);
-> 
-> this is the declaration, your grep went funny
-> 
-> > *** kernel/debug/debug_core.c:
-> > kgdb_roundup_cpus[272]         ret = smp_call_function_single_async(cpu, csd);
-> > *** net/core/dev.c:
-> > net_rps_send_ipi[5818]         smp_call_function_single_async(remsd->cpu, &remsd->csd);
-> 
-> Both percpu again.
-> 
-> > 
-> > =================================================
-> > 
-> > For (1): These probably justify more on that we might want a patch
-> >          like this to avoid reimplementing it everywhere.
-> 
-> I can't quite parse that, but if you're saying we should fix the
-> callers, then I agree.
-> 
-> > For (2): If I read it right, smp_call_function_single_async() is the
-> >          only place where we take a call_single_data_t structure
-> >          rather than the (smp_call_func_t, void *) tuple.
-> 
-> That's on purpose; by supplying csd we allow explicit concurrency. If
-> you do as proposed here:
-> 
-> >		I could
-> >          miss something important, but otherwise I think it would be
-> >          good to use the tuple for smp_call_function_single_async() as
-> >          well, then we move call_single_data_t out of global header
-> >          but move into smp.c to avoid callers from toucing it (which
-> >          could be error-prone).  In other words, IMHO it would be good
-> >          to have all these callers fixed.
-> 
-> Then you could only ever have 1 of then in flight at the same time.
-> Which would break things.
-
-Sorry, I think you are right.
-
-> 
-> > For (3): I didn't dig, but I think some of them (or future users)
-> >          could still suffer from the same issue on retriggering the
-> >          WARN_ON... 
-> 
-> They all seem fine.
-> 
-> So I'm thinking your patch is good, but please also fix all 1).
-
-Sure.  Thanks,
-
--- 
-Peter Xu
+-- Joe
 
