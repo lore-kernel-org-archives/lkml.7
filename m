@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931F3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5D3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61587207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3928C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521312;
-	bh=1AUrRWkuKd93Vu4XM2xAppPLl4YptojGjXIUS81Acr0=;
+	s=default; t=1576521319;
+	bh=eQEYk3hsg5U7Y447uIu01pmEqjJAJ+2eg7UBtJWsVcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gN2a78kAPA2aFIuEIgSFnKzxk1VdefHoX+p0osWt+ZfSGQ/GZ1CfRi9nSjttu5hkF
-	 Zl7bMHsNVgLHAG7eK5qkUeR6jqZc/LlHGgies28cPCwFNKpPcuFuO/U0XALBkEG37i
-	 7F34qIeFwwKPqkFFovf6qvCvl0U/2zTfMkKea2Gk=
+	b=fvPlXKmodw+GDsO+IS0Mm2/h0QI3F6kgqVPBQEA3/+m2SIJlrXc2dKivtZdK2HwFc
+	 5MSNx0MH//wtP724YoS/o+0Wsf7NTVpj1pPh2iUD5ZKvK9ngvndwS9EFaOdPT/pNE4
+	 LJzDu5FJ3YTJ0nlklc9i+mL8eZrxj1/dyhH5hmgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbfLPSfL (ORCPT
+        id S1730237AbfLPSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:35:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730250AbfLPSIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:21 -0500
+        id S1730219AbfLPSIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19B72072D;
-        Mon, 16 Dec 2019 18:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BA22072B;
+        Mon, 16 Dec 2019 18:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519701;
-        bh=1AUrRWkuKd93Vu4XM2xAppPLl4YptojGjXIUS81Acr0=;
+        s=default; t=1576519689;
+        bh=eQEYk3hsg5U7Y447uIu01pmEqjJAJ+2eg7UBtJWsVcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZwQs08kf9URlCN2awVcFnMoQbPtESOep3u5Bjmt1S01AumJNEIrwQeiA4C0UPPn4
-         2dLx/2J2Z7nbzjF1EmVEkgogR1DI61QGuaMEhYI85pxD7JIMUT4Nz+cxq1CN63xXbY
-         q17dMpMXE+FKWuqtCjts/IX+gf5i4tdp7Vja5APo=
+        b=Vbcawg/AfwLT9Bl7kMrkb8AgdkVCHac54JGPzFpMZjjSYflpMy/uYQy4sRBSyCHq1
+         n3iq6M3soH1G4QhoxRZUjA7v0wz5avqNSu8Vdidnx2w3y9tjKSSaEQRab5AkJ1kycl
+         l55ZGMvLXInQCLs+7vR7M7NCClg0SFaVWWXqi2F4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.3 008/180] USB: uas: honor flag to avoid CAPACITY16
-Date:   Mon, 16 Dec 2019 18:47:28 +0100
-Message-Id: <20191216174807.557919593@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.3 003/180] Revert "nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T"
+Date:   Mon, 16 Dec 2019 18:47:23 +0100
+Message-Id: <20191216174806.609454626@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,33 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit bff000cae1eec750d62e265c4ba2db9af57b17e1 upstream.
+commit 655e7aee1f0398602627a485f7dca6c29cc96cae upstream.
 
-Copy the support over from usb-storage to get feature parity
+Since e045fa29e893 ("PCI/MSI: Fix incorrect MSI-X masking on resume") is
+merged, we can revert the previous quirk now.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191114112758.32747-2-oneukum@suse.com
+This reverts commit 19ea025e1d28c629b369c3532a85b3df478cc5c6.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Fixes: 19ea025e1d28 ("nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T")
+Link: https://lore.kernel.org/r/20191031093408.9322-1-jian-hong@endlessm.com
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvme/host/core.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -825,6 +825,10 @@ static int uas_slave_configure(struct sc
- 		sdev->wce_default_on = 1;
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2270,16 +2270,6 @@ static const struct nvme_core_quirk_entr
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+-	},
+-	{
+-		/*
+-		 * This Kingston E8FK11.T firmware version has no interrupt
+-		 * after resume with actions related to suspend to idle
+-		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
+-		 */
+-		.vid = 0x2646,
+-		.fr = "E8FK11.T",
+-		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
  	}
+ };
  
-+	/* Some disks cannot handle READ_CAPACITY_16 */
-+	if (devinfo->flags & US_FL_NO_READ_CAPACITY_16)
-+		sdev->no_read_capacity_16 = 1;
-+
- 	/*
- 	 * Some disks return the total number of blocks in response
- 	 * to READ CAPACITY rather than the highest block number.
 
 
