@@ -2,69 +2,119 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B7EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5A1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299E6206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1972020700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfLPLAR (ORCPT
+        id S1727555AbfLPLB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:00:17 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7249 "EHLO huawei.com"
+        Mon, 16 Dec 2019 06:01:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36798 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727466AbfLPLAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:00:16 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ECA08B83B02D2E9C3EF4;
-        Mon, 16 Dec 2019 19:00:13 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Dec 2019 19:00:03 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <clabbe.montjoie@gmail.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH] crypto: allwinner - remove unneeded semicolon
-Date:   Mon, 16 Dec 2019 18:57:04 +0800
-Message-ID: <20191216105704.9841-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727485AbfLPLB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:01:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 854E2AC7D;
+        Mon, 16 Dec 2019 11:01:26 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     andrew.murray@arm.com, maz@kernel.org, linux-kernel@vger.kernel.org
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v5 0/6] Raspberry Pi 4 PCIe support
+Date:   Mon, 16 Dec 2019 12:01:06 +0100
+Message-Id: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+This series aims at providing support for Raspberry Pi 4's PCIe
+controller, which is also shared with the Broadcom STB family of
+devices.
 
-./drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c:558:52-53: Unneeded semicolon
+There was a previous attempt to upstream this some years ago[1] but was
+blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
+is something currently not supported by the kernel.  Luckily this is not
+the case for the Raspberry Pi 4.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Note the series is based on top of linux next, as the DTS patch depends
+on it.
+
+[1] https://patchwork.kernel.org/cover/10605933/
+[2] https://patchwork.kernel.org/patch/10605957/
+
 ---
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 73a7649..5373950 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -555,7 +555,7 @@ static int sun8i_ce_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	ce->base = devm_platform_ioremap_resource(pdev, 0);;
-+	ce->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ce->base))
- 		return PTR_ERR(ce->base);
- 
+Changes since v4:
+  - Rebase DTS patch
+  - Respin log2.h code into it's own series as it's still contentious
+    yet mostly unrelated to the PCIe part
+
+Changes since v3:
+  - Moved all the log2.h related changes at the end of the series, as I
+    presume they will be contentious and I don't want the PCIe patches
+    to depend on them. Ultimately I think I'll respin them on their own
+    series but wanted to keep them in for this submission just for the
+    sake of continuity.
+  - Addressed small nits here and there.
+
+Changes since v2:
+  - Redo register access in driver avoiding indirection while keeping
+    the naming intact
+  - Add patch editing ARM64's config
+  - Last MSI cleanups, notably removing MSIX flag
+  - Got rid of all _RB writes
+  - Got rid of all of_data
+  - Overall churn removal
+  - Address the rest of Andrew's comments
+
+Changes since v1:
+  - add generic rounddown/roundup_pow_two64() patch
+  - Add MAINTAINERS patch
+  - Fix Kconfig
+  - Cleanup probe, use up to date APIs, exit on MSI failure
+  - Get rid of linux,pci-domain and other unused constructs
+  - Use edge triggered setup for MSI
+  - Cleanup MSI implementation
+  - Fix multiple cosmetic issues
+  - Remove supend/resume code
+
+Jim Quinlan (3):
+  dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+  PCI: brcmstb: Add Broadcom STB PCIe host controller driver
+  PCI: brcmstb: Add MSI support
+
+Nicolas Saenz Julienne (3):
+  ARM: dts: bcm2711: Enable PCIe controller
+  MAINTAINERS: Add brcmstb PCIe controller
+  arm64: defconfig: Enable Broadcom's STB PCIe controller
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
+ MAINTAINERS                                   |    4 +
+ arch/arm/boot/dts/bcm2711.dtsi                |   31 +-
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/Kconfig                |    9 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-brcmstb.c         | 1007 +++++++++++++++++
+ 7 files changed, 1149 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+
 -- 
-2.7.4
+2.24.0
 
