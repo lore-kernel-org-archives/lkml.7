@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89E0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEFAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E77D2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6AD206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521334;
-	bh=LmkIYTRoq1puurBJPSSi6hdYB2es2hW23ta6JZXP8dM=;
+	s=default; t=1576521340;
+	bh=mg2DCLQ8QFo+1Hd5CR7rqVt1ibBM/8B3A2AtloUxIbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfSlOSugglzaRgrQ1kTRY2iYlF07HiCJGkJMquz7O+cIoMXFDskUuxHxvAkdsLuRv
-	 CWPIt9IWDWub3sZheS8U9uUg+RHdUV8rPQztnp4nj6Jc6ObsAjXBqIqYhtMmi0Ze6C
-	 cFiVYNwEJ5OAgtEyXl7Urfnz5JUBefhoPUzRrHE0=
+	b=xMhjn1rEFoZe96l1ctzRZVNnnwHSga02PFrVxcrSbT9GS5ef6XIWsdMXmLePUZY4/
+	 3dQ8SqBd+yYjtiZEHL+J58Mm+8Rmmr46bO7ndad+I+9jrZoj1gh+pbQkIgEHMwEGZa
+	 7Hi/Iz1RBJSkPP+Fz9GssVb40RbbBAkXkeajJId0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfLPSfd (ORCPT
+        id S1730190AbfLPSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:35:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfLPSH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:59 -0500
+        id S1730180AbfLPSHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C245D206E0;
-        Mon, 16 Dec 2019 18:07:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FE7F20700;
+        Mon, 16 Dec 2019 18:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519679;
-        bh=LmkIYTRoq1puurBJPSSi6hdYB2es2hW23ta6JZXP8dM=;
+        s=default; t=1576519664;
+        bh=mg2DCLQ8QFo+1Hd5CR7rqVt1ibBM/8B3A2AtloUxIbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh2mLwfOb2wJmi8G+YMQDnEqmTVQoW7YvzkcnLXrKNMJR97wlPHhU9sAAT17oKlPQ
-         jEjjVnxGbISc7RgMD3SuGQCI3XfPuAmwZp9TObsQQNX5/w0KlDrqpGEZG6NTWpq7JA
-         t1p2cwxUGnZOCMQ9qPq53ELP9SVR511EgLrN+KD8=
+        b=G/p8yfaHeKpWiT29rIG68THUlgrkiNNy8zf5kTICWZ0AGr/moV26j/V2gnuxD6jhc
+         r7/9Mben0X7fzcn/xC4vIPYkLgBtf9C5bPSGo5HJjcW4AidBmO1P2FXGdnsgQZNHBZ
+         tHS/bE3ntFP7cURxHGRTEJlAZi0Ax2ZVKWBiLn0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.3 024/180] xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
-Date:   Mon, 16 Dec 2019 18:47:44 +0100
-Message-Id: <20191216174811.329785964@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 019/180] staging: gigaset: add endpoint-type sanity check
+Date:   Mon, 16 Dec 2019 18:47:39 +0100
+Message-Id: <20191216174810.567713865@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,52 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7ff11162808cc2ec66353fc012c58bb449c892c3 upstream.
+commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
 
-xhci driver claims it needs XHCI_TRUST_TX_LENGTH quirk for both
-Broadcom/Cavium and a Renesas xHC controllers.
+Add missing endpoint-type sanity checks to probe.
 
-The quirk was inteded for handling false "success" complete event for
-transfers that had data left untransferred.
-These transfers should complete with "short packet" events instead.
+This specifically prevents a warning in USB core on URB submission when
+fuzzing USB descriptors.
 
-In these two new cases the false "success" completion is reported
-after a "short packet" if the TD consists of several TRBs.
-xHCI specs 4.10.1.1.2 say remaining TRBs should report "short packet"
-as well after the first short packet in a TD, but this issue seems so
-common it doesn't make sense to add the quirk for all vendors.
-
-Turn these events into short packets automatically instead.
-
-This gets rid of the  "The WARN Successful completion on short TX for
-slot 1 ep 1: needs XHCI_TRUST_TX_LENGTH quirk" warning in many cases.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Eli Billauer <eli.billauer@gmail.com>
-Reported-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Eli Billauer <eli.billauer@gmail.com>
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-6-mathias.nyman@linux.intel.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/isdn/gigaset/usb-gigaset.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -2377,7 +2377,8 @@ static int handle_tx_event(struct xhci_h
- 	case COMP_SUCCESS:
- 		if (EVENT_TRB_LEN(le32_to_cpu(event->transfer_len)) == 0)
- 			break;
--		if (xhci->quirks & XHCI_TRUST_TX_LENGTH)
-+		if (xhci->quirks & XHCI_TRUST_TX_LENGTH ||
-+		    ep_ring->last_td_was_short)
- 			trb_comp_code = COMP_SHORT_PACKET;
- 		else
- 			xhci_warn_ratelimited(xhci,
+--- a/drivers/staging/isdn/gigaset/usb-gigaset.c
++++ b/drivers/staging/isdn/gigaset/usb-gigaset.c
+@@ -705,6 +705,12 @@ static int gigaset_probe(struct usb_inte
+ 
+ 	endpoint = &hostif->endpoint[0].desc;
+ 
++	if (!usb_endpoint_is_bulk_out(endpoint)) {
++		dev_err(&interface->dev, "missing bulk-out endpoint\n");
++		retval = -ENODEV;
++		goto error;
++	}
++
+ 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+ 	ucs->bulk_out_size = buffer_size;
+ 	ucs->bulk_out_epnum = usb_endpoint_num(endpoint);
+@@ -724,6 +730,12 @@ static int gigaset_probe(struct usb_inte
+ 
+ 	endpoint = &hostif->endpoint[1].desc;
+ 
++	if (!usb_endpoint_is_int_in(endpoint)) {
++		dev_err(&interface->dev, "missing int-in endpoint\n");
++		retval = -ENODEV;
++		goto error;
++	}
++
+ 	ucs->busy = 0;
+ 
+ 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
 
 
