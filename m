@@ -3,138 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282EFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6CC20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6ADC20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="W5ZxnUOd";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HBC5vWxO"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="b6X1jWpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLPGAq (ORCPT
+        id S1726569AbfLPGBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 01:00:46 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:61672 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfLPGAp (ORCPT
+        Mon, 16 Dec 2019 01:01:23 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33601 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfLPGBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 01:00:45 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBG60gga005933;
-        Sun, 15 Dec 2019 22:00:43 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=XV/KH5y5Wwhvs4O0l74bJAeX+00z+E1xmvKexUoF7Dw=;
- b=W5ZxnUOdym6QSzi4Nv6iVMSYBL7WNMJGd6hm7TaKQK/2cwFgBYMLacTLzqYGGnVMZEp4
- 8HY0FeX3BDaaRZyNestGmT7kSDzhmJUuox5B6L0Yu3y7aj/rLyaUQxO2tBsPYHZ6R22R
- T3dj3bBoD9n7mo05WMMnbJku9HFu32D88to= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wwgc0js05-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Sun, 15 Dec 2019 22:00:43 -0800
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Sun, 15 Dec 2019 22:00:12 -0800
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Sun, 15 Dec 2019 22:00:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XtagY5g4LFygAJmiov7XNLzSKXvATAdxjxoXiMX4mwIIZu49RLh1XzxNv7TwH9bNTlyaH6eEDmseM6fhA/aYtXoM4L633XwJJNMcEwPHiQ1LuwldpV9nf3jdHK9Eu74lK1/QQ6e/Jd12VY43MNH/d2xGMTtY9T6sjHEAqI8gbE1fbULiZVQaCeWBGs0ykBTIlp6wEOx8yr6PSnHdLjc+t9+Mn1kYN0zNYV5gd8/PnayEkk/Tgf04CeIm2SskcqR6w7ggDjo2oaXl8KVPyet0vRjHZJ69P3JO7/lYUEfYy+USOqd+LJWJSnB4UmW0NQXBAZHKjdn1QYcrzGPO70wnZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XV/KH5y5Wwhvs4O0l74bJAeX+00z+E1xmvKexUoF7Dw=;
- b=iwWjP5lgv+7jaP4NvW5pJNPxbbPIjqHOAAnHHH9T0b2UU8lNAVDGXhZeEx/v6aW+OLoxPZoZ4UY7MurJiKVZ5ZyUst5qnkQULtQlZc0HEUyr6z2IF5UJuy406rmbsaG8HNg3WO3V0lsPeLGdmcVI2/0S3Y9bquUl8bYiS1Q3AAQKeVPTElyZCgSh+RO8FjUhAbGRk+KzGpBNwMqG3v5QPxe2P+KQAaPQWnxaP5ne9R9eY+v2EXTKlfU+ASfVBzUOpjm6jqDP8mnB1iueKMTEYX8e4c4GyP+IKd7l/ZqDrFxi4XR5EJqslLKIH/yT6fdMK8jl63ww0PXW37PA4vJhhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XV/KH5y5Wwhvs4O0l74bJAeX+00z+E1xmvKexUoF7Dw=;
- b=HBC5vWxOZjhG/y9y5UiZWrkwVcoX8dV6FDeVnarL3gOI3QI7oiXSIddKvpJu9CAVfGaoUCFwg3McWI/XMiE8os7XaV99yb0l25RsPBfj/Ckvme1Vb/2FkHzyAgsco+Yjpp3yuLRxl/n7nb8VKF52uNPv+JUhuy6x8WpDJV+WjMk=
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com (10.175.107.145) by
- DM5PR15MB1452.namprd15.prod.outlook.com (10.173.225.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Mon, 16 Dec 2019 05:59:57 +0000
-Received: from DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23]) by DM5PR15MB1675.namprd15.prod.outlook.com
- ([fe80::2844:b18d:c296:c23%8]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 05:59:57 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Jules Irenge <jbi.octave@gmail.com>,
-        "bokun.feng@gmail.com" <bokun.feng@gmail.com>
-CC:     Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        "Andrii Nakryiko" <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "\"bpf@vger.kernel\"@vger.kernel.org" 
-        <"bpf@vger.kernel"@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kernel: bpf: add __release sparse annotation
-Thread-Topic: [PATCH] kernel: bpf: add __release sparse annotation
-Thread-Index: AQHVs5+2HhiAKBeViECR7jMbivMnZKe8RNKA
-Date:   Mon, 16 Dec 2019 05:59:57 +0000
-Message-ID: <dd0b6577-aaf6-a557-4cdd-ddc490995c38@fb.com>
-References: <20191215233046.78212-1-jbi.octave@gmail.com>
-In-Reply-To: <20191215233046.78212-1-jbi.octave@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR03CA0019.namprd03.prod.outlook.com
- (2603:10b6:300:117::29) To DM5PR15MB1675.namprd15.prod.outlook.com
- (2603:10b6:3:11f::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::a11e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc8391b9-5a84-438f-af6f-08d781ed2db7
-x-ms-traffictypediagnostic: DM5PR15MB1452:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR15MB1452B0BE8D15FC6876C9BB10D3510@DM5PR15MB1452.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(39860400002)(136003)(366004)(189003)(199004)(8676002)(5660300002)(186003)(8936002)(558084003)(81156014)(81166006)(6486002)(66446008)(66476007)(66556008)(64756008)(2906002)(53546011)(6506007)(6512007)(36756003)(71200400001)(86362001)(4326008)(110136005)(2616005)(478600001)(52116002)(31686004)(31696002)(316002)(66946007)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1452;H:DM5PR15MB1675.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H1vy/F6EPRKhXy3eeu3bZXWFmQInZy6h0l/fCeuwNb2u6w0aDDl7SjwL2e2I31V0Tdg2K/YFbCqxOMvAyLMfuy7tbMVlF438FbQ6c8pLOaEqyS9pGRIyRIjirVJZJPIRBCFBEtekvedd20rD9d0aYpx5MxL93hqUPjcryHIu9te8HdhhVMxduuFjMtzRa8sV1HBk97wMmfwHmG1vJCWWnEe6agj3AMbqi5eLDx/kRB9vr4N9Yh7CerLaeAp/M+bswbu9UJGilPJbjyi8AqcK2nADFMi/px9HOsmE0HX6PUgnXVd8KrNU4KPByD6MiXbB57KeeDfgkIvgOcIJVNqaVcKh+08h43flTGhwhr47zBcK1YQ/3rOyaZ0a6hop4KyGQam8kr3xce9PwDU1SBiBAIRHtPLkFKD91aH8ZeTajE7WgSla4jefTsSGYQ9c4933
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7E71F68C8F2F50479B47BAAF37210AD1@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 01:01:22 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so3387856qto.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 22:01:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f2z51NNQPGTMFGtesof0cLcp5BmT40GR+s1mJAxOa+c=;
+        b=b6X1jWpTP0RfxR0H/2AEWnknIbaWzzhiV6iFVLwl6X9CxbOBNzjE5GUcxjZ7hJEUAn
+         Zc7OU2vHnDk1a726t9a0s/+ZZTMU1TeZTPhtju7Oi59MiMONTQOtK7D7BoAGFq/3OI0q
+         8RTFbo/jAklEfgL4DoCUxqRT6V9fIOgVreE/E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f2z51NNQPGTMFGtesof0cLcp5BmT40GR+s1mJAxOa+c=;
+        b=eW+VDG65+PBKFdiE8bHUvxrIYVRfD/x+dJP/HR81U8c6M9x90HsIfehUYgaCh46hMR
+         fMlbvECBeENoMJ1jea0QJqoQcko4kNJVjGQ6mFI3Pj4SmhfU1w3yoZYgD2p9V86XySHO
+         a1+dm7oIU5q3veF2U2zdMBHi7TgQNJmaquNOzI12OqlOU/lppIyRhFUGAbrLdCDC76Lb
+         ioAcfcGvID+bUgdf7dHHKXe/ya+204b/ZFjFwzpevtLtJkYXU8MzBqAS4dI/q6MlkZAP
+         kQ3h+k0P2eTYUl7mokr9W22x66ypYDxAaR2HU7Pbl90r7mqjzENVgvCKzXaI9N147aKd
+         2m+Q==
+X-Gm-Message-State: APjAAAU7VCKD3hbjR2JP7V3zQferyXPGY9M/f15eTa3KG0n2gjb/pYjg
+        MBdcuZhfmIfhwFMMP8l6y5KwGlngz7vsZ+yr/g8=
+X-Google-Smtp-Source: APXvYqwPky1kIBq5TGeLsTIdyi7DvZWNnzatsH+kjC7TN4z5yU4h0spZkmjXTrZZd+qsQ9tWkqeQPGyHHbV6+3Lse00=
+X-Received: by 2002:ac8:3467:: with SMTP id v36mr22831465qtb.255.1576476081509;
+ Sun, 15 Dec 2019 22:01:21 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc8391b9-5a84-438f-af6f-08d781ed2db7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 05:59:57.5317
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 76jCpPvkcxsw2xcmbz4afOupQ0vJo0xnD02wsaR5KHcMiHFvoBRs4zTE+TTNt9z8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1452
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_01:2019-12-16,2019-12-15 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- impostorscore=0 spamscore=0 phishscore=0 clxscore=1011 suspectscore=0
- mlxlogscore=591 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160053
-X-FB-Internal: deliver
+References: <20191211192742.95699-1-brendanhiggins@google.com>
+ <20191211192742.95699-8-brendanhiggins@google.com> <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
+ <CAFd5g45MFYMK-eZWPC5fhm2OkynUXKfArUVhbanYVH+qKRUwPg@mail.gmail.com>
+In-Reply-To: <CAFd5g45MFYMK-eZWPC5fhm2OkynUXKfArUVhbanYVH+qKRUwPg@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 16 Dec 2019 06:01:09 +0000
+Message-ID: <CACPK8XdgGLLT=RprY8zVW6kKJ6fjJdm4Oxs0uHBv-W5StMyGPQ@mail.gmail.com>
+Subject: Re: [PATCH v1 7/7] fsi: aspeed: add unspecified HAS_IOMEM dependency
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEyLzE1LzE5IDM6MzAgUE0sIEp1bGVzIElyZW5nZSB3cm90ZToNCj4gQWRkIHNwYXJz
-ZSBhbm5vdGF0aW9uIHRvIHJlbW92ZSBpc3N1ZSBkZXRlY3RlZCBieSBzcGFyc2UgdG9vbC4NCj4g
-d2FybmluZzogY29udGV4dCBpbWJhbGFuY2UgaW4gZnVuY3Rpb24gX19icGZfcHJvZ19leGl0IC0g
-dW5leHBlY3RlZCB1bmxvY2sNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEp1bGVzIElyZW5nZSA8amJp
-Lm9jdGF2ZUBnbWFpbC5jb20+DQoNCkFja2VkLWJ5OiBZb25naG9uZyBTb25nIDx5aHNAZmIuY29t
-Pg0K
+On Thu, 12 Dec 2019 at 00:30, Brendan Higgins <brendanhiggins@google.com> wrote:
+>
+> On Wed, Dec 11, 2019 at 4:12 PM Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > Nice. I hit this when attempting to force on CONFIG_COMPILE_TEST in
+> > order to build some ARM drivers under UM. Do you have plans to fix
+> > that too?
+>
+> The only broken configs I found for UML are all listed on the cover
+> letter of this patch. I think fixing COMPILE_TEST on UM could be
+> worthwhile. Did you see any brokenness other than what I mentioned on
+> the cover letter?
+
+There's a few more in drivers/char/hw_random that you would need.
+These were HW_RANDOM_MESON , HW_RANDOM_MTK, HW_RANDOM_EXYNOS,
+HW_RANDOM_NPCM, HW_RANDOM_KEYSTONE.
+
+The only one from your series I needed was PINCTRL_EQUILIBRIUM.
+
+I applied this:
+
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -91,7 +91,6 @@ config INIT_ENV_ARG_LIMIT
+
+ config COMPILE_TEST
+        bool "Compile also drivers which will not load"
+-       depends on !UML
+        default n
+        help
+
+That lets me build. However, the code I was attempting to enable
+depends on REGMAP, which needs IOMEM too, so I hit that dead end.
+
+Another issue I had was debugging my kunitconfig. This patch helped a bit:
+
+--- a/tools/testing/kunit/kunit_config.py
++++ b/tools/testing/kunit/kunit_config.py
+@@ -40,6 +40,9 @@ class Kconfig(object):
+        def is_subset_of(self, other: 'Kconfig') -> bool:
+                return self.entries().issubset(other.entries())
+
++       def difference(self, other: 'Kconfig') -> list:
++               return self.entries().difference(other.entries())
++
+        def write_to_file(self, path: str) -> None:
+                with open(path, 'w') as f:
+                        for entry in self.entries():
+diff --git a/tools/testing/kunit/kunit_kernel.py
+b/tools/testing/kunit/kunit_kernel.py
+index bf3876835331..0f261bc087e4 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -107,6 +107,7 @@ class LinuxSourceTree(object):
+                validated_kconfig.read_from_file(kconfig_path)
+                if not self._kconfig.is_subset_of(validated_kconfig):
+                        logging.error('Provided Kconfig is not
+contained in validated .config!')
++
+logging.error(self._kconfig.difference(validated_kconfig))
+                        return False
+                return True
+
+Which would need some tidying up before applying, but helped a lot in
+working out what was going wrong.
+
+>
+> > Do you want to get this in a fix for 5.5?
+>
+> Preferably, yes.
+>
+> > Acked-by: Joel Stanley <joel@jms.id.au>
+>
+> Thanks!
