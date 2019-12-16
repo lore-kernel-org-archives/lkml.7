@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2A2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069DDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67640207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B9220717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520094;
-	bh=LlivjxT72g1WSfdls0+LCRODihuebIfcJGAQ7u9gnkA=;
+	s=default; t=1576520096;
+	bh=7yDn2V6zu56CJCV4PFrB+CcvjiJrjdv3u4o/Atw8PsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYbsRI+dYqfHEKJEOLRpNMamck+T9AOQi8JRd0dbQrCX7TKMXw+pNimUwC/hmTz0C
-	 bHPafvORUHwPv0c6bFL1nB5I4NSa/+PV9ji//QFS1nnUYswJrNaGXyRqR+TIf+Wlwe
-	 v95uP/RT3ReGauitPeDIldBTDcbmaGONkeb1qCPk=
+	b=fDFv3Wyrfpz0mY+HXp7JVCDf46cPxXhdHa/dsa3uJjvPSm51riZArYmTNOKvbP823
+	 9vmZ4Ul7WJjJDcNcxOl2vLLJhhRedUH0VcjViPeu/eK99XT+7GvACCcTYkdHrvi1Rb
+	 Y4prcpSp9P9jNr6VFRvPZ0N6csBdP+m8Y62YIuPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbfLPSOx (ORCPT
+        id S1731000AbfLPSOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730990AbfLPSOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:49 -0500
+        id S1731274AbfLPSOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E0C206E0;
-        Mon, 16 Dec 2019 18:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00968206B7;
+        Mon, 16 Dec 2019 18:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520088;
-        bh=LlivjxT72g1WSfdls0+LCRODihuebIfcJGAQ7u9gnkA=;
+        s=default; t=1576520086;
+        bh=7yDn2V6zu56CJCV4PFrB+CcvjiJrjdv3u4o/Atw8PsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcwkN8dRxop8xzX2uZSQX96MJG5wp7ElVjcGEX0uYYR4hdk55tTQjVN+VlD6f8Sk5
-         AFlciW72Hg9GbGt6iEnSyPX647vpeaMxmvTeCaK3UWGkeQQ4stgvHxqfy6/KVj6ImN
-         Cek7t+PU2gABsdbI2NU3AaElZmrd1msQW/tciaic=
+        b=YNApgVVBC7mKVFKUf9rRMSfW+CFYeZqJKYiJ389noSEENbxzejYL8sml/NF/c+tyB
+         fS25xpJi0VhNO+GNMUDQUtYbSkjWJ/q/dMqNJAv+gea0W82W0En4POtL6onRfdtn3Y
+         M+YsTSMR0VoLe7x9VlNrfPeXKnm8vctzHHvFGvp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.4 012/177] ceph: fix compat_ioctl for ceph_dir_operations
-Date:   Mon, 16 Dec 2019 18:47:48 +0100
-Message-Id: <20191216174815.527496174@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 011/177] compat_ioctl: add compat_ptr_ioctl()
+Date:   Mon, 16 Dec 2019 18:47:47 +0100
+Message-Id: <20191216174815.127036832@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,49 +60,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-commit 18bd6caaef4021803dd0d031dc37c2d001d18a5b upstream.
+commit 2952db0fd51b0890f728df94ac563c21407f4f43 upstream.
 
-The ceph_ioctl function is used both for files and directories, but only
-the files support doing that in 32-bit compat mode.
+Many drivers have ioctl() handlers that are completely compatible between
+32-bit and 64-bit architectures, except for the argument that is passed
+down from user space and may have to be passed through compat_ptr()
+in order to become a valid 64-bit pointer.
 
-On the s390 architecture, there is also a problem with invalid 31-bit
-pointers that need to be passed through compat_ptr().
+Using ".compat_ptr = compat_ptr_ioctl" in file operations should let
+us simplify a lot of those drivers to avoid #ifdef checks, and convert
+additional drivers that don't have proper compat handling yet.
 
-Use the new compat_ptr_ioctl() to address both issues.
+On most architectures, the compat_ptr_ioctl() just passes all arguments
+to the corresponding ->ioctl handler. The exception is arch/s390, where
+compat_ptr() clears the top bit of a 32-bit pointer value, so user space
+pointers to the second 2GB alias the first 2GB, as is the case for native
+32-bit s390 user space.
 
-Note: When backporting this patch to stable kernels, "compat_ioctl:
-add compat_ptr_ioctl()" is needed as well.
+The compat_ptr_ioctl() function must therefore be used only with
+ioctl functions that either ignore the argument or pass a pointer to a
+compatible data type.
 
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Cc: stable@vger.kernel.org
+If any ioctl command handled by fops->unlocked_ioctl passes a plain
+integer instead of a pointer, or any of the passed data types is
+incompatible between 32-bit and 64-bit architectures, a proper handler
+is required instead of compat_ptr_ioctl.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v3: add a better description
+v2: use compat_ptr_ioctl instead of generic_compat_ioctl_ptrarg,
+as suggested by Al Viro
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/dir.c  |    1 +
- fs/ceph/file.c |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ fs/ioctl.c         |   35 +++++++++++++++++++++++++++++++++++
+ include/linux/fs.h |    7 +++++++
+ 2 files changed, 42 insertions(+)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1809,6 +1809,7 @@ const struct file_operations ceph_dir_fo
- 	.open = ceph_open,
- 	.release = ceph_release,
- 	.unlocked_ioctl = ceph_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.fsync = ceph_fsync,
- 	.lock = ceph_lock,
- 	.flock = ceph_flock,
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2188,7 +2188,7 @@ const struct file_operations ceph_file_f
- 	.splice_read = generic_file_splice_read,
- 	.splice_write = iter_file_splice_write,
- 	.unlocked_ioctl = ceph_ioctl,
--	.compat_ioctl	= ceph_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.fallocate	= ceph_fallocate,
- 	.copy_file_range = ceph_copy_file_range,
- };
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -8,6 +8,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/mm.h>
+ #include <linux/capability.h>
++#include <linux/compat.h>
+ #include <linux/file.h>
+ #include <linux/fs.h>
+ #include <linux/security.h>
+@@ -719,3 +720,37 @@ SYSCALL_DEFINE3(ioctl, unsigned int, fd,
+ {
+ 	return ksys_ioctl(fd, cmd, arg);
+ }
++
++#ifdef CONFIG_COMPAT
++/**
++ * compat_ptr_ioctl - generic implementation of .compat_ioctl file operation
++ *
++ * This is not normally called as a function, but instead set in struct
++ * file_operations as
++ *
++ *     .compat_ioctl = compat_ptr_ioctl,
++ *
++ * On most architectures, the compat_ptr_ioctl() just passes all arguments
++ * to the corresponding ->ioctl handler. The exception is arch/s390, where
++ * compat_ptr() clears the top bit of a 32-bit pointer value, so user space
++ * pointers to the second 2GB alias the first 2GB, as is the case for
++ * native 32-bit s390 user space.
++ *
++ * The compat_ptr_ioctl() function must therefore be used only with ioctl
++ * functions that either ignore the argument or pass a pointer to a
++ * compatible data type.
++ *
++ * If any ioctl command handled by fops->unlocked_ioctl passes a plain
++ * integer instead of a pointer, or any of the passed data types
++ * is incompatible between 32-bit and 64-bit architectures, a proper
++ * handler is required instead of compat_ptr_ioctl.
++ */
++long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	if (!file->f_op->unlocked_ioctl)
++		return -ENOIOCTLCMD;
++
++	return file->f_op->unlocked_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++EXPORT_SYMBOL(compat_ptr_ioctl);
++#endif
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1727,6 +1727,13 @@ int vfs_mkobj(struct dentry *, umode_t,
+ 
+ extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+ 
++#ifdef CONFIG_COMPAT
++extern long compat_ptr_ioctl(struct file *file, unsigned int cmd,
++					unsigned long arg);
++#else
++#define compat_ptr_ioctl NULL
++#endif
++
+ /*
+  * VFS file helper functions.
+  */
 
 
