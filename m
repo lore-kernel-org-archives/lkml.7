@@ -2,101 +2,120 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B7FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1E3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C33206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576515995;
-	bh=0oFBkKBOjKD2USSrZRJLZXFmdvrGm5lzKV5pWXW+h40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FMu5bbllEwnBsV46t4T9B7QhdrZTsSXX+olaWxQQwXAnILmVSAVL6OyKknuklZtM4
-	 6kTWopQt59YCzSoot4lQCantQkSGXI5v0rxZsChCwsLSR++oMEluVZgS0RB6SiE4HN
-	 7mu+9uVHfqTomt4aet96RitCUzJf9u2EyLTDXX+4=
+	by mail.kernel.org (Postfix) with ESMTP id A4375206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="KKWYwz1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfLPRGe (ORCPT
+        id S1727681AbfLPRGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:06:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39465 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfLPRDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:06:38 -0500
+Received: from mail-eopbgr700045.outbound.protection.outlook.com ([40.107.70.45]:49121
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726881AbfLPRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 12:03:49 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e10so7603672ljj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 09:03:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l7RzTx+FaQRhnzyeAoRMiKl0Ehy+3dstutNDusyFoABpkFYzWt5J++no2/T4WrJXtD+5hAmrIw2dFD+/l1UG9WYNINGZXGnr5LyZaa/p6n+PoK154Yhp99LE4C+9BSbxCXykKahoJnfC5H7wdpgff+uOx/s5QPgJIAv7hRdVZDq8UTlOFdMoQl3Y9E0/5kpglKpgmbhycbEnZodHv50H1A6ZKgjvqnH1AZ/TZMl7fQFNz5nioNRoBn8HPu9aObXBZPCY5ZGzfmu/ehitUHunY+jJiuV+fAB7MqgtY5Lwcq/NJFh8ZbfYNBTN5Z/Y35EkoUs03xf8E6AsbGvwvSzjYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTVxThjHPp7A2J8r0FnOTY1OMMQuMr5YdLrVCSr3MN8=;
+ b=oN7Buq6wxVXF0Jvn3jFa0BEB2O53qXVLjN+JPTGSXWGK48meRycQS3n5JuE4bMKpOKziXUSRUHDOsPMUqPpuoZUT3o2GLEzY61+wbR0arwIgf0SSUxJ7MXtcixoxXl80u4QdfUZYMujQDs8I3OudWwt/fTsR8w39yKaic9jWAohOjQj5ZR5BnOT/Rgzm6MfRXUOProg4kKR5ergl9L7NMgQl5TtMZBYTQu4sWbVcrCnKeUhCwMoGRIOD22damFgDphWLQ4VaC61p2L9fpYDDMQ5fxCR39aIiqmjvd7xR3+Em6WTHu61XjRTYMEGUF7hVc1dj7qClDh7S5vZzsR/vfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZIdISGJGzaJQCx+QFJwKYDn4eFwlu/KmTgZK+KGXtHQ=;
-        b=FisnqkZLHGXU1116n34+W+++BJdXYXOirmyu3COj1Poy7sgqkkMzkwIqNqD2BJgXgp
-         7bJbstoeV3IIxqy5UfVfnC6h1ipDwDqg3zT7NIwOmZblVCoykHaLLgUB9CCSMHXcX6wr
-         99dslGhvIxyUYoXqIGnH5vu5CdG8apoTfqsaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZIdISGJGzaJQCx+QFJwKYDn4eFwlu/KmTgZK+KGXtHQ=;
-        b=DqOfVoTeq2nsz6NQXjFjju20eDVPDZVvokMGhPF+q5Mr9rzBoBHBePVA/bDXeMAT36
-         BdW6syb14lXGzL02L3u4z9CAN9S4PrudSV6Fuj2H3d1ZyKnuWESyxwuG2JlOsQfyZbxY
-         QmkjRbsKTTKCEd9i658nG4u97vgewG4ZIP5Ch2udK04++TVEDTUGSnuaYlaos+D+ZQDI
-         luQQr/EyOCDHd9sfjxb/u00q0crkSIaHiesqidcAS6vMGMcmd5z/8oMyGk6smeXsgX6+
-         ryZI01jqbIpXFfx7QigRqozYRKt+A+7/BHtWiGqA6ZsRMktFHYBRaWoBnuzKCFgj7iKe
-         dETw==
-X-Gm-Message-State: APjAAAVXHZvqpSkWnM07LdxgJUUrjn/dDg253gDxGfo+eICUQOHVPiXY
-        RY00tHqKiMswzzI6C0eVbIeM54+N5ss=
-X-Google-Smtp-Source: APXvYqzc4Vpl0jQV1g9vK8Li5uQ9kSwPTprjS8c0F1ZnZGUCkJF5WwrH1bbqzWJVnLD5QBZ2+nEFzA==
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr96268ljh.42.1576515827226;
-        Mon, 16 Dec 2019 09:03:47 -0800 (PST)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id i9sm5646125lfd.6.2019.12.16.09.03.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 09:03:46 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id c19so7577052lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 09:03:45 -0800 (PST)
-X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr84697ljj.148.1576515825433;
- Mon, 16 Dec 2019 09:03:45 -0800 (PST)
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTVxThjHPp7A2J8r0FnOTY1OMMQuMr5YdLrVCSr3MN8=;
+ b=KKWYwz1hZqoP4npe97UYC5eBq3rdJphhwzuQcyyQ0WD2pN8d/zLn6ACl6rqR1wQEZtQ94aHTUJTXm8IiE8gGO60TxT3JyxS6E1iBWhcOlWMAiiRaX8M3zW8rfqhwgEcQsJZcwsVK4l2hsiaMYR6mr2h7Xc02V+65vx/WJsBvnGg=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4351.namprd11.prod.outlook.com (52.135.39.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.19; Mon, 16 Dec 2019 17:03:46 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 17:03:46 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH 10/55] staging: wfx: fix wrong error message
+Thread-Topic: [PATCH 10/55] staging: wfx: fix wrong error message
+Thread-Index: AQHVtDLCZKW4yzlWmUyCoKdTHIB+DA==
+Date:   Mon, 16 Dec 2019 17:03:38 +0000
+Message-ID: <20191216170302.29543-11-Jerome.Pouiller@silabs.com>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92979376-5e99-4839-86bf-08d78249e9f8
+x-ms-traffictypediagnostic: MN2PR11MB4351:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB4351142D33AF13CBBEB71C9E93510@MN2PR11MB4351.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(396003)(39860400002)(199004)(189003)(66556008)(66446008)(64756008)(66476007)(76116006)(85202003)(91956017)(66946007)(4744005)(54906003)(107886003)(4326008)(478600001)(110136005)(71200400001)(6512007)(81156014)(8676002)(81166006)(186003)(36756003)(2906002)(85182001)(6666004)(66574012)(1076003)(316002)(6506007)(5660300002)(86362001)(26005)(2616005)(6486002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4351;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lJX3Ixp6fpSP91nkY3IquSTq8ORs4QGcMRY1HWBEE7RiOopEzIw+QVa1ITgF/TIHzxusnsMt9mRC/bMK1OAHbqh1BOCLavmpsJcUojvtMqWzfz6yIMqmMgHsb7mpZWNp+5q9Hb6P3PuNzlIdpRUOQOxERYJUvAe1l1vQExYM/usASYIEVvAlBOA6RL9txGUh0aC6VFB4s26omh0GyovzTnnvU2KvEkXETRQtc9DwRDudwGpdWjFBztBPHDybKFZD3UflWZ2NbALJY0MuQxTzcjuGmSyErIs7mEnDMjcMZO9AGCbheZl454SqBG+m/K0Syuvx90WpWjEVUbeytLixlPblAo4ImGLTbzZBCRWvHdJfcFZNF7epon1ztZtVEVucl2E0UNn8j9Qg0bNNBA+4oZLXXMCkyDJwtd7bDmA85K8iEoXUXWLrGjX7RAyspXPy
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FD5E3740047EFD4E92F4D14062458320@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191126102743.3269-1-eric.auger@redhat.com> <0DE725CD-01CD-4E01-B817-9CC7F4768FBC@lca.pw>
- <80da76c4-395a-18cc-1ffa-c3a0471921b0@redhat.com>
-In-Reply-To: <80da76c4-395a-18cc-1ffa-c3a0471921b0@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Dec 2019 09:03:29 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi7hqWOGhDopCFojBXm_K+p7Duyxp6Sjy=2HG=LqM8GbA@mail.gmail.com>
-Message-ID: <CAHk-=wi7hqWOGhDopCFojBXm_K+p7Duyxp6Sjy=2HG=LqM8GbA@mail.gmail.com>
-Subject: Re: [PATCH v3] iommu: fix KASAN use-after-free in iommu_insert_resv_region
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        eric.auger.pro@gmail.com, Joerg Roedel <joro@8bytes.org>,
-        Christoph Hellwig <hch@lst.de>,
-        iommu <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92979376-5e99-4839-86bf-08d78249e9f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:03:38.6242
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hXfpOBwBXN/uT7/D3crJ0NrGmFeeCTU0M1lokA7e7rI2GXZWW9wEjhz9YeZTUfm0CMbgk7eRU2su2FVFJ3zYyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4351
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 6:36 AM Auger Eric <eric.auger@redhat.com> wrote:
->On 12/16/19 3:24 PM, Qian Cai wrote:
-> >
-> > Looks like Joerg is away for a few weeks. Could Andrew or Linus pick up this
-> > use-after-free?
-
-I've taken it.
-
-> Note the right version to pick up is the v4, reviewed by Jerry:
-> https://www.mail-archive.com/iommu@lists.linux-foundation.org/msg36226.html
-
-Btw, please use lore.kernel.org, it's much more convenient for me
-(faster, and a single interface for me so that I don't have to always
-figure out "what's the incantation to get the original raw email" that
-so many archives make it hard to get).
-
-                   Linus
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KDQpU
+aGUgZHJpdmVyIGNoZWNrcyB0aGF0IHRoZSBudW1iZXIgb2YgcmV0cmllcyBtYWRlIGJ5IHRoZSBk
+ZXZpY2UgaXMNCmNvaGVyZW50IHdpdGggdGhlIHJhdGUgcG9saWN5LiBIb3dldmVyLCB0aGlzIGNo
+ZWNrIG1ha2Ugc2Vuc2Ugb25seSBpZg0KdGhlIGRldmljZSBoYXMgcmV0dXJuZWQgUkVUUllfRVhD
+RUVERUQuDQoNClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxs
+ZXJAc2lsYWJzLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZGF0YV90eC5jIHwgNCAr
+KystDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9kYXRhX3R4LmMgYi9kcml2ZXJzL3N0YWdp
+bmcvd2Z4L2RhdGFfdHguYw0KaW5kZXggNzM4YTZjYTVlZGFkLi4zMmUyNjliZWNkNzUgMTAwNjQ0
+DQotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2RhdGFfdHguYw0KKysrIGIvZHJpdmVycy9zdGFn
+aW5nL3dmeC9kYXRhX3R4LmMNCkBAIC03NDgsNyArNzQ4LDkgQEAgdm9pZCB3ZnhfdHhfY29uZmly
+bV9jYihzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwgc3RydWN0IGhpZl9jbmZfdHggKmFyZykNCiAJCXJh
+dGUgPSAmdHhfaW5mby0+c3RhdHVzLnJhdGVzW2ldOw0KIAkJaWYgKHJhdGUtPmlkeCA8IDApDQog
+CQkJYnJlYWs7DQotCQlpZiAodHhfY291bnQgPCByYXRlLT5jb3VudCAmJiBhcmctPnN0YXR1cyAm
+JiBhcmctPmFja19mYWlsdXJlcykNCisJCWlmICh0eF9jb3VudCA8IHJhdGUtPmNvdW50ICYmDQor
+CQkgICAgYXJnLT5zdGF0dXMgPT0gSElGX1NUQVRVU19SRVRSWV9FWENFRURFRCAmJg0KKwkJICAg
+IGFyZy0+YWNrX2ZhaWx1cmVzKQ0KIAkJCWRldl9kYmcod3ZpZi0+d2Rldi0+ZGV2LCAiYWxsIHJl
+dHJpZXMgd2VyZSBub3QgY29uc3VtZWQ6ICVkICE9ICVkXG4iLA0KIAkJCQlyYXRlLT5jb3VudCwg
+dHhfY291bnQpOw0KIAkJaWYgKHR4X2NvdW50IDw9IHJhdGUtPmNvdW50ICYmIHR4X2NvdW50ICYm
+DQotLSANCjIuMjAuMQ0K
