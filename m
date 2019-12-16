@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6CAC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0987EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0EA206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AD52072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519817;
-	bh=uvmuwkss42ULQYKZk7SlI3MEFf+rMhPfU9Iz/mewulQ=;
+	s=default; t=1576519819;
+	bh=1Wd+eUtlHBbmQh+9yqjJjg4lW15sRPZXXxgRoGFlzWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTrXOD3tBuXz6/LwHVo8bdnD8BTXwGjDRP44WvIO0t3LV1Bjw0wxduqGNpnha839b
-	 SFko3sjMeygscUOdK2Lv8ih8phdqkHqkekzl+im5hTpFKPcIXyJ9y/PbSmKASOgN3K
-	 RnJbmOGhP2AIPj7gbePao9rsDYqP6Dz/enEj0zDc=
+	b=caBg4X7gjH/hMxYVtfJPlfbroQ2Jdhp8hv6d+Vdsx4ZqXIcXX29W4rKHcQ3N1rztb
+	 tWPm9CP8adqRKws2iBUG736U0WBjrU8UNpx5a6M0VwwX2LVnkCUt+8g/A88cnCGVct
+	 dqckSNJQ/czeHjgJLO28kT9Zfcw/p4oqli+K7n+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfLPSKQ (ORCPT
+        id S1727056AbfLPSKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbfLPSKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:13 -0500
+        id S1730580AbfLPSKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B349C206EC;
-        Mon, 16 Dec 2019 18:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B118206E0;
+        Mon, 16 Dec 2019 18:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519813;
-        bh=uvmuwkss42ULQYKZk7SlI3MEFf+rMhPfU9Iz/mewulQ=;
+        s=default; t=1576519815;
+        bh=1Wd+eUtlHBbmQh+9yqjJjg4lW15sRPZXXxgRoGFlzWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkoARiuPs9FubjzvWzXlQqVN1z5z7hh6mTKD/NXlOgc1oK7+5Wr6PmLDB+rGBuEcZ
-         SzWrDxoVKi5e3t7gyzMndkxDesEXWNtD2UzAVtggH3B7U+R0zgX0wz3ZxrJJ+92Ve8
-         CZLdx7FqD+ED1obom67tgWQfcR+wGhdJ1eZkuE9I=
+        b=welasmnbbaXauRyt726HjwZXUDTd72IkH/h76Js17XmroRpaGk4x+WbQTCiHVWABi
+         0h//TdtbEL6lV0z2T5s8dXV2z0soKtl7YpCIG4WJwevAiQvhCK0jYqN3K22zQkqghW
+         Q/IGgDNtRs6FLtJMkZqVmfSfA3S+dmuh7UwIBSfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.3 028/180] iio: adis16480: Add debugfs_reg_access entry
-Date:   Mon, 16 Dec 2019 18:47:48 +0100
-Message-Id: <20191216174812.511806453@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Marcin Pawlowski <mpawlowski@fb.com>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>
+Subject: [PATCH 5.3 073/180] workqueue: Fix spurious sanity check failures in destroy_workqueue()
+Date:   Mon, 16 Dec 2019 18:48:33 +0100
+Message-Id: <20191216174830.456576710@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,34 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nuno Sá <nuno.sa@analog.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit 4c35b7a51e2f291471f7221d112c6a45c63e83bc upstream.
+commit def98c84b6cdf2eeea19ec5736e90e316df5206b upstream.
 
-The driver is defining debugfs entries by calling
-`adis16480_debugfs_init()`. However, those entries are attached to the
-iio_dev debugfs entry which won't exist if no debugfs_reg_access
-callback is provided.
+Before actually destrying a workqueue, destroy_workqueue() checks
+whether it's actually idle.  If it isn't, it prints out a bunch of
+warning messages and leaves the workqueue dangling.  It unfortunately
+has a couple issues.
 
-Fixes: 2f3abe6cbb6c ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+* Mayday list queueing increments pwq's refcnts which gets detected as
+  busy and fails the sanity checks.  However, because mayday list
+  queueing is asynchronous, this condition can happen without any
+  actual work items left in the workqueue.
+
+* Sanity check failure leaves the sysfs interface behind too which can
+  lead to init failure of newer instances of the workqueue.
+
+This patch fixes the above two by
+
+* If a workqueue has a rescuer, disable and kill the rescuer before
+  sanity checks.  Disabling and killing is guaranteed to flush the
+  existing mayday list.
+
+* Remove sysfs interface before sanity checks.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Marcin Pawlowski <mpawlowski@fb.com>
+Reported-by: "Williams, Gerald S" <gerald.s.williams@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/workqueue.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -919,6 +919,7 @@ static const struct iio_info adis16480_i
- 	.read_raw = &adis16480_read_raw,
- 	.write_raw = &adis16480_write_raw,
- 	.update_scan_mode = adis_update_scan_mode,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
- };
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -4316,9 +4316,28 @@ void destroy_workqueue(struct workqueue_
+ 	struct pool_workqueue *pwq;
+ 	int node;
  
- static int adis16480_stop_device(struct iio_dev *indio_dev)
++	/*
++	 * Remove it from sysfs first so that sanity check failure doesn't
++	 * lead to sysfs name conflicts.
++	 */
++	workqueue_sysfs_unregister(wq);
++
+ 	/* drain it before proceeding with destruction */
+ 	drain_workqueue(wq);
+ 
++	/* kill rescuer, if sanity checks fail, leave it w/o rescuer */
++	if (wq->rescuer) {
++		struct worker *rescuer = wq->rescuer;
++
++		/* this prevents new queueing */
++		spin_lock_irq(&wq_mayday_lock);
++		wq->rescuer = NULL;
++		spin_unlock_irq(&wq_mayday_lock);
++
++		/* rescuer will empty maydays list before exiting */
++		kthread_stop(rescuer->task);
++	}
++
+ 	/* sanity checks */
+ 	mutex_lock(&wq->mutex);
+ 	for_each_pwq(pwq, wq) {
+@@ -4350,11 +4369,6 @@ void destroy_workqueue(struct workqueue_
+ 	list_del_rcu(&wq->list);
+ 	mutex_unlock(&wq_pool_mutex);
+ 
+-	workqueue_sysfs_unregister(wq);
+-
+-	if (wq->rescuer)
+-		kthread_stop(wq->rescuer->task);
+-
+ 	if (!(wq->flags & WQ_UNBOUND)) {
+ 		wq_unregister_lockdep(wq);
+ 		/*
 
 
