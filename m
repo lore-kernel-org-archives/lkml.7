@@ -2,58 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81958C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB22121D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5598421775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519584;
-	bh=EEn8CzlLCp3Pd/uC7W36bYetZik14ppH0QAecFCzcsU=;
+	s=default; t=1576519587;
+	bh=qfLIyuP8vUYwtGD85lTzXF8+5mCQRvrpZUQQVQpkGXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcaH6MKS/xFbgUFluz6Ke3Ct2RxLllTpn/Y4e5rX4VOLku98wu0piU+6irNwJPkjM
-	 aRH06ReUv1Z140s1KDIQZKC22ayXCemgjE7zzwtezJujVtm9N7Cfl00HOd+RJxZ91S
-	 A+eVKm499oT34819nsnePx/ngFzGm+t9q/EXrniQ=
+	b=YJfsXOubxh4YW4O88J+QiPwmWqM5eo2/LnIF1K9CNkz2XUu41dDkj2Qap+FmtMEXI
+	 WiRj+gWCV+J8eeF3+pRWI7QPTmcwXMma8y+GZeOeLYiNikTiFvbQj47ykGRE48bgkg
+	 cddUmodARkH6g3C+wsvHZEXpDMpjItqEbOnwmE80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfLPSGX (ORCPT
+        id S1729976AbfLPSG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729961AbfLPSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:20 -0500
+        id S1729700AbfLPSGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B629206E0;
-        Mon, 16 Dec 2019 18:06:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0952166E;
+        Mon, 16 Dec 2019 18:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519579;
-        bh=EEn8CzlLCp3Pd/uC7W36bYetZik14ppH0QAecFCzcsU=;
+        s=default; t=1576519582;
+        bh=qfLIyuP8vUYwtGD85lTzXF8+5mCQRvrpZUQQVQpkGXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPuXv3naqxbiX0eIiNDctGZBKXzKsHPICPxRxpf7fAsdRRRulPkPLvHatTUff/oPB
-         RAXpkncEBCA1RhlTEqOMZIb+nCgTRkYziJ4gixmcUM9ETACxBNtitsr8uzTM8JpTDo
-         xZ9HNo5DNY4YyVVWgSBhMdUN6T2aSF/tgz/Xiuj0=
+        b=uupPAW8VIgWOU5eSJRBZ85rmY/3zNz3vMTvu7TR0yMNEd8p2Jaas2Tn8nufoye3IH
+         XaWBWAxefk/OcLOBexkaNA6kivIl097pVFQGWBh0CPfcKzDO6wLbpdIknIMElOI1Va
+         ZEugfU5gaN4k+bSwD0SWCR5D6L8rDSR33cUB2R4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/140] x86/MCE/AMD: Carve out the MC4_MISC thresholding quirk
-Date:   Mon, 16 Dec 2019 18:49:51 +0100
-Message-Id: <20191216174823.068255825@linuxfoundation.org>
+Subject: [PATCH 4.19 124/140] power: supply: cpcap-battery: Fix signed counter sample register
+Date:   Mon, 16 Dec 2019 18:49:52 +0100
+Message-Id: <20191216174823.568255325@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -66,128 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shirish S <Shirish.S@amd.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 30aa3d26edb0f3d7992757287eec0ca588a5c259 ]
+[ Upstream commit c68b901ac4fa969db8917b6a9f9b40524a690d20 ]
 
-The MC4_MISC thresholding quirk needs to be applied during S5 -> S0 and
-S3 -> S0 state transitions, which follow different code paths. Carve it
-out into a separate function and call it mce_amd_feature_init() where
-the two code paths of the state transitions converge.
+The accumulator sample register is signed 32-bits wide register on
+droid 4. And only the earlier version of cpcap has a signed 24-bits
+wide register. We're currently passing it around as unsigned, so
+let's fix that and use sign_extend32() for the earlier revision.
 
- [ bp: massage commit message and the carved out function. ]
-
-Signed-off-by: Shirish S <shirish.s@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1547651417-23583-3-git-send-email-shirish.s@amd.com
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce.c     | 29 ----------------------
- arch/x86/kernel/cpu/mcheck/mce_amd.c | 36 ++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 29 deletions(-)
+ drivers/power/supply/cpcap-battery.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index a0bc7f7570814..87ed8462a5c72 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -1631,35 +1631,6 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- 		if (c->x86 == 0x15 && c->x86_model <= 0xf)
- 			mce_flags.overflow_recov = 1;
+diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cpcap-battery.c
+index 3bae02380bb22..e183a22de7153 100644
+--- a/drivers/power/supply/cpcap-battery.c
++++ b/drivers/power/supply/cpcap-battery.c
+@@ -82,7 +82,7 @@ struct cpcap_battery_config {
+ };
  
--		/*
--		 * Turn off MC4_MISC thresholding banks on all models since
--		 * they're not supported there.
--		 */
--		if (c->x86 == 0x15) {
--			int i;
--			u64 hwcr;
--			bool need_toggle;
--			u32 msrs[] = {
--				0x00000413, /* MC4_MISC0 */
--				0xc0000408, /* MC4_MISC1 */
--			};
--
--			rdmsrl(MSR_K7_HWCR, hwcr);
--
--			/* McStatusWrEn has to be set */
--			need_toggle = !(hwcr & BIT(18));
--
--			if (need_toggle)
--				wrmsrl(MSR_K7_HWCR, hwcr | BIT(18));
--
--			/* Clear CntP bit safely */
--			for (i = 0; i < ARRAY_SIZE(msrs); i++)
--				msr_clear_bit(msrs[i], 62);
--
--			/* restore old settings */
--			if (need_toggle)
--				wrmsrl(MSR_K7_HWCR, hwcr);
--		}
- 	}
+ struct cpcap_coulomb_counter_data {
+-	s32 sample;		/* 24-bits */
++	s32 sample;		/* 24 or 32 bits */
+ 	s32 accumulator;
+ 	s16 offset;		/* 10-bits */
+ };
+@@ -213,7 +213,7 @@ static int cpcap_battery_get_current(struct cpcap_battery_ddata *ddata)
+  * TI or ST coulomb counter in the PMIC.
+  */
+ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+-				    u32 sample, s32 accumulator,
++				    s32 sample, s32 accumulator,
+ 				    s16 offset, u32 divider)
+ {
+ 	s64 acc;
+@@ -224,7 +224,6 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+ 	if (!divider)
+ 		return 0;
  
- 	if (c->x86_vendor == X86_VENDOR_INTEL) {
-diff --git a/arch/x86/kernel/cpu/mcheck/mce_amd.c b/arch/x86/kernel/cpu/mcheck/mce_amd.c
-index 9f915a8791cc7..5bdfe52b2c9d9 100644
---- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
-@@ -545,6 +545,40 @@ out:
- 	return offset;
+-	sample &= 0xffffff;		/* 24-bits, unsigned */
+ 	offset &= 0x7ff;		/* 10-bits, signed */
+ 
+ 	switch (ddata->vendor) {
+@@ -259,7 +258,7 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+ 
+ /* 3600000μAms = 1μAh */
+ static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
+-				   u32 sample, s32 accumulator,
++				   s32 sample, s32 accumulator,
+ 				   s16 offset)
+ {
+ 	return cpcap_battery_cc_raw_div(ddata, sample,
+@@ -268,7 +267,7 @@ static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
  }
  
-+/*
-+ * Turn off MC4_MISC thresholding banks on all family 0x15 models since
-+ * they're not supported there.
-+ */
-+void disable_err_thresholding(struct cpuinfo_x86 *c)
-+{
-+	int i;
-+	u64 hwcr;
-+	bool need_toggle;
-+	u32 msrs[] = {
-+		0x00000413, /* MC4_MISC0 */
-+		0xc0000408, /* MC4_MISC1 */
-+	};
-+
-+	if (c->x86 != 0x15)
-+		return;
-+
-+	rdmsrl(MSR_K7_HWCR, hwcr);
-+
-+	/* McStatusWrEn has to be set */
-+	need_toggle = !(hwcr & BIT(18));
-+
-+	if (need_toggle)
-+		wrmsrl(MSR_K7_HWCR, hwcr | BIT(18));
-+
-+	/* Clear CntP bit safely */
-+	for (i = 0; i < ARRAY_SIZE(msrs); i++)
-+		msr_clear_bit(msrs[i], 62);
-+
-+	/* restore old settings */
-+	if (need_toggle)
-+		wrmsrl(MSR_K7_HWCR, hwcr);
-+}
-+
- /* cpu init entry point, called from mce.c with preempt off */
- void mce_amd_feature_init(struct cpuinfo_x86 *c)
+ static int cpcap_battery_cc_to_ua(struct cpcap_battery_ddata *ddata,
+-				  u32 sample, s32 accumulator,
++				  s32 sample, s32 accumulator,
+ 				  s16 offset)
  {
-@@ -552,6 +586,8 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 	unsigned int bank, block, cpu = smp_processor_id();
- 	int offset = -1;
+ 	return cpcap_battery_cc_raw_div(ddata, sample,
+@@ -312,6 +311,8 @@ cpcap_battery_read_accumulated(struct cpcap_battery_ddata *ddata,
+ 	/* Sample value CPCAP_REG_CCS1 & 2 */
+ 	ccd->sample = (buf[1] & 0x0fff) << 16;
+ 	ccd->sample |= buf[0];
++	if (ddata->vendor == CPCAP_VENDOR_TI)
++		ccd->sample = sign_extend32(24, ccd->sample);
  
-+	disable_err_thresholding(c);
-+
- 	for (bank = 0; bank < mca_cfg.banks; ++bank) {
- 		if (mce_flags.smca)
- 			smca_configure(bank, cpu);
+ 	/* Accumulator value CPCAP_REG_CCA1 & 2 */
+ 	ccd->accumulator = ((s16)buf[3]) << 16;
 -- 
 2.20.1
 
