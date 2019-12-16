@@ -2,179 +2,89 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872A8C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD3AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB6920717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576516878;
-	bh=Q4yTC5SDyZmpiMOi5cnPhop29ndMyyIHxAjnW9Qr1xY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mngcNOX+5yiDUUv81fKpCDJMlattO951Ot/zmXEe7QCO7ZtyQl0TDdpOZ30zbWRSO
-	 QNYkWiN9khMlq2THYvT7uwfpyEXrdHQjpuYxnjalVT0fAVQ4tFK3OWDqbcLjy7Lkno
-	 sD0s8NG0ExEPLKmghrgnL7X/5cQ8L+MTbv6M3fis=
+	by mail.kernel.org (Postfix) with ESMTP id C31F720717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="ZGNN3HnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLPRVR (ORCPT
+        id S1726834AbfLPRVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfLPRVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:21:17 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D70E7206E0;
-        Mon, 16 Dec 2019 17:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576516876;
-        bh=Q4yTC5SDyZmpiMOi5cnPhop29ndMyyIHxAjnW9Qr1xY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fQTv6vEbU7+1/jpoq4zDJisLx/VKltrWs+IPodAO8vamZw9SQJ0FVS26cZj3qng93
-         dG5v2AUTy1PhwWgHhxTKICz/SMRBU0EB5LD1o+fWro1kp/4MI4+mATnTVFmzNeeJmo
-         w9/h+jG6qlhO2y46f4YULRo73PnTFnvlS0VnAync=
-Date:   Mon, 16 Dec 2019 09:21:14 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+958915844b296815c246@syzkaller.appspotmail.com>
-Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
-        linux@dominikbrodowski.net, pc@cjr.nz,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: upstream boot error: general protection fault in do_mount_root
-Message-ID: <20191216172114.GB139479@gmail.com>
-References: <000000000000b321f20599cd8725@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000b321f20599cd8725@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 16 Dec 2019 12:21:25 -0500
+Received: from mickerik.phytec.de ([195.145.39.210]:60732 "EHLO
+        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfLPRVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:21:25 -0500
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 12:21:24 EST
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
+        q=dns/txt; i=@phytec.de; t=1576515982; x=1579107982;
+        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nQzlEhstz6bqYeYN+h83SZIKfFTISEAjbJ8cLaD25kA=;
+        b=ZGNN3HnMGOKXlxf4kNrhPaoaFpxiY3TksbfgIByL/zhHW9OryxwqEaNz1+oYqX1u
+        Veloku7iMZEgOyyyT3iq+xUxE+K3MvOSSVfUQAvwjrNczoxGT9ukNlpeFjB7p6FZ
+        93sl1oOtqdCQm6NKJSgtWvJsWpO4/vBWmk0vrJhoSsk=;
+X-AuditID: c39127d2-e0fff7000000408f-0b-5df7b98d3a6d
+Received: from idefix.phytec.de (Unknown_Domain [172.16.0.10])
+        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 8E.1C.16527.D89B7FD5; Mon, 16 Dec 2019 18:06:21 +0100 (CET)
+Received: from augenblix2.phytec.de ([172.16.0.56])
+          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
+          with ESMTP id 2019121618062135-25360 ;
+          Mon, 16 Dec 2019 18:06:21 +0100 
+From:   Robert Karszniewicz <r.karszniewicz@phytec.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/1] regulator: of: Does always-on imply on-in-suspend?
+Date:   Mon, 16 Dec 2019 18:06:20 +0100
+Message-Id: <1576515981-77867-1-git-send-email-r.karszniewicz@phytec.de>
+X-Mailer: git-send-email 2.7.4
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 16.12.2019 18:06:21,
+        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 16.12.2019 18:06:21,
+        Serialize complete at 16.12.2019 18:06:21
+X-TNEFEvaluated: 1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJMWRmVeSWpSXmKPExsWyRoCBS7d35/dYgz3bzCymPnzCZvHtSgeT
+        xeVdc9gcmD12zrrL7rFpVSebx+dNcgHMUVw2Kak5mWWpRfp2CVwZW1+sYCloY62Y3nOBuYGx
+        i6WLkZNDQsBEYt6C60A2F4eQwFZGieurJrBBOOcYJeav+ssEUsUGVLW7+RYziC0ioCCxufcZ
+        K4jNLOAh0fGkD8wWFnCXaJ81HayeRUBV4vjct2BxXqCal7/uQ22Tk7h5rpMZwm5kkmicKQFh
+        C0mcXnyWeQIjzwJGhlWMQrmZydmpRZnZegUZlSWpyXopqZsYgd4/PFH90g7GvjkehxiZOBgP
+        MUpwMCuJ8O5Q+B4rxJuSWFmVWpQfX1Sak1p8iFGag0VJnHcDb0mYkEB6YklqdmpqQWoRTJaJ
+        g1OqgTFLNaRPM3HN4XPKh+a8ONhWPPXKx90Wvvvknjn1lBZ1OEz9tcO5Wd1g9cYG4z+t7pcM
+        7AsOljLXbX9Zv59TcPLEgHCpK9a/fPX7hD4snVsxT9dd2kD60SpuzUwPXxn+5+t1VrRvVYhR
+        yPfdyb/tis+tfekLrQ8x+FlfXfBF2ndtV9aCt5+4hZRYijMSDbWYi4oTAboxZazsAQAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 11:55:07PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    d1eef1c6 Linux 5.5-rc2
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11ff2fb1e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=958915844b296815c246
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+958915844b296815c246@syzkaller.appspotmail.com
-> 
-> IPI shorthand broadcast: enabled
-> AVX2 version of gcm_enc/dec engaged.
-> AES CTR mode by8 optimization enabled
-> registered taskstats version 1
-> Loading compiled-in X.509 certificates
-> Loaded X.509 cert 'Build time autogenerated kernel key:
-> 2a1122198a3e68692ac5775a16203e4f5f9d30c2'
-> zswap: loaded using pool lzo/zbud
-> Key type ._fscrypt registered
-> Key type .fscrypt registered
-> Btrfs loaded, crc32c=crc32c-intel
-> Key type big_key registered
-> Key type encrypted registered
-> ima: No TPM chip found, activating TPM-bypass!
-> ima: Allocated hash algorithm: sha256
-> ima: No architecture policies found
-> evm: Initialising EVM extended attributes:
-> evm: security.selinux
-> evm: security.SMACK64
-> evm: security.SMACK64EXEC
-> evm: security.SMACK64TRANSMUTE
-> evm: security.SMACK64MMAP
-> evm: security.apparmor
-> evm: security.ima
-> evm: security.capability
-> evm: HMAC attrs: 0x1
-> PM:   Magic number: 15:612:306
-> usb usb38: hash matches
-> tty tty35: hash matches
-> printk: console [netcon0] enabled
-> netconsole: network logging started
-> gtp: GTP module loaded (pdp ctx size 104 bytes)
-> rdma_rxe: loaded
-> cfg80211: Loading compiled-in X.509 certificates for regulatory database
-> cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-> Unstable clock detected, switching default tracing clock to "global"
-> If you want to keep using the local clock, then add:
->   "trace_clock=local"
-> on the kernel command line
-> ALSA device list:
->   #0: Dummy 1
->   #1: Loopback 1
->   #2: Virtual MIDI Card 1
->   #3: HDA Intel at 0xfebf0000 irq 31
-> md: Waiting for all devices to be available before autodetect
-> md: If you don't use raid, use raid=noautodetect
-> md: Autodetecting RAID arrays.
-> md: autorun ...
-> md: ... autorun DONE.
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
-> Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48
-> 89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a 38
-> ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-> RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
-> RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
-> RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
-> R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
-> R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
-> FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  strncpy include/linux/string.h:281 [inline]
->  do_mount_root+0x74/0x23b init/do_mounts.c:404
->  mount_block_root+0x342/0x51a init/do_mounts.c:438
->  mount_root+0x283/0x2cd init/do_mounts.c:628
->  prepare_namespace+0x26f/0x2a7 init/do_mounts.c:687
->  kernel_init_freeable+0x557/0x570 init/main.c:1231
->  kernel_init+0x12/0x1bf init/main.c:1110
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace dc1d12e4189687e7 ]---
-> RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
-> Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48
-> 89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a 38
-> ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-> RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
-> RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
-> RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
-> R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
-> R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
-> FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
+Hi all.
 
-Fixed in mainline by commit 7de7de7ca0ae0
+Just to make sure; the oftree property regulator-always-on implies that for
+every suspend state, the property regulator-on-in-suspend is implicit? With no
+other side-effect? Reading the documentation, this is what I interpret.
 
-#syz fix: Fix root mounting with no mount options
+So if that is true, the next message is a patch to fix a bogus
+"No configuration" warning in the case when regulator-always-on exists and
+suspend states are not set explicitly.
 
-- Eric
+Robert Karszniewicz (1):
+  regulator: of: Hide wrong warning regarding suspend state
+    configuration
+
+ drivers/regulator/of_regulator.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
