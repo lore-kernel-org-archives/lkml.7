@@ -6,69 +6,93 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD3BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EB4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEE02053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7230B22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfLPWee (ORCPT
+        id S1727822AbfLPWlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:34:34 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55889 "EHLO mga01.intel.com"
+        Mon, 16 Dec 2019 17:41:09 -0500
+Received: from muru.com ([72.249.23.125]:48562 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727728AbfLPWec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:34:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 14:34:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="365172648"
-Received: from andresma-mobl.amr.corp.intel.com (HELO [10.252.132.232]) ([10.252.132.232])
-  by orsmga004.jf.intel.com with ESMTP; 16 Dec 2019 14:34:29 -0800
-Subject: Re: [alsa-devel] [PATCH v4 08/15] soundwire: add initial definitions
- for sdw_master_device
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-9-pierre-louis.bossart@linux.intel.com>
- <20191213072844.GF1750354@kroah.com>
- <7431d8cf-4a09-42af-14f5-01ab3b15b47b@linux.intel.com>
- <20191213161046.GA2653074@kroah.com>
- <a838eed1-9d55-d1b4-c790-22bdd0a97370@linux.intel.com>
-Message-ID: <a4e918c3-8d5c-9f89-903e-a34707cb6f0e@linux.intel.com>
-Date:   Mon, 16 Dec 2019 16:34:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726856AbfLPWlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 17:41:09 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9AC38810D;
+        Mon, 16 Dec 2019 22:41:47 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 14:41:05 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+Message-ID: <20191216224105.GS35479@atomide.com>
+References: <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+ <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+ <20191119194425.GQ35479@atomide.com>
+ <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+ <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+ <20191216210407.GR35479@atomide.com>
+ <9adad579-98b4-f228-caf3-f4996dcaecda@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <a838eed1-9d55-d1b4-c790-22bdd0a97370@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9adad579-98b4-f228-caf3-f4996dcaecda@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> No, I mean the new MODULE_NAMESPACE() support that is in the kernel.
->> I'll move the greybus code to use it too, but when you are adding new
->> apis, it just makes sense to use it then as well.
+* Andrew F. Davis <afd@ti.com> [191216 22:34]:
+> On 12/16/19 4:04 PM, Tony Lindgren wrote:
+> > * Andrew F. Davis <afd@ti.com> [191216 20:57]:
+> >> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
+> >> looks like it may get kicked out. arm_smccc_smc() will remain only for
+> >> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
+> >> too opposed upstream.
+> > 
+> > Yes so it seems.
+> > 
+> >> Either way this patch would still be valid as when OP-TEE is present
+> >> then arm_smccc_smc() will be the right call to make, how we handle the
+> >> legacy calls can be sorted out later if a generic SMC call is implemented.
+> > 
+> > Please see my comment regarding this patch earlier in this thread
+> > pasted below for convenience:
+> > 
+> > * Tony Lindgren <tony@atomide.com> [191119 16:22]:
+> >> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
+> >> only once during init. I'm not sure how much checking for
+> >> "/firmware/optee" helps here, sounds like we have a broken system
+> >> if the firmware is not there while the arm_smccc_smc() should
+> >> still work just fine :)
+> > 
+> > So only check once during init. And during init, you should probably
+> > also check that arm_smccc_smc() actually infd optee if
+> > "/firmware/optee" is set, and only then set set the right function
+> > pointer or some flag.
+> > 
 > 
-> ok, thanks for the pointer, will look into this.
+> Okay, I'll check only once and make sure the node is "okay".
 
-This namespace check already saved me a lot of time. I found an issue in 
-our latest code (not submitted for review yet) with a new functionality 
-added to the wrong module and without the proper abstraction required...
-Really nice tool, I can already see how useful it will be for on-going 
-code partitioning (SOF multi-client work and virtualization support).
+Yes we don't want to parse the dts over and over.
+
+> I'll do the check during the first call to an SMC caller, I wouldn't
+> want to pollute the OMAP generic init code for something that is only
+> called on HS platforms, plus these SMC calls are rare (only 3 calls
+> during boot of AM57x for instance) so performance is not critical, so I
+> don't want to do anything fancy like code patching :), I'll just use a flag.
+
+Please just add omap_early_initcall() to omap-secure.c while at it
+to deal with this.
+
+Regards,
+
+Tony
