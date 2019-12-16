@@ -2,53 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24228C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCE4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2827120717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520954;
-	bh=dHp+0izUy3gUt9Z11uqVhXbKnF9n8E0PvImkKYAJD0E=;
+	s=default; t=1576520964;
+	bh=RpOfKwscbcP3jTQZONthTaLFEsK4492fK/8v35MsLPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hgS7CEOPIFulQhlZE0VxBESUylO2ExLKuogYqDKjIvniQ4eKwxURiseI7ATI78nGa
-	 z+vq00z2tth6QrXCChePWQVFzIk0wSSLbjvysy4JVCVMOmbnw5s1cxPE3XNxe7dMLt
-	 2E45wMHqjXK13N5VRimmd0ITtTyAAfvKNjKhG6Sg=
+	b=t/jx1iNBTac+JKihpWhhZToQ2JATk2XdjTKDHsfA4ZcV1O4eHjlaIjgozmssVzXLM
+	 UCHdRjchQtj6+2CjjmWP724nRgOdxERXwybC/uhl+3T7DJR/+NSK2xQ/i+oWbNDtsJ
+	 GdfYkRfnSPcZqxKP6ceeV2SE/IGsPBjpuDsVWsCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbfLPS3M (ORCPT
+        id S1731312AbfLPS3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:29:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:29:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbfLPSOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:10 -0500
+        id S1731013AbfLPSNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 746F421775;
-        Mon, 16 Dec 2019 18:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B831B20CC7;
+        Mon, 16 Dec 2019 18:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520049;
-        bh=dHp+0izUy3gUt9Z11uqVhXbKnF9n8E0PvImkKYAJD0E=;
+        s=default; t=1576520035;
+        bh=RpOfKwscbcP3jTQZONthTaLFEsK4492fK/8v35MsLPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7bXluZmjPbJewGQrhX9MuURjX465otivkbYcT54hDiy17l1GgWgh3gy9Y7mV1j1J
-         0rg4grba4/l9N27W3JzyZyVnT6dmZdN/icH/Jyq9z8OFgCGIAkEgQV0/TWu7RxHJdE
-         bM6o2K71nJNpQ0dwETePKqosL0XVQ9OU2WTkcqXQ=
+        b=CqLGn8D6t/VO1YZf4taGkGIpJ5bFLbEdLkgnZTM00B3/pBPkiyIONjOGagaHUQXyX
+         rJy7mJJvU/LyvT7j49TYvvKguCA3DqoC3WuetqTagbmCVIJgGk+zuaaAjAvgolgAmF
+         tN/uYHcHgZtxW4vELP5ctRjT/gZheq5Yx+3hVxG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 159/180] scsi: qla2xxx: Fix a race condition between aborting and completing a SCSI command
-Date:   Mon, 16 Dec 2019 18:49:59 +0100
-Message-Id: <20191216174845.839026411@linuxfoundation.org>
+        stable@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>,
+        Joseph Chen <chenjh@rock-chips.com>,
+        Daniel Schultz <d.schultz@phytec.de>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.3 171/180] mfd: rk808: Fix RK818 ID template
+Date:   Mon, 16 Dec 2019 18:50:11 +0100
+Message-Id: <20191216174847.644291124@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,158 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Daniel Schultz <d.schultz@phytec.de>
 
-[ Upstream commit 85cffefa09e448906a6f0bc20f422d75a18675bd ]
+commit 37ef8c2c15bdc1322b160e38986c187de2b877b2 upstream.
 
-Instead of allocating a struct srb dynamically from inside .queuecommand(),
-set qla2xxx_driver_template.cmd_size such that struct scsi_cmnd and struct
-srb are contiguous. Do not call QLA_QPAIR_MARK_BUSY() /
-QLA_QPAIR_MARK_NOT_BUSY() for SRBs associated with SCSI commands. That is
-safe because scsi_remove_host() is called before queue pairs are deleted
-and scsi_remove_host() waits for all outstanding SCSI commands to finish.
+The Rockchip PMIC driver can automatically detect connected component
+versions by reading the ID_MSB and ID_LSB registers. The probe function
+will always fail with RK818 PMICs because the ID_MSK is 0xFFF0 and the
+RK818 template ID is 0x8181.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch changes this value to 0x8180.
+
+Fixes: 9d6105e19f61 ("mfd: rk808: Fix up the chip id get failed")
+Cc: stable@vger.kernel.org
+Cc: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: Joseph Chen <chenjh@rock-chips.com>
+Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_def.h |  1 -
- drivers/scsi/qla2xxx/qla_os.c  | 45 ++++++----------------------------
- 2 files changed, 8 insertions(+), 38 deletions(-)
+ include/linux/mfd/rk808.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index 0eb1d5a790b26..ea1728fe2c768 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -562,7 +562,6 @@ typedef struct srb {
- } srb_t;
- 
- #define GET_CMD_SP(sp) (sp->u.scmd.cmd)
--#define SET_CMD_SP(sp, cmd) (sp->u.scmd.cmd = cmd)
- #define GET_CMD_CTX_SP(sp) (sp->u.scmd.ctx)
- 
- #define GET_CMD_SENSE_LEN(sp) \
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 484045e4d194f..3aa2dd43945bf 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -727,7 +727,6 @@ qla2x00_sp_compl(void *ptr, int res)
- 	cmd->scsi_done(cmd);
- 	if (comp)
- 		complete(comp);
--	qla2x00_rel_sp(sp);
- }
- 
- void
-@@ -832,7 +831,6 @@ qla2xxx_qpair_sp_compl(void *ptr, int res)
- 	cmd->scsi_done(cmd);
- 	if (comp)
- 		complete(comp);
--	qla2xxx_rel_qpair_sp(sp->qpair, sp);
- }
- 
- static int
-@@ -925,9 +923,8 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	else
- 		goto qc24_target_busy;
- 
--	sp = qla2x00_get_sp(vha, fcport, GFP_ATOMIC);
--	if (!sp)
--		goto qc24_host_busy;
-+	sp = scsi_cmd_priv(cmd);
-+	qla2xxx_init_sp(sp, vha, vha->hw->base_qpair, fcport);
- 
- 	sp->u.scmd.cmd = cmd;
- 	sp->type = SRB_SCSI_CMD;
-@@ -948,9 +945,6 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- qc24_host_busy_free_sp:
- 	sp->free(sp);
- 
--qc24_host_busy:
--	return SCSI_MLQUEUE_HOST_BUSY;
--
- qc24_target_busy:
- 	return SCSI_MLQUEUE_TARGET_BUSY;
- 
-@@ -1011,9 +1005,8 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
- 	else
- 		goto qc24_target_busy;
- 
--	sp = qla2xxx_get_qpair_sp(vha, qpair, fcport, GFP_ATOMIC);
--	if (!sp)
--		goto qc24_host_busy;
-+	sp = scsi_cmd_priv(cmd);
-+	qla2xxx_init_sp(sp, vha, qpair, fcport);
- 
- 	sp->u.scmd.cmd = cmd;
- 	sp->type = SRB_SCSI_CMD;
-@@ -1037,9 +1030,6 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
- qc24_host_busy_free_sp:
- 	sp->free(sp);
- 
--qc24_host_busy:
--	return SCSI_MLQUEUE_HOST_BUSY;
--
- qc24_target_busy:
- 	return SCSI_MLQUEUE_TARGET_BUSY;
- 
-@@ -1280,10 +1270,8 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 	int ret;
- 	unsigned int id;
- 	uint64_t lun;
--	unsigned long flags;
- 	int rval;
- 	struct qla_hw_data *ha = vha->hw;
--	struct qla_qpair *qpair;
- 
- 	if (qla2x00_isp_reg_stat(ha)) {
- 		ql_log(ql_log_info, vha, 0x8042,
-@@ -1295,29 +1283,11 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
- 	if (ret != 0)
- 		return ret;
- 
--	sp = (srb_t *) CMD_SP(cmd);
--	if (!sp)
--		return SUCCESS;
-+	sp = scsi_cmd_priv(cmd);
- 
--	qpair = sp->qpair;
--	if (!qpair)
--		return SUCCESS;
--
--	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
--	if (sp->type != SRB_SCSI_CMD || GET_CMD_SP(sp) != cmd) {
--		/* there's a chance an interrupt could clear
--		   the ptr as part of done & free */
--		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
--		return SUCCESS;
--	}
--
--	/* Get a reference to the sp and drop the lock. */
--	if (sp_get(sp)){
--		/* ref_count is already 0 */
--		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
-+	/* Return if the command has already finished. */
-+	if (sp_get(sp))
- 		return SUCCESS;
--	}
--	spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
- 
- 	id = cmd->device->id;
- 	lun = cmd->device->lun;
-@@ -7197,6 +7167,7 @@ struct scsi_host_template qla2xxx_driver_template = {
- 
- 	.supported_mode		= MODE_INITIATOR,
- 	.track_queue_depth	= 1,
-+	.cmd_size		= sizeof(srb_t),
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -610,7 +610,7 @@ enum {
+ 	RK808_ID = 0x0000,
+ 	RK809_ID = 0x8090,
+ 	RK817_ID = 0x8170,
+-	RK818_ID = 0x8181,
++	RK818_ID = 0x8180,
  };
  
- static const struct pci_error_handlers qla2xxx_err_handler = {
--- 
-2.20.1
-
+ struct rk808 {
 
 
