@@ -4,378 +4,200 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439F0C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790C9C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C7F206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F088206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfLPOP1 (ORCPT
+        id S1728183AbfLPOP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:15:27 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:49881 "EHLO
+        Mon, 16 Dec 2019 09:15:28 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:59529 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfLPOPX (ORCPT
+        with ESMTP id S1727807AbfLPOPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:15:23 -0500
+        Mon, 16 Dec 2019 09:15:25 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MDy54-1iWzmS1RJc-009zVF; Mon, 16 Dec 2019 15:15:16 +0100
+ 1M894P-1ibcDm1OFP-005KOI; Mon, 16 Dec 2019 15:15:17 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, stable@vger.kernel.org
-Subject: [PATCH v6 3/8] media: v4l2-core: compat: ignore native command codes
-Date:   Mon, 16 Dec 2019 15:15:01 +0100
-Message-Id: <20191216141506.121728-4-arnd@arndb.de>
+        y2038@lists.linaro.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: [PATCH v6 7/8] media: v4l2-core: fix compat VIDIOC_DQEVENT for time64 ABI
+Date:   Mon, 16 Dec 2019 15:15:05 +0100
+Message-Id: <20191216141506.121728-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191216141506.121728-1-arnd@arndb.de>
 References: <20191216141506.121728-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:F+gxqVSWhEt8sdRjM5TYRL1zL7TfqOeKoKt/F35+PfKIantReTR
- uMRoYKZ5nzFNwyPmFncqqEMpHxovpvfC52FwWLiBPVxfWeIdwf7Bt7bT70abw15uC7W2QjH
- a3sg6lLtsg0zPhXP7EUKRV7mGnQYF51CwGvoKy5blnTCPQnhMfMzzF0w6XEp/4FuFN8ayBn
- hoG1dwd/hN0rsb8CbtM/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qyTBv4huTYg=:f668tiGbN00UEjf3IyvTfq
- zNiZnyScMVM62rAFLxUoQ2HevKluRn7Ailxm8lUTrZVPR1dLe9+hPDurspCiqn3allRnMR2ZC
- S9ZRLX1MB2ZHa0uFaFOY05yGQ0CP/FWRnGnvqUY/Kq0hduc7/CVh9tedpZfV4leEbeep2k2WM
- 7S6AODJT2Q2TmrYS7KvKep77ua9nv2PHIdPav0BcL7qX5jhVnoAb493r/RAu4MXURLBbuaQlp
- yTr/3qlsBbKyQ1UjVFBXBG8W6x8tv+LFdpHNNKkgSgzL/gjyPPDOSjUIo9V1pDV+0iwzGnPFS
- KYoo0zAmWZmz3N0aYtLrwGjffxfV2NK4QPnaCpBW6iXumE7aaQvj+9rhLm7uaufyFIfUJQbfL
- xu9JtdM2YGP9bxNf5ElUbV1K4fD/+eO1AKzIDCvjU14o1OSOvxYPro/si/rPNBqhOhuR7oSfr
- TV2yLK/yjAXnJQsJn1WEMLEsDHSAId1BHmPfclpgH8o6zJmrsZrvCaSzq9Yx57hHe7Egcfs81
- gMhDvFuLpCA5/hUii677/7D3kEIIZ69wpZS9OEGhj+dTiPXeeFp6t/l9VM8ys92XyZqmns/AB
- 5zJEi6QWWEdUcze04O3mIQWMe65b21pl8WoGxU+nqs/l0A6VnZs25uiU/xKWQ2XS7Idd7X+il
- lZh/uouJGTb3OsphEDJWf7U5GOrOn6jeSg1wKIkLAER9CmHy6r5J3FsdnIRa1Ebjc2PzSUDNw
- bgM5OhvLWHT9AY8W/BiW1Zg8vC0KCeZwQFN1kjen+MlVi7tDWW1JNpqPnl2tc8tefscroUcoR
- aonbDL9ZHgnfKc5KIOi78NyekwkzhSN0ZjZexYDFFHiPWbvDjTk5AB/hiN34uF12C2YxIgMD+
- NaSY13pEOd1u8jlrCSMw==
+X-Provags-ID: V03:K1:6/Fv6ggGFhH/R+vNLGnpTlSqPnd/sm8+U+BgV4J+uwpVhtjl9n0
+ XfDPsYEZywmDNVNvIe8jRn9OvbCXS+XlLFPO4eyExB/kSCLIzMPyTS1IhB49pJ2FVE6zMKK
+ OWkmW+RraCPwVW9eg8ImQzQdjcCm1lQqhCJejrN0qIwVk7X90shGY16z8Sk/LBLGwcl/bvW
+ LyntoNzuPHC2iYYV9sqlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MhiY5j4G9c0=:8EARmMqyLNGkR0MUZlXQY+
+ Q9ugx9FU/93OE1JdiY3QgAnjxt1ukceF6ZxcRVeQfGX2SrXYq+P57DrDzJLFWMe5psVDhzlaq
+ D5PrgN91kn9wdu5xhMA77LYUz2jxV3QbvV14Bfk+0dSRIKMgCrZ6shLtfUcg7CJqtZJNldxCX
+ LH4W6yqFzfCTy5Nd7Mb9fHAUClqgURLzcp/iG39sPU3wofjeN6i81bFqrS5/jgJowRXB8khZh
+ 9cGBqDpm2tpeM3v6FTH4XimZhKePoshpY2bmbPNnVcsVfLhZxZfrN5kUNtFx5HxWcc6oreens
+ 6kXFdQDISYYCEdti9DQ84EKwaiVrZM4MqkFH/pxYiwIaYBHXXT3rUYbsKqufInMUA4OlEaYWO
+ t411DLaiy1n+6syaZiwyaQ9HWVCeCbNfmZZNHLyB9kv2Fi5weYqIaJl5sCXgk5dNFH28uZJf/
+ DXYqrBwn35cQ4lrm+VJVYSP3HItgVBICKBdf1PkcUFnK/Sd0iQ4Op+NKb3SgLVr4bVc13CDVW
+ 36v5ZBaPHdwlgVZepkCzDNMOMZNlqIPu+xGyqEzZyrzeRIRedRUDiOsja+28i3AM6YdAsH+co
+ n7eD/cLhMihCtJyAAf4J+eEyrUIQweNi4r/gbrVyaZ/Dx6ayODf53bWaNny1YjP3Gx0zWGm2A
+ +zr8F6n9YRCA0pmimy3raSEk2uSzcCRwHlc0wojOER63S5TIeNL8CMxnIo4dC9Ov0c2w74TTn
+ +BAu3MHKjWYXZ2/pLnUxAywCU7iVZCeBMGf3klAw3MDPBZmpWZro/Rv4EngLspK034mCk1jdR
+ zQdVj9oV3c1o9YqQPYv5xf8avlrM3jj+Fc97ilTu53k0Ik73cdGBW7lRw3gzGgRcxYKCXJRPV
+ wLJcc3yTwg/mDjy4ZpsA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The do_video_ioctl() compat handler converts the compat command
-codes into the native ones before processing further, but this
-causes problems for 32-bit user applications that pass a command
-code that matches a 64-bit native number, which will then be
-handled the same way.
+The native code supports the variant of struct v4l2_event for 64-bit
+time_t, so add the compat version as well.
 
-Specifically, this breaks VIDIOC_DQEVENT_TIME from user space
-applications with 64-bit time_t, as the structure layout is
-the same as the native 64-bit layout on many architectures
-(x86 being the notable exception).
+Here, a new incompatibility arises: while almost all 32-bit architectures
+now use the same layout as 64-bit architectures and the commands can
+simply be passed through, on x86 the internal alignment of v4l2_event
+is different because of the 64-bit member in v4l2_event_ctrl.
 
-Change the handler to use the converted command code only for
-passing into the native ioctl handler, not for deciding on the
-conversion, in order to make the compat behavior match the
-native behavior.
+To handle all architectures, this now requires defining four different
+versions of the structure to cover all possible combinations. The compat
+handling for VIDIOC_DQEVENT32 and VIDIOC_DQEVENT32_TIME32 is now inside
+of an #ifdef so it does not get used on architectures other than x86.
 
-Actual support for the 64-bit time_t version of VIDIOC_DQEVENT_TIME
-and other commands still needs to be added in a separate patch.
-
-Cc: stable@vger.kernel.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 148 +++++++++---------
- 1 file changed, 75 insertions(+), 73 deletions(-)
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 60 ++++++++++++++++++-
+ 1 file changed, 59 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-index e1eaf1135c7f..7ad6db8dd9f6 100644
+index 7ad6db8dd9f6..f8a4b0ddd47d 100644
 --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
 +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-@@ -1183,36 +1183,38 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	u32 aux_space;
- 	int compatible_arg = 1;
- 	long err = 0;
-+	unsigned int ncmd;
+@@ -1028,6 +1028,15 @@ static int put_v4l2_ext_controls32(struct file *file,
+ 	return 0;
+ }
  
- 	/*
- 	 * 1. When struct size is different, converts the command.
- 	 */
- 	switch (cmd) {
--	case VIDIOC_G_FMT32: cmd = VIDIOC_G_FMT; break;
--	case VIDIOC_S_FMT32: cmd = VIDIOC_S_FMT; break;
--	case VIDIOC_QUERYBUF32: cmd = VIDIOC_QUERYBUF; break;
--	case VIDIOC_G_FBUF32: cmd = VIDIOC_G_FBUF; break;
--	case VIDIOC_S_FBUF32: cmd = VIDIOC_S_FBUF; break;
--	case VIDIOC_QBUF32: cmd = VIDIOC_QBUF; break;
--	case VIDIOC_DQBUF32: cmd = VIDIOC_DQBUF; break;
--	case VIDIOC_ENUMSTD32: cmd = VIDIOC_ENUMSTD; break;
--	case VIDIOC_ENUMINPUT32: cmd = VIDIOC_ENUMINPUT; break;
--	case VIDIOC_TRY_FMT32: cmd = VIDIOC_TRY_FMT; break;
--	case VIDIOC_G_EXT_CTRLS32: cmd = VIDIOC_G_EXT_CTRLS; break;
--	case VIDIOC_S_EXT_CTRLS32: cmd = VIDIOC_S_EXT_CTRLS; break;
--	case VIDIOC_TRY_EXT_CTRLS32: cmd = VIDIOC_TRY_EXT_CTRLS; break;
--	case VIDIOC_DQEVENT32: cmd = VIDIOC_DQEVENT; break;
--	case VIDIOC_OVERLAY32: cmd = VIDIOC_OVERLAY; break;
--	case VIDIOC_STREAMON32: cmd = VIDIOC_STREAMON; break;
--	case VIDIOC_STREAMOFF32: cmd = VIDIOC_STREAMOFF; break;
--	case VIDIOC_G_INPUT32: cmd = VIDIOC_G_INPUT; break;
--	case VIDIOC_S_INPUT32: cmd = VIDIOC_S_INPUT; break;
--	case VIDIOC_G_OUTPUT32: cmd = VIDIOC_G_OUTPUT; break;
--	case VIDIOC_S_OUTPUT32: cmd = VIDIOC_S_OUTPUT; break;
--	case VIDIOC_CREATE_BUFS32: cmd = VIDIOC_CREATE_BUFS; break;
--	case VIDIOC_PREPARE_BUF32: cmd = VIDIOC_PREPARE_BUF; break;
--	case VIDIOC_G_EDID32: cmd = VIDIOC_G_EDID; break;
--	case VIDIOC_S_EDID32: cmd = VIDIOC_S_EDID; break;
-+	case VIDIOC_G_FMT32: ncmd = VIDIOC_G_FMT; break;
-+	case VIDIOC_S_FMT32: ncmd = VIDIOC_S_FMT; break;
-+	case VIDIOC_QUERYBUF32: ncmd = VIDIOC_QUERYBUF; break;
-+	case VIDIOC_G_FBUF32: ncmd = VIDIOC_G_FBUF; break;
-+	case VIDIOC_S_FBUF32: ncmd = VIDIOC_S_FBUF; break;
-+	case VIDIOC_QBUF32: ncmd = VIDIOC_QBUF; break;
-+	case VIDIOC_DQBUF32: ncmd = VIDIOC_DQBUF; break;
-+	case VIDIOC_ENUMSTD32: ncmd = VIDIOC_ENUMSTD; break;
-+	case VIDIOC_ENUMINPUT32: ncmd = VIDIOC_ENUMINPUT; break;
-+	case VIDIOC_TRY_FMT32: ncmd = VIDIOC_TRY_FMT; break;
-+	case VIDIOC_G_EXT_CTRLS32: ncmd = VIDIOC_G_EXT_CTRLS; break;
-+	case VIDIOC_S_EXT_CTRLS32: ncmd = VIDIOC_S_EXT_CTRLS; break;
-+	case VIDIOC_TRY_EXT_CTRLS32: ncmd = VIDIOC_TRY_EXT_CTRLS; break;
-+	case VIDIOC_DQEVENT32: ncmd = VIDIOC_DQEVENT; break;
-+	case VIDIOC_OVERLAY32: ncmd = VIDIOC_OVERLAY; break;
-+	case VIDIOC_STREAMON32: ncmd = VIDIOC_STREAMON; break;
-+	case VIDIOC_STREAMOFF32: ncmd = VIDIOC_STREAMOFF; break;
-+	case VIDIOC_G_INPUT32: ncmd = VIDIOC_G_INPUT; break;
-+	case VIDIOC_S_INPUT32: ncmd = VIDIOC_S_INPUT; break;
-+	case VIDIOC_G_OUTPUT32: ncmd = VIDIOC_G_OUTPUT; break;
-+	case VIDIOC_S_OUTPUT32: ncmd = VIDIOC_S_OUTPUT; break;
-+	case VIDIOC_CREATE_BUFS32: ncmd = VIDIOC_CREATE_BUFS; break;
-+	case VIDIOC_PREPARE_BUF32: ncmd = VIDIOC_PREPARE_BUF; break;
-+	case VIDIOC_G_EDID32: ncmd = VIDIOC_G_EDID; break;
-+	case VIDIOC_S_EDID32: ncmd = VIDIOC_S_EDID; break;
-+	default: ncmd = cmd; break;
- 	}
++#ifdef CONFIG_X86_64
++/*
++ * x86 is the only compat architecture with different struct alignment
++ * between 32-bit and 64-bit tasks.
++ *
++ * On all other architectures, v4l2_event32 and v4l2_event32_time32 are
++ * the same as v4l2_event and v4l2_event_time32, so we can use the native
++ * handlers, converting v4l2_event to v4l2_event_time32 if necessary.
++ */
+ struct v4l2_event32 {
+ 	__u32				type;
+ 	union {
+@@ -1036,7 +1045,23 @@ struct v4l2_event32 {
+ 	} u;
+ 	__u32				pending;
+ 	__u32				sequence;
+-	struct compat_timespec		timestamp;
++	struct {
++		compat_s64		tv_sec;
++		compat_s64		tv_nsec;
++	} timestamp;
++	__u32				id;
++	__u32				reserved[8];
++};
++
++struct v4l2_event32_time32 {
++	__u32				type;
++	union {
++		compat_s64		value64;
++		__u8			data[64];
++	} u;
++	__u32				pending;
++	__u32				sequence;
++	struct old_timespec32		timestamp;
+ 	__u32				id;
+ 	__u32				reserved[8];
+ };
+@@ -1057,6 +1082,23 @@ static int put_v4l2_event32(struct v4l2_event __user *p64,
+ 	return 0;
+ }
  
- 	/*
-@@ -1221,11 +1223,11 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	 * argument into it.
- 	 */
- 	switch (cmd) {
--	case VIDIOC_OVERLAY:
--	case VIDIOC_STREAMON:
--	case VIDIOC_STREAMOFF:
--	case VIDIOC_S_INPUT:
--	case VIDIOC_S_OUTPUT:
-+	case VIDIOC_OVERLAY32:
-+	case VIDIOC_STREAMON32:
-+	case VIDIOC_STREAMOFF32:
-+	case VIDIOC_S_INPUT32:
-+	case VIDIOC_S_OUTPUT32:
- 		err = alloc_userspace(sizeof(unsigned int), 0, &new_p64);
- 		if (!err && assign_in_user((unsigned int __user *)new_p64,
- 					   (compat_uint_t __user *)p32))
-@@ -1233,23 +1235,23 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
++static int put_v4l2_event32_time32(struct v4l2_event_time32 __user *p64,
++				   struct v4l2_event32_time32 __user *p32)
++{
++	if (!access_ok(p32, sizeof(*p32)) ||
++	    assign_in_user(&p32->type, &p64->type) ||
++	    copy_in_user(&p32->u, &p64->u, sizeof(p64->u)) ||
++	    assign_in_user(&p32->pending, &p64->pending) ||
++	    assign_in_user(&p32->sequence, &p64->sequence) ||
++	    assign_in_user(&p32->timestamp.tv_sec, &p64->timestamp.tv_sec) ||
++	    assign_in_user(&p32->timestamp.tv_nsec, &p64->timestamp.tv_nsec) ||
++	    assign_in_user(&p32->id, &p64->id) ||
++	    copy_in_user(p32->reserved, p64->reserved, sizeof(p32->reserved)))
++		return -EFAULT;
++	return 0;
++}
++#endif
++
+ struct v4l2_edid32 {
+ 	__u32 pad;
+ 	__u32 start_block;
+@@ -1121,6 +1163,7 @@ static int put_v4l2_edid32(struct v4l2_edid __user *p64,
+ #define VIDIOC_S_EXT_CTRLS32    _IOWR('V', 72, struct v4l2_ext_controls32)
+ #define VIDIOC_TRY_EXT_CTRLS32  _IOWR('V', 73, struct v4l2_ext_controls32)
+ #define	VIDIOC_DQEVENT32	_IOR ('V', 89, struct v4l2_event32)
++#define	VIDIOC_DQEVENT32_TIME32	_IOR ('V', 89, struct v4l2_event32_time32)
+ #define VIDIOC_CREATE_BUFS32	_IOWR('V', 92, struct v4l2_create_buffers32)
+ #define VIDIOC_PREPARE_BUF32	_IOWR('V', 93, struct v4l2_buffer32)
  
--	case VIDIOC_G_INPUT:
--	case VIDIOC_G_OUTPUT:
-+	case VIDIOC_G_INPUT32:
-+	case VIDIOC_G_OUTPUT32:
- 		err = alloc_userspace(sizeof(unsigned int), 0, &new_p64);
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_G_EDID:
--	case VIDIOC_S_EDID:
-+	case VIDIOC_G_EDID32:
-+	case VIDIOC_S_EDID32:
- 		err = alloc_userspace(sizeof(struct v4l2_edid), 0, &new_p64);
- 		if (!err)
- 			err = get_v4l2_edid32(new_p64, p32);
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_G_FMT:
--	case VIDIOC_S_FMT:
--	case VIDIOC_TRY_FMT:
-+	case VIDIOC_G_FMT32:
-+	case VIDIOC_S_FMT32:
-+	case VIDIOC_TRY_FMT32:
- 		err = bufsize_v4l2_format(p32, &aux_space);
- 		if (!err)
- 			err = alloc_userspace(sizeof(struct v4l2_format),
-@@ -1262,7 +1264,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_CREATE_BUFS:
-+	case VIDIOC_CREATE_BUFS32:
- 		err = bufsize_v4l2_create(p32, &aux_space);
- 		if (!err)
- 			err = alloc_userspace(sizeof(struct v4l2_create_buffers),
-@@ -1275,10 +1277,10 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_PREPARE_BUF:
--	case VIDIOC_QUERYBUF:
--	case VIDIOC_QBUF:
--	case VIDIOC_DQBUF:
-+	case VIDIOC_PREPARE_BUF32:
-+	case VIDIOC_QUERYBUF32:
-+	case VIDIOC_QBUF32:
-+	case VIDIOC_DQBUF32:
- 		err = bufsize_v4l2_buffer(p32, &aux_space);
- 		if (!err)
- 			err = alloc_userspace(sizeof(struct v4l2_buffer),
-@@ -1291,7 +1293,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_S_FBUF:
-+	case VIDIOC_S_FBUF32:
- 		err = alloc_userspace(sizeof(struct v4l2_framebuffer), 0,
- 				      &new_p64);
- 		if (!err)
-@@ -1299,13 +1301,13 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_G_FBUF:
-+	case VIDIOC_G_FBUF32:
- 		err = alloc_userspace(sizeof(struct v4l2_framebuffer), 0,
- 				      &new_p64);
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_ENUMSTD:
-+	case VIDIOC_ENUMSTD32:
- 		err = alloc_userspace(sizeof(struct v4l2_standard), 0,
- 				      &new_p64);
- 		if (!err)
-@@ -1313,16 +1315,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_ENUMINPUT:
-+	case VIDIOC_ENUMINPUT32:
- 		err = alloc_userspace(sizeof(struct v4l2_input), 0, &new_p64);
- 		if (!err)
- 			err = get_v4l2_input32(new_p64, p32);
- 		compatible_arg = 0;
- 		break;
- 
--	case VIDIOC_G_EXT_CTRLS:
--	case VIDIOC_S_EXT_CTRLS:
--	case VIDIOC_TRY_EXT_CTRLS:
-+	case VIDIOC_G_EXT_CTRLS32:
-+	case VIDIOC_S_EXT_CTRLS32:
-+	case VIDIOC_TRY_EXT_CTRLS32:
- 		err = bufsize_v4l2_ext_controls(p32, &aux_space);
- 		if (!err)
- 			err = alloc_userspace(sizeof(struct v4l2_ext_controls),
-@@ -1334,7 +1336,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+@@ -1202,7 +1245,10 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 	case VIDIOC_G_EXT_CTRLS32: ncmd = VIDIOC_G_EXT_CTRLS; break;
+ 	case VIDIOC_S_EXT_CTRLS32: ncmd = VIDIOC_S_EXT_CTRLS; break;
+ 	case VIDIOC_TRY_EXT_CTRLS32: ncmd = VIDIOC_TRY_EXT_CTRLS; break;
++#ifdef CONFIG_X86_64
+ 	case VIDIOC_DQEVENT32: ncmd = VIDIOC_DQEVENT; break;
++	case VIDIOC_DQEVENT32_TIME32: ncmd = VIDIOC_DQEVENT_TIME32; break;
++#endif
+ 	case VIDIOC_OVERLAY32: ncmd = VIDIOC_OVERLAY; break;
+ 	case VIDIOC_STREAMON32: ncmd = VIDIOC_STREAMON; break;
+ 	case VIDIOC_STREAMOFF32: ncmd = VIDIOC_STREAMOFF; break;
+@@ -1336,10 +1382,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
  		}
  		compatible_arg = 0;
  		break;
--	case VIDIOC_DQEVENT:
-+	case VIDIOC_DQEVENT32:
++#ifdef CONFIG_X86_64
+ 	case VIDIOC_DQEVENT32:
  		err = alloc_userspace(sizeof(struct v4l2_event), 0, &new_p64);
  		compatible_arg = 0;
  		break;
-@@ -1352,9 +1354,9 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	 * Otherwise, it will pass the newly allocated @new_p64 argument.
- 	 */
- 	if (compatible_arg)
--		err = native_ioctl(file, cmd, (unsigned long)p32);
-+		err = native_ioctl(file, ncmd, (unsigned long)p32);
- 	else
--		err = native_ioctl(file, cmd, (unsigned long)new_p64);
-+		err = native_ioctl(file, ncmd, (unsigned long)new_p64);
- 
- 	if (err == -ENOTTY)
++	case VIDIOC_DQEVENT32_TIME32:
++		err = alloc_userspace(sizeof(struct v4l2_event_time32), 0, &new_p64);
++		compatible_arg = 0;
++		break;
++#endif
+ 	}
+ 	if (err)
  		return err;
-@@ -1370,13 +1372,13 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	 * the blocks to maximum allowed value.
- 	 */
- 	switch (cmd) {
--	case VIDIOC_G_EXT_CTRLS:
--	case VIDIOC_S_EXT_CTRLS:
--	case VIDIOC_TRY_EXT_CTRLS:
-+	case VIDIOC_G_EXT_CTRLS32:
-+	case VIDIOC_S_EXT_CTRLS32:
-+	case VIDIOC_TRY_EXT_CTRLS32:
- 		if (put_v4l2_ext_controls32(file, new_p64, p32))
- 			err = -EFAULT;
- 		break;
--	case VIDIOC_S_EDID:
-+	case VIDIOC_S_EDID32:
- 		if (put_v4l2_edid32(new_p64, p32))
- 			err = -EFAULT;
- 		break;
-@@ -1389,49 +1391,49 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 	 * the original 32 bits structure.
- 	 */
- 	switch (cmd) {
--	case VIDIOC_S_INPUT:
--	case VIDIOC_S_OUTPUT:
--	case VIDIOC_G_INPUT:
--	case VIDIOC_G_OUTPUT:
-+	case VIDIOC_S_INPUT32:
-+	case VIDIOC_S_OUTPUT32:
-+	case VIDIOC_G_INPUT32:
-+	case VIDIOC_G_OUTPUT32:
- 		if (assign_in_user((compat_uint_t __user *)p32,
- 				   ((unsigned int __user *)new_p64)))
- 			err = -EFAULT;
- 		break;
- 
--	case VIDIOC_G_FBUF:
-+	case VIDIOC_G_FBUF32:
+@@ -1404,10 +1456,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
  		err = put_v4l2_framebuffer32(new_p64, p32);
  		break;
  
--	case VIDIOC_DQEVENT:
-+	case VIDIOC_DQEVENT32:
++#ifdef CONFIG_X86_64
+ 	case VIDIOC_DQEVENT32:
  		err = put_v4l2_event32(new_p64, p32);
  		break;
  
--	case VIDIOC_G_EDID:
-+	case VIDIOC_G_EDID32:
++	case VIDIOC_DQEVENT32_TIME32:
++		err = put_v4l2_event32_time32(new_p64, p32);
++		break;
++#endif
++
+ 	case VIDIOC_G_EDID32:
  		err = put_v4l2_edid32(new_p64, p32);
  		break;
- 
--	case VIDIOC_G_FMT:
--	case VIDIOC_S_FMT:
--	case VIDIOC_TRY_FMT:
-+	case VIDIOC_G_FMT32:
-+	case VIDIOC_S_FMT32:
-+	case VIDIOC_TRY_FMT32:
- 		err = put_v4l2_format32(new_p64, p32);
- 		break;
- 
--	case VIDIOC_CREATE_BUFS:
-+	case VIDIOC_CREATE_BUFS32:
- 		err = put_v4l2_create32(new_p64, p32);
- 		break;
- 
--	case VIDIOC_PREPARE_BUF:
--	case VIDIOC_QUERYBUF:
--	case VIDIOC_QBUF:
--	case VIDIOC_DQBUF:
-+	case VIDIOC_PREPARE_BUF32:
-+	case VIDIOC_QUERYBUF32:
-+	case VIDIOC_QBUF32:
-+	case VIDIOC_DQBUF32:
- 		err = put_v4l2_buffer32(new_p64, p32);
- 		break;
- 
--	case VIDIOC_ENUMSTD:
-+	case VIDIOC_ENUMSTD32:
- 		err = put_v4l2_standard32(new_p64, p32);
- 		break;
- 
--	case VIDIOC_ENUMINPUT:
-+	case VIDIOC_ENUMINPUT32:
- 		err = put_v4l2_input32(new_p64, p32);
- 		break;
- 	}
 -- 
 2.20.0
 
