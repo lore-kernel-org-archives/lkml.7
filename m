@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70698C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F206C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF8F206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6361206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518875;
-	bh=ocD4bQVfU34clq9XV0vAaLnR4EBaOvgJRFKXhOMifqg=;
+	s=default; t=1576518884;
+	bh=3Fh3Hq0ojttMicOgdFggWJzOUyfTgpux4AiBVY8d64w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcHle2qKtWmVdW1UOyLOiTLK8BOxKKg+rmnQDQHLrZyhN9pPnnjcKsPELHGtW3mvh
-	 58XpPlMgeH/hZLZ7dnIupNZL0siY+XnDdSBlCyNlqGNCUHshOi5oUra1e365DkuE42
-	 EhGkEU590yq3CfHzSlhf929RiQCgMaH6GfVTIxCA=
+	b=cB/rGjNOKw05eGif+aZTFxRXgE6zhs8xMJhm/OdWYP5md9GuiBaDKcCi6tEHPYrkT
+	 Ehsx16GkNqXvbQ8znCNiYFMS41Ql7Znk6m/i7TQrZKCANDcfWrTH555tZF/JlAAGrn
+	 puyYN291v7DeNk8P/izFhUuH9lhM3V/Vqu/SgYhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLPRye (ORCPT
+        id S1727663AbfLPRyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbfLPRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:29 -0500
+        id S1727425AbfLPRyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F9C20733;
-        Mon, 16 Dec 2019 17:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AA75206CB;
+        Mon, 16 Dec 2019 17:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518869;
-        bh=ocD4bQVfU34clq9XV0vAaLnR4EBaOvgJRFKXhOMifqg=;
+        s=default; t=1576518879;
+        bh=3Fh3Hq0ojttMicOgdFggWJzOUyfTgpux4AiBVY8d64w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7eFqJf2U2wI1KeFPu4q/TsiMG3igwNGhpQ793FdxpQYwUPovyGsvEFdI54V8wU9l
-         yyhK6goairFrIPv5I0ivzUFbe5DA+EEIRnlpDAfSOlnI7Jz6A2P+SGHQMklTh0qIJF
-         ujzpwLkTMUi7Q5yvB2C0l9bo0fs7eudMnSK7kt+o=
+        b=RapasiEgM5G35ZuxknnwoQc7mMf0Z5wmdXu9NRru6eB2Llag9+qS2GVs0NFYpRKPX
+         eKE3dEufK1DVBt7XFXEixviBKhR6/T0cjK2UZnAPNs7hrO/ayGI/fbn38T9MYOTMe+
+         BH0KBpUBlDaK9GekfCNEAt9VZdu1YnDk6G4Nz0fM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 099/267] clk: sunxi-ng: h3/h5: Fix CSI_MCLK parent
-Date:   Mon, 16 Dec 2019 18:47:05 +0100
-Message-Id: <20191216174902.141828142@linuxfoundation.org>
+        stable@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>,
+        Fabio Berton <fabio.berton@ossystems.com.br>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 067/267] ARM: dts: rockchip: Fix the PMU interrupt number for rv1108
+Date:   Mon, 16 Dec 2019 18:46:33 +0100
+Message-Id: <20191216174856.140287881@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,34 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Otavio Salvador <otavio@ossystems.com.br>
 
-[ Upstream commit 7bb7d29cffdd24bf419516d14b6768591e74069e ]
+[ Upstream commit c955b7aec510145129ca7aaea6ecbf6d748f5ebf ]
 
-The third parent of CSI_MCLK is PLL_PERIPH1, not PLL_PERIPH0.
-Fix it.
+According to the Rockchip vendor tree the PMU interrupt number is
+76, so fix it accordingly.
 
-Fixes: 0577e4853bfb ("clk: sunxi-ng: Add H3 clocks")
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Tested-by: Fabio Berton <fabio.berton@ossystems.com.br>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 2 +-
+ arch/arm/boot/dts/rv1108.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-index 1729ff6a5aaed..b09acda71abe9 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-@@ -460,7 +460,7 @@ static const char * const csi_sclk_parents[] = { "pll-periph0", "pll-periph1" };
- static SUNXI_CCU_M_WITH_MUX_GATE(csi_sclk_clk, "csi-sclk", csi_sclk_parents,
- 				 0x134, 16, 4, 24, 3, BIT(31), 0);
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index e7cd1315db1b7..6013d2f888c33 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -101,7 +101,7 @@
  
--static const char * const csi_mclk_parents[] = { "osc24M", "pll-video", "pll-periph0" };
-+static const char * const csi_mclk_parents[] = { "osc24M", "pll-video", "pll-periph1" };
- static SUNXI_CCU_M_WITH_MUX_GATE(csi_mclk_clk, "csi-mclk", csi_mclk_parents,
- 				 0x134, 0, 5, 8, 3, BIT(15), 0);
+ 	arm-pmu {
+ 		compatible = "arm,cortex-a7-pmu";
+-		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
  
+ 	timer {
 -- 
 2.20.1
 
