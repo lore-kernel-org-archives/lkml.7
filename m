@@ -2,106 +2,242 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F48C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C37C2D0C3
 	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BA8206E0
+	by mail.kernel.org (Postfix) with ESMTP id 8BE2120726
 	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lyvV6vFN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bRlIZnY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLPQiG (ORCPT
+        id S1726663AbfLPQiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:38:06 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42992 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPQiG (ORCPT
+        Mon, 16 Dec 2019 11:38:07 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14021 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726427AbfLPQiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:38:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so8056549wro.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:38:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RJfGZGrl4mq7TcebevEYAAGdj89wqTsIyY2AzoZNJZg=;
-        b=lyvV6vFNgBoiTgIVaS4JIMPS2cBySlkahCSiktISYEv7wTk4WF5gXFh5lPYVT4ZLbN
-         nMmTe3CySvRZBjk31x8VWSiTTPumFluyjzxlLGWBHAryInc1ZGbEeZqAdH3Y2MU1nf5s
-         2sQg0KxnucMLhVYX90knLd9ZKAlnPnhofPbxH56MeNJQAHN67KyowAoIahFm/NE0ttGi
-         LhNODHQTETuG68H/rtkKfwEoA8xkC/YJZ75TLxh5pYUEdMZio3+sJBDwkd5r3qfgADTR
-         CqjUYjKBZZv1qkuJU0R0BzwvsmP9AFFHmFVhFVX8eEpV3bgTnvf/i0mZ2DRscTasqFQ2
-         5uIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RJfGZGrl4mq7TcebevEYAAGdj89wqTsIyY2AzoZNJZg=;
-        b=TsT28nwjzKtBPJthmrm7BQbbHj6h7GoyJGcIpR7mClxFqbDK/6tjgeIaHgRHD2MADK
-         ks2OxPlYYw/JhZMsH220eKU/XOLKdKh284qdS4yrqqPtT0cECAq3Y28zzbrddE/uXj2y
-         +reDCigpqTPYAAVFFif3rgQOVQYIFCNIh0c5ph/e+ZIyVAmUfTmls108WlAhkBjNfoRd
-         FKS9XczT/7W4vmvahsIAdgRg1V8Gb8aye09CRzskfcGydz4FVN8Lmki82HfwoWNHqNyO
-         m2nb10NyKq83VE/WmpkX3eJm5JqNP3cGXn7sNs6EFNHGoZCfykD6n2Xiv9fMQTtSGMQv
-         ZgOQ==
-X-Gm-Message-State: APjAAAVpSP7kHEzFHBldStH50MYJ+peNZZM5cYPYVAZGFYOEtEMuHncQ
-        0U6eEWkSGDKjkiKJjnBrZ+VQUw==
-X-Google-Smtp-Source: APXvYqyISoODlaaBNQBPOF1jvtun6/H1CK0qGCqV2CyLnIjWshoO5AgQ+rhKG6UM5XFpmO+Sz2402A==
-X-Received: by 2002:adf:e8ca:: with SMTP id k10mr31579907wrn.50.1576514283856;
-        Mon, 16 Dec 2019 08:38:03 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id c195sm10481729wmd.45.2019.12.16.08.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:38:03 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:38:02 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
-Message-ID: <20191216163802.GA18955@dell>
-References: <20191216143259.24587-1-TheSven73@gmail.com>
- <20191216143259.24587-3-TheSven73@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216143259.24587-3-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 16 Dec 2019 11:38:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576514284; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=QmJULzMurJQncjBTq2ifW5g5GxeBV/UAkCu4tXumItA=; b=bRlIZnY+dTvO+TSww1c/4s97owNLBHluKgQVjLlUi3stj58+775xgDXBYJf9C9GYu+pgdCGJ
+ grL7ZJE/UJ9MZvriMz1KEmkNiusatVGwVoq62nipOS9jomvbak/IS+imCWBfnHgJSqJf1hBc
+ zJPTNSpg9ise4OjEGHRWH1Pu+js=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df7b2eb.7f9d85de00d8-smtp-out-n03;
+ Mon, 16 Dec 2019 16:38:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DAD7CC447BA; Mon, 16 Dec 2019 16:38:00 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76C5DC447A2;
+        Mon, 16 Dec 2019 16:37:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76C5DC447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     robin.murphy@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
+Date:   Mon, 16 Dec 2019 09:37:48 -0700
+Message-Id: <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
+References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019, Sven Van Asbroeck wrote:
+Add support to enable split pagetables (TTBR1) if the supporting driver
+requests it via the DOMAIN_ATTR_SPLIT_TABLES flag. When enabled, the driver
+will set up the TTBR0 and TTBR1 regions and program the default domain
+pagetable on TTBR1.
 
-> The driver has been extended to optionally get its operational
-> mode, regulator init data and LED naming from the devicetree.
-> 
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
->  1 file changed, 46 insertions(+), 1 deletion(-)
+After attaching the device, the value of he domain attribute can
+be queried to see if the split pagetables were successfully programmed.
+Furthermore the domain geometry will be updated so that the caller can
+determine the active region for the pagetable that was programmed.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
+ drivers/iommu/arm-smmu.c | 40 +++++++++++++++++++++++++++++++++++-----
+ drivers/iommu/arm-smmu.h | 45 +++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 74 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index c106406..7b59116 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -538,9 +538,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+ 			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+ 			cb->ttbr[1] = 0;
+ 		} else {
+-			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+-			cb->ttbr[0] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
+-			cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
++			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
++				cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
++				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
++				cb->ttbr[1] |=
++					FIELD_PREP(TTBRn_ASID, cfg->asid);
++			} else {
++				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
++				cb->ttbr[0] |=
++					FIELD_PREP(TTBRn_ASID, cfg->asid);
++				cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
++			}
+ 		}
+ 	} else {
+ 		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+@@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 	enum io_pgtable_fmt fmt;
+ 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+ 	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
++	u32 quirks = 0;
+ 
+ 	mutex_lock(&smmu_domain->init_mutex);
+ 	if (smmu_domain->smmu)
+@@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		oas = smmu->ipa_size;
+ 		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
+ 			fmt = ARM_64_LPAE_S1;
++			if (smmu_domain->split_pagetables)
++				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+ 		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
+ 			fmt = ARM_32_LPAE_S1;
+ 			ias = min(ias, 32UL);
+@@ -788,6 +799,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
+ 		.tlb		= smmu_domain->flush_ops,
+ 		.iommu_dev	= smmu->dev,
++		.quirks		= quirks,
+ 	};
+ 
+ 	if (smmu_domain->non_strict)
+@@ -801,8 +813,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 
+ 	/* Update the domain's page sizes to reflect the page table format */
+ 	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+-	domain->geometry.aperture_end = (1UL << ias) - 1;
+-	domain->geometry.force_aperture = true;
++
++	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
++		domain->geometry.aperture_start = ~((1ULL << ias) - 1);
++		domain->geometry.aperture_end = ~0UL;
++	} else {
++		domain->geometry.aperture_end = (1UL << ias) - 1;
++		domain->geometry.force_aperture = true;
++		smmu_domain->split_pagetables = false;
++	}
+ 
+ 	/* Initialise the context bank with our page table cfg */
+ 	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+@@ -1484,6 +1503,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+ 		case DOMAIN_ATTR_NESTING:
+ 			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+ 			return 0;
++		case DOMAIN_ATTR_SPLIT_TABLES:
++			*(int *)data = smmu_domain->split_pagetables;
++			return 0;
+ 		default:
+ 			return -ENODEV;
+ 		}
+@@ -1524,6 +1546,14 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+ 			else
+ 				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+ 			break;
++		case DOMAIN_ATTR_SPLIT_TABLES:
++			if (smmu_domain->smmu) {
++				ret = -EPERM;
++				goto out_unlock;
++			}
++			if (*(int *)data)
++				smmu_domain->split_pagetables = true;
++			break;
+ 		default:
+ 			ret = -ENODEV;
+ 		}
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index afab9de..68526cc 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -177,6 +177,16 @@ enum arm_smmu_cbar_type {
+ #define TCR_IRGN0			GENMASK(9, 8)
+ #define TCR_T0SZ			GENMASK(5, 0)
+ 
++#define TCR_TG1				GENMASK(31, 30)
++
++#define TG0_4K				0
++#define TG0_64K				1
++#define TG0_16K				2
++
++#define TG1_16K				1
++#define TG1_4K				2
++#define TG1_64K				3
++
+ #define ARM_SMMU_CB_CONTEXTIDR		0x34
+ #define ARM_SMMU_CB_S1_MAIR0		0x38
+ #define ARM_SMMU_CB_S1_MAIR1		0x3c
+@@ -329,16 +339,39 @@ struct arm_smmu_domain {
+ 	struct mutex			init_mutex; /* Protects smmu pointer */
+ 	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+ 	struct iommu_domain		domain;
++	bool				split_pagetables;
+ };
+ 
++static inline u32 arm_smmu_lpae_tcr_tg(struct io_pgtable_cfg *cfg)
++{
++	u32 val;
++
++	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
++		return FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg);
++
++	val = FIELD_PREP(TCR_TG1, cfg->arm_lpae_s1_cfg.tcr.tg);
++
++	if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
++		val |= FIELD_PREP(TCR_TG0, TG0_4K);
++	else if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
++		val |= FIELD_PREP(TCR_TG0, TG0_16K);
++	else
++		val |= FIELD_PREP(TCR_TG0, TG0_64K);
++
++	return val;
++}
++
+ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+ {
+-	return TCR_EPD1 |
+-	       FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+-	       FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+-	       FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+-	       FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+-	       FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
++	u32 tcr = FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
++		FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
++		FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
++		FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
++
++	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
++		return tcr | TCR_EPD1 | arm_smmu_lpae_tcr_tg(cfg);
++
++	return tcr | (tcr << 16) | arm_smmu_lpae_tcr_tg(cfg);
+ }
+ 
+ static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
