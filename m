@@ -7,46 +7,41 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C59C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74659C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBBE21582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467BA207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576497985;
-	bh=m1dcq4qX5omvaDQsTzDUyWqAdolNSiNzES2VI9l4d0o=;
+	s=default; t=1576497990;
+	bh=UxYrPwqBt7dG4WAlTh6IKDxuA9CrsTR107Yu0iILLIU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Aw3+wDRvY8aXlZtqwGVa8j4FdDuEYh9YNPyk70bjZYKBdjtqbgTknI1gdA3CFSzGJ
-	 eiPbIPOGZr5lCkfIDURa7mKGwGYTBsPYtVcndj654vIqM7HvVD1FzTXU8UvPktL/1A
-	 WXsX50jm3xlf1Nk+m7d/R4q67r0/PcJGXzBbiQLE=
+	b=QGf2l94oHg1NQ1EPo8ho7prNvh2q2iRrQITCnOVwp6/nR0Wc6Z2U9yG46EjzGwUd1
+	 Q3QYOcJ7mWxi16WuIZ5Fw2b8nsCdmpsnW3cglYH5OjA1PzsuriBocseDSrfMTnTKdK
+	 3KLku3ux1cpaCopUgX5+XLDUAfnIbMW2qKfM8Go4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfLPMGY (ORCPT
+        id S1727753AbfLPMG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:06:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:52648 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 07:06:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:52688 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfLPMGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:06:22 -0500
+        id S1727734AbfLPMG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:06:26 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 438391FB;
-        Mon, 16 Dec 2019 04:06:21 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23B3A1FB;
+        Mon, 16 Dec 2019 04:06:26 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B82FC3F719;
-        Mon, 16 Dec 2019 04:06:20 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:06:19 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 983313F719;
+        Mon, 16 Dec 2019 04:06:25 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:06:24 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     alexandre.torgue@st.com, baohua@kernel.org, broonie@kernel.org,
-        f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        nsaenzjulienne@suse.de, rjui@broadcom.com, sbranden@broadcom.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, vkoul@kernel.org
-Subject: Applied "spi: atmel: Use dma_request_chan() instead dma_request_slave_channel()" to the spi tree
-In-Reply-To: <20191212135550.4634-2-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191212135550.4634-2-peter.ujfalusi@ti.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>
+Subject: Applied "spi: nxp-fspi: Ensure width is respected in spi-mem operations" to the spi tree
+In-Reply-To: <20191211195730.26794-1-michael@walle.cc>
+Message-Id: <applied-20191211195730.26794-1-michael@walle.cc>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,11 +50,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Use dma_request_chan() instead dma_request_slave_channel()
+   spi: nxp-fspi: Ensure width is respected in spi-mem operations
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -80,75 +75,40 @@ to this mail.
 Thanks,
 Mark
 
-From d947c9d26c2381cc10067e76e71bf9ddb0fedb8b Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Thu, 12 Dec 2019 15:55:42 +0200
-Subject: [PATCH] spi: atmel: Use dma_request_chan() instead
- dma_request_slave_channel()
+From 007773e16a6f3f49d1439554078c3ba8af131998 Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael@walle.cc>
+Date: Wed, 11 Dec 2019 20:57:30 +0100
+Subject: [PATCH] spi: nxp-fspi: Ensure width is respected in spi-mem
+ operations
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+Make use of a core helper to ensure the desired width is respected
+when calling spi-mem operators.
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Otherwise only the SPI controller will be matched with the flash chip,
+which might lead to wrong widths. Also consider the width specified by
+the user in the device tree.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20191212135550.4634-2-peter.ujfalusi@ti.com
+Fixes: a5356aef6a90 ("spi: spi-mem: Add driver for NXP FlexSPI controller")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20191211195730.26794-1-michael@walle.cc
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+ drivers/spi/spi-nxp-fspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 56f0ca361deb..013458cabe3c 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -514,26 +514,19 @@ static int atmel_spi_configure_dma(struct spi_master *master,
- 	master->dma_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(master->dma_tx)) {
- 		err = PTR_ERR(master->dma_tx);
--		if (err == -EPROBE_DEFER) {
--			dev_warn(dev, "no DMA channel available at the moment\n");
--			goto error_clear;
--		}
--		dev_err(dev,
--			"DMA TX channel not available, SPI unable to use DMA\n");
--		err = -EBUSY;
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "No TX DMA channel, DMA is disabled\n");
- 		goto error_clear;
- 	}
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index c36bb1bb464e..8c5084a3a617 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -439,7 +439,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
+ 	    op->data.nbytes > f->devtype_data->txfifo)
+ 		return false;
  
--	/*
--	 * No reason to check EPROBE_DEFER here since we have already requested
--	 * tx channel. If it fails here, it's for another reason.
--	 */
--	master->dma_rx = dma_request_slave_channel(dev, "rx");
--
--	if (!master->dma_rx) {
--		dev_err(dev,
--			"DMA RX channel not available, SPI unable to use DMA\n");
--		err = -EBUSY;
-+	master->dma_rx = dma_request_chan(dev, "rx");
-+	if (IS_ERR(master->dma_rx)) {
-+		err = PTR_ERR(master->dma_rx);
-+		/*
-+		 * No reason to check EPROBE_DEFER here since we have already
-+		 * requested tx channel.
-+		 */
-+		dev_err(dev, "No RX DMA channel, DMA is disabled\n");
- 		goto error;
- 	}
+-	return true;
++	return spi_mem_default_supports_op(mem, op);
+ }
  
-@@ -548,7 +541,7 @@ static int atmel_spi_configure_dma(struct spi_master *master,
- 
- 	return 0;
- error:
--	if (master->dma_rx)
-+	if (!IS_ERR(master->dma_rx))
- 		dma_release_channel(master->dma_rx);
- 	if (!IS_ERR(master->dma_tx))
- 		dma_release_channel(master->dma_tx);
+ /* Instead of busy looping invoke readl_poll_timeout functionality. */
 -- 
 2.20.1
 
