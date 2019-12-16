@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80204C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5959921739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF1921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520064;
-	bh=KKOOWSfLI1WXzw4IKwROjHSV2uTd6wYbIRXD1uV/5Bc=;
+	s=default; t=1576520067;
+	bh=Z8qSorUOq32A+KH5Vs7+STz3PRO3FgaprwoajV5hTjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9ZADqp//A6GgBsg6p3IlNXvLGqIYzjC94xtAv9d7SvZGzHkEkJ+r2guW7SSHRlv6
-	 TyRZudxyBLpixss3KUi/i/63V0Xqz6F+73xzN3xEqAwZMQXIQsh6a4VBTFda3otNvt
-	 YHw7f//kpa1TX/wvgL6vKMIjNki3rqmW+Ket49rI=
+	b=0ZLaUwg/O2iY7y1WdIXXsuTlE6iTHB9FcjCpoLuG8vqgK3Xa+roVXvK++8p5XZcLH
+	 pWyoMPJlx9JCd4vCU6Ad/8X4aQE1WEynne5WetCFnTBVAs5h8RQUERfpLTPW8mrxym
+	 p762PD4DZx9zsouMNK7DCEize/Y747EhoCOgjz/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731213AbfLPSOX (ORCPT
+        id S1731221AbfLPSO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfLPSOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:15 -0500
+        id S1731207AbfLPSOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4285F21835;
-        Mon, 16 Dec 2019 18:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19548206E0;
+        Mon, 16 Dec 2019 18:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520054;
-        bh=KKOOWSfLI1WXzw4IKwROjHSV2uTd6wYbIRXD1uV/5Bc=;
+        s=default; t=1576520059;
+        bh=Z8qSorUOq32A+KH5Vs7+STz3PRO3FgaprwoajV5hTjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgG6vWaQZSlmG1J40TXwINyM8PUkOst3OyWbC9SOJ/Mf+zBzT5vHDBlCb6zHG0bJ5
-         jVtC3bE/X5GsW7259rpF1dmZv3o1yYXvYKjRKCRwkRFmZSJdci8b4T4mHFLIzrury2
-         cQVXbNi1ZBuZel9MU6Moer9+G3oRVV565/l/iLLk=
+        b=R8ui1yki1LPEGeKInUFXDor6tkCp1r3RHGAsXEaQg0eVke6DKFbJhHg/3J6LHu5qm
+         so/eIdswWn3r3XvbL6DUZYESu/BFsTLk/fM1G6RpY29PFpdajg33Y0X/ntu5H8vhIj
+         WY9ba9AM2sCU7A8RVGMsmC8kSgfprT2XCJcz+XW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.3 178/180] rtc: disable uie before setting time and enable after
-Date:   Mon, 16 Dec 2019 18:50:18 +0100
-Message-Id: <20191216174848.429026013@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.3 180/180] ext4: fix a bug in ext4_wait_for_tail_page_commit
+Date:   Mon, 16 Dec 2019 18:50:20 +0100
+Message-Id: <20191216174848.663806910@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,72 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: yangerkun <yangerkun@huawei.com>
 
-commit 7e7c005b4b1f1f169bcc4b2c3a40085ecc663df2 upstream.
+commit 565333a1554d704789e74205989305c811fd9c7a upstream.
 
-When setting the time in the future with the uie timer enabled,
-rtc_timer_do_work will loop for a while because the expiration of the uie
-timer was way before the current RTC time and a new timer will be enqueued
-until the current rtc time is reached.
+No need to wait for any commit once the page is fully truncated.
+Besides, it may confuse e.g. concurrent ext4_writepage() with the page
+still be dirty (will be cleared by truncate_pagecache() in
+ext4_setattr()) but buffers has been freed; and then trigger a bug
+show as below:
 
-If the uie timer is enabled, disable it before setting the time and enable
-it after expiring current timers (which may actually be an alarm).
+[   26.057508] ------------[ cut here ]------------
+[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
+...
+[   26.088130] Call trace:
+[   26.088695]  ext4_writepage+0x914/0xb28
+[   26.089541]  writeout.isra.4+0x1b4/0x2b8
+[   26.090409]  move_to_new_page+0x3b0/0x568
+[   26.091338]  __unmap_and_move+0x648/0x988
+[   26.092241]  unmap_and_move+0x48c/0xbb8
+[   26.093096]  migrate_pages+0x220/0xb28
+[   26.093945]  kernel_mbind+0x828/0xa18
+[   26.094791]  __arm64_sys_mbind+0xc8/0x138
+[   26.095716]  el0_svc_common+0x190/0x490
+[   26.096571]  el0_svc_handler+0x60/0xd0
+[   26.097423]  el0_svc+0x8/0xc
 
-This is the safest thing to do to ensure the uie timer is still
-synchronized with the RTC, especially in the UIE emulation case.
+Run the procedure (generate by syzkaller) parallel with ext3.
 
-Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
-Fixes: 6610e0893b8b ("RTC: Rework RTC code to use timerqueue for events")
-Link: https://lore.kernel.org/r/20191020231320.8191-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+void main()
+{
+	int fd, fd1, ret;
+	void *addr;
+	size_t length = 4096;
+	int flags;
+	off_t offset = 0;
+	char *str = "12345";
+
+	fd = open("a", O_RDWR | O_CREAT);
+	assert(fd >= 0);
+
+	/* Truncate to 4k */
+	ret = ftruncate(fd, length);
+	assert(ret == 0);
+
+	/* Journal data mode */
+	flags = 0xc00f;
+	ret = ioctl(fd, _IOW('f', 2, long), &flags);
+	assert(ret == 0);
+
+	/* Truncate to 0 */
+	fd1 = open("a", O_TRUNC | O_NOATIME);
+	assert(fd1 >= 0);
+
+	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
+					MAP_SHARED, fd, offset);
+	assert(addr != (void *)-1);
+
+	memcpy(addr, str, 5);
+	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
+}
+
+And the bug will be triggered once we seen the below order.
+
+reproduce1                         reproduce2
+
+...                            |   ...
+truncate to 4k                 |
+change to journal data mode    |
+                               |   memcpy(set page dirty)
+truncate to 0:                 |
+ext4_setattr:                  |
+...                            |
+ext4_wait_for_tail_page_commit |
+                               |   mbind(trigger bug)
+truncate_pagecache(clean dirty)|   ...
+...                            |
+
+mbind will call ext4_writepage() since the page still be dirty, and then
+report the bug since the buffers has been free. Fix it by return
+directly once offset equals to 0 which means the page has been fully
+truncated.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/interface.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -125,7 +125,7 @@ EXPORT_SYMBOL_GPL(rtc_read_time);
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5493,11 +5493,15 @@ static void ext4_wait_for_tail_page_comm
  
- int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
- {
--	int err;
-+	int err, uie;
- 
- 	err = rtc_valid_tm(tm);
- 	if (err != 0)
-@@ -137,6 +137,17 @@ int rtc_set_time(struct rtc_device *rtc,
- 
- 	rtc_subtract_offset(rtc, tm);
- 
-+#ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
-+	uie = rtc->uie_rtctimer.enabled || rtc->uie_irq_active;
-+#else
-+	uie = rtc->uie_rtctimer.enabled;
-+#endif
-+	if (uie) {
-+		err = rtc_update_irq_enable(rtc, 0);
-+		if (err)
-+			return err;
-+	}
-+
- 	err = mutex_lock_interruptible(&rtc->ops_lock);
- 	if (err)
- 		return err;
-@@ -153,6 +164,12 @@ int rtc_set_time(struct rtc_device *rtc,
- 	/* A timer might have just expired */
- 	schedule_work(&rtc->irqwork);
- 
-+	if (uie) {
-+		err = rtc_update_irq_enable(rtc, 1);
-+		if (err)
-+			return err;
-+	}
-+
- 	trace_rtc_set_time(rtc_tm_to_time64(tm), err);
- 	return err;
- }
+ 	offset = inode->i_size & (PAGE_SIZE - 1);
+ 	/*
+-	 * All buffers in the last page remain valid? Then there's nothing to
+-	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
+-	 * blocksize case
++	 * If the page is fully truncated, we don't need to wait for any commit
++	 * (and we even should not as __ext4_journalled_invalidatepage() may
++	 * strip all buffers from the page but keep the page dirty which can then
++	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
++	 * buffers). Also we don't need to wait for any commit if all buffers in
++	 * the page remain valid. This is most beneficial for the common case of
++	 * blocksize == PAGESIZE.
+ 	 */
+-	if (offset > PAGE_SIZE - i_blocksize(inode))
++	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
+ 		return;
+ 	while (1) {
+ 		page = find_lock_page(inode->i_mapping,
 
 
