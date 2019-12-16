@@ -2,130 +2,123 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAF8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CED620409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B80E206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="G3pdXgNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfLPNsQ convert rfc822-to-8bit (ORCPT
+        id S1727999AbfLPNsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:48:16 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50891 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfLPNsP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:48:15 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 351A2C0003;
-        Mon, 16 Dec 2019 13:48:11 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 14:48:10 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] drm/panel: simple: Support reset GPIOs
-Message-ID: <20191216144810.18710ed3@xps13>
-In-Reply-To: <20191216132732.mmqivmpnq4mio6oo@gilmour.lan>
-References: <20191213181325.26228-1-miquel.raynal@bootlin.com>
-        <20191216130615.qs6ub7bwqofwvhr7@gilmour.lan>
-        <20191216141036.24c22899@xps13>
-        <20191216132732.mmqivmpnq4mio6oo@gilmour.lan>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Dec 2019 08:48:23 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:55490 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727579AbfLPNsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:48:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QorfTf53SPvGZ9VQFNJd+vqD+nj6jSm+GwQ9JD/nM/o=; b=G3pdXgNq+2f7fsK2Uu37jr0pJ
+        q7bOvkfl+XV5qzxjRwnna5RtFdpakhFkjAA95cqb1Qpl31s5VKslR1DWVms7VSVGU7yCYS9Z4LukO
+        w2zFhNpn5+4C95F8IWRhU1mEe4YJXzM4teiyYqtqwSNLTUGoednDfI5ilO+VYMapyFhX4=;
+Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1igqjR-0003hl-Dk; Mon, 16 Dec 2019 14:48:18 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1igp8F-0006kt-JN; Mon, 16 Dec 2019 13:05:47 +0100
+Date:   Mon, 16 Dec 2019 13:05:36 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20191216130536.5935a587@kemnade.info>
+In-Reply-To: <20191216031637.GM35479@atomide.com>
+References: <20191215173817.47918-1-tony@atomide.com>
+        <20191215230331.645b9064@aktux>
+        <20191216030948.GL35479@atomide.com>
+        <20191216031637.GM35479@atomide.com>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/pTDkS8g+4Evpb4NGdmMSFgI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+--Sig_/pTDkS8g+4Evpb4NGdmMSFgI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Maxime Ripard <maxime@cerno.tech> wrote on Mon, 16 Dec 2019 14:27:32
-+0100:
+On Sun, 15 Dec 2019 19:16:37 -0800
+Tony Lindgren <tony@atomide.com> wrote:
 
-> On Mon, Dec 16, 2019 at 02:10:36PM +0100, Miquel Raynal wrote:
-> > > >  drivers/gpu/drm/panel/panel-simple.c | 12 +++++++++++-
-> > > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > > > index 5d487686d25c..15dd495c347d 100644
-> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > > @@ -110,6 +110,7 @@ struct panel_simple {
-> > > >  	struct i2c_adapter *ddc;
-> > > >
-> > > >  	struct gpio_desc *enable_gpio;
-> > > > +	struct gpio_desc *reset_gpio;
-> > > >
-> > > >  	struct drm_display_mode override_mode;
-> > > >  };
-> > > > @@ -433,12 +434,21 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
-> > > >  	if (IS_ERR(panel->supply))
-> > > >  		return PTR_ERR(panel->supply);
-> > > >
-> > > > +	panel->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> > > > +						    GPIOD_OUT_LOW);
-> > > > +	if (IS_ERR(panel->reset_gpio)) {
-> > > > +		err = PTR_ERR(panel->reset_gpio);
-> > > > +		if (err != -EPROBE_DEFER)
-> > > > +			dev_err(dev, "failed to request reset pin: %d\n", err);
-> > > > +		return err;
-> > > > +	}
-> > > > +  
-> > >
-> > > However, I'm wondering if it wouldn't be better to just have the
-> > > device maintained in reset at probe (so OUT_HIGH) and moved out of
-> > > reset during either the prepare or enable callbacks.
-> > >
-> > > This is pretty much what is happening with the enable-gpios already.
-> > >
-> > > Also, panels usually need to wait for a minimum time after you
-> > > deassert the reset line. How is that dealt with?
-> > >
-> > > I guess a good way to do that would be to add that duration to the
-> > > panel description, since this is pretty much device specific.  
-> >
-> > What about the case were your Bootloader displays something and you
-> > don't want the panel to blink ?  
-> 
-> The Bootloader to Linux transition will make the panel blink already,
-> since the display engine is going to be reset / reconfigured during
-> the transition.
-> 
-> The only way to implement this would be to implement properly the
-> reset callbacks in all you display drivers to recreate the DRM state
-> from the hardware state, and then you'll be able to just switch to the
-> new buffer.
-> 
-> Only Intel does this at the time though, and that's way outside of the
-> scope of this patch...
-> 
-> > Right now I am just forcing the reset to be deasserted.  
-> 
-> ... Especially since the very next line after your patch forces the
-> panel to be disabled.
-> 
+> * Tony Lindgren <tony@atomide.com> [191216 03:10]:
+> > Hi,
+> >=20
+> > * Andreas Kemnade <andreas@kemnade.info> [191215 22:04]: =20
+> > > On Sun, 15 Dec 2019 09:38:17 -0800
+> > > If I remember correctly this thing is critical to get the hwmod out of
+> > > reset but I need to examine that again: =20
+> >=20
+> > Thanks for testing, yes that's what I thought might cause it
+> > too, but nope :)
+> >=20
+> > We currently disable interrupts for some reason after
+> > the first read. That won't play with runtime PM autosuspend
+> > at all as we never enable them again until the device has
+> > idled. Can you try the following additional patch on top? =20
+>=20
+> And we should probably do the following too to make sure
+> the mode is initialized before we call runtime PM.
+>=20
+CM_FCLKEN1/IDLEST1_CORE seem to behave, reading also works=20
 
-Is the addition of the reset support (as proposed by Maxime)
-interesting from your point of view? As you answered that you were not
-understanding the needs for such a change, I prefer to ask before
-spending more time on it.
+With these two additional patches this deserves a
+Tested-By: Andreas Kemnade <andreas@kemnade.info> # gta04
 
+Regards,
+Andreas
 
-Thanks,
-Miquèl
+--Sig_/pTDkS8g+4Evpb4NGdmMSFgI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl33cxEACgkQl4jFM1s/
+ye+XJhAAwAP3mP015ttcaI0o1k+rWARDRYa6ZmIdenggQ1kVJC/wyz81oY+EYOhh
++cjFOKGUHHXDJ8N2HZEqlEW/WamTeTOb94eDD4blf5xcFfqO7TlqcQkZxl++8lJy
+J37v+tT+I+7T9j3tA7XlGGy8j5TexKgT0BWXHE9BPryURsA5wANkhLm6jhMxNyWT
+ADrM2ey0kMuReKDjCQcJsOapxRs3wfaxKxMs0t93pe7S54Onqr1Eqi6WDEjkJOPD
+tClQ4WzEHKad70Whi6jiL/PozkNjB5E6MAaY+uENvHf3X1jcNeJI/63rScJfJGkq
+LneGTFeBQ7Bao2bQ/BahxXV9cX6jiZCY6Wsz+ZPizOok3+UWQG5pW0O/DsJ43Rpx
+3JEwjtRgyjboj3fH49jJx/5ayHYdbsqyarxoXh9oHpHpcpoU4GT4YPrCQn7QDenB
+waDGzKr7DYHZF4T1tA8nGw6uc5C3eSMSIgpwecVb2iBRzdyBRUJg1dPgIuAHQb4K
+KXBtkavGIu6mHcqMsCQ1yih8zvVIJnt/A1vo5/flpRY7AQjx+Bz35gZXDYFc/2iI
+Xj7SpP8WXDke53CgZLKhayuBRoH08t84w9vrNLA2x7jFmVxKta7T1eu6+j1VxnpC
+HdVIAu3bk5YSGE4kh4zg2Y+25hy2bSsQP/rboPD5/deCIFNP/XQ=
+=504B
+-----END PGP SIGNATURE-----
+
+--Sig_/pTDkS8g+4Evpb4NGdmMSFgI--
