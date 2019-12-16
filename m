@@ -2,136 +2,107 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413ECC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F07C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D56120725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjlOHfjU"
+	by mail.kernel.org (Postfix) with ESMTP id 957D920725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576486720;
+	bh=0Ev74XVHAGf60ezs+EjGDcDdjhvID9HKfzB+FcRtf7s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yVbqMGWpCwb47tp3HVv8naMo4IKsouAQrXSxYwpJ/i239hLm6txQeyf2ABR0iUINg
+	 tFo8DXbKw0cqHY8F0NHtbT0/7ZqyguKG5I9uoa9VzwDoIwvrZ0QuR2nMTsa6LDPpD7
+	 Zbl2nitTdnCwPWc66XqMQA3EmOVqCx83Ph3m3Yvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLPI4D (ORCPT
+        id S1726939AbfLPI6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:56:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39082 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfLPI4D (ORCPT
+        Mon, 16 Dec 2019 03:58:39 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35409 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPI6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:56:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so8254795oty.6;
-        Mon, 16 Dec 2019 00:56:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
-        b=FjlOHfjUAfcuD6g8sPuagxsQz5NN8GYgQkKB5eMFUDSFQVwSP89GYTqlut3C2mn/YS
-         eBOmWEFi3DmQuTp/qkgihQaDk97WF8xOzKLyWA49CUntFhQp+iGILFSDaYtSjG/0u4Wj
-         LxTSyOx9E//ppj6YpXZ9za8Llr1VmVC8BQXLoBKo0CW3HilP1RhaTFw1FQjulLbUp223
-         mcF16tAkJWH/7f/hSfMy6k/MJDZnaM06WaiErKL/enY0E/Lb5Y7170h/2S8KarFCyZDD
-         CgTiwf8HwXNonQvRTdFiPmrTUBGgr+ds+XVrfdLY1VYSxeJGxr4PI7XI3xP99XeFpSks
-         XLNw==
+        Mon, 16 Dec 2019 03:58:39 -0500
+Received: by mail-ot1-f67.google.com with SMTP id o9so8288599ote.2;
+        Mon, 16 Dec 2019 00:58:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
-        b=RPYjI3gwP83QcQqzhxK/prh5vQhNuhlVOh5qOzqkXImdY5cFJ6XypF5jLJ8+OSF8RC
-         XSW6ZpvL7bjMYmSQcnR0DJZtLorc8yK+cSg4EFSr0qh/XHa3YJJnG+QmxXgs4g3xmWvA
-         wkioxxZykys6C7vyDHfM+ClwuiY5cM8h+Pv3kP/RzLX+EN2gdiO8RG9RFqacemGqpWe2
-         zxYAojJ4WoiQBraxp0k0yV9IqiFSl/RAEfAmRnQgHgoZF0F9s5IigrydQ9ApnZH0hoZQ
-         NgBt33MutVTzl0zTPf+KVxs9K3appRL7ZiQ/7Y153M+lY9BzJSzUvLMESmhuZD9iukjz
-         oHVg==
-X-Gm-Message-State: APjAAAWKZa9yihn/6DhMbzE7j9O4osVchadOusA84c5rSIm2rl7ixtaw
-        OUkL1LldHSsGa1nUtJGJcbpiaQsbp71nbcXgQo8=
-X-Google-Smtp-Source: APXvYqxuG1NFvuEk8dd9qCJss5ujNitykdgf+GtcWeO9MK3yKpQRtT4rBhNxc5bDbHMtxvDMRwurT0NSEqfrjfpI+2g=
-X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15118795otp.44.1576486562033;
- Mon, 16 Dec 2019 00:56:02 -0800 (PST)
+        bh=LFJZor1biFEHIwwZ0BclodlIuoSH1GnzGtcFATNXh5w=;
+        b=kOhETbg38DJObu/oUCSafgukO19vRQvfKsu++dqX/FwXe+kb6+mhddkgIBP4UMdfMI
+         nu5ItM6dRIfyNP+ACpFsmygWzySvudgTEUh29gZYPOwOZN2kBEBdWe7lRi8xvMhXyst1
+         PfVvzGnHBo3obCv2ieXHiKPiLC/3Bwjm7DMdF6K1aixYQ8nNsom3qlu9P/CRxNJINoif
+         PzJQK8pB/KBeDOgPSsPkVGex4ZzrPE0P/SrHZXgLT2M+QnGiqOXXmZh3O4LbRryLruy0
+         Z8zzpBDRXwpa8V7pt7URJea/w0iCSSkBYXhcSFHSiIzTuAnna/uGLSXCh4qRp6JH6+Nf
+         1lyQ==
+X-Gm-Message-State: APjAAAVsYG76JjaTI8pASwmshryLvc3ouBtNGK5hVchN+62/Jm2QsP++
+        VBHnCrTmEBi1Bznykn4Rq/IXucp3bKa54yw4aoU=
+X-Google-Smtp-Source: APXvYqwIHgcR8X1x79aA30CcO7mb98RgFmcgRiLRKFjpih9hvfMnINWSwB/MEDD2rGBZXliIDZOM7hfyst4lsWb5jXw=
+X-Received: by 2002:a05:6830:18cd:: with SMTP id v13mr29766196ote.118.1576486718384;
+ Mon, 16 Dec 2019 00:58:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213201944.GA190383@google.com>
-In-Reply-To: <20191213201944.GA190383@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 08:55:35 +0000
-Message-ID: <CA+V-a8sd1c_8-weQjn6_UbAmVELLQa=3Fe+0cdXSm2Sif0HDRQ@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <cover.1576260216.git.gayatri.kammela@intel.com> <3c1ed2c9964c63fc956ec249d7bfce8d49f53fee.1576260216.git.gayatri.kammela@intel.com>
+In-Reply-To: <3c1ed2c9964c63fc956ec249d7bfce8d49f53fee.1576260216.git.gayatri.kammela@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 16 Dec 2019 09:58:27 +0100
+Message-ID: <CAJZ5v0hysFS+tVKz3fJ0yoOTqaGpx+4oD2Nh98HCzT86=hXawA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] acpi: fan: Add new Tiger Lake hardware ID to
+ support fan driver in acpi
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Dec 13, 2019 at 9:40 PM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
+>
+> Tiger Lake has a new unique hardware ID to support fan driver. Hence,
+> add it.
+>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> ---
+>  drivers/acpi/fan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
+> index 816b0803f7fb..13708fb48038 100644
+> --- a/drivers/acpi/fan.c
+> +++ b/drivers/acpi/fan.c
+> @@ -25,6 +25,7 @@ static int acpi_fan_remove(struct platform_device *pdev);
+>
+>  static const struct acpi_device_id fan_device_ids[] = {
+>         {"PNP0C0B", 0},
+> +       {"INT1044", 0},
 
-Thank you for the review.
+This has to go into device_pm.c:acpi_dev_pm_attach() too, see commit
 
-On Fri, Dec 13, 2019 at 9:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:45AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> $ git log --oneline drivers/of/address.c
-> 951d48855d86 of: Make of_dma_get_range() work on bus nodes
-> 645c138636de of/address: Fix of_pci_range_parser_one translation of DMA addresses
-> 81db12ee15cb of/address: Translate 'dma-ranges' for parent nodes missing 'dma-ranges'
-> b68ac8dc22eb of: Factor out #{addr,size}-cells parsing
-> c60bf3eb888a of: address: Follow DMA parent for "dma-coherent"
-> 862ab5578f75 of/address: Introduce of_get_next_dma_parent() helper
->
-> Make yours match.  There are a few "of: address: " subjects, but the
-> ones from Rob (the maintainer) use "of/address: ", so I'd use that.
->
-will do the same for next iteration.
+b9ea0bae260f ACPI: PM: Avoid attaching ACPI PM domain to certain devices
 
-> > this patch adds support to parse PCI outbound-ranges, the
-> > outbound-regions are similar to pci ranges except it doesn't
-> > have pci address, below is the format for bar-ranges:
->
-> s/pci/PCI/
-> Capitalize sentences.
->
-will fix that.
-
-> Is "bar-range" an actual DT property?  If it's supposed to be a
-> generic description, "BAR range" would be better.
->
-my bad, it should be outbound-range.
-
-Cheers,
---Prabhakar
-
-> > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> >                    upper32_size lower32_size>;
+>         {"INT3404", 0},
+>         {"", 0},
+>  };
+> --
