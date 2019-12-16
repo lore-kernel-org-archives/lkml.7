@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6D6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F74C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E404E218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2352166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520056;
-	bh=D4XvgHEeCS0KzbBgydQLZIYD/5a0d+mwsPG0HseOUWw=;
+	s=default; t=1576520060;
+	bh=qONlitSrMg/KdcPLAt0yizWuwMCNALHE+k/dQ5GPIws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DtlfI/LYgCbm1SBFIW1Sa6JkVGw+e1whdRCNRbxYWsNDLbU3pJd4o90PsHmHYptzp
-	 NJlzwKKgF9Ig/mX+ovOEn/k8fgJLcWWoyE5uC+AyneIB4NAyZ7ttmi9tSqLfrSKSGh
-	 A3hzsji3r/+ECmMz0LuANCNvmrRzzUiWT4xe1MbA=
+	b=HpWQ5K75cotDyBsln1p9Erct8njAT1gys9ab+1rgtCsaqNq7nEOr4jDn4dEFt27tR
+	 glG1LY14QiBFcppzOHDu8wKdw+EtOSPI7uSZ/7LCtr8Du867snCD2aTrbLD8HkSvKo
+	 vxV5BZiNNCed9WT1P0NsTm4sLaCmavBUKvwgGqeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbfLPSON (ORCPT
+        id S1731206AbfLPSOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32788 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730936AbfLPSOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:03 -0500
+        id S1731184AbfLPSOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C1921775;
-        Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D3820CC7;
+        Mon, 16 Dec 2019 18:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520042;
-        bh=D4XvgHEeCS0KzbBgydQLZIYD/5a0d+mwsPG0HseOUWw=;
+        s=default; t=1576520047;
+        bh=qONlitSrMg/KdcPLAt0yizWuwMCNALHE+k/dQ5GPIws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qj+Bz56jt+/SDH74fMvI4WPYX6NzMU/s5T2deAQPzGlfzcRYc9gqwDESMpaOSI1ne
-         PEtfZQxWnsUxw9y90zGSH0R0o1AYaKyjA/0xXQfIjJZZDnWPE8kyJEHgrY7v2Bee1y
-         H4soWxQG3Jd/TUg9ByYhBYVMH+VFDLY2INjMQY1M=
+        b=0dBeumuSG4/x3smzfq0z1dm9bJvUsstJtv/dbyo/k3tdy/KxZHgR9QBLXrgvbGvhp
+         J+aFB1ePdGQZ8zHVj0uxQZjY+DhWfgXuVhZuT2spkjRpinMjqnrfUbAXW3mqGJdFIM
+         76N+A2BiF9eNVxF7qt7LL3eV1ZzCzv5M565ZB2fM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.3 174/180] firmware: qcom: scm: Ensure a0 status code is treated as signed
-Date:   Mon, 16 Dec 2019 18:50:14 +0100
-Message-Id: <20191216174847.965780398@linuxfoundation.org>
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.3 176/180] s390/kaslr: store KASLR offset for early dumps
+Date:   Mon, 16 Dec 2019 18:50:16 +0100
+Message-Id: <20191216174848.194661636@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,34 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit ff34f3cce278a0982a7b66b1afaed6295141b1fc upstream.
+commit a9f2f6865d784477e1c7b59269d3a384abafd9ca upstream.
 
-The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned long',
-however the Qualcomm SCM firmware interface driver expects to receive
-negative error codes via this field, so ensure that it's cast to 'long'
-before comparing to see if it is less than 0.
+The KASLR offset is added to vmcoreinfo in arch_crash_save_vmcoreinfo(),
+so that it can be found by crash when processing kernel dumps.
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+However, arch_crash_save_vmcoreinfo() is called during a subsys_initcall,
+so if the kernel crashes before that, we have no vmcoreinfo and no KASLR
+offset.
+
+Fix this by storing the KASLR offset in the lowcore, where the vmcore_info
+pointer will be stored, and where it can be found by crash. In order to
+make it distinguishable from a real vmcore_info pointer, mark it as uneven
+(KASLR offset itself is aligned to THREAD_SIZE).
+
+When arch_crash_save_vmcoreinfo() stores the real vmcore_info pointer in
+the lowcore, it overwrites the KASLR offset. At that point, the KASLR
+offset is not yet added to vmcoreinfo, so we also need to move the
+mem_assign_absolute() behind the vmcoreinfo_append_str().
+
+Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
+Cc: <stable@vger.kernel.org> # v5.2+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/qcom_scm-64.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/boot/startup.c         |    5 +++++
+ arch/s390/kernel/machine_kexec.c |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -150,7 +150,7 @@ static int qcom_scm_call(struct device *
- 		kfree(args_virt);
- 	}
+--- a/arch/s390/boot/startup.c
++++ b/arch/s390/boot/startup.c
+@@ -164,6 +164,11 @@ void startup_kernel(void)
+ 		handle_relocs(__kaslr_offset);
  
--	if (res->a0 < 0)
-+	if ((long)res->a0 < 0)
- 		return qcom_scm_remap_error(res->a0);
+ 	if (__kaslr_offset) {
++		/*
++		 * Save KASLR offset for early dumps, before vmcore_info is set.
++		 * Mark as uneven to distinguish from real vmcore_info pointer.
++		 */
++		S390_lowcore.vmcore_info = __kaslr_offset | 0x1UL;
+ 		/* Clear non-relocated kernel */
+ 		if (IS_ENABLED(CONFIG_KERNEL_UNCOMPRESSED))
+ 			memset(img, 0, vmlinux.image_size);
+--- a/arch/s390/kernel/machine_kexec.c
++++ b/arch/s390/kernel/machine_kexec.c
+@@ -254,10 +254,10 @@ void arch_crash_save_vmcoreinfo(void)
+ 	VMCOREINFO_SYMBOL(lowcore_ptr);
+ 	VMCOREINFO_SYMBOL(high_memory);
+ 	VMCOREINFO_LENGTH(lowcore_ptr, NR_CPUS);
+-	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
+ 	vmcoreinfo_append_str("SDMA=%lx\n", __sdma);
+ 	vmcoreinfo_append_str("EDMA=%lx\n", __edma);
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
+ }
  
- 	return 0;
+ void machine_shutdown(void)
 
 
