@@ -2,218 +2,121 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64AAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66622C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A964024655
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3083224673
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uc70yHje"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNj7oz/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfLPViE (ORCPT
+        id S1727601AbfLPVjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:38:04 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41377 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfLPViE (ORCPT
+        Mon, 16 Dec 2019 16:39:06 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:56723 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727283AbfLPVjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:38:04 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so6255238eds.8;
-        Mon, 16 Dec 2019 13:38:02 -0800 (PST)
+        Mon, 16 Dec 2019 16:39:05 -0500
+Received: by mail-pj1-f73.google.com with SMTP id y7so320162pjl.23
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:39:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xNgDhHMX6rfsJfALYURvNY0HaS64TFbVe1sH5c4XLy0=;
-        b=uc70yHje3PX7rHprLzhleCJeuyWvcKcKUEcg+dsD26CZ7dRZqFAef1Rjuc0npPAZmc
-         2ogAB/NP2+dfVmIj1gWH8FyanDg0kkhTI2nMZdltE1PG/Xh7MYc+QPF8+GT2WmlDNNeD
-         /sqyoyCqWY/O4erv4HceYyE7EuZs5eZVjp8eh96Mnfei6d5NOAY9WvmqZB822bjhlNaW
-         jmFwZLzxK0CCsdp5/xZysiW2srRGIk6LJRNeSD4lTNmF96yocsCi9uK9S7XxUkscwzcH
-         w3ZxKPll83oqBmpW0PHvKJGL1lunhQ2WAx32W8N1zmPaMybbaZm6ocrlK1o+k+mZMwR8
-         g/hA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=flMQx0RQ+tn1L0OZWy96vlecDFYT8pwNVqw/lok2bBY=;
+        b=tNj7oz/OwoSNeC7zluPeALLNBPcWJXHClCBomAaTTJ3r1XoRHk4FzXlifGIQxkFHwr
+         YyUiRjCh4I9ahZnOEgsvxBqjDsxM1kSxy/7UNJyu4T69g7p3dzMg6CzTOzSGAFXX/+Yq
+         2aQeBvyGrS/w2jF4cwiKGr0dBjCSaj97giU1sSky3b3JJCv6rwsKPHYwSaeeWYauS7G2
+         iSlKKO8bKmJxFWPLEmxj1PSSSe8kW4JVV5AmGyfbs6JIflu6e4EHrCeG+DRIVCC44dS7
+         B1Kcbt1NsVz0gQx+6wyMRS3BAAlTsuwh3OQodCFgJvnK1535qy0qoZX2wE9esYJi1Yzr
+         B//A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xNgDhHMX6rfsJfALYURvNY0HaS64TFbVe1sH5c4XLy0=;
-        b=XvnnJL5LraPUNJNiNinbFPX3G/449cMhw7EDKycXwY21ifPoTbcu/YN2ax4N6oDJEM
-         +yi44ku1F4KuM4D/Ac/mRWyRGyxWgOSJzCYI7NSJOiqx1LH9bvlb2AhcT4gMtRLqqZRH
-         d+F08IamIc4HjmzHRvRnfOR5p8Tb6PRY7uICSDBQpxbXeHVzXtrx1WxLrJJMkktPBHRd
-         uabOEPnHnjBrGyE3kRf3SXn1YEdCK4eUs+X3ZF3WiqMAqifHP0pusVnUMkPTVytBsR02
-         3QsjV2GtqWjVA3i17urm471zRjM/GNBxDXLVhk+QKo+UqODNQJmYR7grI9w1MBomETXW
-         zbAw==
-X-Gm-Message-State: APjAAAV99Ocj2Kyrlnundy9mzKx6BXP9Bib2YFAYE3vJtN+4fcJJ+YI3
-        kuJzlvldwzE3cSwyb46jpnc3LK4hDRuA9AM5MZQ=
-X-Google-Smtp-Source: APXvYqzgDmvTKiZjCyLiUi5wt8/nJwvvzadxkdlzSuUxjzZLdz7Wn4PWxPS+xqEDrQMe2JheZ0j0Z9Xoha3MAyre3tA=
-X-Received: by 2002:a17:906:3052:: with SMTP id d18mr1316604ejd.86.1576532281609;
- Mon, 16 Dec 2019 13:38:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20191216183248.16309-1-f.fainelli@gmail.com>
-In-Reply-To: <20191216183248.16309-1-f.fainelli@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 16 Dec 2019 23:37:50 +0200
-Message-ID: <CA+h21hru33CpK-DOSnsSx62BEbteCYAePVjViKg4M68NAkgk4w@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: Make PHYLINK related function static again
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        open list <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=flMQx0RQ+tn1L0OZWy96vlecDFYT8pwNVqw/lok2bBY=;
+        b=ijrqkUZpe19c6fTt7Yp8bVuDnP/8trYoo7UkaxhdlSh2jQA+hRX9nIwjL+huSmxurK
+         JTqOiWE7YnigSrN/i+uB7gNNfQ2+QEPEk2iA7QDg9Z5kWR6zB6o/Pn0aClr6qq3sHUSo
+         5ZLDmZ/oe8lDeEK8P7vQKOepJMYBgpI4/qgD1UB2JTdI4ADdnn0lD+bc08Fy8Kkhs/j9
+         ZMoW67O2u3bWVze3XcYJ6TvHW8mk9vuO/qYe545NYO6bOAfde62+9nbQYyTspnzlHFsp
+         d3K+gYVLFGbAWXMr8X5R77QjhpBe0tJZyiIXXyYygszJcYR2/kTg/0wEUR+jbsMszotv
+         LvGQ==
+X-Gm-Message-State: APjAAAWrKFwqq7AwtRhuxhlvKgtyE2MjM2w/x2V3kpl0E/fdOQ1b7w1H
+        pKOq8iK2QppUU4I3Zj87xndJAU8gInDqZ/NSprv8XKBJ1M1TzJWDqfUPq8HfmUxNHyQVxneB2Js
+        IX0Vl8lFwjdh6bHsmVxvbyx+oEtZ3ryeKZYuDnMuFUDEzlwJBKEt5H6d8cvi3fSk6vsBdzGm5
+X-Google-Smtp-Source: APXvYqyt7PiZ8I6H4u3XH7x8jvxymQ4VP2vS+iyUjYUqs1LQFO+Fm+X+YTzQ1i0lIBpLid8KhiK0ug3fKcWp
+X-Received: by 2002:a65:6216:: with SMTP id d22mr20828964pgv.437.1576532345144;
+ Mon, 16 Dec 2019 13:39:05 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:38:53 -0800
+Message-Id: <20191216213901.106941-1-bgardon@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v3 0/8] Create a userfaultfd demand paging test
+From:   Ben Gardon <bgardon@google.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ben Gardon <bgardon@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 at 20:32, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Commit 77373d49de22 ("net: dsa: Move the phylink driver calls into
-> port.c") moved and exported a bunch of symbols, but they are not used
-> outside of net/dsa/port.c at the moment, so no reason to export them.
->
-> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+When handling page faults for many vCPUs during demand paging, KVM's MMU
+lock becomes highly contended. This series creates a test with a naive
+userfaultfd based demand paging implementation to demonstrate that
+contention. This test serves both as a functional test of userfaultfd
+and a microbenchmark of demand paging performance with a variable number
+of vCPUs and memory per vCPU.
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+The test creates N userfaultfd threads, N vCPUs, and a region of memory
+with M pages per vCPU. The N userfaultfd polling threads are each set up
+to serve faults on a region of memory corresponding to one of the vCPUs.
+Each of the vCPUs is then started, and touches each page of its disjoint
+memory region, sequentially. In response to faults, the userfaultfd
+threads copy a static buffer into the guest's memory. This creates a
+worst case for MMU lock contention as we have removed most of the
+contention between the userfaultfd threads and there is no time required
+to fetch the contents of guest memory.
 
->  net/dsa/dsa_priv.h | 16 ----------------
->  net/dsa/port.c     | 38 ++++++++++++++++----------------------
->  2 files changed, 16 insertions(+), 38 deletions(-)
->
-> diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-> index 2dd86d9bcda9..09ea2fd78c74 100644
-> --- a/net/dsa/dsa_priv.h
-> +++ b/net/dsa/dsa_priv.h
-> @@ -150,22 +150,6 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
->  int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
->  int dsa_port_link_register_of(struct dsa_port *dp);
->  void dsa_port_link_unregister_of(struct dsa_port *dp);
-> -void dsa_port_phylink_validate(struct phylink_config *config,
-> -                              unsigned long *supported,
-> -                              struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> -                                       struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_config(struct phylink_config *config,
-> -                                unsigned int mode,
-> -                                const struct phylink_link_state *state);
-> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config);
-> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> -                                   unsigned int mode,
-> -                                   phy_interface_t interface);
-> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> -                                 unsigned int mode,
-> -                                 phy_interface_t interface,
-> -                                 struct phy_device *phydev);
->  extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
->
->  /* slave.c */
-> diff --git a/net/dsa/port.c b/net/dsa/port.c
-> index 46ac9ba21987..ffb5601f7ed6 100644
-> --- a/net/dsa/port.c
-> +++ b/net/dsa/port.c
-> @@ -415,9 +415,9 @@ static struct phy_device *dsa_port_get_phy_device(struct dsa_port *dp)
->         return phydev;
->  }
->
-> -void dsa_port_phylink_validate(struct phylink_config *config,
-> -                              unsigned long *supported,
-> -                              struct phylink_link_state *state)
-> +static void dsa_port_phylink_validate(struct phylink_config *config,
-> +                                     unsigned long *supported,
-> +                                     struct phylink_link_state *state)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct dsa_switch *ds = dp->ds;
-> @@ -427,10 +427,9 @@ void dsa_port_phylink_validate(struct phylink_config *config,
->
->         ds->ops->phylink_validate(ds, dp->index, supported, state);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_validate);
->
-> -void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> -                                       struct phylink_link_state *state)
-> +static void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
-> +                                              struct phylink_link_state *state)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct dsa_switch *ds = dp->ds;
-> @@ -444,11 +443,10 @@ void dsa_port_phylink_mac_pcs_get_state(struct phylink_config *config,
->         if (ds->ops->phylink_mac_link_state(ds, dp->index, state) < 0)
->                 state->link = 0;
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_pcs_get_state);
->
-> -void dsa_port_phylink_mac_config(struct phylink_config *config,
-> -                                unsigned int mode,
-> -                                const struct phylink_link_state *state)
-> +static void dsa_port_phylink_mac_config(struct phylink_config *config,
-> +                                       unsigned int mode,
-> +                                       const struct phylink_link_state *state)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct dsa_switch *ds = dp->ds;
-> @@ -458,9 +456,8 @@ void dsa_port_phylink_mac_config(struct phylink_config *config,
->
->         ds->ops->phylink_mac_config(ds, dp->index, mode, state);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_config);
->
-> -void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
-> +static void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct dsa_switch *ds = dp->ds;
-> @@ -470,11 +467,10 @@ void dsa_port_phylink_mac_an_restart(struct phylink_config *config)
->
->         ds->ops->phylink_mac_an_restart(ds, dp->index);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_an_restart);
->
-> -void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> -                                   unsigned int mode,
-> -                                   phy_interface_t interface)
-> +static void dsa_port_phylink_mac_link_down(struct phylink_config *config,
-> +                                          unsigned int mode,
-> +                                          phy_interface_t interface)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct phy_device *phydev = NULL;
-> @@ -491,12 +487,11 @@ void dsa_port_phylink_mac_link_down(struct phylink_config *config,
->
->         ds->ops->phylink_mac_link_down(ds, dp->index, mode, interface);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_down);
->
-> -void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> -                                 unsigned int mode,
-> -                                 phy_interface_t interface,
-> -                                 struct phy_device *phydev)
-> +static void dsa_port_phylink_mac_link_up(struct phylink_config *config,
-> +                                        unsigned int mode,
-> +                                        phy_interface_t interface,
-> +                                        struct phy_device *phydev)
->  {
->         struct dsa_port *dp = container_of(config, struct dsa_port, pl_config);
->         struct dsa_switch *ds = dp->ds;
-> @@ -509,7 +504,6 @@ void dsa_port_phylink_mac_link_up(struct phylink_config *config,
->
->         ds->ops->phylink_mac_link_up(ds, dp->index, mode, interface, phydev);
->  }
-> -EXPORT_SYMBOL_GPL(dsa_port_phylink_mac_link_up);
->
->  const struct phylink_mac_ops dsa_port_phylink_mac_ops = {
->         .validate = dsa_port_phylink_validate,
-> --
-> 2.17.1
->
+This test was run successfully on Intel Haswell, Broadwell, and
+Cascadelake hosts with a variety of vCPU counts and memory sizes.
+
+This test was adapted from the dirty_log_test.
+
+The series can also be viewed in Gerrit here:
+https://linux-review.googlesource.com/c/virt/kvm/kvm/+/1464
+(Thanks to Dmitry Vyukov <dvyukov@google.com> for setting up the Gerrit
+instance)
+
+Ben Gardon (9):
+  KVM: selftests: Create a demand paging test
+  KVM: selftests: Add demand paging content to the demand paging test
+  KVM: selftests: Add memory size parameter to the demand paging test
+  KVM: selftests: Pass args to vCPU instead of using globals
+  KVM: selftests: Support multiple vCPUs in demand paging test
+  KVM: selftests: Time guest demand paging
+  KVM: selftests: Add parameter to _vm_create for memslot 0 base paddr
+  KVM: selftests: Support large VMs in demand paging test
+  Add static flag
+
+ tools/testing/selftests/kvm/.gitignore        |   1 +
+ tools/testing/selftests/kvm/Makefile          |   4 +-
+ .../selftests/kvm/demand_paging_test.c        | 610 ++++++++++++++++++
+ tools/testing/selftests/kvm/dirty_log_test.c  |   2 +-
+ .../testing/selftests/kvm/include/kvm_util.h  |   3 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   7 +-
+ 6 files changed, 621 insertions(+), 6 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/demand_paging_test.c
+
+-- 
+2.23.0.444.g18eeb5a265-goog
+
