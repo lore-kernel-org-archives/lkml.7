@@ -2,245 +2,132 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634AFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E8EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE712067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474B62067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="EyNlTpb6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUoB7/JP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfLPObA (ORCPT
+        id S1728167AbfLPObi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:31:00 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40322 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfLPOa7 (ORCPT
+        Mon, 16 Dec 2019 09:31:38 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55313 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728014AbfLPObh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:30:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rDev2XCf6QPcUaBpKlxXXgkvYM25sEPS6kO7kjMcwQk=; b=EyNlTpb6UEZAxUvMGCTPQ9ZNk
-        cxydnhdzDMVYfNj6WR4slV7CJsz8VQeyg8O6m/P//rPU7T9Z+CpPm6VBLGxd+lprpQ5lFA766b21c
-        N36kCgxuM8ITZhzNVSL8IGi530qlu8ENnoR9h69wIUANDvTLD9I5lSRVtSeFhooA/OilpWw4AVl1L
-        qjocweyH9QsAZVyAZ99StkaeybmVwHuAaa0HNnlmEqPZnk3ncduadTQZlnbqIxdQI/DoKT6MLzGJ4
-        v9iF9RK5ntZakerVHBe4+/xDsGMD9yPKTgqbszxBCppEYg67DXk8ekCfOozOUqTaPBPKLOPyWLRgC
-        Y8M+94PWg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53806)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1igrOY-00082M-1j; Mon, 16 Dec 2019 14:30:46 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1igrOS-0002TC-1z; Mon, 16 Dec 2019 14:30:40 +0000
-Date:   Mon, 16 Dec 2019 14:30:40 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Milind Parab <mparab@cadence.com>
-Cc:     "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "brad.mouring@ni.com" <brad.mouring@ni.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Subject: Re: [PATCH v2 3/3] net: macb: add support for high speed interface
-Message-ID: <20191216143039.GX1344@shell.armlinux.org.uk>
-References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
- <1576230177-11404-1-git-send-email-mparab@cadence.com>
- <20191215151249.GA25745@shell.armlinux.org.uk>
- <20191215152000.GW1344@shell.armlinux.org.uk>
- <BY5PR07MB65143D385836FF49966F5F6AD3510@BY5PR07MB6514.namprd07.prod.outlook.com>
- <20191216130908.GI25745@shell.armlinux.org.uk>
+        Mon, 16 Dec 2019 09:31:37 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576506697; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=89aeAE4p0vIjzskvdLk1qVvaFpos+JuHN3FX5cvcZAc=;
+ b=rUoB7/JPQv3lgx3+X5id/X494q4pamnnL7h5IEd6TqB2Qv8h7Y4jEHPP20JxPPmR4LQlBfBT
+ r2CS+Ei6RSlKuyuGDdN/AZNVKY/7ZkcmFUQ/BaRHOsKXIUsS2Odoi6JkKzjBN0cWlEZHYZpa
+ rXyenXClcV+jPY4E+lXj8gGabuQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df79544.7f5d70246bc8-smtp-out-n03;
+ Mon, 16 Dec 2019 14:31:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 62B76C433CB; Mon, 16 Dec 2019 14:31:31 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 333BDC43383;
+        Mon, 16 Dec 2019 14:31:29 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216130908.GI25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Dec 2019 22:31:29 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+In-Reply-To: <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+Message-ID: <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 01:09:08PM +0000, Russell King - ARM Linux admin wrote:
-> On Mon, Dec 16, 2019 at 12:49:59PM +0000, Milind Parab wrote:
-> > >> > +	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-> > >>
-> > >> Why bp->phy_interface and not state->interface?
-> > 
-> > okay, this needs to change to state->interface
-> > 
-> > >>
-> > >> If you don't support selecting between USXGMII and other modes at
-> > >> runtime, should macb_validate() be allowing ethtool link modes for
-> > >> it when it's different from the configured setting?
-> > 
-> > We have separate SGMII and USXGMII PCS, which are enabled and programmed 
-> > by MAC driver. Also, there are separate low speed (up to 1G) and high 
-> > speed MAC which can be programmed though MAC driver. 
-> > As long as, PHY (PMA, external to Cadence MAC controller) can handle 
-> > this change, GEM can work with interface changes at a runtime.
-> > 
-> > >>
-> > >> > +		if (gem_mac_usx_configure(bp, state) < 0) {
-> > >> > +			spin_unlock_irqrestore(&bp->lock, flags);
-> > >> > +			phylink_mac_change(bp->phylink, false);
-> > >>
-> > >> I guess this is the reason you're waiting for the USXGMII block
-> > >> to lock - do you not have any way to raise an interrupt when
-> > >> something changes with the USXGMII (or for that matter SGMII)
-> > >> blocks?  Without that, you're fixed to a single speed.
-> > 
-> > Yes, we need to wait (poll) until USXGMII block lock is set.
-> > Interrupt for USXGMII block lock set event is not supported.
+On 2019-12-15 02:32, Bart Van Assche wrote:
+> On 12/14/19 8:03 AM, Can Guo wrote:
+>> In ufshcd_remove(), after SCSI host is removed, put it once so that 
+>> its
+>> resources can be released.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index b5966fa..a86b0fd 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+>>   	ufs_bsg_remove(hba);
+>>   	ufs_sysfs_remove_nodes(hba->dev);
+>>   	scsi_remove_host(hba->host);
+>> +	scsi_host_put(hba->host);
+>>   	/* disable interrupts */
+>>   	ufshcd_disable_intr(hba, hba->intr_mask);
+>>   	ufshcd_hba_stop(hba, true);
 > 
-> You should poll for that status. We already have some polling support
-> in phylink (in the case of a fixed link using the callback, or a GPIO
-> that has no interrupt support) so it probably makes sense to extend
-> that functionality for MACs that do not provide status interrupts.
+> Hi Can,
+> 
+> The UFS driver may queue work asynchronously and that asynchronous
+> work may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it
+> guaranteed that all that asynchronous work has finished before
+> scsi_host_put() is called?
+> 
+> Thanks,
+> 
+> Bart.
 
-And here's that extension (untested):
+Hi Bart,
 
-8<===
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH] net: phylink: add support for polling MAC PCS
+As SCSI host is allocated in ufshcd_platform_init() during platform
+drive probe, it is much more appropriate if platform driver calls
+ufshcd_dealloc_host() in their own drv->remove() path. How do you
+think if I change it as below? If it is OK to you, please ignore my
+previous mails.
 
-Some MAC PCS blocks are unable to provide interrupts when their status
-changes. As we already have support in phylink for polling status, use
-this to provide a hook for MACs to enable polling mode.
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 3d4582e..ea45756 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device 
+*pdev)
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- Documentation/networking/sfp-phylink.rst |  8 +++--
- drivers/net/phy/phylink.c                | 44 ++++++++++++++++++------
- include/linux/phylink.h                  |  1 +
- 3 files changed, 40 insertions(+), 13 deletions(-)
+         pm_runtime_get_sync(&(pdev)->dev);
+         ufshcd_remove(hba);
++       ufshcd_dealloc_host(hba);
+         return 0;
+  }
 
-diff --git a/Documentation/networking/sfp-phylink.rst b/Documentation/networking/sfp-phylink.rst
-index a5e00a159d21..5695204be09a 100644
---- a/Documentation/networking/sfp-phylink.rst
-+++ b/Documentation/networking/sfp-phylink.rst
-@@ -115,7 +115,7 @@ this documentation.
-     * - Original function
-       - Replacement function
-     * - phy_start(phydev)
--      - phylink_start(priv->phylink)
-+      - phylink_start(priv->phylink) or phylink_start_poll(priv->phylink)
-     * - phy_stop(phydev)
-       - phylink_stop(priv->phylink)
-     * - phy_mii_ioctl(phydev, ifr, cmd)
-@@ -251,7 +251,9 @@ this documentation.
- 	phylink_mac_change(priv->phylink, link_is_up);
- 
-     where ``link_is_up`` is true if the link is currently up or false
--    otherwise.
-+    otherwise. If a MAC is uanble to provide these interrupts, then
-+    :c:func:`phylink_start_poll` should be used in step 5.
-+
- 
- 11. Verify that the driver does not call::
- 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index fc45657bb9c9..616d208b348e 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -964,15 +964,7 @@ static irqreturn_t phylink_link_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--/**
-- * phylink_start() - start a phylink instance
-- * @pl: a pointer to a &struct phylink returned from phylink_create()
-- *
-- * Start the phylink instance specified by @pl, configuring the MAC for the
-- * desired link mode(s) and negotiation style. This should be called from the
-- * network device driver's &struct net_device_ops ndo_open() method.
-- */
--void phylink_start(struct phylink *pl)
-+static void __phylink_start(struct phylink *pl, bool poll)
- {
- 	ASSERT_RTNL();
- 
-@@ -1014,15 +1006,47 @@ void phylink_start(struct phylink *pl)
- 		if (irq <= 0)
- 			mod_timer(&pl->link_poll, jiffies + HZ);
- 	}
--	if (pl->cfg_link_an_mode == MLO_AN_FIXED && pl->get_fixed_state)
-+	if ((pl->cfg_link_an_mode == MLO_AN_FIXED && pl->get_fixed_state) ||
-+	    poll)
- 		mod_timer(&pl->link_poll, jiffies + HZ);
- 	if (pl->phydev)
- 		phy_start(pl->phydev);
- 	if (pl->sfp_bus)
- 		sfp_upstream_start(pl->sfp_bus);
- }
-+
-+/**
-+ * phylink_start() - start a phylink instance
-+ * @pl: a pointer to a &struct phylink returned from phylink_create()
-+ *
-+ * Start the phylink instance specified by @pl, configuring the MAC for the
-+ * desired link mode(s) and negotiation style. This should be called from the
-+ * network device driver's &struct net_device_ops ndo_open() method.
-+ */
-+void phylink_start(struct phylink *pl)
-+{
-+	__phylink_start(pl, false);
-+}
- EXPORT_SYMBOL_GPL(phylink_start);
- 
-+/**
-+ * phylink_start_poll() - start a phylink instance with polling
-+ * @pl: a pointer to a &struct phylink returned from phylink_create()
-+ *
-+ * Start the phylink instance specified by @pl, as per phylink_start(), but
-+ * also enable polling mode. This should be used if the MAC has no support
-+ * for MAC PCS status interrupts.
-+ *
-+ * The MAC PCS must ensure that if it detects the link going down, that must
-+ * be reported via mac_pcs_get_state() method to ensure proper update of the
-+ * MAC.
-+ */
-+void phylink_start_poll(struct phylink *pl)
-+{
-+	__phylink_start(pl, true);
-+}
-+EXPORT_SYMBOL_GPL(phylink_start_poll);
-+
- /**
-  * phylink_stop() - stop a phylink instance
-  * @pl: a pointer to a &struct phylink returned from phylink_create()
-diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-index bedff1a217fe..529fb5ce440d 100644
---- a/include/linux/phylink.h
-+++ b/include/linux/phylink.h
-@@ -250,6 +250,7 @@ int phylink_fixed_state_cb(struct phylink *,
- void phylink_mac_change(struct phylink *, bool up);
- 
- void phylink_start(struct phylink *);
-+void phylink_start_poll(struct phylink *pl);
- void phylink_stop(struct phylink *);
- 
- void phylink_ethtool_get_wol(struct phylink *, struct ethtool_wolinfo *);
--- 
-2.20.1
+Thanks,
 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Can Guo.
