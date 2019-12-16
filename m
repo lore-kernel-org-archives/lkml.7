@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D9CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F860C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BD7206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72F02082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519878;
-	bh=x/c0dywphSDx6W1FtBK+6NpMrfdCQI/RLiuODgV6fn8=;
+	s=default; t=1576519880;
+	bh=5j+6CsovKw99scUcvr+DpdunNczZoR/kosoKZyu7GQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5+QhloP+qOOwC4bEtAEJJk/NVhn06I1g3ivzQ07MHINboUeGDGQZm6TMEkcYzvwt
-	 JLz0CvjYgUgB2ITM/4fChnKAM8JULopGmff+GVyczogkdRsVsUz6pk63oxB9nt8P6P
-	 2y1v4F56E7qmdpqtnyQJcgqsrXDemaLdLGm4jYa4=
+	b=YLdPq6WtxcJQo+e2bruVFpwxC18+VxfKmjpNofjGjstMDkAC3xtN3vOINRDy2xdmb
+	 ZZZ8zZ8rhNTIgOmubMlrCLdYliGPSDzPpt4G/gNHbv5O6M0uM2xDTxAtHdP4JWecOf
+	 PN5MykTQvIC7JjBLWGy4tdawUBoHuK7rCiT+oia4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbfLPSLQ (ORCPT
+        id S1730767AbfLPSLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730510AbfLPSLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:14 -0500
+        id S1730510AbfLPSLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B67C1206B7;
-        Mon, 16 Dec 2019 18:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF37206B7;
+        Mon, 16 Dec 2019 18:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519874;
-        bh=x/c0dywphSDx6W1FtBK+6NpMrfdCQI/RLiuODgV6fn8=;
+        s=default; t=1576519876;
+        bh=5j+6CsovKw99scUcvr+DpdunNczZoR/kosoKZyu7GQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=in3YfYA67LMu7UGKTgRvi+tRP+2R/aRDtvz/dVeh9u0aK0qjrQy6at0nNlPc0xKsD
-         DMfA+UlAkRe90U7TBNqGGBV1YXMWd7lHqeeQPlNhFnZ68Cp5nWaw09MgjXg2PA3uUE
-         Tk4Eg4iZ1grlRoMW7zjV7Im9invZPQ71xhERSJiU=
+        b=HLyHc1dHb89YS1DSWO3OLsjl8iSw4za90AaR+FeeFoOZNgj4AneVFSj0dgJ8VZIyd
+         jpHYyHFfVawp7RxFC8HrWK9gV0998RlYCst4O5jRErigX3qrHEtXPXbs1yceOVfPbE
+         fh/uupnJaJb0MzDQ7AIUFnYFtWivGguYQGq2P5Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 103/180] ACPI / utils: Move acpi_dev_get_first_match_dev() under CONFIG_ACPI
-Date:   Mon, 16 Dec 2019 18:49:03 +0100
-Message-Id: <20191216174836.968785364@linuxfoundation.org>
+Subject: [PATCH 5.3 104/180] ACPI: LPSS: Add LNXVIDEO -> BYT I2C7 to lpss_device_links
+Date:   Mon, 16 Dec 2019 18:49:04 +0100
+Message-Id: <20191216174837.562060178@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,51 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit a814dcc269830c9dbb8a83731cfc6fc5dd787f8d upstream.
+commit cc18735f208565343a9824adeca5305026598550 upstream.
 
-We have a stub defined for the acpi_dev_get_first_match_dev() in acpi.h
-for the case when CONFIG_ACPI=n.
+So far on Bay Trail (BYT) we only have been adding a device_link adding
+the iGPU (LNXVIDEO) device as consumer for the I2C controller for the
+PMIC for I2C5, but the PMIC only uses I2C5 on BYT CR (cost reduced) on
+regular BYT platforms I2C7 is used and we were not adding the device_link
+sometimes causing resume ordering issues.
 
-Moreover, acpi_dev_put(), counterpart function, is already placed under
-CONFIG_ACPI.
+This commit adds LNXVIDEO -> BYT I2C7 to the lpss_device_links table,
+fixing this.
 
-Thus, move acpi_dev_get_first_match_dev() under CONFIG_ACPI as well.
-
-Fixes: 817b4d64da03 ("ACPI / utils: Introduce acpi_dev_get_first_match_dev() helper")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: 5.2+ <stable@vger.kernel.org> # 5.2+
+Fixes: 2d71ee0ce72f ("ACPI / LPSS: Add a device link from the GPU to the BYT I2C5 controller")
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/acpi/acpi_bus.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_lpss.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -78,9 +78,6 @@ acpi_evaluate_dsm_typed(acpi_handle hand
- bool acpi_dev_found(const char *hid);
- bool acpi_dev_present(const char *hid, const char *uid, s64 hrv);
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -473,9 +473,14 @@ struct lpss_device_links {
+  * the supplier is not enumerated until after the consumer is probed.
+  */
+ static const struct lpss_device_links lpss_device_links[] = {
++	/* CHT External sdcard slot controller depends on PMIC I2C ctrl */
+ 	{"808622C1", "7", "80860F14", "3", DL_FLAG_PM_RUNTIME},
++	/* CHT iGPU depends on PMIC I2C controller */
+ 	{"808622C1", "7", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
++	/* BYT CR iGPU depends on PMIC I2C controller (UID 5 on CR) */
+ 	{"80860F41", "5", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
++	/* BYT iGPU depends on PMIC I2C controller (UID 7 on non CR) */
++	{"80860F41", "7", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
+ };
  
--struct acpi_device *
--acpi_dev_get_first_match_dev(const char *hid, const char *uid, s64 hrv);
--
- #ifdef CONFIG_ACPI
- 
- #include <linux/proc_fs.h>
-@@ -683,6 +680,9 @@ static inline bool acpi_device_can_power
- 		adev->power.states[ACPI_STATE_D3_HOT].flags.explicit_set);
- }
- 
-+struct acpi_device *
-+acpi_dev_get_first_match_dev(const char *hid, const char *uid, s64 hrv);
-+
- static inline void acpi_dev_put(struct acpi_device *adev)
- {
- 	put_device(&adev->dev);
+ static bool hid_uid_match(struct acpi_device *adev,
 
 
