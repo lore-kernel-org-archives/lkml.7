@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9969DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C806C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682D3206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30553206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520826;
-	bh=nbAfZKHrZcSSt+GsVE2E1uxrIj9hr8EtpdPfmMdnG9I=;
+	s=default; t=1576520828;
+	bh=+q9FKvFQoZFCxvd06S8IKHLdtMHXGu5GHZv/pfTJ+Ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+1PNyqn8ZkghkKBv1DBFn5N/Yeyu4kkYLD3KjzcHOPLvc8921+j9OexOgSXhNRzp
-	 n1kMNZjJbAIF399bnYt4IcY7f3WsGg6NwIZKNnk7pM3SvWyh7oiVQJaEXwM8B+bKmp
-	 ZaZTOvHbi6q6eLcbenbjbjWXDx3t/qd6aZT0W3gA=
+	b=GzEaWyK5OwVXiJQlKD02OOyx6eeTEYeZZKS0OKx/Aw/cUBUf4/Iyjab9F2ROlDaDN
+	 XaLbN54cP+TNfPXSrIM4D1Ems+95VmtHtkKtsUCM1Yd/skb+zv/oj8Zzczj8VyzV/E
+	 pVA1xz0xuK6eerVooFm3DW33BSn82DTc/9LIs8fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbfLPSQS (ORCPT
+        id S1731495AbfLPSQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:16:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbfLPSQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:14 -0500
+        id S1731474AbfLPSQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77471206E0;
-        Mon, 16 Dec 2019 18:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92666206E0;
+        Mon, 16 Dec 2019 18:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520173;
-        bh=nbAfZKHrZcSSt+GsVE2E1uxrIj9hr8EtpdPfmMdnG9I=;
+        s=default; t=1576520169;
+        bh=+q9FKvFQoZFCxvd06S8IKHLdtMHXGu5GHZv/pfTJ+Ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O9YKspUlIkFXCbuoQaWw4OVGp5aJy4ua24FFo3G4vd1Vx9sTYGklIIaSIG0uAbnI0
-         nfPTTQKrSYjgFkbv0YQ4po0tmy5ObZxIQEl1v6W6GHdwOND4IGIRNn+OciZ05X8r01
-         aYhNzFFFpNicicRMae0QqKydoR4T0KkCujAo+jrc=
+        b=gWjwyldk9DxdfflJi9Qc+K6E1NtGEeu2B+/JRMN98hqtXPaJjI9CyYv3XDfJejvhy
+         /ZHTqC/EafihyUregBWFUng8RSA91CXPxqi/VJlgVpd1LdvHUoPVmx9hri+MdpBcrP
+         leB2DAanbC2Gi7YDuWoiEEeteNcG4sYv2KB/fXWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
+        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 008/177] scsi: qla2xxx: Fix driver unload hang
-Date:   Mon, 16 Dec 2019 18:47:44 +0100
-Message-Id: <20191216174812.731377005@linuxfoundation.org>
+Subject: [PATCH 5.4 006/177] scsi: zfcp: trace channel log even for FCP command responses
+Date:   Mon, 16 Dec 2019 18:47:42 +0100
+Message-Id: <20191216174812.472242448@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,35 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit dd322b7f3efc8cda085bb60eadc4aee6324eadd8 upstream.
+commit 100843f176109af94600e500da0428e21030ca7f upstream.
 
-This patch fixes driver unload hang by removing msleep()
+While v2.6.26 commit b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug
+trace") is right that we don't want to flood the (payload) trace ring
+buffer, we don't trace successful FCP command responses by default.  So we
+can include the channel log for problem determination with failed responses
+of any FSF request type.
 
-Fixes: d74595278f4ab ("scsi: qla2xxx: Add multiple queue pair functionality.")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191105150657.8092-5-hmadhani@marvell.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug trace")
+Fixes: a54ca0f62f95 ("[SCSI] zfcp: Redesign of the debug tracing for HBA records.")
+Cc: <stable@vger.kernel.org> #2.6.38+
+Link: https://lore.kernel.org/r/e37597b5c4ae123aaa85fd86c23a9f71e994e4a9.1572018132.git.bblock@linux.ibm.com
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_init.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/s390/scsi/zfcp_dbf.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -9021,8 +9021,6 @@ int qla2xxx_delete_qpair(struct scsi_qla
- 	struct qla_hw_data *ha = qpair->hw;
+--- a/drivers/s390/scsi/zfcp_dbf.c
++++ b/drivers/s390/scsi/zfcp_dbf.c
+@@ -95,11 +95,9 @@ void zfcp_dbf_hba_fsf_res(char *tag, int
+ 	memcpy(rec->u.res.fsf_status_qual, &q_head->fsf_status_qual,
+ 	       FSF_STATUS_QUALIFIER_SIZE);
  
- 	qpair->delete_in_progress = 1;
--	while (atomic_read(&qpair->ref_count))
--		msleep(500);
+-	if (q_head->fsf_command != FSF_QTCB_FCP_CMND) {
+-		rec->pl_len = q_head->log_length;
+-		zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
+-				  rec->pl_len, "fsf_res", req->req_id);
+-	}
++	rec->pl_len = q_head->log_length;
++	zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
++			  rec->pl_len, "fsf_res", req->req_id);
  
- 	ret = qla25xx_delete_req_que(vha, qpair->req);
- 	if (ret != QLA_SUCCESS)
+ 	debug_event(dbf->hba, level, rec, sizeof(*rec));
+ 	spin_unlock_irqrestore(&dbf->hba_lock, flags);
 
 
