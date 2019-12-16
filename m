@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA404C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62679C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D2C206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3A7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519179;
-	bh=8ZwNXcZfmNzA2Q4yN+QvRaecjtftk7GOC4R+Pj+edZ8=;
+	s=default; t=1576519182;
+	bh=+KemWMjYWqW5eB6SarUG9NR0qSuKGeP0JUY4NkGsTYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOdOfW+uY5FOc/P1DEhT6wUKAW4rD1iTfJ/F7L8NdKqYBkPLYDO/HrUm8/Y94qJ+F
-	 rswP2u66GGE3tJ2iJN8tMV68jZXmlBaKc0sbOYflBwAbtEFEji84TTFDMfoDpDSG/L
-	 Oy2hv8PC/qsfD8EXJV+mBXu8+HuMcedRIuuTkFfg=
+	b=uvYBw0+w10Yv2T2vIlCYbMizeym0AY6+KVL8AXRz8kkNnU7tMLzpRPVxttYDjt+jw
+	 L4ku0AUQ1XDwSA/9fhvD/eKLfTIL4/1xM904+lAXNGC3uRtRW5ITsLDfUPfUQNDl+t
+	 EVi9VN1aQ1e7Dsiv4Ouf8GWVnlcITzmY+pB/VVQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfLPR7i (ORCPT
+        id S1728810AbfLPR7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60812 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbfLPR7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:36 -0500
+        id S1727031AbfLPR7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B71206B7;
-        Mon, 16 Dec 2019 17:59:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6877D206B7;
+        Mon, 16 Dec 2019 17:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519175;
-        bh=8ZwNXcZfmNzA2Q4yN+QvRaecjtftk7GOC4R+Pj+edZ8=;
+        s=default; t=1576519177;
+        bh=+KemWMjYWqW5eB6SarUG9NR0qSuKGeP0JUY4NkGsTYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+a9Js0xRUBT5BvCu5L+vH91FIQ+2QVC7AlnxDp7sxM9XlNiOqml0mASoXaX+8r+V
-         J9ViceTg6CCFeeztRsLn2AMkrlvQ76lKHsU4lWvfVgFEAkBSITrk8wRxvIZLiVzqVm
-         scw5VWlibTx7x3P7e5nIHbilk5KTQEJYhTcmQ8Ts=
+        b=HMHFhTyv/gHFxKH4QiYDR9drRMM1gfLMkve1poOZsGdmYUUXQ4gKF3aVJfsJv1vrK
+         HbR7r+100Tfxhp0GQU51xLe5AldxGF2KDt67O0l5QSQV/ILEEEuMkVytSYj/nlJSP8
+         Pk8baBFj/oKzheDdELtZ01tr+6Z76di1mL8iQ10g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 224/267] mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid of pandora_wl1251_init_card
-Date:   Mon, 16 Dec 2019 18:49:10 +0100
-Message-Id: <20191216174914.827425264@linuxfoundation.org>
+        stable@vger.kernel.org, Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.14 225/267] ARM: dts: omap3-tao3530: Fix incorrect MMC card detection GPIO polarity
+Date:   Mon, 16 Dec 2019 18:49:11 +0100
+Message-Id: <20191216174914.882537948@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,73 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Jarkko Nikula <jarkko.nikula@bitmer.com>
 
-commit f6498b922e57aecbe3b7fa30a308d9d586c0c369 upstream.
+commit 287897f9aaa2ad1c923d9875914f57c4dc9159c8 upstream.
 
-Pandora_wl1251_init_card was used to do special pdata based
-setup of the sdio mmc interface. This does no longer work with
-v4.7 and later. A fix requires a device tree based mmc3 setup.
+The MMC card detection GPIO polarity is active low on TAO3530, like in many
+other similar boards. Now the card is not detected and it is unable to
+mount rootfs from an SD card.
 
-Therefore we move the special setup to omap_hsmmc.c instead
-of calling some pdata supplied init_card function.
+Fix this by using the correct polarity.
 
-The new code checks for a DT child node compatible to wl1251
-so it will not affect other MMC3 use cases.
+This incorrect polarity was defined already in the commit 30d95c6d7092
+("ARM: dts: omap3: Add Technexion TAO3530 SOM omap3-tao3530.dtsi") in v3.18
+kernel and later changed to use defined GPIO constants in v4.4 kernel by
+the commit 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags
+cell for OMAP2+ boards").
 
-Generally, this code was and still is a hack and should be
-moved to mmc core to e.g. read such properties from optional
-DT child nodes.
+While the latter commit did not introduce the issue I'm marking it with
+Fixes tag due the v4.4 kernels still being maintained.
 
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-[Ulf: Fixed up some checkpatch complaints]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags cell for OMAP2+ boards")
+Cc: linux-stable <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/omap_hsmmc.c |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/omap3-tao3530.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1678,6 +1678,36 @@ static void omap_hsmmc_init_card(struct
+--- a/arch/arm/boot/dts/omap3-tao3530.dtsi
++++ b/arch/arm/boot/dts/omap3-tao3530.dtsi
+@@ -224,7 +224,7 @@
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vmmc1>;
+ 	vqmmc-supply = <&vsim>;
+-	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+ 	bus-width = <8>;
+ };
  
- 	if (mmc_pdata(host)->init_card)
- 		mmc_pdata(host)->init_card(card);
-+	else if (card->type == MMC_TYPE_SDIO ||
-+		 card->type == MMC_TYPE_SD_COMBO) {
-+		struct device_node *np = mmc_dev(mmc)->of_node;
-+
-+		/*
-+		 * REVISIT: should be moved to sdio core and made more
-+		 * general e.g. by expanding the DT bindings of child nodes
-+		 * to provide a mechanism to provide this information:
-+		 * Documentation/devicetree/bindings/mmc/mmc-card.txt
-+		 */
-+
-+		np = of_get_compatible_child(np, "ti,wl1251");
-+		if (np) {
-+			/*
-+			 * We have TI wl1251 attached to MMC3. Pass this
-+			 * information to the SDIO core because it can't be
-+			 * probed by normal methods.
-+			 */
-+
-+			dev_info(host->dev, "found wl1251\n");
-+			card->quirks |= MMC_QUIRK_NONSTD_SDIO;
-+			card->cccr.wide_bus = 1;
-+			card->cis.vendor = 0x104c;
-+			card->cis.device = 0x9066;
-+			card->cis.blksize = 512;
-+			card->cis.max_dtr = 24000000;
-+			card->ocr = 0x80;
-+			of_node_put(np);
-+		}
-+	}
- }
- 
- static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
 
 
