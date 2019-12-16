@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E9CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B0D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC89206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520413;
-	bh=XhccZtZRkjxwIxKwlKZElL/mBn9ub7/v1FJHOoH0a2U=;
+	s=default; t=1576520415;
+	bh=wCDWB/bRhXepO1riftMcvU3VSqlqFKrfo5G149GN9SM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F9+XSk1b4JPzdKKcT25Mw5oTpPKIxKGCEpEeJ4fyLpULyrT/mf+nZbce4pPXkZi+O
-	 YqtTI6bqEPuLi6gbpZ1QPNjJe44ro3jppj74PIYJJrAjN2PmOLcfXH3uGR5EgVwnVt
-	 1/PhTxzG3sLhO9RLa/cZ7VioVtZ0GhiYstPFm6w0=
+	b=GgIZ/A6ygILvfd/uLLUZiDT56F0gWXyXtAs+mIqWA3Dz7vLbD/pUxlEvwRijo3qDe
+	 HUppT141UglY8OUTiz5UUruf3OWjPt5h9GSamOgvNje6PdnPX/lrlHIXk2tjKVG/yR
+	 m1elofXo45VlO6kQVeLlRetsEVge3afKWi83JaRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfLPSUM (ORCPT
+        id S1731841AbfLPSUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49372 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732001AbfLPSUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:05 -0500
+        id S1728634AbfLPSUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA5E220717;
-        Mon, 16 Dec 2019 18:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A0F206EC;
+        Mon, 16 Dec 2019 18:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520405;
-        bh=XhccZtZRkjxwIxKwlKZElL/mBn9ub7/v1FJHOoH0a2U=;
+        s=default; t=1576520410;
+        bh=wCDWB/bRhXepO1riftMcvU3VSqlqFKrfo5G149GN9SM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9kWCK0aDB9UuB3tGC/eVAexNdAAsYBoRisReMwe/UptjoaibX65Jv2xm0bdR80J0
-         dztRaZlzvEBMIK6s3qGyDc3yBWmSsTrOLb2Ad8xUpYKOm6jljCl3OxPKgPCo8E5tdb
-         2wkAiHG80kX8RhcSXthIvfKtly9Lz7swTM2gtsvA=
+        b=NhWOECb8D+tO20iSb/EW0ZZtxcRVeFp/boaoNPLpTw/XBHOtCFrt4/ZhGLFa6JMd9
+         JiwrxK3gN2YvMUWLjvlon0RMUdpcF0m2uhRC81Hw+VJPqFhVuUUtVwaCBVARstL1M4
+         sbJp2IEDI0MYIIMLSFWLc/jAcHXseu8EfbWAUtxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH 5.4 142/177] stm class: Lose the protocol driver when dropping its reference
-Date:   Mon, 16 Dec 2019 18:49:58 +0100
-Message-Id: <20191216174846.926961571@linuxfoundation.org>
+        stable@vger.kernel.org, Alastair DSilva <alastair@d-silva.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 144/177] powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
+Date:   Mon, 16 Dec 2019 18:50:00 +0100
+Message-Id: <20191216174847.126558417@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,60 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Alastair D'Silva <alastair@d-silva.org>
 
-commit 0a8f72fafb3f72a08df4ee491fcbeaafd6de85fd upstream.
+commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
 
-Commit c7fd62bc69d02 ("stm class: Introduce framing protocol drivers")
-forgot to tear down the link between an stm device and its protocol
-driver when policy is removed. This leads to an invalid pointer reference
-if one tries to write to an stm device after the policy has been removed
-and the protocol driver module unloaded, leading to the below splat:
+When calling __kernel_sync_dicache with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-> BUG: unable to handle page fault for address: ffffffffc0737068
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 3d780f067 P4D 3d780f067 PUD 3d7811067 PMD 492781067 PTE 0
-> Oops: 0000 [#1] SMP NOPTI
-> CPU: 1 PID: 26122 Comm: cat Not tainted 5.4.0-rc5+ #1
-> RIP: 0010:stm_output_free+0x40/0xc0 [stm_core]
-> Call Trace:
->  stm_char_release+0x3e/0x70 [stm_core]
->  __fput+0xc6/0x260
->  ____fput+0xe/0x10
->  task_work_run+0x9d/0xc0
->  exit_to_usermode_loop+0x103/0x110
->  do_syscall_64+0x19d/0x1e0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
-Fix this by tearing down the link from an stm device to its protocol
-driver when the policy involving that driver is removed.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: c7fd62bc69d02 ("stm class: Introduce framing protocol drivers")
-Reported-by: Ammy Yi <ammy.yi@intel.com>
-Tested-by: Ammy Yi <ammy.yi@intel.com>
-CC: stable@vger.kernel.org # v4.20+
-Link: https://lore.kernel.org/r/20191114064201.43089-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/policy.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/kernel/vdso64/cacheflush.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hwtracing/stm/policy.c
-+++ b/drivers/hwtracing/stm/policy.c
-@@ -345,7 +345,11 @@ void stp_policy_unbind(struct stp_policy
- 	stm->policy = NULL;
- 	policy->stm = NULL;
- 
-+	/*
-+	 * Drop the reference on the protocol driver and lose the link.
-+	 */
- 	stm_put_protocol(stm->pdrv);
-+	stm->pdrv = NULL;
- 	stm_put_device(stm);
- }
- 
+--- a/arch/powerpc/kernel/vdso64/cacheflush.S
++++ b/arch/powerpc/kernel/vdso64/cacheflush.S
+@@ -35,7 +35,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+@@ -52,7 +52,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
 
 
