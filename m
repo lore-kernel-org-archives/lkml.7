@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B00C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B821EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C952206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D08206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521099;
-	bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
+	s=default; t=1576521105;
+	bh=vp9h9sH+3jUCNoXaY9XmcYdycZ30TI2SG5ijrITR6Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GeVjVZ+9SO2wceJS5OVvIKBDqM9eCNncHBm64GjUAbOK7J1qjApigtK78Er8js/BA
-	 mbYH4wjBg/PAEzluaHTkrFiJ/onNKvSgp/A4xY8XaTRHP1WZ6zphuW0tlSqR/Wg6h6
-	 ugAKwPa3z0tWk7adlMiaJTBboIwSVlzeSfpwnCkw=
+	b=f/qE+hkWhVhixL2s9JTANtMDJqfsAIqQ42/8LdnVeYmcZC4oZSPh1eGa1C/Ba4OL7
+	 kqWHhibPXXC/xtrSFFZoU30NuqTO+Q/+BEdk3+hip1MQo+RFfnTLzRqzDlz4Dpe5E5
+	 JBQat8c+o6b8GfIggz+zKN2vUcbXXz1SBk4Tu+V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbfLPSLI (ORCPT
+        id S1730333AbfLPSbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54766 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:31:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730710AbfLPSLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:05 -0500
+        id S1730723AbfLPSLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 059512072D;
-        Mon, 16 Dec 2019 18:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E318206B7;
+        Mon, 16 Dec 2019 18:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519864;
-        bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
+        s=default; t=1576519866;
+        bh=vp9h9sH+3jUCNoXaY9XmcYdycZ30TI2SG5ijrITR6Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLydCyVxdYqeaPSplSu7a6SRG9Ul4eNBh57G8Fa++W6D3SHSAiPAFqAhc9j9cvlEL
-         eWw5xS9qzNtGtJveuUyLLm8v7ONxwfFrAH5ZTJMFkQLBgXX/qny7IKsPIXthmba+Y6
-         LKlZk+1U1t0A2EL8U/WLwslNSKEtx76efwduKJ+c=
+        b=hKgg9g/ES5aXOcKdv1Vg3j+2B2FVzL9toQZpfRboxsGjlEnfmRiGV/8RYPgyei/xf
+         Q2QBWQdtKR7wCslaSB9CDfLKj2T0lWYfzdG6HYiXgpeQZh+ERia3feGffWfiR/hN1y
+         xlguCGE5kn8v7/aAY4OlH+lnMrQaLZ1P+q1gRhdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 100/180] cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
-Date:   Mon, 16 Dec 2019 18:49:00 +0100
-Message-Id: <20191216174835.920386596@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 101/180] ALSA: fireface: fix return value in error path of isochronous resources reservation
+Date:   Mon, 16 Dec 2019 18:49:01 +0100
+Message-Id: <20191216174836.299780318@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,81 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit db0d32d84031188443e25edbd50a71a6e7ac5d1d upstream.
+commit 480136343cbe89426d6c2ab74ffb4e3ee572c7ee upstream.
 
-The following build warning occurred on powerpc 64-bit builds:
+Even if isochronous resources reservation fails, error code doesn't return
+in pcm.hw_params callback.
 
-drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
-1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-
-This is with a cross-compiler based on gcc 8.1.0, which I got from:
-  https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
-
-The warning is due to putting 1024 bytes on the stack:
-
-    unsigned int chip[256];
-
-...and it's also undesirable to have a hard limit on the number of
-CPUs here.
-
-Fix both problems by dynamically allocating based on num_possible_cpus,
-as recommended by Michael Ellerman.
-
-Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: <stable@vger.kernel.org> #5.3+
+Fixes: 55162d2bb0e8 ("ALSA: fireface: reserve/release isochronous resources in pcm.hw_params/hw_free callbacks")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191209151655.GA8090@workstation
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/powernv-cpufreq.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ sound/firewire/fireface/ff-pcm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpu
- 
- static int init_chip_info(void)
- {
--	unsigned int chip[256];
-+	unsigned int *chip;
- 	unsigned int cpu, i;
- 	unsigned int prev_chip_id = UINT_MAX;
-+	int ret = 0;
-+
-+	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
- 
- 	for_each_possible_cpu(cpu) {
- 		unsigned int id = cpu_to_chip_id(cpu);
-@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
- 	}
- 
- 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
--	if (!chips)
--		return -ENOMEM;
-+	if (!chips) {
-+		ret = -ENOMEM;
-+		goto free_and_return;
-+	}
- 
- 	for (i = 0; i < nr_chips; i++) {
- 		chips[i].id = chip[i];
-@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
- 			per_cpu(chip_info, cpu) =  &chips[i];
+--- a/sound/firewire/fireface/ff-pcm.c
++++ b/sound/firewire/fireface/ff-pcm.c
+@@ -219,7 +219,7 @@ static int pcm_hw_params(struct snd_pcm_
+ 		mutex_unlock(&ff->mutex);
  	}
  
 -	return 0;
-+free_and_return:
-+	kfree(chip);
-+	return ret;
++	return err;
  }
  
- static inline void clean_chip_info(void)
+ static int pcm_hw_free(struct snd_pcm_substream *substream)
 
 
