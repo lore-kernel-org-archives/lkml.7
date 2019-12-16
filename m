@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C438DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF15C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA8D206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D502072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519194;
-	bh=tlsq84Sjw04k/4K1GPsBwrxcrthZHeY7gccHOEHnC7w=;
+	s=default; t=1576519197;
+	bh=7mRFTYdpvzYAcFWBhOAiS0xHJf71bodlxLxqU1DILj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KHVb82C2CLMMTJpaBazYBI1/qNlIroGcqyYrCrhL69Q0caip8dk7zFv+Eza2J+NQa
-	 +mF07iDKjlyEn4UhtBSx2+zjDT0GVLS58G1m/voK4T0iFJzYyWyKJEyysiBhWcmOcp
-	 rO6Tz/0qZ3s+ZNvM6+mnMmOcFriAsDAbZIXU38RE=
+	b=w1pGsZWw/1VsrXWySJR9nYrtei2jmR5pKNoq2JgSkMjYK8/zeGNNJl+fH3EX3A8Bd
+	 3gzUl8GzGiAYp0xgJMx9B/tGOd6A/4XlSSSV9hqUs3hnejV/BUehPo9JBFeKdZWWqQ
+	 5SVY9cX+ZlvFi4OyFnu0IH/+ltkoXHjLxo0f5S/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfLPR7x (ORCPT
+        id S1728855AbfLPR75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbfLPR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:50 -0500
+        id S1728544AbfLPR7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBD2206EC;
-        Mon, 16 Dec 2019 17:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F07C12072D;
+        Mon, 16 Dec 2019 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519190;
-        bh=tlsq84Sjw04k/4K1GPsBwrxcrthZHeY7gccHOEHnC7w=;
+        s=default; t=1576519192;
+        bh=7mRFTYdpvzYAcFWBhOAiS0xHJf71bodlxLxqU1DILj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rusY+goO97eKHBR5/OihqrIyAzmznjQQnUSkjMiSPBvG0XgCxtuouVxMz6IvX9IoY
-         8iLuc29TUyn06VRRH/758kEvds8DSlJoJNLxoyKG1fMpB9zm832vGOvaG4jqhhE96u
-         0DNG5nHg66SinJHjY67qPvvO9767cDaxkMIovNtQ=
+        b=OC2FTtog/Kr3QsMdLLNAwHvO3+Vsr475+7kBT2QlZXnOUcSEIZ3m6WmLJ09dy0DPe
+         pFcj+4WThPiypdMqHaiuhdUXGmqCLTpLPjUv+9171D7iRv9q2rKUe4NYXo7cOnVQE2
+         FZXFOsEK9mD3Nn/7CO75bAmJxbrneJz9eRi4xUTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 191/267] rtlwifi: rtl8192de: Fix missing code to retrieve RX buffer address
-Date:   Mon, 16 Dec 2019 18:48:37 +0100
-Message-Id: <20191216174912.989877268@linuxfoundation.org>
+Subject: [PATCH 4.14 192/267] rtlwifi: rtl8192de: Fix missing callback that tests for hw release of buffer
+Date:   Mon, 16 Dec 2019 18:48:38 +0100
+Message-Id: <20191216174913.045536152@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,44 +61,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 0e531cc575c4e9e3dd52ad287b49d3c2dc74c810 upstream.
+commit 3155db7613edea8fb943624062baf1e4f9cfbfd6 upstream.
 
 In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
-new drivers"), a callback to get the RX buffer address was added to
-the PCI driver. Unfortunately, driver rtl8192de was not modified
-appropriately and the code runs into a WARN_ONCE() call. The use
-of an incorrect array is also fixed.
+new drivers"), a callback needed to check if the hardware has released
+a buffer indicating that a DMA operation is completed was not added.
 
 Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
-Cc: Stable <stable@vger.kernel.org> # 3.18+
+Cc: Stable <stable@vger.kernel.org>	# v3.18+
 Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c  |    1 +
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c |   17 +++++++++++++++++
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h |    2 ++
+ 3 files changed, 20 insertions(+)
 
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
+@@ -237,6 +237,7 @@ static struct rtl_hal_ops rtl8192de_hal_
+ 	.led_control = rtl92de_led_control,
+ 	.set_desc = rtl92de_set_desc,
+ 	.get_desc = rtl92de_get_desc,
++	.is_tx_desc_closed = rtl92de_is_tx_desc_closed,
+ 	.tx_polling = rtl92de_tx_polling,
+ 	.enable_hw_sec = rtl92de_enable_hw_security_config,
+ 	.set_key = rtl92de_set_key,
 --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
 +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-@@ -839,13 +839,15 @@ u32 rtl92de_get_desc(u8 *p_desc, bool is
- 			break;
- 		}
- 	} else {
--		struct rx_desc_92c *pdesc = (struct rx_desc_92c *)p_desc;
- 		switch (desc_name) {
- 		case HW_DESC_OWN:
--			ret = GET_RX_DESC_OWN(pdesc);
-+			ret = GET_RX_DESC_OWN(p_desc);
- 			break;
- 		case HW_DESC_RXPKT_LEN:
--			ret = GET_RX_DESC_PKT_LEN(pdesc);
-+			ret = GET_RX_DESC_PKT_LEN(p_desc);
-+			break;
-+		case HW_DESC_RXBUFF_ADDR:
-+			ret = GET_RX_DESC_BUFF_ADDR(p_desc);
- 			break;
- 		default:
- 			WARN_ONCE(true, "rtl8192de: ERR rxdesc :%d not processed\n",
+@@ -858,6 +858,23 @@ u32 rtl92de_get_desc(u8 *p_desc, bool is
+ 	return ret;
+ }
+ 
++bool rtl92de_is_tx_desc_closed(struct ieee80211_hw *hw,
++			       u8 hw_queue, u16 index)
++{
++	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
++	struct rtl8192_tx_ring *ring = &rtlpci->tx_ring[hw_queue];
++	u8 *entry = (u8 *)(&ring->desc[ring->idx]);
++	u8 own = (u8)rtl92de_get_desc(entry, true, HW_DESC_OWN);
++
++	/* a beacon packet will only use the first
++	 * descriptor by defaut, and the own bit may not
++	 * be cleared by the hardware
++	 */
++	if (own)
++		return false;
++	return true;
++}
++
+ void rtl92de_tx_polling(struct ieee80211_hw *hw, u8 hw_queue)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h
+@@ -736,6 +736,8 @@ bool rtl92de_rx_query_desc(struct ieee80
+ void rtl92de_set_desc(struct ieee80211_hw *hw, u8 *pdesc, bool istx,
+ 		      u8 desc_name, u8 *val);
+ u32 rtl92de_get_desc(u8 *pdesc, bool istx, u8 desc_name);
++bool rtl92de_is_tx_desc_closed(struct ieee80211_hw *hw,
++			       u8 hw_queue, u16 index);
+ void rtl92de_tx_polling(struct ieee80211_hw *hw, u8 hw_queue);
+ void rtl92de_tx_fill_cmddesc(struct ieee80211_hw *hw, u8 *pdesc,
+ 			     bool b_firstseg, bool b_lastseg,
 
 
