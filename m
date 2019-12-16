@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F284C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68304C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FB02082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DD42082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522072;
-	bh=xoLbdjnG4Q9AJYtioJdQMA9gFOkUVdYX+29fOJTfD64=;
+	s=default; t=1576522078;
+	bh=fILLnvAxvEczC53mWgcn9FqojH3F0b9g/obpbhr42SQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r837lCKLihydj3g5v40mTgImAWYMA48fcft07tQTpHvN6/QH9Djn6Na+JZKBa+kza
-	 dfXNmmY4iqQzna6e1Wpac8QByPnB6yz2+G1ymjfDxVuQkQdL8D9CvvAixVMZ+uVlUL
-	 KyOR4pzFsB6lC1KHQKhS2Okx/7m3MViu3nHOPHK4=
+	b=g3M711upUI3dosbFNT4uK3kfNTYxQegP46j3sBUBqWzp6XbFMKtdGvxBYi9mSVbwJ
+	 DRHI8BilbzL4SsemtCSlNUWRdyF8KqKFrrNVh8B6Vz/F82rIKB9me/s0A30NBtSKbw
+	 4/TR64d6ca37fcnRJqY031YTuKagkM/rztKqJJvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfLPSru (ORCPT
+        id S1727936AbfLPRyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51396 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfLPRyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:51 -0500
+        id S1727407AbfLPRyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE86206B7;
-        Mon, 16 Dec 2019 17:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32F4120663;
+        Mon, 16 Dec 2019 17:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518891;
-        bh=xoLbdjnG4Q9AJYtioJdQMA9gFOkUVdYX+29fOJTfD64=;
+        s=default; t=1576518876;
+        bh=fILLnvAxvEczC53mWgcn9FqojH3F0b9g/obpbhr42SQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mO2Z2PjbA3dZ4JA7L3JFI2rJmfa0/1bm7UyHAaai6wYrQMynlNEU42xhW7RkHaFIK
-         V42W5BTidhIG70/MoF9wUfErbufHc60PYnQWeCCpSnPbbMhG7V251pgdZRqXeZRwvk
-         XZXfS0VwGR6JFoy5FB0lOhcMernEBPZWompXsqSw=
+        b=Y/gBQ4MOIlmSUjbFsyWtcrhmeMZcEGMPCDNKpj+9SehLSGJq7pFS6LsGWEPeTiCHM
+         cqA+IXeOX59yVi6sVHZVvPiRPrnlbWmovnzScC/5q5tTYhMelktY3svlA0P8LXcQ1h
+         3A9pHR3ojjUbSg5+TcI7XMhuFhvuZJOJP9dzJUc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
+        stable@vger.kernel.org, Yunlong Song <yunlong.song@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/267] firmware: qcom: scm: fix compilation error when disabled
-Date:   Mon, 16 Dec 2019 18:47:16 +0100
-Message-Id: <20191216174902.740963172@linuxfoundation.org>
+Subject: [PATCH 4.14 066/267] f2fs: change segment to section in f2fs_ioc_gc_range
+Date:   Mon, 16 Dec 2019 18:46:32 +0100
+Message-Id: <20191216174856.049950091@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Yunlong Song <yunlong.song@huawei.com>
 
-[ Upstream commit 16ad9501b1f2edebe24f8cf3c09da0695871986b ]
+[ Upstream commit 67b0e42b768c9ddc3fd5ca1aee3db815cfaa635c ]
 
-This fixes the case when CONFIG_QCOM_SCM is not enabled, and linux/errno.h
-has not been included previously.
+f2fs_ioc_gc_range skips blocks_per_seg each time, however, f2fs_gc moves
+blocks of section each time, so fix it from segment to section.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Yunlong Song <yunlong.song@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/qcom_scm.h | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/f2fs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index e5380471c2cd2..428278a44c7db 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -44,6 +44,9 @@ extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
- extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
- extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
- #else
-+
-+#include <linux/errno.h>
-+
- static inline
- int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- {
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index d68b0132718a6..a90173b856f6d 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2029,7 +2029,7 @@ do_more:
+ 	}
+ 
+ 	ret = f2fs_gc(sbi, range.sync, true, GET_SEGNO(sbi, range.start));
+-	range.start += sbi->blocks_per_seg;
++	range.start += BLKS_PER_SEC(sbi);
+ 	if (range.start <= end)
+ 		goto do_more;
+ out:
 -- 
 2.20.1
 
