@@ -2,281 +2,279 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C060C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E11C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1496A2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576532995;
-	bh=6MJBO7qZQ+iuixMt/i7qk+aJ1/wEIZbVP0/dga2eVzA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mCeYi4o+TxXy2kX5h0Nkr8JtaDyT3guaWXafLnnz73ucICMNOSj25SXmNW0Q4Rr5M
-	 f8AazqqQUZSYSvVfDJZmEG+OgBd3lZVXnCFj0Co5O4zkyCy110Ypn8DbCU/CehW0Qf
-	 8VhGlft0dhwAdG8t/KhFHWCBTYFR5I59DuBl5LzU=
+	by mail.kernel.org (Postfix) with ESMTP id 61D9C2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSKxRFjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfLPVty (ORCPT
+        id S1727407AbfLPVvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:49:54 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44609 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPVty (ORCPT
+        Mon, 16 Dec 2019 16:51:04 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37005 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfLPVvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:49:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so10880024oto.11;
-        Mon, 16 Dec 2019 13:49:53 -0800 (PST)
+        Mon, 16 Dec 2019 16:51:04 -0500
+Received: by mail-pj1-f67.google.com with SMTP id ep17so3601837pjb.4;
+        Mon, 16 Dec 2019 13:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
+        b=oSKxRFjZilaMpzgJltlBgqaWD2rGZM/fE7M3YD9DmDc2pySzRC1UI+lQP1oTaQAYph
+         0X9+m3tz2QUtTdRQtRUwvIUp8ZDFHQ2xR8EwDLncR3IxGipcVdKlXrs6HvUYKkrE4S2r
+         76Lb6LToOunSXQE0eeb0m/5kAjTXeXyjqmswtKjj/8zVizRD7dygRaSrD8ps56uwdMzp
+         Mvt0k+Kaz4mlZJEjrNQ3TFfbX6IaThMTNRcCyZoLlhBOnSYxJW/5ODbWAgpEPYPzQCzf
+         g2hiliMLaLp2aMX70mLmNnMQN74giLfqQHOhPlPDevP69ZdMw9O/Gln7XsdvYVDp8n7o
+         Ddig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HptzT5nDCrwY5+Ndy5nDuVXNd62G0fSk6plJscs64+s=;
-        b=m0a/feoHMgJZRpe3RfWJiWCI+xQQzuDGa92RIjZPxezDfkpSdK3mVMDivsQOfetS5R
-         xi4Y6LVzdKvRsBjunerw4RBkHZ/HWDTcl2tQXQMG/y0YSu9LCKl4oUOpJEAAj4q4D1H9
-         i/X8H8pnMEavb01VIGiGOY47pboA/mJ5xHxevfuQPwh/Nir2lGQ9goF93bYiRpawAiU2
-         xighujP26182mARjuX4v8SGuF3DqgH/hnY5VHD6nCoeHPwUyyHsrLBscSl65a3vXHeEO
-         +ZEnHyICC8ac7+50B81xmSm+6Fe9hq75+mD+yvpaoGQ5IQcxFC1FiJE1arakNqL6Ukii
-         8YkA==
-X-Gm-Message-State: APjAAAXNEnEqzspoawpvv/Kal/L3HdlME+vAE3Evg6QOLDHwUDDeNkcf
-        Dcc7oJQR6H9WqNc2rYc2/DfAwQA=
-X-Google-Smtp-Source: APXvYqxgkaB403WtaFAWNwC6m5B7AcOnZaowDtuEndM91PV4Kl26ED2Pp1qFpLftHvbaAM9KlR57Hw==
-X-Received: by 2002:a05:6830:14d3:: with SMTP id t19mr35544056otq.278.1576532992820;
-        Mon, 16 Dec 2019 13:49:52 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q22sm7146652otm.2.2019.12.16.13.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 13:49:51 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:49:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     broonie@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Erwan Leray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: Re: [PATCH] dt-bindings: spi: Convert stm32 spi bindings to
- json-schema
-Message-ID: <20191216214951.GA9328@bogus>
-References: <20191204153233.791-1-benjamin.gaignard@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
+        b=AMJb0kpXYPSTU4wxV/ICWD66hJxJmljg6FbIywVAOZAKOHIkeQxYmgU7gPE77QwUMC
+         LUngfO2lL/n5/IFjzct2GmONESSfTV6koNr1mkRUUl8eJI2B+HDLPazfCU1Hbt2Z//J9
+         ST6dFFaCgpOtejQI9Y00/98OVBFSFveh4YQ/uyhK7Lcriaepl3fLBnlwXlHJt1I3v4jT
+         ZDE/yfjlL/sgJad89dnxKk8R0AP6YBqX2Rp4yesx6Hjy6pNw9in/BTpELMKDi4tXHB/A
+         vWC5F5+ClyfGyWEdXVZLVI2cejQQOkuPu/DWT/HX8nDoUGPcB3Y2OraZ2riAktw1FJFi
+         UJsA==
+X-Gm-Message-State: APjAAAVkM32Gk7+Iv0J9D9bwIOjUWyUl18GxxTm1EELSgyB4peaDf8ml
+        EOcSCK5gLTPGuyrCpxXnr6XtQMryERLV41HYnWM=
+X-Google-Smtp-Source: APXvYqzEdkeB4ph9YGYvX3ZNEG9A0T3KWxL9/K8KzZe7uhifYuMF1e7WqVPnA59GN9mafj8sJCdPwzE4OoQbWUfLaRA=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr1873888pjq.132.1576533062790;
+ Mon, 16 Dec 2019 13:51:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204153233.791-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 16 Dec 2019 23:50:51 +0200
+Message-ID: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:32:33PM +0100, Benjamin Gaignard wrote:
-> Convert the STM32 spi binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> CC: Erwan Leray <erwan.leray@st.com>
-> CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-> CC: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
->  .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
->  2 files changed, 105 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> deleted file mode 100644
-> index d82755c63eaf..000000000000
-> --- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> +++ /dev/null
-> @@ -1,62 +0,0 @@
-> -STMicroelectronics STM32 SPI Controller
-> -
-> -The STM32 SPI controller is used to communicate with external devices using
-> -the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-> -simplex synchronous serial communication with external devices. It supports
-> -from 4 to 32-bit data size. Although it can be configured as master or slave,
-> -only master is supported by the driver.
-> -
-> -Required properties:
-> -- compatible: Should be one of:
-> -  "st,stm32h7-spi"
-> -  "st,stm32f4-spi"
-> -- reg: Offset and length of the device's register set.
-> -- interrupts: Must contain the interrupt id.
-> -- clocks: Must contain an entry for spiclk (which feeds the internal clock
-> -	  generator).
-> -- #address-cells:  Number of cells required to define a chip select address.
-> -- #size-cells: Should be zero.
-> -
-> -Optional properties:
-> -- resets: Must contain the phandle to the reset controller.
-> -- A pinctrl state named "default" may be defined to set pins in mode of
-> -  operation for SPI transfer.
-> -- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
-> -  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> -- dma-names: DMA request names should include "tx" and "rx" if present.
-> -- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
-> -  Documentation/devicetree/bindings/spi/spi-bus.txt
-> -
-> -
-> -Child nodes represent devices on the SPI bus
-> -  See ../spi/spi-bus.txt
-> -
-> -Optional properties:
-> -- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
-> -		  delay in nanoseconds inserted between two consecutive data
-> -		  frames.
-> -
-> -
-> -Example:
-> -	spi2: spi@40003800 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32h7-spi";
-> -		reg = <0x40003800 0x400>;
-> -		interrupts = <36>;
-> -		clocks = <&rcc SPI2_CK>;
-> -		resets = <&rcc 1166>;
-> -		dmas = <&dmamux1 0 39 0x400 0x01>,
-> -		       <&dmamux1 1 40 0x400 0x01>;
-> -		dma-names = "rx", "tx";
-> -		pinctrl-0 = <&spi2_pins_b>;
-> -		pinctrl-names = "default";
-> -		cs-gpios = <&gpioa 11 0>;
-> -
-> -		aardvark@0 {
-> -			compatible = "totalphase,aardvark";
-> -			reg = <0>;
-> -			spi-max-frequency = <4000000>;
-> -			st,spi-midi-ns = <4000>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-> new file mode 100644
-> index 000000000000..57ef3a0f57e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 SPI Controller bindings
-> +
-> +description: |
-> +  The STM32 SPI controller is used to communicate with external devices using
-> +  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-> +  simplex synchronous serial communication with external devices. It supports
-> +  from 4 to 32-bit data size.
-> +
-> +maintainers:
-> +  - Erwan Leray <erwan.leray@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +  - if:
-> +      properties:
-> +        comptatible:
-> +          constains:
+I would like to be Cc'ed on the matters.
 
-One of the features of json-schema is ignoring unknown keywords like 
-'constains'. I've tried to mitigate this with the meta-schema, but seems 
-this one didn't get caught. But checkpatch.pl caught it.
+On Fri, Nov 29, 2019 at 9:13 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
 
+Thanks for an update!
 
-> +            st,stm32f4-spi
-> +    then:
-> +      properties:
-> +        st,spi-midi-ns: false
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32f4-spi
-> +      - st,stm32h7-spi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    description: |
-> +      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
-> +      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> +    items:
-> +      - description: rx DMA channel
-> +      - description: tx DMA channel
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +
-> +patternProperties:
-> +  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
-> +    type: object
-> +    # SPI slave nodes must be children of the SPI master node and can
-> +    # contain the following properties.
-> +    properties:
-> +      st,spi-midi-ns:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
+Still I think it's wrong approach. What should be done is:
+ - adding a pin configuration type of PWM (when, for example, argument
+defines duty cycle and period)
+ - conversion to pin control of this driver
+ - enabling pin configuration PWM for it.
 
-Don't need a type since it has a standard unit. I'd assume there's 
-at least some max less than 2^32 you could define.
+For now it looks like a custom way of doing it.
+If GPIO maintainers are okay with it, I'll not object, just want to
+have than something like TODO updated for the matter.
 
-> +        description: |
-> +          Only for STM32H7, (Master Inter-Data Idleness) minimum time
-> +          delay in nanoseconds inserted between two consecutive data frames.
+Taking above into consideration, I also provide my comments to the patch
+
+...
+
+>  #include <linux/bits.h>
+> +#include <linux/bitmap.h>
+
+It seems you need to take gpio/fixes branch as a base.
+
+...
+
+>  #define PCA_INT                        BIT(8)
+>  #define PCA_PCAL               BIT(9)
+
+> +#define MAX_PWM                        BIT(10)
+
+Use same prefix.
+
+...
+
+> +#define PWM_MAX_COUNT 16
+> +#define PWM_PER_REG 2
+
+> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
+
+Can we simple put 4 here?
+
+...
+
+> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
+
+Please use plain numbers for the GENMASK() arguments.
+
+...
+
+> +struct max7313_pwm_data {
+> +       struct gpio_desc *desc;
+> +};
+
+Are you plan to extend this? Can we directly use struct gpio_desc pointer?
+
+...
+
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> +           chip->driver_data & MAX_PWM) {
+
+Can't we simple check only for a flag for now?
+
+> +               if (reg >= MAX7313_MASTER &&
+> +                   reg < (MAX7313_INTENSITY + bank_sz))
+> +                       return true;
+> +       }
+
+...
+
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> +           chip->driver_data & MAX_PWM) {
+> +               if (reg >= MAX7313_MASTER &&
+> +                   reg < (MAX7313_INTENSITY + bank_sz))
+> +                       return true;
+> +       }
+
+This is a duplicate from above. Need a helper?
+
+...
+
+> +/*
+> + * Max7313 PWM specific methods
+> + *
+> + * Limitations:
+> + * - Does not support a disabled state
+> + * - Period fixed to 31.25ms
+> + * - Only supports normal polarity
+> + * - Some glitches cannot be prevented
+> + */
+
+Can we have below in a separate file and attach it to the gpio-pca953x
+code iff CONFIG_PWM != n?
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+
+> +       regmap_read(pca_chip->regmap, reg, &val);
+
+No error check?
+
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+...
+
+> +       if (shift)
+
+Redundant.
+
+> +               val >>= shift;
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+> +       regmap_read(pca_chip->regmap, reg, &output);
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+No error check?
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+> +       regmap_read(pca_chip->regmap, reg, &output);
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+No error check?
+
+...
+
+> +static int max7313_pwm_request(struct pwm_chip *chip,
+> +                              struct pwm_device *pwm)
+> +{
+> +       struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> +       struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> +       struct max7313_pwm_data *data;
+> +       struct gpio_desc *desc;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    spi@4000b000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      compatible = "st,stm32h7-spi";
-> +      reg = <0x4000b000 0x400>;
-> +      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&rcc SPI2_K>;
-> +      resets = <&rcc SPI2_R>;
-> +      dmas = <&dmamux1 0 39 0x400 0x05>,
-> +             <&dmamux1 1 40 0x400 0x05>;
-> +      dma-names = "rx", "tx";
-> +      cs-gpios = <&gpioa 11 0>;
-> +
-> +      aardvark@0 {
-> +        compatible = "totalphase,aardvark";
-> +        reg = <0>;
-> +        spi-max-frequency = <4000000>;
-> +        st,spi-midi-ns = <4000>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.15.0
-> 
+> +       desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
+> +                                        "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
+> +       if (IS_ERR(desc)) {
+
+> +               dev_err(&pca_chip->client->dev,
+
+Can't we get to struct device easily?
+If it's possible maybe we could move next line to this one?
+
+> +                       "pin already in use (probably as GPIO): %ld\n",
+> +                       PTR_ERR(desc));
+> +               return PTR_ERR(desc);
+> +       }
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (intensity)
+> +               set_bit(pwm->hwpwm, max_pwm->active_pwm);
+> +       else
+> +               clear_bit(pwm->hwpwm, max_pwm->active_pwm);
+
+assign_bit()
+
+By the way, do you really need it to be atomic? Perhaps __asign_bit()?
+
+...
+
+> +       active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);
+
+> +       if (!active)
+
+In this case more readable will be active == 0 since you compare this
+to the exact value.
+
+> +               ret = max7313_pwm_set_master_intensity(pca_chip, 0);
+> +       else if (active == 1)
+> +               ret = max7313_pwm_set_master_intensity(pca_chip,
+> +                                                      PWM_INTENSITY_MASK);
+
+...
+
+> +       if (IS_ENABLED(CONFIG_PWM)) {
+
+I'm not sure it eliminates all PWM related callbacks.
+
+> +               ret = max7313_pwm_probe(&client->dev, chip);
+> +               if (ret) {
+> +                       dev_err(&client->dev, "pwm probe failed, %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+
+--
+With Best Regards,
+Andy Shevchenko
