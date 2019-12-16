@@ -2,68 +2,94 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C37C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0AFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3A9206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53096207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576492168;
+	bh=h4X6AHfGqH1fcCYhsVZLrhBRQ9DB10RQK53ZRJEGw10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A2LsrPNX/BW6Wusnv3xV9rkHkmwF6uPuy8NqtBFtmS2gUD3twQTlmxICbV76eOZl7
+	 uLqJBwKBec7mtzEBDw9UvP6Wl0c3ActWn669hlLyvZDkE8z5MMcX9dwqACgyfrrREx
+	 zFGhML3dwNcCtD2fEEmtDQ3QM9NQNA0LLFXN+mKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfLPK24 (ORCPT
+        id S1727466AbfLPK31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:28:56 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55628 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727099AbfLPK2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:28:55 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9BD0E8B3E9572B3C1E39;
-        Mon, 16 Dec 2019 18:28:53 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Dec 2019 18:28:45 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <airlied@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <sean@poorly.run>, <zhongjiang@huawei.com>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/udl: make the symbol 'udl_handle_damage' static
-Date:   Mon, 16 Dec 2019 18:24:23 +0800
-Message-ID: <1576491863-19009-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Mon, 16 Dec 2019 05:29:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbfLPK30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:29:26 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD8D9206CB;
+        Mon, 16 Dec 2019 10:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576492166;
+        bh=h4X6AHfGqH1fcCYhsVZLrhBRQ9DB10RQK53ZRJEGw10=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IvVcuSHVLYGMmXZVmzWjp42//mldx+pzhw6/n2ye4z+xgib3qOgAuff+SDPb42z/R
+         wfXre21OOpLxB2OAOi4I2vyhOQHvnESfd1wKswN24x4L31iE3E04U4ynLnDGD25sbv
+         V042YBfc8kD87odpp3NQW1egVmAu9toKR/kAdgAU=
+Date:   Mon, 16 Dec 2019 11:29:23 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 09/14] ARM: dts: sun8i: r40: Add I2C pinmux options
+Message-ID: <20191216102923.nezpk2cqastyfpsd@gilmour.lan>
+References: <20191215165924.28314-1-wens@kernel.org>
+ <20191215165924.28314-10-wens@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6lkmrciahlk4lydl"
+Content-Disposition: inline
+In-Reply-To: <20191215165924.28314-10-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning.
 
-drivers/gpu/drm/udl/udl_modeset.c:269:5: warning: symbol 'udl_handle_damage' was not declared. Should it be static?
+--6lkmrciahlk4lydl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/gpu/drm/udl/udl_modeset.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Dec 16, 2019 at 12:59:19AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The R40 has five I2C controllers. Currently only I2C0 has its pinmux
+> option defined.
+>
+> Add the options for the remaining four, and set them as the default,
+> since each controller has only one possible pinmux configuration.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-diff --git a/drivers/gpu/drm/udl/udl_modeset.c b/drivers/gpu/drm/udl/udl_modeset.c
-index 22af179..82e0927 100644
---- a/drivers/gpu/drm/udl/udl_modeset.c
-+++ b/drivers/gpu/drm/udl/udl_modeset.c
-@@ -266,7 +266,7 @@ static int udl_aligned_damage_clip(struct drm_rect *clip, int x, int y,
- 	return 0;
- }
- 
--int udl_handle_damage(struct drm_framebuffer *fb, int x, int y,
-+static int udl_handle_damage(struct drm_framebuffer *fb, int x, int y,
- 		      int width, int height)
- {
- 	struct drm_device *dev = fb->dev;
--- 
-1.7.12.4
+Applied, thanks!
+Maxime
 
+--6lkmrciahlk4lydl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdcgwAKCRDj7w1vZxhR
+xaLdAP9tc7Nm4GYFEAyZVooyptZNGjG4NOL1T9S7EiBgQ3Pz1AEAtO6crXWEEVFr
+ich4eYyroylJ+xW31k+yFo8klXVkSwg=
+=rMnm
+-----END PGP SIGNATURE-----
+
+--6lkmrciahlk4lydl--
