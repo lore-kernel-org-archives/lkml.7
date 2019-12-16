@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F2AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61270C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA77207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3548820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519427;
-	bh=I1pM00sAx1NXWrBCRm+Y2c8vbUDiPb+MHsbOUbAf5Rk=;
+	s=default; t=1576519432;
+	bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlllnPOHlcOBikqaz+qfN0lfMnIJ5yzzbCTUUBCLFs70nLVjE92BNDwXAT93ulI50
-	 Q7h8GAbA6X62xUOyYno1ZKMKDd23BNRDBVZqk9h2kXD33MfPGH+uw/Kg3o9P3lGKGZ
-	 74o3zk+G4wOZUCRDowyu+eUBboGxk2sfu3t+hGKc=
+	b=pGrLGUp/iNr30N22a+TRzvy8Zz3n0vs6NTyvlPtHyZCK1KbRnyOL4yZy60F4uV17z
+	 OFnRrngD05Aj4OtmDvZ2t8wTXDk4oNrHKj2AsQuPAGE07CG+C+x03Kys+5mRpoPsK3
+	 jIU8ywm/oF+dlWSQchTFMjonMKxKcNQFgVS7FGys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfLPSDq (ORCPT
+        id S1729581AbfLPSDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40642 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfLPSDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:42 -0500
+        id S1729560AbfLPSDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B2620726;
-        Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5638720700;
+        Mon, 16 Dec 2019 18:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519421;
-        bh=I1pM00sAx1NXWrBCRm+Y2c8vbUDiPb+MHsbOUbAf5Rk=;
+        s=default; t=1576519428;
+        bh=fNccwqWA+SRuS5QnXcv5KmJy7FvExzlUIFIQAkUaYT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad4xR9Pidmdih2o77bMF8+X7EFxMpH31wvlSMBpcF7+QwRmYCJdyYHRdX2hV7qQSU
-         CHF/XJMk9pPtfQq/BHtekyn0zDeRoWuRVEsK3zZMtNPZMJpteOoCi7vGW8BtltmxQP
-         j7xgAR7E5OT59bqVhzFEfcLUKQoOtG0UdmABo3Rg=
+        b=x+2puAxgNSKGys2SDu/Ng3KXn4yShYIoEn1Ef1wElI6Ptqd77WLwyC/M0po0ulJ/4
+         kzTqHrve3Np3lN5lTRKdG4ngOAhHleG155bvdwY9MJ2fYa64hEKmlNG4P86Kqwy0Hd
+         n4/cxjjggdB35/ZNTV2Szia3NAkDqUq5w6plN5iU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.19 060/140] cgroup: pids: use atomic64_t for pids->limit
-Date:   Mon, 16 Dec 2019 18:48:48 +0100
-Message-Id: <20191216174804.341263986@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.19 063/140] media: bdisp: fix memleak on release
+Date:   Mon, 16 Dec 2019 18:48:51 +0100
+Message-Id: <20191216174804.909020826@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -59,78 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksa Sarai <cyphar@cyphar.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit a713af394cf382a30dd28a1015cbe572f1b9ca75 upstream.
+commit 11609a7e21f8cea42630350aa57662928fa4dc63 upstream.
 
-Because pids->limit can be changed concurrently (but we don't want to
-take a lock because it would be needlessly expensive), use atomic64_ts
-instead.
+If a process is interrupted while accessing the video device and the
+device lock is contended, release() could return early and fail to free
+related resources.
 
-Fixes: commit 49b786ea146f ("cgroup: implement the PIDs subsystem")
-Cc: stable@vger.kernel.org # v4.3+
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Note that the return value of the v4l2 release file operation is
+ignored.
+
+Fixes: 28ffeebbb7bd ("[media] bdisp: 2D blitter driver using v4l2 mem2mem framework")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cgroup/pids.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/kernel/cgroup/pids.c
-+++ b/kernel/cgroup/pids.c
-@@ -48,7 +48,7 @@ struct pids_cgroup {
- 	 * %PIDS_MAX = (%PID_MAX_LIMIT + 1).
- 	 */
- 	atomic64_t			counter;
--	int64_t				limit;
-+	atomic64_t			limit;
+--- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+@@ -651,8 +651,7 @@ static int bdisp_release(struct file *fi
  
- 	/* Handle for "pids.events" */
- 	struct cgroup_file		events_file;
-@@ -76,8 +76,8 @@ pids_css_alloc(struct cgroup_subsys_stat
- 	if (!pids)
- 		return ERR_PTR(-ENOMEM);
+ 	dev_dbg(bdisp->dev, "%s\n", __func__);
  
--	pids->limit = PIDS_MAX;
- 	atomic64_set(&pids->counter, 0);
-+	atomic64_set(&pids->limit, PIDS_MAX);
- 	atomic64_set(&pids->events_limit, 0);
- 	return &pids->css;
- }
-@@ -149,13 +149,14 @@ static int pids_try_charge(struct pids_c
+-	if (mutex_lock_interruptible(&bdisp->lock))
+-		return -ERESTARTSYS;
++	mutex_lock(&bdisp->lock);
  
- 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
- 		int64_t new = atomic64_add_return(num, &p->counter);
-+		int64_t limit = atomic64_read(&p->limit);
+ 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
  
- 		/*
- 		 * Since new is capped to the maximum number of pid_t, if
- 		 * p->limit is %PIDS_MAX then we know that this test will never
- 		 * fail.
- 		 */
--		if (new > p->limit)
-+		if (new > limit)
- 			goto revert;
- 	}
- 
-@@ -280,7 +281,7 @@ set_limit:
- 	 * Limit updates don't need to be mutex'd, since it isn't
- 	 * critical that any racing fork()s follow the new limit.
- 	 */
--	pids->limit = limit;
-+	atomic64_set(&pids->limit, limit);
- 	return nbytes;
- }
- 
-@@ -288,7 +289,7 @@ static int pids_max_show(struct seq_file
- {
- 	struct cgroup_subsys_state *css = seq_css(sf);
- 	struct pids_cgroup *pids = css_pids(css);
--	int64_t limit = pids->limit;
-+	int64_t limit = atomic64_read(&pids->limit);
- 
- 	if (limit >= PIDS_MAX)
- 		seq_printf(sf, "%s\n", PIDS_MAX_STR);
 
 
