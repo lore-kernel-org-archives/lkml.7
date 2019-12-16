@@ -2,116 +2,133 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419EFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8948C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BD524679
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:49:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BAnyBqYl"
+	by mail.kernel.org (Postfix) with ESMTP id 7A5E624676
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576468246;
+	bh=IiKO8ufJBC/PNXcr3wmtBM6Zg1VoYVvdFufsCOEtfpo=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=Wo6IBYLltIjiz45y2CaDDeRuHXvG62seXW4xpS/4I6NpHzMynSo7AQG1UtwzcgT4R
+	 MEUAbbSrVD67VN1ITaF/wMQ2XJAV4p0+XQOHdbm24MyyRqAXtFBxuA0X/fxL5ljZyI
+	 9owo78NU0YT0kXEZ+2kjIBxwCR9j7uauYNKN/CU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLPDtp (ORCPT
+        id S1726752AbfLPDup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 22:49:45 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37811 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfLPDtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 22:49:45 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bnMp6YNBz9sNH;
-        Mon, 16 Dec 2019 14:49:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576468182;
-        bh=sGY2O5X36neo/pFKW9IY4SqpPcrhzO+xMhavweaplXs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BAnyBqYl/Zc2/w5BibKGylYV7tjX0Nfhe5lQ3YfKqEaehrhPinDzdC98s4OWMfjqg
-         3D8tdchKogVMBZp23RIr0qE5Fn5W6yXiNBO5Nq3bCR/7+w8qzm7feSb3lWnyd9goHV
-         IuKbxHLZTIRFmy8AzJjAPWFdWI/s1aWakTPj3JSFvCBm2UN3CdxVCl3lf/cfUf86/Y
-         4w8JYuLp2DW8SveWwlUqzoTnXpUUyicGUq8Wep3HXoXwD2do9O4f1lLeIf8BPtBDEM
-         x1wmCDApAHZXNyllNC6MLDyn04VoEexs2fjCUcyrDix4Dy7eYmCSFLPx/0VPHVea6G
-         MBPSSeku1rTpQ==
-Date:   Mon, 16 Dec 2019 14:49:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the vhost tree
-Message-ID: <20191216144940.014b2aa7@canb.auug.org.au>
+        Sun, 15 Dec 2019 22:50:45 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46028 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfLPDup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 22:50:45 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so3139849lfa.12
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:50:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=DzovpH6K9q1+vGtZyEs3sJTZHwvK+GxotMXiiPk/JGI=;
+        b=e5uHTIpFPL7zDnu9s6gGg7qofmVdzQwC85tXTNkszwg5TEZRJmJK1PKupjqoApNsMj
+         Ml6wkDlhH2aP5HeyNBm6+ce1OAXf7+NK5DRDRWENV+yjxXii36pM4ktR9MRvD+vR0p8Y
+         tXNviLPGehbYskjzEnscUDpWXEVmAK33JuxQc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=DzovpH6K9q1+vGtZyEs3sJTZHwvK+GxotMXiiPk/JGI=;
+        b=bVy6TM6t/xR1gdaCiM6Ar7XPcpJPmElg8FQyY1TcLo36L1MZGZpWkY0mxTHRMyGwnW
+         56Dj0CKNIMKRh8TeUVeWAEY7IplO7QJHw5Corg2S4PqDfuDDdhppR/1LNqKUvcRisLxV
+         yZM4gAp91hOMHhLX1KYewRkvpEwHWqVDzzPjqSjzw2EU2Fs+PMg1TTRnOoICWD3B3Ylh
+         pb4TyHDBDAKtLM2N6q5lnwry4eUjkXNIu174IzbG0E7CWZ1CTOxKtQiYFMY/uqZsfqis
+         kQMcOHiUKUhxEHDBX8bh/IBN98KOCcLBYDemIBmRk4i1lsu1ieev2NJjTIYi/hT2epLr
+         FvEQ==
+X-Gm-Message-State: APjAAAU3xFF0lViEkzavZO6CBqWB3IJKEaAkQcjYAGMoGNup29r8gH3J
+        dZxfGZfhj2KZMx5RqrbqQpCTTm50CZU=
+X-Google-Smtp-Source: APXvYqz3BzOhXDH6gzIDhkN34M4OwvjdORXnLPcnr4GURTTgZhC9jGXNOSqrbAcUQVcIwUPC1G4Fdg==
+X-Received: by 2002:a19:f00d:: with SMTP id p13mr15870092lfc.37.1576468242886;
+        Sun, 15 Dec 2019 19:50:42 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id h24sm9413318ljc.84.2019.12.15.19.50.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2019 19:50:41 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id m30so3154127lfp.8
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:50:40 -0800 (PST)
+X-Received: by 2002:a19:4351:: with SMTP id m17mr15805672lfj.61.1576468240552;
+ Sun, 15 Dec 2019 19:50:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DgP2aYm5g_4k1KpVKlxNJKD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191212135724.331342-1-linux@dominikbrodowski.net>
+ <20191212135724.331342-4-linux@dominikbrodowski.net> <20191216013536.5wyvq4vjv5efd35n@core.my.home>
+In-Reply-To: <20191216013536.5wyvq4vjv5efd35n@core.my.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 15 Dec 2019 19:50:23 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+Message-ID: <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
+To:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000007a8a160599ca1d80"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DgP2aYm5g_4k1KpVKlxNJKD
-Content-Type: text/plain; charset=US-ASCII
+--0000000000007a8a160599ca1d80
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Sun, Dec 15, 2019 at 5:35 PM Ond=C5=99ej Jirman <megi@xff.cz> wrote:
+>
+> Unable to handle kernel NULL pointer dereference at virtual address 00000=
+00000000000
 
-After merging the vhost tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+Duh. So much for the trivial obvious conversion.
 
-In file included from include/linux/list.h:9,
-                 from include/linux/preempt.h:11,
-                 from include/linux/spinlock.h:51,
-                 from include/linux/seqlock.h:36,
-                 from include/linux/time.h:6,
-                 from include/linux/stat.h:19,
-                 from include/linux/fcntl.h:5,
-                 from include/linux/eventfd.h:12,
-                 from drivers/vhost/vhost.c:13:
-drivers/vhost/vhost.c: In function 'vhost_log_write':
-include/linux/kernel.h:844:29: warning: comparison of distinct pointer type=
-s lacks a cast
-  844 |   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-      |                             ^~
-include/linux/kernel.h:858:4: note: in expansion of macro '__typecheck'
-  858 |   (__typecheck(x, y) && __no_side_effects(x, y))
-      |    ^~~~~~~~~~~
-include/linux/kernel.h:868:24: note: in expansion of macro '__safe_cmp'
-  868 |  __builtin_choose_expr(__safe_cmp(x, y), \
-      |                        ^~~~~~~~~~
-include/linux/kernel.h:877:19: note: in expansion of macro '__careful_cmp'
-  877 | #define min(x, y) __careful_cmp(x, y, <)
-      |                   ^~~~~~~~~~~~~
-drivers/vhost/vhost.c:1968:11: note: in expansion of macro 'min'
- 1968 |   u64 l =3D min(log[i].len, len);
-      |           ^~~
+It didn't take "data might be NULL" into account.
 
-Introduced by commit
+A patch like this, perhaps? Untested..
 
-  b072ae74df17 ("vhost: use vhost_desc instead of vhost_log")
+               Linus
 
-vhost_log::len was u64 and vhost_desc::len is u32 and len is u64.
+--0000000000007a8a160599ca1d80
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k47wh53r0>
+X-Attachment-Id: f_k47wh53r0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DgP2aYm5g_4k1KpVKlxNJKD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl32/tQACgkQAVBC80lX
-0GzSTgf/fv3oiHyqKm8C+KlTzVdPvKLVelaoOXntLLd7iCskm/bWaoad244zCsh1
-A34x01gnoasKR2Avl+0Yzk1+CAQPUD+zJzEzx/fUTecOSRssol5LMCiIauYpPeUV
-80miYjRdw8Cr+Mpe9zDVnDWBt8iO+07ih15YeVwJGTrKLn85lFP9XkgkPDlFchek
-WPEINaTQTQc/AJMVENiTgNIYR3nildCowWWb5+F/utF6FZBq4iQMc8e1E4E0U9he
-t3l/ztP050bY08+8zZVYLROIC4lCZN+Q/vhLpQD5YPB/aImiFWSKgnMHsA6MPP6e
-9izjmwsTZhfuVkS5Lm+ZTtW9xOJdBQ==
-=lTry
------END PGP SIGNATURE-----
-
---Sig_/DgP2aYm5g_4k1KpVKlxNJKD--
+IGluaXQvZG9fbW91bnRzLmMgfCAyMyArKysrKysrKysrKysrLS0tLS0tLS0tLQogMSBmaWxlIGNo
+YW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2lu
+aXQvZG9fbW91bnRzLmMgYi9pbml0L2RvX21vdW50cy5jCmluZGV4IGY1NWNiZDljYjgxOC4uZDIw
+NGY2MDVkYmNlIDEwMDY0NAotLS0gYS9pbml0L2RvX21vdW50cy5jCisrKyBiL2luaXQvZG9fbW91
+bnRzLmMKQEAgLTM5MSwxNyArMzkxLDE5IEBAIHN0YXRpYyBpbnQgX19pbml0IGRvX21vdW50X3Jv
+b3QoY29uc3QgY2hhciAqbmFtZSwgY29uc3QgY2hhciAqZnMsCiAJCQkJIGNvbnN0IGludCBmbGFn
+cywgY29uc3Qgdm9pZCAqZGF0YSkKIHsKIAlzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnM7Ci0JY2hhciAq
+ZGF0YV9wYWdlOwotCXN0cnVjdCBwYWdlICpwOworCXN0cnVjdCBwYWdlICpwID0gTlVMTDsKKwlj
+aGFyICpkYXRhX3BhZ2UgPSBOVUxMOwogCWludCByZXQ7CiAKLQkvKiBkb19tb3VudCgpIHJlcXVp
+cmVzIGEgZnVsbCBwYWdlIGFzIGZpZnRoIGFyZ3VtZW50ICovCi0JcCA9IGFsbG9jX3BhZ2UoR0ZQ
+X0tFUk5FTCk7Ci0JaWYgKCFwKQotCQlyZXR1cm4gLUVOT01FTTsKLQotCWRhdGFfcGFnZSA9IHBh
+Z2VfYWRkcmVzcyhwKTsKLQlzdHJuY3B5KGRhdGFfcGFnZSwgZGF0YSwgUEFHRV9TSVpFIC0gMSk7
+CisJaWYgKGRhdGEpIHsKKwkJLyogZG9fbW91bnQoKSByZXF1aXJlcyBhIGZ1bGwgcGFnZSBhcyBm
+aWZ0aCBhcmd1bWVudCAqLworCQlwID0gYWxsb2NfcGFnZShHRlBfS0VSTkVMKTsKKwkJaWYgKCFw
+KQorCQkJcmV0dXJuIC1FTk9NRU07CisJCWRhdGFfcGFnZSA9IHBhZ2VfYWRkcmVzcyhwKTsKKwkJ
+c3RybmNweShkYXRhX3BhZ2UsIGRhdGEsIFBBR0VfU0laRSAtIDEpOworCQlkYXRhX3BhZ2VbUEFH
+RV9TSVpFIC0gMV0gPSAnXDAnOworCX0KIAogCXJldCA9IGRvX21vdW50KG5hbWUsICIvcm9vdCIs
+IGZzLCBmbGFncywgZGF0YV9wYWdlKTsKIAlpZiAocmV0KQpAQCAtNDE3LDcgKzQxOSw4IEBAIHN0
+YXRpYyBpbnQgX19pbml0IGRvX21vdW50X3Jvb3QoY29uc3QgY2hhciAqbmFtZSwgY29uc3QgY2hh
+ciAqZnMsCiAJICAgICAgIE1BSk9SKFJPT1RfREVWKSwgTUlOT1IoUk9PVF9ERVYpKTsKIAogb3V0
+OgotCXB1dF9wYWdlKHApOworCWlmIChwKQorCQlwdXRfcGFnZShwKTsKIAlyZXR1cm4gcmV0Owog
+fQogCg==
+--0000000000007a8a160599ca1d80--
