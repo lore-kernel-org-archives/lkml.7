@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C897C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D00EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515EF2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC6D20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520600;
-	bh=Zt9UsHwhVTa1hLUu0QlnF2a3b8p7cUxQiiGQdtFVePU=;
+	s=default; t=1576520607;
+	bh=GtfKZoJgMTs3ehiuavid4AXeo1Y4Vl+ehqLzDuPUa/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BhrdfG40eIQoPSX1ihQuQqyOL4ZvEote7QglVFTptzvTuIGB7iqvzkGZPbSHNjkN9
-	 +tDH0XmXiwfahLJm/qN4BJPKfnc7nHCiKZ0+wgeOYXg0rzNJ0j3KCI8d+SBrMxHLwM
-	 lSNtKf7ZfxHC69rmPkw+i3pVMxCJWAwz5hajePd8=
+	b=ZM8PbI1htnCowTwsWX5kF2rNDBGuk9EmpYjXolw2Xr/Kw4noEAwE4w+hEIXJUztuO
+	 axW1k9fln6JgHMThG9L8whv84gYMO9JDT9MNKo5W7Hl+AhsD91/aVpU4P+o+DmNS+7
+	 +7XbIbmrcdXPGNHPKombT4014hOZfk8BtyAgbA70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbfLPSU0 (ORCPT
+        id S1732084AbfLPSXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:23:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732064AbfLPSUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:22 -0500
+        id S1728654AbfLPSUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B723E20409;
-        Mon, 16 Dec 2019 18:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AED6207FF;
+        Mon, 16 Dec 2019 18:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520422;
-        bh=Zt9UsHwhVTa1hLUu0QlnF2a3b8p7cUxQiiGQdtFVePU=;
+        s=default; t=1576520419;
+        bh=GtfKZoJgMTs3ehiuavid4AXeo1Y4Vl+ehqLzDuPUa/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkFqGUApPUZSmtYY0ubGc5kijDJ8pDPuwoH/v/1zUGh6RtW5SOKFwZeoa59HtblWZ
-         9ZIEsP+PPkWbAvUsDqNZKyZhEH67lZVUt2YOPSGJxHxT6TGZlIRf7UWRbMWeNBjn/A
-         6OHsaeLNmSduJ0gspxrlP7Cm7KcpcsbPBFg/iyUA=
+        b=BHbW+Zlahcvp4tQZosDl58j2pH1ryeq83KpJOorGrJXDxWGnebgdK+09KG7guIcdq
+         EbcGYvMPsEizcXEdVoZLNXo0JhMD2RSv/fnu/FzM5wCk8yNWrWN3OOn7ieil6Ir1Ov
+         +mZ9vivIZCkHLi7WQlk9m6qX2DFjbWO0WR5YOn+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-media@vger.kernel.org,
-        Martin Bugge <marbugge@cisco.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 5.4 148/177] video/hdmi: Fix AVI bar unpack
-Date:   Mon, 16 Dec 2019 18:50:04 +0100
-Message-Id: <20191216174847.621564864@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 130/177] ACPI: PM: Avoid attaching ACPI PM domain to certain devices
+Date:   Mon, 16 Dec 2019 18:49:46 +0100
+Message-Id: <20191216174844.410256993@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -64,47 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 6039f37dd6b76641198e290f26b31c475248f567 upstream.
+commit b9ea0bae260f6aae546db224daa6ac1bd9d94b91 upstream.
 
-The bar values are little endian, not big endian. The pack
-function did it right but the unpack got it wrong. Fix it.
+Certain ACPI-enumerated devices represented as platform devices in
+Linux, like fans, require special low-level power management handling
+implemented by their drivers that is not in agreement with the ACPI
+PM domain behavior.  That leads to problems with managing ACPI fans
+during system-wide suspend and resume.
 
-Cc: stable@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Martin Bugge <marbugge@cisco.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Fixes: 2c676f378edb ("[media] hdmi: added unpack and logging functions for InfoFrames")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190919132853.30954-1-ville.syrjala@linux.intel.com
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+For this reason, make acpi_dev_pm_attach() skip the affected devices
+by adding a list of device IDs to avoid to it and putting the IDs of
+the affected devices into that list.
+
+Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines for subsystems)
+Reported-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/hdmi.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/device_pm.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/video/hdmi.c
-+++ b/drivers/video/hdmi.c
-@@ -1576,12 +1576,12 @@ static int hdmi_avi_infoframe_unpack(str
- 	if (ptr[0] & 0x10)
- 		frame->active_aspect = ptr[1] & 0xf;
- 	if (ptr[0] & 0x8) {
--		frame->top_bar = (ptr[5] << 8) + ptr[6];
--		frame->bottom_bar = (ptr[7] << 8) + ptr[8];
-+		frame->top_bar = (ptr[6] << 8) | ptr[5];
-+		frame->bottom_bar = (ptr[8] << 8) | ptr[7];
- 	}
- 	if (ptr[0] & 0x4) {
--		frame->left_bar = (ptr[9] << 8) + ptr[10];
--		frame->right_bar = (ptr[11] << 8) + ptr[12];
-+		frame->left_bar = (ptr[10] << 8) | ptr[9];
-+		frame->right_bar = (ptr[12] << 8) | ptr[11];
- 	}
- 	frame->scan_mode = ptr[0] & 0x3;
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1314,9 +1314,19 @@ static void acpi_dev_pm_detach(struct de
+  */
+ int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ {
++	/*
++	 * Skip devices whose ACPI companions match the device IDs below,
++	 * because they require special power management handling incompatible
++	 * with the generic ACPI PM domain.
++	 */
++	static const struct acpi_device_id special_pm_ids[] = {
++		{"PNP0C0B", }, /* Generic ACPI fan */
++		{"INT3404", }, /* Fan */
++		{}
++	};
+ 	struct acpi_device *adev = ACPI_COMPANION(dev);
  
+-	if (!adev)
++	if (!adev || !acpi_match_device_ids(adev, special_pm_ids))
+ 		return 0;
+ 
+ 	/*
 
 
