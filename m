@@ -2,212 +2,144 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D60C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F986C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA37206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63585205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Db76xbzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfLPNu3 (ORCPT
+        id S1727979AbfLPNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:50:29 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7253 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727579AbfLPNu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:50:29 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 33520A48BA882C891ECE;
-        Mon, 16 Dec 2019 21:50:27 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Dec 2019
- 21:50:21 +0800
-Subject: Re: [PATCH] irq-gic-v3: fix NULL dereference of disabled redist_base
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-References: <20191216062745.63397-1-guoheyi@huawei.com>
- <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <c1447d9f-df4a-db07-adae-7e7e6c0f6455@huawei.com>
-Date:   Mon, 16 Dec 2019 21:50:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:50:42 -0500
+Received: from mout.web.de ([212.227.17.12]:36127 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbfLPNum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:50:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576504226;
+        bh=zJ+cWF7nwDFTUgO2uMhfKRvssVyaJetGmZThvQAErVU=;
+        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
+        b=Db76xbzdOunLhR0vEg1r1yxyZT58+T+iSBTMhJ2pDW3xyeRKRYqemA/Q8L1OHaeGZ
+         4g3XiHz7BA4PBQ3pRS3O3gP6xGfS8MPpXejJ91S07BCOUg856k3Kuf0i8U+hNQspcX
+         caVw2apGKLi/w866i3t5xBtZqHRV7AtAJIPW6Xgo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LsyRS-1hirHc2nXu-012Z2A; Mon, 16
+ Dec 2019 14:50:26 +0100
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
+References: <20191213055028.5574-2-namjae.jeon@samsung.com>
+Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
+ headers
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Message-ID: <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
+Date:   Mon, 16 Dec 2019 14:50:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191213055028.5574-2-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SrekASl3RDsBlAvfraP2ftN01mJ/kTlsHVmUM77Yq6t78iaUhuN
+ 8cky66fW3NgRi5JCO9z37SvnWaSILuZs0f6vQrZYRv87JcD84TktnmK3eNnAvwOnSj1f/DU
+ J3CUnZx2pfE0DNRstX/E5CVkOqGEIkP0ruStDDVC1aBjmSQFYShYYCIHt/0XyP6DI+XB6wU
+ /lqt7Yvdw8Yadte9O6pfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2I+dSRb1Ew0=:RBvvt49EwCkrBBPWxJE5+L
+ 6W5IC2A0M5fukw6bE0fGlVQrnPHPkAwX6q19clvPjxbpf3q8t3bI7fHhOKDkY0CE/jjUZmwKO
+ VqGJB8tEKrz134DbJBc002sKhV7L1S2zicfcCOcqs9BVnr/S1tRGJUOSLM58f5dYDzmmI62IL
+ oVCdsfI/mGNwoT9G88aTzwuEEJn+fjVvqKPlVSloH/MqJjKAhi/SLO+x05QKv08Erj8ReDaM+
+ k7je2wJ2NhdvjEHvD58BKPlAp+jp379Bg3Ca0pZeulHPEjvwKqbeEiqF+CPgEmahFqHv+d5TI
+ a8CKxqsrpRBW6OhWsRZrEVTrATJI+yWEEcogkFlkth4ne7n84MK65jOi1aQ4CGZwVD/w8zrBP
+ 3lJtXrdNxnVdbAocX1s+qw/PSUp0LW8u9BiGOQhukUHosg2V+tPT71c2xOguUGFFjO5JgOM75
+ 2tCU1P7lHq5Pd0NAVDTjxMxFBG1ShXlV48bM8MhPXu+hJGL0vDKfCM/QrrSURNrINJqW/n+Tz
+ B2hltMelZJODjW2jb7Z7ux/Mx/7k8YPp3+L6r/4o9CrOq6q3ZXDAN3XDKTRrBEJCrhm4V/1bT
+ RvSxFRN/UKBFuL/drCnZWA4q3OSVwBn3wfMw5501x3pSFGkXIZVqmVOd/pA3V2t3Rc9NvehBl
+ sPUx4W7nWFblI++/kxcTfjBSX0sINdQLq0axCvgRjci5ItFtaMr2wpyYkNi+vcvd3Hh8ibZ7m
+ AqBkRiTnLTC+Sj/K3VVVUtrI6XBL8fYai710JMq5WrDoEIztHEylzd0fYlNKmdQVVcVlVMll3
+ jvO66X2wC3eAlY2e/njy4+2zX0VbiDaVt9wLpFywffEDhJyVN+9zAjHdo6kp4BOxZmgudgKli
+ VYxfb0QFETRCFiA/0qcU9FrOkOCpMSy+dSnyl1jpJRgz3NlY84PwwlDQg49DCP1zoEfvDiqJ9
+ 5kmuM3P3A0aT1WgSx3jHo6qnBgKHCM5JMFYNzim0oZIZeKixqdUKDCZ83zcgsw5kI72gS+gXY
+ Q5iv5/2CX1LXO1kdPUzhwtKHO2ETG94lGPifojRP3rBcjfqdDRoPL285pL7S/Yh9mQINn/hj5
+ 2Lmnab8EwB/c061DfOoIqc0I1jqHgYS6WJpmVpmFo62eKPjjMYZYsV48iIDPltvchnpnC8mZD
+ sMygdi5rXs2jeE6TCJ/4x4PtUCS85Tfel6GXzQLNk50Sbt64StUEV7diFtgpI9zQKWS1B851W
+ YvRlByIR5wsVizcCH/7/epP//L0ugkIyemNQifFe8Fy0nIc2Q7yUsnCnW8/c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+=E2=80=A6
+> +++ b/fs/exfat/exfat_fs.h
+=E2=80=A6
+> +/* fatent.c */
+=E2=80=A6
+> +int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain =
+*p_dir);
 
-在 2019/12/16 19:14, Marc Zyngier 写道:
-> Hi Heyi,
->
-> On 2019-12-16 06:27, Heyi Guo wrote:
->> If we use ACPI MADT GICC structure to pass single redistributor base,
->> and mark some GICC as disabled, we'll get below call trace during
->> boot:
->>
->> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
->> [    0.000000] GICv3: 256 SPIs implemented
->> [    0.000000] GICv3: 0 Extended SPIs implemented
->> [    0.000000] GICv3: Distributor has no Range Selector support
->> [    0.000000] Unable to handle kernel paging request at virtual
->> address 000000000000ffe8
->> [    0.000000] Mem abort info:
->> [    0.000000]   ESR = 0x96000004
->> [    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
->> [    0.000000]   SET = 0, FnV = 0
->> [    0.000000]   EA = 0, S1PTW = 0
->> [    0.000000] Data abort info:
->> [    0.000000]   ISV = 0, ISS = 0x00000004
->> [    0.000000]   CM = 0, WnR = 0
->> [    0.000000] [000000000000ffe8] user address but active_mm is swapper
->> [    0.000000] Internal error: Oops: 96000004 [#1] SMP
->> [    0.000000] Modules linked in:
->> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1 #5
->> [    0.000000] pstate: 20000085 (nzCv daIf -PAN -UAO)
->> [    0.000000] pc : gic_iterate_rdists+0x58/0x130
->> [    0.000000] lr : gic_iterate_rdists+0x80/0x130
->> [    0.000000] sp : ffff8000113d3cb0
->> [    0.000000] x29: ffff8000113d3cb0 x28: 0000000000000000
->> [    0.000000] x27: 0000000000000000 x26: 0000000000000018
->> [    0.000000] x25: 000000000000ffe8 x24: 000000000000003f
->> [    0.000000] x23: ffff800010588040 x22: 00000000000005e8
->> [    0.000000] x21: ffff8000113df7d0 x20: 0000030f00003f11
->> [    0.000000] x19: 0000000000000000 x18: ffffffffffffffff
->> [    0.000000] x17: 0000000014aeb8dc x16: 00000000c3ba0ccf
->> [    0.000000] x15: ffff8000113d9908 x14: ffff8000913d3a37
->> [    0.000000] x13: ffff8000113d3a45 x12: ffff800011402000
->> [    0.000000] x11: ffff8000113d39d0 x10: ffff8000113db980
->> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff8000106dca98
->> [    0.000000] x7 : 000000000000005b x6 : 0000000000000000
->> [    0.000000] x5 : 0000000000000000 x4 : ffff8000128c0000
->> [    0.000000] x3 : ffff8000128a0000 x2 : ffff0003fc3c7000
->> [    0.000000] x1 : 0000000000000001 x0 : 000000000000ffe8
->> [    0.000000] Call trace:
->> [    0.000000]  gic_iterate_rdists+0x58/0x130
->> [    0.000000]  gic_init_bases+0x200/0x4b4
->> [    0.000000]  gic_acpi_init+0x148/0x284
->> [    0.000000]  acpi_match_madt+0x4c/0x84
->> [    0.000000]  acpi_table_parse_entries_array+0x188/0x278
->> [    0.000000]  acpi_table_parse_entries+0x70/0x98
->> [    0.000000]  acpi_table_parse_madt+0x40/0x50
->> [    0.000000]  __acpi_probe_device_table+0x88/0xe4
->> [    0.000000]  irqchip_init+0x38/0x40
->> [    0.000000]  init_IRQ+0x168/0x19c
->> [    0.000000]  start_kernel+0x328/0x508
->> [    0.000000] Code: f90017b6 9b3a7f16 f8766853 8b190260 (b9400000)
->> [    0.000000] ---[ end trace ae5cf232d924bfc1 ]---
->> [    0.000000] Kernel panic - not syncing: Fatal exception
->> [    0.000000] Rebooting in 3 seconds..
->>
->> In this case, nr_redist_regions counts all GICC structures but only
->> enabled ones have redistributor mapped. So add check to avoid NULL
->> deference of redist_base.
->>
->> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index d6218012097b..bd9d55cadef9 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -781,6 +781,13 @@ static int gic_iterate_rdists(int (*fn)(struct
->> redist_region *, void __iomem *))
->>          u64 typer;
->>          u32 reg;
->>
->> +        /*
->> +         * redist_base may be NULL if we use single_redist and some 
->> GICC
->> +         * structure is disabled.
->> +         */
->> +        if (!ptr)
->> +            continue;
->> +
->>          reg = readl_relaxed(ptr + GICR_PIDR2) & GIC_PIDR2_ARCH_MASK;
->>          if (reg != GIC_PIDR2_ARCH_GICv3 &&
->>              reg != GIC_PIDR2_ARCH_GICv4) { /* We're in trouble... */
->
-> This feels like the wrong fix. The redistributor region array should
-> be completely populated, and there is an assumption all over this driver
-> that there is no junk in these structures.
+I have taken another look also at this function declaration.
 
+1. Can any of these function parameters be marked as =E2=80=9Cconst=E2=80=
+=9D?
 
-Oh, I thought the place holder for disabled GICR in nr_redist_regions 
-were for some special reason, like CPU hotplug. Now I know I was wrong :)
+2. Which source file should provide the corresponding implementation?
+   (I did not find it in the update step =E2=80=9C[PATCH v7 06/13] exfat: =
+add exfat
+   entry operations=E2=80=9D so far.)
 
-
->
-> You're seeing this because we don't track the number of *enabled* rdists,
-> and allocate the number of regions based on the number of overall GICC
-> entries instead of the number of enabled redistributors.
->
-> How about this instead?
-
-It looks good to me, and works fine in my case.
-
-Thanks,
-
-Heyi
-
-
->
->         M.
->
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 3a1866682dd0..9b26a860340b 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -1861,6 +1861,7 @@ static struct
->      struct redist_region *redist_regs;
->      u32 nr_redist_regions;
->      bool single_redist;
-> +    int enabled_rdists;
->      u32 maint_irq;
->      int maint_irq_mode;
->      phys_addr_t vcpu_base;
-> @@ -1955,8 +1956,10 @@ static int __init gic_acpi_match_gicc(union 
-> acpi_subtable_headers *header,
->       * If GICC is enabled and has valid gicr base address, then it means
->       * GICR base is presented via GICC
->       */
-> -    if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-> +    if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-> +        acpi_data.enabled_rdists++;
->          return 0;
-> +    }
->
->      /*
->       * It's perfectly valid firmware can pass disabled GICC entry, 
-> driver
-> @@ -1986,8 +1989,10 @@ static int __init 
-> gic_acpi_count_gicr_regions(void)
->
->      count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
->                        gic_acpi_match_gicc, 0);
-> -    if (count > 0)
-> +    if (count > 0) {
->          acpi_data.single_redist = true;
-> +        count = acpi_data.enabled_rdists;
-> +    }
->
->      return count;
->  }
->
-
+Regards,
+Markus
