@@ -2,75 +2,72 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5200BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39C0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0C5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4329206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfLPPEX (ORCPT
+        id S1728335AbfLPPFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:04:23 -0500
-Received: from www62.your-server.de ([213.133.104.62]:49300 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbfLPPEW (ORCPT
+        Mon, 16 Dec 2019 10:05:14 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:42886 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728158AbfLPPFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:04:22 -0500
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1igrv2-0003Yc-DT; Mon, 16 Dec 2019 16:04:20 +0100
-Date:   Mon, 16 Dec 2019 16:04:19 +0100
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     bokun.feng@gmail.com, ast@kernel.org, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] kernel: bpf: add releases() annotation
-Message-ID: <20191216150419.GB27202@linux.fritz.box>
-References: <20191216124239.19180-1-jbi.octave@gmail.com>
+        Mon, 16 Dec 2019 10:05:13 -0500
+Received: (qmail 2142 invoked by uid 2102); 16 Dec 2019 10:05:11 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Dec 2019 10:05:11 -0500
+Date:   Mon, 16 Dec 2019 10:05:11 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, <mans@mansr.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: Re: general protection fault in usb_set_interface
+In-Reply-To: <CAAeHK+yz3dtfx0Jfd4sbOcN8tSxp8+qAvW609sP_yJC5q6vq8A@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1912161002080.1406-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216124239.19180-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25665/Mon Dec 16 10:52:23 2019)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 12:42:39PM +0000, Jules Irenge wrote:
-> Add sparse annotation to remove issue detected by sparse tool.
-> warning: context imbalance in __bpf_prog_exit - unexpected unlock
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  kernel/bpf/trampoline.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index 7e89f1f49d77..fb43b7a57e38 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -213,6 +213,7 @@ u64 notrace __bpf_prog_enter(void)
->  }
->  
->  void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start)
-> +	__releases(RCU)
+On Mon, 16 Dec 2019, Andrey Konovalov wrote:
 
-Hmm, why are you not adding an annotation to __bpf_prog_enter() as well ?
-
->  {
->  	struct bpf_prog_stats *stats;
->  
-> -- 
-> 2.23.0
+> On Fri, Dec 13, 2019 at 8:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Fri, 13 Dec 2019, Andrey Konovalov wrote:
+> >
+> > > > > Let's retry here:
+> > > >
+> > > > > #syz test: https://github.com/google/kasan.git f0df5c1b
+> > > >
+> > > > This bug is already marked as fixed. No point in testing.
+> > > >
+> > >
+> > > Hm, that explains some of the weirdness. It doesn't explain though
+> > > neither why the patch was actually tested when Alan requested it nor
+> > > why syzbot sent no reply.
+> >
+> > In the meantime, is there any way to get syzbot to test the new patch
+> > with the old reproducer?  Perhaps tell it to re-open this bug?
 > 
+> No, we can only test this manually now. I can run the reproducer for
+> you. Should I revert the fix for this bug and then apply your patch?
+> What's the expected result?
+
+Please simply run the patch as it is, with no other changes.  The 
+expected result is a use-after-free Read in usbvision_v4l2_open, just 
+as with c7b0ec009a216143df30.
+
+Alan Stern
+
