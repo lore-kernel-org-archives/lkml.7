@@ -2,176 +2,181 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF6BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB1FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190E620409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:10:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5MfjoFK"
+	by mail.kernel.org (Postfix) with ESMTP id E678220409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbfLPPKp (ORCPT
+        id S1728337AbfLPPLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:10:45 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45048 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfLPPKo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:10:44 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so3517512oia.11;
-        Mon, 16 Dec 2019 07:10:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7t807zYoSpdLCWGnswiojdM2ajpp5VPd6hbWcLf1dLU=;
-        b=n5MfjoFKQrBfHZwB8rJKUklIAxbDeXhvQlRIohDfUqsxWRDRWNWY0nHUaPZjUytnKR
-         zlCXE0YujnqOZZxlrQ0wSQeEvmfCDCytSJpmxrkVfvmU+zrb64yRbgfAXLSuI+kMPu4P
-         uqi8MizsJeK8ZXxBa9QtR6eGDByImHh2MEFpsI/sA8K4CsdVg7Dh1CTCjSYb34yowRYI
-         t64/zo4KMSfoRMnBT9QmyF1Tmlm9B+wK+GO7osERFdLNKD877BFSkkwOZ67E2GAkRg/g
-         EdhQsbfrXWZQHQJAQp1QS40+10G2vASwEqoFm5wWtTMQavXw/wR+zUSnoVauN6X5pOK6
-         wSxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7t807zYoSpdLCWGnswiojdM2ajpp5VPd6hbWcLf1dLU=;
-        b=laS2q+RwjrIyw332cl/idQh1aZB+h/KoQDeWG13L+yrAmQqugKdGl4nhsfz+CWlmdZ
-         mzkrhsonJwOsPCv7uNYtfPJcD+fTqytRaHF7U79eLiH1i3Fc48L4ec5SFUGbI+beS8Lo
-         2LOfQdb+1oLZG7xfWNP/VRKu2OTV9MaCIP8paIPeafNue/36fBAxFnQMJJEpfjmwb4SB
-         rtsbsrUSuwOdsRsUTb+/Ru9FHKAU0va7n1r58wDNV9wYKWimYWyK2ctKgJ+LjQx2KCbO
-         kgExBDDedN+yhka0erUV4fGh/ZhnPDRGFLn/+fnBKLZtcizMOWvn9ICCgSCONQcL+gNQ
-         fzEg==
-X-Gm-Message-State: APjAAAWiDbVe2/PA3gGGiRY1n3vgXd509YT4nCsji7FL0PPnCEI8tgAC
-        mKmNVkUaKvYzyCto8w6bHrQSUZC6I96iYo2JiOI=
-X-Google-Smtp-Source: APXvYqxZ/H0q0vqC+r7Mv+s0/6YfPc4JB16yhsM/NSPcGeVFdQ08YP2DGqybOBCMPQZtw0yBvmDp858qxSu8KxtBoVM=
-X-Received: by 2002:aca:54cc:: with SMTP id i195mr9400892oib.126.1576509043134;
- Mon, 16 Dec 2019 07:10:43 -0800 (PST)
+        Mon, 16 Dec 2019 10:11:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35062 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728211AbfLPPLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:11:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1A4BFB117;
+        Mon, 16 Dec 2019 15:11:15 +0000 (UTC)
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Ajay Kaher <akaher@vmware.com>, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        punit.agrawal@arm.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, willy@infradead.org,
+        will.deacon@arm.com, mszeredi@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
+        srostedt@vmware.com, Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+ <1576529149-14269-9-git-send-email-akaher@vmware.com>
+ <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+ <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+ <20191216134725.GE2827@hirez.programming.kicks-ass.net>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
+Date:   Mon, 16 Dec 2019 16:11:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <000000000000a6f2030598bbe38c@google.com> <0000000000000e32950599ac5a96@google.com>
- <20191216150017.GA27202@linux.fritz.box>
-In-Reply-To: <20191216150017.GA27202@linux.fritz.box>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Mon, 16 Dec 2019 16:10:32 +0100
-Message-ID: <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
-Subject: Re: WARNING in wp_page_copy
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191216134725.GE2827@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
->
-> Bjorn / Magnus, given xsk below, PTAL, thanks!
+On 12/16/19 2:47 PM, Peter Zijlstra wrote:
+> On Mon, Dec 16, 2019 at 02:30:44PM +0100, Vitaly Kuznetsov wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>>
+>>> On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
+>>>> From: Vlastimil Babka <vbabka@suse.cz>
+>>>>
+>>>> The x86 version of get_user_pages_fast() relies on disabled interrupts to
+>>>> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+>>>> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+>>>> releases the page. As TLB flush is done synchronously via IPI disabling
+>>>> interrupts blocks the page release, and get_page(), which assumes existing
+>>>> reference on page, is thus safe.
+>>>> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+>>>> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+>>>> that was already freed or even reused.
+>>>>
+>>>> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+>>>> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+>>>> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+>>>> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+>>>> immediately releases the page again, while it's already on a freelist. Symptoms
+>>>> include a bad page state warning, general protection faults acessing a poisoned
+>>>> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+>>>> together in a single list. Oscar has also reproduced this scenario, with a
+>>>> patch inserting delays before the get_page() to make the race window larger.
+>>>>
+>>>> Fix this by removing the dependency on TLB flush interrupts the same way as the
+>>>
+>>> This is suppsed to be fixed by:
+>>>
+>>> arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
+>>>
+>>
+>> Yes,
 
-Thanks. I will take a look at it right away.
+Well, that commit fixes the "page table can be freed under us" part. But
+this patch is about the "get_page() will succeed on a page that's being
+freed" part. Upstream fixed that unknowingly in 4.13 by a gup.c
+refactoring that would be too risky to backport fully.
 
-/Magnus
+>> but HAVE_RCU_TABLE_FREE was enabled on x86 only in 4.14:
+>>
+>> commit 9e52fc2b50de3a1c08b44f94c610fbe998c0031a
+>> Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> Date:   Mon Aug 28 10:22:51 2017 +0200
+>>
+>>     x86/mm: Enable RCU based page table freeing (CONFIG_HAVE_RCU_TABLE_FREE=y)
+>>
+>> and, if I understood correctly, Ajay is suggesting the patch for older
+>> stable kernels (4.9 and 4.4 I would guess).
+> 
+> It wasn't at all clear this was targeted at old kernels (I only got this
+> one patch).
+> 
+> And why can't those necro kernels do backports of the upstream solution?
+> 
 
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 cow_user_page mm/memory.c:2229
-> > [inline]
-> > WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 wp_page_copy+0x10b7/0x1560
-> > mm/memory.c:2414
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 9104 Comm: syz-executor.0 Not tainted 5.5.0-rc1-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >  panic+0x2e3/0x75c kernel/panic.c:221
-> >  __warn.cold+0x2f/0x3e kernel/panic.c:582
-> >  report_bug+0x289/0x300 lib/bug.c:195
-> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-> >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-> >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > RIP: 0010:cow_user_page mm/memory.c:2229 [inline]
-> > RIP: 0010:wp_page_copy+0x10b7/0x1560 mm/memory.c:2414
-> > Code: 4c 89 f7 ba 00 10 00 00 48 81 e6 00 f0 ff ff e8 0f e6 22 06 31 ff 41
-> > 89 c7 89 c6 e8 23 03 d3 ff 45 85 ff 74 0f e8 99 01 d3 ff <0f> 0b 4c 89 f7 e8
-> > 3f d8 22 06 e8 8a 01 d3 ff 65 4c 8b 34 25 c0 1e
-> > RSP: 0018:ffffc90002267668 EFLAGS: 00010293
-> > RAX: ffff8880a04c6140 RBX: ffffc90002267918 RCX: ffffffff81a22a0d
-> > RDX: 0000000000000000 RSI: ffffffff81a22a17 RDI: 0000000000000005
-> > RBP: ffffc900022677a8 R08: ffff8880a04c6140 R09: 0000000000000000
-> > R10: ffffed101125cfff R11: ffff8880892e7fff R12: ffff88809e403108
-> > R13: ffffea000224b9c0 R14: ffff8880892e7000 R15: 0000000000001000
-> >  do_wp_page+0x543/0x1540 mm/memory.c:2724
-> >  handle_pte_fault mm/memory.c:3961 [inline]
-> >  __handle_mm_fault+0x327b/0x3da0 mm/memory.c:4075
-> >  handle_mm_fault+0x3b2/0xa50 mm/memory.c:4112
-> >  do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
-> >  __do_page_fault+0x536/0xd80 arch/x86/mm/fault.c:1506
-> >  do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
-> >  page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
-> > RIP: 0010:copy_user_generic_unrolled+0x89/0xc0
-> > arch/x86/lib/copy_user_64.S:91
-> > Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d
-> > 7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d 76
-> > 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
-> > RSP: 0018:ffffc90002267bb8 EFLAGS: 00010206
-> > RAX: 0000000000000001 RBX: 0000000000000018 RCX: 0000000000000003
-> > RDX: 0000000000000000 RSI: ffffc90002267c58 RDI: 0000000020001300
-> > RBP: ffffc90002267bf0 R08: 0000000000000000 R09: fffff5200044cf8e
-> > R10: fffff5200044cf8d R11: ffffc90002267c6f R12: 0000000020001300
-> > R13: ffffc90002267c58 R14: 0000000020001318 R15: 00007ffffffff000
-> >  copy_to_user include/linux/uaccess.h:152 [inline]
-> >  xsk_getsockopt+0x575/0x6c0 net/xdp/xsk.c:898
-> >  __sys_getsockopt+0x16d/0x310 net/socket.c:2174
-> >  __do_sys_getsockopt net/socket.c:2189 [inline]
-> >  __se_sys_getsockopt net/socket.c:2186 [inline]
-> >  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2186
-> >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x45a909
-> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f0ec9e9ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-> > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a909
-> > RDX: 0000000000000007 RSI: 000000000000011b RDI: 000000000000000a
-> > RBP: 000000000075bf20 R08: 0000000020000100 R09: 0000000000000000
-> > R10: 0000000020001300 R11: 0000000000000246 R12: 00007f0ec9e9f6d4
-> > R13: 00000000004c1ab5 R14: 00000000004d5f60 R15: 00000000ffffffff
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
