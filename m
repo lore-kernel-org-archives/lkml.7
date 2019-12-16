@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3CDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609FAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1BF206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262EA206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hIqxrVZI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y49FSHZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfLPKmv (ORCPT
+        id S1727486AbfLPKoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:42:51 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37973 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfLPKmv (ORCPT
+        Mon, 16 Dec 2019 05:44:04 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46632 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfLPKoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:42:51 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u2so6132159wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:42:49 -0800 (PST)
+        Mon, 16 Dec 2019 05:44:03 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z7so6576957wrl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:44:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=++Lt5Fr+RwIy1Ndr73jFO/gA9fjeqgMoPVWGoy6+iBA=;
-        b=hIqxrVZIYiC6WKAtC1ImBqJ2ksj72SS90RjWVGpzSu+WVWxOxXjy5t8owPEiX8d9F/
-         fRxEgPEdq1nGU5o228ROMHVcnbwXhyqghCoiNMO8dfnatxvmBl2WHHL2JZrvrg8QOizZ
-         9yc+T6QudxtwpsoQ1O5EwLFzh8UumMtaAGar/nq8jwvagrSqVrCbaOa8mV5WrWSvltPB
-         whlx7Qr1zRqf+wzhGbNSgnrBbjQza9N4zXxkPfca068hdfr4zH1Ddao77q0x6KInu4ml
-         W9TsGVbyEFMTOPf2Q9TJAVwyXEoI+nSdJkEl3It2ulu+t5aLcfjp13dB1vipbXSxTVpo
-         pQtw==
+        bh=TYn4KXFCmnMue9oYWo/j3mg7jGM7rzuxGct/WdOvzz8=;
+        b=y49FSHZncFMOSmnFI4STiDIoR9ZBizHKIK1wozs34TnPKQasUeHhsz//CBl+myFReF
+         8BGzgzvc79cYEQAH8qhBqhBP5y25cjXxnggkZ3aAkfr3ZNpIcBgGWR1Qxsqp+AZ2I2/c
+         aMXvjPl2hqWhMtlMoxDu1x8AjX+DKoiWAZb1CofggnsrOEOzs4VIYWaFYMBqYQwqFiHj
+         RrntcuxTUtVnxhIv6TrDwlrav6M9fH3+cLwYQ6gpNCVb/Un3BBimVP7W9qGziis98gdy
+         Fyxr6NHhkiFVxTHVc3ALBEa8mE5wfS8ArzFP20jre1v8C2olr1a5fbjBgzJTAH5+g3KB
+         W5cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=++Lt5Fr+RwIy1Ndr73jFO/gA9fjeqgMoPVWGoy6+iBA=;
-        b=enEjPUb21f1iQkddx71mrFmLlHqaZgNSFmYtZytM5RKt1R89udeSurRb635FREx7In
-         4hW43cY3Xcv3CTugmljpBThntC1UTi+rFmY5Up+3QDH2SdMs/GLwv3mAFzxbn1YZOprw
-         IoK+rF7N+F7fI3clWFyq6M9gHdyRxGe6gouBOK33l9S5F9DDlk/dyvFeKHufQrubwXtg
-         tezuOssbjICY1tj0yvaliZlbi2/Fyqrr+UhVjHkblWPePFFooY8I6rza9uJcbO5adj8j
-         /SQlNkm+Y9OO3TG6TdM7OlFFZAoos8MvInH+Q3M6gQigRj3sAt6CfiMmG/437AQXKhLg
-         v6Yw==
-X-Gm-Message-State: APjAAAVMtY+WsHntqeguhQ8zHr8IiBJlOJ1rGyZ/zxg67q6y+iLUXlfo
-        JxQ4iyR3xXNwbKExr6a7DkSDRJ/jwIA=
-X-Google-Smtp-Source: APXvYqzzwkX1ps0/zgn1aMQHOpmA2TSJ2eZ63E3HwGB4lr0SQVll7z6EkkJ2AHAdRx3f+aHoIWg9TQ==
-X-Received: by 2002:a1c:407:: with SMTP id 7mr28746768wme.29.1576492968976;
-        Mon, 16 Dec 2019 02:42:48 -0800 (PST)
+        bh=TYn4KXFCmnMue9oYWo/j3mg7jGM7rzuxGct/WdOvzz8=;
+        b=oDVoQBiYyTEAirJl0Fg1j5Z/902gdjwcC+iH5D4Kgm430llSfVR9Xo1lbhEhwF0YN1
+         0Clb76Ucerxgc9teB0DIOG/dWbbIdAJ8OuQsiJrQn6E5irFwUJBXH5iytON5QHP3UB3m
+         4l7S2Dnio2Ee6Bb2RodMfAWHbYsVQeArV/mqSv9MSUXLoT2ZefWeOir9F3XP0hC6AUJa
+         UV5jbVXf8f/mw3Ic0HI5S500kEX4M/vCOr8ku3b6uphPThA/DISS0ogoTX2i/RIxa6Bb
+         Pq1ifFWDMRNBMx03uVxyqyffxXzUTV/efuKsVIs207s2nxuN2jOZ5Tn6xZiHv+Jwge+D
+         mDag==
+X-Gm-Message-State: APjAAAVFBD+rTKgU/aYwrwmappjLlktYyJW2Szq05tPx1aIicrkFMFS8
+        uK2mDohPb44Fl4YJbU89xN9Vyg==
+X-Google-Smtp-Source: APXvYqy+xHiEnHqxwZv7QXY40UpjEmUZChrkX33sH3sKrTGGgaaX2f6qwwlc+D8e0z2Z3R6tNR26Kg==
+X-Received: by 2002:adf:e3c7:: with SMTP id k7mr31104859wrm.80.1576493041373;
+        Mon, 16 Dec 2019 02:44:01 -0800 (PST)
 Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id y20sm19628749wmi.25.2019.12.16.02.42.48
+        by smtp.gmail.com with ESMTPSA id z3sm21030535wrs.94.2019.12.16.02.43.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 02:42:48 -0800 (PST)
-Date:   Mon, 16 Dec 2019 10:42:48 +0000
+        Mon, 16 Dec 2019 02:44:00 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:43:59 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Stephan Gerhold <stephan@gerhold.net>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -66,14 +66,15 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: ab8500: Document AB8505 bindings
-Message-ID: <20191216104248.GE3601@dell>
+Subject: Re: [PATCH 2/2] mfd: ab8500-core: Add device tree support for AB8505
+Message-ID: <20191216104359.GF3601@dell>
 References: <20191117221053.278415-1-stephan@gerhold.net>
+ <20191117221053.278415-2-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191117221053.278415-1-stephan@gerhold.net>
+In-Reply-To: <20191117221053.278415-2-stephan@gerhold.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -82,15 +83,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, 17 Nov 2019, Stephan Gerhold wrote:
 
-> AB8505 can now be configured from the device tree.
-> The configuration is almost identical to AB8500, so just add a note
-> for the nodes/compatibles that differ between the two revisions.
+> AB8505 support was never fully converted to the device tree.
+> Most of the MFD cells for AB8505 lack an "of_compatible",
+> which prevents them from being configured through the device tree.
+> 
+> Align the definition of the AB8505 MFD cells with the ones for AB8500,
+> and add device tree compatibles. Except for GPIO and regulators the
+> compatibles are equal to those used for AB8500 because the hardware
+> does not differ much.
+> 
+> Finally, change db8500_prcmu_register_ab8500() to check for the AB8505
+> device tree node additionally, and probe it if it is found.
 > 
 > Cc: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
->  Documentation/devicetree/bindings/mfd/ab8500.txt | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  drivers/mfd/ab8500-core.c  | 14 ++++++++++++--
+>  drivers/mfd/db8500-prcmu.c | 26 ++++++++++++++++++++------
+>  2 files changed, 32 insertions(+), 8 deletions(-)
 
 Applied, thanks.
 
