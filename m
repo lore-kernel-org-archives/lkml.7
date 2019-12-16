@@ -2,202 +2,287 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A396EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340CFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B7820725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0274F206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLPL74 convert rfc822-to-8bit (ORCPT
+        id S1727580AbfLPMAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:59:56 -0500
-Received: from mga02.intel.com ([134.134.136.20]:44921 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfLPL7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:59:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 03:59:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="221485422"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Dec 2019 03:59:54 -0800
-Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 03:59:55 -0800
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX161.amr.corp.intel.com (10.18.125.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 03:59:53 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.29]) with mapi id 14.03.0439.000;
- Mon, 16 Dec 2019 19:59:52 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH v3 03/10] vfio_pci: refine vfio_pci_driver reference in
- vfio_pci.c
-Thread-Topic: [PATCH v3 03/10] vfio_pci: refine vfio_pci_driver reference in
- vfio_pci.c
-Thread-Index: AQHVoSntMsAVvlFieUi72FX6+tynY6e7apkAgAFjZ4A=
-Date:   Mon, 16 Dec 2019 11:59:51 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A134FF2@SHSMSX104.ccr.corp.intel.com>
-References: <1574335427-3763-1-git-send-email-yi.l.liu@intel.com>
-        <1574335427-3763-4-git-send-email-yi.l.liu@intel.com>
- <20191215154642.1d4163bf@x1.home>
-In-Reply-To: <20191215154642.1d4163bf@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmEyMzFjNzUtYWNlYy00M2RjLWIzOGItNjY5MjdmODYwMDc0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaXlJbEZYb1wvcnpOMXBWdXdKT0p6VlhUUXlEZ3hJTmc5d0hYQlZSM3J6dEtvVjk1YzVkK2piQjlnbW1HdkJTaUIifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 16 Dec 2019 07:00:12 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52456 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727531AbfLPMAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:00:11 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AB11CA1204432A548E2B;
+        Mon, 16 Dec 2019 20:00:08 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Dec 2019
+ 20:00:02 +0800
+Subject: Re: [PATCH v4] lib: optimize cpumask_local_spread()
+To:     Michal Hocko <mhocko@kernel.org>
+References: <1576051437-23230-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191211090823.GD14655@dhcp22.suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        yuqi jin <jinyuqi@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Juergen Gross" <jgross@suse.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <9c733e33-8e87-9854-107b-b4d78fc95b99@hisilicon.com>
+Date:   Mon, 16 Dec 2019 20:00:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191211090823.GD14655@dhcp22.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson < alex.williamson@redhat.com>
-> Sent: Monday, December 16, 2019 6:47 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v3 03/10] vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
-> 
-> On Thu, 21 Nov 2019 19:23:40 +0800
-> Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
-> > This patch replaces the vfio_pci_driver reference in vfio_pci.c with
-> > pci_dev_driver(vdev->pdev) which is more helpful to make the functions
-> > be generic to module types.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c | 33 ++++++++++++++++++---------------
-> >  1 file changed, 18 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index b04e43a..2096e66 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -1460,24 +1460,25 @@ static void vfio_pci_reflck_get(struct vfio_pci_reflck
-> *reflck)
-> >
-> >  static int vfio_pci_reflck_find(struct pci_dev *pdev, void *data)
-> >  {
-> > -	struct vfio_pci_reflck **preflck = data;
-> > +	struct vfio_pci_device *vdev = data;
-> > +	struct vfio_pci_reflck **preflck = &vdev->reflck;
-> >  	struct vfio_device *device;
-> > -	struct vfio_pci_device *vdev;
-> > +	struct vfio_pci_device *tmp;
-> >
-> >  	device = vfio_device_get_from_dev(&pdev->dev);
-> >  	if (!device)
-> >  		return 0;
-> >
-> > -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> > +	if (pci_dev_driver(pdev) != pci_dev_driver(vdev->pdev)) {
-> >  		vfio_device_put(device);
-> >  		return 0;
-> >  	}
-> >
-> > -	vdev = vfio_device_data(device);
-> > +	tmp = vfio_device_data(device);
-> >
-> > -	if (vdev->reflck) {
-> > -		vfio_pci_reflck_get(vdev->reflck);
-> > -		*preflck = vdev->reflck;
-> > +	if (tmp->reflck) {
-> > +		vfio_pci_reflck_get(tmp->reflck);
-> > +		*preflck = tmp->reflck;
-> >  		vfio_device_put(device);
-> >  		return 1;
-> >  	}
-> > @@ -1494,7 +1495,7 @@ static int vfio_pci_reflck_attach(struct vfio_pci_device
-> *vdev)
-> >
-> >  	if (pci_is_root_bus(vdev->pdev->bus) ||
-> >  	    vfio_pci_for_each_slot_or_bus(vdev->pdev, vfio_pci_reflck_find,
-> > -					  &vdev->reflck, slot) <= 0)
-> > +					  vdev, slot) <= 0)
-> >  		vdev->reflck = vfio_pci_reflck_alloc();
-> >
-> >  	mutex_unlock(&reflck_lock);
-> > @@ -1519,6 +1520,7 @@ static void vfio_pci_reflck_put(struct vfio_pci_reflck
-> *reflck)
-> >
-> >  struct vfio_devices {
-> >  	struct vfio_device **devices;
-> > +	struct vfio_pci_device *vdev;
-> >  	int cur_index;
-> >  	int max_index;
-> >  };
-> > @@ -1527,7 +1529,7 @@ static int vfio_pci_get_unused_devs(struct pci_dev
-> *pdev, void *data)
-> >  {
-> >  	struct vfio_devices *devs = data;
-> >  	struct vfio_device *device;
-> > -	struct vfio_pci_device *vdev;
-> > +	struct vfio_pci_device *tmp;
-> >
-> >  	if (devs->cur_index == devs->max_index)
-> >  		return -ENOSPC;
-> > @@ -1536,15 +1538,15 @@ static int vfio_pci_get_unused_devs(struct pci_dev
-> *pdev, void *data)
-> >  	if (!device)
-> >  		return -EINVAL;
-> >
-> > -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> > +	if (pci_dev_driver(pdev) != pci_dev_driver(devs->vdev->pdev)) {
-> >  		vfio_device_put(device);
-> >  		return -EBUSY;
-> >  	}
-> >
-> > -	vdev = vfio_device_data(device);
-> > +	tmp = vfio_device_data(device);
-> >
-> >  	/* Fault if the device is not unused */
-> > -	if (vdev->refcnt) {
-> > +	if (tmp->refcnt) {
-> >  		vfio_device_put(device);
-> >  		return -EBUSY;
-> >  	}
-> > @@ -1590,6 +1592,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device
-> *vdev)
-> >  	if (!devs.devices)
-> >  		return;
-> >
-> > +	devs.vdev = vdev;
-> 
-> This could be added to the declaration initializer:
-> 
-> struct vfio_devices devs = { .vdev = vdev, .cur_index = 0 };
-> 
-> It might seem a little less random then.  Thanks,
+Hi Andrew/Michal,
 
-Got it. Will do it.
+Any other comments please?
 
 Thanks,
-Yi Liu
+Shaokun
+
+On 2019/12/11 17:08, Michal Hocko wrote:
+> On Wed 11-12-19 16:03:57, Shaokun Zhang wrote:
+>> From: yuqi jin <jinyuqi@huawei.com>
+>>
+>> In multi-processor and NUMA system, I/O driver will find cpu cores that
+>> which shall be bound IRQ. When cpu cores in the local numa have been
+>> used, it is better to find the node closest to the local numa node for
+>> performance, instead of choosing any online cpu immediately.
+>>
+>> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 - 3) in the 2-cpu
+>> system(0 - 1). The topology of this server is followed:
+>> available: 4 nodes (0-3)
+>> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+>> node 0 size: 63379 MB
+>> node 0 free: 61899 MB
+>> node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+>> node 1 size: 64509 MB
+>> node 1 free: 63942 MB
+>> node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+>> node 2 size: 64509 MB
+>> node 2 free: 63056 MB
+>> node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+>> node 3 size: 63997 MB
+>> node 3 free: 63420 MB
+>> node distances:
+>> node   0   1   2   3
+>>   0:  10  16  32  33
+>>   1:  16  10  25  32
+>>   2:  32  25  10  16
+>>   3:  33  32  16  10
+>>
+>> We perform PS (parameter server) business test, the behavior of the 
+>> service is that the client initiates a request through the network card,
+>> the server responds to the request after calculation. When two PS
+>> processes run on node2 and node3 separately and the network card is
+>> located on 'node2' which is in cpu1, the performance of node2 (26W QPS)
+>> and node3 (22W QPS) is different.
+>> It is better that the NIC queues are bound to the cpu1 cores in turn,
+>> then XPS will also be properly initialized, while cpumask_local_spread
+>> only considers the local node. When the number of NIC queues exceeds the
+>> number of cores in the local node, it returns to the online core directly.
+>> So when PS runs on node3 sending a calculated request, the performance is
+>> not as good as the node2.
+>> The IRQ from 369-392 will be bound from NUMA node0 to NUMA node3 with this
+>> patch, before the patch:
+>> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+>> 0
+>> Euler:/sys/bus/pci # cat /proc/irq/370/smp_affinity_list
+>> 1
+>> ...
+>> Euler:/sys/bus/pci # cat /proc/irq/391/smp_affinity_list
+>> 22
+>> Euler:/sys/bus/pci # cat /proc/irq/392/smp_affinity_list
+>> 23
+>> After the patch:
+>> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+>> 72
+>> Euler:/sys/bus/pci # cat /proc/irq/370/smp_affinity_list
+>> 73
+>> ...
+>> Euler:/sys/bus/pci # cat /proc/irq/391/smp_affinity_list
+>> 94
+>> Euler:/sys/bus/pci # cat /proc/irq/392/smp_affinity_list
+>> 95
+>> So the performance of the node3 is the same as node2 that is 26W QPS when
+>> the network card is still in 'node2' with the patch.
+>>
+>> It is considered that the NIC and other I/O devices shall initialize the
+>> interrupt binding, if the cores of the local node are used up, it is
+>> reasonable to return the node closest to it. Let's optimize it and find
+>> the nearest node through NUMA distance for the non-local NUMA nodes.
+> 
+> As I've said/asked earlier. I am missing some background how this is
+> affecting other existing users. Is this just that nobody has noticed the
+> suboptimal cpu usage or is your workload very special in that regards.
+> 
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Juergen Gross <jgross@suse.com>
+>> Cc: Paul Burton <paul.burton@mips.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
+>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> ---
+>> ChangeLog from v3:
+>>     1. Make spread_lock local to cpumask_local_spread();
+>>     2. Add more descriptions on the affinities change in log;
+>>
+>> ChangeLog from v2:
+>>     1. Change the variables as static and use spinlock to protect;
+>>     2. Give more explantation on test and performance;
+>>
+>>  lib/cpumask.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
+>>  1 file changed, 90 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/lib/cpumask.c b/lib/cpumask.c
+>> index 0cb672eb107c..f7394ba36116 100644
+>> --- a/lib/cpumask.c
+>> +++ b/lib/cpumask.c
+>> @@ -6,6 +6,7 @@
+>>  #include <linux/export.h>
+>>  #include <linux/memblock.h>
+>>  #include <linux/numa.h>
+>> +#include <linux/spinlock.h>
+>>  
+>>  /**
+>>   * cpumask_next - get the next cpu in a cpumask
+>> @@ -192,18 +193,39 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>>  }
+>>  #endif
+>>  
+>> -/**
+>> - * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+>> - * @i: index number
+>> - * @node: local numa_node
+>> - *
+>> - * This function selects an online CPU according to a numa aware policy;
+>> - * local cpus are returned first, followed by non-local ones, then it
+>> - * wraps around.
+>> - *
+>> - * It's not very efficient, but useful for setup.
+>> - */
+>> -unsigned int cpumask_local_spread(unsigned int i, int node)
+>> +static void calc_node_distance(int *node_dist, int node)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < nr_node_ids; i++)
+>> +		node_dist[i] = node_distance(node, i);
+>> +}
+>> +
+>> +static int find_nearest_node(int *node_dist, bool *used)
+>> +{
+>> +	int i, min_dist = node_dist[0], node_id = -1;
+>> +
+>> +	/* Choose the first unused node to compare */
+>> +	for (i = 0; i < nr_node_ids; i++) {
+>> +		if (used[i] == 0) {
+>> +			min_dist = node_dist[i];
+>> +			node_id = i;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	/* Compare and return the nearest node */
+>> +	for (i = 0; i < nr_node_ids; i++) {
+>> +		if (node_dist[i] < min_dist && used[i] == 0) {
+>> +			min_dist = node_dist[i];
+>> +			node_id = i;
+>> +		}
+>> +	}
+>> +
+>> +	return node_id;
+>> +}
+>> +
+>> +static unsigned int __cpumask_local_spread(unsigned int i, int node)
+>>  {
+>>  	int cpu;
+>>  
+>> @@ -231,4 +253,60 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+>>  	}
+>>  	BUG();
+>>  }
+>> +
+>> +/**
+>> + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+>> + * @i: index number
+>> + * @node: local numa_node
+>> + *
+>> + * This function selects an online CPU according to a numa aware policy;
+>> + * local cpus are returned first, followed by the nearest non-local ones,
+>> + * then it wraps around.
+>> + *
+>> + * It's not very efficient, but useful for setup.
+>> + */
+>> +unsigned int cpumask_local_spread(unsigned int i, int node)
+>> +{
+>> +	static DEFINE_SPINLOCK(spread_lock);
+>> +	static int node_dist[MAX_NUMNODES];
+>> +	static bool used[MAX_NUMNODES];
+>> +	unsigned long flags;
+>> +	int cpu, j, id;
+>> +
+>> +	/* Wrap: we always want a cpu. */
+>> +	i %= num_online_cpus();
+>> +
+>> +	if (node == NUMA_NO_NODE) {
+>> +		for_each_cpu(cpu, cpu_online_mask)
+>> +			if (i-- == 0)
+>> +				return cpu;
+>> +	} else {
+>> +		if (nr_node_ids > MAX_NUMNODES)
+>> +			return __cpumask_local_spread(i, node);
+>> +
+>> +		spin_lock_irqsave(&spread_lock, flags);
+>> +		memset(used, 0, nr_node_ids * sizeof(bool));
+>> +		calc_node_distance(node_dist, node);
+>> +		for (j = 0; j < nr_node_ids; j++) {
+>> +			id = find_nearest_node(node_dist, used);
+>> +			if (id < 0)
+>> +				break;
+>> +
+>> +			for_each_cpu_and(cpu, cpumask_of_node(id),
+>> +					 cpu_online_mask)
+>> +				if (i-- == 0) {
+>> +					spin_unlock_irqrestore(&spread_lock,
+>> +							       flags);
+>> +					return cpu;
+>> +				}
+>> +			used[id] = 1;
+>> +		}
+>> +		spin_unlock_irqrestore(&spread_lock, flags);
+>> +
+>> +		for_each_cpu(cpu, cpu_online_mask)
+>> +			if (i-- == 0)
+>> +				return cpu;
+>> +	}
+>> +	BUG();
+>> +}
+>>  EXPORT_SYMBOL(cpumask_local_spread);
+>> -- 
+>> 2.7.4
+> 
 
