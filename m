@@ -2,123 +2,130 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E9FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A27FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6613020717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E21206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvItLLLF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXKFvYdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfLPPdw (ORCPT
+        id S1728437AbfLPPer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:33:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44473 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728280AbfLPPdw (ORCPT
+        Mon, 16 Dec 2019 10:34:47 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36093 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbfLPPeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:33:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576510430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z0ykzv4O9XDflANBBucUp6ssbent/uqQftfOjZxhGN0=;
-        b=CvItLLLFf9H0OcxsysiMIYLsVR993UsqrVKMkYsTASsyRTNbjoURpshFMP1kK9iGXKnGaQ
-        mg5uX2nXfGMYeE3HPJlDj7wxZ9s3bQy4jMzWVKalFf4vzitTXsxrQ/SHuBWBh4HWbtdnWz
-        Aq0+rKZ8agxql3pc30/68RGVyfBb0AU=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-R_s1NlYMOwem18pCbqPcqw-1; Mon, 16 Dec 2019 10:33:49 -0500
-X-MC-Unique: R_s1NlYMOwem18pCbqPcqw-1
-Received: by mail-qt1-f198.google.com with SMTP id z12so244584qts.15
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:33:49 -0800 (PST)
+        Mon, 16 Dec 2019 10:34:46 -0500
+Received: by mail-ed1-f68.google.com with SMTP id j17so5409053edp.3;
+        Mon, 16 Dec 2019 07:34:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=TzfAR8SDzD///NGN9DuEi/f++yR3mLqHbY7tEnQ3hyE=;
+        b=dXKFvYdYbZt8kGC/wa9JG2wseqQ4IYUQowSDont/vk68zNdtIxs4Jr+if5/kgq6S1Q
+         sePxB1PZ6npdQL5UH+gNMYL8fID/NutrNwMwQh8DnSUB1MLv45g0JZM8GbTj7IA3rj02
+         omY1FYBDNREPNFgHSV88lhLqHxDMZLC3xgDFNDljgENogzjdDOxU1950omIwR3nbca6X
+         I6j6vjLqxn5/kN4Nj+KYjqX44lKMJ1UAtZlFfChdRu4Ze1VXkl68PXNHrLrvDrFJiS7m
+         yhcwP9YlL2cH7Jra2oXINdHzeWCpC5/43D07U/Wm83+A+AlsWOadscsmU5FPTEOqe12W
+         szaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z0ykzv4O9XDflANBBucUp6ssbent/uqQftfOjZxhGN0=;
-        b=E1po9uamIFPsMIznCtJUr77hB8GHVnnXrBu6CiB/EkD8p6nHSPZPxNjOK7MCSOSskZ
-         Ohlmka4gcChP3pumNdUKDNCEjDighUwh9lf9TpM4kuRAD00tjhTkuUSB1L0WHtVwaxa7
-         DWhfbG85XntBaYT91gJM3za13j+yLprdsnSr/xvRX85jzCBOUiGyNKlkQKSSM5elZ7Cj
-         /W6Jv2Z645ATLT87Rt849XILNJNs5HEuX7iX4xvtd26p0VWCbFyIpERAC7F2y2L10txc
-         yNNR2LNAvvN/l8Hu+rUOh8Z6fGmzasfJT3X6ICeNCgA4FZgZCROIAzYEJh6dusR+/X0D
-         aVMQ==
-X-Gm-Message-State: APjAAAUfMx+9MDiAhelw0tUxkceECk1LqfenB7JYUTMn+hzCkMKleSuu
-        WrO+qSuS5/dZLADKQXVRxN2u7VLwYcW5C7SjoC0wRtNyNTOnYFxjUuG3/DVgf+xq1RQ1BMw7ZZ4
-        l+Z25quXF7yFDajys3jm6HHm3
-X-Received: by 2002:a05:620a:b18:: with SMTP id t24mr27387986qkg.341.1576510428730;
-        Mon, 16 Dec 2019 07:33:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwYwsAN4Q+QC29+/ynoBvhgn+sVgs19/Aa51xUTnXtyYxuSUmHPy54H02pcDC57nW5rMIQk2w==
-X-Received: by 2002:a05:620a:b18:: with SMTP id t24mr27387965qkg.341.1576510428508;
-        Mon, 16 Dec 2019 07:33:48 -0800 (PST)
-Received: from redhat.com ([212.199.108.238])
-        by smtp.gmail.com with ESMTPSA id b191sm6118550qkg.43.2019.12.16.07.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:33:47 -0800 (PST)
-Date:   Mon, 16 Dec 2019 10:33:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191216103251-mutt-send-email-mst@kernel.org>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <20191211063830-mutt-send-email-mst@kernel.org>
- <20191211205952.GA5091@xz-x1>
- <20191211172713-mutt-send-email-mst@kernel.org>
- <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
- <20191215173302.GB83861@xz-x1>
- <20191216044619-mutt-send-email-mst@kernel.org>
- <20191216150754.GC83861@xz-x1>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=TzfAR8SDzD///NGN9DuEi/f++yR3mLqHbY7tEnQ3hyE=;
+        b=ZjzcWxEf12hvAQfzx5vEOYugiXEskGy5uPzi2yQhHmqyLdiPUvJ5EFsO4miH5yNmBU
+         f6hckjcP8/mPNYGe2X2Esy63Gtc/koQqCQC1y3aO/TJoKv1HQWlXpw+HDk4X0wIq5XDE
+         DnpAjxQOZ1hBhUmI1sWYNw+FzlcySlQaY4G10AOK243ZaMvQhevzBeLO9KKOuY8wQ1QH
+         2ADIqSiGBtvw5X5YcmknltnTGaGU6myMZG+ku77T5o0AUYLtGCtkSPRf6ib2mm4HevXB
+         XE53v1zupYOiKSyOYi1pqW3o5mZohHheR+W7cIdyIbFP643LlKmggbYQYkfkbn1z+f/y
+         fmsQ==
+X-Gm-Message-State: APjAAAVkFjW2G9vBBkB8HXxDeKGL6CTjEwWoSwUiDfWL9oVEYYnIkhps
+        niAzablIvdhI6/hTp05amXyv3If2DNoqj1G5S5Q=
+X-Google-Smtp-Source: APXvYqyN+l+hHsnCGP5fKaCWp5Vgf3bVx45JFoAKup3tUOEM5z6gT6b71Rh56KjCe0FiBgXj27oC+gNt/6SyWXIzNbM=
+X-Received: by 2002:a17:906:3793:: with SMTP id n19mr9532162ejc.85.1576510484528;
+ Mon, 16 Dec 2019 07:34:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216150754.GC83861@xz-x1>
+References: <20191107140304.8426-1-laurent@vivier.eu> <20191107140304.8426-2-laurent@vivier.eu>
+ <7cb245ed-f738-7991-a09b-b27152274b9f@vivier.eu> <20191213185110.06b52cf4@md1za8fc.ad001.siemens.net>
+ <1576267177.4060.4.camel@HansenPartnership.com> <3205e74b-71f1-14f4-b784-d878b3ef697f@vivier.eu>
+ <CAKgNAkiaKJZMA0pzvwDa75CxfULTL1LmOZDzhW0Y5TmL7nBGZw@mail.gmail.com> <dbd19cb9-9172-d89d-f796-05a23213ca69@vivier.eu>
+In-Reply-To: <dbd19cb9-9172-d89d-f796-05a23213ca69@vivier.eu>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Mon, 16 Dec 2019 16:34:32 +0100
+Message-ID: <CAKgNAkjgnV2-Q1RRtdkF98ggUaQPm3z1ndyX_AtwKEmjw0Ne6A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/1] ns: add binfmt_misc to the user namespace
+To:     Laurent Vivier <laurent@vivier.eu>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Greg Kurz <groug@kaod.org>, Jann Horn <jannh@google.com>,
+        Containers <containers@lists.linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:07:54AM -0500, Peter Xu wrote:
-> On Mon, Dec 16, 2019 at 04:47:36AM -0500, Michael S. Tsirkin wrote:
-> > On Sun, Dec 15, 2019 at 12:33:02PM -0500, Peter Xu wrote:
-> > > On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
-> > > > >>> What depends on what here? Looks suspicious ...
-> > > > >>
-> > > > >> Hmm, I think maybe it can be removed because the entry pointer
-> > > > >> reference below should be an ordering constraint already?
-> > > > 
-> > > > entry->xxx depends on ring->reset_index.
-> > > 
-> > > Yes that's true, but...
-> > > 
-> > >         entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
-> > >         /* barrier? */
-> > >         next_slot = READ_ONCE(entry->slot);
-> > >         next_offset = READ_ONCE(entry->offset);
-> > > 
-> > > ... I think entry->xxx depends on entry first, then entry depends on
-> > > reset_index.  So it seems fine because all things have a dependency?
-> > 
-> > Is reset_index changed from another thread then?
-> > If yes then you want to read reset_index with READ_ONCE.
-> > That includes a dependency barrier.
-> 
-> There're a few readers, but only this function will change it
-> (kvm_dirty_ring_reset).  Thanks,
+Hi Laurent,
 
-Then you don't need any barriers in this function.
-readers need at least READ_ONCE.
+On Mon, 16 Dec 2019 at 10:13, Laurent Vivier <laurent@vivier.eu> wrote:
+>
+> Le 14/12/2019 =C3=A0 13:32, Michael Kerrisk (man-pages) a =C3=A9crit :
+> > Hello Laurent,
+> >
+> > On Sat, 14 Dec 2019 at 12:35, Laurent Vivier <laurent@vivier.eu> wrote:
+> >>
+> >> Le 13/12/2019 =C3=A0 20:59, James Bottomley a =C3=A9crit :
+> >>> On Fri, 2019-12-13 at 18:51 +0100, Henning Schild wrote:
+> >>>> Hi all,
+> >>>>
+> >>>> that is a very useful contribution, which will hopefully be
+> >>>> considered.
+> >>>
+> >>> I'm technically the maintainer on the you touched it last you own it
+> >>> basis, so if Christian's concerns get addressed I'll shepherd it
+> >>> upstream.
+> >>
+> >> Thank you.
+> >>
+> >> I update this in the next days and re-send the patch.
+> >
+> > Would you also be so kind as to craft a patch for the
+> > user_namespaces(7) manual page describing the changes (sent to me,
+> > linux-man@vger.kernel.org, and the other parties already in CC)?
+> >
+> > If you do not have the time to familiarize yourself with groff/man
+> > markup, a patch that uses plain text is fine; I can handle the
+> > formatting.
+>
+> I will send a patch for the user_namespaces(7) manual.
 
-> -- 
-> Peter Xu
+Thanks! Could you send that in parallel with (each of) the patch
+iterations please (rather than after the feature has been merged).
 
+Thanks,
+
+Michael
+
+--=20
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
