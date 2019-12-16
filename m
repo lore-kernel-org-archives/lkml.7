@@ -2,102 +2,92 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18731C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B376C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D341F20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC08206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EekAYTbg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSKVsWM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfLPNUm (ORCPT
+        id S1727882AbfLPNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:20:42 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:39922 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfLPNUm (ORCPT
+        Mon, 16 Dec 2019 08:21:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40498 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfLPNVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:20:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AIBNLHtUi45jjfcVIL9A+S21fh6ASfhp4YxY7c5nbV0=; b=EekAYTbgHV8U4aNxc1/MCeO3Q
-        J3YIWEqsUPf4ThjMCPzenT99XhnYOyeCGIXk0fydclAME38x9AfcTJnxUxBPN40vl1kquSjyyqhux
-        2brkNugJGgIYmteTLGXIOMlFlL2XldHeBx6KWIqd7H0cveUnkDusYVCQBeYmmvJUXU4Rw4IZp7pV0
-        sXNWGH+w04Ho9bM4GSUsPeInODngOMXkuga/vyZ+K/H+mmdWp/NtFPwlxUVW9D42kkf+OdKz5sVtu
-        UoEDJBfNI7uT/J2M4Au5funK7rzqsuWkrS5/3aHTo9fp4LldlXRWvQsLN5fi1wcfp+7axY5bD9xdD
-        v+573oERw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igqIC-0006kI-Lg; Mon, 16 Dec 2019 13:20:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5087E3035D4;
-        Mon, 16 Dec 2019 14:18:41 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10B7529D74791; Mon, 16 Dec 2019 14:20:04 +0100 (CET)
-Date:   Mon, 16 Dec 2019 14:20:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-Message-ID: <20191216132004.GO2844@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org>
- <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+        Mon, 16 Dec 2019 08:21:18 -0500
+Received: by mail-lj1-f194.google.com with SMTP id s22so6764362ljs.7;
+        Mon, 16 Dec 2019 05:21:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lQsx8zyUIj5ObfEsFUexXNSRbHHE+0/ar0m0MFvhew8=;
+        b=FSKVsWM16+PZVcbPhQt4ueF6AvXIFYCF2rK1iib2leLOhYfLAlCBok2E2VtzZeOtGk
+         /oLy93zRfA4lyN2CMOk/ySN7zgYBkyO0tz6h1djzZZ+xV1NMKe9mIEuBChiGJtnHeeym
+         vJvr2+RqP8Ul+YslzB/p6fLfABbFoDWUuoVQ9m58fJ4IZOFVPWtKrYBdVghNKteVaZho
+         6cyvPBzjwCE0x++n2O5iQW6qtLdh8D7OjE9SUrwEhxej9bZD+ukxlrPzLh5YN7Rim7Kh
+         j1HNIYKN3QlR1mz4AiqDr2TandMNyMvMjqHXtCP1iMwckpiRvBxXKJETj9ffuaG8hwfS
+         4phg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lQsx8zyUIj5ObfEsFUexXNSRbHHE+0/ar0m0MFvhew8=;
+        b=Y1bRDzpoGm4onV8D+w1rXw8hVTJRcqFzaQbL+cIcdTLzw9k1aOmE4SGid30b520DUr
+         cqHI5PXUtPwRsdx22PAGuNhzrtWxnvfm/oE+gEjLOmwIU2JImBUgB/EC9ZBHJ3F733In
+         BOVNe5TlcGmH25+LP9HncLw9cvvD6wJH5a+rA4Rohw2XNcF0GQYSbLTh2pevHM3IRGAf
+         cV3Th3Wj2c6wk2PoNUELPPmOXaL319OkMwSJtFPT0hzrlh/n/1WhOXOl+imieLS/bJte
+         rw0abbAvOsLmZPWJOp81jBysMLXZLnnAeyWd/B3H2Q7lVAwSv25AIEAgg5cqmKopqgYy
+         sSLw==
+X-Gm-Message-State: APjAAAW1IMDjIe9czvczf/bIBahhopkKp1DVsTusOmhb++fYB9axqU0N
+        oY9oRHVtexO/A0ayGBeDWfa4Iqoxa5p6MS4f6os=
+X-Google-Smtp-Source: APXvYqwyasL4AV9P77TBAwFOUCaOWSbMYr6wZzieWtwjK2yo6sJwnMOm8nr7r2NEKviSPQ6GeMTlFbGJtP4kQXgnngM=
+X-Received: by 2002:a2e:8152:: with SMTP id t18mr19475012ljg.255.1576502476464;
+ Mon, 16 Dec 2019 05:21:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191216103522.32215-1-gonsolo@gmail.com> <20191216103522.32215-2-gonsolo@gmail.com>
+ <CAMuHMdVotJuotVKa3rxgR3ujCedoWM19-HhwhbTC9g6gV_EVNw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVotJuotVKa3rxgR3ujCedoWM19-HhwhbTC9g6gV_EVNw@mail.gmail.com>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Mon, 16 Dec 2019 14:21:05 +0100
+Message-ID: <CANL0fFS81NgFBcMBdWo6OKefz04h_FeXadcau9Rkcna7Ap5PDw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Fix undefined reference to 'node_reclaim_distance'.
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:43:53PM +0530, Aneesh Kumar K.V wrote:
-> On 12/16/19 6:07 PM, Peter Zijlstra wrote:
+Hi!
 
-> > I'm confused, are you saing you're happy to have PowerPC eat the extra
-> > TLB invalidates? I thought you cared about PPC performance :-)
-> > 
-> > 
-> 
-> Instead can we do
-> 
-> static inline void tlb_table_invalidate(struct mmu_gather *tlb)
-> {
-> #ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> 	 * Invalidate page-table caches used by hardware walkers. Then we still
-> 	 * need to RCU-sched wait while freeing the pages because software
-> 	 * walkers can still be in-flight.
-> 	 */
-> 	tlb_flush_mmu_tlbonly(tlb);
-> #endif
-> }
+> Unfortunately that may be an x86-centric assumption: on other platforms,
+> there do exist systems with multiple memory banks with different access
+> performance figures.
 
-How does that not break ARM/ARM64/s390 and x86 ?
+Does that mean that the line
+
+obj-$(CONFIG_SMP) += cpupri.o cpudeadline.o topology.o stop_task.o pelt.o
+
+in kernel/sched/topology/Makefile:23 is wrong?
+
+Because in topology.c:1284 the variable node_reclaim_distance ist defined
+which is used in mm/page_alloc.c:3529 without depending on SMP.
+
+-- 
+g
