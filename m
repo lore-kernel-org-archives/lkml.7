@@ -2,122 +2,95 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAEFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E5FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B742082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7452082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521969;
-	bh=Kq/Fq7kyvsgnTWJMezzUi0YYEWQPd0NAaOiejOwwiTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZKNzj0SS82pKSt/yk9R/yXa0CHzTy65ym58hHe7TVMgW1qbvCavenVV43qN/xn1a
-	 35famTu3sXx+6ckKCqx1CSjn3qG7P4bA/3GQe+8hkdyekViYBUjUnG+xCMxumIv3n2
-	 I7VIhN9WP5ZKZZsYz8wo7HW2S6mpz7/t20HMfZXo=
+	s=default; t=1576521976;
+	bh=5QarJk2vf4AgFG65xfyZVNxmgPHhg74dg5zRhUTzMgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PTxB92AqbgjP05mc1COrmS4oGnag+YPhnY4QcBS8JCfwIFN/Y4Oy6+Nv01GqCFkrd
+	 TwFYmlKekCknrsiPqkKsywVGM36f7GYX/XNWehO0es2gzXLPwSQiQBAnHPxUgvdDoJ
+	 mr+yCBc5HW2qyOOlK6RLlmsFpgjJUwdkZyGaATBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfLPSqI (ORCPT
+        id S1728672AbfLPSqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfLPR4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A3621582;
-        Mon, 16 Dec 2019 17:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518993;
-        bh=Kq/Fq7kyvsgnTWJMezzUi0YYEWQPd0NAaOiejOwwiTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIyH/aiQN+QQdFqIoq2RXQEUDaQn3SGAmsoDVkGh8H7n1+2pzN6gW/tIog5R04hd+
-         jfJF8L8iW+0tAA/dFZAXWa2HYVlgKSnL1V6BvISiQDRSAXb6zZrsZFW6aTz5sEOOYf
-         QAJSuL+sCvEsUEEqooa8EZQcnikv07p1Qu+u/Cvw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 4.14 152/267] binder: Handle start==NULL in binder_update_page_range()
-Date:   Mon, 16 Dec 2019 18:47:58 +0100
-Message-Id: <20191216174910.820997337@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
-References: <20191216174848.701533383@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:46:15 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36813 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbfLPR41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:27 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so3255618oic.3;
+        Mon, 16 Dec 2019 09:56:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NSxjmaL8rqoc8+SB0zsgyZ8fRQmy0mATs46EIZXgEyk=;
+        b=Qgl2b+TMaU7LakVluiTrx/MNWV6P2Cm6yJabsMTMGvoFFRKQVm+OjFJ6CgQBO7vpiI
+         zn5szxT3LbEbR6D6HcZckJKkZzQhyZwBu6wtSyEA6s8QsxQIUXAQ+DAJYCAfmKGjKas+
+         ADAWTJrwGa+an5BPjC33tH+4t5I/5tBOO7qqzqxcWBVS6UvvniXIaU3XGdcD89sVbdn2
+         L+CI7Xukyd0eWTy+3zJeAqlsq+tkdY90Qqziv/+LNjzzrOFYTePOa9agC+XKxFyktjQm
+         EPVajn0YhB4+8A0SyvodES8eHLxiHvbGvifRzprvH0P47HeEzRDyQChwvmc/g0P04LHY
+         WEqg==
+X-Gm-Message-State: APjAAAV43tivx9hOjjQ8YJQ1NH29MVP7LydvwA6geS5Wqnbvby+NeIFB
+        g0DQflpE8BwHuf+S+iHMIrWzbLg=
+X-Google-Smtp-Source: APXvYqyXP65Nz9zaHaZk148ttbC2NvwuE+K2RDevNtaBL+faMyDiMYmBW9qIEqPRu2uHBQ6qq8iWfA==
+X-Received: by 2002:aca:498e:: with SMTP id w136mr146134oia.103.1576518986288;
+        Mon, 16 Dec 2019 09:56:26 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k5sm6960322oif.24.2019.12.16.09.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 09:56:25 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:56:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org, paul.kocialkowski@bootlin.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: Re: [PATCH v3 3/6] media: dt-bindings: Add bindings for i.MX8QXP/QM
+ JPEG driver
+Message-ID: <20191216175624.GA24066@bogus>
+References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+ <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+On Fri, 13 Dec 2019 14:06:18 +0200, Mirela Rabulea wrote:
+> Add bindings documentation for i.MX8QXP/QM JPEG decoder & encoder driver.
+> 
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+> ---
+>  .../devicetree/bindings/media/imx8-jpeg.yaml       | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+> 
 
-commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
-continuing backwards to index -1 and crashing.
-
-Luckily you need to be highly privileged to map things at NULL, so it's not
-a big problem.
-
-Fix it by adjusting the loop so that the loop variable is always in bounds.
-
-This patch is deliberately minimal to simplify backporting, but IMO this
-function could use a refactor. The jump labels in the second loop body are
-horrible (the error gotos should be jumping to free_range instead), and
-both loops would look nicer if they just iterated upwards through indices.
-And the up_read()+mmput() shouldn't be duplicated like that.
-
-Cc: stable@vger.kernel.org
-Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/android/binder_alloc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -289,8 +289,7 @@ static int binder_update_page_range(stru
- 	return 0;
- 
- free_range:
--	for (page_addr = end - PAGE_SIZE; page_addr >= start;
--	     page_addr -= PAGE_SIZE) {
-+	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
- 		bool ret;
- 		size_t index;
- 
-@@ -303,6 +302,8 @@ free_range:
- 		WARN_ON(!ret);
- 
- 		trace_binder_free_lru_end(alloc, index);
-+		if (page_addr == start)
-+			break;
- 		continue;
- 
- err_vm_insert_page_failed:
-@@ -312,7 +313,8 @@ err_map_kernel_failed:
- 		page->page_ptr = NULL;
- err_alloc_page_failed:
- err_page_ptr_cleared:
--		;
-+		if (page_addr == start)
-+			break;
- 	}
- err_no_vma:
- 	if (mm) {
-
-
+If a tag was not added on purpose, please state why and what changed.
