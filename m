@@ -2,148 +2,160 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6347C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81030C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF43F20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576523925;
-	bh=umyigagnhb33U7XFcrvRVeu8XmjQxyU9LI/V8/i5YqQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Pp32eZYE+L6nIXEtSwyHpkpugl8V7WCodJvPXRdhkaSWlWJZ3CA0qjz9yw9R4OWAJ
-	 awZNwwvteSalZKsJYOXgpHNei9bAEYnmokdCXQldczOQb0S4kZS7rsyNMpfgFyeijO
-	 jPoRb7tOEaA19VMb0IFLMKCW5hlM3cNsjzmjq2+o=
+	by mail.kernel.org (Postfix) with ESMTP id 56255207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DL4rsunr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfLPTSp (ORCPT
+        id S1727208AbfLPTUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:18:45 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35451 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfLPTSo (ORCPT
+        Mon, 16 Dec 2019 14:20:01 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:58508 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLPTUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:18:44 -0500
-Received: by mail-il1-f193.google.com with SMTP id g12so6347726ild.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 11:18:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b0bPLN5SC/JUxyNe5zd5G4JnOmCrsV5JAHwqQnxls/I=;
-        b=cUG5s+X+poHDgIfqpZeTcLpjKmwBRRAbShTvIRovE09W/Y12Bu+1asGMKjowke85At
-         yk+cmLoG8NRuPli4KN3+KU3jKH4IN8YvmKUbzkYjq9HlMAjI9ijXrN1q+JiDmlXgTYAV
-         /xUD653vaHLTDTMMsQ1S82NWvl2gPI7MIze3A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b0bPLN5SC/JUxyNe5zd5G4JnOmCrsV5JAHwqQnxls/I=;
-        b=Kla394j06zMEsJ3BJBsrd9VrRUP6ERJmgih4xrPxoLFsm+FcOVzuZNKMwonmoqZscj
-         HhTAdXAJWmYsG71f9ovheCe5hJweOwb9tW3c4U3/X9e90VNWIFGF5l+B9HPO+CT+Whtz
-         cSJxak8hyc7JNIl+cdeKcGiYxqRSWRIXRTraF551q1lnR2TgLBJjnpZj8o+Jo3/a1G1A
-         O+g4ZHZ2eRtQBUEd1gEMaijJlmPbnFtrvXEIJm97b33v4l3s9sG/L/NZksO09YdP78m0
-         MYl9zgtv+MZWin4YHeYQKaQIYMt8KbCS7h4VfnTudBcj9tjg94QqnY6sddkDBm4s8JDf
-         744Q==
-X-Gm-Message-State: APjAAAVt7VYG2F/JTWrYChbSXDlXIdadJHQGaNzKbqwOc/fXWk9fe/3C
-        W5neXj60uWp8VCpsb+IClhLY0pqCoZzW9Q==
-X-Google-Smtp-Source: APXvYqyBVVb7+uPaVUYuEid782dIYbWuLfwMhIH5T3fw2W4XVs+n3QA/tRU0fCORY2L/7gD1xws8Zg==
-X-Received: by 2002:a92:84d1:: with SMTP id y78mr13619028ilk.69.1576523923730;
-        Mon, 16 Dec 2019 11:18:43 -0800 (PST)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id v10sm4530979iol.85.2019.12.16.11.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 11:18:43 -0800 (PST)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
-        pmladek@suse.com, joe.lawrence@redhat.com, shuah@kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] selftests: livepatch: Fix it to do root uid check and skip
-Date:   Mon, 16 Dec 2019 12:18:40 -0700
-Message-Id: <20191216191840.15188-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 16 Dec 2019 14:20:00 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2F9A62010C1C;
+        Mon, 16 Dec 2019 11:19:59 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2F9A62010C1C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576523999;
+        bh=Ez8+9qHJjTzpNI++1nr7MYvBifA2xRwHbnv0WHsRdmA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DL4rsunrNxkbz/507oOb+nYxBAwRFit6DeGxF0u7jw1DRxtUocwhZxrpInQOGbUya
+         3N47TnUyaZbeOZ4JujE/9sq4H9CrFO9+0HKtUcbEUoKbvFOqEiNLLW5xBLlkPsQ3c4
+         ukrtRRjJeVmYMLtD0MDeEa/X+M8OA2hwzWdFLimI=
+Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
+ keys
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+References: <20191213171827.28657-1-nramas@linux.microsoft.com>
+ <20191213171827.28657-3-nramas@linux.microsoft.com>
+ <1576257955.8504.20.camel@HansenPartnership.com>
+ <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
+ <1576423353.3343.3.camel@HansenPartnership.com>
+ <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
+ <1576479187.3784.1.camel@HansenPartnership.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8844a360-6d1e-1435-db7c-fd7739487168@linux.microsoft.com>
+Date:   Mon, 16 Dec 2019 11:20:26 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576479187.3784.1.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-livepatch test configures the system and debug environment to run
-tests. Some of these actions fail without root access and test
-dumps several permission denied messages before it exits.
+On 12/15/2019 10:53 PM, James Bottomley wrote:
 
-Fix test-state.sh to call setup_config instead of set_dynamic_debug
-as suggested by Petr Mladek <pmladek@suse.com>
+Hi James,
 
-Fix it to check root uid and exit with skip code instead.
+> On Sun, 2019-12-15 at 17:12 -0800, Lakshmi Ramasubramanian wrote:
+>> On 12/15/2019 7:22 AM, James Bottomley wrote:
+>>
+>> Hi James,
+>>
+>>>
+>>> This is the problem:
+>>>
+>>> if (!flag)
+>>>       pre()
+>>> .
+>>> .
+>>> .
+>>> if (!flag)
+>>>       post()
+>>>
+>>> And your pre and post function either have to both run or neither
+>>> must.
+>>>    However, the flag is set asynchronously, so if it gets set while
+>>> another thread is running through the above code, it can change
+>>> after
+>>> pre is run but before post is.
+>>>
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- tools/testing/selftests/livepatch/functions.sh  | 15 ++++++++++++++-
- tools/testing/selftests/livepatch/test-state.sh |  3 +--
- 2 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> That doesn't matter ... the question is, is the input assumption that
+> both pre/post have to be called or neither must correct?  If so, the
+> code is wrong, if not, explain why.
+> 
+> James
+> 
 
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index 31eb09e38729..a6e3d5517a6f 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -7,6 +7,9 @@
- MAX_RETRIES=600
- RETRY_INTERVAL=".1"	# seconds
- 
-+# Kselftest framework requirement - SKIP code is 4
-+ksft_skip=4
-+
- # log(msg) - write message to kernel log
- #	msg - insightful words
- function log() {
-@@ -18,7 +21,16 @@ function log() {
- function skip() {
- 	log "SKIP: $1"
- 	echo "SKIP: $1" >&2
--	exit 4
-+	exit $ksft_skip
-+}
-+
-+# root test
-+function is_root() {
-+	uid=$(id -u)
-+	if [ $uid -ne 0 ]; then
-+		echo "skip all tests: must be run as root" >&2
-+		exit $ksft_skip
-+	fi
- }
- 
- # die(msg) - game over, man
-@@ -62,6 +74,7 @@ function set_ftrace_enabled() {
- #		 for verbose livepatching output and turn on
- #		 the ftrace_enabled sysctl.
- function setup_config() {
-+	is_root
- 	push_config
- 	set_dynamic_debug
- 	set_ftrace_enabled 1
-diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
-index dc2908c22c26..a08212708115 100755
---- a/tools/testing/selftests/livepatch/test-state.sh
-+++ b/tools/testing/selftests/livepatch/test-state.sh
-@@ -8,8 +8,7 @@ MOD_LIVEPATCH=test_klp_state
- MOD_LIVEPATCH2=test_klp_state2
- MOD_LIVEPATCH3=test_klp_state3
- 
--set_dynamic_debug
--
-+setup_config
- 
- # TEST: Loading and removing a module that modifies the system state
- 
--- 
-2.20.1
+I assume you are asking
+"What happens if the flag changes between the check done without the 
+mutex held (pre()) and the check done after the mutex is taken (post())".
+
+If I misunderstood your question, please clarify.
+
+"READER" functions: ima_post_key_create_or_update() and ima_queue_key()
+***********************************************************************
+In ima_post_key_create_or_update() the flag is checked first without the 
+mutex taken:
+
+  => If the flag is true, then there is no need to queue the key and it 
+can be processed immediately.
+
+     This condition means that either queued keys have already been 
+processed OR there is another thread in the middle of processing queued 
+keys. In both these conditions, the new key should NOT be queued, but 
+processed immediately.
+
+  => If the flag is false, ima_queue_key() is called. In this function, 
+the mutex is taken and flag checked again.
+
+Say, the flag changed from false to true at this point, the key will NOT 
+be queued. ima_queue_key() will return false and in response 
+ima_post_key_create_or_update() will process the key immediately.
+
+But if the flag is still false, the key will be queued by 
+ima_queue_key() and will be processed later.
+
+"WRITER" function: ima_process_queued_keys()
+********************************************
+In ima_process_queued_keys() the flag is checked first without the mutex 
+taken:
+
+  => If the flag is true, either the queued keys have already been 
+processed OR is in the middle of being processed. So no further action 
+is required.
+
+  => If the flag is false, mutex is taken and the flag is checked again. 
+If the flag changed from false to true between the above two tests, that 
+means another thread had raced to call ima_process_queued_keys() and has 
+processed the queued keys. So again, no further action is required.
+
+  But if the flag is still false (after the mutex is taken), then the 
+queued keys are processed and the flag is set to true.
+
+The above sequence ensures that queued keys are processed one and only 
+once. Subsequent keys are always processed immediately.
+
+To the best of my knowledge, there is no condition under which a key 
+would ever be dropped or be queued up without ever getting processed.
+I hope that answers your question.
+
+If you are still not convinced, please describe a sequence of steps that 
+can cause incorrect functionality.
+
+thanks,
+  -lakshmi
 
