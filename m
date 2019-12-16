@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3734C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7A0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8B0206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF09206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518995;
-	bh=YgnrCgMEVvq7Ar+XmQux3CnFO0itKu5o+VNqhmGd2Tg=;
+	s=default; t=1576519000;
+	bh=RARFCDjsWk3oIy7ZHkpustOzA5dM86R+xpwqdoBpGK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XDQI2WUbc+o+Ezxr/HuaVF0mveIgaFVN5uM4XQRTrM/FD/wofp3+wzpgI7/K1904Q
-	 oZXLj6yZvQJY9TmwNXNIzQ7orghszwyhXqa0rnrm9FEQ4yq2atOccWC8OD+8ae/PXY
-	 O+6qpmgRxblgaKrhIoim4ACxp2Gnt4pUw8xmXcD0=
+	b=fWOqvh4h2/b2D4E12/jDBDohC4skE3oFeX2i3+hfo4Q39OFqw6Z3Bk+xGcTZdW76n
+	 rb/f0EZ2t+Za1wdT+d2DZvkaS+I8xo0beqrDYU3Ob7nMiuAlsH/vc5FhTSRYb+UDC6
+	 XqBZB4jCNreue6y80HUM3+yGo+AOahMk016JycCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfLPR4e (ORCPT
+        id S1727857AbfLPR4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54770 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfLPR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:32 -0500
+        id S1727433AbfLPR4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75FDE205ED;
-        Mon, 16 Dec 2019 17:56:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46391205ED;
+        Mon, 16 Dec 2019 17:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518990;
-        bh=YgnrCgMEVvq7Ar+XmQux3CnFO0itKu5o+VNqhmGd2Tg=;
+        s=default; t=1576518995;
+        bh=RARFCDjsWk3oIy7ZHkpustOzA5dM86R+xpwqdoBpGK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p/2bWDpA/8Lgv6l9Lj8ut/joSzq6Y8Ql99pXRZZa4sHc3BWYCOgolmN07vvUhXri8
-         8BCs7aLX/i90L72O2HKcbxchtwqWvt4j/YUBVDuHy6MisQtbcQe1v/WXEML/5vT6jt
-         RSszQjbKj9bbvPSqMnJ4CFg/TEBx/wuP6WwWC3aQ=
+        b=xw0Rc8wRlUHL3riVXmfzKtGnk4+BHWp2Eo9QgYdMsmPmr5odxCwYb0Zb5cI82eW1i
+         njZImAp/yzJieKJGl7vswQfSmL01OObTfU+GsW7LUdz0ufN276dcHFLq6bg3xoRfAX
+         Q+1MuR03rzf+cQkYJJI0fVdhN4RS24FmAVn7O8Ck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 4.14 151/267] thermal: Fix deadlock in thermal thermal_zone_device_check
-Date:   Mon, 16 Dec 2019 18:47:57 +0100
-Message-Id: <20191216174910.767810990@linuxfoundation.org>
+        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.14 153/267] ASoC: rsnd: fixup MIX kctrl registration
+Date:   Mon, 16 Dec 2019 18:47:59 +0100
+Message-Id: <20191216174910.878531863@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,96 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <wvw@google.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
+commit 7aea8a9d71d54f449f49e20324df06341cc18395 upstream.
 
-1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
-device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
-a use-after-free issue. However, cancel_delayed_work_sync could be called
-insides the WQ causing deadlock.
+Renesas sound device has many IPs and many situations.
+If platform/board uses MIXer, situation will be more complex.
+To avoid duplicate DVC kctrl registration when MIXer was used,
+it had original flags.
+But it was issue when sound card was re-binded, because
+no one can't cleanup this flags then.
 
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+To solve this issue, commit 9c698e8481a15237a ("ASoC: rsnd: tidyup
+registering method for rsnd_kctrl_new()") checks registered
+card->controls, because if card was re-binded, these were cleanuped
+automatically. This patch could solve re-binding issue.
+But, it start to avoid MIX kctrl.
 
-Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wei Wang <wvw@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+To solve these issues, we need below.
+To avoid card re-binding issue: check registered card->controls
+To avoid duplicate DVC registration: check registered rsnd_kctrl_cfg
+To allow multiple MIX registration: check registered rsnd_kctrl_cfg
+This patch do it.
+
+Fixes: 9c698e8481a15237a ("ASoC: rsnd: tidyup registering method for rsnd_kctrl_new()")
+Reported-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Tested-By: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/thermal_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sh/rcar/core.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -299,7 +299,7 @@ static void thermal_zone_device_set_poll
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
- }
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -1279,14 +1279,14 @@ int rsnd_kctrl_new(struct rsnd_mod *mod,
+ 	int ret;
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -1350,7 +1350,7 @@ void thermal_zone_device_unregister(stru
+ 	/*
+-	 * 1) Avoid duplicate register (ex. MIXer case)
+-	 * 2) re-register if card was rebinded
++	 * 1) Avoid duplicate register for DVC with MIX case
++	 * 2) Allow duplicate register for MIX
++	 * 3) re-register if card was rebinded
+ 	 */
+ 	list_for_each_entry(kctrl, &card->controls, list) {
+ 		struct rsnd_kctrl_cfg *c = kctrl->private_data;
  
- 	mutex_unlock(&thermal_list_lock);
- 
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
- 
- 	thermal_set_governor(tz, NULL);
+-		if (strcmp(kctrl->id.name, name) == 0 &&
+-		    c->mod == mod)
++		if (c == cfg)
+ 			return 0;
+ 	}
  
 
 
