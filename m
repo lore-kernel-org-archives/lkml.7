@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E8FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C3220CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C58A2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519647;
-	bh=vVxJ+FxthJfmbcChelrHumybQHmC1SgZuN0K7KSHf2Q=;
+	s=default; t=1576519649;
+	bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fr5otf0Rlnrd4AMrmmnMeI3odr8MIrNZYQvjd+mz/obOPMOBzaSUqQSoCpeYRumaR
-	 juA0g5BMU89xG36iTBnykgBNt2F4Xv0xi+2C1Otard/Ap4YbKwHK+S0vRbAfIcA+yy
-	 TMyz4yI7l0x+4Cw/H9biPpuO0o3NKxRs5aT5RHEM=
+	b=hHi2sDnX2JjEnOa7I0J2qN7ofwFwK1g/a5KXKrGz1ZaTsk4ghZUUBzoc0sI+OTelI
+	 PI8xpMOl80SsQPMxwseAvsI2GqFZEjbTOWSC32kiuWI4P8/kzBxLq6hag2sHjIsxad
+	 jc9bcPKRxU4mZN5YT8pro9ed3gc4CqrR/kttOi/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfLPSH0 (ORCPT
+        id S1730144AbfLPSHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729967AbfLPSHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 13:07:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730138AbfLPSHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192252166E;
-        Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD14820CC7;
+        Mon, 16 Dec 2019 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519642;
-        bh=vVxJ+FxthJfmbcChelrHumybQHmC1SgZuN0K7KSHf2Q=;
+        s=default; t=1576519640;
+        bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3w/U1dHi9sYs5CZYurodNaVhos1aUf5z94yuXc9bHf15kVGzvtwCACfufyU8Hs3R
-         izXnXm2pndgmx/TeK6Po6z360sCznGRkIttaZ3oFtPiQTEDgXwdDxy1KIL6pWRP+lf
-         DnTHsv0CLjIJLgXzrXbYojbS3vs4j9CxmlHptIxU=
+        b=ZyPRtWsY8tHGOHdLF+too08++ozDLYmF/nGb5nYEikVj4+kN63g4wNGQ8HM3Kakop
+         /ZQUqWzjn/m4vE+euUa7JfoEranvShlR+RKi6xLbvb7s5wMXlRg40cpuusBjSn7zY9
+         1kP5QXMuNOPPFrUqzY4rFNE4vVLRkjXayV/9Uay4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.3 010/180] USB: documentation: flags on usb-storage versus UAS
-Date:   Mon, 16 Dec 2019 18:47:30 +0100
-Message-Id: <20191216174808.192985780@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.3 001/180] usb: gadget: configfs: Fix missing spin_lock_init()
+Date:   Mon, 16 Dec 2019 18:47:21 +0100
+Message-Id: <20191216174806.244533348@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,74 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 65cc8bf99349f651a0a2cee69333525fe581f306 upstream.
+commit 093edc2baad2c258b1f55d1ab9c63c2b5ae67e42 upstream.
 
-Document which flags work storage, UAS or both
+The driver allocates the spinlock but not initialize it.
+Use spin_lock_init() on it to initialize it correctly.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+This is detected by Coccinelle semantic patch.
+
+Fixes: 1a1c851bbd70 ("usb: gadget: configfs: fix concurrent issue between composite APIs")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191114112758.32747-4-oneukum@suse.com
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191030034046.188808-1-weiyongjun1@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |   22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/configfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5066,13 +5066,13 @@
- 			Flags is a set of characters, each corresponding
- 			to a common usb-storage quirk flag as follows:
- 				a = SANE_SENSE (collect more than 18 bytes
--					of sense data);
-+					of sense data, not on uas);
- 				b = BAD_SENSE (don't collect more than 18
--					bytes of sense data);
-+					bytes of sense data, not on uas);
- 				c = FIX_CAPACITY (decrease the reported
- 					device capacity by one sector);
- 				d = NO_READ_DISC_INFO (don't use
--					READ_DISC_INFO command);
-+					READ_DISC_INFO command, not on uas);
- 				e = NO_READ_CAPACITY_16 (don't use
- 					READ_CAPACITY_16 command);
- 				f = NO_REPORT_OPCODES (don't use report opcodes
-@@ -5087,17 +5087,18 @@
- 				j = NO_REPORT_LUNS (don't use report luns
- 					command, uas only);
- 				l = NOT_LOCKABLE (don't try to lock and
--					unlock ejectable media);
-+					unlock ejectable media, not on uas);
- 				m = MAX_SECTORS_64 (don't transfer more
--					than 64 sectors = 32 KB at a time);
-+					than 64 sectors = 32 KB at a time,
-+					not on uas);
- 				n = INITIAL_READ10 (force a retry of the
--					initial READ(10) command);
-+					initial READ(10) command, not on uas);
- 				o = CAPACITY_OK (accept the capacity
--					reported by the device);
-+					reported by the device, not on uas);
- 				p = WRITE_CACHE (the device cache is ON
--					by default);
-+					by default, not on uas);
- 				r = IGNORE_RESIDUE (the device reports
--					bogus residue values);
-+					bogus residue values, not on uas);
- 				s = SINGLE_LUN (the device has only one
- 					Logical Unit);
- 				t = NO_ATA_1X (don't allow ATA(12) and ATA(16)
-@@ -5106,7 +5107,8 @@
- 				w = NO_WP_DETECT (don't test whether the
- 					medium is write-protected).
- 				y = ALWAYS_SYNC (issue a SYNCHRONIZE_CACHE
--					even if the device claims no cache)
-+					even if the device claims no cache,
-+					not on uas)
- 			Example: quirks=0419:aaf5:rl,0421:0433:rc
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -1544,6 +1544,7 @@ static struct config_group *gadgets_make
+ 	gi->composite.resume = NULL;
+ 	gi->composite.max_speed = USB_SPEED_SUPER;
  
- 	user_debug=	[KNL,ARM]
++	spin_lock_init(&gi->spinlock);
+ 	mutex_init(&gi->lock);
+ 	INIT_LIST_HEAD(&gi->string_list);
+ 	INIT_LIST_HEAD(&gi->available_func);
 
 
