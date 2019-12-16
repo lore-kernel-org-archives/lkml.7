@@ -2,223 +2,149 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52239C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E728C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E39206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="nY19Qlgk"
+	by mail.kernel.org (Postfix) with ESMTP id 1B82D206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfLPRIm (ORCPT
+        id S1727202AbfLPRIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 16 Dec 2019 12:08:49 -0500
+Received: from mga14.intel.com ([192.55.52.115]:59257 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727788AbfLPRIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 12:08:42 -0500
-Received: from mail-eopbgr690050.outbound.protection.outlook.com ([40.107.69.50]:60371
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727849AbfLPRG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:06:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MhYCp3RZaAypP9t+TwTNVYQZ+31ILH28cB14RqskeBZipkggYDbAjKm5Z+s9qN5o2yO8ZorDI50i++kJaNyvurpaf6unwJrgECynasTS9eDh+hpzN525e4FXCOh1RPHbm/TkaTbiTk/Rs0XTXR2FHQkKI/znV0PE6U65MWxfdURV2/GQLWdlLKhKr2LS078MrHz3fzeMVZHfKhfcVS2M32+ScfX95M3YOKDWjrnGZfEEq/IQklTfVuSqVtCSONjZ+eb/fTuVyJE8OvGLu9kzXbuTccTzMPBItybvnV2rEtX7dbz+sMlVuTro10FG1cje1F1NMNVA4OANjTB8X4jZQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKokqRbCvMB90/LU4bnck62DAjSzKvABlk0gli1+IDI=;
- b=WaTluUt1HyX5BDq1/FA42AnoWXQ+wLen20BEMUaK97F5jbrz/TPbHQ291T3E3oYwWqmWf+20jK2rVwekEs6dQP2xui5Dd5QvVDcWlaQlHuT3wtSsYT3W1XNLcTN/UvosJiQZETXop0A/MBPE5b1nKbzJ38LVjT/N04qslQ2gOt0Gv3oesePNl36geffBZNnmqImIIBy7UnxWsJYE0GWlRdmvl5+Vnotu+GBmQTs3p64TXcvFfBYAde9HzNuDw+N9vdUn0XFBMTV3ywF0lI0MiAsVi1LT+Mm75gC6fhoKgCTPpHI736FNfp6r5GGmlnBHUs6AmSiQ5O+CljzHaIy1IA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKokqRbCvMB90/LU4bnck62DAjSzKvABlk0gli1+IDI=;
- b=nY19QlgkspnDphKHhnzEsg83RPjE1J7RhtjEPmBiDuCrpFCL809Hnpq+QvNsc3zDJbbG7jXA3X1GyEl2Gb435gIYHEu7eWWVT+VCt8DJ7InEcm/syKXQq2j96qjS9fzrCLp2KIH38QMgi8VwoYObJqxSTRomMab2AzMgvfSkptI=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4142.namprd11.prod.outlook.com (20.179.149.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Mon, 16 Dec 2019 17:06:44 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 17:06:44 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-Subject: [PATCH 43/55] staging: wfx: simplify hif_set_edca_queue_params()
- usage
-Thread-Topic: [PATCH 43/55] staging: wfx: simplify hif_set_edca_queue_params()
- usage
-Thread-Index: AQHVtDLMFy8LEFq+KkG0dshbJfvNyg==
-Date:   Mon, 16 Dec 2019 17:03:55 +0000
-Message-ID: <20191216170302.29543-44-Jerome.Pouiller@silabs.com>
-References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-In-Reply-To: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8834fd11-e68f-485a-651d-08d7824a53f9
-x-ms-traffictypediagnostic: MN2PR11MB4142:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB41427E17929FAB5BD4E2265D93510@MN2PR11MB4142.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(136003)(376002)(39850400004)(199004)(189003)(6512007)(71200400001)(91956017)(6486002)(8676002)(2906002)(54906003)(81166006)(81156014)(186003)(76116006)(478600001)(36756003)(85182001)(85202003)(6666004)(66556008)(66476007)(66446008)(64756008)(1076003)(66574012)(316002)(2616005)(4326008)(6506007)(26005)(8936002)(110136005)(5660300002)(107886003)(66946007)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OYnngvnvb3Ski5S53PTGtpXo374XCcVcCXmwChgydwtcsgaH6AQ2ormTCoymjdxtYBCznSjKbvsQjNRJ7HB1Y0DeCBv/DdgJcP9iVm1I0U/Y1EiEXEc4n0EDKCSZXwPR9PmJ6FpbcwBPptifE75rScZm6gM61vrf9qKSxzdItAGmiMStJSIyylNBeFP2nKyG98u1CjD/aHNdNl6SzAE+J2woC4gZ06yjCZe47C/2TE9WwzOrIjDq2tr7moVKe2kNyfriIQ/weEzI0arZncDJyMcbLS8NaSKpmZ7KaE/JJq72pcFxOtAut2rcY7B9yqgTmHZ7jDjhJIitV7YDQzbwIFVikjVoGXnOq7GBCMvDH3wwJGCjRIcdCCFjVILuPG8t2h+Ji16NFKhUt6DXW2KBtv5rBcdQ7ju/0jQRWpkN+jiu1bqRXFPlEjImgyRBbJMS
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2A5490171187CC4A8E01757592B314A3@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 08:33:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
+   d="scan'208";a="240090657"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Dec 2019 08:33:57 -0800
+Received: from [10.251.95.214] (abudanko-mobl.ccr.corp.intel.com [10.251.95.214])
+        by linux.intel.com (Postfix) with ESMTP id 52C38580458;
+        Mon, 16 Dec 2019 08:33:49 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     "Lubashev, Igor" <ilubashe@akamai.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bgregg@netflix.com" <bgregg@netflix.com>,
+        Song Liu <songliubraving@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
+ <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
+ <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <3f2ac76c-6108-7769-4b99-a7a2da31af3d@linux.intel.com>
+Date:   Mon, 16 Dec 2019 19:33:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8834fd11-e68f-485a-651d-08d7824a53f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:03:55.8023
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uxYgptWwliyYQztNPuD6gDoIjXsXJAHR8k75mOANzj9JdVJDv/C+oNKj/30NJBIhg/qZUxR+SGDt2PbqXShUTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
+In-Reply-To: <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KDQpU
-aGUgc3RydWN0IGhpZl9yZXFfZWRjYV9xdWV1ZV9wYXJhbXMgY29tZXMgZnJvbSBoYXJkd2FyZSBB
-UEkuIEl0IGlzIG5vdA0KaW50ZW5kZWQgdG8gYmUgbWFuaXB1bGF0ZWQgaW4gdXBwZXIgbGF5ZXJz
-IG9mIHRoZSBkcml2ZXIuDQoNClNvLCB0aGlzIHBhdGNoOg0KICAxLiByZWxvY2F0ZSB0aGUgaGFu
-ZGxpbmcgb2YgdGhpcyBzdHJ1Y3QgaW4gaGlmX3NldF9lZGNhX3F1ZXVlX3BhcmFtcygpDQogICAg
-ICh0aGUgbG93IGxldmVsIGZ1bmN0aW9uKQ0KICAyLiByZXBsYWNlIGl0IGluIHdmeF92aWYgYnkg
-dGhlIG1hYzgwMjExIGVxdWl2YWxlbnQ6IHN0cnVjdA0KICAgICBpZWVlODAyMTFfdHhfcXVldWVf
-cGFyYW1zDQoNClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxs
-ZXJAc2lsYWJzLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmMgfCAyMCAr
-KysrKysrKysrKysrLS0tLS0tLQ0KIGRyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmggfCAgNSAr
-KystLQ0KIGRyaXZlcnMvc3RhZ2luZy93ZngvcXVldWUuYyAgfCAgNiArKystLS0NCiBkcml2ZXJz
-L3N0YWdpbmcvd2Z4L3N0YS5jICAgIHwgMTggKystLS0tLS0tLS0tLS0tLS0tDQogZHJpdmVycy9z
-dGFnaW5nL3dmeC93ZnguaCAgICB8ICA0ICsrKy0NCiA1IGZpbGVzIGNoYW5nZWQsIDI0IGluc2Vy
-dGlvbnMoKyksIDI5IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5n
-L3dmeC9oaWZfdHguYyBiL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmMNCmluZGV4IDljYmY5
-ZDkxNmY1Zi4uMjU5YjQ5Yjk5MDk4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9o
-aWZfdHguYw0KKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHguYw0KQEAgLTM0MCwxOSAr
-MzQwLDI1IEBAIGludCBoaWZfcmVtb3ZlX2tleShzdHJ1Y3Qgd2Z4X2RldiAqd2RldiwgaW50IGlk
-eCkNCiAJcmV0dXJuIHJldDsNCiB9DQogDQotaW50IGhpZl9zZXRfZWRjYV9xdWV1ZV9wYXJhbXMo
-c3RydWN0IHdmeF92aWYgKnd2aWYsDQotCQkJICAgICAgY29uc3Qgc3RydWN0IGhpZl9yZXFfZWRj
-YV9xdWV1ZV9wYXJhbXMgKmFyZykNCitpbnQgaGlmX3NldF9lZGNhX3F1ZXVlX3BhcmFtcyhzdHJ1
-Y3Qgd2Z4X3ZpZiAqd3ZpZiwgdTE2IHF1ZXVlLA0KKwkJCSAgICAgIGNvbnN0IHN0cnVjdCBpZWVl
-ODAyMTFfdHhfcXVldWVfcGFyYW1zICphcmcpDQogew0KIAlpbnQgcmV0Ow0KIAlzdHJ1Y3QgaGlm
-X21zZyAqaGlmOw0KIAlzdHJ1Y3QgaGlmX3JlcV9lZGNhX3F1ZXVlX3BhcmFtcyAqYm9keSA9IHdm
-eF9hbGxvY19oaWYoc2l6ZW9mKCpib2R5KSwNCiAJCQkJCQkJICAgICAgICZoaWYpOw0KIA0KLQkv
-LyBOT1RFOiBxdWV1ZXMgbnVtZXJvdGF0aW9uIGFyZSBub3QgdGhlIHNhbWUgYmV0d2VlbiBXRngg
-YW5kIExpbnV4DQotCW1lbWNweShib2R5LCBhcmcsIHNpemVvZigqYm9keSkpOw0KLQljcHVfdG9f
-bGUxNnMoJmJvZHktPmN3X21pbik7DQotCWNwdV90b19sZTE2cygmYm9keS0+Y3dfbWF4KTsNCi0J
-Y3B1X3RvX2xlMTZzKCZib2R5LT50eF9vcF9saW1pdCk7DQorCVdBUk5fT04oYXJnLT5haWZzID4g
-MjU1KTsNCisJYm9keS0+YWlmc24gPSBhcmctPmFpZnM7DQorCWJvZHktPmN3X21pbiA9IGNwdV90
-b19sZTE2KGFyZy0+Y3dfbWluKTsNCisJYm9keS0+Y3dfbWF4ID0gY3B1X3RvX2xlMTYoYXJnLT5j
-d19tYXgpOw0KKwlib2R5LT50eF9vcF9saW1pdCA9IGNwdV90b19sZTE2KGFyZy0+dHhvcCAqIFVT
-RUNfUEVSX1RYT1ApOw0KKwlib2R5LT5xdWV1ZV9pZCA9IDMgLSBxdWV1ZTsNCisJLy8gQVBJIDIu
-MCBoYXMgY2hhbmdlZCBxdWV1ZSBJRHMgdmFsdWVzDQorCWlmICh3ZnhfYXBpX29sZGVyX3RoYW4o
-d3ZpZi0+d2RldiwgMiwgMCkgJiYgcXVldWUgPT0gSUVFRTgwMjExX0FDX0JFKQ0KKwkJYm9keS0+
-cXVldWVfaWQgPSBISUZfUVVFVUVfSURfQkFDS0dST1VORDsNCisJaWYgKHdmeF9hcGlfb2xkZXJf
-dGhhbih3dmlmLT53ZGV2LCAyLCAwKSAmJiBxdWV1ZSA9PSBJRUVFODAyMTFfQUNfQkspDQorCQli
-b2R5LT5xdWV1ZV9pZCA9IEhJRl9RVUVVRV9JRF9CRVNURUZGT1JUOw0KIAl3ZnhfZmlsbF9oZWFk
-ZXIoaGlmLCB3dmlmLT5pZCwgSElGX1JFUV9JRF9FRENBX1FVRVVFX1BBUkFNUywNCiAJCQlzaXpl
-b2YoKmJvZHkpKTsNCiAJcmV0ID0gd2Z4X2NtZF9zZW5kKHd2aWYtPndkZXYsIGhpZiwgTlVMTCwg
-MCwgZmFsc2UpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmggYi9k
-cml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl90eC5oDQppbmRleCBiYjU4NjBlZTY1NDIuLmQ4ODAxOTQy
-MWZiYyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmgNCisrKyBiL2Ry
-aXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmgNCkBAIC0xMiw2ICsxMiw3IEBADQogDQogI2luY2x1
-ZGUgImhpZl9hcGlfY21kLmgiDQogDQorc3RydWN0IGllZWU4MDIxMV90eF9xdWV1ZV9wYXJhbXM7
-DQogc3RydWN0IHdmeF9kZXY7DQogc3RydWN0IHdmeF92aWY7DQogDQpAQCAtNTIsOCArNTMsOCBA
-QCBpbnQgaGlmX3NldF9ic3NfcGFyYW1zKHN0cnVjdCB3ZnhfdmlmICp3dmlmLA0KIAkJICAgICAg
-IGNvbnN0IHN0cnVjdCBoaWZfcmVxX3NldF9ic3NfcGFyYW1zICphcmcpOw0KIGludCBoaWZfYWRk
-X2tleShzdHJ1Y3Qgd2Z4X2RldiAqd2RldiwgY29uc3Qgc3RydWN0IGhpZl9yZXFfYWRkX2tleSAq
-YXJnKTsNCiBpbnQgaGlmX3JlbW92ZV9rZXkoc3RydWN0IHdmeF9kZXYgKndkZXYsIGludCBpZHgp
-Ow0KLWludCBoaWZfc2V0X2VkY2FfcXVldWVfcGFyYW1zKHN0cnVjdCB3ZnhfdmlmICp3dmlmLA0K
-LQkJCSAgICAgIGNvbnN0IHN0cnVjdCBoaWZfcmVxX2VkY2FfcXVldWVfcGFyYW1zICphcmcpOw0K
-K2ludCBoaWZfc2V0X2VkY2FfcXVldWVfcGFyYW1zKHN0cnVjdCB3ZnhfdmlmICp3dmlmLCB1MTYg
-cXVldWUsDQorCQkJICAgICAgY29uc3Qgc3RydWN0IGllZWU4MDIxMV90eF9xdWV1ZV9wYXJhbXMg
-KmFyZyk7DQogaW50IGhpZl9zdGFydChzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwgY29uc3Qgc3RydWN0
-IGhpZl9yZXFfc3RhcnQgKmFyZyk7DQogaW50IGhpZl9iZWFjb25fdHJhbnNtaXQoc3RydWN0IHdm
-eF92aWYgKnd2aWYsIGJvb2wgZW5hYmxlKTsNCiBpbnQgaGlmX21hcF9saW5rKHN0cnVjdCB3Znhf
-dmlmICp3dmlmLCB1OCAqbWFjX2FkZHIsIGludCBmbGFncywgaW50IHN0YV9pZCk7DQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5jIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9x
-dWV1ZS5jDQppbmRleCAxNjIxNmFmZTZjZmMuLmFiZmJhZDdjOWY3NSAxMDA2NDQNCi0tLSBhL2Ry
-aXZlcnMvc3RhZ2luZy93ZngvcXVldWUuYw0KKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1
-ZS5jDQpAQCAtNDQzLDcgKzQ0Myw3IEBAIHN0YXRpYyBpbnQgd2Z4X2dldF9wcmlvX3F1ZXVlKHN0
-cnVjdCB3ZnhfdmlmICp3dmlmLA0KIHsNCiAJc3RhdGljIGNvbnN0IGludCB1cmdlbnQgPSBCSVQo
-V0ZYX0xJTktfSURfQUZURVJfRFRJTSkgfA0KIAkJQklUKFdGWF9MSU5LX0lEX1VBUFNEKTsNCi0J
-c3RydWN0IGhpZl9yZXFfZWRjYV9xdWV1ZV9wYXJhbXMgKmVkY2E7DQorCWNvbnN0IHN0cnVjdCBp
-ZWVlODAyMTFfdHhfcXVldWVfcGFyYW1zICplZGNhOw0KIAl1bnNpZ25lZCBpbnQgc2NvcmUsIGJl
-c3QgPSAtMTsNCiAJaW50IHdpbm5lciA9IC0xOw0KIAlpbnQgaTsNCkBAIC00NTgsNyArNDU4LDcg
-QEAgc3RhdGljIGludCB3ZnhfZ2V0X3ByaW9fcXVldWUoc3RydWN0IHdmeF92aWYgKnd2aWYsDQog
-CQlpZiAoIXF1ZXVlZCkNCiAJCQljb250aW51ZTsNCiAJCSp0b3RhbCArPSBxdWV1ZWQ7DQotCQlz
-Y29yZSA9ICgoZWRjYS0+YWlmc24gKyBlZGNhLT5jd19taW4pIDw8IDE2KSArDQorCQlzY29yZSA9
-ICgoZWRjYS0+YWlmcyArIGVkY2EtPmN3X21pbikgPDwgMTYpICsNCiAJCQkoKGVkY2EtPmN3X21h
-eCAtIGVkY2EtPmN3X21pbikgKg0KIAkJCSAoZ2V0X3JhbmRvbV9pbnQoKSAmIDB4RkZGRikpOw0K
-IAkJaWYgKHNjb3JlIDwgYmVzdCAmJiAod2lubmVyIDwgMCB8fCBpICE9IDMpKSB7DQpAQCAtNTk1
-LDcgKzU5NSw3IEBAIHN0cnVjdCBoaWZfbXNnICp3ZnhfdHhfcXVldWVzX2dldChzdHJ1Y3Qgd2Z4
-X2RldiAqd2RldikNCiAJCXd2aWYtPnBzcG9sbF9tYXNrICY9IH5CSVQodHhfcHJpdi0+cmF3X2xp
-bmtfaWQpOw0KIA0KIAkJLyogYWxsb3cgYnVyc3RpbmcgaWYgdHhvcCBpcyBzZXQgKi8NCi0JCWlm
-ICh3dmlmLT5lZGNhX3BhcmFtc1txdWV1ZV9udW1dLnR4X29wX2xpbWl0KQ0KKwkJaWYgKHd2aWYt
-PmVkY2FfcGFyYW1zW3F1ZXVlX251bV0udHhvcCkNCiAJCQlidXJzdCA9IChpbnQpd2Z4X3R4X3F1
-ZXVlX2dldF9udW1fcXVldWVkKHF1ZXVlLCB0eF9hbGxvd2VkX21hc2spICsgMTsNCiAJCWVsc2UN
-CiAJCQlidXJzdCA9IDE7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYyBi
-L2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMNCmluZGV4IDM1MDRiNmIzNTE1ZS4uMTljYTEzNTQz
-YTI1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYw0KKysrIGIvZHJpdmVy
-cy9zdGFnaW5nL3dmeC9zdGEuYw0KQEAgLTE3LDcgKzE3LDYgQEANCiAjaW5jbHVkZSAiaGlmX3R4
-LmgiDQogI2luY2x1ZGUgImhpZl90eF9taWIuaCINCiANCi0jZGVmaW5lIFRYT1BfVU5JVCAzMg0K
-ICNkZWZpbmUgSElGX01BWF9BUlBfSVBfQUREUlRBQkxFX0VOVFJJRVMgMg0KIA0KIHN0YXRpYyB1
-MzIgd2Z4X3JhdGVfbWFza190b19odyhzdHJ1Y3Qgd2Z4X2RldiAqd2RldiwgdTMyIHJhdGVzKQ0K
-QEAgLTMyMiwyNiArMzIxLDEzIEBAIGludCB3ZnhfY29uZl90eChzdHJ1Y3QgaWVlZTgwMjExX2h3
-ICpodywgc3RydWN0IGllZWU4MDIxMV92aWYgKnZpZiwNCiB7DQogCXN0cnVjdCB3ZnhfZGV2ICp3
-ZGV2ID0gaHctPnByaXY7DQogCXN0cnVjdCB3ZnhfdmlmICp3dmlmID0gKHN0cnVjdCB3Znhfdmlm
-ICopIHZpZi0+ZHJ2X3ByaXY7DQotCXN0cnVjdCBoaWZfcmVxX2VkY2FfcXVldWVfcGFyYW1zICpl
-ZGNhOw0KIA0KIAlXQVJOX09OKHF1ZXVlID49IGh3LT5xdWV1ZXMpOw0KIA0KIAltdXRleF9sb2Nr
-KCZ3ZGV2LT5jb25mX211dGV4KTsNCiAJYXNzaWduX2JpdChxdWV1ZSwgJnd2aWYtPnVhcHNkX21h
-c2ssIHBhcmFtcy0+dWFwc2QpOw0KLQllZGNhID0gJnd2aWYtPmVkY2FfcGFyYW1zW3F1ZXVlXTsN
-Ci0JZWRjYS0+YWlmc24gPSBwYXJhbXMtPmFpZnM7DQotCWVkY2EtPmN3X21pbiA9IHBhcmFtcy0+
-Y3dfbWluOw0KLQllZGNhLT5jd19tYXggPSBwYXJhbXMtPmN3X21heDsNCi0JZWRjYS0+dHhfb3Bf
-bGltaXQgPSBwYXJhbXMtPnR4b3AgKiBUWE9QX1VOSVQ7DQotCWVkY2EtPmFsbG93ZWRfbWVkaXVt
-X3RpbWUgPSAwOw0KLQllZGNhLT5xdWV1ZV9pZCA9IDMgLSBxdWV1ZTsNCi0JLy8gQVBJIDIuMCBo
-YXMgY2hhbmdlZCBxdWV1ZSBJRHMgdmFsdWVzDQotCWlmICh3ZnhfYXBpX29sZGVyX3RoYW4od2Rl
-diwgMiwgMCkgJiYgcXVldWUgPT0gSUVFRTgwMjExX0FDX0JFKQ0KLQkJZWRjYS0+cXVldWVfaWQg
-PSBISUZfUVVFVUVfSURfQkFDS0dST1VORDsNCi0JaWYgKHdmeF9hcGlfb2xkZXJfdGhhbih3ZGV2
-LCAyLCAwKSAmJiBxdWV1ZSA9PSBJRUVFODAyMTFfQUNfQkspDQotCQllZGNhLT5xdWV1ZV9pZCA9
-IEhJRl9RVUVVRV9JRF9CRVNURUZGT1JUOw0KLQloaWZfc2V0X2VkY2FfcXVldWVfcGFyYW1zKHd2
-aWYsIGVkY2EpOw0KLQ0KKwltZW1jcHkoJnd2aWYtPmVkY2FfcGFyYW1zW3F1ZXVlXSwgcGFyYW1z
-LCBzaXplb2YoKnBhcmFtcykpOw0KKwloaWZfc2V0X2VkY2FfcXVldWVfcGFyYW1zKHd2aWYsIHF1
-ZXVlLCBwYXJhbXMpOw0KIAlpZiAod3ZpZi0+dmlmLT50eXBlID09IE5MODAyMTFfSUZUWVBFX1NU
-QVRJT04pIHsNCiAJCWhpZl9zZXRfdWFwc2RfaW5mbyh3dmlmLCB3dmlmLT51YXBzZF9tYXNrKTsN
-CiAJCWlmICh3dmlmLT5zZXRic3NwYXJhbXNfZG9uZSAmJiB3dmlmLT5zdGF0ZSA9PSBXRlhfU1RB
-VEVfU1RBKQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93Zngvd2Z4LmggYi9kcml2ZXJz
-L3N0YWdpbmcvd2Z4L3dmeC5oDQppbmRleCA1YTJmOGFmMTdlYjcuLmYzOTZhNTAyMjgzZSAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvc3RhZ2luZy93Zngvd2Z4LmgNCisrKyBiL2RyaXZlcnMvc3RhZ2lu
-Zy93Zngvd2Z4LmgNCkBAIC0yNiw2ICsyNiw4IEBADQogI2luY2x1ZGUgImhpZl90eC5oIg0KICNp
-bmNsdWRlICJoaWZfYXBpX2dlbmVyYWwuaCINCiANCisjZGVmaW5lIFVTRUNfUEVSX1RYT1AgMzIg
-Ly8gc2VlIHN0cnVjdCBpZWVlODAyMTFfdHhfcXVldWVfcGFyYW1zDQorDQogc3RydWN0IGh3YnVz
-X29wczsNCiANCiBzdHJ1Y3Qgd2Z4X2RldiB7DQpAQCAtMTE0LDcgKzExNiw3IEBAIHN0cnVjdCB3
-ZnhfdmlmIHsNCiAJYm9vbAkJCXNldGJzc3BhcmFtc19kb25lOw0KIAlzdHJ1Y3Qgd2Z4X2h0X2lu
-Zm8JaHRfaW5mbzsNCiAJdW5zaWduZWQgbG9uZwkJdWFwc2RfbWFzazsNCi0Jc3RydWN0IGhpZl9y
-ZXFfZWRjYV9xdWV1ZV9wYXJhbXMgZWRjYV9wYXJhbXNbSUVFRTgwMjExX05VTV9BQ1NdOw0KKwlz
-dHJ1Y3QgaWVlZTgwMjExX3R4X3F1ZXVlX3BhcmFtcyBlZGNhX3BhcmFtc1tJRUVFODAyMTFfTlVN
-X0FDU107DQogCXN0cnVjdCBoaWZfcmVxX3NldF9ic3NfcGFyYW1zIGJzc19wYXJhbXM7DQogCXN0
-cnVjdCB3b3JrX3N0cnVjdAlic3NfcGFyYW1zX3dvcms7DQogCXN0cnVjdCB3b3JrX3N0cnVjdAlz
-ZXRfY3RzX3dvcms7DQotLSANCjIuMjAuMQ0K
+On 16.12.2019 19:12, Lubashev, Igor wrote:
+> On Mon, Dec 16, 2019 at 2:15 AM, Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
+>>
+>> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+>> processes.
+>> For backward compatibility reasons access to perf_events subsystem remains
+>> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+>> for secure perf_events monitoring is discouraged with respect to
+>> CAP_SYS_PERFMON capability.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  include/linux/perf_event.h | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h index
+>> 34c7c6910026..52313d2cc343 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -1285,7 +1285,8 @@ static inline int perf_is_paranoid(void)
+>>
+>>  static inline int perf_allow_kernel(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 1 &&
+>> +	   !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EACCES;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL); @@
+>> -1293,7 +1294,8 @@ static inline int perf_allow_kernel(struct
+>> perf_event_attr *attr)
+>>
+>>  static inline int perf_allow_cpu(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 0 &&
+>> +	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EACCES;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_CPU); @@ -
+>> 1301,7 +1303,8 @@ static inline int perf_allow_cpu(struct perf_event_attr
+>> *attr)
+>>
+>>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > -1 &&
+>> +	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EPERM;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+>> --
+>> 2.20.1
+> 
+> Thanks.  I like the idea of CAP_SYS_PERFMON that does not require CAP_SYS_ADMIN.  It makes granting users ability to run perf a bit safer.
+> 
+> I see a lot of "(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)" constructs now.  Maybe wrapping it in an " inline bool perfmon_capable()" defined somewhere (like in /include/linux/capability.h)?
+
+Yes, it makes sense.
+
+Thanks,
+Alexey
+
+> 
+> - Igor
+> 
