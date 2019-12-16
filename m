@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15160C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCFB21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF2520726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519304;
-	bh=rxoZOuPi8FYcQwk8HJHMY0NpyXgfqvZ4ggIwplk5InI=;
+	s=default; t=1576519308;
+	bh=9Tb278d/ILZNVN+LrmogSNBrZri5snOMsvfwNybxyBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D580PzM7nwBVnnpTc67tfs5CtmsQp0B20VTV+YmozsSuyGiPy7HTHEk31nvtfqaGT
-	 XEpK7+b4HVMiA0Tp+mBkLYnoKpsIWopHSloqhC3ZA1k/1cCbSdz9OTvQ64YFzV66LK
-	 jktI/9wDKnzXVu1PWaGS+utvWZMbhaN/dBEM+Tqc=
+	b=eCt3WqvhJ/tGK2eHyVK82N0QyJcW3IyI42WuEQ3gl2tBvbmSq100xldskw1F25jBk
+	 xzCX/z/Xqcd0Q46csguGRKDPcCGc8SoJBLdCFrINrINrZXEHbl07ufZCskvd3dMxFF
+	 uw+mrExM0merr7Capp1CuJMWX+SZQe0y6BK5dciU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfLPSBn (ORCPT
+        id S1729219AbfLPSBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:01:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbfLPSBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:42 -0500
+        id S1727711AbfLPSBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E1B02176D;
-        Mon, 16 Dec 2019 18:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AE720726;
+        Mon, 16 Dec 2019 18:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519301;
-        bh=rxoZOuPi8FYcQwk8HJHMY0NpyXgfqvZ4ggIwplk5InI=;
+        s=default; t=1576519304;
+        bh=9Tb278d/ILZNVN+LrmogSNBrZri5snOMsvfwNybxyBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jofuv5/4tfXSDeITEosJ2NuFB+fRIF6zm4RPuGeUA10XXu3b9HuyaddP4To2ZFc/1
-         hgUY2cl2SOcbWPKGIZ8z5Epl4xHc5zgNYkQniNhx/YdSUBFeP7JrQkZKxTnk5PLpOb
-         ZLHPEe338cS3hCzqps4A5J2vzrJCNbnuAbGOBt00=
+        b=u5oMoTS4UfAFdQQOTPUqKk4ii4FvPSsPMucHzPscLbzSMkkhF4eWHUFYI/VQunmnV
+         VMkXFOEqQvWdLHKlbKZm2Josx97oyoIEonoG4OKNLQvRPAPQlWwVeVNu+FnBrp9u6Z
+         5W6IvMC3i28iCfzIx74j49yWy28t/Yv37GtH4fBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 003/140] scsi: qla2xxx: Fix driver unload hang
-Date:   Mon, 16 Dec 2019 18:47:51 +0100
-Message-Id: <20191216174748.887845533@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.19 004/140] media: venus: remove invalid compat_ioctl32 handler
+Date:   Mon, 16 Dec 2019 18:47:52 +0100
+Message-Id: <20191216174748.998709817@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,35 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit dd322b7f3efc8cda085bb60eadc4aee6324eadd8 upstream.
+commit 4adc0423de92cf850d1ef5c0e7cb28fd7a38219e upstream.
 
-This patch fixes driver unload hang by removing msleep()
+v4l2_compat_ioctl32() is the function that calls into
+v4l2_file_operations->compat_ioctl32(), so setting that back to the same
+function leads to a trivial endless loop, followed by a kernel
+stack overrun.
 
-Fixes: d74595278f4ab ("scsi: qla2xxx: Add multiple queue pair functionality.")
+Remove the incorrect assignment.
+
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191105150657.8092-5-hmadhani@marvell.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7472c1c69138 ("[media] media: venus: vdec: add video decoder files")
+Fixes: aaaa93eda64b ("[media] media: venus: venc: add video encoder files")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_init.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/media/platform/qcom/venus/vdec.c |    3 ---
+ drivers/media/platform/qcom/venus/venc.c |    3 ---
+ 2 files changed, 6 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -8725,8 +8725,6 @@ int qla2xxx_delete_qpair(struct scsi_qla
- 	struct qla_hw_data *ha = qpair->hw;
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -1115,9 +1115,6 @@ static const struct v4l2_file_operations
+ 	.unlocked_ioctl = video_ioctl2,
+ 	.poll = v4l2_m2m_fop_poll,
+ 	.mmap = v4l2_m2m_fop_mmap,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl32 = v4l2_compat_ioctl32,
+-#endif
+ };
  
- 	qpair->delete_in_progress = 1;
--	while (atomic_read(&qpair->ref_count))
--		msleep(500);
+ static int vdec_probe(struct platform_device *pdev)
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -1220,9 +1220,6 @@ static const struct v4l2_file_operations
+ 	.unlocked_ioctl = video_ioctl2,
+ 	.poll = v4l2_m2m_fop_poll,
+ 	.mmap = v4l2_m2m_fop_mmap,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl32 = v4l2_compat_ioctl32,
+-#endif
+ };
  
- 	ret = qla25xx_delete_req_que(vha, qpair->req);
- 	if (ret != QLA_SUCCESS)
+ static int venc_probe(struct platform_device *pdev)
 
 
