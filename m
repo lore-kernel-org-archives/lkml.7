@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A36C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A825C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C7F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D18A206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521782;
-	bh=THkWYfbYqwMUh/V+4lMLpITaj51ocDZHj/jxhLPmitI=;
+	s=default; t=1576521792;
+	bh=eRMUhsOZB2UzrhVWcwpyvpslMKCzC00Koai3F01Gycw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ByRgYSN0VHtyFT5ZOnRMFHNrt/lTJvR9XmN5V8dxOu07/qBL45/WHcxcVtTsiW0EU
-	 Q6Xx+vEkm6++kG4/bzFgaynnzik3sMeSs3yyVqWklBr2lUa1nofkyOCXCSHouJWOYS
-	 oGo27gvBEph7xibI9m/dRzVYlW8hy7Ze83qCHAzw=
+	b=EWTE/xJbW2+TC9LN5P35s/rMF4mQ1n8MiCDfgsGo6pCmT+CX5cVHmLuGX+tM9Z6cz
+	 R4LacfzUDcNm0SX8U+KamVyuhLmDAO/xFd66Uwrn6YLLtYnVyfvGwTxJfWgz0mdfr9
+	 h1j+R9sYIzRIOy4iGRIWbZmuViI4dFJEZLgNU1Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfLPSnB (ORCPT
+        id S1729277AbfLPSnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:43:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33410 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfLPR7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:55 -0500
+        id S1727335AbfLPR7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F17205ED;
-        Mon, 16 Dec 2019 17:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B89205C9;
+        Mon, 16 Dec 2019 17:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519194;
-        bh=THkWYfbYqwMUh/V+4lMLpITaj51ocDZHj/jxhLPmitI=;
+        s=default; t=1576519185;
+        bh=eRMUhsOZB2UzrhVWcwpyvpslMKCzC00Koai3F01Gycw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zg1DaK1c1L9iXswPK7mBnFbtTbEZwtnd2H6E/tkOE7uC4SGMpSu/xhgVoRba09mtN
-         wHFsTJf0KpBZvR1goXn6kHEk5Cd56gTtsRBhQ+j1yb1fw+rBT+1mt/aLBqjLcfJXQy
-         G2zB8P54QXMQWOUZ78rS0PD3k/GebSelN2kX7UEk=
+        b=bVY8UD5DS4ZEMRWgiquUR9XHCcyQWIPcHlrvkp4QmUKTrRxRgijHUfZ5rzFCd3nMx
+         wYiogOg9MzT9/KfLkup8cmDMC5WZNm9GHUfDJzJlknRC1BNPr6Uur6X8JXPK8+Zb61
+         G6xi6Cw29ZklJy77yQW1zFQyCCG1c0hYRETCiEK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 193/267] rtlwifi: rtl8192de: Fix missing enable interrupt flag
-Date:   Mon, 16 Dec 2019 18:48:39 +0100
-Message-Id: <20191216174913.100077078@linuxfoundation.org>
+        stable@vger.kernel.org, Atemu <atemu.main@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 189/267] Btrfs: send, skip backreference walking for extents with many references
+Date:   Mon, 16 Dec 2019 18:48:35 +0100
+Message-Id: <20191216174912.879616002@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,67 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 330bb7117101099c687e9c7f13d48068670b9c62 upstream.
+commit fd0ddbe2509568b00df364156f47561e9f469f15 upstream.
 
-In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
-new drivers"), the flag that indicates that interrupts are enabled was
-never set.
+Backreference walking, which is used by send to figure if it can issue
+clone operations instead of write operations, can be very slow and use
+too much memory when extents have many references. This change simply
+skips backreference walking when an extent has more than 64 references,
+in which case we fallback to a write operation instead of a clone
+operation. This limit is conservative and in practice I observed no
+signicant slowdown with up to 100 references and still low memory usage
+up to that limit.
 
-In addition, there are several places when enable/disable interrupts
-were commented out are restored. A sychronize_interrupts() call is
-removed.
+This is a temporary workaround until there are speedups in the backref
+walking code, and as such it does not attempt to add extra interfaces or
+knobs to tweak the threshold.
 
-Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
-Cc: Stable <stable@vger.kernel.org>	# v3.18+
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Atemu <atemu.main@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CAE4GHgkvqVADtS4AzcQJxo0Q1jKQgKaW3JGp3SGdoinVo=C9eQ@mail.gmail.com/T/#me55dc0987f9cc2acaa54372ce0492c65782be3fa
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/btrfs/send.c |   25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
-@@ -1198,6 +1198,7 @@ void rtl92de_enable_interrupt(struct iee
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -37,6 +37,14 @@
+ #include "compression.h"
  
- 	rtl_write_dword(rtlpriv, REG_HIMR, rtlpci->irq_mask[0] & 0xFFFFFFFF);
- 	rtl_write_dword(rtlpriv, REG_HIMRE, rtlpci->irq_mask[1] & 0xFFFFFFFF);
-+	rtlpci->irq_enabled = true;
- }
+ /*
++ * Maximum number of references an extent can have in order for us to attempt to
++ * issue clone operations instead of write operations. This currently exists to
++ * avoid hitting limitations of the backreference walking code (taking a lot of
++ * time and using too much memory for extents with large number of references).
++ */
++#define SEND_MAX_EXTENT_REFS	64
++
++/*
+  * A fs_path is a helper to dynamically build path names with unknown size.
+  * It reallocates the internal buffer on demand.
+  * It allows fast adding of path elements on the right side (normal path) and
+@@ -1324,6 +1332,7 @@ static int find_extent_clone(struct send
+ 	struct clone_root *cur_clone_root;
+ 	struct btrfs_key found_key;
+ 	struct btrfs_path *tmp_path;
++	struct btrfs_extent_item *ei;
+ 	int compressed;
+ 	u32 i;
  
- void rtl92de_disable_interrupt(struct ieee80211_hw *hw)
-@@ -1207,7 +1208,7 @@ void rtl92de_disable_interrupt(struct ie
+@@ -1373,7 +1382,6 @@ static int find_extent_clone(struct send
+ 	ret = extent_from_logical(fs_info, disk_byte, tmp_path,
+ 				  &found_key, &flags);
+ 	up_read(&fs_info->commit_root_sem);
+-	btrfs_release_path(tmp_path);
  
- 	rtl_write_dword(rtlpriv, REG_HIMR, IMR8190_DISABLED);
- 	rtl_write_dword(rtlpriv, REG_HIMRE, IMR8190_DISABLED);
--	synchronize_irq(rtlpci->pdev->irq);
-+	rtlpci->irq_enabled = false;
- }
+ 	if (ret < 0)
+ 		goto out;
+@@ -1382,6 +1390,21 @@ static int find_extent_clone(struct send
+ 		goto out;
+ 	}
  
- static void _rtl92de_poweroff_adapter(struct ieee80211_hw *hw)
-@@ -1378,7 +1379,7 @@ void rtl92de_set_beacon_related_register
- 
- 	bcn_interval = mac->beacon_interval;
- 	atim_window = 2;
--	/*rtl92de_disable_interrupt(hw);  */
-+	rtl92de_disable_interrupt(hw);
- 	rtl_write_word(rtlpriv, REG_ATIMWND, atim_window);
- 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
- 	rtl_write_word(rtlpriv, REG_BCNTCFG, 0x660f);
-@@ -1398,9 +1399,9 @@ void rtl92de_set_beacon_interval(struct
- 
- 	RT_TRACE(rtlpriv, COMP_BEACON, DBG_DMESG,
- 		 "beacon_interval:%d\n", bcn_interval);
--	/* rtl92de_disable_interrupt(hw); */
-+	rtl92de_disable_interrupt(hw);
- 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
--	/* rtl92de_enable_interrupt(hw); */
-+	rtl92de_enable_interrupt(hw);
- }
- 
- void rtl92de_update_interrupt_mask(struct ieee80211_hw *hw,
++	ei = btrfs_item_ptr(tmp_path->nodes[0], tmp_path->slots[0],
++			    struct btrfs_extent_item);
++	/*
++	 * Backreference walking (iterate_extent_inodes() below) is currently
++	 * too expensive when an extent has a large number of references, both
++	 * in time spent and used memory. So for now just fallback to write
++	 * operations instead of clone operations when an extent has more than
++	 * a certain amount of references.
++	 */
++	if (btrfs_extent_refs(tmp_path->nodes[0], ei) > SEND_MAX_EXTENT_REFS) {
++		ret = -ENOENT;
++		goto out;
++	}
++	btrfs_release_path(tmp_path);
++
+ 	/*
+ 	 * Setup the clone roots.
+ 	 */
 
 
