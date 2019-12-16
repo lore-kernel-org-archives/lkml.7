@@ -2,53 +2,51 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8491AC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60478C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D27124650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDBC2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520577;
-	bh=2s/lii9loPIvNFFMVcmr1yl2tE5CR8+63mR1DUuogzc=;
+	s=default; t=1576520584;
+	bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpNjeiND6ovz77W2xqGFxaRsxXWWgIcVw/95Pt/L3bQCMPpEEUkdEMQcwIJ8ejY/z
-	 T2vQyKWOFeb+DQSvfzhUKU4IDfEnaneu+lQIWtl6/MkP1CtH0/mz89PhH18m+Tu+Rl
-	 h/ozzhWN0ex2Ev20u3Iw+YFKteZx7rKjLdYzP+J0=
+	b=lOo7h6lVq7SfzGxkQ73DRntIXH3uZsrNXYynRpJviwP9wGcsyWd823uahR/xAYh9F
+	 f8Efq4GJafM5NXKzSvlJiMMe0ZDwcosKWaytaDsNTMCVC8EtuX+AOof9pELWUHTkkK
+	 SmrCaOQissxPBIW2tUZmxuaLPYVzrbtU8smBWngY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbfLPSUy (ORCPT
+        id S1732121AbfLPSUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfLPSUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:49 -0500
+        id S1732088AbfLPSUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E2D207FF;
-        Mon, 16 Dec 2019 18:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905E4206EC;
+        Mon, 16 Dec 2019 18:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520448;
-        bh=2s/lii9loPIvNFFMVcmr1yl2tE5CR8+63mR1DUuogzc=;
+        s=default; t=1576520434;
+        bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6epByWs6gkzAXvtEu2/IobYSOeK53UsMdC9WlQeVsr6yxlfmytDG/FdNy+KNtQ8f
-         qOrS7WMo9oUvVpePU1DUPAlJ+j0MOu02oc0OQkLjauL/P0mudc+oeuZZUsqGlX5yap
-         1DINUEgfmdiphRamNQrpsIFYHjrEQxSrNJUQORwA=
+        b=NGQ/qYAegpZO5QCGfMKgN7i1kNmOyhM+ekW9bq+2B0RGgvmSSPw4i1LCcaJCyIIq5
+         kfz5YqQ87lNs9x2YGNiCa/YyOpBOGJ7igNemRU6gWPzVkO+bLF/qm6FIPqAx7o6PFj
+         YBb+o3KMPe+BWK3LtlAJQLf4uPTDfJePS8mG1epE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 158/177] iio: ad7949: kill pointless "readback"-handling code
-Date:   Mon, 16 Dec 2019 18:50:14 +0100
-Message-Id: <20191216174848.840189167@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 153/177] ext4: Fix credit estimate for final inode freeing
+Date:   Mon, 16 Dec 2019 18:50:09 +0100
+Message-Id: <20191216174848.241985515@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,91 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Merello <andrea.merello@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
+commit 65db869c754e7c271691dd5feabf884347e694f5 upstream.
 
-The device could be configured to spit out also the configuration word
-while reading the AD result value (in the same SPI xfer) - this is called
-"readback" in the device datasheet.
+Estimate for the number of credits needed for final freeing of inode in
+ext4_evict_inode() was to small. We may modify 4 blocks (inode & sb for
+orphan deletion, bitmap & group descriptor for inode freeing) and not
+just 3.
 
-The driver checks if readback is enabled and it eventually adjusts the SPI
-xfer length and it applies proper shifts to still get the data, discarding
-the configuration word.
+[ Fixed minor whitespace nit. -- TYT ]
 
-The readback option is actually never enabled (the driver disables it), so
-the said checks do not serve for any purpose.
+Fixes: e50e5129f384 ("ext4: xattr-in-inode support")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-6-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Since enabling the readback option seems not to provide any advantage (the
-driver entirely sets the configuration word without relying on any default
-value), just kill the said, unused, code.
-
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad7949.c | 27 +++------------------------
- 1 file changed, 3 insertions(+), 24 deletions(-)
+ fs/ext4/inode.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-index ac0ffff6c5ae1..518044c31a73b 100644
---- a/drivers/iio/adc/ad7949.c
-+++ b/drivers/iio/adc/ad7949.c
-@@ -57,29 +57,11 @@ struct ad7949_adc_chip {
- 	u32 buffer ____cacheline_aligned;
- };
- 
--static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
--{
--	if (!(ad7949_adc->cfg & AD7949_CFG_READ_BACK))
--		return true;
--
--	return false;
--}
--
--static int ad7949_spi_bits_per_word(struct ad7949_adc_chip *ad7949_adc)
--{
--	int ret = ad7949_adc->resolution;
--
--	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
--		ret += AD7949_CFG_REG_SIZE_BITS;
--
--	return ret;
--}
--
- static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
- 				u16 mask)
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -196,7 +196,12 @@ void ext4_evict_inode(struct inode *inod
  {
- 	int ret;
--	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
-+	int bits_per_word = ad7949_adc->resolution;
- 	int shift = bits_per_word - AD7949_CFG_REG_SIZE_BITS;
- 	struct spi_message msg;
- 	struct spi_transfer tx[] = {
-@@ -107,7 +89,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
- 				   unsigned int channel)
- {
- 	int ret;
--	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
-+	int bits_per_word = ad7949_adc->resolution;
- 	int mask = GENMASK(ad7949_adc->resolution, 0);
- 	struct spi_message msg;
- 	struct spi_transfer tx[] = {
-@@ -138,10 +120,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 	handle_t *handle;
+ 	int err;
+-	int extra_credits = 3;
++	/*
++	 * Credits for final inode cleanup and freeing:
++	 * sb + inode (ext4_orphan_del()), block bitmap, group descriptor
++	 * (xattr block freeing), bitmap, group descriptor (inode freeing)
++	 */
++	int extra_credits = 6;
+ 	struct ext4_xattr_inode_array *ea_inode_array = NULL;
  
- 	ad7949_adc->current_channel = channel;
+ 	trace_ext4_evict_inode(inode);
+@@ -252,8 +257,12 @@ void ext4_evict_inode(struct inode *inod
+ 	if (!IS_NOQUOTA(inode))
+ 		extra_credits += EXT4_MAXQUOTAS_DEL_BLOCKS(inode->i_sb);
  
--	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
--		*val = (ad7949_adc->buffer >> AD7949_CFG_REG_SIZE_BITS) & mask;
--	else
--		*val = ad7949_adc->buffer & mask;
-+	*val = ad7949_adc->buffer & mask;
- 
- 	return 0;
- }
--- 
-2.20.1
-
++	/*
++	 * Block bitmap, group descriptor, and inode are accounted in both
++	 * ext4_blocks_for_truncate() and extra_credits. So subtract 3.
++	 */
+ 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE,
+-				 ext4_blocks_for_truncate(inode)+extra_credits);
++			 ext4_blocks_for_truncate(inode) + extra_credits - 3);
+ 	if (IS_ERR(handle)) {
+ 		ext4_std_error(inode->i_sb, PTR_ERR(handle));
+ 		/*
 
 
