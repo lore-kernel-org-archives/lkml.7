@@ -2,175 +2,331 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6185EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C78C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4422067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576506490;
-	bh=FThV7CQkARc2SJLGD//X4PIT+sy2UhpZ23SU41MSpi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KAajMGiQiD6ng1LE9Vm/gDthwNKJyolTkClhZknA4L3TjULrgITGSIjQu0cq3hrl+
-	 mu45viib+PLw/Ebb0Tv2DDWrTN0LLc6kKt7kTyO4gW/MTr+bCOcCZMQCPIVgZKYkz+
-	 CwioxGhA6LdVtyjZx6+Vf2ZwdMVRMyfPXBeo10KM=
+	by mail.kernel.org (Postfix) with ESMTP id 7DDC6206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmOBTB2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfLPO2J (ORCPT
+        id S1728130AbfLPO2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:28:09 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42990 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbfLPO2I (ORCPT
+        Mon, 16 Dec 2019 09:28:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23171 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728008AbfLPO2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:28:08 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so4365984lfl.9;
-        Mon, 16 Dec 2019 06:28:07 -0800 (PST)
+        Mon, 16 Dec 2019 09:28:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576506495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mqnAaSxh0pSKzbiLQ7KvpBpDD8sO/UPH/8UcK0z/vf8=;
+        b=BmOBTB2Cha+JhEN7K3RQlIIwZmKYMEnRh+nojOu8ipSS8HCz+wiUguHnsQC6POsc1k+Wse
+        kH3PWcvIDxfre/oWCqGzhLPr5ELxgJNlAi3+ESpqRpwOdqcxmcYpijJB5EeBPwiI6tt3ro
+        IU5L3x7v+WtMIg6Cx8yPCLZ2iQQedTk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-oajqK1C1P9Cx_8K5cMbUUQ-1; Mon, 16 Dec 2019 09:28:12 -0500
+X-MC-Unique: oajqK1C1P9Cx_8K5cMbUUQ-1
+Received: by mail-wr1-f69.google.com with SMTP id y7so2459305wrm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 06:28:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WJOIxwAEgnSLXlaUUspSrq6fBSD7PUNiSiO3LHKGtnM=;
-        b=MS/WRumo5Kvdy8oj3sZ5/8y1PVYaU4Nxo/tGhjXuPZND6fMzZ6rfFVU897hT2irA2X
-         7jQO/2DSfG1Zr75nO2tw84aFXIMZiaPzgAG0nPNz7MBTcYUGu8wTWFl+t9sPdXpM0SpA
-         8e4OZONaehswU1pY1C2gUHt/CA0Hr6zNq/TmkG38fF29tXyFL56Etd8KAlHnlBCpbyyr
-         YSqYpqZf7r31KsiFYH55VbQCfeR+qgdlmFVMxxs8bpu91SrfhdDhugClTTfUD7loqeBG
-         bW6h55/p7sz0Y7rMYgq2tRE0MUflgtUeG3La1nYdJ8eNUwPWQ+0u+IUOU6OiPewi2O1q
-         096g==
-X-Gm-Message-State: APjAAAUusSL4UA3kIS6FIXsFvZ/9jZ0J0UKFu6Qmo5xs0JsI9gc3Y/tQ
-        nVU3wR+Kyjy9mzJL08bJTPB9z5qp
-X-Google-Smtp-Source: APXvYqz73aVhhcZZM8O6aBQ30eNTzAltzTPWkKENEtP/XGXwIMdgwgsyCbfHqad60okZX+Btibbwhg==
-X-Received: by 2002:ac2:430d:: with SMTP id l13mr17638281lfh.112.1576506486503;
-        Mon, 16 Dec 2019 06:28:06 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id w19sm8891725lfl.55.2019.12.16.06.28.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 06:28:05 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1igrLv-0004Fn-FQ; Mon, 16 Dec 2019 15:28:03 +0100
-Date:   Mon, 16 Dec 2019 15:28:03 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Brant Merryman <Brant.Merryman@silabs.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Proper RTS control when buffers fill
-Message-ID: <20191216142803.GE22665@localhost>
-References: <E0F3E0D5-4652-4DF0-B576-3FDB0274A5CD@silabs.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mqnAaSxh0pSKzbiLQ7KvpBpDD8sO/UPH/8UcK0z/vf8=;
+        b=cFtUSBHJ+cuzMUH35lxaXHqWsDwE9yWiG7dJNDhO/A1fZ4bJBOfOXthSIeSbX/FsY/
+         4jmP5CRwD9McdnfBmxokSK4x1lMOr4FS/UG2zxLL1RTqLcWltLeODQM4yOwc0YpzowOn
+         qnIh1UaQMzkJ3/Ng1B8k8//JcB8EcRk7C6qh5PcHONddAfm7NDnMnhPKbHwb15mW9gIS
+         V6buFEStgiMhf+U4mUOYky3uQb8lGGEji+jtSNLfwuWWYet5UIauaXjjJ5P3PPk3JV5u
+         HAIgjYgiWYUSN7ZdNnLkEOMcnMh5IVCEGpe/pdVILUOQR1y90V7RfBjzORoRYo+BY7Uo
+         Nm3A==
+X-Gm-Message-State: APjAAAXhrWZwDfYlaMgknn58bS/5obQGVZUPYF3cJz4dxEXqKMeV+m4X
+        XKBnbchsv1UekoezPQR4oudf0CZyWeaLzWhrpEnQw3/a1EBBdt9JGYYUmJGHNeHbRBUL6Hxfccu
+        BsQT2fwZcsUzYtegKz+5fpiwQ
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr29355326wmi.51.1576506491407;
+        Mon, 16 Dec 2019 06:28:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz1cdzONxv/4mP1xQlKXrsuF/DPqXX835uoZSpIhEWRShDwrAJ8iqhJqjAy/Yiqp/DSLPbvfQ==
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr29355302wmi.51.1576506491081;
+        Mon, 16 Dec 2019 06:28:11 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id r68sm16146106wmr.43.2019.12.16.06.28.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 06:28:10 -0800 (PST)
+Subject: Re: [PATCH 5/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs on BYT
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <20191215163810.52356-6-hdegoede@redhat.com>
+ <20191216140427.GT1208@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <910ef405-39df-8c58-48cb-d3ee407bd60d@redhat.com>
+Date:   Mon, 16 Dec 2019 15:28:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E0F3E0D5-4652-4DF0-B576-3FDB0274A5CD@silabs.com>
+In-Reply-To: <20191216140427.GT1208@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, please use the common "USB: serial: cp210x: " prefix for
-your changes.
+Hi,
 
-On Mon, Dec 09, 2019 at 07:17:26PM +0000, Brant Merryman wrote:
-> Enables usb generic functions for throttle/unthrottle to prevent USB data
-> loss. CP210x hardware disables RTS but leaves CTS when in hardware flow
-> control mode and port is closed. When re-opening the serial port, if CTS
-> is enabled, then RTS must be re-enabled inside the driver.
-
-This took a while to parse, but makes a little more sense after looking
-at the code and remembering that cp210x unlike other drivers is fetching
-the termios settings from the device on every open rather than simply
-reinitialising the device. Perhaps we should change that at some point.  
-
-Please rephrase the above to say "auto-RTS" ("auto-CTS") so it doesn't
-sound like we're controlling the state of the CTS input line (which
-obviously makes no sense). Same for the comment in the code below.
-
-I also think you should split this in two patches since these are
-strictly two distinct issues; the first one fixing the auto-RTS settings
-after reopening the port, and the second adding the throttle callbacks
-so that the device can tell when the application can't keep up.
-
-> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-> ---
->  drivers/usb/serial/cp210x.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+On 16-12-2019 15:04, Ville Syrjälä wrote:
+> On Sun, Dec 15, 2019 at 05:38:10PM +0100, Hans de Goede wrote:
+>> On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
+>> do not control the LCD panel- and backlight-enable GPIOs. So far, when
+>> the VBT indicates we should use the SoC for backlight control, we have
+>> been relying on these GPIOs being configured as output and driven high by
+>> the Video BIOS (GOP) when it initializes the panel.
+>>
+>> This does not work when the device is booted with a HDMI monitor connected
+>> as then the GOP will initialize the HDMI instead of the panel, leaving the
+>> panel black, even though the i915 driver tries to output an image to it.
+>>
+>> Likewise on some device-models when the GOP does not initialize the DSI
+>> panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
+>> of muxing it to the PWM controller.
+>>
+>> This commit makes the DSI code control the SoC GPIOs for panel- and
+>> backlight-enable on BYT, when the VBT indicates the SoC should be used
+>>
+>> for backlight control. It also ensures that the PWM0 pin is muxed to the
+>> PWM controller in this case.
+>>
+>> This fixes the LCD panel not lighting up on various devices when booted
+>> with a HDMI monitor connected. This has been tested to fix this on the
+>> following devices:
+>>
+>> Peaq C1010
+>> Point of View MOBII TAB-P800W
+>> Point of View MOBII TAB-P1005W
+>> Terra Pad 1061
+>> Yours Y8W81
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/gpu/drm/i915/display/intel_dsi.h     |  3 +-
+>>   drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 63 ++++++++++++++++++++
+>>   2 files changed, 65 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
+>> index 675771ea91aa..7481a5aa3084 100644
+>> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
+>> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+>> @@ -45,8 +45,9 @@ struct intel_dsi {
+>>   	struct intel_dsi_host *dsi_hosts[I915_MAX_PORTS];
+>>   	intel_wakeref_t io_wakeref[I915_MAX_PORTS];
+>>   
+>> -	/* GPIO Desc for CRC based Panel control */
+>> +	/* GPIO Desc for panel and backlight control */
+>>   	struct gpio_desc *gpio_panel;
+>> +	struct gpio_desc *gpio_backlight;
+>>   
+>>   	struct intel_connector *attached_connector;
+>>   
+>> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+>> index 847f04eec2a1..bd007d4f86e2 100644
+>> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+>> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+>> @@ -27,6 +27,8 @@
+>>   #include <linux/gpio/consumer.h>
+>>   #include <linux/gpio/machine.h>
+>>   #include <linux/mfd/intel_soc_pmic.h>
+>> +#include <linux/pinctrl/consumer.h>
+>> +#include <linux/pinctrl/machine.h>
+>>   #include <linux/slab.h>
+>>   
+>>   #include <asm/intel-mid.h>
+>> @@ -525,11 +527,15 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+>>   {
+>>   	if (seq_id == MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
+>>   		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
+>> +	if (seq_id == MIPI_SEQ_BACKLIGHT_ON && intel_dsi->gpio_backlight)
+>> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 1);
+>>   
+>>   	intel_dsi_vbt_exec(intel_dsi, seq_id);
+>>   
+>>   	if (seq_id == MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
+>>   		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
+>> +	if (seq_id == MIPI_SEQ_BACKLIGHT_OFF && intel_dsi->gpio_backlight)
+>> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 0);
+>>   }
+>>   
+>>   void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
+>> @@ -688,6 +694,8 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>>   /*
+>>    * On some BYT/CHT devs some sequences are incomplete and we need to manually
+>>    * control some GPIOs. We need to add a GPIO lookup table before we get these.
+>> + * If the GOP did not initialize the panel (HDMI inserted) we may need to also
+>> + * change the pinmux for the SoC's PWM0 pin from GPIO to PWM.
+>>    */
+>>   static struct gpiod_lookup_table pmic_panel_gpio_table = {
+>>   	/* Intel GFX is consumer */
+>> @@ -699,23 +707,68 @@ static struct gpiod_lookup_table pmic_panel_gpio_table = {
+>>   	},
+>>   };
+>>   
+>> +static struct gpiod_lookup_table soc_panel_gpio_table = {
+>> +	.dev_id = "0000:00:02.0",
+>> +	.table = {
+>> +	  GPIO_LOOKUP("INT33FC:01", 10, "backlight", GPIO_ACTIVE_HIGH),
+>> +	  GPIO_LOOKUP("INT33FC:01", 11, "panel", GPIO_ACTIVE_HIGH),
+>> +	  { },
 > 
-> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-> index f5143eedbc48..fd54181e741b 100644
-> --- a/drivers/usb/serial/cp210x.c
-> +++ b/drivers/usb/serial/cp210x.c
-> @@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_device = {
->  	.break_ctl		= cp210x_break_ctl,
->  	.set_termios		= cp210x_set_termios,
->  	.tx_empty		= cp210x_tx_empty,
-> +	.throttle		= usb_serial_generic_throttle,
-> +	.unthrottle		= usb_serial_generic_unthrottle,
->  	.tiocmget		= cp210x_tiocmget,
->  	.tiocmset		= cp210x_tiocmset,
->  	.attach			= cp210x_attach,
-> @@ -915,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
->  	u32 baud;
->  	u16 bits;
->  	u32 ctl_hs;
-> +	u32 flow_repl;
->  
->  	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
->  
-> @@ -1013,8 +1016,24 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
->  	cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
->  			sizeof(flow_ctl));
->  	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
-> +	flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
-> +	/* CP210x hardware disables RTS but leaves CTS when in hardware
-> +	 * flow control mode and port is closed.
-> +	 * This allows data to flow out, but new data will not come into
-> +	 * the port. When re-opening the port, if CTS is enabled, then RTS
-> +	 * must be re-enabled. in the driver
-> +	 */
+> Some kind of indent fail here.
 
-This isn't strictly true since we assert RTS in cp210x_dtr_rts() after
-open() (but auto-RTS would incorrectly be disabled).
+Yeah, this was intentional in the previous revision because of the
+80 char limit, but this indent hack is no longer necessary, fixed for
+the v2 of this set which I'm preparing.
 
-Also can you be a bit more specific here; is it the interface-disable
-call in close() that unconditionally sets the RTS mode to "statically
-inactive"?
+>> +	},
+>> +};
+>> +
+>> +static const struct pinctrl_map soc_pwm_pinctrl_map[] = {
+>> +	PIN_MAP_MUX_GROUP("0000:00:02.0", "soc_pwm0", "INT33FC:00",
+>> +			  "pwm0_grp", "pwm"),
+>> +};
+>> +
+>>   void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>>   {
+>>   	struct drm_device *dev = intel_dsi->base.base.dev;
+>>   	struct drm_i915_private *dev_priv = to_i915(dev);
+>>   	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+>>   	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+>> +	bool want_backlight_gpio = false;
+>> +	bool want_panel_gpio = false;
+>> +	struct pinctrl *pinctrl;
+>> +	int ret;
+>>   
+>>   	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>>   	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+>>   		gpiod_add_lookup_table(&pmic_panel_gpio_table);
+>> +		want_panel_gpio = true;
+>> +	}
+>> +
+>> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
+>> +		gpiod_add_lookup_table(&soc_panel_gpio_table);
+>> +		want_panel_gpio = true;
+>> +		want_backlight_gpio = true;
+>>   
+>> +		/* Ensure PWM0 pin is muxed as PWM instead of GPIO */
+>> +		ret = pinctrl_register_mappings(soc_pwm_pinctrl_map, 1);
+> 
+> ARRAY_SIZE()?
 
-Nits: Please fix the full-stop in the last sentence and use the right
-format for multi-line comments, which is:
+Ack, will fix for v2.
 
-	/*
-	 * blah, blah
-	 */
 
-Perhaps move the comment inside the if block (after dev_dbg()) as well.
+> 
+>> +		if (ret)
+>> +			DRM_ERROR("Failed to register pwm0 pinmux mapping\n");
+>> +
+>> +		pinctrl = devm_pinctrl_get_select(dev->dev, "soc_pwm0");
+>> +		if (IS_ERR(pinctrl))
+>> +			DRM_ERROR("Failed to set pinmux to PWM\n");
+>> +	}
+>> +
+>> +	if (want_panel_gpio) {
+>>   		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>>   		if (IS_ERR(intel_dsi->gpio_panel)) {
+>>   			DRM_ERROR("Failed to own gpio for panel control\n");
+>>   			intel_dsi->gpio_panel = NULL;
+>>   		}
+>>   	}
+>> +
+>> +	if (want_backlight_gpio) {
+>> +		intel_dsi->gpio_backlight =
+>> +			gpiod_get(dev->dev, "backlight", flags);
+>> +		if (IS_ERR(intel_dsi->gpio_backlight)) {
+>> +			DRM_ERROR("Failed to own gpio for backlight control\n");
+>> +			intel_dsi->gpio_backlight = NULL;
+>> +		}
+>> +	}
+>>   }
+>>   
+>>   void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+>> @@ -729,7 +782,17 @@ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+>>   		intel_dsi->gpio_panel = NULL;
+>>   	}
+>>   
+>> +	if (intel_dsi->gpio_backlight) {
+>> +		gpiod_put(intel_dsi->gpio_backlight);
+>> +		intel_dsi->gpio_backlight = NULL;
+>> +	}
+>> +
+>>   	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>>   	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
+>>   		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
+>> +
+>> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
+> 
+> Slightly annoying to have these checks duplicated. Might be cleaner to
+> have a few helpers that return the correct tables and just use those in
+> both init and cleanup. OTOH those want_*_gpio flags and the pwm stuff is
+> would still be a sticking point I suppose. So maybe not cleaner in the
+> end after all.
 
->  	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
->  		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
-> +		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
-> +		flow_repl |= CP210X_SERIAL_RTS_SHIFT(
-> +			CP210X_SERIAL_RTS_FLOW_CTL);
+So I tried adding a helper for the if condition, since as you mention
+just returning the right table is not really helpful:
 
-Indent continuation lines at least two tabs further, but here I'd
-probably just break the 80-column rule if that's even an issue.
+static bool intel_dsi_vbt_use_pmic_backlight_ctl(struct intel_dsi *intel_dsi)
+{
+        struct drm_device *dev = intel_dsi->base.base.dev;
+        struct drm_i915_private *dev_priv = to_i915(dev);
+        struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
 
-> +
-> +		flow_ctl.ulControlHandshake = cpu_to_le32(ctl_hs);
+        if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+            (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+        return (IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+               mipi_config->pwm_blc == PPS_BLC_PMIC;
+}
 
-Not needed, you're only changing flow_repl.
+And copy and paste that for the PPS_BLC_SOC case. The result does not
+look a lot better then the original, worse actually IMHO, so I'm going
+to keep this as is for v2.
 
-> +		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
-> +		cp210x_write_reg_block(port, CP210X_SET_FLOW,
-> +			&flow_ctl, sizeof(flow_ctl));
+> Looks all right to me:
+> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-At least two tabs here too.
+Thanks.
 
-> +
->  		cflag |= CRTSCTS;
->  	} else {
->  		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
+Regards,
 
-Johan
+Hans
+
+
+
+
+> 
+> 
+>> +		pinctrl_unregister_mappings(soc_pwm_pinctrl_map);
+>> +		gpiod_remove_lookup_table(&soc_panel_gpio_table);
+>> +	}
+>>   }
+>> -- 
+>> 2.23.0
+> 
+
