@@ -2,99 +2,91 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8042C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF80C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72938206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503436;
-	bh=1StiMPO8LpGHEHAabH7gzxcFrrIg+SMyk8LcOwKzZG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jRLkTayUWrKXXZsqzA6zrzYvztFKeqvpfxbXCOpvHw4v0+jIcUbENadKIqlySWhUh
-	 CT8gT3gluTvBdz/yzylinr/focwDH+nLynEUrbXlDzjpPVpykLyxZmcRvr8vjQsjQW
-	 ZvC+3W93awmfvNw8O4iZxddRSHjE+/I+uGytUEQ4=
+	by mail.kernel.org (Postfix) with ESMTP id AE28620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfQG1YAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfLPNhP (ORCPT
+        id S1727967AbfLPNhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:37:15 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39933 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfLPNhP (ORCPT
+        Mon, 16 Dec 2019 08:37:19 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36270 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbfLPNhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:37:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so7277149wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:37:13 -0800 (PST)
+        Mon, 16 Dec 2019 08:37:17 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so7292330wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=1zfuGQ1qe2hDELfu6AsH16OXoBlMUxIDB6zTtky9aok=;
+        b=mfQG1YAO5lpvU1Vr+JWzkRLUL4+MLvwVQCju5dR95vK39ickxPreTV8cjyqfC1RZ7A
+         P/jZgKsY1nfx1sZCQXpAlfcDLWO4sdXcv47WSQxchMkgLOvv0pF9ml9So0Ce+DsQ4sld
+         A4SwecqkQjpflZQPlp7jveQTwfWmlTRehY9QtN2J50MX4HDNMjiNsfbc9tayDT6HhFSM
+         0d4bTBihpuGzJ0/x3asu+wlk1maQDvp0wIordAZMWPsHIj/FTEEhQyfuDnzaXHOhoJk4
+         k0u0PtWl2gBjV2DhALyBegf6uEGro5SPOUvGfmjknYS2KdMTmoglU64YAQciXYUwOv7y
+         fz/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cqmzVJtM8/ik+wTdyhfYBEe+JzF5iuu01jawnGqmvm4=;
-        b=tQYGGoiqAh8eGGmNFqnf1iM6QshP2ZeIsS++hg+YfTC3XN9pUVvhiGp8o7OitRXKNh
-         CHAiNfq11s3qHi8kG3J7H/stTLuv6bTa9ojTV3KoDZ7mslUBCUwrAyV77A3fXqFEvhoU
-         VjAzE28oqilPOOkeiJpRmorP0AwTPuWkMgb7at7Rb7NAmnEFkmYglHLYVMbYet5Ac8O9
-         trAmkiOkMassKcnG/xIFuC8K3NM4SGIKOgONO36Uiwo62u5OAQT/7GMUyahBruVC5bTn
-         mCJSZ3r9jCHb4BUvGFCMbLsZ1s3Zn47h1GinzrY8gexPrSrQa7YiKcXIDwpdssRQ2QeK
-         XcfQ==
-X-Gm-Message-State: APjAAAVjxRgWBAVWIrd1dVPV53ma3UcchgVYacviMrIhFnwAQ+8YL3fs
-        /VSxJqktysuP9EJukr+Jnwg=
-X-Google-Smtp-Source: APXvYqw8DoZT1xy+8BNikDeso3QARwg/9LWZQz63EgJwiBZs7Ir88Njc3Qb9TIWGZJOeNYbjbrzLyA==
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr31839416wro.249.1576503433158;
-        Mon, 16 Dec 2019 05:37:13 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id x132sm22762701wmg.0.2019.12.16.05.37.11
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=1zfuGQ1qe2hDELfu6AsH16OXoBlMUxIDB6zTtky9aok=;
+        b=bVijFWdWrk0kGpYjzThD9CmTmcT6v6hu1LPCKijcFLwV1MS9IX5Xn95vW4SLs9qyCZ
+         EkAFTjd54uPixzhpB9PnJsIm+p/z6xdQt+WPcbmb20guwJNhKBv1ygUBzuG1gUza9AKX
+         pg8ZuKNu3NHhvOutmVgF37q3dUKY4kIWjz2U6iuavBGTQv1ed+BcRPcNbLVzgp/tw1OF
+         RJROwK26RTamLGiHbdKU0Wa8HqwmP8CpRion17EDBpDRk4zH5wB+xkfhY21a9++VeS7X
+         LhjmzJ1uU8Q2XATYec9ToB0LmRFOYxq13GzhDPJKe3r+jHkFWshORa7v9wI9mH/jkeEx
+         Mzow==
+X-Gm-Message-State: APjAAAUbibpGTUNj7NGxzHJjqFZMrzTi3RX5Ne0RU1nwOsANb3yoaufJ
+        HS8K2ZV0HIMJ5MMQFL4Ryw==
+X-Google-Smtp-Source: APXvYqwpwv6Xs2Lty1Kg3w+du/QWBucDPrAljXRXjF0XXtRvy9m0xrq3s68FKBgDgKLHkBnGQXZYPw==
+X-Received: by 2002:adf:dfd2:: with SMTP id q18mr30194212wrn.152.1576503436233;
+        Mon, 16 Dec 2019 05:37:16 -0800 (PST)
+Received: from ninjahub.lan (host-92-15-174-53.as43234.net. [92.15.174.53])
+        by smtp.gmail.com with ESMTPSA id e8sm21495101wrt.7.2019.12.16.05.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 05:37:12 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:37:11 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Waiman Long <longman@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        aneesh.kumar@linux.ibm.com
-Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
-Message-ID: <20191216133711.GH30281@dhcp22.suse.cz>
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
- <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
- <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
- <20191212190427.ouyohviijf5inhur@linux-p48b>
+        Mon, 16 Dec 2019 05:37:15 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Mon, 16 Dec 2019 13:37:08 +0000 (GMT)
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Jules Irenge <jbi.octave@gmail.com>, bokun.feng@gmail.com,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: events: add releases() notation
+In-Reply-To: <20191216083128.GI2844@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.LFD.2.21.1912161335320.23578@ninjahub.org>
+References: <20191216002400.89985-1-jbi.octave@gmail.com> <20191216083128.GI2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212190427.ouyohviijf5inhur@linux-p48b>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12-12-19 11:04:27, Davidlohr Bueso wrote:
-> There have been deadlock reports[1, 2] where put_page is called
-> from softirq context and this causes trouble with the hugetlb_lock,
-> as well as potentially the subpool lock.
-> 
-> For such an unlikely scenario, lets not add irq dancing overhead
-> to the lock+unlock operations, which could incur in expensive
-> instruction dependencies, particularly when considering hard-irq
-> safety. For example PUSHF+POPF on x86.
-> 
-> Instead, just use a workqueue and do the free_huge_page() in regular
-> task context.
 
-I am afraid that work_struct is too large to be stuffed into the struct
-page array (because of the lockdep part).
 
-I think that it would be just safer to make hugetlb_lock irq safe. Are
-there any other locks that would require the same?
--- 
-Michal Hocko
-SUSE Labs
+On Mon, 16 Dec 2019, Peter Zijlstra wrote:
+
+> On Mon, Dec 16, 2019 at 12:24:00AM +0000, Jules Irenge wrote:
+> > Add releases() notation to remove issue detected by sparse
+> > context imbalance in perf_output_end() - unexpected unlock
+> 
+> None of the perf code uses the __acquire / __release annotations crud.
+> Also, your annotation is broken, I think it should be __releases(RCU) or
+> something like that.
+> 
+> 
+
+Thanks for the response. I already updated. 
