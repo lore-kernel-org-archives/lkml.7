@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C59C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D873DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC6A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF7A20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519729;
-	bh=EU7t9QC6x1Qa93dOKlmzl2pS5NWaMNioNG7xowQQfy8=;
+	s=default; t=1576519732;
+	bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXX9SKxb5kOigD6j/eFwww4Eesc0BcK9ete9wakIr7LlBhhV9KlBPy9Wu/1cPpYJW
-	 IKisKJEFhYfg1sqrlRfrO7I5dxO4GLiLfk8pEX3GgqlXiyiREwk7+ddbHNB2SSIs9I
-	 qq69ulZI8QqhToT82YYOts1DkjIRjT1D8aH4py8Y=
+	b=LTLpEvfeG756DwZnGUs3olT3RvnL6qIskMhcfL51uWdrjnyctsoAN0s7bk3GbvMUg
+	 jMrpn0ozsXUabxF+XUfKWf08lvtyc8bgSkxlMrD/S/XK1A1Px3cNaNceeA/KnRbOLW
+	 wix3hO2JlcTMC5xywp4gHaQ+Gkz8GTmtLxFRr5dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfLPSIs (ORCPT
+        id S1730306AbfLPSIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50490 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbfLPSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:43 -0500
+        id S1730321AbfLPSIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17D120700;
-        Mon, 16 Dec 2019 18:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB49206E0;
+        Mon, 16 Dec 2019 18:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519723;
-        bh=EU7t9QC6x1Qa93dOKlmzl2pS5NWaMNioNG7xowQQfy8=;
+        s=default; t=1576519728;
+        bh=ZvaVZQjOKfJxTpZ07uWHAkVkOLa3DZUdeKfk4bxPTO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vafbDHYFbCrDffzelalNH/zyZ2rMZ0GY2NKsRYkqxyS95IPrsjrICp4kaeF9kikzD
-         IC0pot1BvOkWbK8C+Z5WIu4PWa5Re+4dM7OyXGvFLbLYFr7jMDGRkE+gEfcqN1DZzu
-         rBGw52ahYryNk2PeH1fdFWyzhxh7ue12xu2mC5E8=
+        b=ZVXm/7N2K7l67qlhJTfu+S4/Hf8h86z5sxf4FvGs24cJ1081snRWuoDy1plOJpnQW
+         s0bN1RVqqxuePgK8YvTybFudr3gcbbakX8q30aRTRrm358ean2eXTFO503Z4QOyg3U
+         BDCxzX5/BF2TYS8zw6E8SASwZZXEvnaC9d9BdIOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.3 043/180] brcmfmac: disable PCIe interrupts before bus reset
-Date:   Mon, 16 Dec 2019 18:48:03 +0100
-Message-Id: <20191216174818.645990175@linuxfoundation.org>
+        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.3 045/180] mtd: rawnand: Change calculating of position page containing BBM
+Date:   Mon, 16 Dec 2019 18:48:05 +0100
+Message-Id: <20191216174819.918551533@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,59 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Piotr Sroka <piotrs@cadence.com>
 
-commit 5d26a6a6150c486f51ea2aaab33af04db02f63b8 upstream.
+commit a3c4c2339f8948b0f578e938970303a7372e60c0 upstream.
 
-Keeping interrupts on could result in brcmfmac freeing some resources
-and then IRQ handlers trying to use them. That was obviously a straight
-path for crashing a kernel.
+Change calculating of position page containing BBM
 
-Example:
-CPU0                           CPU1
-----                           ----
-brcmf_pcie_reset
-  brcmf_pcie_bus_console_read
-  brcmf_detach
-    ...
-    brcmf_fweh_detach
-    brcmf_proto_detach
-                               brcmf_pcie_isr_thread
-                                 ...
-                                 brcmf_proto_msgbuf_rx_trigger
-                                   ...
-                                   drvr->proto->pd
-    brcmf_pcie_release_irq
+If none of BBM flags are set then function nand_bbm_get_next_page
+reports EINVAL. It causes that BBM is not read at all during scanning
+factory bad blocks. The result is that the BBT table is build without
+checking factory BBM at all. For Micron flash memories none of these
+flags are set if page size is different than 2048 bytes.
 
-[  363.789218] Unable to handle kernel NULL pointer dereference at virtual address 00000038
-[  363.797339] pgd = c0004000
-[  363.800050] [00000038] *pgd=00000000
-[  363.803635] Internal error: Oops: 17 [#1] SMP ARM
-(...)
-[  364.029209] Backtrace:
-[  364.031725] [<bf243838>] (brcmf_proto_msgbuf_rx_trigger [brcmfmac]) from [<bf2471dc>] (brcmf_pcie_isr_thread+0x228/0x274 [brcmfmac])
-[  364.043662]  r7:00000001 r6:c8ca0000 r5:00010000 r4:c7b4f800
+Address this regression by:
+- adding NAND_BBM_FIRSTPAGE chip flag without any condition. It solves
+  issue only for Micron devices.
+- changing the nand_bbm_get_next_page_function. It will return 0
+  if no of BBM flag is set and page parameter is 0. After that modification
+  way of discovering factory bad blocks will work similar as in kernel
+  version 5.1.
 
-Fixes: 4684997d9eea ("brcmfmac: reset PCIe bus on a firmware crash")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: stable@vger.kernel.org
+Fixes: f90da7818b14 (mtd: rawnand: Support bad block markers in first, second or last page)
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/nand/raw/nand_base.c   |    8 ++++++--
+ drivers/mtd/nand/raw/nand_micron.c |    4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-@@ -1426,6 +1426,8 @@ static int brcmf_pcie_reset(struct devic
- 	struct brcmf_fw_request *fwreq;
- 	int err;
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -292,12 +292,16 @@ int nand_bbm_get_next_page(struct nand_c
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	int last_page = ((mtd->erasesize - mtd->writesize) >>
+ 			 chip->page_shift) & chip->pagemask;
++	unsigned int bbm_flags = NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE
++		| NAND_BBM_LASTPAGE;
  
-+	brcmf_pcie_intr_disable(devinfo);
++	if (page == 0 && !(chip->options & bbm_flags))
++		return 0;
+ 	if (page == 0 && chip->options & NAND_BBM_FIRSTPAGE)
+ 		return 0;
+-	else if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
++	if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
+ 		return 1;
+-	else if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
++	if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
+ 		return last_page;
+ 
+ 	return -EINVAL;
+--- a/drivers/mtd/nand/raw/nand_micron.c
++++ b/drivers/mtd/nand/raw/nand_micron.c
+@@ -446,8 +446,10 @@ static int micron_nand_init(struct nand_
+ 	if (ret)
+ 		goto err_free_manuf_data;
+ 
++	chip->options |= NAND_BBM_FIRSTPAGE;
 +
- 	brcmf_pcie_bus_console_read(devinfo, true);
+ 	if (mtd->writesize == 2048)
+-		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
++		chip->options |= NAND_BBM_SECONDPAGE;
  
- 	brcmf_detach(dev);
+ 	ondie = micron_supports_on_die_ecc(chip);
+ 
 
 
