@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BE9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D149C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035EC207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630AC21582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520037;
-	bh=ZRk387PotmoBi8hh6QyD2phChBhzAMte6NFC0bi5/DY=;
+	s=default; t=1576520041;
+	bh=DkCPbrmjrLhyggIsxqQ2UgaXx0IBRimw3qNKWnog8O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EqFkD4rns+p0c0wtkQ46GcvxfKCNEthuspCqbtMtVGTm3lpGwwpFCfClsI066Bdvg
-	 agM4PNW81nGT6tB0Ym22OWJPuZ+ej/U3WAd4LNwqLWCJC9/dysESSI8wY3H+LAPP4H
-	 SU0y1jniPyHy5JTssSR7zhUd/E3merngpu2FzZAo=
+	b=gCbxsfoZ8HFl95GDFKb/58Zqy7/wN70Ug9R/WnW7ENLFqFSg05pWs/xh6CtChHtvn
+	 12yVay1Q2wN7LtNJzqntsmcOHWEj7xBzBnNZ+uQU/jSS56ScuMFIwd4d/AcrwbewUS
+	 dv5M6omQsxPFmLkJ1KFT1W8kzVPQBpgaWjMvO8R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbfLPSN4 (ORCPT
+        id S1730974AbfLPSN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbfLPSNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:43 -0500
+        id S1726787AbfLPSNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A888D207FF;
-        Mon, 16 Dec 2019 18:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1306921582;
+        Mon, 16 Dec 2019 18:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520023;
-        bh=ZRk387PotmoBi8hh6QyD2phChBhzAMte6NFC0bi5/DY=;
+        s=default; t=1576520025;
+        bh=DkCPbrmjrLhyggIsxqQ2UgaXx0IBRimw3qNKWnog8O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cad3hahEaDAIpwV4t9oUOe720T/f8TMpwg3+lsKuyYZaWa0EL4r9V6owxejp+yoVK
-         HbcOfljxSuK6tWjP7epQSwchUEoWxcW2LtHdMtluCmYFSIS+UVzEvM0/Hxdh9RvsQv
-         FiERqjsPbE7IFawkyaarT8yiGE2P+IEu6fJdmuso=
+        b=fy8jXpkA0oBKMH7nynhGKwOoZi57/EsqnNv9MCGhCuogWj7B/H6KKJSveOs7k3Vnh
+         O+XY8wibdWZxCoocKkAC9SSBZW8iuqIF1yEt6Sl15V7gnkvIG/0iPNbq/lWf1takzu
+         LNVXHfNYk8qE7RliHQ9GIyS8LfUGP+sfp2QjKv/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 158/180] Revert "scsi: qla2xxx: Fix memory leak when sending I/O fails"
-Date:   Mon, 16 Dec 2019 18:49:58 +0100
-Message-Id: <20191216174845.614595027@linuxfoundation.org>
+Subject: [PATCH 5.3 167/180] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+Date:   Mon, 16 Dec 2019 18:50:07 +0100
+Message-Id: <20191216174847.143009591@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,46 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit 5a993e507ee65a28eca6690ee11868555c4ca46b ]
+[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
 
-This reverts commit 2f856d4e8c23f5ad5221f8da4a2f22d090627f19.
+With a wl1251 child node of mmc3 in the device tree decoded
+in omap_hsmmc.c to handle special wl1251 initialization, we do
+no longer need to instantiate the mmc3 through pdata quirks.
 
-This patch was found to introduce a double free regression. The issue
-it originally attempted to address was fixed in patch
-f45bca8c5052 ("scsi: qla2xxx: Fix double scsi_done for abort path").
+We also can remove the wlan regulator and reset/interrupt definitions
+and do them through device tree.
 
-Link: https://lore.kernel.org/r/4BDE2B95-835F-43BE-A32C-2629D7E03E0A@marvell.com
-Requested-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
+ 1 file changed, 93 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 6be453985a12d..484045e4d194f 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -947,8 +947,6 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index e5c99e33afae2..da21c589dbdf1 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -303,108 +303,15 @@ static void __init omap3_logicpd_torpedo_init(void)
+ }
  
- qc24_host_busy_free_sp:
- 	sp->free(sp);
--	CMD_SP(cmd) = NULL;
--	qla2x00_rel_sp(sp);
+ /* omap3pandora legacy devices */
+-#define PANDORA_WIFI_IRQ_GPIO		21
+-#define PANDORA_WIFI_NRESET_GPIO	23
  
- qc24_host_busy:
- 	return SCSI_MLQUEUE_HOST_BUSY;
-@@ -1038,8 +1036,6 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
+ static struct platform_device pandora_backlight = {
+ 	.name	= "pandora-backlight",
+ 	.id	= -1,
+ };
  
- qc24_host_busy_free_sp:
- 	sp->free(sp);
--	CMD_SP(cmd) = NULL;
--	qla2xxx_rel_qpair_sp(sp->qpair, sp);
+-static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
+-	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
+-};
+-
+-static struct regulator_init_data pandora_vmmc3 = {
+-	.constraints = {
+-		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
+-	},
+-	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
+-	.consumer_supplies	= pandora_vmmc3_supply,
+-};
+-
+-static struct fixed_voltage_config pandora_vwlan = {
+-	.supply_name		= "vwlan",
+-	.microvolts		= 1800000, /* 1.8V */
+-	.gpio			= PANDORA_WIFI_NRESET_GPIO,
+-	.startup_delay		= 50000, /* 50ms */
+-	.enable_high		= 1,
+-	.init_data		= &pandora_vmmc3,
+-};
+-
+-static struct platform_device pandora_vwlan_device = {
+-	.name		= "reg-fixed-voltage",
+-	.id		= 1,
+-	.dev = {
+-		.platform_data = &pandora_vwlan,
+-	},
+-};
+-
+-static void pandora_wl1251_init_card(struct mmc_card *card)
+-{
+-	/*
+-	 * We have TI wl1251 attached to MMC3. Pass this information to
+-	 * SDIO core because it can't be probed by normal methods.
+-	 */
+-	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
+-		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+-		card->cccr.wide_bus = 1;
+-		card->cis.vendor = 0x104c;
+-		card->cis.device = 0x9066;
+-		card->cis.blksize = 512;
+-		card->cis.max_dtr = 24000000;
+-		card->ocr = 0x80;
+-	}
+-}
+-
+-static struct omap2_hsmmc_info pandora_mmc3[] = {
+-	{
+-		.mmc		= 3,
+-		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
+-		.gpio_cd	= -EINVAL,
+-		.gpio_wp	= -EINVAL,
+-		.init_card	= pandora_wl1251_init_card,
+-	},
+-	{}	/* Terminator */
+-};
+-
+-static void __init pandora_wl1251_init(void)
+-{
+-	struct wl1251_platform_data pandora_wl1251_pdata;
+-	int ret;
+-
+-	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
+-
+-	pandora_wl1251_pdata.power_gpio = -1;
+-
+-	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
+-	if (ret < 0)
+-		goto fail;
+-
+-	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
+-	if (pandora_wl1251_pdata.irq < 0)
+-		goto fail_irq;
+-
+-	pandora_wl1251_pdata.use_eeprom = true;
+-	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
+-	if (ret < 0)
+-		goto fail_irq;
+-
+-	return;
+-
+-fail_irq:
+-	gpio_free(PANDORA_WIFI_IRQ_GPIO);
+-fail:
+-	pr_err("wl1251 board initialisation failed\n");
+-}
+-
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
+-	platform_device_register(&pandora_vwlan_device);
+-	omap_hsmmc_init(pandora_mmc3);
+-	omap_hsmmc_late_init(pandora_mmc3);
+-	pandora_wl1251_init();
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
  
- qc24_host_busy:
- 	return SCSI_MLQUEUE_HOST_BUSY;
 -- 
 2.20.1
 
