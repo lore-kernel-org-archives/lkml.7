@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B253AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E29EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7082166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5275F21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520456;
-	bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
+	s=default; t=1576520459;
+	bh=1WVLOQ7FtZmmPMQdVLbpbkQ0N8WM+n1L7ASOYMn/u6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bE4BBysdjjcOJrITmVAVZrvOb4UxMYdsX7c6N7xEVi5wdynhiAKdxjcNRpRq5wfq0
-	 WSzNNHjQudyj2zSGdM5M1pyY2lFrqWzr+4sgDfl6FbQ3E9CeXzjxO9bq3YyHjhCm+J
-	 XWX4In/26Kd4yBHbLyVnIw/HHn69vYqE6KtsSUNU=
+	b=XbbHMKCGUuLvayOMiGpLrYe4KWl0VjSc8bocbsce4e2iLy/P8hGd55JTMfGIEBEPZ
+	 vkJoZFW3rT1LPuju1Iy+cbg0yZPnzaDcWVpxpO+liqJgdL1q4dZkgVmQOvIIfNr0SD
+	 /vs4RQ3qRavPA7BSVuDj0dvjMId+4FAzYm/WVV7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732162AbfLPSUz (ORCPT
+        id S1732169AbfLPSU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52454 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731360AbfLPSUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:52 -0500
+        id S1732149AbfLPSUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77BCB206EC;
-        Mon, 16 Dec 2019 18:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9AE62166E;
+        Mon, 16 Dec 2019 18:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520450;
-        bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
+        s=default; t=1576520453;
+        bh=1WVLOQ7FtZmmPMQdVLbpbkQ0N8WM+n1L7ASOYMn/u6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohtGMv5A6MxsQXmIrNfJdiwnby3Y0nMUj3M4DhauX0nmifO902y0oQjctmuThTJzP
-         R8MfyFK09i03HAJgUi5OKV9uFLsUOIhmoNWZmMdbb+gJsVvXN4KzkJPs9jI4sFdr0/
-         vWXgeKVqotGmdT/pzUFxyGvO3wGb0XmZgK4oyT8I=
+        b=euEDza0r7EPKrE7rk1BkB5HXSLl0tW+2hO/K2S5l6++R9EfiYilX3RTrTtpL0zIfS
+         T23AMpeY9e59O0wRenT+iue0dNJnAfQWm80JrIOKKAT1JjtDA5cg1sgR0IUQGElKZ7
+         z4mv0vrzXlEuhK/oQnfljVX/cpv+dVM3NXj9MRAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Charles-Antoine Couret <charles-antoine.couret@essensium.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 159/177] iio: ad7949: fix channels mixups
-Date:   Mon, 16 Dec 2019 18:50:15 +0100
-Message-Id: <20191216174848.954422354@linuxfoundation.org>
+Subject: [PATCH 5.4 160/177] omap: pdata-quirks: revert pandora specific gpiod additions
+Date:   Mon, 16 Dec 2019 18:50:16 +0100
+Message-Id: <20191216174849.051043809@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,126 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Merello <andrea.merello@gmail.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit 3b71f6b59508b1c9befcb43de434866aafc76520 ]
+[ Upstream commit 4e8fad98171babe019db51c15055ec74697e9525 ]
 
-Each time we need to read a sample (from the sysfs interface, since the
-driver supports only it) the driver writes the configuration register
-with the proper settings needed to perform the said read, then it runs
-another xfer to actually read the resulting value. Most notably the
-configuration register is updated to set the ADC internal MUX depending by
-which channel the read targets.
+This partly reverts the commit efdfeb079cc3 ("regulator: fixed: Convert to
+use GPIO descriptor only").
 
-Unfortunately this seems not enough to ensure correct operation because
-the ADC works in a pipelined-like fashion and the new configuration isn't
-applied in time.
+We must remove this from mainline first, so that the following patch
+to remove the openpandora quirks for mmc3 and wl1251 cleanly applies
+to stable v4.9, v4.14, v4.19 where the above mentioned patch is not yet
+present.
 
-The ADC alternates two phases: acquisition and conversion. During the
-acquisition phase the ADC samples the analog signal in an internal
-capacitor; in the conversion phase the ADC performs the actual analog to
-digital conversion of the stored voltage. Note that of course the MUX
-needs to be set to the proper channel when the acquisition phase is
-performed.
+Since the code affected is removed (no pandora gpios in pdata-quirks
+and more), there will be no matching revert-of-the-revert.
 
-Once the conversion phase has been completed, the device automatically
-switches back to a new acquisition; on the other hand the device switches
-from acquisition to conversion on the rising edge of SPI cs signal (that
-is when the xfer finishes).
-
-Only after both two phases have been completed (with the proper settings
-already written in the configuration register since the beginning) it is
-possible to read the outcome from SPI bus.
-
-With the current driver implementation, we end up in the following
-situation:
-
-        _______  1st xfer ____________  2nd xfer ___________________
-SPI cs..       \_________/            \_________/
-SPI rd.. idle  |(val N-2)+    idle    | val N-1 +   idle ...
-SPI wr.. idle  |  cfg N  +    idle    |   (X)   +   idle ...
------------------------- + -------------------- + ------------------
-  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1
-
-As shown in the diagram above, the value we read in the Nth read belongs
-to configuration setting N-1.
-
-In case the configuration is not changed (config[N] == config[N-1]), then
-we still get correct data, but in case the configuration changes (i.e.
-switching the MUX on another channel), we get wrong data (data from the
-previously selected channel).
-
-This patch fixes this by performing one more "dummy" transfer in order to
-ending up in reading the data when it's really ready, as per the following
-timing diagram.
-
-        _______  1st xfer ____________  2nd xfer ___________  3rd xfer ___
-SPI cs..       \_________/            \_________/           \_________/
-SPI rd.. idle  |(val N-2)+    idle    |(val N-1)+    idle   |  val N  + ..
-SPI wr.. idle  |  cfg N  +    idle    |   (X)   +    idle   |   (X)   + ..
------------------------- + -------------------- + ------------------- + --
-  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1   | ..
-
-NOTE: in the latter case (cfg changes), the acquisition phase for the
-value to be read begins after the 1st xfer, that is after the read request
-has been issued on sysfs. On the other hand, if the cfg doesn't change,
-then we can refer to the fist diagram assuming N == (N - 1); the
-acquisition phase _begins_ before the 1st xfer (potentially a lot of time
-before the read has been issued via sysfs, but it _ends_ after the 1st
-xfer, that is _after_ the read has started. This should guarantee a
-reasonably fresh data, which value represents the voltage that the sampled
-signal has after the read start or maybe just around it.
-
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Reviewed-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad7949.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-index 518044c31a73b..6b51bfcad0d04 100644
---- a/drivers/iio/adc/ad7949.c
-+++ b/drivers/iio/adc/ad7949.c
-@@ -89,6 +89,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
- 				   unsigned int channel)
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 2efd18e8824c7..800a602c06ecc 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -7,7 +7,6 @@
+ #include <linux/clk.h>
+ #include <linux/davinci_emac.h>
+ #include <linux/gpio.h>
+-#include <linux/gpio/machine.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/of_platform.h>
+@@ -334,7 +333,9 @@ static struct regulator_init_data pandora_vmmc3 = {
+ static struct fixed_voltage_config pandora_vwlan = {
+ 	.supply_name		= "vwlan",
+ 	.microvolts		= 1800000, /* 1.8V */
++	.gpio			= PANDORA_WIFI_NRESET_GPIO,
+ 	.startup_delay		= 50000, /* 50ms */
++	.enable_high		= 1,
+ 	.init_data		= &pandora_vmmc3,
+ };
+ 
+@@ -346,19 +347,6 @@ static struct platform_device pandora_vwlan_device = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table pandora_vwlan_gpiod_table = {
+-	.dev_id = "reg-fixed-voltage.1",
+-	.table = {
+-		/*
+-		 * As this is a low GPIO number it should be at the first
+-		 * GPIO bank.
+-		 */
+-		GPIO_LOOKUP("gpio-0-31", PANDORA_WIFI_NRESET_GPIO,
+-			    NULL, GPIO_ACTIVE_HIGH),
+-		{ },
+-	},
+-};
+-
+ static void pandora_wl1251_init_card(struct mmc_card *card)
  {
- 	int ret;
-+	int i;
- 	int bits_per_word = ad7949_adc->resolution;
- 	int mask = GENMASK(ad7949_adc->resolution, 0);
- 	struct spi_message msg;
-@@ -100,12 +101,23 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
- 		},
- 	};
- 
--	ret = ad7949_spi_write_cfg(ad7949_adc,
--				   channel << AD7949_OFFSET_CHANNEL_SEL,
--				   AD7949_MASK_CHANNEL_SEL);
--	if (ret)
--		return ret;
-+	/*
-+	 * 1: write CFG for sample N and read old data (sample N-2)
-+	 * 2: if CFG was not changed since sample N-1 then we'll get good data
-+	 *    at the next xfer, so we bail out now, otherwise we write something
-+	 *    and we read garbage (sample N-1 configuration).
-+	 */
-+	for (i = 0; i < 2; i++) {
-+		ret = ad7949_spi_write_cfg(ad7949_adc,
-+					   channel << AD7949_OFFSET_CHANNEL_SEL,
-+					   AD7949_MASK_CHANNEL_SEL);
-+		if (ret)
-+			return ret;
-+		if (channel == ad7949_adc->current_channel)
-+			break;
-+	}
- 
-+	/* 3: write something and read actual data */
- 	ad7949_adc->buffer = 0;
- 	spi_message_init_with_transfers(&msg, tx, 1);
- 	ret = spi_sync(ad7949_adc->spi, &msg);
+ 	/*
+@@ -380,6 +368,8 @@ static struct omap2_hsmmc_info pandora_mmc3[] = {
+ 	{
+ 		.mmc		= 3,
+ 		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
++		.gpio_cd	= -EINVAL,
++		.gpio_wp	= -EINVAL,
+ 		.init_card	= pandora_wl1251_init_card,
+ 	},
+ 	{}	/* Terminator */
+@@ -418,7 +408,6 @@ fail:
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
+-	gpiod_add_lookup_table(&pandora_vwlan_gpiod_table);
+ 	platform_device_register(&pandora_vwlan_device);
+ 	omap_hsmmc_init(pandora_mmc3);
+ 	omap_hsmmc_late_init(pandora_mmc3);
 -- 
 2.20.1
 
