@@ -2,206 +2,112 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781CBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BDCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B344206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581BD206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XRZMxrgL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfLPMik (ORCPT
+        id S1727681AbfLPMjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:38:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:53874 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727512AbfLPMik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:38:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B77C1FB;
-        Mon, 16 Dec 2019 04:38:39 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2708C3F719;
-        Mon, 16 Dec 2019 04:38:38 -0800 (PST)
-Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
-To:     Anand Moon <linux.amoon@gmail.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org
-References: <cover.1575932654.git.robin.murphy@arm.com>
- <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
- <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
- <2681192.H4ySjFOPB8@diego>
- <CANAwSgTL-9VCFFj-+4xsLZOxKCHtjyN4P6fYnuRSOe7cZRiWew@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f29fbb91-ffd0-5650-30b4-5791c970a834@arm.com>
-Date:   Mon, 16 Dec 2019 12:38:51 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 07:39:03 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39466 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727512AbfLPMjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:39:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c88RMelWbUgUiJroWa0Q0HLfhfNHGH7r6t3skBuZYFU=; b=XRZMxrgL4mXQitjiaHR/vTJzl
+        OiXWCYBgvU4/QgW7TOQLLk3vijwtgoULXNuuag+CGBE4W//7PBd4XrtGPhLNpwfwUbsYAVnFpDIos
+        JBgvxayPVZKPeIwz/yeAl21ZbYmkrTuMyrqxloImgsH3iPP2/GYw8gxOYj+/6wyF7CF0ysOL4G+nO
+        4huaSdYpFYtqTdO8fNHTZdS8gqUWr7PHTj34GM5vIZIWb0g4sYsbL8ajNGiTNBRUhCDO3zuMReRvL
+        AzmyMhV5V0/tSyXjv664vXjdN14UJgBsqce8S1p+YoCwFeO674JWwmT16Zd+loev4G23/hPGZYTbY
+        e0tgk3YbA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igpdM-00064m-Dp; Mon, 16 Dec 2019 12:37:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 06AD13007F2;
+        Mon, 16 Dec 2019 13:36:30 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DBF192B1A6BF5; Mon, 16 Dec 2019 13:37:52 +0100 (CET)
+Date:   Mon, 16 Dec 2019 13:37:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+Message-ID: <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org>
+ <87woawzc1t.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgTL-9VCFFj-+4xsLZOxKCHtjyN4P6fYnuRSOe7cZRiWew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woawzc1t.fsf@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-16 9:50 am, Anand Moon wrote:
-> Hi Heiko / Robin / Soeren,
+On Mon, Dec 16, 2019 at 06:01:58PM +0530, Aneesh Kumar K.V wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
 > 
-> On Mon, 16 Dec 2019 at 01:57, Heiko Stübner <heiko@sntech.de> wrote:
->>
->> Hi Anand,
->>
->> Am Sonntag, 15. Dezember 2019, 19:51:50 CET schrieb Anand Moon:
->>> On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wrote:
->>>>
->>>> RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK817,
->>>> so it makes little sense for the driver to have to have two completely
->>>> different mechanisms to handle essentially the same thing. Bring RK805
->>>> in line with the RK809/RK817 flow to clean things up.
->>>>
->>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>>> ---
->>
->> [...]
->>
->>> I am sill getting the kernel warning on issue poweroff see below.
->>> on my Rock960 Model A
->>> I feel the reason for this is we now have two poweroff callback
->>> 1  pm_power_off = rk808_device_shutdown
->>> 2  rk8xx_syscore_shutdown
->>
->> Nope, the issue is just the i2c subsystem complaining that the
->> Rocckhip i2c drives does not provide an atomic-transfer function, see
->>          "No atomic I2C transfer handler for 'i2c-0'"
->> in your warning.
->>
->> Somewhere it was suggested that the current transfer function just
->> works as atomic as well.
->>
->>
->>> In my investigation earlier common function for shutdown solve
->>> the issue of clean shutdown.
->>
->> This is simply a result of your syscore-shutdown function running way to
->> early, before the i2c subsystem switched to using atomic transfers.
->>
->> This also indicates that this would really be way to early, as other parts
->> of the kernel could also still be running.
->>
+> > Towards a more consistent naming scheme.
+> >
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/Kconfig              |    3 ++-
+> >  arch/powerpc/Kconfig      |    2 +-
+> >  arch/sparc/Kconfig        |    2 +-
+> >  include/asm-generic/tlb.h |    2 +-
+> >  mm/mmu_gather.c           |    2 +-
+> >  5 files changed, 6 insertions(+), 5 deletions(-)
+> >
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -396,8 +396,9 @@ config HAVE_ARCH_JUMP_LABEL_RELATIVE
+> >  config MMU_GATHER_RCU_TABLE_FREE
+> >  	bool
+> >  
+> > -config HAVE_RCU_TABLE_NO_INVALIDATE
+> > +config MMU_GATHER_NO_TABLE_INVALIDATE
+> >  	bool
+> > +	depends on MMU_GATHER_RCU_TABLE_FREE
 > 
-> Yes, you are correct syscore-shutdown initiates
-> shutdown before all the device do clean shutdown.
 > 
-> So for best approach for clean atomic shutdown is to use
->    /* driver model interfaces that don't relate to enumeration  */
->          void (*shutdown)(struct i2c_client *client);
-> drop the registration of syscore and use core .i2c_shutdown.
+> Can we drop this Kernel config option instead use
+> MMU_GATHER_RCU_TABLE_FREE? IMHO reducing the kernel config related to
+> mmu_gather can reduce the complexity. 
 
-Huh? If you understand that the syscore shutdown hook is too early, why 
-would it seem a good idea to pull the plug even earlier from driver 
-shutdown? Not to mention that your patch as proposed breaks all the 
-GPIO-based shutdown flows.
+I'm confused, are you saing you're happy to have PowerPC eat the extra
+TLB invalidates? I thought you cared about PPC performance :-)
 
-If you really care about avoiding the spurious warning, implement the 
-expected polled-mode transfer function in the I2C driver. Trying to hack 
-around it by issuing I2C-based shutdown from anywhere other than 
-pm_power_off is a waste of everyone's time.
 
-> I have prepare this patch on top of this series for RTF
-> This patch dose clean shutdown of all the devices before poweroff.
-> see the log below.
-> 
-> *Note*: This feature will likely break the clean reboot feature.
-> Rockchip device do not perform clean reboot as some of the IP
-> block are not released before clean reboot and it's remain stuck.
-> Like PCIe and MMC, We need to look into this as well.
-
-As mentioned before, that likely has nothing to do with the PMIC, and 
-really sounds like the issue with Trusted Firmware not reenabling all 
-the SoC power domains before reset - a fix for that has already been 
-identified, see here: 
-https://forum.armbian.com/topic/7552-roc-rk3399-pc-renegade-elite/?do=findComment&comment=90289
-
-Robin.
-
-> Shutdown log of my RK3399 Rock960 Model A
-> [0] https://pastebin.com/peYxmzb7
-> ------------------------------------------------------------------------
-> [  OK  ] Stopped LVM2 metadata daemon.
-> [  OK  ] Reached target Shutdown.
-> [  OK  ] Reached target Final Step.
-> [  OK  ] Closed LVM2 metadata daemon socket.
-> [  OK  ] Started Power-Off.
-> [  OK  ] Reached target Power-Off.
-> [  542.715237] systemd-shutdown[1]: Syncing filesystems and block devices.
-> [  543.158314] systemd-shutdown[1]: Sending SIGTERM to remaining processes...
-> [  543.168469] systemd-journald[280]: Received SIGTERM from PID 1
-> (systemd-shutdow).
-> [  543.202968] systemd-shutdown[1]: Sending SIGKILL to remaining processes...
-> [  543.212365] systemd-shutdown[1]: Unmounting file systems.
-> [  543.214708] [535]: Remounting '/' read-only in with options '(null)'.
-> [  543.229661] EXT4-fs (mmcblk1p1): re-mounted. Opts: (null)
-> [  543.239978] systemd-shutdown[1]: All filesystems unmounted.
-> [  543.240481] systemd-shutdown[1]: Deactivating swaps.
-> [  543.241052] systemd-shutdown[1]: All swaps deactivated.
-> [  543.241514] systemd-shutdown[1]: Detaching loop devices.
-> [  543.244806] systemd-shutdown[1]: All loop devices detached.
-> [  543.245307] systemd-shutdown[1]: Detaching DM devices.
-> [  543.245994] systemd-shutdown[1]: All DM devices detached.
-> [  543.246474] systemd-shutdown[1]: All filesystems, swaps, loop
-> devices and DM devices detached.
-> [  543.302732] systemd-shutdown[1]: Successfully changed into root pivot.
-> [  543.303356] systemd-shutdown[1]: Returning to initrd...
-> [  543.339679] shutdown[1]: Syncing filesystems and block devices.
-> [  543.341084] shutdown[1]: Sending SIGTERM to remaining processes...
-> [  543.348948] shutdown[1]: Sending SIGKILL to remaining processes...
-> [  543.356551] shutdown[1]: Unmounting file systems.
-> [  543.359097] sd-umoun[541]: Unmounting '/oldroot/sys/kernel/config'.
-> [  543.361716] sd-umoun[542]: Unmounting '/oldroot/sys/kernel/debug'.
-> [  543.364333] sd-umoun[543]: Unmounting '/oldroot/dev/mqueue'.
-> [  543.366765] sd-umoun[544]: Unmounting '/oldroot/dev/hugepages'.
-> [  543.369426] sd-umoun[545]: Unmounting '/oldroot/sys/fs/cgroup/memory'.
-> [  543.372338] sd-umoun[546]: Unmounting '/oldroot/sys/fs/cgroup/perf_event'.
-> [  543.375030] sd-umoun[547]: Unmounting '/oldroot/sys/fs/cgroup/cpu,cpuacct'.
-> [  543.377744] sd-umoun[548]: Unmounting '/oldroot/sys/fs/cgroup/pids'.
-> [  543.380620] sd-umoun[549]: Unmounting '/oldroot/sys/fs/cgroup/blkio'.
-> [  543.383256] sd-umoun[550]: Unmounting '/oldroot/sys/fs/cgroup/hugetlb'.
-> [  543.386015] sd-umoun[551]: Unmounting '/oldroot/sys/fs/cgroup/devices'.
-> [  543.389114] sd-umoun[552]: Unmounting '/oldroot/sys/fs/cgroup/cpuset'.
-> [  543.391817] sd-umoun[553]: Unmounting '/oldroot/sys/fs/pstore'.
-> [  543.394401] sd-umoun[554]: Unmounting '/oldroot/sys/fs/cgroup/systemd'.
-> [  543.397245] sd-umoun[555]: Unmounting '/oldroot/sys/fs/cgroup/unified'.
-> [  543.400083] sd-umoun[556]: Unmounting '/oldroot/sys/fs/cgroup'.
-> [  543.402654] sd-umoun[557]: Unmounting '/oldroot/dev/pts'.
-> [  543.405351] sd-umoun[558]: Unmounting '/oldroot/dev/shm'.
-> [  543.407876] sd-umoun[559]: Unmounting '/oldroot/sys/kernel/security'.
-> [  543.410313] sd-umoun[560]: Unmounting '/oldroot'.
-> [  543.410886] sd-umoun[560]: Failed to unmount /oldroot: Device or
-> resource busy
-> [  543.413355] sd-umoun[561]: Unmounting '/oldroot/run'.
-> [  543.415750] sd-umoun[562]: Unmounting '/oldroot/dev'.
-> [  543.418013] sd-umoun[563]: Unmounting '/oldroot/sys'.
-> [  543.420892] sd-umoun[564]: Unmounting '/oldroot/proc'.
-> [  543.423833] sd-umoun[565]: Unmounting '/oldroot'.
-> [  543.486268] shutdown[1]: All filesystems unmounted.
-> [  543.486710] shutdown[1]: Deactivating swaps.
-> [  543.487153] shutdown[1]: All swaps deactivated.
-> [  543.487556] shutdown[1]: Detaching loop devices.
-> [  543.490300] shutdown[1]: All loop devices detached.
-> [  543.490735] shutdown[1]: Detaching DM devices.
-> [  543.491382] shutdown[1]: All DM devices detached.
-> [  543.491801] shutdown[1]: All filesystems, swaps, loop devices and
-> DM devices detached.
-> [  543.494678] shutdown[1]: Syncing filesystems and block devices.
-> [  543.495770] shutdown[1]: Powering off.
-> [  543.496112] kvm: exiting hardware virtualization
-> 
-> -Anand
-> 
