@@ -2,93 +2,89 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EDFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F567C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893E0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521648;
-	bh=sYP6a1qIWAROYWDT3OJif2kJPunlIqYiRnV/nOd2lKs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUErhq5zvkRz1sgmZMKVbYL/DjGGRO2TV6Mrck6wjb4dJHWAzDH5CIKXT7gAWZjHF
-	 XpM0K2JPUSAAndiiOfZGp8w5fpxRMZoWaGJyWAKOQEMMaJMeF9m26hNRp813gz8AZe
-	 thoX+X5yYboaZxTKC0OKfiWyrADP0IClSMMj1qck=
+	by mail.kernel.org (Postfix) with ESMTP id DAB87206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfLPSCC (ORCPT
+        id S1729421AbfLPSky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37604 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:40:54 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60978 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfLPSCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A816D20CC7;
-        Mon, 16 Dec 2019 18:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519321;
-        bh=sYP6a1qIWAROYWDT3OJif2kJPunlIqYiRnV/nOd2lKs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGZsluPI0MyLhIXYHfcRz8FAm89b8oIs1UomBqub3N5uW/NiKBBrGsOfWXzJkfUT0
-         RPz05jn1UirvWUZd4WlOLkIOwKhPieGOsl/jgETShuOxMcpQjLKd7xKzsM062O604I
-         LDE1uplsc7v8Cl35K3QQ7spfHDW3UGpMhsJ+qQuA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 019/140] iio: adis16480: Add debugfs_reg_access entry
-Date:   Mon, 16 Dec 2019 18:48:07 +0100
-Message-Id: <20191216174755.837735242@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
-References: <20191216174747.111154704@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728995AbfLPSBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:50 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1igugj-0001nY-Bk; Mon, 16 Dec 2019 19:01:45 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
+Date:   Mon, 16 Dec 2019 19:01:44 +0100
+Message-ID: <12525836.FhlgEYrHGb@diego>
+In-Reply-To: <20191216175615.GA23392@bogus>
+References: <20191216122448.27867-1-heiko@sntech.de> <20191216175615.GA23392@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nuno Sá <nuno.sa@analog.com>
+Hi Rob,
 
-commit 4c35b7a51e2f291471f7221d112c6a45c63e83bc upstream.
+Am Montag, 16. Dezember 2019, 18:56:15 CET schrieb Rob Herring:
+> On Mon, 16 Dec 2019 13:24:47 +0100, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > 
+> > Further review of the dsi components for the px30 revealed that the
+> > phy shouldn't expose the pll as clock but instead handle settings
+> > via phy parameters.
+> > 
+> > As the phy binding is new and not used anywhere yet, just drop them
+> > so they don't get used.
+> > 
+> > Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > ---
+> > Hi Kishon,
+> > 
+> > maybe suitable as a fix for 5.5-rc?
+> > 
+> > Thanks
+> > Heiko
+> > 
+> >  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
+> >  1 file changed, 5 deletions(-)
+> > 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-The driver is defining debugfs entries by calling
-`adis16480_debugfs_init()`. However, those entries are attached to the
-iio_dev debugfs entry which won't exist if no debugfs_reg_access
-callback is provided.
+sorry about that. The original response somehow did not thread correctly
+in my mail client, probably some fault on my side, so I've only found your
+mail just now by digging hard.
 
-Fixes: 2f3abe6cbb6c ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+@Kishon, the original mail already got an
 
----
- drivers/iio/imu/adis16480.c |    1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -727,6 +727,7 @@ static const struct iio_info adis16480_i
- 	.read_raw = &adis16480_read_raw,
- 	.write_raw = &adis16480_write_raw,
- 	.update_scan_mode = adis_update_scan_mode,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
- };
- 
- static int adis16480_stop_device(struct iio_dev *indio_dev)
+
 
 
