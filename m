@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC25C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C30C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AEB207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B668207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521276;
-	bh=D9BzyQy5ZzPaglJk39CSdueO88kTdIsmK1/C+xN29lg=;
+	s=default; t=1576521284;
+	bh=DP4fkJYu/ZUk3CHqJSESzZrnvSYI605vdEchAwGOeKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G4ihQqKJEedxRKgdQFUn/CPYvC61liLP96Tsx3m16/p5AAE66lGVx56re2idaWgMX
-	 qCwkrwgnyX3I2BR+ciZrKJDxCs9FJRuZiMQ5pDao7X+8thM6ig5P3q5AltP3PunMp9
-	 OE03YN72Zubg9xablObeFEM7kXJH/zpNJdemVGRM=
+	b=y04V2WRQRCnDHgR+sC0NHsImjGwgpcT8Pz1G/1/fAxeJ0YNSjt/NIgN4dt8/nKVUE
+	 0VXGg9aZV29b14Vper67Aae9dsi1Jh6CcpGE8ezzznfjVZQzohS3Ie6Cfn4H+ZvG/0
+	 DsgU5gadl0HFPpCD7rHaQGHfmeqXyXPDs+SI+xhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbfLPSIy (ORCPT
+        id S1730368AbfLPSem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50694 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:34:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbfLPSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:51 -0500
+        id S1730054AbfLPSIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5032072D;
-        Mon, 16 Dec 2019 18:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3BE206E0;
+        Mon, 16 Dec 2019 18:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519730;
-        bh=D9BzyQy5ZzPaglJk39CSdueO88kTdIsmK1/C+xN29lg=;
+        s=default; t=1576519732;
+        bh=DP4fkJYu/ZUk3CHqJSESzZrnvSYI605vdEchAwGOeKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pcXaqhZDY1ncxKboJUaBRKaqeCusGCRNKTr59RirC5+siZOzxIwSTCZEuivpUCNmR
-         5GFCB987jQzCnXo7RjNJiBiaxWvyAd/i8VrlHReirQLArBh0vZUJXYzprx4uK23C+E
-         kYrTkaT0Wz3ZSvczR8X7v33IlFxWDM2KTAVT1JDY=
+        b=VCrmwMmNxIUFEhR4/ckdX5hkNyC8TVULw+vrcoamzOke9W1mwRRDr6UOQPGiZyG7k
+         MWbKMtLoylYUu4cIUcJGXyVo23rr1QFC6+MqrisIpu5fLuhrx0lUuZy8T+mSDn1EGW
+         tuE57YC9p05eODrGIacfzLSeUq2iNIe70o9ccDCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 046/180] virt_wifi: fix use-after-free in virt_wifi_newlink()
-Date:   Mon, 16 Dec 2019 18:48:06 +0100
-Message-Id: <20191216174820.093757147@linuxfoundation.org>
+        stable@vger.kernel.org, Yumei Huang <yuhuang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Igor Mammedov <imammedo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 5.3 047/180] virtio-balloon: fix managed page counts when migrating pages between zones
+Date:   Mon, 16 Dec 2019 18:48:07 +0100
+Message-Id: <20191216174820.203177802@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,76 +64,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit bc71d8b580ba81b55b6e15b1c0320632515b4bac upstream.
+commit 63341ab03706e11a31e3dd8ccc0fbc9beaf723f0 upstream.
 
-When virt_wifi interface is created, virt_wifi_newlink() is called and
-it calls register_netdevice().
-if register_netdevice() fails, it internally would call
-->priv_destructor(), which is virt_wifi_net_device_destructor() and
-it frees netdev. but virt_wifi_newlink() still use netdev.
-So, use-after-free would occur in virt_wifi_newlink().
+In case we have to migrate a ballon page to a newpage of another zone, the
+managed page count of both zones is wrong. Paired with memory offlining
+(which will adjust the managed page count), we can trigger kernel crashes
+and all kinds of different symptoms.
 
-Test commands:
-    ip link add dummy0 type dummy
-    modprobe bonding
-    ip link add bonding_masters link dummy0 type virt_wifi
+One way to reproduce:
+1. Start a QEMU guest with 4GB, no NUMA
+2. Hotplug a 1GB DIMM and online the memory to ZONE_NORMAL
+3. Inflate the balloon to 1GB
+4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
+5. Observe /proc/zoneinfo
+  Node 0, zone   Normal
+    pages free     16810
+          min      24848885473806
+          low      18471592959183339
+          high     36918337032892872
+          spanned  262144
+          present  262144
+          managed  18446744073709533486
+6. Do anything that requires some memory (e.g., inflate the balloon some
+more). The OOM goes crazy and the system crashes
+  [  238.324946] Out of memory: Killed process 537 (login) total-vm:27584kB, anon-rss:860kB, file-rss:0kB, shmem-rss:00
+  [  238.338585] systemd invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+  [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W         5.4.0-next-20191204+ #75
+  [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
+  [  238.341121] Call Trace:
+  [  238.341337]  dump_stack+0x8f/0xd0
+  [  238.341630]  dump_header+0x61/0x5ea
+  [  238.341942]  oom_kill_process.cold+0xb/0x10
+  [  238.342299]  out_of_memory+0x24d/0x5a0
+  [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
+  [  238.343024]  __alloc_pages_nodemask+0x391/0x410
+  [  238.343407]  pagecache_get_page+0xc3/0x3a0
+  [  238.343757]  filemap_fault+0x804/0xc30
+  [  238.344083]  ? ext4_filemap_fault+0x28/0x42
+  [  238.344444]  ext4_filemap_fault+0x30/0x42
+  [  238.344789]  __do_fault+0x37/0x1a0
+  [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
+  [  238.345450]  handle_mm_fault+0x169/0x360
+  [  238.345790]  do_user_addr_fault+0x20d/0x490
+  [  238.346154]  do_page_fault+0x31/0x210
+  [  238.346468]  async_page_fault+0x43/0x50
+  [  238.346797] RIP: 0033:0x7f47eba4197e
+  [  238.347110] Code: Bad RIP value.
+  [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
+  [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007f47eba4197e
+  [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 0000000000000004
+  [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 0000000000000033
+  [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 0000000000000001
+  [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007ffd7c0c18c0
+  [  238.350878] Mem-Info:
+  [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
+  [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
+  [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
+  [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
+  [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
+  [  238.351085]  free:720717 free_pcp:2 free_cma:0
+  [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_file:48kB inactive_file:28kB unevictable:0kB iss
+  [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB reserved_highatomic:0KB active_anon:152kB inactivB
+  [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
+  [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB high:13052kB reserved_highatomic:0KB active_anon:0B
+  [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927865 72057594037927865
+  [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:73886371836733356kB high:147673348131571488kB reB
+  [  238.364765] lowmem_reserve[]: 0 0 0 0 0
+  [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (UM) 1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
+  [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) 2*64kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
+  [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB (UME) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
+  [  238.369184] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+  [  238.369915] 130 total pagecache pages
+  [  238.370241] 0 pages in swap cache
+  [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
+  [  238.370981] Free swap  = 0kB
+  [  238.371239] Total swap = 0kB
+  [  238.371488] 1048445 pages RAM
+  [  238.371756] 0 pages HighMem/MovableOnly
+  [  238.372090] 306992 pages reserved
+  [  238.372376] 0 pages cma reserved
+  [  238.372661] 0 pages hwpoisoned
 
-Splat looks like:
-[  202.220554] BUG: KASAN: use-after-free in virt_wifi_newlink+0x88b/0x9a0 [virt_wifi]
-[  202.221659] Read of size 8 at addr ffff888061629cb8 by task ip/852
+In another instance (older kernel), I was able to observe this
+(negative page count :/):
+  [  180.896971] Offlined Pages 32768
+  [  182.667462] Offlined Pages 32768
+  [  184.408117] Offlined Pages 32768
+  [  186.026321] Offlined Pages 32768
+  [  187.684861] Offlined Pages 32768
+  [  189.227013] Offlined Pages 32768
+  [  190.830303] Offlined Pages 32768
+  [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages: -36920272750453009
 
-[  202.222896] CPU: 1 PID: 852 Comm: ip Not tainted 5.4.0-rc5 #3
-[  202.223765] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  202.225073] Call Trace:
-[  202.225532]  dump_stack+0x7c/0xbb
-[  202.226869]  print_address_description.constprop.5+0x1be/0x360
-[  202.229362]  __kasan_report+0x12a/0x16f
-[  202.230714]  kasan_report+0xe/0x20
-[  202.232595]  virt_wifi_newlink+0x88b/0x9a0 [virt_wifi]
-[  202.233370]  __rtnl_newlink+0xb9f/0x11b0
-[  202.244909]  rtnl_newlink+0x65/0x90
-[ ... ]
+In another instance (older kernel), I was no longer able to start any
+process:
+  [root@vm ~]# [  214.348068] Offlined Pages 32768
+  [  215.973009] Offlined Pages 32768
+  cat /proc/meminfo
+  -bash: fork: Cannot allocate memory
+  [root@vm ~]# cat /proc/meminfo
+  -bash: fork: Cannot allocate memory
 
-Cc: stable@vger.kernel.org
-Fixes: c7cdba31ed8b ("mac80211-next: rtnetlink wifi simulation device")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Link: https://lore.kernel.org/r/20191121122645.9355-1-ap420073@gmail.com
-[trim stack dump a bit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fix it by properly adjusting the managed page count when migrating if
+the zone changed. The managed page count of the zones now looks after
+unplug of the DIMM (and after deflating the balloon) just like before
+inflating the balloon (and plugging+onlining the DIMM).
+
+We'll temporarily modify the totalram page count. If this ever becomes a
+problem, we can fine tune by providing helpers that don't touch
+the totalram pages (e.g., adjust_zone_managed_page_count()).
+
+Please note that fixing up the managed page count is only necessary when
+we adjusted the managed page count when inflating - only if we
+don't have VIRTIO_BALLOON_F_DEFLATE_ON_OOM. With that feature, the
+managed page count is not touched when inflating/deflating.
+
+Reported-by: Yumei Huang <yuhuang@redhat.com>
+Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Jiang Liu <liuj97@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/virt_wifi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/virtio/virtio_balloon.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/net/wireless/virt_wifi.c
-+++ b/drivers/net/wireless/virt_wifi.c
-@@ -450,7 +450,6 @@ static void virt_wifi_net_device_destruc
- 	 */
- 	kfree(dev->ieee80211_ptr);
- 	dev->ieee80211_ptr = NULL;
--	free_netdev(dev);
- }
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -721,6 +721,17 @@ static int virtballoon_migratepage(struc
  
- /* No lock interaction. */
-@@ -458,7 +457,7 @@ static void virt_wifi_setup(struct net_d
- {
- 	ether_setup(dev);
- 	dev->netdev_ops = &virt_wifi_ops;
--	dev->priv_destructor = virt_wifi_net_device_destructor;
-+	dev->needs_free_netdev  = true;
- }
+ 	get_page(newpage); /* balloon reference */
  
- /* Called in a RCU read critical section from netif_receive_skb */
-@@ -544,6 +543,7 @@ static int virt_wifi_newlink(struct net
- 		goto unregister_netdev;
- 	}
- 
-+	dev->priv_destructor = virt_wifi_net_device_destructor;
- 	priv->being_deleted = false;
- 	priv->is_connected = false;
- 	priv->is_up = false;
++	/*
++	  * When we migrate a page to a different zone and adjusted the
++	  * managed page count when inflating, we have to fixup the count of
++	  * both involved zones.
++	  */
++	if (!virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM) &&
++	    page_zone(page) != page_zone(newpage)) {
++		adjust_managed_page_count(page, 1);
++		adjust_managed_page_count(newpage, -1);
++	}
++
+ 	/* balloon's page migration 1st step  -- inflate "newpage" */
+ 	spin_lock_irqsave(&vb_dev_info->pages_lock, flags);
+ 	balloon_page_insert(vb_dev_info, newpage);
 
 
