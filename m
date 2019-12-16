@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7E5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3BC20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F249320726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518656;
-	bh=fDz5odz1kkl19+DXc3m1dlPMy+HzSUY2Aw+C6lLK4Sw=;
+	s=default; t=1576518658;
+	bh=Zh4EvORjiwjuFRIq0OtCGcFRgBY4PLXKZSO978KgCqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0l3aN1KC/Bk58YmNqdGDXVsk8/lvwYMxagzi7B2b/M8WquvUCg0Om2HgQBg4tfS9
-	 se3c7ghE7Nk3AtAPNkStWVDP0LEB3A/FJuIja3Cc7AzYYtRY2VfQv0ko4ktflVShaI
-	 vWpBOQXgs7TBnfw9BzOsYJJL4as1orxv7Pqa4Cj4=
+	b=hWKpU8AATC/cayD86aEeTPaELvoWnes8U0fzwAkb3ClUusrzZ8UKo46YP352WIwGV
+	 hz6Q6pC1JidPqE44lWayZaC7fPcTc5VzPgKbJ9l6VpKFOyB+aSD4m1JwJMTz1dWk8D
+	 2M8pvGlsIpYEnbXDmbtBC1KjaE0hpb7nzlaaRfuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfLPRuz (ORCPT
+        id S1726617AbfLPRu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:50:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40226 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:50:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfLPRuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:50:52 -0500
+        id S1726133AbfLPRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:50:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDDA720717;
-        Mon, 16 Dec 2019 17:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65CA3206EC;
+        Mon, 16 Dec 2019 17:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518651;
-        bh=fDz5odz1kkl19+DXc3m1dlPMy+HzSUY2Aw+C6lLK4Sw=;
+        s=default; t=1576518653;
+        bh=Zh4EvORjiwjuFRIq0OtCGcFRgBY4PLXKZSO978KgCqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cX+Y/+KJHgrTEzHe5THU34B4qU0GiX03rCBEfyYxFVXG6KagMphgmQJ4Lg9RHvkCx
-         NFpvOw/GDckPidoD5B7WJmelcNRTiSFv/V85ah5TuDmezV7VmvnJ0gWloY2rBYAWHL
-         CCvNof3WiXAQCHM7/0QP9eyfM/9lxTB6MTXbIG8g=
+        b=WgIcDJRkByWY47VyUnQXlyT8+GJuHthP5EGHq4ptSxejCdEINFn88N4/A2mdQH5FV
+         26Bb4IKuqG96nmWe51lN3y2yRyemvp2eMCZDwVJUVZZh7TV45uA9xc/ZTn7Ia4SmG5
+         ikGHAR/HMbFl2lt9kh2hs/NX5kekSnBQWR2dszog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 011/267] iwlwifi: pcie: dont consider IV len in A-MSDU
-Date:   Mon, 16 Dec 2019 18:45:37 +0100
-Message-Id: <20191216174850.129523154@linuxfoundation.org>
+Subject: [PATCH 4.14 012/267] exportfs_decode_fh(): negative pinned may become positive without the parent locked
+Date:   Mon, 16 Dec 2019 18:45:38 +0100
+Message-Id: <20191216174850.247750580@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,88 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit cb1a4badf59275eb7221dcec621e8154917eabd1 ]
+[ Upstream commit a2ece088882666e1dc7113744ac912eb161e3f87 ]
 
->From gen2 PN is totally offloaded to hardware (also the space for the
-IV isn't part of the skb).  As you can see in mvm/mac80211.c:3545, the
-MAC for cipher types CCMP/GCMP doesn't set
-IEEE80211_KEY_FLAG_PUT_IV_SPACE for gen2 NICs.
-
-This causes all the AMSDU data to be corrupted with cipher enabled.
-
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ fs/exportfs/expfs.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-index 6f45c8148b279..bbb39d6ec2ee3 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -232,27 +232,23 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
- 	struct ieee80211_hdr *hdr = (void *)skb->data;
- 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
- 	unsigned int mss = skb_shinfo(skb)->gso_size;
--	u16 length, iv_len, amsdu_pad;
-+	u16 length, amsdu_pad;
- 	u8 *start_hdr;
- 	struct iwl_tso_hdr_page *hdr_page;
- 	struct page **page_ptr;
- 	struct tso_t tso;
- 
--	/* if the packet is protected, then it must be CCMP or GCMP */
--	iv_len = ieee80211_has_protected(hdr->frame_control) ?
--		IEEE80211_CCMP_HDR_LEN : 0;
--
- 	trace_iwlwifi_dev_tx(trans->dev, skb, tfd, sizeof(*tfd),
- 			     &dev_cmd->hdr, start_len, 0);
- 
- 	ip_hdrlen = skb_transport_header(skb) - skb_network_header(skb);
- 	snap_ip_tcp_hdrlen = 8 + ip_hdrlen + tcp_hdrlen(skb);
--	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len - iv_len;
-+	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len;
- 	amsdu_pad = 0;
- 
- 	/* total amount of header we may need for this A-MSDU */
- 	hdr_room = DIV_ROUND_UP(total_len, mss) *
--		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr)) + iv_len;
-+		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr));
- 
- 	/* Our device supports 9 segments at most, it will fit in 1 page */
- 	hdr_page = get_page_hdr(trans, hdr_room);
-@@ -263,14 +259,12 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
- 	start_hdr = hdr_page->pos;
- 	page_ptr = (void *)((u8 *)skb->cb + trans_pcie->page_offs);
- 	*page_ptr = hdr_page->page;
--	memcpy(hdr_page->pos, skb->data + hdr_len, iv_len);
--	hdr_page->pos += iv_len;
- 
- 	/*
--	 * Pull the ieee80211 header + IV to be able to use TSO core,
-+	 * Pull the ieee80211 header to be able to use TSO core,
- 	 * we will restore it for the tx_status flow.
- 	 */
--	skb_pull(skb, hdr_len + iv_len);
-+	skb_pull(skb, hdr_len);
- 
- 	/*
- 	 * Remove the length of all the headers that we don't actually
-@@ -348,8 +342,8 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index c22cc9d2a5c9a..a561ae17cf435 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -508,26 +508,33 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
+ 		 * inode is actually connected to the parent.
+ 		 */
+ 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
+-		if (!err) {
+-			inode_lock(target_dir->d_inode);
+-			nresult = lookup_one_len(nbuf, target_dir,
+-						 strlen(nbuf));
+-			inode_unlock(target_dir->d_inode);
+-			if (!IS_ERR(nresult)) {
+-				if (nresult->d_inode) {
+-					dput(result);
+-					result = nresult;
+-				} else
+-					dput(nresult);
+-			}
++		if (err) {
++			dput(target_dir);
++			goto err_result;
  		}
- 	}
  
--	/* re -add the WiFi header and IV */
--	skb_push(skb, hdr_len + iv_len);
-+	/* re -add the WiFi header */
-+	skb_push(skb, hdr_len);
++		inode_lock(target_dir->d_inode);
++		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
++		if (!IS_ERR(nresult)) {
++			if (unlikely(nresult->d_inode != result->d_inode)) {
++				dput(nresult);
++				nresult = ERR_PTR(-ESTALE);
++			}
++		}
++		inode_unlock(target_dir->d_inode);
+ 		/*
+ 		 * At this point we are done with the parent, but it's pinned
+ 		 * by the child dentry anyway.
+ 		 */
+ 		dput(target_dir);
  
- 	return 0;
- 
++		if (IS_ERR(nresult)) {
++			err = PTR_ERR(nresult);
++			goto err_result;
++		}
++		dput(result);
++		result = nresult;
++
+ 		/*
+ 		 * And finally make sure the dentry is actually acceptable
+ 		 * to NFSD.
 -- 
 2.20.1
 
