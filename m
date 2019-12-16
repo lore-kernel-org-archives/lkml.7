@@ -2,53 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A61C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4465C20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E432D20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519547;
-	bh=QdyoteWgD7kF0jwwZP6g5VAPMOLvoEu3eqsQsbUZqFU=;
+	s=default; t=1576519553;
+	bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nU8T9LcHH1e8AiYrQRGb/J0PRWkMiuThkP50n8X6XXzxV9KL80z2ZvZgSQFNeNUMf
-	 e9qEqF6nQcqj/rTeq5ALnsq4kAfC6iPUeFC9UnYvaQq9DbAK/y7FELEsXfONIbGwA9
-	 x5YXCaRLbzzL+gBgQmN0IaHrm0Zxj12QnypLr+as=
+	b=FLbHcTxEZUSuOFTp/NcAT4D5FXWZla0bPfCUj4qUBmEMupwIvNPO01mwSMBFcq9D1
+	 uAnifKE1kiISq1CXpuo1k6QeVVUvqh+1DDPS3MBlbVfkpLjZEBYO9YgauKVA8lvX63
+	 iRqZZQ+rxYAGSRD2g+Zz3BH8YE7UmX+i85SPfy1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfLPSFq (ORCPT
+        id S1729895AbfLPSFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44582 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729867AbfLPSFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:44 -0500
+        id S1729875AbfLPSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39482082E;
-        Mon, 16 Dec 2019 18:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4188520733;
+        Mon, 16 Dec 2019 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519543;
-        bh=QdyoteWgD7kF0jwwZP6g5VAPMOLvoEu3eqsQsbUZqFU=;
+        s=default; t=1576519545;
+        bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjzq6clJxJiirzcFUJki/E1+vsbqHzTxyIpKtmngxvdHYGNSzOzbGRvOD8paVctf7
-         owbjiuYeWEQUpfYRe6D5sd8ZMhbqr3oO+97eLXpzt8czIiopwL6C2CcT1FUNuEFmk9
-         9rUZjaPj9Lyr7Fb1tMf/9vwP499pOE2XzpLwWFN4=
+        b=GmVQGfXyUecmO77+/3YnM29MuGAFOWxcUk0EA8R5XQHck3CQGx+Y/pH0En2Zt2ToO
+         4E2qkKFC3jsm3ODCmFfplTzK2z+ZFhbc23WpEGOwiP/7dJOHSZzLUutzH8oEJ2uzCF
+         /PD6cLztuD1SAe2cYjBpuTS7v6NoYMMoD4wgD6Bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/140] scsi: lpfc: Correct code setting non existent bits in sli4 ABORT WQE
-Date:   Mon, 16 Dec 2019 18:49:38 +0100
-Message-Id: <20191216174816.759103426@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.19 093/140] quota: fix livelock in dquot_writeback_dquots
+Date:   Mon, 16 Dec 2019 18:49:21 +0100
+Message-Id: <20191216174811.675919447@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,86 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-[ Upstream commit 1c36833d82ff24d0d54215fd956e7cc30fffce54 ]
+commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
 
-Driver is setting bits in word 10 of the SLI4 ABORT WQE (the wqid).  The
-field was a carry over from a prior SLI revision. The field does not exist
-in SLI4, and the action may result in an overlap with future definition of
-the WQE.
+Write only quotas which are dirty at entry.
 
-Remove the setting of WQID in the ABORT WQE.
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
 
-Also cleaned up WQE field settings - initialize to zero, don't bother to
-set fields to zero.
+Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
+CC: stable@vger.kernel.org
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c |  2 --
- drivers/scsi/lpfc/lpfc_sli.c  | 14 +++-----------
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ fs/quota/dquot.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 8ee585e453dcf..f73726e55e44d 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1856,7 +1856,6 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local_port *pnvme_lport,
- 	bf_set(abort_cmd_criteria, &abts_wqe->abort_cmd, T_XRI_TAG);
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -617,7 +617,7 @@ EXPORT_SYMBOL(dquot_scan_active);
+ /* Write all dquot structures to quota files */
+ int dquot_writeback_dquots(struct super_block *sb, int type)
+ {
+-	struct list_head *dirty;
++	struct list_head dirty;
+ 	struct dquot *dquot;
+ 	struct quota_info *dqopt = sb_dqopt(sb);
+ 	int cnt;
+@@ -631,9 +631,10 @@ int dquot_writeback_dquots(struct super_
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
+ 		spin_lock(&dq_list_lock);
+-		dirty = &dqopt->info[cnt].dqi_dirty_list;
+-		while (!list_empty(dirty)) {
+-			dquot = list_first_entry(dirty, struct dquot,
++		/* Move list away to avoid livelock. */
++		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
++		while (!list_empty(&dirty)) {
++			dquot = list_first_entry(&dirty, struct dquot,
+ 						 dq_dirty);
  
- 	/* word 7 */
--	bf_set(wqe_ct, &abts_wqe->abort_cmd.wqe_com, 0);
- 	bf_set(wqe_cmnd, &abts_wqe->abort_cmd.wqe_com, CMD_ABORT_XRI_CX);
- 	bf_set(wqe_class, &abts_wqe->abort_cmd.wqe_com,
- 	       nvmereq_wqe->iocb.ulpClass);
-@@ -1871,7 +1870,6 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local_port *pnvme_lport,
- 	       abts_buf->iotag);
- 
- 	/* word 10 */
--	bf_set(wqe_wqid, &abts_wqe->abort_cmd.wqe_com, nvmereq_wqe->hba_wqidx);
- 	bf_set(wqe_qosd, &abts_wqe->abort_cmd.wqe_com, 1);
- 	bf_set(wqe_lenloc, &abts_wqe->abort_cmd.wqe_com, LPFC_WQE_LENLOC_NONE);
- 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 755803ff6cfef..f459fd62e493c 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -10989,19 +10989,12 @@ lpfc_sli4_abort_nvme_io(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 
- 	/* Complete prepping the abort wqe and issue to the FW. */
- 	abts_wqe = &abtsiocbp->wqe;
--	bf_set(abort_cmd_ia, &abts_wqe->abort_cmd, 0);
--	bf_set(abort_cmd_criteria, &abts_wqe->abort_cmd, T_XRI_TAG);
--
--	/* Explicitly set reserved fields to zero.*/
--	abts_wqe->abort_cmd.rsrvd4 = 0;
--	abts_wqe->abort_cmd.rsrvd5 = 0;
- 
--	/* WQE Common - word 6.  Context is XRI tag.  Set 0. */
--	bf_set(wqe_xri_tag, &abts_wqe->abort_cmd.wqe_com, 0);
--	bf_set(wqe_ctxt_tag, &abts_wqe->abort_cmd.wqe_com, 0);
-+	/* Clear any stale WQE contents */
-+	memset(abts_wqe, 0, sizeof(union lpfc_wqe));
-+	bf_set(abort_cmd_criteria, &abts_wqe->abort_cmd, T_XRI_TAG);
- 
- 	/* word 7 */
--	bf_set(wqe_ct, &abts_wqe->abort_cmd.wqe_com, 0);
- 	bf_set(wqe_cmnd, &abts_wqe->abort_cmd.wqe_com, CMD_ABORT_XRI_CX);
- 	bf_set(wqe_class, &abts_wqe->abort_cmd.wqe_com,
- 	       cmdiocb->iocb.ulpClass);
-@@ -11016,7 +11009,6 @@ lpfc_sli4_abort_nvme_io(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 	       abtsiocbp->iotag);
- 
- 	/* word 10 */
--	bf_set(wqe_wqid, &abts_wqe->abort_cmd.wqe_com, cmdiocb->hba_wqidx);
- 	bf_set(wqe_qosd, &abts_wqe->abort_cmd.wqe_com, 1);
- 	bf_set(wqe_lenloc, &abts_wqe->abort_cmd.wqe_com, LPFC_WQE_LENLOC_NONE);
- 
--- 
-2.20.1
-
+ 			WARN_ON(!test_bit(DQ_ACTIVE_B, &dquot->dq_flags));
 
 
