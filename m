@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F97C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E18C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F16A24672
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC8F24672
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IRaWB77s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rl/7dkOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfLPVgG (ORCPT
+        id S1727821AbfLPVgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:36:06 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:53226 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfLPVgC (ORCPT
+        Mon, 16 Dec 2019 16:36:09 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:45305 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbfLPVgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:36:02 -0500
-Received: by mail-pl1-f201.google.com with SMTP id x10so2327640plo.19
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:36:00 -0800 (PST)
+        Mon, 16 Dec 2019 16:36:05 -0500
+Received: by mail-pf1-f201.google.com with SMTP id x21so7703610pfp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:36:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tdjhHaFHTNc8ESXu/zTu/enk0TT4JDIoNFmVjTmEGts=;
-        b=IRaWB77s/VGoNr1vSIh63Qx328fBMuda30+mQ4bKVNcz39Bv6dJRNK+QzZ4pD8HySU
-         +1PP0Lh3XXqcCT9gJ++1JvNmXEvzt/Pitap67zXTqDQxlUqqEHsl2IyvDnURpl7PDLFq
-         vThL7uM7QDEHI7nwFiOTOfl+Pi+JXozrvpAxFTmwGP4njN3q39lMH2/VoXIY01uDNuNw
-         6cG4uZ9NsOy0Xx+PRGsgk2w4+4wYUJ0PGAsnEJZkwjoDUqZ+pfCTeG6wsdT8nj5vX/sC
-         D4hepItIxBWzeYLM6V8mPophSiSmwQoeZulISLvDeOUfjr98/6HwRyOALEEB2yDK326R
-         IKkg==
+        bh=12xMY3S0k192hVkbotc53c72N/aodHQMjhfnDBGydPE=;
+        b=rl/7dkOgtYeVv9AB7dvqV/elQ8lG4vxCd0UIegUKUVq/guJ7sv45aiSJfICIpCTvqs
+         p6PASHMMDqZxO4cDMRqLQyL22gumOO6wRpS0MsNRLrt7UsYEtEGCGH9iFK7Qmr3G8HX8
+         B0n9CXIt3Of3/o5Xm9fGR4RkPbg89PP4O7r1iLIG2i/rwz8Va1ylN0eIfQCmVxHMy4Y1
+         afmtBwI9BaoRYkflywTXSreG3Q+W/tkTT+W1pRZYCHKnTL2L88h8lwIKCcdf4gp5Q6Yf
+         7rILaJNZ/v4tD8ms//+Vv8ZRfd1NqHE9tcB9QtaTZA53J0/uArTXJI7C8DIeRRk+6ohJ
+         IlIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tdjhHaFHTNc8ESXu/zTu/enk0TT4JDIoNFmVjTmEGts=;
-        b=FVGAmODpSuKpBZLt5UjTlkTwBdBU/l/A8QF+vPNXL7U18kZ/EsRRjwrNPIJOddU9Zr
-         j9xuX7wo1CZZdFEWy2OfSarwsEywHfRq/EoHHmoy9FwAQGBiUsGPZcEehWvIlq1S+5kW
-         7L+MKqgEJOCeV+t/RmDNEpfA1l+UHivvtFnlxJ93LpnSDTiSWndfB4lGkKShxZCNOloE
-         v9oT6MsXR3l/zlul5oogSr4B5keG8uKpaGCUNEtQZP68giq8F64EbDuilUMxYvVFaY/Z
-         qusZfwgwKjJ3BLopszQiEEasCK7h6i052EzTFJDG4gy6nxWdtLeyYQy8ECcua6IyLwMC
-         L31A==
-X-Gm-Message-State: APjAAAVCHOsFyEZecevRiotyNMDoZ5iBTiUYhWcPRQg7gXvSChr45Qcj
-        Oxrj6/AFGms57myId8sRbmG2m9d2hHpIFt3ecTeQJqbm9hqX0HvBinflxzGxPn5qr5f1dNVElI0
-        YzpJ1Ig+Eb2fV0TR2wl++b3/gcW5PuExxEy8iKcoBG5bqepVB1c56b9FBGcXgX0pNbdPtCdMp
-X-Google-Smtp-Source: APXvYqxi3X8qxuLB6h+VvdR1/yBEPcDWFQDFhRZTFFyTIlnY9HAFQxZ1aFFHWN2auQ9Qcuz0olZW5yuz2xUJ
-X-Received: by 2002:a63:a54d:: with SMTP id r13mr21029200pgu.138.1576532160089;
- Mon, 16 Dec 2019 13:36:00 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:35:28 -0800
+        bh=12xMY3S0k192hVkbotc53c72N/aodHQMjhfnDBGydPE=;
+        b=G0j1LbKdHuVyuVavYvWJ5/isHLkegjA9WaMDlBSlITuYs8MyAch9gM2p+b6tsqP+Xn
+         kJCnqopMTkmLscqaLNon4153ylz8si2QGxjhnW4BETTuNgKpsCbVZJOxyX8ucKaaiV+r
+         vWS7Lwi3wPICr5RNKLQqiCeAS35oRm1+WuAMY+Sr03YOkQg8X5aO89v6QocFyoumn1Ef
+         KAKM1UFKjVALUbyN82f6WUb3ich2UoftK8aX7enNErbPFXxfR19+jvLSTgvWnHv0YdPb
+         VpGQ97sVXvdU78UwCXSvihWHMUBAXZYGCWjxfaVmoJx2EpdY7YLxNZmCru4Po9BSdKXE
+         bVsg==
+X-Gm-Message-State: APjAAAUFVFkazaPJGh1Fl7/eAClZ62tTL64H7/F3ZMijP80o9OpfaUmw
+        sH2+++qY3fsLI3RcI+oFpPbK3SDLvwANpmvYquhsxqBmriODkqoCyKK9hbJERU5i8fXz76TEusC
+        /aWu3q9cdzQVKaa2A2HK1bNnGcM6ENuIkQ8Kz71yHZX3EWOICUeaSlJni+IEg7XX7kXr4tQ2x
+X-Google-Smtp-Source: APXvYqwkL+yZdegrXbzdsdBayfb5JmqCBNLnFE1LAaMF4sDcauOq6l8mmW+RAw0F7ozlKHcDw2WDH6qalYeQ
+X-Received: by 2002:a65:4203:: with SMTP id c3mr20797817pgq.368.1576532164120;
+ Mon, 16 Dec 2019 13:36:04 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:35:30 -0800
 In-Reply-To: <20191216213532.91237-1-bgardon@google.com>
-Message-Id: <20191216213532.91237-6-bgardon@google.com>
+Message-Id: <20191216213532.91237-8-bgardon@google.com>
 Mime-Version: 1.0
 References: <20191216213532.91237-1-bgardon@google.com>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v2 5/8] KVM: selftests: Pass args to vCPU instead of using globals
+Subject: [PATCH v2 7/8] KVM: selftests: Time guest demand paging
 From:   Ben Gardon <bgardon@google.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org
@@ -74,180 +74,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for supporting multiple vCPUs in the demand paging test,
-pass arguments to the vCPU instead of syncing globals to it.
+In order to quantify demand paging performance, time guest execution
+during demand paging.
 
 Signed-off-by: Ben Gardon <bgardon@google.com>
 ---
- .../selftests/kvm/demand_paging_test.c        | 61 +++++++++++--------
- 1 file changed, 37 insertions(+), 24 deletions(-)
+ .../selftests/kvm/demand_paging_test.c        | 68 +++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
 diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
-index 4aa90a3fce99c..8ede26e088ab6 100644
+index 2b80f614dd537..d93d72bdea4a3 100644
 --- a/tools/testing/selftests/kvm/demand_paging_test.c
 +++ b/tools/testing/selftests/kvm/demand_paging_test.c
-@@ -42,7 +42,6 @@
+@@ -32,6 +32,12 @@
+ 
+ #define DEFAULT_GUEST_TEST_MEM_SIZE (1 << 30) /* 1G */
+ 
++#ifdef PRINT_PER_PAGE_UPDATES
++#define PER_PAGE_DEBUG(...) DEBUG(__VA_ARGS__)
++#else
++#define PER_PAGE_DEBUG(...)
++#endif
++
+ #ifdef PRINT_PER_VCPU_UPDATES
+ #define PER_VCPU_DEBUG(...) DEBUG(__VA_ARGS__)
+ #else
+@@ -62,6 +68,26 @@ static uint64_t guest_test_phys_mem;
   */
- static uint64_t host_page_size;
- static uint64_t guest_page_size;
--static uint64_t guest_num_pages;
+ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
  
- static char *guest_data_prototype;
- 
-@@ -63,14 +62,13 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
++int64_t to_ns(struct timespec ts)
++{
++	return (int64_t)ts.tv_nsec + 1000000000LL * (int64_t)ts.tv_sec;
++}
++
++struct timespec diff(struct timespec start, struct  timespec end)
++{
++	struct   timespec temp;
++
++	if ((end.tv_nsec-start.tv_nsec) < 0) {
++		temp.tv_sec = end.tv_sec - start.tv_sec - 1;
++		temp.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
++	} else {
++		temp.tv_sec = end.tv_sec - start.tv_sec;
++		temp.tv_nsec = end.tv_nsec - start.tv_nsec;
++	}
++
++	return temp;
++}
++
+ /*
   * Continuously write to the first 8 bytes of each page in the demand paging
   * memory region.
-  */
--static void guest_code(void)
-+static void guest_code(uint64_t gva, uint64_t pages)
- {
- 	int i;
- 
--	for (i = 0; i < guest_num_pages; i++) {
--		uint64_t addr = guest_test_virt_mem;
-+	for (i = 0; i < pages; i++) {
-+		uint64_t addr = gva + (i * guest_page_size);
- 
--		addr += i * guest_page_size;
- 		addr &= ~(host_page_size - 1);
- 		*(uint64_t *)addr = 0x0123456789ABCDEF;
- 	}
-@@ -82,18 +80,31 @@ static void guest_code(void)
- static void *host_test_mem;
- static uint64_t host_num_pages;
- 
-+struct vcpu_thread_args {
-+	uint64_t gva;
-+	uint64_t pages;
-+	struct kvm_vm *vm;
-+	int vcpu_id;
-+};
-+
- static void *vcpu_worker(void *data)
- {
- 	int ret;
--	struct kvm_vm *vm = data;
-+	struct vcpu_thread_args *args = (struct vcpu_thread_args *)data;
-+	struct kvm_vm *vm = args->vm;
-+	int vcpu_id = args->vcpu_id;
-+	uint64_t gva = args->gva;
-+	uint64_t pages = args->pages;
+@@ -96,11 +122,15 @@ static void *vcpu_worker(void *data)
+ 	uint64_t gva = args->gva;
+ 	uint64_t pages = args->pages;
  	struct kvm_run *run;
++	struct timespec start;
++	struct timespec end;
  
--	run = vcpu_state(vm, VCPU_ID);
-+	vcpu_args_set(vm, vcpu_id, 2, gva, pages);
+ 	vcpu_args_set(vm, vcpu_id, 2, gva, pages);
+ 
+ 	run = vcpu_state(vm, vcpu_id);
+ 
++	clock_gettime(CLOCK_MONOTONIC, &start);
 +
-+	run = vcpu_state(vm, vcpu_id);
- 
  	/* Let the guest access its memory */
--	ret = _vcpu_run(vm, VCPU_ID);
-+	ret = _vcpu_run(vm, vcpu_id);
+ 	ret = _vcpu_run(vm, vcpu_id);
  	TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
--	if (get_ucall(vm, VCPU_ID, NULL) != UCALL_SYNC) {
-+	if (get_ucall(vm, vcpu_id, NULL) != UCALL_SYNC) {
- 		TEST_ASSERT(false,
- 			    "Invalid guest sync status: exit_reason=%s\n",
+@@ -110,6 +140,11 @@ static void *vcpu_worker(void *data)
  			    exit_reason_str(run->exit_reason));
-@@ -269,11 +280,13 @@ static int setup_demand_paging(struct kvm_vm *vm,
- #define PAGE_SHIFT_4K  12
+ 	}
  
- static void run_test(enum vm_guest_mode mode, bool use_uffd,
--		     useconds_t uffd_delay, uint64_t guest_memory_bytes)
-+		     useconds_t uffd_delay, uint64_t vcpu_wss)
++	clock_gettime(CLOCK_MONOTONIC, &end);
++	PER_VCPU_DEBUG("vCPU %d execution time: %lld.%.9lds\n", vcpu_id,
++		       (long long)(diff(start, end).tv_sec),
++		       diff(start, end).tv_nsec);
++
+ 	return NULL;
+ }
+ 
+@@ -145,6 +180,8 @@ static struct kvm_vm *create_vm(enum vm_guest_mode mode, int vcpus,
+ static int handle_uffd_page_request(int uffd, uint64_t addr)
  {
- 	pthread_t vcpu_thread;
- 	pthread_t uffd_handler_thread;
- 	struct kvm_vm *vm;
-+	struct vcpu_thread_args vcpu_args;
-+	uint64_t guest_num_pages;
+ 	pid_t tid;
++	struct timespec start;
++	struct timespec end;
+ 	struct uffdio_copy copy;
  	int r;
  
- 	/*
-@@ -283,16 +296,15 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
- 	 * number will be enough for all archs. (e.g., 64K page size guest
- 	 * will need even less memory for page tables).
- 	 */
--	vm = create_vm(mode, VCPU_ID,
--		       (2 * guest_memory_bytes) >> PAGE_SHIFT_4K,
-+	vm = create_vm(mode, VCPU_ID, (2 * vcpu_wss) >> PAGE_SHIFT_4K,
- 		       guest_code);
+@@ -155,6 +192,8 @@ static int handle_uffd_page_request(int uffd, uint64_t addr)
+ 	copy.len = host_page_size;
+ 	copy.mode = 0;
  
- 	guest_page_size = vm_get_page_size(vm);
- 
--	TEST_ASSERT(guest_memory_bytes % guest_page_size == 0,
-+	TEST_ASSERT(vcpu_wss % guest_page_size == 0,
- 		    "Guest memory size is not guest page size aligned.");
- 
--	guest_num_pages = guest_memory_bytes / guest_page_size;
-+	guest_num_pages = vcpu_wss / guest_page_size;
- 
- #ifdef __s390x__
- 	/* Round up to multiple of 1M (segment size) */
-@@ -308,9 +320,9 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
- 		    guest_num_pages, vm_get_max_gfn(vm));
- 
- 	host_page_size = getpagesize();
--	TEST_ASSERT(guest_memory_bytes % host_page_size == 0,
-+	TEST_ASSERT(vcpu_wss % host_page_size == 0,
- 		    "Guest memory size is not host page size aligned.");
--	host_num_pages = guest_memory_bytes / host_page_size;
-+	host_num_pages = vcpu_wss / host_page_size;
- 
- 	guest_test_phys_mem = (vm_get_max_gfn(vm) - guest_num_pages) *
- 			      guest_page_size;
-@@ -354,10 +366,12 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
- 	/* Export the shared variables to the guest */
- 	sync_global_to_guest(vm, host_page_size);
- 	sync_global_to_guest(vm, guest_page_size);
--	sync_global_to_guest(vm, guest_test_virt_mem);
--	sync_global_to_guest(vm, guest_num_pages);
- 
--	pthread_create(&vcpu_thread, NULL, vcpu_worker, vm);
-+	vcpu_args.vm = vm;
-+	vcpu_args.vcpu_id = VCPU_ID;
-+	vcpu_args.gva = guest_test_virt_mem;
-+	vcpu_args.pages = guest_num_pages;
-+	pthread_create(&vcpu_thread, NULL, vcpu_worker, &vcpu_args);
- 
- 	/* Wait for the vcpu thread to quit */
- 	pthread_join(vcpu_thread, NULL);
-@@ -404,8 +418,7 @@ static void help(char *name)
- 	printf(" -d: add a delay in usec to the User Fault\n"
- 	       "     FD handler to simulate demand paging\n"
- 	       "     overheads. Ignored without -u.\n");
--	printf(" -b: specify the number of bytes of memory which should be\n"
--	       "     allocated to the guest.\n");
-+	printf(" -b: specify the working set size, in bytes for each vCPU.\n");
- 	puts("");
- 	exit(0);
- }
-@@ -413,7 +426,7 @@ static void help(char *name)
- int main(int argc, char *argv[])
- {
- 	bool mode_selected = false;
--	uint64_t guest_memory_bytes = DEFAULT_GUEST_TEST_MEM_SIZE;
-+	uint64_t vcpu_wss = DEFAULT_GUEST_TEST_MEM_SIZE;
- 	unsigned int mode;
- 	int opt, i;
- 	bool use_uffd = false;
-@@ -448,7 +461,7 @@ int main(int argc, char *argv[])
- 				    "A negative UFFD delay is not supported.");
- 			break;
- 		case 'b':
--			guest_memory_bytes = strtoull(optarg, NULL, 0);
-+			vcpu_wss = strtoull(optarg, NULL, 0);
- 		case 'h':
- 		default:
- 			help(argv[0]);
-@@ -462,7 +475,7 @@ int main(int argc, char *argv[])
- 		TEST_ASSERT(vm_guest_mode_params[i].supported,
- 			    "Guest mode ID %d (%s) not supported.",
- 			    i, vm_guest_mode_string(i));
--		run_test(i, use_uffd, uffd_delay, guest_memory_bytes);
-+		run_test(i, use_uffd, uffd_delay, vcpu_wss);
++	clock_gettime(CLOCK_MONOTONIC, &start);
++
+ 	r = ioctl(uffd, UFFDIO_COPY, &copy);
+ 	if (r == -1) {
+ 		DEBUG("Failed Paged in 0x%lx from thread %d with errno: %d\n",
+@@ -162,6 +201,13 @@ static int handle_uffd_page_request(int uffd, uint64_t addr)
+ 		return r;
  	}
  
++	clock_gettime(CLOCK_MONOTONIC, &end);
++
++	PER_PAGE_DEBUG("UFFDIO_COPY %d \t%lld ns\n", tid,
++		       (long long)to_ns(diff(start, end)));
++	PER_PAGE_DEBUG("Paged in %ld bytes at 0x%lx from thread %d\n",
++		       host_page_size, addr, tid);
++
  	return 0;
+ }
+ 
+@@ -178,7 +224,10 @@ static void *uffd_handler_thread_fn(void *arg)
+ 	int uffd = uffd_args->uffd;
+ 	useconds_t delay = uffd_args->delay;
+ 	int64_t pages = 0;
++	struct timespec start;
++	struct timespec end;
+ 
++	clock_gettime(CLOCK_MONOTONIC, &start);
+ 	while (!quit_uffd_thread) {
+ 		struct uffd_msg msg;
+ 		struct pollfd pollfd[1];
+@@ -241,6 +290,13 @@ static void *uffd_handler_thread_fn(void *arg)
+ 		pages++;
+ 	}
+ 
++	clock_gettime(CLOCK_MONOTONIC, &end);
++	PER_VCPU_DEBUG("userfaulted %ld pages over %lld.%.9lds. (%f/sec)\n",
++		       pages, (long long)(diff(start, end).tv_sec),
++		       diff(start, end).tv_nsec, pages /
++		       ((double)diff(start, end).tv_sec +
++			(double)diff(start, end).tv_nsec / 100000000.0));
++
+ 	return NULL;
+ }
+ 
+@@ -303,6 +359,8 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+ 	uint64_t guest_num_pages;
+ 	int vcpu_id;
+ 	int r;
++	struct timespec start;
++	struct timespec end;
+ 
+ 	vm = create_vm(mode, vcpus, vcpu_wss);
+ 
+@@ -417,6 +475,8 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+ 
+ 	DEBUG("Finished creating vCPUs and starting uffd threads\n");
+ 
++	clock_gettime(CLOCK_MONOTONIC, &start);
++
+ 	for (vcpu_id = 0; vcpu_id < vcpus; vcpu_id++) {
+ 		pthread_create(&vcpu_threads[vcpu_id], NULL, vcpu_worker,
+ 			       &vcpu_args[vcpu_id]);
+@@ -432,6 +492,8 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+ 
+ 	DEBUG("All vCPU threads joined\n");
+ 
++	clock_gettime(CLOCK_MONOTONIC, &end);
++
+ 	if (use_uffd) {
+ 		/* Tell the user fault fd handler threads to quit */
+ 		quit_uffd_thread = true;
+@@ -439,6 +501,12 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+ 			pthread_join(uffd_handler_threads[vcpu_id], NULL);
+ 	}
+ 
++	DEBUG("Total guest execution time: %lld.%.9lds\n",
++	      (long long)(diff(start, end).tv_sec), diff(start, end).tv_nsec);
++	DEBUG("Overall demand paging rate: %f pgs/sec\n",
++	      guest_num_pages / ((double)diff(start, end).tv_sec +
++	      (double)diff(start, end).tv_nsec / 100000000.0));
++
+ 	ucall_uninit(vm);
+ 	kvm_vm_free(vm);
+ 
 -- 
 2.24.1.735.g03f4e72817-goog
 
