@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96788C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F2AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC9E20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA77207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519424;
-	bh=Ed1Hq/HQhuS0e/QvE5n80m20YwTftllcPIv26wDuKiY=;
+	s=default; t=1576519427;
+	bh=I1pM00sAx1NXWrBCRm+Y2c8vbUDiPb+MHsbOUbAf5Rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0r2IOwhmcXDs+2adcbJVFj9xGgNIGRS30nw4taIwu3pItFbO2/axUuQY/AmpXrzW
-	 lHiR0mYriBUAnF6ZvgbEjQw4BodLmlpp2evljuVS6KiW06bQHA0B0IlCu1/TG1IX80
-	 7Ygiyq0iSDJtXFCTHQOV3RhfntkWQOWnfw3oE+7s=
+	b=NlllnPOHlcOBikqaz+qfN0lfMnIJ5yzzbCTUUBCLFs70nLVjE92BNDwXAT93ulI50
+	 Q7h8GAbA6X62xUOyYno1ZKMKDd23BNRDBVZqk9h2kXD33MfPGH+uw/Kg3o9P3lGKGZ
+	 74o3zk+G4wOZUCRDowyu+eUBboGxk2sfu3t+hGKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfLPSDn (ORCPT
+        id S1729553AbfLPSDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbfLPSDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:39 -0500
+        id S1729541AbfLPSDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99AF421835;
-        Mon, 16 Dec 2019 18:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B2620726;
+        Mon, 16 Dec 2019 18:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519419;
-        bh=Ed1Hq/HQhuS0e/QvE5n80m20YwTftllcPIv26wDuKiY=;
+        s=default; t=1576519421;
+        bh=I1pM00sAx1NXWrBCRm+Y2c8vbUDiPb+MHsbOUbAf5Rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YUhGpeIw3nisJU1SotmZk9odFNu5eLSM8deehAVdXavVm2Ca9YAtwd0D1LFQ8NmIt
-         66EWMSyCucW1Rm3l2wmp3y7IjHf5KgYPhcnrip1a5IXZiw9ioGaiFJ/z5ddkhCvnFn
-         2G27OFpSRC+mvDV7EZ1B3N08O0leu6iPI7gQ9+v0=
+        b=ad4xR9Pidmdih2o77bMF8+X7EFxMpH31wvlSMBpcF7+QwRmYCJdyYHRdX2hV7qQSU
+         CHF/XJMk9pPtfQq/BHtekyn0zDeRoWuRVEsK3zZMtNPZMJpteOoCi7vGW8BtltmxQP
+         j7xgAR7E5OT59bqVhzFEfcLUKQoOtG0UdmABo3Rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 059/140] blk-mq: avoid sysfs buffer overflow with too many CPU cores
-Date:   Mon, 16 Dec 2019 18:48:47 +0100
-Message-Id: <20191216174804.176499341@linuxfoundation.org>
+        stable@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.19 060/140] cgroup: pids: use atomic64_t for pids->limit
+Date:   Mon, 16 Dec 2019 18:48:48 +0100
+Message-Id: <20191216174804.341263986@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -59,61 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Aleksa Sarai <cyphar@cyphar.com>
 
-commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
+commit a713af394cf382a30dd28a1015cbe572f1b9ca75 upstream.
 
-It is reported that sysfs buffer overflow can be triggered if the system
-has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
-hctx via /sys/block/$DEV/mq/$N/cpu_list.
+Because pids->limit can be changed concurrently (but we don't want to
+take a lock because it would be needlessly expensive), use atomic64_ts
+instead.
 
-Use snprintf to avoid the potential buffer overflow.
-
-This version doesn't change the attribute format, and simply stops
-showing CPU numbers if the buffer is going to overflow.
-
-Cc: stable@vger.kernel.org
-Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: commit 49b786ea146f ("cgroup: implement the PIDs subsystem")
+Cc: stable@vger.kernel.org # v4.3+
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq-sysfs.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ kernel/cgroup/pids.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -151,20 +151,25 @@ static ssize_t blk_mq_hw_sysfs_nr_reserv
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -48,7 +48,7 @@ struct pids_cgroup {
+ 	 * %PIDS_MAX = (%PID_MAX_LIMIT + 1).
+ 	 */
+ 	atomic64_t			counter;
+-	int64_t				limit;
++	atomic64_t			limit;
  
- static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
- {
-+	const size_t size = PAGE_SIZE - 1;
- 	unsigned int i, first = 1;
--	ssize_t ret = 0;
-+	int ret = 0, pos = 0;
+ 	/* Handle for "pids.events" */
+ 	struct cgroup_file		events_file;
+@@ -76,8 +76,8 @@ pids_css_alloc(struct cgroup_subsys_stat
+ 	if (!pids)
+ 		return ERR_PTR(-ENOMEM);
  
- 	for_each_cpu(i, hctx->cpumask) {
- 		if (first)
--			ret += sprintf(ret + page, "%u", i);
-+			ret = snprintf(pos + page, size - pos, "%u", i);
- 		else
--			ret += sprintf(ret + page, ", %u", i);
-+			ret = snprintf(pos + page, size - pos, ", %u", i);
-+
-+		if (ret >= size - pos)
-+			break;
+-	pids->limit = PIDS_MAX;
+ 	atomic64_set(&pids->counter, 0);
++	atomic64_set(&pids->limit, PIDS_MAX);
+ 	atomic64_set(&pids->events_limit, 0);
+ 	return &pids->css;
+ }
+@@ -149,13 +149,14 @@ static int pids_try_charge(struct pids_c
  
- 		first = 0;
-+		pos += ret;
+ 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
+ 		int64_t new = atomic64_add_return(num, &p->counter);
++		int64_t limit = atomic64_read(&p->limit);
+ 
+ 		/*
+ 		 * Since new is capped to the maximum number of pid_t, if
+ 		 * p->limit is %PIDS_MAX then we know that this test will never
+ 		 * fail.
+ 		 */
+-		if (new > p->limit)
++		if (new > limit)
+ 			goto revert;
  	}
  
--	ret += sprintf(ret + page, "\n");
--	return ret;
-+	ret = snprintf(pos + page, size - pos, "\n");
-+	return pos + ret;
+@@ -280,7 +281,7 @@ set_limit:
+ 	 * Limit updates don't need to be mutex'd, since it isn't
+ 	 * critical that any racing fork()s follow the new limit.
+ 	 */
+-	pids->limit = limit;
++	atomic64_set(&pids->limit, limit);
+ 	return nbytes;
  }
  
- static struct attribute *default_ctx_attrs[] = {
+@@ -288,7 +289,7 @@ static int pids_max_show(struct seq_file
+ {
+ 	struct cgroup_subsys_state *css = seq_css(sf);
+ 	struct pids_cgroup *pids = css_pids(css);
+-	int64_t limit = pids->limit;
++	int64_t limit = atomic64_read(&pids->limit);
+ 
+ 	if (limit >= PIDS_MAX)
+ 		seq_printf(sf, "%s\n", PIDS_MAX_STR);
 
 
