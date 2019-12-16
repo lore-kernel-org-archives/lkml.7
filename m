@@ -2,179 +2,68 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ABC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C37C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nMPFxrJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 4F3A9206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfLPK2v (ORCPT
+        id S1727511AbfLPK24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:28:51 -0500
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:49241 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727099AbfLPK2v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:28:51 -0500
-Received: from [IPv6:2001:983:e9a7:1:319d:6a65:b2d0:e9e9]
- ([IPv6:2001:983:e9a7:1:319d:6a65:b2d0:e9e9])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id gncMiGMZ7TsDegncNitaAo; Mon, 16 Dec 2019 11:28:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1576492128; bh=QPnekEio2eThFzmwX19CtbP8Vk3CElMRXAog+X32YZc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=nMPFxrJ/YFHqsdP4cNnu+1macDSQfWE+HLP79rXsmms6eLpCN8k0qJEkMHWIFivSJ
-         CvUopW9erOyGwYFnwm/6/ELVQNP570NdFdKv6BJ0vAn1Qda4SfgZmt3GjpH0uC5tDy
-         TVabtbV1AjJQclI7ctF8WfnQuTW88AI0BJHkv3Tf2tUSFJZKNPBFq95HgbQUVLNjcN
-         zSUSQG53h9cz7YMPgm4pCHj1hRFeAgh9//WIG5yAz9UocaiLDvhlX+egyFlY15wpJY
-         VKX9OLmtgVz6w4jacNdfu/11+NNMw1MdUxIWmwJ2SnB2PIzs9AkvdKYUfsjoqkkuW0
-         5kTxNCk+aT3mg==
-Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        me@zv.io
-References: <20191126161824.337724-1-arnd@arndb.de>
- <20191126161824.337724-7-arnd@arndb.de>
- <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
- <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
- <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
- <0843718f-1391-3379-38be-41fa9558ea6d@xs4all.nl>
- <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
- <bfc18778-0777-ad49-619b-39e1b9b536f3@xs4all.nl>
- <CAK8P3a0ZwMgXqjAjh7P8B2BR4THd-rMZM0jt5KvxHtxNF_8Nqw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <064e8099-9b5d-94cc-a69a-0a71cb814cfb@xs4all.nl>
-Date:   Mon, 16 Dec 2019 11:28:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 05:28:56 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55628 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727099AbfLPK2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:28:55 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9BD0E8B3E9572B3C1E39;
+        Mon, 16 Dec 2019 18:28:53 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 16 Dec 2019 18:28:45 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <airlied@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <sean@poorly.run>, <zhongjiang@huawei.com>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/udl: make the symbol 'udl_handle_damage' static
+Date:   Mon, 16 Dec 2019 18:24:23 +0800
+Message-ID: <1576491863-19009-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0ZwMgXqjAjh7P8B2BR4THd-rMZM0jt5KvxHtxNF_8Nqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOCDUoACuLeAN0RcNpJFyKptLoOMQoeUitQXe5r7jp33g/qsigpDCzIIhiL7ei3U0QLm9SGujcz7rAVcA16LMvdS9C5nQt5apaM65nyDMmkyycKW3BC5
- vdUYvtidyJ1y9erJfUxQqPBnToKxZ7OT6TMR1PipPlZIJZSWa0iGRtLeyKcfkf5zzOeJUKUARrRwRxmDw2HN9SXiivcbhe0H5QQainS9/luxovizi4PZkNmn
- FyGb4TZFKJ5cR/9Moenx+KThjNmQ1rcRi50dWr5hXMj+CxFbLNHsoz2G0VpSnE8qJHM3ADUOr8sS1ErdfdxhOks8yDitEOb6ZmSex5Wrgp9G+UulUZkp+5u7
- G2QF1elEEgr0p2QbwpcYbKc7eMqfL3Sho0rOnaoFGGdhfQifLhyoV5/ieGOCewTNm9zUQgja
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 10:29 AM, Arnd Bergmann wrote:
-> On Sun, Dec 15, 2019 at 6:26 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> Ah, great, that worked, after applying the patch below.
->>
->> Both struct v4l2_buffer32 and v4l2_event32 need to be packed, otherwise you would
->> get an additional 4 bytes since the 64 bit compiler wants to align the 8 byte tv_secs
->> to an 8 byte boundary. But that's not what the i686 compiler does.
-> 
-> Thanks so much for the testing and finding this issue. It would be much more
-> embarrassing to find it later, given that I explained how it's supposed to work
-> in the comment above v4l2_event32 and in the documentation I just submitted
-> but got it wrong anyway ;-)
-> 
->> If I remember correctly, packed is only needed for CONFIG_X86_64.
-> 
-> Correct.
-> 
->> diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->> index 3bbf47d950e0..c01492cf6160 100644
->> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
->> @@ -492,7 +492,11 @@ struct v4l2_buffer32 {
->>         __u32                   length;
->>         __u32                   reserved2;
->>         __s32                   request_fd;
->> +#ifdef CONFIG_X86_64
->> +} __attribute__ ((packed));
->> +#else
->>  };
->> +#endif
-> 
-> I would prefer to write it like this instead to avoid the #ifdef, the
-> effect should
-> be the same:
-> 
-> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> @@ -475,8 +475,8 @@ struct v4l2_buffer32 {
->         __u32                   flags;
->         __u32                   field;  /* enum v4l2_field */
->         struct {
-> -               long long       tv_sec;
-> -               long long       tv_usec;
-> +               compat_s64      tv_sec;
-> +               compat_s64      tv_usec;
->         }                       timestamp;
->         struct v4l2_timecode    timecode;
->         __u32                   sequence;
-> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> @@ -1277,7 +1277,10 @@ struct v4l2_event32 {
->         } u;
->         __u32                           pending;
->         __u32                           sequence;
-> -       struct __kernel_timespec        timestamp;
-> +       struct {
-> +               compat_s64              tv_sec;
-> +               compat_s64              tv_usec;
-> +       } timestamp;
->         __u32                           id;
->         __u32                           reserved[8];
->  };
-> 
-> If you agree, I'll push out a modified branch with that version and send out
-> that series to the list again.
+Fix the following sparse warning.
 
-That's fine. I did a quick test with this and it looks fine.
+drivers/gpu/drm/udl/udl_modeset.c:269:5: warning: symbol 'udl_handle_damage' was not declared. Should it be static?
 
-> 
-> There is one more complication that I just noticed: The "struct v4l2_buffer32"
-> definition has always been defined in a way that works for i386 user space
-> but is broken for x32 user space. The version I used accidentally fixed x32
-> while breaking i386. With the change above, it's back to missing x32 support
-> (so nothing changed).
-> 
-> There is no way to fix the uapi definition of v4l2_buffer to have x32 and i386
-> use the same format, because applications may be using old headers, but
-> I suppose I could add yet another version of the struct to correctly deal with
-> x32, or just add a comment like
-> 
-> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> @@ -468,6 +468,10 @@ struct v4l2_plane32 {
->         __u32                   reserved[11];
->  };
-> 
-> +/*
-> + * This is correct for all architectures including i386, but not x32,
-> + * which has different alignment requirements for timestamp
-> + */
->  struct v4l2_buffer32 {
->         __u32                   index;
->         __u32                   type;   /* enum v4l2_buf_type */
-> 
-> 
->       Arnd
-> 
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ drivers/gpu/drm/udl/udl_modeset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Go with a comment. We've never tested with x32 to be honest. There were discussions
-about a year ago of dropping x32 altogether, but that hasn't happened yet.
+diff --git a/drivers/gpu/drm/udl/udl_modeset.c b/drivers/gpu/drm/udl/udl_modeset.c
+index 22af179..82e0927 100644
+--- a/drivers/gpu/drm/udl/udl_modeset.c
++++ b/drivers/gpu/drm/udl/udl_modeset.c
+@@ -266,7 +266,7 @@ static int udl_aligned_damage_clip(struct drm_rect *clip, int x, int y,
+ 	return 0;
+ }
+ 
+-int udl_handle_damage(struct drm_framebuffer *fb, int x, int y,
++static int udl_handle_damage(struct drm_framebuffer *fb, int x, int y,
+ 		      int width, int height)
+ {
+ 	struct drm_device *dev = fb->dev;
+-- 
+1.7.12.4
 
-Regards,
-
-	Hans
