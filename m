@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98964C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B717CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E25220733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F60420733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519043;
-	bh=79lURdrE0UlnzKSZK6JLWN+3FhI4rYtU1zPTMjzb8FI=;
+	s=default; t=1576519046;
+	bh=xO5dXkCw8xhNTbDA2BESEhyvgo+MUghQp48pLDiRep0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KgHRbfp3JZbrINviZC9MCv5bi1WJB1VSG3aaW8IvKF5l6k83SKnspHg2nUIQTQID/
-	 c7tFWNvvWu6P8K04UnqX12HT/oIUl/SGP5QQNawAPc83QFkAIlzkkvgg/i/ZqcsffU
-	 /TSqkXHHwS6MUiL6UmmNlyZHNA/ERSwXkfmqIwsA=
+	b=ivHC0BJuUFz96nXaVrJ/+T8VFtePxvWZFkz7u2uawPiGaY3xxbmsaMPly8j5bbUAJ
+	 FP/njrbqsBVrMAGuHv9YlPLP5DHMtqRSMcZ6X6lqyMt8X4Zw0YFkT6Mt43EAR54czD
+	 avU8FwOvnJ58WhR9sOTEj8HltN33aFm5l6LKUreA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfLPR5W (ORCPT
+        id S1728437AbfLPR5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727344AbfLPR5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:20 -0500
+        id S1726758AbfLPR5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D30A320733;
-        Mon, 16 Dec 2019 17:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55B98206B7;
+        Mon, 16 Dec 2019 17:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519039;
-        bh=79lURdrE0UlnzKSZK6JLWN+3FhI4rYtU1zPTMjzb8FI=;
+        s=default; t=1576519041;
+        bh=xO5dXkCw8xhNTbDA2BESEhyvgo+MUghQp48pLDiRep0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phUbMAXRthCQPKLs3YPPVlU5j0051RLhNSVjOYqSkGKFF/CNelH00uCk+ajT3Jd64
-         rTJVjuhMrM/TSqPG4OYmEal0opg7NQ8K0Rk+NwI6BZNNfuSp07NrXQRClqCgOSqkJM
-         ZgyhKdr1xsjTVuJHYm9a6pFleF1ETaRHOFVAeRVo=
+        b=Log/zCJwX6hiBxyRuXUKNY+eAA8W54ESnV/qjdppVRv1uqLHoOLi9jDMA2RD4OQjD
+         r1axPHZ5aykaOd7aR5huhItexqCSaVvC42qtg9FnwPxi2c3RJFdTja5zDnyros5x/B
+         rG8Ci9WSMi/yz28MvG2iPoSwZ+X8dHa3Wx0vNpA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 170/267] usb: xhci: only set D3hot for pci device
-Date:   Mon, 16 Dec 2019 18:48:16 +0100
-Message-Id: <20191216174911.815331190@linuxfoundation.org>
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        Atul Gupta <atul.gupta@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 144/267] crypto: af_alg - cast ki_complete ternary op to int
+Date:   Mon, 16 Dec 2019 18:47:50 +0100
+Message-Id: <20191216174910.366989499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,90 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Lin <henryl@nvidia.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-commit f2c710f7dca8457e88b4ac9de2060f011254f9dd upstream.
+commit 64e7f852c47ce99f6c324c46d6a299a5a7ebead9 upstream.
 
-Xhci driver cannot call pci_set_power_state() on non-pci xhci host
-controllers. For example, NVIDIA Tegra XHCI host controller which acts
-as platform device with XHCI_SPURIOUS_WAKEUP quirk set in some platform
-hits this issue during shutdown.
+when libkcapi test is executed  using HW accelerator, cipher operation
+return -74.Since af_alg_async_cb->ki_complete treat err as unsigned int,
+libkcapi receive 429467222 even though it expect -ve value.
 
+Hence its required to cast resultlen to int so that proper
+error is returned to libkcapi.
+
+AEAD one shot non-aligned test 2(libkcapi test)
+./../bin/kcapi   -x 10   -c "gcm(aes)" -i 7815d4b06ae50c9c56e87bd7
+-k ea38ac0c9b9998c80e28fb496a2b88d9 -a
+"853f98a750098bec1aa7497e979e78098155c877879556bb51ddeb6374cbaefc"
+-t "c4ce58985b7203094be1d134c1b8ab0b" -q
+"b03692f86d1b8b39baf2abb255197c98"
+
+Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
 Cc: <stable@vger.kernel.org>
-Fixes: 638298dc66ea ("xhci: Fix spurious wakeups after S5 on Haswell")
-Signed-off-by: Henry Lin <henryl@nvidia.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-4-mathias.nyman@linux.intel.com
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Atul Gupta <atul.gupta@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |   13 +++++++++++++
- drivers/usb/host/xhci.c     |    7 ++-----
- drivers/usb/host/xhci.h     |    1 +
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ crypto/af_alg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -499,6 +499,18 @@ static int xhci_pci_resume(struct usb_hc
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1086,7 +1086,7 @@ void af_alg_async_cb(struct crypto_async
+ 	af_alg_free_resources(areq);
+ 	sock_put(sk);
+ 
+-	iocb->ki_complete(iocb, err ? err : resultlen, 0);
++	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
  }
- #endif /* CONFIG_PM */
+ EXPORT_SYMBOL_GPL(af_alg_async_cb);
  
-+static void xhci_pci_shutdown(struct usb_hcd *hcd)
-+{
-+	struct xhci_hcd		*xhci = hcd_to_xhci(hcd);
-+	struct pci_dev		*pdev = to_pci_dev(hcd->self.controller);
-+
-+	xhci_shutdown(hcd);
-+
-+	/* Yet another workaround for spurious wakeups at shutdown with HSW */
-+	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
-+		pci_set_power_state(pdev, PCI_D3hot);
-+}
-+
- /*-------------------------------------------------------------------------*/
- 
- /* PCI driver selection metadata; PCI hotplugging uses this */
-@@ -534,6 +546,7 @@ static int __init xhci_pci_init(void)
- #ifdef CONFIG_PM
- 	xhci_pci_hc_driver.pci_suspend = xhci_pci_suspend;
- 	xhci_pci_hc_driver.pci_resume = xhci_pci_resume;
-+	xhci_pci_hc_driver.shutdown = xhci_pci_shutdown;
- #endif
- 	return pci_register_driver(&xhci_pci_driver);
- }
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -717,7 +717,7 @@ static void xhci_stop(struct usb_hcd *hc
-  *
-  * This will only ever be called with the main usb_hcd (the USB3 roothub).
-  */
--static void xhci_shutdown(struct usb_hcd *hcd)
-+void xhci_shutdown(struct usb_hcd *hcd)
- {
- 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
- 
-@@ -736,11 +736,8 @@ static void xhci_shutdown(struct usb_hcd
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"xhci_shutdown completed - status = %x",
- 			readl(&xhci->op_regs->status));
--
--	/* Yet another workaround for spurious wakeups at shutdown with HSW */
--	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
--		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
- }
-+EXPORT_SYMBOL_GPL(xhci_shutdown);
- 
- #ifdef CONFIG_PM
- static void xhci_save_registers(struct xhci_hcd *xhci)
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -2022,6 +2022,7 @@ int xhci_start(struct xhci_hcd *xhci);
- int xhci_reset(struct xhci_hcd *xhci);
- int xhci_run(struct usb_hcd *hcd);
- int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks);
-+void xhci_shutdown(struct usb_hcd *hcd);
- void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
 
 
