@@ -2,120 +2,105 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC20AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A79C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A3C20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70F42064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:49:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ptTGsjWJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7W72bwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfLPEgT (ORCPT
+        id S1726798AbfLPEtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:36:19 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:34739 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726638AbfLPEgT (ORCPT
+        Sun, 15 Dec 2019 23:49:53 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33465 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfLPEtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:36:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576470978; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=1IOCtn9qRak1dMm874uHU1b5mpiz11s+B6M7qcU1U20=;
- b=ptTGsjWJiPhuc+kIkNDEKEG0XaBaC4YAuziuODHud8ucJClccDiPDen7WZUfmXv7i9vLTaeB
- uyXvRISj2wtcFBbTtGjHNKrpjpYSasbyUyeBQTrer28rbrXxZacQvFkDlqFLYkoFSybgZqXV
- PvFnKAbrAtIrtS74Lvr1YnKe1+0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df709bd.7f17c1ea4b90-smtp-out-n01;
- Mon, 16 Dec 2019 04:36:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C25CC447A2; Mon, 16 Dec 2019 04:36:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69947C433CB;
-        Mon, 16 Dec 2019 04:36:10 +0000 (UTC)
+        Sun, 15 Dec 2019 23:49:53 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c13so3921723pls.0;
+        Sun, 15 Dec 2019 20:49:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N4ss58iIpeiNf6IgLyQmGag+w8P05Oi8xyk1QaK0LPg=;
+        b=T7W72bwqnK9OxlWgYqXE2QlD7RZnyzaBAhwrYyTnqT9bRaVFr+hIb3D6i558/TMvtw
+         v7+tny3YTgBGPkX+whN4TV91RXfs04ssLHAt4KksovgIa+bviIDfiZVSyP20cvO2iilc
+         oxx9CS6XFN1T6TW9uGV3qgsarFWnQUDq7vTh1H2jaGPk6eida8AN1Mo6lA/ft6SV/7aB
+         UoiwSrYhn5MXYDN9vwqGh70n6Fv8Vn8/6lteFw6JwGnLfpJjCVOZ0Jo60ZQCV1CodaS7
+         ItBt9RYutGEOzHioVdutYJvxmF9/WYHLJBVo+21w73Zwsb8jMuj8sgT6J0RQjGY/6fDg
+         KJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N4ss58iIpeiNf6IgLyQmGag+w8P05Oi8xyk1QaK0LPg=;
+        b=mKDK4XYUrlbVTxwkHotXdhpO5NyQ6y/dt3RKY7K/dpbFDE3RY6TvFO7NFPEHJz6Dst
+         hccgHwZVtoBnWXTP3SUx2DKEj+QTIw/mxheC5XPpXfBxWcnEYATGirnzXbKXuqCgx8Zi
+         BeiM4xxci5uoESrFmfWroTbde3rURQnFVX/f8xcxwVxpEuUdANZMK4oLoTSGxebl2wUm
+         eJfIgz/dcPrOKhxp7jfIf+X9ZDERJodB7zzMkMZCvP8IVWsXTHyn441o1Nu1we8SODB0
+         i5rLt6ZF/wuw5WlS5GjyvjRlpMSLIeusVAKLEuZ7SSAcVNJLQPGLS7RNsZGSY6PmdOi8
+         jsNQ==
+X-Gm-Message-State: APjAAAU/SFjwA9XXgnGGg509EzVdnqoht0zvF0OtM7Z62duHcpN28Xad
+        cOdwN6jl+P2UjtTM9d8axGg=
+X-Google-Smtp-Source: APXvYqw6sh8FgfMTvA6F2fpFUDKta3rxJB0DIIVyNdmXCdeSUR9EOk5xDK4SFqXuBGkXevT/kup37Q==
+X-Received: by 2002:a17:902:760e:: with SMTP id k14mr14331760pll.238.1576471792314;
+        Sun, 15 Dec 2019 20:49:52 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::4748])
+        by smtp.gmail.com with ESMTPSA id f9sm19923513pfd.141.2019.12.15.20.49.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Dec 2019 20:49:51 -0800 (PST)
+Date:   Sun, 15 Dec 2019 20:49:50 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: Replace BUG_ON when fp_old is NULL
+Message-ID: <20191216044948.gj7kwyfgr6laskip@ast-mbp.dhcp.thefacebook.com>
+References: <20191215154432.22399-1-pakki001@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Dec 2019 12:36:10 +0800
-From:   cang@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-In-Reply-To: <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
- <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
-Message-ID: <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215154432.22399-1-pakki001@umn.edu>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-16 05:49, Bart Van Assche wrote:
-> On 2019-12-11 22:37, Bjorn Andersson wrote:
->> It's the asymmetry that I don't like.
->> 
->> Perhaps if you instead make ufshcd platform_device_register_data() the
->> bsg device you would solve the probe ordering, the remove will be
->> symmetric and module autoloading will work as well (although then you
->> need a MODULE_ALIAS of platform:device-name).
+On Sun, Dec 15, 2019 at 09:44:32AM -0600, Aditya Pakki wrote:
+> If fp_old is NULL in bpf_prog_realloc, the program does an assertion
+> and crashes. However, we can continue execution by returning NULL to
+> the upper callers. The patch fixes this issue.
 > 
-> Hi Bjorn,
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  kernel/bpf/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> From Documentation/driver-api/driver-model/platform.rst:
-> "Platform devices are devices that typically appear as autonomous
-> entities in the system. This includes legacy port-based devices and
-> host bridges to peripheral buses, and most controllers integrated
-> into system-on-chip platforms.  What they usually have in common
-> is direct addressing from a CPU bus.  Rarely, a platform_device will
-> be connected through a segment of some other kind of bus; but its
-> registers will still be directly addressable."
-> 
-> Do you agree that the above description is not a good match for the
-> ufs-bsg kernel module?
-> 
-> Thanks,
-> 
-> Bart.
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 49e32acad7d8..4b46654fb26b 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -222,7 +222,8 @@ struct bpf_prog *bpf_prog_realloc(struct bpf_prog *fp_old, unsigned int size,
+>  	u32 pages, delta;
+>  	int ret;
+>  
+> -	BUG_ON(fp_old == NULL);
+> +	if (!fp_old)
+> +		return NULL;
 
-Hi Bart,
-
-I missed this one.
-How about making it a plain device and add it from ufs driver?
-
-Thanks,
-
-Can Guo.
+This change makes no sense to me. fp_old should be valid. That's the point of
+BUG_ON. It can happen only during development. Can remove BUG_ON just as well
+and let kernel page fault.
