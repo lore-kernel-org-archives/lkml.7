@@ -6,107 +6,136 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB6EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E51EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2849F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA0220409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfLPNpb (ORCPT
+        id S1727958AbfLPNp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:45:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 08:45:57 -0500
+Received: from mga01.intel.com ([192.55.52.88]:16751 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbfLPNpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:45:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E22C11FB;
-        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5412F3F718;
-        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:45:27 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 01/13] PCI: cadence: Remove stray "pm_runtime_put_sync()"
- in error path
-Message-ID: <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-2-kishon@ti.com>
+        id S1727826AbfLPNp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:45:57 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 05:45:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="266257611"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 16 Dec 2019 05:45:51 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Dec 2019 15:45:51 +0200
+Date:   Mon, 16 Dec 2019 15:45:51 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
+ LCD is initially off
+Message-ID: <20191216134551.GQ1208@intel.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <20191215163810.52356-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-2-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191215163810.52356-4-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:35PM +0530, Kishon Vijay Abraham I wrote:
-> commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
-> as a core library") while refactoring the Cadence PCIe driver to be
-> used as library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
-> and cdns_pcie_host_setup() but missed to remove the corresponding
-> pm_runtime_put_sync() in the error path. Fix it here.
+On Sun, Dec 15, 2019 at 05:38:08PM +0100, Hans de Goede wrote:
+> When the LCD has not been turned on by the firmware/GOP, because e.g. the
+> device was booted with an external monitor connected over HDMI, we should
+> not turn on the panel-enable GPIO when we request it.
 > 
-> Fixes: commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
-
-As this is a fix, a commit subject starting with PCI: cadence: Fix ... may
-be more obvious.
-
-I'd suggest you use the shorter form of this, i.e. Fixes: %h (\"%s\"))
-
-Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
-
-> as a core library")
+> Turning on the panel-enable GPIO when we request it, means we turn it on
+> too early in the init-sequence, which causes some panels to not correctly
+> light up.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
+> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
+> 
+> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
+> booted with an external monitor connected over HDMI.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 2 --
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 2 --
->  2 files changed, 4 deletions(-)
+>  drivers/gpu/drm/i915/display/intel_dsi.h     | 2 +-
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 7 +++----
+>  drivers/gpu/drm/i915/display/vlv_dsi.c       | 2 +-
+>  3 files changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index 1c173dad67d1..560f22b4d165 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -473,7 +473,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
->  	pci_epc_mem_exit(epc);
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
+> index de7e51cd3460..675771ea91aa 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+> @@ -203,7 +203,7 @@ void bxt_dsi_reset_clocks(struct intel_encoder *encoder, enum port port);
 >  
->   err_init:
-> -	pm_runtime_put_sync(dev);
-> -
->  	return ret;
->  }
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 9b1c3966414b..ccf55e143e1d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -275,7 +275,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	pci_free_resource_list(&resources);
+>  /* intel_dsi_vbt.c */
+>  bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id);
+> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi);
+> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on);
+>  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi);
+>  void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+>  				 enum mipi_seq seq_id);
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> index 5352e8c9eca5..027970348b22 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> @@ -688,17 +688,16 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>   * On some BYT/CHT devs some sequences are incomplete and we need to manually
+>   * control some GPIOs.
+>   */
+> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi)
+> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  {
+>  	struct drm_device *dev = intel_dsi->base.base.dev;
+>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>  	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+> +	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+
+Can't we just tell it not to change the current setting?
+
 >  
->   err_init:
-> -	pm_runtime_put_sync(dev);
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+> -		intel_dsi->gpio_panel =
+> -			gpiod_get(dev->dev, "panel", GPIOD_OUT_HIGH);
 > -
-
-There is probably more you can do here for both -host and -ep:
-
- - Remove the possibly now unused <linux/pm_runtime.h> include
- - Remove the err_init label and return directly from source.
-
-Thanks,
-
-Andrew Murray
-
->  	return ret;
->  }
+> +		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>  		if (IS_ERR(intel_dsi->gpio_panel)) {
+>  			DRM_ERROR("Failed to own gpio for panel control\n");
+>  			intel_dsi->gpio_panel = NULL;
+> diff --git a/drivers/gpu/drm/i915/display/vlv_dsi.c b/drivers/gpu/drm/i915/display/vlv_dsi.c
+> index 178d0fffba5b..e86e4a11e199 100644
+> --- a/drivers/gpu/drm/i915/display/vlv_dsi.c
+> +++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
+> @@ -1910,7 +1910,7 @@ void vlv_dsi_init(struct drm_i915_private *dev_priv)
+>  
+>  	vlv_dphy_param_init(intel_dsi);
+>  
+> -	intel_dsi_vbt_gpio_init(intel_dsi);
+> +	intel_dsi_vbt_gpio_init(intel_dsi, current_mode != NULL);
+>  
+>  	drm_connector_init(dev, connector, &intel_dsi_connector_funcs,
+>  			   DRM_MODE_CONNECTOR_DSI);
 > -- 
-> 2.17.1
-> 
+> 2.23.0
+
+-- 
+Ville Syrjälä
+Intel
