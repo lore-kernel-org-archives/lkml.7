@@ -2,80 +2,184 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4C5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F428207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F70F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576497979;
+	bh=4Z8lW8KTfkt6YvGD981r4RYEkz/l1NYcxZz8ONs1GUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=UfZOJq1mDvmErzTPOT+dq1wyp/J3f7y1kCWsvyYRz0mCA/19DOLJ/+3twywAk6ML4
+	 cyACwS3VVxKjQJue8Bpi23bjjxl9koi06VoVGjDL8yeDb3Z0XExg1rc4zo7eHbk44L
+	 r0YO5MBCueIZwrg/lMzNWIFGvJYlxh+hjh9gADCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfLPMGQ (ORCPT
+        id S1727700AbfLPMGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:06:16 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59092 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727644AbfLPMGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:06:13 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 428CEA28CB66BB409030;
-        Mon, 16 Dec 2019 20:06:10 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Dec 2019
- 20:05:55 +0800
-Subject: [PATCH] reiserfs: prevent NULL pointer dereference in
- reiserfs_insert_item()
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <akpm@linux-foundation.org>, <zhengbin13@huawei.com>,
-        <jack@suse.cz>, <yanaijie@huawei.com>, <darrick.wong@oracle.com>,
-        <linux.bhar@gmail.com>, <hariprasad.kelam@gmail.com>,
-        <deepa.kernel@gmail.com>, <reiserfs-devel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com>
-CC:     "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Message-ID: <20c04f55-aa48-d28a-f8ff-1efed8a38f3a@huawei.com>
-Date:   Mon, 16 Dec 2019 20:05:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+        Mon, 16 Dec 2019 07:06:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:52600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727681AbfLPMGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:06:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9910D1045;
+        Mon, 16 Dec 2019 04:06:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6E163F719;
+        Mon, 16 Dec 2019 04:06:15 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:06:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     alexandre.torgue@st.com, baohua@kernel.org, broonie@kernel.org,
+        f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
+        nsaenzjulienne@suse.de, rjui@broadcom.com, sbranden@broadcom.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, vkoul@kernel.org
+Subject: Applied "spi: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()" to the spi tree
+In-Reply-To: <20191212135550.4634-4-peter.ujfalusi@ti.com>
+Message-Id: <applied-20191212135550.4634-4-peter.ujfalusi@ti.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable inode may be NULL in reiserfs_insert_item(), but there is
-no check before accessing the member of inode.
+The patch
 
-Fix this by adding NULL pointer check before calling reiserfs_debug().
+   spi: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 6133fed0539bc5c059d3a661b61704159ba448a6 Mon Sep 17 00:00:00 2001
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Date: Thu, 12 Dec 2019 15:55:44 +0200
+Subject: [PATCH] spi: bcm2835: Use dma_request_chan() instead
+ dma_request_slave_channel()
+
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
+
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20191212135550.4634-4-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- fs/reiserfs/stree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
-index da9ebe33882b..bb4973aefbb1 100644
---- a/fs/reiserfs/stree.c
-+++ b/fs/reiserfs/stree.c
-@@ -2246,7 +2246,8 @@ int reiserfs_insert_item(struct reiserfs_transaction_handle *th,
- 	/* also releases the path */
- 	unfix_nodes(&s_ins_balance);
- #ifdef REISERQUOTA_DEBUG
--	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
-+	if (inode)
-+		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
- 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
- 		       quota_bytes, inode->i_uid, head2type(ih));
- #endif
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 662d55e9f21d..69df79914504 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -888,8 +888,8 @@ static void bcm2835_dma_release(struct spi_controller *ctlr,
+ 	}
+ }
+ 
+-static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+-			     struct bcm2835_spi *bs)
++static int bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
++			    struct bcm2835_spi *bs)
+ {
+ 	struct dma_slave_config slave_config;
+ 	const __be32 *addr;
+@@ -900,19 +900,24 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ 	addr = of_get_address(ctlr->dev.of_node, 0, NULL, NULL);
+ 	if (!addr) {
+ 		dev_err(dev, "could not get DMA-register address - not using dma mode\n");
+-		goto err;
++		/* Fall back to interrupt mode */
++		return 0;
+ 	}
+ 	dma_reg_base = be32_to_cpup(addr);
+ 
+ 	/* get tx/rx dma */
+-	ctlr->dma_tx = dma_request_slave_channel(dev, "tx");
+-	if (!ctlr->dma_tx) {
++	ctlr->dma_tx = dma_request_chan(dev, "tx");
++	if (IS_ERR(ctlr->dma_tx)) {
+ 		dev_err(dev, "no tx-dma configuration found - not using dma mode\n");
++		ret = PTR_ERR(ctlr->dma_tx);
++		ctlr->dma_tx = NULL;
+ 		goto err;
+ 	}
+-	ctlr->dma_rx = dma_request_slave_channel(dev, "rx");
+-	if (!ctlr->dma_rx) {
++	ctlr->dma_rx = dma_request_chan(dev, "rx");
++	if (IS_ERR(ctlr->dma_rx)) {
+ 		dev_err(dev, "no rx-dma configuration found - not using dma mode\n");
++		ret = PTR_ERR(ctlr->dma_rx);
++		ctlr->dma_rx = NULL;
+ 		goto err_release;
+ 	}
+ 
+@@ -997,7 +1002,7 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ 	/* all went well, so set can_dma */
+ 	ctlr->can_dma = bcm2835_spi_can_dma;
+ 
+-	return;
++	return 0;
+ 
+ err_config:
+ 	dev_err(dev, "issue configuring dma: %d - not using DMA mode\n",
+@@ -1005,7 +1010,14 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ err_release:
+ 	bcm2835_dma_release(ctlr, bs);
+ err:
+-	return;
++	/*
++	 * Only report error for deferred probing, otherwise fall back to
++	 * interrupt mode
++	 */
++	if (ret != -EPROBE_DEFER)
++		ret = 0;
++
++	return ret;
+ }
+ 
+ static int bcm2835_spi_transfer_one_poll(struct spi_controller *ctlr,
+@@ -1317,7 +1329,9 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 
+ 	clk_prepare_enable(bs->clk);
+ 
+-	bcm2835_dma_init(ctlr, &pdev->dev, bs);
++	err = bcm2835_dma_init(ctlr, &pdev->dev, bs);
++	if (err)
++		goto out_clk_disable;
+ 
+ 	/* initialise the hardware with the default polarities */
+ 	bcm2835_wr(bs, BCM2835_SPI_CS,
 -- 
-2.7.4
+2.20.1
 
