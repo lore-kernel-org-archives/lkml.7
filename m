@@ -2,53 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A61C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA59C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E432D20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042AF20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519553;
-	bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
+	s=default; t=1576519558;
+	bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLbHcTxEZUSuOFTp/NcAT4D5FXWZla0bPfCUj4qUBmEMupwIvNPO01mwSMBFcq9D1
-	 uAnifKE1kiISq1CXpuo1k6QeVVUvqh+1DDPS3MBlbVfkpLjZEBYO9YgauKVA8lvX63
-	 iRqZZQ+rxYAGSRD2g+Zz3BH8YE7UmX+i85SPfy1U=
+	b=W46DSRR5rpRgqAETGj/840G2tPaey0WlSinQkGCSje2NfhTMs1jhSEjo3QcKz9/5L
+	 GaJNYtejmVdv0CLKXpHNGhf2Z1/TKw0DAXADPGIqaw5hCaxvfD35Ts7bwAepbQkkr3
+	 yWquxzH9I/w3ueowA851ApxF0EMtrPnZ94gAmpqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfLPSFv (ORCPT
+        id S1729526AbfLPSF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbfLPSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:46 -0500
+        id S1729890AbfLPSFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4188520733;
-        Mon, 16 Dec 2019 18:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 258EE20700;
+        Mon, 16 Dec 2019 18:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519545;
-        bh=RcA8gkxlOcWeShVMQ7iGO0il+QHkLYZa3tgKdkqU2p4=;
+        s=default; t=1576519550;
+        bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GmVQGfXyUecmO77+/3YnM29MuGAFOWxcUk0EA8R5XQHck3CQGx+Y/pH0En2Zt2ToO
-         4E2qkKFC3jsm3ODCmFfplTzK2z+ZFhbc23WpEGOwiP/7dJOHSZzLUutzH8oEJ2uzCF
-         /PD6cLztuD1SAe2cYjBpuTS7v6NoYMMoD4wgD6Bc=
+        b=VwNU4svdzHbOWO4O+WpGuPMrtgl0SyFrdqZFlfO5kZqvJb5cA5eGxcPFCNixQoxqd
+         2V6W1o4ZvES4lR7rxC/5b0XpwYn7JlRwYZskTE7DjvpcZ3Kkvcx7s52RGN+gybBSeB
+         LHUrdXGCk6+6AHx/5e9per5r97q9T00h5nYYkyPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 093/140] quota: fix livelock in dquot_writeback_dquots
-Date:   Mon, 16 Dec 2019 18:49:21 +0100
-Message-Id: <20191216174811.675919447@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 112/140] drbd: Change drbd_request_detach_interruptibles return type to int
+Date:   Mon, 16 Dec 2019 18:49:40 +0100
+Message-Id: <20191216174817.167554962@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,49 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
+[ Upstream commit 5816a0932b4fd74257b8cc5785bc8067186a8723 ]
 
-Write only quotas which are dirty at entry.
+Clang warns when an implicit conversion is done between enumerated
+types:
 
-XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
+drivers/block/drbd/drbd_state.c:708:8: warning: implicit conversion from
+enumeration type 'enum drbd_ret_code' to different enumeration type
+'enum drbd_state_rv' [-Wenum-conversion]
+                rv = ERR_INTR;
+                   ~ ^~~~~~~~
 
-Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
-CC: stable@vger.kernel.org
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+drbd_request_detach_interruptible's only call site is in the return
+statement of adm_detach, which returns an int. Change the return type of
+drbd_request_detach_interruptible to match, silencing Clang's warning.
 
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/block/drbd/drbd_state.c | 6 ++----
+ drivers/block/drbd/drbd_state.h | 3 +--
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -617,7 +617,7 @@ EXPORT_SYMBOL(dquot_scan_active);
- /* Write all dquot structures to quota files */
- int dquot_writeback_dquots(struct super_block *sb, int type)
- {
--	struct list_head *dirty;
-+	struct list_head dirty;
- 	struct dquot *dquot;
- 	struct quota_info *dqopt = sb_dqopt(sb);
- 	int cnt;
-@@ -631,9 +631,10 @@ int dquot_writeback_dquots(struct super_
- 		if (!sb_has_quota_active(sb, cnt))
- 			continue;
- 		spin_lock(&dq_list_lock);
--		dirty = &dqopt->info[cnt].dqi_dirty_list;
--		while (!list_empty(dirty)) {
--			dquot = list_first_entry(dirty, struct dquot,
-+		/* Move list away to avoid livelock. */
-+		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
-+		while (!list_empty(&dirty)) {
-+			dquot = list_first_entry(&dirty, struct dquot,
- 						 dq_dirty);
+diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
+index 0813c654c8938..b452359b6aae8 100644
+--- a/drivers/block/drbd/drbd_state.c
++++ b/drivers/block/drbd/drbd_state.c
+@@ -688,11 +688,9 @@ request_detach(struct drbd_device *device)
+ 			CS_VERBOSE | CS_ORDERED | CS_INHIBIT_MD_IO);
+ }
  
- 			WARN_ON(!test_bit(DQ_ACTIVE_B, &dquot->dq_flags));
+-enum drbd_state_rv
+-drbd_request_detach_interruptible(struct drbd_device *device)
++int drbd_request_detach_interruptible(struct drbd_device *device)
+ {
+-	enum drbd_state_rv rv;
+-	int ret;
++	int ret, rv;
+ 
+ 	drbd_suspend_io(device); /* so no-one is stuck in drbd_al_begin_io */
+ 	wait_event_interruptible(device->state_wait,
+diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
+index b2a390ba73a05..f87371e55e682 100644
+--- a/drivers/block/drbd/drbd_state.h
++++ b/drivers/block/drbd/drbd_state.h
+@@ -162,8 +162,7 @@ static inline int drbd_request_state(struct drbd_device *device,
+ }
+ 
+ /* for use in adm_detach() (drbd_adm_detach(), drbd_adm_down()) */
+-enum drbd_state_rv
+-drbd_request_detach_interruptible(struct drbd_device *device);
++int drbd_request_detach_interruptible(struct drbd_device *device);
+ 
+ enum drbd_role conn_highest_role(struct drbd_connection *connection);
+ enum drbd_role conn_highest_peer(struct drbd_connection *connection);
+-- 
+2.20.1
+
 
 
