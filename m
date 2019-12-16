@@ -2,374 +2,172 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A22C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FF3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8518820725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67492075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n73749cb"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O/AzOzKx";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Ww0rOw61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfLPJ0R (ORCPT
+        id S1727088AbfLPJ0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:26:17 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63420 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727007AbfLPJ0Q (ORCPT
+        Mon, 16 Dec 2019 04:26:32 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:52670 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726903AbfLPJ0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:26:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576488375; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=uTGnsX9HMG9dubiHjOyToucnTgvVizTCl+f2DfPpes4=; b=n73749cbLeaOY1Z8/zBECxfQtL4KRtSIA9pK8CNUYphfbyiTIr5OI9uRpkXsgXmK6JpQNHDP
- YwyI2mZtG2eAElbhdvZhPSpkGvO+uDHXVxbsi5r5UzVhwPDMQtX2Jkt6Vy+mDu1YP6/EvXZe
- rrenBXjChPTGyNXU8L2z4H9/cEQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df74daf.7f07ab4a10a0-smtp-out-n03;
- Mon, 16 Dec 2019 09:26:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 407B6C4479D; Mon, 16 Dec 2019 09:26:06 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 16 Dec 2019 04:26:32 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE948C43383;
-        Mon, 16 Dec 2019 09:26:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE948C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        swboyd@chromium.org, Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
-Date:   Mon, 16 Dec 2019 14:55:51 +0530
-Message-Id: <1576488351-22396-1-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DF950C00A7;
+        Mon, 16 Dec 2019 09:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576488391; bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=O/AzOzKxdkNz6NWBhowZTraYvTQL83By659a42a+OHeX7qWA2odlhOJ0BNM/YvLOh
+         pohhBjJJK8AK85svOVn+uTAT5EmDxw8YhARzfaBHFUl8eW1OSOOFDlRBGTIY3HNeIK
+         xq9x6TkPxdiru0Gtdxy2ZqxeqXkgUwOXELEqIbmkC87VNcv8tkzXKsjHIwgt4Nrj5u
+         L+mJlypAqn0bmGVVmKhwHKfKT4wi7MgO0M3d+k9KXSzDoeDKzzrIJoXeHm0PH21/Lj
+         fYPzmvFLK1MUQ3vQN7vZvXt7vnrxNLkfNkHrTPzoKh2MRE0C/AmhPN2eURwoTDf+nW
+         y6Vlg2/V50LNg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 53EE3A007D;
+        Mon, 16 Dec 2019 09:26:25 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 16 Dec 2019 01:26:25 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 16 Dec 2019 01:26:25 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jGaNTXRnw6wGN27Sk4rAphQwqH4ME4usVRm3CHMdYSwp5hBzg/Y6lBzRZy0mWk2stf/FY2AlEey87vNGjveJ877u6xI9LDy45m55jauaibRBAZ0mNFJkfO/CXrhvitkCCpq+rhspFHUhpAb2vld0NWOjO3u4pAhC7QrruXQ+vKr+jreX7E5MCheU5y0uzDgjwaT0i1qACfFRkZ3UW5fzQ5xQdaPvR1AWWTotd8PNh/2iJlFTVMHwGyv0aUcsnG+E1nQE+eyRLv5/7zq1O9aJEFzxLtNKTnt4xePzAZSNb3rOtC1BB3C1wDuzcWoze3d2vXspWFzSN8D8srXag/b4lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
+ b=NKjSzUB3hXu+yHdEczsnRmeHHZsaKR1+O2wgYXwcoBnOcSW7WCcpsJ9JwxYbiH7lzrVxhFtoDEi5z+WCA1AdL56NVtmtzjsiznKVX2eL+JZBxsFFWto0sg8Lv0lJh6KDpvcTiqwaC2SHk5lJkMn6LqdbTyWlt5n7oJuzUh7fQHKZSSmAQJ0AWs13C31Fu8X1ZBUfDCwXSCwIhLJnEToxXoVx2Scd/g6WRHlUb0SIeqDvfFCvYIECRl6eMX607vdUxu+F6bzh7Z5yAhl+rN0RQd6f7Jh1x0qQHCXI8WCwc6jbg44bXlEJMrtW3e7HoupQ9iDXOjYtAo5O6Ii3v5JR/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
+ b=Ww0rOw61UkDyYzfgQE4EYt6mFqK+OXREFJgyuchu31AHh8l7oyrw5NK1QKSRVWXDN+SVv/BhZOcPD6ljpWlFQE3X1TtoHx3Bhh40V8l7hKuI8tkHqFsSi3cAboVKX5SM5t83LBtfFzVAJ/WNzh5JtUeXSp6+o1P5otmCJF+PfiM=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB2994.namprd12.prod.outlook.com (20.178.210.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Mon, 16 Dec 2019 09:26:23 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::3d20:3a36:3b64:4510]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::3d20:3a36:3b64:4510%7]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 09:26:23 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net 0/8] net: stmmac: Fixes for -net
+Thread-Topic: [PATCH net 0/8] net: stmmac: Fixes for -net
+Thread-Index: AQHVr5DiuA/S/u4Lb0GUkL7jqplpwae4yfIAgAO7yTA=
+Date:   Mon, 16 Dec 2019 09:26:22 +0000
+Message-ID: <BN8PR12MB326639325F465266DEACAA64D3510@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
+ <20191213162216.2dc8a108@cakuba.netronome.com>
+In-Reply-To: <20191213162216.2dc8a108@cakuba.netronome.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ee42dd07-2751-4a2c-2d90-08d7820a0456
+x-ms-traffictypediagnostic: BN8PR12MB2994:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB2994598EB0751D1EF528A922D3510@BN8PR12MB2994.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(39850400004)(396003)(136003)(189003)(199004)(186003)(316002)(66946007)(54906003)(6916009)(5660300002)(33656002)(66556008)(66446008)(66476007)(478600001)(76116006)(64756008)(7696005)(6506007)(26005)(2906002)(71200400001)(9686003)(4326008)(55016002)(8936002)(81166006)(52536014)(86362001)(81156014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2994;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Rq/5T77uCWoaPGCq9QEHSHrvONj8AeSD2Lac9RuOP15uUbIYOulJpd3F2vjfJubSNVBAHct+CsctIDhYPPXVvDwLfKNLRsvEPCeWKg/40KqboEklBPJCLH6Knmb0NbzkvZw+YgEXniH0GE8p6xeNzrl9CBgzJwdz6QBt57zrHoizThXzN/7vjyDod43OexQDED1mjulMEM5tCQOwstWmV4M94C3ZOuqDRZfFNzcRaDeRBvQQjCDK1r4LTCz6fUpdBYQJh/jlgra7EyApZZND7Fp7GNHG04HKNX44NTRWeaPsdVQ8y9SqmY7FknkKb2aaxt7CmNs2jhG8JTnQo0nmm0LS6CZFLHTeIwg//3GThjhKJrXz6JnnmjkaTyeC96S8QrVESSnh96PrKuvqyWouczVLNd5UIFo3cfNi6NM/KIbqJ1gel76apqKZbf8R/VSP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee42dd07-2751-4a2c-2d90-08d7820a0456
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 09:26:22.8426
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8k+GIvVuJ9NtsjZA/P5bnQjIjyZCTWa1KaYRvUOWnrqj6uJ2vvYN9a8vhFTM57HOPwOBzLGdZ6qfn+GbBFtj6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2994
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert QUP geni-se bindings to DT schema format using json-schema.
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
+Date: Dec/14/2019, 00:22:16 (UTC+00:00)
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> On Tue, 10 Dec 2019 20:33:52 +0100, Jose Abreu wrote:
+> > Fixes for stmmac.
+> >=20
+> > 1) Fixes the filtering selftests (again) for cases when the number of m=
+ulticast
+> > filters are not enough.
+> >=20
+> > 2) Fixes SPH feature for MTU > default.
+> >=20
+> > 3) Fixes the behavior of accepting invalid MTU values.
+> >=20
+> > 4) Fixes FCS stripping for multi-descriptor packets.
+> >=20
+> > 5) Fixes the change of RX buffer size in XGMAC.
+> >=20
+> > 6) Fixes RX buffer size alignment.
+> >=20
+> > 7) Fixes the 16KB buffer alignment.
+> >=20
+> > 8) Fixes the enabling of 16KB buffer size feature.
+>=20
+> Hi Jose!
+>=20
+> Patches directed at net should have a Fixes tag identifying the commit
+> which introduced the problem. The commit messages should also describe
+> user-visible outcomes of the bugs. Without those two its hard to judge
+> which patches are important for stable backports.
+>=20
+> Could you please repost with appropriate Fixes tags?
+
+I agree with you Jakub but although these are bugs they are either for=20
+recently introduced features (such as SPH and selftests), or for=20
+features that are not commonly used. I can dig into the GIT history and=20
+provide fixes tag for them all or I can always provide a backport fix if=20
+any user requires so. Can you please comment on which one you prefer ?
+
 ---
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ----------
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 196 +++++++++++++++++++++
- 2 files changed, 196 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-deleted file mode 100644
-index dab7ca9..0000000
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-+++ /dev/null
-@@ -1,94 +0,0 @@
--Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
--
--Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
--is a programmable module for supporting a wide range of serial interfaces
--like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
--Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
--Wrapper controller is modeled as a node with zero or more child nodes each
--representing a serial engine.
--
--Required properties:
--- compatible:		Must be "qcom,geni-se-qup".
--- reg:			Must contain QUP register address and length.
--- clock-names:		Must contain "m-ahb" and "s-ahb".
--- clocks:		AHB clocks needed by the device.
--
--Required properties if child node exists:
--- #address-cells: 	Must be <1> for Serial Engine Address
--- #size-cells: 		Must be <1> for Serial Engine Address Size
--- ranges: 		Must be present
--
--Properties for children:
--
--A GENI based QUP wrapper controller node can contain 0 or more child nodes
--representing serial devices.  These serial devices can be a QCOM UART, I2C
--controller, SPI controller, or some combination of aforementioned devices.
--Please refer below the child node definitions for the supported serial
--interface protocols.
--
--Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-i2c".
--- reg: 			Must contain QUP register address and length.
--- interrupts: 		Must contain I2C interrupt.
--- clock-names: 		Must contain "se".
--- clocks: 		Serial engine core clock needed by the device.
--- #address-cells:	Must be <1> for I2C device address.
--- #size-cells:		Must be <0> as I2C addresses have no size component.
--
--Optional property:
--- clock-frequency:	Desired I2C bus clock frequency in Hz.
--			When missing default to 100000Hz.
--
--Child nodes should conform to I2C bus binding as described in i2c.txt.
--
--Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-debug-uart" or "qcom,geni-uart".
--- reg: 			Must contain UART register location and length.
--- interrupts: 		Must contain UART core interrupts.
--- clock-names:		Must contain "se".
--- clocks:		Serial engine core clock needed by the device.
--
--Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
--node binding is described in
--Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
--
--Example:
--	geniqup@8c0000 {
--		compatible = "qcom,geni-se-qup";
--		reg = <0x8c0000 0x6000>;
--		clock-names = "m-ahb", "s-ahb";
--		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
--			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		i2c0: i2c@a94000 {
--			compatible = "qcom,geni-i2c";
--			reg = <0xa94000 0x4000>;
--			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_i2c_5_active>;
--			pinctrl-1 = <&qup_1_i2c_5_sleep>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
--
--		uart0: serial@a88000 {
--			compatible = "qcom,geni-debug-uart";
--			reg = <0xa88000 0x7000>;
--			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_uart_3_active>;
--			pinctrl-1 = <&qup_1_uart_3_sleep>;
--		};
--
--	}
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-new file mode 100644
-index 0000000..2c3b911
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-@@ -0,0 +1,196 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: GENI Serial Engine QUP Wrapper Controller
-+
-+maintainers:
-+ - Mukesh Savaliya <msavaliy@codeaurora.org>
-+ - Akash Asthana <akashast@codeaurora.org>
-+
-+description: |
-+ Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
-+ is a programmable module for supporting a wide range of serial interfaces
-+ like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
-+ Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
-+ Wrapper controller is modeled as a node with zero or more child nodes each
-+ representing a serial engine.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,geni-se-qup
-+
-+  reg:
-+    description: QUP wrapper common register address and length.
-+
-+  clock-names:
-+    items:
-+      - const: m-ahb
-+      - const: s-ahb
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - description: Master AHB Clock
-+      - description: Slave AHB Clock
-+
-+  "#address-cells":
-+     const: 2
-+
-+  "#size-cells":
-+     const: 2
-+
-+  ranges: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+patternProperties:
-+  "[i2c|spi]@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based I2C and SPI Controller.
-+                 SPI in master mode supports up to 50MHz, up to four chip
-+                 selects, programmable data path from 4 bits to 32 bits and
-+                 numerous protocol variants.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-i2c
-+          - qcom,geni-spi
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+      "#address-cells":
-+         const: 1
-+
-+      "#size-cells":
-+         const: 0
-+
-+      clock-frequency:
-+        description: Desired I2C bus clock frequency in Hz.
-+        default: 100000
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  "serial@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based UART Controller.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-uart
-+          - qcom,geni-debug-uart
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        description: Contains UART core and wakeup interrupts for wakeup
-+                     capable UART devices. We configure wakeup interrupt
-+                     on UART RX line using TLMM interrupt controller.
-+        maxItems: 2
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc: soc@0 {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        qupv3_id_0: geniqup@8c0000 {
-+            compatible = "qcom,geni-se-qup";
-+            reg = <0 0x008c0000 0 0x6000>;
-+            clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-+                <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges;
-+            status = "disabled";
-+
-+            i2c0: i2c@880000 {
-+                compatible = "qcom,geni-i2c";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_i2c0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            spi0: spi@880000 {
-+                compatible = "qcom,geni-spi";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_spi0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            uart0: serial@880000 {
-+                compatible = "qcom,geni-uart";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_uart0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                status = "disabled";
-+            };
-+        };
-+    };
-+
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Thanks,
+Jose Miguel Abreu
