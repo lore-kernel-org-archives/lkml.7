@@ -2,86 +2,98 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76200206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576498982;
-	bh=iqMqtQQV0SVYXKLuUzzUIl4DJZ0CDKW1xjZhpNX9mQI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c9r7PtLp3Hx/8Vmqo+A0zGZAO2McOX+SNLhPf3AIUGn1pZuZzORRQ9h2MxHt2QfZ4
-	 oS9ud4P1l9U7bQ0cHhmnKKOZdDZV+HUrgW4ZVOJlSVlw6pcQkJ867un1OOa6QndS06
-	 RER6LBRv6nysV901UkcT8vQhBOJKu0VdR27KqAlw=
+	by mail.kernel.org (Postfix) with ESMTP id 6E59B206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfLPMXB (ORCPT
+        id S1727569AbfLPMZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:23:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:53358 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 07:25:05 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:56914 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfLPMXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:23:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DB851FB;
-        Mon, 16 Dec 2019 04:23:00 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE57D3F719;
-        Mon, 16 Dec 2019 04:22:59 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:22:58 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Add the broadmobi BM818
-Message-ID: <20191216122258.GC4161@sirena.org.uk>
-References: <20191214235550.31257-1-angus@akkea.ca>
+        id S1727486AbfLPMZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:25:05 -0500
+Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1igpQm-0008GW-Fd; Mon, 16 Dec 2019 13:24:56 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     kishon@ti.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
+Date:   Mon, 16 Dec 2019 13:24:47 +0100
+Message-Id: <20191216122448.27867-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ghzN8eJ9Qlbqn3iT"
-Content-Disposition: inline
-In-Reply-To: <20191214235550.31257-1-angus@akkea.ca>
-X-Cookie: Backed up the system lately?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
---ghzN8eJ9Qlbqn3iT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Further review of the dsi components for the px30 revealed that the
+phy shouldn't expose the pll as clock but instead handle settings
+via phy parameters.
 
-On Sat, Dec 14, 2019 at 03:55:48PM -0800, Angus Ainslie (Purism) wrote:
+As the phy binding is new and not used anywhere yet, just drop them
+so they don't get used.
 
-> Angus Ainslie (Purism) (2):
->   sound: codecs: gtm601: add Broadmobi bm818 sound profile
->   dt-bindings: sound: gtm601: add the broadmobi interface
+Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+Hi Kishon,
 
-As I said in reply to v1:
+maybe suitable as a fix for 5.5-rc?
 
-| These subject styles don't even agree with each other :( - please
-| try to be consistent with the style for the subsystem (the latter
-| one matches, the first one doesn't).
+Thanks
+Heiko
 
---ghzN8eJ9Qlbqn3iT
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
+ 1 file changed, 5 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+index bb0da87bcd84..476c56a1dc8c 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+@@ -13,9 +13,6 @@ properties:
+   "#phy-cells":
+     const: 0
+ 
+-  "#clock-cells":
+-    const: 0
+-
+   compatible:
+     enum:
+       - rockchip,px30-dsi-dphy
+@@ -49,7 +46,6 @@ properties:
+ 
+ required:
+   - "#phy-cells"
+-  - "#clock-cells"
+   - compatible
+   - reg
+   - clocks
+@@ -66,7 +62,6 @@ examples:
+         reg = <0x0 0xff2e0000 0x0 0x10000>;
+         clocks = <&pmucru 13>, <&cru 12>;
+         clock-names = "ref", "pclk";
+-        #clock-cells = <0>;
+         resets = <&cru 12>;
+         reset-names = "apb";
+         #phy-cells = <0>;
+-- 
+2.23.0
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33dyEACgkQJNaLcl1U
-h9CPKwf/Yi58Hf8HxHeOBIXk0Y27oK1tnQS/WvB4x3RVFfqXyikECz5ERE6pdUzc
-5fpXeRbxwO7kTznK/2YE6aP0S332ZVMhxt3nG/BqJLSjn/a6EzSFGQ6jiHSQ1Kvj
-YqGNOyPONPfN37I4h5j6oviotmeLr2QhhL7wySQsifL9L21S/xVVyy3lj6H8HgS/
-e6AqlPkavFIEW3OaGI3Tj9x1iO4TG8tadg+2IlggE46MZunxvlXhrQuLwPxeZSQ5
-65revyyoOPDRbDHMIOVaK/v2598LDohjgKyxRXD2IXiiz2X48IHcT71f6vSk+Bo2
-YcUYhAEeMUrSq5ZwzcvtJl2vV2clFA==
-=B/1w
------END PGP SIGNATURE-----
-
---ghzN8eJ9Qlbqn3iT--
