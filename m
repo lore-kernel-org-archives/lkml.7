@@ -2,234 +2,103 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9C0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621F120725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D1A20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IUjovb1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfLPNBc (ORCPT
+        id S1727817AbfLPNBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:01:32 -0500
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:32067 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727553AbfLPNBb (ORCPT
+        Mon, 16 Dec 2019 08:01:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49268 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfLPNBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:01:31 -0500
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 16 Dec 2019 04:46:24 -0800
-Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 4532E402B6;
-        Mon, 16 Dec 2019 04:46:20 -0800 (PST)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <torvalds@linux-foundation.org>, <punit.agrawal@arm.com>,
-        <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
-        <willy@infradead.org>, <will.deacon@arm.com>,
-        <mszeredi@redhat.com>, <stable@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <amakhalov@vmware.com>, <srinidhir@vmware.com>,
-        <bvikas@vmware.com>, <anishs@vmware.com>, <vsirnapalli@vmware.com>,
-        <srostedt@vmware.com>, <akaher@vmware.com>, <stable@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v3 7/8] fs: prevent page refcount overflow in pipe_buf_get
-Date:   Tue, 17 Dec 2019 02:15:47 +0530
-Message-ID: <1576529149-14269-8-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576529149-14269-1-git-send-email-akaher@vmware.com>
-References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+        Mon, 16 Dec 2019 08:01:36 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGD1GEB035729;
+        Mon, 16 Dec 2019 07:01:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576501276;
+        bh=qu4CX1xmsIJKNsiSCd4Q7cKnvTPwSjXkFWKSo8iJ+4U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IUjovb1voNOw0bGSYt1NM92Pnj8HaGhWHOB/Uf6pgKUahW5o8SeeoMDpJIK5mvJW5
+         SAFt0dkaf5/hQWLjucnoz03cLLQqhlFXLcYDtaJR7Tc8c/NLZNmX8D5s0jHg2AmD/U
+         zLgnkN/DPxAibbOMwYSdxreD4egLXB9aJgPSWWCM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGD1Gsn098541
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 07:01:16 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 07:01:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 07:01:16 -0600
+Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGD1EGl118008;
+        Mon, 16 Dec 2019 07:01:14 -0600
+Subject: Re: [PATCH] dma-heap: Make the symbol 'dma_heap_ioctl_cmds' static
+To:     zhong jiang <zhongjiang@huawei.com>, <sumit.semwal@linaro.org>,
+        <benjamin.gaignard@linaro.org>
+CC:     <lmark@codeaurora.org>, <labbott@redhat.com>,
+        <Brian.Starkey@arm.com>, <john.stultz@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576490904-18069-1-git-send-email-zhongjiang@huawei.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
+Date:   Mon, 16 Dec 2019 08:01:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+In-Reply-To: <1576490904-18069-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox <willy@infradead.org>
+On 12/16/19 5:08 AM, zhong jiang wrote:
+> Fix the following sparse warning.
+> 
+> drivers/gpu/drm/ast/ast_main.c:391:22: warning: symbol 'ast_mode_config_mode_valid' was not declared. Should it be static?
+> 
 
-commit 15fab63e1e57be9fdb5eec1bbc5916e9825e9acb upstream.
 
-Change pipe_buf_get() to return a bool indicating whether it succeeded
-in raising the refcount of the page (if the thing in the pipe is a page).
-This removes another mechanism for overflowing the page refcount.  All
-callers converted to handle a failure.
+The patch looks valid, but this commit message does not seem to match..
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Matthew Wilcox <willy@infradead.org>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[ 4.4.y backport notes:
-  Regarding the change in generic_pipe_buf_get(), note that
-  page_cache_get() is the same as get_page(). See mainline commit
-  09cbfeaf1a5a6 "mm, fs: get rid of PAGE_CACHE_* and
-  page_cache_{get,release} macros" for context. ]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- fs/fuse/dev.c             | 12 ++++++------
- fs/pipe.c                 |  4 ++--
- fs/splice.c               | 12 ++++++++++--
- include/linux/pipe_fs_i.h | 10 ++++++----
- kernel/trace/trace.c      |  6 +++++-
- 5 files changed, 29 insertions(+), 15 deletions(-)
+Andrew
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 36a5df9..16891f5 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -2031,10 +2031,8 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 		rem += pipe->bufs[(pipe->curbuf + idx) & (pipe->buffers - 1)].len;
- 
- 	ret = -EINVAL;
--	if (rem < len) {
--		pipe_unlock(pipe);
--		goto out;
--	}
-+	if (rem < len)
-+		goto out_free;
- 
- 	rem = len;
- 	while (rem) {
-@@ -2052,7 +2050,9 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
- 			pipe->nrbufs--;
- 		} else {
--			pipe_buf_get(pipe, ibuf);
-+			if (!pipe_buf_get(pipe, ibuf))
-+				goto out_free;
-+
- 			*obuf = *ibuf;
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 			obuf->len = rem;
-@@ -2075,13 +2075,13 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 	ret = fuse_dev_do_write(fud, &cs, len);
- 
- 	pipe_lock(pipe);
-+out_free:
- 	for (idx = 0; idx < nbuf; idx++) {
- 		struct pipe_buffer *buf = &bufs[idx];
- 		buf->ops->release(pipe, buf);
- 	}
- 	pipe_unlock(pipe);
- 
--out:
- 	kfree(bufs);
- 	return ret;
- }
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 1e7263b..6534470 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -178,9 +178,9 @@ EXPORT_SYMBOL(generic_pipe_buf_steal);
-  *	in the tee() system call, when we duplicate the buffers in one
-  *	pipe into another.
-  */
--void generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
-+bool generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
- {
--	page_cache_get(buf->page);
-+	return try_get_page(buf->page);
- }
- EXPORT_SYMBOL(generic_pipe_buf_get);
- 
-diff --git a/fs/splice.c b/fs/splice.c
-index fde1263..57ccc58 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1876,7 +1876,11 @@ retry:
- 			 * Get a reference to this pipe buffer,
- 			 * so we can copy the contents over.
- 			 */
--			pipe_buf_get(ipipe, ibuf);
-+			if (!pipe_buf_get(ipipe, ibuf)) {
-+				if (ret == 0)
-+					ret = -EFAULT;
-+				break;
-+			}
- 			*obuf = *ibuf;
- 
- 			/*
-@@ -1948,7 +1952,11 @@ static int link_pipe(struct pipe_inode_info *ipipe,
- 		 * Get a reference to this pipe buffer,
- 		 * so we can copy the contents over.
- 		 */
--		pipe_buf_get(ipipe, ibuf);
-+		if (!pipe_buf_get(ipipe, ibuf)) {
-+			if (ret == 0)
-+				ret = -EFAULT;
-+			break;
-+		}
- 
- 		obuf = opipe->bufs + nbuf;
- 		*obuf = *ibuf;
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 10876f3..0b28b65 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -112,18 +112,20 @@ struct pipe_buf_operations {
- 	/*
- 	 * Get a reference to the pipe buffer.
- 	 */
--	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
-+	bool (*get)(struct pipe_inode_info *, struct pipe_buffer *);
- };
- 
- /**
-  * pipe_buf_get - get a reference to a pipe_buffer
-  * @pipe:	the pipe that the buffer belongs to
-  * @buf:	the buffer to get a reference to
-+ *
-+ * Return: %true if the reference was successfully obtained.
-  */
--static inline void pipe_buf_get(struct pipe_inode_info *pipe,
-+static inline __must_check bool pipe_buf_get(struct pipe_inode_info *pipe,
- 				struct pipe_buffer *buf)
- {
--	buf->ops->get(pipe, buf);
-+	return buf->ops->get(pipe, buf);
- }
- 
- /* Differs from PIPE_BUF in that PIPE_SIZE is the length of the actual
-@@ -148,7 +150,7 @@ struct pipe_inode_info *alloc_pipe_info(void);
- void free_pipe_info(struct pipe_inode_info *);
- 
- /* Generic pipe buffer ops functions */
--void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
-+bool generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ae00e68..7fe8d04 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5731,12 +5731,16 @@ static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 	buf->private = 0;
- }
- 
--static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
-+static bool buffer_pipe_buf_get(struct pipe_inode_info *pipe,
- 				struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
-+	if (ref->ref > INT_MAX/2)
-+		return false;
-+
- 	ref->ref++;
-+	return true;
- }
- 
- /* Pipe buffer operations for a buffer. */
--- 
-2.7.4
 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  drivers/dma-buf/dma-heap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+> index 4f04d10..da2090e 100644
+> --- a/drivers/dma-buf/dma-heap.c
+> +++ b/drivers/dma-buf/dma-heap.c
+> @@ -106,7 +106,7 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
+>  	return 0;
+>  }
+>  
+> -unsigned int dma_heap_ioctl_cmds[] = {
+> +static unsigned int dma_heap_ioctl_cmds[] = {
+>  	DMA_HEAP_IOC_ALLOC,
+>  };
+>  
+> 
