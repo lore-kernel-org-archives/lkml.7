@@ -2,187 +2,177 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2383C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E581206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDC7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLPQnk (ORCPT
+        id S1726445AbfLPQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:43:40 -0500
-Received: from muru.com ([72.249.23.125]:48492 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfLPQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:43:40 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 73F55810D;
-        Mon, 16 Dec 2019 16:44:17 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 08:43:35 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv2] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20191216164335.GP35479@atomide.com>
-References: <20191216145359.28219-1-tony@atomide.com>
+        Mon, 16 Dec 2019 11:45:11 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:52063 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPQpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:45:11 -0500
+Received: by mail-il1-f199.google.com with SMTP id x2so6842737ilk.18
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:45:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lYCE4DYk9v5Wf6F+uOmdTFaGMXO1zFGx920X5vEgeNs=;
+        b=CCOKsUQ5XNmZb9q9kaBdrurHFkUwpKaqNQJHcgMzKEIC1sED1Gau0roboElqa/63JK
+         Z63vbLTF0ezU8iwyjhpVBUx3UrGqyLqmTyedloMraFeWEDseh69KlDxr1iyUBD21HH29
+         cViIVZHGSOyUC9EgEDlBD3VKY6SV8W1J4Nmz2H11VjSTcfpMD2GEgEVhjPVCTammk4FC
+         QZo+fNgZk+nGJEOWXlf8kvYz87Cpcc+D+4AZiEX6OjhTSqHq/iH098CxdLnXy8O8o3Yq
+         YVXN6R5CeDYZzqtGynGRxjDiRRyYGvMuN1Mb9uoju1LTIfBVgOQs6hQf/3sjSiHjRC5P
+         OBFA==
+X-Gm-Message-State: APjAAAUn7uVzmmHumwKuH4ktxUKK1GcrYMGlCbsfFV63rFyJgq/QfPxV
+        dYSiYdoaP4CrbXVdyac7Th1MvklmIJPJHWu0jWBfEwX3h7DS
+X-Google-Smtp-Source: APXvYqy1I7yEO51rxG1hKtqvDQIy0iW2DrLpmcucXHBn/TItukdeNUNiMmOdkiQUfuct4lg+FQyVrt7KfL+W4MPMHYBY0eWu69Ve
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216145359.28219-1-tony@atomide.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a92:3b10:: with SMTP id i16mr13917036ila.170.1576514708986;
+ Mon, 16 Dec 2019 08:45:08 -0800 (PST)
+Date:   Mon, 16 Dec 2019 08:45:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000036658f0599d4ef43@google.com>
+Subject: linux-next boot error: general protection fault in do_mount_root
+From:   syzbot <syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com>
+To:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
+        linux@dominikbrodowski.net, pc@cjr.nz,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [191216 14:54]:
-> Vignesh, any comments on the ti,mode = "1w" and removal of the call to
-> hdq_disable_interrupt()? Is there some specific section where we need
-> to have interrupts disabled and then re-enabled?
+Hello,
 
-OK I got "1w" mode working too now. We need to clear the irqstatus before
-calling wait_event_timeout() on it, and we're now missing it in the
-hdq_read_byte().
+syzbot found the following crash on:
 
-Looks like we should not tinker with the actual irstatus register though,
-that's up to the hdq_isr() to manage.
+HEAD commit:    cf2be78b Add linux-next specific files for 20191216
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f505dee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=634b7ce01f79423d
+dashboard link: https://syzkaller.appspot.com/bug?extid=31f37c1dc3fd9e900602
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-So the following helper is probably what we want to do additionally.
-I'll be posting v3 of the $subject patch.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Regards,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com
 
-Tony
+batman_adv: B.A.T.M.A.N. advanced 2019.5 (compatibility version 15) loaded
+openvswitch: Open vSwitch switching datapath
+NET: Registered protocol family 40
+mpls_gso: MPLS GSO support
+IPI shorthand broadcast: enabled
+AVX2 version of gcm_enc/dec engaged.
+AES CTR mode by8 optimization enabled
+sched_clock: Marking stable (12282186706, 24150593)->(12316857222,  
+-10519923)
+registered taskstats version 1
+Loading compiled-in X.509 certificates
+Loaded X.509 cert 'Build time autogenerated kernel key:  
+8b22f477d966bfa6cf9a482acbda6ca1892a4acc'
+zswap: loaded using pool lzo/zbud
+Key type ._fscrypt registered
+Key type .fscrypt registered
+Btrfs loaded, crc32c=crc32c-intel
+Key type big_key registered
+Key type encrypted registered
+AppArmor: AppArmor sha1 policy hashing enabled
+ima: No TPM chip found, activating TPM-bypass!
+ima: Allocated hash algorithm: sha256
+ima: No architecture policies found
+evm: Initialising EVM extended attributes:
+evm: security.selinux
+evm: security.SMACK64
+evm: security.SMACK64EXEC
+evm: security.SMACK64TRANSMUTE
+evm: security.SMACK64MMAP
+evm: security.apparmor
+evm: security.ima
+evm: security.capability
+evm: HMAC attrs: 0x1
+PM:   Magic number: 15:311:439
+media media3: hash matches
+printk: console [netcon0] enabled
+netconsole: network logging started
+gtp: GTP module loaded (pdp ctx size 104 bytes)
+rdma_rxe: loaded
+cfg80211: Loading compiled-in X.509 certificates for regulatory database
+cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+ALSA device list:
+   #0: Dummy 1
+   #1: Loopback 1
+   #2: Virtual MIDI Card 1
+md: Waiting for all devices to be available before autodetect
+md: If you don't use raid, use raid=noautodetect
+md: Autodetecting RAID arrays.
+md: autorun ...
+md: ... autorun DONE.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191216-syzkaller  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
+Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
+89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
+38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
+RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
+RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
+RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
+R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
+R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  strncpy include/linux/string.h:326 [inline]
+  do_mount_root+0x74/0x23b init/do_mounts.c:404
+  mount_block_root+0x342/0x51a init/do_mounts.c:438
+  mount_root+0x283/0x2cd init/do_mounts.c:628
+  prepare_namespace+0x26f/0x2a7 init/do_mounts.c:687
+  kernel_init_freeable+0x557/0x570 init/main.c:1233
+  kernel_init+0x12/0x1bf init/main.c:1112
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace c645a4d31f27fe8a ]---
+RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
+Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
+89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
+38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
+RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
+RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
+RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
+R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
+R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-8< ----------------------
-diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -119,22 +119,24 @@ static int hdq_wait_for_flag(struct hdq_data *hdq_data, u32 offset,
- 	return ret;
- }
- 
-+/* Clear saved irqstatus after using an interrupt */
-+static void hdq_reset_irqstatus(struct hdq_data *hdq_data)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
-+	hdq_data->hdq_irqstatus = 0;
-+	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
-+}
-+
- /* write out a byte and fill *status with HDQ_INT_STATUS */
- static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
- {
- 	int ret;
- 	u8 tmp_status;
--	unsigned long irqflags;
- 
- 	*status = 0;
- 
--	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
--	/* clear interrupt flags via a dummy read */
--	hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
--	/* ISR loads it with new INT_STATUS */
--	hdq_data->hdq_irqstatus = 0;
--	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
--
- 	hdq_reg_out(hdq_data, OMAP_HDQ_TX_DATA, val);
- 
- 	/* set the GO bit */
-@@ -168,6 +170,7 @@ static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
- 	}
- 
- out:
-+	hdq_reset_irqstatus(hdq_data);
- 	return ret;
- }
- 
-@@ -219,7 +222,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
- {
- 	int ret = 0;
- 	u8 tmp_status;
--	unsigned long irqflags;
- 
- 	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
- 	if (ret < 0) {
-@@ -228,13 +230,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
- 		goto rtn;
- 	}
- 
--	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
--	/* clear interrupt flags via a dummy read */
--	hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
--	/* ISR loads it with new INT_STATUS */
--	hdq_data->hdq_irqstatus = 0;
--	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
--
- 	/* set the INIT and GO bit */
- 	hdq_reg_merge(hdq_data, OMAP_HDQ_CTRL_STATUS,
- 		OMAP_HDQ_CTRL_STATUS_INITIALIZATION | OMAP_HDQ_CTRL_STATUS_GO,
-@@ -283,6 +278,7 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
- 			" return to zero, %x", tmp_status);
- 
- out:
-+	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	return ret;
-@@ -330,6 +326,7 @@ static int hdq_read_byte(struct hdq_data *hdq_data, u8 *val)
- 	/* the data is ready. Read it in! */
- 	*val = hdq_reg_in(hdq_data, OMAP_HDQ_RX_DATA);
- out:
-+	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	return ret;
-@@ -363,7 +360,6 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
- 		goto rtn;
- 	}
- 
--	hdq_data->hdq_irqstatus = 0;
- 	/* read id_bit */
- 	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
- 		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
-@@ -377,7 +373,9 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
- 	}
- 	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
- 
--	hdq_data->hdq_irqstatus = 0;
-+	/* Must clear irqstatus for another RXCOMPLETE interrupt */
-+	hdq_reset_irqstatus(hdq_data);
-+
- 	/* read comp_bit */
- 	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
- 		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
-@@ -420,6 +418,7 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
- 		      OMAP_HDQ_CTRL_STATUS_SINGLE);
- 
- out:
-+	hdq_reset_irqstatus(hdq_data);
- 	mutex_unlock(&hdq_data->hdq_mutex);
- rtn:
- 	pm_runtime_mark_last_busy(hdq_data->dev);
-@@ -460,7 +459,7 @@ static u8 omap_w1_read_byte(void *_hdq)
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(hdq_data->dev);
- 
--		return ret;
-+		return -1;
- 	}
- 
- 	ret = hdq_read_byte(hdq_data, &val);
--- 
-2.24.1
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
