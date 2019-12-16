@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE48C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C98C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D3B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7AA206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519080;
-	bh=EvYG8J8rrt1Rby5sE8y2ueLkHNm3ED/KbOuIQmmIz5k=;
+	s=default; t=1576519082;
+	bh=2e8/UuLvJLNecZgC8ChFnpt7Ilo18ui9cPMWigdrHKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTtOjxJOmbQI1Pyh1+Qb5GOcYuxlWcn98dyDfZvtvOV6Vlso+tjxA/xWzNs4yswRy
-	 tVIo2k9wC5lAm5MvTptKrUzvAmbfHpImEhnZhewlEaS+aINspUaG3q1QPe3JAJz3lU
-	 HRKGGjmaLPn84mDQl2tilkLCQbNB4s8ZI+EgLNAQ=
+	b=nCMy4a+mbgSIHhcYElxmJ0RMB5Fh/INjCM8hnEZE2BROvuBRkC5hwNIaoVLTsoc6G
+	 31A5Xg24MFTZuM4WgsZCU9aMRXIUC+GGfI6ExCVf70SwGirhrnbVLhLKXixa92Ag6X
+	 jd4mXloyrjybLB/zZ7fMaDfD2P6jiH/oE6+5E4rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfLPR57 (ORCPT
+        id S1728565AbfLPR6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57186 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfLPR5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:54 -0500
+        id S1728549AbfLPR56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C6A0205ED;
-        Mon, 16 Dec 2019 17:57:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED18E205ED;
+        Mon, 16 Dec 2019 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519073;
-        bh=EvYG8J8rrt1Rby5sE8y2ueLkHNm3ED/KbOuIQmmIz5k=;
+        s=default; t=1576519078;
+        bh=2e8/UuLvJLNecZgC8ChFnpt7Ilo18ui9cPMWigdrHKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiUp8+OoxA3LCjcydvhyG3X66GhbnvVRaE69eI0RmlQTVLskO3oNXV3VvVywGNDZ8
-         l56dKzdKKfLPNRPQ6Hi3zlcXblpbxx6y4Tfopa0yWqGbowywTj+Nl/8IMt6AZgXdB2
-         Bl8xqjOzo+/QwAx6fOO7j3R2hQlo6IrdlxHMXdjg=
+        b=WHwyUURrJdSHNvH+nij4hUT84zieEIwCVNiS48B5zMh36TXXjIFq928SJ1Qr8CmgA
+         nMl1ySgXR6+8UIPZ0GdGmc2axFVroS5+YzvmNWYp3NwJAGOI0aL1YXU5ex4mSH6uvE
+         Y/x63fUzJ+iBp5RNDc/p+pDxAW1oeSZcJW56+ros=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.14 182/267] mtd: spear_smi: Fix Write Burst mode
-Date:   Mon, 16 Dec 2019 18:48:28 +0100
-Message-Id: <20191216174912.479677655@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 146/267] crypto: ecdh - fix big endian bug in ECC library
+Date:   Mon, 16 Dec 2019 18:47:52 +0100
+Message-Id: <20191216174910.473333138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,107 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
+commit f398243e9fd6a3a059c1ea7b380c40628dbf0c61 upstream.
 
-Any write with either dd or flashcp to a device driven by the
-spear_smi.c driver will pass through the spear_smi_cpy_toio()
-function. This function will get called for chunks of up to 256 bytes.
-If the amount of data is smaller, we may have a problem if the data
-length is not 4-byte aligned. In this situation, the kernel panics
-during the memcpy:
+The elliptic curve arithmetic library used by the EC-DH KPP implementation
+assumes big endian byte order, and unconditionally reverses the byte
+and word order of multi-limb quantities. On big endian systems, the byte
+reordering is not necessary, while the word ordering needs to be retained.
 
-    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
-    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
-    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
-    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
-    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
-    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
-    [...]
-    PC is at memcpy+0xcc/0x330
+So replace the __swab64() invocation with a call to be64_to_cpu() which
+should do the right thing for both little and big endian builds.
 
-The above error occurs because the implementation of memcpy_toio()
-tries to optimize the number of I/O by writing 4 bytes at a time as
-much as possible, until there are less than 4 bytes left and then
-switches to word or byte writes.
-
-Unfortunately, the specification states about the Write Burst mode:
-
-        "the next AHB Write request should point to the next
-	incremented address and should have the same size (byte,
-	half-word or word)"
-
-This means ARM architecture implementation of memcpy_toio() cannot
-reliably be used blindly here. Workaround this situation by update the
-write path to stick to byte access when the burst length is not
-multiple of 4.
-
-Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
+Cc: <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+ crypto/ecc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/devices/spear_smi.c
-+++ b/drivers/mtd/devices/spear_smi.c
-@@ -595,6 +595,26 @@ static int spear_mtd_read(struct mtd_inf
- 	return 0;
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -898,10 +898,11 @@ static void ecc_point_mult(struct ecc_po
+ static inline void ecc_swap_digits(const u64 *in, u64 *out,
+ 				   unsigned int ndigits)
+ {
++	const __be64 *src = (__force __be64 *)in;
+ 	int i;
+ 
+ 	for (i = 0; i < ndigits; i++)
+-		out[i] = __swab64(in[ndigits - 1 - i]);
++		out[i] = be64_to_cpu(src[ndigits - 1 - i]);
  }
  
-+/*
-+ * The purpose of this function is to ensure a memcpy_toio() with byte writes
-+ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
-+ * which also does single byte writes but cannot be used here as this is just an
-+ * implementation detail and not part of the API. Not mentioning the comment
-+ * stating that _memcpy_toio() should be optimized.
-+ */
-+static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
-+				    const void *src, size_t len)
-+{
-+	const unsigned char *from = src;
-+
-+	while (len) {
-+		len--;
-+		writeb(*from, dest);
-+		from++;
-+		dest++;
-+	}
-+}
-+
- static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
- 		void __iomem *dest, const void *src, size_t len)
- {
-@@ -617,7 +637,23 @@ static inline int spear_smi_cpy_toio(str
- 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
- 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
- 
--	memcpy_toio(dest, src, len);
-+	/*
-+	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
-+	 * - incremental
-+	 * - of the same size
-+	 * The ARM implementation of memcpy_toio() will optimize the number of
-+	 * I/O by using as much 4-byte writes as possible, surrounded by
-+	 * 2-byte/1-byte access if:
-+	 * - the destination is not 4-byte aligned
-+	 * - the length is not a multiple of 4-byte.
-+	 * Avoid this alternance of write access size by using our own 'byte
-+	 * access' helper if at least one of the two conditions above is true.
-+	 */
-+	if (IS_ALIGNED(len, sizeof(u32)) &&
-+	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
-+		memcpy_toio(dest, src, len);
-+	else
-+		spear_smi_memcpy_toio_b(dest, src, len);
- 
- 	writel(ctrlreg1, dev->io_base + SMI_CR1);
- 
+ static int __ecc_is_key_valid(const struct ecc_curve *curve,
 
 
