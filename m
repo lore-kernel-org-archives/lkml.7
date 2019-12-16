@@ -2,286 +2,155 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9803DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C12BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5890224672
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56AD207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukTiNvyg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ka/YLRaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfLPWEM (ORCPT
+        id S1727528AbfLPWGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:04:12 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40427 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPWEL (ORCPT
+        Mon, 16 Dec 2019 17:06:52 -0500
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:50147 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfLPWGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:04:11 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so9136694wrn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:04:09 -0800 (PST)
+        Mon, 16 Dec 2019 17:06:52 -0500
+Received: by mail-yb1-f201.google.com with SMTP id j82so7594874ybj.16
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:06:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OcaMGxlrC1ZMOva0UGfFnxr9HfZ6ixW+3vJ8ufw+WhQ=;
-        b=ukTiNvygZ5u+EeL1hpgcFtxuL7Z34tbI4uhe68+7FNUaKFF3IFrbQxcRyyThNqt7fz
-         U99e4cHxy1Dn8Pf/j/qTzncx1DRduWFOts08kiEVbVlymNSLIg0EFpYOlgxAzV/FAd4Q
-         d1ksLa+054LseS4RAS3psrSLTylNNUjI++wHFrclrjKpkULTi11STweuj0MTWNZ7m/QN
-         rPldetgj1J5EHLi4Lcg2gieZV0nfS0mmBu5aQSip4WjkMsR4FC2KX+Fkz16rxcvkDwUK
-         sBvnmAU9fYOJA58Lfc0zwnkTvLOsm7n9gSPESUAmE0nTD+tXyNhvd5hkM1GTvB6X23IX
-         V0lg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eppmz6bMb+izn2RzN3lnlHeodL5pBLSTz1Q/CRKnTLI=;
+        b=Ka/YLRaXtmaXZjNlTNPGUBn6yNVXrLBSLTY7QlLmb+pGLBk64G75unoAUKw7ENQh6A
+         uN5BE7ghfj4hLmg93Dnjr1XOQx9sqGT0tdRhCq572hnGsODMcX8BJaKgKGcekmQHBOhO
+         AT/G6wElDlZ16v6nXSv4LBy5fVRgnz65y56kDJQ63lH+EwqP4r4UCAJCoUmp7jWabH2A
+         irCUuf+Ew8cP8BWTuuXQZ7lkAr38ls5Def/i0fnUPPezbu4E1eeS4PwFWlu2NXCQ1HUv
+         S/CgWSpEN0xx6SLk+OOe8LLXlhdyBfcgbL4oUC4VSaGDR/NZqrh+rbF0+AzVkdQDf+rM
+         tSqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OcaMGxlrC1ZMOva0UGfFnxr9HfZ6ixW+3vJ8ufw+WhQ=;
-        b=czMTvHQ5Flrz2juZRoaEMgvaHNsgYkziGzFmmDlBtoIsZAD2jp3a+wWvH8juO3+l1N
-         u26I1mhl3Kvz+1G6iP4MQkm0DrW0IYO1cFFNN04XAHXkBRa+ER0D33S2zlFqKE6IfAm8
-         4DChkePPpM/BT1MRXUk55uZwTkvE4hn+dgYrma4H/yGZssGWeZrfYf/7eNwKsRDPflmb
-         sVN0pPLiNFjpVBBteDz28fe175Z0dk/qf/RMcbKUtiy/hxKMi89JySml64+N4MI267fe
-         emEyR7APFbPv3VmlsVSYaia3co2FbR9f0eu2G0XWntW5O2FJvHjYxMLyTVnQC60eq2x/
-         H6EQ==
-X-Gm-Message-State: APjAAAX8/ugaeBIgrgJiqqMJiBtGLbH/Kv1cj0R5Qm23lN5Tm5J7eeun
-        dikN4UZGw5j1fsfqEbKCaBpk2mEVwgwXZMgzNw+xyZQM
-X-Google-Smtp-Source: APXvYqwjlrGcgF1Z8NSbOvTnVQvRG0qQGr4zsIUXDAknAikfuQSR8RG2GDUDznaZo04TJF5d0zC6e4bFnV0AF0xrH6E=
-X-Received: by 2002:adf:e74a:: with SMTP id c10mr32016069wrn.386.1576533848518;
- Mon, 16 Dec 2019 14:04:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-11-hch@lst.de>
- <alpine.DEB.2.21.9999.1911171511170.5296@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1911171511170.5296@viisi.sifive.com>
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-Date:   Tue, 17 Dec 2019 00:03:32 +0200
-Message-ID: <CAEn-LToO9MjMr6ipXO1pCGG7H-bunHHAVyYkknOZ2dixOOG4+w@mail.gmail.com>
-Subject: Re: [PATCH 10/12] riscv: add nommu support
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Anup Patel <anup@brainfault.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eppmz6bMb+izn2RzN3lnlHeodL5pBLSTz1Q/CRKnTLI=;
+        b=aru4Y3uDqz7GJk50JcGIWjHRLT/8IjTbhf7LUCLI1wId4Wb09P1nfjXKAKwVepIGaF
+         2WldaqLUlzvKp6KUP2RzNgGMz+xRF/zeyiwtAKaDuLPw5ZHPcKG6NexVkabu14A2xU6x
+         YPpOdLEZVBMV/cyLtYXVM1UfvT9mglRSYtBy2B3G77OD4CnbauGfp/buZS6+PliqrUwp
+         DsSPUL1KmmWkJcmDPnZMHNfIYdHfulIqe+tNQUH4Q0F7GejlwlAw6rr4tBf2RLhbfD3X
+         5JoENuFm2mURUabtyzzm07j/7H5XqVymdbs+CzLAGoXv+EN7ECpW9zf0CZfcy6BsUl+k
+         tdHA==
+X-Gm-Message-State: APjAAAX7k41aCL5gxrRX15EFcNJ97+GRGBkmcbLx97Fgb6HCJpZbKUCA
+        znpUzF0WAyBo6JvSRl8tyofpZdXgpvDcixzonnt53Q==
+X-Google-Smtp-Source: APXvYqyw/OZ9oh2P4WMQ92Laluc4AJxvHqFO1NRLPLVu6fYKpIM1zMHeoh4jp2nR813dRQsMDcwHNPAwIm/JNWREsel9rQ==
+X-Received: by 2002:a0d:ddc8:: with SMTP id g191mr21773562ywe.335.1576534009902;
+ Mon, 16 Dec 2019 14:06:49 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:05:49 -0800
+Message-Id: <20191216220555.245089-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
+ KUnit tests
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, knut.omang@oracle.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 1:13 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Mon, 28 Oct 2019, Christoph Hellwig wrote:
->
-> > The kernel runs in M-mode without using page tables, and thus can't run
-> > bare metal without help from additional firmware.
-> >
-> > Most of the patch is just stubbing out code not needed without page
-> > tables, but there is an interesting detail in the signals implementation:
-> >
-> >  - The normal RISC-V syscall ABI only implements rt_sigreturn as VDSO
-> >    entry point, but the ELF VDSO is not supported for nommu Linux.
-> >    We instead copy the code to call the syscall onto the stack.
-> >
-> > In addition to enabling the nommu code a new defconfig for a small
-> > kernel image that can run in nommu mode on qemu is also provided, to run
-> > a kernel in qemu you can use the following command line:
-> >
-> > qemu-system-riscv64 -smp 2 -m 64 -machine virt -nographic \
-> >       -kernel arch/riscv/boot/loader \
-> >       -drive file=rootfs.ext2,format=raw,id=hd0 \
-> >       -device virtio-blk-device,drive=hd0
-> >
-> > Contains contributions from Damien Le Moal <Damien.LeMoal@wdc.com>.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Reviewed-by: Anup Patel <anup@brainfault.org>
->
-> Thanks, queued the following for v5.5-rc1.
->
->
-[..]
+## TL;DR
 
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index d3221017194d..beb5f0865e39 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -25,6 +25,7 @@
->  #include <asm/pgtable-32.h>
->  #endif /* CONFIG_64BIT */
->
-> +#ifdef CONFIG_MMU
->  /* Number of entries in the page global directory */
->  #define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
->  /* Number of entries in the page table */
-> @@ -32,7 +33,6 @@
->
->  /* Number of PGD entries that a user-mode program can use */
->  #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
-> -#define FIRST_USER_ADDRESS  0
->
->  /* Page protection bits */
->  #define _PAGE_BASE     (_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_USER)
-> @@ -84,42 +84,6 @@ extern pgd_t swapper_pg_dir[];
->  #define __S110 PAGE_SHARED_EXEC
->  #define __S111 PAGE_SHARED_EXEC
->
-> -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> -#define VMALLOC_END      (PAGE_OFFSET - 1)
-> -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> -#define PCI_IO_SIZE      SZ_16M
-> -
-> -/*
-> - * Roughly size the vmemmap space to be large enough to fit enough
-> - * struct pages to map half the virtual address space. Then
-> - * position vmemmap directly below the VMALLOC region.
-> - */
-> -#define VMEMMAP_SHIFT \
-> -       (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> -#define VMEMMAP_SIZE   BIT(VMEMMAP_SHIFT)
-> -#define VMEMMAP_END    (VMALLOC_START - 1)
-> -#define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
-> -
-> -#define vmemmap                ((struct page *)VMEMMAP_START)
-> -
-> -#define PCI_IO_END       VMEMMAP_START
-> -#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> -#define FIXADDR_TOP      PCI_IO_START
-> -
-> -#ifdef CONFIG_64BIT
-> -#define FIXADDR_SIZE     PMD_SIZE
-> -#else
-> -#define FIXADDR_SIZE     PGDIR_SIZE
-> -#endif
-> -#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-> -
-> -/*
-> - * ZERO_PAGE is a global shared page that is always zero,
-> - * used for zero-mapped memory areas, etc.
-> - */
-> -extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-> -#define ZERO_PAGE(vaddr) (virt_to_page(empty_zero_page))
-> -
->  static inline int pmd_present(pmd_t pmd)
->  {
->         return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
-> @@ -430,11 +394,34 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
->  #define __pte_to_swp_entry(pte)        ((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)  ((pte_t) { (x).val })
->
-> -#define kern_addr_valid(addr)   (1) /* FIXME */
-> +#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> +#define VMALLOC_END      (PAGE_OFFSET - 1)
-> +#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
->
-> -extern void *dtb_early_va;
-> -extern void setup_bootmem(void);
-> -extern void paging_init(void);
-> +/*
-> + * Roughly size the vmemmap space to be large enough to fit enough
-> + * struct pages to map half the virtual address space. Then
-> + * position vmemmap directly below the VMALLOC region.
-> + */
-> +#define VMEMMAP_SHIFT \
-> +       (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> +#define VMEMMAP_SIZE   BIT(VMEMMAP_SHIFT)
-> +#define VMEMMAP_END    (VMALLOC_START - 1)
-> +#define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
-> +
-> +#define vmemmap                ((struct page *)VMEMMAP_START)
+This patchset adds a centralized executor to dispatch tests rather than
+relying on late_initcall to schedule each test suite separately along
+with a couple of new features that depend on it.
 
-Why did you move these defines below the functions?
+## What am I trying to do?
 
-This seems to break kernel (5.5-rc2) compilation in Fedora/RISCV. The
-function above needed vmemmap macro.
+Conceptually, I am trying to provide a mechanism by which test suites
+can be grouped together so that they can be reasoned about collectively.
+The last two patches in this series add features which depend on this:
 
-BUILDSTDERR: In file included from ./arch/riscv/include/asm/page.h:131,
-BUILDSTDERR:                  from ./arch/riscv/include/asm/thread_info.h:11,
-BUILDSTDERR:                  from ./include/linux/thread_info.h:38,
-BUILDSTDERR:                  from ./include/asm-generic/preempt.h:5,
-BUILDSTDERR:                  from
-./arch/riscv/include/generated/asm/preempt.h:1,
-BUILDSTDERR:                  from ./include/linux/preempt.h:78,
-BUILDSTDERR:                  from ./include/linux/spinlock.h:51,
-BUILDSTDERR:                  from ./include/linux/seqlock.h:36,
-BUILDSTDERR:                  from ./include/linux/time.h:6,
-BUILDSTDERR:                  from ./include/linux/stat.h:19,
-BUILDSTDERR:                  from ./include/linux/module.h:13,
-BUILDSTDERR:                  from init/main.c:17:
-BUILDSTDERR: ./arch/riscv/include/asm/pgtable.h: In function 'pmd_page':
-BUILDSTDERR: ./include/asm-generic/memory_model.h:54:29: error:
-'vmemmap' undeclared (first use in this function); did you mean
-'mem_map'?
-BUILDSTDERR:    54 | #define __pfn_to_page(pfn) (vmemmap + (pfn))
-BUILDSTDERR:       |                             ^~~~~~~
-BUILDSTDERR: ./include/asm-generic/memory_model.h:82:21: note: in
-expansion of macro '__pfn_to_page'
-BUILDSTDERR:    82 | #define pfn_to_page __pfn_to_page
-BUILDSTDERR:       |                     ^~~~~~~~~~~~~
-BUILDSTDERR: ./arch/riscv/include/asm/pgtable.h:140:9: note: in
-expansion of macro 'pfn_to_page'
-BUILDSTDERR:   140 |  return pfn_to_page(pmd_val(pmd) >> _PAGE_PFN_SHIFT);
-BUILDSTDERR:       |         ^~~~~~~~~~~
-BUILDSTDERR: ./include/asm-generic/memory_model.h:54:29: note: each
-undeclared identifier is reported only once for each function it
-appears in
-BUILDSTDERR:    54 | #define __pfn_to_page(pfn) (vmemmap + (pfn))
-BUILDSTDERR:       |                             ^~~~~~~
-BUILDSTDERR: ./include/asm-generic/memory_model.h:82:21: note: in
-expansion of macro '__pfn_to_page'
-BUILDSTDERR:    82 | #define pfn_to_page __pfn_to_page
-BUILDSTDERR:       |                     ^~~~~~~~~~~~~
-BUILDSTDERR: ./arch/riscv/include/asm/pgtable.h:140:9: note: in
-expansion of macro 'pfn_to_page'
-BUILDSTDERR:   140 |  return pfn_to_page(pmd_val(pmd) >> _PAGE_PFN_SHIFT);
+RFC 5/6 Prints out a test plan right before KUnit tests are run[1]; this
+        is valuable because it makes it possible for a test harness to
+        detect whether the number of tests run matches the number of
+        tests expected to be run, ensuring that no tests silently
+        failed.
 
+RFC 6/6 Add a new kernel command-line option which allows the user to
+        specify that the kernel poweroff, halt, or reboot after
+        completing all KUnit tests; this is very handy for running KUnit
+        tests on UML or a VM so that the UML/VM process exits cleanly
+        immediately after running all tests without needing a special
+        initramfs.
 
-> +
-> +#define PCI_IO_SIZE      SZ_16M
-> +#define PCI_IO_END       VMEMMAP_START
-> +#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> +
-> +#define FIXADDR_TOP      PCI_IO_START
-> +#ifdef CONFIG_64BIT
-> +#define FIXADDR_SIZE     PMD_SIZE
-> +#else
-> +#define FIXADDR_SIZE     PGDIR_SIZE
-> +#endif
-> +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
->
->  /*
->   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-> @@ -446,6 +433,31 @@ extern void paging_init(void);
->  #define TASK_SIZE FIXADDR_START
->  #endif
->
-> +#else /* CONFIG_MMU */
-> +
-> +#define PAGE_KERNEL            __pgprot(0)
-> +#define swapper_pg_dir         NULL
-> +#define VMALLOC_START          0
-> +
-> +#define TASK_SIZE 0xffffffffUL
-> +
-> +#endif /* !CONFIG_MMU */
-> +
-> +#define kern_addr_valid(addr)   (1) /* FIXME */
-> +
-> +extern void *dtb_early_va;
-> +void setup_bootmem(void);
-> +void paging_init(void);
-> +
-> +#define FIRST_USER_ADDRESS  0
-> +
-> +/*
-> + * ZERO_PAGE is a global shared page that is always zero,
-> + * used for zero-mapped memory areas, etc.
-> + */
-> +extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-> +#define ZERO_PAGE(vaddr) (virt_to_page(empty_zero_page))
-> +
->  #include <asm-generic/pgtable.h>
->
->  #endif /* !__ASSEMBLY__ */
+In addition, by dispatching tests from a single location, we can
+guarantee that all KUnit tests run after late_init is complete, which
+was a concern during the initial KUnit patchset review (this has not
+been a problem in practice, but resolving with certainty is nevertheless
+desirable).
+
+Other use cases for this exist, but the above features should provide an
+idea of the value that this could provide.
+
+## What work remains to be done?
+
+These patches were based on patches in our non-upstream branch[2], so we
+have a pretty good idea that they are useable as presented;
+nevertheless, some of the changes done in this patchset could
+*definitely* use some review by subsystem experts (linker scripts, init,
+etc), and will likely change a lot after getting feedback.
+
+The biggest thing that I know will require additional attention is
+integrating this patchset with the KUnit module support patchset[3]. I
+have not even attempted to build these patches on top of the module
+support patches as I would like to get people's initial thoughts first
+(especially Alan's :-) ). I think that making these patches work with
+module support should be fairly straight forward, nevertheless.
+
+Brendan Higgins (5):
+  vmlinux.lds.h: add linker section for KUnit test suites
+  arch: um: add linker section for KUnit test suites
+  kunit: test: create a single centralized executor for all tests
+  init: main: add KUnit to kernel init
+  kunit: test: add test plan to KUnit TAP format
+
+David Gow (1):
+  kunit: Add 'kunit_shutdown' option
+
+ arch/um/include/asm/common.lds.S              |  4 +
+ include/asm-generic/vmlinux.lds.h             |  8 ++
+ include/kunit/test.h                          | 16 ++--
+ init/main.c                                   |  4 +
+ lib/kunit/Makefile                            |  3 +-
+ lib/kunit/executor.c                          | 74 ++++++++++++++++++
+ lib/kunit/test.c                              | 11 ---
+ tools/testing/kunit/kunit_kernel.py           |  2 +-
+ tools/testing/kunit/kunit_parser.py           | 76 +++++++++++++++----
+ .../test_is_test_passed-all_passed.log        |  1 +
+ .../test_data/test_is_test_passed-crash.log   |  1 +
+ .../test_data/test_is_test_passed-failure.log |  1 +
+ 12 files changed, 170 insertions(+), 31 deletions(-)
+ create mode 100644 lib/kunit/executor.c
+
+[1]: https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
+[2]: https://kunit-review.googlesource.com/c/linux/+/1037
+[3]: https://patchwork.kernel.org/project/linux-kselftest/list/?series=211727
+
+-- 
+2.24.1.735.g03f4e72817-goog
+
