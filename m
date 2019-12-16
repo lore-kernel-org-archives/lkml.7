@@ -2,24 +2,28 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E35C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A0B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339BE206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfLPLYA (ORCPT
+        id S1727632AbfLPLYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:24:00 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:49668 "EHLO
+        Mon, 16 Dec 2019 06:24:43 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:49676 "EHLO
         isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfLPLX7 (ORCPT
+        with ESMTP id S1727138AbfLPLYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:23:59 -0500
+        Mon, 16 Dec 2019 06:24:00 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
@@ -29,40 +33,59 @@ X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 0CCC4200A1B;
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 165DF200A62;
         Mon, 16 Dec 2019 11:23:58 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 6134620BC1; Mon, 16 Dec 2019 11:38:58 +0100 (CET)
-Date:   Mon, 16 Dec 2019 11:38:58 +0100
+        id 7AEA020BC9; Mon, 16 Dec 2019 11:53:38 +0100 (CET)
+Date:   Mon, 16 Dec 2019 11:53:38 +0100
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Simon Geis <simon.geis@fau.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: Re: [PATCH v3 09/10] PCMCIA/i82092: delete enter/leave macro
-Message-ID: <20191216103858.GI159459@light.dominikbrodowski.net>
-References: <20191213135311.9111-1-simon.geis@fau.de>
- <20191213135311.9111-10-simon.geis@fau.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kvm list <kvm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: mainline-5.5.0-rc1: do_mount_root+0x6c/0x10d - kernel crash
+ while mounting rootfs
+Message-ID: <20191216105338.GA163642@light.dominikbrodowski.net>
+References: <CA+G9fYuO7vMjsqkyXHZSU-pKEk0L0t9kQTfnd5xopVADyGwprw@mail.gmail.com>
+ <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213135311.9111-10-simon.geis@fau.de>
+In-Reply-To: <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 02:53:13PM +0100, Simon Geis wrote:
-> Remove the enter/leave macros and the corresponding calls.
-> These are obsolete since ftrace is available.
+On Mon, Dec 16, 2019 at 11:22:04AM +0100, Arnd Bergmann wrote:
+> On Mon, Dec 16, 2019 at 10:15 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > The following kernel crash reported on qemu_x86_64 boot running
+> > 5.5.0-rc1 mainline kernel.
 > 
-> Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
-> Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
-> Signed-off-by: Simon Geis <simon.geis@fau.de>
+> I looked for too long at v5.5-rc1 completely puzzled by how you got to this
+> object code before realizing that this is a git snapshot between -rc1 and -rc2.
+> 
+> The code in question was changed by a recent series from Dominik Brodowski,
+> the main difference being commit cccaa5e33525 ("init: use do_mount() instead
+> of ksys_mount()").
+> 
+> It looks like the NULL-check in ksys_mount()/copy_mount_options() is missing
+> from the new mount_block_root, so it passes a NULL pointer into strncpy().
+> 
+> Something like this should fix it (not tested):
 
-Applied, thanks.
+This equivalent patch by Linus already got some testing:
 
+https://lore.kernel.org/lkml/CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com/
+
+Thanks,
 	Dominik
