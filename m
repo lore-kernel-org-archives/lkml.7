@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F182C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF91CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2245F21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5A92465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518721;
-	bh=rt0gZO6uMKEjHQN3gy5iVI2W98TuSbkRFdUgSTYAts4=;
+	s=default; t=1576518723;
+	bh=EeoVV6ryo2hNzhMUbvjm0xMB01/LlrckvQW141QdoEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vG6PZ6eGZZPt/MFbTvIx3qQ4q+hoQJEDxZo0nx0l2u6Bsc3UNRGbFSy04z2OzYVDS
-	 MnK2jUwc4JQjELW/WoYy0A2DjmsmdqW3DH/CIVgpkzHkIZR+RD+Eh2cIsUno/TgMde
-	 2T8/taXIGmCPNauDrgdy4coeTINOahwy21lr9gNw=
+	b=kApvXwo2jCCiSv2/bm+TGYEQPH964swp96/7kYwGIrQo8bW/MwnF3U9tPNULfTyem
+	 ZG32bfjPeCwZR3oXeuWn81MsxCvNTIFTKao2xb8/W3y79PHSnkcPw6A1je41qoAKdN
+	 sa2eQeQn4O5ibsl8jz2ltv1EeThsAW+VZIXxycLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfLPRwA (ORCPT
+        id S1727317AbfLPRwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42828 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfLPRv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:51:57 -0500
+        id S1727281AbfLPRv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5823021775;
-        Mon, 16 Dec 2019 17:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1DE3206D3;
+        Mon, 16 Dec 2019 17:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518716;
-        bh=rt0gZO6uMKEjHQN3gy5iVI2W98TuSbkRFdUgSTYAts4=;
+        s=default; t=1576518719;
+        bh=EeoVV6ryo2hNzhMUbvjm0xMB01/LlrckvQW141QdoEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r837HXnW1ZuU9KKf1oAvvs2pcSFsfSFztmhRTRvfy716ii68Twf5fvyMl/ojY9ag9
-         JX/ij2GNLRfzrjlPRGfRBHUMomUiMHFsY049THyPQh8+6jIP8QHtusxOs2sWOGolm0
-         OgVfBqNuyav4JTVLeLkhB5BuKgbzr8AEHauElcEc=
+        b=YUGE/Yl7xnfV4+vInlWONz4gnJO0Dcre5+/9wCSxU7gKs4csgZzOzIlkfSCP+PW7k
+         mB2GzSE5Eazj0aO8kXCoNiYoSsq6CbGrSPs5c+I00MLXlVu7izyMMsbBCpohm5FDbH
+         xtrsC4hqTUw7rG9eSZEACvnaME+TJuFJl7Q3mGNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/267] net: ep93xx_eth: fix mismatch of request_mem_region in remove
-Date:   Mon, 16 Dec 2019 18:45:46 +0100
-Message-Id: <20191216174851.211492139@linuxfoundation.org>
+Subject: [PATCH 4.14 038/267] MIPS: SiByte: Enable ZONE_DMA32 for LittleSur
+Date:   Mon, 16 Dec 2019 18:46:04 +0100
+Message-Id: <20191216174853.121397187@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,44 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Maciej W. Rozycki <macro@linux-mips.org>
 
-[ Upstream commit 3df70afe8d33f4977d0e0891bdcfb639320b5257 ]
+[ Upstream commit 756d6d836dbfb04a5a486bc2ec89397aa4533737 ]
 
-The driver calls release_resource in remove to match request_mem_region
-in probe, which is incorrect.
-Fix it by using the right one, release_mem_region.
+The LittleSur board is marked for high memory support and therefore
+clearly must provide a way to have enough memory installed for some to
+be present outside the low 4GiB physical address range.  With the memory
+map of the BCM1250 SOC it has been built around it means over 1GiB of
+actual DRAM, as only the first 1GiB is mapped in the low 4GiB physical
+address range[1].
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Complement commit cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need
+DMA32.") then and also enable ZONE_DMA32 for LittleSur.
+
+
+[1] "BCM1250/BCM1125/BCM1125H User Manual", Revision 1250_1125-UM100-R,
+    Broadcom Corporation, 21 Oct 2002, Section 3: "System Overview",
+    "Memory Map", pp. 34-38
+
+Signed-off-by: Maciej W. Rozycki <macro@linux-mips.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Patchwork: https://patchwork.linux-mips.org/patch/21107/
+Fixes: cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need DMA32.")
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cirrus/ep93xx_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-index e2a702996db41..82bd918bf967f 100644
---- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-+++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-@@ -767,6 +767,7 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
- {
- 	struct net_device *dev;
- 	struct ep93xx_priv *ep;
-+	struct resource *mem;
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index ae4450e891abc..7e267d657c561 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -812,6 +812,7 @@ config SIBYTE_LITTLESUR
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
++	select ZONE_DMA32 if 64BIT
  
- 	dev = platform_get_drvdata(pdev);
- 	if (dev == NULL)
-@@ -782,8 +783,8 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
- 		iounmap(ep->base_addr);
- 
- 	if (ep->res != NULL) {
--		release_resource(ep->res);
--		kfree(ep->res);
-+		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		release_mem_region(mem->start, resource_size(mem));
- 	}
- 
- 	free_netdev(dev);
+ config SIBYTE_SENTOSA
+ 	bool "Sibyte BCM91250E-Sentosa"
 -- 
 2.20.1
 
