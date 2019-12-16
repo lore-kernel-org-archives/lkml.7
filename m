@@ -2,57 +2,58 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F31C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB8AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BCC206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2223206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520914;
-	bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
+	s=default; t=1576520916;
+	bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19jzWTFuVMOKo8CQaYbn2NSwwq05AGzYQt8j1MDpkHj3OXYJUK2sevAB2Wqb0QEj1
-	 yKUp+5M+4BkBabLrI3OQiU7EEcNbOxgKvaDHEk36KuR76wU+yIR/aXgY+yLEgPGoMW
-	 K4g+2fAzUo4VX3Nk/NrGdJihM9Syfgq7zQIpmTTQ=
+	b=2uKapoVW66y0aj2lhFvpIwJF4v9U/FtBt2H4xSx8HZmDs58yLdKV9AriDWZ3ONY2+
+	 OdVAENXp6FIKN6+uGbl6a6/BGIa2pL79ZIVkxsVdZSvkGBOjhOEddaz3j2PnCZofdn
+	 Q92CTfCCZpUJExY/Z/js82pRWvsu7BIkIwji35DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbfLPSOp (ORCPT
+        id S1731252AbfLPSOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731256AbfLPSOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:42 -0500
+        id S1731242AbfLPSOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13150206B7;
-        Mon, 16 Dec 2019 18:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B07C720674;
+        Mon, 16 Dec 2019 18:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520081;
-        bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
+        s=default; t=1576520074;
+        bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2NVtae+4gVHfKSMoyDF/wLT63ZhMI0K6GB17X5inm9Xs618vBbprrpgR1JjHiSd6z
-         QWAefh0Aj0exlA6TcC0hkzvrsDCQ5suEcrrziVdmh6dwth0EBhryoqz662ixJVzM+7
-         9bS3g6R3c2g8kFlpCVBCbucxlBaFoY7USY6mmRSg=
+        b=cyXlcjDQH5RVOQu7IGX1ptmP5JNXdry+d1SELndXu0kb6bob6iiBotHT19ZmjaSbK
+         nstMzV/zd15l4MZDIym+Egr5Pc6IxBzC43QwmOEyJVXSoBIvp2UlKd1DeJgW+Ywgbw
+         htx9u51LqmnLRpLCqgJfnhKWmWlmT3OcENWBim+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.4 001/177] usb: gadget: configfs: Fix missing spin_lock_init()
-Date:   Mon, 16 Dec 2019 18:47:37 +0100
-Message-Id: <20191216174811.412153826@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Charles-Antoine Couret <charles-antoine.couret@essensium.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 165/180] iio: ad7949: fix channels mixups
+Date:   Mon, 16 Dec 2019 18:50:05 +0100
+Message-Id: <20191216174846.926937703@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-References: <20191216174811.158424118@linuxfoundation.org>
+In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
+References: <20191216174806.018988360@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,35 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Andrea Merello <andrea.merello@gmail.com>
 
-commit 093edc2baad2c258b1f55d1ab9c63c2b5ae67e42 upstream.
+[ Upstream commit 3b71f6b59508b1c9befcb43de434866aafc76520 ]
 
-The driver allocates the spinlock but not initialize it.
-Use spin_lock_init() on it to initialize it correctly.
+Each time we need to read a sample (from the sysfs interface, since the
+driver supports only it) the driver writes the configuration register
+with the proper settings needed to perform the said read, then it runs
+another xfer to actually read the resulting value. Most notably the
+configuration register is updated to set the ADC internal MUX depending by
+which channel the read targets.
 
-This is detected by Coccinelle semantic patch.
+Unfortunately this seems not enough to ensure correct operation because
+the ADC works in a pipelined-like fashion and the new configuration isn't
+applied in time.
 
-Fixes: 1a1c851bbd70 ("usb: gadget: configfs: fix concurrent issue between composite APIs")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20191030034046.188808-1-weiyongjun1@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The ADC alternates two phases: acquisition and conversion. During the
+acquisition phase the ADC samples the analog signal in an internal
+capacitor; in the conversion phase the ADC performs the actual analog to
+digital conversion of the stored voltage. Note that of course the MUX
+needs to be set to the proper channel when the acquisition phase is
+performed.
 
+Once the conversion phase has been completed, the device automatically
+switches back to a new acquisition; on the other hand the device switches
+from acquisition to conversion on the rising edge of SPI cs signal (that
+is when the xfer finishes).
+
+Only after both two phases have been completed (with the proper settings
+already written in the configuration register since the beginning) it is
+possible to read the outcome from SPI bus.
+
+With the current driver implementation, we end up in the following
+situation:
+
+        _______  1st xfer ____________  2nd xfer ___________________
+SPI cs..       \_________/            \_________/
+SPI rd.. idle  |(val N-2)+    idle    | val N-1 +   idle ...
+SPI wr.. idle  |  cfg N  +    idle    |   (X)   +   idle ...
+------------------------ + -------------------- + ------------------
+  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1
+
+As shown in the diagram above, the value we read in the Nth read belongs
+to configuration setting N-1.
+
+In case the configuration is not changed (config[N] == config[N-1]), then
+we still get correct data, but in case the configuration changes (i.e.
+switching the MUX on another channel), we get wrong data (data from the
+previously selected channel).
+
+This patch fixes this by performing one more "dummy" transfer in order to
+ending up in reading the data when it's really ready, as per the following
+timing diagram.
+
+        _______  1st xfer ____________  2nd xfer ___________  3rd xfer ___
+SPI cs..       \_________/            \_________/           \_________/
+SPI rd.. idle  |(val N-2)+    idle    |(val N-1)+    idle   |  val N  + ..
+SPI wr.. idle  |  cfg N  +    idle    |   (X)   +    idle   |   (X)   + ..
+------------------------ + -------------------- + ------------------- + --
+  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1   | ..
+
+NOTE: in the latter case (cfg changes), the acquisition phase for the
+value to be read begins after the 1st xfer, that is after the read request
+has been issued on sysfs. On the other hand, if the cfg doesn't change,
+then we can refer to the fist diagram assuming N == (N - 1); the
+acquisition phase _begins_ before the 1st xfer (potentially a lot of time
+before the read has been issued via sysfs, but it _ends_ after the 1st
+xfer, that is _after_ the read has started. This should guarantee a
+reasonably fresh data, which value represents the voltage that the sampled
+signal has after the read start or maybe just around it.
+
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Reviewed-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/configfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/ad7949.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -1544,6 +1544,7 @@ static struct config_group *gadgets_make
- 	gi->composite.resume = NULL;
- 	gi->composite.max_speed = USB_SPEED_SUPER;
+diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+index 518044c31a73b..6b51bfcad0d04 100644
+--- a/drivers/iio/adc/ad7949.c
++++ b/drivers/iio/adc/ad7949.c
+@@ -89,6 +89,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 				   unsigned int channel)
+ {
+ 	int ret;
++	int i;
+ 	int bits_per_word = ad7949_adc->resolution;
+ 	int mask = GENMASK(ad7949_adc->resolution, 0);
+ 	struct spi_message msg;
+@@ -100,12 +101,23 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 		},
+ 	};
  
-+	spin_lock_init(&gi->spinlock);
- 	mutex_init(&gi->lock);
- 	INIT_LIST_HEAD(&gi->string_list);
- 	INIT_LIST_HEAD(&gi->available_func);
+-	ret = ad7949_spi_write_cfg(ad7949_adc,
+-				   channel << AD7949_OFFSET_CHANNEL_SEL,
+-				   AD7949_MASK_CHANNEL_SEL);
+-	if (ret)
+-		return ret;
++	/*
++	 * 1: write CFG for sample N and read old data (sample N-2)
++	 * 2: if CFG was not changed since sample N-1 then we'll get good data
++	 *    at the next xfer, so we bail out now, otherwise we write something
++	 *    and we read garbage (sample N-1 configuration).
++	 */
++	for (i = 0; i < 2; i++) {
++		ret = ad7949_spi_write_cfg(ad7949_adc,
++					   channel << AD7949_OFFSET_CHANNEL_SEL,
++					   AD7949_MASK_CHANNEL_SEL);
++		if (ret)
++			return ret;
++		if (channel == ad7949_adc->current_channel)
++			break;
++	}
+ 
++	/* 3: write something and read actual data */
+ 	ad7949_adc->buffer = 0;
+ 	spi_message_init_with_transfers(&msg, tx, 1);
+ 	ret = spi_sync(ad7949_adc->spi, &msg);
+-- 
+2.20.1
+
 
 
