@@ -2,214 +2,124 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A21C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5203E20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2719D20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U82ohaIZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwJ4hMk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfLPTMc (ORCPT
+        id S1727191AbfLPTNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:12:32 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39066 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfLPTMb (ORCPT
+        Mon, 16 Dec 2019 14:13:49 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34297 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbfLPTNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:12:31 -0500
-Received: by mail-io1-f66.google.com with SMTP id c16so6266743ioh.6;
-        Mon, 16 Dec 2019 11:12:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZessK4RCkLAmekHW0Wl1a8wj13gMExX3b9NCfcOgXbo=;
-        b=U82ohaIZN/w0MFLAlUAwnbAq0JLNa9b2Fc5jgR4UC1odAYjoFiSSuhSTulYDO9cFBE
-         R9BrKmpEkNDOv84a5xQLnfghs/wE6mTA28qib4+YfVlcCE3wdAnxXhH2+zH5zsDSX/MS
-         8SuCjoa1hIz3fOGELmnYL9LFhQ8EELx9Epu5IHHl4smBmdwKk3sVE5ykGFHMvDucpqZ4
-         TZjoWbpxNVmZ71umMvCtPte0QTgIpnp431KI0PP2b5sNYLO5AICGO3P+M+PMCoUvPOLv
-         TU6gL0x0lIkV20eAzbnfXA+VgnGYzM9dqt2bfEaYbKW3BQv4Sd55sRfr3PzBCfX24+VN
-         5m6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZessK4RCkLAmekHW0Wl1a8wj13gMExX3b9NCfcOgXbo=;
-        b=lVgrtWG09sLBFVa3U9G+pQ/YM4wEVMC3ru6MKrhs3f+EtMYm7yTb3IqTffSUbdCWKQ
-         q9AYvzIkbZr0MwGzHG8pMEhAPwn/oQn3kX9i3Ve5PQZSej7feVObCFHCdBm4qUAw0MrI
-         AdYPPoTuMb0ZPRHEFtbmKs7cIyZxAxRWnxxHqOSDVPt2Znd60w0t/uE2KEqjkKVbRbnS
-         xo6XppWQtSCZnUdlhQU/+bG9gbU8DnEoL0liWNddJoPdXaPysNDG0mDsntU3Oo7fz5ZJ
-         oG4QIFOhb0Ac9WraRqOTpC+oC/qu2OHz4YZW5Fl8mfmrJUVoY0aVipxudPWX6E7u9IQS
-         kCMg==
-X-Gm-Message-State: APjAAAVDHHxBBiuAU1P7mXt66hxpjN1HWMyNlbo/0wbewfeB3wPQ37jV
-        Z+P0oqzKM/jylqsoxQmvJ7DH0ddz8ySAZgZdlss=
-X-Google-Smtp-Source: APXvYqwRYJHzqvLl44ZQm8vLb4+2mcus3NnTtVojmPbDyZomPUuGFA2ryD/F41TNtoy2rA10QFUmE8jsaxK3mAVMyw4=
-X-Received: by 2002:a02:ca56:: with SMTP id i22mr12783297jal.140.1576523550596;
- Mon, 16 Dec 2019 11:12:30 -0800 (PST)
+        Mon, 16 Dec 2019 14:13:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576523627;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7IDJvDD38IDnwBTnAlisdN2mPCEFyvjHW7+IKs5mzFg=;
+        b=TwJ4hMk7ldDA8xt+lAwkWXCpCmMhSiPldrfQmqPGT4W36qsjm47GLOpDZH5dopvnQraNcY
+        OorcPQcytG1dCseO8FjOBVjlTDVbV/5lQ6WM1HBUY4Hv5m74G6XJ//qmN359i9PKITfrtJ
+        y+UvQsa4/bBig4hvq117fZ/9AaIcCDM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-cOXcvRs-MLyw4hRyP0UnrA-1; Mon, 16 Dec 2019 14:13:44 -0500
+X-MC-Unique: cOXcvRs-MLyw4hRyP0UnrA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DE10800D41;
+        Mon, 16 Dec 2019 19:13:42 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 476C260933;
+        Mon, 16 Dec 2019 19:13:41 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        aneesh.kumar@linux.ibm.com
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+ <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+ <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+ <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
+ <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
+ <20191212190427.ouyohviijf5inhur@linux-p48b>
+ <20191216133711.GH30281@dhcp22.suse.cz>
+ <20191216161748.tgi2oictlfqy6azi@linux-p48b>
+ <68d466cc-2cbd-ae49-7d89-e7476c5a9c24@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <17e326a7-093a-dbd3-8e6e-232ec9b81b9e@redhat.com>
+Date:   Mon, 16 Dec 2019 14:13:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
- <1573798172-20534-3-git-send-email-cang@codeaurora.org> <20191216190415.GL2536@vkoul-mobl>
-In-Reply-To: <20191216190415.GL2536@vkoul-mobl>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 16 Dec 2019 12:12:19 -0700
-Message-ID: <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for host controller
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <68d466cc-2cbd-ae49-7d89-e7476c5a9c24@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 12:05 PM Vinod Koul <vkoul@kernel.org> wrote:
+On 12/16/19 2:08 PM, Mike Kravetz wrote:
+> On 12/16/19 8:17 AM, Davidlohr Bueso wrote:
+>> On Mon, 16 Dec 2019, Michal Hocko wrote:
+>>> I am afraid that work_struct is too large to be stuffed into the struct
+>>> page array (because of the lockdep part).
+>> Yeah, this needs to be done without touching struct page.
+>>
+>> Which is why I had done the stack allocated way in this patch, but we
+>> cannot wait for it to complete in irq, so that's out the window. Andi
+>> had suggested percpu allocated work items, but having played with the
+>> idea over the weekend, I don't see how we can prevent another page being
+>> freed on the same cpu before previous work on the same cpu is complete
+>> (cpu0 wants to free pageA, schedules the work, in the mean time cpu0
+>> wants to free pageB and workerfn for pageA still hasn't been called).
+>>
+>>> I think that it would be just safer to make hugetlb_lock irq safe. Are
+>>> there any other locks that would require the same?
+>> It would be simpler. Any performance issues that arise would probably
+>> be only seen in microbenchmarks, assuming we want to have full irq safety.
+>> If we don't need to worry about hardirq, then even better.
+>>
+>> The subpool lock would also need to be irq safe.
+> I do think we need to worry about hardirq.  There are no restruictions that
+> put_page can not be called from hardirq context. 
 >
-> Hi Can,
+> I am concerned about the latency of making hugetlb_lock (and potentially
+> subpool lock) hardirq safe.  When these locks were introduced (before my
+> time) the concept of making them irq safe was not considered.  Recently,
+> I learned that the hugetlb_lock is held for a linear scan of ALL hugetlb
+> pages during a cgroup reparentling operation.  That is just too long.
 >
-> On 14-11-19, 22:09, Can Guo wrote:
-> > Add reset control for host controller so that host controller can be reset
-> > as required in its power up sequence.
+> If there is no viable work queue solution, then I think we would like to
+> restructure the hugetlb locking before a change to just make hugetlb_lock
+> irq safe.  The idea would be to split the scope of what is done under
+> hugetlb_lock.  Most of it would never be executed in irq context.  Then
+> have a small/limited set of functionality that really needs to be irq
+> safe protected by an irq safe lock.
 >
-> I am seeing a regression on UFS on SM8150-mtp with this patch. I think
-> Jeff is seeing same one lenove laptop on 8998.
+Please take a look at my recently posted patch to see if that is an
+acceptable workqueue based solution.
 
-Confirmed.
+Thanks,
+Longman
 
->
-> 845 does not seem to have this issue and only thing I can see is that on
-> sm8150 and 8998 we define reset as:
->
->                         resets = <&gcc GCC_UFS_BCR>;
->                         reset-names = "rst";
->
-> Thanks
->
-> >
-> > Signed-off-by: Can Guo <cang@codeaurora.org>
-> > ---
-> >  drivers/scsi/ufs/ufs-qcom.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/scsi/ufs/ufs-qcom.h |  3 +++
-> >  2 files changed, 56 insertions(+)
-> >
-> > diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> > index a5b7148..c69c29a1c 100644
-> > --- a/drivers/scsi/ufs/ufs-qcom.c
-> > +++ b/drivers/scsi/ufs/ufs-qcom.c
-> > @@ -246,6 +246,44 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
-> >       mb();
-> >  }
-> >
-> > +/**
-> > + * ufs_qcom_host_reset - reset host controller and PHY
-> > + */
-> > +static int ufs_qcom_host_reset(struct ufs_hba *hba)
-> > +{
-> > +     int ret = 0;
-> > +     struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> > +
-> > +     if (!host->core_reset) {
-> > +             dev_warn(hba->dev, "%s: reset control not set\n", __func__);
-> > +             goto out;
-> > +     }
-> > +
-> > +     ret = reset_control_assert(host->core_reset);
-> > +     if (ret) {
-> > +             dev_err(hba->dev, "%s: core_reset assert failed, err = %d\n",
-> > +                              __func__, ret);
-> > +             goto out;
-> > +     }
-> > +
-> > +     /*
-> > +      * The hardware requirement for delay between assert/deassert
-> > +      * is at least 3-4 sleep clock (32.7KHz) cycles, which comes to
-> > +      * ~125us (4/32768). To be on the safe side add 200us delay.
-> > +      */
-> > +     usleep_range(200, 210);
-> > +
-> > +     ret = reset_control_deassert(host->core_reset);
-> > +     if (ret)
-> > +             dev_err(hba->dev, "%s: core_reset deassert failed, err = %d\n",
-> > +                              __func__, ret);
-> > +
-> > +     usleep_range(1000, 1100);
-> > +
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> >  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
-> >  {
-> >       struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> > @@ -254,6 +292,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
-> >       bool is_rate_B = (UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B)
-> >                                                       ? true : false;
-> >
-> > +     /* Reset UFS Host Controller and PHY */
-> > +     ret = ufs_qcom_host_reset(hba);
-> > +     if (ret)
-> > +             dev_warn(hba->dev, "%s: host reset returned %d\n",
-> > +                               __func__, ret);
-> > +
-> >       if (is_rate_B)
-> >               phy_set_mode(phy, PHY_MODE_UFS_HS_B);
-> >
-> > @@ -1101,6 +1145,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
-> >       host->hba = hba;
-> >       ufshcd_set_variant(hba, host);
-> >
-> > +     /* Setup the reset control of HCI */
-> > +     host->core_reset = devm_reset_control_get(hba->dev, "rst");
-> > +     if (IS_ERR(host->core_reset)) {
-> > +             err = PTR_ERR(host->core_reset);
-> > +             dev_warn(dev, "Failed to get reset control %d\n", err);
-> > +             host->core_reset = NULL;
-> > +             err = 0;
-> > +     }
-> > +
-> >       /* Fire up the reset controller. Failure here is non-fatal. */
-> >       host->rcdev.of_node = dev->of_node;
-> >       host->rcdev.ops = &ufs_qcom_reset_ops;
-> > diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
-> > index d401f17..2d95e7c 100644
-> > --- a/drivers/scsi/ufs/ufs-qcom.h
-> > +++ b/drivers/scsi/ufs/ufs-qcom.h
-> > @@ -6,6 +6,7 @@
-> >  #define UFS_QCOM_H_
-> >
-> >  #include <linux/reset-controller.h>
-> > +#include <linux/reset.h>
-> >
-> >  #define MAX_UFS_QCOM_HOSTS   1
-> >  #define MAX_U32                 (~(u32)0)
-> > @@ -233,6 +234,8 @@ struct ufs_qcom_host {
-> >       u32 dbg_print_en;
-> >       struct ufs_qcom_testbus testbus;
-> >
-> > +     /* Reset control of HCI */
-> > +     struct reset_control *core_reset;
-> >       struct reset_controller_dev rcdev;
-> >
-> >       struct gpio_desc *device_reset;
-> > --
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
->
-> --
-> ~Vinod
