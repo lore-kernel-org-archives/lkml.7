@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5318C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4424C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE97207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FD9206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521289;
-	bh=Ul+6vb0R77VIZx6xIPBeeZvukDJoyv1LW2mE2NNbkms=;
+	s=default; t=1576521293;
+	bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovCqEE/O2wZd99obYCJpc4tO561Yj3ay70kF6KcPvFQM6CKiyXW2hLzoSwsGtzzVU
-	 r7Fcx3jEAFEivGdXZ9mDCMabMprjyYBzzSV6a5npyRK+o8uclNXjR/Uz6jx4Go+68D
-	 T7NV6vFiHd7+spIW/0kr5MDrwQyaEQ9xeJAL78xQ=
+	b=rmy+Vzw1GlVdBCHJe6Er9uMrmtsbAaTnp2Ns3zWkjVHfbp37AfY+3gp6VrDrHmqSq
+	 g9L5JMche8WO6Uc2gSuuUZ7AC0axIwOQ7UDGSI/iQVHj15chxBnxYdOuABhPyTWWho
+	 ejpsIC5LQmxqXUfzvX5Wbl2yHvfouKyWjfm3x+dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfLPSIq (ORCPT
+        id S1730517AbfLPSev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50404 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:34:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbfLPSIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:41 -0500
+        id S1730307AbfLPSIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AC6A206EC;
-        Mon, 16 Dec 2019 18:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310E02072D;
+        Mon, 16 Dec 2019 18:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519720;
-        bh=Ul+6vb0R77VIZx6xIPBeeZvukDJoyv1LW2mE2NNbkms=;
+        s=default; t=1576519725;
+        bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnjjoAWeqRRiojYWb/KA9p/0CT/y3xgmPnL+CuNTCi9GQ+x+1vrkAG7x2dxYojQo3
-         VZbFGn+pJ3Na7FPn8c99aCR9O/CtkK21pUR+fznQV0YNO/M5AQd4yMoYOuKmWByt9D
-         e1IOXQPgFfuRrCYzLrc7fuAD1Nc/o/LUuyRD+h7g=
+        b=Zd6tzcjY2Hfa5UKQG9HEVUY4kYZ3hgqM6av8F7yO+nQGQc+U2c9GdupE2XZHNw7bX
+         dv/r4m6usV/IKluyVuWVbaZWr1EefbPFabG5gRrBYtSCapzNoZ4SoZ1c1oa82t3RXG
+         9vO9yU+JgyEA9IdLn4jhH73OE7SSnp/L3XDaYopM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meng Li <Meng.Li@windriver.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        James Morse <james.morse@arm.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 5.3 042/180] EDAC/altera: Use fast register IO for S10 IRQs
-Date:   Mon, 16 Dec 2019 18:48:02 +0100
-Message-Id: <20191216174817.274664572@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.3 044/180] mtd: spear_smi: Fix Write Burst mode
+Date:   Mon, 16 Dec 2019 18:48:04 +0100
+Message-Id: <20191216174819.027145153@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -65,60 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Meng Li <Meng.Li@windriver.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-commit 56d9e7bd3fa0f105b6670021d167744bc50ae4fe upstream.
+commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
 
-When an IRQ occurs, regmap_{read,write,...}() is invoked in atomic
-context. Regmap must indicate register IO is fast so that a spinlock is
-used instead of a mutex to avoid sleeping in atomic context:
+Any write with either dd or flashcp to a device driven by the
+spear_smi.c driver will pass through the spear_smi_cpy_toio()
+function. This function will get called for chunks of up to 256 bytes.
+If the amount of data is smaller, we may have a problem if the data
+length is not 4-byte aligned. In this situation, the kernel panics
+during the memcpy:
 
-  lock_acquire
-  __mutex_lock
-  mutex_lock_nested
-  regmap_lock_mutex
-  regmap_write
-  a10_eccmgr_irq_unmask
-  unmask_irq.part.0
-  irq_enable
-  __irq_startup
-  irq_startup
-  __setup_irq
-  request_threaded_irq
-  devm_request_threaded_irq
-  altr_sdram_probe
+    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
+    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
+    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
+    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
+    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
+    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
+    [...]
+    PC is at memcpy+0xcc/0x330
 
-Mark it so.
+The above error occurs because the implementation of memcpy_toio()
+tries to optimize the number of I/O by writing 4 bytes at a time as
+much as possible, until there are less than 4 bytes left and then
+switches to word or byte writes.
 
- [ bp: Massage. ]
+Unfortunately, the specification states about the Write Burst mode:
 
-Fixes: 3dab6bd52687 ("EDAC, altera: Add support for Stratix10 SDRAM EDAC")
-Reported-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: stable <stable@vger.kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/1574361048-17572-2-git-send-email-thor.thayer@linux.intel.com
+        "the next AHB Write request should point to the next
+	incremented address and should have the same size (byte,
+	half-word or word)"
+
+This means ARM architecture implementation of memcpy_toio() cannot
+reliably be used blindly here. Workaround this situation by update the
+write path to stick to byte access when the burst length is not
+multiple of 4.
+
+Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/altera_edac.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -561,6 +561,7 @@ static const struct regmap_config s10_sd
- 	.reg_write = s10_protected_reg_write,
- 	.use_single_read = true,
- 	.use_single_write = true,
-+	.fast_io = true,
- };
+--- a/drivers/mtd/devices/spear_smi.c
++++ b/drivers/mtd/devices/spear_smi.c
+@@ -592,6 +592,26 @@ static int spear_mtd_read(struct mtd_inf
+ 	return 0;
+ }
  
- /************** </Stratix10 EDAC Memory Controller Functions> ***********/
++/*
++ * The purpose of this function is to ensure a memcpy_toio() with byte writes
++ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
++ * which also does single byte writes but cannot be used here as this is just an
++ * implementation detail and not part of the API. Not mentioning the comment
++ * stating that _memcpy_toio() should be optimized.
++ */
++static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
++				    const void *src, size_t len)
++{
++	const unsigned char *from = src;
++
++	while (len) {
++		len--;
++		writeb(*from, dest);
++		from++;
++		dest++;
++	}
++}
++
+ static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
+ 		void __iomem *dest, const void *src, size_t len)
+ {
+@@ -614,7 +634,23 @@ static inline int spear_smi_cpy_toio(str
+ 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
+ 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
+ 
+-	memcpy_toio(dest, src, len);
++	/*
++	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
++	 * - incremental
++	 * - of the same size
++	 * The ARM implementation of memcpy_toio() will optimize the number of
++	 * I/O by using as much 4-byte writes as possible, surrounded by
++	 * 2-byte/1-byte access if:
++	 * - the destination is not 4-byte aligned
++	 * - the length is not a multiple of 4-byte.
++	 * Avoid this alternance of write access size by using our own 'byte
++	 * access' helper if at least one of the two conditions above is true.
++	 */
++	if (IS_ALIGNED(len, sizeof(u32)) &&
++	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
++		memcpy_toio(dest, src, len);
++	else
++		spear_smi_memcpy_toio_b(dest, src, len);
+ 
+ 	writel(ctrlreg1, dev->io_base + SMI_CR1);
+ 
 
 
