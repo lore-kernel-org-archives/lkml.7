@@ -2,144 +2,170 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F1B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576492024;
-	bh=kUgzQHruAjaFJFDFjIH83xFuk1KBvTCvlgdm112GOkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFQk5o5bnK74dKuObUNDcvTjJobCoi9Wuq7/EUh5EurxJsfDQEKWwPZeaJjXjJQ3V
-	 zcT/Qes3td1jv5yrUeCQJN3wsZlsY09YWNxKg7jFF7IRapVBIRmJCuhNZPizqk3ZQ1
-	 qwGXOuOjFyf11KV1iAi+KqTMsz4V6p0TIWMWcwlc=
+	by mail.kernel.org (Postfix) with ESMTP id 28D4420725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfLPK1D (ORCPT
+        id S1727431AbfLPK1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:27:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727345AbfLPK1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:27:02 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDADC206CB;
-        Mon, 16 Dec 2019 10:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576492022;
-        bh=kUgzQHruAjaFJFDFjIH83xFuk1KBvTCvlgdm112GOkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oKrWqvEV9lXn1r3miOVPSITbPPacHp89DGtXxqTYnHvm6TN+1tSGZFivgdvUIN9o7
-         cz4Ste93FLYwlxxzWJ603rI4ubx/PnNMo1xyoMJxTyuDz/t6BuQ3a2OcHHCyeXDOKA
-         YAmAJhk4Qtwm29VaZCd1Kh4XTwB/LGGWe8oz9g+k=
-Date:   Mon, 16 Dec 2019 10:26:56 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v2 1/3] ubsan: Add trap instrumentation option
-Message-ID: <20191216102655.GA11082@willie-the-truck>
-References: <20191121181519.28637-1-keescook@chromium.org>
- <20191121181519.28637-2-keescook@chromium.org>
+        Mon, 16 Dec 2019 05:27:14 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:57866 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPK1N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:27:13 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 5jsqDektV5BBk2+xf3w/QcqvniodKkPePiSDQucL2mBcAfnV0iyjeDQf/r2QK9nJNIrLHoHtFM
+ aiELBZFR1pVJPWH2ErEzW3Ff5y0gL1/yZ1Sylm+pmkwWlgnm/ctrtFlqbc75tn/o+zyg9y7Zn7
+ xjZ8RI68Ik5eX63k9atSyhnV4b7ivLHPdpW7JbP4YXrX3H9PXnP2cr3xvon0Y0eQR8zQqtAv/r
+ o7vs0mcBwP6GY9pwoSklBZnMaHnLwP7ooKy2Ve2Z9dcHF8yUExUHWnpzQJsgKsMxx6TiqF6WY+
+ zmc=
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="57878905"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Dec 2019 03:27:12 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 16 Dec 2019 03:27:11 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 16 Dec 2019 03:27:11 -0700
+Date:   Mon, 16 Dec 2019 11:26:56 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     David Engraf <david.engraf@sysgo.com>
+CC:     <richard.genoud@gmail.com>, <gregkh@linuxfoundation.org>,
+        <jslaby@suse.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] tty/serial: atmel: fix out of range clock divider
+ handling
+Message-ID: <20191216102656.lkazcvuy5oai63lb@M43218.corp.atmel.com>
+Mail-Followup-To: David Engraf <david.engraf@sysgo.com>,
+        richard.genoud@gmail.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <39e4d1c7-20b0-a024-3a46-e4d4369eed8e@sysgo.com>
+ <20191216085403.17050-1-david.engraf@sysgo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191121181519.28637-2-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216085403.17050-1-david.engraf@sysgo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+On Mon, Dec 16, 2019 at 09:54:03AM +0100, David Engraf wrote:
+> Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+> register was already written thus the clock selection is ignored.
+> 
+> Fix by doing the baud rate calulation before setting the mode.
+> 
+> Fixes: 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-On Thu, Nov 21, 2019 at 10:15:17AM -0800, Kees Cook wrote:
-> The Undefined Behavior Sanitizer can operate in two modes: warning
-> reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
-> __builtin_trap() as the handler. Using lib/ubsan.c means the kernel
-> image is about 5% larger (due to all the debugging text and reporting
-> structures to capture details about the warning conditions). Using the
-> trap mode, the image size changes are much smaller, though at the loss
-> of the "warning only" mode.
-> 
-> In order to give greater flexibility to system builders that want
-> minimal changes to image size and are prepared to deal with kernel code
-> being aborted and potentially destabilizing the system, this introduces
-> CONFIG_UBSAN_TRAP. The resulting image sizes comparison:
-> 
->    text    data     bss       dec       hex     filename
-> 19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
-> 19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
-> 19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
-> 
-> CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
-> CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
-> 
-> Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and
-> removes the mention of non-existing boot param "ubsan_handle".
-> 
-> Suggested-by: Elena Petrova <lenaptr@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Thanks for the fix
+
+Regards
+
 > ---
->  lib/Kconfig.ubsan      | 22 ++++++++++++++++++----
->  lib/Makefile           |  2 ++
->  scripts/Makefile.ubsan |  9 +++++++--
->  3 files changed, 27 insertions(+), 6 deletions(-)
+> Changes since v1:
+>  - moves set baud rate block before setting the mode register because
+>    ATMEL_US_RTSDIS and ATMEL_US_RTSEN depend on ATMEL_US_MR.mode
 > 
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 0e04fcb3ab3d..9deb655838b0 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -5,11 +5,25 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
->  config UBSAN
->  	bool "Undefined behaviour sanity checker"
->  	help
-> -	  This option enables undefined behaviour sanity checker
-> +	  This option enables the Undefined Behaviour sanity checker.
->  	  Compile-time instrumentation is used to detect various undefined
-> -	  behaviours in runtime. Various types of checks may be enabled
-> -	  via boot parameter ubsan_handle
-> -	  (see: Documentation/dev-tools/ubsan.rst).
-> +	  behaviours at runtime. For more details, see:
-> +	  Documentation/dev-tools/ubsan.rst
+> ---
+>  drivers/tty/serial/atmel_serial.c | 43 ++++++++++++++++---------------
+>  1 file changed, 22 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index a8dc8af83f39..1ba9bc667e13 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -2270,27 +2270,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>                 mode |= ATMEL_US_USMODE_NORMAL;
+>         }
+> 
+> -       /* set the mode, clock divisor, parity, stop bits and data size */
+> -       atmel_uart_writel(port, ATMEL_US_MR, mode);
+> -
+> -       /*
+> -        * when switching the mode, set the RTS line state according to the
+> -        * new mode, otherwise keep the former state
+> -        */
+> -       if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
+> -               unsigned int rts_state;
+> -
+> -               if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
+> -                       /* let the hardware control the RTS line */
+> -                       rts_state = ATMEL_US_RTSDIS;
+> -               } else {
+> -                       /* force RTS line to low level */
+> -                       rts_state = ATMEL_US_RTSEN;
+> -               }
+> -
+> -               atmel_uart_writel(port, ATMEL_US_CR, rts_state);
+> -       }
+> -
+>         /*
+>          * Set the baud rate:
+>          * Fractional baudrate allows to setup output frequency more
+> @@ -2317,6 +2296,28 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+> 
+>         if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
+>                 atmel_uart_writel(port, ATMEL_US_BRGR, quot);
 > +
-> +config UBSAN_TRAP
-> +	bool "On Sanitizer warnings, abort the running kernel code"
-> +	depends on UBSAN
-> +	depends on $(cc-option, -fsanitize-undefined-trap-on-error)
-> +	help
-> +	  Building kernels with Sanitizer features enabled tends to grow
-> +	  the kernel size by around 5%, due to adding all the debugging
-> +	  text on failure paths. To avoid this, Sanitizer instrumentation
-> +	  can just issue a trap. This reduces the kernel size overhead but
-> +	  turns all warnings (including potentially harmless conditions)
-> +	  into full exceptions that abort the running kernel code
-> +	  (regardless of context, locks held, etc), which may destabilize
-> +	  the system. For some system builders this is an acceptable
-> +	  trade-off.
-
-Slight nit, but I wonder if it would make sense to move all this under a
-'menuconfig UBSAN' entry, so the dependencies can be dropped? Then you could
-have all of the suboptions default to on and basically choose which
-individual compiler options to disable based on your own preferences.
-
-What do you think?
-
-Will
+> +       /* set the mode, clock divisor, parity, stop bits and data size */
+> +       atmel_uart_writel(port, ATMEL_US_MR, mode);
+> +
+> +       /*
+> +        * when switching the mode, set the RTS line state according to the
+> +        * new mode, otherwise keep the former state
+> +        */
+> +       if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
+> +               unsigned int rts_state;
+> +
+> +               if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
+> +                       /* let the hardware control the RTS line */
+> +                       rts_state = ATMEL_US_RTSDIS;
+> +               } else {
+> +                       /* force RTS line to low level */
+> +                       rts_state = ATMEL_US_RTSEN;
+> +               }
+> +
+> +               atmel_uart_writel(port, ATMEL_US_CR, rts_state);
+> +       }
+> +
+>         atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+>         atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN | ATMEL_US_RXEN);
+>         atmel_port->tx_stopped = false;
+> --
+> 2.17.1
+> 
