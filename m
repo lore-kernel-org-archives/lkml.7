@@ -2,217 +2,174 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFBEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC63206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9225620726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xdvo+u/I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MccC4sL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfLPQHR (ORCPT
+        id S1726571AbfLPQIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:07:17 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35898 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfLPQHQ (ORCPT
+        Mon, 16 Dec 2019 11:08:43 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52982 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbfLPQIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:07:16 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r19so7425529ljg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:07:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JoatAXnsscqwevd4UrCvyNMG3ipR3iur8U3aX+Ed2Jk=;
-        b=Xdvo+u/IXPig78kh+mecIpXWcmxUT8VKW/sVzs/EDMxswV2l/JaXCvCdS8H3X1pikD
-         JLxFaQ0VeEphzKl52NoiZ25lo7I/NU+GbsOJzi9lPumEh40L2r6y0aGdNzH6cTZCvRNg
-         e5iz1B+di4HymzwSxyTUlJp+iVD85D+Zrz+GhHoq5AM6kutocfCqy9eJOgsr+SRxoHNi
-         pdP1dUFMspcYcrlrO5IJrPsT3vxoK4v1LuHmAEa//hv0kcMCch3NQcdnvuRx6ZPmLewZ
-         hBXPs4KnJ7I+QxnjDMZNXWEskSwCf2WrrtiuQRjp3+VSrtC0eIJ7IKQ1jkjWa+CzNDWP
-         Y+sA==
+        Mon, 16 Dec 2019 11:08:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576512519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yIpix4UPxBSh2MT6UEhohtiVputl6QStexIF4LGjRs4=;
+        b=MccC4sL58Tpyv8bkZNYZl+JA6f//OCLhS3H5htWg0lCYqdsSIOxt7rQpF7vN+gWzUWq2CT
+        I72wbXg0Ns7cdz8mgFgFKq8y4P9cyLwfdciLjW3szrXYhwcPjAkXeG2Cf+HYgOrHr+Mn5S
+        UUK0M7tgppgVp0xU7WT+n94YMH+KFE0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-uUjezuzGMmKM5JozpWqn2A-1; Mon, 16 Dec 2019 11:08:36 -0500
+X-MC-Unique: uUjezuzGMmKM5JozpWqn2A-1
+Received: by mail-wr1-f71.google.com with SMTP id b13so2560943wrx.22
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:08:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JoatAXnsscqwevd4UrCvyNMG3ipR3iur8U3aX+Ed2Jk=;
-        b=efAWObUbGJv4hrHODEhChU8dW12i2LMzIa06SibeHX9YPt/tARzbfw7gWbk5c1fN4D
-         V8EdILbqobkpTQqSRQAxIDyQDzAOaaOxuSzhbZRY9mKmbQS48KJIUUrUlak2Wn4s977X
-         7AUV25HFSrFvoCEaxYZZ90Y/ZG4wfUTLrUV8OKPCk/smhI6K/IY/LWkxZ5h3+yva0Oe6
-         8MNqXNh5xpDAC2oF45Di7v+HN8wUv6RNScuf4jyKAwLs3wDQN8ecMGwovnVXloUV9yk3
-         8AXSI91ox+conmN0BE5OiTd2u1Jw7nXj5Q3lmjOJF/hOd3oPXKtC2gkflfgwAAzUFh6B
-         f3Kg==
-X-Gm-Message-State: APjAAAXPhENvmA2sxJUnjuMGMav425kxRsgRBbHY1o8GwVQkaw5+EiwO
-        HklkKjjunWnSROAZGcrfBL5OXmhl6NYtFGcn+7bIvQ==
-X-Google-Smtp-Source: APXvYqwxNqdtDrkdzWg1ESrG7iZonCmMzh47FixdIjb79EHqwCZOOL6W5Q+r0UYyIOksNbud40CBaS0lzlDjRmnSkDo=
-X-Received: by 2002:a2e:7818:: with SMTP id t24mr20737181ljc.195.1576512434009;
- Mon, 16 Dec 2019 08:07:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107190011.23924-1-acme@kernel.org> <20191107190011.23924-57-acme@kernel.org>
-In-Reply-To: <20191107190011.23924-57-acme@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 16 Dec 2019 21:37:02 +0530
-Message-ID: <CA+G9fYu-sGYutfX5K5LyAZ8cUfNpWomtyA_0SQsHyej0jD8qTw@mail.gmail.com>
-Subject: Re: [PATCH 56/63] perf tests: Fix out of bounds memory access
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=yIpix4UPxBSh2MT6UEhohtiVputl6QStexIF4LGjRs4=;
+        b=VAwqrnpWZ/zLqmGnpTBcNc74Sg+SO+PpwdRKzWeW2Jwks34B8tPp3SZqRPzeDQ4veB
+         9NhwRyKKAYABTuiXUNXstXOLE2NfVkwFEPoJzBkjCy8mKnQgd2G1iZj+ozM9dR1pp1XS
+         QdSeyUcGqBM0vOdUo1c8PSsQ8fAiDCH4p1HghoBVj90h6l9N/h5yKeX0Wol+/m74fTPz
+         yjxoo6SEzRDXrTA1bcjqufuu33hjfJQMRQTGy1v1EiqNHovbK1W69tPhypx5jtt27eQ3
+         NZ+X5JmfWA66LSMjDOZOxxF7YU+AmvIXr7UGVDt+H3akUxWbsNQjaHo8LTiLh+ZErufX
+         qG+A==
+X-Gm-Message-State: APjAAAVRXF/oNYBUL8IfnrnodjiVJJGF25s3GC06K7Gb/91hP2T2KPq8
+        cWepnt+bOHjyZZb8/GrdWwX/1SstvgEpkFZ7xZs1yotUM/h3R1h6+Od3s1f9i0vOjOtBsHTZPUl
+        i7Ev5iR7jg1IUJ+TOidz6aBbO
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr31499785wmc.21.1576512515589;
+        Mon, 16 Dec 2019 08:08:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwDcQ7lKF+oayQgC++uUUuXpbNGgRnUniNAizGb6g1+QNaoRZFDljRrO1NXUlKqtodM3COvQA==
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr31499763wmc.21.1576512515346;
+        Mon, 16 Dec 2019 08:08:35 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id g2sm21949089wrw.76.2019.12.16.08.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 08:08:34 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vlastimil Babka <vbabka@suse.cz>, Ajay Kaher <akaher@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        punit.agrawal@arm.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, willy@infradead.org,
+        will.deacon@arm.com, mszeredi@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
+        srostedt@vmware.com, Oscar Salvador <osalvador@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        linux- stable <stable@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
+In-Reply-To: <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com> <1576529149-14269-9-git-send-email-akaher@vmware.com> <20191216130443.GN2844@hirez.programming.kicks-ass.net> <87lfrc9z3v.fsf@vitty.brq.redhat.com> <20191216134725.GE2827@hirez.programming.kicks-ass.net> <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
+Date:   Mon, 16 Dec 2019 17:08:32 +0100
+Message-ID: <87immg9rsv.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch merged into stable-rc tree and perf build failed on OE for
-Linaro builds for 5.3, 4.19, 4.14 and 4.9.
-Please find build error logs here,
+Vlastimil Babka <vbabka@suse.cz> writes:
 
-tests/backward-ring-buffer.c: In function 'test__backward_ring_buffer':
-tests/backward-ring-buffer.c:147:2: warning: implicit declaration of
-function 'evlist__close'; did you mean 'perf_evlist__close'?
-[-Wimplicit-function-declaration]
-  evlist__close(evlist);
-  ^~~~~~~~~~~~~
-  perf_evlist__close
-tests/backward-ring-buffer.c:147:2: warning: nested extern declaration
-of 'evlist__close' [-Wnested-externs]
-tests/backward-ring-buffer.c:149:8: warning: implicit declaration of
-function 'evlist__open'; did you mean 'perf_evlist__open'?
-[-Wimplicit-function-declaration]
-  err = evlist__open(evlist);
-        ^~~~~~~~~~~~
-        perf_evlist__open
-tests/backward-ring-buffer.c:149:8: warning: nested extern declaration
-of 'evlist__open' [-Wnested-externs]
-perf/1.0-r9/recipe-sysroot/usr/lib/python2.7/config/libpython2.7.a(posixmodule.o):
-In function `posix_tmpnam':
-/usr/src/debug/python/2.7.15-r1/Python-2.7.15/Modules/posixmodule.c:7648:
-warning: the use of `tmpnam_r' is dangerous, better use `mkstemp'
-perf/1.0-r9/recipe-sysroot/usr/lib/python2.7/config/libpython2.7.a(posixmodule.o):
-In function `posix_tempnam':
-/usr/src/debug/python/2.7.15-r1/Python-2.7.15/Modules/posixmodule.c:7595:
-warning: the use of `tempnam' is dangerous, better use `mkstemp'
-perf/1.0-r9/perf-1.0/perf-in.o: In function `test__backward_ring_buffer':
-perf/1.0-r9/perf-1.0/tools/perf/tests/backward-ring-buffer.c:147:
-undefined reference to `evlist__close'
-perf/1.0-r9/perf-1.0/tools/perf/tests/backward-ring-buffer.c:149:
-undefined reference to `evlist__open'
+> On 12/16/19 2:47 PM, Peter Zijlstra wrote:
+>> On Mon, Dec 16, 2019 at 02:30:44PM +0100, Vitaly Kuznetsov wrote:
+>>> Peter Zijlstra <peterz@infradead.org> writes:
+>>>
+>>>> On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
+>>>>> From: Vlastimil Babka <vbabka@suse.cz>
+>>>>>
+>>>>> The x86 version of get_user_pages_fast() relies on disabled interrupts to
+>>>>> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+>>>>> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+>>>>> releases the page. As TLB flush is done synchronously via IPI disabling
+>>>>> interrupts blocks the page release, and get_page(), which assumes existing
+>>>>> reference on page, is thus safe.
+>>>>> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+>>>>> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+>>>>> that was already freed or even reused.
+>>>>>
+>>>>> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+>>>>> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+>>>>> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+>>>>> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+>>>>> immediately releases the page again, while it's already on a freelist. Symptoms
+>>>>> include a bad page state warning, general protection faults acessing a poisoned
+>>>>> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+>>>>> together in a single list. Oscar has also reproduced this scenario, with a
+>>>>> patch inserting delays before the get_page() to make the race window larger.
+>>>>>
+>>>>> Fix this by removing the dependency on TLB flush interrupts the same way as the
+>>>>
+>>>> This is suppsed to be fixed by:
+>>>>
+>>>> arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
+>>>>
+>>>
+>>> Yes,
+>
+> Well, that commit fixes the "page table can be freed under us" part. But
+> this patch is about the "get_page() will succeed on a page that's being
+> freed" part. Upstream fixed that unknowingly in 4.13 by a gup.c
+> refactoring that would be too risky to backport fully.
+>
 
-Full log can be found at,
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.3/DISTRO=lkft,MACHINE=hikey,label=docker-lkft/72/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/378/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/675/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/753/consoleText
+(I also dislike receiving only this patch of the series, next time
+please send the whole thing, it's only 8 patches, our mailfolders will
+survive that)
 
+When I was adding Hyper-V PV TLB flush to RHEL7 - which is 3.10 based -
+in addition to adding page_cache_get_speculative() to
+gup_get_pte()/gup_huge_pmd()/gup_huge_pud() I also had to synchronize
+huge PMD split against gup_fast with the following hack:
 
-On Fri, 8 Nov 2019 at 00:38, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> From: Leo Yan <leo.yan@linaro.org>
->
-> The test case 'Read backward ring buffer' failed on 32-bit architectures
-> which were found by LKFT perf testing.  The test failed on arm32 x15
-> device, qemu_arm32, qemu_i386, and found intermittent failure on i386;
-> the failure log is as below:
->
->   50: Read backward ring buffer                  :
->   --- start ---
->   test child forked, pid 510
->   Using CPUID GenuineIntel-6-9E-9
->   mmap size 1052672B
->   mmap size 8192B
->   Finished reading overwrite ring buffer: rewind
->   free(): invalid next size (fast)
->   test child interrupted
->   ---- end ----
->   Read backward ring buffer: FAILED!
->
-> The log hints there have issue for memory usage, thus free() reports
-> error 'invalid next size' and directly exit for the case.  Finally, this
-> issue is root caused as out of bounds memory access for the data array
-> 'evsel->id'.
->
-> The backward ring buffer test invokes do_test() twice.  'evsel->id' is
-> allocated at the first call with the flow:
->
->   test__backward_ring_buffer()
->     `-> do_test()
->           `-> evlist__mmap()
->                 `-> evlist__mmap_ex()
->                       `-> perf_evsel__alloc_id()
->
-> So 'evsel->id' is allocated with one item, and it will be used in
-> function perf_evlist__id_add():
->
->    evsel->id[0] = id
->    evsel->ids   = 1
->
-> At the second call for do_test(), it skips to initialize 'evsel->id'
-> and reuses the array which is allocated in the first call.  But
-> 'evsel->ids' contains the stale value.  Thus:
->
->    evsel->id[1] = id    -> out of bound access
->    evsel->ids   = 2
->
-> To fix this issue, we will use evlist__open() and evlist__close() pair
-> functions to prepare and cleanup context for evlist; so 'evsel->id' and
-> 'evsel->ids' can be initialized properly when invoke do_test() and avoid
-> the out of bounds memory access.
->
-> Fixes: ee74701ed8ad ("perf tests: Add test to check backward ring buffer")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Cc: stable@vger.kernel.org # v4.10+
-> Link: http://lore.kernel.org/lkml/20191107020244.2427-1-leo.yan@linaro.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/backward-ring-buffer.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-> index a4cd30c0beb3..15cea518f5ad 100644
-> --- a/tools/perf/tests/backward-ring-buffer.c
-> +++ b/tools/perf/tests/backward-ring-buffer.c
-> @@ -148,6 +148,15 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
->                 goto out_delete_evlist;
->         }
->
-> +       evlist__close(evlist);
-> +
-> +       err = evlist__open(evlist);
-> +       if (err < 0) {
-> +               pr_debug("perf_evlist__open: %s\n",
-> +                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               goto out_delete_evlist;
-> +       }
-> +
->         err = do_test(evlist, 1, &sample_count, &comm_count);
->         if (err != TEST_OK)
->                 goto out_delete_evlist;
-> --
-> 2.21.0
->
++static void do_nothing(void *unused)
++{
++
++}
++
++static void serialize_against_pte_lookup(struct mm_struct *mm)
++{
++       smp_mb();
++       smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
++}
++
+ void pmdp_splitting_flush(struct vm_area_struct *vma,
+                          unsigned long address, pmd_t *pmdp)
+ {
+@@ -434,9 +473,10 @@ void pmdp_splitting_flush(struct vm_area_struct *vma,
+        set = !test_and_set_bit(_PAGE_BIT_SPLITTING,
+                                (unsigned long *)pmdp);
+        if (set) {
+                /* need tlb flush only to serialize against gup-fast */
+                flush_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
++               if (pv_mmu_ops.flush_tlb_others != native_flush_tlb_others)
++                       serialize_against_pte_lookup(vma->vm_mm);
+        }
+ }
+
+I'm not sure which stable kernel you're targeting (and if you addressed this
+with other patches in the series, if this is needed,...) so JFYI.
+
+-- 
+Vitaly
+
