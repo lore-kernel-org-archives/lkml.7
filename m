@@ -6,108 +6,112 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4834C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55E6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A413B22B48
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62BC20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576472295;
-	bh=NFCDm0J/sj2gQThOrMv49pIL9bZiKnIMUEtSP1Mu9Co=;
+	s=default; t=1576473157;
+	bh=2kKwAdsBDSWZcgMl5S+Mj5/RItgzvVhvm4Gw1vNn228=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lOdzxLnb6LDON9yjMswn7MBz4gxrIoq2zHlfRlCHXEGW+Vh0wZSUitcLufpy61vzV
-	 fa6W7xitYTKHheNjgDJAeQeKtdC82dZqJkd0Y9/mPLvaA7lHCc3ppRDePeR8UPdIni
-	 ex9zK8SyU91Czifkbg4YBliMS5NAIpJz+RCrP30E=
+	b=TL5TtQuMdv0OLvabnr6Yu3ZDlA8pJS7xlAddUYKAmLRswuJ8oJdT4Fagb1DF2APxy
+	 d9HerV1lQmZlthTHcHuq1MzFiwG4/0Hk9H76DxnCxE/qBdqP9wd2FNtgxJgSUiiwJJ
+	 WExCiskMw6gIJ7qwmAObL6yIzaCvU8FZTwueRl7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLPE6O (ORCPT
+        id S1726320AbfLPFMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:58:14 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:48195 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbfLPE6O (ORCPT
+        Mon, 16 Dec 2019 00:12:36 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:24252 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfLPFMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:58:14 -0500
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id xBG4vxJo014459;
-        Mon, 16 Dec 2019 13:58:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xBG4vxJo014459
+        Mon, 16 Dec 2019 00:12:36 -0500
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xBG5C6aW012876
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:12:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xBG5C6aW012876
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576472280;
-        bh=Dq88weXkzpxSO5QZBRSpaBLmC889uRll48tmSqUd+dI=;
+        s=dec2015msa; t=1576473127;
+        bh=yl6Tz4iO7J/vuzlRNXbKAf8n5lJta1BrJoOL2Yhb/lc=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ISSFpAE83YjJuao9B9hmKcViGQrZHFKHU+7NJKWH/x3SjUXVPyELSSuJPNr8E4ZRt
-         VTehOLYPmQ72hdgEKx9elwdROWzYPAlh8nBfEc+SNez3m/xrqcbIAGFiHhR+jFaH2/
-         gwWWX25jO/aUxclHWzuE5YgUjRbd6G/B5y+MwmX88eZjrKd0/QlP17sO9Q8ofbQbYv
-         lMk0rAnXP6Et5deFG2kHQcSRM9FZzmZUkrgJLAVQbGHnvCHYZmi98pVSZsVTZWp935
-         mahec60Wn1374Oi5xSaVxoy9bWJrLWIe5ljpiCkdwlUOlfJJCtkAbxgHXhAguyc4NS
-         ddw6qsWkitgIw==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id o42so1619960uad.10;
-        Sun, 15 Dec 2019 20:58:00 -0800 (PST)
-X-Gm-Message-State: APjAAAWRLWX0V6BWCgiatx89s/fsz/pMxGE+rzBZgMMkrv3//yrLFmco
-        FZn/zwr/kMqrOA6pQPOnMiaxZFf2dfCHghxI3FA=
-X-Google-Smtp-Source: APXvYqxuSu6UowRbWZfICDzasoVnUy8YTI38SoCo1hsIG/HEjPxaMfDL5kwzOdOdrq588Hlg2yXBrCCQjD9M7jia+zQ=
-X-Received: by 2002:ab0:63c7:: with SMTP id i7mr20713722uap.109.1576472279037;
- Sun, 15 Dec 2019 20:57:59 -0800 (PST)
+        b=WSelY+agzLCPGstUxCyswuQBlLJ5nWMDcqfZmmy8yP/C8t9s2dfcPcstGH7XrM2A5
+         6yRs9ljk7i9RsDVdQWYjokTcV50nwq+g7egi3SMKhqwL2axwtGmt5Y6SuVa/EYne0S
+         7e/vjHOSwiktwuzzjo0vUtm2FCcy3JTdM0i51GtkPOQiyCTwCzOmimGFfozG44FP1A
+         khRGCH9JCOA2GNQi/qq1+cz68ytuXfKKgWB4bWoWx3z36PKMF0pVzu+8Ki7CGwtTc1
+         kN8vlEr75Ol/+BN1AK+nmfm6NvokOtaw6gK5Jw9dswwTYXy49bAOyDge5DLbcjFqa4
+         cDeyX9r6yShUA==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id l6so1155886uap.13
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 21:12:07 -0800 (PST)
+X-Gm-Message-State: APjAAAXav7YLD8ofqiVNeUC3KnAWsrMiDMsVSIZAoliMN3fSkVtLc3Xy
+        HJFLnzwnCgCUZ60lq7otvXWyCAayGgpjaHrM5K8=
+X-Google-Smtp-Source: APXvYqzmS8HvVVi2szRpojYPExgKEgQC4CYMj/OMvKX7/eqofqDgaetGfg1gTZeShMOfxEkMsuiLsmBLQF4Yg5Pp2kI=
+X-Received: by 2002:ab0:2814:: with SMTP id w20mr21472074uap.95.1576473126199;
+ Sun, 15 Dec 2019 21:12:06 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1575879069.git.tommyhebb@gmail.com>
-In-Reply-To: <cover.1575879069.git.tommyhebb@gmail.com>
+References: <392d86d2-76a4-03d2-5517-3c22bcf3e535@lwfinger.net>
+In-Reply-To: <392d86d2-76a4-03d2-5517-3c22bcf3e535@lwfinger.net>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 16 Dec 2019 13:57:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQFevjOu6bVhcfUwxCVH81WKs9O7fUH-Wa=7dF=cgwE2w@mail.gmail.com>
-Message-ID: <CAK7LNAQFevjOu6bVhcfUwxCVH81WKs9O7fUH-Wa=7dF=cgwE2w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] kconfig: rework symbol help text
-To:     Thomas Hebb <tommyhebb@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Date:   Mon, 16 Dec 2019 14:11:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARUhrC92HM7DVBVUbPVpS9Q_svb-h6EZ496fpr5JFdPdg@mail.gmail.com>
+Message-ID: <CAK7LNARUhrC92HM7DVBVUbPVpS9Q_svb-h6EZ496fpr5JFdPdg@mail.gmail.com>
+Subject: Re: VirtualBox module build breakage since commit 39808e451fdf
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 5:19 PM Thomas Hebb <tommyhebb@gmail.com> wrote:
+Hi.
+
+On Mon, Dec 16, 2019 at 11:48 AM Larry Finger <Larry.Finger@lwfinger.net> wrote:
 >
-> This series fixes several issues with help text generated by Kconfig,
-> mainly affecting symbols that are defined in multiple places. Although
-> results of these patches are somewhat visible for the symbols in Linux,
-> what prompted me to write the series was working on U-Boot, which also
-> uses Kconfig and makes very heavy use of multiple definitions (e.g. for
-> overriding defaults). I have provided Linux examples where I could find
-> them, but the example for the biggest patch (the first one) is taken
-> from U-Boot because it was more illustrative than anything I could find
-> in Linux.
-
-Nice patch set.
-Thanks for sending it to kbuild ML first
-(then you or somebody else will backport it to U-Boot)
-
-
-BTW, talking about U-Boot, it abuses the multi-definition feature too much.
-This always causes broken dependency when U-Boot migrate
-CONFIG options to Kconfig.  :-/
-
-For my arm64 boards, I used CONFIG_POSITION_INDEPENDENT
-instead of coping with CONFIG_SYS_TEXT_BASE mess...
-
-
-
-> Thomas Hebb (4):
->   kconfig: list all definitions of a symbol in help text
->   kconfig: don't crash on NULL expressions in expr_eq()
->   kconfig: distinguish between dependencies and visibility in help text
->   kconfig: fix nesting of symbol help text
+> Hi,
 >
->  scripts/kconfig/expr.c |  8 +++--
->  scripts/kconfig/expr.h |  1 +
->  scripts/kconfig/menu.c | 75 ++++++++++++++++++++++++------------------
->  3 files changed, 50 insertions(+), 34 deletions(-)
+> Since commit 39808e451fdf ("kbuild: do not read
+> $(KBUILD_EXTMOD)/Module.symvers"), some of the modules for VirtualBox have
+> failed to build. There are at least 3 such modules, namely vboxdrv, vboxnetflt,
+> and vboxnetadp.
+
+As the section 6.3 of Documentation/kbuild/modules.rst says,
+the best practice is to put the related modules into the same source
+tree, and then do like this:
+
+  obj-m := vboxdrv/  vboxnetfit/  vboxnetadp/
+
+
+
+If you want to maintain the three separately,
+as 39808e451fdf mentions, you can useKBUILD_EXTRA_SYMBOLS.
+KBUILD_EXTRA_SYMBOLS was added more than a decade.
+So, you should be able to use it for your modules.
+
+I think it is a cleaner solution than
+copying around Module.symvers in your build tree.
+
+Thanks.
+
+
+> The latter 2 require linking to routines exported from the build
+> of the first, thus file "Module.symvers" is copied from the build directory of
+> vboxdrv into that of the other modules. Even though the documentation says that
+> this method should work, and it has in the past, it fails after this commit. The
+> necessary external symbols are not found.
 >
-> --
-> 2.24.0
+> Am I missing some step needed to make the copy of "Module.symvers" method work?
+> I understand that the method could lead to stale values; however, the build of
+> vboxdrv immediately precedes the build of the others, thus the values are always
+> current.
+>
+> Thanks,
+>
+> Larry
 >
 
 
--- 
+--
 Best Regards
 Masahiro Yamada
