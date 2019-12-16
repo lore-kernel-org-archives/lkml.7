@@ -2,215 +2,131 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921D2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B6AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBF420409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E3F20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3iCBytLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfLPNqe (ORCPT
+        id S1727933AbfLPNrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:46:34 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60796 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbfLPNqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:46:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 05:46:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="389461898"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.169]) ([10.237.72.169])
-  by orsmga005.jf.intel.com with ESMTP; 16 Dec 2019 05:46:30 -0800
-Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
- devices
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc:     kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, zhang.chunyan@linaro.org, tony@atomide.com
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
- <20191210095151.15441-3-faiz_abbas@ti.com>
- <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
- <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
-Date:   Mon, 16 Dec 2019 15:45:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:47:52 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40188 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfLPNrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:47:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2KLAN4ZBm7mQw6EPErstooeuDqde0MxZ8aeQqGLKk1U=; b=3iCBytLQJTNQKbERk1Ou0Oa8r
+        OxTzGqtSGn15JzRVQE+Jmcq1kQjgF/gMYSzRaMsauBjxCsMymuuB42kedoFb3sPqYMRCcuiS+CPrH
+        bfgZW35CWZDsTbAb94g/W98U+aVd++jAj/rmwOtuzSbWq9EXcnOQ6s9ll94fdKB+W9NcgGZwnwhtQ
+        VVYAlw3UUyFSymkgWjUjb0vpLgMQjHMOa/2aHAV8jc3NhPJ3/uL4KXHR0ryqpOuApmYZxZMqx89g2
+        kjsuH5c+qV6pHm39ajE6tLHJhEE9BX7G0nu7YyFLSguEwedR+yqXezfy5OgEaAqXySQ1HgMTs33Ck
+        LceJjZakA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igqid-0007BC-11; Mon, 16 Dec 2019 13:47:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 319D83007F2;
+        Mon, 16 Dec 2019 14:46:03 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5CB252B2A010B; Mon, 16 Dec 2019 14:47:25 +0100 (CET)
+Date:   Mon, 16 Dec 2019 14:47:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Ajay Kaher <akaher@vmware.com>, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        punit.agrawal@arm.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, willy@infradead.org,
+        will.deacon@arm.com, mszeredi@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
+        srostedt@vmware.com, Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+Message-ID: <20191216134725.GE2827@hirez.programming.kicks-ass.net>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+ <1576529149-14269-9-git-send-email-akaher@vmware.com>
+ <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+ <87lfrc9z3v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/12/19 10:27 am, Faiz Abbas wrote:
-> Hi Adrian,
+On Mon, Dec 16, 2019 at 02:30:44PM +0100, Vitaly Kuznetsov wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
 > 
-> On 12/12/19 6:25 pm, Adrian Hunter wrote:
->> On 10/12/19 11:51 am, Faiz Abbas wrote:
->>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>
->>> Some standard SD host controllers can support both external dma
->>> controllers as well as ADMA/SDMA in which the SD host controller
->>> acts as DMA master. TI's omap controller is the case as an example.
->>>
->>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->>> the host controller but does not have any support for external DMA
->>> controllers implemented using dmaengine, meaning that custom code is
->>> needed for any systems that use an external DMA controller with SDHCI.
->>>
->>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->>> 1. Map scatterlists before dmaengine_prep_slave_sg()
->>> 2. Use dma_async() functions inside of the send_command() path and call
->>> terminate_sync() in non-atomic context in case of an error.
->>>
->>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>> ---
-> ...
->>>  {
->>> @@ -1379,12 +1562,19 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->>>  	}
->>>  
->>>  	host->cmd = cmd;
->>> +	host->data_timeout = 0;
->>>  	if (sdhci_data_line_cmd(cmd)) {
->>>  		WARN_ON(host->data_cmd);
->>>  		host->data_cmd = cmd;
->>> +		sdhci_set_timeout(host, cmd);
->>>  	}
->>>  
->>> -	sdhci_prepare_data(host, cmd);
->>> +	if (cmd->data) {
->>> +		if (host->use_external_dma)
->>> +			sdhci_external_dma_prepare_data(host, cmd);
->>> +		else
->>> +			sdhci_prepare_data(host, cmd);
->>> +	}
->>
->> Please make the 3 changes above and the corresponding changes
->> sdhci_prepare_data into a separate patch i.e.
+> > On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
+> >> From: Vlastimil Babka <vbabka@suse.cz>
+> >> 
+> >> The x86 version of get_user_pages_fast() relies on disabled interrupts to
+> >> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+> >> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+> >> releases the page. As TLB flush is done synchronously via IPI disabling
+> >> interrupts blocks the page release, and get_page(), which assumes existing
+> >> reference on page, is thus safe.
+> >> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+> >> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+> >> that was already freed or even reused.
+> >> 
+> >> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+> >> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+> >> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+> >> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+> >> immediately releases the page again, while it's already on a freelist. Symptoms
+> >> include a bad page state warning, general protection faults acessing a poisoned
+> >> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+> >> together in a single list. Oscar has also reproduced this scenario, with a
+> >> patch inserting delays before the get_page() to make the race window larger.
+> >> 
+> >> Fix this by removing the dependency on TLB flush interrupts the same way as the
+> >
+> > This is suppsed to be fixed by:
+> >
+> > arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
+> >
 > 
-> Ok. And I agree with all your style change requests above this. Will fix
-> in v4.
+> Yes,
 > 
->>> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
->>>  	if (host->flags & SDHCI_REQ_USE_DMA) {
->>>  		struct mmc_data *data = mrq->data;
->>>  
->>> +		spin_unlock_irqrestore(&host->lock, flags);
->>> +
->>> +		/* Terminate and synchronize dma in case of an error */
->>> +		if (data && (mrq->cmd->error || data->error) &&
->>> +		    host->use_external_dma) {
->>> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
->>> +									  data);
->>> +			dmaengine_terminate_sync(chan);
->>> +		}
->>> +
->>> +		spin_lock_irqsave(&host->lock, flags);
->>> +
->>
->> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
->> and put it back again to be consistent with the remaining code. Also put
->> host->use_external_dma as the first condition i.e.
->>
->> 		if (host->use_external_dma && data &&
->> 		    (mrq->cmd->error || data->error)) {
->> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
->>
->> 			host->mrqs_done[i] = NULL;
->> 			spin_unlock_irqrestore(&host->lock, flags);
->> 			dmaengine_terminate_sync(chan);
->> 			spin_lock_irqsave(&host->lock, flags);
->> 			sdhci_set_mrq_done(host, mrq);
->> 		}
->>
->> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
->>
->> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->> {
->> 	int i;
->>
->> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->> 		if (host->mrqs_done[i] == mrq) {
->> 			WARN_ON(1);
->> 			return;
->> 		}
->> 	}
->>
->> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->> 		if (!host->mrqs_done[i]) {
->> 			host->mrqs_done[i] = mrq;
->> 			break;
->> 		}
->> 	}
->>
->> 	WARN_ON(i >= SDHCI_MAX_MRQS);
->> }
->>
->> sdhci_set_mrq_done() can be made in the refactoring patch.
-> Haven't we already done the sdhci_set_mrq_done() part in
-> __sdhci_finish_mrq()?
+> but HAVE_RCU_TABLE_FREE was enabled on x86 only in 4.14:
 > 
-> We are picking up an already "done" mrq, looking at whether it had any
-> error and then sychronizing with external dma. Or at least that is my
-> understanding.
+> commit 9e52fc2b50de3a1c08b44f94c610fbe998c0031a
+> Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Date:   Mon Aug 28 10:22:51 2017 +0200
+> 
+>     x86/mm: Enable RCU based page table freeing (CONFIG_HAVE_RCU_TABLE_FREE=y)
+> 
+> and, if I understood correctly, Ajay is suggesting the patch for older
+> stable kernels (4.9 and 4.4 I would guess).
 
-sdhci supports having 2 requests (1 data, 1 cmd) at a time, so there is an
-error case where 1 request will wait for the 2nd request before doing a
-reset.  That logic is further down in sdhci_request_done() so you have to
-put the mrq back into host->mrqs_done[] to make it work.
+It wasn't at all clear this was targeted at old kernels (I only got this
+one patch).
 
-> 
->>
->>>  		if (data && data->host_cookie == COOKIE_MAPPED) {
->>>  			if (host->bounce_buffer) {
->>>  				/*
->>> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>  		       mmc_hostname(mmc), host->version);
->>>  	}
->>>  
->>> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
->>> +	if (host->use_external_dma) {
->>> +		ret = sdhci_external_dma_init(host);
->>> +		if (ret == -EPROBE_DEFER)
->>> +			goto unreg;
->>> +
->>> +		/*
->>> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
->>> +		 * instead of external DMA devices.
->>> +		 */
->>> +		if (ret)
->>> +			sdhci_switch_external_dma(host, false);
->>> +	}
->>> +
->>> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
->>>  		host->flags |= SDHCI_USE_SDMA;
->>> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
->>> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
->>>  		DBG("Controller doesn't have SDMA capability\n");
->>> -	else
->>> +	} else if (host->use_external_dma) {
->>> +		/* Using dma-names to detect external dma capability */
->>
->> What is this change for?  Do you expect for SDHCI_USE_SDMA and
->> SDHCI_USE_ADMA flags to be clear?
-> 
-> Yes. Today the code enables SDMA by default (in the else part below
-> this). I want it to not enable SDMA in the external dma case.
-
-What about moving the "if (host->use_external_dma) {" clause and explicitly
-clearing SDHCI_USE_SDMA and SDHCI_USE_ADMA?
+And why can't those necro kernels do backports of the upstream solution?
