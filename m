@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD74BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB11C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C73B2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0A2207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXEdzR5s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eUKWeLUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfLPWHI (ORCPT
+        id S1727767AbfLPWHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:07:08 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:47631 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbfLPWHF (ORCPT
+        Mon, 16 Dec 2019 17:07:01 -0500
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:53175 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727404AbfLPWG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:07:05 -0500
-Received: by mail-pf1-f201.google.com with SMTP id e62so7755449pfh.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:07:05 -0800 (PST)
+        Mon, 16 Dec 2019 17:06:58 -0500
+Received: by mail-qk1-f202.google.com with SMTP id n128so5620291qke.19
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:06:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Q0qe2kR+bAay0VBCKejOtYmpF3XJORWe/2Y7Sg9amhw=;
-        b=KXEdzR5sEfYW47IOMB4cZpps1PEpUNY54j1THILz0FDue58d4xDTo4xEyITzycC8WI
-         cty59wubaPPbwA/praz2PhIRWbMoNlSfJ5HI5lCRKkz8ZEl+1Q+Mgi5nnUk4hwIMFFyK
-         o9a7hgBtcB2M5nWh7oleILEiPMeC9wsSl3JvL9uyI3jcWOWl2HiNpuPS3tm/2kuzXz/2
-         ZwrcD9NIwbP+TD9B5epGkERp4xEk54xjjIh2KP3BOzg2dWatvs23FcGoe18LGv9tigsN
-         zk7enm6BbQ+IPvYpT59CVbQcLcAbQsDC1kmQ7hMOW4aOh6ehkNGuohUloJyoEOImpdB0
-         og2A==
+        bh=g4iCY0XKOYvOdNm2o5ubHQIC+0sd2MLwVwFTH1VbWR4=;
+        b=eUKWeLUHl5e6Iza28SAKvx6Zq+BxsVkv4uL89+TqB8OuEzqq6FuXTVIVUu1GQ8dno1
+         l7cHlVmOrBkeH7XWMmILFxVKFZV7rsury5fJhw1xxyKJSWfKCdS/wNPDJCKDp5ySJeiG
+         ECDGgFAdQS5ynkDgjAJgwvPqM/HDl6zCiTrTpVjemJKsivs7hkdHasHA2wDDv+YGPfZ8
+         TiEm7sUU9Ms4asZTQeRuB6s2iOCMB8mrcCjvsiqYxx24tsA3YfbTNIonQf7sL+QQNzEr
+         v/1i4c16+71Snz07T8iZzvdlkTb4fE05SoSEQfnbpe9veNktankDVkf33+XPv6tAz2dE
+         t/5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Q0qe2kR+bAay0VBCKejOtYmpF3XJORWe/2Y7Sg9amhw=;
-        b=l53p2mGUsITpDxUyuXmqO4ZpBrfMTKSy5IKnKPAVVIySrZLTWG+whoraTAm2gMZZOY
-         GLRbxNcx3TyqF9DJ3CfqfnEeCSqz4Y9Z+G6PVFQzVh0zEq0eTWju7P/umrgaOoZgC5lj
-         pBiU4uKAStJyziFybSy8j7vm8Nd1Gj9d/GJSeHsem6cxxzZSUrFHphhXH5OLUgMif4OD
-         dPHqKZ+iljin3QoMCNE+WVWkL9CeUB7VFNLCE2ua46HY7c9/D3sJqyJxshOdvQb1KSJT
-         qAJbAWpaZrq4CGcOvCFttq5FDkBtutfMV1rwbFVOXpBKYr2eN+ko+PaQYyy/FPC5uFYw
-         VbEQ==
-X-Gm-Message-State: APjAAAWaoJpS0R5IxYPQkEgIUXr82Eb2kp9+OIVka2QrBz00nUvbdAYf
-        VuYnBWXNNQMxDJH+O03jPv7socV/z244cspcOkBT+w==
-X-Google-Smtp-Source: APXvYqxRhQSngjdpwvFolaB1SLzzXTDEa/g1lTeVrAduuwj0fvc+F3k5fBaVV1qGODXsFPGnv0IqlV0v+/1bKZjWCdvWlA==
-X-Received: by 2002:a63:9548:: with SMTP id t8mr9143009pgn.205.1576534024897;
- Mon, 16 Dec 2019 14:07:04 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:05:55 -0800
+        bh=g4iCY0XKOYvOdNm2o5ubHQIC+0sd2MLwVwFTH1VbWR4=;
+        b=iZ737bv37kltmggK79Pqs6e5l/TnJaBS4ppA7nELa3rBfY4bvgnihRS7GPMmtMy5iW
+         PaoNaRrrqJfDqdDsdRV5NycMgepp1l2AiRoeA4IntyzeT02O2W6JGCa53etuBFSDqJ8m
+         nbB67Ed4PHrl9jefGYPTfR133hAAayN0wHZ3s6TNrx1w/6i2EBGJxxmyUAYgaWM3g9sc
+         S0HblTK6paJKTMqvdowPMbZcQ8zuNdkKTfUH+Q5xvXj7fzB20ZxbLfkqqNcZeFEZJ473
+         b68KG+55hPVAJPuoA3SGOxn8r5XT48Rc55QWm5v/rVqenhh1jtQhtGDhSWEeJGfJJ7kp
+         /FOw==
+X-Gm-Message-State: APjAAAUeuIkAOUb8BrPUsl8u+kTB7nZpU9uIRYvs20Ox80pYSUsJi3Yb
+        RLC8q6R+2myzuQTjz1+OmYelZEvneQA6MX2kbnix+A==
+X-Google-Smtp-Source: APXvYqy1y35y01Wvspoaet51cZ880b6BVTx+UkgakDke3s1m8DfU2hecucqQU/8/Yb1EnMCG30tZoyXobwMCULi6qGbq/A==
+X-Received: by 2002:ac8:534b:: with SMTP id d11mr1654558qto.170.1576534017374;
+ Mon, 16 Dec 2019 14:06:57 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:05:52 -0800
 In-Reply-To: <20191216220555.245089-1-brendanhiggins@google.com>
-Message-Id: <20191216220555.245089-7-brendanhiggins@google.com>
+Message-Id: <20191216220555.245089-4-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20191216220555.245089-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [RFC v1 6/6] kunit: Add 'kunit_shutdown' option
+Subject: [RFC v1 3/6] kunit: test: create a single centralized executor for
+ all tests
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
@@ -76,99 +77,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Gow <davidgow@google.com>
+Add a centralized executor to dispatch tests rather than relying on
+late_initcall to schedule each test suite separately.
 
-Add a new kernel command-line option, 'kunit_shutdown', which allows the
-user to specify that the kernel poweroff, halt, or reboot after
-completing all KUnit tests; this is very handy for running KUnit tests
-on UML or a VM so that the UML/VM process exits cleanly immediately
-after running all tests without needing a special initramfs.
-
-Signed-off-by: David Gow <davidgow@google.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Co-developed-by: Iurii Zaikin <yzaikin@google.com>
+Signed-off-by: Iurii Zaikin <yzaikin@google.com>
 ---
- lib/kunit/executor.c                | 18 ++++++++++++++++++
- tools/testing/kunit/kunit_kernel.py |  2 +-
- tools/testing/kunit/kunit_parser.py |  2 +-
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ include/kunit/test.h |  7 ++-----
+ lib/kunit/Makefile   |  3 ++-
+ lib/kunit/executor.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 6 deletions(-)
+ create mode 100644 lib/kunit/executor.c
 
-diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-index d5f1d07f2f817..32462ecb94eb6 100644
---- a/lib/kunit/executor.c
-+++ b/lib/kunit/executor.c
-@@ -7,7 +7,9 @@
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index dba48304b3bd3..c070798ebb765 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -217,11 +217,8 @@ int kunit_run_tests(struct kunit_suite *suite);
+  * everything else is definitely initialized.
   */
- 
- #include <linux/init.h>
-+#include <linux/moduleparam.h>
- #include <linux/printk.h>
-+#include <linux/reboot.h>
- #include <kunit/test.h>
+ #define kunit_test_suite(suite)						       \
+-	static int kunit_suite_init##suite(void)			       \
+-	{								       \
+-		return kunit_run_tests(&suite);				       \
+-	}								       \
+-	late_initcall(kunit_suite_init##suite)
++	static struct kunit_suite *__kunit_suite_##suite		       \
++	__used __aligned(8) __section(.kunit_test_suites) = &suite
  
  /*
-@@ -17,6 +19,9 @@
- extern struct kunit_suite *__kunit_suites_start[];
- extern struct kunit_suite *__kunit_suites_end[];
+  * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 769d9402b5d3a..893df8a685880 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,7 +1,8 @@
+ obj-$(CONFIG_KUNIT) +=			test.o \
+ 					string-stream.o \
+ 					assert.o \
+-					try-catch.o
++					try-catch.o \
++					executor.o
  
-+static char *kunit_shutdown;
-+core_param(kunit_shutdown, kunit_shutdown, charp, 0644);
+ obj-$(CONFIG_KUNIT_TEST) +=		test-test.o \
+ 					string-stream-test.o
+diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+new file mode 100644
+index 0000000000000..978086cfd257d
+--- /dev/null
++++ b/lib/kunit/executor.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Base unit test (KUnit) API.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
 +
- static void kunit_print_tap_header(void)
- {
- 	size_t num_of_suites;
-@@ -30,6 +35,17 @@ static void kunit_print_tap_header(void)
- 	pr_info("1..%zd\n", num_of_suites);
- }
- 
-+static void kunit_handle_shutdown(void)
++#include <linux/init.h>
++#include <linux/printk.h>
++#include <kunit/test.h>
++
++/*
++ * These symbols point to the .kunit_test_suites section and are defined in
++ * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
++ */
++extern struct kunit_suite *__kunit_suites_start[];
++extern struct kunit_suite *__kunit_suites_end[];
++
++static bool kunit_run_all_tests(void)
 +{
-+	if (!strcmp(kunit_shutdown, "poweroff")) {
-+		kernel_power_off();
-+	} else if (!strcmp(kunit_shutdown, "halt")) {
-+		kernel_halt();
-+	} else if (!strcmp(kunit_shutdown, "reboot")) {
-+		kernel_restart(NULL);
++	struct kunit_suite **suite;
++	bool has_test_failed = false;
++
++	for (suite = __kunit_suites_start;
++	     suite < __kunit_suites_end;
++	     ++suite) {
++		if (kunit_run_tests(*suite))
++			has_test_failed = true;
 +	}
++
++	return !has_test_failed;
 +}
 +
- static bool kunit_run_all_tests(void)
- {
- 	struct kunit_suite **suite;
-@@ -44,6 +60,8 @@ static bool kunit_run_all_tests(void)
- 			has_test_failed = true;
- 	}
- 
-+	kunit_handle_shutdown();
++static int kunit_executor_init(void)
++{
++	if (kunit_run_all_tests())
++		return 0;
++	else
++		return -EFAULT;
++}
 +
- 	return !has_test_failed;
- }
- 
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index bf38768353313..0070c6b807d2a 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -141,7 +141,7 @@ class LinuxSourceTree(object):
- 		return True
- 
- 	def run_kernel(self, args=[], timeout=None, build_dir=None):
--		args.extend(['mem=256M'])
-+		args.extend(['mem=256M', 'kunit_shutdown=halt'])
- 		process = self._ops.linux_bin(args, timeout, build_dir)
- 		with open('test.log', 'w') as f:
- 			for line in process.stdout:
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 78b3bdd03b1e4..633811dd9bce8 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -48,7 +48,7 @@ class TestStatus(Enum):
- 	FAILURE_TO_PARSE_TESTS = auto()
- 
- kunit_start_re = re.compile(r'^TAP version [0-9]+$')
--kunit_end_re = re.compile('List of all partitions:')
-+kunit_end_re = re.compile(r'reboot: System halted')
- 
- def isolate_kunit_output(kernel_output):
- 	started = False
++late_initcall(kunit_executor_init);
 -- 
 2.24.1.735.g03f4e72817-goog
 
