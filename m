@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9859CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D9CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7084A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BD7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519872;
-	bh=I/aQZOgdx/StfqxD/zjch/Q7mN7Mb/s/G1BBWN5EtvE=;
+	s=default; t=1576519878;
+	bh=x/c0dywphSDx6W1FtBK+6NpMrfdCQI/RLiuODgV6fn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y74YAP4EQydAhqyDp/BuNaGNwhl91T02BPgTAGu5REztSZMSA702icRQrr1XxLClG
-	 /1YsNRTZ81Shyy43RSayXIbE+vanpkLEtwZE9Lhqb/FO/LdUJByu+zdqVhMwlBVXvi
-	 SCTzKOnAa7maTwf/a1iBTwtXz/Odk1UHHadKX378=
+	b=a5+QhloP+qOOwC4bEtAEJJk/NVhn06I1g3ivzQ07MHINboUeGDGQZm6TMEkcYzvwt
+	 JLz0CvjYgUgB2ITM/4fChnKAM8JULopGmff+GVyczogkdRsVsUz6pk63oxB9nt8P6P
+	 2y1v4F56E7qmdpqtnyQJcgqsrXDemaLdLGm4jYa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbfLPSLL (ORCPT
+        id S1730757AbfLPSLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730739AbfLPSLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:09 -0500
+        id S1730510AbfLPSLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D14E5206E0;
-        Mon, 16 Dec 2019 18:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B67C1206B7;
+        Mon, 16 Dec 2019 18:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519869;
-        bh=I/aQZOgdx/StfqxD/zjch/Q7mN7Mb/s/G1BBWN5EtvE=;
+        s=default; t=1576519874;
+        bh=x/c0dywphSDx6W1FtBK+6NpMrfdCQI/RLiuODgV6fn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3Q1q2zMz0LnpzHTq3gMGvy5aHRxy8yXD2JF7EOin5a5h9Y+HYlzV5MdrTsBEDWpu
-         EJXrcl9t5Q6zgQyyB4YzJP1JvGKzSVlixsayV+TvBCNoSYCqV+qjt5S0dmj7I8j0cY
-         r9OxrPs+ckN7iQcq2pUU/2V1s23n/6EQSJCJoZpU=
+        b=in3YfYA67LMu7UGKTgRvi+tRP+2R/aRDtvz/dVeh9u0aK0qjrQy6at0nNlPc0xKsD
+         DMfA+UlAkRe90U7TBNqGGBV1YXMWd7lHqeeQPlNhFnZ68Cp5nWaw09MgjXg2PA3uUE
+         Tk4Eg4iZ1grlRoMW7zjV7Im9invZPQ71xhERSJiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Rasmussen <jacobraz@google.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 075/180] ASoC: rt5645: Fixed buddy jack support.
-Date:   Mon, 16 Dec 2019 18:48:35 +0100
-Message-Id: <20191216174830.619155079@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.3 103/180] ACPI / utils: Move acpi_dev_get_first_match_dev() under CONFIG_ACPI
+Date:   Mon, 16 Dec 2019 18:49:03 +0100
+Message-Id: <20191216174836.968785364@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,58 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Rasmussen <jacobraz@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit e7cfd867fd9842f346688f28412eb83dec342900 upstream.
+commit a814dcc269830c9dbb8a83731cfc6fc5dd787f8d upstream.
 
-The headphone jack on buddy was broken with the following commit:
-commit 6b5da66322c5 ("ASoC: rt5645: read jd1_1 status for jd
-detection").
-This changes the jd_mode for buddy to 4 so buddy can read from the same
-register that was used in the working version of this driver without
-affecting any other devices that might use this, since no other device uses
-jd_mode = 4. To test this I plugged and uplugged the headphone jack, verifying
-audio works.
+We have a stub defined for the acpi_dev_get_first_match_dev() in acpi.h
+for the case when CONFIG_ACPI=n.
 
-Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
-Reviewed-by: Ross Zwisler <zwisler@google.com>
-Link: https://lore.kernel.org/r/20191111185957.217244-1-jacobraz@google.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Moreover, acpi_dev_put(), counterpart function, is already placed under
+CONFIG_ACPI.
+
+Thus, move acpi_dev_get_first_match_dev() under CONFIG_ACPI as well.
+
+Fixes: 817b4d64da03 ("ACPI / utils: Introduce acpi_dev_get_first_match_dev() helper")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: 5.2+ <stable@vger.kernel.org> # 5.2+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/rt5645.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/acpi/acpi_bus.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/soc/codecs/rt5645.c
-+++ b/sound/soc/codecs/rt5645.c
-@@ -3270,6 +3270,9 @@ static void rt5645_jack_detect_work(stru
- 		snd_soc_jack_report(rt5645->mic_jack,
- 				    report, SND_JACK_MICROPHONE);
- 		return;
-+	case 4:
-+		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
-+		break;
- 	default: /* read rt5645 jd1_1 status */
- 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
- 		break;
-@@ -3603,7 +3606,7 @@ static const struct rt5645_platform_data
- static const struct rt5645_platform_data buddy_platform_data = {
- 	.dmic1_data_pin = RT5645_DMIC_DATA_GPIO5,
- 	.dmic2_data_pin = RT5645_DMIC_DATA_IN2P,
--	.jd_mode = 3,
-+	.jd_mode = 4,
- 	.level_trigger_irq = true,
- };
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -78,9 +78,6 @@ acpi_evaluate_dsm_typed(acpi_handle hand
+ bool acpi_dev_found(const char *hid);
+ bool acpi_dev_present(const char *hid, const char *uid, s64 hrv);
  
-@@ -3999,6 +4002,7 @@ static int rt5645_i2c_probe(struct i2c_c
- 					   RT5645_JD1_MODE_1);
- 			break;
- 		case 3:
-+		case 4:
- 			regmap_update_bits(rt5645->regmap, RT5645_A_JD_CTRL1,
- 					   RT5645_JD1_MODE_MASK,
- 					   RT5645_JD1_MODE_2);
+-struct acpi_device *
+-acpi_dev_get_first_match_dev(const char *hid, const char *uid, s64 hrv);
+-
+ #ifdef CONFIG_ACPI
+ 
+ #include <linux/proc_fs.h>
+@@ -683,6 +680,9 @@ static inline bool acpi_device_can_power
+ 		adev->power.states[ACPI_STATE_D3_HOT].flags.explicit_set);
+ }
+ 
++struct acpi_device *
++acpi_dev_get_first_match_dev(const char *hid, const char *uid, s64 hrv);
++
+ static inline void acpi_dev_put(struct acpi_device *adev)
+ {
+ 	put_device(&adev->dev);
 
 
