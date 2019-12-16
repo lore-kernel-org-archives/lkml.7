@@ -2,211 +2,258 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3942C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F2C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4FF206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576505067;
-	bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C3uCXmTl7M2gRPjdzHyMyZ9FGdgK5k/YloAuLQWDS3mdoJ3kNZhBZaarlfve21gL4
-	 jtM5436mBC6xUkL7UtlNYIvtAJKL5QzQk6uZkLrbWDaP/UtKJ8ES/EthiBazaQRHLD
-	 kq28zFaGjQvqlGfzR+CDjftvkC1oooaFKrrkXKR0=
+	by mail.kernel.org (Postfix) with ESMTP id 609FF20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfLPOE0 (ORCPT
+        id S1728178AbfLPOEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:04:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 09:04:47 -0500
+Received: from mga04.intel.com ([192.55.52.120]:3366 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbfLPOE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:04:26 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C951C206A5;
-        Mon, 16 Dec 2019 14:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576505065;
-        bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A8aG72OOaT8znWL8+GmFhVW5bWEDI5ITGF2n2FOZQrOGAZPAK8TwebfG6yZ/idgLI
-         72X8kyE2neY4gEQpT7V7jx7S3d/A8I93FNZ7g4n7lf6lWWMvpr01tj0/lLzWy59qJT
-         uaTK+pIxRpmLZ3iLVuMB5bPe6qQRh9KJfGq2Dmw0=
-Date:   Mon, 16 Dec 2019 15:04:22 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 2/8] dt-bindings: mailbox: Add a sun6i message box
- binding
-Message-ID: <20191216140422.on4bredklgdxywbw@gilmour.lan>
-References: <20191215042455.51001-1-samuel@sholland.org>
- <20191215042455.51001-3-samuel@sholland.org>
+        id S1728069AbfLPOEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:04:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 06:04:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="227122473"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 16 Dec 2019 06:04:28 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Dec 2019 16:04:27 +0200
+Date:   Mon, 16 Dec 2019 16:04:27 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 5/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs on BYT
+Message-ID: <20191216140427.GT1208@intel.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <20191215163810.52356-6-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6kpcajowhdygmdk2"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191215042455.51001-3-samuel@sholland.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191215163810.52356-6-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6kpcajowhdygmdk2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Sat, Dec 14, 2019 at 10:24:49PM -0600, Samuel Holland wrote:
-> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
-> sun50i SoCs. Add a device tree binding for it. As it has only been
-> tested on the A83T, A64, H3/H5, and H6 SoCs, only those compatibles are
-> included.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On Sun, Dec 15, 2019 at 05:38:10PM +0100, Hans de Goede wrote:
+> On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
+> do not control the LCD panel- and backlight-enable GPIOs. So far, when
+> the VBT indicates we should use the SoC for backlight control, we have
+> been relying on these GPIOs being configured as output and driven high by
+> the Video BIOS (GOP) when it initializes the panel.
+> 
+> This does not work when the device is booted with a HDMI monitor connected
+> as then the GOP will initialize the HDMI instead of the panel, leaving the
+> panel black, even though the i915 driver tries to output an image to it.
+> 
+> Likewise on some device-models when the GOP does not initialize the DSI
+> panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
+> of muxing it to the PWM controller.
+> 
+> This commit makes the DSI code control the SoC GPIOs for panel- and
+> backlight-enable on BYT, when the VBT indicates the SoC should be used
+> 
+> for backlight control. It also ensures that the PWM0 pin is muxed to the
+> PWM controller in this case.
+> 
+> This fixes the LCD panel not lighting up on various devices when booted
+> with a HDMI monitor connected. This has been tested to fix this on the
+> following devices:
+> 
+> Peaq C1010
+> Point of View MOBII TAB-P800W
+> Point of View MOBII TAB-P1005W
+> Terra Pad 1061
+> Yours Y8W81
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-> new file mode 100644
-> index 000000000000..dd746e07acfd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/gpu/drm/i915/display/intel_dsi.h     |  3 +-
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 63 ++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
+> index 675771ea91aa..7481a5aa3084 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+> @@ -45,8 +45,9 @@ struct intel_dsi {
+>  	struct intel_dsi_host *dsi_hosts[I915_MAX_PORTS];
+>  	intel_wakeref_t io_wakeref[I915_MAX_PORTS];
+>  
+> -	/* GPIO Desc for CRC based Panel control */
+> +	/* GPIO Desc for panel and backlight control */
+>  	struct gpio_desc *gpio_panel;
+> +	struct gpio_desc *gpio_backlight;
+>  
+>  	struct intel_connector *attached_connector;
+>  
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> index 847f04eec2a1..bd007d4f86e2 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> @@ -27,6 +27,8 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/gpio/machine.h>
+>  #include <linux/mfd/intel_soc_pmic.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/machine.h>
+>  #include <linux/slab.h>
+>  
+>  #include <asm/intel-mid.h>
+> @@ -525,11 +527,15 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+>  {
+>  	if (seq_id == MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
+>  		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
+> +	if (seq_id == MIPI_SEQ_BACKLIGHT_ON && intel_dsi->gpio_backlight)
+> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 1);
+>  
+>  	intel_dsi_vbt_exec(intel_dsi, seq_id);
+>  
+>  	if (seq_id == MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
+>  		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
+> +	if (seq_id == MIPI_SEQ_BACKLIGHT_OFF && intel_dsi->gpio_backlight)
+> +		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 0);
+>  }
+>  
+>  void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
+> @@ -688,6 +694,8 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>  /*
+>   * On some BYT/CHT devs some sequences are incomplete and we need to manually
+>   * control some GPIOs. We need to add a GPIO lookup table before we get these.
+> + * If the GOP did not initialize the panel (HDMI inserted) we may need to also
+> + * change the pinmux for the SoC's PWM0 pin from GPIO to PWM.
+>   */
+>  static struct gpiod_lookup_table pmic_panel_gpio_table = {
+>  	/* Intel GFX is consumer */
+> @@ -699,23 +707,68 @@ static struct gpiod_lookup_table pmic_panel_gpio_table = {
+>  	},
+>  };
+>  
+> +static struct gpiod_lookup_table soc_panel_gpio_table = {
+> +	.dev_id = "0000:00:02.0",
+> +	.table = {
+> +	  GPIO_LOOKUP("INT33FC:01", 10, "backlight", GPIO_ACTIVE_HIGH),
+> +	  GPIO_LOOKUP("INT33FC:01", 11, "panel", GPIO_ACTIVE_HIGH),
+> +	  { },
+
+Some kind of indent fail here.
+
+> +	},
+> +};
 > +
-> +title: Allwinner sunxi Message Box
+> +static const struct pinctrl_map soc_pwm_pinctrl_map[] = {
+> +	PIN_MAP_MUX_GROUP("0000:00:02.0", "soc_pwm0", "INT33FC:00",
+> +			  "pwm0_grp", "pwm"),
+> +};
 > +
-> +maintainers:
-> +  - Samuel Holland <samuel@sholland.org>
+>  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  {
+>  	struct drm_device *dev = intel_dsi->base.base.dev;
+>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>  	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+>  	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+> +	bool want_backlight_gpio = false;
+> +	bool want_panel_gpio = false;
+> +	struct pinctrl *pinctrl;
+> +	int ret;
+>  
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+>  		gpiod_add_lookup_table(&pmic_panel_gpio_table);
+> +		want_panel_gpio = true;
+> +	}
 > +
-> +description: |
-> +  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
-> +  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
-> +  is raised for received messages, but software must poll to know when a
-> +  transmitted message has been acknowledged by the remote user. Each FIFO can
-> +  hold four 32-bit messages; when a FIFO is full, clients must wait before
-> +  attempting more transmissions.
+> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
+> +		gpiod_add_lookup_table(&soc_panel_gpio_table);
+> +		want_panel_gpio = true;
+> +		want_backlight_gpio = true;
+>  
+> +		/* Ensure PWM0 pin is muxed as PWM instead of GPIO */
+> +		ret = pinctrl_register_mappings(soc_pwm_pinctrl_map, 1);
+
+ARRAY_SIZE()?
+
+> +		if (ret)
+> +			DRM_ERROR("Failed to register pwm0 pinmux mapping\n");
 > +
-> +  Refer to ./mailbox.txt for generic information about mailbox device-tree
-> +  bindings.
+> +		pinctrl = devm_pinctrl_get_select(dev->dev, "soc_pwm0");
+> +		if (IS_ERR(pinctrl))
+> +			DRM_ERROR("Failed to set pinmux to PWM\n");
+> +	}
 > +
-> +properties:
-> +  compatible:
-> +     items:
-> +      - enum:
-> +          - allwinner,sun8i-a83t-msgbox
-> +          - allwinner,sun8i-h3-msgbox
-> +          - allwinner,sun50i-a64-msgbox
-> +          - allwinner,sun50i-h6-msgbox
-> +      - const: allwinner,sun6i-a31-msgbox
-
-This will fail for the A31, since it won't have two compatibles but
-just one.
-
-You can have something like this if you want to do it with an enum:
-
-compatible:
-  oneOf:
-    - const: allwinner,sun6i-a31-msgbox
-    - items:
-      - enum:
-        - allwinner,sun8i-a83t-msgbox
-        - allwinner,sun8i-h3-msgbox
-        - allwinner,sun50i-a64-msgbox
-        - allwinner,sun50i-h6-msgbox
-      - const: allwinner,sun6i-a31-msgbox
-
-> +  reg:
-> +    items:
-> +      - description: MMIO register range
-
-There's no need for an obvious description like this.
-Just set it to maxItems: 1
-
+> +	if (want_panel_gpio) {
+>  		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>  		if (IS_ERR(intel_dsi->gpio_panel)) {
+>  			DRM_ERROR("Failed to own gpio for panel control\n");
+>  			intel_dsi->gpio_panel = NULL;
+>  		}
+>  	}
 > +
-> +  clocks:
-> +    maxItems: 1
-> +    description: bus clock
+> +	if (want_backlight_gpio) {
+> +		intel_dsi->gpio_backlight =
+> +			gpiod_get(dev->dev, "backlight", flags);
+> +		if (IS_ERR(intel_dsi->gpio_backlight)) {
+> +			DRM_ERROR("Failed to own gpio for backlight control\n");
+> +			intel_dsi->gpio_backlight = NULL;
+> +		}
+> +	}
+>  }
+>  
+>  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+> @@ -729,7 +782,17 @@ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+>  		intel_dsi->gpio_panel = NULL;
+>  	}
+>  
+> +	if (intel_dsi->gpio_backlight) {
+> +		gpiod_put(intel_dsi->gpio_backlight);
+> +		intel_dsi->gpio_backlight = NULL;
+> +	}
 > +
-> +  resets:
-> +    maxItems: 1
-> +    description: bus reset
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
+>  		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: controller interrupt
+> +	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc == PPS_BLC_SOC) {
 
-Ditto, you can drop the description here.
+Slightly annoying to have these checks duplicated. Might be cleaner to
+have a few helpers that return the correct tables and just use those in
+both init and cleanup. OTOH those want_*_gpio flags and the pwm stuff is
+would still be a sticking point I suppose. So maybe not cleaner in the
+end after all.
 
-> +  '#mbox-cells':
-> +    const: 1
+Looks all right to me:
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-However, you should document what the argument is about?
 
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - resets
-> +  - interrupts
-> +  - '#mbox-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/reset/sun8i-h3-ccu.h>
-> +
-> +    msgbox: mailbox@1c17000 {
-> +            compatible = "allwinner,sun8i-h3-msgbox",
-> +                         "allwinner,sun6i-a31-msgbox";
-> +            reg = <0x01c17000 0x1000>;
-> +            clocks = <&ccu CLK_BUS_MSGBOX>;
-> +            resets = <&ccu RST_BUS_MSGBOX>;
-> +            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +            #mbox-cells = <1>;
-> +    };
+> +		pinctrl_unregister_mappings(soc_pwm_pinctrl_map);
+> +		gpiod_remove_lookup_table(&soc_panel_gpio_table);
+> +	}
+>  }
+> -- 
+> 2.23.0
 
-Look good otherwise, thanks!
-Maxime
-
---6kpcajowhdygmdk2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeO5gAKCRDj7w1vZxhR
-xZz1AP4ummpThYn1v2bFsXFQFsYqcm6TRKjZ8eZz+DriVOSSjAEAgxnXw2btNZrv
-PVGRNuENk6kHsBf7eVmnaJa2MVik5Qs=
-=/Mdk
------END PGP SIGNATURE-----
-
---6kpcajowhdygmdk2--
+-- 
+Ville Syrjälä
+Intel
