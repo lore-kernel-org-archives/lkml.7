@@ -2,86 +2,162 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE17EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5B4C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857FE20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aK5FHjDX"
+	by mail.kernel.org (Postfix) with ESMTP id B318720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576519349;
+	bh=ThkZrGCpRWJfNFSjjFeIhD8e0DeNX9ugk1KreQ0/rlM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w9X3pX1gDPovTafnz4Q8ekvCgIGyOeqc/wNyz/4qA2PjEBzmV5rpvt8+7G9J0AFjx
+	 mhwUEX25yhV/ClrWw9ndeDlIP9DFBPqlCnMf2hAuljEq1lIp0TUmr9mdxW9TZFf9WK
+	 NBCtNfVbPktsrx3bnlauOQCjvAq0gWbKrrf3P7KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfLPSC1 (ORCPT
+        id S1729350AbfLPSC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:27 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38808 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729086AbfLPSCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:24 -0500
-Received: by mail-qk1-f195.google.com with SMTP id k6so3622581qki.5;
-        Mon, 16 Dec 2019 10:02:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=/wgIjX1dU2wQH6kmt/wxBh8DEI9OC0fPRFaMU5c+19U=;
-        b=aK5FHjDX78JdmIlmY7UGSEKLyK+plDswCHD9EfXisDUKQelP/XMkWce0lfrZkZUJyg
-         3UC66szQcE7PNLgccwlf59/DU2/S88c323rKOwvOimcYvXbcQq3jftigRUrw3yGgwfKO
-         aK6zJH123/LmhoYyEpo/YBOtBw4tmQhG00QBrrosLUg83ENlpU3hsJBrdo7YfPPYJKzB
-         zmIwmJUdhuBtX5+FYq/fg1mUZGgxJGJK/0qoZBbGbdyukYxJ2vaDyRkd7nNJYGx5UO3y
-         zcmoJ9rieShg9yFWklosDfWp4SLtbQW1n5szZ8uNw2Cd9Rlq5mgoro/6us+dNZ2+H2RM
-         uB5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/wgIjX1dU2wQH6kmt/wxBh8DEI9OC0fPRFaMU5c+19U=;
-        b=E6XaYTUysM5GJojTbuA+SSAwMQN0i4HyRW/8LPgUr/oDDWI4Xh9ylRY5013KekdVB1
-         8fy+JfmKfwNHAsQrYwQx0OJHUIV/9LNdUJ7i6TCb2SnmS7U5I/ClWosgrHD2FZYFkRfP
-         XFUzcAFvMjGtDfQDPN83LA+K9X+XO44wpcg4GATF0rm4akiH9SjBsa1KcisyKjSjwkLb
-         3X97L/8Mtf7kNmMPCTHbReBYLrQUkjc2aCtxgT1jIrjFRq3Jio3Xix6R82ZVpSej0x/t
-         obqBEMEGsT5Duwdq4mImp5bvRCi/0fmXp7A43pWVv6+7KXdaVZnbAe4k5+O5q0lMfckT
-         r4zQ==
-X-Gm-Message-State: APjAAAXFxLeM4cOCowm1L0fn06JQNqOIDX5ZmJOCosRZoFl0fCPZ8QdB
-        BguEtTdcR59cyncOYsmuzWc=
-X-Google-Smtp-Source: APXvYqzdu1sTCj4NZqYSRC6slwAaJGOIFip0P2vewuNZ7htej3nWePVTXo/8UzTYLV9SDoAn/6Sq9A==
-X-Received: by 2002:a37:9f94:: with SMTP id i142mr582854qke.244.1576519343375;
-        Mon, 16 Dec 2019 10:02:23 -0800 (PST)
-Received: from iclxps (c-73-129-26-117.hsd1.md.comcast.net. [73.129.26.117])
-        by smtp.gmail.com with ESMTPSA id r41sm7101996qtc.6.2019.12.16.10.02.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 10:02:22 -0800 (PST)
-Message-ID: <2e689322e9c07a062454eed51b318d4c0b29799c.camel@gmail.com>
-Subject: Re: [PATCH v5 2/4] lib: devres: add a helper function for ioremap_uc
-From:   Tuowen Zhao <ztuowen@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, stable@vger.kernel.org,
-        linux@roeck-us.net
-Date:   Mon, 16 Dec 2019 13:02:21 -0500
-In-Reply-To: <20191216130634.GA1563846@kroah.com>
-References: <20191016210629.1005086-3-ztuowen@gmail.com>
-         <20191017143144.9985421848@mail.kernel.org>
-         <b113dd8da86934acc90859dc592e0234fa88cfdc.camel@gmail.com>
-         <20191018164738.GY31224@sasha-vm>
-         <7eb0ed7d51b53f7d720a78d9b959c462adb850d4.camel@gmail.com>
-         <20191216130634.GA1563846@kroah.com>
-Content-Type: text/plain
-User-Agent: Evolution 3.34.2 
+        Mon, 16 Dec 2019 13:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729054AbfLPSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34253207FF;
+        Mon, 16 Dec 2019 18:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519345;
+        bh=ThkZrGCpRWJfNFSjjFeIhD8e0DeNX9ugk1KreQ0/rlM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XG555jIr/8N0/6LxwDhDpyE1HcX/C0ctHEdZvZaNcdXfanrHHT2ZV6PPIUC+qtiFA
+         S5TmlkCEx0R5o9/UIF4oFDKxRb489hOcMhE0Kmk972Z0MGijBZtJKzfF55bIwPNoo6
+         lkxvnXgGOA/GcgB6HV+5eM0Ij8mPFqrOzp4iVReQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pete Zaitcev <zaitcev@redhat.com>,
+        syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.19 028/140] usb: mon: Fix a deadlock in usbmon between mmap and read
+Date:   Mon, 16 Dec 2019 18:48:16 +0100
+Message-Id: <20191216174757.608036067@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
+References: <20191216174747.111154704@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, sorry for the trouble.
+From: Pete Zaitcev <zaitcev@redhat.com>
 
-Tuowen
+commit 19e6317d24c25ee737c65d1ffb7483bdda4bb54a upstream.
+
+The problem arises because our read() function grabs a lock of the
+circular buffer, finds something of interest, then invokes copy_to_user()
+straight from the buffer, which in turn takes mm->mmap_sem. In the same
+time, the callback mon_bin_vma_fault() is invoked under mm->mmap_sem.
+It attempts to take the fetch lock and deadlocks.
+
+This patch does away with protecting of our page list with any
+semaphores, and instead relies on the kernel not close the device
+while mmap is active in a process.
+
+In addition, we prohibit re-sizing of a buffer while mmap is active.
+This way, when (now unlocked) fault is processed, it works with the
+page that is intended to be mapped-in, and not some other random page.
+Note that this may have an ABI impact, but hopefully no legitimate
+program is this wrong.
+
+Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
+Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 46eb14a6e158 ("USB: fix usbmon BUG trigger")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191204203941.3503452b@suzdal.zaitcev.lan
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/mon/mon_bin.c |   32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *f
+ 
+ 		mutex_lock(&rp->fetch_lock);
+ 		spin_lock_irqsave(&rp->b_lock, flags);
+-		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+-		kfree(rp->b_vec);
+-		rp->b_vec  = vec;
+-		rp->b_size = size;
+-		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+-		rp->cnt_lost = 0;
++		if (rp->mmap_active) {
++			mon_free_buff(vec, size/CHUNK_SIZE);
++			kfree(vec);
++			ret = -EBUSY;
++		} else {
++			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
++			kfree(rp->b_vec);
++			rp->b_vec  = vec;
++			rp->b_size = size;
++			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
++			rp->cnt_lost = 0;
++		}
+ 		spin_unlock_irqrestore(&rp->b_lock, flags);
+ 		mutex_unlock(&rp->fetch_lock);
+ 		}
+@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct p
+ static void mon_bin_vma_open(struct vm_area_struct *vma)
+ {
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active++;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ static void mon_bin_vma_close(struct vm_area_struct *vma)
+ {
++	unsigned long flags;
++
+ 	struct mon_reader_bin *rp = vma->vm_private_data;
++	spin_lock_irqsave(&rp->b_lock, flags);
+ 	rp->mmap_active--;
++	spin_unlock_irqrestore(&rp->b_lock, flags);
+ }
+ 
+ /*
+@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(stru
+ 	unsigned long offset, chunk_idx;
+ 	struct page *pageptr;
+ 
+-	mutex_lock(&rp->fetch_lock);
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	if (offset >= rp->b_size) {
+-		mutex_unlock(&rp->fetch_lock);
++	if (offset >= rp->b_size)
+ 		return VM_FAULT_SIGBUS;
+-	}
+ 	chunk_idx = offset / CHUNK_SIZE;
+ 	pageptr = rp->b_vec[chunk_idx].pg;
+ 	get_page(pageptr);
+-	mutex_unlock(&rp->fetch_lock);
+ 	vmf->page = pageptr;
+ 	return 0;
+ }
+
 
