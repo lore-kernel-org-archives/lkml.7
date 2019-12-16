@@ -2,100 +2,104 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C98C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F91C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF1120717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5D120684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/J/iNuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfLPNRZ (ORCPT
+        id S1727859AbfLPNSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:17:25 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:34735 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfLPNRY (ORCPT
+        Mon, 16 Dec 2019 08:18:05 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35520 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfLPNSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:17:24 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MA88C-1iZjVc380Y-00BfWR; Mon, 16 Dec 2019 14:17:02 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: lpfc: fix build failure with DEBUGFS disabled
-Date:   Mon, 16 Dec 2019 14:16:49 +0100
-Message-Id: <20191216131701.3125077-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 16 Dec 2019 08:18:04 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so1838741plt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:18:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JDTG1dtuof8oohV+ZDjnkTKA+QbTtPXocHHBYvIWtYU=;
+        b=S/J/iNuzrRNSlcoVOoFAosx1pTi88JQTvUDIvkDwjAvXTjmXKPJ+OY4ApQT00OvL3T
+         BihH2XEs9CCbEwTg5bdsJ5JzMng+nXSqV27hrzRCNGYnl5j/pXS3xCnHab5m3tZ6lfdS
+         fVC8ESr3EjvsR8tKYP9Fiy5zwxgVnslVyb57oNetnP2OwrBlIKqff4Ebb8UZ1NwS7qHi
+         4ng9ekKWSPIz15ZgFpQUXh3CSH6OW29DsvxB5Y+aywtmQtx5nvxSOWQxq3KZoQiM8hD8
+         B66/8OtrhB7y+cyji/kKZQpgSpbAOU3q9F7IysssNwFVfmWs0fJ9KVJ93S050e6tMU+B
+         /2+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JDTG1dtuof8oohV+ZDjnkTKA+QbTtPXocHHBYvIWtYU=;
+        b=N81Q7nih3Z/BP0et8ddvrXYwkDptpzkjSx2ZvF1etz5w214O0ttL5R3TintE1YT0tZ
+         2GiHNz2LnBGrDlCGkOFb5WOfMzS7GUW8fxLgYdL8p6Q1fIoES3mdd/5R1RAxVQXvo2AQ
+         5aAHU68pWUkLUbmImG9YDjVNr71pl85qvlyTiForDMvdKblKGUbEGJPkydM3yghUKdwk
+         BCp4H4+A28f+xbGw6iKNtQIywYzJKjprxncFskXkMC7gfroUkHzV6X6XJXN0Ygal981s
+         cwOrTiJncvjPhQK0Cy1uf8GAP1g1BvLwJfnPjSoLPxETvfyT6aOdw/yuwrB/EQBgNsfC
+         6VNg==
+X-Gm-Message-State: APjAAAWTLfVd9DNsR+TKd/Aj2Ns2DJXHmaPn1sud3ENwsp/o8MC3ujRL
+        IQGVooPDqJJg3n7Mhm4Fkk4/pW4u/HuRjFYD7YDSvA==
+X-Google-Smtp-Source: APXvYqyU6prPxVR6gNSNaVAUcL5V++4eeLFe5K9rpahXPgNvA2HzUtv8aCtb6oKq0CyPcRLFn+BQdhyiEUMOptdlRdE=
+X-Received: by 2002:a17:90b:150:: with SMTP id em16mr17350598pjb.123.1576502283682;
+ Mon, 16 Dec 2019 05:18:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:muNsOaQMWt/pgvfzkrJbpOqFT5GN9UxG1fJWHJjZeBLFKbF8xfp
- yYlQCzvOEkCpvq2JejmOFD9/vaq7yUpfys1l15/URUlHWQewyx9fudWty+/T1TOEnBSPy7t
- y86BXPNYUBhEBTi8jaZoZT+jKHpS7XEwcrrv3NCt6+xaEKYSi4siJ3QOVyOZE8nHesakQ1I
- CpmdMy0/GkkPS9opsYdgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:r4lXlfYw3sY=:eBDEz/XTIQGoh0b+8pb1TU
- sQifTHqB+yB4EgWPe3jvYkp3clTkvFkkAthqxhhimxeHTA7ofmGaiwGTQGuZYN/Mk0n62L1iw
- XUPSDox/UTo3J10ByoDooy61vg548vyvZXTAPQWveqdMRjn+cYjUeQR3SLkr85PpqRof8oPOF
- ZzpMUyGB93DXsY1xww+D7hFuaQ20a57RW3rM0+g6ZAkPgTrUX3mWfFEdNwfgdCVlhuKewKGqH
- arEbuP53MbAQL9zDaWY9wR/NHXsBg0i+gV0xIqJKSeor7Qt4yy7w3XZuHl4D9doEKZDvI33zs
- 8Kco9v7HRVg6P07UQ+l2mnWoxa4aUaiEpSIDaBES3C5wJpChbdmxJ++qiZFTuKQa5khtjcpWn
- IoelE7YI2pE9x7Q1nyBQFf3V99f7zS7apJPXKi3eXt0rST7RFvvAe8/WeQx3lsA7WdvBykMbb
- JT7APJlx4rtzBppaPZGI/nCkUPwZXq2lbSGHT9sulfFeszLUdyTzwcaOK0j08t9gIm/zfiMNv
- sSJ+2UD2+rWX/sfVKp9SsAVMNdJgFUr/8nNtgAGu5ZQTjOnUKshSIVOYfKyKdclOAq6p6ToNl
- msgVL/mHB2MmsdILy+O35Mg3Kn96TDEDhS/L6hGnTFwVc9mt/Mmqlc84cN/Ee7vyFXo7Mdd8C
- 2fqOTkxhjX00MzUbUBGbYYnrl/RJf8PiSWi5SUErqQwQWeKmlsgQw8fL/lXafLFXW0sR7c7mk
- vzWHKI38u8woNdXghUVKEMfCfSHulKIe2xL8o1v9hMHQSTOJ6qyQK7OmPTiB+mUNfMbFVJMgr
- LVA/H5l46kwyQPFNG6aWY+cTL9g58t96PqJtK7xX5J86QacuOCLdKgXleuXI0H38G9rk0nxLh
- mjhdjssjRfyjybr7Ccpw==
+References: <20191108154838.21487-1-will@kernel.org> <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck>
+In-Reply-To: <20191216121651.GA12947@willie-the-truck>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 16 Dec 2019 14:17:52 +0100
+Message-ID: <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+To:     Will Deacon <will@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent change appears to have moved an #endif by accident:
+On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Laurent,
+>
+> On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > Thank you for the patch.
+> >
+> > I'm sorry for the delay, and will have to ask you to be a bit more
+> > patient I'm afraid. I will leave tomorrow for a week without computer
+> > access and will only be able to go through my backlog when I will be
+> > back on the 17th.
+>
+> Gentle reminder on this, now you've been back a month ;)
 
-drivers/scsi/lpfc/lpfc_debugfs.c:5393:18: error: 'lpfc_debugfs_dumpHBASlim_open' undeclared here (not in a function); did you mean 'lpfc_debugfs_op_dumpHBASlim'?
-drivers/scsi/lpfc/lpfc_debugfs.c:5394:18: error: 'lpfc_debugfs_lseek' undeclared here (not in a function); did you mean 'lpfc_debugfs_nvme_trc'?
-drivers/scsi/lpfc/lpfc_debugfs.c:5395:18: error: 'lpfc_debugfs_read' undeclared here (not in a function); did you mean 'lpfc_debug_dump_q'?
-drivers/scsi/lpfc/lpfc_debugfs.c:5396:18: error: 'lpfc_debugfs_release' undeclared here (not in a function); did you mean 'lpfc_debugfs_terminate'?
-drivers/scsi/lpfc/lpfc_debugfs.c:5402:18: error: 'lpfc_debugfs_dumpHostSlim_open' undeclared here (not in a function); did you mean 'lpfc_debugfs_op_dumpHostSlim'?
+Hi Will,
 
-Move it back to where it was previously.
+I think we now have a reproducer for this issue that syzbot just reported:
 
-Fixes: 95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/lpfc/lpfc_debugfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
 
-diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
-index 2e6a68d9ea4f..a5ecbce4eda2 100644
---- a/drivers/scsi/lpfc/lpfc_debugfs.c
-+++ b/drivers/scsi/lpfc/lpfc_debugfs.c
-@@ -5385,7 +5385,6 @@ static const struct file_operations lpfc_debugfs_ras_log = {
- 	.read =         lpfc_debugfs_read,
- 	.release =      lpfc_debugfs_ras_log_release,
- };
--#endif
- 
- #undef lpfc_debugfs_op_dumpHBASlim
- static const struct file_operations lpfc_debugfs_op_dumpHBASlim = {
-@@ -5557,7 +5556,7 @@ static const struct file_operations lpfc_idiag_op_extAcc = {
- 	.write =        lpfc_idiag_extacc_write,
- 	.release =      lpfc_idiag_cmd_release,
- };
--
-+#endif
- 
- /* lpfc_idiag_mbxacc_dump_bsg_mbox - idiag debugfs dump bsg mailbox command
-  * @phba: Pointer to HBA context object.
--- 
-2.20.0
+You can try you patch on it :)
 
+There's also another one, which looks related:
+
+https://syzkaller.appspot.com/bug?extid=0b0095300dfeb8a83dc8
+
+Thanks!
