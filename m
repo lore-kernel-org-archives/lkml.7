@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7505EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA445C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451D52082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B263A21582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521350;
-	bh=NrwJ/T0J+hwOEUD8tFTp6mb6eQcRRMoPmExsk3iDw3U=;
+	s=default; t=1576521353;
+	bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RJ+8bL5hB+rNT5vuDwTz4DVwZNMFWLSHjX+wtJNbG3Ybip9tZ5fxKevLRffMVL+Ye
-	 CKs86YkbirfkntaD/ep2m3IPbgFXh07ACdcmpOZyo0BOk7+qdjrnEViH1qDTmNDDUC
-	 Z+RdN530WXn4FQhCj3f2TYY/nck614k0+E8ehTkM=
+	b=zOE4tk+8E8vIN4EhOSwAlerQuH4CtmOjM4ZotSDXjCsCbrJF/K3I2KgpujRsMREWj
+	 mtk7B9PAAD2aXyGkU9W/LZVIU1md0QD/eRKJsCcwGhcm27kmtojBVcrr/qaoE9tfjS
+	 /yxu/E1RVBruDyn2DnOS3x0RFWM9iM6isf2+zJeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbfLPSHf (ORCPT
+        id S1730475AbfLPSfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:35:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbfLPSHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:30 -0500
+        id S1729800AbfLPSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C23A20CC7;
-        Mon, 16 Dec 2019 18:07:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F267A20700;
+        Mon, 16 Dec 2019 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519650;
-        bh=NrwJ/T0J+hwOEUD8tFTp6mb6eQcRRMoPmExsk3iDw3U=;
+        s=default; t=1576519652;
+        bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYSDKm54YJsuSf42Uw4RSSm4xIHUcu+RRktA+CxLn5RPHrZvSzfFnW53KNHGAMEsA
-         G3hG6N1Kd9sFYFKv6l66xG+YFlCbe9aA0SYAgYnIFqCU00r1oZJF9WrWOzuCMILWrf
-         BOyF9C+Zmj77m11N2C/X3olJnYdEhDpHoN9e5ojk=
+        b=FxQAB80lrXdIGsEKuLjbEMwS3xVXINHLg0Pf7CaJ1OwiHQyxvf3SKJzK5pbe7kEju
+         1oNohA4056Y9Y82coMVjd2K3nc8a75PwUYxw8/1VLUCjeI2z2CV/u3H86tk4yFJCg4
+         g7bAeXYb32ohf5rbdpavQUxG3rv6REDfqizQng0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>
-Subject: [PATCH 5.3 013/180] binder: fix incorrect calculation for num_valid
-Date:   Mon, 16 Dec 2019 18:47:33 +0100
-Message-Id: <20191216174808.729939627@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 014/180] staging: rtl8188eu: fix interface sanity check
+Date:   Mon, 16 Dec 2019 18:47:34 +0100
+Message-Id: <20191216174808.901670398@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,44 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 16981742717b04644a41052570fb502682a315d2 upstream.
+commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
 
-For BINDER_TYPE_PTR and BINDER_TYPE_FDA transactions, the
-num_valid local was calculated incorrectly causing the
-range check in binder_validate_ptr() to miss out-of-bounds
-offsets.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Fixes: bde4a19fc04f ("binder: use userspace pointer as base of buffer space")
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213202531.55010-1-tkjos@google.com
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
+Cc: stable <stable@vger.kernel.org>     # 3.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -3332,7 +3332,7 @@ static void binder_transaction(struct bi
- 			binder_size_t parent_offset;
- 			struct binder_fd_array_object *fda =
- 				to_binder_fd_array_object(hdr);
--			size_t num_valid = (buffer_offset - off_start_offset) *
-+			size_t num_valid = (buffer_offset - off_start_offset) /
- 						sizeof(binder_size_t);
- 			struct binder_buffer_object *parent =
- 				binder_validate_ptr(target_proc, t->buffer,
-@@ -3406,7 +3406,7 @@ static void binder_transaction(struct bi
- 				t->buffer->user_data + sg_buf_offset;
- 			sg_buf_offset += ALIGN(bp->length, sizeof(u64));
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -70,7 +70,7 @@ static struct dvobj_priv *usb_dvobj_init
+ 	phost_conf = pusbd->actconfig;
+ 	pconf_desc = &phost_conf->desc;
  
--			num_valid = (buffer_offset - off_start_offset) *
-+			num_valid = (buffer_offset - off_start_offset) /
- 					sizeof(binder_size_t);
- 			ret = binder_fixup_parent(t, thread, bp,
- 						  off_start_offset,
+-	phost_iface = &usb_intf->altsetting[0];
++	phost_iface = usb_intf->cur_altsetting;
+ 	piface_desc = &phost_iface->desc;
+ 
+ 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
 
 
