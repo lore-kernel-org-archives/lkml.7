@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E095EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C79C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79AE24680
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B351E2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521555;
-	bh=7sFZgH0GHz1uqutiu9syMlI4HQ+LzFR3DWImJL7Q/4E=;
+	s=default; t=1576521557;
+	bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvFjsw7NBc2NOXgNXeIDubNAIiuERq/Q6PcdAmNLvtJ3iBiW6lh/s7jkt059bATMj
-	 kvUBJUZ3bdc67x7n8PaLJ1qcfDTbiB5rwlotI+q8eqbvFPP5RHZtd9VbLwvwWsYPKm
-	 US4F8omO+rwxZXcUxtUm5B469e0ZIkLFte+QGL3s=
+	b=GsMHrpon+TpvxKJlFbbqzrKDrxwyAXH8FshcPWwmDgxO1S1TDjTezdfJAMjC7Cdna
+	 +rZ6hX95P95vrKMFoMY4emaHXfW0chJw65r3pNou+zf05Rk+cPQy/V8x2w19mGRz0V
+	 PCPvkvULb8gqeFmX57dC+XpcZ57zuQ+jNrr29YRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfLPSDu (ORCPT
+        id S1729559AbfLPSDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbfLPSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:46 -0500
+        id S1729002AbfLPSDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FA320700;
-        Mon, 16 Dec 2019 18:03:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F74420733;
+        Mon, 16 Dec 2019 18:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519426;
-        bh=7sFZgH0GHz1uqutiu9syMlI4HQ+LzFR3DWImJL7Q/4E=;
+        s=default; t=1576519423;
+        bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTgWUEwxGrWiAWEOV0XTaqO9E9eej/bk7RLtJRHeaCWXp5uSOkYec7oemWE9EEGeU
-         UYHE8C6+Pd3olJHOsu5gsFjMHOYfQ3AH/ALGHBqJ9EY5ETbJzRGuoifK5Y3+U4DUKu
-         5i5uUNoQbAaowIUuZWHhK7cWZbBZUAoRHVEljNOc=
+        b=vAMv2jDbUj1odzOlcHBV+KuxcFyexbx9TndyfKmgdbZcdVY0w2lua7b+KWSfaKFHH
+         oLIDhfXHOT8Dg/rNiZB8a1/qSQdGuDwxTvj648sCvdixq8l+a3HoIwRXwY9VK8ZdDp
+         XjjQ1RdaCMrH0JImOqefuwYDRomNvpXBeYkG9YoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.19 062/140] s390/mm: properly clear _PAGE_NOEXEC bit when it is not supported
-Date:   Mon, 16 Dec 2019 18:48:50 +0100
-Message-Id: <20191216174804.746911582@linuxfoundation.org>
+        stable@vger.kernel.org, Pontus Fuchs <pontus.fuchs@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Denis Efremov <efremov@linux.com>
+Subject: [PATCH 4.19 061/140] ar5523: check NULL before memcpy() in ar5523_cmd()
+Date:   Mon, 16 Dec 2019 18:48:49 +0100
+Message-Id: <20191216174804.559449657@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,65 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit ab874f22d35a8058d8fdee5f13eb69d8867efeae upstream.
+commit 315cee426f87658a6799815845788fde965ddaad upstream.
 
-On older HW or under a hypervisor, w/o the instruction-execution-
-protection (IEP) facility, and also w/o EDAT-1, a translation-specification
-exception may be recognized when bit 55 of a pte is one (_PAGE_NOEXEC).
+memcpy() call with "idata == NULL && ilen == 0" results in undefined
+behavior in ar5523_cmd(). For example, NULL is passed in callchain
+"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+adds ilen check before memcpy() call in ar5523_cmd() to prevent an
+undefined behavior.
 
-The current code tries to prevent setting _PAGE_NOEXEC in such cases,
-by removing it within set_pte_at(). However, ptep_set_access_flags()
-will modify a pte directly, w/o using set_pte_at(). There is at least
-one scenario where this can result in an active pte with _PAGE_NOEXEC
-set, which would then lead to a panic due to a translation-specification
-exception (write to swapped out page):
-
-do_swap_page
-  pte = mk_pte (with _PAGE_NOEXEC bit)
-  set_pte_at   (will remove _PAGE_NOEXEC bit in page table, but keep it
-                in local variable pte)
-  vmf->orig_pte = pte (pte still contains _PAGE_NOEXEC bit)
-  do_wp_page
-    wp_page_reuse
-      entry = vmf->orig_pte (still with _PAGE_NOEXEC bit)
-      ptep_set_access_flags (writes entry with _PAGE_NOEXEC bit)
-
-Fix this by clearing _PAGE_NOEXEC already in mk_pte_phys(), where the
-pgprot value is applied, so that no pte with _PAGE_NOEXEC will ever be
-visible, if it is not supported. The check in set_pte_at() can then also
-be removed.
-
-Cc: <stable@vger.kernel.org> # 4.11+
-Fixes: 57d7f939e7bd ("s390: add no-execute support")
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/pgtable.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ar5523/ar5523.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1150,8 +1150,6 @@ void gmap_pmdp_idte_global(struct mm_str
- static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
- 			      pte_t *ptep, pte_t entry)
- {
--	if (!MACHINE_HAS_NX)
--		pte_val(entry) &= ~_PAGE_NOEXEC;
- 	if (pte_present(entry))
- 		pte_val(entry) &= ~_PAGE_UNUSED;
- 	if (mm_has_pgste(mm))
-@@ -1168,6 +1166,8 @@ static inline pte_t mk_pte_phys(unsigned
- {
- 	pte_t __pte;
- 	pte_val(__pte) = physpage + pgprot_val(pgprot);
-+	if (!MACHINE_HAS_NX)
-+		pte_val(__pte) &= ~_PAGE_NOEXEC;
- 	return pte_mkyoung(__pte);
- }
+--- a/drivers/net/wireless/ath/ar5523/ar5523.c
++++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar,
  
+ 	if (flags & AR5523_CMD_FLAG_MAGIC)
+ 		hdr->magic = cpu_to_be32(1 << 24);
+-	memcpy(hdr + 1, idata, ilen);
++	if (ilen)
++		memcpy(hdr + 1, idata, ilen);
+ 
+ 	cmd->odata = odata;
+ 	cmd->olen = olen;
 
 
