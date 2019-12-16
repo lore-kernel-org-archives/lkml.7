@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340E0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B0FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105E820725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A947207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfLPLY0 (ORCPT
+        id S1727600AbfLPLYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:24:26 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:49882 "EHLO
+        Mon, 16 Dec 2019 06:24:31 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:49860 "EHLO
         isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfLPLYB (ORCPT
+        with ESMTP id S1727346AbfLPLYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 06:24:01 -0500
 X-isilmar-external: YES
@@ -29,11 +29,11 @@ X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id ABFEA200ACA;
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 88392200AC5;
         Mon, 16 Dec 2019 11:23:58 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id E5E8320BAB; Mon, 16 Dec 2019 11:32:51 +0100 (CET)
-Date:   Mon, 16 Dec 2019 11:32:51 +0100
+        id 8EF0C20AFE; Mon, 16 Dec 2019 11:29:52 +0100 (CET)
+Date:   Mon, 16 Dec 2019 11:29:52 +0100
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
 To:     Simon Geis <simon.geis@fau.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,27 +42,27 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Adam Zerella <adam.zerella@gmail.com>,
         linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
         Lukas Panzer <lukas.panzer@fau.de>
-Subject: Re: [PATCH v3 06/10] PCMCIA/i82092: move assignment out of if
- condition
-Message-ID: <20191216103251.GF159459@light.dominikbrodowski.net>
+Subject: Re: [PATCH v3 03/10] PCMCIA/i82092: remove braces around single
+ statement blocks
+Message-ID: <20191216102952.GC159459@light.dominikbrodowski.net>
 References: <20191213135311.9111-1-simon.geis@fau.de>
- <20191213135311.9111-7-simon.geis@fau.de>
+ <20191213135311.9111-4-simon.geis@fau.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213135311.9111-7-simon.geis@fau.de>
+In-Reply-To: <20191213135311.9111-4-simon.geis@fau.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 02:53:10PM +0100, Simon Geis wrote:
-> Improve readability by moving the assignment out of if conditions.
+On Fri, Dec 13, 2019 at 02:53:07PM +0100, Simon Geis wrote:
+> Remove braces around single statement blocks in order to
+> improve readability.
 > 
 > Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
 > Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
 > Signed-off-by: Simon Geis <simon.geis@fau.de>
 
-Applied, thanks!
-
+Applied, thanks.
 	Dominik
