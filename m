@@ -2,199 +2,278 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B166C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC59C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB65D20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EF220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BcLYAjEW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eYHRni0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLPKTh (ORCPT
+        id S1727435AbfLPKUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:19:37 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41125 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfLPKTh (ORCPT
+        Mon, 16 Dec 2019 05:20:09 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36233 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbfLPKUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:19:37 -0500
-Received: by mail-qt1-f194.google.com with SMTP id k40so1586712qtk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:19:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ui1c9Y6dD99W6Khx+UM3GayAgwiTKG7dGHroyFCHCFw=;
-        b=BcLYAjEWWxr47Go39e8DSJQ3tIYRI2cNBvmCkh9X4sWOyUqsqa2mo7nzIna/soPCh8
-         lnjE48cuNzRNXrL9jt9gpYyRcI5WS5YIYi+8dZMY8wKfMiM127tpW8Zf9TU5uB8GMR25
-         ojWUui8VTY0woxk5GQN6dPAWN9cWg2L2b0DQE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ui1c9Y6dD99W6Khx+UM3GayAgwiTKG7dGHroyFCHCFw=;
-        b=YQwyUWyNdWGTQwTKYaWzvSSc1WF2xHQrqTm8a88LHht8B2dASzbgo9YypuOFyVcWXn
-         TLwPBZMaGS+GnaeiAYw61m6efJjpJdLtzisA0ae2AGPoAyRr8HbbPjv4jSt2cIpIHg0x
-         Eg+iA4Xad2dnMlkrI5rEJkI8hOL7IIQ0Btp6ne2P3UYdh16MB90jIAh7JpuRxc8F8DdP
-         LXkNbKe1lVPkiBxhENDpuIO9waGE9c+ccQJNVXqdWEVv6cLmYwxsewhGHDaF+4Nax2P1
-         CWxyNmGOrrY4RyrveMrsqZBAm5P9C7XftLh1I14YIciYJL58g25cYNDnijWLq7cUlIGv
-         0t8A==
-X-Gm-Message-State: APjAAAX6dgGuuFLfxjbgDjmaSHzcuCK16Z2SVsWBWFcMzvoGFprNo+eJ
-        HBRh8fCP16VqbRAmDw6aCAQTzFCiWwMWj810qpZhWA==
-X-Google-Smtp-Source: APXvYqx3C2Qa4BrgHElceO35w40MEmAWZKPrgPEQfSGXCQpXZ7aO22lSc8cg3VhqBHMiWjpy6gwDXUi+zTZaeV5kHjk=
-X-Received: by 2002:ac8:4446:: with SMTP id m6mr9731503qtn.159.1576491575693;
- Mon, 16 Dec 2019 02:19:35 -0800 (PST)
+        Mon, 16 Dec 2019 05:20:07 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191216102004euoutp028898b7aff399f52d8404452d35ab7a8f~g0sMJ0VWC2975429754euoutp024
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 10:20:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191216102004euoutp028898b7aff399f52d8404452d35ab7a8f~g0sMJ0VWC2975429754euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576491604;
+        bh=nYOnw7VM3AQaKXg0AwDk97XPBQ6saxFKGxNXr/emicY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=eYHRni0uoMBWA/X1vsq4VNG/nZqULQ2XRnpoTF3+Knm+ORvTWrk9j1mHS9JlbVjvT
+         HrI3jHsXbwpZ9sP0hBeci/GS6KJ4h6dNb5oWNwOQPxcMVlu0B7s9O2Qx5YXIGLnc7S
+         Ea55FK4exGkgLKm40eF7BiOwlcxX8ip8vQu3vSGw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191216102004eucas1p175ff0eda6b41ee4262332d32b0f962ed~g0sLycfGg2772827728eucas1p1T;
+        Mon, 16 Dec 2019 10:20:04 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id A1.30.61286.45A57FD5; Mon, 16
+        Dec 2019 10:20:04 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191216102003eucas1p280d2bb32bc439a52353536dca87246f0~g0sLan12Q0541205412eucas1p2e;
+        Mon, 16 Dec 2019 10:20:03 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191216102003eusmtrp16a1c99a4a2ca4667d022a438920f5bf0~g0sLZmPfB2660126601eusmtrp1C;
+        Mon, 16 Dec 2019 10:20:03 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-1e-5df75a54ffd3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 89.7C.07950.35A57FD5; Mon, 16
+        Dec 2019 10:20:03 +0000 (GMT)
+Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191216102003eusmtip2c309d38f4ba35a8edcad52d2a6e88463~g0sKs93hs0560005600eusmtip2U;
+        Mon, 16 Dec 2019 10:20:03 +0000 (GMT)
+From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, kgene@kernel.org, krzk@kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com
+Subject: [PATCH] devfreq: exynos-bus: Clean up code
+Date:   Mon, 16 Dec 2019 11:19:48 +0100
+Message-Id: <20191216101948.526-1-a.swigon@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191211061911.238393-1-hsinyi@chromium.org> <20191211061911.238393-3-hsinyi@chromium.org>
- <20191213223816.GS4860@pendragon.ideasonboard.com> <CAJMQK-gFn8WeokxGfAZ-akNvdEbQhPj_3Ax2sD7Ti6JcSvjF4g@mail.gmail.com>
-In-Reply-To: <CAJMQK-gFn8WeokxGfAZ-akNvdEbQhPj_3Ax2sD7Ti6JcSvjF4g@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 16 Dec 2019 18:19:24 +0800
-Message-ID: <CANMq1KDh=ehp0RDFRLQ5OCTibrK=Uzp2UFVLM+7AhwpVp-X=yQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND 2/4] drm: bridge: anx7688: Add anx7688 bridge
- driver support.
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfSxVcRjH+91zzr2HdTkum8dL2N2sqeVl2jobNZpx/ZP+aNPYXQ7OsOtt
+        96D4QyIqI0ZeK2tlsktzXdy4ouZa1sj1HmuGiZvUH15vlpTrUP77/J7n+31+3+e3H4lJOglH
+        MiE5jVUmM4lSoSWufb9jOHctwiT37umzoefq8hHdWt1C0J82jQRdNleK0yWLqxhtMKhF9Mfc
+        7yJaszhF0OO6J0J6o7gf0dWGXgH9qn9WRH++0yikq8tXhAFWMo3qgVDWVn9b9rBdhWQbGper
+        eISlfyybmJDBKr0uRVnGm0ZFqWvSWxPGeiwHfXMqRBYkUOdBr3+LCpElKaEaETS8bsX4wyaC
+        7oIRzKySUBsI/tSFHTlmt8cEvOglgpaqOuE/x/iaGplVQioQyirmRWa2o/IR1OSeNjNGVQqg
+        tTvAzLaUL3Qb8vY1JIlT7jCpcjeXxdQFaGpsFPCXuUKT+h3G123gQ80XnB/jCnkdjw+SAqUV
+        Qf1eD8EbgqC4fUjEsy18G2g/ZGcYLC/CeeZgqWuO4M05CDQN/Rjf8AP9wChhDoRRHtCi8+LL
+        gTDzS3uQEygrmP5hw2ewgjJtFcaXxXC/QMKjFHQ1VrwRILdp6nC2DIYfVeL8c8qhbeGeqBS5
+        1R5brPbYYrX/IzxDmArZs+lcUhzL+SSzNz05JolLT47zjElJ0qD9/zS4N7DeibbGovsQRSLp
+        SXGAYlsuIZgMLjOpDwGJSe3EnW4muUQcy2RmscqUG8r0RJbrQ04kLrUX+z5fkUuoOCaNVbBs
+        Kqs86gpIC8ccFLUcqrJWdsmcqqYvljHWXxeKfup3HYzEVna4TWhwebqw1FSykuHjGZQdkbpX
+        c9kvzCXSOiT0hCO3rOuP+x096S1wHX+qvr4bM3n2yrAif3Urz7iz3D71omp+JJJqDsFsjRUZ
+        Q/Onspil9bsegpk34l7thElh6HD2Z5sdgnXhUpyLZ3zOYEqO+Qu/1w7cSwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xe7rBUd9jDb4uNbG4P6+V0WLjjPWs
+        Fte/PGe1mHR/AotF/+PXzBbnz29gtzjb9IbdYtPja6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3
+        uN24gs1ixuSXbA58HptWdbJ5bF5S79G3ZRWjx+dNcgEsUXo2RfmlJakKGfnFJbZK0YYWRnqG
+        lhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZ3y+yF3xUqrjyfAlzA+Mr6S5GTg4JAROJ
+        u98uMXUxcnEICSxllNjf+ZoVIiEh8XH9DShbWOLPtS42iKJPjBJXFm4FS7AJOEpMmvqAHSQh
+        ItDJKNG1+RzYKGaBRUwSDR+fMIFUCQsYS+w+3wxUxcHBIqAqcXWVKkiYV8BcYvWKFUwQG+Ql
+        Vm84wAwRF5Q4OfMJC0g5s4C6xPp5QiBhZqCS5q2zmScw8s9CUjULoWoWkqoFjMyrGEVSS4tz
+        03OLjfSKE3OLS/PS9ZLzczcxAmNp27GfW3Ywdr0LPsQowMGoxMPrkP0tVog1say4MvcQowQH
+        s5II7w6F77FCvCmJlVWpRfnxRaU5qcWHGE2BPpjILCWanA+M87ySeENTQ3MLS0NzY3NjMwsl
+        cd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYz75r49H/SsaGvczvwvWgIrLvxQ1/0b0r89IGJ/
+        SJyfs9ovkTMnrE5Gz/JSvCfySb5NZ7/V7KpdEpm8Z490WcmtTV00c2WAOIcl7y1bM/fnB9Py
+        VokXsL9cI8Rfx9vIwfYjy8Zv2s/v9iVsndtn7bAtcl7aIPio/lUf869H37sK38/b/jPxeo4S
+        S3FGoqEWc1FxIgBq4pRUuwIAAA==
+X-CMS-MailID: 20191216102003eucas1p280d2bb32bc439a52353536dca87246f0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191216102003eucas1p280d2bb32bc439a52353536dca87246f0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191216102003eucas1p280d2bb32bc439a52353536dca87246f0
+References: <CGME20191216102003eucas1p280d2bb32bc439a52353536dca87246f0@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 4:46 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> On Sat, Dec 14, 2019 at 6:38 AM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Hsin-Yi and Nicolas,
-> >
-> > Thank you for the patch.
-> >
-> > On Wed, Dec 11, 2019 at 02:19:09PM +0800, Hsin-Yi Wang wrote:
-> > > From: Nicolas Boichat <drinkcat@chromium.org>
-> > >
-> > > ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
-> > > that has an internal microcontroller.
-> > >
-> > > The only reason a Linux kernel driver is necessary is to reject
-> > > resolutions that require more bandwidth than what is available on
-> > > the DP side. DP bandwidth and lane count are reported by the bridge
-> > > via 2 registers on I2C.
-> >
-> > How about power, doesn't this chip have power supplies that potentially
-> > need to be controlled ?
-> >
-> Ideally we should add power supplies as well, but the power is
-> supplied by ec in mt8173 oak board. And we only have this board can
-> test this driver. If we add power supplies in driver we can't test it.
+This patch improves code readability by changing the following construct:
 
-To clarify a bit more, this is because this chip is actually a
-TCPC+mux+HDMI=>DP converter
-(https://www.analogix.com/en/products/convertersbridges/anx7688). In
-Chromebook architecture, TCPC+mux is controlled by the EC (including
-power and other control pins), and the only reason we need a driver
-for the HDMI=>DP converter is to get the number of lanes on the DP
-side and filter out resolutions. Also, the converter is on a different
-I2C address and it could almost be considered as a separate device.
+>    if (cond)
+>        goto passive;
+>    foo();
+>    goto out;
+> passive:
+>    bar();
+> out:
 
-(of course we could write a kernel driver for the TCPC+mux but we'll
-leave that to others if there's ever a board that is built with the
-TCPC part connected to the AP)
+into this:
 
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/bridge/Kconfig            |   9 +
-> > >  drivers/gpu/drm/bridge/Makefile           |   1 +
-> > >  drivers/gpu/drm/bridge/analogix-anx7688.c | 202 ++++++++++++++++++++++
-> > >  3 files changed, 212 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> > > index 34362976cd6f..1f3fc6bec842 100644
-> > > --- a/drivers/gpu/drm/bridge/Kconfig
-> > > +++ b/drivers/gpu/drm/bridge/Kconfig
-> > > @@ -16,6 +16,15 @@ config DRM_PANEL_BRIDGE
-> > >  menu "Display Interface Bridges"
-> > >       depends on DRM && DRM_BRIDGE
-> > >
-> > > +config DRM_ANALOGIX_ANX7688
-> > > +     tristate "Analogix ANX7688 bridge"
-> > > +     select DRM_KMS_HELPER
-> > > +     select REGMAP_I2C
-> > > +     ---help---
-> > > +       ANX7688 is a transmitter to support DisplayPort over USB-C for
-> > > +       smartphone and tablets.
-> > > +       This driver only supports the HDMI to DP component of the chip.
-> > > +
-> > >  config DRM_ANALOGIX_ANX78XX
-> > >       tristate "Analogix ANX78XX bridge"
-> > >       select DRM_KMS_HELPER
-> > > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > > index 4934fcf5a6f8..7a1e0ec032e6 100644
-> > > --- a/drivers/gpu/drm/bridge/Makefile
-> > > +++ b/drivers/gpu/drm/bridge/Makefile
-> > > @@ -1,4 +1,5 @@
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > > +obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
-> > >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> > >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
-> > >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> > > diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
-> > > new file mode 100644
-> > > index 000000000000..baaed48d6201
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
-> > > @@ -0,0 +1,202 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * ANX7688 HDMI->DP bridge driver
-> > > + *
-> > > + * Copyright 2016 Google LLC
-> > > + */
-> > > +
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <drm/drm_bridge.h>
-> > > +
-> > > +/* Register addresses */
-> > > +#define VENDOR_ID_REG 0x00
-> > > +#define DEVICE_ID_REG 0x02
-> > > +
-> > > +#define FW_VERSION_REG 0x80
-> > > +
-> > > +#define DP_BANDWIDTH_REG 0x85
-> > > +#define DP_LANE_COUNT_REG 0x86
-> >
-> > Are these registers defined by the ANX7688 hardware, or by the firmware
-> > running on the chip (and, I assume, developed by Google) ?
-> >
-> By firmware developed by ANX provided to Google.
+>    if (cond)
+>        bar();
+>    else
+>        foo();
 
-We asked for these registers to be added to ANX FW, and this is the FW
-that is used by all elm/hana Chromebooks (I have no idea about other
-ANX customers...). We have facilities to update the ANX FW from
-coreboot/depthcharge on Chromebooks, but that does not really matter:
-the factory FW of all MP Chromebooks does provide these registers.
+as well as eliminating a few more goto statements and fixing header
+includes.
 
-Thanks.
+Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+---
+ drivers/devfreq/exynos-bus.c | 54 +++++++++++++-----------------------
+ 1 file changed, 19 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 19d9f9f8ced2..7f5917d59072 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -15,11 +15,10 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
+-#include <linux/of_device.h>
++#include <linux/of.h>
+ #include <linux/pm_opp.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/slab.h>
+ 
+ #define DEFAULT_SATURATION_RATIO	40
+ 
+@@ -301,10 +300,9 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	profile->exit = exynos_bus_exit;
+ 
+ 	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+-	if (!ondemand_data) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
++	if (!ondemand_data)
++		return -ENOMEM;
++
+ 	ondemand_data->upthreshold = 40;
+ 	ondemand_data->downdifferential = 5;
+ 
+@@ -314,15 +312,14 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 						ondemand_data);
+ 	if (IS_ERR(bus->devfreq)) {
+ 		dev_err(dev, "failed to add devfreq device\n");
+-		ret = PTR_ERR(bus->devfreq);
+-		goto err;
++		return PTR_ERR(bus->devfreq);
+ 	}
+ 
+ 	/* Register opp_notifier to catch the change of OPP  */
+ 	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to register opp notifier\n");
+-		goto err;
++		return ret;
+ 	}
+ 
+ 	/*
+@@ -332,17 +329,16 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	ret = exynos_bus_enable_edev(bus);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to enable devfreq-event devices\n");
+-		goto err;
++		return ret;
+ 	}
+ 
+ 	ret = exynos_bus_set_event(bus);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to set event to devfreq-event devices\n");
+-		goto err;
++		return ret;
+ 	}
+ 
+-err:
+-	return ret;
++	return 0;
+ }
+ 
+ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+@@ -351,7 +347,6 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+ 	struct device *dev = bus->dev;
+ 	struct devfreq_passive_data *passive_data;
+ 	struct devfreq *parent_devfreq;
+-	int ret = 0;
+ 
+ 	/* Initialize the struct profile and governor data for passive device */
+ 	profile->target = exynos_bus_target;
+@@ -359,16 +354,13 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+ 
+ 	/* Get the instance of parent devfreq device */
+ 	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+-	if (IS_ERR(parent_devfreq)) {
+-		ret = -EPROBE_DEFER;
+-		goto err;
+-	}
++	if (IS_ERR(parent_devfreq))
++		return -EPROBE_DEFER;
+ 
+ 	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
+-	if (!passive_data) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
++	if (!passive_data)
++		return -ENOMEM;
++
+ 	passive_data->parent = parent_devfreq;
+ 
+ 	/* Add devfreq device for exynos bus with passive governor */
+@@ -377,12 +369,10 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+ 	if (IS_ERR(bus->devfreq)) {
+ 		dev_err(dev,
+ 			"failed to add devfreq dev with passive governor\n");
+-		ret = PTR_ERR(bus->devfreq);
+-		goto err;
++		return PTR_ERR(bus->devfreq);
+ 	}
+ 
+-err:
+-	return ret;
++	return 0;
+ }
+ 
+ static int exynos_bus_probe(struct platform_device *pdev)
+@@ -427,19 +417,13 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 		goto err_reg;
+ 
+ 	if (passive)
+-		goto passive;
+-
+-	ret = exynos_bus_profile_init(bus, profile);
+-	if (ret < 0)
+-		goto err;
++		ret = exynos_bus_profile_init_passive(bus, profile);
++	else
++		ret = exynos_bus_profile_init(bus, profile);
+ 
+-	goto out;
+-passive:
+-	ret = exynos_bus_profile_init_passive(bus, profile);
+ 	if (ret < 0)
+ 		goto err;
+ 
+-out:
+ 	max_state = bus->devfreq->profile->max_state;
+ 	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
+ 	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
+-- 
+2.17.1
+
