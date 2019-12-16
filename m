@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B7BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1891C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BB32467E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831B420717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520653;
-	bh=Au99viy+X18pYsQ1rPzRNBgVSzZlFq3Aj87KG1CsGg4=;
+	s=default; t=1576520659;
+	bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tq44a/ZskZxVzalqIi0KlcV/ztxevn3xpCia3FdhP2+e7JviPzMgRK36LGal0v51C
-	 gY6MSZcmGqGliSlBRtzOmJTTU/v7qPcpcGtVwYHwY6nZtKLVBhqpf8B9Na0qewY2+2
-	 SpZ3uS9PLp7DneOgpylV1Gyy2TkTbiCJ8n6yQvjE=
+	b=lAxipH77gyY4rDgKqixgEgDNMJVSwCzD3HGpS8kBn7G/hhILONIBbQGdhVy3jPVeV
+	 //PL3g3qtZ9bw1vnzcQs5v8Iu2iR8yVZ4tz4vBrely2c3OFjQIW5TXJy/azRLU0/ba
+	 JAaXWwZSoxmNg0s3phYGbLmWLMqSkh+TBQLTHLOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbfLPSYL (ORCPT
+        id S1732118AbfLPSYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:24:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48236 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:24:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731953AbfLPSTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:36 -0500
+        id S1728005AbfLPSTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF5EA2072D;
-        Mon, 16 Dec 2019 18:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F6320409;
+        Mon, 16 Dec 2019 18:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520376;
-        bh=Au99viy+X18pYsQ1rPzRNBgVSzZlFq3Aj87KG1CsGg4=;
+        s=default; t=1576520373;
+        bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7tHvJ3QdUu96NHpbJxpMl/kZjBavXLLZXEAWPvi16lUOPpNmMDVXvM2p0iFZob1n
-         IwFxE4ADMUIQTMF4sxJKFX2NltZcxKEg4HXN5QyF2lluroGSX5Tz2EgcRDdNDEZ5/A
-         9Id1oHsmWjcSs99XGTOxu4ee5PPMBu1xEea0DEMI=
+        b=OJuWHXuZtv1W97pjPq0ym1oDavowSbBplOPkgmZtLNvemRGGAsbIqYOvO15JjXaPc
+         /TqW3NSpRiRmlQFDWPT1kCOM8VZD+J+Q7QBta23mLY+Yknn4e5cHShaMQGVpkgo/qO
+         E/RY/0DNly5TbRrlXQg7zK86cGd0wEgB566YxnhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
+        stable@vger.kernel.org,
+        Valerio Passini <passini.valerio@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 127/177] ACPI: OSL: only free map once in osl.c
-Date:   Mon, 16 Dec 2019 18:49:43 +0100
-Message-Id: <20191216174844.032699335@linuxfoundation.org>
+Subject: [PATCH 5.4 126/177] ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
+Date:   Mon, 16 Dec 2019 18:49:42 +0100
+Message-Id: <20191216174843.919210561@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,111 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 833a426cc471b6088011b3d67f1dc4e147614647 upstream.
+commit 77adf9355304f8dcf09054280af5e23fc451ab3d upstream.
 
-acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-before freeing the map. This creates a race condition the can result
-in the map being freed more than once.
-A panic can be caused by running
+Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
+PCI: Don't scan bridges managed by native hotplug") prevents some recent
+LG and HP laptops from booting with endless loop of:
 
-for ((i=0; i<10; i++))
-do
-        for ((j=0; j<100000; j++))
-        do
-                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
-        done &
-done
+  ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
+  ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
+  ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
+  ...
 
-This patch makes sure that only the process that drops the reference
-to 0 does the freeing.
+What seems to happen is that during boot, after the initial PCI enumeration
+when EC is enabled the platform triggers ACPI Notify() to one of the root
+ports. The root port itself looks like this:
 
-Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
+  pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
+  pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+
+The BIOS has configured the root port so that it does not have I/O bridge
+window.
+
+Now when the ACPI Notify() is triggered ACPI hotplug handler calls
+acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system is
+using native PCIe hotplug) and pci_assign_unassigned_bridge_resources() to
+allocate resources.
+
+The device connected to the root port is a PCIe switch (Thunderbolt
+controller) with two hotplug downstream ports. Because of the hotplug ports
+__pci_bus_size_bridges() tries to add "additional I/O" of 256 bytes to each
+(DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k as that's the
+minimum I/O window size so each hotplug port gets 4k I/O window and the
+same happens for the root port (which is also hotplug port). This means
+3 * 4k = 12k I/O window.
+
+Because of this pci_assign_unassigned_bridge_resources() ends up opening a
+I/O bridge window for the root port at first available I/O address which
+seems to be in range 0x1000 - 0x3fff. Normally this range is used for ACPI
+stuff such as GPE bits (below is part of /proc/ioports):
+
+    1800-1803 : ACPI PM1a_EVT_BLK
+    1804-1805 : ACPI PM1a_CNT_BLK
+    1808-180b : ACPI PM_TMR
+    1810-1815 : ACPI CPU throttle
+    1850-1850 : ACPI PM2_CNT_BLK
+    1854-1857 : pnp 00:05
+    1860-187f : ACPI GPE0_BLK
+
+However, when the ACPI Notify() happened this range was not yet reserved
+for ACPI/PNP (that happens later) so PCI gets it. It then starts writing to
+this range and accidentally stomps over GPE bits among other things causing
+the endless stream of messages about missing GPE handler.
+
+This problem does not happen if "pci=hpiosize=0" is passed in the kernel
+command line. The reason is that then the kernel does not try to allocate
+the additional 256 bytes for each hotplug port.
+
+Fix this by allocating resources directly below the non-hotplug bridges
+where a new device may appear as a result of ACPI Notify(). This avoids the
+hotplug bridges and prevents opening the additional I/O window.
+
+Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
+Link: https://lore.kernel.org/r/20191030150545.19885-1-mika.westerberg@linux.intel.com
+Reported-by: Valerio Passini <passini.valerio@gmail.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/osl.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/pci/hotplug/acpiphp_glue.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -374,19 +374,21 @@ void *__ref acpi_os_map_memory(acpi_phys
- }
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(s
  
--static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+/* Must be called with mutex_lock(&acpi_ioremap_lock) */
-+static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
- {
--	if (!--map->refcount)
-+	unsigned long refcount = --map->refcount;
+ 	/* Scan non-hotplug bridges that need to be reconfigured */
+ 	for_each_pci_bridge(dev, bus) {
+-		if (!hotplug_is_native(dev))
+-			max = pci_scan_bridge(bus, dev, max, 1);
++		if (hotplug_is_native(dev))
++			continue;
 +
-+	if (!refcount)
- 		list_del_rcu(&map->list);
-+	return refcount;
- }
- 
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	if (!map->refcount) {
--		synchronize_rcu_expedited();
--		acpi_unmap(map->phys, map->virt);
--		kfree(map);
--	}
-+	synchronize_rcu_expedited();
-+	acpi_unmap(map->phys, map->virt);
-+	kfree(map);
- }
- 
- /**
-@@ -406,6 +408,7 @@ static void acpi_os_map_cleanup(struct a
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (!acpi_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -419,10 +422,11 @@ void __ref acpi_os_unmap_iomem(void __io
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
++		max = pci_scan_bridge(bus, dev, max, 1);
++		if (dev->subordinate) {
++			pcibios_resource_survey_bus(dev->subordinate);
++			pci_bus_size_bridges(dev->subordinate);
++			pci_bus_assign_resources(dev->subordinate);
++		}
  	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
  }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
  
-@@ -457,6 +461,7 @@ void acpi_os_unmap_generic_address(struc
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -472,10 +477,11 @@ void acpi_os_unmap_generic_address(struc
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
+@@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_s
+ 			if (PCI_SLOT(dev->devfn) == slot->device)
+ 				acpiphp_native_scan_bridge(dev);
+ 		}
+-		pci_assign_unassigned_bridge_resources(bus->self);
+ 	} else {
+ 		LIST_HEAD(add_list);
+ 		int max, pass;
 
 
