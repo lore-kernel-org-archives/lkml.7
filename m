@@ -2,155 +2,79 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F2EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D180C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB0E2072A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QQGWYhJp"
+	by mail.kernel.org (Postfix) with ESMTP id F306624683
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLPAGJ (ORCPT
+        id S1726536AbfLPAKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 19:06:09 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:19304 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfLPAGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 19:06:09 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191216000603epoutp04932893bdc7ee2401fc20065c86164e5b~gsUFLeB4i1835218352epoutp04a
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:06:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191216000603epoutp04932893bdc7ee2401fc20065c86164e5b~gsUFLeB4i1835218352epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576454763;
-        bh=yiZ2VagM8HQOxVfhO1tU2xkE4O7iWivvMoYcoWs9/co=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=QQGWYhJpqLx1u0TBnVvZeIz8cZd8yI/KunSJU6bTlEWjbmSqvNTQRdGEUt9LDmBHW
-         LAqVw4YFx0jP9jwxOOpalhDtuTwi5ZumqPdphTR7YGmVgQ20kwxqFZODMhZ34tL68K
-         OLFr6LTEVhDcQKaJ044NAGadCrD4GZeyFv4PNk7c=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191216000602epcas1p10a7aa2bd1d5ff5310c1200db1fd2a49c~gsUEMmMTR0396103961epcas1p1c;
-        Mon, 16 Dec 2019 00:06:02 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47bhPg3ySvzMqYkc; Mon, 16 Dec
-        2019 00:05:59 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1C.E2.48019.66AC6FD5; Mon, 16 Dec 2019 09:05:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191216000557epcas1p1f82e6da04e99a0299a67a95f9abbfe7a~gsT-PEuY41073410734epcas1p1F;
-        Mon, 16 Dec 2019 00:05:57 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191216000557epsmtrp2747362009f1df9cf95c20b48d088a95b~gsT-LeGz72725127251epsmtrp2R;
-        Mon, 16 Dec 2019 00:05:57 +0000 (GMT)
-X-AuditID: b6c32a38-257ff7000001bb93-05-5df6ca66be89
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2C.66.10238.46AC6FD5; Mon, 16 Dec 2019 09:05:57 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191216000556epsmtip29edfa6046ffefe886e1ef5c8fd3a4e63~gsT_-5Ikl0780607806epsmtip2R;
-        Mon, 16 Dec 2019 00:05:56 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org
-Cc:     cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and
- HAVE_ARM_SMCCC dependency
-Date:   Mon, 16 Dec 2019 09:12:28 +0900
-Message-Id: <20191216001228.5258-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7bCmnm7aqW+xBjO3iFpc//Kc1eJs0xt2
-        i8u75rBZfO49wmhxu3EFmwOrR9+WVYwenzfJBTBFZdtkpCampBYppOYl56dk5qXbKnkHxzvH
-        m5oZGOoaWlqYKynkJeam2iq5+AToumXmAG1TUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gq
-        pRak5BRYFugVJ+YWl+al6yXn51oZGhgYmQIVJmRnvFiyka1gEm/F4RdPmRsYO7i7GDk5JARM
-        JObs/83SxcjFISSwg1Hixfsj7CAJIYFPjBLvXjBCJL4xStw+f40dpuPx/7OsEIm9jBKf+7ZB
-        tX9hlDiytosVpIpNQEti/4sbbCC2iICMxNQr+8HizAJ5Emuv7AKLCwvESTSun8QIYrMIqEr8
-        erMcLM4rYCmx8tclJoht8hKrNxxgBlkgIfCQVaKv5zvUGS4Sz56vhrKFJV4d3wJlS0l8freX
-        DcKullh58ggbRHMHo8SW/RdYIRLGEvuXTgbawAF0kabE+l36EGFFiZ2/5zJCHMon8e5rDytI
-        iYQAr0RHmxBEibLE5Qd3oW6TlFjc3skGUeIh8XV1OSTkYiUeTfzBOoFRdhbC/AWMjKsYxVIL
-        inPTU4sNC0yQI2kTIzgBaVnsYNxzzucQowAHoxIP74uMb7FCrIllxZW5hxglOJiVRHhTtT/H
-        CvGmJFZWpRblxxeV5qQWH2I0BQbeRGYp0eR8YHLMK4k3NDUyNja2MDE0MzU0VBLn5fhxMVZI
-        ID2xJDU7NbUgtQimj4mDU6qB0fLHS9ZC7n07vm723Glib2z0mqVfxuBcx+KA1I06mVvPmy0J
-        vD1/duiUZ+sN5s1dv+/EFjPnuCVcLJcLr8W1OW7TlHXTmn0nS57x7rEFxdvCOvaGt0X/uON3
-        dWr8Zc1pWTkq377m31fXvWqR1/kpbfnvX5fiDAUFLx+TLvgxydIrNuBGzRTZPUosxRmJhlrM
-        RcWJAGTjS5ZWAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJMWRmVeSWpSXmKPExsWy7bCSvG7qqW+xBut3MFlc//Kc1eJs0xt2
-        i8u75rBZfO49wmhxu3EFmwOrR9+WVYwenzfJBTBFcdmkpOZklqUW6dslcGW8WLKRrWASb8Xh
-        F0+ZGxg7uLsYOTkkBEwkHv8/ywpiCwnsZpR4vFgfIi4pMe3iUeYuRg4gW1ji8OHiLkYuoJJP
-        jBLHvh0Aq2cT0JLY/+IGG4gtIiAjMfXKfrA4s0CRxMntD9hBeoUFYiT2LHAFCbMIqEr8erMc
-        rJxXwFJi5a9LTBCr5CVWbzjAPIGRZwEjwypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxN
-        jOBw0NLcwXh5SfwhRgEORiUeXofsb7FCrIllxZW5hxglOJiVRHhTtT/HCvGmJFZWpRblxxeV
-        5qQWH2KU5mBREud9mncsUkggPbEkNTs1tSC1CCbLxMEp1cCYc0fUh9/CS/uY91fnlX8Ofnv8
-        MmNbO5ds3eneKd2b1+x5rxMr80/2d67XszO7ddfuedl+ZE/NhM55P/rrjDi+vHSpOTOH+VS4
-        4FwuneMvnm9/8sOFx25p1PM3J16bzZmnnP8/zfH5t/QfiesPn7nMnRIvwHixMIL5xd8mP30Z
-        cY/YuxybNweLK7EUZyQaajEXFScCAH0wsRMDAgAA
-X-CMS-MailID: 20191216000557epcas1p1f82e6da04e99a0299a67a95f9abbfe7a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191216000557epcas1p1f82e6da04e99a0299a67a95f9abbfe7a
-References: <CGME20191216000557epcas1p1f82e6da04e99a0299a67a95f9abbfe7a@epcas1p1.samsung.com>
+        Sun, 15 Dec 2019 19:10:12 -0500
+Received: from gate.crashing.org ([63.228.1.57]:47746 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbfLPAKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 19:10:12 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xBG09YtQ028879;
+        Sun, 15 Dec 2019 18:09:35 -0600
+Message-ID: <0511b917d8ebcf594480349b79fcb9f14aa882f9.camel@kernel.crashing.org>
+Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
+ multiple matches
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        AlekseyMakarov <aleksey.makarov@linaro.org>
+Date:   Mon, 16 Dec 2019 11:09:33 +1100
+In-Reply-To: <20191211091740.p6bgjy7sy75maenw@pathway.suse.cz>
+References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
+         <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
+         <50d2c44a15960760c6a9d24442a93fa4b31b7594.camel@kernel.crashing.org>
+         <20191211091740.p6bgjy7sy75maenw@pathway.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+On Wed, 2019-12-11 at 10:17 +0100, Petr Mladek wrote:
+> The reverse search of list of console does not work for ttySX
+> consoles because the number is omitted when matching. And the messages
+> will appear only on the first matched serial console. There is
+> a paragraph about this in the commit message of my patch.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes from v1:
-- Add HAVE_ARM_SMCCC dependency because this driver used SMCCC interface.
-  It was reportd from kbuild test robot.
+About that specific issue...
 
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+I see indeed that 8250_core.c registers a "generic" console with index
+-1 which will match whetever we hit first in the array.
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 8485f948caeb..1526f758daeb 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -125,7 +125,8 @@ config ARM_TEGRA20_DEVFREQ
- 
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cef2cf5347ca..a53e0a6ffdfe 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -34,7 +34,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
- 
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
--- 
-2.17.1
+This is actually wrong isn't it ? Without any change such as what we've
+been proposing, it means that an arch doing add_preferred_console of
+any ttyS* will override anything on the command line, and it also means
+that a command line with multiple ttyS entries will stop at the first
+one, not the last one.
+
+IE. In both case the code will select a console that isn't
+preferred_console... or am I missing something subtle ?
+
+So yes, fixing that will "regress" in the sense that it will change the
+behaviour, but to make it match what's documented... am I wrong ?
+
+The question then becomes what's the most broken ? Changing the
+behaviour that might have become expected or leaving the (alledgedly)
+broken behaviour in place ?
+
+Cheers,
+Ben.
+
 
