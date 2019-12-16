@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90B7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16502072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C3220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519641;
-	bh=jdLXzefjyg12GC+3pcA3MEYa1/IjbOx/xkJKHuQBapo=;
+	s=default; t=1576519647;
+	bh=vVxJ+FxthJfmbcChelrHumybQHmC1SgZuN0K7KSHf2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aLD424g66LpWNr2sY9+AWy9zVwrO4QE74h6X0mIIhKDWBLac0CWDIHWkR/RJfrZXe
-	 zG6I12ojBm8SnbaAxQ4ZB3IHtG4CUQieks9TJoG+8i7QCTWVDJSzBdQYEfpN8rU9b0
-	 HfAqApirJUvQWGwfnMx0tyyUfylD0RmBSVTFaWk8=
+	b=Fr5otf0Rlnrd4AMrmmnMeI3odr8MIrNZYQvjd+mz/obOPMOBzaSUqQSoCpeYRumaR
+	 juA0g5BMU89xG36iTBnykgBNt2F4Xv0xi+2C1Otard/Ap4YbKwHK+S0vRbAfIcA+yy
+	 TMyz4yI7l0x+4Cw/H9biPpuO0o3NKxRs5aT5RHEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfLPSHU (ORCPT
+        id S1730156AbfLPSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730132AbfLPSHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:18 -0500
+        id S1729967AbfLPSHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 400D32072B;
-        Mon, 16 Dec 2019 18:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192252166E;
+        Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519637;
-        bh=jdLXzefjyg12GC+3pcA3MEYa1/IjbOx/xkJKHuQBapo=;
+        s=default; t=1576519642;
+        bh=vVxJ+FxthJfmbcChelrHumybQHmC1SgZuN0K7KSHf2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/FhIFkn2mLYRwiKBACG/gfLfIVFAKgttxWxRsFaJEXO89LDIHPE8p43xJPYM2qlI
-         C15qvvzJAES0GkKEC5rvQ8inkZ9NGVinh8wFCdsmAfnxIRleaH0UrUyI73wgLEBwiZ
-         WLJnods65i0VTJDcYRpdDxUya3xcCD/+dk3AaGck=
+        b=D3w/U1dHi9sYs5CZYurodNaVhos1aUf5z94yuXc9bHf15kVGzvtwCACfufyU8Hs3R
+         izXnXm2pndgmx/TeK6Po6z360sCznGRkIttaZ3oFtPiQTEDgXwdDxy1KIL6pWRP+lf
+         DnTHsv0CLjIJLgXzrXbYojbS3vs4j9CxmlHptIxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.19 134/140] rtc: disable uie before setting time and enable after
-Date:   Mon, 16 Dec 2019 18:50:02 +0100
-Message-Id: <20191216174828.973357613@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.3 010/180] USB: documentation: flags on usb-storage versus UAS
+Date:   Mon, 16 Dec 2019 18:47:30 +0100
+Message-Id: <20191216174808.192985780@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
-References: <20191216174747.111154704@linuxfoundation.org>
+In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
+References: <20191216174806.018988360@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,72 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 7e7c005b4b1f1f169bcc4b2c3a40085ecc663df2 upstream.
+commit 65cc8bf99349f651a0a2cee69333525fe581f306 upstream.
 
-When setting the time in the future with the uie timer enabled,
-rtc_timer_do_work will loop for a while because the expiration of the uie
-timer was way before the current RTC time and a new timer will be enqueued
-until the current rtc time is reached.
+Document which flags work storage, UAS or both
 
-If the uie timer is enabled, disable it before setting the time and enable
-it after expiring current timers (which may actually be an alarm).
-
-This is the safest thing to do to ensure the uie timer is still
-synchronized with the RTC, especially in the UIE emulation case.
-
-Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
-Fixes: 6610e0893b8b ("RTC: Rework RTC code to use timerqueue for events")
-Link: https://lore.kernel.org/r/20191020231320.8191-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191114112758.32747-4-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/interface.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |   22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -127,7 +127,7 @@ EXPORT_SYMBOL_GPL(rtc_read_time);
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5066,13 +5066,13 @@
+ 			Flags is a set of characters, each corresponding
+ 			to a common usb-storage quirk flag as follows:
+ 				a = SANE_SENSE (collect more than 18 bytes
+-					of sense data);
++					of sense data, not on uas);
+ 				b = BAD_SENSE (don't collect more than 18
+-					bytes of sense data);
++					bytes of sense data, not on uas);
+ 				c = FIX_CAPACITY (decrease the reported
+ 					device capacity by one sector);
+ 				d = NO_READ_DISC_INFO (don't use
+-					READ_DISC_INFO command);
++					READ_DISC_INFO command, not on uas);
+ 				e = NO_READ_CAPACITY_16 (don't use
+ 					READ_CAPACITY_16 command);
+ 				f = NO_REPORT_OPCODES (don't use report opcodes
+@@ -5087,17 +5087,18 @@
+ 				j = NO_REPORT_LUNS (don't use report luns
+ 					command, uas only);
+ 				l = NOT_LOCKABLE (don't try to lock and
+-					unlock ejectable media);
++					unlock ejectable media, not on uas);
+ 				m = MAX_SECTORS_64 (don't transfer more
+-					than 64 sectors = 32 KB at a time);
++					than 64 sectors = 32 KB at a time,
++					not on uas);
+ 				n = INITIAL_READ10 (force a retry of the
+-					initial READ(10) command);
++					initial READ(10) command, not on uas);
+ 				o = CAPACITY_OK (accept the capacity
+-					reported by the device);
++					reported by the device, not on uas);
+ 				p = WRITE_CACHE (the device cache is ON
+-					by default);
++					by default, not on uas);
+ 				r = IGNORE_RESIDUE (the device reports
+-					bogus residue values);
++					bogus residue values, not on uas);
+ 				s = SINGLE_LUN (the device has only one
+ 					Logical Unit);
+ 				t = NO_ATA_1X (don't allow ATA(12) and ATA(16)
+@@ -5106,7 +5107,8 @@
+ 				w = NO_WP_DETECT (don't test whether the
+ 					medium is write-protected).
+ 				y = ALWAYS_SYNC (issue a SYNCHRONIZE_CACHE
+-					even if the device claims no cache)
++					even if the device claims no cache,
++					not on uas)
+ 			Example: quirks=0419:aaf5:rl,0421:0433:rc
  
- int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
- {
--	int err;
-+	int err, uie;
- 
- 	err = rtc_valid_tm(tm);
- 	if (err != 0)
-@@ -139,6 +139,17 @@ int rtc_set_time(struct rtc_device *rtc,
- 
- 	rtc_subtract_offset(rtc, tm);
- 
-+#ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
-+	uie = rtc->uie_rtctimer.enabled || rtc->uie_irq_active;
-+#else
-+	uie = rtc->uie_rtctimer.enabled;
-+#endif
-+	if (uie) {
-+		err = rtc_update_irq_enable(rtc, 0);
-+		if (err)
-+			return err;
-+	}
-+
- 	err = mutex_lock_interruptible(&rtc->ops_lock);
- 	if (err)
- 		return err;
-@@ -162,6 +173,12 @@ int rtc_set_time(struct rtc_device *rtc,
- 	/* A timer might have just expired */
- 	schedule_work(&rtc->irqwork);
- 
-+	if (uie) {
-+		err = rtc_update_irq_enable(rtc, 1);
-+		if (err)
-+			return err;
-+	}
-+
- 	trace_rtc_set_time(rtc_tm_to_time64(tm), err);
- 	return err;
- }
+ 	user_debug=	[KNL,ARM]
 
 
