@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA476C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA295C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985A7205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B024B21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518979;
-	bh=sSQGXtUBwq1HgWZiNGj8oNP9wbdZB0MTUIajG+SdqIA=;
+	s=default; t=1576518981;
+	bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfiyviUauZIkM8GZb9Vdb+5Rc2nWPXiRd3knAiaNaI/nrKKXthEiOfpNY2tlb68NX
-	 GIiXe27fkiV8rp8Nn3FJTRluBka6u53fNOxgq4+yGibOSMCEh83KaAXARVx2a6ZsIU
-	 X8Zx0UEyBIA8M7rQCi8YD0F8fYEdaJhX+NOehfXc=
+	b=gZkWTLYHWgc4UPJwNVhfVaBmTCe+wfz9L9hh7cU3dwkFIuxlz8s33Rny+coPIvRn0
+	 UDkq5Zotk+xa0s/+r2XcK9F1ftQdaNNP2ddTZCuc+Bj1GMPLw4rfax3aFt2rpfHAAE
+	 ddAGVQbOxuwggvA59w/b/q8Pshyg7hhQnlPuHvBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfLPR4S (ORCPT
+        id S1728196AbfLPR4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54152 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbfLPR4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:14 -0500
+        id S1727398AbfLPR4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 583F0205ED;
-        Mon, 16 Dec 2019 17:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB12218AC;
+        Mon, 16 Dec 2019 17:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518973;
-        bh=sSQGXtUBwq1HgWZiNGj8oNP9wbdZB0MTUIajG+SdqIA=;
+        s=default; t=1576518976;
+        bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NOBAAE7cZjZLpDcffcP3vB3w5DG4RAy7ZhZmUb/CGest0gZhDMPD8fIPTZQkSPATq
-         iV/x0WEN09LdwHe1Ar4z/mKLsdQmeAa/FR9WnZNsHoTBiLqhGv+yXpddcNSenUCOCQ
-         rOiwS0TE4FCOKWTJKCcK7HznCFyCFuULYtGLwDCw=
+        b=U9eHUxI1W4k/yFY9b1B7rHQLO77KTeompxt0sJdskGPrRcKW9IcjDJtpHb/xukGMA
+         hEzQgXMpElmAm/wJxvQfAoD+kOnmYYCZZOX6rrklVfGCNmO77V8l80lPWnbclam4ec
+         CzZtdexetTOzvV4/jjmYHfwM7Cx+U0pmjNUynfx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/267] clk: renesas: r8a77995: Correct parent clock of DU
-Date:   Mon, 16 Dec 2019 18:47:11 +0100
-Message-Id: <20191216174902.474889166@linuxfoundation.org>
+Subject: [PATCH 4.14 106/267] MIPS: OCTEON: cvmx_pko_mem_debug8: use oldest forward compatible definition
+Date:   Mon, 16 Dec 2019 18:47:12 +0100
+Message-Id: <20191216174902.528657263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,38 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit 515b2915ee08060ad4f6a3b3de38c5c2c5258e8b ]
+[ Upstream commit 1c6121c39677175bd372076020948e184bad4b6b ]
 
-According to the R-Car Gen3 Hardware Manual Rev 1.00, the parent clock
-of the DU module clocks on R-Car D3 is S1D1.
+cn58xx is compatible with cn50xx, so use the latter.
 
-Fixes: d71e851d82c6cfe5 ("clk: renesas: cpg-mssr: Add R8A77995 support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+[paul.burton@mips.com: s/cn52xx/cn50xx/ in commit message.]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a77995-cpg-mssr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c | 2 +-
+ arch/mips/include/asm/octeon/cvmx-pko.h            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-index e594cf8ee63b6..8434d5530fb15 100644
---- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-@@ -141,8 +141,8 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
- 	DEF_MOD("vspbs",		 627,	R8A77995_CLK_S0D1),
- 	DEF_MOD("ehci0",		 703,	R8A77995_CLK_S3D2),
- 	DEF_MOD("hsusb",		 704,	R8A77995_CLK_S3D2),
--	DEF_MOD("du1",			 723,	R8A77995_CLK_S2D1),
--	DEF_MOD("du0",			 724,	R8A77995_CLK_S2D1),
-+	DEF_MOD("du1",			 723,	R8A77995_CLK_S1D1),
-+	DEF_MOD("du0",			 724,	R8A77995_CLK_S1D1),
- 	DEF_MOD("lvds",			 727,	R8A77995_CLK_S2D1),
- 	DEF_MOD("vin7",			 804,	R8A77995_CLK_S1D2),
- 	DEF_MOD("vin6",			 805,	R8A77995_CLK_S1D2),
+diff --git a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
+index 8241fc6aa17d8..3839feba68f20 100644
+--- a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
++++ b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
+@@ -266,7 +266,7 @@ int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
+ 		} else {
+ 			union cvmx_pko_mem_debug8 debug8;
+ 			debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
+-			return debug8.cn58xx.doorbell;
++			return debug8.cn50xx.doorbell;
+ 		}
+ 	case CVMX_CMD_QUEUE_ZIP:
+ 	case CVMX_CMD_QUEUE_DFA:
+diff --git a/arch/mips/include/asm/octeon/cvmx-pko.h b/arch/mips/include/asm/octeon/cvmx-pko.h
+index 5f47f76ed510a..20eb9c46a75ab 100644
+--- a/arch/mips/include/asm/octeon/cvmx-pko.h
++++ b/arch/mips/include/asm/octeon/cvmx-pko.h
+@@ -611,7 +611,7 @@ static inline void cvmx_pko_get_port_status(uint64_t port_num, uint64_t clear,
+ 		pko_reg_read_idx.s.index = cvmx_pko_get_base_queue(port_num);
+ 		cvmx_write_csr(CVMX_PKO_REG_READ_IDX, pko_reg_read_idx.u64);
+ 		debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
+-		status->doorbell = debug8.cn58xx.doorbell;
++		status->doorbell = debug8.cn50xx.doorbell;
+ 	}
+ }
+ 
 -- 
 2.20.1
 
