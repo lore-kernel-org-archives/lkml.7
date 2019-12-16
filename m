@@ -2,94 +2,154 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EC6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5FBC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C2A21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54C721582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:20:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576527658;
+	bh=hmnXgG+nuVbuFMvNlKiLO65Ck2pIEJTMLtm4NV3bQwU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=QWxks43lDq2FpiuXIqYivZU8zUGiwa9yJZP+c8y6K5gXDPWzTXEoaqksuj35QsvtX
+	 99pODESK2dGwkp/jAo/8uKSX0x1AxOl0u6exzKkgnu/xZWI6Fob7VBslhITepC0J0z
+	 CslLMB17NXnPQSVingvC+XkhxiNiUI7CAUYI9NZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfLPUTU (ORCPT
+        id S1727665AbfLPUU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:19:20 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45668 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727016AbfLPUTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:19:20 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBGKIYFr018829
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 15:18:35 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id BD9E2420821; Mon, 16 Dec 2019 15:18:34 -0500 (EST)
-Date:   Mon, 16 Dec 2019 15:18:34 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-Message-ID: <20191216201834.GA785904@mit.edu>
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com>
- <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
+        Mon, 16 Dec 2019 15:20:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbfLPUU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:20:57 -0500
+Received: from [192.168.1.37] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FC52082E;
+        Mon, 16 Dec 2019 20:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576527656;
+        bh=hmnXgG+nuVbuFMvNlKiLO65Ck2pIEJTMLtm4NV3bQwU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wNxxO5tBWrt3GxRjRi3i6qBJSdppQfmInusBrk8ighJ+vYpijvbffBQboNrsM2qVq
+         UeqTswiZIyietPKXKKMkxbasJmS82DiK3/132DIeHAgi39AEBKQMgFF3vmfjCCn1p4
+         +RNBSscagqEZEobwyPpBmLUxbkdqiKfm2bVgI0AE=
+Subject: Re: [PATCH 12/17] clk: socfpga: convert to
+ devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, Eugeniy.Paltsev@synopsys.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, agross@kernel.org,
+        s.nawrocki@samsung.com, tomasz.figa@gmail.com,
+        cw00.choi@samsung.com, kgene@kernel.org, krzk@kernel.org,
+        palmer@sifive.com, paul.walmsley@sifive.com, mripard@kernel.org,
+        wens@csie.org, emilio@elopez.com.ar, pdeschrijver@nvidia.com,
+        pgaikwad@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, matthias.bgg@gmail.com, rfontana@redhat.com,
+        gregkh@linuxfoundation.org, t-kristo@ti.com, john@phrozen.org,
+        tglx@linutronix.de, allison@lohutok.net,
+        kstewart@linuxfoundation.org, swinslow@gmail.com,
+        aisheng.dong@nxp.com, robh@kernel.org, daniel.baluta@nxp.com,
+        weiyongjun1@huawei.com, wangyan.wang@mediatek.com,
+        chunhui.dai@mediatek.com, miquel.raynal@bootlin.com,
+        heiko@sntech.de, jcmvbkbc@gmail.com, nsekhar@ti.com,
+        geert+renesas@glider.be
+Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20191209195749.868-1-tiny.windzz@gmail.com>
+ <20191209195749.868-12-tiny.windzz@gmail.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ xsFNBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
+ Sk/MW9mxO9KNvQCbZtthfn62YHmroNwipjZ6wKOMfKdtJR4+8JW/ShIJYnrMfwN8Wki6O+5a
+ yPNNCeENHleV0FLVXw3aACxOcjEzGJHYmg4UC+56rfoxPEhKF6aGBTV5aGKMtQy77ywuqt12
+ c+hlRXHODmXdIeT2V4/u/AsFNAq6UFUEvHrVj+dMIyv2VhjRvkcESIGnG12ifPdU7v/+wom/
+ smtfOAGojgTCqpwd0Ay2xFzgGnSCIFRHp0I/OJqhUcwAYEAdgHSBVwiyTQx2jP+eDu3Q0jI3
+ K/x5qrhZ7lj8MmJPJWQOSYC4fYSse2oVO+2msoMTvMi3+Jy8k+QNH8LhB6agq7wTgF2jodwO
+ yij5BRRIKttp4U62yUgfwbQtEUvatkaBQlG3qSerOzcdjSb4nhRPxasRqNbgkBfs7kqH02qU
+ LOAXJf+y9Y1o6Nk9YCqb5EprDcKCqg2c8hUya8BYqo7y+0NkBU30mpzhaJXncbCMz3CQZYgV
+ 1TR0qEzMv/QtoVuuPtWH9RCC83J5IYw1uFUG4RaoL7Z03fJhxGiXx3/r5Kr/hC9eMl2he6vH
+ 8rrEpGGDm/mwZOEoG5D758WQHLGH4dTAATg0+ZzFHWBbSnNaSQARAQABzSFEaW5oIE5ndXll
+ biA8ZGluZ3V5ZW5Aa2VybmVsLm9yZz7CwXgEEwECACIFAlbG5oQCGwMGCwkIBwMCBhUIAgkK
+ CwQWAgMBAh4BAheAAAoJEBmUBAuBoyj0fIgQAICrZ2ceRWpkZv1UPM/6hBkWwOo3YkzSQwL+
+ AH15hf9xx0D5mvzEtZ97ZoD0sAuB+aVIFwolet+nw49Q8HA3E/3j0DT7sIAqJpcPx3za+kKT
+ twuQ4NkQTTi4q5WCpA5b6e2qzIynB50b3FA6bCjJinN06PxhdOixJGv1qDDmJ01fq2lA7/PL
+ cny/1PIo6PVMWo9nf77L6iXVy8sK/d30pa1pjhMivfenIleIPYhWN1ZdRAkH39ReDxdqjQXN
+ NHanNtsnoCPFsqeCLmuUwcG+XSTo/gEM6l2sdoMF4qSkD4DdrVf5rsOyN4KJAY9Uqytn4781
+ n6l1NAQSRr0LPT5r6xdQ3YXIbwUfrBWh2nDPm0tihuHoH0CfyJMrFupSmjrKXF84F3cq0DzC
+ yasTWUKyW/YURbWeGMpQH3ioDLvBn0H3AlVoSloaRzPudQ6mP4O8mY0DZQASGf6leM82V3t0
+ Gw8MxY9tIiowY7Yl2bHqXCorPlcEYXjzBP32UOxIK7y7AQ1JQkcv6pZ0/6lX6hMshzi9Ydw0
+ m8USfFRZb48gsp039gODbSMCQ2NfxBEyUPw1O9nertCMbIO/0bHKkP9aiHwg3BPwm3YL1UvM
+ ngbze/8cyjg9pW3Eu1QAzMQHYkT1iiEjJ8fTssqDLjgJyp/I3YHYUuAf3i8SlcZTusIwSqnD
+ zsFNBFEnvWwBEADZqma4LI+vMqJYe15fxnX8ANw+ZuDeYHy17VXqQ7dA7n8E827ndnoXoBKB
+ 0n7smz1C0I9StarHQPYTUciMLsaUpedEfpYgqLa7eRLFPvk/cVXxmY8Pk+aO8zHafr8yrFB1
+ cYHO3Ld8d/DvF2DuC3iqzmgXzaRQhvQZvJ513nveCa2zTPPCj5w4f/Qkq8OgCz9fOrf/CseM
+ xcP3Jssyf8qTZ4CTt1L6McRZPA/oFNTTgS/KA22PMMP9i8E6dF0Nsj0MN0R7261161PqfA9h
+ 5c+BBzKZ6IHvmfwY+Fb0AgbqegOV8H/wQYCltPJHeA5y1kc/rqplw5I5d8Q6B29p0xxXSfaP
+ UQ/qmXUkNQPNhsMnlL3wRoCol60IADiEyDJHVZRIl6U2K54LyYE1vkf14JM670FsUH608Hmk
+ 30FG8bxax9i+8Muda9ok/KR4Z/QPQukmHIN9jVP1r1C/aAEvjQ2PK9aqrlXCKKenQzZ8qbeC
+ rOTXSuJgWmWnPWzDrMxyEyy+e84bm+3/uPhZjjrNiaTzHHSRnF2ffJigu9fDKAwSof6SwbeH
+ eZcIM4a9Dy+Ue0REaAqFacktlfELeu1LVzMRvpIfPua8izTUmACTgz2kltTaeSxAXZwIziwY
+ prPU3cfnAjqxFHO2TwEpaQOMf8SH9BSAaCXArjfurOF+Pi3lKwARAQABwsFfBBgBAgAJBQJR
+ J71sAhsMAAoJEBmUBAuBoyj0MnIQAI+bcNsfTNltf5AbMJptDgzISZJrYCXuzOgv4+d1CubD
+ 83s0k6VJgsiCIEpvELQJsr58xB6l+o3yTBZRo/LViNLk0jF4CmCdXWjTyaQAIceEdlaeeTGH
+ d5GqAud9rv9q1ERHTcvmoEX6pwv3m66ANK/dHdBV97vXacl+BjQ71aRiAiAFySbJXnqj+hZQ
+ K8TCI/6TOtWJ9aicgiKpmh/sGmdeJCwZ90nxISvkxDXLEmJ1prvbGc74FGNVNTW4mmuNqj/p
+ oNr0iHan8hjPNXwoyLNCtj3I5tBmiHZcOiHDUufHDyKQcsKsKI8kqW3pJlDSACeNpKkrjrib
+ 3KLQHSEhTQCt3ZUDf5xNPnFHOnBjQuGkumlmhkgD5RVguki39AP2BQYp/mdk1NCRQxz5PR1B
+ 2w0QaTgPY24chY9PICcMw+VeEgHZJAhuARKglxiYj9szirPd2kv4CFu2w6a5HNMdVT+i5Hov
+ cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
+ Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
+ JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
+Message-ID: <2ebd88a1-7b04-a6e6-cffc-59353a6846dc@kernel.org>
+Date:   Mon, 16 Dec 2019 14:20:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191209195749.868-12-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:35:00AM +0900, Tetsuo Handa wrote:
-> >> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> >> index 1ef6f75d92f1..9a2f95a78fef 100644
-> >> --- a/kernel/printk/printk.c
-> >> +++ b/kernel/printk/printk.c
-> >> @@ -1198,6 +1198,14 @@ MODULE_PARM_DESC(ignore_loglevel,
-> >>  
-> >>  static bool suppress_message_printing(int level)
-> >>  {
-> >> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
-> >> +	/*
-> >> +	 * Changing console_loglevel causes "no output". But ignoring
-> >> +	 * console_loglevel is easier than preventing change of
-> >> +	 * console_loglevel.
-> >> +	 */
-> >> +	return (level >= CONSOLE_LOGLEVEL_DEFAULT && !ignore_loglevel);
-> >> +#endif
-> > 
-> > I don't understand the need for this change at all.
+
+
+On 12/9/19 1:57 PM, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
 > 
-> this case was too hard to blacklist, as explained at
-> https://lore.kernel.org/lkml/4d1a4b51-999b-63c6-5ce3-a704013cecb6@i-love.sakura.ne.jp/ .
-> syz_execute_func() can find deeper bug by executing arbitrary binary code, but
-> we cannot blacklist specific syscalls/arguments for syz_execute_func() testcases.
-> Unless we guard on the kernel side, we won't be able to re-enable syz_execute_func()
-> testcases.
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/clk/socfpga/clk-s10.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
+> index 993f3a73c71e..85055fc56404 100644
+> --- a/drivers/clk/socfpga/clk-s10.c
+> +++ b/drivers/clk/socfpga/clk-s10.c
+> @@ -276,11 +276,9 @@ static struct stratix10_clock_data *__socfpga_s10_clk_init(struct platform_devic
+>  	struct device *dev = &pdev->dev;
+>  	struct stratix10_clock_data *clk_data;
+>  	struct clk **clk_table;
+> -	struct resource *res;
+>  	void __iomem *base;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	base = devm_ioremap_resource(dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base)) {
+>  		pr_err("%s: failed to map clock registers\n", __func__);
+>  		return ERR_CAST(base);
+> 
 
-I looked at the reference, but I didn't see the explanation in the
-above link about why it was "too hard to blacklist".  In fact, it
-looks like a bit earlier in the thread, Dmitry stated that adding this
-find of blacklist "is not hard"?
-
-https://lore.kernel.org/lkml/CACT4Y+Z_+H09iOPzSzJfs=_D=dczk22gL02FjuZ6HXO+p0kRyA@mail.gmail.com/
-
-I suspect that adding whack-a-mole in the kernel is going to be just
-as hard/annoying as adding it in Syzkaller....  The question is under
-which rug are we proposing to hide the dirt?   :-)
-
-      	      	 	      	       - Ted
+Tested-by: Dinh Nguyen <dinguyen@kernel.org>
