@@ -2,53 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2875C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BB2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4FA20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C96D21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518920;
-	bh=JuIU6evUP0TJkyze9RRlQ4q5lVJ+JG69SdDkDI2hhDI=;
+	s=default; t=1576518923;
+	bh=DYeh9forBhYUxyxk7ChjjS288K8KaqAK00EUlOonP8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yz9dvnyVsFeGvFPXEmNM8LqcKLkK49cPEerIz93pvuHoTv1x+p1+uMVTElkYfcODy
-	 +xL9WIHlwKjIg01Twnp4oRxBX0/ALt34y5iaxml5m41bCgtR8pPRTqLtnp2xCijRIg
-	 lm65x6MgVpMRg1TtVMWAe3tMq3duPhvchnFzr9gA=
+	b=Ko/q/YdgrYjWqnfxLDp7RrSE4/pWKbd+876OX3GUWplxMHtr+rPiRnqVFtq9Mo54G
+	 ST+HV+F3KCj5OgZnPMCsnE41s4mGahVEttJVTml5lrbZOsp103aXTzvSTpuSldRUJh
+	 n04s0dIGsGz39vU8ULENXwbjg9j2D9VkVyWq6HvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfLPRzT (ORCPT
+        id S1727827AbfLPRzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfLPRzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:16 -0500
+        id S1727390AbfLPRzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461B320663;
-        Mon, 16 Dec 2019 17:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0E79205ED;
+        Mon, 16 Dec 2019 17:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518915;
-        bh=JuIU6evUP0TJkyze9RRlQ4q5lVJ+JG69SdDkDI2hhDI=;
+        s=default; t=1576518913;
+        bh=DYeh9forBhYUxyxk7ChjjS288K8KaqAK00EUlOonP8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqz2dlpjFPxbFoHNCzc9YliOCe8ykiwzDtoG99Vsb8R1j0aFxugZyU930dzs0QATd
-         klGPYKz9rjdn0xZSZLV8V2/HjcwSERiMgD4Pi3X7luiAfoAH00UkW8YhMENw27Vzim
-         ZwqyX+NWhldeN4RV5glFW48F/7SgWRh+8o+tZs9U=
+        b=h1CkM2IEdd3q5B/tmdPrvHpmlAb9QKhBNjG1I1NJkHEnFW8XkcBW3ox48eDxvDv5D
+         3gwsvF2rd3fCfrZ0iqhx3cnQcCs6/K7mJOPZeG40cn36a260jaVsPlhOQUXqseGlOF
+         sBy4JV/1oQ6/zdncysMLECacqoV7NhimD3IupEq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 102/267] net/mlx4_core: Fix return codes of unsupported operations
-Date:   Mon, 16 Dec 2019 18:47:08 +0100
-Message-Id: <20191216174902.302005230@linuxfoundation.org>
+        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 119/267] tcp: exit if nothing to retransmit on RTO timeout
+Date:   Mon, 16 Dec 2019 18:47:25 +0100
+Message-Id: <20191216174903.234158752@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,76 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Alfasi <ereza@mellanox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 95aac2cdafd8c8298c9b2589c52f44db0d824e0e ]
+Two upstream commits squashed together for v4.14 stable :
 
-Functions __set_port_type and mlx4_check_port_params returned
--EINVAL while the proper return code is -EOPNOTSUPP as a
-result of an unsupported operation. All drivers should generate
-this and all users should check for it when detecting an
-unsupported functionality.
+ commit 88f8598d0a302a08380eadefd09b9f5cb1c4c428 upstream.
 
-Signed-off-by: Erez Alfasi <ereza@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+  Previously TCP only warns if its RTO timer fires and the
+  retransmission queue is empty, but it'll cause null pointer
+  reference later on. It's better to avoid such catastrophic failure
+  and simply exit with a warning.
+
+Squashed with "tcp: refactor tcp_retransmit_timer()" :
+
+ commit 0d580fbd2db084a5c96ee9c00492236a279d5e0f upstream.
+
+  It appears linux-4.14 stable needs a backport of commit
+  88f8598d0a30 ("tcp: exit if nothing to retransmit on RTO timeout")
+
+  Since tcp_rtx_queue_empty() is not in pre 4.15 kernels,
+  let's refactor tcp_retransmit_timer() to only use tcp_rtx_queue_head()
+
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Neal Cardwell <ncardwell@google.com>
+Reviewed-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ net/ipv4/tcp_timer.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index c273a3ebb8e8e..12d4b891301b6 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -199,7 +199,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
- 		for (i = 0; i < dev->caps.num_ports - 1; i++) {
- 			if (port_type[i] != port_type[i + 1]) {
- 				mlx4_err(dev, "Only same port types supported on this HCA, aborting\n");
--				return -EINVAL;
-+				return -EOPNOTSUPP;
- 			}
- 		}
- 	}
-@@ -208,7 +208,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
- 		if (!(port_type[i] & dev->caps.supported_type[i+1])) {
- 			mlx4_err(dev, "Requested port type for port %d is not supported on this HCA\n",
- 				 i + 1);
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 		}
- 	}
- 	return 0;
-@@ -1152,8 +1152,7 @@ static int __set_port_type(struct mlx4_port_info *info,
- 		mlx4_err(mdev,
- 			 "Requested port type for port %d is not supported on this HCA\n",
- 			 info->port);
--		err = -EINVAL;
--		goto err_sup;
-+		return -EOPNOTSUPP;
- 	}
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -413,6 +413,7 @@ void tcp_retransmit_timer(struct sock *s
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct net *net = sock_net(sk);
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++	struct sk_buff *skb;
  
- 	mlx4_stop_sense(mdev);
-@@ -1175,7 +1174,7 @@ static int __set_port_type(struct mlx4_port_info *info,
- 		for (i = 1; i <= mdev->caps.num_ports; i++) {
- 			if (mdev->caps.possible_type[i] == MLX4_PORT_TYPE_AUTO) {
- 				mdev->caps.possible_type[i] = mdev->caps.port_type[i];
--				err = -EINVAL;
-+				err = -EOPNOTSUPP;
- 			}
- 		}
+ 	if (tp->fastopen_rsk) {
+ 		WARN_ON_ONCE(sk->sk_state != TCP_SYN_RECV &&
+@@ -423,10 +424,13 @@ void tcp_retransmit_timer(struct sock *s
+ 		 */
+ 		return;
  	}
-@@ -1201,7 +1200,7 @@ static int __set_port_type(struct mlx4_port_info *info,
- out:
- 	mlx4_start_sense(mdev);
- 	mutex_unlock(&priv->port_mutex);
--err_sup:
 +
- 	return err;
- }
+ 	if (!tp->packets_out)
+-		goto out;
++		return;
  
--- 
-2.20.1
-
+-	WARN_ON(tcp_write_queue_empty(sk));
++	skb = tcp_rtx_queue_head(sk);
++	if (WARN_ON_ONCE(!skb))
++		return;
+ 
+ 	tp->tlp_high_seq = 0;
+ 
+@@ -459,7 +463,7 @@ void tcp_retransmit_timer(struct sock *s
+ 			goto out;
+ 		}
+ 		tcp_enter_loss(sk);
+-		tcp_retransmit_skb(sk, tcp_write_queue_head(sk), 1);
++		tcp_retransmit_skb(sk, skb, 1);
+ 		__sk_dst_reset(sk);
+ 		goto out_reset_timer;
+ 	}
 
 
