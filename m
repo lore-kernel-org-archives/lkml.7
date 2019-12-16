@@ -2,114 +2,117 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB28DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58FAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1AC24687
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB902072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519577;
-	bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6cF/yTKHUQJpdlf5Fw3ZqTQYOX3CT0CV4DQxbg7pjnPwePuafwadZz07wQHp2kQh
-	 CXk5iAsLA2F1OIJhUs6HCyog4hGQsj5q0xwM/qnde4Irq7uT4K+iRQeVOt+jfVbeHM
-	 4P+uOItbiUpfEYrx9sEBHIK+sLwnYmEjh56ZsDJw=
+	s=default; t=1576519581;
+	bh=S5EzSfr7uz1asgFND7AidBJiY1qcdryqnWh8OXVt/z8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H4hu+3UMXrP5X5lTq6pwO/eHhASyahNxKHSywtdaCwTq2KhGqoVOiFz+wn1UyE0FR
+	 Rm5om1iWssccWCka3eFEnvXFrH6lEFVuxRXKmMZcOy77B+ofRfpNrD17YunIPEgScu
+	 9Qh4q1oa6wWveW0jxD/VLQE/EAB9aPY79zvhfVi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfLPSGQ (ORCPT
+        id S1729965AbfLPSGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729940AbfLPSGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:13 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729954AbfLPSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:18 -0500
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AE3821739;
-        Mon, 16 Dec 2019 18:06:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2072166E
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 18:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519572;
-        bh=NrWdrWtn4VJKQ0e5Ra59uuBMOs9/sQETE74QJUDxaf4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y6i6OnIY4net4JbjZcQAz4auY6CxTfkDJ0GFwzXuT+fZ/mmA+3m23BI+pPcPSIODh
-         GlxzK9urQbI5aNUHknEcZIjCycvNu9sxNQqRXHkbclz9lrdQlFDMHIttWyxWbYBBpJ
-         fOTcYaBrv1I8pTEQJ1ZE4MqvAriI3WeGPsk+fAr0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 094/140] ext4: Fix credit estimate for final inode freeing
-Date:   Mon, 16 Dec 2019 18:49:22 +0100
-Message-Id: <20191216174811.816124544@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
-References: <20191216174747.111154704@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1576519577;
+        bh=S5EzSfr7uz1asgFND7AidBJiY1qcdryqnWh8OXVt/z8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TEhdLnktDkneS2U8ScbsupaPjrRyLgXviGmjv8fyXhwceZZdPuBlDvLwgGj1XN2ep
+         MqB4YXvCEMCZpAipLQv21MJ7GuyG7fzDDtJa8lYOoycO5iWHrTUWpBooPwnINxpV1U
+         pSba1UJsUlpjXkMnIi/z/5TRpZ5CLIuca3hlHI5Q=
+Received: by mail-wr1-f54.google.com with SMTP id c9so8443761wrw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 10:06:17 -0800 (PST)
+X-Gm-Message-State: APjAAAWSRo9wmIcudj4QM1jGrSarHvN/Egxm8pHuwgt0RlAXbaNJlZsv
+        VngZhXi1A66K9Fox+5ZlwB6Lb91GY/PcfX1zCdl37A==
+X-Google-Smtp-Source: APXvYqzNIPecnAEIIuC3AYqmcV/03RxgmHT8yLHLhfcvyzkeze3OiCVXOUVH+z/9oav+2xiJixtULNy2GAZ80uDWYuI=
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr33046847wrn.61.1576519575849;
+ Mon, 16 Dec 2019 10:06:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
+ <20191121185303.GB199273@romley-ivt3.sc.intel.com> <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
+ <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
+ <20191122092555.GA4097@hirez.programming.kicks-ass.net> <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
+ <20191122203105.GE2844@hirez.programming.kicks-ass.net> <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+ <20191211175202.GQ2827@hirez.programming.kicks-ass.net> <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
+ <20191211223407.GT2844@hirez.programming.kicks-ass.net> <CALCETrUr+LwpQm5caeKgXGhaZ87HmcNn4wTsmkPzTEptp6sC6g@mail.gmail.com>
+ <8d880a468c6242b9a951a83716ddeb07@AcuMS.aculab.com> <CALCETrW1LDuzcnvav=MY1bUv4jQ25n30La5m5x8tXfDknfV_cQ@mail.gmail.com>
+ <053a199934844aef9745d7398494b5a0@AcuMS.aculab.com>
+In-Reply-To: <053a199934844aef9745d7398494b5a0@AcuMS.aculab.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 16 Dec 2019 10:06:03 -0800
+X-Gmail-Original-Message-ID: <CALCETrWvq9XMTse=9JTtnVYY+U2pGcF-nP=YHvEFq4htxbfGwA@mail.gmail.com>
+Message-ID: <CALCETrWvq9XMTse=9JTtnVYY+U2pGcF-nP=YHvEFq4htxbfGwA@mail.gmail.com>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+On Mon, Dec 16, 2019 at 9:45 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Andy Lutomirski
+> > Sent: 16 December 2019 17:23
+> ...
+> > I'm talking specifically about x86 here, where, for example, "Reads
+> > are not reordered with other reads".  So READ_ONCE *does* have
+> > sequencing requirements on the CPUs.
+> >
+> > Feel free to replace READ_ONCE with MOV in your head if you like :)
+>
+> I got a little confused because I thought your reference to READ_ONCE()
+> was relevant.
+>
+> Sometimes remembering all this gets hard.
+> The docs about the effects of LFENCE and MFENCE don't really help
+> (they make my brain hurt).
+> I'm pretty sure I've decided in the past they are almost never needed.
+>
 
-commit 65db869c754e7c271691dd5feabf884347e694f5 upstream.
+Me too.
 
-Estimate for the number of credits needed for final freeing of inode in
-ext4_evict_inode() was to small. We may modify 4 blocks (inode & sb for
-orphan deletion, bitmap & group descriptor for inode freeing) and not
-just 3.
+This whole discussion is about the fact that PeterZ is sceptical that
+actual x86 CPUs have as strong a memory model as the SDM suggests, and
+I'm trying to understand the exact concern.  This may or may not be
+directly relevant to the kernel. :)
 
-[ Fixed minor whitespace nit. -- TYT ]
+> Usually the ordering of reads doesn't help you.
+> IIRC If locations 'a' and 'b' get changed from 0 to 1 it is perfectly possible
+> for one cpu to see a==0, b==1 and another a==1, b==0 even
+> though both read a then b.
+> (On non-alpha this may require different cpus update a and b.)
+>
 
-Fixes: e50e5129f384 ("ext4: xattr-in-inode support")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-6-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/inode.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -196,7 +196,12 @@ void ext4_evict_inode(struct inode *inod
- {
- 	handle_t *handle;
- 	int err;
--	int extra_credits = 3;
-+	/*
-+	 * Credits for final inode cleanup and freeing:
-+	 * sb + inode (ext4_orphan_del()), block bitmap, group descriptor
-+	 * (xattr block freeing), bitmap, group descriptor (inode freeing)
-+	 */
-+	int extra_credits = 6;
- 	struct ext4_xattr_inode_array *ea_inode_array = NULL;
- 
- 	trace_ext4_evict_inode(inode);
-@@ -252,8 +257,12 @@ void ext4_evict_inode(struct inode *inod
- 	if (!IS_NOQUOTA(inode))
- 		extra_credits += EXT4_MAXQUOTAS_DEL_BLOCKS(inode->i_sb);
- 
-+	/*
-+	 * Block bitmap, group descriptor, and inode are accounted in both
-+	 * ext4_blocks_for_truncate() and extra_credits. So subtract 3.
-+	 */
- 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE,
--				 ext4_blocks_for_truncate(inode)+extra_credits);
-+			 ext4_blocks_for_truncate(inode) + extra_credits - 3);
- 	if (IS_ERR(handle)) {
- 		ext4_std_error(inode->i_sb, PTR_ERR(handle));
- 		/*
-
-
+x86 mostly prevents this.
