@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC41FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FD7C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30982072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164672166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519512;
-	bh=ijubuqzniGt2PKEzrQHg6y/PnF9gic4B/UqCN5qjFXA=;
+	s=default; t=1576519514;
+	bh=b4nXKvnnBvh+P7hu7As8o6OfzCqZv6cQvPzTdaRbJEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QI8SRJ+W9VsgHw8H5bibdnWzkKJ6CflD4rDPj99axMHHrFx+gTNiA047J3QpVEfp7
-	 pnLXYglE3ZJpzAGCmU5IwSrRRwcFQJyaokH9ZubeaucaG0QYs4YeqtHovZ1uIdjOFr
-	 nGTdo95o0Blu/g4rt+82q7M49iSEbhoNjjZ0E2JY=
+	b=w/LrPbdHc95SlKbCc9AxueW+QWWi3g2+JmTD4Vy80a0zd/EdFcUoGzVHgtfeaWBFK
+	 mveavCDEWL5sNdo206qR6zq5SHeD9dfZGsx2vbNbQ02h5DQPJnB4rIVgD+K6s5lCzz
+	 tyD0S3CMdwHkVwnDdTC6c9iAm+31i6EGDXXephjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfLPSFL (ORCPT
+        id S1729779AbfLPSFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43166 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbfLPSFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:09 -0500
+        id S1729557AbfLPSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFADA206EC;
-        Mon, 16 Dec 2019 18:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033BD206EC;
+        Mon, 16 Dec 2019 18:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519509;
-        bh=ijubuqzniGt2PKEzrQHg6y/PnF9gic4B/UqCN5qjFXA=;
+        s=default; t=1576519504;
+        bh=b4nXKvnnBvh+P7hu7As8o6OfzCqZv6cQvPzTdaRbJEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9vJnLbO0FrbjKlua9+z+WchHv8sB89oKojCQQouQccwaUWqmC/0r43YYKde81AN/
-         HrYuvm+ip/fesoC9fXn/Wf7dZ24bYVp8OqH1wh4LsXPFaTNHsR7XNsQ0CRO/xTpxtJ
-         yPR6yzCp3VJBfQ0OjHIu0cQnb8QDsTj9NbAwBZaI=
+        b=k2S3ri7YrvNDzV+u30tlWPGvtek93myoejt/TqTY2Rp0x9rTFbvNj4q65RzrrHdye
+         rmWNLuKD7V43iqw+MALWRcZc8WlE6vyoYQxPq6eY9rzceHgXNmRFjNW6+1w9M3MZw9
+         rYDok/bADVhqEdm3UcdqgoEqutSyCY9TGfSHq1QY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        NeilBrown <neilb@suse.de>
-Subject: [PATCH 4.19 054/140] workqueue: Fix pwq ref leak in rescuer_thread()
-Date:   Mon, 16 Dec 2019 18:48:42 +0100
-Message-Id: <20191216174803.141256519@linuxfoundation.org>
+        stable@vger.kernel.org, zhangxiaoxu <zhangxiaoxu5@huawei.com>,
+        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 052/140] dm zoned: reduce overhead of backing device checks
+Date:   Mon, 16 Dec 2019 18:48:40 +0100
+Message-Id: <20191216174802.752828965@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,60 +60,261 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
+commit e7fad909b68aa37470d9f2d2731b5bec355ee5d6 upstream.
 
-008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
-the rescuer worker requeue the pwq immediately if there may be more
-work items which need rescuing instead of waiting for the next mayday
-timer expiration.  Unfortunately, it doesn't check whether the pwq is
-already on the mayday list and unconditionally gets the ref and moves
-it onto the list.  This doesn't corrupt the list but creates an
-additional reference to the pwq.  It got queued twice but will only be
-removed once.
+Commit 75d66ffb48efb3 added backing device health checks and as a part
+of these checks, check_events() block ops template call is invoked in
+dm-zoned mapping path as well as in reclaim and flush path. Calling
+check_events() with ATA or SCSI backing devices introduces a blocking
+scsi_test_unit_ready() call being made in sd_check_events(). Even though
+the overhead of calling scsi_test_unit_ready() is small for ATA zoned
+devices, it is much larger for SCSI and it affects performance in a very
+negative way.
 
-This leak later can trigger pwq refcnt warning on workqueue
-destruction and prevent freeing of the workqueue.
+Fix this performance regression by executing check_events() only in case
+of any I/O errors. The function dmz_bdev_is_dying() is modified to call
+only blk_queue_dying(), while calls to check_events() are made in a new
+helper function, dmz_check_bdev().
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
-Cc: NeilBrown <neilb@suse.de>
-Cc: stable@vger.kernel.org # v3.19+
+Reported-by: zhangxiaoxu <zhangxiaoxu5@huawei.com>
+Fixes: 75d66ffb48efb3 ("dm zoned: properly handle backing device failure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/workqueue.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/md/dm-zoned-metadata.c |   29 ++++++++++++++--------
+ drivers/md/dm-zoned-reclaim.c  |    8 +-----
+ drivers/md/dm-zoned-target.c   |   54 ++++++++++++++++++++++++++++-------------
+ drivers/md/dm-zoned.h          |    2 +
+ 4 files changed, 61 insertions(+), 32 deletions(-)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2413,8 +2413,14 @@ repeat:
- 			 */
- 			if (need_to_create_worker(pool)) {
- 				spin_lock(&wq_mayday_lock);
--				get_pwq(pwq);
--				list_move_tail(&pwq->mayday_node, &wq->maydays);
-+				/*
-+				 * Queue iff we aren't racing destruction
-+				 * and somebody else hasn't queued it already.
-+				 */
-+				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
-+					get_pwq(pwq);
-+					list_add_tail(&pwq->mayday_node, &wq->maydays);
-+				}
- 				spin_unlock(&wq_mayday_lock);
- 			}
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -552,6 +552,7 @@ static struct dmz_mblock *dmz_get_mblock
+ 		       TASK_UNINTERRUPTIBLE);
+ 	if (test_bit(DMZ_META_ERROR, &mblk->state)) {
+ 		dmz_release_mblock(zmd, mblk);
++		dmz_check_bdev(zmd->dev);
+ 		return ERR_PTR(-EIO);
+ 	}
+ 
+@@ -623,6 +624,8 @@ static int dmz_rdwr_block(struct dmz_met
+ 	ret = submit_bio_wait(bio);
+ 	bio_put(bio);
+ 
++	if (ret)
++		dmz_check_bdev(zmd->dev);
+ 	return ret;
+ }
+ 
+@@ -689,6 +692,7 @@ static int dmz_write_dirty_mblocks(struc
+ 			       TASK_UNINTERRUPTIBLE);
+ 		if (test_bit(DMZ_META_ERROR, &mblk->state)) {
+ 			clear_bit(DMZ_META_ERROR, &mblk->state);
++			dmz_check_bdev(zmd->dev);
+ 			ret = -EIO;
  		}
-@@ -4478,7 +4484,8 @@ static void show_pwq(struct pool_workque
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
+ 		nr_mblks_submitted--;
+@@ -766,7 +770,7 @@ int dmz_flush_metadata(struct dmz_metada
+ 	/* If there are no dirty metadata blocks, just flush the device cache */
+ 	if (list_empty(&write_list)) {
+ 		ret = blkdev_issue_flush(zmd->dev->bdev, GFP_NOIO, NULL);
+-		goto out;
++		goto err;
+ 	}
  
--	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
-+	pr_cont(" active=%d/%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->max_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ 	/*
+@@ -776,7 +780,7 @@ int dmz_flush_metadata(struct dmz_metada
+ 	 */
+ 	ret = dmz_log_dirty_mblocks(zmd, &write_list);
+ 	if (ret)
+-		goto out;
++		goto err;
  
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
+ 	/*
+ 	 * The log is on disk. It is now safe to update in place
+@@ -784,11 +788,11 @@ int dmz_flush_metadata(struct dmz_metada
+ 	 */
+ 	ret = dmz_write_dirty_mblocks(zmd, &write_list, zmd->mblk_primary);
+ 	if (ret)
+-		goto out;
++		goto err;
+ 
+ 	ret = dmz_write_sb(zmd, zmd->mblk_primary);
+ 	if (ret)
+-		goto out;
++		goto err;
+ 
+ 	while (!list_empty(&write_list)) {
+ 		mblk = list_first_entry(&write_list, struct dmz_mblock, link);
+@@ -803,16 +807,20 @@ int dmz_flush_metadata(struct dmz_metada
+ 
+ 	zmd->sb_gen++;
+ out:
+-	if (ret && !list_empty(&write_list)) {
+-		spin_lock(&zmd->mblk_lock);
+-		list_splice(&write_list, &zmd->mblk_dirty_list);
+-		spin_unlock(&zmd->mblk_lock);
+-	}
+-
+ 	dmz_unlock_flush(zmd);
+ 	up_write(&zmd->mblk_sem);
+ 
+ 	return ret;
++
++err:
++	if (!list_empty(&write_list)) {
++		spin_lock(&zmd->mblk_lock);
++		list_splice(&write_list, &zmd->mblk_dirty_list);
++		spin_unlock(&zmd->mblk_lock);
++	}
++	if (!dmz_check_bdev(zmd->dev))
++		ret = -EIO;
++	goto out;
+ }
+ 
+ /*
+@@ -1235,6 +1243,7 @@ static int dmz_update_zone(struct dmz_me
+ 	if (ret) {
+ 		dmz_dev_err(zmd->dev, "Get zone %u report failed",
+ 			    dmz_id(zmd, zone));
++		dmz_check_bdev(zmd->dev);
+ 		return ret;
+ 	}
+ 
+--- a/drivers/md/dm-zoned-reclaim.c
++++ b/drivers/md/dm-zoned-reclaim.c
+@@ -81,6 +81,7 @@ static int dmz_reclaim_align_wp(struct d
+ 			    "Align zone %u wp %llu to %llu (wp+%u) blocks failed %d",
+ 			    dmz_id(zmd, zone), (unsigned long long)wp_block,
+ 			    (unsigned long long)block, nr_blocks, ret);
++		dmz_check_bdev(zrc->dev);
+ 		return ret;
+ 	}
+ 
+@@ -488,12 +489,7 @@ static void dmz_reclaim_work(struct work
+ 	ret = dmz_do_reclaim(zrc);
+ 	if (ret) {
+ 		dmz_dev_debug(zrc->dev, "Reclaim error %d\n", ret);
+-		if (ret == -EIO)
+-			/*
+-			 * LLD might be performing some error handling sequence
+-			 * at the underlying device. To not interfere, do not
+-			 * attempt to schedule the next reclaim run immediately.
+-			 */
++		if (!dmz_check_bdev(zrc->dev))
+ 			return;
+ 	}
+ 
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -79,6 +79,8 @@ static inline void dmz_bio_endio(struct
+ 
+ 	if (status != BLK_STS_OK && bio->bi_status == BLK_STS_OK)
+ 		bio->bi_status = status;
++	if (bio->bi_status != BLK_STS_OK)
++		bioctx->target->dev->flags |= DMZ_CHECK_BDEV;
+ 
+ 	if (atomic_dec_and_test(&bioctx->ref)) {
+ 		struct dm_zone *zone = bioctx->zone;
+@@ -564,32 +566,52 @@ out:
+ }
+ 
+ /*
+- * Check the backing device availability. If it's on the way out,
++ * Check if the backing device is being removed. If it's on the way out,
+  * start failing I/O. Reclaim and metadata components also call this
+  * function to cleanly abort operation in the event of such failure.
+  */
+ bool dmz_bdev_is_dying(struct dmz_dev *dmz_dev)
+ {
+-	struct gendisk *disk;
++	if (dmz_dev->flags & DMZ_BDEV_DYING)
++		return true;
+ 
+-	if (!(dmz_dev->flags & DMZ_BDEV_DYING)) {
+-		disk = dmz_dev->bdev->bd_disk;
+-		if (blk_queue_dying(bdev_get_queue(dmz_dev->bdev))) {
+-			dmz_dev_warn(dmz_dev, "Backing device queue dying");
+-			dmz_dev->flags |= DMZ_BDEV_DYING;
+-		} else if (disk->fops->check_events) {
+-			if (disk->fops->check_events(disk, 0) &
+-					DISK_EVENT_MEDIA_CHANGE) {
+-				dmz_dev_warn(dmz_dev, "Backing device offline");
+-				dmz_dev->flags |= DMZ_BDEV_DYING;
+-			}
+-		}
++	if (dmz_dev->flags & DMZ_CHECK_BDEV)
++		return !dmz_check_bdev(dmz_dev);
++
++	if (blk_queue_dying(bdev_get_queue(dmz_dev->bdev))) {
++		dmz_dev_warn(dmz_dev, "Backing device queue dying");
++		dmz_dev->flags |= DMZ_BDEV_DYING;
+ 	}
+ 
+ 	return dmz_dev->flags & DMZ_BDEV_DYING;
+ }
+ 
+ /*
++ * Check the backing device availability. This detects such events as
++ * backing device going offline due to errors, media removals, etc.
++ * This check is less efficient than dmz_bdev_is_dying() and should
++ * only be performed as a part of error handling.
++ */
++bool dmz_check_bdev(struct dmz_dev *dmz_dev)
++{
++	struct gendisk *disk;
++
++	dmz_dev->flags &= ~DMZ_CHECK_BDEV;
++
++	if (dmz_bdev_is_dying(dmz_dev))
++		return false;
++
++	disk = dmz_dev->bdev->bd_disk;
++	if (disk->fops->check_events &&
++	    disk->fops->check_events(disk, 0) & DISK_EVENT_MEDIA_CHANGE) {
++		dmz_dev_warn(dmz_dev, "Backing device offline");
++		dmz_dev->flags |= DMZ_BDEV_DYING;
++	}
++
++	return !(dmz_dev->flags & DMZ_BDEV_DYING);
++}
++
++/*
+  * Process a new BIO.
+  */
+ static int dmz_map(struct dm_target *ti, struct bio *bio)
+@@ -902,8 +924,8 @@ static int dmz_prepare_ioctl(struct dm_t
+ {
+ 	struct dmz_target *dmz = ti->private;
+ 
+-	if (dmz_bdev_is_dying(dmz->dev))
+-		return -ENODEV;
++	if (!dmz_check_bdev(dmz->dev))
++		return -EIO;
+ 
+ 	*bdev = dmz->dev->bdev;
+ 
+--- a/drivers/md/dm-zoned.h
++++ b/drivers/md/dm-zoned.h
+@@ -71,6 +71,7 @@ struct dmz_dev {
+ 
+ /* Device flags. */
+ #define DMZ_BDEV_DYING		(1 << 0)
++#define DMZ_CHECK_BDEV		(2 << 0)
+ 
+ /*
+  * Zone descriptor.
+@@ -254,5 +255,6 @@ void dmz_schedule_reclaim(struct dmz_rec
+  * Functions defined in dm-zoned-target.c
+  */
+ bool dmz_bdev_is_dying(struct dmz_dev *dmz_dev);
++bool dmz_check_bdev(struct dmz_dev *dmz_dev);
+ 
+ #endif /* DM_ZONED_H */
 
 
