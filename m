@@ -6,94 +6,87 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A52C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872A8C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD14206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB6920717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576516849;
-	bh=X9CKuk6N2L95+vXHudxOK4j+U77FwSFhSczaZfyRT6Y=;
+	s=default; t=1576516878;
+	bh=Q4yTC5SDyZmpiMOi5cnPhop29ndMyyIHxAjnW9Qr1xY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z7EEtx2TCSvdT4DKE9D2RWXk6bUYyy8HpKS9S+WuMLAKhKLAPme2ADnH+Eh7dGKYo
-	 /pvfNAYTxLwl2IGZwJShXr1QnzA5KXEfffn3v3BW6BouXbOxhgzhpClaUt2diytDGH
-	 MXbXh19js1Vebg+Hq9uF8o31Nzq/6lApfjb5tlD8=
+	b=mngcNOX+5yiDUUv81fKpCDJMlattO951Ot/zmXEe7QCO7ZtyQl0TDdpOZ30zbWRSO
+	 QNYkWiN9khMlq2THYvT7uwfpyEXrdHQjpuYxnjalVT0fAVQ4tFK3OWDqbcLjy7Lkno
+	 sD0s8NG0ExEPLKmghrgnL7X/5cQ8L+MTbv6M3fis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfLPRUs (ORCPT
+        id S1726742AbfLPRVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:20:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLPRUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:20:47 -0500
+        id S1726016AbfLPRVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:21:17 -0500
 Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFF57206D3;
-        Mon, 16 Dec 2019 17:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70E7206E0;
+        Mon, 16 Dec 2019 17:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576516846;
-        bh=X9CKuk6N2L95+vXHudxOK4j+U77FwSFhSczaZfyRT6Y=;
+        s=default; t=1576516876;
+        bh=Q4yTC5SDyZmpiMOi5cnPhop29ndMyyIHxAjnW9Qr1xY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eqUHWF7DVSRziUDpfUjjXL81Sd68qyEDM8/1T0nL/XTyuavtOI9IGH+cqJfr5fDtt
-         3vhKprKp4l8A2B9YMRd0aYHqnwTWq5JKnQ4CCgmJDQ8W3hbsOJqNJVShxL4CCNwDLz
-         lo5MnQLE+Wks0Pt1OA/wKH8N3bwN11bNsmbGBXlw=
-Date:   Mon, 16 Dec 2019 09:20:44 -0800
+        b=fQTv6vEbU7+1/jpoq4zDJisLx/VKltrWs+IPodAO8vamZw9SQJ0FVS26cZj3qng93
+         dG5v2AUTy1PhwWgHhxTKICz/SMRBU0EB5LD1o+fWro1kp/4MI4+mATnTVFmzNeeJmo
+         w9/h+jG6qlhO2y46f4YULRo73PnTFnvlS0VnAync=
+Date:   Mon, 16 Dec 2019 09:21:14 -0800
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com>
+To:     syzbot <syzbot+958915844b296815c246@syzkaller.appspotmail.com>
 Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
         linux@dominikbrodowski.net, pc@cjr.nz,
         syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: linux-next boot error: general protection fault in do_mount_root
-Message-ID: <20191216172043.GA139479@gmail.com>
-References: <00000000000036658f0599d4ef43@google.com>
+Subject: Re: upstream boot error: general protection fault in do_mount_root
+Message-ID: <20191216172114.GB139479@gmail.com>
+References: <000000000000b321f20599cd8725@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000036658f0599d4ef43@google.com>
+In-Reply-To: <000000000000b321f20599cd8725@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 08:45:08AM -0800, syzbot wrote:
+On Sun, Dec 15, 2019 at 11:55:07PM -0800, syzbot wrote:
 > Hello,
 > 
 > syzbot found the following crash on:
 > 
-> HEAD commit:    cf2be78b Add linux-next specific files for 20191216
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13f505dee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=634b7ce01f79423d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=31f37c1dc3fd9e900602
+> HEAD commit:    d1eef1c6 Linux 5.5-rc2
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11ff2fb1e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=958915844b296815c246
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > 
 > Unfortunately, I don't have any reproducer for this crash yet.
 > 
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+31f37c1dc3fd9e900602@syzkaller.appspotmail.com
+> Reported-by: syzbot+958915844b296815c246@syzkaller.appspotmail.com
 > 
-> batman_adv: B.A.T.M.A.N. advanced 2019.5 (compatibility version 15) loaded
-> openvswitch: Open vSwitch switching datapath
-> NET: Registered protocol family 40
-> mpls_gso: MPLS GSO support
 > IPI shorthand broadcast: enabled
 > AVX2 version of gcm_enc/dec engaged.
 > AES CTR mode by8 optimization enabled
-> sched_clock: Marking stable (12282186706, 24150593)->(12316857222,
-> -10519923)
 > registered taskstats version 1
 > Loading compiled-in X.509 certificates
 > Loaded X.509 cert 'Build time autogenerated kernel key:
-> 8b22f477d966bfa6cf9a482acbda6ca1892a4acc'
+> 2a1122198a3e68692ac5775a16203e4f5f9d30c2'
 > zswap: loaded using pool lzo/zbud
 > Key type ._fscrypt registered
 > Key type .fscrypt registered
 > Btrfs loaded, crc32c=crc32c-intel
 > Key type big_key registered
 > Key type encrypted registered
-> AppArmor: AppArmor sha1 policy hashing enabled
 > ima: No TPM chip found, activating TPM-bypass!
 > ima: Allocated hash algorithm: sha256
 > ima: No architecture policies found
@@ -107,18 +100,24 @@ On Mon, Dec 16, 2019 at 08:45:08AM -0800, syzbot wrote:
 > evm: security.ima
 > evm: security.capability
 > evm: HMAC attrs: 0x1
-> PM:   Magic number: 15:311:439
-> media media3: hash matches
+> PM:   Magic number: 15:612:306
+> usb usb38: hash matches
+> tty tty35: hash matches
 > printk: console [netcon0] enabled
 > netconsole: network logging started
 > gtp: GTP module loaded (pdp ctx size 104 bytes)
 > rdma_rxe: loaded
 > cfg80211: Loading compiled-in X.509 certificates for regulatory database
 > cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+> Unstable clock detected, switching default tracing clock to "global"
+> If you want to keep using the local clock, then add:
+>   "trace_clock=local"
+> on the kernel command line
 > ALSA device list:
 >   #0: Dummy 1
 >   #1: Loopback 1
 >   #2: Virtual MIDI Card 1
+>   #3: HDA Intel at 0xfebf0000 irq 31
 > md: Waiting for all devices to be available before autodetect
 > md: If you don't use raid, use raid=noautodetect
 > md: Autodetecting RAID arrays.
@@ -127,60 +126,51 @@ On Mon, Dec 16, 2019 at 08:45:08AM -0800, syzbot wrote:
 > kasan: CONFIG_KASAN_INLINE enabled
 > kasan: GPF could be caused by NULL-ptr deref or user memory access
 > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191216-syzkaller
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
+> CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-syzkaller #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
+> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
 > RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
 > Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48
 > 89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a 38
 > ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-> RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
-> RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
-> RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
-> R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
-> R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
+> RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
+> RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
+> R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
+> R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
+> FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
 > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
+> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
 > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 > Call Trace:
->  strncpy include/linux/string.h:326 [inline]
+>  strncpy include/linux/string.h:281 [inline]
 >  do_mount_root+0x74/0x23b init/do_mounts.c:404
 >  mount_block_root+0x342/0x51a init/do_mounts.c:438
 >  mount_root+0x283/0x2cd init/do_mounts.c:628
 >  prepare_namespace+0x26f/0x2a7 init/do_mounts.c:687
->  kernel_init_freeable+0x557/0x570 init/main.c:1233
->  kernel_init+0x12/0x1bf init/main.c:1112
+>  kernel_init_freeable+0x557/0x570 init/main.c:1231
+>  kernel_init+0x12/0x1bf init/main.c:1110
 >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 > Modules linked in:
-> ---[ end trace c645a4d31f27fe8a ]---
+> ---[ end trace dc1d12e4189687e7 ]---
 > RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
 > Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48
 > 89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a 38
 > ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
-> RSP: 0000:ffffc90000c7fca8 EFLAGS: 00010246
-> RAX: ffff888099090000 RBX: ffff888099090000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888099090000
-> RBP: ffffc90000c7fcd8 R08: ffff888099090000 R09: ffffed1015d07074
-> R10: ffffed1015d07073 R11: ffff8880ae83839b R12: ffffea0002642400
-> R13: dffffc0000000000 R14: ffff888099090fff R15: ffff888214cc3000
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
+> RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
+> RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
+> R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
+> R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
+> FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
 > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 00000000001406f0
+> CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
 > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 > 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 > 
 
 Fixed in mainline by commit 7de7de7ca0ae0
