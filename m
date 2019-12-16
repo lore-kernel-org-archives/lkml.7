@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2415C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86651206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3201F21582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519976;
-	bh=cDrDGBDk6oXaOO6XSqMr574ZbPBCo63cBd4LFc0NzN8=;
+	s=default; t=1576519984;
+	bh=3ky4ZU8tMvRV5lg3udxWMIllO9DeUCVEmcuIMNAYDU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ggvBtEHvoodUs2Kp7wPGqITxd4teX/6nbe0Ky3roiSiQen5spphDobn3pY7WgBS9
-	 ZT6YaGdLbOfgjkjZZG0AkI5NuqVpqBHUHfYzWbziwSn9M2czU0Lz/cZA8b0sq5nHQR
-	 GqEu5MHTC8+HZX5wZHKxDxsIgyZjrpIIxPLI8Xr4=
+	b=Ls2PpkVgxSTSCEEIFo6Z8oYv0qOqoCicfkRmtzh88ka9D5kHZAKaKdsDAxY3Q8Rye
+	 pzgNRvnZ2zJ5pr+gAP1OcBVjHGZR3TiswKFP9XHtxt1t7qrDG1xF81tGz+ybL5U3z2
+	 xNUwKzIK5PeKSaKYAutETNdXefA8MULlBPujgSFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731031AbfLPSMz (ORCPT
+        id S1731055AbfLPSND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58244 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbfLPSMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:49 -0500
+        id S1731040AbfLPSM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7EB420CC7;
-        Mon, 16 Dec 2019 18:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE9C4206E0;
+        Mon, 16 Dec 2019 18:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519969;
-        bh=cDrDGBDk6oXaOO6XSqMr574ZbPBCo63cBd4LFc0NzN8=;
+        s=default; t=1576519979;
+        bh=3ky4ZU8tMvRV5lg3udxWMIllO9DeUCVEmcuIMNAYDU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2FO2LOItAnPDu59Z/QNFTRdkKkyYoh22yIxb+3HHVG/p7qTPvcAtjpo5PcXPL38hH
-         tcJfGhZbPRycADdhLTNwF/d6KqzreNyCxQWhpOW+OKXXPjpKnX57m+Sh4YwOTTCMbB
-         Gsd8tmwJmTDm+dsaQY3KhiJy0ZgzbcXrW2qZDky4=
+        b=S2773ho0cPuXrOm0+/zkSFmBEi0OhGwO1usqAAZcbp2bNW6vEBXf9t1/TQhIPgGN0
+         fhdR9/tofNqEVj1TRLPP6LZ43F1oN2c5c2UH6IDKSFghqrGv+ZZGfiOCQcN0V2/zdG
+         gfHM81nkegcDeunDAI1qO4X7lKXoRwBzyJTq/U2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 143/180] scsi: qla2xxx: Make qla2x00_abort_srb() again decrease the sp reference count
-Date:   Mon, 16 Dec 2019 18:49:43 +0100
-Message-Id: <20191216174843.248552703@linuxfoundation.org>
+Subject: [PATCH 5.3 146/180] scsi: qla2xxx: Fix qla24xx_process_bidir_cmd()
+Date:   Mon, 16 Dec 2019 18:49:46 +0100
+Message-Id: <20191216174843.609838178@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -63,35 +63,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit d2d2b5a5741d317bed1fa38211f1f3b142d8cf7a ]
+[ Upstream commit c29282c65d1cf54daeea63be46243d7f69d72f4d ]
 
-Since qla2x00_abort_srb() starts with increasing the reference count of
-@sp, decrease that same reference count before returning.
+Set the r??_data_len variables before using these instead of after.
+
+This patch fixes the following Coverity complaint:
+
+const: At condition req_data_len != rsp_data_len, the value of req_data_len
+must be equal to 0.
+const: At condition req_data_len != rsp_data_len, the value of rsp_data_len
+must be equal to 0.
+dead_error_condition: The condition req_data_len != rsp_data_len cannot be
+true.
 
 Cc: Himanshu Madhani <hmadhani@marvell.com>
-Fixes: 219d27d7147e ("scsi: qla2xxx: Fix race conditions in the code for aborting SCSI commands") # v5.2.
+Fixes: a9b6f722f62d ("[SCSI] qla2xxx: Implementation of bidirectional.") # v3.7.
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Tested-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/qla2xxx/qla_bsg.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index ef75897b27132..82f6ae4dcfc0b 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1751,6 +1751,8 @@ static void qla2x00_abort_srb(struct qla_qpair *qp, srb_t *sp, const int res,
- 		spin_lock_irqsave(qp->qp_lock_ptr, *flags);
- 		sp->comp = NULL;
- 	}
-+
-+	atomic_dec(&sp->ref_count);
- }
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index ce87bbdb30907..be9eeabe965e2 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -1782,8 +1782,8 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 	uint16_t nextlid = 0;
+ 	uint32_t tot_dsds;
+ 	srb_t *sp = NULL;
+-	uint32_t req_data_len = 0;
+-	uint32_t rsp_data_len = 0;
++	uint32_t req_data_len;
++	uint32_t rsp_data_len;
  
- static void
+ 	/* Check the type of the adapter */
+ 	if (!IS_BIDI_CAPABLE(ha)) {
+@@ -1888,6 +1888,9 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
+ 
++	req_data_len = bsg_job->request_payload.payload_len;
++	rsp_data_len = bsg_job->reply_payload.payload_len;
++
+ 	if (req_data_len != rsp_data_len) {
+ 		rval = EXT_STATUS_BUSY;
+ 		ql_log(ql_log_warn, vha, 0x70aa,
+@@ -1895,10 +1898,6 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
+ 
+-	req_data_len = bsg_job->request_payload.payload_len;
+-	rsp_data_len = bsg_job->reply_payload.payload_len;
+-
+-
+ 	/* Alloc SRB structure */
+ 	sp = qla2x00_get_sp(vha, &(vha->bidir_fcport), GFP_KERNEL);
+ 	if (!sp) {
 -- 
 2.20.1
 
