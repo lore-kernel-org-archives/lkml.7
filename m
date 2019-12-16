@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6D6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9190FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F142082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6062E2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521961;
-	bh=3UOo2nzTK/HKra1hB3D6Q1ldASbnw37qIKyf5VpvXFM=;
+	s=default; t=1576521963;
+	bh=NaWavsSZhFlb4xQQSsr5Jhv73K6/rXkLUuFFF1PQqd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyQbKO7A3x7gYTMo0sHWZ7/+Sq7P/+AceJpl9k7Dekd+In69b9/B1dWWd2y2AlWKT
-	 ZGTNDTL83LFKquCM50NlX8OWAygejU/EEjDUhiqjP9Q6kojCVUsfkMjwKGXzI8+ilv
-	 WqZD2Ip8g5B+E8vM047CHJP/dY4kT6gxSTayU4q4=
+	b=SDgyygpLGa8NgqRz09+7rDqXax0TblbgQc88ECRebIMvff5PrCu72VyrzvyIFuzc/
+	 0A4n6tJhyNQRtk1v7CSVm8EOOEQWzuPRTKZKxu7grjrGN1UdQJQ4pKks+HqG1kBly3
+	 vDQcrOOiVUAqjdVZB4ueGpKcuw5378bOHhwLu+K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfLPSqA (ORCPT
+        id S1728269AbfLPR4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55140 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfLPR4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:46 -0500
+        id S1728259AbfLPR4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CDFE205ED;
-        Mon, 16 Dec 2019 17:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE27C21582;
+        Mon, 16 Dec 2019 17:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519005;
-        bh=3UOo2nzTK/HKra1hB3D6Q1ldASbnw37qIKyf5VpvXFM=;
+        s=default; t=1576518998;
+        bh=NaWavsSZhFlb4xQQSsr5Jhv73K6/rXkLUuFFF1PQqd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JI5P8gI+8TEnTEKbPLY9OGfPnMICyxuT6mosF00y01GMJ+d3PP63OOjBL9HKkTUuL
-         R2IYyct2uvDD47kF9YX0KXsp/OQlZP9Ml7w31Oxu5OmGl7F/xffWP8C9P2cfMukeT4
-         hBn6wdm028Qf7VSM7J+lWXWPPn+ys+ZscXXiPrg0=
+        b=YZv3eL8jUkRbjtKKwAH1gA6zgijeW/c0Ois3gnqWm2VAMHrISi9Wnc+QFCIFKI3zW
+         TBu6nezakmMs7abFsrqgwmWm+bgQWuvwPQR3jDiM8KFwCmf49Ihq8GMmxiYoGq0j4v
+         5TxWnKI70yCS8H/k0B537g3Or7NPKf18fSa99T30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.14 157/267] usb: gadget: configfs: Fix missing spin_lock_init()
-Date:   Mon, 16 Dec 2019 18:48:03 +0100
-Message-Id: <20191216174911.106775624@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.14 154/267] KVM: x86: fix out-of-bounds write in KVM_GET_EMULATED_CPUID (CVE-2019-19332)
+Date:   Mon, 16 Dec 2019 18:48:00 +0100
+Message-Id: <20191216174910.932121900@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,35 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 093edc2baad2c258b1f55d1ab9c63c2b5ae67e42 upstream.
+commit 433f4ba1904100da65a311033f17a9bf586b287e upstream.
 
-The driver allocates the spinlock but not initialize it.
-Use spin_lock_init() on it to initialize it correctly.
+The bounds check was present in KVM_GET_SUPPORTED_CPUID but not
+KVM_GET_EMULATED_CPUID.
 
-This is detected by Coccinelle semantic patch.
-
-Fixes: 1a1c851bbd70 ("usb: gadget: configfs: fix concurrent issue between composite APIs")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20191030034046.188808-1-weiyongjun1@huawei.com
+Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
+Fixes: 84cffe499b94 ("kvm: Emulate MOVBE", 2013-10-29)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/configfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/cpuid.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -1543,6 +1543,7 @@ static struct config_group *gadgets_make
- 	gi->composite.resume = NULL;
- 	gi->composite.max_speed = USB_SPEED_SUPER;
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -404,7 +404,7 @@ static inline int __do_cpuid_ent(struct
  
-+	spin_lock_init(&gi->spinlock);
- 	mutex_init(&gi->lock);
- 	INIT_LIST_HEAD(&gi->string_list);
- 	INIT_LIST_HEAD(&gi->available_func);
+ 	r = -E2BIG;
+ 
+-	if (*nent >= maxnent)
++	if (WARN_ON(*nent >= maxnent))
+ 		goto out;
+ 
+ 	do_cpuid_1_ent(entry, function, index);
+@@ -707,6 +707,9 @@ out:
+ static int do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 func,
+ 			u32 idx, int *nent, int maxnent, unsigned int type)
+ {
++	if (*nent >= maxnent)
++		return -E2BIG;
++
+ 	if (type == KVM_GET_EMULATED_CPUID)
+ 		return __do_cpuid_ent_emulated(entry, func, idx, nent, maxnent);
+ 
 
 
