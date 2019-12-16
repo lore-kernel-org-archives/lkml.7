@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AC6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D082082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F175206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519911;
-	bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
+	s=default; t=1576519912;
+	bh=00g5RKiIENXMC3oLyUK6qvQXapP1X6bpjKBjMZkmUmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvWiTpFAO4Wf7xoNKV0bQiRwXfz1FRmf8WGjfpR25BvPJJnNRiuN35YiV0Ikc35U+
-	 69QJ33/CS9Hm+CwLMBGxBxSD0nHqJ8hFjpWy1mcFUL6IBIY9UDI/y67WV3Yw2EO4kE
-	 P49PZs8Y2GnSlBceO6qlHl/keMevz7Qu8wFz+N8c=
+	b=BtciO0HDUNTDCxdwHJ+ikyT2lSYeSQ7zkDkWVkF3zpqtT9YLCFtHSA9Kv+tvODBYv
+	 QNZsNo+YzMn0SVGzTrziKseS+NvT2tzjDQCT2VK11GsC940nmAr8c8opt7mzucoC12
+	 0i3NarHMHRqmutWYQjqZ7l35pmzRZ4unWhD5gu9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfLPSLt (ORCPT
+        id S1730849AbfLPSLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730829AbfLPSLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:46 -0500
+        id S1730832AbfLPSLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8251B206EC;
-        Mon, 16 Dec 2019 18:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD9352072D;
+        Mon, 16 Dec 2019 18:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519906;
-        bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
+        s=default; t=1576519908;
+        bh=00g5RKiIENXMC3oLyUK6qvQXapP1X6bpjKBjMZkmUmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9NHDSWFKxafetNHyACIFDRjrMngpcYUY8KO4Nnv4tc1lmdKpgiDJ7yDTq0Wng31J
-         hERLRUuD3GSAX0jliTbKlWuE7M4XEo+c211oN020MKQi5w4ispNYFP1SEbMhmEdlcI
-         /43bqqsfrNEi2ztjBCRVRmtUJyIToxzh8ZixR3e4=
+        b=qGIFrQaobMNG/LsTmsqCpIuCF47JVbxBxTt8vdWD+/lrpzWx8NmT+OHYOd8delBqY
+         Z+CIwFn7FYDwtpX2a65M258xAH4691aNuKe9hJtzDRj+clrM5MKbGGQRYhIYqTz+Z4
+         NC2teG/eE+XygGsQ0ngiKrN60Sd1fU9Q+elI0UvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 077/180] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
-Date:   Mon, 16 Dec 2019 18:48:37 +0100
-Message-Id: <20191216174830.831310842@linuxfoundation.org>
+Subject: [PATCH 5.3 078/180] ASoC: fsl_audmix: Add spin lock to protect tdms
+Date:   Mon, 16 Dec 2019 18:48:38 +0100
+Message-Id: <20191216174830.960022512@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,37 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
+commit fe965096c9495ddcf78ec163348105e2baf8d185 upstream.
 
-Check for existance of jack before tracing.
-NULL pointer dereference has been reported by KASAN while unloading
-machine driver (snd_soc_cnl_rt274).
+Audmix support two substream, When two substream start
+to run, the trigger function may be called by two substream
+in same time, that the priv->tdms may be updated wrongly.
 
-Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+The expected priv->tdms is 0x3, but sometimes the
+result is 0x2, or 0x1.
+
+Fixes: be1df61cf06e ("ASoC: fsl: Add Audio Mixer CPU DAI driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/1e706afe53fdd1fbbbc79277c48a98f8416ba873.1573458378.git.shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-jack.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/fsl/fsl_audmix.c |    6 ++++++
+ sound/soc/fsl/fsl_audmix.h |    1 +
+ 2 files changed, 7 insertions(+)
 
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -100,10 +100,9 @@ void snd_soc_jack_report(struct snd_soc_
- 	unsigned int sync = 0;
- 	int enable;
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -286,6 +286,7 @@ static int fsl_audmix_dai_trigger(struct
+ 				  struct snd_soc_dai *dai)
+ {
+ 	struct fsl_audmix *priv = snd_soc_dai_get_drvdata(dai);
++	unsigned long lock_flags;
  
--	trace_snd_soc_jack_report(jack, mask, status);
--
- 	if (!jack)
- 		return;
-+	trace_snd_soc_jack_report(jack, mask, status);
+ 	/* Capture stream shall not be handled */
+ 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
+@@ -295,12 +296,16 @@ static int fsl_audmix_dai_trigger(struct
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		spin_lock_irqsave(&priv->lock, lock_flags);
+ 		priv->tdms |= BIT(dai->driver->id);
++		spin_unlock_irqrestore(&priv->lock, lock_flags);
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		spin_lock_irqsave(&priv->lock, lock_flags);
+ 		priv->tdms &= ~BIT(dai->driver->id);
++		spin_unlock_irqrestore(&priv->lock, lock_flags);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -493,6 +498,7 @@ static int fsl_audmix_probe(struct platf
+ 		return PTR_ERR(priv->ipg_clk);
+ 	}
  
- 	dapm = &jack->card->dapm;
++	spin_lock_init(&priv->lock);
+ 	platform_set_drvdata(pdev, priv);
+ 	pm_runtime_enable(dev);
+ 
+--- a/sound/soc/fsl/fsl_audmix.h
++++ b/sound/soc/fsl/fsl_audmix.h
+@@ -96,6 +96,7 @@ struct fsl_audmix {
+ 	struct platform_device *pdev;
+ 	struct regmap *regmap;
+ 	struct clk *ipg_clk;
++	spinlock_t lock; /* Protect tdms */
+ 	u8 tdms;
+ };
  
 
 
