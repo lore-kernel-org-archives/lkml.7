@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD759C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227EEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F9B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0FC206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519894;
-	bh=1sfH16P1I4MDaz88wYmpDscHnYskeF2xKyrHr+t1yZ8=;
+	s=default; t=1576519897;
+	bh=6xdm1M0tEeY7At1h5MvDfHcXQcl135ewA0mZSxi3U78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWuhOzEbP+XNl+pfaA7TZ6Sk1VxuCaR8NHk53igKAvsU1WuYzaVTNFlw8lL5HBlV8
-	 +NwdeEPnH+7zMcH9GcEz5NthXajlYFNqJn4QXVZ5uEWXB66R33JRb1wzAuRcfTsqY8
-	 1yxJFp+LobIdLmHEqmq/hhMemRyVC9ijfiFmdeW4=
+	b=x+LZUOPXxXnCiH1CfdjsH6D+X0T91Ca6u/NwdbwVjSVuBqwjAi17iHtc4kCNypgH8
+	 pF6/KGnXqDPeOMXF6oIdIPwVpVkmXB1e7K7An5a5yNyeiZwMP+XGedTJs3mY700EIe
+	 tGc49hFUTpk0ypQREYFaJ+5LseAA4rx0AijMOQKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfLPSLd (ORCPT
+        id S1730808AbfLPSLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730364AbfLPSLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:32 -0500
+        id S1728074AbfLPSL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D841E206E0;
-        Mon, 16 Dec 2019 18:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70754206E0;
+        Mon, 16 Dec 2019 18:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519891;
-        bh=1sfH16P1I4MDaz88wYmpDscHnYskeF2xKyrHr+t1yZ8=;
+        s=default; t=1576519888;
+        bh=6xdm1M0tEeY7At1h5MvDfHcXQcl135ewA0mZSxi3U78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Blv4emAEfQ1JirvxbBeP8M+4QyhJDz4xshGCZr/468YFxgWdyYebeociRs0GJHNDU
-         1DgZbgE/ozXJEuKeZVvMu4henHGGwtnz/5TnZudgqeSPV7mrgiAePj86NT6mamaOoE
-         bteVtVCj7Ymm4OoD5gExK9G0wYDWLsJQDMV15CyM=
+        b=Ersp7mrqlDdzSXx8XEHM3H78g6dzPoimNsnrfdDGLonCo8U7iOB+XCfphcXI1Q2b7
+         RM9t7aogpCqphemrnW+/SAwl0pZyKpTK0sHPL4gZftYujg46ZDV/H/qo+CUP0iFl+i
+         1FXn7IMAFOibHXfNumXfdCirzNwnZJcvIAe3V0/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>,
+        stable@vger.kernel.org,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 110/180] ACPI: PM: Avoid attaching ACPI PM domain to certain devices
-Date:   Mon, 16 Dec 2019 18:49:10 +0100
-Message-Id: <20191216174838.673230464@linuxfoundation.org>
+Subject: [PATCH 5.3 109/180] ACPI: bus: Fix NULL pointer check in acpi_bus_get_private_data()
+Date:   Mon, 16 Dec 2019 18:49:09 +0100
+Message-Id: <20191216174838.344695631@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,53 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 
-commit b9ea0bae260f6aae546db224daa6ac1bd9d94b91 upstream.
+commit 627ead724eff33673597216f5020b72118827de4 upstream.
 
-Certain ACPI-enumerated devices represented as platform devices in
-Linux, like fans, require special low-level power management handling
-implemented by their drivers that is not in agreement with the ACPI
-PM domain behavior.  That leads to problems with managing ACPI fans
-during system-wide suspend and resume.
+kmemleak reported backtrace:
+    [<bbee0454>] kmem_cache_alloc_trace+0x128/0x260
+    [<6677f215>] i2c_acpi_install_space_handler+0x4b/0xe0
+    [<1180f4fc>] i2c_register_adapter+0x186/0x400
+    [<6083baf7>] i2c_add_adapter+0x4e/0x70
+    [<a3ddf966>] intel_gmbus_setup+0x1a2/0x2c0 [i915]
+    [<84cb69ae>] i915_driver_probe+0x8d8/0x13a0 [i915]
+    [<81911d4b>] i915_pci_probe+0x48/0x160 [i915]
+    [<4b159af1>] pci_device_probe+0xdc/0x160
+    [<b3c64704>] really_probe+0x1ee/0x450
+    [<bc029f5a>] driver_probe_device+0x142/0x1b0
+    [<d8829d20>] device_driver_attach+0x49/0x50
+    [<de71f045>] __driver_attach+0xc9/0x150
+    [<df33ac83>] bus_for_each_dev+0x56/0xa0
+    [<80089bba>] driver_attach+0x19/0x20
+    [<cc73f583>] bus_add_driver+0x177/0x220
+    [<7b29d8c7>] driver_register+0x56/0xf0
 
-For this reason, make acpi_dev_pm_attach() skip the affected devices
-by adding a list of device IDs to avoid to it and putting the IDs of
-the affected devices into that list.
+In i2c_acpi_remove_space_handler(), a leak occurs whenever the
+"data" parameter is initialized to 0 before being passed to
+acpi_bus_get_private_data().
 
-Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines for subsystems)
-Reported-by: Zhang Rui <rui.zhang@intel.com>
-Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+This is because the NULL pointer check in acpi_bus_get_private_data()
+(condition->if(!*data)) returns EINVAL and, in consequence, memory is
+never freed in i2c_acpi_remove_space_handler().
+
+Fix the NULL pointer check in acpi_bus_get_private_data() to follow
+the analogous check in acpi_get_data_full().
+
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+[ rjw: Subject & changelog ]
+Cc: All applicable <stable@vger.kernel.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_pm.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/acpi/bus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1309,9 +1309,19 @@ static void acpi_dev_pm_detach(struct de
-  */
- int acpi_dev_pm_attach(struct device *dev, bool power_on)
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -153,7 +153,7 @@ int acpi_bus_get_private_data(acpi_handl
  {
-+	/*
-+	 * Skip devices whose ACPI companions match the device IDs below,
-+	 * because they require special power management handling incompatible
-+	 * with the generic ACPI PM domain.
-+	 */
-+	static const struct acpi_device_id special_pm_ids[] = {
-+		{"PNP0C0B", }, /* Generic ACPI fan */
-+		{"INT3404", }, /* Fan */
-+		{}
-+	};
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	acpi_status status;
  
--	if (!adev)
-+	if (!adev || !acpi_match_device_ids(adev, special_pm_ids))
- 		return 0;
+-	if (!*data)
++	if (!data)
+ 		return -EINVAL;
  
- 	/*
+ 	status = acpi_get_data(handle, acpi_bus_private_data_handler, data);
 
 
