@@ -2,91 +2,91 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F0FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71677C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FDF206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEB2206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521622;
-	bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rO8pFNrHaPUT1j33cIerLEBAXJdxLBSDqxdWjcLPtCBJhn8amg0xlmqDOv80DQkkx
-	 il2EWL7CwLxusgVF96Wo90UxKx2hFgZ39KNSKpaF/bUhtJLcbSMJ2WzZWj8qqxjkdY
-	 HPok4CKCLaFhpOPVAW8Un3um2SaWoEMJpYMF1arQ=
+	s=default; t=1576521627;
+	bh=/qaf6Uh/1ZyJF0Hw75+xksqxkhKZSbTe8TCbRUfiF4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Uqyeevwl23qbhlH3FUYhKp6fhq1e0I8oTnntLfvBYkxJuJ3RjIbdN8yB19IXjhLLa
+	 RFKb/YZkoE5pmG8pJH5r6888CFxo8vX80JFH/ItViSx/sO30nBKuSun5hqSaohjorx
+	 kNctI5eHxKIPUfxPkRb4FQoeYjyQit2YdOB/R/Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfLPSkU (ORCPT
+        id S1729339AbfLPSk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:40:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbfLPSCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF34420726;
-        Mon, 16 Dec 2019 18:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519343;
-        bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkD6hHygbJs2wm6lJSLYsreD+6PspFfPOVJvFj8YeF9OuzaZuAE6dgIJ5A5254NjY
-         lSiA+QOlkUYYML/S+9SLQsXwXGeWp696+OlCZnw7qQwgXj7TidS9Q6R2is80nV51l4
-         82K8RKiWz/GMRBoh7vnFhTvhDFRkHqS5Jr9EaS/I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emiliano Ingrassia <ingrassia@epigenesys.com>
-Subject: [PATCH 4.19 027/140] usb: core: urb: fix URB structure initialization function
-Date:   Mon, 16 Dec 2019 18:48:15 +0100
-Message-Id: <20191216174757.466182721@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
-References: <20191216174747.111154704@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:40:26 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44936 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729077AbfLPSCV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:21 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so3998451oia.11;
+        Mon, 16 Dec 2019 10:02:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J0Ye3heezTLCH4+67gtqBGARVM5JPXQ6ZAyCvxeGrk0=;
+        b=Zo2A5TSfWISX2Qba8wRAbkeq2hHOLGInBAN79sbFsyrwVhzQ8cgMVAFm9x/Nx0C/CK
+         PVsrBeSMiUMzqpDjtgdHpOefqDCnId3UazNNqzh+JRXuzqtxeoQFBz5Obt9kQUVaZ738
+         NEvF8YlwgrFReHEWMlgvNSy4ODkltZcZZciDeE9jWU/NI0ikPFlVMsLxp21aBgslO30k
+         lUgtlEGsa2ZdGzqH6guac3MDs71AfTpa4rJy+5yWdBFxnPOHPEm57sRg2h2uZgYmzSeM
+         KYFu9qcEssgXeAZc67yWfO3TqNJmSD+uLjlLEaL7v78oHVYIo+PKyMSNDnR+K9AArAQS
+         Qkpw==
+X-Gm-Message-State: APjAAAV8tjJflkoHTUcDqTxg5VSYS7mhmQnp3bkH5UUM4bzdo1D0twli
+        1wIdKMCXisUir4BoUgX+2g==
+X-Google-Smtp-Source: APXvYqx8PFxe+WYzPYFarvmtkpwauTlh4e8QaG3TMcwH4A0Yno5Ur0RNASmV37L9QyPeAT0ozN1ngg==
+X-Received: by 2002:aca:ec45:: with SMTP id k66mr139352oih.179.1576519340758;
+        Mon, 16 Dec 2019 10:02:20 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n19sm5828686oig.57.2019.12.16.10.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 10:02:20 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:02:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, robh+dt@kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 2/3] dt-bindings: clock: Introduce QCOM Modem clock
+  bindings
+Message-ID: <20191216180219.GA32620@bogus>
+References: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
+ <0101016ed0008a4d-e7c6d3fc-1020-48e6-a515-762c71bcedff-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ed0008a4d-e7c6d3fc-1020-48e6-a515-762c71bcedff-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emiliano Ingrassia <ingrassia@epigenesys.com>
+On Wed, 4 Dec 2019 08:22:06 +0000, Taniya Das wrote:
+> Add device tree bindings for modem clock controller for
+> Qualcomm Technology Inc's SC7180 SoCs.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h |  5 +++++
+>  include/dt-bindings/clock/qcom,mss-sc7180.h | 12 ++++++++++++
+>  2 files changed, 17 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> 
 
-commit 1cd17f7f0def31e3695501c4f86cd3faf8489840 upstream.
-
-Explicitly initialize URB structure urb_list field in usb_init_urb().
-This field can be potentially accessed uninitialized and its
-initialization is coherent with the usage of list_del_init() in
-usb_hcd_unlink_urb_from_ep() and usb_giveback_urb_bh() and its
-explicit initialization in usb_hcd_submit_urb() error path.
-
-Signed-off-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191127160355.GA27196@ingrassia.epigenesys.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/core/urb.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/usb/core/urb.c
-+++ b/drivers/usb/core/urb.c
-@@ -45,6 +45,7 @@ void usb_init_urb(struct urb *urb)
- 	if (urb) {
- 		memset(urb, 0, sizeof(*urb));
- 		kref_init(&urb->kref);
-+		INIT_LIST_HEAD(&urb->urb_list);
- 		INIT_LIST_HEAD(&urb->anchor_list);
- 	}
- }
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
