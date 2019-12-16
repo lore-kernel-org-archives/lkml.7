@@ -2,104 +2,133 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007BCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3AF20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576488503;
-	bh=RW14kw0PJ2wrm6ulu6HtyD0f3CFUMop1Am8yugJWJLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b9xhueDbWi2lDrQVQGKlqgz6hnfOYg0x1P+XxTydQncJ+tLpUI6zPOK1szkZCHzeG
-	 aXHljoSrPGxLdXVfgx8MA2jQ4jKk1iLjLNF0IJngihyk69rjiLZUUeQzmAaxGRaxQv
-	 xmX3JjXFL51NOsPEHDFYMemw0Xpe/DAu4eG48Glc=
+	by mail.kernel.org (Postfix) with ESMTP id EEA1B2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GeK+Bj/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLPJ2W (ORCPT
+        id S1727052AbfLPJ3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:28:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfLPJ2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:28:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF312075A;
-        Mon, 16 Dec 2019 09:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576488501;
-        bh=RW14kw0PJ2wrm6ulu6HtyD0f3CFUMop1Am8yugJWJLY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZR9zT84IZckgL6VojKqYtTYubTnmKvXzNr8AlFm4gcwHI/sjcPmZzLNtZV53XQyzI
-         1IqF2do9BVvrI9iRYVZX+unWx1dwf2wJtRRLH8qKOHZxuj7MA7KJ9Hyhkc/Q4Jjd6k
-         ELcF5ywb2uDp7ymvJjK3TnaoLcfG6VA7an7pl+ro=
-Date:   Mon, 16 Dec 2019 10:28:18 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andre Tomt <andre@tomt.net>
-Cc:     Jack Wang <jack.wang.usish@gmail.com>,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 153/306] block: fix the DISCARD request merge
- (4.19.87+ crash)
-Message-ID: <20191216092818.GA1203682@kroah.com>
-References: <20191127203114.766709977@linuxfoundation.org>
- <20191127203126.845809286@linuxfoundation.org>
- <aabbc521-b263-2d5f-efc6-72d500ab5c71@tomt.net>
- <CA+res+RtrAOfiVLeg1QE7V1Xjs6029y3tVmh0vfy+B71_bhsUw@mail.gmail.com>
- <4d8343e0-f38a-3e08-edf6-3346b3011ddf@tomt.net>
+        Mon, 16 Dec 2019 04:29:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36737 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726937AbfLPJ3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:29:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576488582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D+soKtjNipH8IpDTofIGrq0aj+9fNzPNczOVUstfi40=;
+        b=GeK+Bj/uKgosw892qxigAaBMbkiJ8wM6KWk0F45ziFEebaX3Kq+mRNTzdGvTLnt/zip/VH
+        a8vD7RrLjvyuf7cWUe5FvQ7206qRryGsO9tkKwnfG2rNQBjG9U83LTw1T9X0K6DnGPRog5
+        joAovHva9vU2uXgk2HqOCNXV3FIWGBQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-Esuma3D8M7SQ4SInaisa_g-1; Mon, 16 Dec 2019 04:29:39 -0500
+X-MC-Unique: Esuma3D8M7SQ4SInaisa_g-1
+Received: by mail-wr1-f70.google.com with SMTP id f10so3466473wro.14
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:29:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D+soKtjNipH8IpDTofIGrq0aj+9fNzPNczOVUstfi40=;
+        b=PADSJHNGBpY4l5Ef/3ABCEH1IrnTtB9s74NeMZqxxHXiBolfoHNN8DhRldp+oQKtq/
+         6Enhh+lX+vmaERuCFWboQR8flSM6kVI/lkUN+4EmZR0qVSWhGy8IQMo+8lfIA9Lp9lTW
+         W9k1ZH9UoDPCAyhGb0265xa0TUjtN26rX/4IrG2JnU4AgVnS/8s20XvYetrz9ay1TB8c
+         Eoc3hh11ufnxHD/qyEsnGKIDVoEeKalpqC5/u9lT4bRuesxz2BYhTYeCWqrv2Wunjwq3
+         NmbNbHIzRj/dwYFXcblIqD+s/Ire9SzGLTb+U6Eer3ga5QJOBLo3ewRmfHtBlmceDBLe
+         Pr1g==
+X-Gm-Message-State: APjAAAU19uzpFV1GK53eZKFacAPx7HW60TwQjbtZ762p2QnaqyaB93Qx
+        JnOYs7DJoJkUCBdSovrv2FPwWrF6PL3C6gGGGutGc8c8RmOP/lwZAq/ZbfFpMKhs0AFg4KsDm1d
+        4N5oSNlCOP8xo70zg9aP72pxa
+X-Received: by 2002:a05:6000:12:: with SMTP id h18mr27350891wrx.87.1576488578199;
+        Mon, 16 Dec 2019 01:29:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcZPae2fpcmqbfNpMEm7htf9LRZYX5o97SGgIiTkAX1Z/FX+jXlRQPGctSI6IqUy1eUKeLNg==
+X-Received: by 2002:a05:6000:12:: with SMTP id h18mr27350870wrx.87.1576488577987;
+        Mon, 16 Dec 2019 01:29:37 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:cde8:2463:95a9:1d81? ([2001:b07:6468:f312:cde8:2463:95a9:1d81])
+        by smtp.gmail.com with ESMTPSA id v14sm20958683wrm.28.2019.12.16.01.29.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 01:29:37 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com> <m1lfrihj2n.fsf@dinechin.org>
+ <20191213202324.GI16429@xz-x1>
+ <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
+ <20191214162644.GK16429@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0f084179-2a5d-e8d9-5870-3cc428105596@redhat.com>
+Date:   Mon, 16 Dec 2019 10:29:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191214162644.GK16429@xz-x1>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d8343e0-f38a-3e08-edf6-3346b3011ddf@tomt.net>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:18:48AM +0100, Andre Tomt wrote:
-> On 16.12.2019 08:42, Jack Wang wrote:
-> > Andre Tomt <andre@tomt.net> 于2019年12月14日周六 下午3:24写道：
-> > > 
-> > > 4.19.87, 4.19.88, 4.19.89 all lock up frequently on some of my systems.
-> > > The same systems run 5.4.3 fine, so the newer trees are probably OK.
-> > > Reverting this commit on top of 4.19.87 makes everything stable.
-> > > 
-> > > To trigger it all I have to do is re-rsyncing a directory tree with some
-> > > changed files churn, it will usually crash in 10 to 30 minutes.
-> > > 
-> > > The systems crashing has ext4 filesystem on a two ssd md raid1 mounted
-> > > with the mount option discard. If mounting it without discard, the
-> > > crashes no longer seem to occur.
-> > > 
-> > > No oops/panic made it to the ipmi console. I suspect the console is just
-> > > misbehaving and it didnt really livelock. At one point one line of the
-> > > crash made it to the console (kernel BUG at block/blk-core.c:1776), and
-> > > it was enough to pinpoint this commit. Note that the line number might
-> > > be off, as I was attempting a bisect at the time.
-> > > 
-> > > This commit also made it to 4.14.x, but I have not tested it.
-> > Hi Andre,
-> > 
-> > I noticed one fix is missing for discard merge in 4.19.y
-> > 2a5cf35cd6c5 ("block: fix single range discard merge")
-> > 
-> > Can you try if it helps? just "git cherry-pick 2a5cf35cd6c5"
+On 14/12/19 17:26, Peter Xu wrote:
+> On Sat, Dec 14, 2019 at 08:57:26AM +0100, Paolo Bonzini wrote:
+>> On 13/12/19 21:23, Peter Xu wrote:
+>>>> What is the benefit of using u16 for that? That means with 4K pages, you
+>>>> can share at most 256M of dirty memory each time? That seems low to me,
+>>>> especially since it's sufficient to touch one byte in a page to dirty it.
+>>>>
+>>>> Actually, this is not consistent with the definition in the code ;-)
+>>>> So I'll assume it's actually u32.
+>>> Yes it's u32 now.  Actually I believe at least Paolo would prefer u16
+>>> more. :)
+>>
+>> It has to be u16, because it overlaps the padding of the first entry.
 > 
-> Indeed, adding this commit on top a clean 4.19.89 fixes the issue. So far
-> survived about an hour of rsyncing file churn.
+> Hmm, could you explain?
 > 
+> Note that here what Christophe commented is on dirty_index,
+> reset_index of "struct kvm_dirty_ring", so imho it could really be
+> anything we want as long as it can store a u32 (which is the size of
+> the elements in kvm_dirty_ring_indexes).
+> 
+> If you were instead talking about the previous union definition of
+> "struct kvm_dirty_gfns" rather than "struct kvm_dirty_ring", iiuc I've
+> moved those indices out of it and defined kvm_dirty_ring_indexes which
+> we expose via kvm_run, so we don't have that limitation as well any
+> more?
 
-Great!
+Yeah, I meant that since the size has (had) to be u16 in the union, it
+need not be bigger in kvm_dirty_ring.
 
-Thanks Jack for finding the fix and Andre for reporting this.  I'll go
-queue this fix up right now.
+I don't think having more than 2^16 entries in the *per-CPU* ring buffer
+makes sense; lagging in recording dirty memory by more than 256 MiB per
+CPU would mean a large pause later on resetting the ring buffers (your
+KVM_CLEAR_DIRTY_LOG patches found the sweet spot to be around 1 GiB for
+the whole system).
 
-greg k-h
+So I liked the union, but if you removed it you might as well align the
+producer and consumer indices to 64 bytes so that they are in separate
+cache lines.
+
+Paolo
+
