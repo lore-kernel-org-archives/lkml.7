@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3ABC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209FBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF47205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B482082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519242;
-	bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
+	s=default; t=1576519246;
+	bh=eW4+B0zty61phdLibfIAHIR2sQEhGPCdQmYBS6sUS7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sc/7ysmz9T43yclU7ACeWMj5vjZdUbt9xrmSi5ClTwsqIqg73Tu0RzT7tWAk6Tb6P
-	 jcJtkwR48O0ySTR20z2Yfx0kRByPComLVN1aoMjzUOa1b5DcP/Q7n1BWJuG/gkgnxW
-	 vk/Zb2rhfLjDO07NzFn8UkYGMXO46BHL4z42vAWE=
+	b=aJAacwi/WWSPs81HSu5DglAk0Z2DclNg/TKMkScEJXeY2KPtsc5HdwhXsY46sDcxa
+	 7AJFiyacIDPN5XrSfGLVQbnM0wPS7V36x6ETumT6AuaB+eG+tSJnrEE3UsT25tzVNa
+	 HafMMbdSCTLoizif1b6Yx1CA6COi06gqCF2NABLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfLPSAl (ORCPT
+        id S1729005AbfLPSAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbfLPSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:36 -0500
+        id S1728985AbfLPSAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E668E20726;
-        Mon, 16 Dec 2019 18:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B645C207FF;
+        Mon, 16 Dec 2019 18:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519236;
-        bh=qpNwJcQPCMoeoqAQpmsMhpaFzPY0C6tolrQbm+JA800=;
+        s=default; t=1576519241;
+        bh=eW4+B0zty61phdLibfIAHIR2sQEhGPCdQmYBS6sUS7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gf1btnJqWDowtrwAc1dtxVG+tUsbW6t3CQFjqGJg7XITq0WhWeMEQDi833zWIHutX
-         JsRDQsX+bEM8eA/NNZGSSS3Rq/UfsvMCvj/YV9jXWynYStP0L5Ogq55KGMrVFz1Jgz
-         /p38FbL2zyvmfwznxF0spn+9fgGt64T+4Au0PmFM=
+        b=DLKow97vCWe7NIpdaqvO+scUvLpexjTgjFT72hiGGXeXGEQhi3nvXkCbiTaDYHhkA
+         9v+8cySmP+YYB2G99pQRs/BgDjDOSC8RMapHEaCPmgOQhy9Ga1QTlYzeXtNruYPZpO
+         OOABPuY91n0YukjqfuOYrDsMUQceaEJuKPdkUkJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 251/267] drbd: Change drbd_request_detach_interruptibles return type to int
-Date:   Mon, 16 Dec 2019 18:49:37 +0100
-Message-Id: <20191216174916.378746725@linuxfoundation.org>
+        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 253/267] x86/MCE/AMD: Turn off MC4_MISC thresholding on all family 0x15 models
+Date:   Mon, 16 Dec 2019 18:49:39 +0100
+Message-Id: <20191216174916.513541198@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,65 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Shirish S <Shirish.S@amd.com>
 
-[ Upstream commit 5816a0932b4fd74257b8cc5785bc8067186a8723 ]
+[ Upstream commit c95b323dcd3598dd7ef5005d6723c1ba3b801093 ]
 
-Clang warns when an implicit conversion is done between enumerated
-types:
+MC4_MISC thresholding is not supported on all family 0x15 processors,
+hence skip the x86_model check when applying the quirk.
 
-drivers/block/drbd/drbd_state.c:708:8: warning: implicit conversion from
-enumeration type 'enum drbd_ret_code' to different enumeration type
-'enum drbd_state_rv' [-Wenum-conversion]
-                rv = ERR_INTR;
-                   ~ ^~~~~~~~
+ [ bp: massage commit message. ]
 
-drbd_request_detach_interruptible's only call site is in the return
-statement of adm_detach, which returns an int. Change the return type of
-drbd_request_detach_interruptible to match, silencing Clang's warning.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Shirish S <shirish.s@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1547106849-3476-2-git-send-email-shirish.s@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_state.c | 6 ++----
- drivers/block/drbd/drbd_state.h | 3 +--
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
-index 0813c654c8938..b452359b6aae8 100644
---- a/drivers/block/drbd/drbd_state.c
-+++ b/drivers/block/drbd/drbd_state.c
-@@ -688,11 +688,9 @@ request_detach(struct drbd_device *device)
- 			CS_VERBOSE | CS_ORDERED | CS_INHIBIT_MD_IO);
- }
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 4f3be91f0b0bc..dcc11303885b7 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1661,11 +1661,10 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 			mce_flags.overflow_recov = 1;
  
--enum drbd_state_rv
--drbd_request_detach_interruptible(struct drbd_device *device)
-+int drbd_request_detach_interruptible(struct drbd_device *device)
- {
--	enum drbd_state_rv rv;
--	int ret;
-+	int ret, rv;
- 
- 	drbd_suspend_io(device); /* so no-one is stuck in drbd_al_begin_io */
- 	wait_event_interruptible(device->state_wait,
-diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
-index b2a390ba73a05..f87371e55e682 100644
---- a/drivers/block/drbd/drbd_state.h
-+++ b/drivers/block/drbd/drbd_state.h
-@@ -162,8 +162,7 @@ static inline int drbd_request_state(struct drbd_device *device,
- }
- 
- /* for use in adm_detach() (drbd_adm_detach(), drbd_adm_down()) */
--enum drbd_state_rv
--drbd_request_detach_interruptible(struct drbd_device *device);
-+int drbd_request_detach_interruptible(struct drbd_device *device);
- 
- enum drbd_role conn_highest_role(struct drbd_connection *connection);
- enum drbd_role conn_highest_peer(struct drbd_connection *connection);
+ 		/*
+-		 * Turn off MC4_MISC thresholding banks on those models since
++		 * Turn off MC4_MISC thresholding banks on all models since
+ 		 * they're not supported there.
+ 		 */
+-		if (c->x86 == 0x15 &&
+-		    (c->x86_model >= 0x10 && c->x86_model <= 0x1f)) {
++		if (c->x86 == 0x15) {
+ 			int i;
+ 			u64 hwcr;
+ 			bool need_toggle;
 -- 
 2.20.1
 
