@@ -2,149 +2,177 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2336BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC18207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A56206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="isCPi/8A"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aMfTO5H7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfLPBXi (ORCPT
+        id S1726620AbfLPBYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 20:23:38 -0500
-Received: from ozlabs.org ([203.11.71.1]:50125 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbfLPBXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 20:23:37 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bk784hz8z9sP6;
-        Mon, 16 Dec 2019 12:23:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576459414;
-        bh=bFoEp0Oze1uoHC2r3Fp1CEYcJF/UHb71fRXsGtfYZIY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=isCPi/8AXANwUAv7CIHOP3YyUqe1M13CxS7FNwVn5LSnOYxaShAHu6U4KV7L8BEiI
-         kCBNwYRS40ivvFQUmwcR7LZjzhhddVeBBkJaPj1MkaMBsBgoGVDQwvqOwxNW6G96x/
-         0+LbVYrLtZhQo12LRpH75E0gr4AkkwSfufYRTZjnL1KceqqeJ11wUU82rC+vaKg32Q
-         3KyGMKSI0kfWHS4dz62eEMLjq15DkSfKyOWtklUXKi44Ng1u2FmxDh/V3xrHIiNnC8
-         4C6DjdvGRFSa27gZ1U9G2vVNi7pLyVNp2L0QmhRfYIRxqQn8zBilHXJhk19SZxz36s
-         Zbp884+wsJXZA==
-Date:   Mon, 16 Dec 2019 12:23:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20191216122331.43c766f1@canb.auug.org.au>
+        Sun, 15 Dec 2019 20:24:41 -0500
+Received: from mail-eopbgr70081.outbound.protection.outlook.com ([40.107.7.81]:35386
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726299AbfLPBYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 20:24:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bIxVA1J4UKpcpH8yZlw7/zrYbl0kk2E35RBcqcLqqo/ll4TwlfxPejRYymHM0DlH1Ft0/pqlv3ar7Crhtlo6/ozVil6jYHUvECMj9Dbqrdq86Ww5zdI2UJjjQsUvO6XrZ8vffRsIrQrgUR72bPqAu1ub2j4HTXF84tb7DEJsMtqqx5PsZrFyNW7+A//d/3yj6c45vVaskuryhgVQO9imCBhhjjNZUdi3U70FPErX9dexlr/0boMGLwCMM6Zowlp8LwzfDgFl+u21+nGOVg/f3+Iu0suqyerSm7gPRcU1Yebmw501PQkBDyP8JWqjc0LVeQ+B3frhNqBQi+5LUfXqnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWcz42ePjnkuxrDXmlXo+w8oHCACf/paQLTWyda5P7M=;
+ b=aLMxnA2q0IQdF/WP24MujUcl4xAiFZOuOihYVGn5JmtD6IPsCDSbJsylhtnble2eRz4XYCBWj1XqWhJYK34EFA7fGiIq6STb/nWpGQk40g4dUTTKYcWUwPRGegM1twsF/Riek7Om2uhJhrvWtcd9jtqheL1uSzj+JDgCpFUlPdzKJ4s2KTKbw+JqwHdtmvg+9j5U/Px4jFWQadOm3T6KdjjXlefZiCcem+1cO/rlgHJjyV3N8fYJRJ0ahWZjwxc5DwF7H2jFpNhApWPXvMDOQnPZFAox7+H1MVuvXNsra1QarGP44fRcp3Df3JTmsRzins7nAMZcbkPASarnUzMkTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWcz42ePjnkuxrDXmlXo+w8oHCACf/paQLTWyda5P7M=;
+ b=aMfTO5H70W4SE10xSDJjGQkP9/MKA1NpVwBZNZDWeUCvNk35AadQLgC4cb5FO+fkGuIqYRGEBvaITUezmMY2QRva8he07GUVa5a+aDGK381my+njj11qufO9QLBC8PTvYf4MCsFQr1LBUYw7gVX8xSKZCkD+JJOIXJ6I/0x1CG0=
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
+ VI1PR04MB3229.eurprd04.prod.outlook.com (10.170.231.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Mon, 16 Dec 2019 01:24:35 +0000
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::cd33:501f:b25:51a9]) by VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::cd33:501f:b25:51a9%7]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 01:24:35 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "od@zcrc.me" <od@zcrc.me>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+Thread-Topic: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+Thread-Index: AQHVsDrKPWSbvY6T+0OJ94dLsbCA8qe2ObMAgAJTXYCAA3BKkA==
+Date:   Mon, 16 Dec 2019 01:24:35 +0000
+Message-ID: <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20191211155032.167032-1-paul@crapouillou.net>
+        <20191211155032.167032-3-paul@crapouillou.net>
+        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
+In-Reply-To: <1576270147.3.0@crapouillou.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 35b637ed-a5e1-4c42-4b53-08d781c6b631
+x-ms-traffictypediagnostic: VI1PR04MB3229:
+x-microsoft-antispam-prvs: <VI1PR04MB3229D387431E7EF62D46BC518B510@VI1PR04MB3229.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(189003)(199004)(7696005)(478600001)(4326008)(5660300002)(33656002)(26005)(52536014)(6506007)(6916009)(66556008)(86362001)(66946007)(316002)(54906003)(64756008)(76116006)(186003)(44832011)(9686003)(7416002)(8676002)(71200400001)(55016002)(8936002)(66476007)(66446008)(81166006)(81156014)(2906002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3229;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3Yl6s7ezAOyhIYkO9aQAEbwLzL9dZWre+IfcSs9QoOZXbWuEvIkCdU30lBef8T7CmCJAVS8xhRTLzDg7MRJ8ao+0Yh3WuSZu8oIMWspfpPj+YZIiO1SOqstzBOBR+q8b/6T7xYTLKlybrhmE4V75Gs87Shcbrczrzr2Pa1Xv541Sukl0wd+fnJvPC/IFcvMSKcmh62YOXcceR2cV2N3pJiDqcntqZFrghGBb1KDeAM3Dlu9r6zKsrONuI7emimIOM3quw+lAO41bQYCaYbHmrJySrLlhNdUKcrlJACgVMXF7cYeCwJymebF1E1+TwY0V4tTDholEZhkaoJRQ4beANtFRgoKO0zI/aJ/Lv6KOz52IAN0xM0Yb/1c+QdMbigt2bzr/G5DQsFbLSsfCzZBo1EhnJ5BbVl6hEGbVMqfR1w7B6zoqjNTJE6aRq+yk3Wd+Fu7wnUrf1iQc5b45ti/Fd2EoobXY/a6yyqe8jmxT+OsY8EbGKdWvDvSmldIWU68p
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zeyYGkAXi=.XMxUHhTLcnmI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35b637ed-a5e1-4c42-4b53-08d781c6b631
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 01:24:35.4737
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4wEwjRdPxSS3hdbP9zP6/Kl1zt7l/1aF8fcGEMAsDFs19CzoEUj179+mz+2/GTfyvSlL2MT0UNzhZVFMBxKenQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3229
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zeyYGkAXi=.XMxUHhTLcnmI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/gpu/drm/bridge/analogix/analogix-anx6345.c: In function 'anx6345_i2=
-c_probe':
-drivers/gpu/drm/bridge/analogix/analogix-anx6345.c:738:30: error: implicit =
-declaration of function 'i2c_new_dummy' [-Werror=3Dimplicit-function-declar=
-ation]
-  738 |    anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
-      |                              ^~~~~~~~~~~~~
-drivers/gpu/drm/bridge/analogix/analogix-anx6345.c:738:28: warning: assignm=
-ent to 'struct i2c_client *' from 'int' makes pointer from integer without =
-a cast [-Wint-conversion]
-  738 |    anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
-      |                            ^
-
-Caused by commit
-
-  6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
-
-interacting with commit
-
-  2c2f00ab1641 ("i2c: remove i2c_new_dummy() API")
-
-=46rom Linus' tree.
-
-I have applied the following fix up patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 16 Dec 2019 12:11:19 +1100
-Subject: [PATCH] drm/bridge: fix up for removal of i2c_new_dummy()
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/g=
-pu/drm/bridge/analogix/analogix-anx6345.c
-index 9917ce0d86a0..56f55c53abfd 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-@@ -735,13 +735,13 @@ static int anx6345_i2c_probe(struct i2c_client *clien=
-t,
- 	/* Map slave addresses of ANX6345 */
- 	for (i =3D 0; i < I2C_NUM_ADDRESSES; i++) {
- 		if (anx6345_i2c_addresses[i] >> 1 !=3D client->addr)
--			anx6345->i2c_clients[i] =3D i2c_new_dummy(client->adapter,
-+			anx6345->i2c_clients[i] =3D i2c_new_dummy_device(client->adapter,
- 						anx6345_i2c_addresses[i] >> 1);
- 		else
- 			anx6345->i2c_clients[i] =3D client;
 =20
--		if (!anx6345->i2c_clients[i]) {
--			err =3D -ENOMEM;
-+		if (IS_ERR(anx6345->i2c_clients[i])) {
-+			err =3D PTR_ERR(anx6345->i2c_clients[i]);
- 			DRM_ERROR("Failed to reserve I2C bus %02x\n",
- 				  anx6345_i2c_addresses[i]);
- 			goto err_unregister_i2c;
---=20
-2.24.0
+> >>  +
+> >>  +	desc =3D &charger->desc;
+> >>  +	desc->name =3D "usb-charger";
+> >>  +	desc->properties =3D usb_charger_properties;
+> >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
+> >>  +	desc->get_property =3D usb_charger_get_property;
+> >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
+> >
+> > What's your further plan for this generic USB charger?
+> > To support BC1.2, we need to know charger type, and how we could get
+> > it?
+> >
+> > Peter
+>=20
+> Well I don't really know. The USB role framework does not give any info a=
+bout
+> what's plugged.
+>=20
 
---=20
-Cheers,
-Stephen Rothwell
+What's the use case for this patch set? How it be used?
 
---Sig_/zeyYGkAXi=.XMxUHhTLcnmI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
+Peter
 
------BEGIN PGP SIGNATURE-----
+> -Paul
+>=20
+>=20
+> >
+> >>  +
+> >>  +	charger->charger =3D devm_power_supply_register(dev, desc, &cfg);
+> >>  +	if (IS_ERR(charger->charger)) {
+> >>  +		dev_err(dev, "Unable to register charger");
+> >>  +		return PTR_ERR(charger->charger);
+> >>  +	}
+> >>  +
+> >>  +	err =3D usb_role_switch_register_notifier(charger->role,
+> >> &charger->nb);
+> >>  +	if (err) {
+> >>  +		dev_err(dev, "Unable to register USB role switch notifier");
+> >>  +		return err;
+> >>  +	}
+> >>  +
+> >>  +	return devm_add_action_or_reset(dev, usb_charger_unregister,
+> >> charger);
+> >>  +}
+> >>  +
+> >>  +static const struct of_device_id usb_charger_of_match[] =3D {
+> >>  +	{ .compatible =3D "usb-charger" },
+> >>  +	{ /* sentinel */ },
+> >>  +};
+> >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static struct
+> >> platform_driver usb_charger_driver =3D {
+> >>  +	.driver =3D {
+> >>  +		.name =3D "usb-charger",
+> >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
+> >>  +	},
+> >>  +	.probe =3D usb_charger_probe,
+> >>  +};
+> >>  +module_platform_driver(usb_charger_driver);
+> >>  +
+> >>  +MODULE_DESCRIPTION("Simple USB charger driver");
+> >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> >> +MODULE_LICENSE("GPL");
+> >>  --
+> >>  2.24.0
+> >>
+> >
+> > --
+> >
+> > Thanks,
+> > Peter Chen
+>=20
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl323JMACgkQAVBC80lX
-0GxN4QgAj7cSKYl22karaXz89XosCJqL4gvGd9bkeZ5Xb+s0IxEa+wWqHBlypzSK
-CgwKRM52IvdDillgu4OrUswwU3uOnGVwpDzhaAEPud2MlVHwW8FUVpVWXMS/R0T9
-ioq2BZghynAVV4bk7BtJbqGT4/NWyLOLqMNRJc87ab314NQ/ndHVhND9dRRnarka
-iDuQJA9LeT8a2nAVjK7h3eaX2kwBVOARZuOY5nODMeRyKzaYyWo4RVn4B5bCR+gY
-wBugDDotCKnOgI3ZwdLySA9A5cPbySMuIXK5d30QDptp6vH0YzbI8nFc+/S7XFQm
-RnTk93uuVVln84h0daNEeovw8VE/nQ==
-=ycV+
------END PGP SIGNATURE-----
-
---Sig_/zeyYGkAXi=.XMxUHhTLcnmI--
