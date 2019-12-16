@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55E9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E05D2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C77620CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519958;
-	bh=/cv/6abJU3XvKGPnuAB8xlGpmyFKElwPZzPYxBS/kAU=;
+	s=default; t=1576519966;
+	bh=d12kf7wnXmN+tmehWkqrFnPeqkE4s/wDn6LeQg0ZVXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOaH84IYnp59M1kQOT3BWEqNdwFusJsyrLrzwuvldJAqIwQSReCrmpM2f1OkZLh5g
-	 ePvXWqaQ8wHgY8e4uKI4FgyrXw/vfH0JpYUyCf28syxzlLpfMVP+6TzQHGOq9eoA7T
-	 tuFT1qEJIlcvXudnqoYDhEgPeYeIpiS9NOxPkOB0=
+	b=J4iVMbeTNK7jzw0hXiL/S3iwEinoXXRJmRqaEbaofik9pgmgi3Ly4fusW9c60ipuA
+	 QH4ooZ1JlLFYM86uxqK+WmzxWRi5xSOESAZtafhsgAUOUzxHSYbYnR4oXvUSNMHmkY
+	 eB+kX+kftk9Abx2Pze/hZurfy+1i36ayJWiSc3Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbfLPSMh (ORCPT
+        id S1730596AbfLPSMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:12:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbfLPSMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:32 -0500
+        id S1730985AbfLPSMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB94206E0;
-        Mon, 16 Dec 2019 18:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F392206EC;
+        Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519952;
-        bh=/cv/6abJU3XvKGPnuAB8xlGpmyFKElwPZzPYxBS/kAU=;
+        s=default; t=1576519959;
+        bh=d12kf7wnXmN+tmehWkqrFnPeqkE4s/wDn6LeQg0ZVXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EssGKJirLt2EGxUxdRAAz1JaW12BmX6yYpKgGtIo3CXielwhoXT5avdyOXnfqrjjD
-         LDv8eHdYVmiAX6CTGRTd1/dPfnsN1Pnehgq1XkEk6utk9Tcbl/F1deEpe8ulkfICj8
-         qanRUKWv6T0CosgyJcKi6k8845PI2xPCUTfv8T0g=
+        b=zYx50u1q2Vogg3s5os/k+V+a/WpiGZLvlMznOK0DNHWSjgR0skWI+687Y7Z0eYNWN
+         KgQgkZpTG4yGGxKNhmzryP5KWh6Y8fMxGCCoaMUcg1KQ6wf+Ua26pvdYE3GtFznvR+
+         Xp3pa2Lwuwg0o6zQH3QNtx2IF69tcO/Fi51l6bq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 136/180] scsi: qla2xxx: Fix abort timeout race condition.
-Date:   Mon, 16 Dec 2019 18:49:36 +0100
-Message-Id: <20191216174842.426476124@linuxfoundation.org>
+Subject: [PATCH 5.3 139/180] scsi: qla2xxx: Fix DMA unmap leak
+Date:   Mon, 16 Dec 2019 18:49:39 +0100
+Message-Id: <20191216174842.792080148@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,75 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit 0c6df59061b23c7a951836d23977be34e896d3da ]
+[ Upstream commit 5d328de64d89400dcf9911125844d8adc0db697f ]
 
-If an abort times out, the Abort IOCB completion and Abort timer can race
-against each other. This patch provides unique error code for timer path to
-allow proper cleanup.
+With debug kernel we see following wanings indicating memory leak.
 
-[mkp: typo]
+[28809.523959] WARNING: CPU: 3 PID: 6790 at lib/dma-debug.c:978
+dma_debug_device_change+0x166/0x1d0
+[28809.523964] pci 0000:0c:00.6: DMA-API: device driver has pending DMA
+allocations while released from device [count=5]
+[28809.523964] One of leaked entries details: [device
+address=0x00000002aefe4000] [size=8208 bytes] [mapped with DMA_BIDIRECTIONAL]
+[mapped as coherent]
+
+Fix this by unmapping DMA memory.
 
 Signed-off-by: Quinn Tran <qutran@marvell.com>
 Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_def.h  |  1 +
- drivers/scsi/qla2xxx/qla_init.c | 18 ++++++++++++++++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_bsg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index a2922b17b55b0..bb1c7b2d0ac1f 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -4629,6 +4629,7 @@ struct secure_flash_update_block_pk {
- #define QLA_SUSPENDED			0x106
- #define QLA_BUSY			0x107
- #define QLA_ALREADY_REGISTERED		0x109
-+#define QLA_OS_TIMER_EXPIRED		0x10a
- 
- #define NVRAM_DELAY()		udelay(10)
- 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index afc890bc50e4f..5df604fae7593 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -99,9 +99,22 @@ static void qla24xx_abort_iocb_timeout(void *data)
- {
- 	srb_t *sp = data;
- 	struct srb_iocb *abt = &sp->u.iocb_cmd;
-+	struct qla_qpair *qpair = sp->qpair;
-+	u32 handle;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
-+	for (handle = 1; handle < qpair->req->num_outstanding_cmds; handle++) {
-+		/* removing the abort */
-+		if (qpair->req->outstanding_cmds[handle] == sp) {
-+			qpair->req->outstanding_cmds[handle] = NULL;
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
- 
- 	abt->u.abt.comp_status = CS_TIMEOUT;
--	sp->done(sp, QLA_FUNCTION_TIMEOUT);
-+	sp->done(sp, QLA_OS_TIMER_EXPIRED);
- }
- 
- static void qla24xx_abort_sp_done(void *ptr, int res)
-@@ -109,7 +122,8 @@ static void qla24xx_abort_sp_done(void *ptr, int res)
- 	srb_t *sp = ptr;
- 	struct srb_iocb *abt = &sp->u.iocb_cmd;
- 
--	if (del_timer(&sp->u.iocb_cmd.timer)) {
-+	if ((res == QLA_OS_TIMER_EXPIRED) ||
-+	    del_timer(&sp->u.iocb_cmd.timer)) {
- 		if (sp->flags & SRB_WAKEUP_ON_COMP)
- 			complete(&abt->u.abt.comp);
- 		else
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 3084c2cff7bd5..ce87bbdb30907 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -341,6 +341,8 @@ qla2x00_process_els(struct bsg_job *bsg_job)
+ 		dma_map_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
+ 		bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
+ 	if (!req_sg_cnt) {
++		dma_unmap_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
++		    bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
+ 		rval = -ENOMEM;
+ 		goto done_free_fcport;
+ 	}
+@@ -348,6 +350,8 @@ qla2x00_process_els(struct bsg_job *bsg_job)
+ 	rsp_sg_cnt = dma_map_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
+ 		bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
+         if (!rsp_sg_cnt) {
++		dma_unmap_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
++		    bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
+ 		rval = -ENOMEM;
+ 		goto done_free_fcport;
+ 	}
 -- 
 2.20.1
 
