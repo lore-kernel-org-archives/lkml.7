@@ -2,141 +2,87 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9924C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF50C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76329206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572AB206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="XuNkupx9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RwNh+QmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLPRPf (ORCPT
+        id S1726512AbfLPRSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:15:35 -0500
-Received: from mga03.intel.com ([134.134.136.65]:48079 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfLPRPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:15:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 09:15:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
-   d="scan'208";a="266312083"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Dec 2019 09:15:33 -0800
-Received: from fmsmsx102.amr.corp.intel.com (10.18.124.200) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 09:15:33 -0800
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- FMSMSX102.amr.corp.intel.com (10.18.124.200) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 09:15:32 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 16 Dec 2019 09:15:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCWDNQ4D6mM9NmJ4jroAL/Rquiz+Fr8f1mnNPw/f5v0rpAhBpQihNY0G7i/xRR6rXRzXqrghIcljtXR1pIPrRXgYXdiawqVhacbIWIQtUvHZ/hJzg04s5MkrCXbEfGaTbwpiOqNmXBhCjVU2eo+Cc0jyKopsjsGP4sENBSXpB5ZvtqacQTkKH6KejMRBV+3BDxIWJLp/NIF3i8ITnKbqjCCtO4QJIp8hRkL8tGFAqkOMY9bWmuBgR6FGZmE3mHzjEI9e4eB3EVynYcQYTyevCyh9vrIzEFY3iEi36KL2BEjaS+hAOLQ32VjnBafRXGEUh2tqYisyy0P9DlSqpPCpLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IFQvHEq0B+LjPmcIU/cQyu9NAa753mkm2kUcuNx24a8=;
- b=IDHN1gN6mHKsPha81j9ac1UzXbwDUTNqKHdKlG8IdUvV4Czx1+lvNesQqLRceQMA5Fpb7M6YgdlbAmSKac5yFhCQrx8TeMB1hK9TPAq53eXy8kogzF+eBSavrGgzthO/jzg5oO7yeopshMCSv4t6WQLWVn5kRvHlTPQwISsP+MeLK/cDDAOk625ieT20Jw5h9/KQpv667YeIofKFtovpZEqhDcD0wvgAAqhp1ha/F3HuwkN4+y33btJXWQsDqHz5UmRSWBRUzu+ScukB2JkdRlJWGFimFfUIq8OYoSYHbmPqq33907n62Y9RgDZWelYzVEwRsU9ElkmAm1EJxRo4jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IFQvHEq0B+LjPmcIU/cQyu9NAa753mkm2kUcuNx24a8=;
- b=XuNkupx9I19dwi8UnW6EfazA6F7iIJAsi2DVGiAiT7jX8YkQuGhcIq54eXtFHqmq8SomNPqLddGyCVNB/mcaUuCX8h523mM9a41NzOSYQ7z3MgC+HGlOvawELJ/TBnSM99f8mF5d+m4EfIW8TFjrQv/QZ34vWKfeFKcVbKCGWfE=
-Received: from MWHPR11MB1278.namprd11.prod.outlook.com (10.169.230.151) by
- MWHPR11MB1566.namprd11.prod.outlook.com (10.172.56.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Mon, 16 Dec 2019 17:15:31 +0000
-Received: from MWHPR11MB1278.namprd11.prod.outlook.com
- ([fe80::707d:8cdb:8345:664e]) by MWHPR11MB1278.namprd11.prod.outlook.com
- ([fe80::707d:8cdb:8345:664e%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 17:15:30 +0000
-From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
-To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "alex.hung@canonical.com" <alex.hung@canonical.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: RE: [PATCH v2 4/4] thermal: int340x_thermal: Add new Tiger Lake
- hardware IDs to support thermal driver
-Thread-Topic: [PATCH v2 4/4] thermal: int340x_thermal: Add new Tiger Lake
- hardware IDs to support thermal driver
-Thread-Index: AQHVseGLKMeMKZlivUi5LK2P7xCLTae9AmWAgAACjWA=
-Date:   Mon, 16 Dec 2019 17:15:30 +0000
-Message-ID: <MWHPR11MB12785D0329786CC2E1D2564FF2510@MWHPR11MB1278.namprd11.prod.outlook.com>
-References: <cover.1576260216.git.gayatri.kammela@intel.com>
-         <8964445c268f61beb8fbaa3f54b469ddd7f8cafa.1576260216.git.gayatri.kammela@intel.com>
- <752244e73e3703b6d20da3ab870e4e86f9e4a3fb.camel@intel.com>
-In-Reply-To: <752244e73e3703b6d20da3ab870e4e86f9e4a3fb.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjRmOTRmZmYtMmExZC00YzZlLWJjY2EtYjczNTExNjc1NTk2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidThmNmFLd1FtRjNhbW16SHVcL2ZYdmpqUXpXbEpmWmNcL1dsV1NXc3o5bVN4cmk3VURweWhZdG1JdDdqbThmNm9TIn0=
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gayatri.kammela@intel.com; 
-x-originating-ip: [192.55.52.214]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 588948d7-e4c8-4f71-403e-08d7824b8dd4
-x-ms-traffictypediagnostic: MWHPR11MB1566:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB15661FC15E5EE91CF7802108F2510@MWHPR11MB1566.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:669;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(346002)(376002)(136003)(199004)(189003)(54906003)(4326008)(7696005)(110136005)(55016002)(4744005)(86362001)(66446008)(66556008)(66476007)(71200400001)(81166006)(26005)(6506007)(9686003)(76116006)(316002)(5660300002)(7416002)(478600001)(186003)(66946007)(33656002)(64756008)(8936002)(8676002)(52536014)(4001150100001)(2906002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR11MB1566;H:MWHPR11MB1278.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xAnyVysZt7FHw+SaLhThducqIq/hTmF0khQTChZT7+BmlVPUKVGAebrrC5Houqn9H2OyMI/XK+q3xyH2lgvGHq4fX/e5koAj1okMyPWMhvSzvbMD9cxF8bCzI3pZToMS3IWDlsCtSFRmnBI9nXY7W12QWMFyi5NQPhlJWDEk8XVpFM4E/optE74hLN4Axj+DLzQFfZ0+QXTxEbR0b2UeWrOJxgF88XtOUhguE3vlPONwHgU8QSH8P4PegXRuN6T9SuAVL1WXMRk6GCzy8H81UChBtPTTNIiscCsbROeWeoqyBVhi0wok8ZQWXwiZiXzfkeRAACbimugdYd6FrDL2g00YoRno82A9Eu4W1yyR995EY3Uc4wsTUQeAsazH+KH11ckSWZin7IlJEAEYQskl5DMyW+dcrBAd7DYFBO1DKR9YVH1VPU88PQP7M7C69mNV
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 12:18:42 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36698 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPRSm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:18:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cscWSzyLmPlZfTX0xDvWjfdOdN/mHzFVS9chZMvjXxY=; b=RwNh+QmO1PA4xtilpzeE8YyCC
+        Uxn+HcpH+YWg1Xq4pVZoJXCJqYsBzJ3KcRH4xRLZmMHqjgHLDzbNImzdIIvYbOEqWH9hHwc223Y/D
+        lCB5H5SKwtjQK/CqOA3mf6gWOImLCFmYRAgIte7fAY3/HfeKfUzsSnG97E27s/mXwvvfV6EyVGmCl
+        T1uzfCb5mfWgP7CohImsfYREYe1ntreJdHYO3ZO8Uv9DFi9DtKwuKTaVGDPs0BUXQCKGI9xIxxBql
+        Bl+j34P2mXQ7oA3KYR2SrdX/rh69a5z2wow6ZZ5XO0fxS+XK8eFbMOXNZuaFRg1cao7UcK/lkRqLj
+        g8forvRtw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igu10-0000aM-Ki; Mon, 16 Dec 2019 17:18:38 +0000
+Date:   Mon, 16 Dec 2019 09:18:38 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, aneesh.kumar@linux.ibm.com
+Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
+Message-ID: <20191216171838.GA32169@bombadil.infradead.org>
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+ <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+ <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+ <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
+ <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
+ <20191212190427.ouyohviijf5inhur@linux-p48b>
+ <20191216133711.GH30281@dhcp22.suse.cz>
+ <20191216161748.tgi2oictlfqy6azi@linux-p48b>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 588948d7-e4c8-4f71-403e-08d7824b8dd4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:15:30.7831
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1sYKW0W5KQluY/l5jC22rmEoQz1i5UcrsaqEPpSpnvFZePKE4ijKAF4Fgz3HNZTCjhU3GeMHCfNsOzky3/k46hUVUHVsEBIFqKQX91kCC28=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1566
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216161748.tgi2oictlfqy6azi@linux-p48b>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBGcmksIDIwMTktMTItMTMgYXQgMTA6MTQgLTA4MDAsIEdheWF0cmkgS2FtbWVsYSB3cm90
-ZToNCj4gPiBUaWdlciBMYWtlIGhhcyBhIG5ldyB1bmlxdWUgaGFyZHdhcmUgSURzIHRvIHN1cHBv
-cnQgdGhlcm1hbCBkcml2ZXIuDQo+ID4gSGVuY2UsIGFkZCB0aGVtLg0KPiA+DQo+ID4gQ2M6IEFu
-ZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiA+IENj
-OiBaaGFuZyBydWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+DQo+ID4gQ2M6IFNyaW5pdmFzIFBhbmRy
-dXZhZGEgPHNyaW5pdmFzLnBhbmRydXZhZGFAaW50ZWwuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEdheWF0cmkgS2FtbWVsYSA8Z2F5YXRyaS5rYW1tZWxhQGludGVsLmNvbT4NCj4gUmV2aWV3ZWQt
-Ynk6IFBhbmRydXZhZGEsIFNyaW5pdmFzIDxzcmluaXZhcy5wYW5kcnV2YWRhQGludGVsLmNvbT4N
-ClRoYW5rcyBTcmluaXZhcyENCg==
+On Mon, Dec 16, 2019 at 08:17:48AM -0800, Davidlohr Bueso wrote:
+> On Mon, 16 Dec 2019, Michal Hocko wrote:
+> > I am afraid that work_struct is too large to be stuffed into the struct
+> > page array (because of the lockdep part).
+> 
+> Yeah, this needs to be done without touching struct page.
+> 
+> Which is why I had done the stack allocated way in this patch, but we
+> cannot wait for it to complete in irq, so that's out the window. Andi
+> had suggested percpu allocated work items, but having played with the
+> idea over the weekend, I don't see how we can prevent another page being
+> freed on the same cpu before previous work on the same cpu is complete
+> (cpu0 wants to free pageA, schedules the work, in the mean time cpu0
+> wants to free pageB and workerfn for pageA still hasn't been called).
+
+Why is it that we can call functions after-an-RCU-period-has-elapsed time,
+at returning-to-userspace time and after-exiting-hardirq-handler
+time easily, but the mechanism for calling a function
+after-we've-finished-handling-softirqs is so bloody hard to use?
+
+That's surely the major problem we need to fix.
+
