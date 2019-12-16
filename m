@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9362C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58232C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4F0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D766206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522146;
-	bh=MaaPmMeYJWo6gV+yUdPw3tOOj9YwHYuuiU/to3VoIvI=;
+	s=default; t=1576522153;
+	bh=KE/AxhjaBXCBBb9qFu3IbAIk253Jp0xmyfJ1IatDtZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12izTxRzZQi70qTM3800mR2L88ApMV25GnnqgB/Gh6PzxB/DSieSCtdUNiAn7Ly7T
-	 lHc+l4U0lBktV1wdZK1lZV8k4pUNMu073j1nFKXrLhKzd9uEUvl61de8pHjBxK5JIn
-	 6F7vDFVCdRo546jTW/S3gDu5UUsB2ru+/Xpm15wg=
+	b=uJeqPeJ5YCrTw6Mw95DC/meArZtaVHZ3j35sjr9wnKdy38lGBqWsDdyOVVIVGayfM
+	 ELtBdUkMk9EJd6J0GbP1tcUmHVlp+WzVxuHFkd01xwQh8KJMQ/AzcUSR9P2pqKKvRI
+	 J8bybnSrpHV1WYDP/UYVHY6kqymnO8nCKcY5drMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfLPStF (ORCPT
+        id S1727733AbfLPRxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:49:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47754 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:53:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfLPRxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:34 -0500
+        id S1727708AbfLPRxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:53:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201CA2166E;
-        Mon, 16 Dec 2019 17:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2435206D3;
+        Mon, 16 Dec 2019 17:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518813;
-        bh=MaaPmMeYJWo6gV+yUdPw3tOOj9YwHYuuiU/to3VoIvI=;
+        s=default; t=1576518794;
+        bh=KE/AxhjaBXCBBb9qFu3IbAIk253Jp0xmyfJ1IatDtZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYU+TominRAz0omOhdypkjZuxpVJ0RyD6V4Pn8B4UcWTsUn10O46VbTcqF3lV2QER
-         xQGzFnCg2X/uv0AVAgJHhibOh0dNLDI8luLQVQ3tIIPLqyLK20Qno16hmJOqMlKuX5
-         oAssYcP4DKW3nY2+ndPNjQN60Pmt7zrHPBkbItDg=
+        b=e5wBMv9Ct2PKDFOPnB98p7clTuTKXJLZRX/6MJTDDQAPDZk5B5SEsme3IO94a9stC
+         sIdPAs0bX2qEvgA9EWPkeotVaSO7Wprym7rBQYXmFJIqrn6/u6InGvoAjVdJlibooY
+         f+brHM1by3nhdK+PB4QVXDMQRHWv2DpjJGUDIPdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/267] ARM: dts: sun8i: v3s: Change pinctrl nodes to avoid warning
-Date:   Mon, 16 Dec 2019 18:46:44 +0100
-Message-Id: <20191216174857.106817261@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 070/267] sparc: Correct ctx->saw_frame_pointer logic.
+Date:   Mon, 16 Dec 2019 18:46:36 +0100
+Message-Id: <20191216174856.417853888@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,91 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: David Miller <davem@davemloft.net>
 
-[ Upstream commit 438a44ce7e51ce571f942433c6c7cb87c4c0effd ]
+[ Upstream commit e2ac579a7a18bcd9e8cf14cf42eac0b8a2ba6c4b ]
 
-All our pinctrl nodes were using a node name convention with a unit-address
-to differentiate the different muxing options. However, since those nodes
-didn't have a reg property, they were generating warnings in DTC.
+We need to initialize the frame pointer register not just if it is
+seen as a source operand, but also if it is seen as the destination
+operand of a store or an atomic instruction (which effectively is a
+source operand).
 
-In order to accomodate for this, convert the old nodes to the syntax we've
-been using for the new SoCs, including removing the letter suffix of the
-node labels to the bank of those pins to make things more readable.
+This is exercised by test_verifier's "non-invalid fp arithmetic"
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  4 ++--
- arch/arm/boot/dts/sun8i-v3s.dtsi              | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/sparc/net/bpf_jit_comp_64.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d6..333df90e8037c 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -78,7 +78,7 @@
- };
+diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
+index adfb4581bd809..dfb1a62abe932 100644
+--- a/arch/sparc/net/bpf_jit_comp_64.c
++++ b/arch/sparc/net/bpf_jit_comp_64.c
+@@ -1326,6 +1326,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
+ 		u32 opcode = 0, rs2;
  
- &mmc0 {
--	pinctrl-0 = <&mmc0_pins_a>;
-+	pinctrl-0 = <&mmc0_pins>;
- 	pinctrl-names = "default";
- 	broken-cd;
- 	bus-width = <4>;
-@@ -87,7 +87,7 @@
- };
++		if (insn->dst_reg == BPF_REG_FP)
++			ctx->saw_frame_pointer = true;
++
+ 		ctx->tmp_2_used = true;
+ 		emit_loadimm(imm, tmp2, ctx);
  
- &uart0 {
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index 3a06dc5b37467..da5823c6fa3e6 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -292,17 +292,17 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
+@@ -1364,6 +1367,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		const u8 tmp = bpf2sparc[TMP_REG_1];
+ 		u32 opcode = 0, rs2;
  
--			i2c0_pins: i2c0 {
-+			i2c0_pins: i2c0-pins {
- 				pins = "PB6", "PB7";
- 				function = "i2c0";
- 			};
++		if (insn->dst_reg == BPF_REG_FP)
++			ctx->saw_frame_pointer = true;
++
+ 		switch (BPF_SIZE(code)) {
+ 		case BPF_W:
+ 			opcode = ST32;
+@@ -1396,6 +1402,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
+ 		const u8 tmp3 = bpf2sparc[TMP_REG_3];
  
--			uart0_pins_a: uart0@0 {
-+			uart0_pb_pins: uart0-pb-pins {
- 				pins = "PB8", "PB9";
- 				function = "uart0";
- 			};
++		if (insn->dst_reg == BPF_REG_FP)
++			ctx->saw_frame_pointer = true;
++
+ 		ctx->tmp_1_used = true;
+ 		ctx->tmp_2_used = true;
+ 		ctx->tmp_3_used = true;
+@@ -1416,6 +1425,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
+ 		const u8 tmp3 = bpf2sparc[TMP_REG_3];
  
--			mmc0_pins_a: mmc0@0 {
-+			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2", "PF3",
- 				       "PF4", "PF5";
- 				function = "mmc0";
-@@ -310,7 +310,7 @@
- 				bias-pull-up;
- 			};
- 
--			mmc1_pins: mmc1 {
-+			mmc1_pins: mmc1-pins {
- 				pins = "PG0", "PG1", "PG2", "PG3",
- 				       "PG4", "PG5";
- 				function = "mmc1";
-@@ -318,7 +318,7 @@
- 				bias-pull-up;
- 			};
- 
--			spi0_pins: spi0 {
-+			spi0_pins: spi0-pins {
- 				pins = "PC0", "PC1", "PC2", "PC3";
- 				function = "spi0";
- 			};
++		if (insn->dst_reg == BPF_REG_FP)
++			ctx->saw_frame_pointer = true;
++
+ 		ctx->tmp_1_used = true;
+ 		ctx->tmp_2_used = true;
+ 		ctx->tmp_3_used = true;
 -- 
 2.20.1
 
