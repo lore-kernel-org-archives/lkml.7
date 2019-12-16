@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD4BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F60C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657E121739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB7E21582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519153;
-	bh=RiHveqCWVdP3RSPZSPGetwtQ5nykNe6+tU/V2tKOyhs=;
+	s=default; t=1576519160;
+	bh=2JwDM7TaPeUxhQ0KNFjZ43IsJOHsVpWhexDGziKV0Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpxN8JIsDjANWvYa0rDhda4xBF3g9VgWC6l524ZnaPKnHWeFHvKTtd8Vu2C7chPvz
-	 QWuke3/WUeP9qqGi8it/HR6PwcAUuyfMZBReqTuxQxzjutGNN/ktTkWDSKpLhCo65y
-	 041Y41JFZiG7vj09bYcW+2Eoopb1gvbymdy6w2do=
+	b=byEpGr4Lxu7t8UZo+yn7iBsCXcxnih2kKHiYVuPJ/h16/SW13ASbYcgRMwzdalSVP
+	 FZSnBhd5yKaSVLWhlXMguC6/pxO037z/kdRpj6ZsRqZemY4QXRnj9V7hmko+22CrIe
+	 +e5lKdPcJM2NDunOo50CI2UfyMgLsorAUmr/gQso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfLPR7M (ORCPT
+        id S1726696AbfLPR7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbfLPR7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:02 -0500
+        id S1728181AbfLPR7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3580B2166E;
-        Mon, 16 Dec 2019 17:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44ED221582;
+        Mon, 16 Dec 2019 17:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519141;
-        bh=RiHveqCWVdP3RSPZSPGetwtQ5nykNe6+tU/V2tKOyhs=;
+        s=default; t=1576519153;
+        bh=2JwDM7TaPeUxhQ0KNFjZ43IsJOHsVpWhexDGziKV0Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qDI9ikFRvL03rNpr+h407CJQRI44qUyWDjVi6d8GELg23IdXwY3Dk5RcCdySoXvGD
-         CqHIs5o8LjhXXOaw1CqFArxnP/cr3PVE2c/+cyEGBPrD42ME6hQi0/kcQiKe4yOZ3t
-         x4cR68Tt/89r5WIpKdaGdeAw52NxA2ePM3Kt9A9w=
+        b=gGlZOQvJetKflbwAK8hr3OxFcs6F56wWurq3NykBgZY9kY0I1QOvsfdBGSAMqaaVv
+         Syb3Xj7TCawnR7Dm1fCU9sHOfXKy6o/aYTVLxsI/MaSYa5EYbeiBw/tA9zk6h1sjjq
+         hoSdwc1euwBJtxr22Iqw9ogKdxVLBKfuUKuCXmQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 212/267] intel_th: Fix a double put_device() in error path
-Date:   Mon, 16 Dec 2019 18:48:58 +0100
-Message-Id: <20191216174914.170497116@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 216/267] cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
+Date:   Mon, 16 Dec 2019 18:49:02 +0100
+Message-Id: <20191216174914.391297366@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,54 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit 512592779a337feb5905d8fcf9498dbf33672d4a upstream.
+commit db0d32d84031188443e25edbd50a71a6e7ac5d1d upstream.
 
-Commit a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
-factored out intel_th_subdevice_alloc() from intel_th_populate(), but got
-the error path wrong, resulting in two instances of a double put_device()
-on a freshly initialized, but not 'added' device.
+The following build warning occurred on powerpc 64-bit builds:
 
-Fix this by only doing one put_device() in the error path.
+drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
+1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
-Reported-by: Wen Yang <wenyang@linux.alibaba.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20191120130806.44028-2-alexander.shishkin@linux.intel.com
+This is with a cross-compiler based on gcc 8.1.0, which I got from:
+  https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
+
+The warning is due to putting 1024 bytes on the stack:
+
+    unsigned int chip[256];
+
+...and it's also undesirable to have a hard limit on the number of
+CPUs here.
+
+Fix both problems by dynamically allocating based on num_possible_cpus,
+as recommended by Michael Ellerman.
+
+Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/core.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/cpufreq/powernv-cpufreq.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/hwtracing/intel_th/core.c
-+++ b/drivers/hwtracing/intel_th/core.c
-@@ -628,10 +628,8 @@ intel_th_subdevice_alloc(struct intel_th
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1002,9 +1002,14 @@ static struct cpufreq_driver powernv_cpu
+ 
+ static int init_chip_info(void)
+ {
+-	unsigned int chip[256];
++	unsigned int *chip;
+ 	unsigned int cpu, i;
+ 	unsigned int prev_chip_id = UINT_MAX;
++	int ret = 0;
++
++	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int id = cpu_to_chip_id(cpu);
+@@ -1016,8 +1021,10 @@ static int init_chip_info(void)
  	}
  
- 	err = intel_th_device_add_resources(thdev, res, subdev->nres);
--	if (err) {
--		put_device(&thdev->dev);
-+	if (err)
- 		goto fail_put_device;
--	}
+ 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+-	if (!chips)
+-		return -ENOMEM;
++	if (!chips) {
++		ret = -ENOMEM;
++		goto free_and_return;
++	}
  
- 	if (subdev->type == INTEL_TH_OUTPUT) {
- 		thdev->dev.devt = MKDEV(th->major, th->num_thdevs);
-@@ -644,10 +642,8 @@ intel_th_subdevice_alloc(struct intel_th
+ 	for (i = 0; i < nr_chips; i++) {
+ 		chips[i].id = chip[i];
+@@ -1027,7 +1034,9 @@ static int init_chip_info(void)
+ 			per_cpu(chip_info, cpu) =  &chips[i];
  	}
  
- 	err = device_add(&thdev->dev);
--	if (err) {
--		put_device(&thdev->dev);
-+	if (err)
- 		goto fail_free_res;
--	}
+-	return 0;
++free_and_return:
++	kfree(chip);
++	return ret;
+ }
  
- 	/* need switch driver to be loaded to enumerate the rest */
- 	if (subdev->type == INTEL_TH_SWITCH && !req) {
+ static inline void clean_chip_info(void)
 
 
