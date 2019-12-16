@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECBDC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C78FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECB720717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501D520717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520556;
-	bh=NfLTpMpdY1P59r8KrNeZwv9n+oDLlDos8mnXv/OtaBE=;
+	s=default; t=1576520561;
+	bh=9qlUL9FC7N+k1z+E4k4mGKZs9S4CLnnOmFfX4VzFhWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdM0GG4XM5ZhfV6EJzITB7yyTGEelVhFtK0SBfD55mOZyxXw95KTt2qrcjlO1Jpo5
-	 3IFAgyMyDiN2D3L4oszvSYXsQbSilTXw4PP37ALItR8SrKRh3MFsW5VXToXKL92JKq
-	 ABi6UP/vsAeHG7zkYqxeihXBcyzlOtUQnB3A3JI8=
+	b=O7x9j0zOgPFiUz5E+hub7q2ohcFPekRXv2rabRPzEF3wD+O8vOH8Xq0Oo7M8+IiGH
+	 V1fokHX+Komzoxb8U+ZACVXBbT8Guf+gcL4LoVi2/VEA/r6J5c8+oikvHPZ8b34M4/
+	 i6ojRW2F+edEwqFG0mF7sztkcVBDfe0mZtM1/hQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbfLPSVQ (ORCPT
+        id S1732150AbfLPSWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:21:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:22:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732206AbfLPSVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:13 -0500
+        id S1732203AbfLPSVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7947821775;
-        Mon, 16 Dec 2019 18:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC7E20717;
+        Mon, 16 Dec 2019 18:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520472;
-        bh=NfLTpMpdY1P59r8KrNeZwv9n+oDLlDos8mnXv/OtaBE=;
+        s=default; t=1576520470;
+        bh=9qlUL9FC7N+k1z+E4k4mGKZs9S4CLnnOmFfX4VzFhWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+0GQxioZiWjsMibv/40ge6woAn4tTDnkEUpRfwYYjwb55esdpsdDY8y/jVAWGpYZ
-         d+FSilx/WI0wGKlEsuB9dHW5iQIhU9IFLLrI9d01N/Z/g0im8X3yPEebezVWlw8cAf
-         5mB+BlHGuyBA/wLhaVl4AT6sq1Yga7x7Hk3OvO6E=
+        b=NEuz8JvLZC1bMG63dWrK4WAoWMxclgtxIpaF/bbsZUXKElkCtCoxD6rfj1Ye68Qlf
+         QEcw1KY+BZXqnN09nR9Dk+/zI7r/ZF7P0vcH1n+zcq4Z3XVKxAo2e7R94jmGY3LxSP
+         uIhcRfgHrl9WX4dEVBAEQelS7tb1oHy4wtb7kAMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 132/177] pinctrl: armada-37xx: Fix irq mask access in armada_37xx_irq_set_type()
-Date:   Mon, 16 Dec 2019 18:49:48 +0100
-Message-Id: <20191216174844.642009420@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>
+Subject: [PATCH 5.4 167/177] ext4: work around deleting a file with i_nlink == 0 safely
+Date:   Mon, 16 Dec 2019 18:50:23 +0100
+Message-Id: <20191216174849.936839083@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,44 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 04fb02757ae5188031eb71b2f6f189edb1caf5dc upstream.
+commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 upstream.
 
-As explained in the following commit a9a1a4833613 ("pinctrl:
-armada-37xx: Fix gpio interrupt setup") the armada_37xx_irq_set_type()
-function can be called before the initialization of the mask field.
+If the file system is corrupted such that a file's i_links_count is
+too small, then it's possible that when unlinking that file, i_nlink
+will already be zero.  Previously we were working around this kind of
+corruption by forcing i_nlink to one; but we were doing this before
+trying to delete the directory entry --- and if the file system is
+corrupted enough that ext4_delete_entry() fails, then we exit with
+i_nlink elevated, and this causes the orphan inode list handling to be
+FUBAR'ed, such that when we unmount the file system, the orphan inode
+list can get corrupted.
 
-That means that we can't use this field in this function and need to
-workaround it using hwirq.
+A better way to fix this is to simply skip trying to call drop_nlink()
+if i_nlink is already zero, thus moving the check to the place where
+it makes the most sense.
 
-Fixes: 30ac0d3b0702 ("pinctrl: armada-37xx: Add edge both type gpio irq support")
-Cc: stable@vger.kernel.org
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191115155752.2562-1-gregory.clement@bootlin.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=205433
+
+Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ext4/namei.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -595,10 +595,10 @@ static int armada_37xx_irq_set_type(stru
- 		regmap_read(info->regmap, in_reg, &in_val);
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -3182,18 +3182,17 @@ static int ext4_unlink(struct inode *dir
+ 	if (IS_DIRSYNC(dir))
+ 		ext4_handle_sync(handle);
  
- 		/* Set initial polarity based on current input level. */
--		if (in_val & d->mask)
--			val |= d->mask;		/* falling */
-+		if (in_val & BIT(d->hwirq % GPIO_PER_REG))
-+			val |= BIT(d->hwirq % GPIO_PER_REG);	/* falling */
- 		else
--			val &= ~d->mask;	/* rising */
-+			val &= ~(BIT(d->hwirq % GPIO_PER_REG));	/* rising */
- 		break;
- 	}
- 	default:
+-	if (inode->i_nlink == 0) {
+-		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
+-				   dentry->d_name.len, dentry->d_name.name);
+-		set_nlink(inode, 1);
+-	}
+ 	retval = ext4_delete_entry(handle, dir, de, bh);
+ 	if (retval)
+ 		goto end_unlink;
+ 	dir->i_ctime = dir->i_mtime = current_time(dir);
+ 	ext4_update_dx_flag(dir);
+ 	ext4_mark_inode_dirty(handle, dir);
+-	drop_nlink(inode);
++	if (inode->i_nlink == 0)
++		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
++				   dentry->d_name.len, dentry->d_name.name);
++	else
++		drop_nlink(inode);
+ 	if (!inode->i_nlink)
+ 		ext4_orphan_add(handle, inode);
+ 	inode->i_ctime = current_time(inode);
 
 
