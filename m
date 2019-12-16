@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CE8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9CCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7E521582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA24A22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518754;
-	bh=z3rTYzIuC9db465zqs7C561jd+xtDH6SGh4K3kTwM2Y=;
+	s=default; t=1576518757;
+	bh=Qh/gqcCVqscY92mPX3z8Nf4W9GFxItIAl9ng5iZJEUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqG+DVUEAMPZztwhMaJ5RCGz2DcuadWio7AGuFF/vrjbWWjxZVnLjw6VijJtIhSrK
-	 LjoGOtK9Vc3xiUk1yy6rVWPWjVvicN9bzmnqlH5fhDc50jX6fjAyN8hkFoiZGdxqmr
-	 jsbmPWlwR5bUng9Cifc9gMsdCL5pASnH7p/jRLws=
+	b=n+unuDRYE1rlksVU3f3xnWGwX3jAwQv+vBIEBqE/4HiIuppVwdTXcZLhtQfVVg8da
+	 pnqLyUDazoKM8O6QhzB40vrdCtkQq0z4m/JPIIJwOOWA0eUJcHnME77anxeXdWWiZq
+	 ivNEm7iNCUfE+/ljtRQLbKgzdU2v07TgCrjPPTWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfLPRwd (ORCPT
+        id S1727528AbfLPRwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbfLPRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:52:29 -0500
+        id S1727522AbfLPRwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0991C20733;
-        Mon, 16 Dec 2019 17:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD4BF20733;
+        Mon, 16 Dec 2019 17:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518748;
-        bh=z3rTYzIuC9db465zqs7C561jd+xtDH6SGh4K3kTwM2Y=;
+        s=default; t=1576518753;
+        bh=Qh/gqcCVqscY92mPX3z8Nf4W9GFxItIAl9ng5iZJEUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXqP0sfKu+6jvh1bGB2fRzSdWolHdGPCbo7o774zgjjyZg2WJN7/JcMf0tPfBVDv1
-         B3sflvnahgL8Es3CvpD2PB1GC7mJ+GXS5U1Msa/Qeyyb0kJHeJzlV/2h2brpDBXeeU
-         RCCI5RJdvQcRjvQvHlwem/09v+2gyFfwH4sJZimg=
+        b=0nVYtwbD61nesuCS/K8X2zvfhmoMG3Wleo+etlcSpM+Bn+Mq2p3wY9aY/QtGBWgVq
+         UFlTCc3h/5OO6yFNLZxGqZMCYwUnH7dHBxy1CZGCD+DFZ7gZA/HDSnjM9wd7B36vMa
+         KYW+Yefb2fM0iumOJtFuTeF8RalE5nq1/oAmChPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xue Chaojing <xuechaojing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 049/267] net-next/hinic:fix a bug in set mac address
-Date:   Mon, 16 Dec 2019 18:46:15 +0100
-Message-Id: <20191216174853.970651912@linuxfoundation.org>
+Subject: [PATCH 4.14 051/267] MIPS: OCTEON: octeon-platform: fix typing
+Date:   Mon, 16 Dec 2019 18:46:17 +0100
+Message-Id: <20191216174854.129155930@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,53 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xue Chaojing <xuechaojing@huawei.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit 9ea72dc9430306b77c73a8a21beb51437cde1d6d ]
+[ Upstream commit 2cf1c8933dd93088cfb5f8f58b3bb9bbdf1781b9 ]
 
-In add_mac_addr(), if the MAC address is a muliticast address,
-it will not be set, which causes the network card fail to receive
-the multicast packet. This patch fixes this bug.
+Use correct type for fdt_property nameoff field.
 
-Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/21204/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_main.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/mips/cavium-octeon/octeon-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index a696b5b2d40e6..44c73215d0264 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -598,9 +598,6 @@ static int add_mac_addr(struct net_device *netdev, const u8 *addr)
- 	u16 vid = 0;
- 	int err;
+diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
+index 1d92efb82c372..e1e24118c169e 100644
+--- a/arch/mips/cavium-octeon/octeon-platform.c
++++ b/arch/mips/cavium-octeon/octeon-platform.c
+@@ -501,7 +501,7 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
+ 	if (phy_addr >= 256 && alt_phy > 0) {
+ 		const struct fdt_property *phy_prop;
+ 		struct fdt_property *alt_prop;
+-		u32 phy_handle_name;
++		fdt32_t phy_handle_name;
  
--	if (!is_valid_ether_addr(addr))
--		return -EADDRNOTAVAIL;
--
- 	netif_info(nic_dev, drv, netdev, "set mac addr = %02x %02x %02x %02x %02x %02x\n",
- 		   addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
- 
-@@ -724,6 +721,7 @@ static void set_rx_mode(struct work_struct *work)
- {
- 	struct hinic_rx_mode_work *rx_mode_work = work_to_rx_mode_work(work);
- 	struct hinic_dev *nic_dev = rx_mode_work_to_nic_dev(rx_mode_work);
-+	struct netdev_hw_addr *ha;
- 
- 	netif_info(nic_dev, drv, nic_dev->netdev, "set rx mode work\n");
- 
-@@ -731,6 +729,9 @@ static void set_rx_mode(struct work_struct *work)
- 
- 	__dev_uc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
- 	__dev_mc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
-+
-+	netdev_for_each_mc_addr(ha, nic_dev->netdev)
-+		add_mac_addr(nic_dev->netdev, ha->addr);
- }
- 
- static void hinic_set_rx_mode(struct net_device *netdev)
+ 		/* Use the alt phy node instead.*/
+ 		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);
 -- 
 2.20.1
 
