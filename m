@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF05C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B28BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94195206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE30F206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520641;
-	bh=ebxA31I8kpABX25jJlShKO7mHPTQ5Ng3ActI00OltWc=;
+	s=default; t=1576520647;
+	bh=QA9F+xZ2ekjN/MqhF4t0Gp3icowfE+3Q9boBMFZHcwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3r2AWtKKV039XggnS3Pa5V3JQkwtzzKhVO3VXvACSdcn5Sb2DqXnzjWxfPHZfO8O
-	 IFCTTQZSTdW48CTDt3cPcpLY/HFCSIjjrluwT7r2tHGCi9lVIaF2y1s/RNxtTecCll
-	 1kWT4AFdwTpUJOCpb/WEGcBwBjP70BvAqFSJmLVE=
+	b=syXkhOu2swkDF9P0UmQGYHjnUlW0Xh1l+69sGnZ/3LqOXw2DCgai1/peXs78P+r1X
+	 KIQUEivlof+ysJ5uK404wBfwlV/4rgW4bysZjP2KMubwGaWuSBTs9JpzzZF4FBZqC4
+	 fpfIrdHuXKSNE1ketbvVO8JlkXRBIqX+DebEuEVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfLPSTi (ORCPT
+        id S1732115AbfLPSYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:19:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:24:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731637AbfLPSTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:19 -0500
+        id S1731959AbfLPSTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C8620717;
-        Mon, 16 Dec 2019 18:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 421CB206EC;
+        Mon, 16 Dec 2019 18:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520359;
-        bh=ebxA31I8kpABX25jJlShKO7mHPTQ5Ng3ActI00OltWc=;
+        s=default; t=1576520378;
+        bh=QA9F+xZ2ekjN/MqhF4t0Gp3icowfE+3Q9boBMFZHcwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyIncVm3+qqbyhTwRODQglZOQBfQVYSo3VmosAgtY5suMLJVAEWuajxgmtpdz+9Br
-         Tk8VI/HeZpIQRyIlRlRbn7vWi4s4lHhmolVHrosIsCKUQvXmLDZKLBl7c5Sq6y+AcV
-         5TmZz5oBrQH/t9AhmwmqjVM6LFnQo7WXPBHBNgVM=
+        b=zpLy/rKvvxpM2vHo10jgZt2QDF9fe2/7tkIkftkSFRiaoCMUipyepZ00P1d8tG07e
+         5sqwBXdcLSf9YfSb/VY1dvJwAIZKWvcQENDmwzVVlcaGPSTgaOFmYeUuZc4XfIhFm1
+         uUEcoybVOAKZwqJ8QsnVKwWz0icCsgEos+U2aFTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 121/177] ALSA: hda/realtek - Line-out jack doesnt work on a Dell AIO
-Date:   Mon, 16 Dec 2019 18:49:37 +0100
-Message-Id: <20191216174843.307870676@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 089/177] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
+Date:   Mon, 16 Dec 2019 18:49:05 +0100
+Message-Id: <20191216174838.982882719@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
 
-commit 5815bdfd7f54739be9abed1301d55f5e74d7ad1f upstream.
+commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
 
-After applying the fixup ALC274_FIXUP_DELL_AIO_LINEOUT_VERB, the
-Line-out jack works well. And instead of adding a new set of pin
-definition in the pin_fixup_tbl, we put a more generic matching entry
-in the fallback_pin_fixup_tbl.
+Check for existance of jack before tracing.
+NULL pointer dereference has been reported by KASAN while unloading
+machine driver (snd_soc_cnl_rt274).
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20191211051321.5883-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ sound/soc/soc-jack.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7672,11 +7672,6 @@ static const struct snd_hda_pin_quirk al
- 		{0x1a, 0x90a70130},
- 		{0x1b, 0x90170110},
- 		{0x21, 0x03211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
--		{0x12, 0xb7a60130},
--		{0x13, 0xb8a61140},
--		{0x16, 0x90170110},
--		{0x21, 0x04211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0280, 0x103c, "HP", ALC280_FIXUP_HP_GPIO4,
- 		{0x12, 0x90a60130},
- 		{0x14, 0x90170110},
-@@ -7864,6 +7859,9 @@ static const struct snd_hda_pin_quirk al
- 	SND_HDA_PIN_QUIRK(0x10ec0289, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
- 		{0x19, 0x40000000},
- 		{0x1b, 0x40000000}),
-+	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
-+		{0x19, 0x40000000},
-+		{0x1a, 0x40000000}),
- 	{}
- };
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -82,10 +82,9 @@ void snd_soc_jack_report(struct snd_soc_
+ 	unsigned int sync = 0;
+ 	int enable;
+ 
+-	trace_snd_soc_jack_report(jack, mask, status);
+-
+ 	if (!jack)
+ 		return;
++	trace_snd_soc_jack_report(jack, mask, status);
+ 
+ 	dapm = &jack->card->dapm;
  
 
 
