@@ -2,51 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6653BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200F3C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2C9206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4B020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518894;
-	bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
+	s=default; t=1576518899;
+	bh=9yhvzDax4rRGNjaYevYMMTVtZveT6fA2Z5l48Eag30o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVPCFyyL30Gk/1p34XEa61CPdBAMckv817rk0rXM5zQT/MYL1/yu+VgcucRgyPZqZ
-	 +w/bltXqkxXBYc7+kLXJ+HcgJAAh5QHVegB/lQ/1Y8yW6tVZDEhzP7zzcMW3dk2Nl1
-	 iXfGYllw9T5OpIl8FzU0jgk+yMStfRtDykb96Dj0=
+	b=jjHxZ2uF2PqFvqB29Kk79Do26R9IIQf4MTUoQC7gENWRE78GA5dXh04fMg+EIlNBl
+	 4OzG60EleTkU0Px9HSNBzqgMLx1aPOJVWlm/rcCYO7La6PYt5QHhzPCVoXUFw92R+u
+	 GMzOK7Bru9oCGFqlrTBagxky3L/8W/TctEF7X5oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfLPRyx (ORCPT
+        id S1727976AbfLPRy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51204 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfLPRyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:46 -0500
+        id S1727105AbfLPRyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E840120663;
-        Mon, 16 Dec 2019 17:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 469532053B;
+        Mon, 16 Dec 2019 17:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518886;
-        bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
+        s=default; t=1576518893;
+        bh=9yhvzDax4rRGNjaYevYMMTVtZveT6fA2Z5l48Eag30o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EXPX+LgSkLmSOYh/Gzv1LARMhfp8eJ2fHaRGLA8j8du6rfaM0o8s2AwokCgpGxVky
-         1XB9/IQi2Abl3xO9X/Eij9rTF4JhPmrxQVP2od7HomBtai4E2MK6lnSSHr3Fkaufk7
-         IVwlzhery7GjUFRSmaNMxhTk3Z/xY05uFAigh3Vs=
+        b=otanHXhVZBGQQ+hIutJk4z257T4XMq6UmksUXwbSgXVwLl/bFyu7Lkp81RpYM8FnG
+         lH4BPIaA45OL45JDMIB1F+y8ScsonJuhtemlHc0pOEWpECOpGdsPXlLcCPEe3x3QHz
+         euHKohr5a0OfmwTndbfH/QwUHFmuMyzyeE4/kn+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 060/267] dmaengine: coh901318: Remove unused variable
-Date:   Mon, 16 Dec 2019 18:46:26 +0100
-Message-Id: <20191216174855.614026608@linuxfoundation.org>
+        stable@vger.kernel.org, Nir Dotan <nird@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 111/267] mlxsw: spectrum_router: Relax GRE decap matching check
+Date:   Mon, 16 Dec 2019 18:47:17 +0100
+Message-Id: <20191216174902.794020169@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,36 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Nir Dotan <nird@mellanox.com>
 
-commit 35faaf0df42d285b40f8a6310afbe096720f7758 upstream.
+[ Upstream commit da93d2913fdf43d5cde3c5a53ac9cc29684d5c7c ]
 
-Commit 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug") left
-flags variable unused, so remove it to fix the warning.
+GRE decap offload is configured when local routes prefix correspond to the
+local address of one of the offloaded GRE tunnels. The matching check was
+found to be too strict, such that for a flat GRE configuration, in which
+the overlay and underlay traffic share the same non-default VRF, decap flow
+was not offloaded.
 
-drivers/dma/coh901318.c: In function 'coh901318_config':
-drivers/dma/coh901318.c:1805:16: warning: unused variable 'flags' [-Wunused-variable]
-  unsigned long flags;
-                ^~~~~
+Relax the check for decap flow offloading. A match occurs if the local
+address of the tunnel matches the local route address while both share the
+same VRF table.
 
-Fixes: 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug")
-Reported-By: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4607f6d26950 ("mlxsw: spectrum_router: Support IPv4 underlay decap")
+Signed-off-by: Nir Dotan <nird@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/coh901318.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1797,7 +1797,6 @@ static struct dma_chan *coh901318_xlate(
- static int coh901318_config(struct coh901318_chan *cohc,
- 			    struct coh901318_params *param)
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index 3ed4fb346f235..5b9a5c3834d9e 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -1252,15 +1252,12 @@ mlxsw_sp_ipip_entry_matches_decap(struct mlxsw_sp *mlxsw_sp,
  {
--	unsigned long flags;
- 	const struct coh901318_params *p;
- 	int channel = cohc->id;
- 	void __iomem *virtbase = cohc->base->virtbase;
+ 	u32 ul_tb_id = l3mdev_fib_table(ul_dev) ? : RT_TABLE_MAIN;
+ 	enum mlxsw_sp_ipip_type ipipt = ipip_entry->ipipt;
+-	struct net_device *ipip_ul_dev;
+ 
+ 	if (mlxsw_sp->router->ipip_ops_arr[ipipt]->ul_proto != ul_proto)
+ 		return false;
+ 
+-	ipip_ul_dev = __mlxsw_sp_ipip_netdev_ul_dev_get(ipip_entry->ol_dev);
+ 	return mlxsw_sp_ipip_entry_saddr_matches(mlxsw_sp, ul_proto, ul_dip,
+-						 ul_tb_id, ipip_entry) &&
+-	       (!ipip_ul_dev || ipip_ul_dev == ul_dev);
++						 ul_tb_id, ipip_entry);
+ }
+ 
+ /* Given decap parameters, find the corresponding IPIP entry. */
+-- 
+2.20.1
+
 
 
