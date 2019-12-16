@@ -2,29 +2,28 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493B4C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B997C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF062082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4CE206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLPKGd (ORCPT
+        id S1727387AbfLPKGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:06:33 -0500
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:58832 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLPKGd (ORCPT
+        Mon, 16 Dec 2019 05:06:36 -0500
+Received: from out28-75.mail.aliyun.com ([115.124.28.75]:46129 "EHLO
+        out28-75.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbfLPKGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:06:33 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3570728|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.177133-0.0111704-0.811697;DS=CONTINUE|ham_regular_dialog|0.00420419-0.00014114-0.995655;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GICQvrI_1576490773;
+        Mon, 16 Dec 2019 05:06:35 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3297215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0160889-0.000375421-0.983536;DS=CONTINUE|ham_system_inform|0.00381865-0.000386367-0.995795;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GICQvrI_1576490773;
 Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GICQvrI_1576490773)
           by smtp.aliyun-inc.com(10.147.44.129);
-          Mon, 16 Dec 2019 18:06:19 +0800
+          Mon, 16 Dec 2019 18:06:18 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -33,9 +32,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
         paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
         paul@crapouillou.net, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: [PATCH v2 1/2] dt-bindings: I2C: Add X1000 bindings.
-Date:   Mon, 16 Dec 2019 18:06:10 +0800
-Message-Id: <1576490771-120353-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v2 0/2] Add I2C support for the Ingenic X1000 SoC
+Date:   Mon, 16 Dec 2019 18:06:09 +0800
+Message-Id: <1576490771-120353-2-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -47,33 +46,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the I2C bindings for the X1000 Soc from Ingenic.
+v1->v2:
+Add code to check device_get_match_data(), if it return a NULL ptr,
+then print an error message and return -ENODEV.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: I2C: Add X1000 bindings.
+  I2C: JZ4780: Add support for the X1000.
 
-Notes:
-    v1->v2:
-    No change.
+ .../devicetree/bindings/i2c/i2c-jz4780.txt         |   4 +-
+ drivers/i2c/busses/i2c-jz4780.c                    | 155 +++++++++++++++------
+ 2 files changed, 118 insertions(+), 41 deletions(-)
 
- Documentation/devicetree/bindings/i2c/i2c-jz4780.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
-index 3738cfb..d229eff 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
-@@ -1,7 +1,9 @@
- * Ingenic JZ4780 I2C Bus controller
- 
- Required properties:
--- compatible: should be "ingenic,jz4780-i2c"
-+- compatible: should be one of the following:
-+  - "ingenic,jz4780-i2c" for the JZ4780
-+  - "ingenic,x1000-i2c" for the X1000
- - reg: Should contain the address & size of the I2C controller registers.
- - interrupts: Should specify the interrupt provided by parent.
- - clocks: Should contain a single clock specifier for the JZ4780 I2C clock.
 -- 
 2.7.4
 
