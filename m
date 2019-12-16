@@ -2,204 +2,203 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDB4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B87C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E537F20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C490E20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="u5Sd0Jwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfLPJqW (ORCPT
+        id S1727091AbfLPJrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:46:22 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46039 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfLPJqV (ORCPT
+        Mon, 16 Dec 2019 04:47:47 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39778 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfLPJrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:46:21 -0500
-Received: from [79.140.120.2] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1igmxF-0003LX-EQ; Mon, 16 Dec 2019 09:46:17 +0000
-Date:   Mon, 16 Dec 2019 10:46:16 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Laurent Vivier <laurent@vivier.eu>
-Cc:     linux-kernel@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Jann Horn <jannh@google.com>, Andrei Vagin <avagin@gmail.com>,
-        linux-api@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        keescook@chromium.org
-Subject: Re: [PATCH v8 0/1] ns: introduce binfmt_misc namespace
-Message-ID: <20191216094615.xlhxoze3umjn2tzy@wittgenstein>
-References: <20191216091220.465626-1-laurent@vivier.eu>
+        Mon, 16 Dec 2019 04:47:47 -0500
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 96377A34;
+        Mon, 16 Dec 2019 10:47:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576489664;
+        bh=Oa2zjAy88eEZOO6lAfiyhi8EQOZLEhABzdV73KDcbSo=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=u5Sd0JwcfaKKAWiiHOfo9Y0ljJZxXVVEKOyGXV4p+8uAdJ4tkN8gPDvs8Dmy/ltlQ
+         XOiR+yl24p4SaLgMZ9y0EgeC3CL57IlIt2C9aP7FBkARsYEZC1TN+twDUrpbSd6TLW
+         UXv/PJu9IA+G/QNetGj32u7vGrHB8DfF6ysO5860=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
+ <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
+ <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
+ <20190913090359.GC29992@pendragon.ideasonboard.com>
+ <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
+ <20191213004812.GA27328@pendragon.ideasonboard.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <19cb3d1c-6910-4bec-13bb-adb875ddd077@ideasonboard.com>
+Date:   Mon, 16 Dec 2019 09:47:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191213004812.GA27328@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191216091220.465626-1-laurent@vivier.eu>
-User-Agent: NeoMutt/20180716
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:12:19AM +0100, Laurent Vivier wrote:
-> v8: s/file->f_path.dentry/file_dentry(file)/
-> 
-> v7: Use the new mount API
-> 
->     Replace
-> 
->       static struct dentry *bm_mount(struct file_system_type *fs_type,
->                             int flags, const char *dev_name, void *data)
->       {
->                struct user_namespace *ns = current_user_ns();
-> 
->                return mount_ns(fs_type, flags, data, ns, ns,
->                                bm_fill_super);
->       }
-> 
->     by
-> 
->       static void bm_free(struct fs_context *fc)
->       {
->              if (fc->s_fs_info)
->                      put_user_ns(fc->s_fs_info);
->       }
-> 
->       static int bm_get_tree(struct fs_context *fc)
->       {
->               return get_tree_keyed(fc, bm_fill_super, get_user_ns(fc->user_ns));
->       }
-> 
->       static const struct fs_context_operations bm_context_ops = {
->               .free           = bm_free,
->               .get_tree       = bm_get_tree,
->       };
-> 
->       static int bm_init_fs_context(struct fs_context *fc)
->       {
->               fc->ops = &bm_context_ops;
->               return 0;
->       }
-> 
-> v6: Return &init_binfmt_ns instead of NULL in binfmt_ns()
->     This should never happen, but to stay safe return a
->     value we can use.
->     change subject from "RFC" to "PATCH"
-> 
-> v5: Use READ_ONCE()/WRITE_ONCE()
->     move mount pointer struct init to bm_fill_super() and add smp_wmb()
->     remove useless NULL value init
->     add WARN_ON_ONCE()
-> 
-> v4: first user namespace is initialized with &init_binfmt_ns,
->     all new user namespaces are initialized with a NULL and use
->     the one of the first parent that is not NULL. The pointer
->     is initialized to a valid value the first time the binfmt_misc
->     fs is mounted in the current user namespace.
->     This allows to not change the way it was working before:
->     new ns inherits values from its parent, and if parent value is modified
->     (or parent creates its own binfmt entry by mounting the fs) child
->     inherits it (unless it has itself mounted the fs).
-> 
-> v3: create a structure to store binfmt_misc data,
->     add a pointer to this structure in the user_namespace structure,
->     in init_user_ns structure this pointer points to an init_binfmt_ns
->     structure. And all new user namespaces point to this init structure.
->     A new binfmt namespace structure is allocated if the binfmt_misc
->     filesystem is mounted in a user namespace that is not the initial
->     one but its binfmt namespace pointer points to the initial one.
->     add override_creds()/revert_creds() around open_exec() in
->     bm_register_write()
-> 
-> v2: no new namespace, binfmt_misc data are now part of
->     the mount namespace
->     I put this in mount namespace instead of user namespace
->     because the mount namespace is already needed and
->     I don't want to force to have the user namespace for that.
->     As this is a filesystem, it seems logic to have it here.
-> 
-> This allows to define a new interpreter for each new container.
-> 
-> But the main goal is to be able to chroot to a directory
-> using a binfmt_misc interpreter without being root.
-> 
-> I have a modified version of unshare at:
-> 
->   https://github.com/vivier/util-linux.git branch unshare-chroot
-> 
-> with some new options to unshare binfmt_misc namespace and to chroot
-> to a directory.
-> 
-> If you have a directory /chroot/powerpc/jessie containing debian for powerpc
-> binaries and a qemu-ppc interpreter, you can do for instance:
-> 
->  $ uname -a
->  Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 x86_64 x86_64 x86_64 GNU/Linux
->  $ ./unshare --map-root-user --fork --pid \
->    --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/qemu-ppc:OC" \
->    --root=/chroot/powerpc/jessie /bin/bash -l
->  # uname -a
->  Linux fedora28-wor-2 4.19.0-rc5+ #18 SMP Mon Oct 1 00:32:34 CEST 2018 ppc GNU/Linux
->  # id
-> uid=0(root) gid=0(root) groups=0(root),65534(nogroup)
->  # ls -l
-> total 5940
-> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 bin
-> drwxr-xr-x.   2 nobody nogroup    4096 Jun 17 20:26 boot
-> drwxr-xr-x.   4 nobody nogroup    4096 Aug 12 00:08 dev
-> drwxr-xr-x.  42 nobody nogroup    4096 Sep 28 07:25 etc
-> drwxr-xr-x.   3 nobody nogroup    4096 Sep 28 07:25 home
-> drwxr-xr-x.   9 nobody nogroup    4096 Aug 12 00:58 lib
-> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 media
-> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 mnt
-> drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 13:09 opt
-> dr-xr-xr-x. 143 nobody nogroup       0 Sep 30 23:02 proc
-> -rwxr-xr-x.   1 nobody nogroup 6009712 Sep 28 07:22 qemu-ppc
-> drwx------.   3 nobody nogroup    4096 Aug 12 12:54 root
-> drwxr-xr-x.   3 nobody nogroup    4096 Aug 12 00:08 run
-> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:58 sbin
-> drwxr-xr-x.   2 nobody nogroup    4096 Aug 12 00:08 srv
-> drwxr-xr-x.   2 nobody nogroup    4096 Apr  6  2015 sys
-> drwxrwxrwt.   2 nobody nogroup    4096 Sep 28 10:31 tmp
-> drwxr-xr-x.  10 nobody nogroup    4096 Aug 12 00:08 usr
-> drwxr-xr-x.  11 nobody nogroup    4096 Aug 12 00:08 var
-> 
-> If you want to use the qemu binary provided by your distro, you can use
-> 
->     --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/bin/qemu-ppc-static:OCF"
-> 
-> With the 'F' flag, qemu-ppc-static will be then loaded from the main root
-> filesystem before switching to the chroot.
-> 
-> Another example is to use the 'P' flag in one chroot and not in another one (useful in a test
-> environment to test different configurations of the same interpreter):
-> 
-> ./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-noargv0:OCF" --root=/chroot/powerpc/jessie /bin/bash -l
-> root@localhost:/# sh -c 'echo $0'
-> /bin/sh
-> 
-> ./unshare --fork --pid --mount-proc --map-root-user --load-interp ":qemu-ppc:M::\x7fELF\x01\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x14:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff://usr/bin/qemu-ppc-argv0:OCFP" --root=/chroot/powerpc/jessie /bin/bash -l
-> root@localhost:/# sh -c 'echo $0'
-> sh
+Hi Laurent,
 
-Hey Laurent,
+On 13/12/2019 00:48, Laurent Pinchart wrote:
+> Hi Kieran,
+> 
+> On Mon, Dec 09, 2019 at 12:41:07PM +0000, Kieran Bingham wrote:
+>> On 13/09/2019 10:03, Laurent Pinchart wrote:
+>>> On Fri, Sep 13, 2019 at 10:21:29AM +0200, Simon Horman wrote:
+>>>> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
+>>>>> On 11.09.2019 22:25, Kieran Bingham wrote:
+>>>>>
+>>>>>> Add direct support for the r8a77980 (V3H).
+>>>>>>
+>>>>>> The V3H shares a common, compatible configuration with the r8a77970
+>>>>>> (V3M) so that device info structure is reused.
+>>>>>
+>>>>>    Do we really need to add yet another compatible in this case?
+>>>>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
+>>>>> a patch like this one didn't get posted by me.
+>>>>
+>>>> The reason for having per-SoC compat strings is that the IP blocks
+>>>> are not versioned and while we can observe that there are similarities
+>>>> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
+>>>> differences may not emerge at some point. By having per-SoC compat strings
+>>>> we have the flexibility for the driver to address any such differences as
+>>>> the need arises.
+>>>>
+>>>> My recollection is that this scheme has been adopted for non-versioned
+>>>> Renesas IP blocks since June 2015 and uses of this scheme well before that.
+>>>
+>>> Sure, but we could use
+>>>
+>>> 	compatible = "renesas,du-r8a77980", "renesas,du-r8a77970";
 
-We have quite some time before the v5.6 merge window opens. So I would
-really like for this new feature to come with proper testing!
+We already do in arch/arm64/boot/dts/renesas/r8a77980.dtsi.
 
-I know you've been waiting on this patch quite some time but adding
-tests will not endanger v5.6 inclusion - lest we find significant bugs. ;)
+However that is the *only* non r8a77980 reference in the file so it,
+itself looks *very* much out of place.
 
-Christian
+
+Furthermore, the main purpose of this patch is that we clearly document
+the driver as supporting the r8a77980 in the bindings (No mention that
+you must use the ..970 binding), yet in actual fact - the driver could
+not currently support loading a device with the following compatible:
+
+	compatible = "renesas,du-r8a77980";
+
+
+>>> in DT without updating the driver. If the r8a77980 turns out to be
+>>> different, we'll then update the driver without a need to modify DT. I'm
+>>> fine either way, so
+>>>
+>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>
+>> Thanks,
+>>
+>> This patch has an RB tag from you, and Simon, but alas I don't believe
+>> it has been picked up in your drm/du/next branch.
+>>
+>> Is this patch acceptable? Or do I need to repost?
+> 
+> Could you just confirm I should apply this patch, and not go for the
+> alternative proposal above ?
+
+I believe the alternative proposal above is what we have today isn't it?
+
+
+Yes, I do believe we should apply this patch.
+
+
+I'm going to assume you haven't read the other arguments on this thread
+so I'll paste them here:
+
+>>> <Sergei>
+>>>    Do we really need to add yet another compatible in this case?
+>>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
+>>> a patch like this one didn't get posted by me.
+>>
+>> <Kieran>
+>> It's not just about the compatible string for me here,
+>>
+>> There is no indication in the driver that it supports the r8a77980, and
+>> no comment in the driver to explain that the r8a77980 is shared by the
+>> r8a77970.
+>>
+>> This patch makes that explicit at the driver.
+>>
+>> Also - I am considering sending a patch (that I've already created
+>> anyway) to remove the r8a77970 reference from the
+>>
+>>   arch/arm64/boot/dts/renesas/r8a77980.dtsi file.
+>>
+>> This is the *only* non r8a77980 reference in this file, so it seems very
+>> out of place.
+> 
+> <Geert>
+> Agreed.
+> 
+>> In fact more so than that - except for a seemingly glaring typo, that
+>> I'll investigate and send a patch for next, this is the *only* cross-soc
+>> compatible reference:
+>>
+>> #!/bin/sh
+>>
+>> files=r8a77*.dtsi
+>>
+>> for f in $files;
+>> do
+>>         soc=`basename $f .dtsi | sed 's/-.*//'`
+>>         echo "F: $f soc: $soc";
+>>
+>>         # Find all references to all socs, then hide 'this' soc
+>>         grep r8a77 $f | grep -v $soc
+> 
+> This hides the complete line.  So you better use e.g.
+> 
+>     sed -e "s/$soc/soc/ig" $f | grep -i r8a
+> 
+> instead.  No new offenders, though.
+> 
+>> done;
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+
+
+This is the only occurrence within *all* of our compatibles where we do
+not reference the compatible string of the device, and we require
+specifying 'another compatible'.
+
+This is not documented anywhere, and doesn't seem to follow
+{best,any}-practices. That's why I'm trying to fix it up.
+
+--
+Regards
+
+Kieran
+
