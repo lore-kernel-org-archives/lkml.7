@@ -2,72 +2,146 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292B7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEE020700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Gb2IOJSJ"
+	by mail.kernel.org (Postfix) with ESMTP id 09340206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfLPK5A (ORCPT
+        id S1727579AbfLPK6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:57:00 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:60582 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfLPK5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:57:00 -0500
-Received: from zn.tnic (p4FED3450.dip0.t-ipconnect.de [79.237.52.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F9C71EC09F1;
-        Mon, 16 Dec 2019 11:56:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576493815;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QJiNMAg/GcgzaQCJvUqpS4i6rcn+NVQocqxvPz+M2GE=;
-        b=Gb2IOJSJuu/dh35XxyYuJc/OY2oU4XlmL4iWtLXcpQe3Ob3vcNvsPSHRvcrU4l0IAT01Xx
-        UP/4ENS+Rgl3XEL3f3W7Qp1+XaLCxHzbd+rchK+GG0MNJlJTzQh3xLOg27Ep9mAOUOwETN
-        JV14P8JYiSbuVvGIfuJsJQkCibzfSH8=
-Date:   Mon, 16 Dec 2019 11:54:39 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Chris Clayton <chris2553@googlemail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: Oops booting 5.5.0-rc2
-Message-ID: <20191216105439.GB32241@zn.tnic>
-References: <3f2f9d0a-887a-6d44-994c-c53bd1c6a4e8@googlemail.com>
+        Mon, 16 Dec 2019 05:58:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727403AbfLPK6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:58:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CC33AACA7;
+        Mon, 16 Dec 2019 10:58:07 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 803C11E0B2E; Mon, 16 Dec 2019 11:58:07 +0100 (CET)
+Date:   Mon, 16 Dec 2019 11:58:07 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>,
+        darrick.wong@oracle.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-ext4@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: Re: KASAN: use-after-free Read in iov_iter_alignment
+Message-ID: <20191216105807.GB23120@quack2.suse.cz>
+References: <000000000000ad9f910598bbb867@google.com>
+ <20191202211037.GF2695@dread.disaster.area>
+ <20191216104836.GA23120@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
 Content-Disposition: inline
-In-Reply-To: <3f2f9d0a-887a-6d44-994c-c53bd1c6a4e8@googlemail.com>
+In-Reply-To: <20191216104836.GA23120@quack2.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:41:18AM +0000, Chris Clayton wrote:
-> I get an oops during boot of 5.5.0-rc2. My root partition is on an SSD - /dev/nvme0n1p5.
 
-Here's the fix:
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://lore.kernel.org/lkml/CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com/
+On Mon 16-12-19 11:48:36, Jan Kara wrote:
+> On Tue 03-12-19 08:10:37, Dave Chinner wrote:
+> > [cc linux-ext4@vger.kernel.org - this is reported from the new ext4
+> > dio->iomap code]
+> > 
+> > On Mon, Dec 02, 2019 at 09:15:08AM -0800, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
+> > > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
+> > > 
+...
+
+> > Looks like buffered read IO on a loopback device on an ext4 image
+> > file, and something is being tripped over in the new ext4 direct IO
+> > path.  Might be an iomap issue, might be an ext4 issue, but it looks
+> > like the buffered read bio completion is running while the iov is
+> > still being submitted...
+> 
+> Looking a bit more into this, I'm pretty sure this is caused by commit
+> 8cefc107ca54c "pipe: Use head and tail pointers for the ring, not cursor
+> and length". The pipe dereference it has added to iov_iter_alignment() is
+> just bogus for all iter types except for pipes. I'll send a fix.
+
+For reference the fix I've sent is attached.
+
+								Honza
 
 -- 
-Regards/Gruss,
-    Boris.
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--y0ulUmNC+osPPQO6
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment; filename="0001-pipe-Fix-bogus-dereference-in-iov_iter_alignment.patch"
+
+From bc27e20fdd29b97b45015e1443128b4d3ff9455e Mon Sep 17 00:00:00 2001
+From: Jan Kara <jack@suse.cz>
+Date: Mon, 16 Dec 2019 11:44:14 +0100
+Subject: [PATCH] pipe: Fix bogus dereference in iov_iter_alignment()
+
+We cannot look at 'i->pipe' unless we know the iter is a pipe. Move the
+ring_size load to a branch in iov_iter_alignment() where we've already
+checked the iter is a pipe to avoid bogus dereference.
+
+Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
+Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ lib/iov_iter.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+ Al, David, not sure who's going to merge this so sending to both :).
+
+								Honza
+
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index fb29c02c6a3c..51595bf3af85 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1222,11 +1222,12 @@ EXPORT_SYMBOL(iov_iter_discard);
+ 
+ unsigned long iov_iter_alignment(const struct iov_iter *i)
+ {
+-	unsigned int p_mask = i->pipe->ring_size - 1;
+ 	unsigned long res = 0;
+ 	size_t size = i->count;
+ 
+ 	if (unlikely(iov_iter_is_pipe(i))) {
++		unsigned int p_mask = i->pipe->ring_size - 1;
++
+ 		if (size && i->iov_offset && allocated(&i->pipe->bufs[i->head & p_mask]))
+ 			return size | i->iov_offset;
+ 		return size;
+-- 
+2.16.4
+
+
+--y0ulUmNC+osPPQO6--
