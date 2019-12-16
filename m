@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107E3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD93C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8341206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBC2206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfLPL2J (ORCPT
+        id S1727441AbfLPL2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:28:09 -0500
-Received: from mail02.asahi-net.or.jp ([202.224.55.14]:53832 "EHLO
+        Mon, 16 Dec 2019 06:28:35 -0500
+Received: from mail02.asahi-net.or.jp ([202.224.55.14]:53971 "EHLO
         mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfLPL2J (ORCPT
+        with ESMTP id S1727140AbfLPL2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:28:09 -0500
+        Mon, 16 Dec 2019 06:28:35 -0500
 Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
         (Authenticated sender: PQ4Y-STU)
-        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id C0A4F99C3B;
-        Mon, 16 Dec 2019 20:28:07 +0900 (JST)
+        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id 9C8ED99D0C;
+        Mon, 16 Dec 2019 20:28:33 +0900 (JST)
 Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 07B3624008E;
-        Mon, 16 Dec 2019 20:28:07 +0900 (JST)
-Date:   Mon, 16 Dec 2019 20:28:01 +0900
-Message-ID: <87r214fr26.wl-ysato@users.sourceforge.jp>
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 4DB8624008E;
+        Mon, 16 Dec 2019 20:28:33 +0900 (JST)
+Date:   Mon, 16 Dec 2019 20:28:32 +0900
+Message-ID: <87pngofr1b.wl-ysato@users.sourceforge.jp>
 From:   Yoshinori Sato <ysato@users.sourceforge.jp>
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Rich Felker <dalias@libc.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: add missing EXPORT_SYMBOL() for __delay
-In-Reply-To: <87wob2clos.wl-kuninori.morimoto.gx@renesas.com>
-References: <87wob2clos.wl-kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH v2] sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
+In-Reply-To: <87zhfx3uo2.wl-kuninori.morimoto.gx@renesas.com>
+References: <87zhfx3uo2.wl-kuninori.morimoto.gx@renesas.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,34 +47,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 11:38:43 +0900,
+On Fri, 13 Dec 2019 10:01:49 +0900,
 Kuninori Morimoto wrote:
 > 
 > 
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> __delay() is used from kernel module.
-> We need EXPORT_SYMBOL(), otherwise we will get compile error.
+> __ashiftrt_r4_xx might be used from kernel module.
+> We need DECLARE_EXPORT() for them, otherwise we will get compile error.
+> This patch adds missing DECLARE_EXPORT()
 > 
-> ERROR: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/iio/pressure/bmp280.ko] undefined!
+> ERROR: "__ashiftrt_r4_26" [drivers/iio/dac/ad5764.ko] undefined!
+> ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/mma7660.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/iio/accel/dmard06.ko] undefined!
+> ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/bma220_spi.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/crypto/hisilicon/sec/hisi_sec.ko] undefined!
+> ERROR: "__ashiftrt_r4_26" [drivers/rtc/rtc-x1205.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf85063.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf2123.ko] undefined!
+> ERROR: "__ashiftrt_r4_25" [drivers/input/tablet/gtco.ko] undefined!
+> ERROR: "__ashiftrt_r4_26" [drivers/input/mouse/psmouse.ko] undefined!
+> ERROR: "__ashiftrt_r4_28" [drivers/input/mouse/psmouse.ko] undefined!
+> ERROR: "__ashiftrt_r4_28" [drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko] undefined!
+> ERROR: "__ashiftrt_r4_28" [fs/udf/udf.ko] undefined!
 > 
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  arch/sh/lib/delay.c | 1 +
->  1 file changed, 1 insertion(+)
+> v1 -> v2
 > 
-> diff --git a/arch/sh/lib/delay.c b/arch/sh/lib/delay.c
-> index dad8e6a..540e670 100644
-> --- a/arch/sh/lib/delay.c
-> +++ b/arch/sh/lib/delay.c
-> @@ -29,6 +29,7 @@ void __delay(unsigned long loops)
->  		: "0" (loops)
->  		: "t");
->  }
-> +EXPORT_SYMBOL(__delay);
->  
->  inline void __const_udelay(unsigned long xloops)
->  {
+> 	- r4_0  - r4_5  are added
+> 	- r4_16 - r4_19 are added
+> 
+>  arch/sh/kernel/sh_ksyms_32.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/sh/kernel/sh_ksyms_32.c b/arch/sh/kernel/sh_ksyms_32.c
+> index 2827744..5858936 100644
+> --- a/arch/sh/kernel/sh_ksyms_32.c
+> +++ b/arch/sh/kernel/sh_ksyms_32.c
+> @@ -38,6 +38,13 @@ DECLARE_EXPORT(__ashlsi3);
+>  DECLARE_EXPORT(__lshrsi3_r0);
+>  DECLARE_EXPORT(__ashrsi3_r0);
+>  DECLARE_EXPORT(__ashlsi3_r0);
+> +
+> +DECLARE_EXPORT(__ashiftrt_r4_0);
+> +DECLARE_EXPORT(__ashiftrt_r4_1);
+> +DECLARE_EXPORT(__ashiftrt_r4_2);
+> +DECLARE_EXPORT(__ashiftrt_r4_3);
+> +DECLARE_EXPORT(__ashiftrt_r4_4);
+> +DECLARE_EXPORT(__ashiftrt_r4_5);
+>  DECLARE_EXPORT(__ashiftrt_r4_6);
+>  DECLARE_EXPORT(__ashiftrt_r4_7);
+>  DECLARE_EXPORT(__ashiftrt_r4_8);
+> @@ -48,13 +55,23 @@ DECLARE_EXPORT(__ashiftrt_r4_12);
+>  DECLARE_EXPORT(__ashiftrt_r4_13);
+>  DECLARE_EXPORT(__ashiftrt_r4_14);
+>  DECLARE_EXPORT(__ashiftrt_r4_15);
+> +DECLARE_EXPORT(__ashiftrt_r4_16);
+> +DECLARE_EXPORT(__ashiftrt_r4_17);
+> +DECLARE_EXPORT(__ashiftrt_r4_18);
+> +DECLARE_EXPORT(__ashiftrt_r4_19);
+>  DECLARE_EXPORT(__ashiftrt_r4_20);
+>  DECLARE_EXPORT(__ashiftrt_r4_21);
+>  DECLARE_EXPORT(__ashiftrt_r4_22);
+>  DECLARE_EXPORT(__ashiftrt_r4_23);
+>  DECLARE_EXPORT(__ashiftrt_r4_24);
+> +DECLARE_EXPORT(__ashiftrt_r4_25);
+> +DECLARE_EXPORT(__ashiftrt_r4_26);
+>  DECLARE_EXPORT(__ashiftrt_r4_27);
+> +DECLARE_EXPORT(__ashiftrt_r4_28);
+> +DECLARE_EXPORT(__ashiftrt_r4_29);
+>  DECLARE_EXPORT(__ashiftrt_r4_30);
+> +DECLARE_EXPORT(__ashiftrt_r4_31);
+> +DECLARE_EXPORT(__ashiftrt_r4_32);
+>  DECLARE_EXPORT(__movstr);
+>  DECLARE_EXPORT(__movstrSI8);
+>  DECLARE_EXPORT(__movstrSI12);
 > -- 
 > 2.7.4
 > 
