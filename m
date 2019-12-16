@@ -2,176 +2,173 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B348EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4258C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9337F206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8653420725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="P6aWTboU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfLPKsl (ORCPT
+        id S1727525AbfLPKwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:48:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58962 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727099AbfLPKsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:48:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5E5BAABF4;
-        Mon, 16 Dec 2019 10:48:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 006DA1E0B2E; Mon, 16 Dec 2019 11:48:36 +0100 (CET)
-Date:   Mon, 16 Dec 2019 11:48:36 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>,
-        darrick.wong@oracle.com, hch@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-ext4@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: KASAN: use-after-free Read in iov_iter_alignment
-Message-ID: <20191216104836.GA23120@quack2.suse.cz>
-References: <000000000000ad9f910598bbb867@google.com>
- <20191202211037.GF2695@dread.disaster.area>
+        Mon, 16 Dec 2019 05:52:14 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:42740 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPKwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:52:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576493531; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJtKg4YBH/DsNNYyKShEC+cjzAd8qY62spFT3pgBt20=;
+        b=P6aWTboUJ49iR09mjEKD0sd3Jw123RPpiEYdRir1RQrcwtYq/ezKQrhszcaPBdS7A7DVQP
+        phKTilD8m1ja30fBqFmDrw+6BwZgBakNHExJ8ugrmvA3GrzeNUY4xoyEKDi/UYAMYQE5Gp
+        wfMBzqHQjI4GCgur+IiYHqri5cnNqPI=
+Date:   Mon, 16 Dec 2019 11:52:05 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Message-Id: <1576493525.3.0@crapouillou.net>
+In-Reply-To: <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.c
+        om>
+References: <20191211155032.167032-1-paul@crapouillou.net>
+        <20191211155032.167032-3-paul@crapouillou.net>
+        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
+        <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202211037.GF2695@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-12-19 08:10:37, Dave Chinner wrote:
-> [cc linux-ext4@vger.kernel.org - this is reported from the new ext4
-> dio->iomap code]
-> 
-> On Mon, Dec 02, 2019 at 09:15:08AM -0800, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
-> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
-> > 
-> > ==================================================================
-> > BUG: KASAN: use-after-free in iov_iter_alignment+0x6a1/0x7b0
-> > lib/iov_iter.c:1225
-> > Read of size 4 at addr ffff888098d40f54 by task loop0/8203
-> > 
-> > CPU: 0 PID: 8203 Comm: loop0 Not tainted 5.4.0-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
-> >  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
-> >  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
-> >  kasan_report+0x26/0x50 mm/kasan/common.c:634
-> >  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-> >  iov_iter_alignment+0x6a1/0x7b0 lib/iov_iter.c:1225
-> >  iomap_dio_bio_actor+0x1a7/0x11e0 fs/iomap/direct-io.c:203
-> >  iomap_dio_actor+0x2b4/0x4a0 fs/iomap/direct-io.c:375
-> >  iomap_apply+0x370/0x490 fs/iomap/apply.c:80
-> >  iomap_dio_rw+0x8ad/0x1010 fs/iomap/direct-io.c:493
-> >  ext4_dio_read_iter fs/ext4/file.c:77 [inline]
-> >  ext4_file_read_iter+0x834/0xc20 fs/ext4/file.c:128
-> >  lo_rw_aio+0xcbb/0xea0 include/linux/fs.h:1889
-> 
-> loopback -> ext4 direct IO, bad access on iov passed to iomap DIO
-> code.
-> 
-> >  do_req_filebacked drivers/block/loop.c:616 [inline]
-> >  loop_handle_cmd drivers/block/loop.c:1952 [inline]
-> >  loop_queue_work+0x13ab/0x2590 drivers/block/loop.c:1966
-> >  kthread_worker_fn+0x449/0x700 kernel/kthread.c:671
-> >  loop_kthread_worker_fn+0x40/0x60 drivers/block/loop.c:901
-> >  kthread+0x332/0x350 kernel/kthread.c:255
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > 
-> > Allocated by task 4198:
-> >  save_stack mm/kasan/common.c:69 [inline]
-> >  set_track mm/kasan/common.c:77 [inline]
-> >  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
-> >  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
-> >  slab_post_alloc_hook mm/slab.h:584 [inline]
-> >  slab_alloc mm/slab.c:3319 [inline]
-> >  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
-> >  mempool_alloc_slab+0x4d/0x70 mm/mempool.c:513
-> >  mempool_alloc+0x104/0x5e0 mm/mempool.c:393
-> >  bio_alloc_bioset+0x1b0/0x5f0 block/bio.c:477
-> >  bio_alloc include/linux/bio.h:400 [inline]
-> >  mpage_alloc fs/mpage.c:79 [inline]
-> >  do_mpage_readpage+0x1685/0x1d10 fs/mpage.c:306
-> >  mpage_readpages+0x2a9/0x440 fs/mpage.c:404
-> >  blkdev_readpages+0x2c/0x40 fs/block_dev.c:620
-> >  read_pages+0xad/0x4d0 mm/readahead.c:126
-> >  __do_page_cache_readahead+0x480/0x530 mm/readahead.c:212
-> >  force_page_cache_readahead mm/readahead.c:243 [inline]
-> >  page_cache_sync_readahead+0x329/0x3b0 mm/readahead.c:522
-> >  generic_file_buffered_read+0x41d/0x2570 mm/filemap.c:2051
-> >  generic_file_read_iter+0xa9/0x450 mm/filemap.c:2324
-> >  blkdev_read_iter+0x12e/0x140 fs/block_dev.c:2039
-> >  call_read_iter include/linux/fs.h:1889 [inline]
-> >  new_sync_read fs/read_write.c:414 [inline]
-> >  __vfs_read+0x59e/0x730 fs/read_write.c:427
-> >  vfs_read+0x1dd/0x420 fs/read_write.c:461
-> >  ksys_read+0x117/0x220 fs/read_write.c:587
-> >  __do_sys_read fs/read_write.c:597 [inline]
-> >  __se_sys_read fs/read_write.c:595 [inline]
-> >  __x64_sys_read+0x7b/0x90 fs/read_write.c:595
-> >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > 
-> > Freed by task 4205:
-> >  save_stack mm/kasan/common.c:69 [inline]
-> >  set_track mm/kasan/common.c:77 [inline]
-> >  kasan_set_free_info mm/kasan/common.c:332 [inline]
-> >  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
-> >  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-> >  __cache_free mm/slab.c:3425 [inline]
-> >  kmem_cache_free+0x81/0xf0 mm/slab.c:3693
-> >  mempool_free_slab+0x1d/0x30 mm/mempool.c:520
-> >  mempool_free+0xd5/0x350 mm/mempool.c:502
-> >  bio_put+0x38b/0x460 block/bio.c:255
-> >  mpage_end_io+0x2f5/0x330 fs/mpage.c:58
-> >  bio_endio+0x4ff/0x570 block/bio.c:1818
-> >  req_bio_endio block/blk-core.c:245 [inline]
-> >  blk_update_request+0x438/0x10d0 block/blk-core.c:1464
-> >  scsi_end_request+0x8c/0xa20 drivers/scsi/scsi_lib.c:579
-> >  scsi_io_completion+0x17c/0x1b80 drivers/scsi/scsi_lib.c:963
-> >  scsi_finish_command+0x3b3/0x560 drivers/scsi/scsi.c:228
-> >  scsi_softirq_done+0x289/0x310 drivers/scsi/scsi_lib.c:1477
-> >  blk_done_softirq+0x312/0x370 block/blk-softirq.c:37
-> >  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:762
-> 
-> Looks like buffered read IO on a loopback device on an ext4 image
-> file, and something is being tripped over in the new ext4 direct IO
-> path.  Might be an iomap issue, might be an ext4 issue, but it looks
-> like the buffered read bio completion is running while the iov is
-> still being submitted...
+Hi Peter,
 
-Looking a bit more into this, I'm pretty sure this is caused by commit
-8cefc107ca54c "pipe: Use head and tail pointers for the ring, not cursor
-and length". The pipe dereference it has added to iov_iter_alignment() is
-just bogus for all iter types except for pipes. I'll send a fix.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Le lun., d=E9c. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a=20
+=E9crit :
+>=20
+>>  >>  +
+>>  >>  +	desc =3D &charger->desc;
+>>  >>  +	desc->name =3D "usb-charger";
+>>  >>  +	desc->properties =3D usb_charger_properties;
+>>  >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
+>>  >>  +	desc->get_property =3D usb_charger_get_property;
+>>  >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
+>>  >
+>>  > What's your further plan for this generic USB charger?
+>>  > To support BC1.2, we need to know charger type, and how we could=20
+>> get
+>>  > it?
+>>  >
+>>  > Peter
+>>=20
+>>  Well I don't really know. The USB role framework does not give any=20
+>> info about
+>>  what's plugged.
+>>=20
+>=20
+> What's the use case for this patch set? How it be used?
+
+My devicetree:
+
+usb_otg: usb@13440000 {
+	compatible =3D "ingenic,jz4770-musb", "simple-mfd";
+	reg =3D <0x13440000 0x10000>;
+	[...]
+
+	usb-role-switch;
+
+	connector {
+		compatible =3D "gpio-usb-b-connector", "usb-b-connector";
+		label =3D "mini-USB";
+		type =3D "mini";
+
+		id-gpios =3D <&gpf 18 GPIO_ACTIVE_HIGH>;
+		vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
+		[...]
+	};
+
+	usb_charger: usb-charger {
+		compatible =3D "usb-charger";
+	};
+};
+
+The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in=20
+which state (device, host, unconnected) a OTG connector is. However,=20
+that means I cannot use the standard gpio-charger driver to detect the=20
+presence of a charger based on the state of the VBUS gpio, since it's=20
+already requested here. So the point of this patchset is to provide an=20
+alternative to gpio-charger that works with OTG controllers compatible=20
+with 'usb-role-switch'.
+
+Cheers,
+-Paul
+
+
+>>  >
+>>  >>  +
+>>  >>  +	charger->charger =3D devm_power_supply_register(dev, desc,=20
+>> &cfg);
+>>  >>  +	if (IS_ERR(charger->charger)) {
+>>  >>  +		dev_err(dev, "Unable to register charger");
+>>  >>  +		return PTR_ERR(charger->charger);
+>>  >>  +	}
+>>  >>  +
+>>  >>  +	err =3D usb_role_switch_register_notifier(charger->role,
+>>  >> &charger->nb);
+>>  >>  +	if (err) {
+>>  >>  +		dev_err(dev, "Unable to register USB role switch notifier");
+>>  >>  +		return err;
+>>  >>  +	}
+>>  >>  +
+>>  >>  +	return devm_add_action_or_reset(dev, usb_charger_unregister,
+>>  >> charger);
+>>  >>  +}
+>>  >>  +
+>>  >>  +static const struct of_device_id usb_charger_of_match[] =3D {
+>>  >>  +	{ .compatible =3D "usb-charger" },
+>>  >>  +	{ /* sentinel */ },
+>>  >>  +};
+>>  >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static=20
+>> struct
+>>  >> platform_driver usb_charger_driver =3D {
+>>  >>  +	.driver =3D {
+>>  >>  +		.name =3D "usb-charger",
+>>  >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
+>>  >>  +	},
+>>  >>  +	.probe =3D usb_charger_probe,
+>>  >>  +};
+>>  >>  +module_platform_driver(usb_charger_driver);
+>>  >>  +
+>>  >>  +MODULE_DESCRIPTION("Simple USB charger driver");
+>>  >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>  >> +MODULE_LICENSE("GPL");
+>>  >>  --
+>>  >>  2.24.0
+>>  >>
+>>  >
+>>  > --
+>>  >
+>>  > Thanks,
+>>  > Peter Chen
+>>=20
+>=20
+
+=
+
