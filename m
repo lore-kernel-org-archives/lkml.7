@@ -2,117 +2,136 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC9FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413ECC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D227E20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D56120725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjlOHfjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLPIze (ORCPT
+        id S1727039AbfLPI4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:55:34 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33755 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfLPIze (ORCPT
+        Mon, 16 Dec 2019 03:56:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39082 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPI4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:55:34 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1igmA2-0003x9-Gv; Mon, 16 Dec 2019 09:55:26 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1igmA1-0001w3-8N; Mon, 16 Dec 2019 09:55:25 +0100
-Date:   Mon, 16 Dec 2019 09:55:25 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
+        Mon, 16 Dec 2019 03:56:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so8254795oty.6;
+        Mon, 16 Dec 2019 00:56:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
+        b=FjlOHfjUAfcuD6g8sPuagxsQz5NN8GYgQkKB5eMFUDSFQVwSP89GYTqlut3C2mn/YS
+         eBOmWEFi3DmQuTp/qkgihQaDk97WF8xOzKLyWA49CUntFhQp+iGILFSDaYtSjG/0u4Wj
+         LxTSyOx9E//ppj6YpXZ9za8Llr1VmVC8BQXLoBKo0CW3HilP1RhaTFw1FQjulLbUp223
+         mcF16tAkJWH/7f/hSfMy6k/MJDZnaM06WaiErKL/enY0E/Lb5Y7170h/2S8KarFCyZDD
+         CgTiwf8HwXNonQvRTdFiPmrTUBGgr+ds+XVrfdLY1VYSxeJGxr4PI7XI3xP99XeFpSks
+         XLNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
+        b=RPYjI3gwP83QcQqzhxK/prh5vQhNuhlVOh5qOzqkXImdY5cFJ6XypF5jLJ8+OSF8RC
+         XSW6ZpvL7bjMYmSQcnR0DJZtLorc8yK+cSg4EFSr0qh/XHa3YJJnG+QmxXgs4g3xmWvA
+         wkioxxZykys6C7vyDHfM+ClwuiY5cM8h+Pv3kP/RzLX+EN2gdiO8RG9RFqacemGqpWe2
+         zxYAojJ4WoiQBraxp0k0yV9IqiFSl/RAEfAmRnQgHgoZF0F9s5IigrydQ9ApnZH0hoZQ
+         NgBt33MutVTzl0zTPf+KVxs9K3appRL7ZiQ/7Y153M+lY9BzJSzUvLMESmhuZD9iukjz
+         oHVg==
+X-Gm-Message-State: APjAAAWKZa9yihn/6DhMbzE7j9O4osVchadOusA84c5rSIm2rl7ixtaw
+        OUkL1LldHSsGa1nUtJGJcbpiaQsbp71nbcXgQo8=
+X-Google-Smtp-Source: APXvYqxuG1NFvuEk8dd9qCJss5ujNitykdgf+GtcWeO9MK3yKpQRtT4rBhNxc5bDbHMtxvDMRwurT0NSEqfrjfpI+2g=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15118795otp.44.1576486562033;
+ Mon, 16 Dec 2019 00:56:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212165124.GJ4310@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:40:13 up 30 days, 23:58, 39 users,  load average: 0.04, 0.06,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213201944.GA190383@google.com>
+In-Reply-To: <20191213201944.GA190383@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Dec 2019 08:55:35 +0000
+Message-ID: <CA+V-a8sd1c_8-weQjn6_UbAmVELLQa=3Fe+0cdXSm2Sif0HDRQ@mail.gmail.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-12 16:51, Mark Brown wrote:
-> On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
-> 
-> > "... what's driving the input ..":
-> > Sorry I didn't get you here. What did you mean? The input is driven by
-> > the host. This can be any gpio line and in my case it is a gpio line
-> > driven by the soc-hw during a suspend operation.
-> 
-> Something needs to say what that thing is, especially if it's runtime
-> controllable.  In your case from the point of view of software there is
-> actually no enable control so we shouldn't be providing an enable
-> operation to the framework.
+Hi Bjorn,
 
-The enabel control signal is always available, please check [1] table
-63. There is a mux in front of the enable pin so:
+Thank you for the review.
 
-             +-------------
- Seq. |\     |   Regulator
- GPI1 | \    |
- GPI2 | | -- > Enable
- GPI3 | /    |
-      |/     .
-             .
-             .
+On Fri, Dec 13, 2019 at 9:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:45AM +0000, Lad Prabhakar wrote:
+> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> $ git log --oneline drivers/of/address.c
+> 951d48855d86 of: Make of_dma_get_range() work on bus nodes
+> 645c138636de of/address: Fix of_pci_range_parser_one translation of DMA addresses
+> 81db12ee15cb of/address: Translate 'dma-ranges' for parent nodes missing 'dma-ranges'
+> b68ac8dc22eb of: Factor out #{addr,size}-cells parsing
+> c60bf3eb888a of: address: Follow DMA parent for "dma-coherent"
+> 862ab5578f75 of/address: Introduce of_get_next_dma_parent() helper
+>
+> Make yours match.  There are a few "of: address: " subjects, but the
+> ones from Rob (the maintainer) use "of/address: ", so I'd use that.
+>
+will do the same for next iteration.
 
-Adam please correct me if this is wrong.
+> > this patch adds support to parse PCI outbound-ranges, the
+> > outbound-regions are similar to pci ranges except it doesn't
+> > have pci address, below is the format for bar-ranges:
+>
+> s/pci/PCI/
+> Capitalize sentences.
+>
+will fix that.
 
-[1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+> Is "bar-range" an actual DT property?  If it's supposed to be a
+> generic description, "BAR range" would be better.
+>
+my bad, it should be outbound-range.
 
-Regards,
-  Marco
+Cheers,
+--Prabhakar
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+> >                    upper32_size lower32_size>;
