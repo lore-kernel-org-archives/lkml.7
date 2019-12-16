@@ -2,128 +2,98 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D7BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B55C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD16D20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576492095;
-	bh=aJNODjNlV3v54INi4VXe5H6gmqwl3DaOFDNd3U6oYJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0h5vjij90jGSWqtjK4IQZgrlrwe9R8NoMyflqBMlWCFS8RTjrqshHpLzjq/aEmDRq
-	 Eo0AXHZWRWLh2tlFAwsjcMjpRf8aXzQg29x0CdeqZqILWM93Bi2hT+/tsfNkyCu80s
-	 IDUgWUhDhNxrDxotwJaVmrpgUQ2c5FXhpY2Di878=
+	by mail.kernel.org (Postfix) with ESMTP id A8F012082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kiHB4903"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfLPK2P (ORCPT
+        id S1727491AbfLPK2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfLPK2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:28:12 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7CFD206CB;
-        Mon, 16 Dec 2019 10:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576492091;
-        bh=aJNODjNlV3v54INi4VXe5H6gmqwl3DaOFDNd3U6oYJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PQl9UUy06Hwnhc+WgyHD0YW0DQzVIQ3siJt9h2AJUf2ItnavgPY6wHx2lPr17QIQn
-         pWJIbXf9wTMoC3M3VQX7GFymirkp4wWHUq5YB2bZkO1uOlk9b2v98++N2Cjd8ShJBl
-         a4tkOdQpyWd0Yqop+KfyrtBhCC5RfjzevBWWVcHs=
-Date:   Mon, 16 Dec 2019 10:28:06 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191213144359.GA3826@willie-the-truck>
-References: <875zimp0ay.fsf@mpe.ellerman.id.au>
- <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
- <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
+        Mon, 16 Dec 2019 05:28:23 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44312 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPK2X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:28:23 -0500
+Received: by mail-lj1-f194.google.com with SMTP id c19so6164985lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
+        b=kiHB4903z0YwS4JpJ1gi73s6446AzmG+vycJ0iyY97WttaKy2iGzEj3edupk5Ytma4
+         sCWlfm/Rxehb/LtxMP5pO00Ufe/6xX1+VMPoaDeUggEsVuap1N9u4sw7ssD3nbDI/zFh
+         dN0zfPlhE1/4zMCaBTzL/gd9KQ3DvH4mEM32gjjNxRSpoB6R1nRyhA3M6oK/nQo8S0NQ
+         IxawwPGhTYhsIrtUIcc1o6o8DCCkp8JVlAAqXKt4UrN8hIBxIyWOi9e1SeoGO6OAwRyX
+         KOtMAorX9TkHU5jRK9asVCmhp7qr+l3dHawUJqq667yore78GofGrl8Kxmz4Z39tnvKd
+         72fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
+        b=AXum59s4mJex2YYSvtlvLJhHXoBKNPuf8d3TSb4Go3lT5MOgb+Fk2ICN9xfqQWTmn9
+         aF87dMvh7IjgJcI6+k0L8bcufvwt9wihZJK9fWvyI3V89pMNWzuHQEsgMn4mK0xQ7xHx
+         1EHQVorpfvAFYqnTv3CmnO0guMRqfUThZesvpxC5msWtNGCGxt7jD7pxC3ZYwGcWvii9
+         9UsWyX7P2MY4nLrVv/wcGPjyOCmt5/BwEfo1GIuRRj3eJJAPgw9LU+W8m+NFBeWvMzJO
+         nY77wk5iOd9D++sWqtVU1xgOf99xA9jRrxRo5rqOcEzzRPkhWqgr+aNMPtAlgI10lCmE
+         L4Hw==
+X-Gm-Message-State: APjAAAVwCgVe0HCotHXkRp4FzwPVNdngqVeXj8ns8Im60A2qV6NMB94a
+        Q2L+GJ+M6XP/8aNp1v1rDoTFXKKnsX0YYjZA/fQL0Q==
+X-Google-Smtp-Source: APXvYqzIK3/hH2FPyLoT1jp9cAXyv3Rqw/xnQY9Cr/V3d9Y+7lqo0CgT1RLffzK4WqPw4AE1exyAkY88bA5xiNu7h+g=
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr18088445ljh.42.1576492100956;
+ Mon, 16 Dec 2019 02:28:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-4-hdegoede@redhat.com>
+In-Reply-To: <20191215163810.52356-4-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 11:28:09 +0100
+Message-ID: <CACRpkdYpg-fE3Kf=VSKpC1VaCzHjt5n31jfqOgRgWzFZ9HYtsA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
+ LCD is initially off
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 02:17:08PM +0100, Arnd Bergmann wrote:
-> On Thu, Dec 12, 2019 at 9:50 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> > On Thu, Dec 12, 2019 at 11:34 AM Will Deacon <will@kernel.org> wrote:
-> > > The root of my concern in all of this, and what started me looking at it in
-> > > the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
-> > > for a pointer means that local variables in macros declared using typeof()
-> > > suddenly start generating *hideous* code, particularly when pointless stack
-> > > spills get stackprotector all excited.
-> >
-> > Yeah, removing volatile can be a bit annoying.
-> >
-> > For the particular case of the bitops, though, it's not an issue.
-> > Since you know the type there, you can just cast it.
-> >
-> > And if we had the rule that READ_ONCE() was an arithmetic type, you could do
-> >
-> >     typeof(0+(*p)) __var;
-> >
-> > since you might as well get the integer promotion anyway (on the
-> > non-volatile result).
-> >
-> > But that doesn't work with structures or unions, of course.
-> >
-> > I'm not entirely sure we have READ_ONCE() with a struct. I do know we
-> > have it with 64-bit entities on 32-bit machines, but that's ok with
-> > the "0+" trick.
-> 
-> I'll have my randconfig builder look for instances, so far I found one,
-> see below. My feeling is that it would be better to enforce at least
-> the size being a 1/2/4/8, to avoid cases where someone thinks
-> the access is atomic, but it falls back on a memcpy.
+On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-I've been using something similar built on compiletime_assert_atomic_type()
-and I spotted another instance in the xdp code (xskq_validate_desc()) which
-tries to READ_ONCE() on a 128-bit descriptor, although a /very/ quick read
-of the code suggests that this probably can't be concurrently modified if
-the ring indexes are synchronised properly.
+> When the LCD has not been turned on by the firmware/GOP, because e.g. the
+> device was booted with an external monitor connected over HDMI, we should
+> not turn on the panel-enable GPIO when we request it.
+>
+> Turning on the panel-enable GPIO when we request it, means we turn it on
+> too early in the init-sequence, which causes some panels to not correctly
+> light up.
+>
+> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
+> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
+>
+> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
+> booted with an external monitor connected over HDMI.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-However, enabling this for 32-bit ARM is total carnage; as Linus mentioned,
-a whole bunch of code appears to be relying on atomic 64-bit access of
-READ_ONCE(); the perf ring buffer, io_uring, the scheduler, pm_runtime,
-cpuidle, ... :(
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Unfortunately, at least some of these *do* look like bugs, but I can't see
-how we can fix them, not least because the first two are user ABI afaict. It
-may also be that in practice we get 2x32-bit stores, and that works out fine
-when storing a 32-bit virtual address. I'm not sure what (if anything) the
-compiler guarantees in these cases.
-
-Will
+Yours,
+Linus Walleij
