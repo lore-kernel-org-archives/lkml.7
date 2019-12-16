@@ -2,140 +2,95 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CD1C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A726D206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8FuEAKp"
+	by mail.kernel.org (Postfix) with ESMTP id 573E4206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfLPNau (ORCPT
+        id S1727916AbfLPNb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:30:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38002 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727601AbfLPNau (ORCPT
+        Mon, 16 Dec 2019 08:31:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41517 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfLPNb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:30:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576503048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T3wALvF0xpsoopJ4Bzkk3lqyRNuGZEwsZlHqY5vrDU8=;
-        b=D8FuEAKp90PI4ISdkPkEP9MgaOIAVAYq5VZdsC304Rh3NRNdn4Qvz2eHDFGy7cQPgjxe5r
-        MvPC6GdvEqeyrHK6N5mvaM4zVGGoqqsLnYj6VApbH96sJG+ZdvAhSwgMK5liDsSDNIHgeD
-        fC1gbDpk6SZtiXK4M3tX8BPqprJPuO8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-0JlNpt70POGwaZeVPldK5A-1; Mon, 16 Dec 2019 08:30:47 -0500
-X-MC-Unique: 0JlNpt70POGwaZeVPldK5A-1
-Received: by mail-wm1-f69.google.com with SMTP id t16so614906wmt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:30:47 -0800 (PST)
+        Mon, 16 Dec 2019 08:31:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so3293311oie.8;
+        Mon, 16 Dec 2019 05:31:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=T3wALvF0xpsoopJ4Bzkk3lqyRNuGZEwsZlHqY5vrDU8=;
-        b=CudUSv2rha6cL8kRTPZERr1Gsl74c5qvubbupdazVPSmaG13U8Nt1K7D2Yoht1Kvg8
-         QSzDVb0xFXqCyTKwU5en+iWjOw5FAjBjpDSV6sse3JT9c8rUTtPbyfjzGPfQOd0A1TLG
-         g6VU0IpdEL2jkVZEdocrtyFwBMB8LmDChanpJicVNp8wSiE2RkyNaCRT7/hr0Oz75Ota
-         hio4LruYT+eYKqMAefOKQzEUdrjy9AdUD0Ot/fGxKxC9TrxvVkkbhfN05s9IyWkpGq6g
-         0CAbaJXEWeFL8UkJ4aUsJ2W5hHiRDsp6s/BYV0anZYFaHz0EWzc8eorzAlntuIxK9cCM
-         Y10g==
-X-Gm-Message-State: APjAAAXroIWffzVhof3LivLxO22HsPTfC5mTT84ktBViFPEmVlidh0V/
-        YElBGGdXw3bH8fIp5Nl4g1zYcIWrAZ0GTSoHY/EBq1K1RUrkjJZd2akZh26Wj9dt01uBOMerese
-        jHowPIiAhg1rebhD/6geQ4Eu/
-X-Received: by 2002:adf:9b83:: with SMTP id d3mr30125990wrc.54.1576503046077;
-        Mon, 16 Dec 2019 05:30:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwp1RzM05y36ZEXv8HKgj2CLHoERwAX15WfZnqvn+tQSSKxuIklj/RaULFXdTnzVAnGsM+K+A==
-X-Received: by 2002:adf:9b83:: with SMTP id d3mr30125970wrc.54.1576503045873;
-        Mon, 16 Dec 2019 05:30:45 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 2sm21854185wrq.31.2019.12.16.05.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 05:30:45 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ajay Kaher <akaher@vmware.com>
-Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, punit.agrawal@arm.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        willy@infradead.org, will.deacon@arm.com, mszeredi@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        srivatsab@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        srinidhir@vmware.com, bvikas@vmware.com, anishs@vmware.com,
-        vsirnapalli@vmware.com, srostedt@vmware.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
-In-Reply-To: <20191216130443.GN2844@hirez.programming.kicks-ass.net>
-References: <1576529149-14269-1-git-send-email-akaher@vmware.com> <1576529149-14269-9-git-send-email-akaher@vmware.com> <20191216130443.GN2844@hirez.programming.kicks-ass.net>
-Date:   Mon, 16 Dec 2019 14:30:44 +0100
-Message-ID: <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=adjDVaDOpI8al3CJQ77m74YYE8EkJXzR3/QYajElcEI=;
+        b=StC/OOVyFh/DCx1ibsKGFWicd83T1QyAS6dvKFXQY7CHTwLgm3KDUnXit8naQXFdwx
+         y0KJcWqhHxtYuJkWPW4Babu4/kbKqvsVXsvc5T/hO1/17LynlDxHj4f+wW0M9po/wukt
+         fReAYQ6Fx/mttEZl+FvenAZnEUPxpXnMArWsUfdKmCvcGHvv7ej6Ujbf+LnB/H27fl2p
+         tIkuwZdqISHniJ2E02Jk7bE/Lfx6fzMO+isXsuaL0iVV7fYZzzwD0jUDeN8VeiOiTR1u
+         SwKVt3A0KewXAl1zEHGnqFgaOAV9Xs0Pvz/WIjzY7NckqSK0dOxymZjR288oV1Wx7w2b
+         +f2Q==
+X-Gm-Message-State: APjAAAXhfeiNJM3YAEOLOsYik1OIrLZaGdIXMoXzElvYAnqMROdPl169
+        cjcuByeLzPSTPU9vpjbvT6YErPjIf/lu1kF9CXs=
+X-Google-Smtp-Source: APXvYqzpYtDQFaajS+ak1BudGvve2+sX5+qPNXt7bilITUMT9J0kfhP2OCfVlZn2kuME7LrilgZcj2EXBvnBUJh8rqA=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr9745707oia.54.1576503086134;
+ Mon, 16 Dec 2019 05:31:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191216103522.32215-1-gonsolo@gmail.com> <20191216103522.32215-2-gonsolo@gmail.com>
+ <CAMuHMdVotJuotVKa3rxgR3ujCedoWM19-HhwhbTC9g6gV_EVNw@mail.gmail.com> <CANL0fFS81NgFBcMBdWo6OKefz04h_FeXadcau9Rkcna7Ap5PDw@mail.gmail.com>
+In-Reply-To: <CANL0fFS81NgFBcMBdWo6OKefz04h_FeXadcau9Rkcna7Ap5PDw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 16 Dec 2019 14:31:15 +0100
+Message-ID: <CAMuHMdVtm6BGx6d+F8-Bw+fD-M-DugspLkBvCtTKGgWiPvJnSA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Fix undefined reference to 'node_reclaim_distance'.
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+Hi Gon,
 
-> On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
->> From: Vlastimil Babka <vbabka@suse.cz>
->> 
->> The x86 version of get_user_pages_fast() relies on disabled interrupts to
->> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
->> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
->> releases the page. As TLB flush is done synchronously via IPI disabling
->> interrupts blocks the page release, and get_page(), which assumes existing
->> reference on page, is thus safe.
->> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
->> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
->> that was already freed or even reused.
->> 
->> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
->> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
->> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
->> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
->> immediately releases the page again, while it's already on a freelist. Symptoms
->> include a bad page state warning, general protection faults acessing a poisoned
->> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
->> together in a single list. Oscar has also reproduced this scenario, with a
->> patch inserting delays before the get_page() to make the race window larger.
->> 
->> Fix this by removing the dependency on TLB flush interrupts the same way as the
+On Mon, Dec 16, 2019 at 2:21 PM Gonsolo <gonsolo@gmail.com> wrote:
+> > Unfortunately that may be an x86-centric assumption: on other platforms,
+> > there do exist systems with multiple memory banks with different access
+> > performance figures.
 >
-> This is suppsed to be fixed by:
+> Does that mean that the line
 >
-> arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
+> obj-$(CONFIG_SMP) += cpupri.o cpudeadline.o topology.o stop_task.o pelt.o
 >
+> in kernel/sched/topology/Makefile:23 is wrong?
+>
+> Because in topology.c:1284 the variable node_reclaim_distance ist defined
+> which is used in mm/page_alloc.c:3529 without depending on SMP.
 
-Yes,
+The offending commit seems to be a55c7454a8c887b2 ("sched/topology:
+Improve load balancing on AMD EPYC systems").
 
-but HAVE_RCU_TABLE_FREE was enabled on x86 only in 4.14:
+Probably the node_reclaim_distance variable should be moved from
+an SMP-specific file to a NUMA-specific file.
 
-commit 9e52fc2b50de3a1c08b44f94c610fbe998c0031a
-Author: Vitaly Kuznetsov <vkuznets@redhat.com>
-Date:   Mon Aug 28 10:22:51 2017 +0200
+Gr{oetje,eeting}s,
 
-    x86/mm: Enable RCU based page table freeing (CONFIG_HAVE_RCU_TABLE_FREE=y)
-
-and, if I understood correctly, Ajay is suggesting the patch for older
-stable kernels (4.9 and 4.4 I would guess).
+                        Geert
 
 -- 
-Vitaly
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
