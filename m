@@ -2,189 +2,112 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9A0C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEDEC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB8A20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4725020700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i+RmSP29"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IGnhB3L2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLPRqY (ORCPT
+        id S1726515AbfLPRrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:46:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23251 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfLPRqY (ORCPT
+        Mon, 16 Dec 2019 12:47:41 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39643 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLPRrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:46:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576518383; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rzuAqWFdTzrWO4clWvy7mwhpSIFXq93mC1ouQT7d0SU=; b=i+RmSP29LGcKHFfGNyrdMulgcQoTL1fMWa+2g56A1ijBU+6wW1OHXRPy3p/ayLbTInSiXXjv
- suGv1hY4/MWcWERJpeqc0TuCDF7HwNrC6n5F8PjcOvfHMUWDygDwa9+e6mcvqGUjOwx7c0zx
- PjNdaSR6xmUyWHfQM4GVYrkxfpo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df7c2ee.7f4ad81ac420-smtp-out-n02;
- Mon, 16 Dec 2019 17:46:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0A126C447A2; Mon, 16 Dec 2019 17:46:22 +0000 (UTC)
-Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C946C433A2;
-        Mon, 16 Dec 2019 17:46:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C946C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9c591-d04928e8-6440-488c-a956-3b5c9b8988bf-000000@us-west-2.amazonses.com>
- <20191203215248.GA1688@bogus>
-From:   Sibi Sankar <sibis@codeaurora.org>
-Message-ID: <a19623d4-ab33-d87e-5925-d0411d7479dd@codeaurora.org>
-Date:   Mon, 16 Dec 2019 23:16:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 16 Dec 2019 12:47:41 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so4118993pga.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 09:47:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=23EgKnWEsl0Hd3XbTrDUtuEdXnQvPbAjdUpGkg0hfXw=;
+        b=IGnhB3L2ap3ulPumsoKZ4TVu/FXmghrIC8FwJJpv4Dfc3bbyxjUaFsLSYDCUhkyW4p
+         +xreDjgbdjUxX7sC1gFq9aTbQ106feVMgzzFTVc8tnhMRI6v14HsQKFIkyuf/GInQA/u
+         KccmCNYTo1rTVXvYurh1NY7uS4X8vgOpk+9rw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=23EgKnWEsl0Hd3XbTrDUtuEdXnQvPbAjdUpGkg0hfXw=;
+        b=YiqzSaDOqaXaA0vAGwXDa15r3Qs5E97KH9SMFEQrXWIiqx5YUWEcb46tsq4kjunYxz
+         fmJDDeFahWOhInf3weziMo6tAEoRiHY9McZAKqVj/WdQU0VbqAd/LFG7FgOjCxVuQRZ0
+         kPRIkSRhG+Hijlzhu8D0mcafMls/dJcXW899V7uCcNjDAt9FR4Ia5/Us5PKcOQ/vrHZI
+         hhjK/dnWhq7ZeaG3cZ5qT8ZmXKITzCJ2jOLNBlAsmacEelGf+eiJfkg/0bM4ykTTkorD
+         CHvogAMYS5jh9fRxMcLrh5I6QmaSuKhOJOZkjsDCOxGpU0uslvz04kPdpaOAqffxI8eh
+         zIkA==
+X-Gm-Message-State: APjAAAW00T8F4ugLP1lSh2G4wl64Kom1GIanFSjE+YLE4nS2Qsri3Ldd
+        GXKJPKr/7A2FpPTYzhi89npyaQ==
+X-Google-Smtp-Source: APXvYqyImG7BVxbhsOeBlgf/l2MpA9ppdirUWWsjIQfweo+/Xeo7ac2PoYXkrH8FYNr02BUC+wD+oA==
+X-Received: by 2002:a63:211f:: with SMTP id h31mr18905268pgh.299.1576518460259;
+        Mon, 16 Dec 2019 09:47:40 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:6d28:a89:f9e1:1506])
+        by smtp.gmail.com with ESMTPSA id a6sm22342924pgg.25.2019.12.16.09.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 09:47:39 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 0/4] arm64: dts: rockchip: Add Rock Pi N10 support
+Date:   Mon, 16 Dec 2019 23:17:07 +0530
+Message-Id: <20191216174711.17856-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <20191203215248.GA1688@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Rob,
-Thanks for the review :)
+Unlike, other Rock PI boards from radxa, Rock Pi N10 SBC is based
+on SOM + Carrier board combination.
 
-On 12/4/19 3:22 AM, Rob Herring wrote:
-> On Mon, Nov 18, 2019 at 02:28:00PM +0000, Sibi Sankar wrote:
->> Add optional "qcom,protection-domain" bindings for APR services. This
->> helps to capture the dependencies between APR services and the PD on
->> which each apr service run.
->>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->> index db501269f47b8..f87c0b2a48de4 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
->> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
->>   			12 - Ultrasound stream manager.
->>   			13 - Listen stream manager.
->>   
->> +- qcom,protection-domain
->> +	Usage: optional
->> +	Value type: <stringlist>
->> +	Definition: Must list the protection domain service name and path
->> +		    that the particular apr service has a dependency on.
-> 
-> Is name and path 2 values? Length is always 2?
+Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
+- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
+- Dalang carrier board from Radxa.
 
-Yes the length is always 2 values i.e service name and the path where
-the service is hosted.
+patch 0001: dt-bindings for Rock Pi N10
 
-> 
-> You've got the same values for every case in the example. Is there a
-> defined list of possible values?
+patch 0002: VMARC RK3399Pro SOM dtsi support
 
-apr bus is expected to track just the "avs/audio" running on
-msm/adsp/audio_pd on msm8998 and sdm845 SoCs. So shouldn't
-make much sense to list all possible service names:paths here.
+patch 0003: Radxa Dalang carrier board dtsi support
 
-However the qcom,protection-domain is expected to be used
-on fastrpc compute bank nodes as well, where they track other
-services:paths. I'll make sure to include all the possible
-values that fastrpc cb nodes depend on.
+patch 0004: Rock Pi N10 dts support
 
-> 
->> +
->>   = EXAMPLE
->>   The following example represents a QDSP based sound card on a MSM8996 device
->>   which uses apr as communication between Apps and QDSP.
->> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
->>   			...
->>   		};
->>   	};
->> +
->> += EXAMPLE 2
->> +The following example represents a QDSP based sound card on SDM845 device.
->> +Here the apr services are dependent on "avs/audio" service running on AUDIO
->> +Protection Domain hosted on ADSP remote processor.
->> +
->> +	apr {
->> +		compatible = "qcom,apr-v2";
->> +		qcom,glink-channels = "apr_audio_svc";
->> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
->> +
->> +		q6core {
->> +			compatible = "qcom,q6core";
->> +			reg = <APR_SVC_ADSP_CORE>;
->> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
->> +		};
->> +
->> +		q6afe: q6afe {
->> +			compatible = "qcom,q6afe";
->> +			reg = <APR_SVC_AFE>;
->> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
->> +			q6afedai: dais {
->> +				compatible = "qcom,q6afe-dais";
->> +				#sound-dai-cells = <1>;
->> +
->> +				qi2s@22 {
->> +					reg = <22>;
->> +					qcom,sd-lines = <3>;
->> +				};
->> +			};
->> +		};
->> +
->> +		q6asm: q6asm {
->> +			compatible = "qcom,q6asm";
->> +			reg = <APR_SVC_ASM>;
->> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
->> +			q6asmdai: dais {
->> +				compatible = "qcom,q6asm-dais";
->> +				#sound-dai-cells = <1>;
->> +				iommus = <&apps_smmu 0x1821 0x0>;
->> +			};
->> +		};
->> +
->> +		q6adm: q6adm {
->> +			compatible = "qcom,q6adm";
->> +			reg = <APR_SVC_ADM>;
->> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
->> +			q6routing: routing {
->> +				compatible = "qcom,q6adm-routing";
->> +				#sound-dai-cells = <0>;
->> +			};
->> +		};
->> +	};
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+Tested basic peripherals and will all more in future patches.
+
+Any inputs?
+Jagan.
+
+Jagan Teki (4):
+  dt-bindings: arm: rockchip: Add Rock Pi N10 binding
+  arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
+  ARM: dts: rockchip: Add Radxa Dalang Carrier board
+  arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    |  81 +++++
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |  17 +
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 333 ++++++++++++++++++
+ 5 files changed, 438 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
 
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.18.0.321.gffc6fa0e3
+
