@@ -2,53 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52AFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F8CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60BD207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F83207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521034;
-	bh=xSVs3r04PT5m97YjF+wZ6dfZTqbLcmVYKcLXLpectC0=;
+	s=default; t=1576521051;
+	bh=3moiQoxxvNMC+stxxb5nQ7tU8bHiKDEQTcfdzncWdX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztRAbSNAf792Rx+tZ4J/VEiXy7S/pWeNCiWFlwpXkweU5XbA+Fs2GQnuaQ7025rnS
-	 a6Es3fXCwKBkApaj7cRxJaUi+4D5oAfQ3yS0zWF28dMstP3F12CQ8fCvNbZkm4xXs+
-	 Ayda6BbluGLdkt3bIiTcELGiYz8M2QCMgeNiMtUw=
+	b=eNxywZxiGXCYCsT/LD+pKlmyw2J8vKMEhDjHwUA1F15fPXwWB2FLOBQyWYx0mvrez
+	 sSuD50hFg+2JN8NH1I+1DnWwqUWV6qx74s2uAd/JEsyGUztAikZoqP4I+8dYk8kcoX
+	 OhbwWyvrMY93v6uT+JxBi+tHyXaOSut0oSt/PYgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfLPSMl (ORCPT
+        id S1729060AbfLPSat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57822 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbfLPSMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:38 -0500
+        id S1730743AbfLPSMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F6D206E0;
-        Mon, 16 Dec 2019 18:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D31206EC;
+        Mon, 16 Dec 2019 18:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519957;
-        bh=xSVs3r04PT5m97YjF+wZ6dfZTqbLcmVYKcLXLpectC0=;
+        s=default; t=1576519940;
+        bh=3moiQoxxvNMC+stxxb5nQ7tU8bHiKDEQTcfdzncWdX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZl0+9BApED1Sm0b4GfvqcEhVi6eNSNCnR9JrYcMH2cV/lRrfLIsY8lTicV9yyfZP
-         Qo6FbcuGosgZYOkHcvBJqpUcNoffZ83TP6aymDT4wwRWO4XvlZLC5bXVI5QKNJiWCY
-         CWOQmJx2iS1yURrj1fnEXvkCJxV4G1448UuaPoqg=
+        b=2MucHNEpD9357+U3Rl1Vbu7NZcal0qAB7CEn9ytJs0mBt5jnkdScI8QYuck++CJI+
+         SyVHwHzh9etPvuMuLMmXjtpfupva15QOxZsnyhHZW9XeC5Q8Vs7lIhb2an91QdlwSw
+         MCFLyisSZzYmhGbrHO6S7S+xAE2CYVlcXXuPxGKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 138/180] scsi: qla2xxx: Fix premature timer expiration
-Date:   Mon, 16 Dec 2019 18:49:38 +0100
-Message-Id: <20191216174842.676136994@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.3 132/180] quota: fix livelock in dquot_writeback_dquots
+Date:   Mon, 16 Dec 2019 18:49:32 +0100
+Message-Id: <20191216174841.980689641@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,116 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-[ Upstream commit 3a4b6cc7332130ac5cbf3b505d8cddf0aa2ea745 ]
+commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
 
-For any qla2xxx async command, the SRB buffer is used to send it. In
-setting up the SRB buffer, the timer for this command is started before all
-memory allocation has finished.  Under low memory pressure, memory alloc
-can go to sleep and not wake up before the timer expires. Once timer has
-expired, the timer thread will access uninitialize fields resulting into
-NULL pointer crash.
+Write only quotas which are dirty at entry.
 
-This patch fixes this crash by moving the start of timer after everything
-is setup.
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
 
-backtrace shows following
+Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
+CC: stable@vger.kernel.org
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-PID: 3720   TASK: ffff996928401040  CPU: 0   COMMAND: "qla2xxx_1_dpc"
-0 [ffff99652751b698] __schedule at ffffffff965676c7
-1 [ffff99652751b728] schedule at ffffffff96567bc9
-2 [ffff99652751b738] schedule_timeout at ffffffff965655e8
-3 [ffff99652751b7e0] io_schedule_timeout at ffffffff9656726d
-4 [ffff99652751b810] congestion_wait at ffffffff95fd8d12
-5 [ffff99652751b870] isolate_migratepages_range at ffffffff95fddaf3
-6 [ffff99652751b930] compact_zone at ffffffff95fdde96
-7 [ffff99652751b980] compact_zone_order at ffffffff95fde0bc
-8 [ffff99652751ba20] try_to_compact_pages at ffffffff95fde481
-9 [ffff99652751ba80] __alloc_pages_direct_compact at ffffffff9655cc31
-10 [ffff99652751bae0] __alloc_pages_slowpath at ffffffff9655d101
-11 [ffff99652751bbd0] __alloc_pages_nodemask at ffffffff95fc0e95
-12 [ffff99652751bc80] dma_generic_alloc_coherent at ffffffff95e3217f
-13 [ffff99652751bcc8] x86_swiotlb_alloc_coherent at ffffffff95e6b7a1
-14 [ffff99652751bcf8] qla2x00_rft_id at ffffffffc055b5e0 [qla2xxx]
-15 [ffff99652751bd50] qla2x00_loop_resync at ffffffffc0533e71 [qla2xxx]
-16 [ffff99652751be68] qla2x00_do_dpc at ffffffffc05210ca [qla2xxx]
-
-PID: 0      TASK: ffffffff96a18480  CPU: 0   COMMAND: "swapper/0"
- 0 [ffff99652fc03ae0] machine_kexec at ffffffff95e63674
- 1 [ffff99652fc03b40] __crash_kexec at ffffffff95f1ce12
- 2 [ffff99652fc03c10] crash_kexec at ffffffff95f1cf00
- 3 [ffff99652fc03c28] oops_end at ffffffff9656c758
- 4 [ffff99652fc03c50] no_context at ffffffff9655aa7e
- 5 [ffff99652fc03ca0] __bad_area_nosemaphore at ffffffff9655ab15
- 6 [ffff99652fc03cf0] bad_area_nosemaphore at ffffffff9655ac86
- 7 [ffff99652fc03d00] __do_page_fault at ffffffff9656f6b0
- 8 [ffff99652fc03d70] do_page_fault at ffffffff9656f915
- 9 [ffff99652fc03da0] page_fault at ffffffff9656b758
-    [exception RIP: unknown or invalid address]
-    RIP: 0000000000000000  RSP: ffff99652fc03e50  RFLAGS: 00010202
-    RAX: 0000000000000000  RBX: ffff99652b79a600  RCX: ffff99652b79a760
-    RDX: ffff99652b79a600  RSI: ffffffffc0525ad0  RDI: ffff99652b79a600
-    RBP: ffff99652fc03e60   R8: ffffffff96a18a18   R9: ffffffff96ee3c00
-    R10: 0000000000000002  R11: ffff99652fc03de8  R12: ffff99652b79a760
-    R13: 0000000000000100  R14: ffffffffc0525ad0  R15: ffff99652b79a600
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-10 [ffff99652fc03e50] qla2x00_sp_timeout at ffffffffc0525af8 [qla2xxx]
-11 [ffff99652fc03e68] call_timer_fn at ffffffff95ea7f58
-12 [ffff99652fc03ea0] run_timer_softirq at ffffffff95eaa3bd
-13 [ffff99652fc03f18] __do_softirq at ffffffff95ea0f05
-14 [ffff99652fc03f88] call_softirq at ffffffff9657832c
-15 [ffff99652fc03fa0] do_softirq at ffffffff95e2e675
-16 [ffff99652fc03fc0] irq_exit at ffffffff95ea1285
-17 [ffff99652fc03fd8] smp_apic_timer_interrupt at ffffffff965796c8
-18 [ffff99652fc03ff0] apic_timer_interrupt at ffffffff96575df2
-
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_def.h  | 1 +
- drivers/scsi/qla2xxx/qla_iocb.c | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/quota/dquot.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index 674ee2afe2b52..0eb1d5a790b26 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -537,6 +537,7 @@ typedef struct srb {
- 	wait_queue_head_t nvme_ls_waitq;
- 	struct fc_port *fcport;
- 	struct scsi_qla_host *vha;
-+	unsigned int start_timer:1;
- 	uint32_t handle;
- 	uint16_t flags;
- 	uint16_t type;
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 9312b19ed708b..1886de92034c7 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2540,7 +2540,7 @@ void qla2x00_init_timer(srb_t *sp, unsigned long tmo)
- 	sp->free = qla2x00_sp_free;
- 	if (IS_QLAFX00(sp->vha->hw) && sp->type == SRB_FXIOCB_DCMD)
- 		init_completion(&sp->u.iocb_cmd.u.fxiocb.fxiocb_comp);
--	add_timer(&sp->u.iocb_cmd.timer);
-+	sp->start_timer = 1;
- }
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -623,7 +623,7 @@ EXPORT_SYMBOL(dquot_scan_active);
+ /* Write all dquot structures to quota files */
+ int dquot_writeback_dquots(struct super_block *sb, int type)
+ {
+-	struct list_head *dirty;
++	struct list_head dirty;
+ 	struct dquot *dquot;
+ 	struct quota_info *dqopt = sb_dqopt(sb);
+ 	int cnt;
+@@ -637,9 +637,10 @@ int dquot_writeback_dquots(struct super_
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
+ 		spin_lock(&dq_list_lock);
+-		dirty = &dqopt->info[cnt].dqi_dirty_list;
+-		while (!list_empty(dirty)) {
+-			dquot = list_first_entry(dirty, struct dquot,
++		/* Move list away to avoid livelock. */
++		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
++		while (!list_empty(&dirty)) {
++			dquot = list_first_entry(&dirty, struct dquot,
+ 						 dq_dirty);
  
- static void
-@@ -3668,6 +3668,9 @@ qla2x00_start_sp(srb_t *sp)
- 		break;
- 	}
- 
-+	if (sp->start_timer)
-+		add_timer(&sp->u.iocb_cmd.timer);
-+
- 	wmb();
- 	qla2x00_start_iocbs(vha, qp->req);
- done:
--- 
-2.20.1
-
+ 			WARN_ON(!test_bit(DQ_ACTIVE_B, &dquot->dq_flags));
 
 
