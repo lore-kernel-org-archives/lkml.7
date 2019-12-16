@@ -6,92 +6,86 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45F8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1959220700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB202072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Io/Hf5q7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="leqpCm4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfLPINd (ORCPT
+        id S1726794AbfLPIPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:13:33 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38378 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfLPINc (ORCPT
+        Mon, 16 Dec 2019 03:15:39 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:44749 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfLPIPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:13:32 -0500
-Received: by mail-ua1-f68.google.com with SMTP id z17so1766994uac.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:13:32 -0800 (PST)
+        Mon, 16 Dec 2019 03:15:39 -0500
+Received: by mail-vk1-f195.google.com with SMTP id y184so1365455vkc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:15:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xn4dNigwlhxAQyKm9gOJN6QkFcnPQMlJTzy6sb2QOwk=;
-        b=Io/Hf5q7xSuHylwL4OacRp4P2PsiZyoZaYrdRYlxqQKP0mShYWfBf+OMhO/2Np5ORk
-         fbAabr9vNzYuqtaPzEs9468vWGCNFq6L07CpSEQEZDdQry1M0dq7J63v6z64SWxPOAwf
-         aBsKNENdCTw1nW9p7XIYQuyMxASCHpUlj5HAzZvecr+WMA9OvIhKR8QH6qkSHxJvT/sV
-         8QWyZr0vsXuIHqdImqYvcvVW/I2GLZFBKq/RBYiJ/t94ixC6bqbpO5tBZVkMH5O/SwID
-         fpTlS9kNGShue2P7WPTC5Xv2q8hEBVLvMg4kHJ1x4kG+jy4ihbaykjFCICEm8rKO27mI
-         0ztA==
+        bh=Qu4go+LfnKNu76tzONlM/DXLfpoLwvN/WGMtsTcLNx8=;
+        b=leqpCm4mwbX2Ey94U37p2i9Bbx2RkIfvb6WvQBDRNgtT+BR4hoBJgsQ9ofMZk5fgW5
+         aqxcfB+w0CyBiGJxW4/iwcSMgOronAmehBnbN81GmoJ70EOU1PUCsHaWHY98vwPhJ44T
+         TdoXMzTniNcKi8V8AEo+GkUhJ0dLg4ypg8jqEqpplE+ltTEnK5qErmotbHGqAkodjLG+
+         tf4Q5K/uXylKQEEgLK77AIFTtqOg0tNi8n3CfamBgzRNKyv2g7Jq9h57fPnhyJlcrrzm
+         cwEcHY9vODoelw/MO0sk05APT3/mfurBJmYf1ri/44TwKzvTZejfR2XBWGKUVsGLVaZ1
+         Eyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xn4dNigwlhxAQyKm9gOJN6QkFcnPQMlJTzy6sb2QOwk=;
-        b=WS33zob7lvkDLMVso+MIXGR080u/8Ah8Iu0DUu9SduP+WfinPwcP1j83USJIMm3UTx
-         IrKUIXS4i3IVs8vWr1dgTYflay+5cT7cmDK7zgltWnndg9ZCpEoa/IuMMQD7J5MqEUi9
-         wtKY67vZ+9t5VaM4KN8W1kU6CMBUiHlhxoZt2JqVEFEOCwRIiOQPbdHXZY1eS+8ALx/Q
-         2XuxcVhRCU2rhWT+P5C5aKF4PKqhI9YwzpdSpSY+yvvK4u/PzvkuEkH1YGqV3bVYP5J7
-         s2FP2bxo2m93SXPec7/297rx3Z3ALN3X1CbA3BaJtTsBKPWfk1jKVN2ko/jgsWAscmh3
-         Xkqg==
-X-Gm-Message-State: APjAAAVfSN111IgQEIhS2taOXeCrdJ8TWs404OXg/1Zj2iK83ZT37o9Y
-        Ct3Y87uBd0s3HWbmW9bz/YpIZDk0w0o0JboBfHJqfg==
-X-Google-Smtp-Source: APXvYqzf6JCyaHJwxPnWzJiB8wq7OgYE7mfA/OKhvFmoPueU8tPGA+C3vAw/23I1YgLjMrghbr0yx4mgW9xyWoMeQRY=
-X-Received: by 2002:ab0:1c0a:: with SMTP id a10mr22253217uaj.140.1576484011659;
- Mon, 16 Dec 2019 00:13:31 -0800 (PST)
+        bh=Qu4go+LfnKNu76tzONlM/DXLfpoLwvN/WGMtsTcLNx8=;
+        b=ZSDSL78K1L3X8Or3rjiouw/STvLZpGSRrz2dPicB4gwn2OOMpXh+qld/23x5MVrg0X
+         236mR7XNs2JJbWI9Z04nMvY2KaRadxF1E18DMDGVJWU17c585K2csw7SeZzT4A+drEOJ
+         rlfaIl2kTmAe5K6yjWFrhbYW3MgqW16lE4LcmvSOP9/hLS9oQdyYSLDYpvofbrzJ+TWr
+         vMrARLqqxeos23EKiHwJhAOKBhOaPCETqIx/NPGh0du8DWGed/PbwAVRdCT8P8PGJLBi
+         EKULi80Q6/oNQYH+rn2Q9ifGvVTtL6/rywRURkNuwkNTulmI/vM85mqHKpA5vMoSR/+y
+         Bi1Q==
+X-Gm-Message-State: APjAAAXwVW+IDKqpU9cYnqBql1eKBYHMo0N+9klKFrViPry4yN8yhpOk
+        WobXGIwKHMQYW6Xl0UFNl4dnWecP8cRVVizCHc+dDi20sijaxg==
+X-Google-Smtp-Source: APXvYqxsLIGSSYoLhqReMPk/ckHJ7XR9h2vXGNBZs6Z+b9XI4Prqv4oOpdbXnDGHV9aGiX7g2AlfDFsUeaCDtmU0zBU=
+X-Received: by 2002:a1f:ccc6:: with SMTP id c189mr12309632vkg.5.1576484137990;
+ Mon, 16 Dec 2019 00:15:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-5-ktouil@baylibre.com>
-In-Reply-To: <20191210154157.21930-5-ktouil@baylibre.com>
+References: <20191210164446.53912-1-paul@crapouillou.net>
+In-Reply-To: <20191210164446.53912-1-paul@crapouillou.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:13:20 +0100
-Message-ID: <CACRpkdbHLv2R+XvCjCaEgaztUqpmHWCmSAqHABkkstJREkmfVw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] eeprom: at24: remove the write-protect pin support
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Date:   Mon, 16 Dec 2019 09:15:26 +0100
+Message-ID: <CACRpkdZA=0vYhYUXYYNtjkaWKRbm9Y=iQLyjcNWLStpfd=LRAg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrote:
+On Tue, Dec 10, 2019 at 5:44 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-> NVMEM framework is an interface for the at24 EEPROMs as well as for
-> other drivers, instead of passing the wp-gpios over the different
-> drivers each time, it would be better to pass it over the NVMEM
-> subsystem once and for all.
+> JZ4760 support was added in parallel of the previous patch so this one
+> slipped through. The first SoC to use the new register is the JZ4760 and
+> not the JZ4770, fix it here.
 >
-> Removing the support for the write-protect pin after adding it to the
-> NVMEM subsystem.
+> Fixes: 7009d046a601 ("pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT
+> config")
 >
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-I wonder if this needs to be in the same patch that adds it to
-the NVMEM subsystem, so as to avoid both code paths being
-taken between the two patches (bisectability..)
+Patch applied for fixes.
 
-However that is not the biggest thing in the universe and I'm
-no bisectability-perfectionist, so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>  The commit it fixes was added in v5.5-rc1, so I didn't Cc
+>  linux-stable - I wasn't sure if I had to.
+
+No need for that when it is fixing a current -rc, that is what
+-rc:s are for.
 
 Yours,
 Linus Walleij
