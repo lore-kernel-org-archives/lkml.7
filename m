@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15444C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F400AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4282082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C485E2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522122;
-	bh=OwVgrZZe3+NEKgSc3Kxz+SFE+8Xi58o59qJvArZOm0M=;
+	s=default; t=1576522125;
+	bh=nKlEQuyx9OU3F7MpnfXzCGoKkM3bM6UtxtePuYeJZ3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LntRxFRcQr5H+3uF/aVW9xrIjj0yLWCXOy1XtlqdWIapIeCrkyrD1rUUGd/HU4pUo
-	 Q6CEmvb3hZNhsX8rQqan0wNLI39UMxWmutGvOTFV6L2EIi2lj51GDM0s5+FolYlFqe
-	 3ykdVPh1Mxf69QKfyCA1FuleXuNTPnWvrfjaUpGM=
+	b=V30Delp8PaUyAcam5N3u1UTd1Vy8tLB1GuWBazu/in8stRdtSa6HURNROJPEIC45e
+	 l5JoXkRQkxlX1U+H8s1N0FaIPtCD8vSRoPIJ81UOkRuveYgBxW84/j8OVzuKQ+ChJB
+	 09HCcNOKL+Gha/xACgdD8SBVb0u41IOj0UcTzgjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLPRyE (ORCPT
+        id S1728208AbfLPSsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:48:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbfLPRxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:55 -0500
+        id S1727440AbfLPRyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF0C20733;
-        Mon, 16 Dec 2019 17:53:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2034620733;
+        Mon, 16 Dec 2019 17:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518835;
-        bh=OwVgrZZe3+NEKgSc3Kxz+SFE+8Xi58o59qJvArZOm0M=;
+        s=default; t=1576518842;
+        bh=nKlEQuyx9OU3F7MpnfXzCGoKkM3bM6UtxtePuYeJZ3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Og/COYC443uYKL7YHOV93NLFCVgzC3Yy1EXqDUKe8+agAsyxnby51vO9x/oP47Wez
-         7ILzu7CrinZLeePhinU0+sVnlFoarVfh6oI4iHKMTPAaP49J8hWOZeyjfcuzk8pqcT
-         HZ299QtvbMLxERow4OUdndj1mcfhA4RPg+wSzu7o=
+        b=AcF4x6KjuSWjfBJAHFV2wngJ+O0DUT089irvhIx4uTpfJslo330DZ/VG1Uf2iqHjh
+         00GbhtKIu3lfhdS+dtuXELOyOBYF/0hEYqrBDgPSfbocrt8+v6ru2vobiaDqh59pji
+         brRagzHKqrWYZCTT3FPqADGZlMWiT0wOcs2M8B7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/267] arm64: dts: meson-gxbb-odroidc2: fix GPIO lines names
-Date:   Mon, 16 Dec 2019 18:46:52 +0100
-Message-Id: <20191216174857.725366756@linuxfoundation.org>
+Subject: [PATCH 4.14 089/267] net/x25: fix null_x25_address handling
+Date:   Mon, 16 Dec 2019 18:46:55 +0100
+Message-Id: <20191216174857.933627671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,44 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 2165b006b65d609140dafafcb14cce5a4aaacbab ]
+[ Upstream commit 06137619f061f498c2924f6543fa45b7d39f0501 ]
 
-The gpio line names were set in the pinctrl node instead of the gpio node,
-at the time it was merged, it worked, but was obviously wrong.
-This patch moves the properties to the gpio nodes.
+o x25_find_listener(): the compare for the null_x25_address was wrong.
+   We have to check the x25_addr of the listener socket instead of the
+   x25_addr of the incomming call.
 
-Fixes: b03c7d6438bb ("ARM64: dts: meson-gxbb-odroidc2: Add GPIO lines names")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+ o x25_bind(): it was not possible to bind a socket to null_x25_address
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/x25/af_x25.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index c3c65b06ba76b..4ea23df81f212 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -189,7 +189,7 @@
- 	pinctrl-names = "default";
- };
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index 6e7ad4c6f83c8..a156b6dc3a724 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -288,7 +288,7 @@ static struct sock *x25_find_listener(struct x25_address *addr,
+ 	sk_for_each(s, &x25_list)
+ 		if ((!strcmp(addr->x25_addr,
+ 			x25_sk(s)->source_addr.x25_addr) ||
+-				!strcmp(addr->x25_addr,
++				!strcmp(x25_sk(s)->source_addr.x25_addr,
+ 					null_x25_address.x25_addr)) &&
+ 					s->sk_state == TCP_LISTEN) {
+ 			/*
+@@ -684,11 +684,15 @@ static int x25_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 		goto out;
+ 	}
  
--&pinctrl_aobus {
-+&gpio_ao {
- 	gpio-line-names = "UART TX", "UART RX", "VCCK En", "TF 3V3/1V8 En",
- 			  "USB HUB nRESET", "USB OTG Power En",
- 			  "J7 Header Pin2", "IR In", "J7 Header Pin4",
-@@ -197,7 +197,7 @@
- 			  "HDMI CEC", "SYS LED";
- };
+-	len = strlen(addr->sx25_addr.x25_addr);
+-	for (i = 0; i < len; i++) {
+-		if (!isdigit(addr->sx25_addr.x25_addr[i])) {
+-			rc = -EINVAL;
+-			goto out;
++	/* check for the null_x25_address */
++	if (strcmp(addr->sx25_addr.x25_addr, null_x25_address.x25_addr)) {
++
++		len = strlen(addr->sx25_addr.x25_addr);
++		for (i = 0; i < len; i++) {
++			if (!isdigit(addr->sx25_addr.x25_addr[i])) {
++				rc = -EINVAL;
++				goto out;
++			}
+ 		}
+ 	}
  
--&pinctrl_periphs {
-+&gpio {
- 	gpio-line-names = /* Bank GPIOZ */
- 			  "Eth MDIO", "Eth MDC", "Eth RGMII RX Clk",
- 			  "Eth RX DV", "Eth RX D0", "Eth RX D1", "Eth RX D2",
 -- 
 2.20.1
 
