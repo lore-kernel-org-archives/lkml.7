@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED979C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79644C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40CA20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513B2206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521642;
-	bh=FAoSuFN++pCYuO0My1MHO6HH1CjEyyDk9zCPD07s2Ks=;
+	s=default; t=1576521644;
+	bh=3LT4beEpcvuokI08zK/DUGAIqBmOucLx1SdC+4Z4siY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEJQ2xmi/xuFlD3TJRzs2j3x5CwUzKpd9NzilF65KBelkvi1I3FZH8CwOPBf5PSHg
-	 L7Ad7LOcy9MQLk89hPCGxBef0W9YKKWKxrDgI15zsreevEaU4RCpbGBbDu3EZDxQVd
-	 hKNTAjfUk04sDQ5NuExh7RTjFromrE7bkPBfRtH4=
+	b=rqCb1WXZPGlAg8MjvhWFkDwvZ23+8goHSwjlF9zktfpnJYrt10wvmwvb8uNRmFBER
+	 zqIRKs8bdLZ8cs47BmB+NTLb1Cd+b1ouuRTGkt6DEBZc3HgQjpfmWO0kLdGFph1dtH
+	 wFsbE3smvMSaSNfdyxooaCEUSf1v8+LgsuCzBPI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbfLPSkl (ORCPT
+        id S1729274AbfLPSCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:40:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37816 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbfLPSCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:09 -0500
+        id S1729011AbfLPSB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D2A20CC7;
-        Mon, 16 Dec 2019 18:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2062072D;
+        Mon, 16 Dec 2019 18:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519328;
-        bh=FAoSuFN++pCYuO0My1MHO6HH1CjEyyDk9zCPD07s2Ks=;
+        s=default; t=1576519318;
+        bh=3LT4beEpcvuokI08zK/DUGAIqBmOucLx1SdC+4Z4siY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oHYrK99i3eneOlkgP6VGfnt5JcBjE0E+ca/I5adQUlLc5ZaKTp3fFYU/QTrGaxHOX
-         AoQ/Tzhsrctw0J+1n4MdVrRb24C6VpJFGdHpKruGTVw6LvbH9IOjlWM/GO8uJH/jcE
-         xRUNlWXI1qxkCb78m7yOUhtHX6CnOKFJglBkffUg=
+        b=rEg9/DbVeVZtFxXcxXU0Fk91eOeK7luyU2SKsNmsSHfYneqlTeygJEiMTIUdR736e
+         eAuxyB44sn20oOh+w4hJLgfmeryZ9/eazYPoy1q9Nz9sc4gacTsJqdx/WZS+4wYrzu
+         woxiiz48E2ywyi3d/3G4KoklL3rlitgLJcnLDwPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 022/140] USB: atm: ueagle-atm: add missing endpoint check
-Date:   Mon, 16 Dec 2019 18:48:10 +0100
-Message-Id: <20191216174756.404593678@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 018/140] ARM: dts: pandora-common: define wl1251 as child node of mmc3
+Date:   Mon, 16 Dec 2019 18:48:06 +0100
+Message-Id: <20191216174755.522736589@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -58,90 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 09068c1ad53fb077bdac288869dec2435420bdc4 upstream.
+commit 4f9007d692017cef38baf2a9b82b7879d5b2407b upstream.
 
-Make sure that the interrupt interface has an endpoint before trying to
-access its endpoint descriptors to avoid dereferencing a NULL pointer.
+Since v4.7 the dma initialization requires that there is a
+device tree property for "rx" and "tx" channels which is
+not provided by the pdata-quirks initialization.
 
-The driver binds to the interrupt interface with interface number 0, but
-must not assume that this interface or its current alternate setting are
-the first entries in the corresponding configuration arrays.
+By conversion of the mmc3 setup to device tree this will
+finally allows to remove the OpenPandora wlan specific omap3
+data-quirks.
 
-Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.16
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-2-johan@kernel.org
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/atm/ueagle-atm.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/omap3-pandora-common.dtsi |   36 ++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/atm/ueagle-atm.c
-+++ b/drivers/usb/atm/ueagle-atm.c
-@@ -2168,10 +2168,11 @@ resubmit:
- /*
-  * Start the modem : init the data and start kernel thread
-  */
--static int uea_boot(struct uea_softc *sc)
-+static int uea_boot(struct uea_softc *sc, struct usb_interface *intf)
- {
--	int ret, size;
- 	struct intr_pkt *intr;
-+	int ret = -ENOMEM;
-+	int size;
+--- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
++++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+@@ -229,6 +229,17 @@
+ 		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* GPIO_164 */
+ 	};
  
- 	uea_enters(INS_TO_USBDEV(sc));
- 
-@@ -2196,6 +2197,11 @@ static int uea_boot(struct uea_softc *sc
- 	if (UEA_CHIP_VERSION(sc) == ADI930)
- 		load_XILINX_firmware(sc);
- 
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
-+		ret = -ENODEV;
-+		goto err0;
-+	}
++	/* wl1251 wifi+bt module */
++	wlan_en: fixed-regulator-wg7210_en {
++		compatible = "regulator-fixed";
++		regulator-name = "vwlan";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		startup-delay-us = <50000>;
++		enable-active-high;
++		gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++	};
 +
- 	intr = kmalloc(size, GFP_KERNEL);
- 	if (!intr)
- 		goto err0;
-@@ -2207,8 +2213,7 @@ static int uea_boot(struct uea_softc *sc
- 	usb_fill_int_urb(sc->urb_int, sc->usb_dev,
- 			 usb_rcvintpipe(sc->usb_dev, UEA_INTR_PIPE),
- 			 intr, size, uea_intr, sc,
--			 sc->usb_dev->actconfig->interface[0]->altsetting[0].
--			 endpoint[0].desc.bInterval);
-+			 intf->cur_altsetting->endpoint[0].desc.bInterval);
+ 	/* wg7210 (wifi+bt module) 32k clock buffer */
+ 	wg7210_32k: fixed-regulator-wg7210_32k {
+ 		compatible = "regulator-fixed";
+@@ -525,9 +536,30 @@
+ 	/*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/	/* GPIO_127 */
+ };
  
- 	ret = usb_submit_urb(sc->urb_int, GFP_KERNEL);
- 	if (ret < 0) {
-@@ -2223,6 +2228,7 @@ static int uea_boot(struct uea_softc *sc
- 	sc->kthread = kthread_create(uea_kthread, sc, "ueagle-atm");
- 	if (IS_ERR(sc->kthread)) {
- 		uea_err(INS_TO_USBDEV(sc), "failed to create thread\n");
-+		ret = PTR_ERR(sc->kthread);
- 		goto err2;
- 	}
+-/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
+ &mmc3 {
+-	status = "disabled";
++	vmmc-supply = <&wlan_en>;
++
++	bus-width = <4>;
++	non-removable;
++	ti,non-removable;
++	cap-power-off-card;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	wlan: wifi@1 {
++		compatible = "ti,wl1251";
++
++		reg = <1>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
++
++		ti,wl1251-has-eeprom;
++	};
+ };
  
-@@ -2237,7 +2243,7 @@ err1:
- 	kfree(intr);
- err0:
- 	uea_leaves(INS_TO_USBDEV(sc));
--	return -ENOMEM;
-+	return ret;
- }
- 
- /*
-@@ -2598,7 +2604,7 @@ static int uea_bind(struct usbatm_data *
- 	if (ret < 0)
- 		goto error;
- 
--	ret = uea_boot(sc);
-+	ret = uea_boot(sc, intf);
- 	if (ret < 0)
- 		goto error_rm_grp;
- 
+ /* bluetooth*/
 
 
