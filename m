@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE8CC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A6DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB70C20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D4C20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521575;
-	bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+	s=default; t=1576521578;
+	bh=U+Zy8WDW51twCqB13+h4TM2bIhnae75Z5rp9vowzhX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSdV0JqDIVpbVXr3ZL1rh9tIKNlhrFY7Q4+tPbvbxrKLyfWp336B5LYH8dSe2jOcd
-	 ransyEShP6HcEEtq/fP92hBkaCQGRaeNcGwBmS9b5pZVLziQxTLjEsJ7aLE0VBl0DK
-	 S0qu74108R7TymWsUkQerPszpTf26Ru30qbjm+Q4=
+	b=GGRjrW5ubO2pIv5qCLpm7BqnvayuzEOhDAp14HfK+BVm3kMzmr2n2+GfSrDICgn6K
+	 AFTFYzCf+9OBm9rEToeNy4zlt70YFQjR2rqc03xIz4uEmXGHSPtexfpU5Iepz2jmf0
+	 VJ/ZIJTm6GN57Ckxx/eNPpyUBNnmqMmEG6OXKx+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfLPSDb (ORCPT
+        id S1729205AbfLPSDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729280AbfLPSDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:20 -0500
+        id S1729256AbfLPSDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE8B2072D;
-        Mon, 16 Dec 2019 18:03:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DA0207FF;
+        Mon, 16 Dec 2019 18:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519399;
-        bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+        s=default; t=1576519397;
+        bh=U+Zy8WDW51twCqB13+h4TM2bIhnae75Z5rp9vowzhX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=emTF5Qphi2K/Jrj9LNtU7xDYzlzTbqOfIb4oUgY4xN9sn2Oqu8CUaUzYEPm4t0jKm
-         WCO6yFSnKCvF1hLW5ygbE0gCuFWR8VC5DEwh5Htb0Yn9WxBw2eEeB6Qrs9XaYHwusr
-         30iuHiw0UePukD5Dx0UNW2M9UN6xREjofFgos/Cg=
+        b=2LNTlPsCvMey0gLdjRtC6K5DRTbZqjyxWQEGs3zxmNyxdTWIL1iN+EFkhNI4HhPMA
+         w/ENLHlSelYzsRQPHvJ4rC8j37fLXdL0Hju5+Z5x0G3e1DB5v9axfg9M3VW4QcGqEH
+         8iN+vzzzK2hGGIMyWhRPMKlQfE40Rpq4DVVVXdII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 013/140] staging: gigaset: add endpoint-type sanity check
-Date:   Mon, 16 Dec 2019 18:48:01 +0100
-Message-Id: <20191216174754.265077397@linuxfoundation.org>
+        stable@vger.kernel.org, Tilman Schmidt <tilman@imap.cc>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 012/140] staging: gigaset: fix illegal free on probe errors
+Date:   Mon, 16 Dec 2019 18:48:00 +0100
+Message-Id: <20191216174753.117607514@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,49 +61,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
+commit 84f60ca7b326ed8c08582417493982fe2573a9ad upstream.
 
-Add missing endpoint-type sanity checks to probe.
+The driver failed to initialise its receive-buffer pointer, something
+which could lead to an illegal free on late probe errors.
 
-This specifically prevents a warning in USB core on URB submission when
-fuzzing USB descriptors.
+Fix this by making sure to clear all driver data at allocation.
 
+Fixes: 2032e2c2309d ("usb_gigaset: code cleanup")
+Cc: stable <stable@vger.kernel.org>     # 2.6.33
+Cc: Tilman Schmidt <tilman@imap.cc>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
+Link: https://lore.kernel.org/r/20191202085610.12719-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/isdn/gigaset/usb-gigaset.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/isdn/gigaset/usb-gigaset.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 --- a/drivers/isdn/gigaset/usb-gigaset.c
 +++ b/drivers/isdn/gigaset/usb-gigaset.c
-@@ -708,6 +708,12 @@ static int gigaset_probe(struct usb_inte
+@@ -574,8 +574,7 @@ static int gigaset_initcshw(struct cards
+ {
+ 	struct usb_cardstate *ucs;
  
- 	endpoint = &hostif->endpoint[0].desc;
+-	cs->hw.usb = ucs =
+-		kmalloc(sizeof(struct usb_cardstate), GFP_KERNEL);
++	cs->hw.usb = ucs = kzalloc(sizeof(struct usb_cardstate), GFP_KERNEL);
+ 	if (!ucs) {
+ 		pr_err("out of memory\n");
+ 		return -ENOMEM;
+@@ -587,9 +586,6 @@ static int gigaset_initcshw(struct cards
+ 	ucs->bchars[3] = 0;
+ 	ucs->bchars[4] = 0x11;
+ 	ucs->bchars[5] = 0x13;
+-	ucs->bulk_out_buffer = NULL;
+-	ucs->bulk_out_urb = NULL;
+-	ucs->read_urb = NULL;
+ 	tasklet_init(&cs->write_tasklet,
+ 		     gigaset_modem_fill, (unsigned long) cs);
  
-+	if (!usb_endpoint_is_bulk_out(endpoint)) {
-+		dev_err(&interface->dev, "missing bulk-out endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
- 	ucs->bulk_out_size = buffer_size;
- 	ucs->bulk_out_epnum = usb_endpoint_num(endpoint);
-@@ -727,6 +733,12 @@ static int gigaset_probe(struct usb_inte
- 
- 	endpoint = &hostif->endpoint[1].desc;
- 
-+	if (!usb_endpoint_is_int_in(endpoint)) {
-+		dev_err(&interface->dev, "missing int-in endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	ucs->busy = 0;
- 
- 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
 
 
