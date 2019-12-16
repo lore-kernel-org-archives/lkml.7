@@ -2,207 +2,159 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B129DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24748C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B91920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E537820CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="XutwovNc"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="nqbswclv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLPVxd (ORCPT
+        id S1727523AbfLPV5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:53:33 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46580 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPVxd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:53:33 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f15so5384834lfl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:53:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=UWnCdbVcICZmAK6eBq6qDsPZuchsCvO3LUVcqk3TXso=;
-        b=XutwovNch624bzEmqS/scigRStmz63GXtqrGzMwVK0NC1oCv4UB0VCUM5PxxOzydWp
-         KgxCwFsVHLq/KihZHLgr6f+D1KzJaw9KQWNiBii6VpvI+fy8aXiFpklcgeC2NtC4s7yd
-         OUw90QVpp/GnOgfYUCKg0GgETLbPjzExFyNmFfB4CGfEDLBhPlg7mtjkUw9OuLtTcuJ2
-         s7a8c/Pdb00Ozg8N+I1F420VBWmPgKgOPCnADGbzpiAHfFmW7dyyiXb8klzg4NJLO2xt
-         rkBy2G+UwtTrqeAmX4v9c5nJS961nWawUq9rlVeQ9nOBRegwT2oDZR/Cpb1YQs2vllTj
-         rKGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=UWnCdbVcICZmAK6eBq6qDsPZuchsCvO3LUVcqk3TXso=;
-        b=cLOzmYEdqnCGs+kWvUsc8gtq8vtEDZ+hUDWvDLLfb8baGsCo0BFJ9NxnANZeZdZZY+
-         rZpgTNHpiTXCiE7yzOP5b04MN1nPAzi1YYYP6O0mYBbg1L8CHyk8M7t9Ol65Ygwiyr9g
-         +ex0bhcozlwZ/dpVPEKWVgV4GxtWEbdVMxmudFocPUV1MiIgg4ObL07hGYu0zV01BJ+6
-         iSrfDteKQCSKSzD9tib1xWbkP/95vDYQ8L+0Z7T3JxfBrpZ7TKAEBBG28USGTc/0MhKx
-         35R6UV2AVg5aNxdoE4RflohpORhBtbpz0AFqjNoBCoHDPUfnABmxcB+UzBb/h0QXHja7
-         +FTw==
-X-Gm-Message-State: APjAAAWPmSl9pKJrxAKbjd91P4oO6aDxDt72Q6tuB5gMFSpEJRlsixDV
-        WdAQx0mpdH2m9T8xXhb50q2Wt3LvtSloyA==
-X-Google-Smtp-Source: APXvYqwbMx6tW5Wgn+Bdc3Hbpz9H0mRNZrI2wF2Gs8s8y4VPXUihxRs58UFX6f463QrP6ZujcZi8lQ==
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr799195lfc.130.1576533210378;
-        Mon, 16 Dec 2019 13:53:30 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id n5sm11314858ljh.86.2019.12.16.13.53.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Dec 2019 13:53:28 -0800 (PST)
-Date:   Mon, 16 Dec 2019 13:53:20 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     torvalds@linux-foundation.org
-Cc:     olof@lixom.net, arm@kernel.org, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: SoC fixes
-Message-ID: <20191216215320.li7x45fhkrkolvbk@localhost>
+        Mon, 16 Dec 2019 16:57:31 -0500
+Received: from mga18.intel.com ([134.134.136.126]:57586 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbfLPV5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 16:57:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:57:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="212184232"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Dec 2019 13:57:28 -0800
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 13:57:24 -0800
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 13:57:23 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 16 Dec 2019 13:57:19 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e5FIrWyLoglElaDJ0JAelgTKpBiayb8I4xjfktFdIvHrP47eClVMsURNrhZiVYDYDa4tXSHWWXjQdV2viRzb++18vdqLmgmfVEuPz/eNfCZ+z7wuWm6a8+I3gwWZIq/Fnf65+jSuQuMkVx9qnecVi6vkVlyQYz9qvrm/juNZu9AIwrw74vJ//YlwjjWjckI5u7WhzS0aDi9qFfXQdjeeX6sbfdBtk3mDk3mIzurZHW2oin21zRu2wrr+OFWoRsOMx7tUkdT7l5AdXOP1emQrfHHtMc9iGwTR7MbJwqiOJ2TPol19e+EmwrZvGXyKIOgpi13O9cvweNI3AJJO4tTyIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aYSttqBuTRRTRFXgIMDEVizo05qA0uhw3A2Xj5OUgiY=;
+ b=YHm2hVAR2Gcy6TpRgvlZ6j24zQY3ReMEFmliZewnqtFVZ9Pv5kZ9r2WjHeC8NYDRZxDwoD/YMKiTlQg0TgaztB2tS+gXiEJpQSbfeBVM1CdujyLW6L9iV0jgCmIPZs92CB9zQkCUpEc9Vvt9f2x2/OVuxsyTKGxogWPQP1PniKAZ9SoiXOneby9fzI68Ie/Hm99uGpNuglX6Q638hS56VEen1YL3QKWDLMedgOCmK8mW5yBTkPrzK7kxXpzSdPUCa5GOheIoACjKAzjV1gnic1yqGdboIUZ+26dwdGjnq7dawjoXbFPOCkzSnkyNr4CWEdfKplTSVFTT5pFKUjh/xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aYSttqBuTRRTRFXgIMDEVizo05qA0uhw3A2Xj5OUgiY=;
+ b=nqbswclvkorWKYwsTj+cAzBVOgGz2RzAkD9ll5/gNQWXvICc4fAMGMAi1Qxfm55/atQ7JfDu2e9k7ixjA8mN5sQcRs5h7ffSKTyAkuNZBP2sFfLntoQb46tVFXUBetri5croZ1hBhCbp1FBu2vEKOe7dENpTV+zqXjnZxE4orDQ=
+Received: from MWHPR11MB1278.namprd11.prod.outlook.com (10.169.230.151) by
+ MWHPR11MB1791.namprd11.prod.outlook.com (10.175.53.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Mon, 16 Dec 2019 21:56:55 +0000
+Received: from MWHPR11MB1278.namprd11.prod.outlook.com
+ ([fe80::707d:8cdb:8345:664e]) by MWHPR11MB1278.namprd11.prod.outlook.com
+ ([fe80::707d:8cdb:8345:664e%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 21:56:55 +0000
+From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     Linux PM <linux-pm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+Subject: RE: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support
+ ACPI,
+Thread-Topic: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support
+ ACPI,
+Thread-Index: AQHVtD9rz4F98Q5KHUWM8j7jsII8yae9SQAAgAAFuqA=
+Date:   Mon, 16 Dec 2019 21:56:55 +0000
+Message-ID: <MWHPR11MB1278E9E06FBB5847444B11F3F2510@MWHPR11MB1278.namprd11.prod.outlook.com>
+References: <cover.1576520244.git.gayatri.kammela@intel.com>
+ <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzc0YmUyYzktMzRmYi00OWIyLTlkMzktZTVkYTdlOWZlNmUwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRHU4T3lIRVBQNEhUTEVOSmFmWWpiMEhoT0Q1eVZleDNpc0hUdG9ZR0xjRGptWUJwRlwvZER3S2dYNkFveG1tQlQifQ==
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gayatri.kammela@intel.com; 
+x-originating-ip: [192.55.52.214]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f6105267-965f-450e-4571-08d78272ddc1
+x-ms-traffictypediagnostic: MWHPR11MB1791:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB1791D5FBAC22144C5123D69EF2510@MWHPR11MB1791.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(136003)(346002)(376002)(199004)(189003)(13464003)(186003)(76116006)(26005)(33656002)(7696005)(66476007)(66946007)(66556008)(64756008)(66446008)(53546011)(52536014)(2906002)(71200400001)(6916009)(7416002)(9686003)(55016002)(81166006)(81156014)(8676002)(8936002)(86362001)(6506007)(4326008)(54906003)(316002)(5660300002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR11MB1791;H:MWHPR11MB1278.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NKkWMnf79zepVBK8W/W9ipVWJpzgeQY9g1OmxPWElEjpuxIxpAsSN8hELgAHs7jcoEOdNlO4Ik0hqPM6L7QiQeBcwOMm4t0Li8QygBfiPE76lVhjz3DDmbM5ZSdlRGlCOivF8uVFfv5FoqznABXkbwyJlLn0coiDOUE1plTDafZPqga1izgXFmQ8hX6DiVSUb5zaR+4EwEnbvXc3R99cMtiicMYfjPSkK2DntjVDQ8qr6oaIgMcDSs1Ndqox6SPVc3tEefFdYZzl5045+2CvzdD9eGZJ5Whd4SuiQRfg70FbSPpTUuUZJ2ihT5yUFMUivB8OJqimwvGZXwfm9L37G993+q0W4egRnZZxiQQi/XYlbx7QjfLSRVCgKAnUEoPIHaNP0SpQ4VcJTMVX0bhExfxTtHeq1Kj0vEVwba1ksZw9kWJKmHSz2sBonhN+ZlXQ9SFLJGpYgQNIvjAVn1K4ssle5agY+tYpADA42NwEvHY2BHnoAECV/LH21GvLabXH
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6105267-965f-450e-4571-08d78272ddc1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 21:56:55.3388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LHCmePyJVBBfA93y+casjCEtSi4nBnmCawUWSSFEgUeH8+btttt1hqkFHjuYXfuj+KknCw0fXm+4z2sZDu904GY6+7gWHN8zUXpn3uqLfZ8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1791
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-
-for you to fetch changes up to e3992af1256a4fe0b83ac790d4caa58ff731609d:
-
-  Merge tag 'arm-soc/for-5.5/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes (2019-12-16 11:33:29 -0800)
-
-----------------------------------------------------------------
-ARM: SoC fixes
-
-I didn't get a batch in this weekend, so here's what we queued up last
-week and today.
-
- - A couple of defconfigs add back debugfs -- it used to be implicitly
- enabled through CONFIG_TRACING, but 0e4a459f56c32d3e ("tracing: Remove
- unnecessary DEBUG_FS dependency") removed that.
-
- - The rest are mostly minor fixlets of the usual kind; some DT tweaks,
- a headerfile refactor that needs a build fix now, etc.
-
-----------------------------------------------------------------
-Andreas Kemnade (1):
-      ARM: dts: e60k02: fix power button
-
-Arnd Bergmann (1):
-      ARM: mmp: include the correct cputype.h
-
-Christoph Niedermaier (1):
-      ARM: imx: Correct ocotp id for serial number support of i.MX6ULL/ULZ SoCs
-
-Florian Fainelli (4):
-      ARM: dts: BCM5301X: Fix MDIO node address/size cells
-      ARM: dts: Cygnus: Fix MDIO node address/size cells
-      dt-bindings: reset: Fix brcmstb-reset example
-      reset: brcmstb: Remove resource checks
-
-Geert Uytterhoeven (3):
-      reset: Fix {of,devm}_reset_control_array_get kerneldoc return types
-      reset: Do not register resource data for missing resets
-      ARM: shmobile: defconfig: Restore debugfs support
-
-Grygorii Strashko (1):
-      ARM: omap2plus_defconfig: enable NET_SWITCHDEV
-
-H. Nikolaus Schaller (1):
-      ARM: bcm: Add missing sentinel to bcm2711_compat[]
-
-Krzysztof Kozlowski (1):
-      MAINTAINERS: Include Samsung SoC serial driver in Samsung SoC entry
-
-Leonard Crestez (3):
-      ARM: dts: imx6ul-evk: Fix peripheral regulator
-      ARM: imx_v6_v7_defconfig: Explicitly restore CONFIG_DEBUG_FS
-      ARM: imx: Fix boot crash if ocotp is not found
-
-Lukasz Luba (1):
-      MAINTAINERS: Update Lukasz Luba's email address
-
-Mans Rullgard (1):
-      ARM: dts: am335x-sancloud-bbe: fix phy mode
-
-Marek Szyprowski (1):
-      ARM: exynos_defconfig: Restore debugfs support
-
-Michael Walle (2):
-      arm64: dts: ls1028a: fix typo in TMU calibration data
-      arm64: dts: ls1028a: fix reboot node
-
-Nicolas Saenz Julienne (1):
-      ARM: dts: bcm2711: fix soc's node dma-ranges
-
-Olof Johansson (8):
-      Merge tag 'vexpress-fixes-5.5' of git://git.kernel.org/.../sudeep.holla/linux into arm/fixes
-      Merge tag 'arm-soc/for-5.5/devicetree-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'reset-fixes-for-v5.5-2' of git://git.pengutronix.de/git/pza/linux into arm/fixes
-      Merge tag 'imx-fixes-5.5' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'omap-for-v5.5/fixes-rc1-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
-      Merge tag 'renesas-fixes-for-v5.5-tag1' of git://git.kernel.org/.../geert/renesas-devel into arm/fixes
-      Merge tag 'samsung-fixes-5.5' of https://git.kernel.org/.../krzk/linux into arm/fixes
-      Merge tag 'arm-soc/for-5.5/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-
-Stefan Roese (1):
-      ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
-
-Stefan Wahren (1):
-      ARM: dts: bcm283x: Fix critical trip point
-
-Sudeep Holla (2):
-      ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-      cpufreq: vexpress-spc: Switch cpumask from topology core to OPP sharing
-
-Tomi Valkeinen (1):
-      ARM: dts: am437x-gp/epos-evm: fix panel compatible
-
-Tony Lindgren (3):
-      bus: ti-sysc: Fix missing force mstandby quirk handling
-      ARM: omap2plus_defconfig: Add back DEBUG_FS
-      bus: ti-sysc: Fix missing reset delay handling
-
- .mailmap                                           |  1 +
- .../bindings/reset/brcm,brcmstb-reset.txt          |  2 +-
- MAINTAINERS                                        |  3 ++-
- arch/arm/boot/dts/am335x-sancloud-bbe.dts          |  2 +-
- arch/arm/boot/dts/am437x-gp-evm.dts                |  2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts               |  2 +-
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |  4 ++--
- arch/arm/boot/dts/bcm2711.dtsi                     |  2 +-
- arch/arm/boot/dts/bcm283x.dtsi                     |  2 +-
- arch/arm/boot/dts/bcm5301x.dtsi                    |  4 ++--
- arch/arm/boot/dts/e60k02.dtsi                      |  5 ----
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi            | 28 ++++++++++++++++------
- arch/arm/configs/exynos_defconfig                  |  1 +
- arch/arm/configs/imx_v6_v7_defconfig               |  1 +
- arch/arm/configs/omap2plus_defconfig               |  4 +++-
- arch/arm/configs/shmobile_defconfig                |  1 +
- arch/arm/mach-bcm/bcm2711.c                        |  1 +
- arch/arm/mach-imx/cpu.c                            |  8 ++++---
- arch/arm/mach-mmp/pxa168.h                         |  2 +-
- arch/arm/mach-vexpress/spc.c                       | 12 +++++++++-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     | 10 ++++++--
- drivers/bus/ti-sysc.c                              |  7 +++++-
- drivers/cpufreq/vexpress-spc-cpufreq.c             |  2 +-
- drivers/reset/core.c                               | 10 ++++----
- drivers/reset/reset-brcmstb.c                      |  6 -----
- include/linux/platform_data/ti-sysc.h              |  1 +
- 26 files changed, 78 insertions(+), 45 deletions(-)
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFmYWVsIEouIFd5c29j
+a2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIERlY2VtYmVyIDE2LCAyMDE5
+IDE6MzYgUE0NCj4gVG86IEthbW1lbGEsIEdheWF0cmkgPGdheWF0cmkua2FtbWVsYUBpbnRlbC5j
+b20+DQo+IENjOiBMaW51eCBQTSA8bGludXgtcG1Admdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0g
+RHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBBbGV4IEh1
+bmcgPGFsZXguaHVuZ0BjYW5vbmljYWwuY29tPjsgQUNQSSBEZXZlbA0KPiBNYWxpbmcgTGlzdCA8
+bGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz47
+DQo+IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IExpbnV4IEtlcm5lbCBN
+YWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgRGFuaWVsIExl
+emNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+OyBBbWl0DQo+IEt1Y2hlcmlhIDxhbWl0
+Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb20+OyBQcmVzdG9waW5lLCBDaGFybGVzIEQNCj4gPGNoYXJs
+ZXMuZC5wcmVzdG9waW5lQGludGVsLmNvbT47IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFk
+Lm9yZz47DQo+IFJhZmFlbCBKIC4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5vcmc+OyBBbmR5IFNo
+ZXZjaGVua28NCj4gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IFpoYW5nLCBS
+dWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+Ow0KPiBQYW5kcnV2YWRhLCBTcmluaXZhcyA8c3Jpbml2
+YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC81XSBk
+cml2ZXJzOiBBZGQgVGlnZXIgTGFrZSBoYXJkd2FyZSBJRHMgdG8gc3VwcG9ydA0KPiBBQ1BJLA0K
+PiANCj4gT24gTW9uLCBEZWMgMTYsIDIwMTkgYXQgNzozMyBQTSBHYXlhdHJpIEthbW1lbGENCj4g
+PGdheWF0cmkua2FtbWVsYUBpbnRlbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGksDQo+ID4NCj4g
+PiBUaWdlciBMYWtlIHN1cHBvcnRzIGRldmljZXMgd2hvc2UgaGFyZHdhcmUgSURzIGFyZSBjaGFu
+Z2VkIGZvciB2YXJpb3VzDQo+ID4gZHJpdmVycy4gSGVuY2UsIGFkZCB0aGUgbmV3IGhhcmR3YXJl
+IElEcy4NCj4gPg0KPiA+IFBhdGNoIDE6IEFkZCBUaWdlciBMYWtlIHN1cHBvcnQgdG8gRFBURiBk
+cml2ZXIgUGF0Y2ggMjogQWRkIFRpZ2VyIExha2UNCj4gPiBzdXBwb3J0IHRvIGZhbiBkcml2ZXIg
+UGF0Y2ggMzogQWRkIFRpZ2VyIExha2Ugc3VwcG9ydCB0byBkZXZpY2VfcG0NCj4gPiBQYXRjaCA0
+OiBBZGQgVGlnZXIgTGFrZSBzdXBwb3J0IHRvIEludGVsJ3MgSElEIGRyaXZlciBQYXRjaCA1OiBB
+ZGQNCj4gPiBUaWdlciBMYWtlIHN1cHBvcnQgdG8gdGhlcm1hbCBkcml2ZXINCj4gDQo+IEknbSBn
+b2luZyB0byBhcHBseSB0aGUgd2hvbGUgc2VyaWVzIChmb3IgNS42KSBpZiBub2JvZHkgaGFzIGFu
+eSBpc3N1ZXMgd2l0aA0KPiB0aGF0Lg0KPiANCj4gVGhhbmtzIQ0KDQpUaGFuayB5b3UgUmFmYWVs
+IQ0K
