@@ -2,135 +2,165 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB903C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9032C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ED1205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D53D206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oRZSc2g2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zrI8kgBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfLPP0y (ORCPT
+        id S1728427AbfLPP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:26:54 -0500
-Received: from mout.web.de ([212.227.17.11]:46573 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbfLPP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:26:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576509998;
-        bh=bX6ezpgPKnZz7gXv6Z70uAvDUPR/OQwEjr37+ely8/4=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=oRZSc2g27iG8oOUDh5xGeaHdgEhX8L5cBKVPu7AjFVKUsVhx0jyZ/UPdvHJy0SsUr
-         +9VKPAkBTW0ycfBJHsCax6rXGRrDKmYY1yqMLlPET4NYA3ftq7fTNGk/YD2fdf222W
-         u/LJEVrX3nUKcjjiim+OX6nubcIEhbePYmxPUzYY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.181.202]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LrJse-1hiHx42Amq-0137js; Mon, 16
- Dec 2019 16:26:38 +0100
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
-References: <20191213055028.5574-2-namjae.jeon@samsung.com>
-Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
- headers
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Message-ID: <4aedc5e0-17e3-f0c5-9c47-8d1300e0af3f@web.de>
-Date:   Mon, 16 Dec 2019 16:26:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 10:27:20 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46081 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbfLPP1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:27:20 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so7721996wrl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=q3MgqIM7Lebzkf8JO0ojhPzDqiRHLK5vJzUfeZMc1zU=;
+        b=zrI8kgBBoboagFSLXfmTf0mbONsvoKKFbRJjR42YqaEaWnlMrQyzcWb1XMd3mJDIDA
+         XEZRkQ8P8pAI2TuMYE0eBA7sLbLxsitGBmzo66TAenENXpkSFTIFTH0BiQJz45X9zJoE
+         H4pmwfVFQeaforibR4y0VCfdsHWTqBW+kukg7d1cOXYSeCS7D/lHY2Uhncb2P8QqzA70
+         QSUUf4iuWxxGW1iyZsIULB6RumULY/boFuV9T8RrnUAG3Ab1ce71ZAZH6Wte3H9d3TUM
+         oKjbW/zgqasVXHvbr6TC5orVS8GePjn2BhNh9z4+f09Xp+aUnWtHm6yqFLV/d/iNoCV9
+         h5Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=q3MgqIM7Lebzkf8JO0ojhPzDqiRHLK5vJzUfeZMc1zU=;
+        b=ezT7wN2XBXjjsU0hrB0RjYGRnUCqk7uoPc2+FylT0AS5waqJDTslwsUOg8fNz55XNk
+         ZM0blAfup5cGHSHplLn8uMu1cxijDXJtkTiPyO+CxCX4gi7X04nNtf+rJ7pQazbWTbm+
+         8eZl1BG/S0HtGZvVQsCe2mKz3HtipAjf2TAcL84sUObiBpbwqjqxhxFemJa9un4Ltfxq
+         eTKw4nuQvi6t9X7SRxFAyotxxc3x9RwTu624dghNIk7kL3aenJZb9xV6Gg+FaAFTdcao
+         RKKFv2Yh92ok3soASk+NhQ5nBfZR2ng5oaLZvcgmRUO3ma6LcuiLxUZj5w+5BKGV2lYN
+         et7Q==
+X-Gm-Message-State: APjAAAW0ns4oAZdDDDfD2MT3xpuHR2QzePxsyKEFtebwvXV8rwLnmjrR
+        BzSzBi7+WZHCdhr9DzymjjOfNw==
+X-Google-Smtp-Source: APXvYqzUTemS2PAuC/RnjCOMgKkGPqFGklDx/Gs//sa0fLFQ2EuYXh0JOOt4jLFQ6QC7CwPooTMy4g==
+X-Received: by 2002:a5d:6b82:: with SMTP id n2mr30708752wrx.153.1576510037406;
+        Mon, 16 Dec 2019 07:27:17 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id o66sm17974890wmo.20.2019.12.16.07.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:27:16 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:27:15 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v4 2/5] mfd: rn5t618: add IRQ support
+Message-ID: <20191216152715.GH2369@dell>
+References: <20191211215409.32764-1-andreas@kemnade.info>
+ <20191211215409.32764-3-andreas@kemnade.info>
 MIME-Version: 1.0
-In-Reply-To: <20191213055028.5574-2-namjae.jeon@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:33DO9kAi1XCUVZ6W1UO14ulKknd/vu8psU5mBGNcHnJL8PUFSzT
- WPcc62OcJOilaM69r69WqHLU0sdTe6C1FFZjbixRELf4ub2TSnawkjYd3HTRRp+s3WDKle8
- GJOOgWwwEKNoF+UGqoVM9UULkVbJDk3ASkFPRbMMKd79AX8TzXczcAC+f4W1Lpz/b7DJ4W8
- 61YfuEWIl94ow4WuUoV6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uwE6IeKaNFY=:8qCfO7melHxdnpPgUaOQSb
- 1N0wnoAUZW/bvKSlms+w5evBLiIy0VZ2WB7hA0frgX9eJvo1cGeNnEv+rGxCTYRLsCLNWrAus
- 0oftlMROZaXC0GUko6dK+Y7lqi/rJGvsNVMOMPPEKNEsRgrtic70LpS0P/29LczbyFRwA3b+R
- FF4EbJL1yTyKRTsnQhEIeW+0q6qvhmwfR2GlQ4Z5jyJWwqVXEBADhP/THCS6AeP70ZTnfB9u9
- ++uuevNg5KE0aTROrokH8Mh/H9yntIcyD5PHGAuOxvi3ZKZwWMZGWlyYkZnBpcdOaOSO1buda
- QDfpoZ9XjgRp17b4cFlJkG93bVHfhWORFMTO5P4jMg5oF9o+l5o7SZBrFF9hG7Rse7p/Y2kU9
- sAlRkCiD7KDF0oaTCs6I81suiXxelKp3hQc8VdnZZsifijiKwuPeNemvxL9ul6P41mcebVWyt
- uq0gp8uI9RAz8euB9keaIyeaxBwpk4gMPtQ9dZLobnZVVFc2zgy5Wxghy2Ck0LP3SAdWS62qN
- 9jiVUC8p5QBUO16Cd0aFwDtsd4ViWcyWrj/GDEYMAu73huFsoZ091sCpLSV1OfEvZGHnV1xBE
- XVfRpfNbv3SKeGslxbokzoKfJRxa3xLu8O4bFR1GJcA60blrd3IFTPzB9i1PfbTFkTic2Il3V
- BeMh35NAqD06Ouxi2x/Huh38kpBzTwOdLW5vv/wY6bkyButCFMA+smSbKtGWMaul+gzOaIhYk
- H01Vsb9l6fSrafaIyBU6x1ZAvrAF39jbWaGiVfg8vgUQ9HpBUdHTviAH8bsv1TgnwlOuvgEeC
- LjdtVNGcCaqKL9tCSQcbDz3haVjUX64sAiJkkvCJVhgJNARL8IGDtbJLYEbZXpskbKPJ22bau
- yIL/xFv8hpxg+DehHq3ojGkBX6Sd90kU+ZukhvjToqkyQX34/rOfSbQ3gjMJmwwdB2xVkkwPz
- CooblE7vTam/beFR/B6b1C/1Ci2JlgFBg6Ds2eGupYjBw8CMkqYRjKRf6KFEjiOG7NB6nKdg6
- 75sSqkQrvQja5HBw3Ujs+hG7epy5HdeapoUffNG08jf2vxi+h5GUVsvGQQg/12BW6H5PoV/6y
- X3nH8TCGryZ0bYrHPCYhT9D2mUvAe6hnfEtGf1vPv3JeUHmPrph3ybeLy+hioLbhPNLdkWxO7
- WwIV9isHy0K9ztEn3C1UlgJHBPvlQ7gZrCZNx2aAdiUS+wD8BoLQv5Ujm4Q1u6+dfHSIhF/ZM
- pH9/0b1XVtjyzI18Anjk45hbEr3z/C7ODGQoxFb/dQkISZNzoLwePcHctq+4=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211215409.32764-3-andreas@kemnade.info>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/exfat_fs.h
-=E2=80=A6
-> +/* type values */
+On Wed, 11 Dec 2019, Andreas Kemnade wrote:
 
-How do you think about to convert the specification =E2=80=9C#define TYPE_=
-=E2=80=A6=E2=80=9D
-into enumerations?
+> This adds support for IRQ handling in the RC5T619 which is required
+> for properly implementing subdevices like RTC.
+> For now only definitions for the variant RC5T619 are included.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v4:
+> merge rn5t618-irq.c into rn5t618.c
+> use macros for IRQ table
+> 
+> Changes in v3:
+> alignment cleanup
+> 
+> Changes in v2:
+> - no dead code, did some more testing and thinking for that
+> - remove extra empty lines
+>  drivers/mfd/Kconfig         |  1 +
+>  drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h | 15 ++++++++
+>  3 files changed, 104 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index ae24d3ea68ea..522e068d0082 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1057,6 +1057,7 @@ config MFD_RN5T618
+>  	depends on OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+> +	select REGMAP_IRQ
+>  	help
+>  	  Say yes here to add support for the Ricoh RN5T567,
+>  	  RN5T618, RC5T619 PMIC.
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index da5cd9c92a59..76d997c0cfe4 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -8,6 +8,8 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+> @@ -45,9 +47,63 @@ static const struct regmap_config rn5t618_regmap_config = {
+>  	.cache_type	= REGCACHE_RBTREE,
+>  };
+>  
+> +static const struct regmap_irq rc5t619_irqs[] = {
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
+> +};
+> +
+> +static const struct regmap_irq_chip rc5t619_irq_chip = {
+> +	.name = "rc5t619",
+> +	.irqs = rc5t619_irqs,
+> +	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
+> +	.num_regs = 1,
+> +	.status_base = RN5T618_INTMON,
+> +	.mask_base = RN5T618_INTEN,
+> +	.mask_invert = true,
+> +};
+> +
+>  static struct rn5t618 *rn5t618_pm_power_off;
+>  static struct notifier_block rn5t618_restart_handler;
+>  
+> +int rn5t618_irq_init(struct rn5t618 *rn5t618)
 
-Regards,
-Markus
+Static?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
