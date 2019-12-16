@@ -2,132 +2,175 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA649C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC9AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A120920725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9+hyjIO"
+	by mail.kernel.org (Postfix) with ESMTP id 4E38A20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLPHws (ORCPT
+        id S1726742AbfLPHzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 02:52:48 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42281 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfLPHws (ORCPT
+        Mon, 16 Dec 2019 02:55:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:48119 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfLPHzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 02:52:48 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so8005885otd.9;
-        Sun, 15 Dec 2019 23:52:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=teaKbuiwSImi7RfIBsT5A595WaRZ9qMw7uZTBvgzoPo=;
-        b=T9+hyjIOYswgHEv4Tk1y+UNP7CGTbnEox9pCdGBWORd9ZZ8iJyE++oJ17Ew7Pahdw8
-         eV4gf9dCyNCNDRSAH/6T+z2+0xICmVRXxTvFJK3lXXeCq+konXyjj9WGgZhxkc3ABdiF
-         JEM7Gm1bSUKBl2NJoGdxXv/p/bAUz4rzX+FTOUyLZb6hIqR2WQMjUJNm42ULZRiJZZoc
-         ga24v8E8mr7DcvLxPW8MMCvY2OXxWEnyGfPcU+z0xN5sXyUwN7CB3kpXsWqkjc+ot3QR
-         6s8GOULh2ygu7Y0nuPsI8e9UL1ThafpjTBl47lNjqSxsBLfirQSGATt1hukDBeom5QaS
-         NYZw==
+        Mon, 16 Dec 2019 02:55:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id x69so5835542ill.14
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 23:55:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=teaKbuiwSImi7RfIBsT5A595WaRZ9qMw7uZTBvgzoPo=;
-        b=i8UQsnBUKManNbfKeGEx09gaawx5DdjPvw2tZ3nV+0D8LrmGh0MAeBdEFet7stC96C
-         iXOu5pPhZ2Pll4HELXt/QfodfpQmhIjdQyu5Sm007o6HKjqyzW5XLhQOmqFZnkbdU5yK
-         UxpNivJOCS8G7t9fg28FvvP9C+IP8UZFnDnBSSn5Xe89jf5xL4lStB3vIshOZBNoF18j
-         OPIAWyAHp4vJTPnrY8/wGuz2S68SchMffnbFnV1XuorzrGvSuRn2/SvNubOOguY/qwbc
-         EFT1qHVXWy7CUVIOMO+S3xKKYPAyn252efyuRKUdkrDNEZt3vfUN4LvRt5/ui0hm1TXM
-         OQ9w==
-X-Gm-Message-State: APjAAAW8fPY11K+qYAuCFimhpbIxw2WQMbjuzfUH81FrUCEPTGNsZYoo
-        UxDpXVoK8xYq0Kuk+5wmu6gLQqBQHf+b15oY58g=
-X-Google-Smtp-Source: APXvYqzJWsrCKHBWPt/+qDVqGaXSw/dwYOelFmuU1LMlbhh0onKHLZCdb9U0GQHZ+rXpK2GlmhJM1lVnV2qMLZqENUI=
-X-Received: by 2002:a9d:175:: with SMTP id 108mr30137165otu.325.1576482767410;
- Sun, 15 Dec 2019 23:52:47 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DoFXJSJKMvoDM3LRXAT9KZk/64+PWGsl9OaFVHFDZvQ=;
+        b=HiuDtSldNwBbMKLswqVQRiU9JTK6OVIFs2jtKdkR2tzJd2V5kp8Ch3ZjEfFn6hBwv5
+         mToZpHLuMtNqjfKLJm8ZW/T2bGLJyzUmCsqEG+OdTvYMcaomyANuiHqpJyZWNTBNjbWh
+         PetptgE6RR0272Y4bnEFlk516EyrTxsGmJ/2oT+yosBn2RiLVOsIcYACBZQtaxpyZ8Vt
+         +fp/U4D8BnE++XK5okUmUytll1ASbRtvGEeSUmC1BEd7W8fPJ7Q5h7KsHYUmouncye7L
+         r2arG+BGqVWcbgJGDVBx3zg68F00AsrQLhtNR+DRZ8rt9ViItZdruUYrN8mJYXAmhRtG
+         l61w==
+X-Gm-Message-State: APjAAAVJ2OKEclXprKROWuP6N0tlw/px9Bo0NwHEROukMlOIV/PucD0k
+        s150q8jTGzWlhmbwvlcXy7qml/6p3w5HBUue0cFqOeVBVm6S
+X-Google-Smtp-Source: APXvYqx0uWwaLQvQEejqYGoCN4/q2wXWlIFpAXBYDSvNNvVldkxcbn1hXaXH3vJRow4HaZVJGld2E9n9p8gjVzIu8HqeHD86UAC/
 MIME-Version: 1.0
-References: <20191213084748.11210-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213185011.GA170447@google.com>
-In-Reply-To: <20191213185011.GA170447@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 07:52:20 +0000
-Message-ID: <CA+V-a8u7RO1L1ExPXwHuSpKrCA47iRPFySUn1royEGoOxy0=2A@mail.gmail.com>
-Subject: Re: [v2 1/6] pci: pcie-rcar: preparation for adding endpoint support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:8854:: with SMTP id t20mr15271401ios.121.1576482907559;
+ Sun, 15 Dec 2019 23:55:07 -0800 (PST)
+Date:   Sun, 15 Dec 2019 23:55:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b321f20599cd8725@google.com>
+Subject: upstream boot error: general protection fault in do_mount_root
+From:   syzbot <syzbot+958915844b296815c246@syzkaller.appspotmail.com>
+To:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
+        linux@dominikbrodowski.net, pc@cjr.nz,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hello,
 
-On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:43AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > this patch prepares for adding endpoint support to rcar controller,
-> > there are no functional changes with this patch, a common file is
-> > created so that it can be shared with endpoint driver. Alongside
-> > this patch fixes checkpatch reported issues.
->
-> Can you please split this into:
->
->   - a patch that moves code only, with no other changes except any
->     necessary Kconfig and Makefile changes
->   - another patch that fixes the checkpatch things
->
-> When the checkpatch fixes are buried in the code move, it's impossible
-> to review them.
->
-thank you for the review.sure I'll split up the patches and resend.
+syzbot found the following crash on:
 
-Cheers,
---Prabhakar
+HEAD commit:    d1eef1c6 Linux 5.5-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ff2fb1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
+dashboard link: https://syzkaller.appspot.com/bug?extid=958915844b296815c246
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  arch/arm64/configs/defconfig            |    2 +-
-> >  drivers/pci/controller/Kconfig          |    4 +-
-> >  drivers/pci/controller/Makefile         |    2 +-
-> >  drivers/pci/controller/pcie-rcar-host.c | 1056 ++++++++++++++++++++++++++
-> >  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
-> >  drivers/pci/controller/pcie-rcar.h      |  129 ++++
-> >  6 files changed, 1242 insertions(+), 1180 deletions(-)
-> >  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
-> >  create mode 100644 drivers/pci/controller/pcie-rcar.h
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+958915844b296815c246@syzkaller.appspotmail.com
+
+IPI shorthand broadcast: enabled
+AVX2 version of gcm_enc/dec engaged.
+AES CTR mode by8 optimization enabled
+registered taskstats version 1
+Loading compiled-in X.509 certificates
+Loaded X.509 cert 'Build time autogenerated kernel key:  
+2a1122198a3e68692ac5775a16203e4f5f9d30c2'
+zswap: loaded using pool lzo/zbud
+Key type ._fscrypt registered
+Key type .fscrypt registered
+Btrfs loaded, crc32c=crc32c-intel
+Key type big_key registered
+Key type encrypted registered
+ima: No TPM chip found, activating TPM-bypass!
+ima: Allocated hash algorithm: sha256
+ima: No architecture policies found
+evm: Initialising EVM extended attributes:
+evm: security.selinux
+evm: security.SMACK64
+evm: security.SMACK64EXEC
+evm: security.SMACK64TRANSMUTE
+evm: security.SMACK64MMAP
+evm: security.apparmor
+evm: security.ima
+evm: security.capability
+evm: HMAC attrs: 0x1
+PM:   Magic number: 15:612:306
+usb usb38: hash matches
+tty tty35: hash matches
+printk: console [netcon0] enabled
+netconsole: network logging started
+gtp: GTP module loaded (pdp ctx size 104 bytes)
+rdma_rxe: loaded
+cfg80211: Loading compiled-in X.509 certificates for regulatory database
+cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+Unstable clock detected, switching default tracing clock to "global"
+If you want to keep using the local clock, then add:
+   "trace_clock=local"
+on the kernel command line
+ALSA device list:
+   #0: Dummy 1
+   #1: Loopback 1
+   #2: Virtual MIDI Card 1
+   #3: HDA Intel at 0xfebf0000 irq 31
+md: Waiting for all devices to be available before autodetect
+md: If you don't use raid, use raid=noautodetect
+md: Autodetecting RAID arrays.
+md: autorun ...
+md: ... autorun DONE.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
+Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
+89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
+38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
+RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
+RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
+RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
+R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
+R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
+FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  strncpy include/linux/string.h:281 [inline]
+  do_mount_root+0x74/0x23b init/do_mounts.c:404
+  mount_block_root+0x342/0x51a init/do_mounts.c:438
+  mount_root+0x283/0x2cd init/do_mounts.c:628
+  prepare_namespace+0x26f/0x2a7 init/do_mounts.c:687
+  kernel_init_freeable+0x557/0x570 init/main.c:1231
+  kernel_init+0x12/0x1bf init/main.c:1110
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace dc1d12e4189687e7 ]---
+RIP: 0010:strncpy+0x35/0xc0 lib/string.c:119
+Code: e5 41 56 41 55 4c 8d 34 17 49 bd 00 00 00 00 00 fc ff df 41 54 53 48  
+89 fb 48 83 ec 10 48 89 f2 48 89 f1 48 c1 ea 03 83 e1 07 <42> 0f b6 14 2a  
+38 ca 7f 04 84 d2 75 40 48 89 da 48 89 d9 44 0f b6
+RSP: 0000:ffffc9000034fca8 EFLAGS: 00010246
+RAX: ffff88807331f000 RBX: ffff88807331f000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807331f000
+RBP: ffffc9000034fcd8 R08: ffff88807331f000 R09: ffffed1005a6703d
+R10: ffffed1005a6703c R11: ffff88802d3381e3 R12: ffffea0001ccc7c0
+R13: dffffc0000000000 R14: ffff88807331ffff R15: ffff88801f1cb000
+FS:  0000000000000000(0000) GS:ffff88802d300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000000986d000 CR4: 0000000000340ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
