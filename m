@@ -2,101 +2,101 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762C1206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0C7206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521986;
-	bh=Bvqqqe3GhN6lFEa5+962rvSDLp9kezccEfUJn96dULY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Merv9iNJP+/Ly0PFLhKgmDqTfEpBV4IsRCzDdF1aBCP2QCF9qj6r8MLKB5yAQfHjQ
-	 0zqhPXIl0rtGHtjkCXevypuUWmpeL7Al6556EhUz/ihCuI+JeVmKaI6mPotD8CqxzB
-	 WLTkHQRu1Zlb53GGsC8H91oWPPhbn0PKj6zqxQ/M=
+	s=default; t=1576521992;
+	bh=lVsQtlz9HqUC4ySS/Wo8a1rhZi2RdxjoPZBn/2TzcSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuk0AxhZV3Gnfb4GeK86ZSslTlW7K1ana9Ps+nBW8ht+6FADaCCew1he2koe5B9nr
+	 Rr2KICIEADy/kCdbtDe7f21l9MQ+qA9WjAv06i2lk1MQIlhenVZgQbGvsBmbrZZpx5
+	 OMRLYRq1/ub7iqucL4C8GeLMKqA83kRtS+tzJMhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfLPSqZ (ORCPT
+        id S1728445AbfLPSqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbfLPR4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD7621582;
-        Mon, 16 Dec 2019 17:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518983;
-        bh=Bvqqqe3GhN6lFEa5+962rvSDLp9kezccEfUJn96dULY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWOMT/thXq0QrEemMZUsoqEqSPZEfBtlNQcv792AJmu8pdQZvtmO+OTNi88IJQ2PP
-         KGt8ixkjn/+1rsMZBvtdaA0xiFWtYkc0+Ic16Ko9tpUMIaY4GKmReTUeEyhSlHzrhw
-         nPDxPTl2qImgJO4URO+NwEzlwMbI29m9nbOAmBJE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Pape <ap@ca-pape.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/267] media: stkwebcam: Bugfix for wrong return values
-Date:   Mon, 16 Dec 2019 18:47:15 +0100
-Message-Id: <20191216174902.687446834@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
-References: <20191216174848.701533383@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 16 Dec 2019 13:46:31 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38518 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfLPR4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id h20so10168609otn.5;
+        Mon, 16 Dec 2019 09:56:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aw1ByhbMIhX8L3tpVoMfqyhN1NAHJbr1+p+FNO511mw=;
+        b=nrMvKXP819hDukBTzAVD5fj7fjnXlO/iuNiZNRauhqvxPAleLPK7PhDPEEswRvauou
+         tE53c/EHRbEmJiXf7zwCH3XN3m5qF1s5mYNpEEP5opSLUT4hqqlt0Lg/qtuvo484QaHT
+         YXScST/HMAOvoj7jtqkkCKtD7IF/WE2T2jNWQ6Ud+35aOhIysvPZmFeHehQ7CoaQU+eT
+         jDPZb8FuJcQQCNIC/eMpFJ5MiiKFHC9dQGhG76hFmKvNqQu2HkNhpO7HnYUXjOaFMIZH
+         0W8gIt9at6MDjIvNujZtzkBsAW5F9lYwDMU7GZBT0b+A1lvtHCcMdVK+Qvy+t/m5HbZO
+         u5Fw==
+X-Gm-Message-State: APjAAAWIBm03hyu+rzzmsyhE6g4uB4ZnbfPNrsylMvyBZRSb5eIpn/ye
+        ui71fIhptEQUiaITI3GjLQ==
+X-Google-Smtp-Source: APXvYqwnnF6ea7JjKjRTbA+MoqjFiZwsAnK2w39lJst7Lqh4AyRaVH2JJ0Lo6JAUE+Ksjh06jg4ewA==
+X-Received: by 2002:a9d:600e:: with SMTP id h14mr32060423otj.113.1576518977031;
+        Mon, 16 Dec 2019 09:56:17 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p127sm7017255oig.26.2019.12.16.09.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 09:56:16 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:56:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from
+ rockchip,px30-dsi-dphy
+Message-ID: <20191216175615.GA23392@bogus>
+References: <20191216122448.27867-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216122448.27867-1-heiko@sntech.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Pape <ap@ca-pape.de>
+On Mon, 16 Dec 2019 13:24:47 +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> Further review of the dsi components for the px30 revealed that the
+> phy shouldn't expose the pll as clock but instead handle settings
+> via phy parameters.
+> 
+> As the phy binding is new and not used anywhere yet, just drop them
+> so they don't get used.
+> 
+> Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+> Hi Kishon,
+> 
+> maybe suitable as a fix for 5.5-rc?
+> 
+> Thanks
+> Heiko
+> 
+>  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
 
-[ Upstream commit 3c28b91380dd1183347d32d87d820818031ebecf ]
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-usb_control_msg returns in case of a successfully sent message the number
-of sent bytes as a positive number. Don't use this value as a return value
-for stk_camera_read_reg, as a non-zero return value is used as an error
-condition in some cases when stk_camera_read_reg is called.
-
-Signed-off-by: Andreas Pape <ap@ca-pape.de>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/usb/stkwebcam/stk-webcam.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/usb/stkwebcam/stk-webcam.c b/drivers/media/usb/stkwebcam/stk-webcam.c
-index a7da1356a36ef..6992e84f8a8bb 100644
---- a/drivers/media/usb/stkwebcam/stk-webcam.c
-+++ b/drivers/media/usb/stkwebcam/stk-webcam.c
-@@ -164,7 +164,11 @@ int stk_camera_read_reg(struct stk_camera *dev, u16 index, u8 *value)
- 		*value = *buf;
- 
- 	kfree(buf);
--	return ret;
-+
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return 0;
- }
- 
- static int stk_start_stream(struct stk_camera *dev)
--- 
-2.20.1
-
-
-
+If a tag was not added on purpose, please state why and what changed.
