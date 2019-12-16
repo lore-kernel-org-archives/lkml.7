@@ -2,116 +2,187 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D6DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7898206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:42:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OC0UO2BJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6E581206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLPQmg (ORCPT
+        id S1726512AbfLPQnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:42:36 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42182 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLPQmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:42:35 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so5865908pfz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:42:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc:user-agent:date;
-        bh=tEFANuRfrtEbXVW2kT4hb0C2KzTNmSirXF8koSqQv8o=;
-        b=OC0UO2BJXeENM4Cbn94I+bIgETrJ0X6BAYk8ZfwLXFw18OzceJhE8oiuEoSMUL/pHt
-         M/H+Y2c0EtXdGPj/+B2I7W0dHG7mRFTrLdnK9c+EfpmkcOlvPnLkzvwZKAmS23pAPDJp
-         YLdmB9hBVjmn9V/B9tJibbZJmv830c+C4cuws=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
-         :user-agent:date;
-        bh=tEFANuRfrtEbXVW2kT4hb0C2KzTNmSirXF8koSqQv8o=;
-        b=DbqleCUgImrTiIZJ/b09KOGFWk2n+OX+6si7ZiKog768N38h4Ne99cidIQZraaSx+X
-         6AfSVQv8lIQTUePeRqFpaYV8ubLYcIrApMhdoVaOO9nnrUuGboJxrMlDgDv/qgfPcPHi
-         pvGHMG8x6eMMXIblbzbId2KJtl1PHuUBQVrNMa1Ut5Z7ubow0UiyLFmdQGF1N/fZzEJ6
-         pIVOOZkTwRY9/87g5c43U/PXsJWS/cPxmwL+I1U1hE5cDDIM54dh1uz1TMC6njArXTbM
-         HmtYVqMDCqqg3+F8F2pMz4BDDowOALMn1ONrzVZiWALKFgIPZPqe9qsz+gWK2gvfyltG
-         jGFA==
-X-Gm-Message-State: APjAAAVhj2+zcBGKoUK+k2PYlYafbUgEMHPyFK/7IjKHubK1E0ZEglnk
-        2JC/fVMQc0RXkIHmjFSKUp1tqQ==
-X-Google-Smtp-Source: APXvYqx858IvO891FQ+PAlePnfwquAJeL9h4+4TcpmC6btQgALdMcGge3MsYBYMJWyRrqvxCfMaqYw==
-X-Received: by 2002:a62:7696:: with SMTP id r144mr16912411pfc.177.1576514555188;
-        Mon, 16 Dec 2019 08:42:35 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w11sm22988142pfn.4.2019.12.16.08.42.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:42:34 -0800 (PST)
-Message-ID: <5df7b3fa.1c69fb81.fa080.21a7@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 16 Dec 2019 11:43:40 -0500
+Received: from muru.com ([72.249.23.125]:48492 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfLPQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:43:40 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 73F55810D;
+        Mon, 16 Dec 2019 16:44:17 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 08:43:35 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv2] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20191216164335.GP35479@atomide.com>
+References: <20191216145359.28219-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1576488351-22396-1-git-send-email-akashast@codeaurora.org>
-References: <1576488351-22396-1-git-send-email-akashast@codeaurora.org>
-Subject: Re: [PATCH] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
-To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        Akash Asthana <akashast@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 16 Dec 2019 08:42:33 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216145359.28219-1-tony@atomide.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Akash Asthana (2019-12-16 01:25:51)
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml=
- b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> new file mode 100644
-> index 0000000..2c3b911
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> @@ -0,0 +1,196 @@
-[...]
-> +
-> +  "serial@[0-9]+$":
-> +    type: object
-> +    description: GENI Serial Engine based UART Controller.
-> +
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - qcom,geni-uart
-> +          - qcom,geni-debug-uart
-> +
-> +      reg:
-> +        description: GENI Serial Engine register address and length.
-> +
-> +      interrupts:
-> +        description: Contains UART core and wakeup interrupts for wakeup
-> +                     capable UART devices. We configure wakeup interrupt
-> +                     on UART RX line using TLMM interrupt controller.
-> +        maxItems: 2
+* Tony Lindgren <tony@atomide.com> [191216 14:54]:
+> Vignesh, any comments on the ti,mode = "1w" and removal of the call to
+> hdq_disable_interrupt()? Is there some specific section where we need
+> to have interrupts disabled and then re-enabled?
 
-Shouldn't there be a minItems: 1 here? And then you should specify the orde=
-r?
-Presumably something like
+OK I got "1w" mode working too now. We need to clear the irqstatus before
+calling wait_event_timeout() on it, and we're now missing it in the
+hdq_read_byte().
 
-	interrupts:
-	  minItems: 1
-	  maxItems: 2
-	  items:
-	    - description: UART core irq
-	    - description: Wakeup irq (RX GPIO)
+Looks like we should not tinker with the actual irstatus register though,
+that's up to the hdq_isr() to manage.
 
+So the following helper is probably what we want to do additionally.
+I'll be posting v3 of the $subject patch.
+
+Regards,
+
+Tony
+
+8< ----------------------
+diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
+--- a/drivers/w1/masters/omap_hdq.c
++++ b/drivers/w1/masters/omap_hdq.c
+@@ -119,22 +119,24 @@ static int hdq_wait_for_flag(struct hdq_data *hdq_data, u32 offset,
+ 	return ret;
+ }
+ 
++/* Clear saved irqstatus after using an interrupt */
++static void hdq_reset_irqstatus(struct hdq_data *hdq_data)
++{
++	unsigned long irqflags;
++
++	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
++	hdq_data->hdq_irqstatus = 0;
++	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
++}
++
+ /* write out a byte and fill *status with HDQ_INT_STATUS */
+ static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
+ {
+ 	int ret;
+ 	u8 tmp_status;
+-	unsigned long irqflags;
+ 
+ 	*status = 0;
+ 
+-	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
+-	/* clear interrupt flags via a dummy read */
+-	hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
+-	/* ISR loads it with new INT_STATUS */
+-	hdq_data->hdq_irqstatus = 0;
+-	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
+-
+ 	hdq_reg_out(hdq_data, OMAP_HDQ_TX_DATA, val);
+ 
+ 	/* set the GO bit */
+@@ -168,6 +170,7 @@ static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
+ 	}
+ 
+ out:
++	hdq_reset_irqstatus(hdq_data);
+ 	return ret;
+ }
+ 
+@@ -219,7 +222,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
+ {
+ 	int ret = 0;
+ 	u8 tmp_status;
+-	unsigned long irqflags;
+ 
+ 	ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
+ 	if (ret < 0) {
+@@ -228,13 +230,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
+ 		goto rtn;
+ 	}
+ 
+-	spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
+-	/* clear interrupt flags via a dummy read */
+-	hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
+-	/* ISR loads it with new INT_STATUS */
+-	hdq_data->hdq_irqstatus = 0;
+-	spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
+-
+ 	/* set the INIT and GO bit */
+ 	hdq_reg_merge(hdq_data, OMAP_HDQ_CTRL_STATUS,
+ 		OMAP_HDQ_CTRL_STATUS_INITIALIZATION | OMAP_HDQ_CTRL_STATUS_GO,
+@@ -283,6 +278,7 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
+ 			" return to zero, %x", tmp_status);
+ 
+ out:
++	hdq_reset_irqstatus(hdq_data);
+ 	mutex_unlock(&hdq_data->hdq_mutex);
+ rtn:
+ 	return ret;
+@@ -330,6 +326,7 @@ static int hdq_read_byte(struct hdq_data *hdq_data, u8 *val)
+ 	/* the data is ready. Read it in! */
+ 	*val = hdq_reg_in(hdq_data, OMAP_HDQ_RX_DATA);
+ out:
++	hdq_reset_irqstatus(hdq_data);
+ 	mutex_unlock(&hdq_data->hdq_mutex);
+ rtn:
+ 	return ret;
+@@ -363,7 +360,6 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+ 		goto rtn;
+ 	}
+ 
+-	hdq_data->hdq_irqstatus = 0;
+ 	/* read id_bit */
+ 	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
+ 		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
+@@ -377,7 +373,9 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+ 	}
+ 	id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
+ 
+-	hdq_data->hdq_irqstatus = 0;
++	/* Must clear irqstatus for another RXCOMPLETE interrupt */
++	hdq_reset_irqstatus(hdq_data);
++
+ 	/* read comp_bit */
+ 	hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
+ 		      ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
+@@ -420,6 +418,7 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
+ 		      OMAP_HDQ_CTRL_STATUS_SINGLE);
+ 
+ out:
++	hdq_reset_irqstatus(hdq_data);
+ 	mutex_unlock(&hdq_data->hdq_mutex);
+ rtn:
+ 	pm_runtime_mark_last_busy(hdq_data->dev);
+@@ -460,7 +459,7 @@ static u8 omap_w1_read_byte(void *_hdq)
+ 	if (ret < 0) {
+ 		pm_runtime_put_noidle(hdq_data->dev);
+ 
+-		return ret;
++		return -1;
+ 	}
+ 
+ 	ret = hdq_read_byte(hdq_data, &val);
+-- 
+2.24.1
