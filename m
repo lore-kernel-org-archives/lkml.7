@@ -2,220 +2,113 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B01C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87050C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEE52067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA4C2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RoYqbfkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfLPNPL (ORCPT
+        id S1727920AbfLPNPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:15:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:45036 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbfLPNPK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:15:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id h87so5130624ild.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:15:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jrC1hy+B+ZUZUUL3zO0Ty88a7c56IoHN5y2LItNpz4g=;
-        b=hteUYL190P86qzDT2DnDQRi9t6BbYUEq8QEQsI7G9FU11pW9DY1hqccFhZcP7pImYu
-         ot2HRhRD7FcgurSEScx8+vq3jyRijeNon1KjD0S+EsDQ+CJLsYTCZDdIQHSxDiQSLoCQ
-         3T8xiGRUUTqGGE+YeJmvBpPyiBD+7u/0sZ9tOAZIDNzfVW1VlD7D2gGaY6Jjh99JxyUM
-         NcTM9kk1l6RgUHjFRGCtyPco5Tbb/YsIXzI4Yqqd0Kyz8HOIe0WTB6Lv9gDYVH2en0Mw
-         kAXfpL2rMAHi5mdBSsBu4RnPTqMR3tpioI++CHepWM+Tviqh4pc58iBb/+SJximjxKxI
-         EdiQ==
-X-Gm-Message-State: APjAAAVWRzKGpkcH98CbvMyeIzi2RqeaneslK7mK0fuSXm1sZe2if2Hq
-        rlKIm/opmnwgMT9tJXyR39hx3sVjZVSAcYaWRzN+vsrbDlYp
-X-Google-Smtp-Source: APXvYqwsKRh3vgeP21Wrq9YSX6ApLsb7V4nNezP2v/oMJABOflvdEuhucLI0lb7fvR7rsC91k6055RuFLZiFiQg9WpNkkLtGhn5Y
+        Mon, 16 Dec 2019 08:15:15 -0500
+Received: from vps.xff.cz ([195.181.215.36]:45156 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727897AbfLPNPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:15:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1576502113; bh=91BvEmwihOD7qAEzR/XIWeG45IH0J4HCzYdZSVFlRxE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=RoYqbfkDdb6FsoIaYhxjz2Ad0BUS4hazQTN/VAep2LGC1sC45PMPkNj4TcRaOpEXw
+         +lKGjAZYjdlfM+jDDL56VQCNXbDNQ7WdNYR+kslOaCF46jOuaEoESXrWZU3H2eSBaD
+         zmMbFM82pOEPCylQ5rtxHEj8WW5SZpGoMRvGB5xg=
+Date:   Mon, 16 Dec 2019 14:15:12 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling
+ during startup
+Message-ID: <20191216131512.c5x5ltndmdambdf4@core.my.home>
+Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-bluetooth@vger.kernel.org
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-94-sashal@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7e48:: with SMTP id k8mr4574965ioq.39.1576502109853;
- Mon, 16 Dec 2019 05:15:09 -0800 (PST)
-Date:   Mon, 16 Dec 2019 05:15:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003ee3610599d20096@google.com>
-Subject: KASAN: use-after-free Read in __media_entity_remove_links
-From:   syzbot <syzbot+0b0095300dfeb8a83dc8@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210210735.9077-94-sashal@kernel.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On Tue, Dec 10, 2019 at 04:03:58PM -0500, Sasha Levin wrote:
+> From: Stefan Wahren <wahrenst@gmx.net>
+> 
+> [ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
+> 
+> The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
+> doesn't react to HCI requests during DT probe. The reason is the inproper
+> handling of the RTS line during startup. According to the startup
+> signaling sequence in the CYW43455 datasheet, the hosts RTS line must
+> be driven after BT_REG_ON and BT_HOST_WAKE.
+> 
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/bluetooth/hci_bcm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> index 7646636f2d183..0f73f6a686cb7 100644
+> --- a/drivers/bluetooth/hci_bcm.c
+> +++ b/drivers/bluetooth/hci_bcm.c
+> @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
+>  
+>  out:
+>  	if (bcm->dev) {
+> +		hci_uart_set_flow_control(hu, true);
+>  		hu->init_speed = bcm->dev->init_speed;
+>  		hu->oper_speed = bcm->dev->oper_speed;
+>  		err = bcm_gpio_set_power(bcm->dev, true);
+> +		hci_uart_set_flow_control(hu, false);
+>  		if (err)
+>  			goto err_unset_hu;
+>  	}
 
-HEAD commit:    4cc037ec usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=104e177ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e9c2b6de462bc469
-dashboard link: https://syzkaller.appspot.com/bug?extid=0b0095300dfeb8a83dc8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f2fb1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16842d2ee00000
+This causes bluetooth breakage (degraded bluetooth performance, due to failure to
+switch to higher baudrate) for Orange Pi 3 board:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0b0095300dfeb8a83dc8@syzkaller.appspotmail.com
+[    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
+[   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
+[   12.004613] Bluetooth: hci0: Failed to set baudrate
+[   12.123187] Bluetooth: hci0: BCM: chip id 130
+[   12.128398] Bluetooth: hci0: BCM: features 0x0f
+[   12.154686] Bluetooth: hci0: BCM4345C5
+[   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
+[   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
 
-usb 1-1: USB disconnect, device number 2
-==================================================================
-BUG: KASAN: use-after-free in __media_entity_remove_links+0x134/0x160  
-drivers/media/mc/mc-entity.c:779
-Read of size 8 at addr ffff8881d199f120 by task kworker/1:2/1719
+I suggest not pushing this to stable.
 
-CPU: 1 PID: 1719 Comm: kworker/1:2 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xef/0x16e lib/dump_stack.c:118
-  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
-  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:639
-  __media_entity_remove_links+0x134/0x160 drivers/media/mc/mc-entity.c:779
-  __media_device_unregister_entity+0x187/0x300  
-drivers/media/mc/mc-device.c:596
-  media_device_unregister_entity+0x49/0x70 drivers/media/mc/mc-device.c:688
-  v4l2_device_unregister_subdev+0x257/0x380  
-drivers/media/v4l2-core/v4l2-device.c:283
-  v4l2_device_unregister drivers/media/v4l2-core/v4l2-device.c:100 [inline]
-  v4l2_device_unregister+0x139/0x220 drivers/media/v4l2-core/v4l2-device.c:88
-  uvc_unregister_video+0x11a/0x210 drivers/media/usb/uvc/uvc_driver.c:1929
-  uvc_disconnect+0xbc/0x160 drivers/media/usb/uvc/uvc_driver.c:2242
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1134 [inline]
-  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
-  device_del+0x481/0xd30 drivers/base/core.c:2664
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
-  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1753/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+regards,
+	Ondrej
 
-Allocated by task 22:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:670 [inline]
-  media_add_link+0x47/0x180 drivers/media/mc/mc-entity.c:592
-  media_create_pad_link+0x1fb/0x530 drivers/media/mc/mc-entity.c:684
-  uvc_mc_create_links drivers/media/usb/uvc/uvc_entity.c:50 [inline]
-  uvc_mc_register_entities+0x468/0x77a drivers/media/usb/uvc/uvc_entity.c:114
-  uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2075 [inline]
-  uvc_probe.cold+0x2137/0x29de drivers/media/usb/uvc/uvc_driver.c:2201
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 1719:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x129/0x170 mm/kasan/common.c:474
-  slab_free_hook mm/slub.c:1425 [inline]
-  slab_free_freelist_hook mm/slub.c:1458 [inline]
-  slab_free mm/slub.c:3005 [inline]
-  kfree+0xda/0x310 mm/slub.c:3957
-  __media_entity_remove_link+0x25c/0x5d0 drivers/media/mc/mc-entity.c:622
-  __media_entity_remove_links+0x86/0x160 drivers/media/mc/mc-entity.c:780
-  __media_device_unregister_entity+0x187/0x300  
-drivers/media/mc/mc-device.c:596
-  media_device_unregister_entity+0x49/0x70 drivers/media/mc/mc-device.c:688
-  v4l2_device_unregister_subdev+0x257/0x380  
-drivers/media/v4l2-core/v4l2-device.c:283
-  v4l2_device_unregister drivers/media/v4l2-core/v4l2-device.c:100 [inline]
-  v4l2_device_unregister+0x139/0x220 drivers/media/v4l2-core/v4l2-device.c:88
-  uvc_unregister_video+0x11a/0x210 drivers/media/usb/uvc/uvc_driver.c:1929
-  uvc_disconnect+0xbc/0x160 drivers/media/usb/uvc/uvc_driver.c:2242
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1134 [inline]
-  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
-  device_del+0x481/0xd30 drivers/base/core.c:2664
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
-  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1753/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d199f100
-  which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 32 bytes inside of
-  96-byte region [ffff8881d199f100, ffff8881d199f160)
-The buggy address belongs to the page:
-page:ffffea00074667c0 refcount:1 mapcount:0 mapping:ffff8881da002f00  
-index:0xffff8881d199fe80
-raw: 0200000000000200 ffffea0007474e40 0000000e0000000e ffff8881da002f00
-raw: ffff8881d199fe80 0000000080200016 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d199f000: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-  ffff8881d199f080: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-> ffff8881d199f100: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                                ^
-  ffff8881d199f180: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-  ffff8881d199f200: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> 2.20.1
+> 
