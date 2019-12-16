@@ -2,163 +2,132 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3985EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA55DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017082465E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738C624676
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=transsionglobal.onmicrosoft.com header.i=@transsionglobal.onmicrosoft.com header.b="YLET4M2A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YFtjl2oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLPCCw (ORCPT
+        id S1726528AbfLPCKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 21:02:52 -0500
-Received: from mail-eopbgr1300041.outbound.protection.outlook.com ([40.107.130.41]:52954
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726373AbfLPCCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 21:02:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cFP+xAJWsGi76OCd5g2AMrceN+eX1SvxXbrRXqw97J4HPq/8TnxsiAj0J4OxqkqnEKI1sljU94+BR/WQzuIJZtb8gSPkan4pMvGqmriZuXZamXeWI7hKc4QzOQPKIxpawg2QtOMsIWUSFHNH1CH3ESBEc/k8tA1nN2AjDwjK9RH9zuyv8NONfD+I5nCCseLId0IlfF6eYjmj5osgNuz/yM9WAanDQe1r8B+EhAeggN+4zIrbuvd6cYSmOO2454aAfPiUdiLwRmoFXVmfO4oLtoOGzkUoiJtpAJOwQPeFQcpsR1fE3QAdb4oCprb1IP3BcSeA6dSFTZVChsPw0mCKqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SI7R/msScpHcQSvVK0AzEGWohNhrRlL29G3FfIyTa0U=;
- b=HPMLFYYUvSNLaucRTpbVeZDd71L0WkI6KoRa1FVo/G/sx56x0nl4IAox6+5Kr9FvIjZVVhlJrhDvAAG8ScZiXl9cpRPtxb9kjfGZQMylhe/Fna/sYt4qnsxe4DF9kHDZuOLcvJmeZAb28fITyZN6wzMAjfqO5OqVd6MJnUtAA979RIBkoMkVnb2BGCV+UEmcZEgc3dbHfwspVuRw7vHT5r5n1jnFXnlMeKFWEHJTufhradltZaUTN5qEAtUnjegvfVKdD2vL9+t3f9rQw5NFbjfqQpal9VNnc1G1umKz+az71FL1RV2n10fjgINr+DkbvF7JnDR4JtRG9uPg/HDV0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 27.115.63.14) smtp.rcpttodomain=kernel.org smtp.mailfrom=transsion.com;
- dmarc=none action=none header.from=transsion.com; dkim=none (message not
- signed); arc=none
+        Sun, 15 Dec 2019 21:10:53 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40620 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfLPCKx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 21:10:53 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so2747082pgt.7
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 18:10:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=transsionglobal.onmicrosoft.com;
- s=selector2-transsionglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SI7R/msScpHcQSvVK0AzEGWohNhrRlL29G3FfIyTa0U=;
- b=YLET4M2AedTmVmygucHMxEWvRpmuuxRQwBL1D+tTDYUbybOXEnqlAHjORkSwVLBE6mt91UIrrlh+jIddyOBVXaof31TkoazVWXn6S1O8/Kw+bQiQNbEeAqVIanHHyXcRjHqygMVWkyiamig6rVgBoIAhdfBxdTod/pVYmiRN1tE=
-Received: from SG2PR0401CA0001.apcprd04.prod.outlook.com (2603:1096:3:1::11)
- by HK0PR04MB2564.apcprd04.prod.outlook.com (2603:1096:203:67::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Mon, 16 Dec
- 2019 02:02:45 +0000
-Received: from PU1APC01FT049.eop-APC01.prod.protection.outlook.com
- (2a01:111:f400:7ebd::208) by SG2PR0401CA0001.outlook.office365.com
- (2603:1096:3:1::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15 via Frontend
- Transport; Mon, 16 Dec 2019 02:02:44 +0000
-Authentication-Results: spf=fail (sender IP is 27.115.63.14)
- smtp.mailfrom=transsion.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=transsion.com;
-Received-SPF: Fail (protection.outlook.com: domain of transsion.com does not
- designate 27.115.63.14 as permitted sender) receiver=protection.outlook.com;
- client-ip=27.115.63.14; helo=mail.transsion.com;
-Received: from mail.transsion.com (27.115.63.14) by
- PU1APC01FT049.mail.protection.outlook.com (10.152.253.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2538.15 via Frontend Transport; Mon, 16 Dec 2019 02:02:43 +0000
-Received: from SH-EXC-MX01.transsion.com (10.150.2.41) by
- SH-EXC-MX01.transsion.com (10.150.2.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 16 Dec 2019 10:02:33 +0800
-Received: from SH-EXC-MX01.transsion.com ([fe80::a9c9:4b06:6245:846c]) by
- SH-EXC-MX01.transsion.com ([fe80::a9c9:4b06:6245:846c%13]) with mapi id
- 15.01.1591.008; Mon, 16 Dec 2019 10:02:33 +0800
-From:   =?gb2312?B?eGlhbnJvbmcuemhvdSjW3M/IyNkp?= 
-        <xianrong.zhou@transsion.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        =?gb2312?B?d2VpbWluLm1hbyjDq87Aw/Ep?= <weimin.mao@transsion.com>,
-        =?gb2312?B?aGFpemhvdS5zb25nKMvOuqPW2yk=?= 
-        <haizhou.song@transsion.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        =?gb2312?B?d2FuYmluLndhbmcozfTN8rHzKQ==?= 
-        <wanbin.wang@transsion.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?gb2312?B?eXVhbmppb25nLmdhbyi439Sovrwp?= 
-        <yuanjiong.gao@transsion.com>,
-        =?gb2312?B?cnV4aWFuLmZlbmcot+vI5ea1KQ==?= 
-        <ruxian.feng@transsion.com>, "agk@redhat.com" <agk@redhat.com>
-Subject: Reply [PATCH] dm-verity: unnecessary data blocks that need not read
- hash blocks
-Thread-Topic: Reply [PATCH] dm-verity: unnecessary data blocks that need not
- read hash blocks
-Thread-Index: AdWztMxRz9kVwcU5TJCkJS5tt5ezYg==
-Date:   Mon, 16 Dec 2019 02:02:33 +0000
-Message-ID: <727b9e9279a546beb2ae63a18eae6ab0@transsion.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.150.151.93]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dA+Be6hjL2cHUlLT4b0QsKh2SO4TkadtZEXugHfpPn0=;
+        b=YFtjl2oOg9s6QG+eXFDBYnsP4sW5M5MAy/pdUOOJ6vuyeF1jflPjV2z/YOo+il9v4R
+         /eGDJcWYRPV1NoTwxvKC28S5k8H1bEsJsLsmVv2mt/jVvcBlYNhrgg+B+7pllBvUZw6I
+         d3qmgKuQI/28TpQHnmxJ0pAF9x0DLSZMbVaEK+8l14cJvPKAdTYCJnYtt/PNXh5iwi+Z
+         ajVNj0fF9ptvGl7KRtstEdNoI5kWTL0NyIAE6eOtR1auwBLObX+NfVqNYtG5/PoE/oIv
+         d62acGTLwbz8ud1mB2Jn9d/s0jSRR069/iAUPxmsEijJaOVAR7RfiGz/br8Hvpm6UEHA
+         ufEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dA+Be6hjL2cHUlLT4b0QsKh2SO4TkadtZEXugHfpPn0=;
+        b=neGU4dRswezbwyoBAWyQFb7bUUTKpMlVJZjG2cqKDg2MSGg6cV8t4G7RT58A3a+il+
+         76x/DGbEcXrDdDNT+iOOFTkgvAV7VICNJ3g34yMr5C/1C0mboGbLPlflUZGL5Md+sM+x
+         Yj38WB85BiL8o9LYnou5Ke794mk1z9DCBXLEJoBGRa9JIovTGlAf0nyxiBdZD2+2W7Nu
+         4LG4yxmfkPAPMQj/HsUCGgMA0PtbO4yciJWuAjZ+Tvd/HfFWb2pt+wwCQ1FjGCqsezfq
+         Ecqipn5XzQYfK4QL2bMq1RtVjlCksZntd9acPEKSo+noj+FcriulIcqQbirHx7sFkFeQ
+         JIVg==
+X-Gm-Message-State: APjAAAWk2b3nc/j/oj+rKDt+/9O3Cfo2Tk7gkSuL86UM4TTWRf6INl6D
+        nCNtzaBtI/jiljKPeoeUSKj0eQ==
+X-Google-Smtp-Source: APXvYqylJxqANyN2tsXOloyg9jZCWJSFnvigEIIla7pk6dyyIchgI7ylkTViTT47zhAEhRlY2Fi3yg==
+X-Received: by 2002:a65:644b:: with SMTP id s11mr15436130pgv.332.1576462252631;
+        Sun, 15 Dec 2019 18:10:52 -0800 (PST)
+Received: from linaro.org ([121.95.100.191])
+        by smtp.googlemail.com with ESMTPSA id o31sm18900626pgb.56.2019.12.15.18.10.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Dec 2019 18:10:51 -0800 (PST)
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
+        frowand.list@gmail.com
+Cc:     james.morse@arm.com, bhsharma@redhat.com,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v4 0/2] arm64: kexec_file: add kdump
+Date:   Mon, 16 Dec 2019 11:12:45 +0900
+Message-Id: <20191216021247.24950-1-takahiro.akashi@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:27.115.63.14;IPV:;CTRY:CN;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(39850400004)(136003)(396003)(1110001)(339900001)(199004)(189003)(316002)(2906002)(5660300002)(8676002)(4326008)(8936002)(81166006)(6916009)(336012)(478600001)(186003)(26005)(426003)(81156014)(70206006)(54906003)(108616005)(85182001)(356004)(36756003)(86362001)(2616005)(70586007)(7696005)(24736004);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR04MB2564;H:mail.transsion.com;FPR:;SPF:Fail;LANG:en;PTR:mail.reallytek.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8c813980-4f7a-48c6-4836-08d781cc09ee
-X-MS-TrafficTypeDiagnostic: HK0PR04MB2564:
-X-Microsoft-Antispam-PRVS: <HK0PR04MB256419E689FBE9AA81B992D1F8510@HK0PR04MB2564.apcprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 02530BD3AA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pZBBX22bDThTCzV21FdYsZx4HhRYRbBijLxObb6JM2/Ht1JU7YtMyMXV4bKb7z64wHGxaxVtJhyuf/lhRWNkJxbHgamIyI5iFGVjkCNLi6MmDIbU0zoJ3DEtNgobOi/Kr7ikvgtqi1epsX2Yi4bFopHdLlmr6l3fA04n7sOMJllqqdiDCG7nSSni/5ZS/LfWxjIQs9AzDRlQ73KGGrbR3a/oP9zj/MHlW5KrvzJ2Fjqq5GoFbGcLwY4ycFdhdYS2chz4TUEYcc9EOGtR4CdaqCpvzhYb+kGnSxV1SlE7vTtOQkG+O7+UUA4swUPLq3zxVc1awAvOLR3CG9lbUvDg+oUbaimAtWdIfPHv1sSb1tnhW22llt0hDt4maPybvsJHlef8weg4awbuf26FwuQqRJuVmOC1RkB71TwhZlnM0w7zfYUYwA67Izcz8D7jY0Ln
-X-OriginatorOrg: transsion.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2019 02:02:43.4375
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c813980-4f7a-48c6-4836-08d781cc09ee
-X-MS-Exchange-CrossTenant-Id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2;Ip=[27.115.63.14];Helo=[mail.transsion.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR04MB2564
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aGV5IEVyaWM6DQoNCk9uIFdlZCwgRGVjIDExLCAyMDE5IGF0IDExOjMyOjQwQU0gKzA4MDAsIHpo
-b3UgeGlhbnJvbmcgd3JvdGU6DQo+IEZyb206ICJ4aWFucm9uZy56aG91IiA8eGlhbnJvbmcuemhv
-dUB0cmFuc3Npb24uY29tPg0KPiANCj4gSWYgY2hlY2tfYXRfbW9zdF9vbmNlIGVuYWJsZWQsIGp1
-c3QgbGlrZSB2ZXJpdHkgd29yayB0aGUgcHJlZmV0Y2hpbmcgDQo+IHdvcmsgc2hvdWxkIGNoZWNr
-IGZvciBkYXRhIGJsb2NrIGJpdG1hcCBmaXJzdGx5IGJlZm9yZSByZWFkaW5nIGhhc2ggDQo+IGJs
-b2NrIGFzIHdlbGwuIFNraXAgYml0LXNldCBkYXRhIGJsb2NrcyBmcm9tIGJvdGggZW5kcyBvZiBk
-YXRhIGJsb2NrIA0KPiByYW5nZSBieSB0ZXN0aW5nIHRoZSB2YWxpZGF0ZWQgYml0bWFwLiBUaGlz
-IGNhbiByZWR1Y2UgdGhlIGFtb3VudHMgb2YgDQo+IGRhdGEgYmxvY2tzIHdoaWNoIG5lZWQgdG8g
-cmVhZCBoYXNoIGJsb2Nrcy4NCj4gDQo+IExhdW5jaGluZyA5MSBhcHBzIGV2ZXJ5IDE1cyBhbmQg
-cmVwZWF0IDIxIHJvdW5kcyBvbiBBbmRyb2lkIFEuDQo+IEluIHByZWZldGNoaW5nIHdvcmsgd2Ug
-Y2FuIGxldCBvbmx5IDI2MDIvMzYwMzEyID0gMC43MiUgZGF0YSBibG9ja3MgDQo+IHJlYWxseSBu
-ZWVkIHRvIHJlYWQgaGFzaCBibG9ja3MuDQo+IA0KPiBCdXQgdGhlIHJlZHVjZWQgZGF0YSBibG9j
-a3MgcmFuZ2Ugd291bGQgYmUgZW5sYXJnZWQgYWdhaW4gYnkgDQo+IGRtX3Zlcml0eV9wcmVmZXRj
-aF9jbHVzdGVyIGxhdGVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogeGlhbnJvbmcuemhvdSA8eGlh
-bnJvbmcuemhvdUB0cmFuc3Npb24uY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiB5dWFuamlvbmcuZ2Fv
-IDx5dWFuamlvbmcuZ2FvQHRyYW5zc2lvbi5jb20+DQo+IFRlc3RlZC1ieTogcnV4aWFuLmZlbmcg
-PHJ1eGlhbi5mZW5nQHRyYW5zc2lvbi5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9tZC9kbS12ZXJp
-dHktdGFyZ2V0LmMgfCAxNiArKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTYg
-aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWQvZG0tdmVyaXR5LXRh
-cmdldC5jIA0KPiBiL2RyaXZlcnMvbWQvZG0tdmVyaXR5LXRhcmdldC5jIGluZGV4IDRmYjMzZTc1
-NjJjNS4uN2I4ZWI3NTRjMGI2IA0KPiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZC9kbS12ZXJp
-dHktdGFyZ2V0LmMNCj4gKysrIGIvZHJpdmVycy9tZC9kbS12ZXJpdHktdGFyZ2V0LmMNCj4gQEAg
-LTU4MSw2ICs1ODEsMjIgQEAgc3RhdGljIHZvaWQgdmVyaXR5X3ByZWZldGNoX2lvKHN0cnVjdCB3
-b3JrX3N0cnVjdCAqd29yaykNCj4gIAlzdHJ1Y3QgZG1fdmVyaXR5ICp2ID0gcHctPnY7DQo+ICAJ
-aW50IGk7DQo+ICANCj4gKwlpZiAodi0+dmFsaWRhdGVkX2Jsb2Nrcykgew0KPiArCQl3aGlsZSAo
-cHctPm5fYmxvY2tzKSB7DQo+ICsJCQlpZiAodW5saWtlbHkoIXRlc3RfYml0KHB3LT5ibG9jaywg
-di0+dmFsaWRhdGVkX2Jsb2NrcykpKQ0KPiArCQkJCWJyZWFrOw0KPiArCQkJcHctPmJsb2NrKys7
-DQo+ICsJCQlwdy0+bl9ibG9ja3MtLTsNCj4gKwkJfQ0KPiArCQl3aGlsZSAocHctPm5fYmxvY2tz
-KSB7DQo+ICsJCQlpZiAodW5saWtlbHkoIXRlc3RfYml0KHB3LT5ibG9jayArIHB3LT5uX2Jsb2Nr
-cyAtIDEsDQo+ICsJCQkJdi0+dmFsaWRhdGVkX2Jsb2NrcykpKQ0KPiArCQkJCWJyZWFrOw0KPiAr
-CQkJcHctPm5fYmxvY2tzLS07DQo+ICsJCX0NCj4gKwkJaWYgKCFwdy0+bl9ibG9ja3MpDQo+ICsJ
-CQlyZXR1cm47DQo+ICsJfQ0KDQpUaGlzIGlzIGEgZ29vZCBpZGVhLCBidXQgc2hvdWxkbid0IHRo
-aXMgbG9naWMgZ28gaW4gdmVyaXR5X3N1Ym1pdF9wcmVmZXRjaCgpIHByaW9yIHRvIHRoZSBzdHJ1
-Y3QgZG1fdmVyaXR5X3ByZWZldGNoX3dvcmsgYmVpbmcgYWxsb2NhdGVkPyAgVGhlbiBpZiBubyBw
-cmVmZWNoaW5nIGlzIG5lZWRlZCwgYWxsb2NhdGluZyBhbmQgc2NoZWR1bGluZyB0aGUgd29yayBv
-YmplY3QgY2FuIGJlIHNraXBwZWQuDQoNCkVyaWMsIERvIHlvdSBtZWFuIGl0IGlzIG1vcmUgc3Vp
-dGFibGUgaW4gZG1fYnVmaW9fcHJlZmV0Y2ggd2hpY2ggaXMgY2FsbGVkIG9uIGRpZmZlcmVudCBw
-YXRocyBldmVuIHRob3VnaCBwcmVmZWNoaW5nIGlzIGRpc2FibGVkID8NCg0KQWxzbyBub3RlIHRo
-YXQgeW91J3JlIGN1cnJlbnRseSBsZWFraW5nIHRoZSB3b3JrIG9iamVjdCB3aXRoIHRoZSBlYXJs
-eSByZXR1cm4uCQ0KDQpSaWdodCEgSSBsZWFrZWQgdGhpcy4gYWx3YXlzIHNvLiBUaGFua3MhISEN
-Cg0KLSBFcmljDQo=
+This is the last piece of my kexec_file_load implementation for arm64.
+It is now ready for being merged as some relevant patch to dtc/libfdt[1]
+has finally been integrated in v5.3-rc1.
+(Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
+
+Patch#1 and #2 are preliminary patches for libfdt component.
+Patch#3 is to add kdump support.
+
+Bhepesh's patch[3] will be required for 52-bit VA support either against
+legacy kexec or kexec_file.
+Once this patch is applied, whether or not CONFIG_ARM64_VA_BITS_52 is
+enabled or not, a matching fix[4] on user space side, crash utility,
+will also be needed. 
+
+Anyway, I tested my patch, at least, with the following configuration:
+1) CONFIG_ARM64_BITS_48=y
+2) CONFIG_ARM64_BITS_52=y, but vabits_actual=48
+
+(I don't have any platform to use for
+3) CONFIG_ARM64_BITS_52=y, and vabits_actual=52)
+
+[1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
+    v1.5.0-23-g87963ee20693"), in particular
+	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/693411.html
+[4] https://www.redhat.com/archives/crash-utility/2019-November/msg00014.html
+
+Changes in v4 (Dec 16, 2019)
+* rebased to v5.5-rc2
+* use KEXEC_BUF_MEM_UNKNOWN instead of "0" (patch#2)
+
+Changes in v3 (Dec 9, 2019)
+* rebased to v5.5-rc1
+* no functional changes (since v1)
+
+Changes in v2 (Nov 14, 2019)
+* rebased to v5.4-rc7
+* no functional changes
+
+v1 (Sept 12, 2019)
+* on top of v5.3-rc8
+
+AKASHI Takahiro (2):
+  libfdt: include fdt_addresses.c
+  arm64: kexec_file: add crash dump support
+
+ arch/arm64/include/asm/kexec.h         |   4 +
+ arch/arm64/kernel/kexec_image.c        |   4 -
+ arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
+ lib/Makefile                           |   2 +-
+ lib/fdt_addresses.c                    |   2 +
+ 5 files changed, 109 insertions(+), 9 deletions(-)
+ create mode 100644 lib/fdt_addresses.c
+
+-- 
+2.24.0
+
