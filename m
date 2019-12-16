@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C508C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018C1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AD921582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE805206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521463;
-	bh=Fuzx3MD10UTEWpoIo+tb/rfAjkPW5zaJnqeC+50ff3g=;
+	s=default; t=1576521468;
+	bh=Xp4VK4g8z7ehO2iTZkFT1vXBhhdanHJk21j08fBiBs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ze7yFnmc/It6u2cHNiRBBaO9qNr4xpPDNkBlL+VsV6aBndNxuZVKEEPw7yuYbuGq
-	 BROETeXMKZoXQ/+/ZwireYZaYAbjxRuKeSW9Mn5UGw7fL6/IzZimxjNRThwyZLCf03
-	 luw8ICBi+Dw4VaPPBIyjMuunu7G+iLkHRNFcJOMs=
+	b=aWAsFLV6CXqQijQ8VqzYulFRGYlm0cx/aW77xHk4uVAL7BLHrghrs8Iy5vhaXODPS
+	 A3inQ/FTVFklcFgUCYAc0XTfqk7jn0JC/vVc7P0Xgmk9NpUXH+apZHy7XuW85HdOz/
+	 9dbrfq7Y0qjg/4fPgl7c2vQiKpPJG4Nh0PqFje0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbfLPShm (ORCPT
+        id S1729888AbfLPSFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:37:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:05:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbfLPSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:01 -0500
+        id S1729028AbfLPSFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:05:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02FCC20700;
-        Mon, 16 Dec 2019 18:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC3AB2072D;
+        Mon, 16 Dec 2019 18:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519560;
-        bh=Fuzx3MD10UTEWpoIo+tb/rfAjkPW5zaJnqeC+50ff3g=;
+        s=default; t=1576519548;
+        bh=Xp4VK4g8z7ehO2iTZkFT1vXBhhdanHJk21j08fBiBs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gk3dYV/kob478HhQqg0KBZUOoIux1OtmLuKRyVuV7qxvy1QZoLTTxTHcG8Ks4Q0fa
-         J1+uKoAredTbnRVVnYuDAabz0TfAAP4f4oJCuynbQHtQGOIfqAv2JauZ7E7UQGyiWJ
-         wsw3GU99sHn/8t1cSbvJln1QayZcziS53r/6E8oE=
+        b=v8KFpcIXLp1nO+z5ITuiTgxeIRYM++tglrzlnX0aCdG5kdjsJNgBylCCEHW+5xdg4
+         QU0z+v7oqCmFk73tLcvFop8TfxjIGPxJSEYWJa7gqSDTuPP21UHbdbXon5JFvx5cbd
+         sUQ4ZxgLRC+IuXJGQ3LlBzS52Q2Q7HN5ReWZ2igM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/140] net/smc: do not wait under send_lock
-Date:   Mon, 16 Dec 2019 18:49:44 +0100
-Message-Id: <20191216174819.039049758@linuxfoundation.org>
+Subject: [PATCH 4.19 111/140] scsi: lpfc: Correct topology type reporting on G7 adapters
+Date:   Mon, 16 Dec 2019 18:49:39 +0100
+Message-Id: <20191216174816.975135592@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,57 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 33f3fcc290671590821ff3c0c9396db1ec9b7d4c ]
+[ Upstream commit 76558b25733140a0c6bd53ea8af04b2811c92ec3 ]
 
-smc_cdc_get_free_slot() might wait for free transfer buffers when using
-SMC-R. This wait should not be done under the send_lock, which is a
-spin_lock. This fixes a cpu loop in parallel threads waiting for the
-send_lock.
+Driver missed classifying the chip type for G7 when reporting supported
+topologies. This resulted in loop being shown as supported on FC links that
+are not supported per the standard.
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add the chip classifications to the topology checks in the driver.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_tx.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_attr.c | 5 +++--
+ drivers/scsi/lpfc/lpfc_mbox.c | 6 +++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/smc/smc_tx.c b/net/smc/smc_tx.c
-index 0ecbbdc337b82..62885a2781c9a 100644
---- a/net/smc/smc_tx.c
-+++ b/net/smc/smc_tx.c
-@@ -486,25 +486,23 @@ static int smcr_tx_sndbuf_nonempty(struct smc_connection *conn)
- 	struct smc_wr_buf *wr_buf;
- 	int rc;
- 
--	spin_lock_bh(&conn->send_lock);
- 	rc = smc_cdc_get_free_slot(conn, &wr_buf, &pend);
- 	if (rc < 0) {
- 		if (rc == -EBUSY) {
- 			struct smc_sock *smc =
- 				container_of(conn, struct smc_sock, conn);
- 
--			if (smc->sk.sk_err == ECONNABORTED) {
--				rc = sock_error(&smc->sk);
--				goto out_unlock;
--			}
-+			if (smc->sk.sk_err == ECONNABORTED)
-+				return sock_error(&smc->sk);
- 			rc = 0;
- 			if (conn->alert_token_local) /* connection healthy */
- 				mod_delayed_work(system_wq, &conn->tx_work,
- 						 SMC_TX_WORK_DELAY);
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index 1e9002138d31c..fe084d47ed9e5 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -3849,8 +3849,9 @@ lpfc_topology_store(struct device *dev, struct device_attribute *attr,
+ 				val);
+ 			return -EINVAL;
  		}
--		goto out_unlock;
-+		return rc;
+-		if (phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC &&
+-			val == 4) {
++		if ((phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC ||
++		     phba->pcidev->device == PCI_DEVICE_ID_LANCER_G7_FC) &&
++		    val == 4) {
+ 			lpfc_printf_vlog(vport, KERN_ERR, LOG_INIT,
+ 				"3114 Loop mode not supported\n");
+ 			return -EINVAL;
+diff --git a/drivers/scsi/lpfc/lpfc_mbox.c b/drivers/scsi/lpfc/lpfc_mbox.c
+index deb094fdbb793..e6bf5e8bc7670 100644
+--- a/drivers/scsi/lpfc/lpfc_mbox.c
++++ b/drivers/scsi/lpfc/lpfc_mbox.c
+@@ -513,9 +513,9 @@ lpfc_init_link(struct lpfc_hba * phba,
+ 		break;
  	}
  
-+	spin_lock_bh(&conn->send_lock);
- 	if (!conn->local_tx_ctrl.prod_flags.urg_data_present) {
- 		rc = smc_tx_rdma_writes(conn);
- 		if (rc) {
+-	if (phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC &&
+-		mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
+-		/* Failover is not tried for Lancer G6 */
++	if ((phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC ||
++	     phba->pcidev->device == PCI_DEVICE_ID_LANCER_G7_FC) &&
++	    mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
+ 		mb->un.varInitLnk.link_flags = FLAGS_TOPOLOGY_MODE_PT_PT;
+ 		phba->cfg_topology = FLAGS_TOPOLOGY_MODE_PT_PT;
+ 	}
 -- 
 2.20.1
 
