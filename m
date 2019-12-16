@@ -2,102 +2,114 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877E0C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58656C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E677206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngqFTy3o"
+	by mail.kernel.org (Postfix) with ESMTP id 273EE206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521682;
+	bh=As9WKSQ3y0nobEFshxT41+FxQfGhMWaUk8FiRIcy2cE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rK/g1Hlj50IfD+k5leyaHEuK6g+4MkhAhCtXgtjg+NsivAvjy5OU22t+l4OJR7b9F
+	 kp7a1e/qNuNjCOFKm7vOLiTODqtOFFxE/ijMeLMZ4pJwYEpRSDo27hFMlx2u8dQEI2
+	 vRGF7z2GtUJQz0kCmE//U6H/SzcalZUqd5t/GyXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfLPSlP (ORCPT
+        id S1729506AbfLPSlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:41:15 -0500
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:33232 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbfLPSlN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:41:13 -0500
-Received: by mail-wr1-f45.google.com with SMTP id b6so8590019wrq.0;
-        Mon, 16 Dec 2019 10:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=dmiMgoD75AAcjw9CAZdw1UHn0tTsdKG95qJoZRe609s=;
-        b=ngqFTy3olA305iYX6EZqcLN+BQjyz2wKMWgz3dJ2m8O/tyEtLn7SOCWPza8nJMh4zn
-         XveTtlWQA+GDN57VINSxnK2ca3s7OUIEa0r8qTD7fnVOOikzEaPTXnwHi8asYPJXPlwx
-         KwmYlZJ2lEw3bCsDVw+VtgH/71J5IQsVxSbjs0AemXIb6gNljIc36geRdKxfvDgfIgWu
-         1fEeMk2d/t2o7dHcpNxjDppkb8lFfnIhXrtDnlTAzOfyHUW9sfFNWuZlKkNnFeou+ui1
-         IR2EZRSCtt7uQTCOD50N9UNiRa1LTn7jFw2VP+FjoK9eDUAllIUVlJgn4RArjydl3Gc+
-         1vYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=dmiMgoD75AAcjw9CAZdw1UHn0tTsdKG95qJoZRe609s=;
-        b=iNLadC+dy8zPHAOeyj6RCfOUqSMDDDe+VzDGX3fSvnvh2C5VQ4XLlumjQZ4hU7eNe3
-         ps/v85WodOjzZi6SkMFDxWlWLid4dI1sodBhkRZjUTFK3Y51/W0U+URpeGz9nukdC7Nu
-         XCjTqs9A4t4gLsfR5uXYQS3uCrhgN6MWobvsbrD3qdwiV6wecvfhN4YY/Mm9VuKfaYxq
-         Zg9zK31z4kqTSs2OpnBsYOVrLWDWgRBrd0eQ95ZMut3xlYINEUsdhu7HrmS1sQZSEZVz
-         tuO2liB85RHJsHMbEuX2P3Qx691SC7DDVArPxzVsdNt/KguVulJVbQxJvuoa6Y9wYZdN
-         j+kA==
-X-Gm-Message-State: APjAAAWGvd2S1SwYbtVXnGuoSkip8qu/rwMcNeZgipSVlSf+yEaE5yOf
-        bi+7qtTLNnNvS9CJs/yWGLE=
-X-Google-Smtp-Source: APXvYqyKkMN/qW4xYNq8UMawoOmvbRZkuOZ+cFL6xDfsqUXPsmPt1FpvM7lRXAbCbYvtCCNI/KiKTA==
-X-Received: by 2002:a5d:5708:: with SMTP id a8mr33619339wrv.79.1576521671684;
-        Mon, 16 Dec 2019 10:41:11 -0800 (PST)
-Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id z83sm293566wmg.2.2019.12.16.10.41.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 10:41:11 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <05cd01d5b43f$b7d88f60$2789ae20$@gmail.com>
-In-Reply-To: <05cd01d5b43f$b7d88f60$2789ae20$@gmail.com>
-Subject: RE: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Mon, 16 Dec 2019 18:41:10 -0000
-Message-ID: <05dd01d5b440$63421740$29c645c0$@gmail.com>
+        Mon, 16 Dec 2019 13:41:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729148AbfLPSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC1621582;
+        Mon, 16 Dec 2019 18:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519286;
+        bh=As9WKSQ3y0nobEFshxT41+FxQfGhMWaUk8FiRIcy2cE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cFObJF1VoXcE8pzDvirWeMqzJFv8pcojmy3AywA15qrm7OwlpXbGCBtGRhvFCQgPo
+         3Mlf79lNhK7yBrel3dA/W4VJ8VBWF0ccguunG4SwwPj6XfIqXEHeAkMb4Ba/x+iNw4
+         Jg8Yu8i5qFUpKkBfmNkjxuNm4Dbp49haxNA2JpfU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 235/267] ext4: Fix credit estimate for final inode freeing
+Date:   Mon, 16 Dec 2019 18:49:21 +0100
+Message-Id: <20191216174915.429633953@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIkbnQjyymuSgNjdVHy4DQRhOG+0gKmN4ENpwpw5eA=
-Content-Language: en-gb
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jan Kara <jack@suse.cz>
 
->btw: Recent ONTAP versions return NFS4ERR_STALE_CLIENTID which is handled
-correctly - Linux client will try to renew its lease and if successful it
-will retry open().
+commit 65db869c754e7c271691dd5feabf884347e694f5 upstream.
+
+Estimate for the number of credits needed for final freeing of inode in
+ext4_evict_inode() was to small. We may modify 4 blocks (inode & sb for
+orphan deletion, bitmap & group descriptor for inode freeing) and not
+just 3.
+
+[ Fixed minor whitespace nit. -- TYT ]
+
+Fixes: e50e5129f384 ("ext4: xattr-in-inode support")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-6-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ext4/inode.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -195,7 +195,12 @@ void ext4_evict_inode(struct inode *inod
+ {
+ 	handle_t *handle;
+ 	int err;
+-	int extra_credits = 3;
++	/*
++	 * Credits for final inode cleanup and freeing:
++	 * sb + inode (ext4_orphan_del()), block bitmap, group descriptor
++	 * (xattr block freeing), bitmap, group descriptor (inode freeing)
++	 */
++	int extra_credits = 6;
+ 	struct ext4_xattr_inode_array *ea_inode_array = NULL;
  
-One more comment here, although the issue won't manifest to applications
-with NetApp fileservers in this case, it is still wrong for the client to
-end up in such a state.
-Also, you will need to wait longer (keep unmounting/mounting) with NetApp
-filers as they seem to have implemented courtesy locks/delayed lease
-expiration as per the RFC.
-This means to reproduce the issue against NetApp you need to wait at least
-2x grace period + 1 minute).
-
-
-    
-Best regards,
- Robert Milkowski
-
+ 	trace_ext4_evict_inode(inode);
+@@ -251,8 +256,12 @@ void ext4_evict_inode(struct inode *inod
+ 	if (!IS_NOQUOTA(inode))
+ 		extra_credits += EXT4_MAXQUOTAS_DEL_BLOCKS(inode->i_sb);
+ 
++	/*
++	 * Block bitmap, group descriptor, and inode are accounted in both
++	 * ext4_blocks_for_truncate() and extra_credits. So subtract 3.
++	 */
+ 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE,
+-				 ext4_blocks_for_truncate(inode)+extra_credits);
++			 ext4_blocks_for_truncate(inode) + extra_credits - 3);
+ 	if (IS_ERR(handle)) {
+ 		ext4_std_error(inode->i_sb, PTR_ERR(handle));
+ 		/*
 
 
