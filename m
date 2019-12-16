@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284A4C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C508C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C62206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AD921582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521461;
-	bh=BdZ0yQP4HI8x/lzZSpbUwSTV0mG9B9AKkhRakrXWk5s=;
+	s=default; t=1576521463;
+	bh=Fuzx3MD10UTEWpoIo+tb/rfAjkPW5zaJnqeC+50ff3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnJAfgEfcNnxXu5PJyPCt0YZ1eUmZpjjVUeCSncATtLnys5w8OY22ZyzETweLyC5j
-	 x3zlW1OR/3BaGYHjAMoUt/a/eALAzsvclHY+EE84Ggak2P5230+R5RIJ1MCB/b2MdU
-	 6w0y3fKxIS4AuDQubKP5yBWcGE9M4IZ0T6I0uOJ0=
+	b=1ze7yFnmc/It6u2cHNiRBBaO9qNr4xpPDNkBlL+VsV6aBndNxuZVKEEPw7yuYbuGq
+	 BROETeXMKZoXQ/+/ZwireYZaYAbjxRuKeSW9Mn5UGw7fL6/IzZimxjNRThwyZLCf03
+	 luw8ICBi+Dw4VaPPBIyjMuunu7G+iLkHRNFcJOMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfLPSFz (ORCPT
+        id S1730034AbfLPShm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:05:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:37:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729685AbfLPSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:53 -0500
+        id S1728182AbfLPSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B8CD2072D;
-        Mon, 16 Dec 2019 18:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02FCC20700;
+        Mon, 16 Dec 2019 18:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519553;
-        bh=BdZ0yQP4HI8x/lzZSpbUwSTV0mG9B9AKkhRakrXWk5s=;
+        s=default; t=1576519560;
+        bh=Fuzx3MD10UTEWpoIo+tb/rfAjkPW5zaJnqeC+50ff3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1sH7zy80RhVyV/W9ntYjhJKidzQsNYax3L7JLfDRI7JwJ85fdGZYIZQAxK7PPzaX
-         X2l08pfHCxlPgIDqdj5zbOAqSTrs8XcOKsVgqOtjjujjbI6Nq/hHpSmnNtcCRe6jys
-         CYPQTyK2fHIkXMD9FVKoBYz8MhaWzxOyF3dy8Ydg=
+        b=gk3dYV/kob478HhQqg0KBZUOoIux1OtmLuKRyVuV7qxvy1QZoLTTxTHcG8Ks4Q0fa
+         J1+uKoAredTbnRVVnYuDAabz0TfAAP4f4oJCuynbQHtQGOIfqAv2JauZ7E7UQGyiWJ
+         wsw3GU99sHn/8t1cSbvJln1QayZcziS53r/6E8oE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/140] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
-Date:   Mon, 16 Dec 2019 18:49:41 +0100
-Message-Id: <20191216174817.376556781@linuxfoundation.org>
+Subject: [PATCH 4.19 116/140] net/smc: do not wait under send_lock
+Date:   Mon, 16 Dec 2019 18:49:44 +0100
+Message-Id: <20191216174819.039049758@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,37 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
+[ Upstream commit 33f3fcc290671590821ff3c0c9396db1ec9b7d4c ]
 
-Fix a static code checker warning:
-drivers/net/ethernet/intel/e100.c:1349
- e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
+smc_cdc_get_free_slot() might wait for free transfer buffers when using
+SMC-R. This wait should not be done under the send_lock, which is a
+spin_lock. This fixes a cpu loop in parallel threads waiting for the
+send_lock.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e100.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/smc/smc_tx.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index 27d5f27163d2c..78b44d7876386 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -1345,8 +1345,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
+diff --git a/net/smc/smc_tx.c b/net/smc/smc_tx.c
+index 0ecbbdc337b82..62885a2781c9a 100644
+--- a/net/smc/smc_tx.c
++++ b/net/smc/smc_tx.c
+@@ -486,25 +486,23 @@ static int smcr_tx_sndbuf_nonempty(struct smc_connection *conn)
+ 	struct smc_wr_buf *wr_buf;
+ 	int rc;
  
- 	fw = e100_request_firmware(nic);
- 	/* If it's NULL, then no ucode is required */
--	if (!fw || IS_ERR(fw))
--		return PTR_ERR(fw);
-+	if (IS_ERR_OR_NULL(fw))
-+		return PTR_ERR_OR_ZERO(fw);
+-	spin_lock_bh(&conn->send_lock);
+ 	rc = smc_cdc_get_free_slot(conn, &wr_buf, &pend);
+ 	if (rc < 0) {
+ 		if (rc == -EBUSY) {
+ 			struct smc_sock *smc =
+ 				container_of(conn, struct smc_sock, conn);
  
- 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
- 		netif_err(nic, probe, nic->netdev,
+-			if (smc->sk.sk_err == ECONNABORTED) {
+-				rc = sock_error(&smc->sk);
+-				goto out_unlock;
+-			}
++			if (smc->sk.sk_err == ECONNABORTED)
++				return sock_error(&smc->sk);
+ 			rc = 0;
+ 			if (conn->alert_token_local) /* connection healthy */
+ 				mod_delayed_work(system_wq, &conn->tx_work,
+ 						 SMC_TX_WORK_DELAY);
+ 		}
+-		goto out_unlock;
++		return rc;
+ 	}
+ 
++	spin_lock_bh(&conn->send_lock);
+ 	if (!conn->local_tx_ctrl.prod_flags.urg_data_present) {
+ 		rc = smc_tx_rdma_writes(conn);
+ 		if (rc) {
 -- 
 2.20.1
 
