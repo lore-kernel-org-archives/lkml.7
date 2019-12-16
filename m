@@ -2,313 +2,131 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42EDC47409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16AE2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576494678;
-	bh=A7AUUJpVpvCGayfJCEP0Dp7YfD45RnWbwafdRAozocI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VjZeQ6Q5U+ZzePAIIO3lbNuzmKy5RlsaCA2tfPdkkv0L08eRz8aiShGtXIjtrkJ7R
-	 QxUNHMnN3rCeQ+qUhitmsAVhRdUrephckfz7qCaUD+1N0cVzED0+XO81QMu8FJ3PiJ
-	 8/v8S9tuptkKNNuTA4rCW0qUjS+l4DzUSDEuYuIk=
+	by mail.kernel.org (Postfix) with ESMTP id A32A22072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/jCrwoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLPLLR (ORCPT
+        id S1727574AbfLPLLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:11:17 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:21597 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfLPLLQ (ORCPT
+        Mon, 16 Dec 2019 06:11:37 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42653 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727140AbfLPLLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:11:16 -0500
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xBGBB79c019508;
-        Mon, 16 Dec 2019 20:11:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBGBB79c019508
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576494668;
-        bh=qBKefwqQitZhL6I4eBQdRTRPWC5kpTe8hnKaQk64Qu4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jgikHonVxQz1G13GekCnlYOR+LJg0Ve/brvtKVsQXFhBzLKWpq6Q2R3OhTSNKBgR1
-         wu5F6Yw+9KIh2twSe0Oiuj+NlIu+U23nL5dwyvu+fR5rwQ961tnThjoZqWGsNgk8fg
-         Zht/aLcqkDAy4l+IknvtvE4KpaO9SHincgXahHFoACfRlYH4z4++cph9WSL3Dpdmm6
-         SaO4DO9RhEi21q9nKpyYtRXrKwElvc8IGKBX5qPesmT0K9/c4h+4xCPCiKgYH2N8U5
-         wxUmLC6YJ3rPy13+SvJ6cGNM8zTojuzYorvvixgaxoNlc5QjKmvXttYZwdWgWwElt9
-         rBpAwCIcOs0rg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id x18so3857596vsq.4;
-        Mon, 16 Dec 2019 03:11:07 -0800 (PST)
-X-Gm-Message-State: APjAAAVNG2fO2+s7dCwXgX8PLFqmfNkhn3syNDqT2BMjK/lsDtFQ368Y
-        vjI/mQhOpoxgc6cpSHRsumIa/h6ZpyEvDpuiJTk=
-X-Google-Smtp-Source: APXvYqzEgniVxn2J6CNEWQhemKkcpRi7kyQGTsmGSMweO+pJcDNj8liS297PGQU+sz16ijjthuUmbI3aiIupG8ofAWc=
-X-Received: by 2002:a67:f055:: with SMTP id q21mr19897000vsm.215.1576494666564;
- Mon, 16 Dec 2019 03:11:06 -0800 (PST)
+        Mon, 16 Dec 2019 06:11:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576494695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
+        b=P/jCrwoVUgSuRPZ0wEoMSKFN5dladWd8opE3ZpD/VNx9IDHniBn6Wa1Elw8EDWwTofUa+s
+        tUneswKjaVOVeq/I85dTNWALicBxwZG8A6FDzH3YEHIOzAKs7aPZjs4ULe6ufAtWc71WBp
+        uD/jURIiFCDT/thlQEsqetCCLDjm1UY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-Shv1eYX1M1eLoUpTDSTpkw-1; Mon, 16 Dec 2019 06:11:34 -0500
+X-MC-Unique: Shv1eYX1M1eLoUpTDSTpkw-1
+Received: by mail-wr1-f72.google.com with SMTP id u12so1871225wrt.15
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 03:11:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
+        b=TKWlqmrnxcUUwmlzam9/eXA2B4xR06rRInsLWaxgXZQ+7XQ9xpLMvhA6EWby+y3dgk
+         fAWyrRjGGjWxT1CXhIbiHkeGm/RmjNRo/MiYbveEsuC1/6w4/hG8o6b8w0b1S8MF8SfL
+         /2GaheEEQPdxH6iK2+mqpUzFzzUGGPO6DSF2k3bCqhxhuuDA4Oe7OSc8N78oG+7YA98U
+         f9lO6kKfsd4pGDJP8eTzOszvgl01JFJ6/nOsAMaCwqcK5LalhnKd5B+3VVV5weLjusdi
+         nLwzE4UQcRqt5UJLtLKp1OsdXGIjZdi2BB95HPqGKBAzpznej9ffM4g+fRoVrhadWhO1
+         kIhA==
+X-Gm-Message-State: APjAAAXbamZDPMAg26KDHJkz8ZBcEZXAJEOWcWr8MXyUv6ranJwfLnni
+        cjFV5Jmgf+AzjQSiJzJmOhuPaI8OVBP1UeBYArTKpHHy8dUQrr1F88kTtiarFOJFxx8xz6VN02l
+        XXpVBltUYMeonV6iOttzLozHZ
+X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955306wmc.161.1576494693445;
+        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz95JVS+9hzCpx2tUeBC+2E8wF70N/Kg5EXyntvwnCxuCB6OinaKV46tDHhavo+POTw6isKJw==
+X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955289wmc.161.1576494693250;
+        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id x18sm20950368wrr.75.2019.12.16.03.11.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 03:11:32 -0800 (PST)
+Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs from VBT
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+Date:   Mon, 16 Dec 2019 12:11:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <5a473c6c-cc1f-6648-31ec-3b40e415a836@infradead.org> <20191207014238.5507-1-penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20191207014238.5507-1-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 16 Dec 2019 20:10:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATj5RBHov_w05q1XSiOPN7fYQCKhVMDzHNwHSB1Eq2rmQ@mail.gmail.com>
-Message-ID: <CAK7LNATj5RBHov_w05q1XSiOPN7fYQCKhVMDzHNwHSB1Eq2rmQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kconfig: Add yes2modconfig and mod2yesconfig targets.
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hi,
 
-I tested this, and seems working.
-Please see some comments below.
+On 16-12-2019 11:26, Linus Walleij wrote:
+> On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+>> Linus, this series starts with the already discussed pinctrl change to
+>> export the function to unregister a pinctrl-map. We can either merge this
+>> through drm-intel, or you could pick it up and then provide an immutable
+>> branch with it for merging into drm-intel-next. Which option do you prefer?
+> 
+> I have created an immutable branch with these changes and pulled it
+> to my "devel" branch for v5.6:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
 
-On Sat, Dec 7, 2019 at 10:43 AM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> Since kernel configs provided by syzbot are close to "make allyesconfig",
-> it takes long time to rebuild. This is especially waste of time when we
-> need to rebuild for many times (e.g. doing manual printk() inspection,
-> bisect operations).
->
-> We can save time if we can exclude modules which are irrelevant to each
-> problem. But "make localmodconfig" cannot exclude modules which are built
-> into vmlinux because /sbin/lsmod output is used as the source of modules.
->
-> Therefore, this patch adds "make yes2modconfig" which converts from =y
-> to =m if possible. After confirming that the interested problem is still
-> reproducible, we can try "make localmodconfig" (and/or manually tune
-> based on "Modules linked in:" line) in order to exclude modules which are
-> irrelevant to the interested problem. While we are at it, this patch also
-> adds "make mod2yesconfig" which converts from =m to =y in case someone
-> wants to convert from =m to =y after "make localmodconfig".
->
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> ---
-> Changelog since v1:
-> - Updated the available 'help' targets in Makefile.
->
->  scripts/kconfig/Makefile   |  4 +++-
->  scripts/kconfig/conf.c     | 17 +++++++++++++++++
->  scripts/kconfig/confdata.c | 26 ++++++++++++++++++++++++++
->  scripts/kconfig/lkc.h      |  3 +++
->  4 files changed, 49 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index 2f1a59fa5169..4da36f83277f 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -67,7 +67,7 @@ localyesconfig localmodconfig: $(obj)/conf
->  #  deprecated for external use
->  simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
->         alldefconfig randconfig listnewconfig olddefconfig syncconfig \
-> -       helpnewconfig
-> +       helpnewconfig yes2modconfig mod2yesconfig
->
->  PHONY += $(simple-targets)
->
-> @@ -135,6 +135,8 @@ help:
->         @echo  '  allmodconfig    - New config selecting modules when possible'
->         @echo  '  alldefconfig    - New config with all symbols set to default'
->         @echo  '  randconfig      - New config with random answer to all options'
-> +       @echo  '  yes2modconfig   - Change answers from yes to mod if possible'
-> +       @echo  '  mod2yesconfig   - Change answers from mod to yes'
+Ugh, taking one last look at the "pinctrl: Export pinctrl_unregister_mappings"
+patch it is no good, sorry.
 
+I just realized that if the mapping has been dupped, the if (maps_node->maps == map)
+check will never be true, because maps_node->maps is the return value from kmemdup
+and map is the map originally passed in while registering.
 
-For consistency,
-"mod to yes if possible" ?
+Linus, can you please drop this from your -next ?
 
-Turning mod into yes may not be possible
-due to some dependencies.
+So I see 2 options:
+1) Add an orig_map member to maps_node and use that in the comparison,
+this is IMHO somewhat ugly
 
-For example, see lib/Kconfig.debug
+2) Add a new pinctrl_register_mappings_no_dup helper and document in
+pinctrl_unregister_mappings kdoc that it can only be used together
+with the no_dup variant.
 
-'depends on m' is a common idiom to limit a CONFIG option
-to either m or n.
+I believe that 2 is by far the best option. Linus do you agree or
+do you have any other suggestions?
 
+Regards,
 
+Hans
 
->         @echo  '  listnewconfig   - List new options'
->         @echo  '  helpnewconfig   - List new options and help text'
->         @echo  '  olddefconfig    - Same as oldconfig but sets new symbols to their'
-> diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
-> index 1f89bf1558ce..ae9ddf88c64d 100644
-> --- a/scripts/kconfig/conf.c
-> +++ b/scripts/kconfig/conf.c
-> @@ -34,6 +34,8 @@ enum input_mode {
->         listnewconfig,
->         helpnewconfig,
->         olddefconfig,
-> +       yes2modconfig,
-> +       mod2yesconfig,
->  };
->  static enum input_mode input_mode = oldaskconfig;
->
-> @@ -467,6 +469,8 @@ static struct option long_opts[] = {
->         {"listnewconfig",   no_argument,       NULL, listnewconfig},
->         {"helpnewconfig",   no_argument,       NULL, helpnewconfig},
->         {"olddefconfig",    no_argument,       NULL, olddefconfig},
-> +       {"yes2modconfig",   no_argument,       NULL, yes2modconfig},
-> +       {"mod2yesconfig",   no_argument,       NULL, mod2yesconfig},
->         {NULL, 0, NULL, 0}
->  };
->
-> @@ -489,6 +493,8 @@ static void conf_usage(const char *progname)
->         printf("  --allmodconfig          New config where all options are answered with mod\n");
->         printf("  --alldefconfig          New config with all symbols set to default\n");
->         printf("  --randconfig            New config with random answer to all options\n");
-> +       printf("  --yes2modconfig         Change answers from yes to mod if possible\n");
-> +       printf("  --mod2yesconfig         Change answers from mod to yes\n");
-
-Same here.
-"if possible"
-
-
-
->  }
->
->  int main(int ac, char **av)
-> @@ -553,6 +559,8 @@ int main(int ac, char **av)
->                 case listnewconfig:
->                 case helpnewconfig:
->                 case olddefconfig:
-> +               case yes2modconfig:
-> +               case mod2yesconfig:
->                         break;
->                 case '?':
->                         conf_usage(progname);
-> @@ -587,6 +595,8 @@ int main(int ac, char **av)
->         case listnewconfig:
->         case helpnewconfig:
->         case olddefconfig:
-> +       case yes2modconfig:
-> +       case mod2yesconfig:
->                 conf_read(NULL);
->                 break;
->         case allnoconfig:
-> @@ -638,6 +648,11 @@ int main(int ac, char **av)
->                 }
->         }
->
-> +       if (input_mode == yes2modconfig)
-> +               conf_rewrite_mod_or_yes(def_y2m);
-> +       else if (input_mode == mod2yesconfig)
-> +               conf_rewrite_mod_or_yes(def_m2y);
-> +
-
-For consistency, why not put these lines into the switch statement below?
-
-
-
->         switch (input_mode) {
->         case allnoconfig:
->                 conf_set_all_new_symbols(def_no);
-> @@ -669,6 +684,8 @@ int main(int ac, char **av)
->         case listnewconfig:
->         case helpnewconfig:
->         case syncconfig:
-> +       case yes2modconfig:
-> +       case mod2yesconfig:
-
-This looks like
-yes2mod/mod2yesconfig are interactive modes.
-Why do you need this?
-
-I believe yes2mod/mod2yesconfig
-should work non-interactively.
-
-
-
->                 /* Update until a loop caused no more changes */
->                 do {
->                         conf_cnt = 0;
-> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-> index 3569d2dec37c..6832a04a1aa4 100644
-> --- a/scripts/kconfig/confdata.c
-> +++ b/scripts/kconfig/confdata.c
-> @@ -1362,3 +1362,29 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
->
->         return has_changed;
->  }
-> +
-> +bool conf_rewrite_mod_or_yes(enum conf_def_mode mode)
-
-If you do not use the return value of this function,
-could you make it into a void function?
-
-
-
-> +{
-> +       struct symbol *sym;
-> +       int i;
-> +       bool has_changed = false;
-> +
-> +       if (mode == def_y2m) {
-> +               for_all_symbols(i, sym) {
-> +                       if (sym_get_type(sym) == S_TRISTATE &&
-> +                           sym->def[S_DEF_USER].tri == yes) {
-> +                               sym->def[S_DEF_USER].tri = mod;
-> +                               has_changed = true;
-
-sym_add_change_count(1); seems the convention way
-to inform kconfig of some options being updated.
-
-
-
-> +                       }
-> +               }
-> +       } else if (mode == def_m2y) {
-> +               for_all_symbols(i, sym) {
-> +                       if (sym_get_type(sym) == S_TRISTATE &&
-> +                           sym->def[S_DEF_USER].tri == mod) {
-> +                               sym->def[S_DEF_USER].tri = yes;
-> +                               has_changed = true;
-> +                       }
-> +               }
-> +       }
-> +       return has_changed;
-
-
-
-Perhaps, the similar for_all_symbols() could be merged, like follows:
-(this might be a matter of preference, though)
-
-
-        tristate old_val = (mode == def_y2m) ? yes : mod;
-        tristate new_val = (mode == def_y2m) ? mod : yes;
-
-        for_all_symbols(i, sym) {
-                if (sym_get_type(sym) == S_TRISTATE &&
-                    sym->def[S_DEF_USER].tri == old_val) {
-                              sym->def[S_DEF_USER].tri = new_val;
-                              sym_add_change_count(1);
-
-
-
-
-
-BTW, I have never contributed to the syzbot bug shooting.
-So, please teach me if you know this:
-Is there a a specific reason why the config set for syzbot
-is close to allyesconfig instead of allmodconfig?
-
-
-Thanks.
-
-
-
---
-Best Regards
-
-Masahiro Yamada
