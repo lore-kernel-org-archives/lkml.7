@@ -2,152 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877E0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5CF206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521661;
-	bh=KWIJ7ZeDG4964tC5hBxLoL6XtKsLZ097pRrc/2uZips=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hiMpyiA46DkTJzgIAtnOPW7mOGGISRhGhY/x+AWbW9SqaIa++4oax964qEnwPHuex
-	 YgUAx1g68PJ384TTeOXdOGRiIWjWkDZdpOrr5U2yLfpdfneWiZknWK9mpvmIYMBfZP
-	 C4sgT2DQmowNBHfmxeE8ZGLCHXTkWBR7oBzc7Liw=
+	by mail.kernel.org (Postfix) with ESMTP id 5E677206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngqFTy3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfLPSlA (ORCPT
+        id S1729346AbfLPSlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:41:00 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37614 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfLPSBr (ORCPT
+        Mon, 16 Dec 2019 13:41:15 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:33232 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728940AbfLPSlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:47 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k14so10208430otn.4;
-        Mon, 16 Dec 2019 10:01:46 -0800 (PST)
+        Mon, 16 Dec 2019 13:41:13 -0500
+Received: by mail-wr1-f45.google.com with SMTP id b6so8590019wrq.0;
+        Mon, 16 Dec 2019 10:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=dmiMgoD75AAcjw9CAZdw1UHn0tTsdKG95qJoZRe609s=;
+        b=ngqFTy3olA305iYX6EZqcLN+BQjyz2wKMWgz3dJ2m8O/tyEtLn7SOCWPza8nJMh4zn
+         XveTtlWQA+GDN57VINSxnK2ca3s7OUIEa0r8qTD7fnVOOikzEaPTXnwHi8asYPJXPlwx
+         KwmYlZJ2lEw3bCsDVw+VtgH/71J5IQsVxSbjs0AemXIb6gNljIc36geRdKxfvDgfIgWu
+         1fEeMk2d/t2o7dHcpNxjDppkb8lFfnIhXrtDnlTAzOfyHUW9sfFNWuZlKkNnFeou+ui1
+         IR2EZRSCtt7uQTCOD50N9UNiRa1LTn7jFw2VP+FjoK9eDUAllIUVlJgn4RArjydl3Gc+
+         1vYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qc/5271R27TyFXwcNXdVrUFfe556FVCOMsvivSqHqAg=;
-        b=sIwN8SOCYrh/nxbAhf8Efrb51CrNXPhpY0l734Vh8OBL2ugyGrFZoXa1fVkEy1N9y9
-         l4+u6mgPpgypD5sBZxzPfomKiMroYUFWQ/MLIOocvrbxti62uPdguucj2nD1pmAp/BpP
-         cj9cTTTM9GJ5N1rbke8NAleASRSEeQMfGqkz22+OCoD+VKNGf3V/m8WF30hDCGdz/oLe
-         9oQj2f50n4OdZmWavP7BpCiZqoM85CtFB7M522/grz4FoffX5giBIkBBFbu4I7Mhjne/
-         JurKoQM6MGt70bF/Sd0uTqO+m/lPT/QzH9HRlZyCtltdxoBn4fL4sMh8DmyrVc2AtMQ3
-         Ax6g==
-X-Gm-Message-State: APjAAAU9BOJC9Lz7fKxcUfCynfTRxTPf6mYvoK9y4wpGGqQKh1sEdh1O
-        DebqEB+gRPZSHOEV3vOdjw==
-X-Google-Smtp-Source: APXvYqyDjtM59oNy+jnz+ALXTiAza8mNWXii6SfQ0a6fPk4PXCtGHdQapdtyKbKz29Lrhv+sKtPD2Q==
-X-Received: by 2002:a9d:1b4e:: with SMTP id l72mr33875485otl.345.1576519306408;
-        Mon, 16 Dec 2019 10:01:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d59sm7084094otb.50.2019.12.16.10.01.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 10:01:45 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:01:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-Message-ID: <20191216180144.GA27463@bogus>
-References: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
- <0101016ed0006092-b6693b0f-f8c6-428a-9b64-f6e1f4606844-000000@us-west-2.amazonses.com>
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=dmiMgoD75AAcjw9CAZdw1UHn0tTsdKG95qJoZRe609s=;
+        b=iNLadC+dy8zPHAOeyj6RCfOUqSMDDDe+VzDGX3fSvnvh2C5VQ4XLlumjQZ4hU7eNe3
+         ps/v85WodOjzZi6SkMFDxWlWLid4dI1sodBhkRZjUTFK3Y51/W0U+URpeGz9nukdC7Nu
+         XCjTqs9A4t4gLsfR5uXYQS3uCrhgN6MWobvsbrD3qdwiV6wecvfhN4YY/Mm9VuKfaYxq
+         Zg9zK31z4kqTSs2OpnBsYOVrLWDWgRBrd0eQ95ZMut3xlYINEUsdhu7HrmS1sQZSEZVz
+         tuO2liB85RHJsHMbEuX2P3Qx691SC7DDVArPxzVsdNt/KguVulJVbQxJvuoa6Y9wYZdN
+         j+kA==
+X-Gm-Message-State: APjAAAWGvd2S1SwYbtVXnGuoSkip8qu/rwMcNeZgipSVlSf+yEaE5yOf
+        bi+7qtTLNnNvS9CJs/yWGLE=
+X-Google-Smtp-Source: APXvYqyKkMN/qW4xYNq8UMawoOmvbRZkuOZ+cFL6xDfsqUXPsmPt1FpvM7lRXAbCbYvtCCNI/KiKTA==
+X-Received: by 2002:a5d:5708:: with SMTP id a8mr33619339wrv.79.1576521671684;
+        Mon, 16 Dec 2019 10:41:11 -0800 (PST)
+Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id z83sm293566wmg.2.2019.12.16.10.41.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 10:41:11 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>
+Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <05cd01d5b43f$b7d88f60$2789ae20$@gmail.com>
+In-Reply-To: <05cd01d5b43f$b7d88f60$2789ae20$@gmail.com>
+Subject: RE: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Mon, 16 Dec 2019 18:41:10 -0000
+Message-ID: <05dd01d5b440$63421740$29c645c0$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ed0006092-b6693b0f-f8c6-428a-9b64-f6e1f4606844-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIkbnQjyymuSgNjdVHy4DQRhOG+0gKmN4ENpwpw5eA=
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:21:56AM +0000, Taniya Das wrote:
-> The MSS clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,mss.yaml        | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> new file mode 100644
-> index 0000000..4494a6b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
 
-Dual license new bindings please:
+>btw: Recent ONTAP versions return NFS4ERR_STALE_CLIENTID which is handled
+correctly - Linux client will try to renew its lease and if successful it
+will retry open().
+ 
+One more comment here, although the issue won't manifest to applications
+with NetApp fileservers in this case, it is still wrong for the client to
+end up in such a state.
+Also, you will need to wait longer (keep unmounting/mounting) with NetApp
+filers as they seem to have implemented courtesy locks/delayed lease
+expiration as per the RFC.
+This means to reproduce the issue against NetApp you need to wait at least
+2x grace period + 1 minute).
 
-(GPL-2.0-only OR BSD-2-Clause)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Modem Clock Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm modem clock control module which supports the clocks.
-> +
-> +properties:
-> +  compatible :
-> +    enum:
-> +       - qcom,mss-sc7180
+    
+Best regards,
+ Robert Milkowski
 
-Normal order is 'qcom,sc7180-mss'.
 
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
 
-Add:
-
-additionalItems: false
-
-> +
-> +examples:
-> +  # Example of MSS with clock nodes properties for SC7180:
-> +  - |
-> +    clock-controller@41aa000 {
-> +      compatible = "qcom,sc7180-mss";
-> +      reg = <0x041aa000 0x100>;
-> +      reg-names = "cc";
-
-Not documented, nor necessary.
-
-> +      #clock-cells = <1>;
-> +    };
-> +...
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
