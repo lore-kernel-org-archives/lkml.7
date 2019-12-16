@@ -2,190 +2,131 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DCAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919DB206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Mspx/K+Q"
+	by mail.kernel.org (Postfix) with ESMTP id 62E45206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLPIro (ORCPT
+        id S1726908AbfLPItV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:47:44 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44858 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfLPIrn (ORCPT
+        Mon, 16 Dec 2019 03:49:21 -0500
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:33031 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPItV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:47:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so6137628wrm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:47:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
-        b=Mspx/K+QfHmNRZPHL6k5AJMceeZwtVPDzqXbxtrPfcHZCmPaxeuVIFSA4Rgd3YhD76
-         fT1t/dd8PunfVmAPihW8z0V8ypiLOnVwMbhLN4+gap6qinf7YXJvcPpIeGJRt3jqvGMP
-         3L8w5kf1WLsdAvw1jjEl1qSFmI63h9J4n93J7R3Y0Qvg/KFDNSb2eFhUeaKcTUaB1jsa
-         zEIaqTjvq2F8nfDEBLolbmA+4K+N1iHBaF7kroMNF6OpMRIEiSp934EJ5jmxrXlU4ZUS
-         D9xcCyfF7GBak9VY4qWm+AmbxpIupPIY1r/KSd43sD5ioVrT3JoOFBgx4Zsazft7dbYf
-         dssw==
+        Mon, 16 Dec 2019 03:49:21 -0500
+Received: by mail-ot1-f50.google.com with SMTP id d17so8274140otc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:49:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
-        b=rOaxW8sOIYMVj0oyW2RZ/M39JJDdaI6Jf2Pdbwcp50LL34MlqruO/37TQWm9uQkgvQ
-         gWWtxlX3ffnVUgz00IVm1A737hb2XvZTo620FHYKENXwIJjVQM3k9SX1L3VefZgg8Pn1
-         dB2TBCOojTZ9HAvqCFsesCUonTWQLAvWvqkuEZNkU+o+5ZfbDxrVszFBo7STdbjAHwoj
-         vr/6z2OxPw9d85kVcomnQ/f/qhetQewHrZ2DbWYTlAlF2Xbkc3syzdHDbw3biIn56n9r
-         qOKFgDcpx0vtzuxJsLnXRDcQfgBRveEm+8u7iiskg6Rjji88MeTgXk8nd1IYKr34EL4t
-         nN1w==
-X-Gm-Message-State: APjAAAVuX5lOqMVhR7AqIjQVt6iSDclA6jf1axaCfGMeDWunsY2vqh3Q
-        JB31+xXDOcQw9oSNPCqIHCLslg==
-X-Google-Smtp-Source: APXvYqyLnlEaVpkiF1HI78n8G1vzJZongnJIMYz+ifesrg0LxQphKWK8bFoJHiH4Wxje2YoxtG06rw==
-X-Received: by 2002:adf:fc03:: with SMTP id i3mr29498932wrr.306.1576486061156;
-        Mon, 16 Dec 2019 00:47:41 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id z18sm19958406wmf.21.2019.12.16.00.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 00:47:40 -0800 (PST)
-References: <20191208210320.15539-1-repk@triplefau.lt> <1jpngxew6l.fsf@starbuckisacylon.baylibre.com> <20191215113634.GB7304@voidbox>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: amlogic: Make PCIe working reliably on AXG platforms
-In-reply-to: <20191215113634.GB7304@voidbox>
-Date:   Mon, 16 Dec 2019 09:47:39 +0100
-Message-ID: <1jsglkbqs4.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t3tpSwE7m7poBVzPd8EZu474xjqUfv4oG2KZ3IU+yZc=;
+        b=BcDMLd0BosYKEPsNx6SbLfgHzIppqC23l4MUEV7F9RishE/dK+8kb8qtTpkTdGgiRf
+         N6bk5DacCRn91mHbsj3DopRK0JYyCLrSZdpvQ54Zgxe9qclgvP+ZctOMlPylBcueqQoI
+         Z34Ye11czpEasaQcgOAn9JN5NIia2d3Fy8QaFILrLHAgLX8fYqmJhvx2u4hQ4B8ANM7h
+         39kHFGl3s/XGEOFCieVj0AJX+MpBHcnP/HUc/y2kWPq9Jt4bfEuvPJ9lEqBtQkKQ8m8z
+         n9P3gG2yl2At5k7We+PdksfLAY4K6s4zATZQZSk01dA2NnklqYRVTB520Hu7g26AHbNg
+         y3qw==
+X-Gm-Message-State: APjAAAXK4mmv3uSo7XpsWzT/4dvRtZ8RKiGUFn2/k7ccNISmcYUvEwI1
+        kmwtdK/4dI0mlaA/++mEXEJ1jR9ioT8LshAzu+a30FTB
+X-Google-Smtp-Source: APXvYqzRKELwCr0XO/6x7gN8sFTvhH3qjoyCLrwzYNnLz1qIygqROXs6kzATz14rUugVvJ+VzO/0TaipbKfb6l72Q2k=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr30701941ota.145.1576486159745;
+ Mon, 16 Dec 2019 00:49:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191216083658.21386-1-geert@linux-m68k.org>
+In-Reply-To: <20191216083658.21386-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 16 Dec 2019 09:49:08 +0100
+Message-ID: <CAMuHMdUaRdyRigwS+fdju1_PQCahONVFPKu0DbX6hhb7=JXmLA@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.5-rc2
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
-On Sun 15 Dec 2019 at 12:36, Remi Pommarel <repk@triplefau.lt> wrote:
+On Mon, Dec 16, 2019 at 9:38 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v5.5-rc2[1] compared to v5.4[2].
 
-> On Mon, Dec 09, 2019 at 09:32:18AM +0100, Jerome Brunet wrote:
->> 
->> On Sun 08 Dec 2019 at 22:03, Remi Pommarel <repk@triplefau.lt> wrote:
->> 
->> > PCIe device probing failures have been seen on some AXG platforms and were
->> > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
->> > solved the problem. After being contacted about this, vendor reported that
->> > this bit was linked to PCIe PLL CML output.
->> 
->> Thanks for reporting the problem.
->> 
->> As Martin pointed out, the CML outputs already exist in the AXG clock
->> controller but are handled using HHI_PCIE_PLL_CNTL6. Although
->> incomplete, it seems to be aligned with the datasheet I have (v0.9)
->> 
->> According to the same document, HHI_MIPI_CNTL0 belong to the MIPI Phy.
->> Unfortunately bit 26 is not documented
->> 
->> AFAICT, the clock controller is not appropriate driver to deal with this
->> register/bit
->> 
->
-> Regarding both @Martin's and your remark.
->
-> Unfortunately the documentation I have and vendor feedback are a bit
-> vague to me. I do agree that CLKID_PCIE_PLL_CML_ENABLE is not a proper
-> name for this bit because this register is MIPI related.
->
-> Here is the information I got from the vendor [1]. As you can see
-> HHI_MIPI_CNTL0[29] and HHI_MIPI_CNTL0[26] are related together, and
-> HHI_MIPI_CNTL0[29] is implemented in the clock controller as
-> axg_mipi_enable which is why I used this driver for HHI_MIPI_CNTL0[26].
->
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/d1eef1c619749b2a57e514a3fa67d9a516ffa919/ (all 232 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/219d54332a09e8d8741c1e1982f5eae56099de85/ (all 232 configs)
 
-Seems I should have paid more attention when axg_mipi_enable.
-Bit 29 is yet another undocumented bit
+>   + /kisskb/src/arch/m68k/include/asm/string.h: warning: '__builtin_memcpy' forming offset [3, 4] is out of the bounds [0, 2] of object '__gu_val' with type 'short unsigned int' [-Warray-bounds]:  => 72:25
 
-> So maybe I could rename this bit to something MIPI related ?
+The upgrade from gcc 4.6.3 to 81.0 seems to have revealed a potential
+issue in get_user() in arch/m68k/include/asm/uaccess_no.h.
 
-This register region is simply not part of the main clock
-controller. The bits in it are not related to this controller but the
-MIPI PHY. It should not have been mapped in this way to begin with.
+        #define get_user(x, ptr)                                        \
+        ({                                                              \
+            int __gu_err = 0;                                           \
+            typeof(x) __gu_val = 0;                                     \
+            ^^^^^^^^^
+            This is the type of the destination
 
-I can see how it would be convient to model this with a gate to just
-flip the bit when needed but it is just wrong.
+            switch (sizeof(*(ptr))) {                                   \
+            case 1:                                                     \
+                __get_user_asm(__gu_err, __gu_val, ptr, b, "=d");       \
+                break;                                                  \
+            case 2:                                                     \
+                __get_user_asm(__gu_err, __gu_val, ptr, w, "=r");       \
+                break;                                                  \
+            case 4:                                                     \
+                __get_user_asm(__gu_err, __gu_val, ptr, l, "=r");       \
+                break;                                                  \
+            case 8:                                                     \
+                memcpy((void *) &__gu_val, ptr, sizeof (*(ptr)));       \
+                break;                                                  \
+            default:                                                    \
+                __gu_val = 0;                                           \
+                __gu_err = __get_user_bad();                            \
+                break;                                                  \
+            }                                                           \
+            (x) = (typeof(*(ptr))) __gu_val;                            \
+            __gu_err;                                                   \
+        })
 
-The documentation says the register are for the MIPI analog PHY, it
-should be implemented as such and used by the PCIe as needed.
+ext2_ioctl() calls this like
 
-Of course, fixing this (remapping the region and removing
-axg_mipi_enable) will be a bit messy. If you want to make that MIPI Phy
-driver, I can help you with the clock part.
+        unsigned short rsv_window_size;
+        if (get_user(rsv_window_size, (int __user *)arg)) { ... }
 
->
->> >
->> > This serie adds a way to set this bit through AXG clock gating logic.
->> > Platforms having this kind of issue could make use of this gating by
->> > applying a patch to their devicetree similar to:
->> >
->> >                 clocks = <&clkc CLKID_USB
->> >                         &clkc CLKID_MIPI_ENABLE
->> >                         &clkc CLKID_PCIE_A
->> > -                       &clkc CLKID_PCIE_CML_EN0>;
->> > +                       &clkc CLKID_PCIE_CML_EN0
->> > +                       &clkc CLKID_PCIE_PLL_CML_ENABLE>;
->> >                 clock-names = "pcie_general",
->> >                                 "pcie_mipi_en",
->> >                                 "pcie",
->> > -                               "port";
->> > +                               "port",
->> > +                               "pll_cml_en";
->> >                 resets = <&reset RESET_PCIE_PHY>,
->> >                         <&reset RESET_PCIE_A>,
->> >                         <&reset RESET_PCIE_APB>;
->> 
->> A few remarks for your future patches:
->> 
->> * You need to document any need binding you introduce:
->>   It means that there should have been a patch in
->>   Documentation/devicetree/... before using your newclock name in the
->>   pcie driver. As Martin pointed out, dt-bindings should be dealt with
->>   in their own patches
->> 
->> >
->> >
->> > Remi Pommarel (2):
->> >   clk: meson: axg: add pcie pll cml gating
->> 
->> Whenever possible, patches intended for different maintainers should be
->> sent separately (different series)
->
-> Thanks, will do both of the above remarks.
->
->> 
->> >   PCI: amlogic: Use PCIe pll gate when available
->> >
->> >  drivers/clk/meson/axg.c                | 3 +++
->> >  drivers/clk/meson/axg.h                | 2 +-
->> >  drivers/pci/controller/dwc/pci-meson.c | 5 +++++
->> >  include/dt-bindings/clock/axg-clkc.h   | 1 +
->> >  4 files changed, 10 insertions(+), 1 deletion(-)
->> 
->
-> Thanks for reviewing this.
->
-> [1] https://i.snipboard.io/bHMPeq.jpg
+So a 32-bit value is being copied to an unsigned short value, leading
+to the warning (for the memcpy() in the non-taken "case 8" branch).
 
+Fortunately the compiler emits a register move for this, so no real harm
+is done:
+
+        | fs/ext2/ioctl.c:123:          if (get_user(rsv_window_size,
+(int __user *)arg))
+                move.l 48(%sp),%a0      | arg,
+        #APP
+        | 123 "fs/ext2/ioctl.c" 1
+                movel (%a0),%d2 | *arg.32_43, __gu_val
+
+The corresponding code in arch/m68k/include/asm/uaccess_mm.h
+uses a temporary __gu_val of the right sized type based on the source
+type to avoid this.
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
