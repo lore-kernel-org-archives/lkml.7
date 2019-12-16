@@ -2,54 +2,51 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D18C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAC6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D31920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506C620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520992;
-	bh=oh5IHH2oVaapGKTkdsmXeNccwkFKjNXFbOdFd0qesaw=;
+	s=default; t=1576520994;
+	bh=40qkxjhWCccXDQIPoVhHJt3I9NYsDbe/8jQ7XFJETiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXqftoCKC9XQEGmEwP98WO6nfkQHkZyJvOvmxAJMU15k0hWxZD/pXuG7ySTGpad45
-	 dV2ZxzcKHWI4pzSvnSKTqVaUu46q+skmKkzSHmBYTEGhNZPkFDbGUYkQACn2t1uw/A
-	 EimMXSUbQuAaKriPyIulFiDWWqsaRMnozodaq+30=
+	b=Tx6ExLLb9+jLD78NSbbxPr8K5tUtaVlC5dSOkW+dYlN2thxhg4T90hlByKL5rABf+
+	 n9ndGq91jh7prk493zkJe3ZThVPqXcQi5mMgNHRN8VqwRoinW8sb8TYH5Ry72UYUpd
+	 ik6TAk9FTEQ0/xs2p6Fh4p+cpQqMLmszltzc/uu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbfLPS3v (ORCPT
+        id S1730782AbfLPS3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:29:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59678 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:29:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbfLPSN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:27 -0500
+        id S1731103AbfLPSN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8646721582;
-        Mon, 16 Dec 2019 18:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0601C207FF;
+        Mon, 16 Dec 2019 18:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520006;
-        bh=oh5IHH2oVaapGKTkdsmXeNccwkFKjNXFbOdFd0qesaw=;
+        s=default; t=1576520008;
+        bh=40qkxjhWCccXDQIPoVhHJt3I9NYsDbe/8jQ7XFJETiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAvp6bLr7LeucXX7MXH0cdTKRf1dkfo2TTlDcz2SKfanRJ2hRB3orFMP3TWnDJdOg
-         JOa6AvKElQlmIOOSSsiI1i7csXRZCBOxT41bG9OlCYQgrWh1olRwefzwqGo5CCNuj3
-         S3agxZLVhka/bZkWTipREACXFlv9R9rQZtBd7MlA=
+        b=XcHxzzm0H1WfFsJBVe4Fp0VM6mjjBXrTmS8UgW0BjUCLvdfgkR5BTrsnZrZ5QrQLu
+         Nvd0xsmytjqD2xt79iSc+T7kF+tCWMcUa01OmaHPhV2cmhBiv15TqxoPolVHXpUdLA
+         BzHc2S4Ow3+v0mmGaFbfMB/DYeDTMQtpoxyqDkZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 156/180] scsi: qla2xxx: Fix SRB leak on switch command timeout
-Date:   Mon, 16 Dec 2019 18:49:56 +0100
-Message-Id: <20191216174844.785440139@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.3 120/180] RDMA/core: Fix ib_dma_max_seg_size()
+Date:   Mon, 16 Dec 2019 18:49:20 +0100
+Message-Id: <20191216174840.759185995@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,161 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit af2a0c51b1205327f55a7e82e530403ae1d42cbb ]
+commit ecdfdfdbe4d4c74029f2b416b7ee6d0aeb56364a upstream.
 
-when GPSC/GPDB switch command fails, driver just returns without doing a
-proper cleanup. This patch fixes this memory leak by calling sp->free() in
-the error path.
+If dev->dma_device->params == NULL then the maximum DMA segment size is 64
+KB. See also the dma_get_max_seg_size() implementation. This patch fixes
+the following kernel warning:
 
-Link: https://lore.kernel.org/r/20191105150657.8092-4-hmadhani@marvell.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  DMA-API: infiniband rxe0: mapping sg segment longer than device claims to support [len=126976] [max=65536]
+  WARNING: CPU: 4 PID: 4848 at kernel/dma/debug.c:1220 debug_dma_map_sg+0x3d9/0x450
+  RIP: 0010:debug_dma_map_sg+0x3d9/0x450
+  Call Trace:
+   srp_queuecommand+0x626/0x18d0 [ib_srp]
+   scsi_queue_rq+0xd02/0x13e0 [scsi_mod]
+   __blk_mq_try_issue_directly+0x2b3/0x3f0
+   blk_mq_request_issue_directly+0xac/0xf0
+   blk_insert_cloned_request+0xdf/0x170
+   dm_mq_queue_rq+0x43d/0x830 [dm_mod]
+   __blk_mq_try_issue_directly+0x2b3/0x3f0
+   blk_mq_request_issue_directly+0xac/0xf0
+   blk_mq_try_issue_list_directly+0xb8/0x170
+   blk_mq_sched_insert_requests+0x23c/0x3b0
+   blk_mq_flush_plug_list+0x529/0x730
+   blk_flush_plug_list+0x21f/0x260
+   blk_mq_make_request+0x56b/0xf20
+   generic_make_request+0x196/0x660
+   submit_bio+0xae/0x290
+   blkdev_direct_IO+0x822/0x900
+   generic_file_direct_write+0x110/0x200
+   __generic_file_write_iter+0x124/0x2a0
+   blkdev_write_iter+0x168/0x270
+   aio_write+0x1c4/0x310
+   io_submit_one+0x971/0x1390
+   __x64_sys_io_submit+0x12a/0x390
+   do_syscall_64+0x6f/0x2e0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Link: https://lore.kernel.org/r/20191025225830.257535-2-bvanassche@acm.org
+Cc: <stable@vger.kernel.org>
+Fixes: 0b5cb3300ae5 ("RDMA/srp: Increase max_segment_size")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_gs.c   |  2 +-
- drivers/scsi/qla2xxx/qla_init.c | 11 +++++------
- drivers/scsi/qla2xxx/qla_mbx.c  |  4 ----
- drivers/scsi/qla2xxx/qla_mid.c  | 11 ++++-------
- drivers/scsi/qla2xxx/qla_os.c   |  7 ++++++-
- 5 files changed, 16 insertions(+), 19 deletions(-)
+ include/rdma/ib_verbs.h |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index dec521d726d91..97ca95cd174bc 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3029,7 +3029,7 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
- 	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
- 
- 	if (res == QLA_FUNCTION_TIMEOUT)
--		return;
-+		goto done;
- 
- 	if (res == (DID_ERROR << 16)) {
- 		/* entry status error */
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index d4e381f81997b..b84afef37f70b 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -1169,13 +1169,11 @@ void qla24xx_async_gpdb_sp_done(void *s, int res)
- 	    "Async done-%s res %x, WWPN %8phC mb[1]=%x mb[2]=%x \n",
- 	    sp->name, res, fcport->port_name, mb[1], mb[2]);
- 
--	if (res == QLA_FUNCTION_TIMEOUT) {
--		dma_pool_free(sp->vha->hw->s_dma_pool, sp->u.iocb_cmd.u.mbx.in,
--			sp->u.iocb_cmd.u.mbx.in_dma);
--		return;
--	}
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -3978,9 +3978,7 @@ static inline void ib_dma_unmap_sg_attrs
+  */
+ static inline unsigned int ib_dma_max_seg_size(struct ib_device *dev)
+ {
+-	struct device_dma_parameters *p = dev->dma_device->dma_parms;
 -
- 	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
-+
-+	if (res == QLA_FUNCTION_TIMEOUT)
-+		goto done;
-+
- 	memset(&ea, 0, sizeof(ea));
- 	ea.event = FCME_GPDB_DONE;
- 	ea.fcport = fcport;
-@@ -1183,6 +1181,7 @@ void qla24xx_async_gpdb_sp_done(void *s, int res)
- 
- 	qla2x00_fcport_event_handler(vha, &ea);
- 
-+done:
- 	dma_pool_free(ha->s_dma_pool, sp->u.iocb_cmd.u.mbx.in,
- 		sp->u.iocb_cmd.u.mbx.in_dma);
- 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 45548628c6f3e..8601e63e4698f 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -6285,17 +6285,13 @@ int qla24xx_send_mb_cmd(struct scsi_qla_host *vha, mbx_cmd_t *mcp)
- 	case  QLA_SUCCESS:
- 		ql_dbg(ql_dbg_mbx, vha, 0x119d, "%s: %s done.\n",
- 		    __func__, sp->name);
--		sp->free(sp);
- 		break;
- 	default:
- 		ql_dbg(ql_dbg_mbx, vha, 0x119e, "%s: %s Failed. %x.\n",
- 		    __func__, sp->name, rval);
--		sp->free(sp);
- 		break;
- 	}
- 
--	return rval;
--
- done_free_sp:
- 	sp->free(sp);
- done:
-diff --git a/drivers/scsi/qla2xxx/qla_mid.c b/drivers/scsi/qla2xxx/qla_mid.c
-index b2977e49356ba..0341dc0e06510 100644
---- a/drivers/scsi/qla2xxx/qla_mid.c
-+++ b/drivers/scsi/qla2xxx/qla_mid.c
-@@ -934,7 +934,7 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
- 
- 	sp = qla2x00_get_sp(base_vha, NULL, GFP_KERNEL);
- 	if (!sp)
--		goto done;
-+		return rval;
- 
- 	sp->type = SRB_CTRL_VP;
- 	sp->name = "ctrl_vp";
-@@ -950,7 +950,7 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
- 		ql_dbg(ql_dbg_async, vha, 0xffff,
- 		    "%s: %s Failed submission. %x.\n",
- 		    __func__, sp->name, rval);
--		goto done_free_sp;
-+		goto done;
- 	}
- 
- 	ql_dbg(ql_dbg_vport, vha, 0x113f, "%s hndl %x submitted\n",
-@@ -968,16 +968,13 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
- 	case QLA_SUCCESS:
- 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s done.\n",
- 		    __func__, sp->name);
--		goto done_free_sp;
-+		break;
- 	default:
- 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s Failed. %x.\n",
- 		    __func__, sp->name, rval);
--		goto done_free_sp;
-+		break;
- 	}
- done:
--	return rval;
--
--done_free_sp:
- 	sp->free(sp);
- 	return rval;
+-	return p ? p->max_segment_size : UINT_MAX;
++	return dma_get_max_seg_size(dev->dma_device);
  }
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 0f51387ceebdf..d2e7a4e7b3a9a 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1030,7 +1030,7 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
- 		ql_dbg(ql_dbg_io + ql_dbg_verbose, vha, 0x3078,
- 		    "Start scsi failed rval=%d for cmd=%p.\n", rval, cmd);
- 		if (rval == QLA_INTERFACE_ERROR)
--			goto qc24_fail_command;
-+			goto qc24_free_sp_fail_command;
- 		goto qc24_host_busy_free_sp;
- 	}
  
-@@ -1047,6 +1047,11 @@ qc24_host_busy:
- qc24_target_busy:
- 	return SCSI_MLQUEUE_TARGET_BUSY;
- 
-+qc24_free_sp_fail_command:
-+	sp->free(sp);
-+	CMD_SP(cmd) = NULL;
-+	qla2xxx_rel_qpair_sp(sp->qpair, sp);
-+
- qc24_fail_command:
- 	cmd->scsi_done(cmd);
- 
--- 
-2.20.1
-
+ /**
 
 
