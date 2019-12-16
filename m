@@ -2,128 +2,91 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFDAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C245BC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E76E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576513523;
-	bh=BIgz88Jxh/hhpFVygPCWmHqmEervhbpVfOW1PXEq/4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zcEjYabYDuIhxHckyM8XQQwgHG/hJx2kTOPNJnN4gIx+JDwtXKmpeYOhy7pUdqOee
-	 nxMDFwIiQlkgvZ3TEtSgeLy2LoDVvTQgoHiAnef1ZWeWTx9uSedpIzyqhZfNEsTBGO
-	 5ilaAMik+4LxUQbtSui0sbe3esopBiwSb/q2xJKE=
+	by mail.kernel.org (Postfix) with ESMTP id 94EF8206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLPQZV (ORCPT
+        id S1726320AbfLPQ11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:25:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41034 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 11:27:27 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:43148 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfLPQZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:25:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1DAC206D7;
-        Mon, 16 Dec 2019 16:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576513520;
-        bh=BIgz88Jxh/hhpFVygPCWmHqmEervhbpVfOW1PXEq/4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B4XeOd/HNIJ2fz7+62Ywopnp31Jw6v6HijzywYRXZ0y0D/DI43NS4vJvB0ehaiYPh
-         ClkfRA0zvLMsi4qgnA0rfEbhQlBJ1uB7QcUQboJJBbNVSarne4UDToy0caYNHvn/RP
-         IR87HXp2GWbxzucsyhC1aV2blpQZNRJUlRRUkRjo=
-Date:   Mon, 16 Dec 2019 17:25:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v4 08/15] soundwire: add initial definitions
- for sdw_master_device
-Message-ID: <20191216162517.GA2258618@kroah.com>
-References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-9-pierre-louis.bossart@linux.intel.com>
- <20191213072844.GF1750354@kroah.com>
- <7431d8cf-4a09-42af-14f5-01ab3b15b47b@linux.intel.com>
- <20191213161046.GA2653074@kroah.com>
- <20728848-e0ae-01f6-1c45-c8eef6a6a1f4@linux.intel.com>
- <20191214082742.GA3318534@kroah.com>
- <e9d77c58-e0bd-010c-bbc8-b54c82f065fd@linux.intel.com>
+        id S1725805AbfLPQ11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:27:27 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 4D5C5FB03;
+        Mon, 16 Dec 2019 17:27:25 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sZtjjrcIejdo; Mon, 16 Dec 2019 17:27:24 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 92F69498AE; Mon, 16 Dec 2019 17:27:23 +0100 (CET)
+Date:   Mon, 16 Dec 2019 17:27:23 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        kernel@puri.sm, linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: add accelerometer and
+ gyro sensor
+Message-ID: <20191216162723.GA23173@bogon.m.sigxcpu.org>
+References: <20191203130336.18763-1-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <e9d77c58-e0bd-010c-bbc8-b54c82f065fd@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191203130336.18763-1-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 09:02:01AM -0600, Pierre-Louis Bossart wrote:
+Hi,
+On Tue, Dec 03, 2019 at 02:03:36PM +0100, Martin Kepplinger wrote:
+> Now that there is driver support, describe the accel and gyro sensor parts
+> of the LSM9DS1 IMU.
 > 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> On 12/14/19 2:27 AM, Greg KH wrote:
-> > On Fri, Dec 13, 2019 at 05:25:23PM -0600, Pierre-Louis Bossart wrote:
-> > > 
-> > > > No, I mean the new MODULE_NAMESPACE() support that is in the kernel.
-> > > > I'll move the greybus code to use it too, but when you are adding new
-> > > > apis, it just makes sense to use it then as well.
-> > > 
-> > > Greg, would the patch below be what you had in mind?
-> > > Thanks
-> > > -Pierre
-> > > 
-> > > 
-> > > diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-> > > index 76a5c52b12b4..5bad8422887e 100644
-> > > --- a/drivers/soundwire/Makefile
-> > > +++ b/drivers/soundwire/Makefile
-> > > @@ -7,9 +7,11 @@ ccflags-y += -DDEBUG
-> > >   #Bus Objs
-> > >   soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o
-> > > stream.o
-> > >   obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
-> > > +ccflags-$(CONFIG_SOUNDWIRE) += -DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
-> > > 
-> > >   soundwire-generic-allocation-objs := generic_bandwidth_allocation.o
-> > >   obj-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) +=
-> > > soundwire-generic-allocation.o
-> > > +ccflags-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) +=
-> > > -DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
-> > 
-> > Don't use ccflags, just use the correct MODULE_EXPORT_NS() tag instead.
-> 
-> The documentation [1] states
-> 
-> "
-> Defining namespaces for all symbols of a subsystem can be very verbose and
-> may become hard to maintain. Therefore a default define
-> (DEFAULT_SYMBOL_NAMESPACE) is been provided, that, if set, will become the
-> default for all EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL() macro expansions
-> that do not specify a namespace.
-> "
-> 
-> If the ccflags option is not supported or no longer desired, it'd be worth
-> updating the documentation for dummies like me. I took the wording as a hint
-> to avoid using MODULE_EXPORT_NS.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 683a11035643..7a92704c53ec 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -415,6 +415,13 @@
+>  	pinctrl-0 = <&pinctrl_i2c3>;
+>  	status = "okay";
+>  
+> +	accel_gyro@6a {
+> +		compatible = "st,lsm9ds1-imu";
+> +		reg = <0x6a>;
+> +		vdd-supply = <&reg_3v3_p>;
+> +		vddio-supply = <&reg_3v3_p>;
+> +	};
+> +
 
-It's supported, and works just fine.  It's just that you really don't
-have a ton of exports, right?  What's wrong with manually marking them?
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+ -- Guido
 
-> > And "SDW_CORE" is odd, "SOUNDWIRE" instead?
+>  	magnetometer@1e	{
+>  		compatible = "st,lsm9ds1-magn";
+>  		reg = <0x1e>;
+> -- 
+> 2.20.1
 > 
-> 'sdw' is the prefix used everywhere for SoundWire symbols.
-
-Ok, I guess that ship has sailed :(
-
-greg k-h
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
