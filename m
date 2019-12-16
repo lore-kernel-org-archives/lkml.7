@@ -2,102 +2,138 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8194CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79309C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5640E206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DCD206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F98ofzZs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NITuPJbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfLPKbB (ORCPT
+        id S1727560AbfLPKbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:31:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40059 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfLPKbA (ORCPT
+        Mon, 16 Dec 2019 05:31:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43896 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727319AbfLPKbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:31:00 -0500
-Received: by mail-lj1-f194.google.com with SMTP id s22so6195132ljs.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:30:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R2CAqD7yphVxKpqpK+F/eAr7MRlAfENWVqw0CFqAnoY=;
-        b=F98ofzZswi1ON1bAKTPSWd5+Icm6mrMRcWlGoNTeahpUdZxvSM6qFcZqGN4zAN4Osp
-         NdlLEy7XHE0zbPmUPi2zZq5/U5/a9Ue2B+XfIh+EluUE+NoHaOMSjoxvxpExuwNfwwOs
-         2oTEoPYR/rTYGmGXHzgc0Pr/FAj3QmcuhcAhTsRGt6RmxDIqCHgnOQMkUTOAHb4I3u1R
-         m/2YQVrcDL+DR1UUH/SkmD8dEzpXTM4KzvF07eOk6LXi/nqEznJiz6kcl0yeiO3Lfg0O
-         dcea358D79Zrq3wRs5ExA4+mnB0OVo8ZagEMOi3YmF/JKgrNYhNQ40lRqBXcsKfb/BZy
-         RfWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R2CAqD7yphVxKpqpK+F/eAr7MRlAfENWVqw0CFqAnoY=;
-        b=A1/P7UQN4jw1RbSsnkUSiOBv4BmIeFz2OIGSZspTVkEQtUd01SCrTHnDpH7yv3U57T
-         ayYgmsbrLKcAhIRKDLOsmE8fOgNrBTvDNzZHTDz41hvxCNNueROvRAifaZsvMUcglHhQ
-         qjTmO3J1cH9+Leaa6DiEHX4P80i/DTNgMHfPbn0S7/YLQ8nvP2fVnIeKV1BtzVL/4wws
-         fsOSNxl6uNNNWMi5X4bPzuqhuajygO6rrVK8y0rV0q0LVBGA4L+3D10P34WUIQBoXNWg
-         17/nhsO3ywxyrxcE3TUVWh1GsgdW5SbA+dA2iWRQSUa3DNcHmN29dCjs5/hXkbongeD+
-         O/pA==
-X-Gm-Message-State: APjAAAVVbvL4XuuoysIKLYuDSvdxcb7ZQZdkiaAWH7GwFpVrZuZZPatV
-        tRqo0BkxYv3onryWeT3nhmCyif3z634t2tj/bKoazA==
-X-Google-Smtp-Source: APXvYqycu9hlE1s4S+Sge2Bqv8D+k87tga/cDOXtTcuobEYzip+IsUlyb9ENhVmckOFQwM0Ke6RmQOIym8zJ1np0yPg=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr18594833ljm.233.1576492258842;
- Mon, 16 Dec 2019 02:30:58 -0800 (PST)
+        Mon, 16 Dec 2019 05:31:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576492269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Eo005stHRd9C8m5vBASr94rer3WPzPVBtfLVLTsOZZo=;
+        b=NITuPJbLOcemBHHPJDB1gmUZxyFb/GvKypQeAm7uyCPyBatpxWiZUKAwLQFU6cEQJWYOB5
+        Jd6MyDyt5aLJejhL10Vl/Z2LZ/ieq4d1D2jjoFvOeiRPBwlIpu/DmlBtU2Nmejq0oeFuNm
+        E0nwUjfjf5UVOvrk1RYtvOlyQgBDBu8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-8fcKe7vtONSMgfiW6jjRQw-1; Mon, 16 Dec 2019 05:31:06 -0500
+X-MC-Unique: 8fcKe7vtONSMgfiW6jjRQw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5041CDC23;
+        Mon, 16 Dec 2019 10:31:04 +0000 (UTC)
+Received: from t480s.redhat.com (unknown [10.36.118.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D75485C241;
+        Mon, 16 Dec 2019 10:30:58 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arun KS <arunks@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2] powerpc/pseries/cmm: fix managed page counts when migrating pages between zones
+Date:   Mon, 16 Dec 2019 11:30:58 +0100
+Message-Id: <20191216103058.4958-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-5-hdegoede@redhat.com>
-In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:30:46 +0100
-Message-ID: <CACRpkdYLXU9SmrNZfk9vrJuai9O-evAoq_c1oPJ7Q=NQU8=gng@mail.gmail.com>
-Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
- lookup from mfd to the i915 driver
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Commit 63341ab03706 (virtio-balloon: fix managed page counts when migrati=
+ng
+pages between zones) fixed a long existing BUG in the virtio-balloon
+driver when pages would get migrated between zones.  I did not try to
+reproduce on powerpc, but looking at the code, the same should apply to
+powerpc/cmm ever since it started using the balloon compaction
+infrastructure (luckily just recently).
 
-> Move the Crystal Cove PMIC panel GPIO lookup-table from
-> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
->
-> The moved looked-up table is adding a GPIO lookup to the i915 PCI
-> device and the GPIO subsys allows only one lookup table per device,
->
-> The intel_soc_pmic_core.c code only adds lookup-table entries for the
-> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
-> able to access some GPIOs on the SoC itself, which requires entries for
-> these GPIOs in the lookup-table.
->
-> Since the lookup-table is attached to the i915 PCI device it really
-> should be part of the i915 driver, this will also allow us to extend
-> it with GPIOs from other sources when necessary.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+In case we have to migrate a ballon page to a newpage of another zone, th=
+e
+managed page count of both zones is wrong. Paired with memory offlining
+(which will adjust the managed page count), we can trigger kernel crashes
+and all kinds of different symptoms.
 
-Looks OK to me
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Fix it by properly adjusting the managed page count when migrating if
+the zone changed.
 
-But Lee & Andy should have a final word on this.
+We'll temporarily modify the totalram page count. If this ever becomes a
+problem, we can fine tune by providing helpers that don't touch
+the totalram pages (e.g., adjust_zone_managed_page_count()).
 
-Yours,
-Linus Walleij
+Fixes: fe030c9b85e6 ("powerpc/pseries/cmm: Implement balloon compaction")
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+v1 -> v2:
+- Link virtio-balloon fix commit
+- Check if the zone changed
+- Move fixup further up, before enqueuing the new newpage (where we are
+  guaranteed to hold a reference to both pages)
+
+---
+ arch/powerpc/platforms/pseries/cmm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platform=
+s/pseries/cmm.c
+index 91571841df8a..9dba7e880885 100644
+--- a/arch/powerpc/platforms/pseries/cmm.c
++++ b/arch/powerpc/platforms/pseries/cmm.c
+@@ -539,6 +539,16 @@ static int cmm_migratepage(struct balloon_dev_info *=
+b_dev_info,
+ 	/* balloon page list reference */
+ 	get_page(newpage);
+=20
++	/*
++	 * When we migrate a page to a different zone, we have to fixup the
++	 * count of both involved zones as we adjusted the managed page count
++	 * when inflating.
++	 */
++	if (page_zone(page) !=3D page_zone(newpage)) {
++		adjust_managed_page_count(page, 1);
++		adjust_managed_page_count(newpage, -1);
++	}
++
+ 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+ 	balloon_page_insert(b_dev_info, newpage);
+ 	balloon_page_delete(page);
+--=20
+2.23.0
+
