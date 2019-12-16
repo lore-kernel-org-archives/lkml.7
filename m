@@ -2,96 +2,144 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E38C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C90420725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lDL84PL+"
+	by mail.kernel.org (Postfix) with ESMTP id 71F1B20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576492024;
+	bh=kUgzQHruAjaFJFDFjIH83xFuk1KBvTCvlgdm112GOkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iFQk5o5bnK74dKuObUNDcvTjJobCoi9Wuq7/EUh5EurxJsfDQEKWwPZeaJjXjJQ3V
+	 zcT/Qes3td1jv5yrUeCQJN3wsZlsY09YWNxKg7jFF7IRapVBIRmJCuhNZPizqk3ZQ1
+	 qwGXOuOjFyf11KV1iAi+KqTMsz4V6p0TIWMWcwlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfLPK0Y (ORCPT
+        id S1727404AbfLPK1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:26:24 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46570 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLPK0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:26:24 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z17so6145673ljk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:26:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OkpVHHKfDIvE++qC7pqWmg/jiaUV0l9IrypFklbrI6o=;
-        b=lDL84PL+2Ns4vFAqwLLrdQi1O+3TQ6U/1dl28aR2f5iPN84nonscwhbbksUFjIlS5R
-         otbTznmgxLMJaAner5nrpGth72IVvBmT/6uaM4tx+Y+mEEawgORon/elo6UPVH5JvJYb
-         Ck2/MV674z0jbmRgEZH0vAlKytoZnH/ItSxaGXx0K213YovI7A4yEtfAGr8qVFC8qILi
-         94ezCXOUyfvLoV8f/yzdmpj1qIfvNUfwHHlA4TO3fmxjmrNVgk41krWYbwyb3SMyU9cr
-         Nn8qkvnhE3ahvqrWYa02Vf4Ret+ZHDC4hZD4vr81kUyvgcplB6Y5bMnP2WfkMtddC/uN
-         iXIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OkpVHHKfDIvE++qC7pqWmg/jiaUV0l9IrypFklbrI6o=;
-        b=Ki3+4jlhTtQetplvZEkKlplcTPawqZeSy61KwZNnumQqBz62fbjaMW+0ajYEQuBFNb
-         c2L+fs9KC2uUembyGu5Ai7PShw4lSsu1yow/G/WKO3fK+dX4A1EwZEX+I4QO1n4Pe81d
-         WKjmgEiJ9oJbAQw52un9kE3EX6Wc7YPOqiQ8F2d/aOuO6izQNlTNg2MBc++rEZvrFrjU
-         Sb3vKibDGGXLN15V//E2kwjQH6+yz1Mouog9poZHPi6y+0YkWhNYyemYlr3UiPWofl3V
-         ifcbZM50fWhg9oK0eqsdOOPoFPzj8J51+bMI0fnkl4PzuFdjojoWq81QEQqU36J09+Ps
-         6r3g==
-X-Gm-Message-State: APjAAAXRm1u8O6FseILlhWyDkMPHHaIYLKZc50C9R/zGEOZFcSrT+1BP
-        uQsETWMW0LzTNHpY61yShpjiKQnUvVzbiC5rq8aeUw==
-X-Google-Smtp-Source: APXvYqyfCsSztFtNTTzlCe+aXkIxE7g02n2kJDD5isrSGVNYwnEfbfi911iDlZCap4HI8gvXspWAPVC8NvrEdEvcY0s=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr18582325ljm.233.1576491982626;
- Mon, 16 Dec 2019 02:26:22 -0800 (PST)
+        Mon, 16 Dec 2019 05:27:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727345AbfLPK1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:27:02 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDADC206CB;
+        Mon, 16 Dec 2019 10:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576492022;
+        bh=kUgzQHruAjaFJFDFjIH83xFuk1KBvTCvlgdm112GOkQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oKrWqvEV9lXn1r3miOVPSITbPPacHp89DGtXxqTYnHvm6TN+1tSGZFivgdvUIN9o7
+         cz4Ste93FLYwlxxzWJ603rI4ubx/PnNMo1xyoMJxTyuDz/t6BuQ3a2OcHHCyeXDOKA
+         YAmAJhk4Qtwm29VaZCd1Kh4XTwB/LGGWe8oz9g+k=
+Date:   Mon, 16 Dec 2019 10:26:56 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v2 1/3] ubsan: Add trap instrumentation option
+Message-ID: <20191216102655.GA11082@willie-the-truck>
+References: <20191121181519.28637-1-keescook@chromium.org>
+ <20191121181519.28637-2-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20191215163810.52356-1-hdegoede@redhat.com>
-In-Reply-To: <20191215163810.52356-1-hdegoede@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:26:10 +0100
-Message-ID: <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
- GPIOs from VBT
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121181519.28637-2-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Kees,
 
-> Linus, this series starts with the already discussed pinctrl change to
-> export the function to unregister a pinctrl-map. We can either merge this
-> through drm-intel, or you could pick it up and then provide an immutable
-> branch with it for merging into drm-intel-next. Which option do you prefer?
+On Thu, Nov 21, 2019 at 10:15:17AM -0800, Kees Cook wrote:
+> The Undefined Behavior Sanitizer can operate in two modes: warning
+> reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
+> __builtin_trap() as the handler. Using lib/ubsan.c means the kernel
+> image is about 5% larger (due to all the debugging text and reporting
+> structures to capture details about the warning conditions). Using the
+> trap mode, the image size changes are much smaller, though at the loss
+> of the "warning only" mode.
+> 
+> In order to give greater flexibility to system builders that want
+> minimal changes to image size and are prepared to deal with kernel code
+> being aborted and potentially destabilizing the system, this introduces
+> CONFIG_UBSAN_TRAP. The resulting image sizes comparison:
+> 
+>    text    data     bss       dec       hex     filename
+> 19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
+> 19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
+> 19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
+> 
+> CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
+> CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
+> 
+> Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and
+> removes the mention of non-existing boot param "ubsan_handle".
+> 
+> Suggested-by: Elena Petrova <lenaptr@google.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  lib/Kconfig.ubsan      | 22 ++++++++++++++++++----
+>  lib/Makefile           |  2 ++
+>  scripts/Makefile.ubsan |  9 +++++++--
+>  3 files changed, 27 insertions(+), 6 deletions(-)
+> 
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index 0e04fcb3ab3d..9deb655838b0 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -5,11 +5,25 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
+>  config UBSAN
+>  	bool "Undefined behaviour sanity checker"
+>  	help
+> -	  This option enables undefined behaviour sanity checker
+> +	  This option enables the Undefined Behaviour sanity checker.
+>  	  Compile-time instrumentation is used to detect various undefined
+> -	  behaviours in runtime. Various types of checks may be enabled
+> -	  via boot parameter ubsan_handle
+> -	  (see: Documentation/dev-tools/ubsan.rst).
+> +	  behaviours at runtime. For more details, see:
+> +	  Documentation/dev-tools/ubsan.rst
+> +
+> +config UBSAN_TRAP
+> +	bool "On Sanitizer warnings, abort the running kernel code"
+> +	depends on UBSAN
+> +	depends on $(cc-option, -fsanitize-undefined-trap-on-error)
+> +	help
+> +	  Building kernels with Sanitizer features enabled tends to grow
+> +	  the kernel size by around 5%, due to adding all the debugging
+> +	  text on failure paths. To avoid this, Sanitizer instrumentation
+> +	  can just issue a trap. This reduces the kernel size overhead but
+> +	  turns all warnings (including potentially harmless conditions)
+> +	  into full exceptions that abort the running kernel code
+> +	  (regardless of context, locks held, etc), which may destabilize
+> +	  the system. For some system builders this is an acceptable
+> +	  trade-off.
 
-I have created an immutable branch with these changes and pulled it
-to my "devel" branch for v5.6:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
+Slight nit, but I wonder if it would make sense to move all this under a
+'menuconfig UBSAN' entry, so the dependencies can be dropped? Then you could
+have all of the suboptions default to on and basically choose which
+individual compiler options to disable based on your own preferences.
 
-Please pull this in and put the other patches on top of that.
+What do you think?
 
-I had a bit of mess in my subsystems last kernel cycle so I
-want to avoid that by strictly including all larger commits
-in my trees.
-
-Yours,
-Linus Walleij
+Will
