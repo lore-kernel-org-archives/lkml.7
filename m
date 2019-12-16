@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEBFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F0FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3BB4206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FDF206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521618;
-	bh=Bcyfsom547QGU5e7VQvQpY+Cvi9D3GQGIU6yVL4/iB0=;
+	s=default; t=1576521622;
+	bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwGtzFX0Au5yPBMBRr05QgWEw6gNwMsgv6QXH7Qu1QM/3aYD/EL/jJUVzYZj3cP/v
-	 QNSPW4oa0BcCpiHH4q7Z77Cd63M35n2WRWbqf6PZMX/aqaQg+gA5QsOEuZKjo81esa
-	 SbF+i++CgxiZsbWvb7My05EciyDdkflTL4htcgx4=
+	b=rO8pFNrHaPUT1j33cIerLEBAXJdxLBSDqxdWjcLPtCBJhn8amg0xlmqDOv80DQkkx
+	 il2EWL7CwLxusgVF96Wo90UxKx2hFgZ39KNSKpaF/bUhtJLcbSMJ2WzZWj8qqxjkdY
+	 HPok4CKCLaFhpOPVAW8Un3um2SaWoEMJpYMF1arQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfLPSCW (ORCPT
+        id S1729562AbfLPSkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729314AbfLPSCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:18 -0500
+        id S1729332AbfLPSCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE996207FF;
-        Mon, 16 Dec 2019 18:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF34420726;
+        Mon, 16 Dec 2019 18:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519338;
-        bh=Bcyfsom547QGU5e7VQvQpY+Cvi9D3GQGIU6yVL4/iB0=;
+        s=default; t=1576519343;
+        bh=T0ZeePh69wfZFJoEVb5zMxvl/KiHPmT9h9JmdM695A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bxd7ewy0kW5ihCTyEQE10DyGax/8orY95WuxXCgkKpqUWzD0ybg1wbO2760QbwWXi
-         sekZTwJOWTergMk5JCLqQr6gIYr8/xbbKL5tdN0Kv8aXSAcEWdhWJTRjy1QkzHXJJJ
-         OSIjxNvKxfUjCVn7A0QUeAIPKzELCI407XybhH2U=
+        b=VkD6hHygbJs2wm6lJSLYsreD+6PspFfPOVJvFj8YeF9OuzaZuAE6dgIJ5A5254NjY
+         lSiA+QOlkUYYML/S+9SLQsXwXGeWp696+OlCZnw7qQwgXj7TidS9Q6R2is80nV51l4
+         82K8RKiWz/GMRBoh7vnFhTvhDFRkHqS5Jr9EaS/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 026/140] USB: adutux: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:48:14 +0100
-Message-Id: <20191216174757.164784224@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>
+Subject: [PATCH 4.19 027/140] usb: core: urb: fix URB structure initialization function
+Date:   Mon, 16 Dec 2019 18:48:15 +0100
+Message-Id: <20191216174757.466182721@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -58,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Emiliano Ingrassia <ingrassia@epigenesys.com>
 
-commit 3c11c4bed02b202e278c0f5c319ae435d7fb9815 upstream.
+commit 1cd17f7f0def31e3695501c4f86cd3faf8489840 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Explicitly initialize URB structure urb_list field in usb_init_urb().
+This field can be potentially accessed uninitialized and its
+initialization is coherent with the usage of list_del_init() in
+usb_hcd_unlink_urb_from_ep() and usb_giveback_urb_bh() and its
+explicit initialization in usb_hcd_submit_urb() error path.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 03270634e242 ("USB: Add ADU support for Ontrak ADU devices")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-3-johan@kernel.org
+Signed-off-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191127160355.GA27196@ingrassia.epigenesys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/adutux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/urb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -671,7 +671,7 @@ static int adu_probe(struct usb_interfac
- 	init_waitqueue_head(&dev->read_wait);
- 	init_waitqueue_head(&dev->write_wait);
- 
--	res = usb_find_common_endpoints_reverse(&interface->altsetting[0],
-+	res = usb_find_common_endpoints_reverse(interface->cur_altsetting,
- 			NULL, NULL,
- 			&dev->interrupt_in_endpoint,
- 			&dev->interrupt_out_endpoint);
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -45,6 +45,7 @@ void usb_init_urb(struct urb *urb)
+ 	if (urb) {
+ 		memset(urb, 0, sizeof(*urb));
+ 		kref_init(&urb->kref);
++		INIT_LIST_HEAD(&urb->urb_list);
+ 		INIT_LIST_HEAD(&urb->anchor_list);
+ 	}
+ }
 
 
