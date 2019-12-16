@@ -2,145 +2,84 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F45C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB63C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CBF206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:27:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="g5559xHV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cLhqAmDn"
+	by mail.kernel.org (Postfix) with ESMTP id D0C99206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576502907;
+	bh=en62J9Sle+YYjeP96DqQn4yayB6lPx6YOVyC3LY1Kis=;
+	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
+	b=wqV9RYp5e8+NO050sYfSPnR00Ls/XjJO3mLWfDOyIyjiVGksO3LNwqcwjwk/ej79S
+	 /Qc5vKlUP/XG7arF6M9iWEi7rGOiECLarz+7CDDlnlpjVQNva6z/IUckOzBDLGu6sA
+	 W89dEB7/Fb4iGdUYc1ZcLoyxB/D/DDAUZ83GUkWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfLPN1y (ORCPT
+        id S1727935AbfLPN20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:27:54 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:51695 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727601AbfLPN1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:27:54 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id B2FC1727;
-        Mon, 16 Dec 2019 08:27:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 16 Dec 2019 08:27:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=Y
-        mViL70LTOh/d2HUWHm4SX1kRjzqtzPlz629CD92l7o=; b=g5559xHV/ZCMjWQRL
-        UWI/pqUKEGOqkKg+bsWfTrrpEDpqnV3jhvtF0IUVbhi8Jlzm7+78bXTjiID/tqTt
-        mY1CCAuOauItpHcX7/RUb2bYdoyBbCgLBdtXgUGXnSQ42XVouKfLdhRq5YQbKw9U
-        03E5CNvw9hC5f72JXyjeM5MiCpurESr2T+lrtjinFGsZd/GKb+KJuSeyTC+LeoBE
-        alfTXc/6OXr6p1edPOecWQp2Hz/XoJwQQdla9AR6mXlMI+niKkDf+abWMcN0Jg5L
-        WhxiUrBRdCwCqfQdHzzxFDhGfzWt7nxS4kNmMOvkRcoLaXQd1wOHqa/GfS6BMaof
-        SrTFw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=YmViL70LTOh/d2HUWHm4SX1kRjzqtzPlz629CD92l
-        7o=; b=cLhqAmDna7VjQ9383OzQsmzNRRFn+BLWtqAEe3oHZhAm9L4rIAEN8kAR/
-        V3f2jyIByYkBIOxTQ+7UDKlFnBOrRZIxTWpFUkRtdOirLWraFVsAvdwpbjFKwyG3
-        PB4qJN0Q7xdLVGwD0NLLD7a/eT8UJm6KQjcYyW5kutR1BZ2URimqpCicSiIJ/Fgh
-        QvWUabgX39A3jr81lUc0JYDdg8LHA9RWhVGoyBxV22ah1PCLE9YTkN7NIJ+8CNwL
-        4x5IITF/gmXt73slDHHqmKnBZ0SAdySnq9MUGVV0Kjkw7pdwQGjf/dWYfgjLbmec
-        75XItDwCituwprizpkesg3eOYXnXw==
-X-ME-Sender: <xms:V4b3XZf5TJsqQm6TdDA2OZMRNdtH63WcOi5z3ON7EyiBheZ7fFiNZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedgheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:WIb3XaOl1strmbI1xe_6r_gUUNxH1Vy7X7GsRXsF7EoLpm7LU7oFNQ>
-    <xmx:WIb3XeL6fIs7EUe61HNSlxHyMDL1qg-m0lFucPi8_5Yzrbjpi-xJsg>
-    <xmx:WIb3XRppvTTLMJArPhfvq6M9R9whCHoN3hQJZxFvDJCtoS-KHjQB1Q>
-    <xmx:WIb3XSp1VyLOH-z42TfhxpbUlL-3Y-5ZSTjSsGTFvFz6JXnKAVGe8Q>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AFAAF306010D;
-        Mon, 16 Dec 2019 08:27:51 -0500 (EST)
-Date:   Mon, 16 Dec 2019 14:27:50 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling
- during startup
-Message-ID: <20191216132750.GA1646935@kroah.com>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-94-sashal@kernel.org>
- <20191216131512.c5x5ltndmdambdf4@core.my.home>
+        Mon, 16 Dec 2019 08:28:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727601AbfLPN20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:28:26 -0500
+Received: from [192.168.0.114] (unknown [58.212.132.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC3C0206CB;
+        Mon, 16 Dec 2019 13:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576502905;
+        bh=en62J9Sle+YYjeP96DqQn4yayB6lPx6YOVyC3LY1Kis=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=dbGzyJj4vH71sNkYyLTdAqtPy1ugCsqngU/6RSks1Og8gfuhSodwPMPwzEwhunxwl
+         FIlvIXutM7Pca1Vn7QSzPyR3RrEXn4vBEOCBraj/GbxH2hjDROvOF6VqDVuFDoChqQ
+         E4YdEa6hbIMxg6jYKvelWonDkjDPiL7aL4CVpALc=
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <0ab8c593-d043-cdf6-7805-f7bceba8e519@web.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <0677a4fd-62a5-ad98-fd02-ae7d5a9cb501@kernel.org>
+Date:   Mon, 16 Dec 2019 21:28:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <0ab8c593-d043-cdf6-7805-f7bceba8e519@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216131512.c5x5ltndmdambdf4@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 02:15:12PM +0100, Ondřej Jirman wrote:
-> Hi,
-> 
-> On Tue, Dec 10, 2019 at 04:03:58PM -0500, Sasha Levin wrote:
-> > From: Stefan Wahren <wahrenst@gmx.net>
-> > 
-> > [ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
-> > 
-> > The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
-> > doesn't react to HCI requests during DT probe. The reason is the inproper
-> > handling of the RTS line during startup. According to the startup
-> > signaling sequence in the CYW43455 datasheet, the hosts RTS line must
-> > be driven after BT_REG_ON and BT_HOST_WAKE.
-> > 
-> > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> > Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/bluetooth/hci_bcm.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> > index 7646636f2d183..0f73f6a686cb7 100644
-> > --- a/drivers/bluetooth/hci_bcm.c
-> > +++ b/drivers/bluetooth/hci_bcm.c
-> > @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
-> >  
-> >  out:
-> >  	if (bcm->dev) {
-> > +		hci_uart_set_flow_control(hu, true);
-> >  		hu->init_speed = bcm->dev->init_speed;
-> >  		hu->oper_speed = bcm->dev->oper_speed;
-> >  		err = bcm_gpio_set_power(bcm->dev, true);
-> > +		hci_uart_set_flow_control(hu, false);
-> >  		if (err)
-> >  			goto err_unset_hu;
-> >  	}
-> 
-> This causes bluetooth breakage (degraded bluetooth performance, due to failure to
-> switch to higher baudrate) for Orange Pi 3 board:
-> 
-> [    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
-> [   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
-> [   12.004613] Bluetooth: hci0: Failed to set baudrate
-> [   12.123187] Bluetooth: hci0: BCM: chip id 130
-> [   12.128398] Bluetooth: hci0: BCM: features 0x0f
-> [   12.154686] Bluetooth: hci0: BCM4345C5
-> [   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
-> [   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
-> 
-> I suggest not pushing this to stable.
+On 2019-12-16 19:51, Markus Elfring wrote:
+> …
+>> +++ b/fs/f2fs/f2fs.h
+> …
+>> +#ifdef CONFIG_F2FS_FS_COMPRESSION
+>> +bool f2fs_is_compressed_page(struct page *page);
+> …
+>
+> Can the following adjustment make sense?
+>
+> +bool f2fs_is_compressed_page(const struct page *page);
+>
+>
+> Would you like to improve const-correctness at any more source code places?
 
-Is it being fixed in Linus's tree?
+I can't figure out a good reason to do that for f2fs internal functions...
 
-thanks,
+Thanks,
 
-greg k-h
+>
+> Regards,
+> Markus
+>
