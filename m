@@ -2,322 +2,98 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83F4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B01C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6686620700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3DB20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AfhJ9nsm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8bMJA3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfLPIKE (ORCPT
+        id S1726900AbfLPIKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:10:04 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43278 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLPIKD (ORCPT
+        Mon, 16 Dec 2019 03:10:05 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:33290 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfLPIKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:10:03 -0500
-Received: by mail-qk1-f195.google.com with SMTP id t129so2904476qke.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:10:03 -0800 (PST)
+        Mon, 16 Dec 2019 03:10:04 -0500
+Received: by mail-vk1-f194.google.com with SMTP id i78so1381123vke.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:10:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MqbnFQHmZrpa0AOsiWXxCoFAk+GRpaNAI5iaz8ghDhM=;
-        b=AfhJ9nsmFBX1MBqiprJE/IFswoBgJC23Yc1dCcmT9IbApkHHKTa1/PQO6jniHo07iD
-         vqXapbUHNILm0dydcinlSq5ZZtAapZUhM3qm3M9P0t1aC2ONN9ik05hAbWDYxoylZkH8
-         bgXzmqQSISsNPQdtUyAD2SSzyG9VEdMvXY7CebzwbHHqBTe4CndZtl0DQ/txUs1nnBiO
-         mVz62wQRfVfYn6pB+D1clGCH8/YKZWUgukcbBq/Fr12LOWyq8LhBgIExdnbD5x5XzZ/i
-         pFaOyYRG570PEfvvScn9rz8PrPToWjNlZxvUKS2+RfRIM1tq6KB0eqdYKd00yblPIOV6
-         1A6A==
+        bh=OaW5Hnc1v0arti4eZTySZ/4BhiMhUg3N5njmRM9tic4=;
+        b=y8bMJA3mew2fcZQ7cpXVf/KhayFi/B2k/6eZ6N9Sv26pXuVqEg0g0meW5SHvNxQfq1
+         CXwOdlE68eobeKxZqVXVuPhvmAKrGBZ00op1yOHOqf2RzzZdbivN1O9T7iqMgHbtag1E
+         VwmOxqjG6r1lXxi/Bd4ob/QiGnbJlx+9Lu8ssLMLyoKWTFehEF3qpaCr65WL/1kTblAG
+         9beDIfbJ4JyuJkm7MsuQyUcsPH+1zGPW3RNrZr2X6/HicmoX3P81W77kszgcHAAcSs8G
+         McuF9QkoLFHowla+BmUpoKkQvBWQlDRfJ3F6f+bUotqCHKyHtS6h6fzgLXT6tDAI0Da1
+         FeOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MqbnFQHmZrpa0AOsiWXxCoFAk+GRpaNAI5iaz8ghDhM=;
-        b=UZWwI1ytpDXOl+BxY8ipJGV5v8Yqw0sAVoBDy1Aslb/auFTHFi+Ca7vDUL7j3M9SH7
-         hO+BceflPux7OFVUWBa0VugATOp3Rce/O9VU3vOkQvf/HLeRPj5t2vw2W2ojvLocz2eK
-         Ejcm60djLrm/9BRBFKtlWPw5LWGPsXBJfwkRPiCvq4yttS/3iJwGtQDMnBzTexyxpRjO
-         xXVxwWsv+HXEo/7L33UxHjkjlXpWzjOPI0ZP/KOQ+tozqo9LJcq9yv1v6Gom/tYTo+W+
-         9kk7zhLFeEoTlNoD6m30wx7LoN7kcntSELCk4LdzoyFS7mcQ+4qTca2NcZsDBXKafQPL
-         wjFg==
-X-Gm-Message-State: APjAAAXLsknL05IaXsZMVD5M4G0ubZenqQXdD9im5NccQjgKtJUb2e1y
-        cnbeOIv1y7EQhWM1Ygxc4qiinmTtdplu70/rgocVqQ==
-X-Google-Smtp-Source: APXvYqxy1jsjrgXIc9KkiY8dqe0Yevuy0Pq7KGGCsDx+L5LcYj27ueeWtQy3pwAK+PyyrQwyqiqzuK0wBqN53GRo1FA=
-X-Received: by 2002:ae9:e50c:: with SMTP id w12mr23755470qkf.407.1576483802315;
- Mon, 16 Dec 2019 00:10:02 -0800 (PST)
+        bh=OaW5Hnc1v0arti4eZTySZ/4BhiMhUg3N5njmRM9tic4=;
+        b=DZstLC+p3EbE7En74NSevQmxnMcP3l/c3btBoNhztaq2YoOvwpZ0ya8Sw8NVW9WKT2
+         71JITo9QhMdeFx3ok8UZcNvBUVhhW20CZsgPfKqulmsFPdx5b4HUmsv7hBjy1rg8F/5i
+         lv5fjJXWuOxlpS/9nHjaMQ5+2J3YoXEBsHrRn6wwwZtZ1g9GJmpYdzEVxcXduxprX6LL
+         LF/kAp92/b3qjvmRQVsG7VRF4shLb+JPcP7MR+yhg7+SfDyf77VZ78eLDHxCt6h/RCEh
+         kMVp+k8XV5W0gywl4J3v98HLswHeW44TupQJ2gc3BxVXSP5Uo5uO6mm6fA1rxsiamGUg
+         wsdA==
+X-Gm-Message-State: APjAAAWyzwGucYkaePBcxt15zoRslxko36+zCNu0oXFs+j/539st1rr6
+        M+bvjOuu6j1JvpgBjlWDVzLHdASHs3K2fmAiXTuWYg==
+X-Google-Smtp-Source: APXvYqxrAb1mbxQGpITUr96izDI9QHkdc32NxrkBD2ZJlXCzk+6QUM2DiUNw2b1ZYAJSZRzpOYold++C0qlU8ALpepg=
+X-Received: by 2002:a1f:add3:: with SMTP id w202mr1458047vke.30.1576483803676;
+ Mon, 16 Dec 2019 00:10:03 -0800 (PST)
 MIME-Version: 1.0
-References: <000000000000c71dcf0579b0553f@google.com> <000000000000dcc9b10599b3fd5e@google.com>
- <20191215063020.GA11512@mit.edu>
-In-Reply-To: <20191215063020.GA11512@mit.edu>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 16 Dec 2019 09:09:51 +0100
-Message-ID: <CACT4Y+Zk42DSpSYWjH5AdHEk5s_iJtpU9zm44kiW33zAu7CtBA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in ext4_xattr_set_entry (2)
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     syzbot <syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com>,
-        a@unstable.cc, Andreas Dilger <adilger.kernel@dilger.ca>,
-        afd@ti.com, b.a.t.m.a.n@lists.open-mesh.org, chris@lapa.com.au,
-        David Miller <davem@davemloft.net>, linux-ext4@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev <netdev@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        sre@kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-3-ktouil@baylibre.com>
+In-Reply-To: <20191210154157.21930-3-ktouil@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:09:52 +0100
+Message-ID: <CACRpkdZPO+nBA=H0qJUiSq2iA0BDg=n3Ez5wPgnrtLc3MYdpJw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] nvmem: add support for the write-protect pin
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 7:30 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Sat, Dec 14, 2019 at 05:27:00PM -0800, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit 8835cae5f2abd7f7a3143afe357f416aff5517a4
-> > Author: Chris Lapa <chris@lapa.com.au>
-> > Date:   Wed Jan 11 01:44:47 2017 +0000
-> >
-> >     power: supply: bq27xxx: adds specific support for bq27520-g4 revision.
->
-> This is pretty clearly nonsense.
+On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrote:
 
-Agree.
+> The write-protect pin handling looks like a standard property that
+> could benefit other users if available in the core nvmem framework.
+>
+> Instead of modifying all the memory drivers to check this pin, make
+> the NVMEM subsystem check if the write-protect GPIO being passed
+> through the nvmem_config or defined in the device tree and pull it
+> low whenever writing to the memory.
+>
+> There was a suggestion for introducing the gpiodesc from pdata, but
+> as pdata is already removed it could be replaced by adding it to
+> nvmem_config.
+>
+> Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.html
+>
+> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
 
-FTR, it seems that bisection was first diverged by this kernel bug:
+This is consistent IMO, we just specify that WP is active high
+as in "when it is high, it actively protects against writing", so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-testing commit 8835cae5f2abd7f7a3143afe357f416aff5517a4 with gcc (GCC) 5.5.0
-run #0: crashed: WARNING in batadv_mcast_mla_update
-
-on top of this non-deterministic kernel build bug kicked in to prevent
-detection of "culprit does not affect build":
-
-culprit signature: 2aca06cd9a4175f124f866fe66467cfa96c0bf2a
-parent  signature: 8a8dd9ca5726f129b6d36eb6e1f3b78cc7c18b31
-
-
-
-
-
->  However let's try this fix:
->
-> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git master
->
-> From 9c962de70a52e0b24fba00ee7b8707964d3d1e37 Mon Sep 17 00:00:00 2001
-> From: Theodore Ts'o <tytso@mit.edu>
-> Date: Sun, 15 Dec 2019 01:09:03 -0500
-> Subject: [PATCH] ext4: validate the debug_want_extra_isize mount option at parse time
->
-> Instead of setting s_want_extra_size and then making sure that it is a
-> valid value afterwards, validate the field before we set it.  This
-> avoids races and other problems when remounting the file system.
->
-> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> Reported-by: syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
-> ---
->  fs/ext4/super.c | 143 +++++++++++++++++++++++-------------------------
->  1 file changed, 69 insertions(+), 74 deletions(-)
->
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index b205112ca051..46b6d5b150ac 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1886,6 +1886,13 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->                 }
->                 sbi->s_commit_interval = HZ * arg;
->         } else if (token == Opt_debug_want_extra_isize) {
-> +               if ((arg & 1) ||
-> +                   (arg < 4) ||
-> +                   (arg > (sbi->s_inode_size - EXT4_GOOD_OLD_INODE_SIZE))) {
-> +                       ext4_msg(sb, KERN_ERR,
-> +                                "Invalid want_extra_isize %d", arg);
-> +                       return -1;
-> +               }
->                 sbi->s_want_extra_isize = arg;
->         } else if (token == Opt_max_batch_time) {
->                 sbi->s_max_batch_time = arg;
-> @@ -3540,40 +3547,6 @@ int ext4_calculate_overhead(struct super_block *sb)
->         return 0;
->  }
->
-> -static void ext4_clamp_want_extra_isize(struct super_block *sb)
-> -{
-> -       struct ext4_sb_info *sbi = EXT4_SB(sb);
-> -       struct ext4_super_block *es = sbi->s_es;
-> -       unsigned def_extra_isize = sizeof(struct ext4_inode) -
-> -                                               EXT4_GOOD_OLD_INODE_SIZE;
-> -
-> -       if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
-> -               sbi->s_want_extra_isize = 0;
-> -               return;
-> -       }
-> -       if (sbi->s_want_extra_isize < 4) {
-> -               sbi->s_want_extra_isize = def_extra_isize;
-> -               if (ext4_has_feature_extra_isize(sb)) {
-> -                       if (sbi->s_want_extra_isize <
-> -                           le16_to_cpu(es->s_want_extra_isize))
-> -                               sbi->s_want_extra_isize =
-> -                                       le16_to_cpu(es->s_want_extra_isize);
-> -                       if (sbi->s_want_extra_isize <
-> -                           le16_to_cpu(es->s_min_extra_isize))
-> -                               sbi->s_want_extra_isize =
-> -                                       le16_to_cpu(es->s_min_extra_isize);
-> -               }
-> -       }
-> -       /* Check if enough inode space is available */
-> -       if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
-> -           (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
-> -                                                       sbi->s_inode_size)) {
-> -               sbi->s_want_extra_isize = def_extra_isize;
-> -               ext4_msg(sb, KERN_INFO,
-> -                        "required extra inode space not available");
-> -       }
-> -}
-> -
->  static void ext4_set_resv_clusters(struct super_block *sb)
->  {
->         ext4_fsblk_t resv_clusters;
-> @@ -3781,6 +3754,68 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
->          */
->         sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
->
-> +       if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
-> +               sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
-> +               sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
-> +       } else {
-> +               sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
-> +               sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
-> +               if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
-> +                       ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
-> +                                sbi->s_first_ino);
-> +                       goto failed_mount;
-> +               }
-> +               if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
-> +                   (!is_power_of_2(sbi->s_inode_size)) ||
-> +                   (sbi->s_inode_size > blocksize)) {
-> +                       ext4_msg(sb, KERN_ERR,
-> +                              "unsupported inode size: %d",
-> +                              sbi->s_inode_size);
-> +                       goto failed_mount;
-> +               }
-> +               /*
-> +                * i_atime_extra is the last extra field available for
-> +                * [acm]times in struct ext4_inode. Checking for that
-> +                * field should suffice to ensure we have extra space
-> +                * for all three.
-> +                */
-> +               if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-> +                       sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-> +                       sb->s_time_gran = 1;
-> +                       sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
-> +               } else {
-> +                       sb->s_time_gran = NSEC_PER_SEC;
-> +                       sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
-> +               }
-> +               sb->s_time_min = EXT4_TIMESTAMP_MIN;
-> +       }
-> +       if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
-> +               sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-> +                       EXT4_GOOD_OLD_INODE_SIZE;
-> +               if (ext4_has_feature_extra_isize(sb)) {
-> +                       unsigned v, max = (sbi->s_inode_size -
-> +                                          EXT4_GOOD_OLD_INODE_SIZE);
-> +
-> +                       v = le16_to_cpu(es->s_want_extra_isize);
-> +                       if (v > max) {
-> +                               ext4_msg(sb, KERN_ERR,
-> +                                        "bad s_want_extra_isize: %d", v);
-> +                               goto failed_mount;
-> +                       }
-> +                       if (sbi->s_want_extra_isize < v)
-> +                               sbi->s_want_extra_isize = v;
-> +
-> +                       v = le16_to_cpu(es->s_min_extra_isize);
-> +                       if (v > max) {
-> +                               ext4_msg(sb, KERN_ERR,
-> +                                        "bad s_min_extra_isize: %d", v);
-> +                               goto failed_mount;
-> +                       }
-> +                       if (sbi->s_want_extra_isize < v)
-> +                               sbi->s_want_extra_isize = v;
-> +               }
-> +       }
-> +
->         if (sbi->s_es->s_mount_opts[0]) {
->                 char *s_mount_opts = kstrndup(sbi->s_es->s_mount_opts,
->                                               sizeof(sbi->s_es->s_mount_opts),
-> @@ -4019,42 +4054,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
->                                                       has_huge_files);
->         sb->s_maxbytes = ext4_max_size(sb->s_blocksize_bits, has_huge_files);
->
-> -       if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
-> -               sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
-> -               sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
-> -       } else {
-> -               sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
-> -               sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
-> -               if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
-> -                       ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
-> -                                sbi->s_first_ino);
-> -                       goto failed_mount;
-> -               }
-> -               if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
-> -                   (!is_power_of_2(sbi->s_inode_size)) ||
-> -                   (sbi->s_inode_size > blocksize)) {
-> -                       ext4_msg(sb, KERN_ERR,
-> -                              "unsupported inode size: %d",
-> -                              sbi->s_inode_size);
-> -                       goto failed_mount;
-> -               }
-> -               /*
-> -                * i_atime_extra is the last extra field available for [acm]times in
-> -                * struct ext4_inode. Checking for that field should suffice to ensure
-> -                * we have extra space for all three.
-> -                */
-> -               if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-> -                       sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-> -                       sb->s_time_gran = 1;
-> -                       sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
-> -               } else {
-> -                       sb->s_time_gran = NSEC_PER_SEC;
-> -                       sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
-> -               }
-> -
-> -               sb->s_time_min = EXT4_TIMESTAMP_MIN;
-> -       }
-> -
->         sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
->         if (ext4_has_feature_64bit(sb)) {
->                 if (sbi->s_desc_size < EXT4_MIN_DESC_SIZE_64BIT ||
-> @@ -4503,8 +4502,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
->         } else if (ret)
->                 goto failed_mount4a;
->
-> -       ext4_clamp_want_extra_isize(sb);
-> -
->         ext4_set_resv_clusters(sb);
->
->         err = ext4_setup_system_zone(sb);
-> @@ -5292,8 +5289,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
->                 goto restore_opts;
->         }
->
-> -       ext4_clamp_want_extra_isize(sb);
-> -
->         if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
->             test_opt(sb, JOURNAL_CHECKSUM)) {
->                 ext4_msg(sb, KERN_ERR, "changing journal_checksum "
-> --
-> 2.24.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20191215063020.GA11512%40mit.edu.
+Yours,
+Linus Walleij
