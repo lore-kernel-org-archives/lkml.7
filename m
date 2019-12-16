@@ -2,167 +2,185 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037A5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB3FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16F3207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC167206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P4hSaHlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLPJOX convert rfc822-to-8bit (ORCPT
+        id S1727024AbfLPJPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:14:23 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50393 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfLPJOV (ORCPT
+        Mon, 16 Dec 2019 04:15:18 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43639 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfLPJPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:14:21 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0331624000B;
-        Mon, 16 Dec 2019 09:14:17 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 10:14:16 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191216101416.339d873f@xps13>
-In-Reply-To: <20191216085424.x6fqr4gxkph5zqjh@pengutronix.de>
-References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
-        <20191212211434.455trhnlcvn26zl6@pengutronix.de>
-        <20191216093955.177a04af@xps13>
-        <20191216085424.x6fqr4gxkph5zqjh@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Dec 2019 04:15:18 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so3641927lfq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:15:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=rj0lGpd3yaUxGRTGZvxPWnnnjGnW8gKPN7KeoAgqNTM=;
+        b=P4hSaHlupp/IyXcENyYnh8QhbcDUnjZCPsS7UfzRTZcDn018IUlCkE/RwisPdi8uZ5
+         UfSzV4BFjxT/FxmHdxbufulAVu6NMkkXCKiYkG9hIBnzRtFtAB+6zCdGjXdREzWkCLGn
+         LB/5EY3fZsnGIYRpykQ4PLkYKSNz4EnlaYKEjRwqcahkYmxHdciurF/0JDsR4929Sbfp
+         rAz1WwzDVPd+l4pIIRB1Wx3Jxbz0K+bgG4KxCvEusA/MuNnFeq4GaANstyVN47kOxAQY
+         AzLfjamjN0QGvWAmP6x8Se3MTCiAS1iKRSGIUicwNzhL6U8yIwJkjOVIgmxNOiryQCXs
+         i3YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=rj0lGpd3yaUxGRTGZvxPWnnnjGnW8gKPN7KeoAgqNTM=;
+        b=cVglnV6usRNJ6aX7BnP4Eyu1SREff7hhxZGoj9gDyHPdFA6Dk4SKADYmcBgV67AGWw
+         unnmBY4qpf/wOWjfou1H1pzIjhL5HOLgN2bVMeRLeHl1gGq2DkjnQH57WgrudHdjNYRz
+         NQoZX5m4wV501+hVJSgY9wfJLbxNpWO6+XMYpFfDqgWuKVOWidPJ/g91rzkHgsKR/d/E
+         7FN1oCJ5Ecyk2MvzFTLgSZq9vD5c3vqxH8VsgsRjkyfYIHyEE8jgBEbZKbyLkXH1fX9e
+         ++kQMX/MyXyIt+8d/4wiQyazcBgGxCkBKKiuGYr5pVgQ5Z9abqTBsl0PRe7DUoOCUoDs
+         1YfA==
+X-Gm-Message-State: APjAAAW9L7cXXPeXgANpL9yV74KHTKu7EYmP2w4KWnxqJcKwM6AEOmQB
+        eXLzsfXuoxR9njrmg5CFmLzm5UVT/yYjCVFJ/XBxIQ==
+X-Google-Smtp-Source: APXvYqyehN/Xs5RL2OuF672CaHnDupDsIMF34lzkZlx71dQkwBQRLFaLmkgEdHVRSAhH6YE5de5QGFBuVLBhGSvxTEo=
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr16281646lfk.67.1576487715866;
+ Mon, 16 Dec 2019 01:15:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 16 Dec 2019 14:45:04 +0530
+Message-ID: <CA+G9fYuO7vMjsqkyXHZSU-pKEk0L0t9kQTfnd5xopVADyGwprw@mail.gmail.com>
+Subject: mainline-5.5.0-rc1: do_mount_root+0x6c/0x10d - kernel crash while
+ mounting rootfs
+To:     kvm list <kvm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Paolo Bonzini <pbonzini@redhat.com>, maz@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+The following kernel crash reported on qemu_x86_64 boot running
+5.5.0-rc1 mainline kernel.
 
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Mon, 16 Dec
-2019 09:54:24 +0100:
+Regressions detected on arm64, arm, qemu_x86_64, and qemu_i386.
+Where as x86_64 and i386 boot pass on devices.
 
-> Hi Miquel,
-> 
-> On Mon, Dec 16, 2019 at 09:39:55AM +0100, Miquel Raynal wrote:
-> > Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Thu, 12 Dec
-> > 2019 22:14:34 +0100:
-> >   
-> > > On Fri, Nov 29, 2019 at 08:10:23PM +0100, Miquel Raynal wrote:  
-> > > > +static int max7313_pwm_apply(struct pwm_chip *chip,
-> > > > +			     struct pwm_device *pwm,
-> > > > +			     const struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> > > > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> > > > +	unsigned int intensity, active;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	if (!state->enabled ||
-> > > > +	    state->period < PWM_PERIOD_NS ||
-> > > > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	/* Convert the duty-cycle to be in the [0;16] range */
-> > > > +	intensity = DIV_ROUND_DOWN_ULL(state->duty_cycle,
-> > > > +				       state->period / PWM_DC_STATES);    
-> > > 
-> > > this looks wrong. The period must not have an influence on the selection
-> > > of the duty_cycle (other than duty_cycle < period). So given that the
-> > > period is fixed at 31.25 ms, the result of
-> > > 
-> > > 	pwm_apply_state(pwm, { .enabled = 1, .period = 2s, .duty_cycle = 16 ms })
-> > > 
-> > > must be the same as for
-> > > 
-> > > 	pwm_apply_state(pwm, { .enabled = 1, .period = 3s, .duty_cycle = 16 ms })  
-> > 
-> > This was not my understanding of our previous discussion and, again, I
-> > don't really understand this choice but if the framework works like
-> > that we shall probably continue with this logic. However, all this
-> > should probably be explained directly in the kernel doc of each core
-> > helper, that would help a lot.  
-> 
-> I agree. There is a pending doc patch and once Thierry applies it I plan
-> to add these details.
+qemu_x86_64 kernel crash log,
+-------------------------------------------
+[    1.680229] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[    1.681148] #PF: supervisor read access in kernel mode
+[    1.681150] #PF: error_code(0x0000) - not-present page
+[    1.681150] PGD 0 P4D 0
+[    1.681150] Oops: 0000 [#1] SMP NOPTI
+[    1.681150] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1 #1
+[    1.681150] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    1.681150] RIP: 0010:strncpy+0x12/0x30
+[    1.681150] Code: 89 e5 48 83 c6 01 0f b6 4e ff 48 83 c2 01 84 c9
+88 4a ff 75 ed 5d c3 90 55 48 85 d2 48 89 f8 48 89 e5 74 1e 48 01 fa
+48 89 f9 <44> 0f b6 06 41 80 f8 01 44 88 01 48 83 de ff 48 83 c1 01 48
+39 d1
+[    1.681150] RSP: 0018:ffffacea40013e00 EFLAGS: 00010286
+[    1.681150] RAX: ffff9eff78f4f000 RBX: ffffd91104e3d3c0 RCX: ffff9eff78f4f000
+[    1.681150] RDX: ffff9eff78f4ffff RSI: 0000000000000000 RDI: ffff9eff78f4f000
+[    1.681150] RBP: ffffacea40013e00 R08: ffff9eff78f4f000 R09: 0000000000000000
+[    1.681150] R10: ffffd91104e3d3c0 R11: 0000000000000000 R12: 0000000000008001
+[    1.681150] R13: 00000000fffffff4 R14: ffffffffa5d9aa89 R15: ffff9eff78f4e000
+[    1.681150] FS:  0000000000000000(0000) GS:ffff9eff7bc00000(0000)
+knlGS:0000000000000000
+[    1.681150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.681150] CR2: 0000000000000000 CR3: 0000000113010000 CR4: 00000000003406f0
+[    1.681150] Call Trace:
+[    1.681150]  do_mount_root+0x6c/0x10d
+[    1.681150]  mount_block_root+0x103/0x226
+[    1.681150]  ? do_mknodat+0x16e/0x200
+[    1.681150]  ? set_debug_rodata+0x17/0x17
+[    1.681150]  mount_root+0x114/0x133
+[    1.681150]  prepare_namespace+0x139/0x16a
+[    1.681150]  kernel_init_freeable+0x21b/0x22f
+[    1.681150]  ? rest_init+0x250/0x250
+[    1.681150]  kernel_init+0xe/0x110
+[    1.681150]  ret_from_fork+0x27/0x50
+[    1.681150] Modules linked in:
+[    1.681150] CR2: 0000000000000000
+[    1.681150] ---[ end trace d7ad8453a7546454 ]---
+[    1.681150] RIP: 0010:strncpy+0x12/0x30
+[    1.681150] Code: 89 e5 48 83 c6 01 0f b6 4e ff 48 83 c2 01 84 c9
+88 4a ff 75 ed 5d c3 90 55 48 85 d2 48 89 f8 48 89 e5 74 1e 48 01 fa
+48 89 f9 <44> 0f b6 06 41 80 f8 01 44 88 01 48 83 de ff 48 83 c1 01 48
+39 d1
+[    1.681150] RSP: 0018:ffffacea40013e00 EFLAGS: 00010286
+[    1.681150] RAX: ffff9eff78f4f000 RBX: ffffd91104e3d3c0 RCX: ffff9eff78f4f000
+[    1.681150] RDX: ffff9eff78f4ffff RSI: 0000000000000000 RDI: ffff9eff78f4f000
+[    1.681150] RBP: ffffacea40013e00 R08: ffff9eff78f4f000 R09: 0000000000000000
+[    1.681150] R10: ffffd91104e3d3c0 R11: 0000000000000000 R12: 0000000000008001
+[    1.681150] R13: 00000000fffffff4 R14: ffffffffa5d9aa89 R15: ffff9eff78f4e000
+[    1.681150] FS:  0000000000000000(0000) GS:ffff9eff7bc00000(0000)
+knlGS:0000000000000000
+[    1.681150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.681150] CR2: 0000000000000000 CR3: 0000000113010000 CR4: 00000000003406f0
+[    1.681150] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:38
+[    1.681150] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
+1, name: swapper/0
+[    1.681150] INFO: lockdep is turned off.
+[    1.681150] irq event stamp: 2360074
+[    1.681150] hardirqs last  enabled at (2360073):
+[<ffffffffa48f4c8c>] get_page_from_freelist+0x21c/0x1430
+[    1.681150] hardirqs last disabled at (2360074):
+[<ffffffffa4601eab>] trace_hardirqs_off_thunk+0x1a/0x1c
+[    1.681150] softirqs last  enabled at (2359990):
+[<ffffffffa5800338>] __do_softirq+0x338/0x43a
+[    1.681150] softirqs last disabled at (2359975):
+[<ffffffffa4701828>] irq_exit+0xb8/0xc0
+[    1.681150] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G      D
+  5.5.0-rc1 #1
+[    1.681150] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    1.681150] Call Trace:
+[    1.681150]  dump_stack+0x7a/0xa5
+[    1.681150]  ___might_sleep+0x163/0x250
+[    1.681150]  __might_sleep+0x4a/0x80
+[    1.681150]  exit_signals+0x33/0x2d0
+[    1.681150]  do_exit+0xb6/0xcd0
+[    1.681150]  ? prepare_namespace+0x139/0x16a
+[    1.681150]  ? kernel_init_freeable+0x21b/0x22f
+[    1.681150]  ? rest_init+0x250/0x250
+[    1.681150]  rewind_stack_do_exit+0x17/0x20
+[    1.736632] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+[    1.737579] Kernel Offset: 0x23600000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-Great!
+Full log,
+qemu_x86_64,
+https://lkft.validation.linaro.org/scheduler/job/1054430#L573
+qemu_i386:
+https://lkft.validation.linaro.org/scheduler/job/1054335#L571
 
-> 
-> The idea is to make the policy simple (both computational and to
-> understand). With each policy there are strange corner cases, so for
-> sure you can come up with examples that yield results that are way off
-> from the request. The idea is that drivers all implement the same policy
-> and then create helper functions to match the different consumer needs.
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: 9603e22104439ddfa6a077f1a0e5d8c662beec6c
+  git describe: v5.5-rc1-308-g9603e2210443
+  make_kernelversion: 5.5.0-rc1
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2325/config
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/2325/
+  build-location:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2325
 
-I fully understand and comply with this.
-
-The above logic was not the first one that would have came off my mind
-but it is 100% true that it keeps the computation easy (= less bugs, =
-quicker) and has probably been much more pondered than mine.
-
-> 
-> > > . Also dividing by a division looses precision.  
-> > 
-> > I agree but this is a problem with fixed point calculations. Maybe I
-> > could first multiply the numerator by a factor of 100 or 1000 to
-> > minimize the error. Do you have a better idea?  
-> 
-> intensity = DIV_ROUND_DOWN_ULL((unsigned long long)state->duty_cycle * PWM_DC_STATES, state->period);
-> 
-> should be both more exact and cheaper to calculate. (But this is
-> somewhat moot given that state->period shouldn't be there.)
-
-I feel stupid now - let's put it on monday mood. Of course it's more
-accurate this way.
-
-> (And in general you have to care for overflowing, but I think that's not
-> a problem in practise here as struct pwm_state::duty_cycle is an int
-> (still), and PWM_DC_STATES is small.)
-
-Do you plan to change duty_cycle type?
-
-Right now the multiplication cannot be over 500 000 which is totally
-okay for a s32 but not for a s16 for instance. 
-
-> > > > +static void max7313_pwm_get_state(struct pwm_chip *chip,
-> > > > +				  struct pwm_device *pwm,
-> > > > +				  struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> > > > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> > > > +	u8 intensity;
-> > > > +
-> > > > +	state->enabled = true;
-> > > > +	state->period = PWM_PERIOD_NS;
-> > > > +	state->polarity = PWM_POLARITY_NORMAL;
-> > > > +
-> > > > +	intensity = max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
-> > > > +	state->duty_cycle = intensity * PWM_OFFSET_NS;    
-> > > 
-> > > I think you need to take into account the blink phase bit.  
-> > 
-> > It is already done by .pwm_get_intensity itself, no?  
-> 
-> Ah, possible, I admin I didn't look deep enough to catch it there.
-
-No problem, thanks anyway for all the careful reviews!
-
-Thanks,
-Miquèl
+--
+Linaro LKFT
+https://lkft.linaro.org
