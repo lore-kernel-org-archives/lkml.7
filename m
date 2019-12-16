@@ -2,119 +2,142 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15074C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFC7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD54206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E0520717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="owOuxhkO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJVc+R9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfLPPbX (ORCPT
+        id S1728436AbfLPPcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:31:23 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41304 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbfLPPbW (ORCPT
+        Mon, 16 Dec 2019 10:32:00 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33225 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728248AbfLPPb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:31:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=a8LsOaGDs/Z3fBnFkqVotZhvYgNBIldUCQVm7RoIjUw=; b=owOuxhkOKLqC2aX5Ubb+i3Lrc
-        1J/D+0WnBgyS8URosr+J53C7mFpvAzCVyLGKXTcQfUfPOOnkM8BjFyyCZswOaf4LRVcAQfbYBIYDE
-        o1XBGZfki3nEpN3bvWg1RB0E5nC7B0dqfG6j8kTTnYlwT22Dby4B45p4JklKVMbFes5e7eN7xjpBO
-        xI93EfP5FSRaOvV7kRi+AUGzG0CD22v5XS0gxv80irPuOCwmsv7iac5YzdmNjpzvtdt+nbdn2/JYg
-        rFMSL7vf31OneaqLAe2jCNoqMB1dMgB352yWfH56PYzpTwfdZ7wZZO3YV3XTa85eubc90XSYRF0EW
-        fgdfN3KSg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igsKh-0000Ou-6E; Mon, 16 Dec 2019 15:30:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 096BD3035D4;
-        Mon, 16 Dec 2019 16:29:25 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DE7E72B2A192E; Mon, 16 Dec 2019 16:30:47 +0100 (CET)
-Date:   Mon, 16 Dec 2019 16:30:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-Message-ID: <20191216153047.GM2871@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org>
- <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
- <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
- <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
- <20191216145041.GG2827@hirez.programming.kicks-ass.net>
- <20191216151419.GL2871@hirez.programming.kicks-ass.net>
+        Mon, 16 Dec 2019 10:31:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576510317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b4ukn9jg5iLQIvGzXAVPG9KPLZpvMGtjikA+c6QsDvA=;
+        b=hJVc+R9+/TiZe3hnaBI2XKmeoRfJMqiFauOZYEqYCoBVofozMsSBIeK1Y7W+Tdy/HeZjcG
+        XLTrtuWVt/+WWbTmpd/40i9dFSaySlsQhF2AUU5mcjelVGHDptfCsC7rtJ/62jrQvP6TYE
+        1S7h76RqMCuBBJjYvVYWyfNpjICaGIc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-4E2355ysOluWgkCT4CS3Zw-1; Mon, 16 Dec 2019 10:31:56 -0500
+X-MC-Unique: 4E2355ysOluWgkCT4CS3Zw-1
+Received: by mail-wr1-f70.google.com with SMTP id z14so3935771wrs.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:31:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b4ukn9jg5iLQIvGzXAVPG9KPLZpvMGtjikA+c6QsDvA=;
+        b=DN5mdBSu9VatUsfejBf3wg6LolcILeCWAT1XmQ7Lqe2/2bAYnwSag1RwiPYSFCfHUq
+         V8WQWfDX11IG/Bkyf/+rZ0lJo246uk5BAwxWDcdJSym82GXQSBwSlapyCRY/E6Pb0H5g
+         iUJP1xdcY/oVBu0JXNUqN6dt9XixZeKt2ljF+7xyxNzGPgYaNnKFsyXhIEZIxQhVrIf5
+         IpcJsRO6v5q7VEbzDXIhnhBi1VXD6cVAlg3Y8I/hPXhOdSU+3DGCodmMK07x7H/K0ZlR
+         SC1wPPgncZBHk/eeY3OTKleJqOegS5qvq94asynlIg1l/DAfad4JIons5saCMw6gd505
+         t4XA==
+X-Gm-Message-State: APjAAAXmo3JuQq+bQSZP0keWXrVBXnpt0VROrQ0KRh+q2r1v6nKdeUB3
+        C+LqCEvT3683z2RkRXZ3TVbomkNtZA+sGcisovjvVCSVTilnFzstjTxnwtr0+RSmlJh2eDWgHFq
+        czc+ARXplo7PILNw6teOxktP7
+X-Received: by 2002:a5d:4c85:: with SMTP id z5mr30176063wrs.42.1576510312161;
+        Mon, 16 Dec 2019 07:31:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzSt8LzC5weKbJysR0X7nBKyx8pcDL+THj78l8aUphiEurT2I+K1QUcSiZnvcelJLAhVItfpA==
+X-Received: by 2002:a5d:4c85:: with SMTP id z5mr30176037wrs.42.1576510311911;
+        Mon, 16 Dec 2019 07:31:51 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:cde8:2463:95a9:1d81? ([2001:b07:6468:f312:cde8:2463:95a9:1d81])
+        by smtp.gmail.com with ESMTPSA id t190sm12991878wmt.44.2019.12.16.07.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 07:31:51 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com> <m1lfrihj2n.fsf@dinechin.org>
+ <20191213202324.GI16429@xz-x1>
+ <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
+ <20191214162644.GK16429@xz-x1>
+ <0f084179-2a5d-e8d9-5870-3cc428105596@redhat.com>
+ <20191216152647.GD83861@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fa25d729-a2fb-85af-a968-1dedc754a55d@redhat.com>
+Date:   Mon, 16 Dec 2019 16:31:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216151419.GL2871@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216152647.GD83861@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 04:14:19PM +0100, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 03:50:41PM +0100, Peter Zijlstra wrote:
-> > On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
-> > 
-> > > So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
-> > > cache flush and the actual flush in done in tlb_flush_mmu.
-> > 
-> > Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
-> > tlb_remove_table().
-> > 
-> > > As per
-> > > 
-> > > d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
-> > > invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
-> > 
-> > 96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
-> > 
-> > And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
-> > not TLBI when it fails to allocate a batch page, which is an error for
-> > PPC-Radix.
-> > 
-> > There is also no TLBI when the batch page is full and the RCU callback
-> > happens, which is also a bug on PPC-Radix.
+On 16/12/19 16:26, Peter Xu wrote:
+> On Mon, Dec 16, 2019 at 10:29:36AM +0100, Paolo Bonzini wrote:
+>> On 14/12/19 17:26, Peter Xu wrote:
+>>> On Sat, Dec 14, 2019 at 08:57:26AM +0100, Paolo Bonzini wrote:
+>>>> On 13/12/19 21:23, Peter Xu wrote:
+>>>>>> What is the benefit of using u16 for that? That means with 4K pages, you
+>>>>>> can share at most 256M of dirty memory each time? That seems low to me,
+>>>>>> especially since it's sufficient to touch one byte in a page to dirty it.
+>>>>>>
+>>>>>> Actually, this is not consistent with the definition in the code ;-)
+>>>>>> So I'll assume it's actually u32.
+>>>>> Yes it's u32 now.  Actually I believe at least Paolo would prefer u16
+>>>>> more. :)
+>>>>
+>>>> It has to be u16, because it overlaps the padding of the first entry.
+>>>
+>>> Hmm, could you explain?
+>>>
+>>> Note that here what Christophe commented is on dirty_index,
+>>> reset_index of "struct kvm_dirty_ring", so imho it could really be
+>>> anything we want as long as it can store a u32 (which is the size of
+>>> the elements in kvm_dirty_ring_indexes).
+>>>
+>>> If you were instead talking about the previous union definition of
+>>> "struct kvm_dirty_gfns" rather than "struct kvm_dirty_ring", iiuc I've
+>>> moved those indices out of it and defined kvm_dirty_ring_indexes which
+>>> we expose via kvm_run, so we don't have that limitation as well any
+>>> more?
+>>
+>> Yeah, I meant that since the size has (had) to be u16 in the union, it
+>> need not be bigger in kvm_dirty_ring.
+>>
+>> I don't think having more than 2^16 entries in the *per-CPU* ring buffer
+>> makes sense; lagging in recording dirty memory by more than 256 MiB per
+>> CPU would mean a large pause later on resetting the ring buffers (your
+>> KVM_CLEAR_DIRTY_LOG patches found the sweet spot to be around 1 GiB for
+>> the whole system).
 > 
-> It seems to me you need something like this here patch, all you need to
-> add is a suitable definition of tlb_needs_table_invalidate() for Power.
+> That's right, 1G could probably be a "common flavor" for guests in
+> that case.
+> 
+> Though I wanted to use u64 only because I wanted to prepare even
+> better for future potential changes as long as it won't hurt much.
 
-I'm thinking this:
+No u64, please.  u32 I can agree with, 16-bit *should* be enough but it
+is a bit tight, so let's make it 32-bit if we drop the union idea.
 
-#define tlb_needs_table_invalidate()	radix_enabled()
+Paolo
 
-should work for you. When you have Radix you need that TLBI, if you have
-Hash you don't.
