@@ -2,101 +2,124 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A153C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CF2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAD0206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:47:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NIKIK/cZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5E2FA206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfLPLr6 (ORCPT
+        id S1727528AbfLPLsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:47:58 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:38902 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLPLr5 (ORCPT
+        Mon, 16 Dec 2019 06:48:41 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:34048 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLPLsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:47:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LwcWvPUPdHgv2odYtZcSMNnsgALZyJIt29Wbmp4VgB8=; b=NIKIK/cZilp7O4WY5tTPGdJ71
-        0bSlzirEsG8ICgflK8h81fjEYBOzirr95k2osGKphsDK4HWCEJok7EWXmBJyqpIcHKgyCKXS2WcSi
-        +X8yRLNm2YDi41R98ppiuSE8qrqlPRD/uOpsmzodOLqDFsZDqrrFYRVT/IKOO8GQb2lrrY7LKi1d+
-        Esy0g5T8tmr0jCUwWNXLRdaVxRedn/nRTNc7vfLYhetZeE+mPdLLm4axpNRPOSIcFVh4KID6EDquB
-        OxeWbfbldP7mSASAmxCSUP8gm7qmRhxNPtrypeCpUi/1bpzi2hcUu7jJ2MNrbVz3S+wCrTWLh9fYP
-        0kj67N7cg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igoqW-0005HZ-2d; Mon, 16 Dec 2019 11:47:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96FFC3035D4;
-        Mon, 16 Dec 2019 12:46:02 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9D3422B1A6BF1; Mon, 16 Dec 2019 12:47:24 +0100 (CET)
-Date:   Mon, 16 Dec 2019 12:47:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191216114724.GL2844@hirez.programming.kicks-ass.net>
-References: <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
- <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
- <20191213144359.GA3826@willie-the-truck>
+        Mon, 16 Dec 2019 06:48:40 -0500
+Received: from 2606-a000-111b-43ee-0000-0000-0000-115f.inf6.spectrum.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1igorW-0000nC-FD; Mon, 16 Dec 2019 06:48:33 -0500
+Date:   Mon, 16 Dec 2019 06:48:28 -0500
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     syzbot <syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Subject: Re: memory leak in sctp_stream_init
+Message-ID: <20191216114828.GA20281@hmswarspite.think-freely.org>
+References: <000000000000f531080599c4073c@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213144359.GA3826@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <000000000000f531080599c4073c@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:28:06AM +0000, Will Deacon wrote:
-> However, enabling this for 32-bit ARM is total carnage; as Linus mentioned,
-> a whole bunch of code appears to be relying on atomic 64-bit access of
-> READ_ONCE(); the perf ring buffer, io_uring, the scheduler, pm_runtime,
-> cpuidle, ... :(
+On Sun, Dec 15, 2019 at 12:35:09PM -0800, syzbot wrote:
+> Hello,
 > 
-> Unfortunately, at least some of these *do* look like bugs, but I can't see
-> how we can fix them, not least because the first two are user ABI afaict. It
-> may also be that in practice we get 2x32-bit stores, and that works out fine
-> when storing a 32-bit virtual address. I'm not sure what (if anything) the
-> compiler guarantees in these cases.
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e31736d9 Merge tag 'nios2-v5.5-rc2' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=126a177ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bbf3a35184a3ed64
+> dashboard link: https://syzkaller.appspot.com/bug?extid=772d9e36c490b18d51d1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15602ddee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12798251e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8881080a3000 (size 4096):
+>   comm "syz-executor474", pid 7155, jiffies 4294942658 (age 15.870s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000df094087>] genradix_alloc_node lib/generic-radix-tree.c:90
+> [inline]
+>     [<00000000df094087>] __genradix_ptr_alloc+0xf5/0x250
+> lib/generic-radix-tree.c:122
+>     [<0000000057cfa7bb>] __genradix_prealloc+0x46/0x70
+> lib/generic-radix-tree.c:223
+>     [<0000000029d02dac>] sctp_stream_alloc_out.part.0+0x57/0x80
+> net/sctp/stream.c:86
+>     [<00000000bb930a04>] sctp_stream_alloc_out net/sctp/stream.c:151
+> [inline]
+>     [<00000000bb930a04>] sctp_stream_init+0x129/0x180 net/sctp/stream.c:129
+>     [<00000000ba13c246>] sctp_association_init net/sctp/associola.c:229
+> [inline]
+>     [<00000000ba13c246>] sctp_association_new+0x46e/0x700
+> net/sctp/associola.c:295
+>     [<000000008eb57b4d>] sctp_connect_new_asoc+0x90/0x220
+> net/sctp/socket.c:1070
+>     [<00000000ea24e048>] __sctp_connect+0x182/0x3b0 net/sctp/socket.c:1176
+>     [<00000000aa2c530a>] __sctp_setsockopt_connectx+0xa9/0xf0
+> net/sctp/socket.c:1322
+>     [<0000000018934bfd>] sctp_getsockopt_connectx3 net/sctp/socket.c:1407
+> [inline]
+>     [<0000000018934bfd>] sctp_getsockopt net/sctp/socket.c:8079 [inline]
+>     [<0000000018934bfd>] sctp_getsockopt+0x1394/0x32f6
+> net/sctp/socket.c:8010
+>     [<000000005fd7e3c8>] sock_common_getsockopt+0x38/0x50
+> net/core/sock.c:3108
+>     [<00000000333baf72>] __sys_getsockopt+0xa8/0x180 net/socket.c:2162
+>     [<00000000de0f98e4>] __do_sys_getsockopt net/socket.c:2177 [inline]
+>     [<00000000de0f98e4>] __se_sys_getsockopt net/socket.c:2174 [inline]
+>     [<00000000de0f98e4>] __x64_sys_getsockopt+0x26/0x30 net/socket.c:2174
+>     [<00000000cf1dfee9>] do_syscall_64+0x73/0x220
+> arch/x86/entry/common.c:294
+>     [<000000000f416860>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
 
-Perf does indeed have a (known) problem here for the head/tail values.
-Last time we looked at that nobody could really come up with a sane
-solution that wouldn't break something.
+Almost looks like we're processing a connectx socket option while the handling
+of a cookie echo chunk is in flight through the state machine (i.e.
+sctp_stream_update is getting called on the association while we're setting it
+up in parallel), though I'm not sure how that can happen
 
-I'll try and dig out that thread. Perhaps casting the value to 'unsigned
-long' internally might work, I forgot the details.
+Neil
+
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
