@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBCCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF99C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7B5207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D760D2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520273;
-	bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
+	s=default; t=1576520276;
+	bh=GwnxEesexQtVCbUlKAvqAWQdggO4dZDTKWJDHH3wg/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwjG6hfwvThCjBzjuj60fwfFX6lisj9oHAl2lvF8rFx5stjKZCuG0T7m28WxKYiWg
-	 5bomEiY2WyiwL2HDpMHjoK0vDy8BjGPw3WBOSfAoMK3AB2z92Ym9VP0tc34i+0T2/K
-	 ZwBzAJPS7DKzC7DukDc6bUr3i5UR7RmYAsAUk5VM=
+	b=z0NKhXKIS1XqwdXFCmkvTko+neS6vuLOIvwRQU9n99nl60E8Q+DD/bRBAee8GNjor
+	 28693B2rHJzL61DFnKIIXOEIkiNQYPLXdNrBpwQQ5bZDT5vZs4Z8jn1EmjeblplmvA
+	 A+1BpfsXjgAnSuSLJ5QFS6RdwuLsSFx+DEQN41mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfLPSRw (ORCPT
+        id S1731726AbfLPSRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:17:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42358 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:17:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731368AbfLPSRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:17:49 -0500
+        id S1731717AbfLPSRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0821206E0;
-        Mon, 16 Dec 2019 18:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31627207FF;
+        Mon, 16 Dec 2019 18:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520269;
-        bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
+        s=default; t=1576520271;
+        bh=GwnxEesexQtVCbUlKAvqAWQdggO4dZDTKWJDHH3wg/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K1BX4kHNOzycgnQqtT17kj8YVcwxO21PeUyVm9O0v/TVEViJwL8aUwwA/lvYelmQ+
-         Gi7hbsp1F64oZsX2UCK62H4dIbcop9hdjVvZRUnvgOc7McKk6deA//eSRKu15Zv0z4
-         ddzAI2gCcsXzgeA64vC5wA99lPJEljyR/VIeG2HU=
+        b=FqAsIFCvlWkAvkM1KE/kfamKZjU4HjkWPWKdjScghUsirYH2REewV342ylLadyHA1
+         a5C2cUTR45VODFIf+EM3YOi1mNU9bxOcdIyMvGsx9nEygVRCkfSUcnPeeD28tTKalG
+         08ACNZqDxDU0gs7M+iptYaTSoe5KO4y8SSMc2zkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maged Mokhtar <mmokhtar@petasan.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 083/177] dm writecache: handle REQ_FUA
-Date:   Mon, 16 Dec 2019 18:48:59 +0100
-Message-Id: <20191216174837.756474123@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 046/177] USB: serial: io_edgeport: fix epic endpoint lookup
+Date:   Mon, 16 Dec 2019 18:48:22 +0100
+Message-Id: <20191216174829.977179920@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,33 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maged Mokhtar <mmokhtar@petasan.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit c1005322ff02110a4df7f0033368ea015062b583 upstream.
+commit 7c5a2df3367a2c4984f1300261345817d95b71f8 upstream.
 
-Call writecache_flush() on REQ_FUA in writecache_map().
+Make sure to use the current alternate setting when looking up the
+endpoints on epic devices to avoid binding to an invalid interface.
 
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Maged Mokhtar <mmokhtar@petasan.org>
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 6e8cf7751f9f ("USB: add EPIC support to the io_edgeport driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.21
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210112601.3561-5-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/serial/io_edgeport.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -1218,7 +1218,8 @@ bio_copy:
- 			}
- 		} while (bio->bi_iter.bi_size);
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -2901,16 +2901,18 @@ static int edge_startup(struct usb_seria
+ 	response = 0;
  
--		if (unlikely(wc->uncommitted_blocks >= wc->autocommit_blocks))
-+		if (unlikely(bio->bi_opf & REQ_FUA ||
-+			     wc->uncommitted_blocks >= wc->autocommit_blocks))
- 			writecache_flush(wc);
- 		else
- 			writecache_schedule_autocommit(wc);
+ 	if (edge_serial->is_epic) {
++		struct usb_host_interface *alt;
++
++		alt = serial->interface->cur_altsetting;
++
+ 		/* EPIC thing, set up our interrupt polling now and our read
+ 		 * urb, so that the device knows it really is connected. */
+ 		interrupt_in_found = bulk_in_found = bulk_out_found = false;
+-		for (i = 0; i < serial->interface->altsetting[0]
+-						.desc.bNumEndpoints; ++i) {
++		for (i = 0; i < alt->desc.bNumEndpoints; ++i) {
+ 			struct usb_endpoint_descriptor *endpoint;
+ 			int buffer_size;
+ 
+-			endpoint = &serial->interface->altsetting[0].
+-							endpoint[i].desc;
++			endpoint = &alt->endpoint[i].desc;
+ 			buffer_size = usb_endpoint_maxp(endpoint);
+ 			if (!interrupt_in_found &&
+ 			    (usb_endpoint_is_int_in(endpoint))) {
 
 
