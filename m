@@ -2,141 +2,119 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD566C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15074C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AC820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD54206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQf1ByAm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="owOuxhkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfLPPbJ (ORCPT
+        id S1728428AbfLPPbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:31:09 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34815 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbfLPPbJ (ORCPT
+        Mon, 16 Dec 2019 10:31:23 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41304 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbfLPPbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:31:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so7812269wrr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:31:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=F7qxJLY2B0q2S9xWqYQhOGVkpLg1b0U2h68SKIpYOSM=;
-        b=ZQf1ByAmTqQWYrXd/L/q1azTVA3vCJAg4DgVgTEvElv+S0USzhiaovMwqkHiVWz5Zr
-         kdgo2xjU2VKrukZA2Y3G9F0BaJn1cGMlJHEbLcD/rfdgsk5qcSjvrDsgDpMXwNMl0xcj
-         IU5RiIoHNXVOhpsLIlFmT2Sd8Loyb1APb+nlzEk2uTINsYuL/wN+ktFD6wOFMwpzmfAN
-         E97qqYqiPMia2UzBfFzaQl2jvKP0phVv34LdrbErwwjPr+5eIJ+n3CSC2vNG2MuT2ziB
-         R9Ke340k9MtgEAJmAX6liOEadzi90oEM4LsBju+Xywo1SHhrdCDn9Nq5dOd4vBSBk1V0
-         AhwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=F7qxJLY2B0q2S9xWqYQhOGVkpLg1b0U2h68SKIpYOSM=;
-        b=RxKLUT37WRRUu2NCeXlJr5p7eOmF8XrDKhTGPmDaEJWL7IZOc9Bx1FZhpbRtXyncoh
-         vLnp0JbsqJBtniKo3hRaj7KPDiK7+rB79MqNSdiOIId7mXhmi2JcJ8jxUwA/cpMKbjte
-         pWPUacnGe6G2LIp+8R+Pz8w9OVoy4gNSwekzV3yd+5C7A1OMsuuo8/EvznvayZPDxBCx
-         vTD4GOgb/Yz0m/pPFk9l0V0UACxmEfOtIbjlKOIdlFrTF3ji7NnZQbxqMaR6/HJjrt0C
-         DgxSAOGXkC5Xoq5P5cJ08dBhEMjvC5GRKFjB4Ylzi/KbFmA/ZYupmJuzfnPJvv9qFULh
-         NTcw==
-X-Gm-Message-State: APjAAAW3xTaOYv38czmKMSCjC/6Gj5gHPynurZI2EBxaB2PzZHsTcAvK
-        /54bYh6l1uheeK4Uw/F/KuMRkQ==
-X-Google-Smtp-Source: APXvYqzXaCm+VcadKjSIjeuwTuxX1mlnsuNzVNjfB1+gqraaFYRglw7XZsHB6451b/EXWV+RRXhjaw==
-X-Received: by 2002:adf:e887:: with SMTP id d7mr29983243wrm.162.1576510267203;
-        Mon, 16 Dec 2019 07:31:07 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id u24sm14478768wml.10.2019.12.16.07.31.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:31:06 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:31:06 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v4 4/5] mfd: rn5t618: add more subdevices
-Message-ID: <20191216153106.GK2369@dell>
-References: <20191211215409.32764-1-andreas@kemnade.info>
- <20191211215409.32764-5-andreas@kemnade.info>
+        Mon, 16 Dec 2019 10:31:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=a8LsOaGDs/Z3fBnFkqVotZhvYgNBIldUCQVm7RoIjUw=; b=owOuxhkOKLqC2aX5Ubb+i3Lrc
+        1J/D+0WnBgyS8URosr+J53C7mFpvAzCVyLGKXTcQfUfPOOnkM8BjFyyCZswOaf4LRVcAQfbYBIYDE
+        o1XBGZfki3nEpN3bvWg1RB0E5nC7B0dqfG6j8kTTnYlwT22Dby4B45p4JklKVMbFes5e7eN7xjpBO
+        xI93EfP5FSRaOvV7kRi+AUGzG0CD22v5XS0gxv80irPuOCwmsv7iac5YzdmNjpzvtdt+nbdn2/JYg
+        rFMSL7vf31OneaqLAe2jCNoqMB1dMgB352yWfH56PYzpTwfdZ7wZZO3YV3XTa85eubc90XSYRF0EW
+        fgdfN3KSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igsKh-0000Ou-6E; Mon, 16 Dec 2019 15:30:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 096BD3035D4;
+        Mon, 16 Dec 2019 16:29:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE7E72B2A192E; Mon, 16 Dec 2019 16:30:47 +0100 (CET)
+Date:   Mon, 16 Dec 2019 16:30:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+Message-ID: <20191216153047.GM2871@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org>
+ <87woawzc1t.fsf@linux.ibm.com>
+ <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+ <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+ <20191216132004.GO2844@hirez.programming.kicks-ass.net>
+ <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
+ <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
+ <20191216145041.GG2827@hirez.programming.kicks-ass.net>
+ <20191216151419.GL2871@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191211215409.32764-5-andreas@kemnade.info>
+In-Reply-To: <20191216151419.GL2871@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Andreas Kemnade wrote:
-
-> The RC5T619 has a RTC which is missing in the
-> RN5T618. Add it as subdevice to prepare for their implementation
+On Mon, Dec 16, 2019 at 04:14:19PM +0100, Peter Zijlstra wrote:
+> On Mon, Dec 16, 2019 at 03:50:41PM +0100, Peter Zijlstra wrote:
+> > On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
+> > 
+> > > So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
+> > > cache flush and the actual flush in done in tlb_flush_mmu.
+> > 
+> > Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
+> > tlb_remove_table().
+> > 
+> > > As per
+> > > 
+> > > d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
+> > > invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
+> > 
+> > 96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
+> > 
+> > And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
+> > not TLBI when it fails to allocate a batch page, which is an error for
+> > PPC-Radix.
+> > 
+> > There is also no TLBI when the batch page is full and the RCU callback
+> > happens, which is also a bug on PPC-Radix.
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> Changes in v3:
-> - alignment cleanup
->  drivers/mfd/rn5t618.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> index d78eb29b94a4..18d56a732b20 100644
-> --- a/drivers/mfd/rn5t618.c
-> +++ b/drivers/mfd/rn5t618.c
-> @@ -22,6 +22,12 @@ static const struct mfd_cell rn5t618_cells[] = {
->  	{ .name = "rn5t618-wdt" },
->  };
->  
-> +static const struct mfd_cell rc5t619_cells[] = {
-> +	{ .name = "rn5t618-regulator" },
-> +	{ .name = "rc5t619-rtc" },
-> +	{ .name = "rn5t618-wdt" },
-> +};
-> +
->  static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
->  {
->  	switch (reg) {
-> @@ -173,8 +179,14 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->  		return ret;
->  	}
->  
-> -	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
-> -				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
-> +	if (priv->variant == RC5T619)
-> +		ret = devm_mfd_add_devices(&i2c->dev, -1, rc5t619_cells,
+> It seems to me you need something like this here patch, all you need to
+> add is a suitable definition of tlb_needs_table_invalidate() for Power.
 
-Ref: The "-1", please use this as an opportunity to use the defines.
+I'm thinking this:
 
-> +					   ARRAY_SIZE(rc5t619_cells),
-> +					   NULL, 0, NULL);
-> +	else
+#define tlb_needs_table_invalidate()	radix_enabled()
 
-Are you sure it's not possible for 'variant' to be an unsupported
-device?
-
-> +		ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
-> +					   ARRAY_SIZE(rn5t618_cells),
-> +					   NULL, 0, NULL);
->  	if (ret) {
->  		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
->  		return ret;
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+should work for you. When you have Radix you need that TLBI, if you have
+Hash you don't.
