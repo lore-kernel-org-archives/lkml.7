@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C992C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD759C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759DB2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F9B2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519891;
-	bh=k7xBRQGwFZT0l2WQ2lzq2M6iEO5KUqq5Nksao5BGViA=;
+	s=default; t=1576519894;
+	bh=1sfH16P1I4MDaz88wYmpDscHnYskeF2xKyrHr+t1yZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ljuj4gRSBwk7UWXk4cbvhRGijo8bRLk2+TvCSdLi2vLM3NbY8q1Iqq/FzqDrGRYvb
-	 DvI/vUCal07HD09m3uo0vG/ZCi7VlRYcFLUXVyWX0Hzw9fSyUQCRK7y4pmLk9YiMES
-	 kdF2AG/FZHiVZ/r8QnN73lxndqDSW+/gkKyDhFhw=
+	b=EWuhOzEbP+XNl+pfaA7TZ6Sk1VxuCaR8NHk53igKAvsU1WuYzaVTNFlw8lL5HBlV8
+	 +NwdeEPnH+7zMcH9GcEz5NthXajlYFNqJn4QXVZ5uEWXB66R33JRb1wzAuRcfTsqY8
+	 1yxJFp+LobIdLmHEqmq/hhMemRyVC9ijfiFmdeW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfLPSLa (ORCPT
+        id S1730798AbfLPSLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55426 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730364AbfLPSL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:27 -0500
+        id S1730364AbfLPSLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 040602072D;
-        Mon, 16 Dec 2019 18:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D841E206E0;
+        Mon, 16 Dec 2019 18:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519886;
-        bh=k7xBRQGwFZT0l2WQ2lzq2M6iEO5KUqq5Nksao5BGViA=;
+        s=default; t=1576519891;
+        bh=1sfH16P1I4MDaz88wYmpDscHnYskeF2xKyrHr+t1yZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mV8jOa1k4Vp0UNaFwS3qxJ7lzS61RXVoTGoBK6MpL69KX8TqD9dY3KRWZvplmQi5U
-         qBF8hRdp/pMAE0+JmAm5fKEbVhS/3Bnv+7dPzS75243FHKSujiZt06hjmFuz/HNEwv
-         jooH9lBM6WRr8B2s8wpn2Zm/DaLEqYs+WggvdDCk=
+        b=Blv4emAEfQ1JirvxbBeP8M+4QyhJDz4xshGCZr/468YFxgWdyYebeociRs0GJHNDU
+         1DgZbgE/ozXJEuKeZVvMu4henHGGwtnz/5TnZudgqeSPV7mrgiAePj86NT6mamaOoE
+         bteVtVCj7Ymm4OoD5gExK9G0wYDWLsJQDMV15CyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 108/180] ACPI: OSL: only free map once in osl.c
-Date:   Mon, 16 Dec 2019 18:49:08 +0100
-Message-Id: <20191216174838.239581788@linuxfoundation.org>
+Subject: [PATCH 5.3 110/180] ACPI: PM: Avoid attaching ACPI PM domain to certain devices
+Date:   Mon, 16 Dec 2019 18:49:10 +0100
+Message-Id: <20191216174838.673230464@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,111 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 833a426cc471b6088011b3d67f1dc4e147614647 upstream.
+commit b9ea0bae260f6aae546db224daa6ac1bd9d94b91 upstream.
 
-acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-before freeing the map. This creates a race condition the can result
-in the map being freed more than once.
-A panic can be caused by running
+Certain ACPI-enumerated devices represented as platform devices in
+Linux, like fans, require special low-level power management handling
+implemented by their drivers that is not in agreement with the ACPI
+PM domain behavior.  That leads to problems with managing ACPI fans
+during system-wide suspend and resume.
 
-for ((i=0; i<10; i++))
-do
-        for ((j=0; j<100000; j++))
-        do
-                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
-        done &
-done
+For this reason, make acpi_dev_pm_attach() skip the affected devices
+by adding a list of device IDs to avoid to it and putting the IDs of
+the affected devices into that list.
 
-This patch makes sure that only the process that drops the reference
-to 0 does the freeing.
-
-Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: All applicable <stable@vger.kernel.org>
+Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines for subsystems)
+Reported-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/osl.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/acpi/device_pm.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -360,19 +360,21 @@ void *__ref acpi_os_map_memory(acpi_phys
- }
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
- 
--static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+/* Must be called with mutex_lock(&acpi_ioremap_lock) */
-+static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1309,9 +1309,19 @@ static void acpi_dev_pm_detach(struct de
+  */
+ int acpi_dev_pm_attach(struct device *dev, bool power_on)
  {
--	if (!--map->refcount)
-+	unsigned long refcount = --map->refcount;
-+
-+	if (!refcount)
- 		list_del_rcu(&map->list);
-+	return refcount;
- }
++	/*
++	 * Skip devices whose ACPI companions match the device IDs below,
++	 * because they require special power management handling incompatible
++	 * with the generic ACPI PM domain.
++	 */
++	static const struct acpi_device_id special_pm_ids[] = {
++		{"PNP0C0B", }, /* Generic ACPI fan */
++		{"INT3404", }, /* Fan */
++		{}
++	};
+ 	struct acpi_device *adev = ACPI_COMPANION(dev);
  
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	if (!map->refcount) {
--		synchronize_rcu_expedited();
--		acpi_unmap(map->phys, map->virt);
--		kfree(map);
--	}
-+	synchronize_rcu_expedited();
-+	acpi_unmap(map->phys, map->virt);
-+	kfree(map);
- }
+-	if (!adev)
++	if (!adev || !acpi_match_device_ids(adev, special_pm_ids))
+ 		return 0;
  
- /**
-@@ -392,6 +394,7 @@ static void acpi_os_map_cleanup(struct a
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (!acpi_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -405,10 +408,11 @@ void __ref acpi_os_unmap_iomem(void __io
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
- 
-@@ -443,6 +447,7 @@ void acpi_os_unmap_generic_address(struc
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -458,10 +463,11 @@ void acpi_os_unmap_generic_address(struc
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
+ 	/*
 
 
