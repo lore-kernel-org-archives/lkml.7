@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA30C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D23C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EBB2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF5A206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519788;
-	bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
+	s=default; t=1576519792;
+	bh=7lH2J8jbJLx5db/U3NXg0SHa+gy/pg/2nY0NAcJSs5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRXF585fjM2BpcX/9x29LqtwsOUy8g2wbaI2b9WRtMAiKPPUJfmqKCyHsu/6pxstB
-	 4E5Lh34W8n6zlQuZyD9JPVOVIllX5UFh/6ocHw7OOlx07DeWKSOKGm0yybZiJls9oT
-	 kdSGzinHEOn8JqpBs8pgGC5R2d8Kpu3XFXSgMR4g=
+	b=IG9H648TBWVkZ2N8xPuq9GFXFN5720Ke7TP0TThi/V43PzCC1iiJFmY5YMV25cVzn
+	 56KOlQ5861QKcg+F/I44Pg1XDY0VV0etvZ0eTmWaenYcIpLNfv1JYvaFMXa0OkPpcJ
+	 PRvni6tFlOSqhUNlkcf6HuTtGoVuP/GF7uDKDTQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfLPSJr (ORCPT
+        id S1730513AbfLPSJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52356 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:09:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbfLPSJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:44 -0500
+        id S1730500AbfLPSJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:09:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99DF206B7;
-        Mon, 16 Dec 2019 18:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8518120700;
+        Mon, 16 Dec 2019 18:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519784;
-        bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
+        s=default; t=1576519789;
+        bh=7lH2J8jbJLx5db/U3NXg0SHa+gy/pg/2nY0NAcJSs5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJNmDjFZ+glGnqhimh7fkMBT4WjLtQqdgDrmyHAN6EQFYE6GLHji8cavuaGVtTZjv
-         5smYLqsiG78Sur6OcAErVWmc+jsD4hrJBiTy/i/hbluYB+ETgdx/wt6Vp2oQtrp3qp
-         GO5Oem3YJ9yGyLhOEMh7OoLZMWW1aLqGYaK2FAvI=
+        b=ImhPIFTm+kze106Up4R4Yjvs4lH99rL8R+XyoQO1ShWMTUKPJmybg/QlkrhuHa2I8
+         ziEr2FEt6UEdNZwmwMgoVibqEWCvGCr/wpBx7XTv+Bt0jG1UwESkx5VgObSC6Yq4R4
+         2vonsGD0DfcFvyTUU8zd0F4uZb9Ql7PmoOgS/NZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 5.3 066/180] lib: raid6: fix awk build warnings
-Date:   Mon, 16 Dec 2019 18:48:26 +0100
-Message-Id: <20191216174829.872645949@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Robert=20W=C3=B6rle?= <rwoerle@mibtec.de>,
+        Beniamin Bia <beniamin.bia@analog.com>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.3 032/180] iio: adc: ad7606: fix reading unnecessary data from device
+Date:   Mon, 16 Dec 2019 18:47:52 +0100
+Message-Id: <20191216174813.559785560@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Beniamin Bia <beniamin.bia@analog.com>
 
-commit 702600eef73033ddd4eafcefcbb6560f3e3a90f7 upstream.
+commit 341826a065660d1b77d89e6335b6095cd654271c upstream.
 
-Newer versions of awk spit out these fun warnings:
-	awk: ../lib/raid6/unroll.awk:16: warning: regexp escape sequence `\#' is not a known regexp operator
+When a conversion result is being read from ADC, the driver reads the
+number of channels + 1 because it thinks that IIO_CHAN_SOFT_TIMESTAMP
+is also a physical channel. This patch fixes this issue.
 
-As commit 700c1018b86d ("x86/insn: Fix awk regexp warnings") showed, it
-turns out that there are a number of awk strings that do not need to be
-escaped and newer versions of awk now warn about this.
-
-Fix the string up so that no warning is produced.  The exact same kernel
-module gets created before and after this patch, showing that it wasn't
-needed.
-
-Link: https://lore.kernel.org/r/20191206152600.GA75093@kroah.com
+Fixes: 2985a5d88455 ("staging: iio: adc: ad7606: Move out of staging")
+Reported-by: Robert Wörle <rwoerle@mibtec.de>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/raid6/unroll.awk |    2 +-
+ drivers/iio/adc/ad7606.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/lib/raid6/unroll.awk
-+++ b/lib/raid6/unroll.awk
-@@ -13,7 +13,7 @@ BEGIN {
- 	for (i = 0; i < rep; ++i) {
- 		tmp = $0
- 		gsub(/\$\$/, i, tmp)
--		gsub(/\$\#/, n, tmp)
-+		gsub(/\$#/, n, tmp)
- 		gsub(/\$\*/, "$", tmp)
- 		print tmp
- 	}
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -57,7 +57,7 @@ static int ad7606_reset(struct ad7606_st
+ 
+ static int ad7606_read_samples(struct ad7606_state *st)
+ {
+-	unsigned int num = st->chip_info->num_channels;
++	unsigned int num = st->chip_info->num_channels - 1;
+ 	u16 *data = st->data;
+ 	int ret;
+ 
 
 
