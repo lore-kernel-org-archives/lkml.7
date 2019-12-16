@@ -7,118 +7,125 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F67C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA22AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8081206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981B0206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="IsTeoXfp"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="d6zgnrFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732093AbfLPSYm (ORCPT
+        id S1732139AbfLPSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:24:42 -0500
-Received: from vps.xff.cz ([195.181.215.36]:50976 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731857AbfLPSSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1576520330; bh=tjqUrdJQ+sFgrpyy8lo3o0DQkqIgbuLDl4dG18ldaN8=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=IsTeoXfpkpmEZzVR08Zfbp3ADTbHFdfCoVooeSxmGpvkjHWi9Gow2l5pVe4fRRImx
-         nUONHluXxUA1z06PAmzN7v7+3krXu3N+ZzlMVDOM6ivwFvoVaxUdb3GLM3kM0wsDXM
-         3m9RynybKjigDIgnv5V81lhvvif8XiZThyi+rpPw=
-Date:   Mon, 16 Dec 2019 19:18:50 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling
- during startup
-Message-ID: <20191216181850.oyqjof6rgeofkou7@core.my.home>
-Mail-Followup-To: Greg KH <greg@kroah.com>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-94-sashal@kernel.org>
- <20191216131512.c5x5ltndmdambdf4@core.my.home>
- <20191216132750.GA1646935@kroah.com>
+        Mon, 16 Dec 2019 13:24:48 -0500
+Received: from mail-eopbgr700101.outbound.protection.outlook.com ([40.107.70.101]:5344
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732052AbfLPSYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:24:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YHujkp7CVVUQ8P3v7tV3AFFHghGlqfYv6Q05yNJPDnjtXzMp3kfxyhvw2sg9fNlj4obtYg+KOc2yyi6Vjnc1UtDERxdnEpnVhm8Zs60DwfPP8/d/2cw2D+BOFOvWbQsCOX1M/V2sSos38hz0ppx4z6HYqnan8w28GsNiWWKGnoof5zI70CVYIhhU11Q+ivUxxdThW/V5vVNT+Nh2nFXeadUFfyQ3OYs2/T6KYWtHH64urNLLOzZ/DLxaNtgwAYZdBE7GauMQzFd1CKEXkUGGXVIxYSNkjgzg69gW0LjoKXho3ggLhas1xuKOVkXOTCK44vVIHqheKdJ47jaxflMhYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/0fhl52scLtKcu/Z3lmmF87F0BKFSk7u7oqP+jP2hss=;
+ b=IgAgf57RhOgg9uPLhFQiXJ7Ky6S6Ddhxg0IQ9KFuG2jPYMvEqCOM/Zbg7Qyt79JTv4Oy2jDadgvFcg1D2SHWAS/8gLhrtfKpih5oVwo42Q3cWpEmmQt4g8mTRGvQhxkwzzGupKhamyZFjbNYMA2skKCIKem54EkVLaDD1FQsDBZ6bGb3z7b3XdzjAJ7rB48V4+In+7Fq9bVEyOR0JmSLJSHJCws8xo73w2B+fCJPR7zwk7+IXGJa7CwP8fkoCyewXvribMRKJgrFbzmtycN6SGEfEeE2LhGjcEXL48yc7d6Tk7GZ39g6UCwJVfd034un3b5Zsex+EHWDBHcsSE0PUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/0fhl52scLtKcu/Z3lmmF87F0BKFSk7u7oqP+jP2hss=;
+ b=d6zgnrFu9bwcow02H/COZ92NZvqNya/fszdSOjb/wT8B9BLx4kHH5yK1UlMkZ2bTlbbeLEray3j3uso6KhIpsci/Y/A4XkPfo1WiDsAxWZng1nBMaeJg0Dw9D9VUEUKJvm0LQFR3dOnPIBONl7eOSHwKtKMSZfktFcjWDYt7Jcc=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB2060.namprd13.prod.outlook.com (10.174.186.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.8; Mon, 16 Dec 2019 18:24:40 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2559.012; Mon, 16 Dec 2019
+ 18:24:39 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
+CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Topic: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Index: AdW0MytZJzbanD9yTZ+e0zLvCdtxJAACuc6A
+Date:   Mon, 16 Dec 2019 18:24:39 +0000
+Message-ID: <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+In-Reply-To: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: da240dad-5650-4da3-4458-08d78255369f
+x-ms-traffictypediagnostic: DM5PR1301MB2060:
+x-microsoft-antispam-prvs: <DM5PR1301MB206066E3505DC18C6523B300B8510@DM5PR1301MB2060.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39840400004)(136003)(396003)(346002)(376002)(189003)(199004)(66946007)(64756008)(66446008)(4001150100001)(6512007)(66556008)(66476007)(36756003)(76116006)(316002)(54906003)(110136005)(71200400001)(2906002)(81166006)(6506007)(2616005)(86362001)(5660300002)(186003)(8676002)(4326008)(6486002)(81156014)(8936002)(508600001)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2060;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5vR7QDjBEe6tY4bm4B+qWigmsw+/P9qzKlnfM+BnZKXc2IP58IesYE6DhmKaV0N4GUl+8tWQ38TJ9mYT+/xTuCnblJF44hUL79dIKxlX1qXlQKc2eGrf5+vPAcnfpP8hHJizZ3Q7NT5pLShVaFLlBbWYrtSJSQlIjZy6f+Lhj8SzAu1GMjiRTyGn5Oj7243tHrODGne56X+cXaSFsSrzoSrsx6HRSSELc1FOvr0BYzSIGLh+bumfDjdV+xu9kiCSXCnOJkPocqxKC5xIzuA0zC6+gsd7j57k89YWcYeWCYfOXz9fXNrQlZjCoi7dZ6T6y2YiG1ucdTpvSrev5ZfNpUqftd4EHIvHD1s8kE2VZ8wZWmjuiii9OjGogdCpxFaK1t7ROHCV4f+yU/79axBPea1mIFCyNTtyEFzO9Ch0JaYTorCH7gAiPQ27g3VR1yyA
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5778E02CA2275C47AE02D3E15C6799A9@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216132750.GA1646935@kroah.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da240dad-5650-4da3-4458-08d78255369f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 18:24:39.4963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zGZ7oru2Q8L9bxpTRJsaob7+q9vzNl+cuLHvqoglhgoT0KCopsPgxepA6f9tU0h0fc6kU/el73ThrXvFF5b1bg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 02:27:50PM +0100, Greg KH wrote:
-> On Mon, Dec 16, 2019 at 02:15:12PM +0100, Ondřej Jirman wrote:
-> > Hi,
-> > 
-> > On Tue, Dec 10, 2019 at 04:03:58PM -0500, Sasha Levin wrote:
-> > > From: Stefan Wahren <wahrenst@gmx.net>
-> > > 
-> > > [ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
-> > > 
-> > > The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
-> > > doesn't react to HCI requests during DT probe. The reason is the inproper
-> > > handling of the RTS line during startup. According to the startup
-> > > signaling sequence in the CYW43455 datasheet, the hosts RTS line must
-> > > be driven after BT_REG_ON and BT_HOST_WAKE.
-> > > 
-> > > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> > > Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >  drivers/bluetooth/hci_bcm.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> > > index 7646636f2d183..0f73f6a686cb7 100644
-> > > --- a/drivers/bluetooth/hci_bcm.c
-> > > +++ b/drivers/bluetooth/hci_bcm.c
-> > > @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
-> > >  
-> > >  out:
-> > >  	if (bcm->dev) {
-> > > +		hci_uart_set_flow_control(hu, true);
-> > >  		hu->init_speed = bcm->dev->init_speed;
-> > >  		hu->oper_speed = bcm->dev->oper_speed;
-> > >  		err = bcm_gpio_set_power(bcm->dev, true);
-> > > +		hci_uart_set_flow_control(hu, false);
-> > >  		if (err)
-> > >  			goto err_unset_hu;
-> > >  	}
-> > 
-> > This causes bluetooth breakage (degraded bluetooth performance, due to failure to
-> > switch to higher baudrate) for Orange Pi 3 board:
-> > 
-> > [    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
-> > [   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
-> > [   12.004613] Bluetooth: hci0: Failed to set baudrate
-> > [   12.123187] Bluetooth: hci0: BCM: chip id 130
-> > [   12.128398] Bluetooth: hci0: BCM: features 0x0f
-> > [   12.154686] Bluetooth: hci0: BCM4345C5
-> > [   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
-> > [   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
-> > 
-> > I suggest not pushing this to stable.
-> 
-> Is it being fixed in Linus's tree?
-
-No. This patch broke it there as well, and no response yet from the author.
-
-regards,
-	o.
-
-> thanks,
-> 
-> greg k-h
+T24gTW9uLCAyMDE5LTEyLTE2IGF0IDE3OjM4ICswMDAwLCBSb2JlcnQgTWlsa293c2tpIHdyb3Rl
+Og0KPiBGcm9tOiBSb2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gDQo+
+IEN1cnJlbnRseSwgZWFjaCB0aW1lIG5mczRfZG9fZnNpbmZvKCkgaXMgY2FsbGVkIGl0IHdpbGwg
+ZG8gYW4NCj4gaW1wbGljaXQNCj4gTkZTNCBsZWFzZSByZW5ld2FsLCB3aGljaCBpcyBub3QgY29t
+cGxpYW50IHdpdGggdGhlIE5GUzQNCj4gc3BlY2lmaWNhdGlvbi4NCj4gVGhpcyBjYW4gcmVzdWx0
+IGluIGEgbGVhc2UgYmVpbmcgZXhwaXJlZCBieSBORlMgc2VydmVyIHdoaWNoIHdpbGwNCj4gdGhl
+bg0KPiByZXR1cm4gTkZTNEVSUl9FWFBJUkVEIG9yIE5GUzRFUlJfU1RBTEVfQ0xJRU5USUQuDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNv
+bT4NCj4gLS0tDQo+ICBmcy9uZnMvbmZzNHByb2MuYyB8IDcgKysrKystLQ0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQg
+YS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IGluZGV4IDc2ZDM3MTYu
+LmFhZDY1ZGQgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mcy9uZnM0cHJvYy5jDQo+ICsrKyBiL2ZzL25m
+cy9uZnM0cHJvYy5jDQo+IEBAIC01MDE5LDE2ICs1MDE5LDE5IEBAIHN0YXRpYyBpbnQgbmZzNF9k
+b19mc2luZm8oc3RydWN0IG5mc19zZXJ2ZXINCj4gKnNlcnZlciwNCj4gc3RydWN0IG5mc19maCAq
+ZmhhbmRsZSwgc3RyDQo+ICAJc3RydWN0IG5mczRfZXhjZXB0aW9uIGV4Y2VwdGlvbiA9IHsNCj4g
+IAkJLmludGVycnVwdGlibGUgPSB0cnVlLA0KPiAgCX07DQo+IC0JdW5zaWduZWQgbG9uZyBub3cg
+PSBqaWZmaWVzOw0KPiArCXVuc2lnbmVkIGxvbmcgbGFzdF9yZW5ld2FsID0gamlmZmllczsNCj4g
+IAlpbnQgZXJyOw0KPiAgDQo+ICAJZG8gew0KPiAgCQllcnIgPSBfbmZzNF9kb19mc2luZm8oc2Vy
+dmVyLCBmaGFuZGxlLCBmc2luZm8pOw0KPiAgCQl0cmFjZV9uZnM0X2ZzaW5mbyhzZXJ2ZXIsIGZo
+YW5kbGUsIGZzaW5mby0+ZmF0dHIsIGVycik7DQo+ICAJCWlmIChlcnIgPT0gMCkgew0KPiArCQkJ
+Lyogbm8gaW1wbGljaXQgbGVhc2UgcmVuZXdhbCBhbGxvd2VkIGhlcmUgKi8NCj4gKwkJCWlmIChz
+ZXJ2ZXItPm5mc19jbGllbnQtPmNsX2xhc3RfcmVuZXdhbCAhPSAwKQ0KPiArCQkJCWxhc3RfcmVu
+ZXdhbCA9DQo+IHNlcnZlci0+bmZzX2NsaWVudC0+Y2xfbGFzdF9yZW5ld2FsOw0KPiAgCQkJbmZz
+NF9zZXRfbGVhc2VfcGVyaW9kKHNlcnZlci0+bmZzX2NsaWVudCwNCj4gIAkJCQkJZnNpbmZvLT5s
+ZWFzZV90aW1lICogSFosDQo+IC0JCQkJCW5vdyk7DQo+ICsJCQkJCWxhc3RfcmVuZXdhbCk7DQo+
+ICAJCQlicmVhazsNCj4gIAkJfQ0KPiAgCQllcnIgPSBuZnM0X2hhbmRsZV9leGNlcHRpb24oc2Vy
+dmVyLCBlcnIsICZleGNlcHRpb24pOw0KDQpOQUNLLiBUaGUgYWJvdmUgYXJndW1lbnQgb25seSBh
+cHBsaWVzIHRvIGxlZ2FjeSBtaW5vciB2ZXJzaW9uIDAgc2V0dXBzLA0KYW5kIGRvZXMgbm90IGFw
+cGx5IHRvIE5GU3Y0LjEgb3IgbmV3ZXIuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBO
+RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVy
+c3BhY2UuY29tDQoNCg0K
