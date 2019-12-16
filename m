@@ -2,126 +2,140 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC02C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CD1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955B6206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A726D206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU2LMml9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8FuEAKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfLPNaM (ORCPT
+        id S1727880AbfLPNau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:30:12 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35324 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727763AbfLPNaM (ORCPT
+        Mon, 16 Dec 2019 08:30:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38002 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727601AbfLPNau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:30:12 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w23so2992713pjd.2;
-        Mon, 16 Dec 2019 05:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
-        b=WU2LMml9ybURvvoAkKn84Ls2pu5xuXxxs5xMy9YIAIuH+QpEBES7Fx3AEg2Awx0eZC
-         eOP9lj+obKAHaeQTG8x7AKkZRmJVsKhTCrmDoU+lTu4fD7hbjbbB0TDh8anWmiR4NE8Q
-         0vRnJFCI88IlQ/i2lgF5OkFvvmdA4xSVQw46d82pfn1UYopKvLJdYUDFZEOie4D29ofs
-         jhr83+VsoL5WyjrRsBkdTtIISTH1IF0nFzXfQYAZkctwUem7bQamJ24XBDBIj+xvPmhA
-         AGv5C2QbcM9PBGJxMstdHAuE0iPKFOisBpolMprqccxSmygVz+ynNZOFYWIQiWOsIKW0
-         X9QQ==
+        Mon, 16 Dec 2019 08:30:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576503048;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T3wALvF0xpsoopJ4Bzkk3lqyRNuGZEwsZlHqY5vrDU8=;
+        b=D8FuEAKp90PI4ISdkPkEP9MgaOIAVAYq5VZdsC304Rh3NRNdn4Qvz2eHDFGy7cQPgjxe5r
+        MvPC6GdvEqeyrHK6N5mvaM4zVGGoqqsLnYj6VApbH96sJG+ZdvAhSwgMK5liDsSDNIHgeD
+        fC1gbDpk6SZtiXK4M3tX8BPqprJPuO8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-57-0JlNpt70POGwaZeVPldK5A-1; Mon, 16 Dec 2019 08:30:47 -0500
+X-MC-Unique: 0JlNpt70POGwaZeVPldK5A-1
+Received: by mail-wm1-f69.google.com with SMTP id t16so614906wmt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:30:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
-        b=elD5O4Z7FQ4hGHLyDNuTWJH3MA1bZd96RVOwgDO9dL2L6UuzsZ6mjGZJuICjGl/Loy
-         GyUPcmwBIr8uW0shDph5qvfanTHKh8/lOmslXzZx1ZU6bGPziq3y/m21TCHMhdoPuYmP
-         t7n6T9CHf9JuEfwhtrnhzLoulwcMoirdzI1x0bFdtlaLYLRDtrfKh38b/Sqn2Yu8noRX
-         UwgFbwKCfX8Xv/8K9nBXwyyFLATgXCJs33IwQjD2sXnH6LSpP7mLJDSVHB/k6MPWX5Pk
-         B1DlgtDGJtRjFDHFaiR5xQufLvFaKnrmLM/3733ECMxDOSYFjTqn7JT5QAHhlsKpJk6x
-         /C2w==
-X-Gm-Message-State: APjAAAVbaOrV3ZStzPTmW/8n4PvLr5AnYsA4l9v6vlYUlffrNcQnXsUi
-        ZkbJkCmAiIu7iejuU8o2+bE=
-X-Google-Smtp-Source: APXvYqyJ6TZHpyv2Kz7CGI3OHria7rp9vvxislgxfsCZuO3kdTuBGJfZKrdme0Kw7m9+Qlmwh7TBjw==
-X-Received: by 2002:a17:902:d915:: with SMTP id c21mr15807890plz.295.1576503011717;
-        Mon, 16 Dec 2019 05:30:11 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 13sm5365907pfi.78.2019.12.16.05.30.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 05:30:10 -0800 (PST)
-Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
- <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
- <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
- <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
-Date:   Mon, 16 Dec 2019 05:30:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=T3wALvF0xpsoopJ4Bzkk3lqyRNuGZEwsZlHqY5vrDU8=;
+        b=CudUSv2rha6cL8kRTPZERr1Gsl74c5qvubbupdazVPSmaG13U8Nt1K7D2Yoht1Kvg8
+         QSzDVb0xFXqCyTKwU5en+iWjOw5FAjBjpDSV6sse3JT9c8rUTtPbyfjzGPfQOd0A1TLG
+         g6VU0IpdEL2jkVZEdocrtyFwBMB8LmDChanpJicVNp8wSiE2RkyNaCRT7/hr0Oz75Ota
+         hio4LruYT+eYKqMAefOKQzEUdrjy9AdUD0Ot/fGxKxC9TrxvVkkbhfN05s9IyWkpGq6g
+         0CAbaJXEWeFL8UkJ4aUsJ2W5hHiRDsp6s/BYV0anZYFaHz0EWzc8eorzAlntuIxK9cCM
+         Y10g==
+X-Gm-Message-State: APjAAAXroIWffzVhof3LivLxO22HsPTfC5mTT84ktBViFPEmVlidh0V/
+        YElBGGdXw3bH8fIp5Nl4g1zYcIWrAZ0GTSoHY/EBq1K1RUrkjJZd2akZh26Wj9dt01uBOMerese
+        jHowPIiAhg1rebhD/6geQ4Eu/
+X-Received: by 2002:adf:9b83:: with SMTP id d3mr30125990wrc.54.1576503046077;
+        Mon, 16 Dec 2019 05:30:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwp1RzM05y36ZEXv8HKgj2CLHoERwAX15WfZnqvn+tQSSKxuIklj/RaULFXdTnzVAnGsM+K+A==
+X-Received: by 2002:adf:9b83:: with SMTP id d3mr30125970wrc.54.1576503045873;
+        Mon, 16 Dec 2019 05:30:45 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 2sm21854185wrq.31.2019.12.16.05.30.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 05:30:45 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ajay Kaher <akaher@vmware.com>
+Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, punit.agrawal@arm.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        willy@infradead.org, will.deacon@arm.com, mszeredi@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        srinidhir@vmware.com, bvikas@vmware.com, anishs@vmware.com,
+        vsirnapalli@vmware.com, srostedt@vmware.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
+In-Reply-To: <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com> <1576529149-14269-9-git-send-email-akaher@vmware.com> <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+Date:   Mon, 16 Dec 2019 14:30:44 +0100
+Message-ID: <87lfrc9z3v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/15/19 10:03 PM, Xingyu Chen wrote:
-> Hi, Martin
-> 
-> Sorry for the late reply.
-> 
-> On 2019/12/13 4:05, Martin Blumenstingl wrote:
->> Hi Xingyu and Rob,
->>
->> On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
->> [...]
->>> +examples:
->>> +  - |
->>> +    watchdog {
->>> +          compatible = "amlogic,meson-sec-wdt";
->>> +          timeout-sec = <60>;
->>> +    };
->> in v3 of this patch Rob commented that there shouldn't be an OF node
->> if there are no additional properties
->> with timeout-sec there's now an additional property so my
->> understanding is that it's fine to have an OF node
-> Your understanding is correct.
->>
->> what I don't understand yet is where this node should be placed.
->> is it supposed to be a child node of the secure monitor node (for
->> which we already have a binding here:
->> Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
->> where else would we place it inside the .dts?
-> IMO,  Although the watchdog node need to reference the meson_sm node, there is no
-> bus-like dependencies between the devices which the two nodes corresponding to.
-> so i think that the watchdog node as child node of meson_sm maybe not appropriate.
+Peter Zijlstra <peterz@infradead.org> writes:
 
-The watchdog driver needs the meson SM's dt node, and it depends on the existence
-of that node. That seems enough of a relationship to warrant having it as child note.
+> On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
+>> From: Vlastimil Babka <vbabka@suse.cz>
+>> 
+>> The x86 version of get_user_pages_fast() relies on disabled interrupts to
+>> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+>> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+>> releases the page. As TLB flush is done synchronously via IPI disabling
+>> interrupts blocks the page release, and get_page(), which assumes existing
+>> reference on page, is thus safe.
+>> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+>> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+>> that was already freed or even reused.
+>> 
+>> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+>> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+>> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+>> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+>> immediately releases the page again, while it's already on a freelist. Symptoms
+>> include a bad page state warning, general protection faults acessing a poisoned
+>> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+>> together in a single list. Oscar has also reproduced this scenario, with a
+>> patch inserting delays before the get_page() to make the race window larger.
+>> 
+>> Fix this by removing the dependency on TLB flush interrupts the same way as the
+>
+> This is suppsed to be fixed by:
+>
+> arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
+>
 
-Guenter
+Yes,
+
+but HAVE_RCU_TABLE_FREE was enabled on x86 only in 4.14:
+
+commit 9e52fc2b50de3a1c08b44f94c610fbe998c0031a
+Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+Date:   Mon Aug 28 10:22:51 2017 +0200
+
+    x86/mm: Enable RCU based page table freeing (CONFIG_HAVE_RCU_TABLE_FREE=y)
+
+and, if I understood correctly, Ajay is suggesting the patch for older
+stable kernels (4.9 and 4.4 I would guess).
+
+-- 
+Vitaly
+
