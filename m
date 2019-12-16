@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5A2C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894FCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6D0206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615D2207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520252;
-	bh=wvXasYD+Dc9YrXfVNDeL1Ftvqof9bT52g7Ve5B1l2vI=;
+	s=default; t=1576520257;
+	bh=h6h2iKDlws2XsM3EJFa8ad3Lcnw7rBJHFhzCA/7wLyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUGDE7hI688tkwDtCYaNAwA95pffQC8KYKiiGs201TejN41isNejTG+Iuod7RM9tA
-	 86MGjtf0Q5v82lZcLojNkl6XLR3IdskbVEDdX+sVBsfZd/8kzFHAx7vx8QJezRfwBR
-	 w/GFA0rRjJVbIYIowRX3GrmPyQrPLRJDzV9gQigk=
+	b=lFwy4ulzQ0Y8dvu68QTNMdXCzMhtaaqFECvaVZrUJ90Tv8Q8zEhyCTcjg4iHjx1Qb
+	 xtnaqKV2+sW4DxhAKPN4He885FkepATN6d3wRDt2IBbC4mRqa0G4rxyhyGf2ZpkEfH
+	 7gI4QJcN4BJ7TMxiaW5PGpjoa+KfM2SK7qFps4H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbfLPSRb (ORCPT
+        id S1731676AbfLPSRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41224 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:17:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731648AbfLPSRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:17:23 -0500
+        id S1731359AbfLPSRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16D38206E0;
-        Mon, 16 Dec 2019 18:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E79720717;
+        Mon, 16 Dec 2019 18:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520242;
-        bh=wvXasYD+Dc9YrXfVNDeL1Ftvqof9bT52g7Ve5B1l2vI=;
+        s=default; t=1576520245;
+        bh=h6h2iKDlws2XsM3EJFa8ad3Lcnw7rBJHFhzCA/7wLyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSqZwzoU3AK/xdcBg7AafJ0DjEEzsPHb/s1wpuPAH4KyuaT4diBW/TSyBO5/Sm5/2
-         WZ4p7pCFW4wXqB2+YjpG4KXEjnoySL+YsiraXlhUop3MnIBSbvewX5r9K49IYkp1H+
-         ipisgxV9+VZR35KurD6FC6b8c4wzXPoIkEfZwgn0=
+        b=N2ohEk6nNTvaidl6n5EHFj0GA4lHmw0YVYtp4WFvZd4Kh8cfuUWByLp7QRUV3f/9+
+         2R80CwPgUNpw1ceLG6M7aV8uubA3xL72r8JwF8FFxRWEuXS6rymTKzoT0JFe89A5Bg
+         1jinT71E4QeKyD510/aI5a18MT7Wm4VdOsRks3fY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atemu <atemu.main@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 073/177] Btrfs: send, skip backreference walking for extents with many references
-Date:   Mon, 16 Dec 2019 18:48:49 +0100
-Message-Id: <20191216174835.279707019@linuxfoundation.org>
+Subject: [PATCH 5.4 074/177] btrfs: record all roots for rename exchange on a subvol
+Date:   Mon, 16 Dec 2019 18:48:50 +0100
+Message-Id: <20191216174835.561413372@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,89 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit fd0ddbe2509568b00df364156f47561e9f469f15 upstream.
+commit 3e1740993e43116b3bc71b0aad1e6872f6ccf341 upstream.
 
-Backreference walking, which is used by send to figure if it can issue
-clone operations instead of write operations, can be very slow and use
-too much memory when extents have many references. This change simply
-skips backreference walking when an extent has more than 64 references,
-in which case we fallback to a write operation instead of a clone
-operation. This limit is conservative and in practice I observed no
-signicant slowdown with up to 100 references and still low memory usage
-up to that limit.
+Testing with the new fsstress support for subvolumes uncovered a pretty
+bad problem with rename exchange on subvolumes.  We're modifying two
+different subvolumes, but we only start the transaction on one of them,
+so the other one is not added to the dirty root list.  This is caught by
+btrfs_cow_block() with a warning because the root has not been updated,
+however if we do not modify this root again we'll end up pointing at an
+invalid root because the root item is never updated.
 
-This is a temporary workaround until there are speedups in the backref
-walking code, and as such it does not attempt to add extra interfaces or
-knobs to tweak the threshold.
+Fix this by making sure we add the destination root to the trans list,
+the same as we do with normal renames.  This fixes the corruption.
 
-Reported-by: Atemu <atemu.main@gmail.com>
-Link: https://lore.kernel.org/linux-btrfs/CAE4GHgkvqVADtS4AzcQJxo0Q1jKQgKaW3JGp3SGdoinVo=C9eQ@mail.gmail.com/T/#me55dc0987f9cc2acaa54372ce0492c65782be3fa
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Fixes: cdd1fedf8261 ("btrfs: add support for RENAME_EXCHANGE and RENAME_WHITEOUT")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |   25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ fs/btrfs/inode.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -25,6 +25,14 @@
- #include "compression.h"
- 
- /*
-+ * Maximum number of references an extent can have in order for us to attempt to
-+ * issue clone operations instead of write operations. This currently exists to
-+ * avoid hitting limitations of the backreference walking code (taking a lot of
-+ * time and using too much memory for extents with large number of references).
-+ */
-+#define SEND_MAX_EXTENT_REFS	64
-+
-+/*
-  * A fs_path is a helper to dynamically build path names with unknown size.
-  * It reallocates the internal buffer on demand.
-  * It allows fast adding of path elements on the right side (normal path) and
-@@ -1302,6 +1310,7 @@ static int find_extent_clone(struct send
- 	struct clone_root *cur_clone_root;
- 	struct btrfs_key found_key;
- 	struct btrfs_path *tmp_path;
-+	struct btrfs_extent_item *ei;
- 	int compressed;
- 	u32 i;
- 
-@@ -1349,7 +1358,6 @@ static int find_extent_clone(struct send
- 	ret = extent_from_logical(fs_info, disk_byte, tmp_path,
- 				  &found_key, &flags);
- 	up_read(&fs_info->commit_root_sem);
--	btrfs_release_path(tmp_path);
- 
- 	if (ret < 0)
- 		goto out;
-@@ -1358,6 +1366,21 @@ static int find_extent_clone(struct send
- 		goto out;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9554,6 +9554,9 @@ static int btrfs_rename_exchange(struct
+ 		goto out_notrans;
  	}
  
-+	ei = btrfs_item_ptr(tmp_path->nodes[0], tmp_path->slots[0],
-+			    struct btrfs_extent_item);
-+	/*
-+	 * Backreference walking (iterate_extent_inodes() below) is currently
-+	 * too expensive when an extent has a large number of references, both
-+	 * in time spent and used memory. So for now just fallback to write
-+	 * operations instead of clone operations when an extent has more than
-+	 * a certain amount of references.
-+	 */
-+	if (btrfs_extent_refs(tmp_path->nodes[0], ei) > SEND_MAX_EXTENT_REFS) {
-+		ret = -ENOENT;
-+		goto out;
-+	}
-+	btrfs_release_path(tmp_path);
++	if (dest != root)
++		btrfs_record_root_in_trans(trans, dest);
 +
  	/*
- 	 * Setup the clone roots.
- 	 */
+ 	 * We need to find a free sequence number both in the source and
+ 	 * in the destination directory for the exchange.
 
 
