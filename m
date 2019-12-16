@@ -2,86 +2,248 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4B2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EDFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC6724650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D02206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ezPwBt9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLPTB0 (ORCPT
+        id S1727083AbfLPTBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:01:26 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:34938 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfLPTBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:01:25 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1igvcR-0005jE-3f; Mon, 16 Dec 2019 12:01:24 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1igvcQ-0005Zd-C9; Mon, 16 Dec 2019 12:01:22 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 16 Dec 2019 12:01:17 -0700
-Message-Id: <20191216190120.21374-3-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191216190120.21374-1-logang@deltatee.com>
-References: <20191216190120.21374-1-logang@deltatee.com>
+        Mon, 16 Dec 2019 14:01:31 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39374 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfLPTB3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 14:01:29 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y1so5060090lfb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 11:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j8zv1CiPH593sjJeuXjnKC5zw4ZEGW4qNjfHHVhMY3Y=;
+        b=ezPwBt9pUMGZXAfLdBdvnrmdpl1zWlUKRl7w5W1F0CBO0BZjbIoARtDcId4cwYQVoJ
+         x6deawPEIIjhrfIYzC7E3RnmFJPoPe+o4Tpp0m4KWbTXmqmXuilZniU4wGMH521vhenO
+         Fyb+whsXeMgRu2l2jULJPCi1SVUHPGeRtYiGA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j8zv1CiPH593sjJeuXjnKC5zw4ZEGW4qNjfHHVhMY3Y=;
+        b=qe15QNyc0shpXxm62eMYrYYPY+SWuMWkHZa6JB2jjSxzs6PC3MqXdk3TjefRtW8GPV
+         h5fk9MjJm+R4FgdiFGuYPIOL+wuBm3XMP/z7FFa/eGVcyNDgUV+qbHv3+HTSt+O90FkG
+         TME4J0HAvlZDxfURu0dv3AGWN89G7xMfiCVonUmRYOnIZ6bY4RS0WZD8wtkKP44191iA
+         sliwpJlnixog/j4V8sPzPjdWTsvGjDglwhx0EcR6OKjaqbYcndIyDUvgGVvltMsRrevu
+         O1zC4j9eyDOOCWaTaToDduYOMBoiCzgUC72UH8er+6Z7dcyeolf7PA+35lApTFHEi0rq
+         lesQ==
+X-Gm-Message-State: APjAAAWBbVBzDPuOHFX96pY9iCU6zkWZGTfzCVtyNNZSX5iMrDLUWOU4
+        WlI3P25+s9Ic2QNnXzHYd/+u2aqHo+sTFWszCO1WGQ==
+X-Google-Smtp-Source: APXvYqz7K/UCHxkFWnkPVaboJEEgUEvs787WcXzp6l8eUvEdNbEIL+niAGbE/zeLTUwQA96F6RqcRb0xCxq1xsIoOKc=
+X-Received: by 2002:a19:a408:: with SMTP id q8mr335591lfc.174.1576522886867;
+ Mon, 16 Dec 2019 11:01:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, dave.jiang@intel.com, kchow@gigaio.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 2/5] dmaengine: Call module_put() after device_free_chan_resources()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <1576195889-23527-1-git-send-email-psajeepa@purestorage.com> <20191215185500.GA6097@unreal>
+In-Reply-To: <20191215185500.GA6097@unreal>
+From:   Prabhath Sajeepa <psajeepa@purestorage.com>
+Date:   Mon, 16 Dec 2019 11:01:15 -0800
+Message-ID: <CAE=VkfCzi3ooh7Cg8NqDNdVE4cwPvjO6JNjKCiAJQC37KyWJag@mail.gmail.com>
+Subject: Re: [PATCH] IB/mlx5: Fix outstanding_pi index for GSI qps
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Roland Dreier <roland@purestorage.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The module reference is taken to ensure the callbacks still exist
-when they are called. If the channel holds the last reference to the
-module, the module can disappear before device_free_chan_resources() is
-called and would cause a call into free'd memory.
+On Sun, Dec 15, 2019 at 10:55 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 05:11:29PM -0700, Prabhath Sajeepa wrote:
+> > b0ffeb537f3a changed the way how outstanding WRs are tracked for GSI QP. But the
+> > fix did not cover the case when a call to ib_post_send fails and index
+> > to track outstanding WRs need to be updated correctly.
+> >
+> > Fixes: b0ffeb537f3a ('IB/mlx5: Fix iteration overrun in GSI qps ')
+> > Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+> > ---
+> >  drivers/infiniband/hw/mlx5/gsi.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/infiniband/hw/mlx5/gsi.c b/drivers/infiniband/hw/mlx5/gsi.c
+> > index ac4d8d1..1ae6fd9 100644
+> > --- a/drivers/infiniband/hw/mlx5/gsi.c
+> > +++ b/drivers/infiniband/hw/mlx5/gsi.c
+> > @@ -507,8 +507,7 @@ int mlx5_ib_gsi_post_send(struct ib_qp *qp, const struct ib_send_wr *wr,
+> >               ret = ib_post_send(tx_qp, &cur_wr.wr, bad_wr);
+> >               if (ret) {
+> >                       /* Undo the effect of adding the outstanding wr */
+> > -                     gsi->outstanding_pi = (gsi->outstanding_pi - 1) %
+> > -                                           gsi->cap.max_send_wr;
+> > +                     gsi->outstanding_pi--;
+>
+> I'm a little bit confused, what is the difference before and after
+> except dropping "gsi->cap.max_send_wr"?
+>
+> Thanks
+>
+> >                       goto err;
+> >               }
+> >               spin_unlock_irqrestore(&gsi->lock, flags);
+> > --
+> > 2.7.4
+> >
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/dma/dmaengine.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This patch needs to be considered in conjunction with the below patch
+done by Slava Shwartsman
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 4b604086b1b3..776fdf535a3a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -250,7 +250,6 @@ static void dma_chan_put(struct dma_chan *chan)
- 		return;
- 
- 	chan->client_count--;
--	module_put(dma_chan_to_owner(chan));
- 
- 	/* This channel is not in use anymore, free it */
- 	if (!chan->client_count && chan->device->device_free_chan_resources) {
-@@ -259,6 +258,8 @@ static void dma_chan_put(struct dma_chan *chan)
- 		chan->device->device_free_chan_resources(chan);
- 	}
- 
-+	module_put(dma_chan_to_owner(chan));
-+
- 	/* If the channel is used via a DMA request router, free the mapping */
- 	if (chan->router && chan->router->route_free) {
- 		chan->router->route_free(chan->router->dev, chan->route_data);
+commit b0ffeb537f3a726931d962ab6d03e34a2f070ea4
+
+Author: Slava Shwartsman <slavash@mellanox.com>
+
+Date:   Sun Jul 3 06:28:19 2016
+
+    IB/mlx5: Fix iteration overrun in GSI qps
+
+
+
+    Number of outstanding_pi may overflow and as a result may indicate that
+
+    there are no elements in the queue. The effect of doing this is that the
+
+    MAD layer will get stuck waiting for completions. The MAD layer will
+
+    think that the QP is full - because it didn't receive these completions.
+
+
+
+    This fix changes it so the outstanding_pi number is increased
+
+    with 32-bit wraparound and is not limited to max_send_wr so
+
+    that the difference between outstanding_pi and outstanding_ci will
+
+    really indicate the number of outstanding completions.
+
+
+    Cc: Stable <stable@vger.kernel.org>
+
+    Fixes: ea6dc2036224 ('IB/mlx5: Reorder GSI completions')
+
+    Signed-off-by: Slava Shwartsman <slavash@mellanox.com>
+
+    Signed-off-by: Leon Romanovsky <leon@kernel.org>
+
+    Reviewed-by: Haggai Eran <haggaie@mellanox.com>
+
+    Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+
+    Signed-off-by: Doug Ledford <dledford@redhat.com>
+
+diff --git a/drivers/infiniband/hw/mlx5/gsi.c b/drivers/infiniband/hw/mlx5/gsi.c
+
+index 53e03c8..79e6309 100644
+
+--- a/drivers/infiniband/hw/mlx5/gsi.c
+
++++ b/drivers/infiniband/hw/mlx5/gsi.c
+
+@@ -69,15 +69,6 @@ static bool mlx5_ib_deth_sqpn_cap(struct mlx5_ib_dev *dev)
+
+        return MLX5_CAP_GEN(dev->mdev, set_deth_sqpn);
+
+ }
+
+
+
+-static u32 next_outstanding(struct mlx5_ib_gsi_qp *gsi, u32 index)
+
+-{
+
+-       return ++index % gsi->cap.max_send_wr;
+
+-}
+
+-
+
+-#define for_each_outstanding_wr(gsi, index) \
+
+-       for (index = gsi->outstanding_ci; index != gsi->outstanding_pi; \
+
+-            index = next_outstanding(gsi, index))
+
+-
+
+ /* Call with gsi->lock locked */
+
+ static void generate_completions(struct mlx5_ib_gsi_qp *gsi)
+
+ {
+
+@@ -85,8 +76,9 @@ static void generate_completions(struct mlx5_ib_gsi_qp *gsi)
+
+        struct mlx5_ib_gsi_wr *wr;
+
+        u32 index;
+
+
+
+-       for_each_outstanding_wr(gsi, index) {
+
+-               wr = &gsi->outstanding_wrs[index];
+
++       for (index = gsi->outstanding_ci; index != gsi->outstanding_pi;
+
++            index++) {
+
++               wr = &gsi->outstanding_wrs[index % gsi->cap.max_send_wr];
+
+
+
+                if (!wr->completed)
+
+                        break;
+
+@@ -430,8 +422,9 @@ static int mlx5_ib_add_outstanding_wr(struct
+mlx5_ib_gsi_qp *gsi,
+
+                return -ENOMEM;
+
+        }
+
+
+
+-       gsi_wr = &gsi->outstanding_wrs[gsi->outstanding_pi];
+
+-       gsi->outstanding_pi = next_outstanding(gsi, gsi->outstanding_pi);
+
++       gsi_wr = &gsi->outstanding_wrs[gsi->outstanding_pi %
+
++                                      gsi->cap.max_send_wr];
+
++       gsi->outstanding_pi++;
+
+
+
+        if (!wc) {
+
+                memset(&gsi_wr->wc, 0, sizeof(gsi_wr->wc));
+
+
+
+The above fix was incomplete since it did not fix the ib_post_send
+failure case, which is fixed by the patch I submitted.
+
+
 -- 
-2.20.1
-
+Thanks,
+Prabhath
