@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FFEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA60206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AF2206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLPTBn (ORCPT
+        id S1727274AbfLPTBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:01:43 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:34952 "EHLO ale.deltatee.com"
+        Mon, 16 Dec 2019 14:01:48 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:34928 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfLPTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:01:26 -0500
+        id S1726390AbfLPTBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 14:01:25 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1igvcR-0005jF-3f; Mon, 16 Dec 2019 12:01:25 -0700
+        id 1igvcR-0005jH-3f; Mon, 16 Dec 2019 12:01:23 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1igvcQ-0005Zg-GF; Mon, 16 Dec 2019 12:01:22 -0700
+        id 1igvcQ-0005Zm-Mi; Mon, 16 Dec 2019 12:01:22 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>, Kit Chow <kchow@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 16 Dec 2019 12:01:18 -0700
-Message-Id: <20191216190120.21374-4-logang@deltatee.com>
+Date:   Mon, 16 Dec 2019 12:01:20 -0700
+Message-Id: <20191216190120.21374-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191216190120.21374-1-logang@deltatee.com>
 References: <20191216190120.21374-1-logang@deltatee.com>
@@ -43,7 +43,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, dave.jiang@intel.com, kchow@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 3/5] dmaengine: Move dma_channel_rebalance() infrastructure up in code
+Subject: [PATCH 5/5] dmaengine: ioat: Support in-use unbind
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,331 +51,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So it can be called by a release function which is needed higher up in
-the code. No functional changes intended.
+Don't allocate memory using the devm infrastructure and instead call
+kfree with the new dmaengine device_release call back. This ensures
+the structures are available until the last reference is dropped.
+
+We also need to ensure we call ioat_shutdown() in ioat_remove() so
+that all the channels are quiesced and further transaction fails.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/dma/dmaengine.c | 288 ++++++++++++++++++++--------------------
- 1 file changed, 144 insertions(+), 144 deletions(-)
+ drivers/dma/ioat/init.c | 38 ++++++++++++++++++++++++++------------
+ 1 file changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 776fdf535a3a..1f9a6293f15a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -164,6 +164,150 @@ static struct class dma_devclass = {
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index a6a6dc432db8..60e9afbb896c 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -556,10 +556,6 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
+ 	ioat_kobject_del(ioat_dma);
  
- /* --- client and device registration --- */
- 
-+/**
-+ * dma_cap_mask_all - enable iteration over all operation types
-+ */
-+static dma_cap_mask_t dma_cap_mask_all;
-+
-+/**
-+ * dma_chan_tbl_ent - tracks channel allocations per core/operation
-+ * @chan - associated channel for this entry
-+ */
-+struct dma_chan_tbl_ent {
-+	struct dma_chan *chan;
-+};
-+
-+/**
-+ * channel_table - percpu lookup table for memory-to-memory offload providers
-+ */
-+static struct dma_chan_tbl_ent __percpu *channel_table[DMA_TX_TYPE_END];
-+
-+static int __init dma_channel_table_init(void)
-+{
-+	enum dma_transaction_type cap;
-+	int err = 0;
-+
-+	bitmap_fill(dma_cap_mask_all.bits, DMA_TX_TYPE_END);
-+
-+	/* 'interrupt', 'private', and 'slave' are channel capabilities,
-+	 * but are not associated with an operation so they do not need
-+	 * an entry in the channel_table
-+	 */
-+	clear_bit(DMA_INTERRUPT, dma_cap_mask_all.bits);
-+	clear_bit(DMA_PRIVATE, dma_cap_mask_all.bits);
-+	clear_bit(DMA_SLAVE, dma_cap_mask_all.bits);
-+
-+	for_each_dma_cap_mask(cap, dma_cap_mask_all) {
-+		channel_table[cap] = alloc_percpu(struct dma_chan_tbl_ent);
-+		if (!channel_table[cap]) {
-+			err = -ENOMEM;
-+			break;
-+		}
-+	}
-+
-+	if (err) {
-+		pr_err("initialization failure\n");
-+		for_each_dma_cap_mask(cap, dma_cap_mask_all)
-+			free_percpu(channel_table[cap]);
-+	}
-+
-+	return err;
-+}
-+arch_initcall(dma_channel_table_init);
-+
-+/**
-+ * dma_chan_is_local - returns true if the channel is in the same numa-node as
-+ *	the cpu
-+ */
-+static bool dma_chan_is_local(struct dma_chan *chan, int cpu)
-+{
-+	int node = dev_to_node(chan->device->dev);
-+	return node == NUMA_NO_NODE ||
-+		cpumask_test_cpu(cpu, cpumask_of_node(node));
-+}
-+
-+/**
-+ * min_chan - returns the channel with min count and in the same numa-node as
-+ *	the cpu
-+ * @cap: capability to match
-+ * @cpu: cpu index which the channel should be close to
-+ *
-+ * If some channels are close to the given cpu, the one with the lowest
-+ * reference count is returned. Otherwise, cpu is ignored and only the
-+ * reference count is taken into account.
-+ * Must be called under dma_list_mutex.
-+ */
-+static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
-+{
-+	struct dma_device *device;
-+	struct dma_chan *chan;
-+	struct dma_chan *min = NULL;
-+	struct dma_chan *localmin = NULL;
-+
-+	list_for_each_entry(device, &dma_device_list, global_node) {
-+		if (!dma_has_cap(cap, device->cap_mask) ||
-+		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
-+			continue;
-+		list_for_each_entry(chan, &device->channels, device_node) {
-+			if (!chan->client_count)
-+				continue;
-+			if (!min || chan->table_count < min->table_count)
-+				min = chan;
-+
-+			if (dma_chan_is_local(chan, cpu))
-+				if (!localmin ||
-+				    chan->table_count < localmin->table_count)
-+					localmin = chan;
-+		}
-+	}
-+
-+	chan = localmin ? localmin : min;
-+
-+	if (chan)
-+		chan->table_count++;
-+
-+	return chan;
-+}
-+
-+/**
-+ * dma_channel_rebalance - redistribute the available channels
-+ *
-+ * Optimize for cpu isolation (each cpu gets a dedicated channel for an
-+ * operation type) in the SMP case,  and operation isolation (avoid
-+ * multi-tasking channels) in the non-SMP case.  Must be called under
-+ * dma_list_mutex.
-+ */
-+static void dma_channel_rebalance(void)
-+{
-+	struct dma_chan *chan;
-+	struct dma_device *device;
-+	int cpu;
-+	int cap;
-+
-+	/* undo the last distribution */
-+	for_each_dma_cap_mask(cap, dma_cap_mask_all)
-+		for_each_possible_cpu(cpu)
-+			per_cpu_ptr(channel_table[cap], cpu)->chan = NULL;
-+
-+	list_for_each_entry(device, &dma_device_list, global_node) {
-+		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
-+			continue;
-+		list_for_each_entry(chan, &device->channels, device_node)
-+			chan->table_count = 0;
-+	}
-+
-+	/* don't populate the channel_table if no clients are available */
-+	if (!dmaengine_ref_count)
-+		return;
-+
-+	/* redistribute available channels */
-+	for_each_dma_cap_mask(cap, dma_cap_mask_all)
-+		for_each_online_cpu(cpu) {
-+			chan = min_chan(cap, cpu);
-+			per_cpu_ptr(channel_table[cap], cpu)->chan = chan;
-+		}
-+}
-+
- #define dma_device_satisfies_mask(device, mask) \
- 	__dma_device_satisfies_mask((device), &(mask))
- static int
-@@ -289,57 +433,6 @@ enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie)
+ 	dma_async_device_unregister(dma);
+-
+-	dma_pool_destroy(ioat_dma->completion_pool);
+-
+-	INIT_LIST_HEAD(&dma->channels);
  }
- EXPORT_SYMBOL(dma_sync_wait);
  
--/**
-- * dma_cap_mask_all - enable iteration over all operation types
-- */
--static dma_cap_mask_t dma_cap_mask_all;
--
--/**
-- * dma_chan_tbl_ent - tracks channel allocations per core/operation
-- * @chan - associated channel for this entry
-- */
--struct dma_chan_tbl_ent {
--	struct dma_chan *chan;
--};
--
--/**
-- * channel_table - percpu lookup table for memory-to-memory offload providers
-- */
--static struct dma_chan_tbl_ent __percpu *channel_table[DMA_TX_TYPE_END];
--
--static int __init dma_channel_table_init(void)
--{
--	enum dma_transaction_type cap;
--	int err = 0;
--
--	bitmap_fill(dma_cap_mask_all.bits, DMA_TX_TYPE_END);
--
--	/* 'interrupt', 'private', and 'slave' are channel capabilities,
--	 * but are not associated with an operation so they do not need
--	 * an entry in the channel_table
--	 */
--	clear_bit(DMA_INTERRUPT, dma_cap_mask_all.bits);
--	clear_bit(DMA_PRIVATE, dma_cap_mask_all.bits);
--	clear_bit(DMA_SLAVE, dma_cap_mask_all.bits);
--
--	for_each_dma_cap_mask(cap, dma_cap_mask_all) {
--		channel_table[cap] = alloc_percpu(struct dma_chan_tbl_ent);
--		if (!channel_table[cap]) {
--			err = -ENOMEM;
--			break;
--		}
--	}
--
--	if (err) {
--		pr_err("initialization failure\n");
--		for_each_dma_cap_mask(cap, dma_cap_mask_all)
--			free_percpu(channel_table[cap]);
--	}
--
--	return err;
--}
--arch_initcall(dma_channel_table_init);
--
  /**
-  * dma_find_channel - find a channel to carry out the operation
-  * @tx_type: transaction type
-@@ -370,97 +463,6 @@ void dma_issue_pending_all(void)
- }
- EXPORT_SYMBOL(dma_issue_pending_all);
+@@ -589,7 +585,7 @@ static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+ 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
  
--/**
-- * dma_chan_is_local - returns true if the channel is in the same numa-node as the cpu
-- */
--static bool dma_chan_is_local(struct dma_chan *chan, int cpu)
--{
--	int node = dev_to_node(chan->device->dev);
--	return node == NUMA_NO_NODE ||
--		cpumask_test_cpu(cpu, cpumask_of_node(node));
--}
--
--/**
-- * min_chan - returns the channel with min count and in the same numa-node as the cpu
-- * @cap: capability to match
-- * @cpu: cpu index which the channel should be close to
-- *
-- * If some channels are close to the given cpu, the one with the lowest
-- * reference count is returned. Otherwise, cpu is ignored and only the
-- * reference count is taken into account.
-- * Must be called under dma_list_mutex.
-- */
--static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
--{
--	struct dma_device *device;
--	struct dma_chan *chan;
--	struct dma_chan *min = NULL;
--	struct dma_chan *localmin = NULL;
--
--	list_for_each_entry(device, &dma_device_list, global_node) {
--		if (!dma_has_cap(cap, device->cap_mask) ||
--		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
--			continue;
--		list_for_each_entry(chan, &device->channels, device_node) {
--			if (!chan->client_count)
--				continue;
--			if (!min || chan->table_count < min->table_count)
--				min = chan;
--
--			if (dma_chan_is_local(chan, cpu))
--				if (!localmin ||
--				    chan->table_count < localmin->table_count)
--					localmin = chan;
--		}
--	}
--
--	chan = localmin ? localmin : min;
--
--	if (chan)
--		chan->table_count++;
--
--	return chan;
--}
--
--/**
-- * dma_channel_rebalance - redistribute the available channels
-- *
-- * Optimize for cpu isolation (each cpu gets a dedicated channel for an
-- * operation type) in the SMP case,  and operation isolation (avoid
-- * multi-tasking channels) in the non-SMP case.  Must be called under
-- * dma_list_mutex.
-- */
--static void dma_channel_rebalance(void)
--{
--	struct dma_chan *chan;
--	struct dma_device *device;
--	int cpu;
--	int cap;
--
--	/* undo the last distribution */
--	for_each_dma_cap_mask(cap, dma_cap_mask_all)
--		for_each_possible_cpu(cpu)
--			per_cpu_ptr(channel_table[cap], cpu)->chan = NULL;
--
--	list_for_each_entry(device, &dma_device_list, global_node) {
--		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
--			continue;
--		list_for_each_entry(chan, &device->channels, device_node)
--			chan->table_count = 0;
--	}
--
--	/* don't populate the channel_table if no clients are available */
--	if (!dmaengine_ref_count)
--		return;
--
--	/* redistribute available channels */
--	for_each_dma_cap_mask(cap, dma_cap_mask_all)
--		for_each_online_cpu(cpu) {
--			chan = min_chan(cap, cpu);
--			per_cpu_ptr(channel_table[cap], cpu)->chan = chan;
--		}
--}
--
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+ 	for (i = 0; i < dma->chancnt; i++) {
+-		ioat_chan = devm_kzalloc(dev, sizeof(*ioat_chan), GFP_KERNEL);
++		ioat_chan = kzalloc(sizeof(*ioat_chan), GFP_KERNEL);
+ 		if (!ioat_chan)
+ 			break;
+ 
+@@ -624,12 +620,16 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+ 		return;
+ 
+ 	ioat_stop(ioat_chan);
+-	ioat_reset_hw(ioat_chan);
+ 
+-	/* Put LTR to idle */
+-	if (ioat_dma->version >= IOAT_VER_3_4)
+-		writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
+-			ioat_chan->reg_base + IOAT_CHAN_LTR_SWSEL_OFFSET);
++	if (!test_bit(IOAT_CHAN_DOWN, &ioat_chan->state)) {
++		ioat_reset_hw(ioat_chan);
++
++		/* Put LTR to idle */
++		if (ioat_dma->version >= IOAT_VER_3_4)
++			writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
++			       ioat_chan->reg_base +
++			       IOAT_CHAN_LTR_SWSEL_OFFSET);
++	}
+ 
+ 	spin_lock_bh(&ioat_chan->cleanup_lock);
+ 	spin_lock_bh(&ioat_chan->prep_lock);
+@@ -1322,16 +1322,28 @@ static struct pci_driver ioat_pci_driver = {
+ 	.err_handler	= &ioat_err_handler,
+ };
+ 
++static void release_ioatdma(struct dma_device *device)
++{
++	struct ioatdma_device *d = to_ioatdma_device(device);
++	int i;
++
++	for (i = 0; i < IOAT_MAX_CHANS; i++)
++		kfree(d->idx[i]);
++
++	dma_pool_destroy(d->completion_pool);
++	kfree(d);
++}
++
+ static struct ioatdma_device *
+ alloc_ioatdma(struct pci_dev *pdev, void __iomem *iobase)
  {
- 	struct dma_device *device;
-@@ -1376,5 +1378,3 @@ static int __init dma_bus_init(void)
- 	return class_register(&dma_devclass);
+-	struct device *dev = &pdev->dev;
+-	struct ioatdma_device *d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
++	struct ioatdma_device *d = kzalloc(sizeof(*d), GFP_KERNEL);
+ 
+ 	if (!d)
+ 		return NULL;
+ 	d->pdev = pdev;
+ 	d->reg_base = iobase;
++	d->dma_dev.device_release = release_ioatdma;
+ 	return d;
  }
- arch_initcall(dma_bus_init);
--
--
+ 
+@@ -1400,6 +1412,8 @@ static void ioat_remove(struct pci_dev *pdev)
+ 	if (!device)
+ 		return;
+ 
++	ioat_shutdown(pdev);
++
+ 	dev_err(&pdev->dev, "Removing dma and dca services\n");
+ 	if (device->dca) {
+ 		unregister_dca_provider(device->dca, &pdev->dev);
 -- 
 2.20.1
 
