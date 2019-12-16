@@ -2,101 +2,98 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE0BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE259206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576508189;
-	bh=vciKTE255vapQBp95xy+DJ/uu5p9pwikFwfp5i++bRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nKpv9yICpWxaIXq4XKdUGRLAJ2Zfj2qByuY8/xrR2PQaRPU1LmBJuxnMKqNrdHLYD
-	 sOUXM0uVoOrRCX0aDpFyyOoQGDjly6ol9s16wOsGN3KNydsnlfO+lwyo6naswCSKNQ
-	 4YLfp5Glgc3QDwtPoiSEUFDGFvUGpCa9oxtlmdys=
+	by mail.kernel.org (Postfix) with ESMTP id 1A665206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VnFNPKri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfLPO42 (ORCPT
+        id S1728255AbfLPO4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:56:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:58014 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfLPO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:56:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42CAE1FB;
-        Mon, 16 Dec 2019 06:56:27 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B689F3F718;
-        Mon, 16 Dec 2019 06:56:26 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:56:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        xuejiancheng@hisilicon.com, fengsheng5@huawei.com,
-        chenxiang66@hisilicon.com
-Subject: Re: [PATCH v2 0/3] HiSilicon v3xx SFC driver
-Message-ID: <20191216145625.GF4161@sirena.org.uk>
-References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
- <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
+        Mon, 16 Dec 2019 09:56:37 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40878 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbfLPO4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:56:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3zBj6S7cwbWsVQLzYyhiT0zmek9MdQQXjrf7Gfxlmzw=; b=VnFNPKriAgQmCyl15gxSVX3YB
+        x5wY88163f3vdws6jQCmIRIcoVWVIP1jmmizGcloh1h1pjbY7NDl7QkStx6Q79sXFyMiHkttJLG+D
+        GBroGHysoJJ/uMBZcKsBrVq99ue8WOICC34fYah2Yxrc0fJfmFgbPoUuOasexBKpPI7vHkr+3rAPo
+        Fv6Z/DnX/8Vy+cCpNlAJKFrfjGypC1gL8AB7fmgkYTy1rlb8EmNKeLCk2IyhRPDYdkwx7qh5pDovv
+        8dBQSKddWrGtH76Fr6pjEtSMTARixsEHrhFyw0UFhRdMvcag/rbr8KSIH9II4hBoLeQAhdvhFyqwi
+        78jOHqVkA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igrnO-0008Gz-CK; Mon, 16 Dec 2019 14:56:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B39C3035D4;
+        Mon, 16 Dec 2019 15:55:02 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C6CC62B2A1918; Mon, 16 Dec 2019 15:56:24 +0100 (CET)
+Date:   Mon, 16 Dec 2019 15:56:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, javi.merino@kernel.org,
+        amit.kucheria@verdurent.com
+Subject: Re: [Patch v6 0/7] Introduce Thermal Pressure
+Message-ID: <20191216145624.GU2844@hirez.programming.kicks-ass.net>
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yH1ZJFh+qWm+VodA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
-X-Cookie: Backed up the system lately?
+In-Reply-To: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 11:11:41PM -0500, Thara Gopinath wrote:
+> Test Results
+> 
+> Hackbench: 1 group , 30000 loops, 10 runs
+>                                                Result         SD
+>                                                (Secs)     (% of mean)
+>  No Thermal Pressure                            14.03       2.69%
+>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
+>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
+>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
+>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
+>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
+> 
+> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>                                                  Result      SD
+>                                                  (Secs)    (% of mean)
+>  No Thermal Pressure                              9.452      4.49%
+>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%
 
---yH1ZJFh+qWm+VodA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What is the conclusion, if any from these results? Clearly thermal
+pressuse seems to help, but what window? ISTR we default to 32ms, which
+is a wash for drystone, but sub-optimal for hackbench.
 
-On Mon, Dec 16, 2019 at 02:52:23PM +0000, John Garry wrote:
-> On 09/12/2019 14:08, John Garry wrote:
-> > This patchset introduces support for the HiSilicon SFC V3XX driver.
-> >=20
->=20
-> Hi guys,
->=20
-> Just a friendly reminder on this series.
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
-
---yH1ZJFh+qWm+VodA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33mxgACgkQJNaLcl1U
-h9BkyAf9ERzOEHkj4pm1zcqytpYhQyLc/XjXH3fGYXrtycjyRGjH0+FOGFxRKFKz
-fSKqN7QBU2dWuPvKqvB43G/eIMrD0FR7Dg+SkbzW1761xgy0r3TWVF8Fgt+WtMki
-MpZisGQmpcWjVkYkwsd7FqMPhSxSNkpSQjYDGvuvJfJ+DALzTjwawoDDVECeNuRj
-P4gZscc2m79ff/24eTtmktjjzIIwT+Zv6qrjSx2e0LCqueLNzudNgL6ToP5QppU7
-zRgzI6MefT64/ffpcGa6yr7kBBWX9I33uuOAcgmY3NIQrFvDc8cxCfZZ9346e1wK
-Nrp6zKYgFjmfO3gYYW1cP8XJqd3OgQ==
-=JPvu
------END PGP SIGNATURE-----
-
---yH1ZJFh+qWm+VodA--
+Anyway, the patches look more or less acceptible, just a bunch of nits,
+the biggest being the fact that even if an architecture does not support
+this there is still the code and runtime overhead.
