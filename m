@@ -2,162 +2,212 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199A9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D60C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C56A20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ts.fujitsu.com header.i=@ts.fujitsu.com header.b="jrCab8U7"
+	by mail.kernel.org (Postfix) with ESMTP id 8FA37206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfLPNsb (ORCPT
+        id S1727940AbfLPNu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:48:31 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.71]:55638 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727579AbfLPNsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:48:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ts.fujitsu.com;
-        s=200619tsfj; t=1576504107; i=@ts.fujitsu.com;
-        bh=WAoiOLVLnfRZHjvIM34WJoYjoSRik6RjAJThWwiCBpk=;
-        h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-         Content-Transfer-Encoding:Content-Type;
-        b=jrCab8U7Sy0MExL0pvFBhIDrmnNm/SzwDfIQCGbMVfPfeMid4sALcf+JkHebFzCjg
-         FVF3zVZkgDRSiDC1lUTAA3uD2WnIdAbI8CgZtw40yR3aEJ9AKRbq9M/skSnWEtfwmc
-         dwMJIqA2ytR+EGhhO50Bk1/WdpjKYBarDd988fAYOCp5R/+seO4whf+iMiBfxfkhaR
-         eVD1aSnj+rt55KMAs41zttgXIOkZ2L1C0W8uDEUnO/fH4YlKi/dIs/JN8rhY4iBC/K
-         PhTklxPamdJicn/Xsaa5XnQSDkDv25Tu86/PIe7RdGc7ujggNzoAmp1J0IMqyLxVEO
-         sXbDDT6eh02jg==
-Received: from [46.226.52.199] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-7.bemta.az-b.eu-west-1.aws.symcld.net id 79/B1-22075-B2B87FD5; Mon, 16 Dec 2019 13:48:27 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRWlGSWpSXmKPExsViZ8MRqqvW/T3
-  W4O5kbYs9e0+yWFzeNYfNYlLnMTYHZo+WzdEenzfJBTBFsWbmJeVXJLBmTO9fwFLwUK7i2OUF
-  rA2MtyW7GLk4hATmMEosu3GBEcKZzyhx9fYZpi5GTg42AQOJXa8OMXcxcnCICChKXH7vBBJmF
-  nCUWDvjFwtIWFjARWLXjyyQMIuAqsSVRTeYQWxeAUOJTU+XsULYghInZz5hgWiVl+i43MgKYe
-  tILNj9iW0CI/csJGWzkJTNQlK2gJF5FaNFUlFmekZJbmJmjq6hgYGuoaGRrqGlORCb6SVW6Sb
-  ppZbqlqcWl+ga6iWWF+sVV+Ym56To5aWWbGIEhldKwdEjOxjffX2rd4hRkoNJSZQ35Oa3WCG+
-  pPyUyozE4oz4otKc1OJDjDIcHEoSvGvav8cKCRalpqdWpGXmAEMdJi3BwaMkwhvTCZTmLS5Iz
-  C3OTIdInWLU5Vj1f94iZiGWvPy8VClxXs4uoCIBkKKM0jy4EbC4u8QoKyXMy8jAwCDEU5BalJ
-  tZgir/ilGcg1FJmLcIZBVPZl4J3KZXQEcwAR1h5PcN5IiSRISUVAOTQTHXDB7GsPyYHYWf7Py
-  Xb2Dtjqy7crJC7NCc/P1pO4rDthXM5fXI56rbqKcl9lrhRQvXh6Ky/62N3658r5suech/po+K
-  1yfbMzLVTHPn5z+z3P+XezWL/fy/+ZWhn/onLt4o1L/YYO3dNEOjL4dXffm+0+xKas96xWc8f
-  Unn5CerObY03buW0GwasvbIM8Yd7gd2aiU2pn+a1bIok9txQQHr9m2qvvFf1fLzp7KxlGS/vP
-  Fv4hMzveidDFIHlfczLprIuqpjxdOQqc98//36oRHta6oj7DZfz6CJY+/LqTmFEep2b9b+va9
-  xYrFOzd3bX5ML71bP/BJ7sbfkzWVHu81arzoiHt1k/fCsudxAiaU4I9FQi7moOBEAyksHKDYD
-  AAA=
-X-Env-Sender: dietmar.hahn@ts.fujitsu.com
-X-Msg-Ref: server-5.tower-287.messagelabs.com!1576504102!563365!1
-X-Originating-IP: [62.60.8.85]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 31400 invoked from network); 16 Dec 2019 13:48:22 -0000
-Received: from unknown (HELO mailhost4.uk.fujitsu.com) (62.60.8.85)
-  by server-5.tower-287.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 16 Dec 2019 13:48:22 -0000
-Received: from sanpedro.mch.fsc.net ([172.17.20.6])
-        by mailhost4.uk.fujitsu.com (8.14.5/8.14.5) with SMTP id xBGDmGSC018441;
-        Mon, 16 Dec 2019 13:48:16 GMT
-Received: from amur.mch.fsc.net (unknown [10.172.102.15])
-        by sanpedro.mch.fsc.net (Postfix) with ESMTP id D9A7A9D00C7C;
-        Mon, 16 Dec 2019 14:48:07 +0100 (CET)
-From:   Dietmar Hahn <dietmar.hahn@ts.fujitsu.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@ftp.linux.org.uk>
-Subject: [PATCH] Fix a panic when core_pattern is set to "| prog..."
-Date:   Mon, 16 Dec 2019 14:48:07 +0100
-Message-ID: <2996767.y7E8ffpIOs@amur.mch.fsc.net>
+        Mon, 16 Dec 2019 08:50:29 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7253 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727579AbfLPNu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:50:29 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 33520A48BA882C891ECE;
+        Mon, 16 Dec 2019 21:50:27 +0800 (CST)
+Received: from [127.0.0.1] (10.133.216.73) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Dec 2019
+ 21:50:21 +0800
+Subject: Re: [PATCH] irq-gic-v3: fix NULL dereference of disabled redist_base
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+References: <20191216062745.63397-1-guoheyi@huawei.com>
+ <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
+From:   Guoheyi <guoheyi@huawei.com>
+Message-ID: <c1447d9f-df4a-db07-adae-7e7e6c0f6455@huawei.com>
+Date:   Mon, 16 Dec 2019 21:50:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.216.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-if the /proc/sys/kernel/core_pattern is set with a space between '|' and the
-program and later a core file should be written the kernel panics.
-This happens because in format_corename() the first part of cn.corename
-is set to '\0' and later call_usermodehelper_exec() exits because of an
-empty command path but with return 0. But no pipe is created and thus
-cprm.file == NULL.
-This leads in file_start_write() to the panic because of dereferencing
-file_inode(file)->i_mode.
+在 2019/12/16 19:14, Marc Zyngier 写道:
+> Hi Heyi,
+>
+> On 2019-12-16 06:27, Heyi Guo wrote:
+>> If we use ACPI MADT GICC structure to pass single redistributor base,
+>> and mark some GICC as disabled, we'll get below call trace during
+>> boot:
+>>
+>> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>> [    0.000000] GICv3: 256 SPIs implemented
+>> [    0.000000] GICv3: 0 Extended SPIs implemented
+>> [    0.000000] GICv3: Distributor has no Range Selector support
+>> [    0.000000] Unable to handle kernel paging request at virtual
+>> address 000000000000ffe8
+>> [    0.000000] Mem abort info:
+>> [    0.000000]   ESR = 0x96000004
+>> [    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
+>> [    0.000000]   SET = 0, FnV = 0
+>> [    0.000000]   EA = 0, S1PTW = 0
+>> [    0.000000] Data abort info:
+>> [    0.000000]   ISV = 0, ISS = 0x00000004
+>> [    0.000000]   CM = 0, WnR = 0
+>> [    0.000000] [000000000000ffe8] user address but active_mm is swapper
+>> [    0.000000] Internal error: Oops: 96000004 [#1] SMP
+>> [    0.000000] Modules linked in:
+>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1 #5
+>> [    0.000000] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>> [    0.000000] pc : gic_iterate_rdists+0x58/0x130
+>> [    0.000000] lr : gic_iterate_rdists+0x80/0x130
+>> [    0.000000] sp : ffff8000113d3cb0
+>> [    0.000000] x29: ffff8000113d3cb0 x28: 0000000000000000
+>> [    0.000000] x27: 0000000000000000 x26: 0000000000000018
+>> [    0.000000] x25: 000000000000ffe8 x24: 000000000000003f
+>> [    0.000000] x23: ffff800010588040 x22: 00000000000005e8
+>> [    0.000000] x21: ffff8000113df7d0 x20: 0000030f00003f11
+>> [    0.000000] x19: 0000000000000000 x18: ffffffffffffffff
+>> [    0.000000] x17: 0000000014aeb8dc x16: 00000000c3ba0ccf
+>> [    0.000000] x15: ffff8000113d9908 x14: ffff8000913d3a37
+>> [    0.000000] x13: ffff8000113d3a45 x12: ffff800011402000
+>> [    0.000000] x11: ffff8000113d39d0 x10: ffff8000113db980
+>> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff8000106dca98
+>> [    0.000000] x7 : 000000000000005b x6 : 0000000000000000
+>> [    0.000000] x5 : 0000000000000000 x4 : ffff8000128c0000
+>> [    0.000000] x3 : ffff8000128a0000 x2 : ffff0003fc3c7000
+>> [    0.000000] x1 : 0000000000000001 x0 : 000000000000ffe8
+>> [    0.000000] Call trace:
+>> [    0.000000]  gic_iterate_rdists+0x58/0x130
+>> [    0.000000]  gic_init_bases+0x200/0x4b4
+>> [    0.000000]  gic_acpi_init+0x148/0x284
+>> [    0.000000]  acpi_match_madt+0x4c/0x84
+>> [    0.000000]  acpi_table_parse_entries_array+0x188/0x278
+>> [    0.000000]  acpi_table_parse_entries+0x70/0x98
+>> [    0.000000]  acpi_table_parse_madt+0x40/0x50
+>> [    0.000000]  __acpi_probe_device_table+0x88/0xe4
+>> [    0.000000]  irqchip_init+0x38/0x40
+>> [    0.000000]  init_IRQ+0x168/0x19c
+>> [    0.000000]  start_kernel+0x328/0x508
+>> [    0.000000] Code: f90017b6 9b3a7f16 f8766853 8b190260 (b9400000)
+>> [    0.000000] ---[ end trace ae5cf232d924bfc1 ]---
+>> [    0.000000] Kernel panic - not syncing: Fatal exception
+>> [    0.000000] Rebooting in 3 seconds..
+>>
+>> In this case, nr_redist_regions counts all GICC structures but only
+>> enabled ones have redistributor mapped. So add check to avoid NULL
+>> deference of redist_base.
+>>
+>> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Jason Cooper <jason@lakedaemon.net>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+>> index d6218012097b..bd9d55cadef9 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -781,6 +781,13 @@ static int gic_iterate_rdists(int (*fn)(struct
+>> redist_region *, void __iomem *))
+>>          u64 typer;
+>>          u32 reg;
+>>
+>> +        /*
+>> +         * redist_base may be NULL if we use single_redist and some 
+>> GICC
+>> +         * structure is disabled.
+>> +         */
+>> +        if (!ptr)
+>> +            continue;
+>> +
+>>          reg = readl_relaxed(ptr + GICR_PIDR2) & GIC_PIDR2_ARCH_MASK;
+>>          if (reg != GIC_PIDR2_ARCH_GICv3 &&
+>>              reg != GIC_PIDR2_ARCH_GICv4) { /* We're in trouble... */
+>
+> This feels like the wrong fix. The redistributor region array should
+> be completely populated, and there is an assumption all over this driver
+> that there is no junk in these structures.
+
+
+Oh, I thought the place holder for disabled GICR in nr_redist_regions 
+were for some special reason, like CPU hotplug. Now I know I was wrong :)
+
+
+>
+> You're seeing this because we don't track the number of *enabled* rdists,
+> and allocate the number of regions based on the number of overall GICC
+> entries instead of the number of enabled redistributors.
+>
+> How about this instead?
+
+It looks good to me, and works fine in my case.
 
 Thanks,
-Dietmar.
 
-[  432.431005] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[  432.431006] #PF: supervisor read access in kernel mode
-[  432.431006] #PF: error_code(0x0000) - not-present page
-[  432.431007] PGD 102ad73067 P4D 102ad73067 PUD 105b898067 PMD 0 
-[  432.431010] Oops: 0000 [#1] SMP NOPTI
-[  432.431012] CPU: 0 PID: 20114 Comm: a Kdump: loaded Tainted: G            E     5.5.0-rc2-10.g62d06a0-default+ #15
-[  432.431013] Hardware name: FUJITSU SE SERVER SU310 M1/D3753-C1, BIOS V5.0.0.14 R1.12.0 for D3753-C1x                    07/22/2019
-[  432.431020] RIP: 0010:do_coredump+0x7b8/0x1128
-[  432.431021] Code: 00 48 8b bd 18 ff ff ff 48 85 ff 74 05 e8 60 04 fa ff 65 48 8b 04 25 c0 ab 01 00 48 8b 00 48 8b 4d a0 a8 04 0f 85 16 01 00 00 <48> 8b 51 20 0f b7 02 66 25 00 f0 66 3d 00 80 75 13 48 8b 7a 28 be
-[  432.431022] RSP: 0018:ffffab39081dfcc0 EFLAGS: 00010246
-[  432.431023] RAX: 0000000000004008 RBX: ffff8e77df3e6e80 RCX: 0000000000000000
-[  432.431024] RDX: 0000000000000000 RSI: ffffab39081dfc90 RDI: 0000000000000000
-[  432.431024] RBP: ffffab39081dfdf8 R08: 0000000000000000 R09: ffffab39081dfc18
-[  432.431025] R10: ffff8e6fd9020000 R11: 0000000000000000 R12: ffff8e6fb16eb080
-[  432.431026] R13: 0000000000000000 R14: ffffffff8f878400 R15: ffffffff8ff21860
-[  432.431027] FS:  00007f8ad3468700(0000) GS:ffff8e6fdfe00000(0000) knlGS:0000000000000000
-[  432.431027] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  432.431028] CR2: 0000000000000020 CR3: 000000105ef26002 CR4: 00000000007606f0
-[  432.431028] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  432.431029] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  432.431029] PKRU: 55555554
-[  432.431030] Call Trace:
-[  432.431040]  get_signal+0x13c/0x860
-[  432.431046]  ? __switch_to_asm+0x34/0x70
-[  432.431047]  ? __switch_to_asm+0x40/0x70
-[  432.431048]  ? __switch_to_asm+0x34/0x70
-[  432.431055]  do_signal+0x36/0x630
-[  432.431065]  ? finish_task_switch+0x7c/0x2a0
-[  433.237753]  exit_to_usermode_loop+0x95/0x130
-[  433.237755]  prepare_exit_to_usermode+0xa7/0xf0
-[  433.237758]  ret_from_intr+0x2a/0x3a
-[  433.237761] RIP: 0033:0x7f8ad2f05381
-[  433.237763] Code: 4c 8b 85 28 fb ff ff 44 29 e8 48 98 49 39 c1 0f 87 a2 f7 ff ff 44 03 ad 20 fb ff ff e9 02 ec ff ff 31 c0 48 83 c9 ff 4c 89 d7 <f2> ae c7 85 28 fb ff ff 00 00 00 00 48 89 ce 48 f7 d6 4c 8d 4e ff
-[  433.237763] RSP: 002b:00007fff72daa6a0 EFLAGS: 00010286
-[  433.237764] RAX: 0000000000000000 RBX: 00007f8ad325b2a0 RCX: ffffffffffffffff
-[  433.237765] RDX: 0000000000000010 RSI: 00007fff72daabf8 RDI: 0000000000000001
-[  433.237765] RBP: 00007fff72daac30 R08: 00000000004005fa R09: 0000000000000073
-[  433.237766] R10: 0000000000000001 R11: 0000000000000000 R12: 00000000004005f4
-[  433.237766] R13: 0000000000000006 R14: 0000000000000000 R15: 00007fff72daac48
+Heyi
 
 
-Signed-off-by: Dietmar Hahn <dietmar.hahn@ts.fujitsu.com>
-
----
- fs/coredump.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index b1ea7dfbd149..106c1c5f542a 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -628,7 +628,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
- 
--		if (ispipe < 0) {
-+		if (ispipe < 0 || !*cn.corename) {
- 			printk(KERN_WARNING "format_corename failed\n");
- 			printk(KERN_WARNING "Aborting core\n");
- 			goto fail_unlock;
--- 
-2.16.4
-
-
-
+>
+>         M.
+>
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 3a1866682dd0..9b26a860340b 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1861,6 +1861,7 @@ static struct
+>      struct redist_region *redist_regs;
+>      u32 nr_redist_regions;
+>      bool single_redist;
+> +    int enabled_rdists;
+>      u32 maint_irq;
+>      int maint_irq_mode;
+>      phys_addr_t vcpu_base;
+> @@ -1955,8 +1956,10 @@ static int __init gic_acpi_match_gicc(union 
+> acpi_subtable_headers *header,
+>       * If GICC is enabled and has valid gicr base address, then it means
+>       * GICR base is presented via GICC
+>       */
+> -    if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
+> +    if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
+> +        acpi_data.enabled_rdists++;
+>          return 0;
+> +    }
+>
+>      /*
+>       * It's perfectly valid firmware can pass disabled GICC entry, 
+> driver
+> @@ -1986,8 +1989,10 @@ static int __init 
+> gic_acpi_count_gicr_regions(void)
+>
+>      count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+>                        gic_acpi_match_gicc, 0);
+> -    if (count > 0)
+> +    if (count > 0) {
+>          acpi_data.single_redist = true;
+> +        count = acpi_data.enabled_rdists;
+> +    }
+>
+>      return count;
+>  }
+>
 
