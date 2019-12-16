@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2804C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB6420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2FA24683
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521564;
-	bh=tvOIjDCxD7/z37ZjVf2gcMsRlUyrETBdTSr/zPhHUUw=;
+	s=default; t=1576521566;
+	bh=Ry2NG3S3kKwh6GZVYQzjgd6nEGjX5EXezKwnS9n90oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkrE1VCNOoVE4DC6uQdcJlZgXFeTUHN4Mc/1bOwLWA1WqsKnjUfAiv3pnDtYGBKDC
-	 pUZUczH4cR9+7wNpV+52OwDAODpierSAjgAUAYb6UySx0sME3wLriU2VsHyQkJDGLr
-	 IbH3osOZMUTEUo/OUwsIrWEBFwG241vxnXoVfzoU=
+	b=v7uvqOvuwrcIverNt8fXbM9tPkzXN9vFmkJUQy3wcIkesGdbuWSTtN2r63LrAaqJH
+	 MlgYFOgPWIYcxhmx41H5lnWvPR2KPqOYmcH/6XwdKCZsb189sYclRepbx5Xh8LgJIN
+	 CspEhBZXtxALRBBci2W8dPUeyUSw4c3QEx75MFzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfLPSDi (ORCPT
+        id S1729405AbfLPSjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:03:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40208 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:39:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfLPSD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:27 -0500
+        id S1729529AbfLPSDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6454820726;
-        Mon, 16 Dec 2019 18:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D7A20733;
+        Mon, 16 Dec 2019 18:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519406;
-        bh=tvOIjDCxD7/z37ZjVf2gcMsRlUyrETBdTSr/zPhHUUw=;
+        s=default; t=1576519416;
+        bh=Ry2NG3S3kKwh6GZVYQzjgd6nEGjX5EXezKwnS9n90oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFZWtIB65KYXwvwk9EQfBJ6PFZGv17jmNiFGMWvtkyEkxyLMUW8voOVZEUkIMpIdr
-         JWqd+uaXbzofaez0lbI9/pIXu4on6piHS3fnTX39f5coXWmVWWT/7pE/ywGKCKlWsc
-         XtPtcMhRVDn/SzmGdiaPF7pyI3UggX9qapnpyeng=
+        b=UBR1pxRucOtrfqMvkooTtBXzi73KEQWEoy95nXsaK4EAeymMtH0fO6koBXKayWFY1
+         26nYwwROnVz+14p1S3ehwhzrpU3VPiiCqObSk3J/QL9Yle2bi5afotxpWa2ZUM6Hae
+         4xoqknRjMTsSFmY2G5GAeMti/gcHn5huueGE+vNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 016/140] xhci: Increase STS_HALT timeout in xhci_suspend()
-Date:   Mon, 16 Dec 2019 18:48:04 +0100
-Message-Id: <20191216174754.928800087@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        David Jeffery <djeffery@redhat.com>, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.19 058/140] md: improve handling of bio with REQ_PREFLUSH in md_flush_request()
+Date:   Mon, 16 Dec 2019 18:48:46 +0100
+Message-Id: <20191216174803.958690455@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,43 +60,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: David Jeffery <djeffery@redhat.com>
 
-commit 7c67cf6658cec70d8a43229f2ce74ca1443dc95e upstream.
+commit 775d78319f1ceb32be8eb3b1202ccdc60e9cb7f1 upstream.
 
-I've recently observed failed xHCI suspend attempt on AMD Raven Ridge
-system:
-kernel: xhci_hcd 0000:04:00.4: WARN: xHC CMD_RUN timeout
-kernel: PM: suspend_common(): xhci_pci_suspend+0x0/0xd0 returns -110
-kernel: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -110
-kernel: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns -110
-kernel: PM: Device 0000:04:00.4 failed to suspend async: error -110
+If pers->make_request fails in md_flush_request(), the bio is lost. To
+fix this, pass back a bool to indicate if the original make_request call
+should continue to handle the I/O and instead of assuming the flush logic
+will push it to completion.
 
-Similar to commit ac343366846a ("xhci: Increase STS_SAVE timeout in
-xhci_suspend()") we also need to increase the HALT timeout to make it be
-able to suspend again.
+Convert md_flush_request to return a bool and no longer calls the raid
+driver's make_request function.  If the return is true, then the md flush
+logic has or will complete the bio and the md make_request call is done.
+If false, then the md make_request function needs to keep processing like
+it is a normal bio. Let the original call to md_handle_request handle any
+need to retry sending the bio to the raid driver's make_request function
+should it be needed.
 
-Cc: <stable@vger.kernel.org> # 5.2+
-Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-5-mathias.nyman@linux.intel.com
+Also mark md_flush_request and the make_request function pointer as
+__must_check to issue warnings should these critical return values be
+ignored.
+
+Fixes: 2bc13b83e629 ("md: batch flush requests.")
+Cc: stable@vger.kernel.org # # v4.19+
+Cc: NeilBrown <neilb@suse.com>
+Signed-off-by: David Jeffery <djeffery@redhat.com>
+Reviewed-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md-linear.c    |    5 ++---
+ drivers/md/md-multipath.c |    5 ++---
+ drivers/md/md.c           |   11 +++++++++--
+ drivers/md/md.h           |    4 ++--
+ drivers/md/raid0.c        |    5 ++---
+ drivers/md/raid1.c        |    5 ++---
+ drivers/md/raid10.c       |    5 ++---
+ drivers/md/raid5.c        |    4 ++--
+ 8 files changed, 23 insertions(+), 21 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -960,7 +960,7 @@ static bool xhci_pending_portevent(struc
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup)
+--- a/drivers/md/md-linear.c
++++ b/drivers/md/md-linear.c
+@@ -252,10 +252,9 @@ static bool linear_make_request(struct m
+ 	sector_t start_sector, end_sector, data_offset;
+ 	sector_t bio_sector = bio->bi_iter.bi_sector;
+ 
+-	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
+-		md_flush_request(mddev, bio);
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
++	    && md_flush_request(mddev, bio))
+ 		return true;
+-	}
+ 
+ 	tmp_dev = which_dev(mddev, bio_sector);
+ 	start_sector = tmp_dev->end_sector - tmp_dev->rdev->sectors;
+--- a/drivers/md/md-multipath.c
++++ b/drivers/md/md-multipath.c
+@@ -112,10 +112,9 @@ static bool multipath_make_request(struc
+ 	struct multipath_bh * mp_bh;
+ 	struct multipath_info *multipath;
+ 
+-	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
+-		md_flush_request(mddev, bio);
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
++	    && md_flush_request(mddev, bio))
+ 		return true;
+-	}
+ 
+ 	mp_bh = mempool_alloc(&conf->pool, GFP_NOIO);
+ 
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -487,7 +487,13 @@ static void md_submit_flush_data(struct
+ 	}
+ }
+ 
+-void md_flush_request(struct mddev *mddev, struct bio *bio)
++/*
++ * Manages consolidation of flushes and submitting any flushes needed for
++ * a bio with REQ_PREFLUSH.  Returns true if the bio is finished or is
++ * being finished in another context.  Returns false if the flushing is
++ * complete but still needs the I/O portion of the bio to be processed.
++ */
++bool md_flush_request(struct mddev *mddev, struct bio *bio)
  {
- 	int			rc = 0;
--	unsigned int		delay = XHCI_MAX_HALT_USEC;
-+	unsigned int		delay = XHCI_MAX_HALT_USEC * 2;
- 	struct usb_hcd		*hcd = xhci_to_hcd(xhci);
- 	u32			command;
- 	u32			res;
+ 	ktime_t start = ktime_get_boottime();
+ 	spin_lock_irq(&mddev->lock);
+@@ -512,9 +518,10 @@ void md_flush_request(struct mddev *mdde
+ 			bio_endio(bio);
+ 		else {
+ 			bio->bi_opf &= ~REQ_PREFLUSH;
+-			mddev->pers->make_request(mddev, bio);
++			return false;
+ 		}
+ 	}
++	return true;
+ }
+ EXPORT_SYMBOL(md_flush_request);
+ 
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -532,7 +532,7 @@ struct md_personality
+ 	int level;
+ 	struct list_head list;
+ 	struct module *owner;
+-	bool (*make_request)(struct mddev *mddev, struct bio *bio);
++	bool __must_check (*make_request)(struct mddev *mddev, struct bio *bio);
+ 	/*
+ 	 * start up works that do NOT require md_thread. tasks that
+ 	 * requires md_thread should go into start()
+@@ -684,7 +684,7 @@ extern void md_error(struct mddev *mddev
+ extern void md_finish_reshape(struct mddev *mddev);
+ 
+ extern int mddev_congested(struct mddev *mddev, int bits);
+-extern void md_flush_request(struct mddev *mddev, struct bio *bio);
++extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
+ extern void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
+ 			   sector_t sector, int size, struct page *page);
+ extern int md_super_wait(struct mddev *mddev);
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -580,10 +580,9 @@ static bool raid0_make_request(struct md
+ 	unsigned chunk_sects;
+ 	unsigned sectors;
+ 
+-	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
+-		md_flush_request(mddev, bio);
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
++	    && md_flush_request(mddev, bio))
+ 		return true;
+-	}
+ 
+ 	if (unlikely((bio_op(bio) == REQ_OP_DISCARD))) {
+ 		raid0_handle_discard(mddev, bio);
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1537,10 +1537,9 @@ static bool raid1_make_request(struct md
+ {
+ 	sector_t sectors;
+ 
+-	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
+-		md_flush_request(mddev, bio);
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
++	    && md_flush_request(mddev, bio))
+ 		return true;
+-	}
+ 
+ 	/*
+ 	 * There is a limit to the maximum size, but
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1562,10 +1562,9 @@ static bool raid10_make_request(struct m
+ 	int chunk_sects = chunk_mask + 1;
+ 	int sectors = bio_sectors(bio);
+ 
+-	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
+-		md_flush_request(mddev, bio);
++	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
++	    && md_flush_request(mddev, bio))
+ 		return true;
+-	}
+ 
+ 	if (!md_write_start(mddev, bio))
+ 		return false;
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -5590,8 +5590,8 @@ static bool raid5_make_request(struct md
+ 		if (ret == 0)
+ 			return true;
+ 		if (ret == -ENODEV) {
+-			md_flush_request(mddev, bi);
+-			return true;
++			if (md_flush_request(mddev, bi))
++				return true;
+ 		}
+ 		/* ret == -EAGAIN, fallback */
+ 		/*
 
 
