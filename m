@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B47EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577FEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8A4206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9A221582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519937;
-	bh=Zt9UsHwhVTa1hLUu0QlnF2a3b8p7cUxQiiGQdtFVePU=;
+	s=default; t=1576519940;
+	bh=E1eH4V28AhDSPxwzREWDAeBIRwVTvqP+aN8l9PpGcgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOTx7np65R2gdh2QCzD4WzWIE6j1tpdEP7lBbfdOdntSe5olz0RbcM1QUS9p388GM
-	 jioHfsZR2TCubiUgU8a0JKmC98lQthBv8BHPG6+lFB/UJ9JJC8LFY46wLuI8qeKNQH
-	 F2yvx3zfo5XCLQx0EeZGKGcm3jLJ0jN/gZCA7Mk8=
+	b=CNqHlMSChDr5gVE5NHNH8hsO7eIB9gGR6BvMTTv/J+Hxsdzj4L1W8QerAzGyuCUX9
+	 51/dHJlUHOCAOw/iMGSMZZxhu4/y8i50IkB7IzgHAeK8I2PvBkq7HuXPUCEVWHu5BV
+	 VDRjNdClzhA4Katu+IN/Wg/ZuGxczPqSHCILyT5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfLPSMP (ORCPT
+        id S1730744AbfLPSMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56828 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:12:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbfLPSMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:10 -0500
+        id S1730920AbfLPSMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90AE20700;
-        Mon, 16 Dec 2019 18:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9BE821775;
+        Mon, 16 Dec 2019 18:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519930;
-        bh=Zt9UsHwhVTa1hLUu0QlnF2a3b8p7cUxQiiGQdtFVePU=;
+        s=default; t=1576519935;
+        bh=E1eH4V28AhDSPxwzREWDAeBIRwVTvqP+aN8l9PpGcgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5tVie1bUNRoTz/Xg0znvO6dWsfV3WTmQ7PO3hCSD1+3HTi4K/ZZGQKhTUnedwwZw
-         46KOZUxLLheker/xnuavb9744guBesNeuGfwgmSOdRzBKHGuEwrlSsCwgfeKerLiNI
-         6kK7C6ODagzJfl4jnZ+bDahGgmMRk6xfY9OcQVdY=
+        b=wT8My/DgP41wa9YYMerFi4PM1HTL1nVek7FMVaVaHV/SQV/v67qI92lJz62vb/tj9
+         9wxZ0PyKJ4Otm6TP7DnOkNm+tFivcI+GZOujEw7hXA135mKkQEkl9dzWYtckHggDQD
+         4NP0xctKszsQ8zqtUjnbghfWOP0p7hyr6ZD0XPlo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-media@vger.kernel.org,
-        Martin Bugge <marbugge@cisco.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 5.3 128/180] video/hdmi: Fix AVI bar unpack
-Date:   Mon, 16 Dec 2019 18:49:28 +0100
-Message-Id: <20191216174841.514153317@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.3 130/180] ext2: check err when partial != NULL
+Date:   Mon, 16 Dec 2019 18:49:30 +0100
+Message-Id: <20191216174841.735294082@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -64,47 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 6039f37dd6b76641198e290f26b31c475248f567 upstream.
+commit e705f4b8aa27a59f8933e8f384e9752f052c469c upstream.
 
-The bar values are little endian, not big endian. The pack
-function did it right but the unpack got it wrong. Fix it.
+Check err when partial == NULL is meaningless because
+partial == NULL means getting branch successfully without
+error.
 
-Cc: stable@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Martin Bugge <marbugge@cisco.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Fixes: 2c676f378edb ("[media] hdmi: added unpack and logging functions for InfoFrames")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190919132853.30954-1-ville.syrjala@linux.intel.com
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+CC: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191105045100.7104-1-cgxu519@mykernel.net
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/hdmi.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/ext2/inode.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/video/hdmi.c
-+++ b/drivers/video/hdmi.c
-@@ -1576,12 +1576,12 @@ static int hdmi_avi_infoframe_unpack(str
- 	if (ptr[0] & 0x10)
- 		frame->active_aspect = ptr[1] & 0xf;
- 	if (ptr[0] & 0x8) {
--		frame->top_bar = (ptr[5] << 8) + ptr[6];
--		frame->bottom_bar = (ptr[7] << 8) + ptr[8];
-+		frame->top_bar = (ptr[6] << 8) | ptr[5];
-+		frame->bottom_bar = (ptr[8] << 8) | ptr[7];
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -701,10 +701,13 @@ static int ext2_get_blocks(struct inode
+ 		if (!partial) {
+ 			count++;
+ 			mutex_unlock(&ei->truncate_mutex);
+-			if (err)
+-				goto cleanup;
+ 			goto got_it;
+ 		}
++
++		if (err) {
++			mutex_unlock(&ei->truncate_mutex);
++			goto cleanup;
++		}
  	}
- 	if (ptr[0] & 0x4) {
--		frame->left_bar = (ptr[9] << 8) + ptr[10];
--		frame->right_bar = (ptr[11] << 8) + ptr[12];
-+		frame->left_bar = (ptr[10] << 8) | ptr[9];
-+		frame->right_bar = (ptr[12] << 8) | ptr[11];
- 	}
- 	frame->scan_mode = ptr[0] & 0x3;
  
+ 	/*
 
 
