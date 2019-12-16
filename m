@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF0DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD5AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCDD206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBE5206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfLPJ2O (ORCPT
+        id S1727344AbfLPJ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:28:14 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42768 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727269AbfLPJ2N (ORCPT
+        Mon, 16 Dec 2019 04:28:18 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59751 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727067AbfLPJ2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:28:13 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Tl3Q8b2_1576488439;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tl3Q8b2_1576488439)
+        Mon, 16 Dec 2019 04:28:17 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Tl3i.ek_1576488441;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tl3i.ek_1576488441)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 16 Dec 2019 17:27:19 +0800
+          Mon, 16 Dec 2019 17:27:21 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -33,12 +33,11 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v6 05/10] mm/swap: only change the lru_lock iff page's lruvec is different
-Date:   Mon, 16 Dec 2019 17:26:21 +0800
-Message-Id: <1576488386-32544-6-git-send-email-alex.shi@linux.alibaba.com>
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: [PATCH v6 09/10] mm/memcg: fold lock in lock_page_lru
+Date:   Mon, 16 Dec 2019 17:26:25 +0800
+Message-Id: <1576488386-32544-10-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -47,63 +46,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we introduced relock_page_lruvec, we could use it in more place
-to reduce spin_locks.
+According to the calling path of commit_charge, the lrucare is bound
+with PageLRU, so we could just fold it under PageLRU. This has no
+functional change.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-kernel@vger.kernel.org
 Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- mm/swap.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ mm/memcontrol.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 97e108be4f92..84a845968e1d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -196,11 +196,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 	for (i = 0; i < pagevec_count(pvec); i++) {
- 		struct page *page = pvec->pages[i];
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 138f298b694f..f8e279487e1d 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2621,9 +2621,10 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
  
--		lruvec = lock_page_lruvec_irqsave(page, &flags);
-+		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+ static struct lruvec *lock_page_lru(struct page *page, int *isolated)
+ {
+-	struct lruvec *lruvec = lock_page_lruvec_irq(page);
++	struct lruvec *lruvec = NULL;
  
- 		(*move_fn)(page, lruvec, arg);
--		unlock_page_lruvec_irqrestore(lruvec, flags);
+ 	if (PageLRU(page)) {
++		lruvec = lock_page_lruvec_irq(page);
+ 
+ 		ClearPageLRU(page);
+ 		del_page_from_lru_list(page, lruvec, page_lru(page));
+@@ -2637,17 +2638,18 @@ static struct lruvec *lock_page_lru(struct page *page, int *isolated)
+ static void unlock_page_lru(struct page *page, int isolated,
+ 				struct lruvec *locked_lruvec)
+ {
+-	struct lruvec *lruvec;
++	if (isolated) {
++		struct lruvec *lruvec;
+ 
+-	unlock_page_lruvec_irq(locked_lruvec);
+-	lruvec = lock_page_lruvec_irq(page);
++		if (locked_lruvec)
++			unlock_page_lruvec_irq(locked_lruvec);
++		lruvec = lock_page_lruvec_irq(page);
+ 
+-	if (isolated) {
+ 		VM_BUG_ON_PAGE(PageLRU(page), page);
+ 		SetPageLRU(page);
+ 		add_page_to_lru_list(page, lruvec, page_lru(page));
++		unlock_page_lruvec_irq(lruvec);
  	}
-+	if (lruvec)
-+		unlock_page_lruvec_irqrestore(lruvec, flags);
+-	unlock_page_lruvec_irq(lruvec);
+ }
  
- 	release_pages(pvec->pages, pvec->nr);
- 	pagevec_reinit(pvec);
-@@ -819,14 +820,11 @@ void release_pages(struct page **pages, int nr)
- 		}
- 
- 		if (PageLRU(page)) {
--			struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+			struct lruvec *pre_lruvec = lruvec;
- 
--			if (new_lruvec != lruvec) {
--				if (lruvec)
--					unlock_page_lruvec_irqrestore(lruvec, flags);
-+			lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
-+			if (pre_lruvec != lruvec)
- 				lock_batch = 0;
--				lruvec = lock_page_lruvec_irqsave(page, &flags);
--			}
- 
- 			VM_BUG_ON_PAGE(!PageLRU(page), page);
- 			__ClearPageLRU(page);
+ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
 -- 
 1.8.3.1
 
