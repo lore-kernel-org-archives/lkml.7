@@ -2,258 +2,264 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2ADC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFC3C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3FB20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E2520725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RxHjRGXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfLPKBh (ORCPT
+        id S1727198AbfLPKBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:01:37 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:65497 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLPKBh (ORCPT
+        Mon, 16 Dec 2019 05:01:46 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:21745 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLPKBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:01:37 -0500
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBGA0EVj008200;
-        Mon, 16 Dec 2019 19:00:14 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
- Mon, 16 Dec 2019 19:00:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
-Received: from ccsecurity.localdomain (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xBGA04DQ008154
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 16 Dec 2019 19:00:14 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH] kconfig: Add kernel config option for fuzz testing.
-Date:   Mon, 16 Dec 2019 18:59:55 +0900
-Message-Id: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.1
+        Mon, 16 Dec 2019 05:01:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576490505; x=1608026505;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=LtdCtzcshD6qXVmdgBHlLj8wpUXd5CRe7nngX+q2rNE=;
+  b=RxHjRGXGcitU7zINvYSunUxuDMaDnNqXl2tAbj98wo9b/4uh+OEMvpqR
+   NGML8rpEW84jk8G4EUfxBzdVYVdgnyeeg+i7vO7CXn9TdLCPZC11LOYyv
+   CZUWOqCLHxO7Gcm19CsRCrE/9+KzqUMkdMDKXQWzhdZy30xFySaeVDpgt
+   w=;
+IronPort-SDR: +nhKU2Tl8MS+eqoV/mR0K7/tezXU9G9id8VSRKkd7HdhYB1SCvtQW6h/4TOmb27zuQKsgd/HFA
+ GWz4PZC1oE7w==
+X-IronPort-AV: E=Sophos;i="5.69,321,1571702400"; 
+   d="scan'208";a="7785002"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 16 Dec 2019 10:01:43 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id EE82FA1DDE;
+        Mon, 16 Dec 2019 10:01:41 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 16 Dec 2019 10:01:12 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 16 Dec 2019 10:01:07 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+CC:     <jgross@suse.com>, <axboe@kernel.dk>, <sjpark@amazon.com>,
+        <konrad.wilk@oracle.com>, <pdurrant@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <sj38.park@gmail.com>
+Subject: Re: Re: [Xen-devel] [PATCH v9 2/4] xen/blkback: Squeeze page pools if a memory pressure is detected
+Date:   Mon, 16 Dec 2019 11:00:52 +0100
+Message-ID: <20191216100052.27361-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+In-Reply-To: <20191216093755.GJ11756@Air-de-Roger>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D16UWB001.ant.amazon.com (10.43.161.17) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While syzkaller is finding many bugs, sometimes syzkaller examines
-stupid operations. But disabling operations using kernel config option
-is problematic because "kernel config option excludes whole module when
-there is still room for examining all but specific operation" and
-"the list of kernel config options becomes too complicated to maintain
-because such list changes over time". Thus, this patch introduces a
-kernel config option which allows disabling only specific operations.
-This kernel config option should be enabled only when building kernels
-for fuzz testing.
+On Mon, 16 Dec 2019 10:37:55 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Dmitry Vyukov <dvyukov@google.com>
----
- drivers/char/mem.c                  |  6 +++---
- drivers/tty/serial/8250/8250_port.c |  7 +++++--
- drivers/tty/vt/keyboard.c           |  3 +++
- fs/ioctl.c                          |  5 +++++
- include/linux/uaccess.h             | 12 ++++++++++++
- kernel/printk/printk.c              |  8 ++++++++
- lib/Kconfig.debug                   | 10 ++++++++++
- lib/usercopy.c                      | 27 +++++++++++++++++++++++++++
- 8 files changed, 73 insertions(+), 5 deletions(-)
+> On Fri, Dec 13, 2019 at 03:35:44PM +0000, SeongJae Park wrote:
+> > Each `blkif` has a free pages pool for the grant mapping.  The size of
+> > the pool starts from zero and is increased on demand while processing
+> > the I/O requests.  If current I/O requests handling is finished or 100
+> > milliseconds has passed since last I/O requests handling, it checks and
+> > shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+> > 
+> > Therefore, host administrators can cause memory pressure in blkback by
+> > attaching a large number of block devices and inducing I/O.  Such
+> > problematic situations can be avoided by limiting the maximum number of
+> > devices that can be attached, but finding the optimal limit is not so
+> > easy.  Improper set of the limit can results in memory pressure or a
+> > resource underutilization.  This commit avoids such problematic
+> > situations by squeezing the pools (returns every free page in the pool
+> > to the system) for a while (users can set this duration via a module
+> > parameter) if memory pressure is detected.
+> > 
+> > Discussions
+> > ===========
+> > 
+> > The `blkback`'s original shrinking mechanism returns only pages in the
+> > pool which are not currently be used by `blkback` to the system.  In
+> > other words, the pages that are not mapped with granted pages.  Because
+> > this commit is changing only the shrink limit but still uses the same
+> > freeing mechanism it does not touch pages which are currently mapping
+> > grants.
+> > 
+> > Once memory pressure is detected, this commit keeps the squeezing limit
+> > for a user-specified time duration.  The duration should be neither too
+> > long nor too short.  If it is too long, the squeezing incurring overhead
+> > can reduce the I/O performance.  If it is too short, `blkback` will not
+> > free enough pages to reduce the memory pressure.  This commit sets the
+> > value as `10 milliseconds` by default because it is a short time in
+> > terms of I/O while it is a long time in terms of memory operations.
+> > Also, as the original shrinking mechanism works for at least every 100
+> > milliseconds, this could be a somewhat reasonable choice.  I also tested
+> > other durations (refer to the below section for more details) and
+> > confirmed that 10 milliseconds is the one that works best with the test.
+> > That said, the proper duration depends on actual configurations and
+> > workloads.  That's why this commit allows users to set the duration as a
+> > module parameter.
+> > 
+> > Memory Pressure Test
+> > ====================
+> > 
+> > To show how this commit fixes the memory pressure situation well, I
+> > configured a test environment on a xen-running virtualization system.
+> > On the `blkfront` running guest instances, I attach a large number of
+> > network-backed volume devices and induce I/O to those.  Meanwhile, I
+> > measure the number of pages that swapped in (pswpin) and out (pswpout)
+> > on the `blkback` running guest.  The test ran twice, once for the
+> > `blkback` before this commit and once for that after this commit.  As
+> > shown below, this commit has dramatically reduced the memory pressure:
+> > 
+> >                 pswpin  pswpout
+> >     before      76,672  185,799
+> >     after          212    3,325
+> > 
+> > Optimal Aggressive Shrinking Duration
+> > -------------------------------------
+> > 
+> > To find a best squeezing duration, I repeated the test with three
+> > different durations (1ms, 10ms, and 100ms).  The results are as below:
+> > 
+> >     duration    pswpin  pswpout
+> >     1           852     6,424
+> >     10          212     3,325
+> >     100         203     3,340
+> > 
+> > As expected, the memory pressure has decreased as the duration is
+> > increased, but the reduction stopped from the `10ms`.  Based on this
+> > results, I chose the default duration as 10ms.
+> > 
+> > Performance Overhead Test
+> > =========================
+> > 
+> > This commit could incur I/O performance degradation under severe memory
+> > pressure because the squeezing will require more page allocations per
+> > I/O.  To show the overhead, I artificially made a worst-case squeezing
+> > situation and measured the I/O performance of a `blkfront` running
+> > guest.
+> > 
+> > For the artificial squeezing, I set the `blkback.max_buffer_pages` using
+> > the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  In this
+> > test, I set the value to `1024` and `0`.  The `1024` is the default
+> > value.  Setting the value as `0` is same to a situation doing the
+> > squeezing always (worst-case).
+> > 
+> > For the I/O performance measurement, I run a simple `dd` command 5 times
+> > as below and collect the 'MB/s' results.
+> > 
+> >     $ for i in {1..5}; do dd if=/dev/zero of=file \
+> >                              bs=4k count=$((256*512)); sync; done
+> > 
+> > If the underlying block device is slow enough, the squeezing overhead
+> > could be hidden.  For the reason, I do this test for both a slow block
+> > device and a fast block device.  I use a popular cloud block storage
+> > service, ebs[1] as a slow device and the ramdisk block device[2] for the
+> > fast device.
+> > 
+> > The results are as below.  'max_pgs' represents the value of the
+> > `blkback.max_buffer_pages` parameter.
+> > 
+> > On the slow block device
+> > ------------------------
+> > 
+> >     max_pgs   Min       Max       Median     Avg    Stddev
+> >     0         38.7      45.8      38.7       40.12  3.1752165
+> >     1024      38.7      45.8      38.7       40.12  3.1752165
+> >     No difference proven at 95.0% confidence
+> > 
+> > On the fast block device
+> > ------------------------
+> > 
+> >     max_pgs   Min       Max       Median     Avg    Stddev
+> >     0         417       423       420        419.4  2.5099801
+> >     1024      414       425       416        417.8  4.4384682
+> >     No difference proven at 95.0% confidence
+> > 
+> > In short, even worst case squeezing on ramdisk based fast block device
+> > makes no visible performance degradation.  Please note that this is just
+> > a very simple and minimal test.  On systems using super-fast block
+> > devices and a special I/O workload, the results might be different.  If
+> > you have any doubt, test on your machine with your workload to find the
+> > optimal squeezing duration for you.
+> > 
+> > [1] https://aws.amazon.com/ebs/
+> > [2] https://www.kernel.org/doc/html/latest/admin-guide/blockdev/ramdisk.html
 
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 43dd0891ca1e..63aff3ae7c2b 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -246,7 +246,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 				return -EFAULT;
- 			}
- 
--			copied = copy_from_user(ptr, buf, sz);
-+			copied = copy_from_user_to_any(ptr, buf, sz);
- 			unxlate_dev_mem_ptr(p, ptr);
- 			if (copied) {
- 				written += sz - copied;
-@@ -550,7 +550,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- 		if (!virt_addr_valid(ptr))
- 			return -ENXIO;
- 
--		copied = copy_from_user(ptr, buf, sz);
-+		copied = copy_from_user_to_any(ptr, buf, sz);
- 		if (copied) {
- 			written += sz - copied;
- 			if (written)
-@@ -604,7 +604,7 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
- 				err = -ENXIO;
- 				break;
- 			}
--			n = copy_from_user(kbuf, buf, sz);
-+			n = copy_from_user_to_any(kbuf, buf, sz);
- 			if (n) {
- 				err = -EFAULT;
- 				break;
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 90655910b0c7..367b92ad598b 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -519,11 +519,14 @@ serial_port_out_sync(struct uart_port *p, int offset, int value)
- 	case UPIO_MEM32:
- 	case UPIO_MEM32BE:
- 	case UPIO_AU:
--		p->serial_out(p, offset, value);
-+		/* Writing to random kernel address causes crash. */
-+		if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
-+			p->serial_out(p, offset, value);
- 		p->serial_in(p, UART_LCR);	/* safe, no side-effects */
- 		break;
- 	default:
--		p->serial_out(p, offset, value);
-+		if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
-+			p->serial_out(p, offset, value);
- 	}
- }
- 
-diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-index 15d33fa0c925..367820b8ff59 100644
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -633,6 +633,9 @@ static void k_spec(struct vc_data *vc, unsigned char value, char up_flag)
- 	     kbd->kbdmode == VC_OFF) &&
- 	     value != KVAL(K_SAK))
- 		return;		/* SAK is allowed even in raw mode */
-+	/* Repeating SysRq-t forever causes RCU stalls. */
-+	if (IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
-+		return;
- 	fn_handler[value](vc);
- }
- 
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 2f5e4e5b97e1..f879aa94b118 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -601,6 +601,11 @@ static int ioctl_fsfreeze(struct file *filp)
- 	if (sb->s_op->freeze_fs == NULL && sb->s_op->freeze_super == NULL)
- 		return -EOPNOTSUPP;
- 
-+#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
-+	/* Freezing filesystems causes hung tasks. */
-+	return -EBUSY;
-+#endif
-+
- 	/* Freeze */
- 	if (sb->s_op->freeze_super)
- 		return sb->s_op->freeze_super(sb);
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 67f016010aad..6e5ddd0fdcce 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -387,4 +387,16 @@ void __noreturn usercopy_abort(const char *name, const char *detail,
- 			       unsigned long len);
- #endif
- 
-+#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
-+unsigned long __must_check copy_from_user_to_any(void *to,
-+						 const void __user *from,
-+						 unsigned long n);
-+#else
-+static __always_inline unsigned long __must_check
-+copy_from_user_to_any(void *to, const void __user *from, unsigned long n)
-+{
-+	return copy_from_user(to, from, n);
-+}
-+#endif
-+
- #endif		/* __LINUX_UACCESS_H__ */
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1ef6f75d92f1..9a2f95a78fef 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1198,6 +1198,14 @@ MODULE_PARM_DESC(ignore_loglevel,
- 
- static bool suppress_message_printing(int level)
- {
-+#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
-+	/*
-+	 * Changing console_loglevel causes "no output". But ignoring
-+	 * console_loglevel is easier than preventing change of
-+	 * console_loglevel.
-+	 */
-+	return (level >= CONSOLE_LOGLEVEL_DEFAULT && !ignore_loglevel);
-+#endif
- 	return (level >= console_loglevel && !ignore_loglevel);
- }
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d1842fe756d5..f9836cc23942 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2184,4 +2184,14 @@ config HYPERV_TESTING
- 	help
- 	  Select this option to enable Hyper-V vmbus testing.
- 
-+config KERNEL_BUILT_FOR_FUZZ_TESTING
-+       bool "Build kernel for fuzz testing"
-+       default n
-+       help
-+	 Say N unless you are building kernels for fuzz testing.
-+	 Saying Y here disables several things that legitimately cause
-+	 damage under a fuzzer workload (e.g. copying to arbitrary
-+	 user-specified kernel address, changing console loglevel,
-+	 freezing filesystems).
-+
- endmenu # Kernel hacking
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index cbb4d9ec00f2..f7d5d243a63d 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -86,3 +86,30 @@ int check_zeroed_user(const void __user *from, size_t size)
- 	return -EFAULT;
- }
- EXPORT_SYMBOL(check_zeroed_user);
-+
-+#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
-+/*
-+ * Since copying to arbitrary user-specified kernel address will crash
-+ * the kernel trivially, do not copy to user-specified kernel address
-+ * if the kernel was build for fuzz testing.
-+ */
-+unsigned long __must_check copy_from_user_to_any(void *to,
-+						 const void __user *from,
-+						 unsigned long n)
-+{
-+	static char dummybuf[PAGE_SIZE];
-+	unsigned long ret = 0;
-+
-+	while (n) {
-+		unsigned long size = min(n, sizeof(dummybuf));
-+
-+		ret = copy_from_user(dummybuf, from, size);
-+		if (ret)
-+			break;
-+		from += size;
-+		n -= size;
-+	}
-+	return ret;
-+}
-+EXPORT_SYMBOL(copy_from_user_to_any);
-+#endif
--- 
-2.18.1
+I forgot to update this section.  It contains two evaluation results which has
+no big difference and also describes one test in wrong way (it induced direct
+IO to the ramdisk).  For example, I would like to update this section as below:
 
+    Performance Overhead Test
+    =========================
+    
+    This commit could incur I/O performance degradation under severe memory
+    pressure because the squeezing will require more page allocations per
+    I/O.  To show the overhead, I artificially made a worst-case squeezing
+    situation and measured the I/O performance of a `blkfront` running
+    guest.
+    
+    For the artificial squeezing, I set the `blkback.max_buffer_pages` using
+    the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  In this
+    test, I set the value to `1024` and `0`.  The `1024` is the default
+    value.  Setting the value as `0` is same to a situation doing the
+    squeezing always (worst-case).
+    
+    If the underlying block device is slow enough, the squeezing overhead could
+    be hidden.  For the reason, I use a fast block device, namely the rbd[1]:
+    
+        # xl block-attach guest phy:/dev/ram0 xvdb w
+    
+    For the I/O performance measurement, I run a simple `dd` command 5 times
+    directly to the device as below and collect the 'MB/s' results.
+    
+        $ for i in {1..5}; do dd if=/dev/zero of=/dev/xvdb \
+                                 bs=4k count=$((256*512)); sync; done
+    
+    The results are as below.  'max_pgs' represents the value of the
+    `blkback.max_buffer_pages` parameter.
+    
+        max_pgs   Min       Max       Median     Avg    Stddev
+        0         417       423       420        419.4  2.5099801
+        1024      414       425       416        417.8  4.4384682
+        No difference proven at 95.0% confidence
+    
+    In short, even worst case squeezing on ramdisk based fast block device
+    makes no visible performance degradation.  Please note that this is just a
+    very simple and minimal test.  On systems using super-fast block devices
+    and a special I/O workload, the results might be different.  If you have
+    any doubt, test on your machine with your workload to find the optimal
+    squeezing duration for you.
+    
+    [1] https://www.kernel.org/doc/html/latest/admin-guide/blockdev/ramdisk.html
+
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> 
+> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+
+Appreciate for your reviews.  You made this patch much better!
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks, Roger.
+> 
