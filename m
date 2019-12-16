@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B666C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC9AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FD22176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6780421775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519050;
-	bh=CVQpmsHggTTIIS9+lI4h+PJUbqp97d7qTuyXzomvncQ=;
+	s=default; t=1576519053;
+	bh=eKqDTAxFyxA/lXvzU1Qr7q6anvv1C64wcHPO3SspZ5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeYNS1BNBQk6TF0iSkzVOEsIf5VYTkcPqi5y9ZeUNT79ayN4x6CCisifs6MkNgKey
-	 eT+x8yrucnKNBZNE/DkWaUfRMxG2NFmN8MnbZp9OznUqkf+DohaCG2ZepzcABLMGKv
-	 NGs/oqbfXSv/kydY2IYUMQSVlOOGTYDuAWZRBDDE=
+	b=llnss6uxWq788vgkufnZBoMwizJhivVYCKZQqJz8LL7dkYEnxixt4dM9XD6hoRHl6
+	 NhoyDetWwALq5Dpv+HIKc9Hra+EWdBLJYU/ZqAnU4Ql1rLRbqVKdENBQF5AJjlVf1P
+	 gVQOH8Tn9bwHIY50PwK95fkNpbnNCo02bZnkmsGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfLPR52 (ORCPT
+        id S1728472AbfLPR5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56206 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfLPR5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:24 -0500
+        id S1728438AbfLPR51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDBB320733;
-        Mon, 16 Dec 2019 17:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38958206B7;
+        Mon, 16 Dec 2019 17:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519044;
-        bh=CVQpmsHggTTIIS9+lI4h+PJUbqp97d7qTuyXzomvncQ=;
+        s=default; t=1576519046;
+        bh=eKqDTAxFyxA/lXvzU1Qr7q6anvv1C64wcHPO3SspZ5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YC86IzqRf6rYtG/jJn0azjjB/Jv7PmnaFxew9QQS0MsJMcTedjnJjCyliBgFGDYfv
-         FQ85eqXgWcrEmLHXeqplr+zQ/bAAWGqaM7tZN+evFtrmXeZWg6HU45l1HcxErd+FOx
-         Fnh6A++ggMkbEOFbONY3RpWDgulXZhVjcJk9tA50=
+        b=gVKlVKrWlQBdAEiL8WtxfCQ9qdACq8hj/U5+g/BydiMsyPeTW50g/uf2Hhc+0LlsN
+         KXTkwZAoqBil4L5x78W63IF3odyC+HndJH9eY+olCqrUUGMDklMasqJpuKWBaFrpmA
+         uvlniWagZDPcKncdht0F355VrayjaOI4XBKZu0QE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 171/267] xhci: Increase STS_HALT timeout in xhci_suspend()
-Date:   Mon, 16 Dec 2019 18:48:17 +0100
-Message-Id: <20191216174911.868500975@linuxfoundation.org>
+Subject: [PATCH 4.14 172/267] xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
+Date:   Mon, 16 Dec 2019 18:48:18 +0100
+Message-Id: <20191216174911.925916147@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 7c67cf6658cec70d8a43229f2ce74ca1443dc95e upstream.
+commit 7ff11162808cc2ec66353fc012c58bb449c892c3 upstream.
 
-I've recently observed failed xHCI suspend attempt on AMD Raven Ridge
-system:
-kernel: xhci_hcd 0000:04:00.4: WARN: xHC CMD_RUN timeout
-kernel: PM: suspend_common(): xhci_pci_suspend+0x0/0xd0 returns -110
-kernel: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -110
-kernel: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns -110
-kernel: PM: Device 0000:04:00.4 failed to suspend async: error -110
+xhci driver claims it needs XHCI_TRUST_TX_LENGTH quirk for both
+Broadcom/Cavium and a Renesas xHC controllers.
 
-Similar to commit ac343366846a ("xhci: Increase STS_SAVE timeout in
-xhci_suspend()") we also need to increase the HALT timeout to make it be
-able to suspend again.
+The quirk was inteded for handling false "success" complete event for
+transfers that had data left untransferred.
+These transfers should complete with "short packet" events instead.
 
-Cc: <stable@vger.kernel.org> # 5.2+
-Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+In these two new cases the false "success" completion is reported
+after a "short packet" if the TD consists of several TRBs.
+xHCI specs 4.10.1.1.2 say remaining TRBs should report "short packet"
+as well after the first short packet in a TD, but this issue seems so
+common it doesn't make sense to add the quirk for all vendors.
+
+Turn these events into short packets automatically instead.
+
+This gets rid of the  "The WARN Successful completion on short TX for
+slot 1 ep 1: needs XHCI_TRUST_TX_LENGTH quirk" warning in many cases.
+
+Cc: <stable@vger.kernel.org>
+Reported-by: Eli Billauer <eli.billauer@gmail.com>
+Reported-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Eli Billauer <eli.billauer@gmail.com>
+Tested-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-5-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/20191211142007.8847-6-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-ring.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -908,7 +908,7 @@ static bool xhci_pending_portevent(struc
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup)
- {
- 	int			rc = 0;
--	unsigned int		delay = XHCI_MAX_HALT_USEC;
-+	unsigned int		delay = XHCI_MAX_HALT_USEC * 2;
- 	struct usb_hcd		*hcd = xhci_to_hcd(xhci);
- 	u32			command;
- 	u32			res;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2398,7 +2398,8 @@ static int handle_tx_event(struct xhci_h
+ 	case COMP_SUCCESS:
+ 		if (EVENT_TRB_LEN(le32_to_cpu(event->transfer_len)) == 0)
+ 			break;
+-		if (xhci->quirks & XHCI_TRUST_TX_LENGTH)
++		if (xhci->quirks & XHCI_TRUST_TX_LENGTH ||
++		    ep_ring->last_td_was_short)
+ 			trb_comp_code = COMP_SHORT_PACKET;
+ 		else
+ 			xhci_warn_ratelimited(xhci,
 
 
