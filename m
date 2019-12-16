@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA0EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACBDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CF3206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94D020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519853;
-	bh=+mUDm720vOil5NekTWtSXYLAFxEU5F0beangRkvpLQI=;
+	s=default; t=1576519856;
+	bh=w8DpnLIqefWHHbyN99Kdhz6nhOOdKYSGyPbX7mF7uQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4hwrhZnq19ZTykiBHQDnbhRSH8JG718sZSLuWDcdqUT7RKmzzrCoV3Xu9IZJkgJV
-	 dGBv9m/jHUaA1GKDxw4+ipRV6jUfYlM3/JxpxUs+IBDCNqmVri5Goh+VJwtEanTCeJ
-	 6Y53UfLNH107HNzhdj0yTN4gWIvl1HvHBYBaxkkM=
+	b=2Jw+6p3FZr7cPb09vTjnRrp+Kd6u2omemmFyhpkK4M8aWDPIebNhJ1LpnZJhu2Ilm
+	 AWJTiUd/9I3325RJGYWKmXwSybbiqIqDC6Qs7JPu0rEXUiAT8PqunnFMEJWrdCLFi7
+	 ZUOurrV97W8oye6YgkwYu64YgBLyGdJtQ2i9KJK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbfLPSKw (ORCPT
+        id S1730379AbfLPSK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54276 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730665AbfLPSKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:50 -0500
+        id S1730318AbfLPSKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7460E207FF;
-        Mon, 16 Dec 2019 18:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3500206B7;
+        Mon, 16 Dec 2019 18:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519849;
-        bh=+mUDm720vOil5NekTWtSXYLAFxEU5F0beangRkvpLQI=;
+        s=default; t=1576519852;
+        bh=w8DpnLIqefWHHbyN99Kdhz6nhOOdKYSGyPbX7mF7uQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8cDNcxUVYU/NU+2dM5lLxuLsefCOmyQZOSIq2zwjcZynrpQmJUBEne60KQVKK6Mk
-         Ftg+vg8bUTVT7zGF9JR43+fyyNSTZr0hum3q5QQtc4BLkLfvtVhkpO78hujYeDweyA
-         Y1RzlwJ34Q/aZNgEJ7NrjzWR9iu6LY/JOBuhitwA=
+        b=09W6uUf4s+kgMI1lJo/faNzSxXHxBsTXxqAporPbTnqTngKmLXy9kIh8hqukhNit4
+         ik9WDdv4Gnh5kT24+DQ7r+j95604Moek5yCzBuJEN4zfMnYZw3nJMfZoa2QSNhqnLR
+         CTLq4JXaZEcfUPvA55Vlvj5Ce2k30JDhApNaOTkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 5.3 094/180] erofs: zero out when listxattr is called with no xattr
-Date:   Mon, 16 Dec 2019 18:48:54 +0100
-Message-Id: <20191216174835.001737408@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        "Hariharan T.S." <hari@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 095/180] powerpc/perf: Disable trace_imc pmu
+Date:   Mon, 16 Dec 2019 18:48:55 +0100
+Message-Id: <20191216174835.132489608@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,42 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-commit 926d1650176448d7684b991fbe1a5b1a8289e97c upstream.
+commit 249fad734a25889a4f23ed014d43634af6798063 upstream.
 
-As David reported [1], ENODATA returns when attempting
-to modify files by using EROFS as an overlayfs lower layer.
+When a root user or a user with CAP_SYS_ADMIN privilege uses any
+trace_imc performance monitoring unit events, to monitor application
+or KVM threads, it may result in a checkstop (System crash).
 
-The root cause is that listxattr could return unexpected
--ENODATA by mistake for inodes without xattr. That breaks
-listxattr return value convention and it can cause copy
-up failure when used with overlayfs.
+The cause is frequent switching of the "trace/accumulation" mode of
+the In-Memory Collection hardware (LDBAR).
 
-Resolve by zeroing out if no xattr is found for listxattr.
+This patch disables the trace_imc PMU unit entirely to avoid
+triggering the checkstop. A future patch will reenable it at a later
+stage once a workaround has been developed.
 
-[1] https://lore.kernel.org/r/CAEvUa7nxnby+rxK-KRMA46=exeOMApkDMAV08AjMkkPnTPV4CQ@mail.gmail.com
-Link: https://lore.kernel.org/r/20191201084040.29275-1-hsiangkao@aol.com
-Fixes: cadf1ccf1b00 ("staging: erofs: add error handling for xattr submodule")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Fixes: 012ae244845f ("powerpc/perf: Trace imc PMU functions")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Tested-by: Hariharan T.S. <hari@linux.ibm.com>
+[mpe: Add pr_info_once() so dmesg shows the PMU has been disabled]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191118034452.9939-1-maddy@linux.vnet.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/erofs/xattr.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/powernv/opal-imc.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/erofs/xattr.c
-+++ b/drivers/staging/erofs/xattr.c
-@@ -649,6 +649,8 @@ ssize_t erofs_listxattr(struct dentry *d
- 	struct listxattr_iter it;
- 
- 	ret = init_inode_xattrs(d_inode(dentry));
-+	if (ret == -ENOATTR)
-+		return 0;
- 	if (ret)
- 		return ret;
- 
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -285,7 +285,14 @@ static int opal_imc_counters_probe(struc
+ 			domain = IMC_DOMAIN_THREAD;
+ 			break;
+ 		case IMC_TYPE_TRACE:
+-			domain = IMC_DOMAIN_TRACE;
++			/*
++			 * FIXME. Using trace_imc events to monitor application
++			 * or KVM thread performance can cause a checkstop
++			 * (system crash).
++			 * Disable it for now.
++			 */
++			pr_info_once("IMC: disabling trace_imc PMU\n");
++			domain = -1;
+ 			break;
+ 		default:
+ 			pr_warn("IMC Unknown Device type \n");
 
 
