@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC951C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8931F206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D082082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519907;
-	bh=+TcQCskO8Yxad2UV+B9L/vAH6xNMwSDamhI/wfm7YAM=;
+	s=default; t=1576519911;
+	bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7VXD42u35N2a4p/uihB5re7LvgA93zAFS/aFitmEbYJK7MU0YCC04NItuQ9do3FI
-	 dLkzzE3XwA30t5KRq5X6IT8WAQ+JYHEC5gX7mnxKVRs62X82TaFJ4b42ixqkDnE25d
-	 npYxVAhtTyVTu5p/7WA6lK7eeqoWbux6kSH/rvXI=
+	b=yvWiTpFAO4Wf7xoNKV0bQiRwXfz1FRmf8WGjfpR25BvPJJnNRiuN35YiV0Ikc35U+
+	 69QJ33/CS9Hm+CwLMBGxBxSD0nHqJ8hFjpWy1mcFUL6IBIY9UDI/y67WV3Yw2EO4kE
+	 P49PZs8Y2GnSlBceO6qlHl/keMevz7Qu8wFz+N8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfLPSLq (ORCPT
+        id S1730839AbfLPSLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730148AbfLPSLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:44 -0500
+        id S1730829AbfLPSLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C952206E0;
-        Mon, 16 Dec 2019 18:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8251B206EC;
+        Mon, 16 Dec 2019 18:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519903;
-        bh=+TcQCskO8Yxad2UV+B9L/vAH6xNMwSDamhI/wfm7YAM=;
+        s=default; t=1576519906;
+        bh=zr40ijXVMEOd8x6/Kipd24NfEl4lgp/N8U1A6J9z/vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/5eskF93S5FJ+NRw70wLbEQxKCsJISHINo2QcRxq3oAoyu88QDEVFtxIxTHA4aYu
-         2/o+iKGTfQUv15qpBSVabXqOqE5wPwy5EJ3gXGla/CIt6HAdt2cj5mI+PLT2rlvj3M
-         Bnil/YzBgKJQGG8dOc2xNLBwhN1DpiZ8PkBGqDHw=
+        b=y9NHDSWFKxafetNHyACIFDRjrMngpcYUY8KO4Nnv4tc1lmdKpgiDJ7yDTq0Wng31J
+         hERLRUuD3GSAX0jliTbKlWuE7M4XEo+c211oN020MKQi5w4ispNYFP1SEbMhmEdlcI
+         /43bqqsfrNEi2ztjBCRVRmtUJyIToxzh8ZixR3e4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.3 114/180] pinctrl: samsung: Fix device node refcount leaks in Exynos wakeup controller init
-Date:   Mon, 16 Dec 2019 18:49:14 +0100
-Message-Id: <20191216174839.220927863@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.3 077/180] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
+Date:   Mon, 16 Dec 2019 18:48:37 +0100
+Message-Id: <20191216174830.831310842@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,60 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
 
-commit 5c7f48dd14e892e3e920dd6bbbd52df79e1b3b41 upstream.
+commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
 
-In exynos_eint_wkup_init() the for_each_child_of_node() loop is used
-with a break to find a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+Check for existance of jack before tracing.
+NULL pointer dereference has been reported by KASAN while unloading
+machine driver (snd_soc_cnl_rt274).
 
-Cc: <stable@vger.kernel.org>
-Fixes: 43b169db1841 ("pinctrl: add exynos4210 specific extensions for samsung pinctrl driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ sound/soc/soc-jack.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -506,6 +506,7 @@ int exynos_eint_wkup_init(struct samsung
- 				bank->nr_pins, &exynos_eint_irqd_ops, bank);
- 		if (!bank->irq_domain) {
- 			dev_err(dev, "wkup irq domain add failed\n");
-+			of_node_put(wkup_np);
- 			return -ENXIO;
- 		}
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -100,10 +100,9 @@ void snd_soc_jack_report(struct snd_soc_
+ 	unsigned int sync = 0;
+ 	int enable;
  
-@@ -520,8 +521,10 @@ int exynos_eint_wkup_init(struct samsung
- 		weint_data = devm_kcalloc(dev,
- 					  bank->nr_pins, sizeof(*weint_data),
- 					  GFP_KERNEL);
--		if (!weint_data)
-+		if (!weint_data) {
-+			of_node_put(wkup_np);
- 			return -ENOMEM;
-+		}
+-	trace_snd_soc_jack_report(jack, mask, status);
+-
+ 	if (!jack)
+ 		return;
++	trace_snd_soc_jack_report(jack, mask, status);
  
- 		for (idx = 0; idx < bank->nr_pins; ++idx) {
- 			irq = irq_of_parse_and_map(bank->of_node, idx);
-@@ -538,10 +541,13 @@ int exynos_eint_wkup_init(struct samsung
- 		}
- 	}
+ 	dapm = &jack->card->dapm;
  
--	if (!muxed_banks)
-+	if (!muxed_banks) {
-+		of_node_put(wkup_np);
- 		return 0;
-+	}
- 
- 	irq = irq_of_parse_and_map(wkup_np, 0);
-+	of_node_put(wkup_np);
- 	if (!irq) {
- 		dev_err(dev, "irq number for muxed EINTs not found\n");
- 		return 0;
 
 
