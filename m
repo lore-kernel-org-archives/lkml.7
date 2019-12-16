@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B83C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068ACC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6266520733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF87821582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519008;
-	bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+	s=default; t=1576519011;
+	bh=7v9Nt0umS3gM455BPNBm91enprq0zUj3UrK0FBst+OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNe7NWVRoUW2yXpbJT1OBUaT85dDaBTTFfYesi+096SP16EN+SIitNVFAZkJMU3z8
-	 TwViAx7N5gavEMdCA/HiicMNORzdC0PWwHeFlE6B/4xi4OlPBEUbzha5aYGLdyT24t
-	 /MQ780m6PsUQBh7OQBza9ap5e8LUiaHG2ISk3SI0=
+	b=Y2ys9serFNGzfxws5cCGDhLxcxkesLeRig8wjWCwBxZ5kIKbKlIni1TOpItlYOEpW
+	 M8DbpRaw+jo5UVxdxIM5evJAB+mL0rP5eeR+KVFliwlpxCeey0yNQRbP7dpHzbaaUa
+	 TNhT9iz6ArKqQukCZcUOwahEVBstJJ6qBvkt8kyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfLPR4r (ORCPT
+        id S1727630AbfLPR4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbfLPR4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:43 -0500
+        id S1727908AbfLPR4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88158206B7;
-        Mon, 16 Dec 2019 17:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76007206B7;
+        Mon, 16 Dec 2019 17:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519003;
-        bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+        s=default; t=1576519007;
+        bh=7v9Nt0umS3gM455BPNBm91enprq0zUj3UrK0FBst+OI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4YptT7a9akPE55UlQnVAxG3+Bh3h/fywmrxDkUtZD7wkGjNEZZ0tuvw9QSwLWu0S
-         NAFc70N5STqKlT976g+MaZFdT+ORAo1upUsLZhOxrrqNqEmwoovySpJdPDGjG1t8gk
-         7gwlKENmysD1vHVgtJrcOKurzKgWk5RrH5ZVsKX0=
+        b=WqyDlvGC0mIbNCsGG/SBjzSDfDREAQxgSY76GMDKmuzNlB67TtqzThx/JO9i/IwYI
+         wBepGAsRiUmRknYCOxVdRZ5XQ8jCWTVLbAGK2175gKZDa7mOnItOaGurT6Ed/v8phd
+         OuThhuYoynOe7gICrS+qarHlim3pO5HJbvJBuNew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 156/267] appletalk: Set error code if register_snap_client failed
-Date:   Mon, 16 Dec 2019 18:48:02 +0100
-Message-Id: <20191216174911.038675598@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 4.14 158/267] usb: gadget: pch_udc: fix use after free
+Date:   Mon, 16 Dec 2019 18:48:04 +0100
+Message-Id: <20191216174911.161361692@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,33 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit c93ad1337ad06a718890a89cdd85188ff9a5a5cc upstream.
+commit 66d1b0c0580b7f1b1850ee4423f32ac42afa2e92 upstream.
 
-If register_snap_client fails in atalk_init,
-error code should be set, otherwise it will
-triggers NULL pointer dereference while unloading
-module.
+Remove pointer dereference after free.
 
-Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+pci_pool_free doesn't care about contents of td.
+It's just a void* for it
+
+Addresses-Coverity-ID: 1091173 ("Use after free")
+Cc: stable@vger.kernel.org
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://lore.kernel.org/r/20191106202821.GA20347@embeddedor
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/appletalk/ddp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/pch_udc.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1927,6 +1927,7 @@ static int __init atalk_init(void)
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl) {
- 		pr_crit("Unable to register DDP with SNAP.\n");
-+		rc = -ENOMEM;
- 		goto out_sock;
+--- a/drivers/usb/gadget/udc/pch_udc.c
++++ b/drivers/usb/gadget/udc/pch_udc.c
+@@ -1523,7 +1523,6 @@ static void pch_udc_free_dma_chain(struc
+ 		td = phys_to_virt(addr);
+ 		addr2 = (dma_addr_t)td->next;
+ 		dma_pool_free(dev->data_requests, td, addr);
+-		td->next = 0x00;
+ 		addr = addr2;
  	}
- 
+ 	req->chain_len = 1;
 
 
