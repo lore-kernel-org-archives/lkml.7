@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7A2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63165C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DB92082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA8320726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519374;
-	bh=qQixZ5DrkUJz8IqzDp3njeCQ3LaCkdHq0wq4v/Pznfw=;
+	s=default; t=1576519380;
+	bh=vLGodRCGkCR1avik2p/FRYXEtMWNfbPeLSlc7nWweAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvWIkiiXkMp9ZkWMyBEkkcytFq5OwL2uV/FkeegGYiBZrCtgyhpUc7+0ZJIjwYwSM
-	 r5Xmaw59LpZSnO5q3froasg9bSj9aKnjYwD8tj6HhHvLvk47SSiowV9AhZUiLBijPm
-	 8/YLgmiiPChwexhfG0K+C4tTdHpbnAm19LxKbv5U=
+	b=QT7xS3bMVycXrxsjlIJTetqwMPC/x+lRholNhutpHgTkQRnsEcy0/hEcnlDZdJ7ll
+	 okZawxuZYKydLTb7BVX2u3BLlK7H6+wM4usrvXuQkgXN44wQVgSFEYwHyOLA4JKEbs
+	 TqgXEoyhcHuP2Lu8mH1JrIoTokryRm3dJQEyFxWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfLPSCw (ORCPT
+        id S1729430AbfLPSC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbfLPSCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:50 -0500
+        id S1729392AbfLPSC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB5F207FF;
-        Mon, 16 Dec 2019 18:02:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BB70207FF;
+        Mon, 16 Dec 2019 18:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519370;
-        bh=qQixZ5DrkUJz8IqzDp3njeCQ3LaCkdHq0wq4v/Pznfw=;
+        s=default; t=1576519374;
+        bh=vLGodRCGkCR1avik2p/FRYXEtMWNfbPeLSlc7nWweAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bMhFrnvEeJp5Q92Jufo9FOYjRItEA8HD6U5X79a4o3nrx3cWUNd/K7PVA/iQYKwLX
-         YnKWkTtWIhCNih7ijU4ifrdaMMFMIUyxDE1oofnaavXIh5ZwPOLBh8xBc6B6q5aR4L
-         cOhpEyMy3ne+N8zXxbU8pyit2/cXh+Ohz/F3hfb8=
+        b=BAH8kWybHUNmOKQ28tUCUguc/nsN+bD7lBX6dQ1nXW/7ZQChMitSERLlAoES+w5W0
+         Vw6Q3M7rEt27punXXkn2oVpKd4y5C1P6AzlDfraghr1TM2YmWa2y1taJkhX3l5nWA5
+         EXsCxk2EtYxsYUcpLn8uaB8psjjNGbzR6J27CyVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 037/140] btrfs: use refcount_inc_not_zero in kill_all_nodes
-Date:   Mon, 16 Dec 2019 18:48:25 +0100
-Message-Id: <20191216174759.213503369@linuxfoundation.org>
+Subject: [PATCH 4.19 039/140] Btrfs: fix negative subv_writers counter and data space leak after buffered write
+Date:   Mon, 16 Dec 2019 18:48:27 +0100
+Message-Id: <20191216174759.596315852@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,67 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit baf320b9d531f1cfbf64c60dd155ff80a58b3796 upstream.
+commit a0e248bb502d5165b3314ac3819e888fdcdf7d9f upstream.
 
-We hit the following warning while running down a different problem
+When doing a buffered write it's possible to leave the subv_writers
+counter of the root, used for synchronization between buffered nocow
+writers and snapshotting. This happens in an exceptional case like the
+following:
 
-[ 6197.175850] ------------[ cut here ]------------
-[ 6197.185082] refcount_t: underflow; use-after-free.
-[ 6197.194704] WARNING: CPU: 47 PID: 966 at lib/refcount.c:190 refcount_sub_and_test_checked+0x53/0x60
-[ 6197.521792] Call Trace:
-[ 6197.526687]  __btrfs_release_delayed_node+0x76/0x1c0
-[ 6197.536615]  btrfs_kill_all_delayed_nodes+0xec/0x130
-[ 6197.546532]  ? __btrfs_btree_balance_dirty+0x60/0x60
-[ 6197.556482]  btrfs_clean_one_deleted_snapshot+0x71/0xd0
-[ 6197.566910]  cleaner_kthread+0xfa/0x120
-[ 6197.574573]  kthread+0x111/0x130
-[ 6197.581022]  ? kthread_create_on_node+0x60/0x60
-[ 6197.590086]  ret_from_fork+0x1f/0x30
-[ 6197.597228] ---[ end trace 424bb7ae00509f56 ]---
+1) We fail to allocate data space for the write, since there's not
+   enough available data space nor enough unallocated space for allocating
+   a new data block group;
 
-This is because the free side drops the ref without the lock, and then
-takes the lock if our refcount is 0.  So you can have nodes on the tree
-that have a refcount of 0.  Fix this by zero'ing out that element in our
-temporary array so we don't try to kill it again.
+2) Because of that failure, we try to go to NOCOW mode, which succeeds
+   and therefore we set the local variable 'only_release_metadata' to true
+   and set the root's sub_writers counter to 1 through the call to
+   btrfs_start_write_no_snapshotting() made by check_can_nocow();
 
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+3) The call to btrfs_copy_from_user() returns zero, which is very unlikely
+   to happen but not impossible;
+
+4) No pages are copied because btrfs_copy_from_user() returned zero;
+
+5) We call btrfs_end_write_no_snapshotting() which decrements the root's
+   subv_writers counter to 0;
+
+6) We don't set 'only_release_metadata' back to 'false' because we do
+   it only if 'copied', the value returned by btrfs_copy_from_user(), is
+   greater than zero;
+
+7) On the next iteration of the while loop, which processes the same
+   page range, we are now able to allocate data space for the write (we
+   got enough data space released in the meanwhile);
+
+8) After this if we fail at btrfs_delalloc_reserve_metadata(), because
+   now there isn't enough free metadata space, or in some other place
+   further below (prepare_pages(), lock_and_cleanup_extent_if_need(),
+   btrfs_dirty_pages()), we break out of the while loop with
+   'only_release_metadata' having a value of 'true';
+
+9) Because 'only_release_metadata' is 'true' we end up decrementing the
+   root's subv_writers counter to -1 (through a call to
+   btrfs_end_write_no_snapshotting()), and we also end up not releasing the
+   data space previously reserved through btrfs_check_data_free_space().
+   As a consequence the mechanism for synchronizing NOCOW buffered writes
+   with snapshotting gets broken.
+
+Fix this by always setting 'only_release_metadata' to false at the start
+of each iteration.
+
+Fixes: 8257b2dc3c1a ("Btrfs: introduce btrfs_{start, end}_nocow_write() for each subvolume")
+Fixes: 7ee9e4405f26 ("Btrfs: check if we can nocow if we don't have data space")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
-[ add comment ]
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/delayed-inode.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/btrfs/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -1939,12 +1939,19 @@ void btrfs_kill_all_delayed_nodes(struct
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1636,6 +1636,7 @@ static noinline ssize_t btrfs_buffered_w
+ 			break;
  		}
  
- 		inode_id = delayed_nodes[n - 1]->inode_id + 1;
--
--		for (i = 0; i < n; i++)
--			refcount_inc(&delayed_nodes[i]->refs);
-+		for (i = 0; i < n; i++) {
-+			/*
-+			 * Don't increase refs in case the node is dead and
-+			 * about to be removed from the tree in the loop below
-+			 */
-+			if (!refcount_inc_not_zero(&delayed_nodes[i]->refs))
-+				delayed_nodes[i] = NULL;
-+		}
- 		spin_unlock(&root->inode_lock);
- 
- 		for (i = 0; i < n; i++) {
-+			if (!delayed_nodes[i])
-+				continue;
- 			__btrfs_kill_delayed_node(delayed_nodes[i]);
- 			btrfs_release_delayed_node(delayed_nodes[i]);
++		only_release_metadata = false;
+ 		sector_offset = pos & (fs_info->sectorsize - 1);
+ 		reserve_bytes = round_up(write_bytes + sector_offset,
+ 				fs_info->sectorsize);
+@@ -1791,7 +1792,6 @@ again:
+ 			set_extent_bit(&BTRFS_I(inode)->io_tree, lockstart,
+ 				       lockend, EXTENT_NORESERVE, NULL,
+ 				       NULL, GFP_NOFS);
+-			only_release_metadata = false;
  		}
+ 
+ 		btrfs_drop_pages(pages, num_pages);
 
 
