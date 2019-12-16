@@ -2,43 +2,43 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31678C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF35CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AC3206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B36C20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503499;
-	bh=Iu98Oy5TZm+H1asM/smrTrfPFvEBzeFkzFr8AMmXZXk=;
+	s=default; t=1576503520;
+	bh=shI0lUnBWDuONPZWYfqSGhPOhXNDA+SfJVRhGbQY6Xw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Zx2vXz8uCXmMA9cOJifkDyDY1dW3LS+gAyfERoer3IR11s0OsBrkfmDb3fT5dKzL
-	 JjwyEMqDh6flakHPZMKkretoPtFxGQXBymW0AYGoyS9W91Ra9+TdiNMXqCNQdyQS59
-	 IG82jBcUB2ySukQRYpTB7fHDO1Zuf7RRDK6v3oMU=
+	b=Ff/wEy9St+fBbpd3H9yIuhUCDEiLJiAfzm5dJMjla6IL4imoTXQyS7GYvaLOPNO8n
+	 SFicM1xQt/p3lSvQgwyQHx69AoMLKNmiVTsuKP5t73o1aL2lH1k++/DOHQI1tS92IS
+	 wkiTv06PQt9ICYj6wu3SZIOmb+NccIauB9iKuAGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfLPNiS (ORCPT
+        id S1727925AbfLPNik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:38:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46614 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 08:38:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfLPNiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:38:17 -0500
+        id S1727557AbfLPNij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:38:39 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB5A206A5;
-        Mon, 16 Dec 2019 13:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68705206A5;
+        Mon, 16 Dec 2019 13:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503496;
-        bh=Iu98Oy5TZm+H1asM/smrTrfPFvEBzeFkzFr8AMmXZXk=;
+        s=default; t=1576503518;
+        bh=shI0lUnBWDuONPZWYfqSGhPOhXNDA+SfJVRhGbQY6Xw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qLoRzPiAgHrMoOeQlq47u2JMMsF+kaN6ulynlbG1cRyJ7s2WQ+gZ9zfgmw3qdh7sv
-         myCIG83Rfn3FSh1WmEl5AH2BfMtLbkWPKDglHU66akHYiVDCTmO2Ep7X01WYXQ8I12
-         04mRGGadq8HC3/+ky2NASgJcq/3lws8PZ0xtYJTs=
-Date:   Mon, 16 Dec 2019 14:38:14 +0100
+        b=UttEaSKeMmq7uNC2LPGQ067DE+umu9bQ9JgGGDcjUIl3d40CeYzZFihVV7vaeKa+U
+         XfCAudFleagC55ea2i5XWF84QZer3HDLZc9f1oep55imPczhTnxcbZ1AMYC6o42Acm
+         Ibp/Qt935MDXGb9HDPOFujM1lj2mZrBvdTydBQQI=
+Date:   Mon, 16 Dec 2019 14:38:36 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -48,88 +48,65 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 05/14] media: sun4i-csi: Deal with DRAM offset
-Message-ID: <20191216133814.hozcgdrnqe6tim36@gilmour.lan>
+Subject: Re: [PATCH 06/14] media: sun4i-csi: Add support for A10 CSI1 camera
+ sensor interface
+Message-ID: <20191216133836.n4sej7jqhzwxljnl@gilmour.lan>
 References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-6-wens@kernel.org>
+ <20191215165924.28314-7-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f4vwh4csed7tzwjp"
+        protocol="application/pgp-signature"; boundary="qxmpdqzztr46q3kx"
 Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-6-wens@kernel.org>
+In-Reply-To: <20191215165924.28314-7-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---f4vwh4csed7tzwjp
+--qxmpdqzztr46q3kx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Dec 16, 2019 at 12:59:15AM +0800, Chen-Yu Tsai wrote:
+On Mon, Dec 16, 2019 at 12:59:16AM +0800, Chen-Yu Tsai wrote:
 > From: Chen-Yu Tsai <wens@csie.org>
 >
-> On Allwinner SoCs, some high memory bandwidth devices do DMA directly
-> over the memory bus (called MBUS), instead of the system bus. These
-> devices include the CSI camera sensor interface, video (codec) engine,
-> display subsystem, etc.. The memory bus has a different addressing
-> scheme without the DRAM starting offset.
+> The A10/A20 Allwinner SoCs have two camera sensor interface blocks,
+> named CSI0 and CSI1. The two have the same register layouts with
+> slightly different features:
 >
-> Deal with this using the "interconnects" property from the device tree,
-> or if that is not available, set dev->dma_pfn_offset to PHYS_PFN_OFFSET.
+>   - CSI0 has an image signal processor (ISP); CSI1 doesn't
 >
-> Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
+>   - CSI0 can support up to four separate channels under CCIR656;
+>     CSI1 can only support one
+>
+>   - CSI0 can support up to 16-bit wide bus with YUV422;
+>     CSI1 can support up to 24-bit wide bus with YUV444
+>
+> For now the driver doesn't support wide busses, nor CCIR656. So the
+> only relevant difference is whether a clock needs to be taken and
+> enabled for the ISP.
+>
+> Add structs to record the differences, tie them to the compatible
+> strings, and deal with the ISP clock. Support for the new CSI1
+> hardware block is added as well.
+>
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
 Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> ---
->  .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> index f36dc6258900..b8b07c1de2a8 100644
-> --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> @@ -11,6 +11,7 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_graph.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> @@ -155,6 +156,27 @@ static int sun4i_csi_probe(struct platform_device *pdev)
->  	subdev = &csi->subdev;
->  	vdev = &csi->vdev;
->
-> +	/*
-> +	 * On Allwinner SoCs, some high memory bandwidth devices do DMA
-> +	 * directly over the memory bus (called MBUS), instead of the
-> +	 * system bus. The memory bus has a different addressing scheme
-> +	 * without the DRAM starting offset.
-> +	 *
-> +	 * In some cases this can be described by an interconnect in
-> +	 * the device tree. In other cases where the hardware is not
-> +	 * fully understood and the interconnect is left out of the
-> +	 * device tree, fall back to a default offset.
-> +	 */
-
-Though we should probably mention the DT-backward-compatibility case
-here too.
-
+Thanks!
 Maxime
 
---f4vwh4csed7tzwjp
+--qxmpdqzztr46q3kx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeIxgAKCRDj7w1vZxhR
-xSYlAP4uGoz1Ce+9iej57ZZmMWf4/Tv6JmIocroCOLYz9/kGmgEAlLfgpLkvr3sQ
-xO02B/RijIIY2oIzaS23VHo7I+iAtgs=
-=/CRW
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeI3AAKCRDj7w1vZxhR
+xVSBAP9m2gsGlN6svjB7zDFDDm9ZKaScsYn4Qk0eM3z4TyWE/QD/eKqz3SoIImtb
+BN2EcgJHtWC+oJn4pHEYxoCeDYV5IA8=
+=w2qB
 -----END PGP SIGNATURE-----
 
---f4vwh4csed7tzwjp--
+--qxmpdqzztr46q3kx--
