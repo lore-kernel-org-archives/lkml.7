@@ -2,142 +2,211 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844F1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FF5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7C324673
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D2424655
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfLPVm5 (ORCPT
+        id S1727629AbfLPVnx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:42:57 -0500
-Received: from mga06.intel.com ([134.134.136.31]:3598 "EHLO mga06.intel.com"
+        Mon, 16 Dec 2019 16:43:53 -0500
+Received: from mga03.intel.com ([134.134.136.65]:65082 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfLPVm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:42:57 -0500
+        id S1726891AbfLPVnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 16:43:53 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:42:55 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:43:52 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208,223";a="209457143"
-Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:42:55 -0800
-From:   Tony Luck <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/cpufeatures: Add support for fast short rep mov
-Date:   Mon, 16 Dec 2019 13:42:54 -0800
-Message-Id: <20191216214254.26492-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191212225210.GA22094@zn.tnic>
-References: <20191212225210.GA22094@zn.tnic>
+   d="scan'208";a="416594399"
+Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Dec 2019 13:43:50 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Po Liu <po.liu@nxp.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
+        "allison\@lohutok.net" <allison@lohutok.net>,
+        "andrew\@lunn.ch" <andrew@lunn.ch>,
+        "ayal\@mellanox.com" <ayal@mellanox.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
+        "jiri\@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo\@netfilter.org" <pablo@netfilter.org>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     "simon.horman\@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: RE: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
+In-Reply-To: <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
+Date:   Mon, 16 Dec 2019 13:44:13 -0800
+Message-ID: <87eex43pzm.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the Intel Optimization Reference Manual:
+Hi Po,
 
-3.7.6.1 Fast Short REP MOVSB
-Beginning with processors based on Ice Lake Client microarchitecture,
-REP MOVSB performance of short operations is enhanced. The enhancement
-applies to string lengths between 1 and 128 bytes long.  Support for
-fast-short REP MOVSB is enumerated by the CPUID feature flag: CPUID
-[EAX=7H, ECX=0H).EDX.FAST_SHORT_REP_MOVSB[bit 4] = 1. There is no change
-in the REP STOS performance.
+Po Liu <po.liu@nxp.com> writes:
 
-Add an X86_FEATURE_FSRM flag for this.
+> Hi Andre,
+>
+>
+> Br,
+> Po Liu
+>
+>> -----Original Message-----
+>> From: Andre Guedes <andre.guedes@linux.intel.com>
+>> Sent: 2019年12月11日 10:53
+>> To: alexandru.ardelean@analog.com; allison@lohutok.net; andrew@lunn.ch;
+>> ayal@mellanox.com; davem@davemloft.net; f.fainelli@gmail.com;
+>> gregkh@linuxfoundation.org; hauke.mehrtens@intel.com;
+>> hkallweit1@gmail.com; jiri@mellanox.com; linux-kernel@vger.kernel.org;
+>> netdev@vger.kernel.org; pablo@netfilter.org; saeedm@mellanox.com;
+>> tglx@linutronix.de; Po Liu <po.liu@nxp.com>
+>> Cc: vinicius.gomes@intel.com; simon.horman@netronome.com; Claudiu Manoil
+>> <claudiu.manoil@nxp.com>; Vladimir Oltean <vladimir.oltean@nxp.com>;
+>> Alexandru Marginean <alexandru.marginean@nxp.com>; Xiaoliang Yang
+>> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
+>> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
+>> <leoyang.li@nxp.com>; Po Liu <po.liu@nxp.com>
+>> Subject: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
+>> traffic classes
+>> 
+>> Caution: EXT Email
+>> 
+>> Hi Po,
+>> 
+>> Quoting Po Liu (2019-11-27 01:59:18)
+>> > IEEE Std 802.1Qbu standard defined the frame preemption of port
+>> > traffic classes. This patch introduce a method to set traffic classes
+>> > preemption. Add a parameter 'preemption' in struct
+>> > ethtool_link_settings. The value will be translated to a binary, each
+>> > bit represent a traffic class. Bit "1" means preemptable traffic
+>> > class. Bit "0" means express traffic class.  MSB represent high number
+>> > traffic class.
+>> >
+>> > If hardware support the frame preemption, driver could set the
+>> > ethernet device with hw_features and features with NETIF_F_PREEMPTION
+>> > when initializing the port driver.
+>> >
+>> > User can check the feature 'tx-preemption' by command 'ethtool -k
+>> > devname'. If hareware set preemption feature. The property would be a
+>> > fixed value 'on' if hardware support the frame preemption.
+>> > Feature would show a fixed value 'off' if hardware don't support the
+>> > frame preemption.
 
-memmove() avoids REP MOVSB for short (< 32 byte) copies. Fix it
-to check FSRM and use REP MOVSB for short copies on systems that
-support it.
+Having some knobs in ethtool to enable when/how Frame Preemption is
+advertised on the wire makes sense. I also agree that it should be "on"
+by default.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+>> >
+>> > Command 'ethtool devname' and 'ethtool -s devname preemption N'
+>> > would show/set which traffic classes are frame preemptable.
+>> >
+>> > Port driver would implement the frame preemption in the function
+>> > get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
+>> 
+>> In an early RFC series [1], we proposed a way to support frame preemption. I'm
+>> not sure if you have considered it before implementing this other proposal
+>> based on ethtool interface so I thought it would be a good idea to bring that up
+>> to your attention, just in case.
+>  
+> Sorry, I didn't notice the RFC proposal. Using ethtool set the
+> preemption just thinking about 8021Qbu as standalone. And not limit to
+> the taprio if user won't set 802.1Qbv.
 
----
+I see your point of using frame-preemption "standalone", I have two
+ideas:
 
-Time (cycles) for memmove() sizes 1..31 with neither source nor
-destination in cache.
+ 1. add support in taprio to be configured without any schedule in the
+ "full offload" mode. In practice, allowing taprio to work somewhat
+ similar to (mqprio + frame-preemption), changes in the code should de
+ fairly small;
 
-  1800 +-+-------+--------+---------+---------+---------+--------+-------+-+
-       +         +        +         +         +         +        +         +
-  1600 +-+                                          'memmove-fsrm' *******-+
-       |   ######                                   'memmove-orig' ####### |
-  1400 +-+ #     #####################                                   +-+
-       |   #                          ############                         |
-  1200 +-+#                                       ##################     +-+
-       |  #                                                                |
-  1000 +-+#                                                              +-+
-       |  #                                                                |
-       | #                                                                 |
-   800 +-#                                                               +-+
-       | #                                                                 |
-   600 +-***********************                                         +-+
-       |                        *****************************              |
-   400 +-+                                                   *******     +-+
-       |                                                                   |
-   200 +-+                                                               +-+
-       +         +        +         +         +         +        +         +
-     0 +-+-------+--------+---------+---------+---------+--------+-------+-+
-       0         5        10        15        20        25       30        35
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/lib/memmove_64.S          | 6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ 2. extend mqprio to support frame-preemption;
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index e9b62498fe75..98c60fa31ced 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -357,6 +357,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_FSRM		(18*32+ 4) /* Fast Short Rep Mov */
- #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
- #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
-diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
-index 337830d7a59c..4a23086806e6 100644
---- a/arch/x86/lib/memmove_64.S
-+++ b/arch/x86/lib/memmove_64.S
-@@ -29,10 +29,7 @@
- SYM_FUNC_START_ALIAS(memmove)
- SYM_FUNC_START(__memmove)
- 
--	/* Handle more 32 bytes in loop */
- 	mov %rdi, %rax
--	cmp $0x20, %rdx
--	jb	1f
- 
- 	/* Decide forward/backward copy mode */
- 	cmp %rdi, %rsi
-@@ -43,6 +40,7 @@ SYM_FUNC_START(__memmove)
- 	jg 2f
- 
- .Lmemmove_begin_forward:
-+	ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
- 	ALTERNATIVE "", "movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
- 
- 	/*
-@@ -114,6 +112,8 @@ SYM_FUNC_START(__memmove)
- 	 */
- 	.p2align 4
- 2:
-+	cmp $0x20, %rdx
-+	jb	1f
- 	cmp $680, %rdx
- 	jb 6f
- 	cmp %dil, %sil
--- 
-2.20.1
+>
+> As some feedback  also want to set the MAC merge minimal fragment size
+> and get some more information of 802.3br.
 
+The minimal fragment size, I guess, also makes sense to be kept in
+ethtool. That is we have a sane default, and allow the user to change
+this setting for special cases.
+
+>
+>> 
+>> In that initial proposal, Frame Preemption feature is configured via taprio qdisc.
+>> For example:
+>> 
+>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>       num_tc 3 \
+>>       map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+>>       queues 1@0 1@1 2@2 \
+>>       preemption 0 1 1 1 \
+>>       base-time 10000000 \
+>>       sched-entry S 01 300000 \
+>>       sched-entry S 02 300000 \
+>>       sched-entry S 04 400000 \
+>>       clockid CLOCK_TAI
+>> 
+>> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
+>> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
+>> 802.1Q-2018 for further details.
+>  
+> I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
+> could be understand as guardband by hardware preemption. MAC should
+> auto calculate the nano seconds before  express entry slot start to
+> break to two fragments. Set-And-Hold-MAC should minimal larger than
+> the fragment-size oct times.
+
+Another interesting point. My first idea is that when the schedule is
+offloaded to the driver and the driver detects that the "entry" width is
+smaller than the fragment side, the driver could reject that schedule
+with a nice error message.
+
+>
+>> 
+>> Please share your thoughts on this.
+>
+> I am good to see there is frame preemption proposal. Each way is ok
+> for me but ethtool is more flexible. I've seen the RFC the code. The
+> hardware offload is in the mainline, but preemption is not yet, I
+> don't know why. Could you post it again?
+
+It's not mainline because this kind of stuff will not be accepted
+upstream without in-tree users. And you are the first one to propose
+such a thing :-)
+
+It's just now that I have something that supports frame-preemption, the
+code I have is approaching RFC-like quality. I will send another RFC
+this week hopefully, and we can see how things look in practice.
+
+
+Cheers,
+--
+Vinicius
