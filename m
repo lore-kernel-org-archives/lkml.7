@@ -2,53 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8810C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9271C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE83206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8788E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521754;
-	bh=c3op8XXqjMLB5WUnGVDuddbg3J5XoBfQlQDNADyb73s=;
+	s=default; t=1576521757;
+	bh=PjRTivSThzWAPtY8BdWGvjX8V2EKIO+0ggdCBxpSkCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G7cNYKidfWQhcXx0z4jpudmCN/RiZb+3vacPoRqeCsWa4MqOCmtuYFh2J8B5cPvRe
-	 OlAJFNN5TmGdkD7ytEs8iQHj9W2iP+yaVRjCvSBYcLgT+LBngeq4+oisrQsdRbAFeQ
-	 NkyJTzWL7f4XrXK14uSoVRS4HAFnk3DqhFjP7Shc=
+	b=rR4d3RVYFnGQA6G5+girZ9AKsEc5Yn8+D4b0AGuspoLK913BFETyeDFFTCkDZkLnX
+	 yS0NBY+B4EcgOh8sEgO6ncJP3cGGPCyVXlZZ4BhOQDYmkDPb5N8Mi8ZIebsGuPOWT3
+	 FbjraO24TbnaNPKGwZP3V0hVt5pKoBheVpmu7kdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfLPSmd (ORCPT
+        id S1728914AbfLPSAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34222 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbfLPSAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:17 -0500
+        id S1728896AbfLPSAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFE4207FF;
-        Mon, 16 Dec 2019 18:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7617D206B7;
+        Mon, 16 Dec 2019 18:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519216;
-        bh=c3op8XXqjMLB5WUnGVDuddbg3J5XoBfQlQDNADyb73s=;
+        s=default; t=1576519211;
+        bh=PjRTivSThzWAPtY8BdWGvjX8V2EKIO+0ggdCBxpSkCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nv360pR/ADI0WvFIbhFpLOTq16ZOUcXCHCNmDbcmiHJUd8abtYnvDvjDtujbgFgXO
-         KDhEKM26fz+vCJR3lWL7+Ab2IYjocxZ+Uu293g8EEUqwCZS+LJFzunXFF4Njh669L6
-         XK3FsMD8UzzmDGoa6mrP4dvf3U4eg4PvCjf7vTAU=
+        b=CQcM2WvMEkFzk8MIHbXs+8EVg22+9mrg4zFUkOI1vdfu2grN1jjhnunIrvN+pP1aH
+         DqRFOSpIMOkkLojlsTiyenyC+Nu3VZW0nvIhCV9nKVFQ7OcTXt7xR8BYje+d3xYQiW
+         5w6XyHm38AI/hccX15sFdb0G6LaNmwzYx8Dx6aBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 244/267] xhci: Fix memory leak in xhci_add_in_port()
-Date:   Mon, 16 Dec 2019 18:49:30 +0100
-Message-Id: <20191216174915.921810425@linuxfoundation.org>
+Subject: [PATCH 4.14 242/267] scsi: qla2xxx: Always check the qla2x00_wait_for_hba_online() return value
+Date:   Mon, 16 Dec 2019 18:49:28 +0100
+Message-Id: <20191216174915.811245126@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,88 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit ce91f1a43b37463f517155bdfbd525eb43adbd1a ]
+[ Upstream commit e6803efae5acd109fad9f2f07dab674563441a53 ]
 
-When xHCI is part of Alpine or Titan Ridge Thunderbolt controller and
-the xHCI device is hot-removed as a result of unplugging a dock for
-example, the driver leaks memory it allocates for xhci->usb3_rhub.psi
-and xhci->usb2_rhub.psi in xhci_add_in_port() as reported by kmemleak:
+This patch fixes several Coverity complaints about not always checking
+the qla2x00_wait_for_hba_online() return value.
 
-unreferenced object 0xffff922c24ef42f0 (size 16):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 16 bytes):
-    21 00 0c 00 12 00 dc 05 23 00 e0 01 00 00 00 00  !.......#.......
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
-unreferenced object 0xffff922c24ef3318 (size 8):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 8 bytes):
-    34 01 05 00 35 41 0a 00                          4...5A..
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
-
-Fix this by calling kfree() for the both psi objects in
-xhci_mem_cleanup().
-
-Cc: <stable@vger.kernel.org> # 4.4+
-Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-mem.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/qla2xxx/qla_attr.c   | 3 ++-
+ drivers/scsi/qla2xxx/qla_target.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1866,10 +1866,14 @@ no_bw:
- 	kfree(xhci->port_array);
- 	kfree(xhci->rh_bw);
- 	kfree(xhci->ext_caps);
-+	kfree(xhci->usb2_rhub.psi);
-+	kfree(xhci->usb3_rhub.psi);
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 1844c2f594605..656253285db9d 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -652,7 +652,8 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
+ 			break;
+ 		} else {
+ 			/* Make sure FC side is not in reset */
+-			qla2x00_wait_for_hba_online(vha);
++			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
++				     QLA_SUCCESS);
  
- 	xhci->usb2_ports = NULL;
- 	xhci->usb3_ports = NULL;
- 	xhci->port_array = NULL;
-+	xhci->usb2_rhub.psi = NULL;
-+	xhci->usb3_rhub.psi = NULL;
- 	xhci->rh_bw = NULL;
- 	xhci->ext_caps = NULL;
+ 			/* Issue MPI reset */
+ 			scsi_block_requests(vha->host);
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 2f5658554275c..69ed544d80ef0 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -6394,7 +6394,8 @@ qlt_enable_vha(struct scsi_qla_host *vha)
+ 	} else {
+ 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
+ 		qla2xxx_wake_dpc(base_vha);
+-		qla2x00_wait_for_hba_online(base_vha);
++		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
++			     QLA_SUCCESS);
+ 	}
+ }
+ EXPORT_SYMBOL(qlt_enable_vha);
+@@ -6424,7 +6425,9 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
  
+ 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+ 	qla2xxx_wake_dpc(vha);
+-	qla2x00_wait_for_hba_online(vha);
++	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
++		ql_dbg(ql_dbg_tgt, vha, 0xe081,
++		       "qla2x00_wait_for_hba_online() failed\n");
+ }
+ 
+ /*
+-- 
+2.20.1
+
 
 
