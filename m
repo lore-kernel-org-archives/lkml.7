@@ -7,181 +7,196 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66440C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABDC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A42521D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BED2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fpQ2xygm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/6qph6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfLPWlr (ORCPT
+        id S1726928AbfLPWw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:41:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:37494 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfLPWlq (ORCPT
+        Mon, 16 Dec 2019 17:52:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26212 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726448AbfLPWw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:41:46 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBGMY7F5085443;
-        Mon, 16 Dec 2019 22:40:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=utHCjfqt2C6hjz6GKGBiHdj8ODiq5ltxzbVwQ8evxhE=;
- b=fpQ2xygmJhFW6M1fivA5ceukacwOJRe3dsaprlTZzIGO0yZKyauj+7IU4Da/2P6KoXKg
- kWXb73NLHdiDOrqm4Cgiht72ifB2iueMGpgNVjyazURXyENGtXfN4VEyJSZjZsuT4OtG
- TSjIGYCFpb5iYP5bBjsQ75Y0+oSGeb16lmOnpchQ2ufr71WiqqYB9SKuPYnWv6yFaNtt
- 1xg6zUk0HnAMG93mdV7+/xxQVGoBFdxh2erSmVN3h0xi0k68Hyi8EI0eN+UQa+yoRwbt
- ieBEHJsGKJgDAoDEVMc9hxSXWtj0ZX5O5YBFX/zJx53unKn6nvaevvkITxs01olsvire Dw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wvqpq2n86-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 22:40:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBGMdHGn042093;
-        Mon, 16 Dec 2019 22:40:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2ww98tpv13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 22:40:27 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBGMeNRW003056;
-        Mon, 16 Dec 2019 22:40:23 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 16 Dec 2019 14:40:23 -0800
+        Mon, 16 Dec 2019 17:52:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576536744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sprdJbzrcYgB8goX1vCpRjORoPnAOw6aRMXZkfaGarU=;
+        b=Z/6qph6Yw3sC3AYXY4ngeLbrwFUDKnL3xKhhhQpDqLkzoeTH/lWJJPfW/1Xbi6O2+/ZhLf
+        CsEmwxa6J6DNqm3xynUOhjf488XxM70KkcZbsGuD+jAMUu8Vs2jo7CSfjJ+eyyp8yEEPET
+        e2nlw/+/p5PT8URPHlBCgecj2jTi2cc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-Uo-WBHi9NR21aGRkvdF4aw-1; Mon, 16 Dec 2019 17:52:20 -0500
+X-MC-Unique: Uo-WBHi9NR21aGRkvdF4aw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 137131854331;
+        Mon, 16 Dec 2019 22:52:19 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-151.rdu2.redhat.com [10.10.120.151])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA3905C1B0;
+        Mon, 16 Dec 2019 22:52:17 +0000 (UTC)
 Subject: Re: [PATCH] mm/hugetlb: Defer freeing of huge pages if in non-task
  context
-To:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Matthew Wilcox <willy@infradead.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Andi Kleen <ak@linux.intel.com>,
         Michal Hocko <mhocko@kernel.org>
 References: <20191216182739.26880-1-longman@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <530afa00-4da9-61cd-d1f3-66803bcd30e6@oracle.com>
-Date:   Mon, 16 Dec 2019 14:40:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ <20191216135110.b6fb283ba5551c8cfb22494e@linux-foundation.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a4789a59-d54e-2052-bd4d-3ab44a9726b6@redhat.com>
+Date:   Mon, 16 Dec 2019 17:52:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191216182739.26880-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191216135110.b6fb283ba5551c8cfb22494e@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9473 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912160189
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9473 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912160189
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 10:27 AM, Waiman Long wrote:
-> The following lockdep splat was observed when a certain hugetlbfs test
-> was run:
-<snip>
-> This patch implements the deferred freeing by adding a
-> free_hpage_workfn() work function to do the actual freeing. The
-> free_huge_page() call in a non-task context saves the page to be freed
-> in the hpage_freelist linked list in a lockless manner.
-> 
-> The generic workqueue is used to process the work, but a dedicated
-> workqueue can be used instead if it is desirable to have the huge page
-> freed ASAP.
-> 
-<snip>
->  
-> +/*
-> + * As free_huge_page() can be called from a non-task context, we have
-> + * to defer the actual freeing in a workqueue to prevent potential
-> + * hugetlb_lock deadlock.
-> + *
-> + * free_hpage_workfn() locklessly retrieves the linked list of pages to
-> + * be freed and frees them one-by-one. As the page->mapping pointer is
-> + * going to be cleared in __free_huge_page() anyway, it is reused as the
-> + * next pointer of a singly linked list of huge pages to be freed.
-> + */
-> +#define NEXT_PENDING	((struct page *)-1)
-> +static struct page *hpage_freelist;
-> +
-> +static void free_hpage_workfn(struct work_struct *work)
-> +{
-> +	struct page *curr, *next;
-> +	int cnt = 0;
-> +
-> +	do {
-> +		curr = xchg(&hpage_freelist, NULL);
-> +		if (!curr)
-> +			break;
-> +
-> +		while (curr) {
-> +			next = (struct page *)READ_ONCE(curr->mapping);
-> +			if (next == NEXT_PENDING) {
-> +				cpu_relax();
-> +				continue;
-> +			}
-> +			__free_huge_page(curr);
-> +			curr = next;
-> +			cnt++;
-> +		}
-> +	} while (!READ_ONCE(hpage_freelist));
-> +
-> +	if (!cnt)
-> +		return;
-> +	pr_debug("HugeTLB: free_hpage_workfn() frees %d huge page(s)\n", cnt);
-> +}
-> +static DECLARE_WORK(free_hpage_work, free_hpage_workfn);
-> +
-> +void free_huge_page(struct page *page)
-> +{
-> +	/*
-> +	 * Defer freeing if in non-task context to avoid hugetlb_lock deadlock.
-> +	 */
-> +	if (!in_task()) {
-> +		struct page *next;
-> +
-> +		page->mapping = (struct address_space *)NEXT_PENDING;
-> +		next = xchg(&hpage_freelist, page);
-> +		WRITE_ONCE(page->mapping, (struct address_space *)next);
-> +		schedule_work(&free_hpage_work);
-> +		return;
-> +	}
+On 12/16/19 4:51 PM, Andrew Morton wrote:
+> On Mon, 16 Dec 2019 13:27:39 -0500 Waiman Long <longman@redhat.com> wrote:
+>
+>> The following lockdep splat was observed when a certain hugetlbfs test
+>> was run:
+>>
+>> ...
+>>
+>> Both the hugetbl_lock and the subpool lock can be acquired in
+>> free_huge_page(). One way to solve the problem is to make both locks
+>> irq-safe. Another alternative is to defer the freeing to a workqueue job.
+>>
+>> This patch implements the deferred freeing by adding a
+>> free_hpage_workfn() work function to do the actual freeing. The
+>> free_huge_page() call in a non-task context saves the page to be freed
+>> in the hpage_freelist linked list in a lockless manner.
+>>
+>> The generic workqueue is used to process the work, but a dedicated
+>> workqueue can be used instead if it is desirable to have the huge page
+>> freed ASAP.
+>>
+>> ...
+>>
+>> @@ -1199,6 +1199,73 @@ void free_huge_page(struct page *page)
+>>  	spin_unlock(&hugetlb_lock);
+>>  }
+>>  
+>> +/*
+>> + * As free_huge_page() can be called from a non-task context, we have
+>> + * to defer the actual freeing in a workqueue to prevent potential
+>> + * hugetlb_lock deadlock.
+>> + *
+>> + * free_hpage_workfn() locklessly retrieves the linked list of pages to
+>> + * be freed and frees them one-by-one. As the page->mapping pointer is
+>> + * going to be cleared in __free_huge_page() anyway, it is reused as the
+>> + * next pointer of a singly linked list of huge pages to be freed.
+>> + */
+>> +#define NEXT_PENDING	((struct page *)-1)
+>> +static struct page *hpage_freelist;
+>> +
+>> +static void free_hpage_workfn(struct work_struct *work)
+>> +{
+>> +	struct page *curr, *next;
+>> +	int cnt = 0;
+>> +
+>> +	do {
+>> +		curr = xchg(&hpage_freelist, NULL);
+>> +		if (!curr)
+>> +			break;
+>> +
+>> +		while (curr) {
+>> +			next = (struct page *)READ_ONCE(curr->mapping);
+>> +			if (next == NEXT_PENDING) {
+>> +				cpu_relax();
+>> +				continue;
+>> +			}
+>> +			__free_huge_page(curr);
+>> +			curr = next;
+>> +			cnt++;
+>> +		}
+>> +	} while (!READ_ONCE(hpage_freelist));
+>> +
+>> +	if (!cnt)
+>> +		return;
+>> +	pr_debug("HugeTLB: free_hpage_workfn() frees %d huge page(s)\n", cnt);
+>> +}
+>> +static DECLARE_WORK(free_hpage_work, free_hpage_workfn);
+>> +
+>> +void free_huge_page(struct page *page)
+>> +{
+>> +	/*
+>> +	 * Defer freeing if in non-task context to avoid hugetlb_lock deadlock.
+>> +	 */
+>> +	if (!in_task()) {
+>> +		struct page *next;
+>> +
+>> +		page->mapping = (struct address_space *)NEXT_PENDING;
+>> +		next = xchg(&hpage_freelist, page);
+>> +		WRITE_ONCE(page->mapping, (struct address_space *)next);
+> The NEXT_PENDING stuff could do with come commenting, I think.  It's
+> reasonably obvious, but not obvious enough.  For example, why does the
+> second write to page->mapping use WRITE_ONCE() but the first does not. 
+> Please spell out the design, fully.
 
-As Andrew mentioned, the design for the lockless queueing could use more
-explanation.  I had to draw some diagrams before I felt relatively confident
-in the design.
+Sure. The idea is that the setting of the next pointer and the writing
+to hpage_freelist cannot be done atomically without using a lock. Before
+xchg(), the page isn't visible to a concurrent work function. So no
+special write is needed, the mb() in xchg will ensure that the
+page->mapping will be visible to all. After the xchg, page->mapping is
+subjected to concurrent access. So WRITE_ONCE() is used to make sure
+that is no write tearing.
 
-> +
-> +	/*
-> +	 * Racing may prevent some deferred huge pages in hpage_freelist
-> +	 * from being freed. Check here and call schedule_work() if that
-> +	 * is the case.
-> +	 */
-> +	if (unlikely(hpage_freelist && !work_pending(&free_hpage_work)))
-> +		schedule_work(&free_hpage_work);
+I will update the patch with more comment once I gather other feedbacks
+from other reviewers.
 
-Can you describe the race which would leave deferred huge pages on
-hpage_freelist?  I am having a hard time determining how that can happen.
+>
+>> +		schedule_work(&free_hpage_work);
+>> +		return;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Racing may prevent some deferred huge pages in hpage_freelist
+>> +	 * from being freed. Check here and call schedule_work() if that
+>> +	 * is the case.
+>> +	 */
+>> +	if (unlikely(hpage_freelist && !work_pending(&free_hpage_work)))
+>> +		schedule_work(&free_hpage_work);
+>> +
+>> +	__free_huge_page(page);
+>> +}
+>> +
+>>  static void prep_new_huge_page(struct hstate *h, struct page *page, int nid)
+>>  {
+>>  	INIT_LIST_HEAD(&page->lru);
+> Otherwise it looks OK to me.  Deferring freeing in this way is
+> generally lame and gives rise to concerns about memory exhaustion in
+> strange situations, and to concerns about various memory accounting
+> stats being logically wrong for short periods.  But we already do this
+> in (too) many places, so fingers crossed :(
+>
+It is actually quite rare to hit the condition that a huge page will
+have to be freed in an irq context. Otherwise, this problem will be
+found earlier. Hopefully the workfn won't be invoked in that many occasions.
 
-And, if this indeed can happen then I would have to ask what happens if
-a page is 'stuck' and we do not call free_huge_page?  Do we need to take
-that case into account?
+Cheers,
+Longman
 
-Overall, I like the design and hope this will work.  I have been testing
-a 'modified' version of the patch to always do the deferred freeing.  The
-modification is simply to stress the code.   So far, I have not found any
-issues in any of my testing.
--- 
-Mike Kravetz
