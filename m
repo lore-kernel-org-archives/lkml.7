@@ -2,218 +2,101 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD6BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD0FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8239A21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C264E21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nOaUKB8O"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hrfy1ApX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLPV5e (ORCPT
+        id S1727384AbfLPWBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:57:34 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35000 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfLPV5c (ORCPT
+        Mon, 16 Dec 2019 17:01:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35829 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfLPWBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:57:32 -0500
-Received: by mail-vs1-f68.google.com with SMTP id x123so5181692vsc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 13:57:31 -0800 (PST)
+        Mon, 16 Dec 2019 17:01:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so2487508plt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:01:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DFPpNng3KoPqtg8NdN2SpyoGmm5E5m0rky9u0AsyxLk=;
-        b=nOaUKB8O/lLoPcm34GbcXeaAetd9TsZSmTrUu2nEBnBwoIurEZRZGA+EjyDHs9ahas
-         mZ72Fu15WqdrDZf5opeovzT/LYUYrT8uK0u70I4hk8q8U26bpxVaTuTHFFRAhs5PaD4v
-         Xx32wem5YmdhKnIA7pj9RACkakMtPlgZ9ce9s=
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pg208Gbp4fn2PKZAr2bOwBY2qUBOZu7Jr1zInufrXBs=;
+        b=hrfy1ApX8xLoQLm4yS29kRMMe5/v9oV7VS0hEMnjGX08S9FQcCX3m2+Vj1Fn6Eah66
+         laldmyuREHSLW82S1wA/7uRE89/Dk/tAgcdw+sUExbXYeSqARIBWUWNZ6vLAcHl3myGw
+         7tsikcdP89E0zFm9p5Z8DXib3NkeWC3RrnOc9rZhIQkNQQ39obh3GjfFF0z5nHdZDWfo
+         AIAcaPHSgtZMrnfjUXuFq4QfMY3W2Omadm+S/RBACQ6udnK3vROLXVGycaa9X2VRJLOW
+         XFqEDZc/nsrxfGaEMGKaq+BL0bdqDjvQMGtvRj4CXcDg6dE8lejHaeTOrorIhSY/IkO3
+         hizg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DFPpNng3KoPqtg8NdN2SpyoGmm5E5m0rky9u0AsyxLk=;
-        b=gbeTWOYcJ02OHUNyndOJvmzlT8PLq1Mw5Lu1r8jTQwhjw1jgACwyuAjqle0oiRJCNm
-         s6R0qOLuWemruCtTwV2LTPzE1Y7754TFj1b0F+89QhIYShBuPpuaddMKzN5WI60Eapww
-         AeB+u90Yi/TUKTyuB8wSNn9z0pME+ulD9b5PaZ7RFRJO/+keDQiWNSIlwkM3+dzFX+FG
-         35Zcjuo8f7mJUu01qiHI6k2w5U3UPw2M0mbuxxbIdEJiliqCjPq83L+UNiPd/FcCCcz/
-         nqYWP7pUMvtnoPfvssbkZW49RQ3761SPaRTZ+K4EBa6ptmncittfNuFXaegj1JOsR96L
-         0L6w==
-X-Gm-Message-State: APjAAAU/hko2ykkPw1UU9LU3vsZ2onF3+tanSajj+Sm+OAUC3q8bNjfa
-        lnkBvXSI8ejzoPAbogDiE37gvj4Fzri4EVbOp1h87w==
-X-Google-Smtp-Source: APXvYqyK1F6gGCRuxEz8GZK1mdTsTU3OEQl91lSUWV7Cjfrgcb+iTWic/oW/rvOgipPfFAyWFbF1nTFONGWvRzCBwSA=
-X-Received: by 2002:a05:6102:81:: with SMTP id t1mr916905vsp.86.1576533450826;
- Mon, 16 Dec 2019 13:57:30 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pg208Gbp4fn2PKZAr2bOwBY2qUBOZu7Jr1zInufrXBs=;
+        b=BusijuUS51DInszff/54J01CXgAAYt0kzkfHi9JwsyTobgInxI18w+6S0umtL/3tv/
+         5bLG9yHvs/XRZqEXLYbOwwG6fEI2MwFBo4TTzXuNHSld+n2YrOKxcTFkpt71ErdnBWhK
+         Bw2TwQx+eDHtgej6qSjKkRZ6kQ/MXPUmGU+nMYIkUoeg8Xt9uXmbgEnKurIkch9ZGWes
+         Qx/v6P9RSEqiquYrv2eJtdoA/OLb6Hzpz/AWD4XrcElW40gJ9j1UTyrDF19twiMcA3JG
+         Km829piCspkkdJu2rY84UjQmeigjaSI7URe/ZI19uNZBEJKcKoQj7vquDyj0yuhuLMLT
+         HE+w==
+X-Gm-Message-State: APjAAAW5eWhlV4lHNFeTUL0qXHJWEX5JQQ5zKhCn2Uu3i1Gt2iD7SSSq
+        K4yp3XCqVjpA602mVdYePnNtyg==
+X-Google-Smtp-Source: APXvYqy59+CReKlQisVLx++KzTKqAnMz72AZMuEwcfkZf0gbQHVgS65xOqkxz8X3QALZWpJFp+5Igw==
+X-Received: by 2002:a17:902:6909:: with SMTP id j9mr18579009plk.136.1576533694788;
+        Mon, 16 Dec 2019 14:01:34 -0800 (PST)
+Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id y26sm83521pfe.65.2019.12.16.14.01.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 14:01:33 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] objtool: silence build output
+Date:   Mon, 16 Dec 2019 14:01:22 -0800
+Message-Id: <20191216220122.22595-1-olof@lixom.net>
+X-Mailer: git-send-email 2.22.GIT
+In-Reply-To: <20191209180833.2oleipnnzh7btqno@treble>
+References: <20191209180833.2oleipnnzh7btqno@treble>
 MIME-Version: 1.0
-References: <20191202084750.k7lafzzrf3yq2tqs@pali> <20191202175440.GA50317@dtor-ws>
- <20191202185340.nae4lljten5jqp3y@pali> <20191202193628.GI50317@dtor-ws>
- <20191202230947.ld5ibnczdpkekfcm@pali> <20191203173821.4u6uzxeaqnt3gyz3@pali>
- <20191203191112.GJ50317@dtor-ws> <20191205105206.slibwytrcteicx6y@pali>
- <CANFp7mXyaqoMDBs4m_Dfm9+4U88g9WoJVcV1g_4KM4xzFhiGXQ@mail.gmail.com>
- <20191206091114.kh255jrmerruumnq@pali> <20191206174048.GQ50317@dtor-ws>
-In-Reply-To: <20191206174048.GQ50317@dtor-ws>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Mon, 16 Dec 2019 13:57:19 -0800
-Message-ID: <CANFp7mVStzfjBT6SxQp+BGytat-Pnb8ntzZe8xMgPpB7x59zCg@mail.gmail.com>
-Subject: Re: [PATCH] Input: uinput - Add UI_SET_UNIQ ioctl handler
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-input@vger.kernel.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kirill Smelkov <kirr@nexedi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The sync-check.sh script prints out the path due to a "cd -" at the end
+of the script, even on silent builds. This isn't even needed, since the
+script is executed in our build instead of sourced (so it won't change
+the working directory of the surrounding build anyway).
 
-Since there hasn't been further activity on this thread, I assume that
-we're agreed that requiring the size in the IOCTL is ok (i.e.
-UI_SET_PHYS_STR(18)).
+Just remove the cd to make the build silent.
 
-Dmitry, could you please review -- [PATCH v4] Input: uinput - Add
-UI_SET_PHYS_STR and UI_SET_UNIQ_STR -- from December 4 for merge?
+Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ tools/objtool/sync-check.sh | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks
-Abhishek
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 9bd04bbed01e..2a1261bfbb62 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
+-
+-cd -
+-- 
+2.22.GIT
 
-On Fri, Dec 6, 2019 at 9:40 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Fri, Dec 06, 2019 at 10:11:14AM +0100, Pali Roh=C3=A1r wrote:
-> > On Thursday 05 December 2019 12:03:05 Abhishek Pandit-Subedi wrote:
-> > > On Thu, Dec 5, 2019 at 2:52 AM Pali Roh=C3=A1r <pali.rohar@gmail.com>=
- wrote:
-> > > >
-> > > > On Tuesday 03 December 2019 11:11:12 Dmitry Torokhov wrote:
-> > > > > On Tue, Dec 03, 2019 at 06:38:21PM +0100, Pali Roh=C3=A1r wrote:
-> > > > > > On Tuesday 03 December 2019 00:09:47 Pali Roh=C3=A1r wrote:
-> > > > > >
-> > > > > > Hi Dmitry!
-> > > > > >
-> > > > > > I was looking again at those _IOW defines for ioctl calls and I=
- have
-> > > > > > another argument why not specify 'char *' in _IOW:
-> > > > > >
-> > > > > > All ioctls in _IOW() specify as a third macro argument type whi=
-ch is
-> > > > > > passed as pointer to the third argument for ioctl() syscall.
-> > > > > >
-> > > > > > So e.g.:
-> > > > > >
-> > > > > >   #define EVIOCSCLOCKID _IOW('E', 0xa0, int)
-> > > > > >
-> > > > > > is called from userspace as:
-> > > > > >
-> > > > > >   int val;
-> > > > > >   ioctl(fd, EVIOCSCLOCKID, &val);
-> > > > > >
-> > > > > > Or
-> > > > > >
-> > > > > >   #define EVIOCSMASK _IOW('E', 0x93, struct input_mask)
-> > > > > >
-> > > > > > is called as:
-> > > > > >
-> > > > > >   struct input_mask val;
-> > > > > >   ioctl(fd, EVIOCSMASK, &val);
-> > > > > >
-> > > > > > So basically third argument for _IOW specify size of byte buffe=
-r passed
-> > > > > > as third argument for ioctl(). In _IOW is not specified pointer=
- to
-> > > > > > struct input_mask, but struct input_mask itself.
-> > > > > >
-> > > > > > And in case you define
-> > > > > >
-> > > > > >   #define MY_NEW_IOCTL _IOW(UINPUT_IOCTL_BASE, 200, char*)
-> > > > > >
-> > > > > > then you by above usage you should pass data as:
-> > > > > >
-> > > > > >   char *val =3D "DATA";
-> > > > > >   ioctl(fd, MY_NEW_IOCTL, &val);
-> > > > > >
-> > > > > > Which is not same as just:
-> > > > > >
-> > > > > >   ioctl(fd, MY_NEW_IOCTL, "DATA");
-> > > > > >
-> > > > > > As in former case you passed pointer to pointer to data and in =
-later
-> > > > > > case you passed only pointer to data.
-> > > > > >
-> > > > > > It just mean that UI_SET_PHYS is already defined inconsistently=
- which is
-> > > > > > also reason why compat ioctl for it was introduced.
-> > > > >
-> > > > > Yes, you are right. UI_SET_PHYS is messed up. I guess the questio=
-n is
-> > > > > what to do with all of this...
-> > > > >
-> > > > > Maybe we should define
-> > > > >
-> > > > > #define UI_SET_PHYS_STR(len)  _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE,=
- 111, len)
-> > > > > #define UI_SET_UNIQ_STR(len)  _IOC(_IOC_WRITE, UINPUT_IOCTL_BASE,=
- 112, len)
-> > > >
-> > > > I'm not sure if this is ideal. Normally in C strings are nul-termin=
-ed,
-> > > > so functions/macros do not take buffer length.
-> > > Except strncpy, strndup, snprintf, etc. all expect a buffer length. A=
-t
-> >
-> > This is something different as for these functions you pass buffer and
-> > length of buffer which is used in write mode -- not for read mode.
-> >
-> > > the user to kernel boundary of ioctl, I think we should require size
-> > > of the user buffer regardless of the data type.
-> > >
-> > > > _STR therefore in names looks inconsistent.
-> > > The _STR suffix is odd (what to name UI_SET_PHYS_STR then??) but
-> > > requiring the length seems to be common across various ioctls.
-> > > * input.h requires a length when requesting the phys and uniq
-> > > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/include/uapi/linux/input.h#n138)
-> > > * Same with HIDRAW when setting and getting features:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/include/uapi/linux/hidraw.h#n40,
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/samples/hidraw/hid-example.c#n88
-> >
-> > All these ioctls where is passed length are in opposite direction
-> > (_IOC_READ) as our PHYS and UNIQ (_IOC_WRITE).
-> >
-> > I fully agree that when you need to read something from kernel
-> > (_IOC_READ) and then writing it to userspace, you need to specify lengt=
-h
-> > of userspace buffer. Exactly same as with userspace functions like
-> > memcpy, snprintf, etc... as you pointed. Otherwise you get buffer
-> > overflow as callee does not know length of buffer.
-> >
-> > But here we we have there quite different problem, we need to write
-> > something to kernel from userspace (_IOC_WRITE) and we are passing
-> > nul-term string. So in this case specifying size is not required as it
-> > is implicitly specified as part of passed string.
->
-> With the new IOCTL definitions it does not need to be a NULL-terminated
-> string. It can be a buffer of characters with given length, and kernel
-> will NULL-terminate as this it what it wants, not what the caller has to
-> give.
->
-> Thanks.
->
-> --
-> Dmitry
