@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B6AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF3CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318B921739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FAF207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520356;
-	bh=LIdc/Ky4bIZV7jaCh27m9/rLPKNcEEgcB2fhg7yU7wM=;
+	s=default; t=1576520359;
+	bh=vp9h9sH+3jUCNoXaY9XmcYdycZ30TI2SG5ijrITR6Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGhN7XKtg4o9+GCrb0rizYX0VSZ0xCsCl+u/4QtYbjTqkMORtIPBxp76idBxCETM7
-	 fGVXpbzZ5voKob6S680hoUdE4YUQ9cg9TvRCpq6qBo+dEv79ksP8Vng1934CmdA6M1
-	 NOCpL6M64iU4sAqDpRd8lN13QlZDX7EhCme6RSFQ=
+	b=hgCfBC8YjgMHMSwjuCjjmIth3HsEF+F7nLyglfeRDy5uddN3l4cWeqnJc4QdRkR/A
+	 EHHqJJxmIAuL8ZGOD6G4Nu+tXUT+i71AEe9N2nD3iT8iOBLMt7lVczYpgBPWL2oMvk
+	 RlsImwM0fs83HbEKyeG5tSBkAHrbJpnh6VYx5ll0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfLPSTP (ORCPT
+        id S1731919AbfLPSTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:19:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731899AbfLPSTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:10 -0500
+        id S1731911AbfLPSTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F09EF20717;
-        Mon, 16 Dec 2019 18:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA8E20717;
+        Mon, 16 Dec 2019 18:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520349;
-        bh=LIdc/Ky4bIZV7jaCh27m9/rLPKNcEEgcB2fhg7yU7wM=;
+        s=default; t=1576520354;
+        bh=vp9h9sH+3jUCNoXaY9XmcYdycZ30TI2SG5ijrITR6Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pH4tfDBLnnirVJ2y4Z9E0bAJfpivF4IxDBiScONNVAgvG0BqgmdVdPp+8iOjZMqe
-         zXKhLPkPNZL2Jj5Y9J2IueORhQeymmSHvIjieUYNg2qPk36XzjaMXoumK90GpRJA7w
-         Cl8tOTJHShJlQUXlifiORKHTupC2GUzdDpOBLl+Y=
+        b=TSw+KqRDX+y3E2Olxp66qJ0Iw5cew2A/ik8TWLfpzFUyubERIlEr9X6P7663ssZpi
+         JvEVy5JPPfvR2S0V89uRTPNoom4ZCYAj3oCIsF2SzI6jpOa7fP2+9da/lndkdHCRyq
+         ZbTOvmJyiX4qPOayPImqOpuDOLRoEDdzJbd9spjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 5.4 117/177] PM / devfreq: Lock devfreq in trans_stat_show
-Date:   Mon, 16 Dec 2019 18:49:33 +0100
-Message-Id: <20191216174842.825068854@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 119/177] ALSA: fireface: fix return value in error path of isochronous resources reservation
+Date:   Mon, 16 Dec 2019 18:49:35 +0100
+Message-Id: <20191216174843.080446202@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,59 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 2abb0d5268ae7b5ddf82099b1f8d5aa8414637d4 upstream.
+commit 480136343cbe89426d6c2ab74ffb4e3ee572c7ee upstream.
 
-There is no locking in this sysfs show function so stats printing can
-race with a devfreq_update_status called as part of freq switching or
-with initialization.
+Even if isochronous resources reservation fails, error code doesn't return
+in pcm.hw_params callback.
 
-Also add an assert in devfreq_update_status to make it clear that lock
-must be held by caller.
-
-Fixes: 39688ce6facd ("PM / devfreq: account suspend/resume for stats")
-Cc: stable@vger.kernel.org
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: <stable@vger.kernel.org> #5.3+
+Fixes: 55162d2bb0e8 ("ALSA: fireface: reserve/release isochronous resources in pcm.hw_params/hw_free callbacks")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191209151655.GA8090@workstation
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/devfreq/devfreq.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ sound/firewire/fireface/ff-pcm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -160,6 +160,7 @@ int devfreq_update_status(struct devfreq
- 	int lev, prev_lev, ret = 0;
- 	unsigned long cur_time;
+--- a/sound/firewire/fireface/ff-pcm.c
++++ b/sound/firewire/fireface/ff-pcm.c
+@@ -219,7 +219,7 @@ static int pcm_hw_params(struct snd_pcm_
+ 		mutex_unlock(&ff->mutex);
+ 	}
  
-+	lockdep_assert_held(&devfreq->lock);
- 	cur_time = jiffies;
+-	return 0;
++	return err;
+ }
  
- 	/* Immediately exit if previous_freq is not initialized yet. */
-@@ -1397,12 +1398,17 @@ static ssize_t trans_stat_show(struct de
- 	int i, j;
- 	unsigned int max_state = devfreq->profile->max_state;
- 
--	if (!devfreq->stop_polling &&
--			devfreq_update_status(devfreq, devfreq->previous_freq))
--		return 0;
- 	if (max_state == 0)
- 		return sprintf(buf, "Not Supported.\n");
- 
-+	mutex_lock(&devfreq->lock);
-+	if (!devfreq->stop_polling &&
-+			devfreq_update_status(devfreq, devfreq->previous_freq)) {
-+		mutex_unlock(&devfreq->lock);
-+		return 0;
-+	}
-+	mutex_unlock(&devfreq->lock);
-+
- 	len = sprintf(buf, "     From  :   To\n");
- 	len += sprintf(buf + len, "           :");
- 	for (i = 0; i < max_state; i++)
+ static int pcm_hw_free(struct snd_pcm_substream *substream)
 
 
