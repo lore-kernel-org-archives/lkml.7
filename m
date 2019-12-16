@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FEEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83D220717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3004C206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520072;
-	bh=tt6JHLn0Pf8Q4RRvjGtOhCq3o4zsZc4BGLC0TuUDiwc=;
+	s=default; t=1576520076;
+	bh=jNhiLWgNNvfGJzQsvErs2H3K0hHtqiAErRcw42j8ADk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJHr6pVgllE/fprZ8v5BrOMFycyi23KJWKH6wba3N8JwgF8aDUfs67bCWi/EzuRzc
-	 bvzzjiv3Kv41CV9zsSfCtiPdARZfUUZUx9s+jijWZCX0aCU6kkqB7gL0nxFD9g4Pdo
-	 x4SH+OYHbDOeSM0Ky9OakVa1awrvIUj9Wup1oN/4=
+	b=sulgBol+vMTKvtZTOQyaYHakmkuh5P0W1Jdnv29meQ34vCEZYJKFhdGS39JEWeGgs
+	 SgkQsYGHaxCaDaIId+rVpGvQI+qVsBqIoEQiDrn6ljWy8GRL2+9S6luRq+y432z1lL
+	 B3Hvd7HZQDOArI82mkWlXI2KRHJDxlOQ8VXXO43M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbfLPSOb (ORCPT
+        id S1731243AbfLPSOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731224AbfLPSO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:27 -0500
+        id S1729861AbfLPSOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74DE921739;
-        Mon, 16 Dec 2019 18:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B7C218AC;
+        Mon, 16 Dec 2019 18:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520066;
-        bh=tt6JHLn0Pf8Q4RRvjGtOhCq3o4zsZc4BGLC0TuUDiwc=;
+        s=default; t=1576520069;
+        bh=jNhiLWgNNvfGJzQsvErs2H3K0hHtqiAErRcw42j8ADk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjkrs1gLiEerGfC8YpEEOFrtPQOoT/qZ98NI7Hp4SgslZjQTYgGe0Yxrqnpvm8zO5
-         r5aoMsnRFFgt1HDoyCkKWd5A/4VbEnYIB6Gl9AlnhUHir3L4JY5FjRb94iu8tTCQTz
-         oIlvGAT1fQY+ZKjjfgCGJPhWlnKTxRltpy6/R3U0=
+        b=UaKvGUp8Y1saCwj+mf0xKAzJZDydPaGqvrxIsmjFTInAqA1FLGqAsom878MfmcQNc
+         mdumRZigI+37Uc8XPFD+e096O+9P+bGGHobIONizw6vhO8C5Cy0kCl/TPyEkj97o7e
+         3nxlPhzK20oMWMhojNRAdludGkCPjUaNVqiRIxw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 162/180] iio: imu: st_lsm6dsx: move odr_table in st_lsm6dsx_sensor_settings
-Date:   Mon, 16 Dec 2019 18:50:02 +0100
-Message-Id: <20191216174846.382156045@linuxfoundation.org>
+Subject: [PATCH 5.3 163/180] iio: imu: st_lsm6dsx: fix ODR check in st_lsm6dsx_write_raw
+Date:   Mon, 16 Dec 2019 18:50:03 +0100
+Message-Id: <20191216174846.581369267@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -64,334 +63,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 40dd7343897760c4b617faa78d213e25652de9a6 ]
+[ Upstream commit fc3f6ad7f5dc6c899fbda0255865737bac88c2e0 ]
 
-Move sensor odr table in st_lsm6dsx_sensor_settings in order to support
-sensors with different odr maps. This is a preliminary patch to add
-support for LSM9DS1 sensor to st_lsm6dsx driver
+Since st_lsm6dsx i2c master controller relies on accel device as trigger
+and slave devices can run at different ODRs we must select an accel_odr >=
+slave_odr. Report real accel ODR in st_lsm6dsx_check_odr() in order to
+properly set sensor frequency in st_lsm6dsx_write_raw and avoid to
+report unsupported frequency
 
-Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Fixes: 6ffb55e5009ff ("iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids")
 Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |   2 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 196 ++++++++++++++++---
- 2 files changed, 166 insertions(+), 32 deletions(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index c14bf533b66b3..ceee4e1aa5d4e 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -198,6 +198,7 @@ struct st_lsm6dsx_ext_dev_settings {
-  * @wai: Sensor WhoAmI default value.
-  * @max_fifo_size: Sensor max fifo length in FIFO words.
-  * @id: List of hw id/device name supported by the driver configuration.
-+ * @odr_table: Hw sensors odr table (Hz + val).
-  * @decimator: List of decimator register info (addr + mask).
-  * @batch: List of FIFO batching register info (addr + mask).
-  * @fifo_ops: Sensor hw FIFO parameters.
-@@ -211,6 +212,7 @@ struct st_lsm6dsx_settings {
- 		enum st_lsm6dsx_hw_id hw_id;
- 		const char *name;
- 	} id[ST_LSM6DSX_MAX_ID];
-+	struct st_lsm6dsx_odr_table_entry odr_table[2];
- 	struct st_lsm6dsx_reg decimator[ST_LSM6DSX_MAX_ID];
- 	struct st_lsm6dsx_reg batch[ST_LSM6DSX_MAX_ID];
- 	struct st_lsm6dsx_fifo_ops fifo_ops;
 diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index a6702a74570e2..41341cf2d9821 100644
+index 41341cf2d9821..ba89cbbb73ae3 100644
 --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
 +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -69,33 +69,6 @@
- #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
- #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
- 
--static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] = {
--	[ST_LSM6DSX_ID_ACC] = {
--		.reg = {
--			.addr = 0x10,
--			.mask = GENMASK(7, 4),
--		},
--		.odr_avl[0] = {  13, 0x01 },
--		.odr_avl[1] = {  26, 0x02 },
--		.odr_avl[2] = {  52, 0x03 },
--		.odr_avl[3] = { 104, 0x04 },
--		.odr_avl[4] = { 208, 0x05 },
--		.odr_avl[5] = { 416, 0x06 },
--	},
--	[ST_LSM6DSX_ID_GYRO] = {
--		.reg = {
--			.addr = 0x11,
--			.mask = GENMASK(7, 4),
--		},
--		.odr_avl[0] = {  13, 0x01 },
--		.odr_avl[1] = {  26, 0x02 },
--		.odr_avl[2] = {  52, 0x03 },
--		.odr_avl[3] = { 104, 0x04 },
--		.odr_avl[4] = { 208, 0x05 },
--		.odr_avl[5] = { 416, 0x06 },
--	}
--};
--
- static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
- 	[ST_LSM6DSX_ID_ACC] = {
- 		.reg = {
-@@ -129,6 +102,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_LSM6DS3_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.decimator = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x08,
-@@ -179,6 +178,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_LSM6DS3H_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.decimator = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x08,
-@@ -235,6 +260,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_ISM330DLC_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.decimator = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x08,
-@@ -288,6 +339,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_LSM6DSOX_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.batch = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x09,
-@@ -356,6 +433,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_ASM330LHH_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.batch = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x09,
-@@ -398,6 +501,32 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.name = ST_LSM6DSR_DEV_NAME,
- 			},
- 		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x11,
-+					.mask = GENMASK(7, 4),
-+				},
-+				.odr_avl[0] = {  13, 0x01 },
-+				.odr_avl[1] = {  26, 0x02 },
-+				.odr_avl[2] = {  52, 0x03 },
-+				.odr_avl[3] = { 104, 0x04 },
-+				.odr_avl[4] = { 208, 0x05 },
-+				.odr_avl[5] = { 416, 0x06 },
-+			},
-+		},
- 		.batch = {
- 			[ST_LSM6DSX_ID_ACC] = {
- 				.addr = 0x09,
-@@ -560,20 +689,22 @@ static int st_lsm6dsx_set_full_scale(struct st_lsm6dsx_sensor *sensor,
- 
- int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
- {
-+	const struct st_lsm6dsx_odr_table_entry *odr_table;
- 	int i;
- 
-+	odr_table = &sensor->hw->settings->odr_table[sensor->id];
- 	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
- 		/*
- 		 * ext devices can run at different odr respect to
- 		 * accel sensor
- 		 */
--		if (st_lsm6dsx_odr_table[sensor->id].odr_avl[i].hz >= odr)
-+		if (odr_table->odr_avl[i].hz >= odr)
- 			break;
- 
- 	if (i == ST_LSM6DSX_ODR_LIST_SIZE)
+@@ -705,8 +705,7 @@ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
  		return -EINVAL;
  
--	*val = st_lsm6dsx_odr_table[sensor->id].odr_avl[i].val;
-+	*val = odr_table->odr_avl[i].val;
- 
- 	return 0;
+ 	*val = odr_table->odr_avl[i].val;
+-
+-	return 0;
++	return odr_table->odr_avl[i].hz;
  }
-@@ -638,7 +769,7 @@ static int st_lsm6dsx_set_odr(struct st_lsm6dsx_sensor *sensor, u16 req_odr)
- 			return err;
+ 
+ static u16 st_lsm6dsx_check_odr_dependency(struct st_lsm6dsx_hw *hw, u16 odr,
+@@ -869,8 +868,10 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
+ 	case IIO_CHAN_INFO_SAMP_FREQ: {
+ 		u8 data;
+ 
+-		err = st_lsm6dsx_check_odr(sensor, val, &data);
+-		if (!err)
++		val = st_lsm6dsx_check_odr(sensor, val, &data);
++		if (val < 0)
++			err = val;
++		else
+ 			sensor->odr = val;
+ 		break;
  	}
- 
--	reg = &st_lsm6dsx_odr_table[ref_sensor->id].reg;
-+	reg = &hw->settings->odr_table[ref_sensor->id].reg;
- 	data = ST_LSM6DSX_SHIFT_VAL(val, reg->mask);
- 	return st_lsm6dsx_update_bits_locked(hw, reg->addr, reg->mask, data);
- }
-@@ -783,11 +914,12 @@ st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev,
- {
- 	struct st_lsm6dsx_sensor *sensor = iio_priv(dev_get_drvdata(dev));
- 	enum st_lsm6dsx_sensor_id id = sensor->id;
-+	struct st_lsm6dsx_hw *hw = sensor->hw;
- 	int i, len = 0;
- 
- 	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
- 		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
--				 st_lsm6dsx_odr_table[id].odr_avl[i].hz);
-+				 hw->settings->odr_table[id].odr_avl[i].hz);
- 	buf[len - 1] = '\n';
- 
- 	return len;
-@@ -1037,7 +1169,7 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
- 	sensor = iio_priv(iio_dev);
- 	sensor->id = id;
- 	sensor->hw = hw;
--	sensor->odr = st_lsm6dsx_odr_table[id].odr_avl[0].hz;
-+	sensor->odr = hw->settings->odr_table[id].odr_avl[0].hz;
- 	sensor->gain = st_lsm6dsx_fs_table[id].fs_avl[0].gain;
- 	sensor->watermark = 1;
- 
 -- 
 2.20.1
 
