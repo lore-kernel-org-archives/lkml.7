@@ -2,146 +2,81 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE04C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C73C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F75218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:01:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpEfYV/x"
+	by mail.kernel.org (Postfix) with ESMTP id 52D9921D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfLPVB2 (ORCPT
+        id S1727099AbfLPVEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:01:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32271 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726729AbfLPVB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:01:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576530086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y2YGUzKWfrJlypL5f6IAP/q6Ohy4nUi/MZaE1v/sIbk=;
-        b=SpEfYV/xOTN6evotg1IYegCzRBRWcvYOF/+yWjw8XOkhYyATs+AAh2GCxW3GnHGjn/08n9
-        u+wKqDNPW4tC9VHO541aJPTBSp7WBp5Ki9QZMyBoAxPiKfsD3HaHo6PKwhs54BsuLvc0yM
-        vHNHP1lLI1Z6m3+B7DrjSAPUAwGJTPs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-7Pu4BB3xNt-Oq5fmzXLGmw-1; Mon, 16 Dec 2019 16:01:23 -0500
-X-MC-Unique: 7Pu4BB3xNt-Oq5fmzXLGmw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7611B801E70;
-        Mon, 16 Dec 2019 21:01:21 +0000 (UTC)
-Received: from redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7479861351;
-        Mon, 16 Dec 2019 21:01:20 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 16:01:18 -0500
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
-        pmladek@suse.com, shuah@kernel.org, live-patching@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: livepatch: Fix it to do root uid check and
- skip
-Message-ID: <20191216210118.GA28841@redhat.com>
-References: <20191216191840.15188-1-skhan@linuxfoundation.org>
+        Mon, 16 Dec 2019 16:04:11 -0500
+Received: from muru.com ([72.249.23.125]:48520 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfLPVEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 16:04:10 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 84397810D;
+        Mon, 16 Dec 2019 21:04:49 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 13:04:07 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+Message-ID: <20191216210407.GR35479@atomide.com>
+References: <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
+ <20191119183247.GN35479@atomide.com>
+ <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+ <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+ <20191119194425.GQ35479@atomide.com>
+ <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+ <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216191840.15188-1-skhan@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 12:18:40PM -0700, Shuah Khan wrote:
-> livepatch test configures the system and debug environment to run
-> tests. Some of these actions fail without root access and test
-> dumps several permission denied messages before it exits.
-> 
-> Fix test-state.sh to call setup_config instead of set_dynamic_debug
-> as suggested by Petr Mladek <pmladek@suse.com>
-> 
-> Fix it to check root uid and exit with skip code instead.
-> 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  tools/testing/selftests/livepatch/functions.sh  | 15 ++++++++++++++-
->  tools/testing/selftests/livepatch/test-state.sh |  3 +--
->  2 files changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-> index 31eb09e38729..a6e3d5517a6f 100644
-> --- a/tools/testing/selftests/livepatch/functions.sh
-> +++ b/tools/testing/selftests/livepatch/functions.sh
-> @@ -7,6 +7,9 @@
->  MAX_RETRIES=600
->  RETRY_INTERVAL=".1"	# seconds
->  
-> +# Kselftest framework requirement - SKIP code is 4
-> +ksft_skip=4
-> +
->  # log(msg) - write message to kernel log
->  #	msg - insightful words
->  function log() {
-> @@ -18,7 +21,16 @@ function log() {
->  function skip() {
->  	log "SKIP: $1"
->  	echo "SKIP: $1" >&2
-> -	exit 4
-> +	exit $ksft_skip
-> +}
-> +
-> +# root test
-> +function is_root() {
-> +	uid=$(id -u)
-> +	if [ $uid -ne 0 ]; then
-> +		echo "skip all tests: must be run as root" >&2
-> +		exit $ksft_skip
-> +	fi
->  }
->  
->  # die(msg) - game over, man
-> @@ -62,6 +74,7 @@ function set_ftrace_enabled() {
->  #		 for verbose livepatching output and turn on
->  #		 the ftrace_enabled sysctl.
->  function setup_config() {
-> +	is_root
->  	push_config
->  	set_dynamic_debug
->  	set_ftrace_enabled 1
-> diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
-> index dc2908c22c26..a08212708115 100755
-> --- a/tools/testing/selftests/livepatch/test-state.sh
-> +++ b/tools/testing/selftests/livepatch/test-state.sh
-> @@ -8,8 +8,7 @@ MOD_LIVEPATCH=test_klp_state
->  MOD_LIVEPATCH2=test_klp_state2
->  MOD_LIVEPATCH3=test_klp_state3
->  
-> -set_dynamic_debug
-> -
-> +setup_config
->  
->  # TEST: Loading and removing a module that modifies the system state
->  
-> -- 
-> 2.20.1
-> 
+* Andrew F. Davis <afd@ti.com> [191216 20:57]:
+> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
+> looks like it may get kicked out. arm_smccc_smc() will remain only for
+> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
+> too opposed upstream.
 
-Thanks for fixing these, Shuah.
+Yes so it seems.
 
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Either way this patch would still be valid as when OP-TEE is present
+> then arm_smccc_smc() will be the right call to make, how we handle the
+> legacy calls can be sorted out later if a generic SMC call is implemented.
 
--- Joe
+Please see my comment regarding this patch earlier in this thread
+pasted below for convenience:
 
+* Tony Lindgren <tony@atomide.com> [191119 16:22]:
+> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
+> only once during init. I'm not sure how much checking for
+> "/firmware/optee" helps here, sounds like we have a broken system
+> if the firmware is not there while the arm_smccc_smc() should
+> still work just fine :)
+
+So only check once during init. And during init, you should probably
+also check that arm_smccc_smc() actually infd optee if
+"/firmware/optee" is set, and only then set set the right function
+pointer or some flag.
+
+Regards,
+
+Tony
