@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A0AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7C9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F93206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7454B20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518676;
-	bh=f5qrXQvyIwR4tEuDd6rOA7k/6DwzakBGHuSrshJIwFQ=;
+	s=default; t=1576518681;
+	bh=dMlxio4fVNiztZsJSbPZb+jiUQpKnO6vtJqb9VrvA3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+yRZVRDHye7A2JnH7raUTQnaxVOPq3LBSZD9AbdN393q1+59Ea/iuDTqfTo4nNQF
-	 OKx8PhDZVujtEezUhupU46W0pgaYQyZhWc+L4KXh1aHoxJr6r5gvYoTjohsYuWr/nS
-	 hpHYA2KJud30d6aEuwj7l/Oly8ovpH0Lmv4Fu8aE=
+	b=rnXpg9IIvdDlCA5EvAxC+JKtr+sqznPEeJQHr1l/Y8I0+5cKZQ5OreoUyCxqgqUF0
+	 Goq9YpeVnaubJSs51412qGQcpJmISljJLr6HiLQYp0l9NGDK0PeT+oct8wmvMHW4kn
+	 FQDxdkVORUKd71Hicnx6GAMdB16MbEkQMlFAjY58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLPRvP (ORCPT
+        id S1726881AbfLPRvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:51:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfLPRvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:51:13 -0500
+        id S1726833AbfLPRvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C337220700;
-        Mon, 16 Dec 2019 17:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9418520700;
+        Mon, 16 Dec 2019 17:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518673;
-        bh=f5qrXQvyIwR4tEuDd6rOA7k/6DwzakBGHuSrshJIwFQ=;
+        s=default; t=1576518678;
+        bh=dMlxio4fVNiztZsJSbPZb+jiUQpKnO6vtJqb9VrvA3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AePD9H9OIAVX0z3wJdIc4ZJKFm5X3P0s3P+9QIjgx3/9uMttkOtT8IWvw7ohxsjm5
-         5bcosaxEOWXAblh8ASc62sNPgEwMtiirPNzBzhYQ7m72LaTa/XPWtD4jHPNxHEmYic
-         fIqAmqamxyzpO2pVNxeGTqM340qhHbkVWQ6zFoic=
+        b=OPG7m4KXyncvny1jT8sEcYTlxfYBuA6XUnwjP3L4bquSvFRFVQR2v9Tgapqum25uC
+         BhUcq0am55ux/secHOHw5beZ9TznzFEKWlngUSM5u0BpC2HsKJ6PVOd2Yrha77IDX1
+         I5r0FHMgNGSykZfMblE3e8v8CfGPrhmjuBtxVGwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 4.14 004/267] tty: serial: fsl_lpuart: use the sg count from dma_map_sg
-Date:   Mon, 16 Dec 2019 18:45:30 +0100
-Message-Id: <20191216174849.239749492@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH 4.14 006/267] serial: pl011: Fix DMA ->flush_buffer()
+Date:   Mon, 16 Dec 2019 18:45:32 +0100
+Message-Id: <20191216174849.509808434@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -58,39 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-commit 487ee861de176090b055eba5b252b56a3b9973d6 upstream.
+commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+PL011's ->flush_buffer() implementation releases and reacquires the port
+lock.  Due to a race condition here, data can end up being added to the
+circular buffer but neither being discarded nor being sent out.  This
+leads to, for example, tcdrain(2) waiting indefinitely.
 
-When enabling iommu for lpuart + edma, iommu framework may concatenate
-two sgs into one.
+Process A                       Process B
 
-Fixes: 6250cc30c4c4e ("tty: serial: fsl_lpuart: Use scatter/gather DMA for Tx")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1572932977-17866-1-git-send-email-peng.fan@nxp.com
+uart_flush_buffer()
+ - acquire lock
+ - circ_clear
+ - pl011_flush_buffer()
+ -- release lock
+ -- dmaengine_terminate_all()
+
+                                uart_write()
+                                - acquire lock
+                                - add chars to circ buffer
+                                - start_tx()
+                                -- start DMA
+                                - release lock
+
+ -- acquire lock
+ -- turn off DMA
+ -- release lock
+
+                                // Data in circ buffer but DMA is off
+
+According to the comment in the code, the releasing of the lock around
+dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
+callback.  However, since the time this code was written, the DMA engine
+API documentation seems to have been clarified to say that
+dmaengine_terminate_all() (in the identically implemented but
+differently named dmaengine_terminate_async() variant) does not wait for
+any running complete callback to be completed and can even be called
+from a complete callback.  So there is no possibility of deadlock if the
+DMA engine driver implements this API correctly.
+
+So we should be able to just remove this release and reacquire of the
+lock to prevent the aforementioned race condition.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/fsl_lpuart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/amba-pl011.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -380,8 +380,8 @@ static void lpuart_dma_tx(struct lpuart_
- 	}
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -829,10 +829,8 @@ __acquires(&uap->port.lock)
+ 	if (!uap->using_tx_dma)
+ 		return;
  
- 	sport->dma_tx_desc = dmaengine_prep_slave_sg(sport->dma_tx_chan, sgl,
--					sport->dma_tx_nents,
--					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
-+					ret, DMA_MEM_TO_DEV,
-+					DMA_PREP_INTERRUPT);
- 	if (!sport->dma_tx_desc) {
- 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
- 		dev_err(dev, "Cannot prepare TX slave DMA!\n");
+-	/* Avoid deadlock with the DMA engine callback */
+-	spin_unlock(&uap->port.lock);
+-	dmaengine_terminate_all(uap->dmatx.chan);
+-	spin_lock(&uap->port.lock);
++	dmaengine_terminate_async(uap->dmatx.chan);
++
+ 	if (uap->dmatx.queued) {
+ 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
+ 			     DMA_TO_DEVICE);
 
 
