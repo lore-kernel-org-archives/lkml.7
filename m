@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04293C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D17820700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ABC20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519802;
-	bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
+	s=default; t=1576519805;
+	bh=J9rVZcIibE8KKmf4ktt4ACclYyInwY8C4/rXZDkABj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJ1k//ab+UB9jXGbGR9ZE+p23wDEj8PQ4yMouq4VBfdQ373McX3gXHkUO4+Hjnv7w
-	 I3wElE9/2xI6sHVE4MzVbKc6DN+pum8u7eRpbfKMmnUQOtSkkPE8XfegoeFrNz6UBT
-	 ZTVM9yrtB4016jFGPVeQgvBhmNjoXJzOdvWane3g=
+	b=M28p5hafLUtvc3G1x4wDOoiSHYltxJGqb/0FJbSnGVD5ufu0ywY7RJacEfsCWK1SF
+	 xOIFbd0qgrHs5a8AmmnhIN7wjZsFStk2EsEteq4NVaNeQLgM+F1odHlLRVJQVdfSzF
+	 h0KVWLthszLomZZiUi5oHOhSFlULRqqQLCgx8pTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfLPSKC (ORCPT
+        id S1730557AbfLPSKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52710 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbfLPSJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:59 -0500
+        id S1730543AbfLPSKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28350206EC;
-        Mon, 16 Dec 2019 18:09:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CF2206E0;
+        Mon, 16 Dec 2019 18:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519798;
-        bh=IWANP2m/HdiV9PxPUQGlMOT2EXU8H0Be69ffeLkXblc=;
+        s=default; t=1576519801;
+        bh=J9rVZcIibE8KKmf4ktt4ACclYyInwY8C4/rXZDkABj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6/J5QEmmw2c6y2ptCI6bpe1zw40it43KTDYK9Y3nBWhHafAu7WCNm69JPS+s4HY2
-         BDe3b7s0tQU70xvYbumbUoAA/uNR1QO3GooCUYWCglWYkNwpNrOYPNw+EoFX+cmb03
-         FeUsTBb5hO8Oc5SJjrk7gibY7xGHdR8goQdlfwMA=
+        b=Rk7jJFxR/Cw7CnGBgyi4GtqmI7YiyhjCcB6Keh3aDCzCfzVZ55fcmzpQBBBGIhE+E
+         vYqBLt5jfPPuXGCV1320fTEaEK0KKP5mUhm8pqm/Wq1ZCsSbWl/I2LWI+k1ZvI45Zo
+         9ZPAtzQFVJk4ndgI/EZpbQZWL2vJQNHJNVJpIWTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maged Mokhtar <mmokhtar@petasan.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.3 071/180] dm writecache: handle REQ_FUA
-Date:   Mon, 16 Dec 2019 18:48:31 +0100
-Message-Id: <20191216174830.280901804@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mircea Caprioru <mircea.caprioru@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.3 033/180] iio: adc: ad7124: Enable internal reference
+Date:   Mon, 16 Dec 2019 18:47:53 +0100
+Message-Id: <20191216174814.591886363@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,33 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maged Mokhtar <mmokhtar@petasan.org>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
 
-commit c1005322ff02110a4df7f0033368ea015062b583 upstream.
+commit 11d7c8d3b1259c303fb52789febed58f0bc35ad1 upstream.
 
-Call writecache_flush() on REQ_FUA in writecache_map().
+When the internal reference was selected by a channel it was not enabled.
+This patch fixes that and enables it.
 
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Maged Mokhtar <mmokhtar@petasan.org>
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: b3af341bbd96 ("iio: adc: Add ad7124 support")
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/ad7124.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -1218,7 +1218,8 @@ bio_copy:
- 			}
- 		} while (bio->bi_iter.bi_size);
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -39,6 +39,8 @@
+ #define AD7124_STATUS_POR_FLAG_MSK	BIT(4)
  
--		if (unlikely(wc->uncommitted_blocks >= wc->autocommit_blocks))
-+		if (unlikely(bio->bi_opf & REQ_FUA ||
-+			     wc->uncommitted_blocks >= wc->autocommit_blocks))
- 			writecache_flush(wc);
- 		else
- 			writecache_schedule_autocommit(wc);
+ /* AD7124_ADC_CONTROL */
++#define AD7124_ADC_CTRL_REF_EN_MSK	BIT(8)
++#define AD7124_ADC_CTRL_REF_EN(x)	FIELD_PREP(AD7124_ADC_CTRL_REF_EN_MSK, x)
+ #define AD7124_ADC_CTRL_PWR_MSK	GENMASK(7, 6)
+ #define AD7124_ADC_CTRL_PWR(x)		FIELD_PREP(AD7124_ADC_CTRL_PWR_MSK, x)
+ #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
+@@ -424,7 +426,10 @@ static int ad7124_init_channel_vref(stru
+ 		break;
+ 	case AD7124_INT_REF:
+ 		st->channel_config[channel_number].vref_mv = 2500;
+-		break;
++		st->adc_control &= ~AD7124_ADC_CTRL_REF_EN_MSK;
++		st->adc_control |= AD7124_ADC_CTRL_REF_EN(1);
++		return ad_sd_write_reg(&st->sd, AD7124_ADC_CONTROL,
++				      2, st->adc_control);
+ 	default:
+ 		dev_err(&st->sd.spi->dev, "Invalid reference %d\n", refsel);
+ 		return -EINVAL;
 
 
