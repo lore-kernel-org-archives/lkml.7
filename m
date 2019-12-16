@@ -2,179 +2,105 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F120DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ACBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C952067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44292067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AAQQx//1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QsIADyvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLPQCE (ORCPT
+        id S1725805AbfLPQFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:02:04 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:44228 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfLPQCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:02:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PFTbYGO/dc90I2YXG41N9f41dU8GVWMEed9i++G4Wv8=; b=AAQQx//12skpZ/haFxx66yTiC
-        dN9Vm0vL43P4Cm/Jxigzt0tPdg0f4RovXhWvsx7jGU+5eDHgQ/IR1fADbyAW8tN2Ivmtj29p5X/Xf
-        GOeC8uxFOI+i9ArqkrmhWraELxw4+KIExOuPqswF6nBIpY+OijyxDiVlq9BKFsVACDyq4=;
-Received: from [77.247.85.102] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igson-0005GN-4P; Mon, 16 Dec 2019 17:01:57 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igsoj-0004ec-Vp; Mon, 16 Dec 2019 17:01:54 +0100
-Date:   Mon, 16 Dec 2019 17:01:52 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v4 2/5] mfd: rn5t618: add IRQ support
-Message-ID: <20191216170152.25da1051@kemnade.info>
-In-Reply-To: <20191216152715.GH2369@dell>
-References: <20191211215409.32764-1-andreas@kemnade.info>
-        <20191211215409.32764-3-andreas@kemnade.info>
-        <20191216152715.GH2369@dell>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Mon, 16 Dec 2019 11:05:31 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42081 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfLPQFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:05:30 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z14so5608283qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:05:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+lKQBDpzDPcg15QBEHobBzdq4ppx02T+T0NScAe4/rA=;
+        b=QsIADyvzRl9qoNxQVFr7adBzvQjOsTJR7jI2oGaHKBK2GYda2oFKhnUM4xsOl/UMeZ
+         bv3vJ75KMRCZfpDFk0zrSDBcVzpxUeN9Re6zIr5fB/AhTVSxcq5SWQyxUXf1VhA3JQ38
+         OtXjHCD7meb2uorDQ4B8xW1i0pURq1ZiCyEKVoudzSWAC7/ETU95NvFX161h2xTesLtu
+         4CKCXS25EHzRA2iiyARcykUTfWjbc8j7uq0YAG6OfWm3eSPsxturRhZ1hQmkFlcMsE+k
+         THvZZRA5PRenWMpOZSycSBezhCZaOOfS/SpDxP7Y8oey3DrqEVkfsXSpow6ryeiYCngM
+         HWFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+lKQBDpzDPcg15QBEHobBzdq4ppx02T+T0NScAe4/rA=;
+        b=nNn+BM9qe5uQfyfrGQ+2jUSiuZtYqCxWqCh2hqIewpqFw4I9DpjkysroozoGbEWJ/c
+         mknGrStu8fauJaxl7h5nX8EjMcY5AX9VnDWSUTUY4v2bWX3GGibHsBXj9IXEGlpluln7
+         nBewUFgrt4kUdGA/kV9iygOfNlIlmvY2IHJ5Cno2fGZBMLhQbc5xEGb3+iLZVnyRE9Ye
+         BWWX8nHB+kQ/kOVvwgu5fJQAc6JroLhdbRLcIpgNF8Af2gVHMmYIj4NYQG/J8TTu6eWc
+         57lcXRyMUymWeZBtrWMmzMfsY72957W4hk05+W/0n552wQAWLaIQaZzmZ6S7ffQNqk7J
+         Hj1g==
+X-Gm-Message-State: APjAAAUAyvpO757YVxJrQ2mWcOB+7n2sX04qe9krWEo0SjQ560l+btPQ
+        DlGVcsrbUxsFgVM3y2NdWKIWjwt8dUlFiA==
+X-Google-Smtp-Source: APXvYqwzTOp0qWhlavl8UpEOrZOd6WkqWpFywuJjzXs13a42ZVBjXmBZSsWQfNbKB9CjvluM06GlvQ==
+X-Received: by 2002:a37:6d5:: with SMTP id 204mr25587692qkg.448.1576512328086;
+        Mon, 16 Dec 2019 08:05:28 -0800 (PST)
+Received: from ?IPv6:2620:0:1004:a:6e2b:60f7:b51b:3b04? ([2620:0:1004:a:6e2b:60f7:b51b:3b04])
+        by smtp.gmail.com with ESMTPSA id r37sm6992733qtj.44.2019.12.16.08.05.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 08:05:27 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+References: <20191212182238.46535-1-brho@google.com>
+ <20191212182238.46535-3-brho@google.com>
+ <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
+ <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
+ <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
+ <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
+ <20191213171950.GA31552@linux.intel.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <e012696f-f13e-5af1-2b14-084607d69bfa@google.com>
+Date:   Mon, 16 Dec 2019 11:05:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/XbepMN/1jKrHdjWF6aXCDE7"; protocol="application/pgp-signature"
+In-Reply-To: <20191213171950.GA31552@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XbepMN/1jKrHdjWF6aXCDE7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 12/13/19 12:19 PM, Sean Christopherson wrote:
+> Teaching thp_adjust() how to handle 1GB wouldn't be a bad thing.  It's
+> unlikely THP itself will support 1GB pages any time soon, but having the
+> logic there wouldn't hurt anything.
+> 
 
-On Mon, 16 Dec 2019 15:27:15 +0000
-Lee Jones <lee.jones@linaro.org> wrote:
+Cool.  This was my main concern - I didn't want to break THP.
 
-> On Wed, 11 Dec 2019, Andreas Kemnade wrote:
->=20
-> > This adds support for IRQ handling in the RC5T619 which is required
-> > for properly implementing subdevices like RTC.
-> > For now only definitions for the variant RC5T619 are included.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > Changes in v4:
-> > merge rn5t618-irq.c into rn5t618.c
-> > use macros for IRQ table
-> >=20
-> > Changes in v3:
-> > alignment cleanup
-> >=20
-> > Changes in v2:
-> > - no dead code, did some more testing and thinking for that
-> > - remove extra empty lines
-> >  drivers/mfd/Kconfig         |  1 +
-> >  drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  include/linux/mfd/rn5t618.h | 15 ++++++++
-> >  3 files changed, 104 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index ae24d3ea68ea..522e068d0082 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1057,6 +1057,7 @@ config MFD_RN5T618
-> >  	depends on OF
-> >  	select MFD_CORE
-> >  	select REGMAP_I2C
-> > +	select REGMAP_IRQ
-> >  	help
-> >  	  Say yes here to add support for the Ricoh RN5T567,
-> >  	  RN5T618, RC5T619 PMIC.
-> > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> > index da5cd9c92a59..76d997c0cfe4 100644
-> > --- a/drivers/mfd/rn5t618.c
-> > +++ b/drivers/mfd/rn5t618.c
-> > @@ -8,6 +8,8 @@
-> > =20
-> >  #include <linux/delay.h>
-> >  #include <linux/i2c.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/mfd/rn5t618.h>
-> >  #include <linux/module.h>
-> > @@ -45,9 +47,63 @@ static const struct regmap_config rn5t618_regmap_con=
-fig =3D {
-> >  	.cache_type	=3D REGCACHE_RBTREE,
-> >  };
-> > =20
-> > +static const struct regmap_irq rc5t619_irqs[] =3D {
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
-> > +};
-> > +
-> > +static const struct regmap_irq_chip rc5t619_irq_chip =3D {
-> > +	.name =3D "rc5t619",
-> > +	.irqs =3D rc5t619_irqs,
-> > +	.num_irqs =3D ARRAY_SIZE(rc5t619_irqs),
-> > +	.num_regs =3D 1,
-> > +	.status_base =3D RN5T618_INTMON,
-> > +	.mask_base =3D RN5T618_INTEN,
-> > +	.mask_invert =3D true,
-> > +};
-> > +
-> >  static struct rn5t618 *rn5t618_pm_power_off;
-> >  static struct notifier_block rn5t618_restart_handler;
-> > =20
-> > +int rn5t618_irq_init(struct rn5t618 *rn5t618) =20
->=20
-> Static?
->=20
-yes, it should be static since IRQ and core do live
-in the same file now.
+I'll rework the series based on all of your comments.
 
-Regards,
-Andreas
+Thanks,
 
---Sig_/XbepMN/1jKrHdjWF6aXCDE7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Barret
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl33qnAACgkQl4jFM1s/
-ye/HZg//az7XDNxeh0oR3qY1nTmAOtRxQEviyCIvDuStB2kAvGRFnrfBBm7ZnO3n
-js7yQjVP9rdLvQzKTnmBem8gwFCRfP+83lgQrW9nUenFbN0eqDlY6ManEHXqcWx4
-1PTQKZ6u8vNHDIYE9fwxkzK4WrJfKSmIxuc24fosCfVk14zA92eCM1dHn2VoQ/TJ
-dqMty9nrGsSEJXOdPNCAItQ7QGUDWhU2RBQnHltux4Con8YXlIT5fgjVyFOjMcSK
-1jFTiL1pTR/CT8rdm8fwVycCESoLxe55YPdy5j0Z19f3fCUdsIUH+OG1H3nLpqy6
-F9d70fvm3M00qcAGxnIerDB/w1QvG2CbzB49zcHPe2B14m4L+V4wAmnyyKCuuJL4
-Wzn7maA82ahCI5Oczr2hAWq8YSg3xC6Nb+1IE5KKTQC6gjYgBJwyRdOkx7xrL+Oz
-x9BHrn93nE6Iqv6w+FD5mYAsil+li/yTS/H8WocQATSv+efMQR+jxwKZe3NTMRrA
-imX/7Tu4arf9erPttL3GBVL6HDAemWtChWMdyUhr6K5bZH5LpAQeLionvQ1Chm2/
-GT0ovDs5IZ7+CwhFJxbZUqsmXVPrvBP+cQSt1AwEmkvO3YXoovYGgCBk9YaCH6sU
-Qj7YZtbMjYxmogsqc93Wk+aMFGytSdlTTOSYDJhdBcwsyzI3djw=
-=kwXw
------END PGP SIGNATURE-----
-
---Sig_/XbepMN/1jKrHdjWF6aXCDE7--
