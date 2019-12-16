@@ -2,95 +2,99 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD49C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573E4206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F05206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pJEqQG2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfLPNb1 (ORCPT
+        id S1727875AbfLPNcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:31:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41517 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLPNb0 (ORCPT
+        Mon, 16 Dec 2019 08:32:31 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53257 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfLPNcb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:31:26 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so3293311oie.8;
-        Mon, 16 Dec 2019 05:31:26 -0800 (PST)
+        Mon, 16 Dec 2019 08:32:31 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m24so5342408wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AlergG06/LQcMMmYPo3XnCRyN7U9O2JUfIg/mU+BPhw=;
+        b=pJEqQG2ettSWl5ISnOhumZ7NbNH1XAryH4p1OSA5elDOk4v2mwGmUskVw4360JUisg
+         xNDnF0aMe+wmle8Pp4tEoek4y0kWO9XIGzCqbCIvqbtttfXyr6696Yytt5Jy7kZTxa+7
+         ucsGdpod8g4RTibYoYsn9l79YIhE3u0ZcPBi6tIi9knazvnbuZPGjCZeAaKtB+zS6RL7
+         bUFCd23wy0OAudcBSICTW70GXuD/9UrIDG14bf4c+oA2V7ZUkRVBTCtOHeattkXFDAcz
+         +awr04c1qyo6orSY75/KNV2OT/y77qfEg6U3B4G5X/61xgvKBgcX6ZRRYWO98+ms0PPA
+         QkJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=adjDVaDOpI8al3CJQ77m74YYE8EkJXzR3/QYajElcEI=;
-        b=StC/OOVyFh/DCx1ibsKGFWicd83T1QyAS6dvKFXQY7CHTwLgm3KDUnXit8naQXFdwx
-         y0KJcWqhHxtYuJkWPW4Babu4/kbKqvsVXsvc5T/hO1/17LynlDxHj4f+wW0M9po/wukt
-         fReAYQ6Fx/mttEZl+FvenAZnEUPxpXnMArWsUfdKmCvcGHvv7ej6Ujbf+LnB/H27fl2p
-         tIkuwZdqISHniJ2E02Jk7bE/Lfx6fzMO+isXsuaL0iVV7fYZzzwD0jUDeN8VeiOiTR1u
-         SwKVt3A0KewXAl1zEHGnqFgaOAV9Xs0Pvz/WIjzY7NckqSK0dOxymZjR288oV1Wx7w2b
-         +f2Q==
-X-Gm-Message-State: APjAAAXhfeiNJM3YAEOLOsYik1OIrLZaGdIXMoXzElvYAnqMROdPl169
-        cjcuByeLzPSTPU9vpjbvT6YErPjIf/lu1kF9CXs=
-X-Google-Smtp-Source: APXvYqzpYtDQFaajS+ak1BudGvve2+sX5+qPNXt7bilITUMT9J0kfhP2OCfVlZn2kuME7LrilgZcj2EXBvnBUJh8rqA=
-X-Received: by 2002:aca:36c5:: with SMTP id d188mr9745707oia.54.1576503086134;
- Mon, 16 Dec 2019 05:31:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20191216103522.32215-1-gonsolo@gmail.com> <20191216103522.32215-2-gonsolo@gmail.com>
- <CAMuHMdVotJuotVKa3rxgR3ujCedoWM19-HhwhbTC9g6gV_EVNw@mail.gmail.com> <CANL0fFS81NgFBcMBdWo6OKefz04h_FeXadcau9Rkcna7Ap5PDw@mail.gmail.com>
-In-Reply-To: <CANL0fFS81NgFBcMBdWo6OKefz04h_FeXadcau9Rkcna7Ap5PDw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 16 Dec 2019 14:31:15 +0100
-Message-ID: <CAMuHMdVtm6BGx6d+F8-Bw+fD-M-DugspLkBvCtTKGgWiPvJnSA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Fix undefined reference to 'node_reclaim_distance'.
-To:     Gonsolo <gonsolo@gmail.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AlergG06/LQcMMmYPo3XnCRyN7U9O2JUfIg/mU+BPhw=;
+        b=MpiJCeQVYZno2XdF0fgaQj2B5evowtLAYUuQ2EE07T9QWAscmqjgG22Bs2SKILOe4d
+         nSSd36osFPa1A0gf6N/F4kWNX9rEFEenpDQkNQqAS7ti6Ng+Y0uGA7yEYEUW02WkGT4w
+         aF4a099ZNw4S1FbpG30lQ7jhQikMbDmfiCdwto3F0872HIBqr5vZCy0kChZL6hG6zst0
+         onOwx6wQpVuCCfei0V1nwlyOFz8asel8edCZb9XOLAzMGW3CXfQm/tWrWlytYSPXsUst
+         i2C4zATTx6ShsskmJfIhadM+6jH4GpyxJBGXx4Lez+DGopiBikHiASG1PgiHW/904UXX
+         Kvcg==
+X-Gm-Message-State: APjAAAWRSolc/AEbBROI3vpOwZeMQZ4OJP4jWLCVjc8w6CKStgfgyQxC
+        iXTg4EzQpWqFNz85cNOxKdc=
+X-Google-Smtp-Source: APXvYqw4TfBbwLqfC3a6Ly4eDGm8UzQzy0kZp9w/UrzITvoiLgE1vN71pHOST3CD8y1WZVj3zO400g==
+X-Received: by 2002:a1c:2dcd:: with SMTP id t196mr9678798wmt.22.1576503148875;
+        Mon, 16 Dec 2019 05:32:28 -0800 (PST)
+Received: from [192.168.1.20] (host86-130-12-236.range86-130.btcentralplus.com. [86.130.12.236])
+        by smtp.googlemail.com with ESMTPSA id p17sm21594336wmk.30.2019.12.16.05.32.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 05:32:28 -0800 (PST)
+Subject: Re: Oops booting 5.5.0-rc2
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>
+References: <3f2f9d0a-887a-6d44-994c-c53bd1c6a4e8@googlemail.com>
+ <20191216105439.GB32241@zn.tnic>
+From:   Chris Clayton <chris2553@googlemail.com>
+Message-ID: <a464989e-7897-e3f8-d517-2c7d6d7f495f@googlemail.com>
+Date:   Mon, 16 Dec 2019 13:32:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191216105439.GB32241@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gon,
 
-On Mon, Dec 16, 2019 at 2:21 PM Gonsolo <gonsolo@gmail.com> wrote:
-> > Unfortunately that may be an x86-centric assumption: on other platforms,
-> > there do exist systems with multiple memory banks with different access
-> > performance figures.
->
-> Does that mean that the line
->
-> obj-$(CONFIG_SMP) += cpupri.o cpudeadline.o topology.o stop_task.o pelt.o
->
-> in kernel/sched/topology/Makefile:23 is wrong?
->
-> Because in topology.c:1284 the variable node_reclaim_distance ist defined
-> which is used in mm/page_alloc.c:3529 without depending on SMP.
 
-The offending commit seems to be a55c7454a8c887b2 ("sched/topology:
-Improve load balancing on AMD EPYC systems").
+On 16/12/2019 10:54, Borislav Petkov wrote:
+> On Mon, Dec 16, 2019 at 10:41:18AM +0000, Chris Clayton wrote:
+>> I get an oops during boot of 5.5.0-rc2. My root partition is on an SSD - /dev/nvme0n1p5.
+> 
+> Here's the fix:
+> 
+> https://lore.kernel.org/lkml/CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com/
+> 
 
-Probably the node_reclaim_distance variable should be moved from
-an SMP-specific file to a NUMA-specific file.
+That's fixed the problem for me.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tested-by: Chris Clayton chris2553@googlemail.com
