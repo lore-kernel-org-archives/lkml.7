@@ -2,53 +2,51 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07017C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8E6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D069220CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0328420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520936;
-	bh=6+Xon98xyuUDg6YRXqvsnRkbM2QYa3frpTr9C/0umUM=;
+	s=default; t=1576520941;
+	bh=zxZs6ko0mtsxntLnAfKqr1zLGrhb0mWWaY4nzW/Ukmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHrYT2e2CE2E15YP6MX6BGkkgoqFM6PbxEhtfHRZcx3+aB0e5FG0c9Fda1BAegZ0F
-	 /0V6gNoQt+wRiGOpHG0+H17bJDcySsKsv3+l70sKL7wau/dr6oismrghatAbvfG6w7
-	 0gOm7vk5nkukmARpSt1WZswdgq3TSOeKOO3AvMv0=
+	b=xqEZardsA5K771nBayhIELXTCHeyIHDxzpSNzKfC2m7kMpHKMUQaKccjJ8DQ3AK8J
+	 wD96xfaCvIVso0OoiCKNoKe0G0V79xYueybjGta8FMO/m3XKblgVV8TKJujH5NcQ5X
+	 lAsZAj6h+p6WrxAeS+LsD61edVElqqp5PRvvscJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfLPS2z (ORCPT
+        id S1731199AbfLPSOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:28:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731217AbfLPSOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:25 -0500
+        id S1731179AbfLPSOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2AAF206E0;
-        Mon, 16 Dec 2019 18:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA0421775;
+        Mon, 16 Dec 2019 18:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520064;
-        bh=6+Xon98xyuUDg6YRXqvsnRkbM2QYa3frpTr9C/0umUM=;
+        s=default; t=1576520045;
+        bh=zxZs6ko0mtsxntLnAfKqr1zLGrhb0mWWaY4nzW/Ukmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddJs0zEuQU2xgw7BKo+sjHfS/v6WGmdJ42M7wToGYn1xfCYCfvxA8xZ0FMsbArG+i
-         wkct3uNc9zTgx33K6qtjgQq9OQT4dW1ymyg0Ep9bhGGi1kPqIgrewG7y7XiaD5jSeo
-         a9RvPV91vaOVqkn/AJZyfcLyP6gBezoPP63civwU=
+        b=OqDCLvIbmV5lSc0CoKEYKjQqs0ogmOURJAFfZG8hU7aynyJqRZ3t093U7P0zZTjON
+         nQduR64deg7U6xmKZD0JUznfHk4owMTGcgIJ8mVOUqI6k3iE7e/7ET3fZiwLKV9IX6
+         FKTKCKzMRR8NazkJY4/XoAQrRZe/XRh3PaW+7WnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 161/180] scsi: qla2xxx: Introduce the function qla2xxx_init_sp()
-Date:   Mon, 16 Dec 2019 18:50:01 +0100
-Message-Id: <20191216174846.265168496@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.3 175/180] s390/smp,vdso: fix ASCE handling
+Date:   Mon, 16 Dec 2019 18:50:15 +0100
+Message-Id: <20191216174848.079439949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,71 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-[ Upstream commit bdb61b9b944d1e5b7cee5a9fe21014363c55b811 ]
+commit a2308c11ecbc3471ebb7435ee8075815b1502ef0 upstream.
 
-This patch does not change any functionality but makes the next patch
-easier to read.
+When a secondary CPU is brought up it must initialize its control
+registers. CPU A which triggers that a secondary CPU B is brought up
+stores its control register contents into the lowcore of new CPU B,
+which then loads these values on startup.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is problematic in various ways: the control register which
+contains the home space ASCE will correctly contain the kernel ASCE;
+however control registers for primary and secondary ASCEs are
+initialized with whatever values were present in CPU A.
+
+Typically:
+- the primary ASCE will contain the user process ASCE of the process
+  that triggered onlining of CPU B.
+- the secondary ASCE will contain the percpu VDSO ASCE of CPU A.
+
+Due to lazy ASCE handling we may also end up with other combinations.
+
+When then CPU B switches to a different process (!= idle) it will
+fixup the primary ASCE. However the problem is that the (wrong) ASCE
+from CPU A was loaded into control register 1: as soon as an ASCE is
+attached (aka loaded) a CPU is free to generate TLB entries using that
+address space.
+Even though it is very unlikey that CPU B will actually generate such
+entries, this could result in TLB entries of the address space of the
+process that ran on CPU A. These entries shouldn't exist at all and
+could cause problems later on.
+
+Furthermore the secondary ASCE of CPU B will not be updated correctly.
+This means that processes may see wrong results or even crash if they
+access VDSO data on CPU B. The correct VDSO ASCE will eventually be
+loaded on return to user space as soon as the kernel executed a call
+to strnlen_user or an atomic futex operation on CPU B.
+
+Fix both issues by intializing the to be loaded control register
+contents with the correct ASCEs and also enforce (re-)loading of the
+ASCEs upon first context switch and return to user space.
+
+Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
+Cc: stable@vger.kernel.org # v4.15+
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_inline.h | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ arch/s390/kernel/smp.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_inline.h b/drivers/scsi/qla2xxx/qla_inline.h
-index bf063c6643523..0c3d907af7692 100644
---- a/drivers/scsi/qla2xxx/qla_inline.h
-+++ b/drivers/scsi/qla2xxx/qla_inline.h
-@@ -152,6 +152,18 @@ qla2x00_chip_is_down(scsi_qla_host_t *vha)
- 	return (qla2x00_reset_active(vha) || !vha->hw->flags.fw_started);
- }
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -262,10 +262,13 @@ static void pcpu_prepare_secondary(struc
+ 	lc->spinlock_index = 0;
+ 	lc->percpu_offset = __per_cpu_offset[cpu];
+ 	lc->kernel_asce = S390_lowcore.kernel_asce;
++	lc->user_asce = S390_lowcore.kernel_asce;
+ 	lc->machine_flags = S390_lowcore.machine_flags;
+ 	lc->user_timer = lc->system_timer =
+ 		lc->steal_timer = lc->avg_steal_timer = 0;
+ 	__ctl_store(lc->cregs_save_area, 0, 15);
++	lc->cregs_save_area[1] = lc->kernel_asce;
++	lc->cregs_save_area[7] = lc->vdso_asce;
+ 	save_access_regs((unsigned int *) lc->access_regs_save_area);
+ 	memcpy(lc->stfle_fac_list, S390_lowcore.stfle_fac_list,
+ 	       sizeof(lc->stfle_fac_list));
+@@ -816,6 +819,8 @@ static void smp_init_secondary(void)
  
-+static void qla2xxx_init_sp(srb_t *sp, scsi_qla_host_t *vha,
-+			    struct qla_qpair *qpair, fc_port_t *fcport)
-+{
-+	memset(sp, 0, sizeof(*sp));
-+	sp->fcport = fcport;
-+	sp->iocbs = 1;
-+	sp->vha = vha;
-+	sp->qpair = qpair;
-+	sp->cmd_type = TYPE_SRB;
-+	INIT_LIST_HEAD(&sp->elem);
-+}
-+
- static inline srb_t *
- qla2xxx_get_qpair_sp(scsi_qla_host_t *vha, struct qla_qpair *qpair,
-     fc_port_t *fcport, gfp_t flag)
-@@ -164,19 +176,9 @@ qla2xxx_get_qpair_sp(scsi_qla_host_t *vha, struct qla_qpair *qpair,
- 		return NULL;
- 
- 	sp = mempool_alloc(qpair->srb_mempool, flag);
--	if (!sp)
--		goto done;
--
--	memset(sp, 0, sizeof(*sp));
--	sp->fcport = fcport;
--	sp->iocbs = 1;
--	sp->vha = vha;
--	sp->qpair = qpair;
--	sp->cmd_type = TYPE_SRB;
--	INIT_LIST_HEAD(&sp->elem);
--
--done:
--	if (!sp)
-+	if (sp)
-+		qla2xxx_init_sp(sp, vha, qpair, fcport);
-+	else
- 		QLA_QPAIR_MARK_NOT_BUSY(qpair);
- 	return sp;
- }
--- 
-2.20.1
-
+ 	S390_lowcore.last_update_clock = get_tod_clock();
+ 	restore_access_regs(S390_lowcore.access_regs_save_area);
++	set_cpu_flag(CIF_ASCE_PRIMARY);
++	set_cpu_flag(CIF_ASCE_SECONDARY);
+ 	cpu_init();
+ 	preempt_disable();
+ 	init_cpu_timer();
 
 
