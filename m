@@ -2,172 +2,149 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FF3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB86C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67492075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O/AzOzKx";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Ww0rOw61"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7872075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfLPJ0c (ORCPT
+        id S1727091AbfLPJ1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:26:32 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:52670 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbfLPJ0c (ORCPT
+        Mon, 16 Dec 2019 04:27:23 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53732 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726313AbfLPJ1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:26:32 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DF950C00A7;
-        Mon, 16 Dec 2019 09:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576488391; bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=O/AzOzKxdkNz6NWBhowZTraYvTQL83By659a42a+OHeX7qWA2odlhOJ0BNM/YvLOh
-         pohhBjJJK8AK85svOVn+uTAT5EmDxw8YhARzfaBHFUl8eW1OSOOFDlRBGTIY3HNeIK
-         xq9x6TkPxdiru0Gtdxy2ZqxeqXkgUwOXELEqIbmkC87VNcv8tkzXKsjHIwgt4Nrj5u
-         L+mJlypAqn0bmGVVmKhwHKfKT4wi7MgO0M3d+k9KXSzDoeDKzzrIJoXeHm0PH21/Lj
-         fYPzmvFLK1MUQ3vQN7vZvXt7vnrxNLkfNkHrTPzoKh2MRE0C/AmhPN2eURwoTDf+nW
-         y6Vlg2/V50LNg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 53EE3A007D;
-        Mon, 16 Dec 2019 09:26:25 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 16 Dec 2019 01:26:25 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 16 Dec 2019 01:26:25 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jGaNTXRnw6wGN27Sk4rAphQwqH4ME4usVRm3CHMdYSwp5hBzg/Y6lBzRZy0mWk2stf/FY2AlEey87vNGjveJ877u6xI9LDy45m55jauaibRBAZ0mNFJkfO/CXrhvitkCCpq+rhspFHUhpAb2vld0NWOjO3u4pAhC7QrruXQ+vKr+jreX7E5MCheU5y0uzDgjwaT0i1qACfFRkZ3UW5fzQ5xQdaPvR1AWWTotd8PNh/2iJlFTVMHwGyv0aUcsnG+E1nQE+eyRLv5/7zq1O9aJEFzxLtNKTnt4xePzAZSNb3rOtC1BB3C1wDuzcWoze3d2vXspWFzSN8D8srXag/b4lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
- b=NKjSzUB3hXu+yHdEczsnRmeHHZsaKR1+O2wgYXwcoBnOcSW7WCcpsJ9JwxYbiH7lzrVxhFtoDEi5z+WCA1AdL56NVtmtzjsiznKVX2eL+JZBxsFFWto0sg8Lv0lJh6KDpvcTiqwaC2SHk5lJkMn6LqdbTyWlt5n7oJuzUh7fQHKZSSmAQJ0AWs13C31Fu8X1ZBUfDCwXSCwIhLJnEToxXoVx2Scd/g6WRHlUb0SIeqDvfFCvYIECRl6eMX607vdUxu+F6bzh7Z5yAhl+rN0RQd6f7Jh1x0qQHCXI8WCwc6jbg44bXlEJMrtW3e7HoupQ9iDXOjYtAo5O6Ii3v5JR/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VqE/VXg+vV+Li+3VRW2K8tKQYknthHpXqMs1+Qjnbns=;
- b=Ww0rOw61UkDyYzfgQE4EYt6mFqK+OXREFJgyuchu31AHh8l7oyrw5NK1QKSRVWXDN+SVv/BhZOcPD6ljpWlFQE3X1TtoHx3Bhh40V8l7hKuI8tkHqFsSi3cAboVKX5SM5t83LBtfFzVAJ/WNzh5JtUeXSp6+o1P5otmCJF+PfiM=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB2994.namprd12.prod.outlook.com (20.178.210.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Mon, 16 Dec 2019 09:26:23 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::3d20:3a36:3b64:4510]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::3d20:3a36:3b64:4510%7]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 09:26:23 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net 0/8] net: stmmac: Fixes for -net
-Thread-Topic: [PATCH net 0/8] net: stmmac: Fixes for -net
-Thread-Index: AQHVr5DiuA/S/u4Lb0GUkL7jqplpwae4yfIAgAO7yTA=
-Date:   Mon, 16 Dec 2019 09:26:22 +0000
-Message-ID: <BN8PR12MB326639325F465266DEACAA64D3510@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
- <20191213162216.2dc8a108@cakuba.netronome.com>
-In-Reply-To: <20191213162216.2dc8a108@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee42dd07-2751-4a2c-2d90-08d7820a0456
-x-ms-traffictypediagnostic: BN8PR12MB2994:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB2994598EB0751D1EF528A922D3510@BN8PR12MB2994.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(39850400004)(396003)(136003)(189003)(199004)(186003)(316002)(66946007)(54906003)(6916009)(5660300002)(33656002)(66556008)(66446008)(66476007)(478600001)(76116006)(64756008)(7696005)(6506007)(26005)(2906002)(71200400001)(9686003)(4326008)(55016002)(8936002)(81166006)(52536014)(86362001)(81156014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2994;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Rq/5T77uCWoaPGCq9QEHSHrvONj8AeSD2Lac9RuOP15uUbIYOulJpd3F2vjfJubSNVBAHct+CsctIDhYPPXVvDwLfKNLRsvEPCeWKg/40KqboEklBPJCLH6Knmb0NbzkvZw+YgEXniH0GE8p6xeNzrl9CBgzJwdz6QBt57zrHoizThXzN/7vjyDod43OexQDED1mjulMEM5tCQOwstWmV4M94C3ZOuqDRZfFNzcRaDeRBvQQjCDK1r4LTCz6fUpdBYQJh/jlgra7EyApZZND7Fp7GNHG04HKNX44NTRWeaPsdVQ8y9SqmY7FknkKb2aaxt7CmNs2jhG8JTnQo0nmm0LS6CZFLHTeIwg//3GThjhKJrXz6JnnmjkaTyeC96S8QrVESSnh96PrKuvqyWouczVLNd5UIFo3cfNi6NM/KIbqJ1gel76apqKZbf8R/VSP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Dec 2019 04:27:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Tl4L2qr_1576488436;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tl4L2qr_1576488436)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 16 Dec 2019 17:27:17 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v6 00/10] per lruvec lru_lock for memcg
+Date:   Mon, 16 Dec 2019 17:26:16 +0800
+Message-Id: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee42dd07-2751-4a2c-2d90-08d7820a0456
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 09:26:22.8426
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8k+GIvVuJ9NtsjZA/P5bnQjIjyZCTWa1KaYRvUOWnrqj6uJ2vvYN9a8vhFTM57HOPwOBzLGdZ6qfn+GbBFtj6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2994
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Date: Dec/14/2019, 00:22:16 (UTC+00:00)
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node.
 
-> On Tue, 10 Dec 2019 20:33:52 +0100, Jose Abreu wrote:
-> > Fixes for stmmac.
-> >=20
-> > 1) Fixes the filtering selftests (again) for cases when the number of m=
-ulticast
-> > filters are not enough.
-> >=20
-> > 2) Fixes SPH feature for MTU > default.
-> >=20
-> > 3) Fixes the behavior of accepting invalid MTU values.
-> >=20
-> > 4) Fixes FCS stripping for multi-descriptor packets.
-> >=20
-> > 5) Fixes the change of RX buffer size in XGMAC.
-> >=20
-> > 6) Fixes RX buffer size alignment.
-> >=20
-> > 7) Fixes the 16KB buffer alignment.
-> >=20
-> > 8) Fixes the enabling of 16KB buffer size feature.
->=20
-> Hi Jose!
->=20
-> Patches directed at net should have a Fixes tag identifying the commit
-> which introduced the problem. The commit messages should also describe
-> user-visible outcomes of the bugs. Without those two its hard to judge
-> which patches are important for stable backports.
->=20
-> Could you please repost with appropriate Fixes tags?
+We introduces function lock_page_lruvec, which will lock the page's
+memcg and then memcg's lruvec->lru_lock(Thanks Johannes Weiner,
+Hugh Dickins and Konstantin Khlebnikov suggestion/reminder) to replace
+old pgdat->lru_lock.
 
-I agree with you Jakub but although these are bugs they are either for=20
-recently introduced features (such as SPH and selftests), or for=20
-features that are not commonly used. I can dig into the GIT history and=20
-provide fixes tag for them all or I can always provide a backport fix if=20
-any user requires so. Can you please comment on which one you prefer ?
+Following to Daniel Jordan's suggestion, I run 208 'dd' with on 104
+containers on a 2s * 26cores * HT box with a modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
 
----
-Thanks,
-Jose Miguel Abreu
+With this patchset, the readtwice performance increased about 80%
+with containers. And no performance drops w/o container. The previous
+suspicious slightly drop has gone in v5.5-rc version. And we even got another
+5% performance increase. Also the readtwice case performance increased from 5.4
+to 5.5-rc.
+
+Another way to guard move_account is by lru_lock instead of move_lock 
+Considering the memcg move task path:
+   mem_cgroup_move_task:
+     mem_cgroup_move_charge:
+	lru_add_drain_all();
+	atomic_inc(&mc.from->moving_account); //ask lruvec's move_lock
+	synchronize_rcu();
+	walk_parge_range: do charge_walk_ops(mem_cgroup_move_charge_pte_range):
+	   isolate_lru_page();
+	   mem_cgroup_move_account(page,)
+		spin_lock(&from->move_lock) 
+		page->mem_cgroup = to;
+		spin_unlock(&from->move_lock) 
+	   putback_lru_page(page)
+
+to guard 'page->mem_cgroup = to' by to_vec->lru_lock has the similar effect with
+move_lock. So for performance reason, both solutions are same.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
+7 years ago.
+
+Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan, 
+Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
+and some testing support from Intel 0days!
+
+v6, 
+  a, rebase on v5.5-rc2, and do retesting.
+  b, pick up Johanness' comments change and a lock_page_lru cleanup.
+
+v5,
+  a, locking page's memcg according JohannesW suggestion
+  b, using macro for non memcg, according to Johanness and Metthew's suggestion.
+
+v4: 
+  a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
+  b, remove the irqsave flags changes, thanks Metthew Wilcox
+  c, merge/split patches for better understanding and bisection purpose
+
+v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
+
+v2: bypass a performance regression bug and fix some function issues
+
+v1: initial version, aim testing show 5% performance increase
+
+
+
+Alex Shi (8):
+  mm/vmscan: remove unnecessary lruvec adding
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: introduce the relock_page_lruvec function
+  mm/mlock: optimize munlock_pagevec by relocking
+  mm/swap: only change the lru_lock iff page's lruvec is different
+  mm/pgdat: remove pgdat lru_lock
+  mm/lru: debug checking for page memcg moving and lock_page_memcg
+  mm/memcg: fold lock in lock_page_lru
+
+Hugh Dickins (1):
+  mm/lru: revise the comments of lru_lock
+
+Johannes Weiner (1):
+  mm: revise the comments of mem_cgroup_page_lruvec
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +---
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
+ Documentation/trace/events-kmem.rst                |  2 +-
+ Documentation/vm/unevictable-lru.rst               | 22 ++---
+ include/linux/memcontrol.h                         | 63 ++++++++++++++
+ include/linux/mm_types.h                           |  2 +-
+ include/linux/mmzone.h                             |  5 +-
+ mm/compaction.c                                    | 59 ++++++++-----
+ mm/filemap.c                                       |  4 +-
+ mm/huge_memory.c                                   | 18 ++--
+ mm/memcontrol.c                                    | 95 +++++++++++++++++----
+ mm/mlock.c                                         | 28 +++----
+ mm/mmzone.c                                        |  1 +
+ mm/page_alloc.c                                    |  1 -
+ mm/page_idle.c                                     |  7 +-
+ mm/rmap.c                                          |  2 +-
+ mm/swap.c                                          | 75 +++++++----------
+ mm/vmscan.c                                        | 97 ++++++++++++----------
+ 18 files changed, 309 insertions(+), 193 deletions(-)
+
+-- 
+1.8.3.1
+
