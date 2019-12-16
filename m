@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97E0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E3B206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7179B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520739;
-	bh=ThkZrGCpRWJfNFSjjFeIhD8e0DeNX9ugk1KreQ0/rlM=;
+	s=default; t=1576520749;
+	bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1vGjDWI9K2TxYJ028iv2QMxOOr1m/b6q/O/I6TrYrZQ/kMTZWFywmsksPO+2w4qg
-	 XHj+dqFx+EGGjiQh2h3AXLAH0aYdmaYhNoBOiGrGBsCXO7dZkXlytfiQ7Qw0nFi09i
-	 0NhabE0mLttbPX6nWweOd3Nsa0KstJmqj9klyG50=
+	b=TwBGMMbuvZUh2JE1KOR7ADDXtZR1fnLN/j9Nlsygf9AzQZJGqgY4QEaGpoAkg8hs1
+	 AZiq7wK9MBJ0Qs+BrQ+SYM87Oj+GOd2mkeA9VqeRGuNiFIief1TAbvYd4lVoAdqFCh
+	 YCTJ95bGSEEhdjt5iaU2GchCk6OXq0ElnEayDzws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731855AbfLPSZh (ORCPT
+        id S1731892AbfLPSZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:25:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:25:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731741AbfLPSSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:02 -0500
+        id S1731496AbfLPSRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1BF0206E0;
-        Mon, 16 Dec 2019 18:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E5C207FF;
+        Mon, 16 Dec 2019 18:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520281;
-        bh=ThkZrGCpRWJfNFSjjFeIhD8e0DeNX9ugk1KreQ0/rlM=;
+        s=default; t=1576520266;
+        bh=QBrHzF/bDur2YZKXK3pZ0+nH4CtHkNb06QOzdb7jU/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwgK6tsjiFkwEBsHY2+654jJwsGk7YJiuZYvCGsbrr5hQFImkk2cZM0mc/NPsadJD
-         2EQUiffBJa0NvGnTdfP0yMEOVu3ZuyrsCifiul6Cx7SyvjrmVhNXnw4sCKR+4Z5/ln
-         ag86GRRVC/oP1gaNSDgMab6Nfd11QD27ov2qymnM=
+        b=Lmom3sP440Gbbom3/8CzNIhDsJnvRBLhePANfqaxSOx3dVQBPek8OB9TcFhMz9Olc
+         OyyVoMUtRkVl+Gru7oNK8nYs0uNY6xtYHS5ExFHJoKEB+BxrrzVhQB2EYnDvWKUXeL
+         Tyu3HTXpw2vmi8jiY4WfUGSxakEIVauPmQb8X0v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pete Zaitcev <zaitcev@redhat.com>,
-        syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 5.4 050/177] usb: mon: Fix a deadlock in usbmon between mmap and read
-Date:   Mon, 16 Dec 2019 18:48:26 +0100
-Message-Id: <20191216174830.354331162@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 082/177] hwrng: omap - Fix RNG wait loop timeout
+Date:   Mon, 16 Dec 2019 18:48:58 +0100
+Message-Id: <20191216174837.647919779@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,104 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pete Zaitcev <zaitcev@redhat.com>
+From: Sumit Garg <sumit.garg@linaro.org>
 
-commit 19e6317d24c25ee737c65d1ffb7483bdda4bb54a upstream.
+commit be867f987a4e1222114dd07a01838a17c26f3fff upstream.
 
-The problem arises because our read() function grabs a lock of the
-circular buffer, finds something of interest, then invokes copy_to_user()
-straight from the buffer, which in turn takes mm->mmap_sem. In the same
-time, the callback mon_bin_vma_fault() is invoked under mm->mmap_sem.
-It attempts to take the fetch lock and deadlocks.
+Existing RNG data read timeout is 200us but it doesn't cover EIP76 RNG
+data rate which takes approx. 700us to produce 16 bytes of output data
+as per testing results. So configure the timeout as 1000us to also take
+account of lack of udelay()'s reliability.
 
-This patch does away with protecting of our page list with any
-semaphores, and instead relies on the kernel not close the device
-while mmap is active in a process.
-
-In addition, we prohibit re-sizing of a buffer while mmap is active.
-This way, when (now unlocked) fault is processed, it works with the
-page that is intended to be mapped-in, and not some other random page.
-Note that this may have an ABI impact, but hopefully no legitimate
-program is this wrong.
-
-Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
-Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
-Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: 46eb14a6e158 ("USB: fix usbmon BUG trigger")
+Fixes: 383212425c92 ("hwrng: omap - Add device variant for SafeXcel IP-76 found in Armada 8K")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191204203941.3503452b@suzdal.zaitcev.lan
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/mon/mon_bin.c |   32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ drivers/char/hw_random/omap-rng.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/mon/mon_bin.c
-+++ b/drivers/usb/mon/mon_bin.c
-@@ -1039,12 +1039,18 @@ static long mon_bin_ioctl(struct file *f
+--- a/drivers/char/hw_random/omap-rng.c
++++ b/drivers/char/hw_random/omap-rng.c
+@@ -66,6 +66,13 @@
+ #define OMAP4_RNG_OUTPUT_SIZE			0x8
+ #define EIP76_RNG_OUTPUT_SIZE			0x10
  
- 		mutex_lock(&rp->fetch_lock);
- 		spin_lock_irqsave(&rp->b_lock, flags);
--		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
--		kfree(rp->b_vec);
--		rp->b_vec  = vec;
--		rp->b_size = size;
--		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
--		rp->cnt_lost = 0;
-+		if (rp->mmap_active) {
-+			mon_free_buff(vec, size/CHUNK_SIZE);
-+			kfree(vec);
-+			ret = -EBUSY;
-+		} else {
-+			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-+			kfree(rp->b_vec);
-+			rp->b_vec  = vec;
-+			rp->b_size = size;
-+			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-+			rp->cnt_lost = 0;
-+		}
- 		spin_unlock_irqrestore(&rp->b_lock, flags);
- 		mutex_unlock(&rp->fetch_lock);
- 		}
-@@ -1216,13 +1222,21 @@ mon_bin_poll(struct file *file, struct p
- static void mon_bin_vma_open(struct vm_area_struct *vma)
- {
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	unsigned long flags;
++/*
++ * EIP76 RNG takes approx. 700us to produce 16 bytes of output data
++ * as per testing results. And to account for the lack of udelay()'s
++ * reliability, we keep the timeout as 1000us.
++ */
++#define RNG_DATA_FILL_TIMEOUT			100
 +
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active++;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
- }
+ enum {
+ 	RNG_OUTPUT_0_REG = 0,
+ 	RNG_OUTPUT_1_REG,
+@@ -176,7 +183,7 @@ static int omap_rng_do_read(struct hwrng
+ 	if (max < priv->pdata->data_size)
+ 		return 0;
  
- static void mon_bin_vma_close(struct vm_area_struct *vma)
- {
-+	unsigned long flags;
-+
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active--;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
- }
- 
- /*
-@@ -1234,16 +1248,12 @@ static vm_fault_t mon_bin_vma_fault(stru
- 	unsigned long offset, chunk_idx;
- 	struct page *pageptr;
- 
--	mutex_lock(&rp->fetch_lock);
- 	offset = vmf->pgoff << PAGE_SHIFT;
--	if (offset >= rp->b_size) {
--		mutex_unlock(&rp->fetch_lock);
-+	if (offset >= rp->b_size)
- 		return VM_FAULT_SIGBUS;
--	}
- 	chunk_idx = offset / CHUNK_SIZE;
- 	pageptr = rp->b_vec[chunk_idx].pg;
- 	get_page(pageptr);
--	mutex_unlock(&rp->fetch_lock);
- 	vmf->page = pageptr;
- 	return 0;
- }
+-	for (i = 0; i < 20; i++) {
++	for (i = 0; i < RNG_DATA_FILL_TIMEOUT; i++) {
+ 		present = priv->pdata->data_present(priv);
+ 		if (present || !wait)
+ 			break;
 
 
