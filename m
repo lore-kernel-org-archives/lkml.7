@@ -2,139 +2,104 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF3AC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DBCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C57A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05003206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfLPIio (ORCPT
+        id S1727016AbfLPIjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:38:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726772AbfLPIio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:38:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB298AE34;
-        Mon, 16 Dec 2019 08:38:41 +0000 (UTC)
-Subject: Re: [PATCH 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-References: <20191212183816.102402-1-damien.lemoal@wdc.com>
- <20191212183816.102402-3-damien.lemoal@wdc.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <8fe28905-aae5-bfb4-d6ac-f09d7244059e@suse.de>
-Date:   Mon, 16 Dec 2019 09:38:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:39:00 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:33113 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfLPIi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 03:38:59 -0500
+Received: from [192.168.1.155] ([77.2.44.177]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mbkac-1i8GtY2cKk-00dEbt; Mon, 16 Dec 2019 09:38:50 +0100
+Subject: Re: [PATCH] net: l2tp: remove unneeded MODULE_VERSION() usage
+To:     David Miller <davem@davemloft.net>, info@metux.net
+Cc:     linux-kernel@vger.kernel.org, jchapman@katalix.com,
+        netdev@vger.kernel.org
+References: <20191212133613.25376-1-info@metux.net>
+ <20191212.110354.354662228217900367.davem@davemloft.net>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <75d6a169-d977-441a-f9b5-292be0c9a3f1@metux.net>
+Date:   Mon, 16 Dec 2019 09:38:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191212183816.102402-3-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212.110354.354662228217900367.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:2CqXzjJ/9Rl87J4VRB8rGMWHTiQg+TNck86VRyWGGfMGIhsEhLc
+ YvLGIyG0jCvZO3wy5RAQHLeKqWEELlQ7MkliKqSmhhT6Dr0FZkHypk0Q83op505Om8TLCco
+ VhSVxW4bYHGfdE6ywonzLOd/HFEn3IOzX3W36a3Jk35WQkeofO6U0zbayqrIXL+0jpOwJuA
+ tneSCDpLmGZ5pmbOkSeXA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8Nfwt0ybmJc=:A4391fXndGZ/zwrcm7kqf7
+ KP/GcKlirwiXeqt0Xq5gpj3wbVesvKNygGkvJmyDXc/GhtF8mVP/Iu9gmCukA8fB5Uce9E/8a
+ 1p2rwmbmsA1jel6nXi+rwRnFKc1uHykMo/PNo3brFBTniprpZSZro1RTAKleKL40vkGHMRBVs
+ FxZz8hLqzE7NDMbnika8wtLikC5E81vbOTJBsqwp5Y+SDZGg25Fo7Q7Rwq9M8kXyl3EwGCFky
+ Xn9OXU2N+SPboglQ+dLyYFr7Lk97aEej3XN69xOUuI+GxPutOdF5MU0mIT0WP/dLJ94xQnofp
+ ak+aBMbG0nkmMlbNN6d8gxNHC3GfX3c//Fe5KlIWLbvWUZsvX8+Cot+T7DlS0rXezsXtfHdyT
+ 26gE7MnsQxJOsCvn+Uhk0v5TG9j+6w0+cT+XFSAzR6HIgmeutEFQFMs3JtDGqDg1wg1DnSCdC
+ OFLmSPrrUNTucqQX3Nknve/hw6of6MWmWWpM3dkEtpF57pIgbSfiAYbbIW7DGs8wIcfCKcvHV
+ BjsRaJDLtjI1rtWNAqeMVEEzWBAmqeKTyMrTrrqy7sT3LU6NsZBQjUCxHL4nq2qZgQxmUwBFR
+ rKq12ya6obp9GuIcUIqcpaLH2XXEvFTzY43ag7W+GmG4PbT7F8s9/XzVpG6ehps9TKRUAGisU
+ em7n+fPbab4Y9NK0av/aFk3idd7D0oVyswNfri5aRz2HG775LCo7PGZyAUjyvahzp6it8J2Mv
+ 6xhcQ2ib9JfZhyMsHoGFrxJ/DDw294bvyc5j0a9xF8rtF9lkwnOjzUcxmqXgt9JZfe7bga24t
+ 1SkZdovYC3SBYOjwuza6WriEMwZ3dp8JqEmZN/3y3x5e7wKfiNhpEJuzPqebVH+CRF/d5uniE
+ dMCl/u2s6p0D0ckMoO/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 7:38 PM, Damien Le Moal wrote:
-> Add the new file Documentation/filesystems/zonefs.txt to document zonefs
-> principles and user-space tool usage.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->   Documentation/filesystems/zonefs.txt | 150 +++++++++++++++++++++++++++
->   MAINTAINERS                          |   1 +
->   2 files changed, 151 insertions(+)
->   create mode 100644 Documentation/filesystems/zonefs.txt
-> 
-> diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
-> new file mode 100644
-> index 000000000000..e5d798f4087d
-> --- /dev/null
-> +++ b/Documentation/filesystems/zonefs.txt
-> @@ -0,0 +1,150 @@
-> +ZoneFS - Zone filesystem for Zoned block devices
-> +
-> +Overview
-> +========
-> +
-> +zonefs is a very simple file system exposing each zone of a zoned block device
-> +as a file. Unlike a regular file system with zoned block device support (e.g.
-> +f2fs), zonefs does not hide the sequential write constraint of zoned block
-> +devices to the user. Files representing sequential write zones of the device
-> +must be written sequentially starting from the end of the file (append only
-> +writes).
-> +
-> +As such, zonefs is in essence closer to a raw block device access interface
-> +than to a full featured POSIX file system. The goal of zonefs is to simplify
-> +the implementation of zoned block devices support in applications by replacing
-> +raw block device file accesses with a richer file API, avoiding relying on
-> +direct block device file ioctls which may be more obscure to developers. One
-> +example of this approach is the implementation of LSM (log-structured merge)
-> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices by
-> +allowing SSTables to be stored in a zone file similarly to a regular file system
-> +rather than as a range of sectors of the entire disk. The introduction of the
-> +higher level construct "one file is one zone" can help reducing the amount of
-> +changes needed in the application as well as introducing support for different
-> +application programming languages.
-> +
-> +zonefs on-disk metadata is reduced to a super block which persistently stores a
-> +magic number and optional features flags and values. On mount, zonefs uses
-> +blkdev_report_zones() to obtain the device zone configuration and populates
-> +the mount point with a static file tree solely based on this information.
-> +E.g. file sizes come from the device zone type and write pointer offset managed
-> +by the device itself.
-> +
-> +The zone files created on mount have the following characteristics.
-> +1) Files representing zones of the same type are grouped together
-> +   under the same sub-directory:
-> +  * For conventional zones, the sub-directory "cnv" is used.
-> +  * For sequential write zones, the sub-directory "seq" is used.
-> +  These two directories are the only directories that exist in zonefs. Users
-> +  cannot create other directories and cannot rename nor delete the "cnv" and
-> +  "seq" sub-directories.
-> +2) The name of zone files is the number of the file within the zone type
-> +   sub-directory, in order of increasing zone start sector.
-> +3) The size of conventional zone files is fixed to the device zone size.
-> +   Conventional zone files cannot be truncated.
-> +4) The size of sequential zone files represent the file's zone write pointer
-> +   position relative to the zone start sector. Truncating these files is
-> +   allowed only down to 0, in wich case, the zone is reset to rewind the file
-> +   zone write pointer position to the start of the zone, or up to the zone size,
-> +   in which case the file's zone is transitioned to the FULL state (finish zone
-> +   operation).
-> +5) All read and write operations to files are not allowed beyond the file zone
-> +   size. Any access exceeding the zone size is failed with the -EFBIG error.
-> +6) Creating, deleting, renaming or modifying any attribute of files and
-> +   sub-directories is not allowed.
-> +
-> +Several optional features of zonefs can be enabled at format time.
-> +* Conventional zone aggregation: ranges of contiguous conventional zones can be
-> +  agregated into a single larger file instead of the default one file per zone.
-> +* File ownership: The owner UID and GID of zone files is by default 0 (root)
-> +  but can be changed to any valid UID/GID.
-> +* File access permissions: the default 640 access permissions can be changed.
-> +
+On 12.12.19 20:03, David Miller wrote:
 
-Please mention the 'direct writes only to sequential zones' restriction.
+Hi,
 
-Cheers,
+> Is there a plan to remove MODULE_VERSION across the entire kernel tree?
 
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+I'm not entirely sure, but for all I know it just doesn't make sense at
+all to have it (maybe except for OOT modules) and already was removed in
+several places. For example, Greg cleansed it from the input subsys a
+few years ago:
+
+	https://lkml.org/lkml/2017/11/22/480
+
+Similar patch for gpio subsys was accepted recently.
+
+This got my attention by some discussion on some patches introducing new
+module w/ including such macro call. The consensus from the discussion
+was that the MODULE_VERSION() shouldn't be used, so I prepared some
+patches to remove it in many places.
+
+If you like to keep it in, give me a clear reject (maybe also a short
+list of other areas under your maintainership), so I can skip it out
+and don't bother you again :)
+
+Personally, I believe, we shouldn't keep things that don't really serve
+any purpose. Does anybody ever actually use it ?
+
+
+By the way: we've got a similar thing with network devices, they've got
+a version field. But it seems not all drivers filling it.
+
+What is that used for ?
+
+
+
+--mtx
+
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
