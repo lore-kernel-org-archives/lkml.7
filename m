@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDBFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0813B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522011;
-	bh=bOCEoTcvdDfPaHOhajk1tunpiBuyvJShyLlO5Cu5dX8=;
+	s=default; t=1576522022;
+	bh=YEsL8fnV5oRLJ3Z306dsBmpxsyykbyKz9/Cdu3UFYAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nji/nsYFH8Gc7BG5IdejICum/3rdYxG1X33bIiL5c90Xx+2fICZvEhaw3PIlz6g0
-	 5MUDdmTJztrYWIdD8MYtQF3jwhD/ymiul6vYS7i1n9WXdp3pM6ahLX9l+dbs76q//3
-	 NeJv5+Y70wZ1MrOYWopZqQqkl79oQjmX1XX9/yNs=
+	b=ZOViP54aIU47UiUgvnlVh895Ibpu7dS95l1aer5oW5deK23gJc59RxFXkEihhqbnz
+	 DTiAjTqYu7Q7dYlB84yV4U3nw6xGYm0iGsF3E+ABrYGNkys1kYAoVjUoVbSxQ413ly
+	 zMfpV8EwkAS/CC0Y/uvn8S0dIbugQd87zwwjwAe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfLPSqu (ORCPT
+        id S1728179AbfLPSrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53772 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbfLPR4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:02 -0500
+        id S1727916AbfLPRzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B60220733;
-        Mon, 16 Dec 2019 17:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92EDA205ED;
+        Mon, 16 Dec 2019 17:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518961;
-        bh=bOCEoTcvdDfPaHOhajk1tunpiBuyvJShyLlO5Cu5dX8=;
+        s=default; t=1576518947;
+        bh=YEsL8fnV5oRLJ3Z306dsBmpxsyykbyKz9/Cdu3UFYAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FKKif3XrbBMIz5xhGPFpQH3mfj+B0/RzTVg+eGUMKCVKR2iciELRaDrd8fZKusVla
-         ZN/tYEtJSjYoPy9QCR6l42byeaJzgE87H44rPlsXZPSlkTTyeFEEbsVv8JkwcWiL1c
-         aGvAFoy1vu1Q1iiYuM2hWUBTRq7iv7hcEYm5Bigg=
+        b=fewTPw0KpdVK8OvjEtsmbnh+MEI6yYTs6xBqt2w+MuHaNDU8f9fdoJvAISW76FxxZ
+         KeWeNaZBRXZb3kE3lRJjkm4U5otxD23CJ38ucWUscJk5ghJP5pYJWR7PQLlelLqSs9
+         D5dH9Wbru2w5ryoO6l07LCHoTu6Jie+MUIW5lWKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.14 137/267] kernfs: fix ino wrap-around detection
-Date:   Mon, 16 Dec 2019 18:47:43 +0100
-Message-Id: <20191216174908.845079069@linuxfoundation.org>
+        stable@vger.kernel.org, emamd001@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 131/267] Input: Fix memory leak in psxpad_spi_probe
+Date:   Mon, 16 Dec 2019 18:47:37 +0100
+Message-Id: <20191216174906.886764514@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,63 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit e23f568aa63f64cd6b355094224cc9356c0f696b upstream.
+In the implementation of psxpad_spi_probe() the allocated memory for
+pdev is leaked if psxpad_spi_init_ff() or input_register_polled_device()
+fail. The solution is using device managed allocation, like the one used
+for pad. Perform the allocation using
+devm_input_allocate_polled_device().
 
-When the 32bit ino wraps around, kernfs increments the generation
-number to distinguish reused ino instances.  The wrap-around detection
-tests whether the allocated ino is lower than what the cursor but the
-cursor is pointing to the next ino to allocate so the condition never
-triggers.
-
-Fix it by remembering the last ino and comparing against that.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 4a3ef68acacf ("kernfs: implement i_generation")
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org # v4.14+
+Fixes: 8be193c7b1f4 ("Input: add support for PlayStation 1/2 joypads connected via SPI")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/kernfs/dir.c        |    5 ++---
- include/linux/kernfs.h |    1 +
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/joystick/psxpad-spi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -623,7 +623,6 @@ static struct kernfs_node *__kernfs_new_
- {
- 	struct kernfs_node *kn;
- 	u32 gen;
--	int cursor;
- 	int ret;
+--- a/drivers/input/joystick/psxpad-spi.c
++++ b/drivers/input/joystick/psxpad-spi.c
+@@ -292,7 +292,7 @@ static int psxpad_spi_probe(struct spi_d
+ 	if (!pad)
+ 		return -ENOMEM;
  
- 	name = kstrdup_const(name, GFP_KERNEL);
-@@ -636,11 +635,11 @@ static struct kernfs_node *__kernfs_new_
- 
- 	idr_preload(GFP_KERNEL);
- 	spin_lock(&kernfs_idr_lock);
--	cursor = idr_get_cursor(&root->ino_idr);
- 	ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
--	if (ret >= 0 && ret < cursor)
-+	if (ret >= 0 && ret < root->last_ino)
- 		root->next_generation++;
- 	gen = root->next_generation;
-+	root->last_ino = ret;
- 	spin_unlock(&kernfs_idr_lock);
- 	idr_preload_end();
- 	if (ret < 0)
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -185,6 +185,7 @@ struct kernfs_root {
- 
- 	/* private fields, do not use outside kernfs proper */
- 	struct idr		ino_idr;
-+	u32			last_ino;
- 	u32			next_generation;
- 	struct kernfs_syscall_ops *syscall_ops;
- 
+-	pdev = input_allocate_polled_device();
++	pdev = devm_input_allocate_polled_device(&spi->dev);
+ 	if (!pdev) {
+ 		dev_err(&spi->dev, "failed to allocate input device\n");
+ 		return -ENOMEM;
 
 
