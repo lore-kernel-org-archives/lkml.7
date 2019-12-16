@@ -2,51 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25019C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B253AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED1B2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7082166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520452;
-	bh=skTilK/llaI7fcauRZugLWg7Pht6YdgHTaPLDoFMAn8=;
+	s=default; t=1576520456;
+	bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPOEsfE5nRmQ7psn/pYgO2LFc0o6PHQmWvk6qsHUPYjxfj9OhvM8oWh8RUsRs2AZf
-	 fPSSP4d1jCGeWoXq+HZ19JPn/QD6TZeuSeCoOGVQMuJg0z50GWFl3iHggF6JEdI9Gl
-	 8nxv8UZB1YtLi80xoE48OgcOjwO27eeERpLeI7xc=
+	b=bE4BBysdjjcOJrITmVAVZrvOb4UxMYdsX7c6N7xEVi5wdynhiAKdxjcNRpRq5wfq0
+	 WSzNNHjQudyj2zSGdM5M1pyY2lFrqWzr+4sgDfl6FbQ3E9CeXzjxO9bq3YyHjhCm+J
+	 XWX4In/26Kd4yBHbLyVnIw/HHn69vYqE6KtsSUNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731912AbfLPSUu (ORCPT
+        id S1732162AbfLPSUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732138AbfLPSUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:47 -0500
+        id S1731360AbfLPSUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06C8206EC;
-        Mon, 16 Dec 2019 18:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BCB206EC;
+        Mon, 16 Dec 2019 18:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520446;
-        bh=skTilK/llaI7fcauRZugLWg7Pht6YdgHTaPLDoFMAn8=;
+        s=default; t=1576520450;
+        bh=LE/ojb96WAFFLYu4wiJQJxjpbgtNDSnCSubFzAS8OmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6IpCUfT2FzwaxIdw21FR+BnQ/UxA+PdTafRZfUZ/LLiMIYqDVZFxUhwQe/QNVMoo
-         lenM9KbiadpzbCzh3M7LjU0Ri6tEpTwNhq8RCqUb94jwAu1dNjRfWEWJRn23wtq6Ro
-         twWByTe/Gtd3DdsyK/xI7MUrmnrLUUIAD+cNmAX0=
+        b=ohtGMv5A6MxsQXmIrNfJdiwnby3Y0nMUj3M4DhauX0nmifO902y0oQjctmuThTJzP
+         R8MfyFK09i03HAJgUi5OKV9uFLsUOIhmoNWZmMdbb+gJsVvXN4KzkJPs9jI4sFdr0/
+         vWXgeKVqotGmdT/pzUFxyGvO3wGb0XmZgK4oyT8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.4 131/177] pinctrl: rza2: Fix gpio name typos
-Date:   Mon, 16 Dec 2019 18:49:47 +0100
-Message-Id: <20191216174844.525961043@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Charles-Antoine Couret <charles-antoine.couret@essensium.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 159/177] iio: ad7949: fix channels mixups
+Date:   Mon, 16 Dec 2019 18:50:15 +0100
+Message-Id: <20191216174848.954422354@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,37 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Brandt <chris.brandt@renesas.com>
+From: Andrea Merello <andrea.merello@gmail.com>
 
-commit 930d3a4907ae6cdb476db23fc7caa86e9de1e557 upstream.
+[ Upstream commit 3b71f6b59508b1c9befcb43de434866aafc76520 ]
 
-Fix apparent copy/paste errors that were overlooked in the original driver.
-  "P0_4" -> "PF_4"
-  "P0_3" -> "PG_3"
+Each time we need to read a sample (from the sysfs interface, since the
+driver supports only it) the driver writes the configuration register
+with the proper settings needed to perform the said read, then it runs
+another xfer to actually read the resulting value. Most notably the
+configuration register is updated to set the ADC internal MUX depending by
+which channel the read targets.
 
-Fixes: b59d0e782706 ("pinctrl: Add RZ/A2 pin and gpio controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Link: https://lore.kernel.org/r/20190930145804.30497-1-chris.brandt@renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Unfortunately this seems not enough to ensure correct operation because
+the ADC works in a pipelined-like fashion and the new configuration isn't
+applied in time.
 
+The ADC alternates two phases: acquisition and conversion. During the
+acquisition phase the ADC samples the analog signal in an internal
+capacitor; in the conversion phase the ADC performs the actual analog to
+digital conversion of the stored voltage. Note that of course the MUX
+needs to be set to the proper channel when the acquisition phase is
+performed.
+
+Once the conversion phase has been completed, the device automatically
+switches back to a new acquisition; on the other hand the device switches
+from acquisition to conversion on the rising edge of SPI cs signal (that
+is when the xfer finishes).
+
+Only after both two phases have been completed (with the proper settings
+already written in the configuration register since the beginning) it is
+possible to read the outcome from SPI bus.
+
+With the current driver implementation, we end up in the following
+situation:
+
+        _______  1st xfer ____________  2nd xfer ___________________
+SPI cs..       \_________/            \_________/
+SPI rd.. idle  |(val N-2)+    idle    | val N-1 +   idle ...
+SPI wr.. idle  |  cfg N  +    idle    |   (X)   +   idle ...
+------------------------ + -------------------- + ------------------
+  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1
+
+As shown in the diagram above, the value we read in the Nth read belongs
+to configuration setting N-1.
+
+In case the configuration is not changed (config[N] == config[N-1]), then
+we still get correct data, but in case the configuration changes (i.e.
+switching the MUX on another channel), we get wrong data (data from the
+previously selected channel).
+
+This patch fixes this by performing one more "dummy" transfer in order to
+ending up in reading the data when it's really ready, as per the following
+timing diagram.
+
+        _______  1st xfer ____________  2nd xfer ___________  3rd xfer ___
+SPI cs..       \_________/            \_________/           \_________/
+SPI rd.. idle  |(val N-2)+    idle    |(val N-1)+    idle   |  val N  + ..
+SPI wr.. idle  |  cfg N  +    idle    |   (X)   +    idle   |   (X)   + ..
+------------------------ + -------------------- + ------------------- + --
+  AD  ..   acq  N-1      + cnv N-1 |  acq N     +  cnv N  | acq N+1   | ..
+
+NOTE: in the latter case (cfg changes), the acquisition phase for the
+value to be read begins after the 1st xfer, that is after the read request
+has been issued on sysfs. On the other hand, if the cfg doesn't change,
+then we can refer to the fist diagram assuming N == (N - 1); the
+acquisition phase _begins_ before the 1st xfer (potentially a lot of time
+before the read has been issued via sysfs, but it _ends_ after the 1st
+xfer, that is _after_ the read has started. This should guarantee a
+reasonably fresh data, which value represents the voltage that the sampled
+signal has after the read start or maybe just around it.
+
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Reviewed-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rza2.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad7949.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/drivers/pinctrl/pinctrl-rza2.c
-+++ b/drivers/pinctrl/pinctrl-rza2.c
-@@ -213,8 +213,8 @@ static const char * const rza2_gpio_name
- 	"PC_0", "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "PC_6", "PC_7",
- 	"PD_0", "PD_1", "PD_2", "PD_3", "PD_4", "PD_5", "PD_6", "PD_7",
- 	"PE_0", "PE_1", "PE_2", "PE_3", "PE_4", "PE_5", "PE_6", "PE_7",
--	"PF_0", "PF_1", "PF_2", "PF_3", "P0_4", "PF_5", "PF_6", "PF_7",
--	"PG_0", "PG_1", "PG_2", "P0_3", "PG_4", "PG_5", "PG_6", "PG_7",
-+	"PF_0", "PF_1", "PF_2", "PF_3", "PF_4", "PF_5", "PF_6", "PF_7",
-+	"PG_0", "PG_1", "PG_2", "PG_3", "PG_4", "PG_5", "PG_6", "PG_7",
- 	"PH_0", "PH_1", "PH_2", "PH_3", "PH_4", "PH_5", "PH_6", "PH_7",
- 	/* port I does not exist */
- 	"PJ_0", "PJ_1", "PJ_2", "PJ_3", "PJ_4", "PJ_5", "PJ_6", "PJ_7",
+diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+index 518044c31a73b..6b51bfcad0d04 100644
+--- a/drivers/iio/adc/ad7949.c
++++ b/drivers/iio/adc/ad7949.c
+@@ -89,6 +89,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 				   unsigned int channel)
+ {
+ 	int ret;
++	int i;
+ 	int bits_per_word = ad7949_adc->resolution;
+ 	int mask = GENMASK(ad7949_adc->resolution, 0);
+ 	struct spi_message msg;
+@@ -100,12 +101,23 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 		},
+ 	};
+ 
+-	ret = ad7949_spi_write_cfg(ad7949_adc,
+-				   channel << AD7949_OFFSET_CHANNEL_SEL,
+-				   AD7949_MASK_CHANNEL_SEL);
+-	if (ret)
+-		return ret;
++	/*
++	 * 1: write CFG for sample N and read old data (sample N-2)
++	 * 2: if CFG was not changed since sample N-1 then we'll get good data
++	 *    at the next xfer, so we bail out now, otherwise we write something
++	 *    and we read garbage (sample N-1 configuration).
++	 */
++	for (i = 0; i < 2; i++) {
++		ret = ad7949_spi_write_cfg(ad7949_adc,
++					   channel << AD7949_OFFSET_CHANNEL_SEL,
++					   AD7949_MASK_CHANNEL_SEL);
++		if (ret)
++			return ret;
++		if (channel == ad7949_adc->current_channel)
++			break;
++	}
+ 
++	/* 3: write something and read actual data */
+ 	ad7949_adc->buffer = 0;
+ 	spi_message_init_with_transfers(&msg, tx, 1);
+ 	ret = spi_sync(ad7949_adc->spi, &msg);
+-- 
+2.20.1
+
 
 
