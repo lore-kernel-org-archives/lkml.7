@@ -2,121 +2,67 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4451CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8E0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8B62082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="FiE3oPPk"
+	by mail.kernel.org (Postfix) with ESMTP id B87FE2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbfLPShF (ORCPT
+        id S1730198AbfLPShK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:37:05 -0500
-Received: from mail-eopbgr760040.outbound.protection.outlook.com ([40.107.76.40]:4206
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729681AbfLPShB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:37:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lntMCfjLtXvq0ejZUrkXC/dwBHrPdO/qqRZ124UeXhEMHj93+XzpYd4Q9EnVqboOQSTy1FK4RsVOVTuE19ahk9EtIoYTGASpZ2Ikfoz15ZrcDyQHx7Bj9JW3+IIGRj933vPYRLrwZPb8SvbfMxwLseC05KpqOpug8HjVp3jxnEE0ihTdqbm+Ivfn+xAYix/NKp6WgxUG1QHnw/eUAklDkip1d5kFij/DemPSBYpj8M82+wJJ5h4i7gHaPuD68AsUv2SgXtiGVZrQm/hkJGua1VJf90ShzFGfa3ncOA/iUuIrMIC13eb36of7iYaGb3yy1ocucsmUjT1KOcf35tuTJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GS4T7C4tapTc1UzKsGi+HmJb6iJSeUeTn0bOjNOC1eA=;
- b=Hd/TEd8+va0kmp0rUaOhUI8IvmZYe2C6hTS2BhpJnzPynaUV6Tv9pVjM8RGPBu4nsB+ta0/DnJNkmEWf2041F22HcCatqiuZ/BmFzoUk4UKKxJKr8KY5+ArOjV6PtUvXmwe1UQN9enr7U6zKKR4ESTclmelFUA8Jf+7YjcvlV26icV3mtvbQKS8vREbHa5GrvU9nGRIpFFtoFQ8jQdsvnR10q8+XHJbJREHU3vzV4Y9uceNEhTnMsR1b326oE5qQgBqnzn0OwtZPb2981WWbHy8RLsoQ8AeCYcHA/kFjgUKkyxD/xs03C8PSTxXAvE8Aafef5SfEDmzYPi0jcfN14g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GS4T7C4tapTc1UzKsGi+HmJb6iJSeUeTn0bOjNOC1eA=;
- b=FiE3oPPkfccj48p7ayoPXUFEd9hzjhwtwof7V9yIP8VrS6UskZKQpgasE9mazxPMk15Is67Dc0fedJX9b+S7Q/DFJgRmsCBY/ot5FEPa8vOPipyX+ZWWCMtKlezYWBDn8+yyfGGNFET9OIvvI6mRDsAdPa7WAvev9EYASR5kXqU=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6607.namprd05.prod.outlook.com (20.178.246.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.11; Mon, 16 Dec 2019 18:36:58 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::611e:6a6b:9109:5aa8%7]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 18:36:58 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.19 139/140] mm/memory.c: fix a huge pud insertion race
- during faulting
-Thread-Topic: [PATCH 4.19 139/140] mm/memory.c: fix a huge pud insertion race
- during faulting
-Thread-Index: AQHVtDulXh+YP6/bhEC7+ZhBemA23Q==
-Date:   Mon, 16 Dec 2019 18:36:57 +0000
-Message-ID: <MN2PR05MB6141D3283B5D4365CBA0A497A1510@MN2PR05MB6141.namprd05.prod.outlook.com>
-References: <20191216174747.111154704@linuxfoundation.org>
- <20191216174829.761116794@linuxfoundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 62a9d415-d3ee-44cd-2f74-08d78256eec2
-x-ms-traffictypediagnostic: MN2PR05MB6607:
-x-microsoft-antispam-prvs: <MN2PR05MB6607BA75C1E141206171DD00A1510@MN2PR05MB6607.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53546011)(2906002)(4744005)(6506007)(66946007)(66476007)(86362001)(91956017)(76116006)(186003)(478600001)(66446008)(71200400001)(52536014)(55016002)(33656002)(9686003)(5660300002)(110136005)(26005)(81166006)(81156014)(4326008)(7696005)(64756008)(66556008)(8676002)(8936002)(316002)(54906003)(14583001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6607;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hhkVerr9q8G5BlxRj2knnnA8cX2zsBxlUPkHvRMG95+XLS6sGFzIepBhMZJ9JzEu8lYVbPvMctZO+m9Wes0P7gNBWce9jX8YvyDnw3ddT6AXaOWTnJH6Hrtb83o5I1TM8x9ZPP02IHFPRl7k/yPaPoPur6K3n3iT870k45lXaWsjA/L6+vGTRujMoDRrmBB0bAN1h0vvsReXG/Tg1l9pldUZasnNCc/tL1WttrT6aD3FnpbdhkJArn7BbAtoogrXJgBzgeXCX+lkHJiRMbqpc1iM5gYnXJ4WwNFIVpDPWRMr99IIkDetVHHrWkgGccWIwXok90S5t7aP+CFT9/F2lr5uwPIeLX65Hm8dF9eJPSAK9FDxImwg0g56mnRgryaRBgWJtPB0OIiaK7CMFZ6RgyOrVg6bAaZ66xhNAN8eXV/BsUsMQZwdufxbwjkDx18ZKuWiGkOXJbzhCNzXn+D2Yvok/eI4ghBYXsLsKPpRptU869/AfhipTgsO9WKJYhJO
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Dec 2019 13:37:10 -0500
+Received: from mga02.intel.com ([134.134.136.20]:6705 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730150AbfLPShI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:37:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 10:37:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
+   d="scan'208";a="365105133"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga004.jf.intel.com with ESMTP; 16 Dec 2019 10:37:07 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A37903003B3; Mon, 16 Dec 2019 10:37:07 -0800 (PST)
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Dietmar Hahn <dietmar.hahn@ts.fujitsu.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@ftp.linux.org.uk>
+Subject: Re: [PATCH] Fix a panic when core_pattern is set to "| prog..."
+References: <2996767.y7E8ffpIOs@amur.mch.fsc.net>
+Date:   Mon, 16 Dec 2019 10:37:07 -0800
+In-Reply-To: <2996767.y7E8ffpIOs@amur.mch.fsc.net> (Dietmar Hahn's message of
+        "Mon, 16 Dec 2019 14:48:07 +0100")
+Message-ID: <87r214unfw.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62a9d415-d3ee-44cd-2f74-08d78256eec2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 18:36:57.8967
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nPm4snmQZcUSqdl3udPL9DWkpUCCQ/xP59WFR4wiqRkybuX5T6K0q9ruKQi0q5JWz50qKBfISL/Noe0SyjxLaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6607
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg, Sasha=0A=
-=0A=
-On 12/16/19 7:07 PM, Greg Kroah-Hartman wrote:=0A=
-> From: Thomas Hellstrom <thellstrom@vmware.com>=0A=
->=0A=
-> [ Upstream commit 625110b5e9dae9074d8a7e67dd07f821a053eed7 ]=0A=
->=0A=
-=0A=
-Just repeating to make sure it's dropped, since it re-appeared again.=0A=
-=0A=
-Could we please drop this patch from -stable for now. I'll re-nominate=0A=
-for stable with the correct dependencies when it's seen some more=0A=
-testing. It's depending on another patch and it's touching a code path=0A=
-we definitely don't want to break with unforeseen corner-cases.=0A=
-=0A=
-Thanks,=0A=
-Thomas=0A=
-=0A=
-=0A=
+Dietmar Hahn <dietmar.hahn@ts.fujitsu.com> writes:
+
+> Hi,
+>
+> if the /proc/sys/kernel/core_pattern is set with a space between '|' and the
+> program and later a core file should be written the kernel panics.
+> This happens because in format_corename() the first part of cn.corename
+> is set to '\0' and later call_usermodehelper_exec() exits because of an
+> empty command path but with return 0. But no pipe is created and thus
+> cprm.file == NULL.
+> This leads in file_start_write() to the panic because of dereferencing
+> file_inode(file)->i_mode.
+
+It would seem better to just skip the spaces and DTRT?
+
+Of course doing the error check properly is a good idea anyways.
+
+-Andi
