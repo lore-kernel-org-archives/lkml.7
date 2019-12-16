@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50F7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D84FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8E12166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75972146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518862;
-	bh=gqVIozMbV8/6ED/LSCxrq5AmMOXvoBr1JTXlHi5UOMc=;
+	s=default; t=1576518867;
+	bh=RfmMguvOsEmVTvPQcmmNoPaMeAWc9qTU28XzeE79xCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FeMIKohJSfizU+lZt7hjLuIQhkHjx7jH2MPN7rVx+bYVubLEBEH0UZ8eHFyKU0GTl
-	 5GbxBvYtXRiPuEMtSib+2rujHTAE/kpml6T9DDcGVtijHWN6fNgRlEuhVUYuCxIiRf
-	 zyUPYYa0mtGBApxP7zBk0mPL5LidpCV0naruCuPg=
+	b=qSdOIDdnPlC3t0nZ1ZR+f4IUS/VVWuL+JXB0QI1aApRZVZzHOIcxNQ1WfQA072dME
+	 eqNuTaftWvaV8ht+UTNTLH75wv2TxIS/z4DQd0q7OQRhQXgwEz73qAwy0bXh8akYAc
+	 lHGH/NR7LPp2G4K14OxqRlpGHO7pcJnqqAWqmGGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfLPRyV (ORCPT
+        id S1727106AbfLPRy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49812 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfLPRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:15 -0500
+        id S1726865AbfLPRyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502FE2146E;
-        Mon, 16 Dec 2019 17:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9168021582;
+        Mon, 16 Dec 2019 17:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518854;
-        bh=gqVIozMbV8/6ED/LSCxrq5AmMOXvoBr1JTXlHi5UOMc=;
+        s=default; t=1576518862;
+        bh=RfmMguvOsEmVTvPQcmmNoPaMeAWc9qTU28XzeE79xCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zT0BnsukXSkeWqmQGFMhhncJFRwo9KoBOPeQ06yFcg9eePqwg9zLUOoC46CUpj3VS
-         5DXb0pBXZ51veq1Lo46TbH4S3y5igwJCPUuHSK2EHA33BRSRTmsSlUu6MVN7Lbs65+
-         qi7wi5JVD0InGd+ZxlRBzG2H3ezJ21jQajuMwAuo=
+        b=oHbGoTNjQmeP4GqpkQ8xRuW4LHeMqLhJ/LRi7M+plG0ASYWQjZhMM4truSQuqrihV
+         IHBBVV3Y1zCl3AJ5SnlHgfWpAkgEcUAmiTd39xaX7WbUa4wautxZGZbS6YYU3NlkY2
+         W+ZN+EkDC5xT2fBue+aylul/EQCQCQpRRicRZ42A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 093/267] tcp: fix SNMP under-estimation on failed retransmission
-Date:   Mon, 16 Dec 2019 18:46:59 +0100
-Message-Id: <20191216174859.035168872@linuxfoundation.org>
+Subject: [PATCH 4.14 096/267] kbuild: fix single target build for external module
+Date:   Mon, 16 Dec 2019 18:47:02 +0100
+Message-Id: <20191216174901.982408463@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,35 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuchung Cheng <ycheng@google.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit ec641b39457e17774313b66697a8a1dc070257bd ]
+[ Upstream commit e07db28eea38ed4e332b3a89f3995c86b713cb5b ]
 
-Previously the SNMP counter LINUX_MIB_TCPRETRANSFAIL is not counting
-the TSO/GSO properly on failed retransmission. This patch fixes that.
+Building a single target in an external module fails due to missing
+.tmp_versions directory.
 
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For example,
+
+  $ make -C /lib/modules/$(uname -r)/build M=$PWD foo.o
+
+will fail in the following way:
+
+  CC [M]  /home/masahiro/foo/foo.o
+/bin/sh: 1: cannot create /home/masahiro/foo/.tmp_versions/foo.mod: Directory nonexistent
+
+This is because $(cmd_crmodverdir) is executed only before building
+/, %/, %.ko single targets of external modules. Create .tmp_versions
+in the 'prepare' target.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_output.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 5b808089eff89..6025cc509d974 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2932,7 +2932,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	if (likely(!err)) {
- 		TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
- 	} else if (err != -EBUSY) {
--		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL);
-+		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
- 	}
- 	return err;
- }
+diff --git a/Makefile b/Makefile
+index d97288c0754fe..4de172b2e1fba 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1529,9 +1529,6 @@ else # KBUILD_EXTMOD
+ 
+ # We are always building modules
+ KBUILD_MODULES := 1
+-PHONY += crmodverdir
+-crmodverdir:
+-	$(cmd_crmodverdir)
+ 
+ PHONY += $(objtree)/Module.symvers
+ $(objtree)/Module.symvers:
+@@ -1543,7 +1540,7 @@ $(objtree)/Module.symvers:
+ 
+ module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
+ PHONY += $(module-dirs) modules
+-$(module-dirs): crmodverdir $(objtree)/Module.symvers
++$(module-dirs): prepare $(objtree)/Module.symvers
+ 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
+ 
+ modules: $(module-dirs)
+@@ -1584,7 +1581,8 @@ help:
+ 
+ # Dummies...
+ PHONY += prepare scripts
+-prepare: ;
++prepare:
++	$(cmd_crmodverdir)
+ scripts: ;
+ endif # KBUILD_EXTMOD
+ 
+@@ -1709,17 +1707,14 @@ endif
+ 
+ # Modules
+ /: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ # Make sure the latest headers are built for Documentation
+ Documentation/ samples/: headers_install
+ %/: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ %.ko: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
+ 	$(build)=$(build-dir) $(@:.ko=.o)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 -- 
 2.20.1
 
