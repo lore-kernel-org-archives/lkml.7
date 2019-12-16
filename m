@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4424C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A256C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FD9206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31383206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521293;
-	bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
+	s=default; t=1576521299;
+	bh=a4YDg4n+rBNstDbt6wO6fqRGNXg+YSO/7h2SbdokrZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmy+Vzw1GlVdBCHJe6Er9uMrmtsbAaTnp2Ns3zWkjVHfbp37AfY+3gp6VrDrHmqSq
-	 g9L5JMche8WO6Uc2gSuuUZ7AC0axIwOQ7UDGSI/iQVHj15chxBnxYdOuABhPyTWWho
-	 ejpsIC5LQmxqXUfzvX5Wbl2yHvfouKyWjfm3x+dY=
+	b=X4nKgSKq+DNcK/CI88M6ou6W8uRzOcPu0jaBGdVBT8VjEBAU69rpurPDBTDhwUjJS
+	 B/S4eM7E/qBv+jEWiGXHQSFeJOZ8UsNqfpjB4xuNKZBWSKwNog424AmsVuMPIk9Cm9
+	 xVozpTij2IywViHC4RaUuizZSEDRWoNCrH58y4RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbfLPSev (ORCPT
+        id S1730283AbfLPSIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:34:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730307AbfLPSIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:46 -0500
+        id S1729934AbfLPSIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310E02072D;
-        Mon, 16 Dec 2019 18:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 770AD2072B;
+        Mon, 16 Dec 2019 18:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519725;
-        bh=02OOIG76Z/Iy1EgmCIZzU+/S2CzO0XCskta4452Yzj4=;
+        s=default; t=1576519710;
+        bh=a4YDg4n+rBNstDbt6wO6fqRGNXg+YSO/7h2SbdokrZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zd6tzcjY2Hfa5UKQG9HEVUY4kYZ3hgqM6av8F7yO+nQGQc+U2c9GdupE2XZHNw7bX
-         dv/r4m6usV/IKluyVuWVbaZWr1EefbPFabG5gRrBYtSCapzNoZ4SoZ1c1oa82t3RXG
-         9vO9yU+JgyEA9IdLn4jhH73OE7SSnp/L3XDaYopM=
+        b=aYU4+Vnku3klkh6YTfTKBbcPZDI/u84k+gDYLkpT/UsF03z+9k+CzFjWxc1+888M7
+         410FeF8MM3kap69MpdzZEzvfgKws+jNWvkZ5uvzUCDXybnBlrC10xVrqSDcQK7rDCo
+         EUf9OxYhI9n8xXE628DrxkDop97lKQ9GAbAPWhXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.3 044/180] mtd: spear_smi: Fix Write Burst mode
-Date:   Mon, 16 Dec 2019 18:48:04 +0100
-Message-Id: <20191216174819.027145153@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 038/180] USB: adutux: fix interface sanity check
+Date:   Mon, 16 Dec 2019 18:47:58 +0100
+Message-Id: <20191216174816.338524225@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,107 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
+commit 3c11c4bed02b202e278c0f5c319ae435d7fb9815 upstream.
 
-Any write with either dd or flashcp to a device driven by the
-spear_smi.c driver will pass through the spear_smi_cpy_toio()
-function. This function will get called for chunks of up to 256 bytes.
-If the amount of data is smaller, we may have a problem if the data
-length is not 4-byte aligned. In this situation, the kernel panics
-during the memcpy:
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
-    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
-    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
-    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
-    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
-    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
-    [...]
-    PC is at memcpy+0xcc/0x330
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-The above error occurs because the implementation of memcpy_toio()
-tries to optimize the number of I/O by writing 4 bytes at a time as
-much as possible, until there are less than 4 bytes left and then
-switches to word or byte writes.
-
-Unfortunately, the specification states about the Write Burst mode:
-
-        "the next AHB Write request should point to the next
-	incremented address and should have the same size (byte,
-	half-word or word)"
-
-This means ARM architecture implementation of memcpy_toio() cannot
-reliably be used blindly here. Workaround this situation by update the
-write path to stick to byte access when the burst length is not
-multiple of 4.
-
-Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 03270634e242 ("USB: Add ADU support for Ontrak ADU devices")
+Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210112601.3561-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+ drivers/usb/misc/adutux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/devices/spear_smi.c
-+++ b/drivers/mtd/devices/spear_smi.c
-@@ -592,6 +592,26 @@ static int spear_mtd_read(struct mtd_inf
- 	return 0;
- }
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -669,7 +669,7 @@ static int adu_probe(struct usb_interfac
+ 	init_waitqueue_head(&dev->read_wait);
+ 	init_waitqueue_head(&dev->write_wait);
  
-+/*
-+ * The purpose of this function is to ensure a memcpy_toio() with byte writes
-+ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
-+ * which also does single byte writes but cannot be used here as this is just an
-+ * implementation detail and not part of the API. Not mentioning the comment
-+ * stating that _memcpy_toio() should be optimized.
-+ */
-+static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
-+				    const void *src, size_t len)
-+{
-+	const unsigned char *from = src;
-+
-+	while (len) {
-+		len--;
-+		writeb(*from, dest);
-+		from++;
-+		dest++;
-+	}
-+}
-+
- static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
- 		void __iomem *dest, const void *src, size_t len)
- {
-@@ -614,7 +634,23 @@ static inline int spear_smi_cpy_toio(str
- 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
- 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
- 
--	memcpy_toio(dest, src, len);
-+	/*
-+	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
-+	 * - incremental
-+	 * - of the same size
-+	 * The ARM implementation of memcpy_toio() will optimize the number of
-+	 * I/O by using as much 4-byte writes as possible, surrounded by
-+	 * 2-byte/1-byte access if:
-+	 * - the destination is not 4-byte aligned
-+	 * - the length is not a multiple of 4-byte.
-+	 * Avoid this alternance of write access size by using our own 'byte
-+	 * access' helper if at least one of the two conditions above is true.
-+	 */
-+	if (IS_ALIGNED(len, sizeof(u32)) &&
-+	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
-+		memcpy_toio(dest, src, len);
-+	else
-+		spear_smi_memcpy_toio_b(dest, src, len);
- 
- 	writel(ctrlreg1, dev->io_base + SMI_CR1);
- 
+-	res = usb_find_common_endpoints_reverse(&interface->altsetting[0],
++	res = usb_find_common_endpoints_reverse(interface->cur_altsetting,
+ 			NULL, NULL,
+ 			&dev->interrupt_in_endpoint,
+ 			&dev->interrupt_out_endpoint);
 
 
