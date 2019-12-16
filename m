@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF05C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FAAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645C121835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184D121739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518709;
-	bh=erO8LhwmHYx3npdBVv16b3/mLdZ9ho5gPtx775lkmY0=;
+	s=default; t=1576518711;
+	bh=OxBhYisU5nOiLRouqrGYkN5Dt4Sf8bE90fcBMc+NCUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMrsqCLRZLtx1MYkHWla6DqZTXDKCpteHa3weEP7xxgMWSRm7hHaPnZQRIAkRmr4x
-	 egHlLRvTNrW8xP1p4totkEwKtv9E4/Nf7AfkO4q0mz5JM+c5cpS/YCuqFGhJ86vG6/
-	 X2g1OrWklhCdmaVnoAorK9WOCi+itiiv7bl4FtnE=
+	b=hAofRFJWJbuKF3dwMwQMiRuaccydu7fmGtsdo1XdNzAxtWYACtldIWkU0huKwQuke
+	 F5gpUbVhxwRh3lY/9VP4J6f/xcrpJFfqCjhGNtNkYnkCOd0B+RzMrnTuFRzKDR0zqu
+	 RybM+B1BSFtacUEo2xhtiQK4THOihAFCe2KUOz4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfLPRvs (ORCPT
+        id S1727193AbfLPRvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbfLPRvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:51:45 -0500
+        id S1727161AbfLPRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFEB206EC;
-        Mon, 16 Dec 2019 17:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD1E20717;
+        Mon, 16 Dec 2019 17:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518704;
-        bh=erO8LhwmHYx3npdBVv16b3/mLdZ9ho5gPtx775lkmY0=;
+        s=default; t=1576518707;
+        bh=OxBhYisU5nOiLRouqrGYkN5Dt4Sf8bE90fcBMc+NCUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lS4M5ik+OdDWHmVeIfKG4S71MmGf1YzEEyw2rXsV0jK4zJZHai581QUkhg56AZMJ6
-         lYhTkqy0jGMsGvlm5qY83Ez3jlDMqRNOllb9tNEVHl5rEwz0AZFc+L8gZ9MWmL8wc/
-         6mfIHlWcKwmczlHQhKU/fb33BSo6fMf6U0wYR2ws=
+        b=wyRLAUBA+9qacTq6xMf9pV4A1MQSZE47zihJ5mzHDS7AyjuC8pN8Kqnh8SUMqjv+C
+         lLOWEHpgReQysbRn/Cr8/YgJ1bt2qT7vaoMJoTewiWcyQrkj3Z+T5OAbtblr9ixWZc
+         Z8RtmAVy2CDNwDYXSaQefQ3rRN/ZZEhNhaqVdwFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mitch Williams <mitch.a.williams@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
+        Johan Jonker <jbx9999@hotmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/267] i40e: dont restart nway if autoneg not supported
-Date:   Mon, 16 Dec 2019 18:45:59 +0100
-Message-Id: <20191216174852.666955803@linuxfoundation.org>
+Subject: [PATCH 4.14 034/267] clk: rockchip: fix rk3188 sclk_smc gate data
+Date:   Mon, 16 Dec 2019 18:46:00 +0100
+Message-Id: <20191216174852.763314292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,65 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mitch Williams <mitch.a.williams@intel.com>
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-[ Upstream commit 7c3758f7839377ab67529cc50264a640636c47af ]
+[ Upstream commit a9f0c0e563717b9f63b3bb1c4a7c2df436a206d9 ]
 
-On link types that do not support autoneg, we cannot attempt to restart
-nway negotiation. This results in a dead link that requires a power
-cycle to remedy.
+Fix sclk_smc gate data.
+Change variable order, flags come before the register address.
 
-Fix this by saving off the autoneg state and checking this value before
-we try to restart nway.
-
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx9999@hotmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/clk/rockchip/clk-rk3188.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index ef22793d6a032..751ac56168843 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -969,6 +969,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 	i40e_status status;
- 	u8 aq_failures;
- 	int err = 0;
-+	u32 is_an;
+diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
+index 2b0d772b4f432..022fecc9bcdf9 100644
+--- a/drivers/clk/rockchip/clk-rk3188.c
++++ b/drivers/clk/rockchip/clk-rk3188.c
+@@ -391,8 +391,8 @@ static struct rockchip_clk_branch common_clk_branches[] __initdata = {
+ 	 * Clock-Architecture Diagram 4
+ 	 */
  
- 	/* Changing the port's flow control is not supported if this isn't the
- 	 * port's controlling PF
-@@ -981,15 +982,14 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 	if (vsi != pf->vsi[pf->lan_vsi])
- 		return -EOPNOTSUPP;
+-	GATE(SCLK_SMC, "sclk_smc", "hclk_peri",
+-			RK2928_CLKGATE_CON(2), 4, 0, GFLAGS),
++	GATE(SCLK_SMC, "sclk_smc", "hclk_peri", 0,
++			RK2928_CLKGATE_CON(2), 4, GFLAGS),
  
--	if (pause->autoneg != ((hw_link_info->an_info & I40E_AQ_AN_COMPLETED) ?
--	    AUTONEG_ENABLE : AUTONEG_DISABLE)) {
-+	is_an = hw_link_info->an_info & I40E_AQ_AN_COMPLETED;
-+	if (pause->autoneg != is_an) {
- 		netdev_info(netdev, "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* If we have link and don't have autoneg */
--	if (!test_bit(__I40E_DOWN, pf->state) &&
--	    !(hw_link_info->an_info & I40E_AQ_AN_COMPLETED)) {
-+	if (!test_bit(__I40E_DOWN, pf->state) && !is_an) {
- 		/* Send message that it might not necessarily work*/
- 		netdev_info(netdev, "Autoneg did not complete so changing settings may not result in an actual change.\n");
- 	}
-@@ -1040,7 +1040,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 		err = -EAGAIN;
- 	}
- 
--	if (!test_bit(__I40E_DOWN, pf->state)) {
-+	if (!test_bit(__I40E_DOWN, pf->state) && is_an) {
- 		/* Give it a little more time to try to come back */
- 		msleep(75);
- 		if (!test_bit(__I40E_DOWN, pf->state))
+ 	COMPOSITE_NOMUX(SCLK_SPI0, "sclk_spi0", "pclk_peri", 0,
+ 			RK2928_CLKSEL_CON(25), 0, 7, DFLAGS,
 -- 
 2.20.1
 
