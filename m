@@ -2,133 +2,121 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296E4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC63C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0064F206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:47:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sgdn5pob"
+	by mail.kernel.org (Postfix) with ESMTP id ED0AE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfLPPru (ORCPT
+        id S1728588AbfLPPse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:47:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47090 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728328AbfLPPrt (ORCPT
+        Mon, 16 Dec 2019 10:48:34 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32900 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbfLPPsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:47:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576511267;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RgWQhpsAIADMZAP/1x3HqNJ9NVK8air/mo1dw8k/m4w=;
-        b=Sgdn5pobUJ/ivfiBFRND0qiM5Eml3tJI4q1vuQemXgxXjnfrNGkvm3s4kCtkTFGXecGlZn
-        aL4xTgtNibbXWwjLTHs4hVk1S1u6l5SrtW/FX8e6fYp2O2JgUzOJK48KZFnYrvIv5DQ1QK
-        kgrP62TPXjvdSoONG/Lle+PqJRqi1Kc=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-ZfP21KXwNgaSecTEQa4hGA-1; Mon, 16 Dec 2019 10:47:44 -0500
-X-MC-Unique: ZfP21KXwNgaSecTEQa4hGA-1
-Received: by mail-qv1-f70.google.com with SMTP id l1so5516671qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:47:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RgWQhpsAIADMZAP/1x3HqNJ9NVK8air/mo1dw8k/m4w=;
-        b=cdAhcF29TWonSVC4arTqQSq1QFKXIfMvXhKw7abyxJLRXJnTajrAxm9+Cm+hXKZtvw
-         vI92cH2MX3jEbD9xkf2fSgfqh/PjQ5jsZFETj1eM4kFP30v0vHGJT+WBeZplwCbL1DHc
-         kORry/3povGOSO6Dqe8Lx/sgegzmDkHXVxEH4cU/VKQfY8P7/IUfQ/VsMMqIzCdQWUEP
-         VjX6SO9bLAY9wgQg6D7P2ndcQYkQryfdgJ9y8s/gSJyx0p4x83eR8B7/khtCZ0JoJL0k
-         1IR93eLkREHotClBUyVgeX8bUhxAymZK+A1/IALl1BN7c9YAGXvrStEhrwFm1+N9SpMP
-         YXcw==
-X-Gm-Message-State: APjAAAUYvUGlk+rRJarMZ0Ong3cQs6nvn14tgh3vgGHbfsP0WmTtepuF
-        2Zf/vZoWz9wub77MwC+hDBfrG9xrDcl16x4SPTGCw/lrz6k1Uhcahdg6mPiZTbjOMrjwQbGxlY4
-        o7KF470BwykcsFPDTpelHTxkk
-X-Received: by 2002:a05:6214:108a:: with SMTP id o10mr26486295qvr.246.1576511264400;
-        Mon, 16 Dec 2019 07:47:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx1PDmhMHZHSnB6wuEZN9qkZjX10yPTV1uCaDq6nRhK2p6zGEl4P7bhy8kKpOy1w0Z1WWcikg==
-X-Received: by 2002:a05:6214:108a:: with SMTP id o10mr26486280qvr.246.1576511264193;
-        Mon, 16 Dec 2019 07:47:44 -0800 (PST)
-Received: from xz-x1 ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id b7sm6059467qkh.106.2019.12.16.07.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:47:42 -0800 (PST)
-Date:   Mon, 16 Dec 2019 10:47:42 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191216154742.GF83861@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <20191211063830-mutt-send-email-mst@kernel.org>
- <20191211205952.GA5091@xz-x1>
- <20191211172713-mutt-send-email-mst@kernel.org>
- <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
- <20191215173302.GB83861@xz-x1>
- <20191216044619-mutt-send-email-mst@kernel.org>
- <20191216150754.GC83861@xz-x1>
- <20191216103251-mutt-send-email-mst@kernel.org>
+        Mon, 16 Dec 2019 10:48:14 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: alyssa)
+        with ESMTPSA id 6F214260667
+Date:   Mon, 16 Dec 2019 10:48:03 -0500
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     yuq825@gmail.com, dri-devel@lists.freedesktop.org,
+        lima@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
+        linux-kernel@vger.kernel.org, tomeu.vizoso@collabora.com,
+        robh@kernel.org, steven.price@arm.com,
+        linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, wens@csie.org
+Subject: Re: [RFC v1 0/1] drm: lima: devfreq and cooling device support
+Message-ID: <20191216154803.GA3921@kevin>
+References: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
 Content-Disposition: inline
-In-Reply-To: <20191216103251-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:33:42AM -0500, Michael S. Tsirkin wrote:
-> On Mon, Dec 16, 2019 at 10:07:54AM -0500, Peter Xu wrote:
-> > On Mon, Dec 16, 2019 at 04:47:36AM -0500, Michael S. Tsirkin wrote:
-> > > On Sun, Dec 15, 2019 at 12:33:02PM -0500, Peter Xu wrote:
-> > > > On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
-> > > > > >>> What depends on what here? Looks suspicious ...
-> > > > > >>
-> > > > > >> Hmm, I think maybe it can be removed because the entry pointer
-> > > > > >> reference below should be an ordering constraint already?
-> > > > > 
-> > > > > entry->xxx depends on ring->reset_index.
-> > > > 
-> > > > Yes that's true, but...
-> > > > 
-> > > >         entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
-> > > >         /* barrier? */
-> > > >         next_slot = READ_ONCE(entry->slot);
-> > > >         next_offset = READ_ONCE(entry->offset);
-> > > > 
-> > > > ... I think entry->xxx depends on entry first, then entry depends on
-> > > > reset_index.  So it seems fine because all things have a dependency?
-> > > 
-> > > Is reset_index changed from another thread then?
-> > > If yes then you want to read reset_index with READ_ONCE.
-> > > That includes a dependency barrier.
-> > 
-> > There're a few readers, but only this function will change it
-> > (kvm_dirty_ring_reset).  Thanks,
-> 
-> Then you don't need any barriers in this function.
-> readers need at least READ_ONCE.
 
-In our case even an old reset_index should not matter much here imho
-because the worst case is we read an old reset so we stop pushing to a
-ring when it's just being reset and at the same time it's soft-full
-(so an extra user exit even race happened).  But I agree it's clearer
-to READ_ONCE() on readers.  Thanks!
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Peter Xu
+If so much code is being duplicated over, I'm wondering if it makes
+sense for us to move some of the common devfreq code to core DRM
+helpers?
 
+On Sun, Dec 15, 2019 at 10:12:22PM +0100, Martin Blumenstingl wrote:
+> This is my attempt at adding devfreq (and cooling device) support to
+> the lima driver.
+> I didn't have much time to do in-depth testing. However, I'm sending
+> this out early because there are many SoCs with Mali-400/450 GPU so
+> I want to avoid duplicating the work with somebody else.
+>=20
+> The code is derived from panfrost_devfreq.c which is why I kept the
+> Collabora copyright in lima_devfreq.c. Please let me know if I should
+> drop this or how I can make it more clear that I "borrowed" the code
+> from panfrost.
+>=20
+> I am seeking comments in two general areas:
+> - regarding the integration into the existing lima code
+> - for the actual devfreq code (I had to adapt the panfrost code
+>   slightly, because lima uses a bus and a GPU/core clock)
+>=20
+> My own TODO list includes "more" testing on various Amlogic SoCs.
+> So far I have tested this on Meson8b and Meson8m2 (which both have a
+> GPU OPP table defined). However, I still need to test this on a GXL
+> board (which is currently missing the GPU OPP table).
+>=20
+>=20
+> Martin Blumenstingl (1):
+>   drm/lima: Add optional devfreq support
+>=20
+>  drivers/gpu/drm/lima/Kconfig        |   1 +
+>  drivers/gpu/drm/lima/Makefile       |   3 +-
+>  drivers/gpu/drm/lima/lima_devfreq.c | 162 ++++++++++++++++++++++++++++
+>  drivers/gpu/drm/lima/lima_devfreq.h |  15 +++
+>  drivers/gpu/drm/lima/lima_device.c  |   4 +
+>  drivers/gpu/drm/lima/lima_device.h  |  11 ++
+>  drivers/gpu/drm/lima/lima_drv.c     |  14 ++-
+>  drivers/gpu/drm/lima/lima_sched.c   |   7 ++
+>  drivers/gpu/drm/lima/lima_sched.h   |   3 +
+>  9 files changed, 217 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
+>  create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
+>=20
+> --=20
+> 2.24.1
+>=20
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl33py4ACgkQ/v5QWgr1
+WA0Caw/8DBkpxsfWejzUF5wK7xq5rkmaLL+RmwJzt9xgNwWgsJ8p2XWt+hgzJSAr
+hNy9KVAEE62SXJHfpziY9CEkQycM+b7cQASYGf2q8/C2XNYfZHv80N8SZv1Gaqmh
+NzCfRSsfgc1BvPjbiKu0E1gdsX4RxlB3TXQV0dmSYbOSQ6yyHaYHgrEImW8HVblc
+/xkW7pOSkBs9ZdQKMFETaKJlQ6iQvkvUUlaywl2rBO4PvidyCVp5TXgRIYUQzXY/
+ls7vy/jU8eWchvp9hlztfssMGtE20BcQeASrHjkKfRUWsaSKt0g9Wh17jbIMf/fj
+BfGKqV+KwkKuMDUubvp7EBaJkwxAG8pTr1jv7+QdxOdm/KVnKMu1NSl2DJmTl8Fa
+o9mIdlNQCoMJo+TG6i92JuHMZ5VL11NBm6uazi1iJIH8KEYg8UPnePbQttHnDnZq
+DqTpy9w0r+T3zu9AH5pQjZCXCcKK+oV4qCTBK5zGe3UtcPigssiTVo912VsGEbb/
+Y8LPtySaWSjCI/hfgz4M9ENfrmNX4yqvIewZnAMMPj6vv5sslfRBBGKBCoCtqcQx
+T9Iy3c57pp9B/Prrc1llotEuqyd2Mi7mws7gSPfGZXaTC/TPNKCikvph39wdRPdp
+WP+lq3rH1n5kMcc3D09p62TZGuaO0uiHmUgxshzPQa3FxXsHqZo=
+=QSX1
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
