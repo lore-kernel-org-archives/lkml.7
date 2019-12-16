@@ -2,87 +2,69 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C8CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E17C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AED420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEF220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfLPKxg convert rfc822-to-8bit (ORCPT
+        id S1727558AbfLPKyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:53:36 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38131 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfLPKxg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:53:36 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EB18C24000F;
-        Mon, 16 Dec 2019 10:53:32 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 11:53:31 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] drm/panel: simple: Support reset GPIOs
-Message-ID: <20191216115331.5c6047f7@xps13>
-In-Reply-To: <20191214102354.GB2967@ravnborg.org>
-References: <20191213181325.26228-1-miquel.raynal@bootlin.com>
-        <20191214102354.GB2967@ravnborg.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Dec 2019 05:54:14 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57312 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727436AbfLPKyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:54:13 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9983F45A05133E74F235;
+        Mon, 16 Dec 2019 18:54:10 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 16 Dec 2019 18:53:59 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <jic23@kernel.org>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH] iio: light: remove unneeded semicolon
+Date:   Mon, 16 Dec 2019 18:51:01 +0800
+Message-ID: <20191216105101.7200-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Fixes coccicheck warning:
 
-Sam Ravnborg <sam@ravnborg.org> wrote on Sat, 14 Dec 2019 11:23:54
-+0100:
+./drivers/iio/light/lm3533-als.c:745:2-3: Unneeded semicolon
 
-> Hi Miquel.
-> 
-> On Fri, Dec 13, 2019 at 07:13:25PM +0100, Miquel Raynal wrote:
-> > The panel common bindings provide a gpios-reset property which is
-> > active low by default. Let's support it in the simple driver.
-> > 
-> > De-asserting the reset pin implies a physical high, which in turns is
-> > a logic low.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
-> 
-> Code looks fine - but I fail to see why simple panels would require a
-> reset pin.
-> 
-> Do you have any simple panels that requires this, or did you add it
-> because you saw it in the panel-common.yaml file?
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/iio/light/lm3533-als.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My hardware is:
+diff --git a/drivers/iio/light/lm3533-als.c b/drivers/iio/light/lm3533-als.c
+index 6733b52..bc196c2 100644
+--- a/drivers/iio/light/lm3533-als.c
++++ b/drivers/iio/light/lm3533-als.c
+@@ -742,7 +742,7 @@ static int lm3533_als_set_resistor(struct lm3533_als *als, u8 val)
+ 	if (val < LM3533_ALS_RESISTOR_MIN || val > LM3533_ALS_RESISTOR_MAX) {
+ 		dev_err(&als->pdev->dev, "invalid resistor value\n");
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	ret = lm3533_write(als->lm3533, LM3533_REG_ALS_RESISTOR_SELECT, val);
+ 	if (ret) {
+-- 
+2.7.4
 
-LVDS IP <----------> LVDS to RGB bridge <------------> Panel
-
-While there is a simple "RGB to LVDS" bridge driver, there is none
-doing the work the other way around. In my case, the bridge has a reset
-pin.
-
-As until now there is no way to represent the "LVDS to RGB" bridge and
-because the bindings already document such reset pin, I decided to add
-support for it in the simple panel driver.
-
-Thanks,
-Miquèl
