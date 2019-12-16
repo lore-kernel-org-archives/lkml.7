@@ -2,106 +2,172 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4450FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96460C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21311206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74782206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfLPOw1 (ORCPT
+        id S1728208AbfLPOwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:52:27 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728008AbfLPOw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:52:26 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 3B58AEB36E6F617BABE2;
-        Mon, 16 Dec 2019 14:52:25 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 16 Dec 2019 14:52:24 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Dec
- 2019 14:52:24 +0000
-Subject: Re: [PATCH v2 0/3] HiSilicon v3xx SFC driver
-To:     <broonie@kernel.org>, <marek.vasut@gmail.com>,
-        <tudor.ambarus@microchip.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
-        <chenxiang66@hisilicon.com>
-References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
-Date:   Mon, 16 Dec 2019 14:52:23 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 16 Dec 2019 09:52:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728008AbfLPOwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:52:55 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53992206A5;
+        Mon, 16 Dec 2019 14:52:53 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 09:52:51 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, nachukannan@gmail.com,
+        saiprakash.ranjan@outlook.com
+Subject: Re: [PATCH] docs: ftrace: Specifies when buffers get clear
+Message-ID: <20191216095251.4bee634e@gandalf.local.home>
+In-Reply-To: <20191216042756.qnho3v2upqg4wm7o@frank-laptop>
+References: <20191216042756.qnho3v2upqg4wm7o@frank-laptop>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/12/2019 14:08, John Garry wrote:
-> This patchset introduces support for the HiSilicon SFC V3XX driver.
-> 
+On Sun, 15 Dec 2019 23:27:56 -0500
+"Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
 
-Hi guys,
+> Clarify in a few places where the ring buffer and the "snapshot"
+> buffer are cleared as a side effect of an operation.
+> 
+> This will avoid users lost of tracing data because of these so far
+> undocumented behavior.
+> 
+> Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
+> ---
+>  Documentation/trace/ftrace.rst | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index d2b5657ed33e..5cc65314e16d 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -95,7 +95,8 @@ of ftrace. Here is a list of some of the key files:
+>    current_tracer:
+>  
+>  	This is used to set or display the current tracer
+> -	that is configured.
+> +	that is configured. Changing the current tracer clears
+> +        the ring buffer content as well as the "snapshot" buffer.
+>  
+>    available_tracers:
+>  
+> @@ -126,7 +127,9 @@ of ftrace. Here is a list of some of the key files:
+>  	This file holds the output of the trace in a human
+>  	readable format (described below). Note, tracing is temporarily
+>  	disabled when the file is open for reading. Once all readers
+> -	are closed, tracing is re-enabled.
+> +	are closed, tracing is re-enabled. Opening this file for
+> +        writing with the O_TRUNC flag clears the ring buffer content
+> +        as well as the "snapshot" buffer.
 
-Just a friendly reminder on this series.
+Writing O_TRUNC into trace does not touch the snapshot buffer. I just
+tested to make sure (because that's not the behavior I remember making):
 
-Thanks,
-John
+ # cd /sys/kernel/tracing
+ # echo 1 > events/sched/enable
+ # echo 1 > snapshot
+ # head -15 snapshot  
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 3563/3563   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+            bash-20130 [007] d.h. 243924.135391: sched_stat_runtime: comm=bash pid=20130 runtime=584815 [ns] vruntime=116509213 [ns]
+            bash-20130 [007] d... 243924.135853: sched_waking: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+            bash-20130 [007] d... 243924.135859: sched_wake_idle_without_ipi: cpu=2
+            bash-20130 [007] d... 243924.135861: sched_wakeup: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+ # echo 0 > tracing_on
+ # head -15 trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 1697/1697   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+            sshd-20125 [005] d... 244126.123095: sched_stat_runtime: comm=sshd pid=20125 runtime=101555 [ns] vruntime=153686839 [ns]
+            sshd-20125 [005] d... 244126.123100: sched_switch: prev_comm=sshd prev_pid=20125 prev_prio=120 prev_state=S ==> next_comm=swapper/5 next_pid=0 next_prio=120
+            bash-20130 [007] d... 244126.123173: sched_waking: comm=kworker/u16:3 pid=20190 prio=120 target_cpu=006
+            bash-20130 [007] d... 244126.123177: sched_wake_idle_without_ipi: cpu=6
+ # echo > trace
+ # head -15 trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 0/0   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+ # head -15 snapshot
+ # tracer: nop
+#
+# entries-in-buffer/entries-written: 3563/3563   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+            bash-20130 [007] d.h. 243924.135391: sched_stat_runtime: comm=bash pid=20130 runtime=584815 [ns] vruntime=116509213 [ns]
+            bash-20130 [007] d... 243924.135853: sched_waking: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+            bash-20130 [007] d... 243924.135859: sched_wake_idle_without_ipi: cpu=2
+            bash-20130 [007] d... 243924.135861: sched_wakeup: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
 
-> Whilst the kernel tree already includes support for a "HiSilicon SFC
-> driver", that is for different HW. Indeed, as mentioned in patch #1, the
-> naming for that driver could be better, as it should support more memory
-> technologies than SPI NOR (as I have been told), and it is actually known
-> internally as FMC. As such, maybe "hisi-fmc" would have been better, but
-> we can't change that now.
-> 
-> I used V3XX in this driver name, as that is the unique versioning for
-> this HW.
-> 
-> As for the driver itself, it is quite simple. Only ACPI firmware is
-> supported, and we assume m25p80 compatible SPI NOR part will be used.
-> 
-> DMA is not supported, and we just use polling mode for operation
-> completion notification. The driver uses the SPI MEM OPs.
-> 
-> Changes from v1:
-> - Add ACPI kconfig dependency
-> - Fix up header comment style
-> - Change macros naming style
-> - Try to enforce aligned accesses in hisi_sfc_v3xx_adjust_op_size()
-> 
-> John Garry (3):
->    mtd: spi-nor: hisi-sfc: Try to provide some clarity on which SFC we
->      are
->    spi: Add HiSilicon v3xx SPI NOR flash controller driver
->    MAINTAINERS: Add a maintainer for the HiSilicon v3xx SFC driver
-> 
->   MAINTAINERS                     |   6 +
->   drivers/mtd/spi-nor/Kconfig     |   4 +-
->   drivers/mtd/spi-nor/hisi-sfc.c  |   2 +-
->   drivers/spi/Kconfig             |   9 +
->   drivers/spi/Makefile            |   1 +
->   drivers/spi/spi-hisi-sfc-v3xx.c | 284 ++++++++++++++++++++++++++++++++
->   6 files changed, 303 insertions(+), 3 deletions(-)
->   create mode 100644 drivers/spi/spi-hisi-sfc-v3xx.c
-> 
+>  
+>    trace_pipe:
+>  
+> @@ -490,6 +493,9 @@ of ftrace. Here is a list of some of the key files:
+>  
+>  	  # echo global > trace_clock
+>  
+> +        Setting a clock clears the ring buffer content as well as the
+> +        "snapshot" buffer.
+> +
+
+Yeah, this is true, because the sorting algorithm relies on the trace
+clocks matching in the buffers. If this becomes an issue, I'm sure we
+could change it.
+
+-- Steve
+
+>    trace_marker:
+>  
+>  	This is a very useful file for synchronizing user space
 
