@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDE1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3CEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D9E206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B9520CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520924;
-	bh=qYqBLF8M2/sPdGcgsGh3i5oLOuUEFURULfi2DPiVQ9o=;
+	s=default; t=1576520929;
+	bh=2s/lii9loPIvNFFMVcmr1yl2tE5CR8+63mR1DUuogzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyVuGrElDCnvSCguZMAC1kiek2i9z7N9oCGxhiiURqFbWicYvVLlGjSxQo0h0ZnN3
-	 oXYfuN4HaTZvZwOKRpNZzLakTScoJLnEhUvGNDQhUBaEa1GCEc6uGjP4Wd2e12gpZU
-	 PmSnZI+RFuzMpscm3F3NB7UruDrpTZ3aMm8T98mc=
+	b=UN01En3fpBh5SBBP3xvA0UzfhqXhnPbUz0t1JG4kcAgplSRu3CNRw43pHAXGKFUU3
+	 cdd1vnsHIM7EyuwIUIdBBcHVuqWNZN3y1QASBQEFiCy5hKuvlLw6rE9TwyJDqsnasx
+	 WV6HUhu0FAuhctqXDa9B6j49i3WPYmIAjS0kEhTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfLPS2m (ORCPT
+        id S1731428AbfLPS2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:28:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34222 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:28:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731245AbfLPSOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:38 -0500
+        id S1731224AbfLPSOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2955B206E0;
-        Mon, 16 Dec 2019 18:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50748207FF;
+        Mon, 16 Dec 2019 18:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520076;
-        bh=qYqBLF8M2/sPdGcgsGh3i5oLOuUEFURULfi2DPiVQ9o=;
+        s=default; t=1576520071;
+        bh=2s/lii9loPIvNFFMVcmr1yl2tE5CR8+63mR1DUuogzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVYTVpr6ceNIuYycjHEUW3xsdlv64PMGfSb4W7q4rTt6dKjDdHfN0zfo0O2wJwa8Y
-         M1aYgy9dY+l9cWGvRWb2h2ZaJoOO2hq96206QUQhLYENLCAdOiTTU9DLKgGLXViNzR
-         nCWrtAEXrkriX+ht+Os4kzYQncNdzWZeliq5+RO4=
+        b=u8FCgF2EdtIhdGImvQBE+QCOvjBDHirZZHB/p8+/Nrk5VRYoRr5+/Vvlw/FG24/tH
+         9ubsmkVeMCVCe+pIrmJqu9VY59czZG6YtKyHR8D4Rh6GJFQ7qrv4UJlb+JZRqeElWs
+         rMMtlE7nLMd2Gjo70hHsGHnVHj9FAjPORk9JaBzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 166/180] omap: pdata-quirks: revert pandora specific gpiod additions
-Date:   Mon, 16 Dec 2019 18:50:06 +0100
-Message-Id: <20191216174847.036007157@linuxfoundation.org>
+Subject: [PATCH 5.3 164/180] iio: ad7949: kill pointless "readback"-handling code
+Date:   Mon, 16 Dec 2019 18:50:04 +0100
+Message-Id: <20191216174846.735485605@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,88 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Andrea Merello <andrea.merello@gmail.com>
 
-[ Upstream commit 4e8fad98171babe019db51c15055ec74697e9525 ]
+[ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
 
-This partly reverts the commit efdfeb079cc3 ("regulator: fixed: Convert to
-use GPIO descriptor only").
+The device could be configured to spit out also the configuration word
+while reading the AD result value (in the same SPI xfer) - this is called
+"readback" in the device datasheet.
 
-We must remove this from mainline first, so that the following patch
-to remove the openpandora quirks for mmc3 and wl1251 cleanly applies
-to stable v4.9, v4.14, v4.19 where the above mentioned patch is not yet
-present.
+The driver checks if readback is enabled and it eventually adjusts the SPI
+xfer length and it applies proper shifts to still get the data, discarding
+the configuration word.
 
-Since the code affected is removed (no pandora gpios in pdata-quirks
-and more), there will be no matching revert-of-the-revert.
+The readback option is actually never enabled (the driver disables it), so
+the said checks do not serve for any purpose.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Since enabling the readback option seems not to provide any advantage (the
+driver entirely sets the configuration word without relying on any default
+value), just kill the said, unused, code.
+
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/iio/adc/ad7949.c | 27 +++------------------------
+ 1 file changed, 3 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 6c6f8fce854e2..e5c99e33afae2 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -7,7 +7,6 @@
- #include <linux/clk.h>
- #include <linux/davinci_emac.h>
- #include <linux/gpio.h>
--#include <linux/gpio/machine.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/of_platform.h>
-@@ -327,7 +326,9 @@ static struct regulator_init_data pandora_vmmc3 = {
- static struct fixed_voltage_config pandora_vwlan = {
- 	.supply_name		= "vwlan",
- 	.microvolts		= 1800000, /* 1.8V */
-+	.gpio			= PANDORA_WIFI_NRESET_GPIO,
- 	.startup_delay		= 50000, /* 50ms */
-+	.enable_high		= 1,
- 	.init_data		= &pandora_vmmc3,
+diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+index ac0ffff6c5ae1..518044c31a73b 100644
+--- a/drivers/iio/adc/ad7949.c
++++ b/drivers/iio/adc/ad7949.c
+@@ -57,29 +57,11 @@ struct ad7949_adc_chip {
+ 	u32 buffer ____cacheline_aligned;
  };
  
-@@ -339,19 +340,6 @@ static struct platform_device pandora_vwlan_device = {
- 	},
- };
- 
--static struct gpiod_lookup_table pandora_vwlan_gpiod_table = {
--	.dev_id = "reg-fixed-voltage.1",
--	.table = {
--		/*
--		 * As this is a low GPIO number it should be at the first
--		 * GPIO bank.
--		 */
--		GPIO_LOOKUP("gpio-0-31", PANDORA_WIFI_NRESET_GPIO,
--			    NULL, GPIO_ACTIVE_HIGH),
--		{ },
--	},
--};
+-static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
+-{
+-	if (!(ad7949_adc->cfg & AD7949_CFG_READ_BACK))
+-		return true;
 -
- static void pandora_wl1251_init_card(struct mmc_card *card)
+-	return false;
+-}
+-
+-static int ad7949_spi_bits_per_word(struct ad7949_adc_chip *ad7949_adc)
+-{
+-	int ret = ad7949_adc->resolution;
+-
+-	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
+-		ret += AD7949_CFG_REG_SIZE_BITS;
+-
+-	return ret;
+-}
+-
+ static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
+ 				u16 mask)
  {
- 	/*
-@@ -373,6 +361,8 @@ static struct omap2_hsmmc_info pandora_mmc3[] = {
- 	{
- 		.mmc		= 3,
- 		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
-+		.gpio_cd	= -EINVAL,
-+		.gpio_wp	= -EINVAL,
- 		.init_card	= pandora_wl1251_init_card,
- 	},
- 	{}	/* Terminator */
-@@ -411,7 +401,6 @@ fail:
- static void __init omap3_pandora_legacy_init(void)
+ 	int ret;
+-	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
++	int bits_per_word = ad7949_adc->resolution;
+ 	int shift = bits_per_word - AD7949_CFG_REG_SIZE_BITS;
+ 	struct spi_message msg;
+ 	struct spi_transfer tx[] = {
+@@ -107,7 +89,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 				   unsigned int channel)
  {
- 	platform_device_register(&pandora_backlight);
--	gpiod_add_lookup_table(&pandora_vwlan_gpiod_table);
- 	platform_device_register(&pandora_vwlan_device);
- 	omap_hsmmc_init(pandora_mmc3);
- 	omap_hsmmc_late_init(pandora_mmc3);
+ 	int ret;
+-	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
++	int bits_per_word = ad7949_adc->resolution;
+ 	int mask = GENMASK(ad7949_adc->resolution, 0);
+ 	struct spi_message msg;
+ 	struct spi_transfer tx[] = {
+@@ -138,10 +120,7 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 
+ 	ad7949_adc->current_channel = channel;
+ 
+-	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
+-		*val = (ad7949_adc->buffer >> AD7949_CFG_REG_SIZE_BITS) & mask;
+-	else
+-		*val = ad7949_adc->buffer & mask;
++	*val = ad7949_adc->buffer & mask;
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
