@@ -2,132 +2,151 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45B7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F84207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576498001;
-	bh=B33dVbrJMuu5Pg0Zz+t3OnRm/Won44ZUY7QsvqxP3GQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YHsYN07a2gz9lcgt5u1CvlnUP0xt4p8mLGKALPsEpjs9on+ebSl6auzSb0e4uvnks
-	 6iNjcLJKWoltgPJjJYiYNtwZcr3qEdh35NtLfUws5rC/mMRpfLopPs86xEioL5E+v/
-	 iRrEmB2Yip06XUjaF1sc533gY//7bYMjemizZRME=
+	by mail.kernel.org (Postfix) with ESMTP id 76D002072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfLPMGR (ORCPT
+        id S1727777AbfLPMGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:06:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:52576 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbfLPMGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:06:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 245E11FB;
-        Mon, 16 Dec 2019 04:06:14 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 712433F719;
-        Mon, 16 Dec 2019 04:06:13 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:06:12 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     alexandre.torgue@st.com, baohua@kernel.org, broonie@kernel.org,
-        f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        nsaenzjulienne@suse.de, rjui@broadcom.com, sbranden@broadcom.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, vkoul@kernel.org
-Subject: Applied "spi: img-spfi: Use dma_request_chan() instead dma_request_slave_channel()" to the spi tree
-In-Reply-To: <20191212135550.4634-5-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191212135550.4634-5-peter.ujfalusi@ti.com>
-X-Patchwork-Hint: ignore
+        Mon, 16 Dec 2019 07:06:45 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:50109 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbfLPMGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:06:43 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MSss2-1iGsog2KTe-00UJfA; Mon, 16 Dec 2019 13:06:40 +0100
+Received: by mail-qk1-f179.google.com with SMTP id j9so4013766qkk.1;
+        Mon, 16 Dec 2019 04:06:40 -0800 (PST)
+X-Gm-Message-State: APjAAAW4VVQq/8xxHABqZCxIIyR96iUxnZ5sDDFMMsS37TtSJlOWMOXj
+        kiu50pXVTDprT8tKFz88BDkvCUPSbxOHoI4Nsf8=
+X-Google-Smtp-Source: APXvYqzaldzKvuGG0VSm+NPjH2zK7pPG6M4z5r7MC0BxVjXSzaHMKlB7/FcMflcuRR66LlFgIuTrrgyX4wxlYfFrPhU=
+X-Received: by 2002:a37:2f02:: with SMTP id v2mr5213363qkh.3.1576497999318;
+ Mon, 16 Dec 2019 04:06:39 -0800 (PST)
+MIME-Version: 1.0
+References: <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck> <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck> <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com> <20191213144359.GA3826@willie-the-truck>
+In-Reply-To: <20191213144359.GA3826@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Dec 2019 13:06:22 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0qgbqKTtRWTh6c0R2E93rehKbkBcB18TL3JX_RWHsTZA@mail.gmail.com>
+Message-ID: <CAK8P3a0qgbqKTtRWTh6c0R2E93rehKbkBcB18TL3JX_RWHsTZA@mail.gmail.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+To:     Will Deacon <will@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:UWsuMcFFlOevk/J313gB6VGz1OHSOZcuLzsKm2jktYu+Jb74c7v
+ n49m3Y0KQsgo99+GYfL9sntR8UJzU4arEcDh5hioSmMMAIp/vdkFPGs7Up456RmIOQ//uw1
+ BphOHIiIc16GAbnyE1VCu/zOyC8vcK9m8tezMoFcX8x3lPP2Cq0u+2b2TMFZ9jHwAuHkJjW
+ PY8LdD75Nibt+cRAbxs8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sGYUQ7XKE8M=:PCf0CczXYZYmFeBmWDClUw
+ u++4xVt/1nCcJT/59IukYBvqFnz1fPUtXT0YV4bZu1Xbqn43YcAyyxoyIGNi6p8x9H64iTAUQ
+ kQArq0h7o6zMLmPuHv0sw6iT2moeTKTsX880oQd6hrp0E63lwPxngjl0rph/ZvVthq9lhQ3jv
+ tQ238m6uLJBWhXBnOkRtS6Wlp3XcyqNTzlZ4f9AUSCEh/QKzwg8twmGmBWa+tPd6rqv3n8Avh
+ nry587NTetViUPhKpu9NcQTscDwGJ83EHtLZqO6HTMPcAsl70VHsvOtUmv+vcDl/2EdkiPqkV
+ XF6JlnkpzOmX6tfeSwxfRq0SbS437SBm/PTQVF48mds/AaWLrAFj1Ez5vaPFzpDJ4zV5xtdJ9
+ j2oNst+diwEmL2/ry4tbarPY5xK5ubyppptyekYoUwu79jzUq5qfcWS1GCcXcXmBCEFioFnrS
+ mkyOYA9cbd1FDtdEYLGKAVu/7p0J2LvIWNSs9Sf9N59jQKpYbW98q0hnBEMaepaMLr9EwxAAb
+ M6PHcSE7XSip/CPoK97UJ/YnDYUhA5cfkNvTqpB6uPXZ5taktiz0huTKscMwUMqGX+X+ip2s9
+ ksdxfNAxk4+LoIBgrXPlsLQg4Oqo8yVGeV2HMz//hTTSkCOqXatGpXbCj2843BFI3hKU8ybwC
+ w9OkoxSI3JmXVkv4g+6KbNjZXDUFzcbVCG+uqvP09P/cXqaC8UTPmteGSRL6oQ/5d2xbDMRG0
+ HucIL6JCt8wgPR5c1h/dDBJjXNOhdqy/lBgtlfedDrVLjqSNXrkIXdHPekTKwSZ5/fESBcMNe
+ ekvNwnxip4bAzGnjFWyvhUXemHpvojYdvqSxKyvyEIkwhxEFRjDVHGofFbondDYP0kBAIhkqD
+ jgR5RUxFg+LwOhnkOjvQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Dec 16, 2019 at 11:28 AM Will Deacon <will@kernel.org> wrote:
+> On Fri, Dec 13, 2019 at 02:17:08PM +0100, Arnd Bergmann wrote:
+> > On Thu, Dec 12, 2019 at 9:50 PM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > > On Thu, Dec 12, 2019 at 11:34 AM Will Deacon <will@kernel.org> wrote:
+> > > > The root of my concern in all of this, and what started me looking at it in
+> > > > the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
+> > > > for a pointer means that local variables in macros declared using typeof()
+> > > > suddenly start generating *hideous* code, particularly when pointless stack
+> > > > spills get stackprotector all excited.
+> > >
+> > > Yeah, removing volatile can be a bit annoying.
+> > >
+> > > For the particular case of the bitops, though, it's not an issue.
+> > > Since you know the type there, you can just cast it.
+> > >
+> > > And if we had the rule that READ_ONCE() was an arithmetic type, you could do
+> > >
+> > >     typeof(0+(*p)) __var;
+> > >
+> > > since you might as well get the integer promotion anyway (on the
+> > > non-volatile result).
+> > >
+> > > But that doesn't work with structures or unions, of course.
+> > >
+> > > I'm not entirely sure we have READ_ONCE() with a struct. I do know we
+> > > have it with 64-bit entities on 32-bit machines, but that's ok with
+> > > the "0+" trick.
+> >
+> > I'll have my randconfig builder look for instances, so far I found one,
+> > see below. My feeling is that it would be better to enforce at least
+> > the size being a 1/2/4/8, to avoid cases where someone thinks
+> > the access is atomic, but it falls back on a memcpy.
+>
+> I've been using something similar built on compiletime_assert_atomic_type()
+> and I spotted another instance in the xdp code (xskq_validate_desc()) which
+> tries to READ_ONCE() on a 128-bit descriptor, although a /very/ quick read
+> of the code suggests that this probably can't be concurrently modified if
+> the ring indexes are synchronised properly.
 
-   spi: img-spfi: Use dma_request_chan() instead dma_request_slave_channel()
+That's the only other one I found. I have not checked how many are structs
+that are the size of a normal u8/u16/u32/u64, or if there are types that
+have a lower alignment than there size, such as a __u16[2] that might
+span a page boundary.
 
-has been applied to the spi tree at
+> However, enabling this for 32-bit ARM is total carnage; as Linus mentioned,
+> a whole bunch of code appears to be relying on atomic 64-bit access of
+> READ_ONCE(); the perf ring buffer, io_uring, the scheduler, pm_runtime,
+> cpuidle, ... :(
+>
+> Unfortunately, at least some of these *do* look like bugs, but I can't see
+> how we can fix them, not least because the first two are user ABI afaict. It
+> may also be that in practice we get 2x32-bit stores, and that works out fine
+> when storing a 32-bit virtual address. I'm not sure what (if anything) the
+> compiler guarantees in these cases.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+Would it help if 32-bit architectures use atomic64_read() and atomic64_set()
+to implement a 64-bit READ_ONCE()/WRITE_ONCE(), or would that make it
+worse in other ways?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+On mips32, riscv32 and some minor 32-bit architectures with SMP support
+(xtensa,  csky, hexagon, openrisc, parisc32, sparc32 and ppc32 AFAICT) this
+ends up using a spinlock for GENERIC_ATOMIC64, but at least ARMv6+,
+i586+ and most ARC should be fine.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+(Side note: the ARMv7 implementation is suboptimimal for ARMv7VE+
+if LPAE is disabled, I think we need to really add Kconfig options for
+ARMv7VE and 32-bit ARMv8 improve this and things like integer divide).
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 6bfbf4d0aa0c5ebfd4442e1200b21565703e90ed Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Thu, 12 Dec 2019 15:55:45 +0200
-Subject: [PATCH] spi: img-spfi: Use dma_request_chan() instead
- dma_request_slave_channel()
-
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
-
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20191212135550.4634-5-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-img-spfi.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
-index f4a8f470aecc..8543f5ed1099 100644
---- a/drivers/spi/spi-img-spfi.c
-+++ b/drivers/spi/spi-img-spfi.c
-@@ -666,8 +666,22 @@ static int img_spfi_probe(struct platform_device *pdev)
- 	master->unprepare_message = img_spfi_unprepare;
- 	master->handle_err = img_spfi_handle_err;
- 
--	spfi->tx_ch = dma_request_slave_channel(spfi->dev, "tx");
--	spfi->rx_ch = dma_request_slave_channel(spfi->dev, "rx");
-+	spfi->tx_ch = dma_request_chan(spfi->dev, "tx");
-+	if (IS_ERR(spfi->tx_ch)) {
-+		ret = PTR_ERR(spfi->tx_ch);
-+		spfi->tx_ch = NULL;
-+		if (ret == -EPROBE_DEFER)
-+			goto disable_pm;
-+	}
-+
-+	spfi->rx_ch = dma_request_chan(spfi->dev, "rx");
-+	if (IS_ERR(spfi->rx_ch)) {
-+		ret = PTR_ERR(spfi->rx_ch);
-+		spfi->rx_ch = NULL;
-+		if (ret == -EPROBE_DEFER)
-+			goto disable_pm;
-+	}
-+
- 	if (!spfi->tx_ch || !spfi->rx_ch) {
- 		if (spfi->tx_ch)
- 			dma_release_channel(spfi->tx_ch);
--- 
-2.20.1
-
+      Arnd
