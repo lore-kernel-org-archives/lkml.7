@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7A0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B649C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF09206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F03E2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519000;
-	bh=RARFCDjsWk3oIy7ZHkpustOzA5dM86R+xpwqdoBpGK0=;
+	s=default; t=1576519005;
+	bh=kT4eyumXft4VNwDjGKQGHX6JSoDb+VUc1CLJUCZZv/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWOqvh4h2/b2D4E12/jDBDohC4skE3oFeX2i3+hfo4Q39OFqw6Z3Bk+xGcTZdW76n
-	 rb/f0EZ2t+Za1wdT+d2DZvkaS+I8xo0beqrDYU3Ob7nMiuAlsH/vc5FhTSRYb+UDC6
-	 XqBZB4jCNreue6y80HUM3+yGo+AOahMk016JycCs=
+	b=2Civu83E23C4WnSAgm+JGOY7i3tozOq3W2QGXeCzklueunrsZE8umdI/VYEwBRGpa
+	 N3DESgdwyoqyVmlpGtiSPHjOao0hF1dz36hz3GQ6DUvqmYhEAGCyuOeFB3p38AJeTD
+	 zMNVpPdCuP39Bs689ls4CctWatcZudYY8M+Ahssk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfLPR4j (ORCPT
+        id S1728278AbfLPR4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54908 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727433AbfLPR4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:36 -0500
+        id S1727893AbfLPR4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46391205ED;
-        Mon, 16 Dec 2019 17:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0CC205ED;
+        Mon, 16 Dec 2019 17:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518995;
-        bh=RARFCDjsWk3oIy7ZHkpustOzA5dM86R+xpwqdoBpGK0=;
+        s=default; t=1576519000;
+        bh=kT4eyumXft4VNwDjGKQGHX6JSoDb+VUc1CLJUCZZv/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xw0Rc8wRlUHL3riVXmfzKtGnk4+BHWp2Eo9QgYdMsmPmr5odxCwYb0Zb5cI82eW1i
-         njZImAp/yzJieKJGl7vswQfSmL01OObTfU+GsW7LUdz0ufN276dcHFLq6bg3xoRfAX
-         Q+1MuR03rzf+cQkYJJI0fVdhN4RS24FmAVn7O8Ck=
+        b=fcx01lIM4M4AyeugSciP/nR/DmF6tLIAu4VyuKYpNgnXeqSeqI7bC9VxzI30gMUXs
+         44Y8GY/E0qA0LeIj04o8/JTB2h9h9azZXQ0d7F3jyYCNEWC9b68qElE02WxKGfiPZ9
+         2EwJ2Q+fy66+3j9yrfIVA0b5tXA6OgH+AeOxRHCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.14 153/267] ASoC: rsnd: fixup MIX kctrl registration
-Date:   Mon, 16 Dec 2019 18:47:59 +0100
-Message-Id: <20191216174910.878531863@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.14 155/267] appletalk: Fix potential NULL pointer dereference in unregister_snap_client
+Date:   Mon, 16 Dec 2019 18:48:01 +0100
+Message-Id: <20191216174910.985307658@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,61 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 7aea8a9d71d54f449f49e20324df06341cc18395 upstream.
+commit 9804501fa1228048857910a6bf23e085aade37cc upstream.
 
-Renesas sound device has many IPs and many situations.
-If platform/board uses MIXer, situation will be more complex.
-To avoid duplicate DVC kctrl registration when MIXer was used,
-it had original flags.
-But it was issue when sound card was re-binded, because
-no one can't cleanup this flags then.
+register_snap_client may return NULL, all the callers
+check it, but only print a warning. This will result in
+NULL pointer dereference in unregister_snap_client and other
+places.
 
-To solve this issue, commit 9c698e8481a15237a ("ASoC: rsnd: tidyup
-registering method for rsnd_kctrl_new()") checks registered
-card->controls, because if card was re-binded, these were cleanuped
-automatically. This patch could solve re-binding issue.
-But, it start to avoid MIX kctrl.
+It has always been used like this since v2.6
 
-To solve these issues, we need below.
-To avoid card re-binding issue: check registered card->controls
-To avoid duplicate DVC registration: check registered rsnd_kctrl_cfg
-To allow multiple MIX registration: check registered rsnd_kctrl_cfg
-This patch do it.
-
-Fixes: 9c698e8481a15237a ("ASoC: rsnd: tidyup registering method for rsnd_kctrl_new()")
-Reported-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-By: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to <4.15: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sh/rcar/core.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/atalk.h |    2 +-
+ net/appletalk/aarp.c  |   15 ++++++++++++---
+ net/appletalk/ddp.c   |   20 ++++++++++++--------
+ 3 files changed, 25 insertions(+), 12 deletions(-)
 
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -1279,14 +1279,14 @@ int rsnd_kctrl_new(struct rsnd_mod *mod,
- 	int ret;
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_
+ #define AARP_RESOLVE_TIME	(10 * HZ)
  
- 	/*
--	 * 1) Avoid duplicate register (ex. MIXer case)
--	 * 2) re-register if card was rebinded
-+	 * 1) Avoid duplicate register for DVC with MIX case
-+	 * 2) Allow duplicate register for MIX
-+	 * 3) re-register if card was rebinded
- 	 */
- 	list_for_each_entry(kctrl, &card->controls, list) {
- 		struct rsnd_kctrl_cfg *c = kctrl->private_data;
+ extern struct datalink_proto *ddp_dl, *aarp_dl;
+-extern void aarp_proto_init(void);
++extern int aarp_proto_init(void);
  
--		if (strcmp(kctrl->id.name, name) == 0 &&
--		    c->mod == mod)
-+		if (c == cfg)
- 			return 0;
- 	}
+ /* Inter module exports */
  
+--- a/net/appletalk/aarp.c
++++ b/net/appletalk/aarp.c
+@@ -879,15 +879,24 @@ static struct notifier_block aarp_notifi
+ 
+ static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+ 
+-void __init aarp_proto_init(void)
++int __init aarp_proto_init(void)
+ {
++	int rc;
++
+ 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+-	if (!aarp_dl)
++	if (!aarp_dl) {
+ 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
++		return -ENOMEM;
++	}
+ 	setup_timer(&aarp_timer, aarp_expire_timeout, 0);
+ 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+ 	add_timer(&aarp_timer);
+-	register_netdevice_notifier(&aarp_notifier);
++	rc = register_netdevice_notifier(&aarp_notifier);
++	if (rc) {
++		del_timer_sync(&aarp_timer);
++		unregister_snap_client(aarp_dl);
++	}
++	return rc;
+ }
+ 
+ /* Remove the AARP entries associated with a device. */
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1911,9 +1911,6 @@ static unsigned char ddp_snap_id[] = { 0
+ EXPORT_SYMBOL(atrtr_get_dev);
+ EXPORT_SYMBOL(atalk_find_dev_addr);
+ 
+-static const char atalk_err_snap[] __initconst =
+-	KERN_CRIT "Unable to register DDP with SNAP.\n";
+-
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+@@ -1928,17 +1925,22 @@ static int __init atalk_init(void)
+ 		goto out_proto;
+ 
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+-	if (!ddp_dl)
+-		printk(atalk_err_snap);
++	if (!ddp_dl) {
++		pr_crit("Unable to register DDP with SNAP.\n");
++		goto out_sock;
++	}
+ 
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+ 	rc = register_netdevice_notifier(&ddp_notifier);
+ 	if (rc)
+-		goto out_sock;
++		goto out_snap;
++
++	rc = aarp_proto_init();
++	if (rc)
++		goto out_dev;
+ 
+-	aarp_proto_init();
+ 	rc = atalk_proc_init();
+ 	if (rc)
+ 		goto out_aarp;
+@@ -1952,11 +1954,13 @@ out_proc:
+ 	atalk_proc_exit();
+ out_aarp:
+ 	aarp_cleanup_module();
++out_dev:
+ 	unregister_netdevice_notifier(&ddp_notifier);
+-out_sock:
++out_snap:
+ 	dev_remove_pack(&ppptalk_packet_type);
+ 	dev_remove_pack(&ltalk_packet_type);
+ 	unregister_snap_client(ddp_dl);
++out_sock:
+ 	sock_unregister(PF_APPLETALK);
+ out_proto:
+ 	proto_unregister(&ddp_proto);
 
 
