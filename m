@@ -4,110 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC60C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C50C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377C220717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CE9206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9eRHG6c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kkH8LCw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfLPPVm (ORCPT
+        id S1728345AbfLPPWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:21:42 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41236 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfLPPVl (ORCPT
+        Mon, 16 Dec 2019 10:22:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38905 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbfLPPWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:21:41 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so7742965wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:21:40 -0800 (PST)
+        Mon, 16 Dec 2019 10:22:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so7760496wrh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:22:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
-        b=l9eRHG6cELj/1PPW5EMQL8KGSpML40lgI42oonoObgVkQJpwcUpAhOzugGJ1YzDVh/
-         Xn+g5HPMl+dLsYUrlg7312P/+FNbj9QEnm2kVtOKCQdPOD447fXhj6oyX5lGi6hArYGI
-         ORKa/zBvvQR/ijSqhhv+sdOOlpsJpm4PmFmwb3UgJplzSokAD8u8b9pQ7kaUsCXJ9f9m
-         Lv/bhO/Swr+5cFJ21U8uk/Jd33llMPn0xeTlVRk8bVjXZJZrg3/QC8m5DHrKlgB4M0QV
-         osHGkfb8Z2PSqzmCGeUX3qd3TpPIq2QDjMGPHvZoY2oInrkzLxNL6LEBL8zZzqTbZKg1
-         pYfA==
+        bh=qLjeAIGdVG2CAGqrqkDVZm71lWq9H9Eq0kShaFA5C18=;
+        b=kkH8LCw60Q4gtYMmg4us/7jO+sM6+roSBcF2Q6uyA+jQZ3cULiu6CqYEB55pDtjCPp
+         tlHbIYxoXQ52On9zJgaLJ0+w0M/RG4Bw61a15MYPv/j+Qzsv8Zy07iy3cetlHdZroJKW
+         rwlUpvP36tCOUlbDM9Us1RMnXeHWGvWXxMsOlfsWVTuUZ512BbX9D9H7IpMZCgZAGMLP
+         91Fp5ooQjGBMo9vZ8mHYD5wJQ4YdfyrsyqYmlRXdsaV+njbGMj+McmdU3MQgtPJbW3Ua
+         v4esrLjpptQmVawCAFP9AKgRLGtU5U2xere4vUxM98aMD77XxZmGCFxc2n6uZTkts0A9
+         O1aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
-        b=p9u/S9VGuyCdizR8Q6V8C9wpla5qcZWlmTg0qrmqRmt6L4RWf3E7ioSECXtzzIzv+Y
-         7h4iKEzwbh30KRwXAE/yJV1RH081XQkoIkVVdrALUhzX4GaMi0ZEQaWrbtlIFbu/mTBN
-         HxMegOYVWghtQdyPd6FEUpc/xOwPlLbIDJoJJ8ZTGxykFtSX+75JL4Uocv72UuqGJ55G
-         zKupj3KQozo6/Rs+hPoXwt26sEzDyeEib144wOpSqb6vtiiBn3CfSVBrw24g673SspJN
-         p1xOz8x+ehHLlnQVGnth7Crc1frseNtnbV0YQXkzu7j9CLz8Tlv3mjuXO4cFgSbUSMXA
-         45Mw==
-X-Gm-Message-State: APjAAAX0p2MZRYXMjW+Jll61QxxpjKa1TfwZqI82nFbc5erNE4PQORaf
-        iMb4pB9rQ0zEPYabGoJsUc+S2w==
-X-Google-Smtp-Source: APXvYqweC7S5MEqLKn13rfYs2+xIpXzL1Op8mNT8o+RON6KKvlXrllfQ92Cbjp2t7tj6nFBRu6VFaw==
-X-Received: by 2002:a5d:4b8f:: with SMTP id b15mr32672267wrt.100.1576509699617;
-        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
+        bh=qLjeAIGdVG2CAGqrqkDVZm71lWq9H9Eq0kShaFA5C18=;
+        b=MyttmHhscjUXTCQCB+hhU4ZdxDg8VMVt43pNOzbZG0TZdZTBEFSLu0Yy1tyjmoP/d2
+         iUDhGMNjF8cb9VSapeGgsREMsHi6UnxeNeFpl4LIHvTiHkWx8gmnuGDb9/YIoguqCkSj
+         VJvF7ZYMJb4P/VrZg+vGwsB5PVTCDsHJX2CgFMBdD2guKOZZfQVJ4AnwYVM++djOeIdo
+         FiAsgj4MbcgJokszSXH8L38SuS1R+CW8E8RJJ+3iH1Ggil1lpvGOg9G0gVt2dGgyHv1y
+         6egxx+q56/TWjWy2u5WSd8YSWqXeOjtMrfb18tfEVP42GK1hPkd6Ji0NIRB9fHLwwi1P
+         T7YQ==
+X-Gm-Message-State: APjAAAXnC8Nu197cw6DXbnSlbkvsz9G4JC3/U8IGBAzU8yPWWXjjRk9Z
+        123ncKr3+rJTylX1ujxXV9T6eA==
+X-Google-Smtp-Source: APXvYqwqcvX/5Yl6rT4Ou+vaTqr6E/+0/LcKrmUU3eQtD677huDYJ6VQOAwdzpeO5hEPA8AhyLoJkA==
+X-Received: by 2002:adf:d848:: with SMTP id k8mr29961381wrl.328.1576509761304;
+        Mon, 16 Dec 2019 07:22:41 -0800 (PST)
 Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id x10sm22076901wrv.60.2019.12.16.07.21.38
+        by smtp.gmail.com with ESMTPSA id b17sm21923340wrp.49.2019.12.16.07.22.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:21:38 +0000
+        Mon, 16 Dec 2019 07:22:40 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:22:40 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Tianping Fang <tianping.fang@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v7 6/6] rtc: Add support for the MediaTek MT6358 RTC
-Message-ID: <20191216152138.GF2369@dell>
-References: <1576057435-3561-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH] mfd: ab8500: Fix ab8500-clk typo
+Message-ID: <20191216152240.GG2369@dell>
+References: <20191211114639.748463-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20191211114639.748463-1-linus.walleij@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Hsin-Hsiung Wang wrote:
+On Wed, 11 Dec 2019, Linus Walleij wrote:
 
-> From: Ran Bi <ran.bi@mediatek.com>
+> Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+> has a typo error renaming "ab8500-clk" to "abx500-clk"
+> with the result att ALSA SoC audio broke as the clock
+> driver was not probing anymore. Fixed it up.
 > 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/rtc/rtc-mt6397.c       | 24 ++++++++++++++++--------
+>  drivers/mfd/ab8500-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
->  include/linux/mfd/mt6397/rtc.h | 16 +++++++++++++++-
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
