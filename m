@@ -2,101 +2,149 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F32EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0C7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521992;
-	bh=lVsQtlz9HqUC4ySS/Wo8a1rhZi2RdxjoPZBn/2TzcSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vuk0AxhZV3Gnfb4GeK86ZSslTlW7K1ana9Ps+nBW8ht+6FADaCCew1he2koe5B9nr
-	 Rr2KICIEADy/kCdbtDe7f21l9MQ+qA9WjAv06i2lk1MQIlhenVZgQbGvsBmbrZZpx5
-	 OMRLYRq1/ub7iqucL4C8GeLMKqA83kRtS+tzJMhs=
+	by mail.kernel.org (Postfix) with ESMTP id 34C6E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JffkAK1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfLPSqb (ORCPT
+        id S1728513AbfLPSqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:31 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38518 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfLPR4S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h20so10168609otn.5;
-        Mon, 16 Dec 2019 09:56:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aw1ByhbMIhX8L3tpVoMfqyhN1NAHJbr1+p+FNO511mw=;
-        b=nrMvKXP819hDukBTzAVD5fj7fjnXlO/iuNiZNRauhqvxPAleLPK7PhDPEEswRvauou
-         tE53c/EHRbEmJiXf7zwCH3XN3m5qF1s5mYNpEEP5opSLUT4hqqlt0Lg/qtuvo484QaHT
-         YXScST/HMAOvoj7jtqkkCKtD7IF/WE2T2jNWQ6Ud+35aOhIysvPZmFeHehQ7CoaQU+eT
-         jDPZb8FuJcQQCNIC/eMpFJ5MiiKFHC9dQGhG76hFmKvNqQu2HkNhpO7HnYUXjOaFMIZH
-         0W8gIt9at6MDjIvNujZtzkBsAW5F9lYwDMU7GZBT0b+A1lvtHCcMdVK+Qvy+t/m5HbZO
-         u5Fw==
-X-Gm-Message-State: APjAAAWIBm03hyu+rzzmsyhE6g4uB4ZnbfPNrsylMvyBZRSb5eIpn/ye
-        ui71fIhptEQUiaITI3GjLQ==
-X-Google-Smtp-Source: APXvYqwnnF6ea7JjKjRTbA+MoqjFiZwsAnK2w39lJst7Lqh4AyRaVH2JJ0Lo6JAUE+Ksjh06jg4ewA==
-X-Received: by 2002:a9d:600e:: with SMTP id h14mr32060423otj.113.1576518977031;
-        Mon, 16 Dec 2019 09:56:17 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p127sm7017255oig.26.2019.12.16.09.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 09:56:16 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:56:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from
- rockchip,px30-dsi-dphy
-Message-ID: <20191216175615.GA23392@bogus>
-References: <20191216122448.27867-1-heiko@sntech.de>
+        Mon, 16 Dec 2019 13:46:37 -0500
+Received: from mout.gmx.net ([212.227.15.19]:53821 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728175AbfLPR4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576518964;
+        bh=CAK+937vMJ7Ul1L0L0cRsieV0URSjAloZ41FxESMYZg=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
+        b=JffkAK1tV2BmEBhNaIPc4vAg6igCT7DVh2lVhf8TVpHgSNU/3O83zV/s7OOF/wA/n
+         d7ey00CzlVsbZRoFDpsN9KLDfOqR15mOfQQa6/wvO+etKanIz3EyZybKUjeoe+onCm
+         9gnq6ewgl1vR0GEARXVdPJ34hWuCcI0lR7nuEsE8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M6lpM-1id5NS0toc-008KWy; Mon, 16
+ Dec 2019 18:56:04 +0100
+Subject: Re: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling
+ during startup
+To:     Greg KH <greg@kroah.com>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-bluetooth@vger.kernel.org
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-94-sashal@kernel.org>
+ <20191216131512.c5x5ltndmdambdf4@core.my.home>
+ <20191216132750.GA1646935@kroah.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <9ea6af63-0133-284c-98a4-57d19c60d497@gmx.net>
+Date:   Mon, 16 Dec 2019 18:56:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216122448.27867-1-heiko@sntech.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216132750.GA1646935@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:1NGjEk2kmw7CCqJGd+/tmrSULyEcRMlyxmyL9HTkLzxJ3t5WPre
+ h29L1kDiUcoAc5deXTwJbbDpbzsQPQziJ7QNj4jGfnaeGOyK4xzLxQS0A427fUgQqNIDH8w
+ qAP3Cw8J8T5ge2H2PDtTALHSY5uvcc6ePf+5gfwGd02xgCd1rDtq0pWE96dhiygulNxnJne
+ ssp/U87lfc9blvIt6MBNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KLJednpRabg=:T5c7YPDR4wYazTXu2MmIJe
+ E+SqqfXyXnnDSPNkA/jBrVz/6+pOP+KcGfJdYeVPqa++qTH7k+ZmQtauFTjtT9w6y3jBrrP47
+ /+hHD7VfuluBjr7b+87e/E2Q9yGJ5Jdi1xdGyiey46Rcv2GMDOlXHe8p3C+XzYgMZCanN5kXo
+ WrYwgrEld69IcwI4cH6MV6R3qxoc40R9Ln39OkKAruN83IR8nPD3qxkgY5Yj2vdavAxwpeLkw
+ QVeaZqXGy45BFMuOpdIq9qM3E0VNQtyXPgnNxiDwlRokbsoUxDxSqv6nyFoIbaY9w9SOEnkeG
+ ONsxrqDHtoEs99GsE99PAMVAx5BpLwXd7sIVYgcEnM+F7rLDxMFpVdd4HeaPC0NC/0e1P3+or
+ 9kh8U5gTXb5LmdO68Df/n56tsYn0p3xc7+prnFmhgrCSJiGqtTcC5xCFfT37x8uwK98Wywx9f
+ 73b/wouir1NnWZaGFxzZ4iiVgGr21LJmv03o8l0PIItmiVqdIYLjxX6uGRdKag6ngtqTMK5ZA
+ SJOnU62Qj0/dSjF5FJTbiBgiKEZz20+Rv2jgGWv8e2MQ5Z2g9EjAbnUUUnG9eh1DSqeWM81eg
+ 0H2qN9KOc9sZ5W1aBOF8yl4U+NGvUnML5M0CYyuKtjU7feU36iv4KpcGabwf08gDX8aYm0yF2
+ O0Umcm9UI77hQdMX5sSjDw9scrTiUttl3+sCm3McXQmImJ8k9HVqcqw2yVzkjzoAhJoMIsI1I
+ A541DuPLICSFzevgpLHvvYXNbLJHoQdg8JHIrRiF48jTkc9B67J/L8riFGI+3ws6sOXPkBozZ
+ CFKighY8lG5zAhqwR/Fi0FpHh82wyucb8n8GmPX/LiBoIZpYvH68rNeDrKIGOfzkNVii0KzFW
+ Ibe3wPSVc+My842xtPbxHGuoQlVidb8kB1QV/Rf2L91ida6ML2fLc9Ki/o3BdSTxJL6IpSyT1
+ z3NIGVSmWWzmoUlvOQl8+onDyW8ZfM9K0TnvaHcAffIugHIBIxwFvPzvuBj6IAlG/1rU4VyF1
+ hUDaaVc/z4Z7WlIjScmpKUDAbqbFuX0wcORDT98xhYGwhRoQxCZ+mCPT9o1lQqSsxO/dMm4uB
+ 2Td8XkjsXjT+xASgxnuSaNHSu+Ttw1a5LbPoONwfn6B7jCmWH154P/V+pNDLRDkSHm5xSWEN+
+ dZiDgZUD8PMq1ugPPIb1O1S3NrlXZOQ4DTfcE7WgV3XwkLiwL34LFHDaqDkwMXl0ko0tCCqlF
+ 0KdG0l9dQUSgpPj0kemw3NcWpYRIUYR88g58tgK7Kaz4YuPFyKczGMUShQ6c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 13:24:47 +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> Further review of the dsi components for the px30 revealed that the
-> phy shouldn't expose the pll as clock but instead handle settings
-> via phy parameters.
-> 
-> As the phy binding is new and not used anywhere yet, just drop them
-> so they don't get used.
-> 
-> Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
-> Hi Kishon,
-> 
-> maybe suitable as a fix for 5.5-rc?
-> 
-> Thanks
-> Heiko
-> 
->  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
->  1 file changed, 5 deletions(-)
-> 
+Am 16.12.19 um 14:27 schrieb Greg KH:
+> On Mon, Dec 16, 2019 at 02:15:12PM +0100, Ond=C5=99ej Jirman wrote:
+>> Hi,
+>>
+>> On Tue, Dec 10, 2019 at 04:03:58PM -0500, Sasha Levin wrote:
+>>> From: Stefan Wahren <wahrenst@gmx.net>
+>>>
+>>> [ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
+>>>
+>>> The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
+>>> doesn't react to HCI requests during DT probe. The reason is the inpro=
+per
+>>> handling of the RTS line during startup. According to the startup
+>>> signaling sequence in the CYW43455 datasheet, the hosts RTS line must
+>>> be driven after BT_REG_ON and BT_HOST_WAKE.
+>>>
+>>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>>> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>> ---
+>>>  drivers/bluetooth/hci_bcm.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+>>> index 7646636f2d183..0f73f6a686cb7 100644
+>>> --- a/drivers/bluetooth/hci_bcm.c
+>>> +++ b/drivers/bluetooth/hci_bcm.c
+>>> @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
+>>>
+>>>  out:
+>>>  	if (bcm->dev) {
+>>> +		hci_uart_set_flow_control(hu, true);
+>>>  		hu->init_speed =3D bcm->dev->init_speed;
+>>>  		hu->oper_speed =3D bcm->dev->oper_speed;
+>>>  		err =3D bcm_gpio_set_power(bcm->dev, true);
+>>> +		hci_uart_set_flow_control(hu, false);
+>>>  		if (err)
+>>>  			goto err_unset_hu;
+>>>  	}
+>> This causes bluetooth breakage (degraded bluetooth performance, due to =
+failure to
+>> switch to higher baudrate) for Orange Pi 3 board:
+>>
+>> [    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
+>> [   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-=
+110)
+>> [   12.004613] Bluetooth: hci0: Failed to set baudrate
+>> [   12.123187] Bluetooth: hci0: BCM: chip id 130
+>> [   12.128398] Bluetooth: hci0: BCM: features 0x0f
+>> [   12.154686] Bluetooth: hci0: BCM4345C5
+>> [   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
+>> [   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
+>>
+>> I suggest not pushing this to stable.
+> Is it being fixed in Linus's tree?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+No, because this mail was the first bug report.
 
-If a tag was not added on purpose, please state why and what changed.
+But i agree with Ond=C5=99ej to not push it into stable.
+
+Stefan
+
+>
+> thanks,
+>
+> greg k-h
