@@ -2,146 +2,139 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292B7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09340206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920E0206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/AYvTgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfLPK6L (ORCPT
+        id S1727591AbfLPK7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:58:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727403AbfLPK6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:58:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC33AACA7;
-        Mon, 16 Dec 2019 10:58:07 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 803C11E0B2E; Mon, 16 Dec 2019 11:58:07 +0100 (CET)
-Date:   Mon, 16 Dec 2019 11:58:07 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     syzbot <syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com>,
-        darrick.wong@oracle.com, hch@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-ext4@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: KASAN: use-after-free Read in iov_iter_alignment
-Message-ID: <20191216105807.GB23120@quack2.suse.cz>
-References: <000000000000ad9f910598bbb867@google.com>
- <20191202211037.GF2695@dread.disaster.area>
- <20191216104836.GA23120@quack2.suse.cz>
+        Mon, 16 Dec 2019 05:59:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44582 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727466AbfLPK7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:59:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576493953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hQ6sYFdb7LHBsbEybHzcurKWWaevQ2cyS6out70xyhQ=;
+        b=c/AYvTgowKMwins/NcMjhTP0exSHdQ1HFu6mcm6kLfPk6d2lrHe6ILK2zBo7GfNFXRFJWP
+        C4snqjIsqLcCnlJ1+bsRUCG2NK5e3VsNluROMgyx1vX1uQp3kVrOUx1JiiPqh/e4G2Cx56
+        cVDA31dt1kmXFcqvjvgyhiBuRCcphDU=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-IcMG-EozPwO79TxUqnJe1Q-1; Mon, 16 Dec 2019 05:59:12 -0500
+X-MC-Unique: IcMG-EozPwO79TxUqnJe1Q-1
+Received: by mail-wr1-f70.google.com with SMTP id i9so3558553wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:59:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hQ6sYFdb7LHBsbEybHzcurKWWaevQ2cyS6out70xyhQ=;
+        b=TVeYCIhIbClPt2lgwQJJA5I2FGG3bi4DXdz2znqd2z8DMiz59ICyTsZoelrLO1tPGY
+         Y6LFTvAX8VvUKxKTYo8GlZ3lDdTO0NQsn94ystBLvK/kmjtw3byIM8h3+t/oio8t0f8a
+         dbtnNDpEG21hlk3xXTGpYG8gFJvRg4/PeA16o6cBEhZm+It6Ttb0wWzLw8CCVjxpr/k2
+         NbQSy6VAe7RBLuVzLe74A3BB+WcFU0y4razRIbMNChbqy9yltOBigEnvuNS7BKszSiGt
+         uoEWJOpyxCuCoVMj1Etn9X3lS5Mlx0kf4vJ7pUHSoPGALjvXh2+Qcau1bS1t/Fq6cSlp
+         kxdQ==
+X-Gm-Message-State: APjAAAXGZnpmK4EkbwNreraDoi8B1nrit/TQ+BIsihgoIJVi3fujrXlk
+        xdViOkw19xQwcgk78gDz7CWFC160xyiNvZF9/o9TRBm3HRcH37q2EHTNXY5Y5gVs5c5+CQx6gq/
+        /UKFU+RZgYjyPk4Y0e9RrxS4b
+X-Received: by 2002:adf:d848:: with SMTP id k8mr28536784wrl.328.1576493951612;
+        Mon, 16 Dec 2019 02:59:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwuvaGOybV0XNDKQ0IqtqC93KS7+4qbR1CruhBbHrdFS8xkO4lkM5kRrehoFB3fnxoPD5bNoQ==
+X-Received: by 2002:adf:d848:: with SMTP id k8mr28536750wrl.328.1576493951322;
+        Mon, 16 Dec 2019 02:59:11 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id s19sm19808552wmj.33.2019.12.16.02.59.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 02:59:10 -0800 (PST)
+Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs from VBT
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+ <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2a356fad-a473-3e37-4a7b-731594524862@redhat.com>
+Date:   Mon, 16 Dec 2019 11:59:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
-Content-Disposition: inline
-In-Reply-To: <20191216104836.GA23120@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon 16-12-19 11:48:36, Jan Kara wrote:
-> On Tue 03-12-19 08:10:37, Dave Chinner wrote:
-> > [cc linux-ext4@vger.kernel.org - this is reported from the new ext4
-> > dio->iomap code]
-> > 
-> > On Mon, Dec 02, 2019 at 09:15:08AM -0800, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    b94ae8ad Merge tag 'seccomp-v5.5-rc1' of git://git.kernel...
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=135a8d7ae00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e464ae414aee8c
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=bea68382bae9490e7dd6
-> > > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> > > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1135cb36e00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e90abce00000
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
-> > > 
-...
-
-> > Looks like buffered read IO on a loopback device on an ext4 image
-> > file, and something is being tripped over in the new ext4 direct IO
-> > path.  Might be an iomap issue, might be an ext4 issue, but it looks
-> > like the buffered read bio completion is running while the iov is
-> > still being submitted...
+On 16-12-2019 11:26, Linus Walleij wrote:
+> On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> Looking a bit more into this, I'm pretty sure this is caused by commit
-> 8cefc107ca54c "pipe: Use head and tail pointers for the ring, not cursor
-> and length". The pipe dereference it has added to iov_iter_alignment() is
-> just bogus for all iter types except for pipes. I'll send a fix.
+>> Linus, this series starts with the already discussed pinctrl change to
+>> export the function to unregister a pinctrl-map. We can either merge this
+>> through drm-intel, or you could pick it up and then provide an immutable
+>> branch with it for merging into drm-intel-next. Which option do you prefer?
+> 
+> I have created an immutable branch with these changes and pulled it
+> to my "devel" branch for v5.6:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
+> 
+> Please pull this in and put the other patches on top of that.
 
-For reference the fix I've sent is attached.
+Great, thank you.
 
-								Honza
+Jani, a question about how I am supposed to push this (when this has been
+also reviewed by some i915 devs and passes CI), can I just do:
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+dim backmerge drm-intel-next-queued linux-pinctrl/ib-pinctrl-unreg-mappings
+cat other-patches | dim apply-branch drm-intel-next-queued
+dim push-branch drm-intel-next-queued
 
---y0ulUmNC+osPPQO6
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-pipe-Fix-bogus-dereference-in-iov_iter_alignment.patch"
+Or I guess that dim backmerge is reserved for other drm branches only and I
+should do:
 
-From bc27e20fdd29b97b45015e1443128b4d3ff9455e Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Mon, 16 Dec 2019 11:44:14 +0100
-Subject: [PATCH] pipe: Fix bogus dereference in iov_iter_alignment()
+dim checkout drm-intel-next-queued
+git merge linux-pinctrl/ib-pinctrl-unreg-mappings
+cat other-patches | dim apply-branch drm-intel-next-queued
+dim push-branch drm-intel-next-queued
 
-We cannot look at 'i->pipe' unless we know the iter is a pipe. Move the
-ring_size load to a branch in iov_iter_alignment() where we've already
-checked the iter is a pipe to avoid bogus dereference.
+Or should I leave merging linux-pinctrl/ib-pinctrl-unreg-mappings into
+drm-intel-next-queued up to you?
 
-Reported-by: syzbot+bea68382bae9490e7dd6@syzkaller.appspotmail.com
-Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- lib/iov_iter.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> I had a bit of mess in my subsystems last kernel cycle so I
+> want to avoid that by strictly including all larger commits
+> in my trees.
 
- Al, David, not sure who's going to merge this so sending to both :).
+I understand.
 
-								Honza
+Regards,
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index fb29c02c6a3c..51595bf3af85 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1222,11 +1222,12 @@ EXPORT_SYMBOL(iov_iter_discard);
- 
- unsigned long iov_iter_alignment(const struct iov_iter *i)
- {
--	unsigned int p_mask = i->pipe->ring_size - 1;
- 	unsigned long res = 0;
- 	size_t size = i->count;
- 
- 	if (unlikely(iov_iter_is_pipe(i))) {
-+		unsigned int p_mask = i->pipe->ring_size - 1;
-+
- 		if (size && i->iov_offset && allocated(&i->pipe->bufs[i->head & p_mask]))
- 			return size | i->iov_offset;
- 		return size;
--- 
-2.16.4
+Hans
 
-
---y0ulUmNC+osPPQO6--
