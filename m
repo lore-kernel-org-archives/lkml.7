@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FF5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2875C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB2721582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4FA20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518916;
-	bh=nOCyJg/TK1iHSax37tqroYlf08bgSkbYJVBxddbKMic=;
+	s=default; t=1576518920;
+	bh=JuIU6evUP0TJkyze9RRlQ4q5lVJ+JG69SdDkDI2hhDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQwzJ9g0fVbX2LTpg3LDs5rWp4kI/Jbp8Ij4ESfmbPp5yR5hMN8/FpcUe4IES8SlM
-	 iOSkPO7wpmxjTMz7eeKGC+ObEN84Z6Pb3NKcA4maertZsnP4SqrOnLLxavIg6SQUxs
-	 0ncomcbdH+63sY6shssLxOEzoUuHg84iNiOCtaE8=
+	b=Yz9dvnyVsFeGvFPXEmNM8LqcKLkK49cPEerIz93pvuHoTv1x+p1+uMVTElkYfcODy
+	 +xL9WIHlwKjIg01Twnp4oRxBX0/ALt34y5iaxml5m41bCgtR8pPRTqLtnp2xCijRIg
+	 lm65x6MgVpMRg1TtVMWAe3tMq3duPhvchnFzr9gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfLPRzP (ORCPT
+        id S1727601AbfLPRzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbfLPRzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:11 -0500
+        id S1727791AbfLPRzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 697E520733;
-        Mon, 16 Dec 2019 17:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 461B320663;
+        Mon, 16 Dec 2019 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518910;
-        bh=nOCyJg/TK1iHSax37tqroYlf08bgSkbYJVBxddbKMic=;
+        s=default; t=1576518915;
+        bh=JuIU6evUP0TJkyze9RRlQ4q5lVJ+JG69SdDkDI2hhDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikOof9BrPaj9C7TRtd/bgC2ODoHLoak3wL/bORSIZKiOU+KpCZKFk/9bgZhy2s5U3
-         Djqf2JCvSxGTO0RQ872BIEI7YcHagkyz/5N7gRdsx5hx8bqt7emO0So6+Ng/aZKkWD
-         qs5OJe9PG3YYtV1JYmXfZYCayHhL6k2T/yw3j9X4=
+        b=lqz2dlpjFPxbFoHNCzc9YliOCe8ykiwzDtoG99Vsb8R1j0aFxugZyU930dzs0QATd
+         klGPYKz9rjdn0xZSZLV8V2/HjcwSERiMgD4Pi3X7luiAfoAH00UkW8YhMENw27Vzim
+         ZwqyX+NWhldeN4RV5glFW48F/7SgWRh+8o+tZs9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
+        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/267] net: aquantia: fix RSS table and key sizes
-Date:   Mon, 16 Dec 2019 18:47:24 +0100
-Message-Id: <20191216174903.169592698@linuxfoundation.org>
+Subject: [PATCH 4.14 102/267] net/mlx4_core: Fix return codes of unsupported operations
+Date:   Mon, 16 Dec 2019 18:47:08 +0100
+Message-Id: <20191216174902.302005230@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,49 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: Erez Alfasi <ereza@mellanox.com>
 
-[ Upstream commit 474fb1150d40780e71f0b569aeac4f375df3af3d ]
+[ Upstream commit 95aac2cdafd8c8298c9b2589c52f44db0d824e0e ]
 
-Set RSS indirection table and RSS hash key sizes to their real size.
+Functions __set_port_type and mlx4_check_port_params returned
+-EINVAL while the proper return code is -EOPNOTSUPP as a
+result of an unsupported operation. All drivers should generate
+this and all users should check for it when detecting an
+unsupported functionality.
 
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_cfg.h | 4 ++--
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/main.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-index 57e796870595b..ea4b7e97c61ea 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-@@ -40,8 +40,8 @@
- #define AQ_CFG_IS_LRO_DEF           1U
+diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
+index c273a3ebb8e8e..12d4b891301b6 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -199,7 +199,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
+ 		for (i = 0; i < dev->caps.num_ports - 1; i++) {
+ 			if (port_type[i] != port_type[i + 1]) {
+ 				mlx4_err(dev, "Only same port types supported on this HCA, aborting\n");
+-				return -EINVAL;
++				return -EOPNOTSUPP;
+ 			}
+ 		}
+ 	}
+@@ -208,7 +208,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
+ 		if (!(port_type[i] & dev->caps.supported_type[i+1])) {
+ 			mlx4_err(dev, "Requested port type for port %d is not supported on this HCA\n",
+ 				 i + 1);
+-			return -EINVAL;
++			return -EOPNOTSUPP;
+ 		}
+ 	}
+ 	return 0;
+@@ -1152,8 +1152,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ 		mlx4_err(mdev,
+ 			 "Requested port type for port %d is not supported on this HCA\n",
+ 			 info->port);
+-		err = -EINVAL;
+-		goto err_sup;
++		return -EOPNOTSUPP;
+ 	}
  
- /* RSS */
--#define AQ_CFG_RSS_INDIRECTION_TABLE_MAX  128U
--#define AQ_CFG_RSS_HASHKEY_SIZE           320U
-+#define AQ_CFG_RSS_INDIRECTION_TABLE_MAX  64U
-+#define AQ_CFG_RSS_HASHKEY_SIZE           40U
+ 	mlx4_stop_sense(mdev);
+@@ -1175,7 +1174,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ 		for (i = 1; i <= mdev->caps.num_ports; i++) {
+ 			if (mdev->caps.possible_type[i] == MLX4_PORT_TYPE_AUTO) {
+ 				mdev->caps.possible_type[i] = mdev->caps.port_type[i];
+-				err = -EINVAL;
++				err = -EOPNOTSUPP;
+ 			}
+ 		}
+ 	}
+@@ -1201,7 +1200,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ out:
+ 	mlx4_start_sense(mdev);
+ 	mutex_unlock(&priv->port_mutex);
+-err_sup:
++
+ 	return err;
+ }
  
- #define AQ_CFG_IS_RSS_DEF           1U
- #define AQ_CFG_NUM_RSS_QUEUES_DEF   AQ_CFG_VECS_DEF
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index cc658a29cc33e..a69f5f1ad32a8 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -43,7 +43,7 @@ static void aq_nic_rss_init(struct aq_nic_s *self, unsigned int num_rss_queues)
- 	struct aq_rss_parameters *rss_params = &cfg->aq_rss;
- 	int i = 0;
- 
--	static u8 rss_key[40] = {
-+	static u8 rss_key[AQ_CFG_RSS_HASHKEY_SIZE] = {
- 		0x1e, 0xad, 0x71, 0x87, 0x65, 0xfc, 0x26, 0x7d,
- 		0x0d, 0x45, 0x67, 0x74, 0xcd, 0x06, 0x1a, 0x18,
- 		0xb6, 0xc1, 0xf0, 0xc7, 0xbb, 0x18, 0xbe, 0xf8,
 -- 
 2.20.1
 
