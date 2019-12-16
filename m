@@ -4,96 +4,212 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E92CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E4FC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6983206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6734B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfLPOT2 (ORCPT
+        id S1728189AbfLPOTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:19:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:56976 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbfLPOT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:19:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E33131FB;
-        Mon, 16 Dec 2019 06:19:25 -0800 (PST)
-Received: from e123648.arm.com (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11A353F718;
-        Mon, 16 Dec 2019 06:19:23 -0800 (PST)
-From:   lukasz.luba@arm.com
-To:     linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
-Cc:     amit.kucheria@verdurent.com, lukasz.luba@arm.com,
-        dietmar.eggemann@arm.com
-Subject: [PATCH  2/2] thermal: devfreq_cooling: Add device node reclaiming in devfreq_cooling_register()
-Date:   Mon, 16 Dec 2019 14:19:09 +0000
-Message-Id: <20191216141909.30063-3-lukasz.luba@arm.com>
+        Mon, 16 Dec 2019 09:19:54 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:44058 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbfLPOTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:19:54 -0500
+Received: from ramsan ([84.195.182.253])
+        by andre.telenet-ops.be with bizsmtp
+        id eeKr2100V5USYZQ01eKrXF; Mon, 16 Dec 2019 15:19:51 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1igrDz-0005tN-LX; Mon, 16 Dec 2019 15:19:51 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1igrDz-0001JT-JW; Mon, 16 Dec 2019 15:19:51 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-m68k@lists.linux-m68k.org
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.5-rc2
+Date:   Mon, 16 Dec 2019 15:19:50 +0100
+Message-Id: <20191216141950.5006-1-geert@linux-m68k.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216141909.30063-1-lukasz.luba@arm.com>
-References: <20191216141909.30063-1-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Luba <lukasz.luba@arm.com>
+  - Remove CONFIG_CRYPTO_BLAKE2B=m (auto-selected by BTRFS_FS since
+    commit 78f926f72e43e4b9 ("btrfs: add Kconfig dependency for
+    BLAKE2B").
+	-CONFIG_CRYPTO_BLAKE2B=m
 
-Since the devfreq device parent might have the proper device node, devfreq
-cooling registration can re-use it. This will allow thermal bind function
-to pin thermal zone with cooling device based on definition in the device
-tree automatically. It will simplify registration of cooling device in
-drivers code.
-Fix also 'unregister path' and add IS_ERR_OR_NULL() check.
-
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- drivers/thermal/devfreq_cooling.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+To be combined with "m68k: defconfig: Update defconfigs for v5.5-rc1".
+---
+ arch/m68k/configs/amiga_defconfig    | 1 -
+ arch/m68k/configs/apollo_defconfig   | 1 -
+ arch/m68k/configs/atari_defconfig    | 1 -
+ arch/m68k/configs/bvme6000_defconfig | 1 -
+ arch/m68k/configs/hp300_defconfig    | 1 -
+ arch/m68k/configs/mac_defconfig      | 1 -
+ arch/m68k/configs/multi_defconfig    | 1 -
+ arch/m68k/configs/mvme147_defconfig  | 1 -
+ arch/m68k/configs/mvme16x_defconfig  | 1 -
+ arch/m68k/configs/q40_defconfig      | 1 -
+ arch/m68k/configs/sun3_defconfig     | 1 -
+ arch/m68k/configs/sun3x_defconfig    | 1 -
+ 12 files changed, 12 deletions(-)
 
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index 1861241c7ef5..c29056cb4a71 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -574,7 +574,24 @@ EXPORT_SYMBOL_GPL(of_devfreq_cooling_register);
-  */
- struct thermal_cooling_device *devfreq_cooling_register(struct devfreq *df)
- {
--	return of_devfreq_cooling_register(NULL, df);
-+	struct thermal_cooling_device *dfc;
-+	struct device_node *np = NULL;
-+	struct device *dev;
-+
-+	if (IS_ERR_OR_NULL(df))
-+		return ERR_PTR(-EINVAL);
-+
-+	dev = df->dev.parent;
-+
-+	if (dev && dev->of_node)
-+		np = of_node_get(dev->of_node);
-+
-+	dfc = of_devfreq_cooling_register(np, df);
-+
-+	if (np)
-+		of_node_put(np);
-+
-+	return dfc;
- }
- EXPORT_SYMBOL_GPL(devfreq_cooling_register);
- 
-@@ -586,7 +603,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
- {
- 	struct devfreq_cooling_device *dfc;
- 
--	if (!cdev)
-+	if (IS_ERR_OR_NULL(cdev))
- 		return;
- 
- 	dfc = cdev->devdata;
+diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
+index 998c6b8c2747da84..0a6ba8e5a39ac342 100644
+--- a/arch/m68k/configs/amiga_defconfig
++++ b/arch/m68k/configs/amiga_defconfig
+@@ -575,7 +575,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
+index 5b9c1fd92714141c..6d9fa08ef6d0e35c 100644
+--- a/arch/m68k/configs/apollo_defconfig
++++ b/arch/m68k/configs/apollo_defconfig
+@@ -531,7 +531,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
+index a2cb5010a9e49401..65bd096f89e7ee04 100644
+--- a/arch/m68k/configs/atari_defconfig
++++ b/arch/m68k/configs/atari_defconfig
+@@ -564,7 +564,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
+index a8bba75a8eafc1a1..789cad50f64ab334 100644
+--- a/arch/m68k/configs/bvme6000_defconfig
++++ b/arch/m68k/configs/bvme6000_defconfig
+@@ -524,7 +524,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
+index e43008bccb19c5be..aa4a8e0a18389b35 100644
+--- a/arch/m68k/configs/hp300_defconfig
++++ b/arch/m68k/configs/hp300_defconfig
+@@ -533,7 +533,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
+index 4e6d99040afa0906..5172398c38047f1e 100644
+--- a/arch/m68k/configs/mac_defconfig
++++ b/arch/m68k/configs/mac_defconfig
+@@ -555,7 +555,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
+index 9dc979672b2913cc..14c31ca056417625 100644
+--- a/arch/m68k/configs/multi_defconfig
++++ b/arch/m68k/configs/multi_defconfig
+@@ -641,7 +641,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
+index 617c331c56bfa0d2..f68287e5c0d83f3e 100644
+--- a/arch/m68k/configs/mvme147_defconfig
++++ b/arch/m68k/configs/mvme147_defconfig
+@@ -523,7 +523,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
+index 43984f89bf1f3602..da79ec7b77ae1fe1 100644
+--- a/arch/m68k/configs/mvme16x_defconfig
++++ b/arch/m68k/configs/mvme16x_defconfig
+@@ -524,7 +524,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
+index acf8ba47f641ff32..d93bd23d0e735e41 100644
+--- a/arch/m68k/configs/q40_defconfig
++++ b/arch/m68k/configs/q40_defconfig
+@@ -542,7 +542,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
+index 835b55d616b2d3aa..5ef9e17dcd51788a 100644
+--- a/arch/m68k/configs/sun3_defconfig
++++ b/arch/m68k/configs/sun3_defconfig
+@@ -526,7 +526,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
+diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
+index 0e09561d13f4b334..bf96a6a15ec4d684 100644
+--- a/arch/m68k/configs/sun3x_defconfig
++++ b/arch/m68k/configs/sun3x_defconfig
+@@ -525,7 +525,6 @@ CONFIG_CRYPTO_KEYWRAP=m
+ CONFIG_CRYPTO_ADIANTUM=m
+ CONFIG_CRYPTO_XCBC=m
+ CONFIG_CRYPTO_VMAC=m
+-CONFIG_CRYPTO_BLAKE2B=m
+ CONFIG_CRYPTO_BLAKE2S=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD128=m
 -- 
 2.17.1
 
