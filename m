@@ -2,96 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC70C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC39C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2313B206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2355C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkwOuyKn"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BRZqrodX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfLPQvG (ORCPT
+        id S1726663AbfLPQwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:51:06 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45794 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQvF (ORCPT
+        Mon, 16 Dec 2019 11:52:01 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33563 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfLPQwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:51:05 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l12so6268842qtq.12;
-        Mon, 16 Dec 2019 08:51:05 -0800 (PST)
+        Mon, 16 Dec 2019 11:52:01 -0500
+Received: by mail-io1-f68.google.com with SMTP id z8so5839360ioh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:52:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=W4O6k67GfjEXcryRt2BFpux0k7KGkAzksxyGgmCZObI=;
-        b=WkwOuyKnh0BhjsoRSwFvRhyT1WaVvJkcZqYxEpSDAVi3J3jIrqy7j/7xlyv6VCXRGt
-         3wwfk6pFKaqZ3U2Z/KxGtAYlizFb9mpmyopREGI+wLBVlSAXMPlOuumSIuuPwbdegamS
-         0Tunu0zfoL9n9pvKN1twtQHXPDs4Z79Bw8EShQC/yDuNv46VNYEeHWWXwQcd7dQ8y87k
-         WbNxAeqlxgAvsQ6JDHehwefju1x76YPgyF7fwLR1yl3jqLRSONSepfSWXtDpR8OEcKpd
-         b+k4+ouvh6f7e+dHrlbAMBospmbr0n1A9OFjLVLmto+vXaH37ZyHFe/Y8Dr1AI/aNf/k
-         bQpA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=cSYB4VDYBn9+UOY67DLcEBptjFhY+ZTaH1LL49YdtyE=;
+        b=BRZqrodXA5SCaDVjC2jOyoJzx31f79hHYU0D5pX0lEM6Rfv1r0XajCAN44q4UZbtfD
+         HsMCewg+vlraUjyReNSq0xV0eBLrBkYFhKPUxkOhFNHQDpKBC/7eRvQXkCTcEpcKv1bH
+         zC6yZd+9vp5VM7/O0rpcCPT5vsK6PJZwtEc9TFt7pBUUZTjod9ILLCUzS2ynnsptDHXY
+         nZoTXe2PCFHgpuH89YD5tXT/+Obj5nK2mlfPLQ5RK2D9MgZqNLllq+/S7WEiz1LUiE3q
+         B9eSaA8NCTS6wMZEXrHoZBFaVyiwEzLnAZ8aRQi8pB0+wnY5cIFvwl/5vLZBE7GS4hEN
+         I1nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=W4O6k67GfjEXcryRt2BFpux0k7KGkAzksxyGgmCZObI=;
-        b=TXPjzRRr1v6uVp288Yjrf8wzDURXE0HWjbBhWPtgZhz6WgFyW8brlh0xQcpp/UueDV
-         RDtgjUavYpj9xWpaUnUMi+cnrNGQbMGIz+T/LPqn7FC3CAEILTijgdRMGii1zI5VOrnL
-         P5SPiBs8meWmln5SYq2PaSmiMxTuf9cv3igHg9OWgCRG/ipL1wtdAlXD80osRHfiGNYh
-         wTqUaAc6bdcRpurDjdKnaJ62WMhfYud7k9PHBsCQTWqiCUrXF4XVEB1pDgPl/HStS7KL
-         QbhFkP0ri1xbGZ2Zk4I2qFOOnXBgfcB3+T/bJ6JhvtmEWkP/bHrNlfEEIFCqc5275Wv+
-         1kcA==
-X-Gm-Message-State: APjAAAUwnHQzoq5EHxoa/GV5UHre1xF2LDcmZTsk5IkSwaaRZk1sZGql
-        AqYsnF+xk06whuiN/A+ekII=
-X-Google-Smtp-Source: APXvYqy6tZPu2WmGWY9idlGNMroe5J64lIFHSkS5SMk8g1WTtdP61Exq4/UAlvvkbagvetYBkxYoaw==
-X-Received: by 2002:ac8:7586:: with SMTP id s6mr105053qtq.309.1576515064844;
-        Mon, 16 Dec 2019 08:51:04 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id b3sm7102789qtr.86.2019.12.16.08.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:51:04 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:51:03 -0500
-Message-ID: <20191216115103.GD2051941@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 4/5] net: dsa: add support for Atheros AR9331 TAG
- format
-In-Reply-To: <20191216074403.313-5-o.rempel@pengutronix.de>
-References: <20191216074403.313-1-o.rempel@pengutronix.de>
- <20191216074403.313-5-o.rempel@pengutronix.de>
+        bh=cSYB4VDYBn9+UOY67DLcEBptjFhY+ZTaH1LL49YdtyE=;
+        b=PIV+EAQ5dJdV8Bxytjm7+08cQ15aB2ry/xLFJ5MhhIun6cotEW/z2pAQbIBoT+lfxK
+         XrGqWEAPo4m12gkUoQHpVB66sBqE+YR/pk28qzB2wli79+WUtc04JvuJ+uQmUwjhvpTA
+         LAdS2wupHwMd2j6HC7RIAYti0U6khTwCzURwBnHqlQ7CMNqqim0XeMDWgtT5Sldzqs+f
+         z7cg20e6guetlDKWjs3qpr+5g3xh345rLOgnqOpKYnkk1rnBJJ7DbehMdN2mOsOXh7oU
+         zV+OkAwRciWhfA3ctAxNKcM8XTmsFDSaZ7GJfFyixNS7xwYRlODzqYrtuGCnYlbKakqf
+         48pA==
+X-Gm-Message-State: APjAAAUeaTmY0TtRVmFiHhllLDzERbMYRLDAkGwNZle1253uk86WxhhG
+        TlUVxdFq37zE6Y4zi9CVbYxonYlEMlAykg==
+X-Google-Smtp-Source: APXvYqyM3ZBL4qMsfF/1+963iDOGt0Z7NbVXph1BwFYa4ifzVCJCuiHtTadM0lmyITafZI42K9FWww==
+X-Received: by 2002:a5d:9eda:: with SMTP id a26mr19373162ioe.238.1576515120598;
+        Mon, 16 Dec 2019 08:52:00 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id b145sm3648590iof.60.2019.12.16.08.51.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 08:52:00 -0800 (PST)
+Subject: Re: [PATCH v3] io_uring: don't wait when under-submitting
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <6256169d519f72fe592e70be47a04aa0e9c3b9a1.1576333754.git.asml.silence@gmail.com>
+ <c6f625bdb27ea3b929d0717ebf2aaa33ad5410da.1576335142.git.asml.silence@gmail.com>
+ <a1f0a9ed-085f-dd6f-9038-62d701f4c354@kernel.dk>
+ <3a102881-3cc3-ba05-2f86-475145a87566@kernel.dk>
+ <900dbb63-ae9e-40e6-94f9-8faa1c14389e@gmail.com>
+ <9b422273-cee6-8fdb-0108-dc304e4b5ccb@kernel.dk>
+ <279b9435-6050-c15a-440d-c196c6184556@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ff49ace9-9d9a-a760-7fc0-325631a8b87c@kernel.dk>
+Date:   Mon, 16 Dec 2019 09:51:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <279b9435-6050-c15a-440d-c196c6184556@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 08:44:02 +0100, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Add support for tag format used in Atheros AR9331 built-in switch.
+On 12/16/19 9:47 AM, Pavel Begunkov wrote:
+> On 16/12/2019 00:33, Jens Axboe wrote:
+>> On 12/15/19 8:48 AM, Pavel Begunkov wrote:
+>>> On 15/12/2019 08:42, Jens Axboe wrote:
+>>>> On 12/14/19 11:43 AM, Jens Axboe wrote:
+>>>>> On 12/14/19 7:53 AM, Pavel Begunkov wrote:
+>>>>>> There is no reliable way to submit and wait in a single syscall, as
+>>>>>> io_submit_sqes() may under-consume sqes (in case of an early error).
+>>>>>> Then it will wait for not-yet-submitted requests, deadlocking the user
+>>>>>> in most cases.
+>>>>>>
+>>>>>> In such cases adjust min_complete, so it won't wait for more than
+>>>>>> what have been submitted in the current call to io_uring_enter(). It
+>>>>>> may be less than totally in-flight including previous submissions,
+>>>>>> but this shouldn't do harm and up to a user.
+>>>>>
+>>>>> Thanks, applied.
+>>>>
+>>>> This causes a behavioral change where if you ask to submit 1 but
+>>>> there's nothing in the SQ ring, then you would get 0 before. Now
+>>>> you get -EAGAIN. This doesn't make a lot of sense, since there's no
+>>>> point in retrying as that won't change anything.
+>>>>
+>>>> Can we please just do something like the one I sent, instead of trying
+>>>> to over-complicate it?
+>>>>
+>>>
+>>> Ok, when I get to a compiler.
+>>
+>> Great, thanks. BTW, I noticed when a regression test failed.
+>>
 > 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Yeah, I properly tested only the first one. Clearly, not as easy as
+> I thought, and there were more to consider.
+> 
+> I sent the next version, but that's odd basically taking your code.
+> Probably, it would have been easier for you to just commit it yourself.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Nah, I'll keep you attribution, the hard part is finding/spotting the
+issue, not the actual fix. I've applied v4, thanks Pavel!
+
+-- 
+Jens Axboe
+
