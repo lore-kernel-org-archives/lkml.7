@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA445C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44A2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B263A21582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA778207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521353;
-	bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
+	s=default; t=1576521363;
+	bh=9MaNyCWvJia4kkvMZep4wOiZNAU6Q48KIxe0ZAmr8xI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOE4tk+8E8vIN4EhOSwAlerQuH4CtmOjM4ZotSDXjCsCbrJF/K3I2KgpujRsMREWj
-	 mtk7B9PAAD2aXyGkU9W/LZVIU1md0QD/eRKJsCcwGhcm27kmtojBVcrr/qaoE9tfjS
-	 /yxu/E1RVBruDyn2DnOS3x0RFWM9iM6isf2+zJeo=
+	b=0OpHBfJwyVv2kHDVklwj3oJvua1kt1ukkAop5D+EiDuguJWTPZSHORh8ZnqQ1wnNr
+	 u1FPR8tmwObTHv5kTw/39r5rYYjCxiSJ0gdEOGECT1eHrpUPdAogzqmzkbWXPF7TIC
+	 A+GsjMcYnvmtqUOJ8bSDSOmHMAb1CdhAxhcbGyNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730475AbfLPSfv (ORCPT
+        id S1730325AbfLPSgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:35:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48620 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:36:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbfLPSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:32 -0500
+        id S1729911AbfLPSH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F267A20700;
-        Mon, 16 Dec 2019 18:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18882206E0;
+        Mon, 16 Dec 2019 18:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519652;
-        bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
+        s=default; t=1576519647;
+        bh=9MaNyCWvJia4kkvMZep4wOiZNAU6Q48KIxe0ZAmr8xI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxQAB80lrXdIGsEKuLjbEMwS3xVXINHLg0Pf7CaJ1OwiHQyxvf3SKJzK5pbe7kEju
-         1oNohA4056Y9Y82coMVjd2K3nc8a75PwUYxw8/1VLUCjeI2z2CV/u3H86tk4yFJCg4
-         g7bAeXYb32ohf5rbdpavQUxG3rv6REDfqizQng0E=
+        b=fYlOQr1GwK893hLfUMi1KB/eb0SAyPnAa1VwuCe6/gmjnbHfCAO+qNKF5x0ptpLNz
+         PI+0pyF7ND1mTfTXQFd/6qjDcil+HqK1zX3dnqaVHwz1lqnB0S0A3SVt60v1YPCzyU
+         A6VuvpmwmBmqkhhd0prlZH4l+ZORB/Y18SfH2eEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 014/180] staging: rtl8188eu: fix interface sanity check
-Date:   Mon, 16 Dec 2019 18:47:34 +0100
-Message-Id: <20191216174808.901670398@linuxfoundation.org>
+        stable@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>,
+        Jui Chang Kuo <jckuo@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.3 012/180] usb: host: xhci-tegra: Correct phy enable sequence
+Date:   Mon, 16 Dec 2019 18:47:32 +0100
+Message-Id: <20191216174808.516644047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -58,36 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
 
-commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
+commit 6351653febbb784d86fdf83afe41f7523a61b392 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+XUSB phy needs to be enabled before un-powergating the power partitions.
+However in the current sequence, it happens opposite. Correct the phy
+enable and powergating partition sequence to avoid any boot hangs.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
-Cc: stable <stable@vger.kernel.org>     # 3.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jui Chang Kuo <jckuo@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/1572859470-7823-1-git-send-email-nkristam@nvidia.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-tegra.c |   25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -70,7 +70,7 @@ static struct dvobj_priv *usb_dvobj_init
- 	phost_conf = pusbd->actconfig;
- 	pconf_desc = &phost_conf->desc;
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -755,7 +755,6 @@ static int tegra_xusb_runtime_suspend(st
+ {
+ 	struct tegra_xusb *tegra = dev_get_drvdata(dev);
  
--	phost_iface = &usb_intf->altsetting[0];
-+	phost_iface = usb_intf->cur_altsetting;
- 	piface_desc = &phost_iface->desc;
+-	tegra_xusb_phy_disable(tegra);
+ 	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
+ 	tegra_xusb_clk_disable(tegra);
  
- 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
+@@ -779,16 +778,8 @@ static int tegra_xusb_runtime_resume(str
+ 		goto disable_clk;
+ 	}
+ 
+-	err = tegra_xusb_phy_enable(tegra);
+-	if (err < 0) {
+-		dev_err(dev, "failed to enable PHYs: %d\n", err);
+-		goto disable_regulator;
+-	}
+-
+ 	return 0;
+ 
+-disable_regulator:
+-	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
+ disable_clk:
+ 	tegra_xusb_clk_disable(tegra);
+ 	return err;
+@@ -1181,6 +1172,12 @@ static int tegra_xusb_probe(struct platf
+ 	 */
+ 	platform_set_drvdata(pdev, tegra);
+ 
++	err = tegra_xusb_phy_enable(tegra);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to enable PHYs: %d\n", err);
++		goto put_hcd;
++	}
++
+ 	pm_runtime_enable(&pdev->dev);
+ 	if (pm_runtime_enabled(&pdev->dev))
+ 		err = pm_runtime_get_sync(&pdev->dev);
+@@ -1189,7 +1186,7 @@ static int tegra_xusb_probe(struct platf
+ 
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to enable device: %d\n", err);
+-		goto disable_rpm;
++		goto disable_phy;
+ 	}
+ 
+ 	tegra_xusb_config(tegra, regs);
+@@ -1275,9 +1272,11 @@ remove_usb2:
+ put_rpm:
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		tegra_xusb_runtime_suspend(&pdev->dev);
+-disable_rpm:
+-	pm_runtime_disable(&pdev->dev);
++put_hcd:
+ 	usb_put_hcd(tegra->hcd);
++disable_phy:
++	tegra_xusb_phy_disable(tegra);
++	pm_runtime_disable(&pdev->dev);
+ put_powerdomains:
+ 	if (!of_property_read_bool(pdev->dev.of_node, "power-domains")) {
+ 		tegra_powergate_power_off(TEGRA_POWERGATE_XUSBC);
+@@ -1314,6 +1313,8 @@ static int tegra_xusb_remove(struct plat
+ 		tegra_xusb_powerdomain_remove(&pdev->dev, tegra);
+ 	}
+ 
++	tegra_xusb_phy_disable(tegra);
++
+ 	tegra_xusb_padctl_put(tegra->padctl);
+ 
+ 	return 0;
 
 
