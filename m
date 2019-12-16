@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E550C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A302C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B5F206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139BC20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPOYeemv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dycXsPQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfLPMUy (ORCPT
+        id S1727697AbfLPMU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:20:54 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42022 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbfLPMUx (ORCPT
+        Mon, 16 Dec 2019 07:20:59 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37685 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfLPMU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:20:53 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so3587474pgb.9;
-        Mon, 16 Dec 2019 04:20:52 -0800 (PST)
+        Mon, 16 Dec 2019 07:20:58 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so3735448pfn.4;
+        Mon, 16 Dec 2019 04:20:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=01+xyxU4uwptAi3q+1sj+DxxdFGvb3XnNh7p3jdpJYc=;
-        b=HPOYeemvJ6BYl7VYWWWFNFb1zucutBzNMKBOjcd7ZeAkTB/ehfbwrMOCSK0JsUvBQE
-         DLUDZLPdIsfHoobWRsV5PlT/QqeOKaCTLJ22r48LaPCNwfN5RypOxxsEqzmsnF2JqaNI
-         Kh+qJMMacJKTVt7PO6kd5rOd2n3LJE+m64M53RML0uph+07VFg82I5gTGrD4ie1FZ76E
-         OJTsM13QCVVn8XMiZrT+UDCUx36Tu7FQ66f4udzqMbZP2dg87Q2yPqbPoFt34AF8ag//
-         XZwrwu1JJGX3Jc1aw4D6EtVpmYOJi+Pvg3A/2rqD4OjwGhSvcrps/T92iYSEVgKmo/4d
-         bOoA==
+        bh=EUp85GIzh/PAO2tf3YkyYzbBc7pPKzlGvgTa1XeBSOA=;
+        b=dycXsPQ5HQIqROeH25CnOI9kZ7Wsfc65DSjGo8n7dDNSk7KMzDsm6LsLZ2ILXjJuis
+         7vnoIuwcejipVxsxqCaBnxup61YUPgDNrk3q4nQ/0SRuBlHiKTSWXCuBGltd6angXy+S
+         u15H78Gc73S4rY9Y+CD9NakFqwGIIqFtNoYLhXAuTuiGqYYeE3g1zFa3iI6LGODwPZ4o
+         Sdw9DKChzyc5oH+z8UfKof/hr914Ex+nDlfzAfib6IU9glwGIn9OIQJ2e/nRuzkoAdkb
+         LinnTkS7cHK/ZpKTs+WUIp1mbHStfscQFAz7s5Bjs4W4Hhz8T9v/X3QfjFvrQhNfUqUO
+         WeUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=01+xyxU4uwptAi3q+1sj+DxxdFGvb3XnNh7p3jdpJYc=;
-        b=bK8VFVp3vMmdnrwsPmnQVNSpvve+d3Q5fkhmnLNfvxSMI0FS69/B+mQMvWC6R8KXSG
-         5ZxHQQOohwTLppf58nIANMzjd69BEQtCcBdORk9mSbDmHrVdrwVttqMW5r5NTqAbUKPO
-         eWcDztxxbJabxnv4BH3lQYsG48B4xUl2O5xbWEx161xY419IJDjdWOZ/9+3UZTDI0U2Y
-         DO8L8lQ4Xv5vUsaYxrpFfLTyo6ImqaclzYuacDO2z2oJjRHeuPUv+0f0LJwbKZcrWhah
-         IRHCxEK7Wra5s0oAi7GHEGc+VxWVEfrWXpnc6rDBoHGWhUKsK4a6XxU4kTjWxlNUmExw
-         bGCw==
-X-Gm-Message-State: APjAAAUH7oJe5gn3OlZC4w6wkUqP6J+Ny3Pavvep/8G05FfZOuKjzvR7
-        jXq5b38egXdwk7TIWObLi8k=
-X-Google-Smtp-Source: APXvYqxOxgeg8zHwzMV06BuJblY3hv6814kHQhLl4PmYYEhcA9rCQmbU+9W6lUzaZE9pYR8lWKU0ZA==
-X-Received: by 2002:a63:f5c:: with SMTP id 28mr18002841pgp.348.1576498852411;
-        Mon, 16 Dec 2019 04:20:52 -0800 (PST)
+        bh=EUp85GIzh/PAO2tf3YkyYzbBc7pPKzlGvgTa1XeBSOA=;
+        b=cFZ068YHLGQJRABMWjlKkGnH7MvVzhbEhyy9hdghgYOSj7mlvcS/XREy3D/5i285aV
+         tWkvzVcVt+Go4S7hK9TP1YG214o9GpmqFoDF2PqAmWVbQ3xrBNopLE+0lx148QUr/EBN
+         c4IMJcySu1t7HkIedn4L2/neSGYcI/Ch85gr5ZmG59sBBf4pTsrLJgxWKbDHmVR58RFD
+         ys89jNzRXV0EXXfjAvkIJG7/T+wKIRZ6mWjmBPmsOZak0NzgmNHdF/B0IRgJE3em0NAj
+         MxbAQPR3N7ZYlvd5FXN3vUrbnYq+m7Ebaqa2wfZ7I+zUHhta5TGoLZNuyLllvNs5hSl3
+         Fwwg==
+X-Gm-Message-State: APjAAAWGLT0s4iSO7mf1wDRYOT9wlLxCB/erlX41La4+YHzX4ioOWFMQ
+        bDqMfoPW7C+zrAdCxVa+1Cw=
+X-Google-Smtp-Source: APXvYqznQ9AZvqm0PgQYUqfrqWkPSTkE8B/D+2/DcG4dNFswcyXVmV0pYE5UObSAWsRQOvKLs8FUzg==
+X-Received: by 2002:a63:9d07:: with SMTP id i7mr18531568pgd.344.1576498857854;
+        Mon, 16 Dec 2019 04:20:57 -0800 (PST)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id o17sm18633910pjq.1.2019.12.16.04.20.47
+        by smtp.gmail.com with ESMTPSA id o17sm18633910pjq.1.2019.12.16.04.20.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 04:20:51 -0800 (PST)
+        Mon, 16 Dec 2019 04:20:57 -0800 (PST)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -67,9 +67,9 @@ Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH V2 4/6] clk: sprd: Add dt-bindings include file for SC9863A
-Date:   Mon, 16 Dec 2019 20:19:30 +0800
-Message-Id: <20191216121932.22967-5-zhang.lyra@gmail.com>
+Subject: [PATCH V2 5/6] clk: sprd: Add macros for referencing parents without strings
+Date:   Mon, 16 Dec 2019 20:19:31 +0800
+Message-Id: <20191216121932.22967-6-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191216121932.22967-1-zhang.lyra@gmail.com>
 References: <20191216121932.22967-1-zhang.lyra@gmail.com>
@@ -82,366 +82,407 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-This file defines all SC9863A clock indexes, it should be included in the
-device tree in which there's device using the clocks.
+With the new clk parenting code, clk_init_data was expanded to include
+.parent_hws and .parent_data, for clk drivers to specify parents without
+name strings of clocks.
+
+Also some macros were added for using these two items to reference clock
+parents. Based on that, this patch expands macros for sprd clocks:
+
+- SPRD_*_DATA, take an array of struct clk_parent_data * as its parents
+  which should be a combination of .fw_name (devicetree clock-names),
+  .hw (pointers to a local struct clk_hw).
+
+- SPRD_*_HW, take a local struct clk_hw pointer, instead of a string, as
+  its parent.
+
+- SPRD_*_FW_NAME, take a string of clock-names decleared in the device
+  tree as the clock parent.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- include/dt-bindings/clock/sprd,sc9863a-clk.h | 345 +++++++++++++++++++
- 1 file changed, 345 insertions(+)
- create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
+ drivers/clk/sprd/composite.h |  39 +++++++++----
+ drivers/clk/sprd/div.h       |  20 +++++--
+ drivers/clk/sprd/gate.h      | 109 ++++++++++++++++++++++++++++++-----
+ drivers/clk/sprd/mux.h       |  28 ++++++---
+ drivers/clk/sprd/pll.h       |  55 ++++++++++++------
+ 5 files changed, 196 insertions(+), 55 deletions(-)
 
-diff --git a/include/dt-bindings/clock/sprd,sc9863a-clk.h b/include/dt-bindings/clock/sprd,sc9863a-clk.h
-new file mode 100644
-index 000000000000..cc7977ebbf76
---- /dev/null
-+++ b/include/dt-bindings/clock/sprd,sc9863a-clk.h
-@@ -0,0 +1,345 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Unisoc SC9863A platform clocks
-+ *
-+ * Copyright (C) 2019, Unisoc Communications Inc.
-+ */
+diff --git a/drivers/clk/sprd/composite.h b/drivers/clk/sprd/composite.h
+index 04ab3f587ee2..adbabbe596b7 100644
+--- a/drivers/clk/sprd/composite.h
++++ b/drivers/clk/sprd/composite.h
+@@ -18,26 +18,43 @@ struct sprd_comp {
+ 	struct sprd_clk_common	common;
+ };
+ 
+-#define SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg, _table,	\
+-			_mshift, _mwidth, _dshift, _dwidth, _flags)	\
++#define SPRD_COMP_CLK_HW_INIT_FN(_struct, _name, _parent, _reg, _table,	\
++				 _mshift, _mwidth, _dshift, _dwidth,	\
++				 _flags, _fn)				\
+ 	struct sprd_comp _struct = {					\
+ 		.mux	= _SPRD_MUX_CLK(_mshift, _mwidth, _table),	\
+ 		.div	= _SPRD_DIV_CLK(_dshift, _dwidth),		\
+ 		.common = {						\
+ 			.regmap		= NULL,				\
+ 			.reg		= _reg,				\
+-			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
+-						       _parent,		\
+-						       &sprd_comp_ops,	\
+-						       _flags),		\
++			.hw.init = _fn(_name, _parent,			\
++				       &sprd_comp_ops, _flags),		\
+ 			 }						\
+ 	}
+ 
+-#define SPRD_COMP_CLK(_struct, _name, _parent, _reg, _mshift,	\
+-			_mwidth, _dshift, _dwidth, _flags)	\
+-	SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg,	\
+-			    NULL, _mshift, _mwidth,		\
+-			    _dshift, _dwidth, _flags)
++#define SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg, _table,	\
++			    _mshift, _mwidth, _dshift, _dwidth, _flags)	\
++	SPRD_COMP_CLK_HW_INIT_FN(_struct, _name, _parent, _reg, _table,	\
++				 _mshift, _mwidth, _dshift, _dwidth,	\
++				 _flags, CLK_HW_INIT_PARENTS)
 +
-+#ifndef _DT_BINDINGS_CLK_SC9863A_H_
-+#define _DT_BINDINGS_CLK_SC9863A_H_
++#define SPRD_COMP_CLK(_struct, _name, _parent, _reg, _mshift,		\
++		      _mwidth, _dshift, _dwidth, _flags)		\
++	SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg, NULL,	\
++			    _mshift, _mwidth, _dshift, _dwidth, _flags)
 +
-+#define CLK_MPLL0_GATE		0
-+#define CLK_DPLL0_GATE		1
-+#define CLK_LPLL_GATE		2
-+#define CLK_GPLL_GATE		3
-+#define CLK_DPLL1_GATE		4
-+#define CLK_MPLL1_GATE		5
-+#define CLK_MPLL2_GATE		6
-+#define CLK_ISPPLL_GATE		7
-+#define CLK_PMU_APB_NUM		(CLK_ISPPLL_GATE + 1)
++#define SPRD_COMP_CLK_DATA_TABLE(_struct, _name, _parent, _reg, _table,	\
++				 _mshift, _mwidth, _dshift,		\
++				 _dwidth, _flags)			\
++	SPRD_COMP_CLK_HW_INIT_FN(_struct, _name, _parent, _reg, _table,	\
++				 _mshift, _mwidth, _dshift, _dwidth,	\
++				 _flags, CLK_HW_INIT_PARENTS_DATA)
 +
-+#define CLK_AUDIO_GATE		0
-+#define CLK_RPLL		1
-+#define CLK_RPLL_390M		2
-+#define CLK_RPLL_260M		3
-+#define CLK_RPLL_195M		4
-+#define CLK_RPLL_26M		5
-+#define CLK_ANLG_PHY_G5_NUM	(CLK_RPLL_26M + 1)
++#define SPRD_COMP_CLK_DATA(_struct, _name, _parent, _reg, _mshift,	\
++			   _mwidth, _dshift, _dwidth, _flags)		\
++	SPRD_COMP_CLK_DATA_TABLE(_struct, _name, _parent, _reg,	NULL,	\
++				 _mshift, _mwidth, _dshift, _dwidth,	\
++				 _flags)
+ 
+ static inline struct sprd_comp *hw_to_sprd_comp(const struct clk_hw *hw)
+ {
+diff --git a/drivers/clk/sprd/div.h b/drivers/clk/sprd/div.h
+index 87510e3d0e14..6acfe6b179fc 100644
+--- a/drivers/clk/sprd/div.h
++++ b/drivers/clk/sprd/div.h
+@@ -35,20 +35,28 @@ struct sprd_div {
+ 	struct sprd_clk_common	common;
+ };
+ 
+-#define SPRD_DIV_CLK(_struct, _name, _parent, _reg,			\
+-			_shift, _width, _flags)				\
++#define SPRD_DIV_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,		\
++				_shift, _width, _flags, _fn)		\
+ 	struct sprd_div _struct = {					\
+ 		.div	= _SPRD_DIV_CLK(_shift, _width),		\
+ 		.common	= {						\
+ 			.regmap		= NULL,				\
+ 			.reg		= _reg,				\
+-			.hw.init	= CLK_HW_INIT(_name,		\
+-						      _parent,		\
+-						      &sprd_div_ops,	\
+-						      _flags),		\
++			.hw.init	= _fn(_name, _parent,		\
++					      &sprd_div_ops, _flags),	\
+ 		}							\
+ 	}
+ 
++#define SPRD_DIV_CLK(_struct, _name, _parent, _reg,			\
++		     _shift, _width, _flags)				\
++	SPRD_DIV_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,		\
++				_shift, _width, _flags, CLK_HW_INIT)
 +
-+#define CLK_TWPLL		0
-+#define CLK_TWPLL_768M		1
-+#define CLK_TWPLL_384M		2
-+#define CLK_TWPLL_192M		3
-+#define CLK_TWPLL_96M		4
-+#define CLK_TWPLL_48M		5
-+#define CLK_TWPLL_24M		6
-+#define CLK_TWPLL_12M		7
-+#define CLK_TWPLL_512M		8
-+#define CLK_TWPLL_256M		9
-+#define CLK_TWPLL_128M		10
-+#define CLK_TWPLL_64M		11
-+#define CLK_TWPLL_307M2		12
-+#define CLK_TWPLL_219M4		13
-+#define CLK_TWPLL_170M6		14
-+#define CLK_TWPLL_153M6		15
-+#define CLK_TWPLL_76M8		16
-+#define CLK_TWPLL_51M2		17
-+#define CLK_TWPLL_38M4		18
-+#define CLK_TWPLL_19M2		19
-+#define CLK_LPLL		20
-+#define CLK_LPLL_409M6		21
-+#define CLK_LPLL_245M76		22
-+#define CLK_GPLL		23
-+#define CLK_ISPPLL		24
-+#define CLK_ISPPLL_468M		25
-+#define CLK_ANLG_PHY_G1_NUM	(CLK_ISPPLL_468M + 1)
++#define SPRD_DIV_CLK_HW(_struct, _name, _parent, _reg,			\
++			_shift, _width, _flags)				\
++	SPRD_DIV_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,		\
++				_shift, _width, _flags, CLK_HW_INIT_HW)
 +
-+#define CLK_DPLL0		0
-+#define CLK_DPLL1		1
-+#define CLK_DPLL0_933M		2
-+#define CLK_DPLL0_622M3		3
-+#define CLK_DPLL0_400M		4
-+#define CLK_DPLL0_266M7		5
-+#define CLK_DPLL0_123M1		6
-+#define CLK_DPLL0_50M		7
-+#define CLK_ANLG_PHY_G7_NUM	(CLK_DPLL0_50M + 1)
+ static inline struct sprd_div *hw_to_sprd_div(const struct clk_hw *hw)
+ {
+ 	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
+diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
+index d380d77b8dce..b55817869367 100644
+--- a/drivers/clk/sprd/gate.h
++++ b/drivers/clk/sprd/gate.h
+@@ -19,9 +19,9 @@ struct sprd_gate {
+ 	struct sprd_clk_common	common;
+ };
+ 
+-#define SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
++#define SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
+ 				    _sc_offset, _enable_mask, _flags,	\
+-				    _gate_flags, _udelay, _ops)		\
++				    _gate_flags, _udelay, _ops, _fn)	\
+ 	struct sprd_gate _struct = {					\
+ 		.enable_mask	= _enable_mask,				\
+ 		.sc_offset	= _sc_offset,				\
+@@ -30,38 +30,121 @@ struct sprd_gate {
+ 		.common	= {						\
+ 			.regmap		= NULL,				\
+ 			.reg		= _reg,				\
+-			.hw.init	= CLK_HW_INIT(_name,		\
+-						      _parent,		\
+-						      _ops,		\
+-						      _flags),		\
++			.hw.init	= _fn(_name, _parent,		\
++					      _ops, _flags),		\
+ 		}							\
+ 	}
+ 
++#define SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
++				    _sc_offset, _enable_mask, _flags,	\
++				    _gate_flags, _udelay, _ops)		\
++	SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
++				    _sc_offset, _enable_mask, _flags,	\
++				    _gate_flags, _udelay, _ops, CLK_HW_INIT)
 +
-+#define CLK_MPLL0		0
-+#define CLK_MPLL1		1
-+#define CLK_MPLL2		2
-+#define CLK_MPLL2_675M		3
-+#define CLK_ANLG_PHY_G4_NUM	(CLK_MPLL2_675M + 1)
+ #define SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
+ 			     _enable_mask, _flags, _gate_flags, _ops)	\
+ 	SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
+ 				    _sc_offset, _enable_mask, _flags,	\
+ 				    _gate_flags, 0, _ops)
+ 
+-#define SPRD_GATE_CLK(_struct, _name, _parent, _reg,			\
+-		      _enable_mask, _flags, _gate_flags)		\
+-	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, 0,		\
+-			     _enable_mask, _flags, _gate_flags,		\
+-			     &sprd_gate_ops)
+-
+ #define SPRD_SC_GATE_CLK(_struct, _name, _parent, _reg, _sc_offset,	\
+ 			 _enable_mask, _flags, _gate_flags)		\
+ 	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
+ 			     _enable_mask, _flags, _gate_flags,		\
+ 			     &sprd_sc_gate_ops)
+ 
++#define SPRD_GATE_CLK(_struct, _name, _parent, _reg,			\
++		      _enable_mask, _flags, _gate_flags)		\
++	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, 0,		\
++			     _enable_mask, _flags, _gate_flags,		\
++			     &sprd_gate_ops)
 +
-+#define CLK_AP_APB		0
-+#define CLK_AP_CE		1
-+#define CLK_NANDC_ECC		2
-+#define CLK_NANDC_26M		3
-+#define CLK_EMMC_32K		4
-+#define CLK_SDIO0_32K		5
-+#define CLK_SDIO1_32K		6
-+#define CLK_SDIO2_32K		7
-+#define CLK_OTG_UTMI		8
-+#define CLK_AP_UART0		9
-+#define CLK_AP_UART1		10
-+#define CLK_AP_UART2		11
-+#define CLK_AP_UART3		12
-+#define CLK_AP_UART4		13
-+#define CLK_AP_I2C0		14
-+#define CLK_AP_I2C1		15
-+#define CLK_AP_I2C2		16
-+#define CLK_AP_I2C3		17
-+#define CLK_AP_I2C4		18
-+#define CLK_AP_I2C5		19
-+#define CLK_AP_I2C6		20
-+#define CLK_AP_SPI0		21
-+#define CLK_AP_SPI1		22
-+#define CLK_AP_SPI2		23
-+#define CLK_AP_SPI3		24
-+#define CLK_AP_IIS0		25
-+#define CLK_AP_IIS1		26
-+#define CLK_AP_IIS2		27
-+#define CLK_SIM0		28
-+#define CLK_SIM0_32K		29
-+#define CLK_AP_CLK_NUM		(CLK_SIM0_32K + 1)
+ #define SPRD_PLL_SC_GATE_CLK(_struct, _name, _parent, _reg, _sc_offset,	\
+-			    _enable_mask, _flags, _gate_flags, _udelay)	\
++			     _enable_mask, _flags, _gate_flags,		\
++			     _udelay)					\
+ 	SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
+ 				    _sc_offset,	_enable_mask, _flags,	\
+ 				    _gate_flags, _udelay,		\
+ 				    &sprd_pll_sc_gate_ops)
+ 
 +
-+#define CLK_13M			0
-+#define CLK_6M5			1
-+#define CLK_4M3			2
-+#define CLK_2M			3
-+#define CLK_250K		4
-+#define CLK_RCO_25M		5
-+#define CLK_RCO_4M		6
-+#define CLK_RCO_2M		7
-+#define CLK_EMC			8
-+#define CLK_AON_APB		9
-+#define CLK_ADI			10
-+#define CLK_AUX0		11
-+#define CLK_AUX1		12
-+#define CLK_AUX2		13
-+#define CLK_PROBE		14
-+#define CLK_PWM0		15
-+#define CLK_PWM1		16
-+#define CLK_PWM2		17
-+#define CLK_AON_THM		18
-+#define CLK_AUDIF		19
-+#define CLK_CPU_DAP		20
-+#define CLK_CPU_TS		21
-+#define CLK_DJTAG_TCK		22
-+#define CLK_EMC_REF		23
-+#define CLK_CSSYS		24
-+#define CLK_AON_PMU		25
-+#define CLK_PMU_26M		26
-+#define CLK_AON_TMR		27
-+#define CLK_POWER_CPU		28
-+#define CLK_AP_AXI		29
-+#define CLK_SDIO0_2X		30
-+#define CLK_SDIO1_2X		31
-+#define CLK_SDIO2_2X		32
-+#define CLK_EMMC_2X		33
-+#define CLK_DPU			34
-+#define CLK_DPU_DPI		35
-+#define CLK_OTG_REF		36
-+#define CLK_SDPHY_APB		37
-+#define CLK_ALG_IO_APB		38
-+#define CLK_GPU_CORE		39
-+#define CLK_GPU_SOC		40
-+#define CLK_MM_EMC		41
-+#define CLK_MM_AHB		42
-+#define CLK_BPC			43
-+#define CLK_DCAM_IF		44
-+#define CLK_ISP			45
-+#define CLK_JPG			46
-+#define CLK_CPP			47
-+#define CLK_SENSOR0		48
-+#define CLK_SENSOR1		49
-+#define CLK_SENSOR2		50
-+#define CLK_MM_VEMC		51
-+#define CLK_MM_VAHB		52
-+#define CLK_VSP			53
-+#define CLK_CORE0		54
-+#define CLK_CORE1		55
-+#define CLK_CORE2		56
-+#define CLK_CORE3		57
-+#define CLK_CORE4		58
-+#define CLK_CORE5		59
-+#define CLK_CORE6		60
-+#define CLK_CORE7		61
-+#define CLK_SCU			62
-+#define CLK_ACE			63
-+#define CLK_AXI_PERIPH		64
-+#define CLK_AXI_ACP		65
-+#define CLK_ATB			66
-+#define CLK_DEBUG_APB		67
-+#define CLK_GIC			68
-+#define CLK_PERIPH		69
-+#define CLK_AON_CLK_NUM		(CLK_VSP + 1)
++#define SPRD_SC_GATE_CLK_HW_OPS_UDELAY(_struct, _name, _parent, _reg,	\
++				       _sc_offset, _enable_mask,	\
++				       _flags, _gate_flags,		\
++				       _udelay, _ops)			\
++	SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
++				    _sc_offset, _enable_mask, _flags,	\
++				    _gate_flags, _udelay, _ops,		\
++				    CLK_HW_INIT_HW)
 +
-+#define CLK_OTG_EB		0
-+#define CLK_DMA_EB		1
-+#define CLK_CE_EB		2
-+#define CLK_NANDC_EB		3
-+#define CLK_SDIO0_EB		4
-+#define CLK_SDIO1_EB		5
-+#define CLK_SDIO2_EB		6
-+#define CLK_EMMC_EB		7
-+#define CLK_EMMC_32K_EB		8
-+#define CLK_SDIO0_32K_EB	9
-+#define CLK_SDIO1_32K_EB	10
-+#define CLK_SDIO2_32K_EB	11
-+#define CLK_NANDC_26M_EB	12
-+#define CLK_DMA_EB2		13
-+#define CLK_CE_EB2		14
-+#define CLK_AP_AHB_GATE_NUM	(CLK_CE_EB2 + 1)
++#define SPRD_SC_GATE_CLK_HW_OPS(_struct, _name, _parent, _reg,		\
++				_sc_offset, _enable_mask, _flags,	\
++				_gate_flags, _ops)			\
++	SPRD_SC_GATE_CLK_HW_OPS_UDELAY(_struct, _name, _parent, _reg,	\
++				       _sc_offset, _enable_mask,	\
++				       _flags, _gate_flags, 0, _ops)
 +
-+#define CLK_GPIO_EB		0
-+#define CLK_PWM0_EB		1
-+#define CLK_PWM1_EB		2
-+#define CLK_PWM2_EB		3
-+#define CLK_PWM3_EB		4
-+#define CLK_KPD_EB		5
-+#define CLK_AON_SYST_EB		6
-+#define CLK_AP_SYST_EB		7
-+#define CLK_AON_TMR_EB		8
-+#define CLK_EFUSE_EB		9
-+#define CLK_EIC_EB		10
-+#define CLK_INTC_EB		11
-+#define CLK_ADI_EB		12
-+#define CLK_AUDIF_EB		13
-+#define CLK_AUD_EB		14
-+#define CLK_VBC_EB		15
-+#define CLK_PIN_EB		16
-+#define CLK_AP_WDG_EB		17
-+#define CLK_MM_EB		18
-+#define CLK_AON_APB_CKG_EB	19
-+#define CLK_CA53_TS0_EB		20
-+#define CLK_CA53_TS1_EB		21
-+#define CLK_CS53_DAP_EB		22
-+#define CLK_PMU_EB		23
-+#define CLK_THM_EB		24
-+#define CLK_AUX0_EB		25
-+#define CLK_AUX1_EB		26
-+#define CLK_AUX2_EB		27
-+#define CLK_PROBE_EB		28
-+#define CLK_EMC_REF_EB		29
-+#define CLK_CA53_WDG_EB		30
-+#define CLK_AP_TMR1_EB		31
-+#define CLK_AP_TMR2_EB		32
-+#define CLK_DISP_EMC_EB		33
-+#define CLK_ZIP_EMC_EB		34
-+#define CLK_GSP_EMC_EB		35
-+#define CLK_MM_VSP_EB		36
-+#define CLK_MDAR_EB		37
-+#define CLK_RTC4M0_CAL_EB	38
-+#define CLK_RTC4M1_CAL_EB	39
-+#define CLK_DJTAG_EB		40
-+#define CLK_MBOX_EB		41
-+#define CLK_AON_DMA_EB		42
-+#define CLK_AON_APB_DEF_EB	43
-+#define CLK_CA5_TS0_EB		44
-+#define CLK_DBG_EB		45
-+#define CLK_DBG_EMC_EB		46
-+#define CLK_CROSS_TRIG_EB	47
-+#define CLK_SERDES_DPHY_EB	48
-+#define CLK_ARCH_RTC_EB		49
-+#define CLK_KPD_RTC_EB		50
-+#define CLK_AON_SYST_RTC_EB	51
-+#define CLK_AP_SYST_RTC_EB	52
-+#define CLK_AON_TMR_RTC_EB	53
-+#define CLK_AP_TMR0_RTC_EB	54
-+#define CLK_EIC_RTC_EB		55
-+#define CLK_EIC_RTCDV5_EB	56
-+#define CLK_AP_WDG_RTC_EB	57
-+#define CLK_CA53_WDG_RTC_EB	58
-+#define CLK_THM_RTC_EB		59
-+#define CLK_ATHMA_RTC_EB	60
-+#define CLK_GTHMA_RTC_EB	61
-+#define CLK_ATHMA_RTC_A_EB	62
-+#define CLK_GTHMA_RTC_A_EB	63
-+#define CLK_AP_TMR1_RTC_EB	64
-+#define CLK_AP_TMR2_RTC_EB	65
-+#define CLK_DXCO_LC_RTC_EB	66
-+#define CLK_BB_CAL_RTC_EB	67
-+#define CLK_GNU_EB		68
-+#define CLK_DISP_EB		69
-+#define CLK_MM_EMC_EB		70
-+#define CLK_POWER_CPU_EB	71
-+#define CLK_HW_I2C_EB		72
-+#define CLK_MM_VSP_EMC_EB	73
-+#define CLK_VSP_EB		74
-+#define CLK_CSSYS_EB		75
-+#define CLK_DMC_EB		76
-+#define CLK_ROSC_EB		77
-+#define CLK_S_D_CFG_EB		78
-+#define CLK_S_D_REF_EB		79
-+#define CLK_B_DMA_EB		80
-+#define CLK_ANLG_EB		81
-+#define CLK_ANLG_APB_EB		82
-+#define CLK_BSMTMR_EB		83
-+#define CLK_AP_AXI_EB		84
-+#define CLK_AP_INTC0_EB		85
-+#define CLK_AP_INTC1_EB		86
-+#define CLK_AP_INTC2_EB		87
-+#define CLK_AP_INTC3_EB		88
-+#define CLK_AP_INTC4_EB		89
-+#define CLK_AP_INTC5_EB		90
-+#define CLK_SCC_EB		91
-+#define CLK_DPHY_CFG_EB		92
-+#define CLK_DPHY_REF_EB		93
-+#define CLK_CPHY_CFG_EB		94
-+#define CLK_OTG_REF_EB		95
-+#define CLK_SERDES_EB		96
-+#define CLK_AON_AP_EMC_EB	97
-+#define CLK_AON_APB_GATE_NUM	(CLK_AON_AP_EMC_EB + 1)
++#define SPRD_SC_GATE_CLK_HW(_struct, _name, _parent, _reg,		\
++			    _sc_offset, _enable_mask, _flags,		\
++			    _gate_flags)				\
++	SPRD_SC_GATE_CLK_HW_OPS(_struct, _name, _parent, _reg,		\
++				_sc_offset, _enable_mask, _flags,	\
++				_gate_flags, &sprd_sc_gate_ops)
 +
-+#define CLK_MAHB_CKG_EB		0
-+#define CLK_MDCAM_EB		1
-+#define CLK_MISP_EB		2
-+#define CLK_MAHBCSI_EB		3
-+#define CLK_MCSI_S_EB		4
-+#define CLK_MCSI_T_EB		5
-+#define CLK_DCAM_AXI_EB		6
-+#define CLK_ISP_AXI_EB		7
-+#define CLK_MCSI_EB		8
-+#define CLK_MCSI_S_CKG_EB	9
-+#define CLK_MCSI_T_CKG_EB	10
-+#define CLK_SENSOR0_EB		11
-+#define CLK_SENSOR1_EB		12
-+#define CLK_SENSOR2_EB		13
-+#define CLK_MCPHY_CFG_EB	14
-+#define CLK_MM_GATE_NUM		(CLK_MCPHY_CFG_EB + 1)
++#define SPRD_GATE_CLK_HW(_struct, _name, _parent, _reg,			\
++			 _enable_mask, _flags, _gate_flags)		\
++	SPRD_SC_GATE_CLK_HW_OPS(_struct, _name, _parent, _reg, 0,	\
++				_enable_mask, _flags, _gate_flags,	\
++				&sprd_gate_ops)
 +
-+#define CLK_MIPI_CSI		0
-+#define CLK_MIPI_CSI_S		1
-+#define CLK_MIPI_CSI_M		2
-+#define CLK_MM_CLK_NUM		(CLK_MIPI_CSI_M + 1)
++#define SPRD_PLL_SC_GATE_CLK_HW(_struct, _name, _parent, _reg,		\
++				_sc_offset, _enable_mask, _flags,	\
++				_gate_flags, _udelay)			\
++	SPRD_SC_GATE_CLK_HW_OPS_UDELAY(_struct, _name, _parent, _reg,	\
++				       _sc_offset, _enable_mask,	\
++				       _flags, _gate_flags, _udelay,	\
++				       &sprd_pll_sc_gate_ops)
 +
-+#define CLK_VCKG_EB		0
-+#define CLK_VVSP_EB		1
-+#define CLK_VJPG_EB		2
-+#define CLK_VCPP_EB		3
-+#define CLK_VSP_AHB_GATE_NUM	(CLK_VCPP_EB + 1)
++#define SPRD_SC_GATE_CLK_FW_NAME_OPS_UDELAY(_struct, _name, _parent,	\
++					    _reg, _sc_offset,		\
++					    _enable_mask, _flags,	\
++					    _gate_flags, _udelay, _ops)	\
++	SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
++				    _sc_offset, _enable_mask, _flags,	\
++				    _gate_flags, _udelay, _ops,		\
++				    CLK_HW_INIT_FW_NAME)
 +
-+#define CLK_SIM0_EB		0
-+#define CLK_IIS0_EB		1
-+#define CLK_IIS1_EB		2
-+#define CLK_IIS2_EB		3
-+#define CLK_SPI0_EB		4
-+#define CLK_SPI1_EB		5
-+#define CLK_SPI2_EB		6
-+#define CLK_I2C0_EB		7
-+#define CLK_I2C1_EB		8
-+#define CLK_I2C2_EB		9
-+#define CLK_I2C3_EB		10
-+#define CLK_I2C4_EB		11
-+#define CLK_UART0_EB		12
-+#define CLK_UART1_EB		13
-+#define CLK_UART2_EB		14
-+#define CLK_UART3_EB		15
-+#define CLK_UART4_EB		16
-+#define CLK_SIM0_32K_EB		17
-+#define CLK_SPI3_EB		18
-+#define CLK_I2C5_EB		19
-+#define CLK_I2C6_EB		20
-+#define CLK_AP_APB_GATE_NUM	(CLK_I2C6_EB + 1)
++#define SPRD_SC_GATE_CLK_FW_NAME_OPS(_struct, _name, _parent, _reg,	\
++				     _sc_offset, _enable_mask, _flags,	\
++				     _gate_flags, _ops)			\
++	SPRD_SC_GATE_CLK_FW_NAME_OPS_UDELAY(_struct, _name, _parent,	\
++					    _reg, _sc_offset,		\
++					    _enable_mask, _flags,	\
++					    _gate_flags, 0, _ops)
 +
-+#endif /* _DT_BINDINGS_CLK_SC9863A_H_ */
++#define SPRD_SC_GATE_CLK_FW_NAME(_struct, _name, _parent, _reg,		\
++				 _sc_offset, _enable_mask, _flags,	\
++				 _gate_flags)				\
++	SPRD_SC_GATE_CLK_FW_NAME_OPS(_struct, _name, _parent, _reg,	\
++				     _sc_offset, _enable_mask, _flags,	\
++				     _gate_flags, &sprd_sc_gate_ops)
++
++#define SPRD_GATE_CLK_FW_NAME(_struct, _name, _parent, _reg,		\
++			      _enable_mask, _flags, _gate_flags)	\
++	SPRD_SC_GATE_CLK_FW_NAME_OPS(_struct, _name, _parent, _reg, 0,	\
++				     _enable_mask, _flags, _gate_flags,	\
++				     &sprd_gate_ops)
++
++#define SPRD_PLL_SC_GATE_CLK_FW_NAME(_struct, _name, _parent, _reg,	\
++				     _sc_offset, _enable_mask, _flags,	\
++				     _gate_flags, _udelay)		\
++	SPRD_SC_GATE_CLK_FW_NAME_OPS_UDELAY(_struct, _name, _parent,	\
++					    _reg, _sc_offset,		\
++					    _enable_mask, _flags,	\
++					    _gate_flags, _udelay,	\
++					    &sprd_pll_sc_gate_ops)
++
+ static inline struct sprd_gate *hw_to_sprd_gate(const struct clk_hw *hw)
+ {
+ 	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
+diff --git a/drivers/clk/sprd/mux.h b/drivers/clk/sprd/mux.h
+index 892e4191cc7f..f3cc31dae06f 100644
+--- a/drivers/clk/sprd/mux.h
++++ b/drivers/clk/sprd/mux.h
+@@ -36,26 +36,40 @@ struct sprd_mux {
+ 		.table	= _table,			\
+ 	}
+ 
+-#define SPRD_MUX_CLK_TABLE(_struct, _name, _parents, _table,		\
+-				     _reg, _shift, _width,		\
+-				     _flags)				\
++#define SPRD_MUX_CLK_HW_INIT_FN(_struct, _name, _parents, _table,	\
++				_reg, _shift, _width, _flags, _fn)	\
+ 	struct sprd_mux _struct = {					\
+ 		.mux	= _SPRD_MUX_CLK(_shift, _width, _table),	\
+ 		.common	= {						\
+ 			.regmap		= NULL,				\
+ 			.reg		= _reg,				\
+-			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
+-						       _parents,	\
+-						       &sprd_mux_ops,	\
+-						       _flags),		\
++			.hw.init = _fn(_name, _parents,			\
++				       &sprd_mux_ops, _flags),		\
+ 		}							\
+ 	}
+ 
++#define SPRD_MUX_CLK_TABLE(_struct, _name, _parents, _table,		\
++			   _reg, _shift, _width, _flags)		\
++	SPRD_MUX_CLK_HW_INIT_FN(_struct, _name, _parents, _table,	\
++				_reg, _shift, _width, _flags,		\
++				CLK_HW_INIT_PARENTS)
++
+ #define SPRD_MUX_CLK(_struct, _name, _parents, _reg,		\
+ 		     _shift, _width, _flags)			\
+ 	SPRD_MUX_CLK_TABLE(_struct, _name, _parents, NULL,	\
+ 			   _reg, _shift, _width, _flags)
+ 
++#define SPRD_MUX_CLK_DATA_TABLE(_struct, _name, _parents, _table,	\
++				_reg, _shift, _width, _flags)		\
++	SPRD_MUX_CLK_HW_INIT_FN(_struct, _name, _parents, _table,	\
++				_reg, _shift, _width, _flags,		\
++				CLK_HW_INIT_PARENTS_DATA)
++
++#define SPRD_MUX_CLK_DATA(_struct, _name, _parents, _reg,		\
++			  _shift, _width, _flags)			\
++	SPRD_MUX_CLK_DATA_TABLE(_struct, _name, _parents, NULL,		\
++				_reg, _shift, _width, _flags)
++
+ static inline struct sprd_mux *hw_to_sprd_mux(const struct clk_hw *hw)
+ {
+ 	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
+diff --git a/drivers/clk/sprd/pll.h b/drivers/clk/sprd/pll.h
+index e95f11e91ffe..6558f50d0296 100644
+--- a/drivers/clk/sprd/pll.h
++++ b/drivers/clk/sprd/pll.h
+@@ -61,27 +61,33 @@ struct sprd_pll {
+ 	struct sprd_clk_common	common;
+ };
+ 
++#define SPRD_PLL_HW_INIT_FN(_struct, _name, _parent, _reg,	\
++			    _regs_num, _itable, _factors,	\
++			    _udelay, _k1, _k2, _fflag,		\
++			    _fvco, _fn)				\
++	struct sprd_pll _struct = {				\
++		.regs_num	= _regs_num,			\
++		.itable		= _itable,			\
++		.factors	= _factors,			\
++		.udelay		= _udelay,			\
++		.k1		= _k1,				\
++		.k2		= _k2,				\
++		.fflag		= _fflag,			\
++		.fvco		= _fvco,			\
++		.common		= {				\
++			.regmap		= NULL,			\
++			.reg		= _reg,			\
++			.hw.init	= _fn(_name, _parent,	\
++					      &sprd_pll_ops, 0),\
++		},						\
++	}
++
+ #define SPRD_PLL_WITH_ITABLE_K_FVCO(_struct, _name, _parent, _reg,	\
+ 				    _regs_num, _itable, _factors,	\
+ 				    _udelay, _k1, _k2, _fflag, _fvco)	\
+-	struct sprd_pll _struct = {					\
+-		.regs_num	= _regs_num,				\
+-		.itable		= _itable,				\
+-		.factors	= _factors,				\
+-		.udelay		= _udelay,				\
+-		.k1		= _k1,					\
+-		.k2		= _k2,					\
+-		.fflag		= _fflag,				\
+-		.fvco		= _fvco,				\
+-		.common		= {					\
+-			.regmap		= NULL,				\
+-			.reg		= _reg,				\
+-			.hw.init	= CLK_HW_INIT(_name,		\
+-						      _parent,		\
+-						      &sprd_pll_ops,	\
+-						      0),		\
+-		},							\
+-	}
++	SPRD_PLL_HW_INIT_FN(_struct, _name, _parent, _reg, _regs_num,	\
++			    _itable, _factors, _udelay, _k1, _k2,	\
++			    _fflag, _fvco, CLK_HW_INIT)
+ 
+ #define SPRD_PLL_WITH_ITABLE_K(_struct, _name, _parent, _reg,		\
+ 			       _regs_num, _itable, _factors,		\
+@@ -96,6 +102,19 @@ struct sprd_pll {
+ 				    _regs_num, _itable, _factors,	\
+ 				    _udelay, 1000, 1000, 0, 0)
+ 
++#define SPRD_PLL_FW_NAME(_struct, _name, _parent, _reg, _regs_num,	\
++			 _itable, _factors, _udelay, _k1, _k2,		\
++			 _fflag, _fvco)					\
++	SPRD_PLL_HW_INIT_FN(_struct, _name, _parent, _reg, _regs_num,	\
++			    _itable, _factors, _udelay, _k1, _k2,	\
++			    _fflag, _fvco, CLK_HW_INIT_FW_NAME)
++
++#define SPRD_PLL_HW(_struct, _name, _parent, _reg, _regs_num, _itable,	\
++		    _factors, _udelay, _k1, _k2, _fflag, _fvco)		\
++	SPRD_PLL_HW_INIT_FN(_struct, _name, _parent, _reg, _regs_num,	\
++			    _itable, _factors, _udelay, _k1, _k2,	\
++			    _fflag, _fvco, CLK_HW_INIT_HW)
++
+ static inline struct sprd_pll *hw_to_sprd_pll(struct clk_hw *hw)
+ {
+ 	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
 -- 
 2.20.1
 
