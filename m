@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B133C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D652120700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1959220700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xJHekG2T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Io/Hf5q7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLPILX (ORCPT
+        id S1726788AbfLPINd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:11:23 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35971 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfLPILW (ORCPT
+        Mon, 16 Dec 2019 03:13:33 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:38378 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLPINc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:11:22 -0500
-Received: by mail-vs1-f68.google.com with SMTP id m5so3581864vsj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:11:22 -0800 (PST)
+        Mon, 16 Dec 2019 03:13:32 -0500
+Received: by mail-ua1-f68.google.com with SMTP id z17so1766994uac.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:13:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t6tRXeWjXk4XedCBH813uitRKRnMxkJ3VN0a1mJ462I=;
-        b=xJHekG2TdTb+LjYMgzpUlMBTcfPzi1OgpdZLNcJRg1av1YCSUAvk+0DxpGeRw7u7Q+
-         toLenzZhgU5SPk9VLTTgb02mRNDaNb64/e/uvkDOhQ3imNCaxIktKL5hcM6FysO20noR
-         8kZHiQmJFuEMKNTqR9B/Y+HzsYcqhnF3KUfP5ApIauHAQa4UGK5PZmf74KvcA70ckxSP
-         DfVmHPPk8z3kKHwO5fx3HDrYK0i6NBIqqPvpBueA/xU5yLyCGTdyIaDl9KxKUMUYFxkW
-         DX6kToJ6oR0mSPSSN5Zxvwd+iUtJGZIXxvyUudxjDQgPl5uj+W2SyTF4AaDiGhLHDtqu
-         gZQg==
+        bh=xn4dNigwlhxAQyKm9gOJN6QkFcnPQMlJTzy6sb2QOwk=;
+        b=Io/Hf5q7xSuHylwL4OacRp4P2PsiZyoZaYrdRYlxqQKP0mShYWfBf+OMhO/2Np5ORk
+         fbAabr9vNzYuqtaPzEs9468vWGCNFq6L07CpSEQEZDdQry1M0dq7J63v6z64SWxPOAwf
+         aBsKNENdCTw1nW9p7XIYQuyMxASCHpUlj5HAzZvecr+WMA9OvIhKR8QH6qkSHxJvT/sV
+         8QWyZr0vsXuIHqdImqYvcvVW/I2GLZFBKq/RBYiJ/t94ixC6bqbpO5tBZVkMH5O/SwID
+         fpTlS9kNGShue2P7WPTC5Xv2q8hEBVLvMg4kHJ1x4kG+jy4ihbaykjFCICEm8rKO27mI
+         0ztA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t6tRXeWjXk4XedCBH813uitRKRnMxkJ3VN0a1mJ462I=;
-        b=jLQZk2b8n3bgMKH0THXm2cq3+cOWQtVO7j1VwbQ3JLv4jCAe/7gzoKVigiifsOswEd
-         IkCaqIxEDoFZrwO4x3BvywKqWvopsXOiIHJ3WLUP52QpsIcZ9zsT8tWuS7FkpOjXKSzN
-         HU6bibBLCL2KULZWsk9iJHknLv9TqCMCTCTBBHsJvoifp5jlLYgEfkK9ZfmSm/P22SGI
-         caufc/VclljKel7bINXON3iZX3aVO7lFS0usY4+xKF3KXp2Eq93hjikoc6lphC2YIaVn
-         rg5sFMsSm1SXuqKS9G6pdWWvFCfFRBkkkF5W9fvrwmsUbJD0SvW7Tlga6hkQPL2N5R61
-         adtg==
-X-Gm-Message-State: APjAAAWKKfy8xzKm9UC2FLEruTkxJkYVWNjoGlC5WjyhcH48BlMhzixQ
-        vyR446pTQG03vJOZEJw7Ikno6NsAw1eIHuhb4x5oPSJU+Zg=
-X-Google-Smtp-Source: APXvYqx8OxQ29bLWSegnLGTEgAkOiNIm/HsyXoLgK379EsycJHVuhlApMERuLDXwVmUW239wqgAmcF8kHHxlBNc9kE4=
-X-Received: by 2002:a67:e00d:: with SMTP id c13mr20218532vsl.57.1576483881730;
- Mon, 16 Dec 2019 00:11:21 -0800 (PST)
+        bh=xn4dNigwlhxAQyKm9gOJN6QkFcnPQMlJTzy6sb2QOwk=;
+        b=WS33zob7lvkDLMVso+MIXGR080u/8Ah8Iu0DUu9SduP+WfinPwcP1j83USJIMm3UTx
+         IrKUIXS4i3IVs8vWr1dgTYflay+5cT7cmDK7zgltWnndg9ZCpEoa/IuMMQD7J5MqEUi9
+         wtKY67vZ+9t5VaM4KN8W1kU6CMBUiHlhxoZt2JqVEFEOCwRIiOQPbdHXZY1eS+8ALx/Q
+         2XuxcVhRCU2rhWT+P5C5aKF4PKqhI9YwzpdSpSY+yvvK4u/PzvkuEkH1YGqV3bVYP5J7
+         s2FP2bxo2m93SXPec7/297rx3Z3ALN3X1CbA3BaJtTsBKPWfk1jKVN2ko/jgsWAscmh3
+         Xkqg==
+X-Gm-Message-State: APjAAAVfSN111IgQEIhS2taOXeCrdJ8TWs404OXg/1Zj2iK83ZT37o9Y
+        Ct3Y87uBd0s3HWbmW9bz/YpIZDk0w0o0JboBfHJqfg==
+X-Google-Smtp-Source: APXvYqzf6JCyaHJwxPnWzJiB8wq7OgYE7mfA/OKhvFmoPueU8tPGA+C3vAw/23I1YgLjMrghbr0yx4mgW9xyWoMeQRY=
+X-Received: by 2002:ab0:1c0a:: with SMTP id a10mr22253217uaj.140.1576484011659;
+ Mon, 16 Dec 2019 00:13:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-4-ktouil@baylibre.com>
-In-Reply-To: <20191210154157.21930-4-ktouil@baylibre.com>
+References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-5-ktouil@baylibre.com>
+In-Reply-To: <20191210154157.21930-5-ktouil@baylibre.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:11:10 +0100
-Message-ID: <CACRpkdZX2Q_EknW+ZJcKLfD1fstM_QOvpvc=ZAnhRvOtbJ4y-A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: at24: remove the optional property write-protect-gpios
+Date:   Mon, 16 Dec 2019 09:13:20 +0100
+Message-ID: <CACRpkdbHLv2R+XvCjCaEgaztUqpmHWCmSAqHABkkstJREkmfVw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] eeprom: at24: remove the write-protect pin support
 To:     Khouloud Touil <ktouil@baylibre.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -80,12 +80,17 @@ On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrote:
 > drivers each time, it would be better to pass it over the NVMEM
 > subsystem once and for all.
 >
-> Removing the optional property form the device tree binding document.
-
-You're not really removing it just referencing it from elsewhere.
-
+> Removing the support for the write-protect pin after adding it to the
+> NVMEM subsystem.
+>
 > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
 
+I wonder if this needs to be in the same patch that adds it to
+the NVMEM subsystem, so as to avoid both code paths being
+taken between the two patches (bisectability..)
+
+However that is not the biggest thing in the universe and I'm
+no bisectability-perfectionist, so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
