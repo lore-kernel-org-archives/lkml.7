@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE8CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E679E20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB70C20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521572;
-	bh=YOwGTA8bggtg9EB37TCIHVOeLJOVKCJIfA3AfeYnd68=;
+	s=default; t=1576521575;
+	bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iC5QeStj1dIxSu269I1LMlwTno3bblX43vytf9qXDnLw+G1kE60ByNAiodFXV2me4
-	 GRK6NGTC88K/T4cJh/7uzYlfTkJbAjv0VJ+aqL5jEEdqjHl1xxomfFuMEzZw73vcH3
-	 TKNJBNrTNoAdySRL7nmHjsPVjKibww5lbIa9SNN4=
+	b=MSdV0JqDIVpbVXr3ZL1rh9tIKNlhrFY7Q4+tPbvbxrKLyfWp336B5LYH8dSe2jOcd
+	 ransyEShP6HcEEtq/fP92hBkaCQGRaeNcGwBmS9b5pZVLziQxTLjEsJ7aLE0VBl0DK
+	 S0qu74108R7TymWsUkQerPszpTf26Ru30qbjm+Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfLPSja (ORCPT
+        id S1729508AbfLPSDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:39:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbfLPSDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:32 -0500
+        id S1729280AbfLPSDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:03:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C97420726;
-        Mon, 16 Dec 2019 18:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE8B2072D;
+        Mon, 16 Dec 2019 18:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519411;
-        bh=YOwGTA8bggtg9EB37TCIHVOeLJOVKCJIfA3AfeYnd68=;
+        s=default; t=1576519399;
+        bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3fzI+AUgQ2NlfFQE65IlOc2ZYhvsydE42r4MZvmsHTb0NFWZ5+GHytm4mjefRrPH
-         r8aER92QoOceFZIiGL5KzO4NVOShPnr6KoDVPLbm9fBOPzpp6qT5qJlEot712xnxpj
-         RGJFIM54dS62WkVfoOc5iZJ7rVOgQHxY3lWu/l4Y=
+        b=emTF5Qphi2K/Jrj9LNtU7xDYzlzTbqOfIb4oUgY4xN9sn2Oqu8CUaUzYEPm4t0jKm
+         WCO6yFSnKCvF1hLW5ygbE0gCuFWR8VC5DEwh5Htb0Yn9WxBw2eEeB6Qrs9XaYHwusr
+         30iuHiw0UePukD5Dx0UNW2M9UN6xREjofFgos/Cg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 048/140] ovl: fix corner case of non-unique st_dev;st_ino
-Date:   Mon, 16 Dec 2019 18:48:36 +0100
-Message-Id: <20191216174801.803159477@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 013/140] staging: gigaset: add endpoint-type sanity check
+Date:   Mon, 16 Dec 2019 18:48:01 +0100
+Message-Id: <20191216174754.265077397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -59,60 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9c6d8f13e9da10a26ad7f0a020ef86e8ef142835 upstream.
+commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
 
-On non-samefs overlay without xino, non pure upper inodes should use a
-pseudo_dev assigned to each unique lower fs and pure upper inodes use the
-real upper st_dev.
+Add missing endpoint-type sanity checks to probe.
 
-It is fine for an overlay pure upper inode to use the same st_dev;st_ino
-values as the real upper inode, because the content of those two different
-filesystem objects is always the same.
+This specifically prevents a warning in USB core on URB submission when
+fuzzing USB descriptors.
 
-In this case, however:
- - two filesystems, A and B
- - upper layer is on A
- - lower layer 1 is also on A
- - lower layer 2 is on B
-
-Non pure upper overlay inode, whose origin is in layer 1 will have the same
-st_dev;st_ino values as the real lower inode. This may result with a false
-positive results of 'diff' between the real lower and copied up overlay
-inode.
-
-Fix this by using the upper st_dev;st_ino values in this case.  This breaks
-the property of constant st_dev;st_ino across copy up of this case. This
-breakage will be fixed by a later patch.
-
-Fixes: 5148626b806a ("ovl: allocate anon bdev per unique lower fs")
-Cc: stable@vger.kernel.org # v4.17+
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/inode.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/isdn/gigaset/usb-gigaset.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -203,8 +203,14 @@ int ovl_getattr(const struct path *path,
- 			if (ovl_test_flag(OVL_INDEX, d_inode(dentry)) ||
- 			    (!ovl_verify_lower(dentry->d_sb) &&
- 			     (is_dir || lowerstat.nlink == 1))) {
--				stat->ino = lowerstat.ino;
- 				lower_layer = ovl_layer_lower(dentry);
-+				/*
-+				 * Cannot use origin st_dev;st_ino because
-+				 * origin inode content may differ from overlay
-+				 * inode content.
-+				 */
-+				if (samefs || lower_layer->fsid)
-+					stat->ino = lowerstat.ino;
- 			}
+--- a/drivers/isdn/gigaset/usb-gigaset.c
++++ b/drivers/isdn/gigaset/usb-gigaset.c
+@@ -708,6 +708,12 @@ static int gigaset_probe(struct usb_inte
  
- 			/*
+ 	endpoint = &hostif->endpoint[0].desc;
+ 
++	if (!usb_endpoint_is_bulk_out(endpoint)) {
++		dev_err(&interface->dev, "missing bulk-out endpoint\n");
++		retval = -ENODEV;
++		goto error;
++	}
++
+ 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+ 	ucs->bulk_out_size = buffer_size;
+ 	ucs->bulk_out_epnum = usb_endpoint_num(endpoint);
+@@ -727,6 +733,12 @@ static int gigaset_probe(struct usb_inte
+ 
+ 	endpoint = &hostif->endpoint[1].desc;
+ 
++	if (!usb_endpoint_is_int_in(endpoint)) {
++		dev_err(&interface->dev, "missing int-in endpoint\n");
++		retval = -ENODEV;
++		goto error;
++	}
++
+ 	ucs->busy = 0;
+ 
+ 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
 
 
