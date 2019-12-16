@@ -2,121 +2,100 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC63C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C83CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0AE206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137B7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJ3NXwRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfLPPse (ORCPT
+        id S1728601AbfLPPtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:48:34 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32900 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728463AbfLPPsO (ORCPT
+        Mon, 16 Dec 2019 10:49:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23081 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728423AbfLPPtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:48:14 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id 6F214260667
-Date:   Mon, 16 Dec 2019 10:48:03 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     yuq825@gmail.com, dri-devel@lists.freedesktop.org,
-        lima@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
-        linux-kernel@vger.kernel.org, tomeu.vizoso@collabora.com,
-        robh@kernel.org, steven.price@arm.com,
-        linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, wens@csie.org
-Subject: Re: [RFC v1 0/1] drm: lima: devfreq and cooling device support
-Message-ID: <20191216154803.GA3921@kevin>
-References: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
+        Mon, 16 Dec 2019 10:49:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576511352;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FUEPuE3lmiTROt831qEr7XPbzQitQcYsLEoUTolKxh8=;
+        b=HJ3NXwRAbWI+6zNGah01BEcABfkEvd79YFQP21WEpPNZk7w4VSnBQGnRHlUiWzhZomKG/l
+        ZuN4svGdVQZGxqYBwt8o+rbHEhgzgCHtn2/j3SR/aqL1m6H3D003nwi9WrO2XIN6pqWxH1
+        uxEoFEiee9liPAtehSFBzsPXToXgF4k=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-ML3euJG2M5SI6h-Qh5s9GQ-1; Mon, 16 Dec 2019 10:49:11 -0500
+X-MC-Unique: ML3euJG2M5SI6h-Qh5s9GQ-1
+Received: by mail-qt1-f198.google.com with SMTP id o18so4853496qtt.19
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:49:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FUEPuE3lmiTROt831qEr7XPbzQitQcYsLEoUTolKxh8=;
+        b=hf0lnGIveRoh4x5LFy7LdQ3bD89p5fZV6nA3ntJh1NnyYUwvEsa8jX2W0b3qSm+fnl
+         k1FyJIvf+CznYcBORSJRN2JbWxsY7FJnZOuJY/wSGkbW5YE44upY5u8ExKIuNfcQzPcT
+         /KRlhEEz5rhMsXEpcogcbXZUHMkQbJ9XxkIN4NmGXPaRyMpndVRqLzxF6xq+l1qHG1T4
+         LO3GPdyNx9QwNYQzduBbLBFUqoY4J6K/KA+vxjpXG9QoB3GhrMABH18gzXw9gAU/W63i
+         s2p0UkTlQoFkJuOKvTf+1Dm5UHLDpFBEtAu5aFhzRBEupXS7u6ADRphm419b/fsNK+zo
+         tO/g==
+X-Gm-Message-State: APjAAAU99ZYofnWEvM2JHqSRdJnWqSybHGgwhxM8VXVAHSjJsgzuCHS6
+        cPRYDN4619w7fYO49AN+ZKe/wXAeZOfx+ouJBZFHZfenlBTKjehaCq2vi2zZRf1tXvw7cSjpOAb
+        v9ihNX7FHwA1Q0VKdhzfFr+Nj
+X-Received: by 2002:aed:376a:: with SMTP id i97mr24765828qtb.44.1576511036535;
+        Mon, 16 Dec 2019 07:43:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzNO+M+uMPH2PC7v8tiGPqdgQ481MGIvuyPN8mLjwyvKqfzFBQlyb23FzKFU9qaIy6pSbyfug==
+X-Received: by 2002:aed:376a:: with SMTP id i97mr24765811qtb.44.1576511036310;
+        Mon, 16 Dec 2019 07:43:56 -0800 (PST)
+Received: from xz-x1 ([104.156.64.75])
+        by smtp.gmail.com with ESMTPSA id f42sm7002645qta.0.2019.12.16.07.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:43:55 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:43:56 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191216154356.GE83861@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <m1lfrihj2n.fsf@dinechin.org>
+ <20191213202324.GI16429@xz-x1>
+ <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
+ <20191214162644.GK16429@xz-x1>
+ <0f084179-2a5d-e8d9-5870-3cc428105596@redhat.com>
+ <20191216152647.GD83861@xz-x1>
+ <fa25d729-a2fb-85af-a968-1dedc754a55d@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <fa25d729-a2fb-85af-a968-1dedc754a55d@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 04:31:50PM +0100, Paolo Bonzini wrote:
+> No u64, please.  u32 I can agree with, 16-bit *should* be enough but it
+> is a bit tight, so let's make it 32-bit if we drop the union idea.
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure.
 
-If so much code is being duplicated over, I'm wondering if it makes
-sense for us to move some of the common devfreq code to core DRM
-helpers?
+-- 
+Peter Xu
 
-On Sun, Dec 15, 2019 at 10:12:22PM +0100, Martin Blumenstingl wrote:
-> This is my attempt at adding devfreq (and cooling device) support to
-> the lima driver.
-> I didn't have much time to do in-depth testing. However, I'm sending
-> this out early because there are many SoCs with Mali-400/450 GPU so
-> I want to avoid duplicating the work with somebody else.
->=20
-> The code is derived from panfrost_devfreq.c which is why I kept the
-> Collabora copyright in lima_devfreq.c. Please let me know if I should
-> drop this or how I can make it more clear that I "borrowed" the code
-> from panfrost.
->=20
-> I am seeking comments in two general areas:
-> - regarding the integration into the existing lima code
-> - for the actual devfreq code (I had to adapt the panfrost code
->   slightly, because lima uses a bus and a GPU/core clock)
->=20
-> My own TODO list includes "more" testing on various Amlogic SoCs.
-> So far I have tested this on Meson8b and Meson8m2 (which both have a
-> GPU OPP table defined). However, I still need to test this on a GXL
-> board (which is currently missing the GPU OPP table).
->=20
->=20
-> Martin Blumenstingl (1):
->   drm/lima: Add optional devfreq support
->=20
->  drivers/gpu/drm/lima/Kconfig        |   1 +
->  drivers/gpu/drm/lima/Makefile       |   3 +-
->  drivers/gpu/drm/lima/lima_devfreq.c | 162 ++++++++++++++++++++++++++++
->  drivers/gpu/drm/lima/lima_devfreq.h |  15 +++
->  drivers/gpu/drm/lima/lima_device.c  |   4 +
->  drivers/gpu/drm/lima/lima_device.h  |  11 ++
->  drivers/gpu/drm/lima/lima_drv.c     |  14 ++-
->  drivers/gpu/drm/lima/lima_sched.c   |   7 ++
->  drivers/gpu/drm/lima/lima_sched.h   |   3 +
->  9 files changed, 217 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
->  create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
->=20
-> --=20
-> 2.24.1
->=20
-
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl33py4ACgkQ/v5QWgr1
-WA0Caw/8DBkpxsfWejzUF5wK7xq5rkmaLL+RmwJzt9xgNwWgsJ8p2XWt+hgzJSAr
-hNy9KVAEE62SXJHfpziY9CEkQycM+b7cQASYGf2q8/C2XNYfZHv80N8SZv1Gaqmh
-NzCfRSsfgc1BvPjbiKu0E1gdsX4RxlB3TXQV0dmSYbOSQ6yyHaYHgrEImW8HVblc
-/xkW7pOSkBs9ZdQKMFETaKJlQ6iQvkvUUlaywl2rBO4PvidyCVp5TXgRIYUQzXY/
-ls7vy/jU8eWchvp9hlztfssMGtE20BcQeASrHjkKfRUWsaSKt0g9Wh17jbIMf/fj
-BfGKqV+KwkKuMDUubvp7EBaJkwxAG8pTr1jv7+QdxOdm/KVnKMu1NSl2DJmTl8Fa
-o9mIdlNQCoMJo+TG6i92JuHMZ5VL11NBm6uazi1iJIH8KEYg8UPnePbQttHnDnZq
-DqTpy9w0r+T3zu9AH5pQjZCXCcKK+oV4qCTBK5zGe3UtcPigssiTVo912VsGEbb/
-Y8LPtySaWSjCI/hfgz4M9ENfrmNX4yqvIewZnAMMPj6vv5sslfRBBGKBCoCtqcQx
-T9Iy3c57pp9B/Prrc1llotEuqyd2Mi7mws7gSPfGZXaTC/TPNKCikvph39wdRPdp
-WP+lq3rH1n5kMcc3D09p62TZGuaO0uiHmUgxshzPQa3FxXsHqZo=
-=QSX1
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
