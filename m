@@ -2,148 +2,265 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A1EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6590F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACB4206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfLPOGz (ORCPT
+        id S1728146AbfLPOHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:06:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:56596 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 09:07:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:56638 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfLPOGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:06:52 -0500
+        id S1727807AbfLPOHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:07:32 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 251EF1FB;
-        Mon, 16 Dec 2019 06:06:52 -0800 (PST)
-Received: from e123648.arm.com (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D86363F718;
-        Mon, 16 Dec 2019 06:06:49 -0800 (PST)
-From:   lukasz.luba@arm.com
-To:     linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     amit.kucheria@verdurent.com, corbet@lwn.net, lukasz.luba@arm.com,
-        dietmar.eggemann@arm.com
-Subject: [PATCH  3/3] thermal: Add sysfs binding for cooling device and thermal zone
-Date:   Mon, 16 Dec 2019 14:06:22 +0000
-Message-Id: <20191216140622.25467-4-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216140622.25467-1-lukasz.luba@arm.com>
-References: <20191216140622.25467-1-lukasz.luba@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E65101FB;
+        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7983F718;
+        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:07:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 03/13] PCI: cadence: Add support to use custom read and
+ write accessors
+Message-ID: <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-4-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-4-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Luba <lukasz.luba@arm.com>
+On Mon, Dec 09, 2019 at 02:51:37PM +0530, Kishon Vijay Abraham I wrote:
+> Add support to use custom read and write accessors. Platforms that
+> doesn't support half word or byte access or any other constraint
 
-Make it possible to bind from userspace a cooling device to an existing
-thermal zone. It adds more flexibility in addition to static device tree
-definitions. There is also a code for changing trip point connected to
-cooling device instance in the thermal zone.
+s/doesn't/don't/
 
-In order to bind a device to a zone, first the proper thermal zone name
-must be checked from file:
-cat /sys/class/thermal/thermal_zoneX/type
-Then that name must be set into cooling device 'bind_tz' file:
-echo 'gpu-thermal' > /sys/class/thermal/cooling_deviceY/bind_tz
-Next a proper trip point must be chosen for this cooling device:
-echo 2 > /sys/class/thermal/thermal_zoneX/cdev_Z_trip_point
+> while accessing registers can use this feature to populate custom
+> read and write accessors. These custom accessors are used for both
+> standard register access and configuration space register access.
 
-To unbind, first set -1 to connected trip point:
-echo -1 > /sys/class/thermal/thermal_zoneX/cdev_Z_trip_point
-Then unbind the thermal zone from the cooling device:
-echo 'gpu-thermal' > /sys/class/thermal/cooling_deviceY/unbind_tz
+You can put the following sentence underneath a --- as it's not needed
+in the commit message (but may be helpful to reviewers).
 
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/thermal/thermal_sysfs.c | 57 +++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+> This is in preparation for adding PCIe support in TI's J721E SoC which
+> uses Cadence PCIe core.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
+>  1 file changed, 90 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index a2b28b912ca4..d0d91c69fa1d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
+>  	MSG_ROUTING_GATHER,
+>  };
+>  
+> +struct cdns_pcie_ops {
+> +	u32	(*read)(void __iomem *addr, int size);
+> +	void	(*write)(void __iomem *addr, int size, u32 value);
+> +};
+> +
+>  /**
+>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>   * @reg_base: IO mapped register base
+> @@ -239,7 +244,7 @@ struct cdns_pcie {
+>  	int			phy_count;
+>  	struct phy		**phy;
+>  	struct device_link	**link;
+> -	const struct cdns_pcie_common_ops *ops;
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index 80c8bae6dd1c..473449b41d55 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -722,15 +722,72 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
- 	return result ? result : count;
- }
- 
-+static ssize_t
-+bind_tz_store(struct device *dev, struct device_attribute *attr,
-+		const char *buf, size_t count)
-+{
-+	struct thermal_cooling_device *cdev = to_cooling_device(dev);
-+	struct thermal_zone_device *tz;
-+	char *orig, *name;
-+	int res = 0;
-+
-+	orig = kstrndup(buf, count, GFP_KERNEL);
-+	if (!orig)
-+		return -ENOMEM;
-+
-+	name = strstrip(orig);
-+
-+	tz = thermal_zone_get_zone_by_name(name);
-+	if (IS_ERR_OR_NULL(tz))
-+		return -EINVAL;
-+
-+	res = thermal_zone_bind_cooling_device(tz, THERMAL_TRIPS_NONE, cdev,
-+					       THERMAL_NO_LIMIT,
-+					       THERMAL_NO_LIMIT,
-+					       THERMAL_WEIGHT_DEFAULT);
-+
-+	kfree(orig);
-+	return res ? res : count;
-+}
-+
-+static ssize_t
-+unbind_tz_store(struct device *dev, struct device_attribute *attr,
-+		const char *buf, size_t count)
-+{
-+	struct thermal_cooling_device *cdev = to_cooling_device(dev);
-+	struct thermal_zone_device *tz;
-+	char *name, *orig;
-+	int res = 0;
-+
-+	orig = kstrndup(buf, count, GFP_KERNEL);
-+	if (!orig)
-+		return -ENOMEM;
-+
-+	name = strstrip(orig);
-+
-+	tz = thermal_zone_get_zone_by_name(name);
-+	if (IS_ERR_OR_NULL(tz))
-+		return -EINVAL;
-+
-+	res = thermal_zone_unbind_cooling_device(tz, THERMAL_TRIPS_NONE, cdev);
-+
-+	kfree(orig);
-+	return res ? res : count;
-+}
-+
- static struct device_attribute
- dev_attr_cdev_type = __ATTR(type, 0444, cdev_type_show, NULL);
- static DEVICE_ATTR_RO(max_state);
- static DEVICE_ATTR_RW(cur_state);
-+static DEVICE_ATTR_WO(bind_tz);
-+static DEVICE_ATTR_WO(unbind_tz);
- 
- static struct attribute *cooling_device_attrs[] = {
- 	&dev_attr_cdev_type.attr,
- 	&dev_attr_max_state.attr,
- 	&dev_attr_cur_state.attr,
-+	&dev_attr_bind_tz.attr,
-+	&dev_attr_unbind_tz.attr,
- 	NULL,
- };
- 
--- 
-2.17.1
+What was cdns_pcie_common_ops? It's not defined in the current tree is it?
 
+> +	const struct cdns_pcie_ops *ops;
+>  };
+>  
+>  /**
+> @@ -301,21 +306,47 @@ struct cdns_pcie_ep {
+>  /* Register access */
+>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
+> +
+>  	writeb(value, pcie->reg_base + reg);
+
+Can you use 'addr' here instead of 'pcie->reg_base + reg'? (And similar for the
+rest of them).
+
+Thanks,
+
+Andrew Murray
+
+
+>  }
+>  
+>  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
+> +
+>  	writew(value, pcie->reg_base + reg);
+>  }
+>  
+>  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x4, value);
+> +		return;
+> +	}
+> +
+>  	writel(value, pcie->reg_base + reg);
+>  }
+>  
+>  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x4);
+> +
+>  	return readl(pcie->reg_base + reg);
+>  }
+>  
+> @@ -323,47 +354,97 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>  				       u32 reg, u8 value)
+>  {
+> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
+> +
+> +	writeb(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>  				       u32 reg, u16 value)
+>  {
+> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
+> +
+> +	writew(value, addr);
+>  }
+>  
+>  /* Endpoint Function register access */
+>  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u8 value)
+>  {
+> -	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
+> +
+> +	writeb(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u16 value)
+>  {
+> -	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
+> +
+> +	writew(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u32 value)
+>  {
+> -	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x4, value);
+> +		return;
+> +	}
+> +
+> +	writel(value, addr);
+>  }
+>  
+>  static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x1);
+> +
+> +	return readb(addr);
+>  }
+>  
+>  static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x2);
+> +
+> +	return readw(addr);
+>  }
+>  
+>  static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x4);
+> +
+> +	return readl(addr);
+>  }
+>  
+>  #ifdef CONFIG_PCIE_CADENCE_HOST
+> -- 
+> 2.17.1
+> 
