@@ -2,131 +2,130 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B6AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E3F20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3iCBytLQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4CED620409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLPNrw (ORCPT
+        id S1727972AbfLPNsQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:47:52 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40188 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfLPNrw (ORCPT
+        Mon, 16 Dec 2019 08:48:16 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50891 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfLPNsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:47:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2KLAN4ZBm7mQw6EPErstooeuDqde0MxZ8aeQqGLKk1U=; b=3iCBytLQJTNQKbERk1Ou0Oa8r
-        OxTzGqtSGn15JzRVQE+Jmcq1kQjgF/gMYSzRaMsauBjxCsMymuuB42kedoFb3sPqYMRCcuiS+CPrH
-        bfgZW35CWZDsTbAb94g/W98U+aVd++jAj/rmwOtuzSbWq9EXcnOQ6s9ll94fdKB+W9NcgGZwnwhtQ
-        VVYAlw3UUyFSymkgWjUjb0vpLgMQjHMOa/2aHAV8jc3NhPJ3/uL4KXHR0ryqpOuApmYZxZMqx89g2
-        kjsuH5c+qV6pHm39ajE6tLHJhEE9BX7G0nu7YyFLSguEwedR+yqXezfy5OgEaAqXySQ1HgMTs33Ck
-        LceJjZakA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igqid-0007BC-11; Mon, 16 Dec 2019 13:47:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 319D83007F2;
-        Mon, 16 Dec 2019 14:46:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5CB252B2A010B; Mon, 16 Dec 2019 14:47:25 +0100 (CET)
-Date:   Mon, 16 Dec 2019 14:47:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Ajay Kaher <akaher@vmware.com>, gregkh@linuxfoundation.org,
-        stable@vger.kernel.org, torvalds@linux-foundation.org,
-        punit.agrawal@arm.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, willy@infradead.org,
-        will.deacon@arm.com, mszeredi@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
-        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
-        srostedt@vmware.com, Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
- in paravirt guest
-Message-ID: <20191216134725.GE2827@hirez.programming.kicks-ass.net>
-References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
- <1576529149-14269-9-git-send-email-akaher@vmware.com>
- <20191216130443.GN2844@hirez.programming.kicks-ass.net>
- <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+        Mon, 16 Dec 2019 08:48:15 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 351A2C0003;
+        Mon, 16 Dec 2019 13:48:11 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 14:48:10 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] drm/panel: simple: Support reset GPIOs
+Message-ID: <20191216144810.18710ed3@xps13>
+In-Reply-To: <20191216132732.mmqivmpnq4mio6oo@gilmour.lan>
+References: <20191213181325.26228-1-miquel.raynal@bootlin.com>
+        <20191216130615.qs6ub7bwqofwvhr7@gilmour.lan>
+        <20191216141036.24c22899@xps13>
+        <20191216132732.mmqivmpnq4mio6oo@gilmour.lan>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfrc9z3v.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 02:30:44PM +0100, Vitaly Kuznetsov wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> 
-> > On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
-> >> From: Vlastimil Babka <vbabka@suse.cz>
-> >> 
-> >> The x86 version of get_user_pages_fast() relies on disabled interrupts to
-> >> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
-> >> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
-> >> releases the page. As TLB flush is done synchronously via IPI disabling
-> >> interrupts blocks the page release, and get_page(), which assumes existing
-> >> reference on page, is thus safe.
-> >> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
-> >> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
-> >> that was already freed or even reused.
-> >> 
-> >> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
-> >> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
-> >> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
-> >> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
-> >> immediately releases the page again, while it's already on a freelist. Symptoms
-> >> include a bad page state warning, general protection faults acessing a poisoned
-> >> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
-> >> together in a single list. Oscar has also reproduced this scenario, with a
-> >> patch inserting delays before the get_page() to make the race window larger.
-> >> 
-> >> Fix this by removing the dependency on TLB flush interrupts the same way as the
-> >
-> > This is suppsed to be fixed by:
-> >
-> > arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
-> >
-> 
-> Yes,
-> 
-> but HAVE_RCU_TABLE_FREE was enabled on x86 only in 4.14:
-> 
-> commit 9e52fc2b50de3a1c08b44f94c610fbe998c0031a
-> Author: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Date:   Mon Aug 28 10:22:51 2017 +0200
-> 
->     x86/mm: Enable RCU based page table freeing (CONFIG_HAVE_RCU_TABLE_FREE=y)
-> 
-> and, if I understood correctly, Ajay is suggesting the patch for older
-> stable kernels (4.9 and 4.4 I would guess).
+Hi Sam,
 
-It wasn't at all clear this was targeted at old kernels (I only got this
-one patch).
+Maxime Ripard <maxime@cerno.tech> wrote on Mon, 16 Dec 2019 14:27:32
++0100:
 
-And why can't those necro kernels do backports of the upstream solution?
+> On Mon, Dec 16, 2019 at 02:10:36PM +0100, Miquel Raynal wrote:
+> > > >  drivers/gpu/drm/panel/panel-simple.c | 12 +++++++++++-
+> > > >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > > > index 5d487686d25c..15dd495c347d 100644
+> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > > @@ -110,6 +110,7 @@ struct panel_simple {
+> > > >  	struct i2c_adapter *ddc;
+> > > >
+> > > >  	struct gpio_desc *enable_gpio;
+> > > > +	struct gpio_desc *reset_gpio;
+> > > >
+> > > >  	struct drm_display_mode override_mode;
+> > > >  };
+> > > > @@ -433,12 +434,21 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+> > > >  	if (IS_ERR(panel->supply))
+> > > >  		return PTR_ERR(panel->supply);
+> > > >
+> > > > +	panel->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> > > > +						    GPIOD_OUT_LOW);
+> > > > +	if (IS_ERR(panel->reset_gpio)) {
+> > > > +		err = PTR_ERR(panel->reset_gpio);
+> > > > +		if (err != -EPROBE_DEFER)
+> > > > +			dev_err(dev, "failed to request reset pin: %d\n", err);
+> > > > +		return err;
+> > > > +	}
+> > > > +  
+> > >
+> > > However, I'm wondering if it wouldn't be better to just have the
+> > > device maintained in reset at probe (so OUT_HIGH) and moved out of
+> > > reset during either the prepare or enable callbacks.
+> > >
+> > > This is pretty much what is happening with the enable-gpios already.
+> > >
+> > > Also, panels usually need to wait for a minimum time after you
+> > > deassert the reset line. How is that dealt with?
+> > >
+> > > I guess a good way to do that would be to add that duration to the
+> > > panel description, since this is pretty much device specific.  
+> >
+> > What about the case were your Bootloader displays something and you
+> > don't want the panel to blink ?  
+> 
+> The Bootloader to Linux transition will make the panel blink already,
+> since the display engine is going to be reset / reconfigured during
+> the transition.
+> 
+> The only way to implement this would be to implement properly the
+> reset callbacks in all you display drivers to recreate the DRM state
+> from the hardware state, and then you'll be able to just switch to the
+> new buffer.
+> 
+> Only Intel does this at the time though, and that's way outside of the
+> scope of this patch...
+> 
+> > Right now I am just forcing the reset to be deasserted.  
+> 
+> ... Especially since the very next line after your patch forces the
+> panel to be disabled.
+> 
+
+Is the addition of the reset support (as proposed by Maxime)
+interesting from your point of view? As you answered that you were not
+understanding the needs for such a change, I prefer to ask before
+spending more time on it.
+
+
+Thanks,
+Miquèl
