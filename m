@@ -2,105 +2,106 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D91BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4450FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5356B206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKMXj16A"
+	by mail.kernel.org (Postfix) with ESMTP id 21311206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfLPOu6 (ORCPT
+        id S1728206AbfLPOw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:50:58 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54558 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfLPOu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:50:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Y3dsY+rCZ72stCfTD3m+0TsmTj/a4NlFQ0hd6IQYEPE=; b=lKMXj16A/yhZR/XjFy7+ZjF8B
-        2bUZJOzvcQsK9xwHXf8tjsXQOXRKjUh6GBlMdQrCSbGiqz1LyP/9dzCE4qkaP09VIVxfbKC5gMcu1
-        WXcrxCYzpFa9fPXh/JEMhJyImklEZeBWsVfEkcXiqp8iCEa1XaAQ09Wui5gKRaXxnGtjnBplpB5is
-        dJjgkX33tJ7LdVSkzUQYX4CVoZ/Xk/A8nL0YRQz7yjFIemb2vchlxD1kKirmFo9YWHVLkujUJD22T
-        WvlRkH+xkMjgeEKfG1tIY0PWvF7OWX5sp7QWxrl/GtT9+k2fzmY9UwKQ57KQ8/L2zTh+eQ9peyhEd
-        hBWcq5leA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igrhs-0001L1-Gl; Mon, 16 Dec 2019 14:50:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 974E0301747;
-        Mon, 16 Dec 2019 15:49:19 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 79DAE2B2A1923; Mon, 16 Dec 2019 15:50:41 +0100 (CET)
-Date:   Mon, 16 Dec 2019 15:50:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-Message-ID: <20191216145041.GG2827@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org>
- <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
- <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
- <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
+        Mon, 16 Dec 2019 09:52:27 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728008AbfLPOw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:52:26 -0500
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 3B58AEB36E6F617BABE2;
+        Mon, 16 Dec 2019 14:52:25 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 16 Dec 2019 14:52:24 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 16 Dec
+ 2019 14:52:24 +0000
+Subject: Re: [PATCH v2 0/3] HiSilicon v3xx SFC driver
+To:     <broonie@kernel.org>, <marek.vasut@gmail.com>,
+        <tudor.ambarus@microchip.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
+        <chenxiang66@hisilicon.com>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
+Date:   Mon, 16 Dec 2019 14:52:23 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
-
-> So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
-> cache flush and the actual flush in done in tlb_flush_mmu.
-
-Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
-tlb_remove_table().
-
-> As per
+On 09/12/2019 14:08, John Garry wrote:
+> This patchset introduces support for the HiSilicon SFC V3XX driver.
 > 
-> d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
-> invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
 
-96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
+Hi guys,
 
-And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
-not TLBI when it fails to allocate a batch page, which is an error for
-PPC-Radix.
+Just a friendly reminder on this series.
 
-There is also no TLBI when the batch page is full and the RCU callback
-happens, which is also a bug on PPC-Radix.
+Thanks,
+John
+
+> Whilst the kernel tree already includes support for a "HiSilicon SFC
+> driver", that is for different HW. Indeed, as mentioned in patch #1, the
+> naming for that driver could be better, as it should support more memory
+> technologies than SPI NOR (as I have been told), and it is actually known
+> internally as FMC. As such, maybe "hisi-fmc" would have been better, but
+> we can't change that now.
+> 
+> I used V3XX in this driver name, as that is the unique versioning for
+> this HW.
+> 
+> As for the driver itself, it is quite simple. Only ACPI firmware is
+> supported, and we assume m25p80 compatible SPI NOR part will be used.
+> 
+> DMA is not supported, and we just use polling mode for operation
+> completion notification. The driver uses the SPI MEM OPs.
+> 
+> Changes from v1:
+> - Add ACPI kconfig dependency
+> - Fix up header comment style
+> - Change macros naming style
+> - Try to enforce aligned accesses in hisi_sfc_v3xx_adjust_op_size()
+> 
+> John Garry (3):
+>    mtd: spi-nor: hisi-sfc: Try to provide some clarity on which SFC we
+>      are
+>    spi: Add HiSilicon v3xx SPI NOR flash controller driver
+>    MAINTAINERS: Add a maintainer for the HiSilicon v3xx SFC driver
+> 
+>   MAINTAINERS                     |   6 +
+>   drivers/mtd/spi-nor/Kconfig     |   4 +-
+>   drivers/mtd/spi-nor/hisi-sfc.c  |   2 +-
+>   drivers/spi/Kconfig             |   9 +
+>   drivers/spi/Makefile            |   1 +
+>   drivers/spi/spi-hisi-sfc-v3xx.c | 284 ++++++++++++++++++++++++++++++++
+>   6 files changed, 303 insertions(+), 3 deletions(-)
+>   create mode 100644 drivers/spi/spi-hisi-sfc-v3xx.c
+> 
+
