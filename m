@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C423C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50F7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC24A2146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8E12166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518859;
-	bh=ekAR3ck2KgdUuuz1Bg+Oor3rUFJl91n6bzTEKuQ3JEw=;
+	s=default; t=1576518862;
+	bh=gqVIozMbV8/6ED/LSCxrq5AmMOXvoBr1JTXlHi5UOMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQqDCUsMYHZUxHzhIQijcjmevtVqhJGxZ8D05AlF9psiWew92qTwckbNlFi8l/12A
-	 sBLNEP+L9ihuwiLK2yScaiKSWlefdjfuJJwNoth7zZG6xp6itT8x21jwrK409mpmRs
-	 qAc5vICxnxI8LX5NDgL30W0nw5O20S4ItbJnOKbw=
+	b=FeMIKohJSfizU+lZt7hjLuIQhkHjx7jH2MPN7rVx+bYVubLEBEH0UZ8eHFyKU0GTl
+	 5GbxBvYtXRiPuEMtSib+2rujHTAE/kpml6T9DDcGVtijHWN6fNgRlEuhVUYuCxIiRf
+	 zyUPYYa0mtGBApxP7zBk0mPL5LidpCV0naruCuPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfLPRyS (ORCPT
+        id S1727894AbfLPRyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbfLPRyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:12 -0500
+        id S1726773AbfLPRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D200621582;
-        Mon, 16 Dec 2019 17:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 502FE2146E;
+        Mon, 16 Dec 2019 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518852;
-        bh=ekAR3ck2KgdUuuz1Bg+Oor3rUFJl91n6bzTEKuQ3JEw=;
+        s=default; t=1576518854;
+        bh=gqVIozMbV8/6ED/LSCxrq5AmMOXvoBr1JTXlHi5UOMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x37TIW1j7FXcw9gNq6AQ7LKskVGh0J5WTyk6sfgqTQv4wHc8u1U/j8/hsxdNxlYBD
-         a07Ahf96CNGclyT2pVHJgJ2ajeUlowcwr9iIPTb2Nn2X+d/GXW+EM1JdoV1HlcWA2r
-         yLPI+rA1bIDAAzuox0R6XtTxVUwZBqy1QNm6Ie4E=
+        b=zT0BnsukXSkeWqmQGFMhhncJFRwo9KoBOPeQ06yFcg9eePqwg9zLUOoC46CUpj3VS
+         5DXb0pBXZ51veq1Lo46TbH4S3y5igwJCPUuHSK2EHA33BRSRTmsSlUu6MVN7Lbs65+
+         qi7wi5JVD0InGd+ZxlRBzG2H3ezJ21jQajuMwAuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Neal Cardwell <ncardwell@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/267] tcp: fix off-by-one bug on aborting window-probing socket
-Date:   Mon, 16 Dec 2019 18:46:58 +0100
-Message-Id: <20191216174858.352109816@linuxfoundation.org>
+Subject: [PATCH 4.14 093/267] tcp: fix SNMP under-estimation on failed retransmission
+Date:   Mon, 16 Dec 2019 18:46:59 +0100
+Message-Id: <20191216174859.035168872@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -64,11 +64,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yuchung Cheng <ycheng@google.com>
 
-[ Upstream commit 3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188 ]
+[ Upstream commit ec641b39457e17774313b66697a8a1dc070257bd ]
 
-Previously there is an off-by-one bug on determining when to abort
-a stalled window-probing socket. This patch fixes that so it is
-consistent with tcp_write_timeout().
+Previously the SNMP counter LINUX_MIB_TCPRETRANSFAIL is not counting
+the TSO/GSO properly on failed retransmission. This patch fixes that.
 
 Signed-off-by: Yuchung Cheng <ycheng@google.com>
 Signed-off-by: Eric Dumazet <edumazet@google.com>
@@ -76,22 +75,22 @@ Signed-off-by: Neal Cardwell <ncardwell@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_timer.c | 2 +-
+ net/ipv4/tcp_output.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-index 592d6e9967a91..04e2c43a43a5a 100644
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -358,7 +358,7 @@ static void tcp_probe_timer(struct sock *sk)
- 			return;
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 5b808089eff89..6025cc509d974 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2932,7 +2932,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	if (likely(!err)) {
+ 		TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
+ 	} else if (err != -EBUSY) {
+-		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL);
++		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
  	}
- 
--	if (icsk->icsk_probes_out > max_probes) {
-+	if (icsk->icsk_probes_out >= max_probes) {
- abort:		tcp_write_err(sk);
- 	} else {
- 		/* Only send another probe if we didn't close things up. */
+ 	return err;
+ }
 -- 
 2.20.1
 
