@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861FFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF23C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3F92082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB722082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520446;
-	bh=VMJt5NBnVWEBZ6OIVNBHveWFXukZL1cWBAtk60f6bgc=;
+	s=default; t=1576520449;
+	bh=qC2dGsy8YPSNHCGZduahSOXJzmMdZKrBI2F3JvshQok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUkofSiYoD2rFZWMJDd9X4QOCJLBeqJIL7ej6tJondy7M5GeRt4H76cOMcPC6ycAF
-	 yn03fHLIAYHn/zs+w9YAHHNHhsTINXHrXO13cg2NROwBE1+vQYQLTidbL+PSSHEhjc
-	 jVi62InR2PEjq2/WThhw/ypl5bvn7YR5UsgOM3y0=
+	b=kSSbYVZF4fRN7UhYgi1qqUeHBh9ExMpnWy7mRPtaaWgAAeC1GSFw7xvQbvcGk77Dy
+	 I5pAoILUuyKchoZQBP1KDt2V3vYDMbJCfinfmKGT7YXaZbEcdeHf9c7q1ZlIdecreM
+	 ru3GQeRNfJvR/1aMAfdwmC5ysOQhXuDmHWd89Ems=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfLPSUp (ORCPT
+        id S1732143AbfLPSUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731952AbfLPSUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:41 -0500
+        id S1732131AbfLPSUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA643206EC;
-        Mon, 16 Dec 2019 18:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC522082E;
+        Mon, 16 Dec 2019 18:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520441;
-        bh=VMJt5NBnVWEBZ6OIVNBHveWFXukZL1cWBAtk60f6bgc=;
+        s=default; t=1576520443;
+        bh=qC2dGsy8YPSNHCGZduahSOXJzmMdZKrBI2F3JvshQok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXo0e/xqN8t5xMeOlYj59j/uU1hhASmHAm2Zo1MR/TkCsliG6VRgvtTWriukNKe9j
-         C9dWSparqDocT9RVjtqcUfM99FCyeG7Y3Jjw0owzNcbbR8L1fF1ybqhxekjN7B1qLB
-         FYsCX5M5MM+iDDaS9iNNftMbRSs47PaXvjSgaPhE=
+        b=uR2EAa5729BGWVaNHqPNbgU492yVKEOcqWANFxn5FIqhyo0g1lEW1ui8erpjiF6xd
+         1GjsHMCB3NsMKeINdurqXctkFIe+FzeCSt3RlYTlZF/3cPQ7vKhVOFrCIJz/Tl1gsb
+         Njrai6Vh9fxwMgqOfYDCLi2PqdVUQdZl1YvhQEfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hernandez <mhernandez@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 156/177] scsi: qla2xxx: Fix a dma_pool_free() call
-Date:   Mon, 16 Dec 2019 18:50:12 +0100
-Message-Id: <20191216174848.606775145@linuxfoundation.org>
+Subject: [PATCH 5.4 157/177] Revert "scsi: qla2xxx: Fix memory leak when sending I/O fails"
+Date:   Mon, 16 Dec 2019 18:50:13 +0100
+Message-Id: <20191216174848.732122292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -63,60 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-[ Upstream commit 162b805e38327135168cb0938bd37b131b481cb0 ]
+[ Upstream commit 5a993e507ee65a28eca6690ee11868555c4ca46b ]
 
-This patch fixes the following kernel warning:
+This reverts commit 2f856d4e8c23f5ad5221f8da4a2f22d090627f19.
 
-DMA-API: qla2xxx 0000:00:0a.0: device driver frees DMA memory with different size [device address=0x00000000c7b60000] [map size=4088 bytes] [unmap size=512 bytes]
-WARNING: CPU: 3 PID: 1122 at kernel/dma/debug.c:1021 check_unmap+0x4d0/0xbd0
-CPU: 3 PID: 1122 Comm: rmmod Tainted: G           O      5.4.0-rc1-dbg+ #1
-RIP: 0010:check_unmap+0x4d0/0xbd0
-Call Trace:
- debug_dma_free_coherent+0x123/0x173
- dma_free_attrs+0x76/0xe0
- qla2x00_mem_free+0x329/0xc40 [qla2xxx_scst]
- qla2x00_free_device+0x170/0x1c0 [qla2xxx_scst]
- qla2x00_remove_one+0x4f0/0x6d0 [qla2xxx_scst]
- pci_device_remove+0xd5/0x1f0
- device_release_driver_internal+0x159/0x280
- driver_detach+0x8b/0xf2
- bus_remove_driver+0x9a/0x15a
- driver_unregister+0x51/0x70
- pci_unregister_driver+0x2d/0x130
- qla2x00_module_exit+0x1c/0xbc [qla2xxx_scst]
- __x64_sys_delete_module+0x22a/0x300
- do_syscall_64+0x6f/0x2e0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This patch was found to introduce a double free regression. The issue
+it originally attempted to address was fixed in patch
+f45bca8c5052 ("scsi: qla2xxx: Fix double scsi_done for abort path").
 
-Fixes: 3f006ac342c0 ("scsi: qla2xxx: Secure flash update support for ISP28XX") # v5.2-rc1~130^2~270.
-Cc: Michael Hernandez <mhernandez@marvell.com>
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Link: https://lore.kernel.org/r/20191106044226.5207-3-bvanassche@acm.org
-Reviewed-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lore.kernel.org/r/4BDE2B95-835F-43BE-A32C-2629D7E03E0A@marvell.com
+Requested-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 23c3927751637..0bbc6a82470a5 100644
+index 0bbc6a82470a5..06037e3c78549 100644
 --- a/drivers/scsi/qla2xxx/qla_os.c
 +++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -4680,7 +4680,8 @@ qla2x00_mem_free(struct qla_hw_data *ha)
- 	ha->sfp_data = NULL;
+@@ -909,8 +909,6 @@ qla2xxx_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
  
- 	if (ha->flt)
--		dma_free_coherent(&ha->pdev->dev, SFP_DEV_SIZE,
-+		dma_free_coherent(&ha->pdev->dev,
-+		    sizeof(struct qla_flt_header) + FLT_REGIONS_SIZE,
- 		    ha->flt, ha->flt_dma);
- 	ha->flt = NULL;
- 	ha->flt_dma = 0;
+ qc24_host_busy_free_sp:
+ 	sp->free(sp);
+-	CMD_SP(cmd) = NULL;
+-	qla2x00_rel_sp(sp);
+ 
+ qc24_target_busy:
+ 	return SCSI_MLQUEUE_TARGET_BUSY;
+@@ -994,8 +992,6 @@ qla2xxx_mqueuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd,
+ 
+ qc24_host_busy_free_sp:
+ 	sp->free(sp);
+-	CMD_SP(cmd) = NULL;
+-	qla2xxx_rel_qpair_sp(sp->qpair, sp);
+ 
+ qc24_target_busy:
+ 	return SCSI_MLQUEUE_TARGET_BUSY;
 -- 
 2.20.1
 
