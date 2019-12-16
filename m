@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AB1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFFCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F41F2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F732166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519126;
-	bh=0cMTQmwl4BZU+5xKQAthdhFWfd/pUDKDSr2RpGBgt5I=;
+	s=default; t=1576519129;
+	bh=DwurjK+quo8SdeIOkvjTyis6n0cJ4qLMhBov65ml5kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dwe+P81kaRhiJ7z4cqltVNjGyvXgqanepok7k7kFRyzt71GnOsAzm/XqXB9CIGHLj
-	 RI+aKZ+MexNYdp2fk4RE6mZyH5OvcvQGmqCpsdIS9Vk82iofv4aXwNUsU1T157wvGc
-	 ZcgpKrbGtFweRkjT5h0DQwejFUymWUwHIGS3VJ+8=
+	b=hg3xj0lZgO0AY5rJTtl7S4j0oLP1Kub/UGBqK2s36d9YaIVb9hPCa7cvuy1Y9ygGw
+	 DLcyHaod/pU6N84Iy27gedKw4qSjxQHDR3nL5KQVxjr6hIDMlBw6ciI3CCepX9wIg3
+	 A64+s9y+C8VqV6uxtKaC5VlD1n+bsgB86vAAgtuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfLPR6o (ORCPT
+        id S1728533AbfLPR6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:58:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58588 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728632AbfLPR6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:38 -0500
+        id S1728634AbfLPR6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B81E21582;
-        Mon, 16 Dec 2019 17:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C5124687;
+        Mon, 16 Dec 2019 17:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519117;
-        bh=0cMTQmwl4BZU+5xKQAthdhFWfd/pUDKDSr2RpGBgt5I=;
+        s=default; t=1576519119;
+        bh=DwurjK+quo8SdeIOkvjTyis6n0cJ4qLMhBov65ml5kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nr56oechQ91y/vFDfYSK0+hVCqIMgttqkpHm3KkvIV+Be47u0oUYSuoUeFhQpRLUI
-         kuZO+qD4u9d4zcumaVspTxEmsDgmCVMrDvS7FQmfPPNZLozfuwTzrqrC5TVj1mRLSv
-         FIJ4bmaXcjQfCeiAUrRGdq1kw4eGd2aevty6WsVI=
+        b=UqC18gppH5jBpit6EhfcGSHrR6XRjgwjJvcRlMQWML+D5l94mvi0BbCJmtsGBwx4g
+         X/0m/gMup1TKIMA6zjyGZhx19EvP+2MLW85118F5h4vU+LtbKJpewRxQvpDcIkWINE
+         bs3tAgb2jylvsAptNx0MnZxoSXhHNKAXBzlVKNow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 203/267] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
-Date:   Mon, 16 Dec 2019 18:48:49 +0100
-Message-Id: <20191216174913.654874111@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 186/267] btrfs: use refcount_inc_not_zero in kill_all_nodes
+Date:   Mon, 16 Dec 2019 18:48:32 +0100
+Message-Id: <20191216174912.709681384@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,37 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
+commit baf320b9d531f1cfbf64c60dd155ff80a58b3796 upstream.
 
-Check for existance of jack before tracing.
-NULL pointer dereference has been reported by KASAN while unloading
-machine driver (snd_soc_cnl_rt274).
+We hit the following warning while running down a different problem
 
-Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+[ 6197.175850] ------------[ cut here ]------------
+[ 6197.185082] refcount_t: underflow; use-after-free.
+[ 6197.194704] WARNING: CPU: 47 PID: 966 at lib/refcount.c:190 refcount_sub_and_test_checked+0x53/0x60
+[ 6197.521792] Call Trace:
+[ 6197.526687]  __btrfs_release_delayed_node+0x76/0x1c0
+[ 6197.536615]  btrfs_kill_all_delayed_nodes+0xec/0x130
+[ 6197.546532]  ? __btrfs_btree_balance_dirty+0x60/0x60
+[ 6197.556482]  btrfs_clean_one_deleted_snapshot+0x71/0xd0
+[ 6197.566910]  cleaner_kthread+0xfa/0x120
+[ 6197.574573]  kthread+0x111/0x130
+[ 6197.581022]  ? kthread_create_on_node+0x60/0x60
+[ 6197.590086]  ret_from_fork+0x1f/0x30
+[ 6197.597228] ---[ end trace 424bb7ae00509f56 ]---
+
+This is because the free side drops the ref without the lock, and then
+takes the lock if our refcount is 0.  So you can have nodes on the tree
+that have a refcount of 0.  Fix this by zero'ing out that element in our
+temporary array so we don't try to kill it again.
+
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add comment ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-jack.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/btrfs/delayed-inode.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -127,10 +127,9 @@ void snd_soc_jack_report(struct snd_soc_
- 	unsigned int sync = 0;
- 	int enable;
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -1975,12 +1975,19 @@ void btrfs_kill_all_delayed_nodes(struct
+ 		}
  
--	trace_snd_soc_jack_report(jack, mask, status);
+ 		inode_id = delayed_nodes[n - 1]->inode_id + 1;
 -
- 	if (!jack)
- 		return;
-+	trace_snd_soc_jack_report(jack, mask, status);
+-		for (i = 0; i < n; i++)
+-			refcount_inc(&delayed_nodes[i]->refs);
++		for (i = 0; i < n; i++) {
++			/*
++			 * Don't increase refs in case the node is dead and
++			 * about to be removed from the tree in the loop below
++			 */
++			if (!refcount_inc_not_zero(&delayed_nodes[i]->refs))
++				delayed_nodes[i] = NULL;
++		}
+ 		spin_unlock(&root->inode_lock);
  
- 	dapm = &jack->card->dapm;
- 
+ 		for (i = 0; i < n; i++) {
++			if (!delayed_nodes[i])
++				continue;
+ 			__btrfs_kill_delayed_node(delayed_nodes[i]);
+ 			btrfs_release_delayed_node(delayed_nodes[i]);
+ 		}
 
 
