@@ -2,94 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F731C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8A1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E07206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416AC20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myJNU0oh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MupdptuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfLPQq4 (ORCPT
+        id S1726559AbfLPQrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:46:56 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45320 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfLPQqz (ORCPT
+        Mon, 16 Dec 2019 11:47:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39075 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfLPQra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:46:55 -0500
-Received: by mail-qt1-f193.google.com with SMTP id l12so6257893qtq.12;
-        Mon, 16 Dec 2019 08:46:55 -0800 (PST)
+        Mon, 16 Dec 2019 11:47:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b72so5442035wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:47:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=FzQD5NeyjMYjn5GUzVnR8JJ9rnqQehngyUlXZ3ny/LA=;
-        b=myJNU0ohp9NClRjz5DPyP/dp+qDqj+ibPEywlbAAwBbLAxuOWcnhhD211Y9I9/oLfo
-         +yTrf/B9Bcg00ATyx4EfOmDBFF0HD/hJ1x/pO1N7gQoPnd8geBR4L9rtp682YVJW/if+
-         t5LWStvrt0Y9nADtYgyD+om75KE0EebaMp1EidTPi0AIAPchcJI6/mOYmnF0ifJ+y5M4
-         VKb1uDCQl9iwvLet2q2wnL5EDkb7yXhttv37C2iiC8vVTKhOD7j1MhR2odSpDh/BlR3d
-         I96b9vPzMJfRwrEshTT2he+9nE6VpFrtA46lksRWRuqR+rcUrlU+T8YYVZGA0yCnVN0l
-         GNFw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
+        b=MupdptuUoWe4nG6XWXO8Am4U5S+54eAzf2A0C0d2Y/5L2NO1Pz8TTYTYp5Oj5iY/hm
+         93t/S9vt5md+700bRha+NTqKBl6oALW4Cyyoy6nn+4F5ibH3bCyki7R/JsAZ4NHflnE+
+         ylV5xuhgvWwd1TxuaFKOb/aFAARfMBD2SMozH1sxIsh3v61V0bAF0jCcttX+d+5MsQ8a
+         N7X0BKMbj5GiVmGpbnjoYcA5U6nauymoWAe/L8NRaOKwVvAw6MyZaLOAepZg7xnyZ+Wh
+         oZqdlXigYNHIy+jwcnTQ+KhoxTXXftAxwM7ur1lCbGU4eP+IxWxLxRdYTCK5wujQtV8H
+         6qig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=FzQD5NeyjMYjn5GUzVnR8JJ9rnqQehngyUlXZ3ny/LA=;
-        b=jDlZmM31yBb/NlI7uhaUORkjEL9sCoPd1f7lE9uBRmpHJB5HWh1Sukk6Cac+E8iKBu
-         k3+njPqgPFL/OwjYgWCUwIl4a8mHH6rM2L7AsVm8rPreBTKLitjIiou41bzzXAiVfqo0
-         Gtt7jrvgePWm7N/wyRgUoJKttF3IhJNzN8LcE1k02O4w1TXZ8rG/SFip6sNAIF+3jQBh
-         2GUM6Flz3lLdfiwoVxQ678K8XAFVo53NuWntT5WvgqFlLrYOISiQzLSRTfUhgz0t4/qw
-         tPs9f6tOdsflPLByyAEdHCnmC5z1SI4Gz/A7yEtlxEvxY3hXuP0RTEoQgsnorYXiOXlT
-         7Mnw==
-X-Gm-Message-State: APjAAAWE/+KEdXBZg3x/dSgWCR/fWNpBK76OQJIHmwJaoE+8VKijG1fc
-        amRp2u5TT7PF6QHqFG2My33Dgm4H
-X-Google-Smtp-Source: APXvYqy1XW6mMY70H5xpe65grZb9SyDfhNylXXrGbRIx1KeEvN9RjkDcnnI02dp3HQHtwhyGu5E0/g==
-X-Received: by 2002:ac8:2d30:: with SMTP id n45mr98014qta.203.1576514814548;
-        Mon, 16 Dec 2019 08:46:54 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id m20sm2627380qkk.15.2019.12.16.08.46.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
+        b=ucmwqU0kse317BIbGPr3BTP1DKI20ltlcy5ig3424JQtTS+Ck4ghNJPxYKciaJO1Nk
+         id0A3+TjF2eIzlM0c5yhOdsAIOJ9toq+9kpaIpn6mSphxJsS2fC6Xzxf42/TrE6iZh9d
+         UxUWBbT+uELZVMRPDg8Ff59OujLOAMxONYxwH1cfvHi9T4BhTo+rDjuCh8XHaLZMw3R7
+         BTl83Be1Eau4kCA0ZvYjn/31Q6f+QI5l6xj1fDdW+9hFQMYe0avhyKONaYky/Kau3dpB
+         VeFCuNVsPrrdFvWn6r6Ou2gc/cd+uu3Z+oHS+wHd+o0HlaQMPNvFVs2BvKSMuPSYrSVu
+         PGGQ==
+X-Gm-Message-State: APjAAAX5xmbkJM87zg/z5TicE0GTFl79FvXOoOiW4cH+szE9Cql/4b0d
+        +as/anPzglrHDWNKaLb2dgh8Nw==
+X-Google-Smtp-Source: APXvYqyNpItBQC+K60hdbMXgCjsSVi+l3bidixDPaRGU5wZG3XvKQQsnCfJdpNCLx9rGhg7CBCc8sw==
+X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr30010613wmd.38.1576514848119;
+        Mon, 16 Dec 2019 08:47:28 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id p5sm21821060wrt.79.2019.12.16.08.47.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:46:53 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:46:52 -0500
-Message-ID: <20191216114652.GB2051941@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: dsa: b53: Fix egress flooding settings
-In-Reply-To: <20191213200027.20803-1-f.fainelli@gmail.com>
-References: <20191213200027.20803-1-f.fainelli@gmail.com>
+        Mon, 16 Dec 2019 08:47:27 -0800 (PST)
+Date:   Mon, 16 Dec 2019 16:47:26 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v6 07/15] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <20191216164726.GD18955@dell>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 12:00:27 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> There were several issues with 53568438e381 ("net: dsa: b53: Add support for port_egress_floods callback") that resulted in breaking connectivity for standalone ports:
-> 
-> - both user and CPU ports must allow unicast and multicast forwarding by
->   default otherwise this just flat out breaks connectivity for
->   standalone DSA ports
-> - IP multicast is treated similarly as multicast, but has separate
->   control registers
-> - the UC, MC and IPMC lookup failure register offsets were wrong, and
->   instead used bit values that are meaningful for the
->   B53_IP_MULTICAST_CTRL register
-> 
-> Fixes: 53568438e381 ("net: dsa: b53: Add support for port_egress_floods callback")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, 11 Dec 2019, Matti Vaittinen wrote:
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+> BD71828GW is a single-chip power management IC for battery-powered portable
+> devices. Add support for controlling BD71828 clk using bd718x7 driver.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> No changes since v5
+> 
+>  drivers/clk/Kconfig              |  6 ++---
+>  drivers/clk/clk-bd718x7.c        | 38 +++++++++++++++++++++++---------
+
+>  include/linux/mfd/rohm-bd70528.h |  6 -----
+>  include/linux/mfd/rohm-bd71828.h |  4 ----
+>  include/linux/mfd/rohm-bd718x7.h |  6 -----
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
