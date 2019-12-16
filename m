@@ -2,174 +2,188 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A46BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9225620726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440B620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MccC4sL5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3vDU5Ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfLPQIn (ORCPT
+        id S1726591AbfLPQJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:08:43 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52982 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbfLPQIl (ORCPT
+        Mon, 16 Dec 2019 11:09:30 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37436 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPQJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:08:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576512519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yIpix4UPxBSh2MT6UEhohtiVputl6QStexIF4LGjRs4=;
-        b=MccC4sL58Tpyv8bkZNYZl+JA6f//OCLhS3H5htWg0lCYqdsSIOxt7rQpF7vN+gWzUWq2CT
-        I72wbXg0Ns7cdz8mgFgFKq8y4P9cyLwfdciLjW3szrXYhwcPjAkXeG2Cf+HYgOrHr+Mn5S
-        UUK0M7tgppgVp0xU7WT+n94YMH+KFE0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-uUjezuzGMmKM5JozpWqn2A-1; Mon, 16 Dec 2019 11:08:36 -0500
-X-MC-Unique: uUjezuzGMmKM5JozpWqn2A-1
-Received: by mail-wr1-f71.google.com with SMTP id b13so2560943wrx.22
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:08:36 -0800 (PST)
+        Mon, 16 Dec 2019 11:09:29 -0500
+Received: by mail-io1-f66.google.com with SMTP id k24so5846193ioc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:09:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cpRMnpuuG37oGQE0b+ougpVuIyKezxFskSDMX9nBV5c=;
+        b=o3vDU5WwoZleI9RZZByuruOMHxPX8Jc5G00bN37o+oyiIOxoN1f5N7mqV6PbThbbFC
+         MqB8GZKW9O26Eq9jxnEcvfGX6OfzmhtfZPs3/efSwsyaO/mBi7Ms3Om0YpU5RE5bEtNJ
+         +xQkREB7Wd87S6ncvydsXeCz6o9Ybl9x1kJMFPsZeKoQzrFUtW4JbtoumLnlnxJmZqHv
+         US4xrmV3Jt3gD8RXV8ulr5TPfu6O9yZtKePVvxw3mIzL8kr5RQqD01oC/+FbOSl0QaOc
+         wCR7zugYf/jZxlKtC+65vbxgmPO26NmQ93Lq1I0Hg4fiyyzERgHGX+H2sQvJxVVnoiTf
+         v5Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=yIpix4UPxBSh2MT6UEhohtiVputl6QStexIF4LGjRs4=;
-        b=VAwqrnpWZ/zLqmGnpTBcNc74Sg+SO+PpwdRKzWeW2Jwks34B8tPp3SZqRPzeDQ4veB
-         9NhwRyKKAYABTuiXUNXstXOLE2NfVkwFEPoJzBkjCy8mKnQgd2G1iZj+ozM9dR1pp1XS
-         QdSeyUcGqBM0vOdUo1c8PSsQ8fAiDCH4p1HghoBVj90h6l9N/h5yKeX0Wol+/m74fTPz
-         yjxoo6SEzRDXrTA1bcjqufuu33hjfJQMRQTGy1v1EiqNHovbK1W69tPhypx5jtt27eQ3
-         NZ+X5JmfWA66LSMjDOZOxxF7YU+AmvIXr7UGVDt+H3akUxWbsNQjaHo8LTiLh+ZErufX
-         qG+A==
-X-Gm-Message-State: APjAAAVRXF/oNYBUL8IfnrnodjiVJJGF25s3GC06K7Gb/91hP2T2KPq8
-        cWepnt+bOHjyZZb8/GrdWwX/1SstvgEpkFZ7xZs1yotUM/h3R1h6+Od3s1f9i0vOjOtBsHTZPUl
-        i7Ev5iR7jg1IUJ+TOidz6aBbO
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr31499785wmc.21.1576512515589;
-        Mon, 16 Dec 2019 08:08:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwDcQ7lKF+oayQgC++uUUuXpbNGgRnUniNAizGb6g1+QNaoRZFDljRrO1NXUlKqtodM3COvQA==
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr31499763wmc.21.1576512515346;
-        Mon, 16 Dec 2019 08:08:35 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id g2sm21949089wrw.76.2019.12.16.08.08.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:08:34 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Vlastimil Babka <vbabka@suse.cz>, Ajay Kaher <akaher@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, gregkh@linuxfoundation.org,
-        stable@vger.kernel.org, torvalds@linux-foundation.org,
-        punit.agrawal@arm.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, willy@infradead.org,
-        will.deacon@arm.com, mszeredi@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
-        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
-        srostedt@vmware.com, Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
-In-Reply-To: <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
-References: <1576529149-14269-1-git-send-email-akaher@vmware.com> <1576529149-14269-9-git-send-email-akaher@vmware.com> <20191216130443.GN2844@hirez.programming.kicks-ass.net> <87lfrc9z3v.fsf@vitty.brq.redhat.com> <20191216134725.GE2827@hirez.programming.kicks-ass.net> <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
-Date:   Mon, 16 Dec 2019 17:08:32 +0100
-Message-ID: <87immg9rsv.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cpRMnpuuG37oGQE0b+ougpVuIyKezxFskSDMX9nBV5c=;
+        b=mMXVwn5mdaL3J0BpMOmaL9UNuyuVd1Pjc/56GdyAZUAI1cG7vE3d5omwNDXd1Exp7h
+         U9mgsBXccS+P4r/mHqXyK2DIViiIrbCsSKn8QWfSI40GBU6aVV22rYNItyfaHczpsX0Z
+         +8Bc7umUszgOGW7avtx34EyM8TkbhC1vZ9OGAHmW32Mp9JeRWeQolaHT6nkbScg0YJlW
+         2nAiurhGQD22BAA4A0hF4viG/VnNRrdgndcNzTDa4mlosmPoe0Cya02UiuubZ/g2d4Rh
+         8lD5jJwlLQdOrCqptWjzlfpslL29rYW2ruoj+RbicTtgPCrd2AsQpvvszwFu004osxJM
+         dV0Q==
+X-Gm-Message-State: APjAAAXlSwYWuSTUgT77udyRTIy/PAn2+RxcYzo5ZcbFAcx2vjPPOerJ
+        jmfEB3/CZjJ3WQ8yme/CvSRnIuBJgq9kzzhrqa4=
+X-Google-Smtp-Source: APXvYqxEvIc3fVXtPmXDLJ0VzbQjsPADshGSsN+ZGGQgy7Xl9n0T94gIIsHFoqHSeFPclKiXgOB6GpXAuRsOmKaTkuI=
+X-Received: by 2002:a02:8817:: with SMTP id r23mr12728830jai.120.1576512568600;
+ Mon, 16 Dec 2019 08:09:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1575932654.git.robin.murphy@arm.com> <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
+ <CANAwSgTtzAZJqpsD7uVKskTnDmrT1bs=JuHxnPrkpQKtnZLhvQ@mail.gmail.com>
+ <2681192.H4ySjFOPB8@diego> <CANAwSgTL-9VCFFj-+4xsLZOxKCHtjyN4P6fYnuRSOe7cZRiWew@mail.gmail.com>
+ <f29fbb91-ffd0-5650-30b4-5791c970a834@arm.com>
+In-Reply-To: <f29fbb91-ffd0-5650-30b4-5791c970a834@arm.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 16 Dec 2019 21:39:16 +0530
+Message-ID: <CANAwSgSpe=7-jCs4OtnnOoosfG89M-TAu-epC7sG0Gw2c7DrHA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vlastimil Babka <vbabka@suse.cz> writes:
+Hi Robin,
 
-> On 12/16/19 2:47 PM, Peter Zijlstra wrote:
->> On Mon, Dec 16, 2019 at 02:30:44PM +0100, Vitaly Kuznetsov wrote:
->>> Peter Zijlstra <peterz@infradead.org> writes:
->>>
->>>> On Tue, Dec 17, 2019 at 02:15:48AM +0530, Ajay Kaher wrote:
->>>>> From: Vlastimil Babka <vbabka@suse.cz>
->>>>>
->>>>> The x86 version of get_user_pages_fast() relies on disabled interrupts to
->>>>> synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
->>>>> a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
->>>>> releases the page. As TLB flush is done synchronously via IPI disabling
->>>>> interrupts blocks the page release, and get_page(), which assumes existing
->>>>> reference on page, is thus safe.
->>>>> However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
->>>>> no blocking thanks to disabled interrupts, and get_page() can succeed on a page
->>>>> that was already freed or even reused.
->>>>>
->>>>> We have recently seen this happen with our 4.4 and 4.12 based kernels, with
->>>>> userspace (java) that exits a thread, where mm_release() performs a futex_wake()
->>>>> on tsk->clear_child_tid, and another thread in parallel unmaps the page where
->>>>> tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
->>>>> immediately releases the page again, while it's already on a freelist. Symptoms
->>>>> include a bad page state warning, general protection faults acessing a poisoned
->>>>> list prev/next pointer in the freelist, or free page pcplists of two cpus joined
->>>>> together in a single list. Oscar has also reproduced this scenario, with a
->>>>> patch inserting delays before the get_page() to make the race window larger.
->>>>>
->>>>> Fix this by removing the dependency on TLB flush interrupts the same way as the
->>>>
->>>> This is suppsed to be fixed by:
->>>>
->>>> arch/x86/Kconfig:       select HAVE_RCU_TABLE_FREE              if PARAVIRT
->>>>
->>>
->>> Yes,
+On Mon, 16 Dec 2019 at 18:08, Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> Well, that commit fixes the "page table can be freed under us" part. But
-> this patch is about the "get_page() will succeed on a page that's being
-> freed" part. Upstream fixed that unknowingly in 4.13 by a gup.c
-> refactoring that would be too risky to backport fully.
+> On 2019-12-16 9:50 am, Anand Moon wrote:
+> > Hi Heiko / Robin / Soeren,
+> >
+> > On Mon, 16 Dec 2019 at 01:57, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
+e:
+> >>
+> >> Hi Anand,
+> >>
+> >> Am Sonntag, 15. Dezember 2019, 19:51:50 CET schrieb Anand Moon:
+> >>> On Tue, 10 Dec 2019 at 18:54, Robin Murphy <robin.murphy@arm.com> wro=
+te:
+> >>>>
+> >>>> RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK8=
+17,
+> >>>> so it makes little sense for the driver to have to have two complete=
+ly
+> >>>> different mechanisms to handle essentially the same thing. Bring RK8=
+05
+> >>>> in line with the RK809/RK817 flow to clean things up.
+> >>>>
+> >>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> >>>> ---
+> >>
+> >> [...]
+> >>
+> >>> I am sill getting the kernel warning on issue poweroff see below.
+> >>> on my Rock960 Model A
+> >>> I feel the reason for this is we now have two poweroff callback
+> >>> 1  pm_power_off =3D rk808_device_shutdown
+> >>> 2  rk8xx_syscore_shutdown
+> >>
+> >> Nope, the issue is just the i2c subsystem complaining that the
+> >> Rocckhip i2c drives does not provide an atomic-transfer function, see
+> >>          "No atomic I2C transfer handler for 'i2c-0'"
+> >> in your warning.
+> >>
+> >> Somewhere it was suggested that the current transfer function just
+> >> works as atomic as well.
+> >>
+> >>
+> >>> In my investigation earlier common function for shutdown solve
+> >>> the issue of clean shutdown.
+> >>
+> >> This is simply a result of your syscore-shutdown function running way =
+to
+> >> early, before the i2c subsystem switched to using atomic transfers.
+> >>
+> >> This also indicates that this would really be way to early, as other p=
+arts
+> >> of the kernel could also still be running.
+> >>
+> >
+> > Yes, you are correct syscore-shutdown initiates
+> > shutdown before all the device do clean shutdown.
+> >
+> > So for best approach for clean atomic shutdown is to use
+> >    /* driver model interfaces that don't relate to enumeration  */
+> >          void (*shutdown)(struct i2c_client *client);
+> > drop the registration of syscore and use core .i2c_shutdown.
+>
+> Huh? If you understand that the syscore shutdown hook is too early, why
+> would it seem a good idea to pull the plug even earlier from driver
+> shutdown? Not to mention that your patch as proposed breaks all the
+> GPIO-based shutdown flows.
+>
+Ok opps, I might have missed some thing.
+I just look into logs to between syscore shutdown and I2C shutdown
+get more insight, so I feel I2C shutdown dose clean shutdown.
+
+> If you really care about avoiding the spurious warning, implement the
+> expected polled-mode transfer function in the I2C driver. Trying to hack
+> around it by issuing I2C-based shutdown from anywhere other than
+> pm_power_off is a waste of everyone's time.
+
+I have tired this I2C shutdown approach earlier, but as their were
+issue with clean restart, so I dropped this line.
+Then I tired to add restart notifier to handle restart that also
+did not work my boards, so I am exploring more.
+
+>
+> > I have prepare this patch on top of this series for RTF
+> > This patch dose clean shutdown of all the devices before poweroff.
+> > see the log below.
+> >
+> > *Note*: This feature will likely break the clean reboot feature.
+> > Rockchip device do not perform clean reboot as some of the IP
+> > block are not released before clean reboot and it's remain stuck.
+> > Like PCIe and MMC, We need to look into this as well.
+>
+> As mentioned before, that likely has nothing to do with the PMIC, and
+> really sounds like the issue with Trusted Firmware not reenabling all
+> the SoC power domains before reset - a fix for that has already been
+> identified, see here:
+> https://forum.armbian.com/topic/7552-roc-rk3399-pc-renegade-elite/?do=3Df=
+indComment&comment=3D90289
+>
+> Robin.
 >
 
-(I also dislike receiving only this patch of the series, next time
-please send the whole thing, it's only 8 patches, our mailfolders will
-survive that)
+If we go with I2C shutdown feature, some how some device will not
+release resources and it remains stuck before the initialization next u-boo=
+t.
+See the log below. https://pastebin.com/xxwvERaz
 
-When I was adding Hyper-V PV TLB flush to RHEL7 - which is 3.10 based -
-in addition to adding page_cache_get_speculative() to
-gup_get_pte()/gup_huge_pmd()/gup_huge_pud() I also had to synchronize
-huge PMD split against gup_fast with the following hack:
+ATF changes will some into affect after the restart of the devices.
+FYI I am testing with all the latest AFT patches from Armbian and latest u-=
+boot.
 
-+static void do_nothing(void *unused)
-+{
-+
-+}
-+
-+static void serialize_against_pte_lookup(struct mm_struct *mm)
-+{
-+       smp_mb();
-+       smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
-+}
-+
- void pmdp_splitting_flush(struct vm_area_struct *vma,
-                          unsigned long address, pmd_t *pmdp)
- {
-@@ -434,9 +473,10 @@ void pmdp_splitting_flush(struct vm_area_struct *vma,
-        set = !test_and_set_bit(_PAGE_BIT_SPLITTING,
-                                (unsigned long *)pmdp);
-        if (set) {
-                /* need tlb flush only to serialize against gup-fast */
-                flush_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
-+               if (pv_mmu_ops.flush_tlb_others != native_flush_tlb_others)
-+                       serialize_against_pte_lookup(vma->vm_mm);
-        }
- }
-
-I'm not sure which stable kernel you're targeting (and if you addressed this
-with other patches in the series, if this is needed,...) so JFYI.
-
--- 
-Vitaly
-
+-Anand
