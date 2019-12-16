@@ -6,189 +6,173 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B480CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAFAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85ED3206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58327206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLPJvV (ORCPT
+        id S1727239AbfLPJv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:51:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18942 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727185AbfLPJvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:51:21 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBG9lGLc146621
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 04:51:20 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdpy4d12-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 04:51:19 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <wenjia@linux.ibm.com>;
-        Mon, 16 Dec 2019 09:51:17 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Dec 2019 09:51:14 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBG9pDPI58982488
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 09:51:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DD84AE055;
-        Mon, 16 Dec 2019 09:51:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58C64AE056;
-        Mon, 16 Dec 2019 09:51:13 +0000 (GMT)
-Received: from [9.152.224.25] (unknown [9.152.224.25])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 09:51:13 +0000 (GMT)
-Subject: Re: s390 EAGAIN on send{msg,to}()/recvmsg() on small MTU and big
- packet size
-To:     Petr Vorel <pvorel@suse.cz>, linux-s390@vger.kernel.org
-Cc:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190923152558.GA31182@dell5510>
-From:   Wenjia Zhang <wenjia@linux.ibm.com>
-Date:   Mon, 16 Dec 2019 10:51:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 16 Dec 2019 04:51:26 -0500
+Received: from mga06.intel.com ([134.134.136.31]:4935 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbfLPJvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:51:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 01:51:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="416382548"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Dec 2019 01:51:20 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ign28-0003JT-8d; Mon, 16 Dec 2019 11:51:20 +0200
+Date:   Mon, 16 Dec 2019 11:51:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Chen Gang <chengang@emindsoft.com.cn>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, sr@denx.de,
+        mika.westerberg@linux.intel.com, yegorslists@googlemail.com,
+        yuehaibing@huawei.com, haolee.swjtu@gmail.com, dsterba@suse.com,
+        mojha@codeaurora.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lv Li-song <lvlisong@emindsoft.com.cn>
+Subject: Re: [PATCH] drivers: tty: serial: 8250: fintek: Can enable or
+ disable irq sharing based on isa or pci bus
+Message-ID: <20191216095120.GN32742@smile.fi.intel.com>
+References: <20191213051717.2058-1-chengang@emindsoft.com.cn>
+ <20191213105033.GT32742@smile.fi.intel.com>
+ <758a0ca9-8f81-1a10-d9e1-11f86fac3de1@emindsoft.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <20190923152558.GA31182@dell5510>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19121609-0028-0000-0000-000003C90A39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121609-0029-0000-0000-0000248C4D6D
-Message-Id: <ab8289e5-547c-5375-5d0f-e9a363005db1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_02:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=956 malwarescore=0 bulkscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160088
+In-Reply-To: <758a0ca9-8f81-1a10-d9e1-11f86fac3de1@emindsoft.com.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+On Mon, Dec 16, 2019 at 10:27:23AM +0800, Chen Gang wrote:
+> Thank you for your reply.
+> 
+> I guess, this patch has to be refactored to match the related linux
+> versions. And excuse me, my orignal hardware environments has been gone,
+> so I can not give the new refactored patch additional test.
+> 
+> It is necessary to continue discussing and reviewing this patch to let
+> it be known completely, but I guess I am not the suitable persion to
+> refactor the patch.
 
-This is not really a bug on s390 but on general linux. A big IP packet is fragmented into small packets according to the MTU size.  Each small packet consumes an amount of system memory, which are recorded in ‘skb->truesize’. And the sum of the space all of the small packets need is limited by ‘2 * sk->sk_sndbuf’ (which you can find in '__ip_append_data' function in net/ipv4/ip_output.c), that is inherited from the system default set during socket initialization. The problem on s390 is that ‘skb->truesize’ is got by aligning the size of the data buffer to the L1 cache line (using SKB_DATA_ALIGN), which on s390 and only on s390 is 256 bytes, while on other processors less than or equal to 128 bytes. So the sum on s390 is much easier to exceed the limit, that the big packet can not be sent successfully.
-Because of the big cache line size on s390, the maximum size of the packet is limited in between 53816 and 64960, if the MTU is set to between 484 and 588.
-However, this problem not only occurs on s390, but also on some other processor e.g. x86. If the MTU is set to less than 340, an IP packet with the theoretical maximum size (65507 bytes) likewise can not be sent successfully.
+Yeah, you may refactor it, but please mention in the comment (the text going
+after '---' line) that you are not able to test it. At least for maintainer it
+may be a crucial point either to take your change or not.
 
-Best,              
+> After finish discussing and reviewing, if anyone still wants me to
+> refactor the patch, please let me know, I shall try.
+> 
+> The contents below are my reply, pelease check, thanks.
 
-Wenjia
+My reply below.
 
-On 23/09/2019 17:25, Petr Vorel wrote:
-> Hi,
->
-> I've found a bug on s390 on small MTU combined with big packet size, using ping
-> (of course both within valid ranges, e.g. MTU 552 and packet size 61245).
->
-> Below is full reproducer on netns.
->
-> I tested it on vanilla: v5.3-rc8 and v4.16.
-> I reproduced it on current iputils master which uses sendto()/recvmsg() and on
-> older version which uses sendmsg()/recvmsg().
->
-> As I'm not aware of any s390 specific socket code in kernel I suspect big endian or something else.
->
-> This bug was find with LTP/if-mtu-change.sh.
->
-> REPRODUCER:
-> LTP_NS="ip netns exec ltp_ns"
-> ip net add ltp_ns
-> ip li add name ltp_ns_veth1 type veth peer name ltp_ns_veth2
-> ip li set dev ltp_ns_veth1 netns ltp_ns
-> $LTP_NS ip li set lo up
->
-> ip xfrm policy flush
-> ip xfrm state flush
-> ip link set ltp_ns_veth2 down
-> ip route flush dev ltp_ns_veth2
-> ip addr flush dev ltp_ns_veth2
-> ip link set ltp_ns_veth2 up
-> ip addr add 10.0.0.2/24 dev ltp_ns_veth2
->
-> $LTP_NS ip xfrm policy flush
-> $LTP_NS ip xfrm state flush
-> $LTP_NS ip link set ltp_ns_veth1 down
-> $LTP_NS ip route flush dev ltp_ns_veth1
-> $LTP_NS ip addr flush dev ltp_ns_veth1
-> $LTP_NS ip link set ltp_ns_veth1 up
-> $LTP_NS ip addr add 10.0.0.1/24 dev ltp_ns_veth1
->
-> i=552; ip link set dev ltp_ns_veth2 mtu $i; $LTP_NS ip link set dev ltp_ns_veth1 mtu $i # it's enough to set just one of them
->
-> ping -I 10.0.0.2 -c 1 10.0.0.1 -s 61245 # fail
-> ping -I 10.0.0.2 -c 1 10.0.0.1 -s 61244 # ok
->
-> FAIL (iputils-s20121221 from package, using sendmsg())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"\10\0\253_\241\373\0\1\0\0\0\0]wf\330\0\0\0\0\0\6\375\201\20\21\22\23\24\25\26\27"..., 61253}], msg_controllen=0, msg_flags=0}, 0) = 61253
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EINTR (Interrupted system call)
-> --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
-> sigreturn({mask=[]})                    = -1 EINTR (Interrupted system call)
->
-> OK (iputils-s20121221 from package, using sendmsg())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"\10\0\3u\242\266\0\1\0\0\0\0]wgd\0\0\0\0\0\6\340%\20\21\22\23\24\25\26\27"..., 61252}], msg_controllen=0, msg_flags=0}, 0) = 61252
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"E\0\357X2\277\0\0@\1D\343\n\0\0\1\n\0\0\2\0\0\vu\242\266\0\1\0\0\0\0"..., 61380}], msg_controllen=32, [{cmsg_len=32, cmsg_level=SOL_SOCKET, cmsg_type=0x1d /*
-> SCM_??? */, ...}], msg_flags=0}, 0) = 61272
-> write(1, "61252 bytes from 10.0.0.1: icmp_"..., 5961252 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.442 ms
-> ) = 59
->
-> FAIL (current iputils master, using sendto())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendto(3, "\10\0\2=\313\315\0\1\0\0\0\0]vH;\0\0\0\0\0\7\233o\20\21\22\23\24\25\26\27"..., 61253, 0, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, 16) = 61253
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EINTR (Interrupted system call)
-> --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
-> sigreturn({mask=[]})                    = -1 EINTR (Interrupted system call)
->
-> OK (current iputils master, using sendto())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendto(3, "\10\0y\4\313\365\0\1\0\0\0\0]vHw\0\0\0\0\0\4`G\20\21\22\23\24\25\26\27"..., 61252, 0, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, 16) = 61252
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"E\0\357Xc$\0\0@\1\24~\n\0\0\1\n\0\0\2\0\0\201\4\313\365\0\1\0\0\0\0"..., 61380}], msg_controllen=32, [{cmsg_len=32, cmsg_level=SOL_SOCKET, cmsg_type=0x1d /*
-> SCM_??? */, ...}], msg_flags=0}, 0) = 61272
-> write(1, "61252 bytes from 10.0.0.1: icmp_"..., 59) = 59
->
-> Kind regards,
-> Petr
+> On 2019/12/13 下午6:50, Andy Shevchenko wrote:
+> > On Fri, Dec 13, 2019 at 01:17:17PM +0800, chengang@emindsoft.com.cn wrote:
+
+> >>  				aux |= inb(addr[i] + DATA_PORT) << 8;
+> >>  				if (aux != io_address)
+> >>  					continue;
+> > 
+> >> -
+> > 
+> > What the point?
+
+(1)
+
+> >> +#if IS_ENABLED(CONFIG_SERIAL_8250_FINTEK_IRQ_SHARING)
+> >> +				set_icsr(addr[i], k);
+> >> +#endif
+> >>  				fintek_8250_exit_key(addr[i]);
+> >>  				*key = keys[j];
+> >>  				*index = k;
+> >> @@ -179,53 +212,6 @@ static int fintek_8250_base_port(u16 io_address, u8 *key, u8 *index)
+> >>  	return -ENODEV;
+> >>  }
+> >>  
+> 
+> In my case at that time, for fintex irq sharing, it needed additional
+> initinalization, or it could not work well. I wrote the related code
+> based on the fintek data-sheet which was downloaded from internet.
+
+I guess it's an answer to the (1). Though in (1) I simple meant the removal
+of blank line (see, I emphasized the excerpt I'm commenting with blank lines
+before and after).
+
+> >> -static int
+> >> -fintek_8250_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+> > 
+> > Why did you move this function?
+> > It's now not only hard to follow what has been changed, and to review.
+> > 
+> >> --- a/drivers/tty/serial/8250/8250_pnp.c
+> >> +++ b/drivers/tty/serial/8250/8250_pnp.c
+> >> @@ -438,8 +438,13 @@ static int
+> >>  serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+> >>  {
+> >>  	struct uart_8250_port uart, *port;
+> >> -	int ret, line, flags = dev_id->driver_data;
+> >> +	int ret, line, flags;
+> >>  
+> > 
+> 
+> I thought locating the main probe function at the end of the source file
+> was better for normal code reading (maybe it need be a seperate patch).
+
+Yes, it needs to be in a separated (preparatory) patch.
+
+> But if we don't mind, we can still remain its orignal position.
+
+I do mind, sorry. The rule of thumb is one logical change per patch.
+
+> >> +#if IS_BUILTIN(CONFIG_SERIAL_8250_FINTEK)
+> >> +	if (!fintek_8250_probe(dev, dev_id))
+> >> +		return 0;
+> >> +#endif
+> >> +	flags = dev_id->driver_data;
+> > 
+> > Oh, I don't like this.
+> > It needs a bit more refactoring done first.
+> > 
+> > The idea that we are not going to pollute generic driver(s) with quirks anymore
+> > (only when it's really unavoidable).
+> > 
+> 
+> At that time, for me, I could not get any new better ways in a short
+> time, and the issue had to be fixed in time, so the code was not good
+> engough.
+
+It's not an excuse to put hacks in the code that will make maintenance hard.
+The usual case is such situations is that author of the fix do:
+
+- provide a fix (perhaps ugly one)
+- refactor and clean up the code
+
+So at the result we have keep maintainable piece in kernel.
+This is by the way my main motivation to NAK this change.
+
+> At present, Linux version has been changed much, welcome any one to
+> refactor it for current linux version or another related old linux
+> versions if this patch is valuable more or less.
+
+Then it's no go for this patch, sorry.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
