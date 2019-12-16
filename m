@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8EFE20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7354206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520870;
-	bh=GBpi+2jc9TM5PgxUcdAcZ9oSk3/lTAFmaEpX0O4ukaA=;
+	s=default; t=1576520874;
+	bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYwN4zn/GYetk7nLscxBZu5Xb3ZBRDlvsKQnZq25fpomszTmqIDxKFB1I1Fs2ebhR
-	 zg3D5B57VT5e9Ea2EqKIz6RJ1AZtSIVX5PdXNkuzxYPhbWQX5LxAcmJOgAtR2HY+4S
-	 rDkolBU4v5PwQ2z0XQ0ywbJUVIfIaQ+4V6xz3LrA=
+	b=RKhVCsBgG+ehEalYaTk1xUrP4PsmKNpcG68NwSKweXzlNN509uHL/pMvlX4KDnHP2
+	 AsFHJ786ZrMKaVeSmxrntwImo/dKCrWV0eB+ufNBjf1t1RM86DrxOEwaIjiq7992Hp
+	 d0IcTlnGmsn1q5wkjlHtYLBEQsl+jQIoKX9Z6OY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbfLPS1s (ORCPT
+        id S1731373AbfLPSPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:27:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:15:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbfLPSPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:35 -0500
+        id S1731343AbfLPSPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983F6206E0;
-        Mon, 16 Dec 2019 18:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA8AE20717;
+        Mon, 16 Dec 2019 18:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520135;
-        bh=GBpi+2jc9TM5PgxUcdAcZ9oSk3/lTAFmaEpX0O4ukaA=;
+        s=default; t=1576520113;
+        bh=9cbr/GasuS7QSyHWgJSVGLmTNURye9a+SzXMS0zRzyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JccahedrrOWP+wz+oOPkt3dmSA0ww0CT5mxly/9hMDoN2Ykg39sa+ctrc0Be5Kg7f
-         xZGmQQxXUWjVjjkF338EbhvRTWx52TPOMkDVmGjE9aMQxxQKRS1c8z0Yli+uJQaLjP
-         g5zn0RVYHEXK0NnQ2DQiuRrcOMDFPd2hV0McwblI=
+        b=DXaCKEDaGYQX4EeFlpaGh51gHZmtT5SWqyvm35QZp8SEueF/ZT4F6boz6aZEprZGm
+         kYzmOUYiOpP6pjSApFVDQmUUUZ/l72McNrqwGwYQ71ou38gsV37Y36z0JfUiaiuuuh
+         5ldNwX8rgfmfwx4VP0Bomesb7InKi/ok2lqeYWEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Brunberg <ingo_brunberg@web.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.4 003/177] nvme: Namepace identification descriptor list is optional
-Date:   Mon, 16 Dec 2019 18:47:39 +0100
-Message-Id: <20191216174811.740598147@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 021/177] staging: rtl8188eu: fix interface sanity check
+Date:   Mon, 16 Dec 2019 18:47:57 +0100
+Message-Id: <20191216174817.345744414@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,42 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 22802bf742c25b1e2473c70b3b99da98af65ef4d upstream.
+commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
 
-Despite NVM Express specification 1.3 requires a controller claiming to
-be 1.3 or higher implement Identify CNS 03h (Namespace Identification
-Descriptor list), the driver doesn't really need this identification in
-order to use a namespace. The code had already documented in comments
-that we're not to consider an error to this command.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Return success if the controller provided any response to an
-namespace identification descriptors command.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 538af88ea7d9de24 ("nvme: make nvme_report_ns_ids propagate error back")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205679
-Reported-by: Ingo Brunberg <ingo_brunberg@web.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: stable@vger.kernel.org # 5.4+
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
+Cc: stable <stable@vger.kernel.org>     # 3.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1727,6 +1727,8 @@ static int nvme_report_ns_ids(struct nvm
- 		if (ret)
- 			dev_warn(ctrl->device,
- 				 "Identify Descriptors failed (%d)\n", ret);
-+		if (ret > 0)
-+			ret = 0;
- 	}
- 	return ret;
- }
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -70,7 +70,7 @@ static struct dvobj_priv *usb_dvobj_init
+ 	phost_conf = pusbd->actconfig;
+ 	pconf_desc = &phost_conf->desc;
+ 
+-	phost_iface = &usb_intf->altsetting[0];
++	phost_iface = usb_intf->cur_altsetting;
+ 	piface_desc = &phost_iface->desc;
+ 
+ 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
 
 
