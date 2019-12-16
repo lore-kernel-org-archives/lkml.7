@@ -2,138 +2,152 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F56C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAFBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19D120717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hRiLsi+0"
+	by mail.kernel.org (Postfix) with ESMTP id 39DF1205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfLPPYl (ORCPT
+        id S1728413AbfLPPZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:24:41 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5140 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfLPPYk (ORCPT
+        Mon, 16 Dec 2019 10:25:12 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:50177 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbfLPPZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:24:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df7a19b0000>; Mon, 16 Dec 2019 07:24:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Dec 2019 07:24:38 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 16 Dec 2019 07:24:38 -0800
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 15:24:37 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 7D6A842762; Mon, 16 Dec 2019 17:24:35 +0200 (EET)
-Date:   Mon, 16 Dec 2019 17:24:35 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mperttunen@nvidia.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pgaikwad@nvidia.com>,
-        <mturquette@baylibre.com>, <horms+renesas@verge.net.au>,
-        <Jisheng.Zhang@synaptics.com>, <krzk@kernel.org>, <arnd@arndb.de>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-Message-ID: <20191216152435.GD28289@pdeschrijver-desktop.Nvidia.com>
-References: <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
- <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
- <0930a710-174b-859b-294c-e9f81f6a3b5e@gmail.com>
- <20191216122005.GB28289@pdeschrijver-desktop.Nvidia.com>
- <53653719-f8e5-f6d1-a1d1-e53c7ccd7636@gmail.com>
- <20191216151132.GC28289@pdeschrijver-desktop.Nvidia.com>
+        Mon, 16 Dec 2019 10:25:12 -0500
+Received: by mail-io1-f72.google.com with SMTP id e13so5969068iob.17
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 07:25:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=t7KLeeGHAQU+IfhPXlUYZnaYXa0avOmf8P/RRgGivPY=;
+        b=qj1qHwqbtP3UeUYG8YdTvQBgSNqvvsCxYA9UbBgqcwAvVCKezHDnBK2qcIET4X0Qg3
+         AjtJ86OIfR/uWDWYW33zvgMSLjMCKEkTpeC2g1Xe+G4Lq2+yZWAFo3oHswgHZJUvsZH+
+         kFX/bQVdFQRr4XzG8pDveSj0FqRPOONAT+MZmj/ijIjlCCY7q37fgQHcp2J5OqeaJ8al
+         Qks5LJxN6ujUz4DwAl0CkH4X580jos+dWxomy+hwlUtcOqbsCVBtbwyvHi7Txgv4Tp7w
+         BRrFz7tIfFWK9s3+GR2TdZOBgazvUzhu1zh7Y2SiJkHhf+1GjGo6Own82fxyk2HzP0If
+         HhDQ==
+X-Gm-Message-State: APjAAAVrZcylxgqeASivp5qZbVRnaiJSGqSQ0FwCytP3TML2bJYdgtMu
+        tUN7152dOm/cYIp/OHVYr5/t8m4U71bdG2wIk1c7L6icQZ91
+X-Google-Smtp-Source: APXvYqxIG5w0KqPgovhJhP5e7TaZ7DIVJV+bqbUePz2yqOaSRDfukAuXlxhWqIajh2m81bDfCxk7jVklYLCx7AZl/LWfB7RYdGOO
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191216151132.GC28289@pdeschrijver-desktop.Nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576509852; bh=pWpE3o2tiFHLJrLl2PwAQ76GOSg2rnsHi4e46CsvdYo=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=hRiLsi+0bgoX0LbYPMmHbTnHOo4XYITpxTxVLSJvqrPn4Y4HaOUe5qOtNOX6K/HwQ
-         IakYnabL3/kvgSPFbR4DDxhCx2/6ZXC+eapBKe1/HspBvR8b8WgpoYPT2z8N0YH2/s
-         LVrKCk4tMYRPtg8ODqcRTIoXpAjVpjuJ/18a5uWW3qIObSEod0rUHqhQbZ4Jwv3gG0
-         ylTDc1ZUpulC1Zmbm3ucygH2kyvW+Kmj31wB5CqubFkD/jfIsDmd4ZsmhWk8PJWC7h
-         XjtKy4D/SFcO/J6QdnLgB+gumP5lBNke494+Qvh8jMLnRBaTmLGgMeo7+oMenxEjfH
-         sgQseh+Itf0SQ==
+X-Received: by 2002:a92:901:: with SMTP id y1mr11977034ilg.274.1576509911135;
+ Mon, 16 Dec 2019 07:25:11 -0800 (PST)
+Date:   Mon, 16 Dec 2019 07:25:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003cffc30599d3d1a0@google.com>
+Subject: kernel BUG at arch/x86/kvm/mmu/mmu.c:LINE!
+From:   syzbot <syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 05:11:32PM +0200, Peter De Schrijver wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Mon, Dec 16, 2019 at 05:23:23PM +0300, Dmitry Osipenko wrote:
-> > >> Could you please clarify what do you mean by the "existing users"?
-> > >> AFAIK, nothing in kernel uses mux clocks.
-> > >
-> > > The DT clk bindings allow for parent initialization, so it's certainly
-> > > possible there are some DTs which rely on this. We promised to never
-> > > break the bindings, which changing to 1 clock would do.
-> >
-> > What about this variant:
-> >
-> >   1. Keep the old CaR code in place.
-> >
-> >   2. Make CaR driver to scan whole device-tree for the legacy PMC clocks.
-> >
-> >   3. If legacy clock is found, then register PMC clocks from CaR.
-> >
-> >   4. If legacy clocks are not found, then don't register PMC clocks from
-> > CaR.
-> >
-> >   5. Add clocks support to the PMC driver and only register them if
-> > legacy clocks are not registered by CaR.
-> >
-> > Now both old and new DTBs can co-exist and work, everyone happy.
-> 
-> That seems even more work.. Today the only upstream user is audio.
-> Currently these clocks are setup by the CAR clock driver. However
-> as they will move to the PMC driver, this mechanism cannot be used.
-> Hence the plan is to modify the audio driver to check for the PMC clocks
-> in DT and if they are not available use the CAR clocks as fallback.
-> The whole reason the clocks move to the PMC driver, is that when PMC
-> becomes secure, all accesses have to go via an SMC. Given that we don't
-> want SMCs all over the Tegra drivers, it's a good opportunity to move
-> the PMC clock handling into the PMC driver. PMC can be secure with both
-> 'new' and old DTs, so just registering the PMC clocks in the CAR driver
-> if legacy clocks are found in the DT, won't always work.
-> 
+Hello,
 
-Given the audio driver needs to change anyway, we can indeed use 1 clock
-per PMC clk_out_ rather than 2 as we have today. As this models the hw
-slightly better, I think we should do that as you suggested.
+syzbot found the following crash on:
 
-Peter.
+HEAD commit:    ae4b064e Merge tag 'afs-fixes-20191211' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=149c0cfae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=c9d1fb51ac9d0d10c39d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a97b7ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15128396e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at arch/x86/kvm/mmu/mmu.c:3416!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9988 Comm: syz-executor218 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:transparent_hugepage_adjust+0x4c8/0x550  
+arch/x86/kvm/mmu/mmu.c:3416
+Code: ff ff e8 eb 5d 5e 00 48 8b 45 b8 48 83 e8 01 48 89 45 c8 e9 a3 fd ff  
+ff 48 89 df e8 c2 f8 9b 00 e9 7b fb ff ff e8 c8 5d 5e 00 <0f> 0b 48 8b 7d  
+c8 e8 ad f8 9b 00 e9 ba fc ff ff 49 8d 7f 30 e8 7f
+RSP: 0018:ffffc90001f27678 EFLAGS: 00010293
+RAX: ffff8880a875a200 RBX: ffffc90001f27768 RCX: ffffffff8116cc87
+RDX: 0000000000000000 RSI: ffffffff8116cdc8 RDI: 0000000000000007
+RBP: ffffc90001f276c0 R08: ffff8880a875a200 R09: ffffed1010d79682
+R10: ffffed1010d79681 R11: ffff888086bcb40b R12: 00000000000001d3
+R13: 0000000000094dd3 R14: 0000000000094dd1 R15: 0000000000000000
+FS:  0000000000fff880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009af1b000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  tdp_page_fault+0x580/0x6a0 arch/x86/kvm/mmu/mmu.c:4315
+  kvm_mmu_page_fault+0x1dd/0x1800 arch/x86/kvm/mmu/mmu.c:5539
+  handle_ept_violation+0x259/0x560 arch/x86/kvm/vmx/vmx.c:5163
+  vmx_handle_exit+0x29f/0x1730 arch/x86/kvm/vmx/vmx.c:5921
+  vcpu_enter_guest+0x334f/0x6110 arch/x86/kvm/x86.c:8290
+  vcpu_run arch/x86/kvm/x86.c:8354 [inline]
+  kvm_arch_vcpu_ioctl_run+0x430/0x17b0 arch/x86/kvm/x86.c:8561
+  kvm_vcpu_ioctl+0x4dc/0xfc0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2847
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440359
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc16334278 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440359
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000006
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401be0
+R13: 0000000000401c70 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace e1a5b9c09fef2e33 ]---
+RIP: 0010:transparent_hugepage_adjust+0x4c8/0x550  
+arch/x86/kvm/mmu/mmu.c:3416
+Code: ff ff e8 eb 5d 5e 00 48 8b 45 b8 48 83 e8 01 48 89 45 c8 e9 a3 fd ff  
+ff 48 89 df e8 c2 f8 9b 00 e9 7b fb ff ff e8 c8 5d 5e 00 <0f> 0b 48 8b 7d  
+c8 e8 ad f8 9b 00 e9 ba fc ff ff 49 8d 7f 30 e8 7f
+RSP: 0018:ffffc90001f27678 EFLAGS: 00010293
+RAX: ffff8880a875a200 RBX: ffffc90001f27768 RCX: ffffffff8116cc87
+RDX: 0000000000000000 RSI: ffffffff8116cdc8 RDI: 0000000000000007
+RBP: ffffc90001f276c0 R08: ffff8880a875a200 R09: ffffed1010d79682
+R10: ffffed1010d79681 R11: ffff888086bcb40b R12: 00000000000001d3
+R13: 0000000000094dd3 R14: 0000000000094dd1 R15: 0000000000000000
+FS:  0000000000fff880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009af1b000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
