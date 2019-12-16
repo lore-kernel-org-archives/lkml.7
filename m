@@ -2,270 +2,178 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE1C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE9BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5151F21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF5021582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VgOK8j7t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kdLKoTmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLPUvs (ORCPT
+        id S1726828AbfLPU4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:51:48 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34252 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727311AbfLPUvq (ORCPT
+        Mon, 16 Dec 2019 15:56:34 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50890 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfLPU4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:51:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576529505;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EPtGGtbmK8Ua4ihCISYN9ulc/oNUQiVsk18eHaZb2Ok=;
-        b=VgOK8j7ttnXwYUbvSiO0vL4FQx38uhLu11uiQ4qLKBNA3AA4Xcz4lFis6IXiKnlbmlU9U5
-        2iVrKEHX6JSkXO7E0a/s6KL02M3jglDWRLijLrr22kRbVQE4yOfME8FgRc7KSZRlbwPWtS
-        ITo2vPDOSaQFVwZIPtBfFOcsbBPJ62Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-kAMdGsJIPkyoA21YfKjQVw-1; Mon, 16 Dec 2019 15:51:41 -0500
-X-MC-Unique: kAMdGsJIPkyoA21YfKjQVw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12B67800D5B;
-        Mon, 16 Dec 2019 20:51:40 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D35201001B00;
-        Mon, 16 Dec 2019 20:51:37 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 5/5] drm/i915/dsi: Control panel and backlight enable GPIOs on BYT
-Date:   Mon, 16 Dec 2019 21:51:22 +0100
-Message-Id: <20191216205122.1850923-6-hdegoede@redhat.com>
-In-Reply-To: <20191216205122.1850923-1-hdegoede@redhat.com>
-References: <20191216205122.1850923-1-hdegoede@redhat.com>
+        Mon, 16 Dec 2019 15:56:34 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGKuS7U072912;
+        Mon, 16 Dec 2019 14:56:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576529788;
+        bh=HbeVMB6LPXMwO1eiEhfGjS8GhC3Lp6KRPVkA0Q8dXnY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=kdLKoTmcSpymDQMLowlHoKCYmsXTwfGshaG2OEOFQKxZiN5rudDLep+33WaUmpcFc
+         hPqcYwThgoJrQJsgVwRstNBff18Py4XL+obGQVu1PecRw+NmKYpHC1v+ywuKTakxwD
+         oog2eB7EqBM8SbO9V76DAT7Y5W4EevNllZa5MOHk=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGKuSgk115333
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 14:56:28 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 14:56:27 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 14:56:27 -0600
+Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGKuR2c102326;
+        Mon, 16 Dec 2019 14:56:27 -0600
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
+ <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
+ <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
+ <20191119183247.GN35479@atomide.com>
+ <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+ <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+ <20191119194425.GQ35479@atomide.com>
+ <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+Message-ID: <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+Date:   Mon, 16 Dec 2019 15:56:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
-do not control the LCD panel- and backlight-enable GPIOs. So far, when
-the VBT indicates we should use the SoC for backlight control, we have
-been relying on these GPIOs being configured as output and driven high by
-the Video BIOS (GOP) when it initializes the panel.
+On 11/19/19 2:59 PM, Andrew F. Davis wrote:
+> On 11/19/19 2:44 PM, Tony Lindgren wrote:
+>> * Andrew F. Davis <afd@ti.com> [191119 19:36]:
+>>> On 11/19/19 2:20 PM, Tony Lindgren wrote:
+>>>> * Andrew F. Davis <afd@ti.com> [191119 19:13]:
+>>>>> On 11/19/19 2:07 PM, Tony Lindgren wrote:
+>>>>>> * Andrew F. Davis <afd@ti.com> [191119 18:51]:
+>>>>>>> On 11/19/19 1:32 PM, Tony Lindgren wrote:
+>>>>>>>> It would allow us to completely change over to using
+>>>>>>>> arm_smccc_smc() and forget the custom calls.
+>>>>>>>
+>>>>>>> We would need more than just the r12 quirk to replace all our custom SMC
+>>>>>>> handlers, we would need quirks for omap_smc2 which puts process ID in r1
+>>>>>>> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
+>>>>>>> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
+>>>>>>> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
+>>>>>>> legacy ROM no matter how much we hack at it :(
+>>>>>>
+>>>>>> We would just have omap_smc2() call arm_smccc_smc() and in that
+>>>>>> case. And omap_smc2() would still deal with saving and restoring
+>>>>>> the registers.
+>>>>>
+>>>>> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
+>>>>> function, all it needs to do after loading the registers and saving the
+>>>>> right ones is issue an "smc #0" instruction, why would we want to
+>>>>> instead call into some other function to re-save registers and issue the
+>>>>> exact same instruction?
+>>>>
+>>>> To use Linux generic API for smc calls where possible.
+>>>
+>>> But we are not using generic API calls, we are using omap_smcx() which
+>>> cannot call into arm_smccc_smc(). For all the above reasons plus
+>>> arm_smccc_smc() uses r12 to save the stack pointer, our ROM expects r12
+>>> to store the function ID.
+>>
+>> Saving and restoring r12 could be handled by the arm_smccc_smc() quirk
+>> for the non-optee case.
+>>
+>> Then we could get rid of omap_smc1() and arm_smccc_smc() should work
+>> for the optee case and non-optee case, right.
+>>
+> 
+> 
+> Yes, we could have both cases working if we could get the quirk in.
+> 
+> 
+>>>>>> Certainly the wrapper functions calling arm_smccc_smc() can deal
+>>>>>> with r12 too if the r12-quirk version and the plain version are
+>>>>>> never needed the same time on a booted SoC.
+>>>>>>
+>>>>>> Are they ever needed the same time on a booted SoC or not?
+>>
+>>> They should not be needed at the same time, either OP-TEE is on the
+>>> secure side or ROM is there.
+>>
+>> OK thanks. So we could just modify the code dynamically on boot
+>> based on if optee is found or not. The quirk could be done along
+>> the lines of the qcom quirk but only for the non-optee case:
+>>
+> 
+> 
+> We wouldn't have to patch anything if we could get the quirk in. One has
+> to state they wish to use the quirk version in a structure passed into
+> arm_smccc_smc_quirk(), in which case for all legacy user we just fill
+> out this quirk struct. OP-TEE uses the same arm_smccc_smc() but without
+> the quirk struct and so it uses the compliant call.
+> 
+> The issue is still the same, I tried adding this, I got NAKd, if you
+> want to convince Mark to change his mind and allow us the quirk then we
+> can go down this path. Otherwise this will remain a dead end.
+> 
 
-This does not work when the device is booted with a HDMI monitor connecte=
-d
-as then the GOP will initialize the HDMI instead of the panel, leaving th=
-e
-panel black, even though the i915 driver tries to output an image to it.
 
-Likewise on some device-models when the GOP does not initialize the DSI
-panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
-of muxing it to the PWM controller.
+Hi Tony,
 
-This commit makes the DSI code control the SoC GPIOs for panel- and
-backlight-enable on BYT, when the VBT indicates the SoC should be used
+Looks like the TI quirk idea is not moving forward, even the QCOM quirk
+looks like it may get kicked out. arm_smccc_smc() will remain only for
+SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
+too opposed upstream.
 
-for backlight control. It also ensures that the PWM0 pin is muxed to the
-PWM controller in this case.
+Either way this patch would still be valid as when OP-TEE is present
+then arm_smccc_smc() will be the right call to make, how we handle the
+legacy calls can be sorted out later if a generic SMC call is implemented.
 
-This fixes the LCD panel not lighting up on various devices when booted
-with a HDMI monitor connected. This has been tested to fix this on the
-following devices:
+Thanks,
+Andrew
 
-Peaq C1010
-Point of View MOBII TAB-P800W
-Point of View MOBII TAB-P1005W
-Terra Pad 1061
-Yours Y8W81
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/i915/display/intel_dsi.h     |  3 +-
- drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 64 ++++++++++++++++++++
- 2 files changed, 66 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i=
-915/display/intel_dsi.h
-index 675771ea91aa..7481a5aa3084 100644
---- a/drivers/gpu/drm/i915/display/intel_dsi.h
-+++ b/drivers/gpu/drm/i915/display/intel_dsi.h
-@@ -45,8 +45,9 @@ struct intel_dsi {
- 	struct intel_dsi_host *dsi_hosts[I915_MAX_PORTS];
- 	intel_wakeref_t io_wakeref[I915_MAX_PORTS];
-=20
--	/* GPIO Desc for CRC based Panel control */
-+	/* GPIO Desc for panel and backlight control */
- 	struct gpio_desc *gpio_panel;
-+	struct gpio_desc *gpio_backlight;
-=20
- 	struct intel_connector *attached_connector;
-=20
-diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/d=
-rm/i915/display/intel_dsi_vbt.c
-index 89558ccf79c8..0032161e0f76 100644
---- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-+++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-@@ -27,6 +27,8 @@
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- #include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/machine.h>
- #include <linux/slab.h>
-=20
- #include <asm/intel-mid.h>
-@@ -525,11 +527,15 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *=
-intel_dsi,
- {
- 	if (seq_id =3D=3D MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
- 		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
-+	if (seq_id =3D=3D MIPI_SEQ_BACKLIGHT_ON && intel_dsi->gpio_backlight)
-+		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 1);
-=20
- 	intel_dsi_vbt_exec(intel_dsi, seq_id);
-=20
- 	if (seq_id =3D=3D MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
- 		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
-+	if (seq_id =3D=3D MIPI_SEQ_BACKLIGHT_OFF && intel_dsi->gpio_backlight)
-+		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 0);
- }
-=20
- void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
-@@ -688,6 +694,8 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, =
-u16 panel_id)
- /*
-  * On some BYT/CHT devs some sequences are incomplete and we need to man=
-ually
-  * control some GPIOs. We need to add a GPIO lookup table before we get =
-these.
-+ * If the GOP did not initialize the panel (HDMI inserted) we may need t=
-o also
-+ * change the pinmux for the SoC's PWM0 pin from GPIO to PWM.
-  */
- static struct gpiod_lookup_table pmic_panel_gpio_table =3D {
- 	/* Intel GFX is consumer */
-@@ -699,23 +707,69 @@ static struct gpiod_lookup_table pmic_panel_gpio_ta=
-ble =3D {
- 	},
- };
-=20
-+static struct gpiod_lookup_table soc_panel_gpio_table =3D {
-+	.dev_id =3D "0000:00:02.0",
-+	.table =3D {
-+		GPIO_LOOKUP("INT33FC:01", 10, "backlight", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("INT33FC:01", 11, "panel", GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static const struct pinctrl_map soc_pwm_pinctrl_map[] =3D {
-+	PIN_MAP_MUX_GROUP("0000:00:02.0", "soc_pwm0", "INT33FC:00",
-+			  "pwm0_grp", "pwm"),
-+};
-+
- void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_=
-on)
- {
- 	struct drm_device *dev =3D intel_dsi->base.base.dev;
- 	struct drm_i915_private *dev_priv =3D to_i915(dev);
- 	struct mipi_config *mipi_config =3D dev_priv->vbt.dsi.config;
- 	enum gpiod_flags flags =3D panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW=
-;
-+	bool want_backlight_gpio =3D false;
-+	bool want_panel_gpio =3D false;
-+	struct pinctrl *pinctrl;
-+	int ret;
-=20
- 	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
- 	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC) {
- 		gpiod_add_lookup_table(&pmic_panel_gpio_table);
-+		want_panel_gpio =3D true;
-+	}
-+
-+	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc =3D=3D PPS_BLC_SOC)=
- {
-+		gpiod_add_lookup_table(&soc_panel_gpio_table);
-+		want_panel_gpio =3D true;
-+		want_backlight_gpio =3D true;
-=20
-+		/* Ensure PWM0 pin is muxed as PWM instead of GPIO */
-+		ret =3D pinctrl_register_mappings(soc_pwm_pinctrl_map,
-+					     ARRAY_SIZE(soc_pwm_pinctrl_map));
-+		if (ret)
-+			DRM_ERROR("Failed to register pwm0 pinmux mapping\n");
-+
-+		pinctrl =3D devm_pinctrl_get_select(dev->dev, "soc_pwm0");
-+		if (IS_ERR(pinctrl))
-+			DRM_ERROR("Failed to set pinmux to PWM\n");
-+	}
-+
-+	if (want_panel_gpio) {
- 		intel_dsi->gpio_panel =3D gpiod_get(dev->dev, "panel", flags);
- 		if (IS_ERR(intel_dsi->gpio_panel)) {
- 			DRM_ERROR("Failed to own gpio for panel control\n");
- 			intel_dsi->gpio_panel =3D NULL;
- 		}
- 	}
-+
-+	if (want_backlight_gpio) {
-+		intel_dsi->gpio_backlight =3D
-+			gpiod_get(dev->dev, "backlight", flags);
-+		if (IS_ERR(intel_dsi->gpio_backlight)) {
-+			DRM_ERROR("Failed to own gpio for backlight control\n");
-+			intel_dsi->gpio_backlight =3D NULL;
-+		}
-+	}
- }
-=20
- void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
-@@ -729,7 +783,17 @@ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *in=
-tel_dsi)
- 		intel_dsi->gpio_panel =3D NULL;
- 	}
-=20
-+	if (intel_dsi->gpio_backlight) {
-+		gpiod_put(intel_dsi->gpio_backlight);
-+		intel_dsi->gpio_backlight =3D NULL;
-+	}
-+
- 	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
- 	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC)
- 		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
-+
-+	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc =3D=3D PPS_BLC_SOC)=
- {
-+		pinctrl_unregister_mappings(soc_pwm_pinctrl_map);
-+		gpiod_remove_lookup_table(&soc_panel_gpio_table);
-+	}
- }
---=20
-2.23.0
-
+> Andrew
+> 
+> 
+>> $ git grep -C10 ARM_SMCCC_QUIRK_QCOM_A6
+>>
+>> Regards,
+>>
+>> Tony
+>>
