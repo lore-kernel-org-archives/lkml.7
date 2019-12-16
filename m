@@ -2,205 +2,445 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05014C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59927C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF48620684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3FD20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="u5JGSR7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbfLPN4d (ORCPT
+        id S1728008AbfLPN5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:56:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:19359 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727609AbfLPN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:56:33 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 05:56:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="227118511"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 16 Dec 2019 05:56:28 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Dec 2019 15:56:27 +0200
-Date:   Mon, 16 Dec 2019 15:56:27 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
- lookup from mfd to the i915 driver
-Message-ID: <20191216135627.GS1208@intel.com>
-References: <20191215163810.52356-1-hdegoede@redhat.com>
- <20191215163810.52356-5-hdegoede@redhat.com>
+        Mon, 16 Dec 2019 08:57:14 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:59926 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbfLPN5N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:57:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576504630; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W+6FWvfy4DCYdNXvWOb8dl37HhLH88Anxlx3K9JQ+AA=;
+        b=u5JGSR7a5JvvS2+BZGD6t84AinGBl2UDHu8o2O3pUCcdcM+RYaFs+AA5GBHNL9ChlA9ADj
+        jlOtnvZdoknYYB5qGVdLTCEtQH/pIarYTogdydXFHtjnoJ+1lFEbc9wkdAXynbWSlgJKWe
+        JF1dPr2g69CiX7wFrFL2bvOFobl8BAg=
+Date:   Mon, 16 Dec 2019 14:57:05 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 2/2] I2C: JZ4780: Add support for the X1000.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mark.rutland@arm.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 2374286503@qq.com
+Message-Id: <1576504625.3.4@crapouillou.net>
+In-Reply-To: <1576490771-120353-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1576490771-120353-4-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 05:38:09PM +0100, Hans de Goede wrote:
-> Move the Crystal Cove PMIC panel GPIO lookup-table from
-> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
-> 
-> The moved looked-up table is adding a GPIO lookup to the i915 PCI
-> device and the GPIO subsys allows only one lookup table per device,
-> 
-> The intel_soc_pmic_core.c code only adds lookup-table entries for the
-> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
-> able to access some GPIOs on the SoC itself, which requires entries for
-> these GPIOs in the lookup-table.
-> 
-> Since the lookup-table is attached to the i915 PCI device it really
-> should be part of the i915 driver, this will also allow us to extend
-> it with GPIOs from other sources when necessary.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Zhou,
+
+
+Le lun., d=C3=A9c. 16, 2019 at 18:06, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
+jie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add support for probing i2c driver on the X1000 Soc from Ingenic.
+> call the corresponding fifo parameter according to the device
+> model obtained from the devicetree.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 > ---
->  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
->  drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
->  2 files changed, 22 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> index 027970348b22..847f04eec2a1 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-> @@ -25,6 +25,7 @@
+>=20
+> Notes:
+>     v1->v2:
+>     Add code to check device_get_match_data(), if it return a NULL=20
+> ptr,
+>     then print an error message and return -ENODEV.
+>=20
+>  drivers/i2c/busses/i2c-jz4780.c | 155=20
+> +++++++++++++++++++++++++++++-----------
+>  1 file changed, 115 insertions(+), 40 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c=20
+> b/drivers/i2c/busses/i2c-jz4780.c
+> index 25dcd73..f07a07c 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2006 - 2009 Ingenic Semiconductor Inc.
+>   * Copyright (C) 2015 Imagination Technologies
+> + * Copyright (C) 2019 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
+> <zhouyanjie@wanyeetech.com>
 >   */
->  
->  #include <linux/gpio/consumer.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/mfd/intel_soc_pmic.h>
->  #include <linux/slab.h>
->  
-> @@ -686,8 +687,18 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
->  
->  /*
->   * On some BYT/CHT devs some sequences are incomplete and we need to manually
-> - * control some GPIOs.
-> + * control some GPIOs. We need to add a GPIO lookup table before we get these.
->   */
-> +static struct gpiod_lookup_table pmic_panel_gpio_table = {
-> +	/* Intel GFX is consumer */
-> +	.dev_id = "0000:00:02.0",
-> +	.table = {
-> +		/* Panel EN/DISABLE */
-> +		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
-> +		{ },
-> +	},
-> +};
-
-Feels like a failure in abstraction to have these irrelevant details
-exposed on the consumer side. Also slightly concerned that someone
-refactoring things in the pmic driver could now break this without
-realizing it. But if people want it done this way I can live with it.
-
-> +
->  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  {
->  	struct drm_device *dev = intel_dsi->base.base.dev;
-> @@ -697,6 +708,8 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  
->  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
->  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
-> +		gpiod_add_lookup_table(&pmic_panel_gpio_table);
-> +
->  		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
->  		if (IS_ERR(intel_dsi->gpio_panel)) {
->  			DRM_ERROR("Failed to own gpio for panel control\n");
-> @@ -707,8 +720,16 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->  
->  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
->  {
-> +	struct drm_device *dev = intel_dsi->base.base.dev;
-> +	struct drm_i915_private *dev_priv = to_i915(dev);
-> +	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
-> +
->  	if (intel_dsi->gpio_panel) {
->  		gpiod_put(intel_dsi->gpio_panel);
->  		intel_dsi->gpio_panel = NULL;
->  	}
-> +
-> +	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
-> +	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
-
-Needless parens here as well.
-
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-> +		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
->  }
-> diff --git a/drivers/mfd/intel_soc_pmic_core.c b/drivers/mfd/intel_soc_pmic_core.c
-> index 47188df3080d..ddd64f9e3341 100644
-> --- a/drivers/mfd/intel_soc_pmic_core.c
-> +++ b/drivers/mfd/intel_soc_pmic_core.c
-> @@ -9,8 +9,6 @@
->   */
->  
->  #include <linux/acpi.h>
-> -#include <linux/gpio/consumer.h>
-> -#include <linux/gpio/machine.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
+>=20
+>  #include <linux/bitops.h>
+> @@ -17,6 +18,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
 >  #include <linux/module.h>
-> @@ -25,17 +23,6 @@
->  #define BYT_CRC_HRV		2
->  #define CHT_CRC_HRV		3
->  
-> -/* Lookup table for the Panel Enable/Disable line as GPIO signals */
-> -static struct gpiod_lookup_table panel_gpio_table = {
-> -	/* Intel GFX is consumer */
-> -	.dev_id = "0000:00:02.0",
-> -	.table = {
-> -		/* Panel EN/DISABLE */
-> -		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
-> -		{ },
-> -	},
-> -};
-> -
->  /* PWM consumed by the Intel GFX */
->  static struct pwm_lookup crc_pwm_lookup[] = {
->  	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL),
-> @@ -96,9 +83,6 @@ static int intel_soc_pmic_i2c_probe(struct i2c_client *i2c,
->  	if (ret)
->  		dev_warn(dev, "Can't enable IRQ as wake source: %d\n", ret);
->  
-> -	/* Add lookup table binding for Panel Control to the GPIO Chip */
-> -	gpiod_add_lookup_table(&panel_gpio_table);
-> -
->  	/* Add lookup table for crc-pwm */
->  	pwm_add_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
->  
-> @@ -121,9 +105,6 @@ static int intel_soc_pmic_i2c_remove(struct i2c_client *i2c)
->  
->  	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
->  
-> -	/* Remove lookup table for Panel Control from the GPIO Chip */
-> -	gpiod_remove_lookup_table(&panel_gpio_table);
-> -
->  	/* remove crc-pwm lookup table */
->  	pwm_remove_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
->  
-> -- 
-> 2.23.0
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+> @@ -55,6 +57,7 @@
+>  #define JZ4780_I2C_ACKGC	0x98
+>  #define JZ4780_I2C_ENSTA	0x9C
+>  #define JZ4780_I2C_SDAHD	0xD0
+> +#define X1000_I2C_SDAHD		0x7C
+>=20
+>  #define JZ4780_I2C_CTRL_STPHLD		BIT(7)
+>  #define JZ4780_I2C_CTRL_SLVDIS		BIT(6)
+> @@ -73,6 +76,8 @@
+>  #define JZ4780_I2C_STA_TFNF		BIT(1)
+>  #define JZ4780_I2C_STA_ACT		BIT(0)
+>=20
+> +#define X1000_I2C_DC_STOP		BIT(9)
+> +
+>  static const char * const jz4780_i2c_abrt_src[] =3D {
+>  	"ABRT_7B_ADDR_NOACK",
+>  	"ABRT_10ADDR1_NOACK",
+> @@ -130,18 +135,33 @@ static const char * const jz4780_i2c_abrt_src[]=20
+> =3D {
+>  #define JZ4780_I2CFLCNT_ADJUST(n)	(((n) - 1) < 8 ? 8 : ((n) - 1))
+>=20
+>  #define JZ4780_I2C_FIFO_LEN	16
+> -#define TX_LEVEL		3
+> -#define RX_LEVEL		(JZ4780_I2C_FIFO_LEN - TX_LEVEL - 1)
+> +
+> +#define X1000_I2C_FIFO_LEN	64
+>=20
+>  #define JZ4780_I2C_TIMEOUT	300
+>=20
+>  #define BUFSIZE 200
+>=20
+> +enum ingenic_i2c_version {
+> +	ID_JZ4780,
+> +	ID_X1000,
+> +};
+> +
+> +/* ingenic_i2c_config: SoC specific config data. */
+> +struct ingenic_i2c_config {
+> +	enum ingenic_i2c_version version;
+> +
+> +	int fifosize;
+> +	int tx_level;
+> +	int rx_level;
+> +};
+> +
+>  struct jz4780_i2c {
+>  	void __iomem		*iomem;
+>  	int			 irq;
+>  	struct clk		*clk;
+>  	struct i2c_adapter	 adap;
+> +	const struct ingenic_i2c_config *cdata;
+>=20
+>  	/* lock to protect rbuf and wbuf between xfer_rd/wr and irq handler=20
+> */
+>  	spinlock_t		lock;
+> @@ -340,11 +360,18 @@ static int jz4780_i2c_set_speed(struct=20
+> jz4780_i2c *i2c)
+>=20
+>  	if (hold_time >=3D 0) {
+>  		/*i2c hold time enable */
+> -		hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		if (i2c->cdata->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, hold_time);
+> +		else {
 
--- 
-Ville Syrjälä
-Intel
+If only one branch of a conditional statement is a single statement,=20
+then you should use braces in both branches.
+
+See:=20
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html#placing-bra=
+ces-and-spaces
+
+
+> +			hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		}
+>  	} else {
+>  		/* disable hold time */
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+> +		if (i2c->cdata->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, 0);
+> +		else
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+>  	}
+>=20
+>  	return 0;
+> @@ -359,9 +386,11 @@ static int jz4780_i2c_cleanup(struct jz4780_i2c=20
+> *i2c)
+>  	spin_lock_irqsave(&i2c->lock, flags);
+>=20
+>  	/* can send stop now if need */
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	/* disable all interrupts first */
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0);
+> @@ -399,11 +428,18 @@ static int jz4780_i2c_prepare(struct jz4780_i2c=20
+> *i2c)
+>  	return jz4780_i2c_enable(i2c);
+>  }
+>=20
+> -static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c, int=20
+> cmd_count)
+> +static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c,
+> +				       int cmd_count, int cmd_left)
+
+Sorry to be pedantic ;) but this line is not properly indented. You=20
+should indent with tab charaters (configure your IDE for one tab =3D=3D 4=20
+spaces) as much as possible, then use spaces to align the first word.
+
+With these two things fixed:
+Acked-by: Paul Cercueil <paul@crapouillou.net>
+
+Cheers,
+-Paul
+
+
+>  {
+>  	int i;
+>=20
+> -	for (i =3D 0; i < cmd_count; i++)
+> +	for (i =3D 0; i < cmd_count - 1; i++)
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+> +
+> +	if ((cmd_left =3D=3D 0) && (i2c->cdata->version >=3D ID_X1000))
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> +				JZ4780_I2C_DC_READ | X1000_I2C_DC_STOP);
+> +	else
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+>  }
+>=20
+> @@ -458,37 +494,44 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>=20
+>  		rd_left =3D i2c->rd_total_len - i2c->rd_data_xfered;
+>=20
+> -		if (rd_left <=3D JZ4780_I2C_FIFO_LEN)
+> +		if (rd_left <=3D i2c->cdata->fifosize)
+>  			jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, rd_left - 1);
+>  	}
+>=20
+>  	if (intst & JZ4780_I2C_INTST_TXEMP) {
+>  		if (i2c->is_write =3D=3D 0) {
+>  			int cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+> -			int max_send =3D (JZ4780_I2C_FIFO_LEN - 1)
+> +			int max_send =3D (i2c->cdata->fifosize - 1)
+>  					 - (i2c->rd_cmd_xfered
+>  					 - i2c->rd_data_xfered);
+>  			int cmd_to_send =3D min(cmd_left, max_send);
+>=20
+>  			if (i2c->rd_cmd_xfered !=3D 0)
+>  				cmd_to_send =3D min(cmd_to_send,
+> -						  JZ4780_I2C_FIFO_LEN
+> -						  - TX_LEVEL - 1);
+> +						  i2c->cdata->fifosize
+> +						  - i2c->cdata->tx_level - 1);
+>=20
+>  			if (cmd_to_send) {
+> -				jz4780_i2c_send_rcmd(i2c, cmd_to_send);
+>  				i2c->rd_cmd_xfered +=3D cmd_to_send;
+> +				cmd_left =3D i2c->rd_total_len -
+> +						i2c->rd_cmd_xfered;
+> +				jz4780_i2c_send_rcmd(i2c,
+> +						cmd_to_send, cmd_left);
+> +
+>  			}
+>=20
+> -			cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+>  			if (cmd_left =3D=3D 0) {
+>  				intmsk =3D jz4780_i2c_readw(i2c, JZ4780_I2C_INTM);
+>  				intmsk &=3D ~JZ4780_I2C_INTM_MTXEMP;
+>  				jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, intmsk);
+>=20
+> -				tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -				tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +				if (i2c->cdata->version < ID_X1000) {
+> +					tmp =3D jz4780_i2c_readw(i2c,
+> +							JZ4780_I2C_CTRL);
+> +					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +					jz4780_i2c_writew(i2c,
+> +							JZ4780_I2C_CTRL, tmp);
+> +				}
+>  			}
+>  		} else {
+>  			unsigned short data;
+> @@ -497,23 +540,26 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>  			i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>=20
+>  			while ((i2c_sta & JZ4780_I2C_STA_TFNF) &&
+> -			       (i2c->wt_len > 0)) {
+> +					(i2c->wt_len > 0)) {
+>  				i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>  				data =3D *i2c->wbuf;
+>  				data &=3D ~JZ4780_I2C_DC_READ;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> -						  data);
+> +				if ((!i2c->stop_hold) && (i2c->cdata->version >=3D
+> +						ID_X1000))
+> +					data |=3D X1000_I2C_DC_STOP;
+> +				jz4780_i2c_writew(i2c, JZ4780_I2C_DC, data);
+>  				i2c->wbuf++;
+>  				i2c->wt_len--;
+>  			}
+>=20
+>  			if (i2c->wt_len =3D=3D 0) {
+> -				if (!i2c->stop_hold) {
+> +				if ((!i2c->stop_hold) && (i2c->cdata->version <
+> +						ID_X1000)) {
+>  					tmp =3D jz4780_i2c_readw(i2c,
+> -							       JZ4780_I2C_CTRL);
+> +							JZ4780_I2C_CTRL);
+>  					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL,
+> -							  tmp);
+> +					jz4780_i2c_writew(i2c,
+> +							JZ4780_I2C_CTRL, tmp);
+>  				}
+>=20
+>  				jz4780_i2c_trans_done(i2c);
+> @@ -567,20 +613,22 @@ static inline int jz4780_i2c_xfer_read(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->rd_data_xfered =3D 0;
+>  	i2c->rd_cmd_xfered =3D 0;
+>=20
+> -	if (len <=3D JZ4780_I2C_FIFO_LEN)
+> +	if (len <=3D i2c->cdata->fifosize)
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, len - 1);
+>  	else
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, RX_LEVEL);
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, i2c->cdata->rx_level);
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM,
+>  			  JZ4780_I2C_INTM_MRXFL | JZ4780_I2C_INTM_MTXEMP
+>  			  | JZ4780_I2C_INTM_MTXABT | JZ4780_I2C_INTM_MRXOF);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -626,14 +674,16 @@ static inline int jz4780_i2c_xfer_write(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->wbuf =3D buf;
+>  	i2c->wt_len =3D len;
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, JZ4780_I2C_INTM_MTXEMP
+>  					| JZ4780_I2C_INTM_MTXABT);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -716,8 +766,25 @@ static const struct i2c_algorithm=20
+> jz4780_i2c_algorithm =3D {
+>  	.functionality	=3D jz4780_i2c_functionality,
+>  };
+>=20
+> +static const struct ingenic_i2c_config jz4780_i2c_config =3D {
+> +	.version =3D ID_JZ4780,
+> +
+> +	.fifosize =3D JZ4780_I2C_FIFO_LEN,
+> +	.tx_level =3D JZ4780_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D JZ4780_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+> +static const struct ingenic_i2c_config x1000_i2c_config =3D {
+> +	.version =3D ID_X1000,
+> +
+> +	.fifosize =3D X1000_I2C_FIFO_LEN,
+> +	.tx_level =3D X1000_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D X1000_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+>  static const struct of_device_id jz4780_i2c_of_matches[] =3D {
+> -	{ .compatible =3D "ingenic,jz4780-i2c", },
+> +	{ .compatible =3D "ingenic,jz4780-i2c", .data =3D &jz4780_i2c_config },
+> +	{ .compatible =3D "ingenic,x1000-i2c", .data =3D &x1000_i2c_config },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, jz4780_i2c_of_matches);
+> @@ -734,6 +801,12 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>  	if (!i2c)
+>  		return -ENOMEM;
+>=20
+> +	i2c->cdata =3D device_get_match_data(&pdev->dev);
+> +	if (!i2c->cdata) {
+> +		dev_err(&pdev->dev, "Error: No device match found\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	i2c->adap.owner		=3D THIS_MODULE;
+>  	i2c->adap.algo		=3D &jz4780_i2c_algorithm;
+>  	i2c->adap.algo_data	=3D i2c;
+> @@ -777,9 +850,11 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>=20
+>  	dev_info(&pdev->dev, "Bus frequency is %d KHz\n", i2c->speed);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
+>=20
+> --
+> 2.7.4
+>=20
+
+=
+
