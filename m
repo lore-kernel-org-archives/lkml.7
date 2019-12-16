@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90182C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D883C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B30B206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7D82053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfLPM3u (ORCPT
+        id S1727747AbfLPM3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:29:50 -0500
-Received: from sauhun.de ([88.99.104.3]:39774 "EHLO pokefinder.org"
+        Mon, 16 Dec 2019 07:29:54 -0500
+Received: from sauhun.de ([88.99.104.3]:39798 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfLPM3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727534AbfLPM3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 07:29:49 -0500
 Received: from localhost (p54B33297.dip0.t-ipconnect.de [84.179.50.151])
-        by pokefinder.org (Postfix) with ESMTPSA id 0F8532C2D92;
-        Mon, 16 Dec 2019 13:29:47 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 42D702C2D98;
+        Mon, 16 Dec 2019 13:29:48 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -29,9 +29,9 @@ Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] media: pci: cx23885: convert to i2c_new_scanned_device
-Date:   Mon, 16 Dec 2019 13:29:41 +0100
-Message-Id: <20191216122946.3495-2-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 3/5] media: pci: bt8xx: convert to i2c_new_scanned_device
+Date:   Mon, 16 Dec 2019 13:29:43 +0100
+Message-Id: <20191216122946.3495-4-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191216122946.3495-1-wsa+renesas@sang-engineering.com>
 References: <20191216122946.3495-1-wsa+renesas@sang-engineering.com>
@@ -51,24 +51,34 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
 Build tested only.
 
- drivers/media/pci/cx23885/cx23885-i2c.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/pci/bt8xx/bttv-input.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23885-i2c.c b/drivers/media/pci/cx23885/cx23885-i2c.c
-index 4f327ee9659e..f51fad33dc04 100644
---- a/drivers/media/pci/cx23885/cx23885-i2c.c
-+++ b/drivers/media/pci/cx23885/cx23885-i2c.c
-@@ -337,8 +337,8 @@ int cx23885_i2c_register(struct cx23885_i2c *bus)
- 		strscpy(info.type, "ir_video", I2C_NAME_SIZE);
- 		/* Use quick read command for probe, some IR chips don't
- 		 * support writes */
--		i2c_new_probed_device(&bus->i2c_adap, &info, addr_list,
--				      i2c_probe_func_quick_read);
-+		i2c_new_scanned_device(&bus->i2c_adap, &info, addr_list,
-+				       i2c_probe_func_quick_read);
- 	}
+diff --git a/drivers/media/pci/bt8xx/bttv-input.c b/drivers/media/pci/bt8xx/bttv-input.c
+index 492bc85c2700..41226f1d0e5b 100644
+--- a/drivers/media/pci/bt8xx/bttv-input.c
++++ b/drivers/media/pci/bt8xx/bttv-input.c
+@@ -386,7 +386,7 @@ void init_bttv_i2c_ir(struct bttv *btv)
  
- 	return bus->i2c_rc;
+ 	if (btv->init_data.name) {
+ 		info.platform_data = &btv->init_data;
+-		i2c_dev = i2c_new_device(&btv->c.i2c_adap, &info);
++		i2c_dev = i2c_new_client_device(&btv->c.i2c_adap, &info);
+ 	} else {
+ 		/*
+ 		 * The external IR receiver is at i2c address 0x34 (0x35 for
+@@ -396,9 +396,9 @@ void init_bttv_i2c_ir(struct bttv *btv)
+ 		 * internal.
+ 		 * That's why we probe 0x1a (~0x34) first. CB
+ 		 */
+-		i2c_dev = i2c_new_probed_device(&btv->c.i2c_adap, &info, addr_list, NULL);
++		i2c_dev = i2c_new_scanned_device(&btv->c.i2c_adap, &info, addr_list, NULL);
+ 	}
+-	if (NULL == i2c_dev)
++	if (IS_ERR(i2c_dev))
+ 		return;
+ 
+ #if defined(CONFIG_MODULES) && defined(MODULE)
 -- 
 2.20.1
 
