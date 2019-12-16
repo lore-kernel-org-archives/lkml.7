@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1891C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831B420717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A291620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520659;
-	bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
+	s=default; t=1576520670;
+	bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAxipH77gyY4rDgKqixgEgDNMJVSwCzD3HGpS8kBn7G/hhILONIBbQGdhVy3jPVeV
-	 //PL3g3qtZ9bw1vnzcQs5v8Iu2iR8yVZ4tz4vBrely2c3OFjQIW5TXJy/azRLU0/ba
-	 JAaXWwZSoxmNg0s3phYGbLmWLMqSkh+TBQLTHLOs=
+	b=mfQRP8v9bzF318qBq+HVTZTaz+LaGkq/0CB6CkTEWAP/GzW+ShA+0F9+uxRF5ch2s
+	 eSDCDo7y53KfZ673TtdDWEO/fgjp+iHLxQtbhEqzTt8anUTzGogkAHgfRd0hd95QdF
+	 uy6k6tNhPeZvU8DUF2P5QywYWapy6mnSkDFJs4uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732118AbfLPSYR (ORCPT
+        id S1732039AbfLPSY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:24:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:24:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfLPSTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:34 -0500
+        id S1731737AbfLPSTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F6320409;
-        Mon, 16 Dec 2019 18:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A6BA207FF;
+        Mon, 16 Dec 2019 18:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520373;
-        bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
+        s=default; t=1576520351;
+        bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJuWHXuZtv1W97pjPq0ym1oDavowSbBplOPkgmZtLNvemRGGAsbIqYOvO15JjXaPc
-         /TqW3NSpRiRmlQFDWPT1kCOM8VZD+J+Q7QBta23mLY+Yknn4e5cHShaMQGVpkgo/qO
-         E/RY/0DNly5TbRrlXQg7zK86cGd0wEgB566YxnhY=
+        b=fW138bzxVLueSJigiJeTcuRNnVw3HZ5CANubNQgLyCXA3pzNtLEvu+8eQWpqTDuyk
+         0M3OaXOJ5x+XDTyV/rBo081f1EZTuBcFINODiIHXqNSdvfXOd9VEJ0QHMh7iVzW1qH
+         RBRYRZVUSSLCWYMo3SR0h5IM0t24PUp68df6oZlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Valerio Passini <passini.valerio@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 126/177] ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
-Date:   Mon, 16 Dec 2019 18:49:42 +0100
-Message-Id: <20191216174843.919210561@linuxfoundation.org>
+Subject: [PATCH 5.4 118/177] cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
+Date:   Mon, 16 Dec 2019 18:49:34 +0100
+Message-Id: <20191216174842.951300479@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,110 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit 77adf9355304f8dcf09054280af5e23fc451ab3d upstream.
+commit db0d32d84031188443e25edbd50a71a6e7ac5d1d upstream.
 
-Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
-PCI: Don't scan bridges managed by native hotplug") prevents some recent
-LG and HP laptops from booting with endless loop of:
+The following build warning occurred on powerpc 64-bit builds:
 
-  ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
-  ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
-  ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
-  ...
+drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
+1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
 
-What seems to happen is that during boot, after the initial PCI enumeration
-when EC is enabled the platform triggers ACPI Notify() to one of the root
-ports. The root port itself looks like this:
+This is with a cross-compiler based on gcc 8.1.0, which I got from:
+  https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
 
-  pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
-  pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
-  pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+The warning is due to putting 1024 bytes on the stack:
 
-The BIOS has configured the root port so that it does not have I/O bridge
-window.
+    unsigned int chip[256];
 
-Now when the ACPI Notify() is triggered ACPI hotplug handler calls
-acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system is
-using native PCIe hotplug) and pci_assign_unassigned_bridge_resources() to
-allocate resources.
+...and it's also undesirable to have a hard limit on the number of
+CPUs here.
 
-The device connected to the root port is a PCIe switch (Thunderbolt
-controller) with two hotplug downstream ports. Because of the hotplug ports
-__pci_bus_size_bridges() tries to add "additional I/O" of 256 bytes to each
-(DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k as that's the
-minimum I/O window size so each hotplug port gets 4k I/O window and the
-same happens for the root port (which is also hotplug port). This means
-3 * 4k = 12k I/O window.
+Fix both problems by dynamically allocating based on num_possible_cpus,
+as recommended by Michael Ellerman.
 
-Because of this pci_assign_unassigned_bridge_resources() ends up opening a
-I/O bridge window for the root port at first available I/O address which
-seems to be in range 0x1000 - 0x3fff. Normally this range is used for ACPI
-stuff such as GPE bits (below is part of /proc/ioports):
-
-    1800-1803 : ACPI PM1a_EVT_BLK
-    1804-1805 : ACPI PM1a_CNT_BLK
-    1808-180b : ACPI PM_TMR
-    1810-1815 : ACPI CPU throttle
-    1850-1850 : ACPI PM2_CNT_BLK
-    1854-1857 : pnp 00:05
-    1860-187f : ACPI GPE0_BLK
-
-However, when the ACPI Notify() happened this range was not yet reserved
-for ACPI/PNP (that happens later) so PCI gets it. It then starts writing to
-this range and accidentally stomps over GPE bits among other things causing
-the endless stream of messages about missing GPE handler.
-
-This problem does not happen if "pci=hpiosize=0" is passed in the kernel
-command line. The reason is that then the kernel does not try to allocate
-the additional 256 bytes for each hotplug port.
-
-Fix this by allocating resources directly below the non-hotplug bridges
-where a new device may appear as a result of ACPI Notify(). This avoids the
-hotplug bridges and prevents opening the additional I/O window.
-
-Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
-Link: https://lore.kernel.org/r/20191030150545.19885-1-mika.westerberg@linux.intel.com
-Reported-by: Valerio Passini <passini.valerio@gmail.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: stable@vger.kernel.org
+Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/hotplug/acpiphp_glue.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/cpufreq/powernv-cpufreq.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/hotplug/acpiphp_glue.c
-+++ b/drivers/pci/hotplug/acpiphp_glue.c
-@@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(s
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpu
  
- 	/* Scan non-hotplug bridges that need to be reconfigured */
- 	for_each_pci_bridge(dev, bus) {
--		if (!hotplug_is_native(dev))
--			max = pci_scan_bridge(bus, dev, max, 1);
-+		if (hotplug_is_native(dev))
-+			continue;
+ static int init_chip_info(void)
+ {
+-	unsigned int chip[256];
++	unsigned int *chip;
+ 	unsigned int cpu, i;
+ 	unsigned int prev_chip_id = UINT_MAX;
++	int ret = 0;
 +
-+		max = pci_scan_bridge(bus, dev, max, 1);
-+		if (dev->subordinate) {
-+			pcibios_resource_survey_bus(dev->subordinate);
-+			pci_bus_size_bridges(dev->subordinate);
-+			pci_bus_assign_resources(dev->subordinate);
-+		}
++	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int id = cpu_to_chip_id(cpu);
+@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
  	}
+ 
+ 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+-	if (!chips)
+-		return -ENOMEM;
++	if (!chips) {
++		ret = -ENOMEM;
++		goto free_and_return;
++	}
+ 
+ 	for (i = 0; i < nr_chips; i++) {
+ 		chips[i].id = chip[i];
+@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
+ 			per_cpu(chip_info, cpu) =  &chips[i];
+ 	}
+ 
+-	return 0;
++free_and_return:
++	kfree(chip);
++	return ret;
  }
  
-@@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_s
- 			if (PCI_SLOT(dev->devfn) == slot->device)
- 				acpiphp_native_scan_bridge(dev);
- 		}
--		pci_assign_unassigned_bridge_resources(bus->self);
- 	} else {
- 		LIST_HEAD(add_list);
- 		int max, pass;
+ static inline void clean_chip_info(void)
 
 
