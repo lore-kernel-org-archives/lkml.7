@@ -2,228 +2,463 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DADC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823C4C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142AF24650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC3520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DZLHVKXk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDsPCzZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfLPI0b (ORCPT
+        id S1726841AbfLPI2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:26:31 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47390 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfLPI0a (ORCPT
+        Mon, 16 Dec 2019 03:28:45 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43501 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfLPI2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:26:30 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8QH4V073483;
-        Mon, 16 Dec 2019 02:26:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576484777;
-        bh=5LJD3BaNdpDqu2z7AYf9ZaOq2CWCjaTXL7atRrYN3cI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DZLHVKXk810t3N8MZMb6HMv/0QUDWc3z+uzXBFx1qkTJhJQvSd8lwSwCsCUCUF6/s
-         cjwWCcNqn8Wl4pO5J6xRDORlm7LITd/VID4WHjwZYKu38umhAb5yuIIcxu/nLyHubP
-         OQJPupJvI/ZnjFbJhQddN8Cv6k5RwRrM938RHHUA=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8QGYo039352
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 02:26:16 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 02:26:16 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 02:26:16 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8QCt3052187;
-        Mon, 16 Dec 2019 02:26:13 -0600
-Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
- devices
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
-        <tony@atomide.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
- <20191210095151.15441-3-faiz_abbas@ti.com>
- <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
-Date:   Mon, 16 Dec 2019 13:57:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:28:44 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so2935281qke.10
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:28:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qY0Fj2NS7QrS6yyqtm/6VeG23NikZuSaQjc06999aA8=;
+        b=QDsPCzZLo5LcuQSUWVPUBE6JaFnUSaO+Pd/nBRfdfiMgyuaoOZgSxnRPpxezl3yTr8
+         hyLF4iuz5k5izk0z2QKtziRfLedX0rHK7h0X+QP2RlWhYU9/Fyy/gFtJHQQ2VCwuY2fi
+         ysadXAECvm4/57DAdKlYxjvT/bLYGmIJUUiiahk2sE7QsYPgw1gY8qdDu0qpsba0qChT
+         Ps1mZJF9HaoW/jN63xogkQg9zAWDImMcUk1Y8BF8JpjNO1SuZmNpz/Pnx+/ZAzBZWNNY
+         Z69zcun4CpX9meELq3o75RW7pIlKykk0XspXQw2jer2OAdPaR9JIpP9UhPhC5a0MTlU4
+         gJmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qY0Fj2NS7QrS6yyqtm/6VeG23NikZuSaQjc06999aA8=;
+        b=SrhyOiPHlwAYUEUI0tEj62nhO4oKtfcHpdUTTj67snZPIYIVt3yiThbc/t0WHv/i5G
+         AK2eGxknXWd2if124Zk2f0gdBKkKSzdY81BJCrqxltldPIanEx0ULdD00B3sf80J9fnl
+         MZwZwZaB4FoquHoiXMIV/dj9+Y8YUKFbMYzzvS9YigbAuuiwGlgZxFJbGvDXymYZLE5r
+         wGaEjk603LpCT90ayXFoNfY426thpisHjmfugyWhaX64aWDO9mf3axmeFQ15j7bWtpXQ
+         l1aJW97BSxFLIJUmnupmMe//LiGthuYo7KU7/TqZwNCRVH8OiMDRRWTsPm1ZItXvfWw7
+         8cdw==
+X-Gm-Message-State: APjAAAWnsw3TS4NphHG5H3TrH9zO986N+UN7VypcgfMs5LQBg8NXIhMm
+        HAqlZ8eF/zePSNriKm5YipfmUtnM+3Je3e5nVw07PQ==
+X-Google-Smtp-Source: APXvYqyhChZv5VpYCIrYP/5PKbtXGfipWyPNPVw/c0i0ohmxSk53tCM/7prPr2slbcT99kLD3Y9jl2TbXoaF3vV8Tfc=
+X-Received: by 2002:a37:6087:: with SMTP id u129mr25456447qkb.219.1576484923323;
+ Mon, 16 Dec 2019 00:28:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191128135057.20020-1-benjamin.gaignard@st.com> <878snsvxzu.fsf@intel.com>
+In-Reply-To: <878snsvxzu.fsf@intel.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Mon, 16 Dec 2019 09:28:31 +0100
+Message-ID: <CA+M3ks5WvYoDLSrbvaGBbJg9+nnkX=xyCiD389QD8tSCdNqB+g@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/dp_mst: Fix W=1 warnings
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+Le mer. 4 d=C3=A9c. 2019 =C3=A0 17:47, Jani Nikula <jani.nikula@linux.intel=
+.com> a =C3=A9crit :
+>
+> On Thu, 28 Nov 2019, Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+> > Fix the warnings that show up with W=3D1.
+> > They are all about unused but set variables.
+> > If functions returns are not used anymore make them void.
+> >
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > ---
+> > CC: Jani Nikula <jani.nikula@linux.intel.com>
+> >
+> > changes in version 3:
+> > - remove the hunk that may conflict with c485e2c97dae
+> >   ("drm/dp_mst: Refactor pdt setup/teardown, add more locking")
+> >
+> > changes in version 2:
+> > - fix indentations
+> > - when possible change functions prototype to void
+> >
+> > drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++---------------=
+-------
+> >  1 file changed, 31 insertions(+), 52 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/dr=
+m_dp_mst_topology.c
+> > index 1437bc46368b..d5cb5688b5dd 100644
+> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > @@ -674,7 +674,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp=
+_sideband_msg_rx *msg,
+> >                                     u8 *replybuf, u8 replybuflen, bool =
+hdr)
+> >  {
+> >       int ret;
+> > -     u8 crc4;
+> >
+> >       if (hdr) {
+> >               u8 hdrlen;
+> > @@ -716,8 +715,6 @@ static bool drm_dp_sideband_msg_build(struct drm_dp=
+_sideband_msg_rx *msg,
+> >       }
+> >
+> >       if (msg->curchunk_idx >=3D msg->curchunk_len) {
+> > -             /* do CRC */
+> > -             crc4 =3D drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_l=
+en - 1);
+>
+> Again, someone needs to check if crc4 should be *used* instead of thrown
+> away. Blindly throwing stuff out is not the way to go.
 
-On 12/12/19 6:25 pm, Adrian Hunter wrote:
-> On 10/12/19 11:51 am, Faiz Abbas wrote:
->> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>
->> Some standard SD host controllers can support both external dma
->> controllers as well as ADMA/SDMA in which the SD host controller
->> acts as DMA master. TI's omap controller is the case as an example.
->>
->> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->> the host controller but does not have any support for external DMA
->> controllers implemented using dmaengine, meaning that custom code is
->> needed for any systems that use an external DMA controller with SDHCI.
->>
->> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->> 1. Map scatterlists before dmaengine_prep_slave_sg()
->> 2. Use dma_async() functions inside of the send_command() path and call
->> terminate_sync() in non-atomic context in case of an error.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
-...
->>  {
->> @@ -1379,12 +1562,19 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->>  	}
->>  
->>  	host->cmd = cmd;
->> +	host->data_timeout = 0;
->>  	if (sdhci_data_line_cmd(cmd)) {
->>  		WARN_ON(host->data_cmd);
->>  		host->data_cmd = cmd;
->> +		sdhci_set_timeout(host, cmd);
->>  	}
->>  
->> -	sdhci_prepare_data(host, cmd);
->> +	if (cmd->data) {
->> +		if (host->use_external_dma)
->> +			sdhci_external_dma_prepare_data(host, cmd);
->> +		else
->> +			sdhci_prepare_data(host, cmd);
->> +	}
-> 
-> Please make the 3 changes above and the corresponding changes
-> sdhci_prepare_data into a separate patch i.e.
+Hi Dave,
 
-Ok. And I agree with all your style change requests above this. Will fix
-in v4.
-
->> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
->>  	if (host->flags & SDHCI_REQ_USE_DMA) {
->>  		struct mmc_data *data = mrq->data;
->>  
->> +		spin_unlock_irqrestore(&host->lock, flags);
->> +
->> +		/* Terminate and synchronize dma in case of an error */
->> +		if (data && (mrq->cmd->error || data->error) &&
->> +		    host->use_external_dma) {
->> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
->> +									  data);
->> +			dmaengine_terminate_sync(chan);
->> +		}
->> +
->> +		spin_lock_irqsave(&host->lock, flags);
->> +
-> 
-> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
-> and put it back again to be consistent with the remaining code. Also put
-> host->use_external_dma as the first condition i.e.
-> 
-> 		if (host->use_external_dma && data &&
-> 		    (mrq->cmd->error || data->error)) {
-> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
-> 
-> 			host->mrqs_done[i] = NULL;
-> 			spin_unlock_irqrestore(&host->lock, flags);
-> 			dmaengine_terminate_sync(chan);
-> 			spin_lock_irqsave(&host->lock, flags);
-> 			sdhci_set_mrq_done(host, mrq);
-> 		}
-> 
-> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
-> 
-> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
-> {
-> 	int i;
-> 
-> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
-> 		if (host->mrqs_done[i] == mrq) {
-> 			WARN_ON(1);
-> 			return;
-> 		}
-> 	}
-> 
-> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
-> 		if (!host->mrqs_done[i]) {
-> 			host->mrqs_done[i] = mrq;
-> 			break;
-> 		}
-> 	}
-> 
-> 	WARN_ON(i >= SDHCI_MAX_MRQS);
-> }
-> 
-> sdhci_set_mrq_done() can be made in the refactoring patch.
-Haven't we already done the sdhci_set_mrq_done() part in
-__sdhci_finish_mrq()?
-
-We are picking up an already "done" mrq, looking at whether it had any
-error and then sychronizing with external dma. Or at least that is my
-understanding.
-
-> 
->>  		if (data && data->host_cookie == COOKIE_MAPPED) {
->>  			if (host->bounce_buffer) {
->>  				/*
->> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
->>  		       mmc_hostname(mmc), host->version);
->>  	}
->>  
->> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
->> +	if (host->use_external_dma) {
->> +		ret = sdhci_external_dma_init(host);
->> +		if (ret == -EPROBE_DEFER)
->> +			goto unreg;
->> +
->> +		/*
->> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
->> +		 * instead of external DMA devices.
->> +		 */
->> +		if (ret)
->> +			sdhci_switch_external_dma(host, false);
->> +	}
->> +
->> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
->>  		host->flags |= SDHCI_USE_SDMA;
->> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
->> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
->>  		DBG("Controller doesn't have SDMA capability\n");
->> -	else
->> +	} else if (host->use_external_dma) {
->> +		/* Using dma-names to detect external dma capability */
-> 
-> What is this change for?  Do you expect for SDHCI_USE_SDMA and
-> SDHCI_USE_ADMA flags to be clear?
-
-Yes. Today the code enables SDMA by default (in the else part below
-this). I want it to not enable SDMA in the external dma case.
+Your are the original writer of this code, could you tell us if we can drop=
+ crc4
+ao if there is something else that I have misunderstood ?
 
 Thanks,
-Faiz
+Benjamin
+
+>
+> BR,
+> Jani.
+>
+> >               /* copy chunk into bigger msg */
+> >               memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_=
+len - 1);
+> >               msg->curlen +=3D msg->curchunk_len - 1;
+> > @@ -1014,7 +1011,7 @@ static bool drm_dp_sideband_parse_req(struct drm_=
+dp_sideband_msg_rx *raw,
+> >       }
+> >  }
+> >
+> > -static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 por=
+t_num, u32 offset, u8 num_bytes, u8 *bytes)
+> > +static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 po=
+rt_num, u32 offset, u8 num_bytes, u8 *bytes)
+> >  {
+> >       struct drm_dp_sideband_msg_req_body req;
+> >
+> > @@ -1024,17 +1021,14 @@ static int build_dpcd_write(struct drm_dp_sideb=
+and_msg_tx *msg, u8 port_num, u32
+> >       req.u.dpcd_write.num_bytes =3D num_bytes;
+> >       req.u.dpcd_write.bytes =3D bytes;
+> >       drm_dp_encode_sideband_req(&req, msg);
+> > -
+> > -     return 0;
+> >  }
+> >
+> > -static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
+> > +static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
+> >  {
+> >       struct drm_dp_sideband_msg_req_body req;
+> >
+> >       req.req_type =3D DP_LINK_ADDRESS;
+> >       drm_dp_encode_sideband_req(&req, msg);
+> > -     return 0;
+> >  }
+> >
+> >  static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *ms=
+g, int port_num)
+> > @@ -1048,7 +1042,7 @@ static int build_enum_path_resources(struct drm_d=
+p_sideband_msg_tx *msg, int por
+> >       return 0;
+> >  }
+> >
+> > -static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, =
+int port_num,
+> > +static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg,=
+ int port_num,
+> >                                 u8 vcpi, uint16_t pbn,
+> >                                 u8 number_sdp_streams,
+> >                                 u8 *sdp_stream_sink)
+> > @@ -1064,10 +1058,9 @@ static int build_allocate_payload(struct drm_dp_=
+sideband_msg_tx *msg, int port_n
+> >                  number_sdp_streams);
+> >       drm_dp_encode_sideband_req(&req, msg);
+> >       msg->path_msg =3D true;
+> > -     return 0;
+> >  }
+> >
+> > -static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+> > +static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+> >                                 int port_num, bool power_up)
+> >  {
+> >       struct drm_dp_sideband_msg_req_body req;
+> > @@ -1080,7 +1073,6 @@ static int build_power_updown_phy(struct drm_dp_s=
+ideband_msg_tx *msg,
+> >       req.u.port_num.port_number =3D port_num;
+> >       drm_dp_encode_sideband_req(&req, msg);
+> >       msg->path_msg =3D true;
+> > -     return 0;
+> >  }
+> >
+> >  static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr=
+ *mgr,
+> > @@ -1746,14 +1738,13 @@ static u8 drm_dp_calculate_rad(struct drm_dp_ms=
+t_port *port,
+> >   */
+> >  static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
+> >  {
+> > -     int ret;
+> >       u8 rad[6], lct;
+> >       bool send_link =3D false;
+> >       switch (port->pdt) {
+> >       case DP_PEER_DEVICE_DP_LEGACY_CONV:
+> >       case DP_PEER_DEVICE_SST_SINK:
+> >               /* add i2c over sideband */
+> > -             ret =3D drm_dp_mst_register_i2c_bus(&port->aux);
+> > +             drm_dp_mst_register_i2c_bus(&port->aux);
+> >               break;
+> >       case DP_PEER_DEVICE_MST_BRANCHING:
+> >               lct =3D drm_dp_calculate_rad(port, rad);
+> > @@ -1823,25 +1814,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux=
+ *aux,
+> >
+> >  static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 =
+*guid)
+> >  {
+> > -     int ret;
+> > -
+> >       memcpy(mstb->guid, guid, 16);
+> >
+> >       if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
+> >               if (mstb->port_parent) {
+> > -                     ret =3D drm_dp_send_dpcd_write(
+> > -                                     mstb->mgr,
+> > -                                     mstb->port_parent,
+> > -                                     DP_GUID,
+> > -                                     16,
+> > -                                     mstb->guid);
+> > +                     drm_dp_send_dpcd_write(mstb->mgr,
+> > +                                            mstb->port_parent,
+> > +                                            DP_GUID,
+> > +                                            16,
+> > +                                            mstb->guid);
+> >               } else {
+> > -
+> > -                     ret =3D drm_dp_dpcd_write(
+> > -                                     mstb->mgr->aux,
+> > -                                     DP_GUID,
+> > -                                     mstb->guid,
+> > -                                     16);
+> > +                     drm_dp_dpcd_write(mstb->mgr->aux,
+> > +                                       DP_GUID,
+> > +                                       mstb->guid,
+> > +                                       16);
+> >               }
+> >       }
+> >  }
+> > @@ -2197,7 +2183,7 @@ static bool drm_dp_validate_guid(struct drm_dp_ms=
+t_topology_mgr *mgr,
+> >       return false;
+> >  }
+> >
+> > -static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port=
+_num, u32 offset, u8 num_bytes)
+> > +static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 por=
+t_num, u32 offset, u8 num_bytes)
+> >  {
+> >       struct drm_dp_sideband_msg_req_body req;
+> >
+> > @@ -2206,8 +2192,6 @@ static int build_dpcd_read(struct drm_dp_sideband=
+_msg_tx *msg, u8 port_num, u32
+> >       req.u.dpcd_read.dpcd_address =3D offset;
+> >       req.u.dpcd_read.num_bytes =3D num_bytes;
+> >       drm_dp_encode_sideband_req(&req, msg);
+> > -
+> > -     return 0;
+> >  }
+> >
+> >  static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mg=
+r,
+> > @@ -2429,14 +2413,14 @@ static void drm_dp_send_link_address(struct drm=
+_dp_mst_topology_mgr *mgr,
+> >  {
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> >       struct drm_dp_link_address_ack_reply *reply;
+> > -     int i, len, ret;
+> > +     int i, ret;
+> >
+> >       txmsg =3D kzalloc(sizeof(*txmsg), GFP_KERNEL);
+> >       if (!txmsg)
+> >               return;
+> >
+> >       txmsg->dst =3D mstb;
+> > -     len =3D build_link_address(txmsg);
+> > +     build_link_address(txmsg);
+> >
+> >       mstb->link_address_sent =3D true;
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> > @@ -2478,7 +2462,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst=
+_topology_mgr *mgr,
+> >  {
+> >       struct drm_dp_enum_path_resources_ack_reply *path_res;
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> > -     int len;
+> >       int ret;
+> >
+> >       txmsg =3D kzalloc(sizeof(*txmsg), GFP_KERNEL);
+> > @@ -2486,7 +2469,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst=
+_topology_mgr *mgr,
+> >               return -ENOMEM;
+> >
+> >       txmsg->dst =3D mstb;
+> > -     len =3D build_enum_path_resources(txmsg, port->port_num);
+> > +     build_enum_path_resources(txmsg, port->port_num);
+> >
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> >
+> > @@ -2569,7 +2552,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_=
+mst_topology_mgr *mgr,
+> >  {
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> >       struct drm_dp_mst_branch *mstb;
+> > -     int len, ret, port_num;
+> > +     int ret, port_num;
+> >       u8 sinks[DRM_DP_MAX_SDP_STREAMS];
+> >       int i;
+> >
+> > @@ -2594,9 +2577,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_=
+mst_topology_mgr *mgr,
+> >               sinks[i] =3D i;
+> >
+> >       txmsg->dst =3D mstb;
+> > -     len =3D build_allocate_payload(txmsg, port_num,
+> > -                                  id,
+> > -                                  pbn, port->num_sdp_streams, sinks);
+> > +     build_allocate_payload(txmsg, port_num,
+> > +                            id,
+> > +                            pbn, port->num_sdp_streams, sinks);
+> >
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> >
+> > @@ -2625,7 +2608,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_ms=
+t_topology_mgr *mgr,
+> >                                struct drm_dp_mst_port *port, bool power=
+_up)
+> >  {
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> > -     int len, ret;
+> > +     int ret;
+> >
+> >       port =3D drm_dp_mst_topology_get_port_validated(mgr, port);
+> >       if (!port)
+> > @@ -2638,7 +2621,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_ms=
+t_topology_mgr *mgr,
+> >       }
+> >
+> >       txmsg->dst =3D port->parent;
+> > -     len =3D build_power_updown_phy(txmsg, port->port_num, power_up);
+> > +     build_power_updown_phy(txmsg, port->port_num, power_up);
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> >
+> >       ret =3D drm_dp_mst_wait_tx_reply(port->parent, txmsg);
+> > @@ -2858,7 +2841,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_ms=
+t_topology_mgr *mgr,
+> >                                struct drm_dp_mst_port *port,
+> >                                int offset, int size, u8 *bytes)
+> >  {
+> > -     int len;
+> >       int ret =3D 0;
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> >       struct drm_dp_mst_branch *mstb;
+> > @@ -2873,7 +2855,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_ms=
+t_topology_mgr *mgr,
+> >               goto fail_put;
+> >       }
+> >
+> > -     len =3D build_dpcd_read(txmsg, port->port_num, offset, size);
+> > +     build_dpcd_read(txmsg, port->port_num, offset, size);
+> >       txmsg->dst =3D port->parent;
+> >
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> > @@ -2911,7 +2893,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_m=
+st_topology_mgr *mgr,
+> >                                 struct drm_dp_mst_port *port,
+> >                                 int offset, int size, u8 *bytes)
+> >  {
+> > -     int len;
+> >       int ret;
+> >       struct drm_dp_sideband_msg_tx *txmsg;
+> >       struct drm_dp_mst_branch *mstb;
+> > @@ -2926,7 +2907,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_m=
+st_topology_mgr *mgr,
+> >               goto fail_put;
+> >       }
+> >
+> > -     len =3D build_dpcd_write(txmsg, port->port_num, offset, size, byt=
+es);
+> > +     build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+> >       txmsg->dst =3D mstb;
+> >
+> >       drm_dp_queue_down_tx(mgr, txmsg);
+> > @@ -3149,7 +3130,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_m=
+st_topology_mgr *mgr, bool up)
+> >  {
+> >       int len;
+> >       u8 replyblock[32];
+> > -     int replylen, origlen, curreply;
+> > +     int replylen, curreply;
+> >       int ret;
+> >       struct drm_dp_sideband_msg_rx *msg;
+> >       int basereg =3D up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MS=
+G_DOWN_REP_BASE;
+> > @@ -3169,7 +3150,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_m=
+st_topology_mgr *mgr, bool up)
+> >       }
+> >       replylen =3D msg->curchunk_len + msg->curchunk_hdrlen;
+> >
+> > -     origlen =3D replylen;
+> >       replylen -=3D len;
+> >       curreply =3D len;
+> >       while (replylen > 0) {
+> > @@ -3961,17 +3941,16 @@ void drm_dp_mst_dump_topology(struct seq_file *=
+m,
+> >       mutex_lock(&mgr->lock);
+> >       if (mgr->mst_primary) {
+> >               u8 buf[DP_PAYLOAD_TABLE_SIZE];
+> > -             int ret;
+> >
+> > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_R=
+ECEIVER_CAP_SIZE);
+> > +             drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_=
+CAP_SIZE);
+> >               seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
+> > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+> > +             drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+> >               seq_printf(m, "faux/mst: %*ph\n", 2, buf);
+> > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+> > +             drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+> >               seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
+> >
+> >               /* dump the standard OUI branch header */
+> > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP=
+_BRANCH_OUI_HEADER_SIZE);
+> > +             drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_=
+OUI_HEADER_SIZE);
+> >               seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
+> >               for (i =3D 0x3; i < 0x8 && buf[i]; i++)
+> >                       seq_printf(m, "%c", buf[i]);
+>
+> --
+> Jani Nikula, Intel Open Source Graphics Center
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
