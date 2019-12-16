@@ -2,52 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8E9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90B7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42C7206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16502072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519638;
-	bh=ANH0VcugweeincgOiV0mn2GBO2ma/dBvXSix39HMcKE=;
+	s=default; t=1576519641;
+	bh=jdLXzefjyg12GC+3pcA3MEYa1/IjbOx/xkJKHuQBapo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uwNYC9BTU3upwTG7nXebkJguZ1jCXQMWEkXbMDSQsocqWI1dDSa/XAqcAnEcjz2EA
-	 Y0J4BdqG9CW3thz61ojDOyl03QB5Cy75Lic4Gu6oFCDFHnU/Z8O4Lw1Sh8cHuO38u0
-	 9kadiBNNDJ8mrzicNsJ2SPDvI5X88+IPLZsss2oc=
+	b=aLD424g66LpWNr2sY9+AWy9zVwrO4QE74h6X0mIIhKDWBLac0CWDIHWkR/RJfrZXe
+	 zG6I12ojBm8SnbaAxQ4ZB3IHtG4CUQieks9TJoG+8i7QCTWVDJSzBdQYEfpN8rU9b0
+	 HfAqApirJUvQWGwfnMx0tyyUfylD0RmBSVTFaWk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfLPSHR (ORCPT
+        id S1729804AbfLPSHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbfLPSHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:16 -0500
+        id S1730132AbfLPSHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0C0206EC;
-        Mon, 16 Dec 2019 18:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 400D32072B;
+        Mon, 16 Dec 2019 18:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519635;
-        bh=ANH0VcugweeincgOiV0mn2GBO2ma/dBvXSix39HMcKE=;
+        s=default; t=1576519637;
+        bh=jdLXzefjyg12GC+3pcA3MEYa1/IjbOx/xkJKHuQBapo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teIX5ryvZoFnQLVuaiPaJEBZKhEm674Y9y3fjTPZ7OrbUJEBMzSVreu8H7EHOVK0E
-         Gjp5sO6FRnd3x3tKdQQfTV8ZmBQnQGi8osvIWV5BJgruFF2BMGcfo5xyO2/cNulbwz
-         jEW3l+ta7ZKsyYvHJ21shRr0FTYNzFAx1rHHNTV0=
+        b=f/FhIFkn2mLYRwiKBACG/gfLfIVFAKgttxWxRsFaJEXO89LDIHPE8p43xJPYM2qlI
+         C15qvvzJAES0GkKEC5rvQ8inkZ9NGVinh8wFCdsmAfnxIRleaH0UrUyI73wgLEBwiZ
+         WLJnods65i0VTJDcYRpdDxUya3xcCD/+dk3AaGck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 140/140] s390/smp,vdso: fix ASCE handling
-Date:   Mon, 16 Dec 2019 18:50:08 +0100
-Message-Id: <20191216174829.844659796@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.19 134/140] rtc: disable uie before setting time and enable after
+Date:   Mon, 16 Dec 2019 18:50:02 +0100
+Message-Id: <20191216174828.973357613@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,84 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit a2308c11ecbc3471ebb7435ee8075815b1502ef0 ]
+commit 7e7c005b4b1f1f169bcc4b2c3a40085ecc663df2 upstream.
 
-When a secondary CPU is brought up it must initialize its control
-registers. CPU A which triggers that a secondary CPU B is brought up
-stores its control register contents into the lowcore of new CPU B,
-which then loads these values on startup.
+When setting the time in the future with the uie timer enabled,
+rtc_timer_do_work will loop for a while because the expiration of the uie
+timer was way before the current RTC time and a new timer will be enqueued
+until the current rtc time is reached.
 
-This is problematic in various ways: the control register which
-contains the home space ASCE will correctly contain the kernel ASCE;
-however control registers for primary and secondary ASCEs are
-initialized with whatever values were present in CPU A.
+If the uie timer is enabled, disable it before setting the time and enable
+it after expiring current timers (which may actually be an alarm).
 
-Typically:
-- the primary ASCE will contain the user process ASCE of the process
-  that triggered onlining of CPU B.
-- the secondary ASCE will contain the percpu VDSO ASCE of CPU A.
+This is the safest thing to do to ensure the uie timer is still
+synchronized with the RTC, especially in the UIE emulation case.
 
-Due to lazy ASCE handling we may also end up with other combinations.
+Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+Fixes: 6610e0893b8b ("RTC: Rework RTC code to use timerqueue for events")
+Link: https://lore.kernel.org/r/20191020231320.8191-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-When then CPU B switches to a different process (!= idle) it will
-fixup the primary ASCE. However the problem is that the (wrong) ASCE
-from CPU A was loaded into control register 1: as soon as an ASCE is
-attached (aka loaded) a CPU is free to generate TLB entries using that
-address space.
-Even though it is very unlikey that CPU B will actually generate such
-entries, this could result in TLB entries of the address space of the
-process that ran on CPU A. These entries shouldn't exist at all and
-could cause problems later on.
-
-Furthermore the secondary ASCE of CPU B will not be updated correctly.
-This means that processes may see wrong results or even crash if they
-access VDSO data on CPU B. The correct VDSO ASCE will eventually be
-loaded on return to user space as soon as the kernel executed a call
-to strnlen_user or an atomic futex operation on CPU B.
-
-Fix both issues by intializing the to be loaded control register
-contents with the correct ASCEs and also enforce (re-)loading of the
-ASCEs upon first context switch and return to user space.
-
-Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/smp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/interface.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index da02f4087d61f..df2413f26a8f2 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -261,9 +261,12 @@ static void pcpu_prepare_secondary(struct pcpu *pcpu, int cpu)
- 	lc->spinlock_index = 0;
- 	lc->percpu_offset = __per_cpu_offset[cpu];
- 	lc->kernel_asce = S390_lowcore.kernel_asce;
-+	lc->user_asce = S390_lowcore.kernel_asce;
- 	lc->machine_flags = S390_lowcore.machine_flags;
- 	lc->user_timer = lc->system_timer = lc->steal_timer = 0;
- 	__ctl_store(lc->cregs_save_area, 0, 15);
-+	lc->cregs_save_area[1] = lc->kernel_asce;
-+	lc->cregs_save_area[7] = lc->vdso_asce;
- 	save_access_regs((unsigned int *) lc->access_regs_save_area);
- 	memcpy(lc->stfle_fac_list, S390_lowcore.stfle_fac_list,
- 	       sizeof(lc->stfle_fac_list));
-@@ -810,6 +813,8 @@ static void smp_start_secondary(void *cpuvoid)
- 	restore_access_regs(S390_lowcore.access_regs_save_area);
- 	__ctl_load(S390_lowcore.cregs_save_area, 0, 15);
- 	__load_psw_mask(PSW_KERNEL_BITS | PSW_MASK_DAT);
-+	set_cpu_flag(CIF_ASCE_PRIMARY);
-+	set_cpu_flag(CIF_ASCE_SECONDARY);
- 	cpu_init();
- 	preempt_disable();
- 	init_cpu_timer();
--- 
-2.20.1
-
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -127,7 +127,7 @@ EXPORT_SYMBOL_GPL(rtc_read_time);
+ 
+ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ {
+-	int err;
++	int err, uie;
+ 
+ 	err = rtc_valid_tm(tm);
+ 	if (err != 0)
+@@ -139,6 +139,17 @@ int rtc_set_time(struct rtc_device *rtc,
+ 
+ 	rtc_subtract_offset(rtc, tm);
+ 
++#ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
++	uie = rtc->uie_rtctimer.enabled || rtc->uie_irq_active;
++#else
++	uie = rtc->uie_rtctimer.enabled;
++#endif
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 0);
++		if (err)
++			return err;
++	}
++
+ 	err = mutex_lock_interruptible(&rtc->ops_lock);
+ 	if (err)
+ 		return err;
+@@ -162,6 +173,12 @@ int rtc_set_time(struct rtc_device *rtc,
+ 	/* A timer might have just expired */
+ 	schedule_work(&rtc->irqwork);
+ 
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 1);
++		if (err)
++			return err;
++	}
++
+ 	trace_rtc_set_time(rtc_tm_to_time64(tm), err);
+ 	return err;
+ }
 
 
