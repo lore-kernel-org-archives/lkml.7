@@ -2,101 +2,189 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD00C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9A0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4E4206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB8A20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i+RmSP29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLPRp0 (ORCPT
+        id S1726510AbfLPRqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:45:26 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43162 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfLPRp0 (ORCPT
+        Mon, 16 Dec 2019 12:46:24 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23251 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfLPRqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:45:26 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-43-acutJ5mMOdScnvq5_4WRig-1; Mon, 16 Dec 2019 17:45:23 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 16 Dec 2019 17:45:22 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 16 Dec 2019 17:45:22 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Andy Lutomirski' <luto@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, "Will Deacon" <will@kernel.org>
-Subject: RE: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Thread-Topic: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Thread-Index: AQHVsSQN6yBAo1s5f0Kws0hZvGpx8qe8iNtwgAB/vgCAAAOJwA==
-Date:   Mon, 16 Dec 2019 17:45:22 +0000
-Message-ID: <053a199934844aef9745d7398494b5a0@AcuMS.aculab.com>
-References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
- <20191121185303.GB199273@romley-ivt3.sc.intel.com>
- <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
- <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
- <20191122092555.GA4097@hirez.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
- <20191122203105.GE2844@hirez.programming.kicks-ass.net>
- <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
- <20191211175202.GQ2827@hirez.programming.kicks-ass.net>
- <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
- <20191211223407.GT2844@hirez.programming.kicks-ass.net>
- <CALCETrUr+LwpQm5caeKgXGhaZ87HmcNn4wTsmkPzTEptp6sC6g@mail.gmail.com>
- <8d880a468c6242b9a951a83716ddeb07@AcuMS.aculab.com>
- <CALCETrW1LDuzcnvav=MY1bUv4jQ25n30La5m5x8tXfDknfV_cQ@mail.gmail.com>
-In-Reply-To: <CALCETrW1LDuzcnvav=MY1bUv4jQ25n30La5m5x8tXfDknfV_cQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 16 Dec 2019 12:46:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576518383; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=rzuAqWFdTzrWO4clWvy7mwhpSIFXq93mC1ouQT7d0SU=; b=i+RmSP29LGcKHFfGNyrdMulgcQoTL1fMWa+2g56A1ijBU+6wW1OHXRPy3p/ayLbTInSiXXjv
+ suGv1hY4/MWcWERJpeqc0TuCDF7HwNrC6n5F8PjcOvfHMUWDygDwa9+e6mcvqGUjOwx7c0zx
+ PjNdaSR6xmUyWHfQM4GVYrkxfpo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df7c2ee.7f4ad81ac420-smtp-out-n02;
+ Mon, 16 Dec 2019 17:46:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0A126C447A2; Mon, 16 Dec 2019 17:46:22 +0000 (UTC)
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C946C433A2;
+        Mon, 16 Dec 2019 17:46:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C946C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org
+References: <20191118142728.30187-1-sibis@codeaurora.org>
+ <0101016e7ee9c591-d04928e8-6440-488c-a956-3b5c9b8988bf-000000@us-west-2.amazonses.com>
+ <20191203215248.GA1688@bogus>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <a19623d4-ab33-d87e-5925-d0411d7479dd@codeaurora.org>
+Date:   Mon, 16 Dec 2019 23:16:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MC-Unique: acutJ5mMOdScnvq5_4WRig-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191203215248.GA1688@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQW5keSBMdXRvbWlyc2tpDQo+IFNlbnQ6IDE2IERlY2VtYmVyIDIwMTkgMTc6MjMNCi4u
-Lg0KPiBJJ20gdGFsa2luZyBzcGVjaWZpY2FsbHkgYWJvdXQgeDg2IGhlcmUsIHdoZXJlLCBmb3Ig
-ZXhhbXBsZSwgIlJlYWRzDQo+IGFyZSBub3QgcmVvcmRlcmVkIHdpdGggb3RoZXIgcmVhZHMiLiAg
-U28gUkVBRF9PTkNFICpkb2VzKiBoYXZlDQo+IHNlcXVlbmNpbmcgcmVxdWlyZW1lbnRzIG9uIHRo
-ZSBDUFVzLg0KPiANCj4gRmVlbCBmcmVlIHRvIHJlcGxhY2UgUkVBRF9PTkNFIHdpdGggTU9WIGlu
-IHlvdXIgaGVhZCBpZiB5b3UgbGlrZSA6KQ0KDQpJIGdvdCBhIGxpdHRsZSBjb25mdXNlZCBiZWNh
-dXNlIEkgdGhvdWdodCB5b3VyIHJlZmVyZW5jZSB0byBSRUFEX09OQ0UoKQ0Kd2FzIHJlbGV2YW50
-Lg0KDQpTb21ldGltZXMgcmVtZW1iZXJpbmcgYWxsIHRoaXMgZ2V0cyBoYXJkLg0KVGhlIGRvY3Mg
-YWJvdXQgdGhlIGVmZmVjdHMgb2YgTEZFTkNFIGFuZCBNRkVOQ0UgZG9uJ3QgcmVhbGx5IGhlbHAN
-Cih0aGV5IG1ha2UgbXkgYnJhaW4gaHVydCkuDQpJJ20gcHJldHR5IHN1cmUgSSd2ZSBkZWNpZGVk
-IGluIHRoZSBwYXN0IHRoZXkgYXJlIGFsbW9zdCBuZXZlciBuZWVkZWQuDQoNClVzdWFsbHkgdGhl
-IG9yZGVyaW5nIG9mIHJlYWRzIGRvZXNuJ3QgaGVscCB5b3UuDQpJSVJDIElmIGxvY2F0aW9ucyAn
-YScgYW5kICdiJyBnZXQgY2hhbmdlZCBmcm9tIDAgdG8gMSBpdCBpcyBwZXJmZWN0bHkgcG9zc2li
-bGUNCmZvciBvbmUgY3B1IHRvIHNlZSBhPT0wLCBiPT0xIGFuZCBhbm90aGVyIGE9PTEsIGI9PTAg
-ZXZlbg0KdGhvdWdoIGJvdGggcmVhZCBhIHRoZW4gYi4NCihPbiBub24tYWxwaGEgdGhpcyBtYXkg
-cmVxdWlyZSBkaWZmZXJlbnQgY3B1cyB1cGRhdGUgYSBhbmQgYi4pDQoNCglEYXZpZA0KDQotDQpS
-ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
-dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
-DQo=
+Hey Rob,
+Thanks for the review :)
 
+On 12/4/19 3:22 AM, Rob Herring wrote:
+> On Mon, Nov 18, 2019 at 02:28:00PM +0000, Sibi Sankar wrote:
+>> Add optional "qcom,protection-domain" bindings for APR services. This
+>> helps to capture the dependencies between APR services and the PD on
+>> which each apr service run.
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
+>>   1 file changed, 59 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> index db501269f47b8..f87c0b2a48de4 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
+>>   			12 - Ultrasound stream manager.
+>>   			13 - Listen stream manager.
+>>   
+>> +- qcom,protection-domain
+>> +	Usage: optional
+>> +	Value type: <stringlist>
+>> +	Definition: Must list the protection domain service name and path
+>> +		    that the particular apr service has a dependency on.
+> 
+> Is name and path 2 values? Length is always 2?
+
+Yes the length is always 2 values i.e service name and the path where
+the service is hosted.
+
+> 
+> You've got the same values for every case in the example. Is there a
+> defined list of possible values?
+
+apr bus is expected to track just the "avs/audio" running on
+msm/adsp/audio_pd on msm8998 and sdm845 SoCs. So shouldn't
+make much sense to list all possible service names:paths here.
+
+However the qcom,protection-domain is expected to be used
+on fastrpc compute bank nodes as well, where they track other
+services:paths. I'll make sure to include all the possible
+values that fastrpc cb nodes depend on.
+
+> 
+>> +
+>>   = EXAMPLE
+>>   The following example represents a QDSP based sound card on a MSM8996 device
+>>   which uses apr as communication between Apps and QDSP.
+>> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
+>>   			...
+>>   		};
+>>   	};
+>> +
+>> += EXAMPLE 2
+>> +The following example represents a QDSP based sound card on SDM845 device.
+>> +Here the apr services are dependent on "avs/audio" service running on AUDIO
+>> +Protection Domain hosted on ADSP remote processor.
+>> +
+>> +	apr {
+>> +		compatible = "qcom,apr-v2";
+>> +		qcom,glink-channels = "apr_audio_svc";
+>> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>> +
+>> +		q6core {
+>> +			compatible = "qcom,q6core";
+>> +			reg = <APR_SVC_ADSP_CORE>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +		};
+>> +
+>> +		q6afe: q6afe {
+>> +			compatible = "qcom,q6afe";
+>> +			reg = <APR_SVC_AFE>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +			q6afedai: dais {
+>> +				compatible = "qcom,q6afe-dais";
+>> +				#sound-dai-cells = <1>;
+>> +
+>> +				qi2s@22 {
+>> +					reg = <22>;
+>> +					qcom,sd-lines = <3>;
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		q6asm: q6asm {
+>> +			compatible = "qcom,q6asm";
+>> +			reg = <APR_SVC_ASM>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +			q6asmdai: dais {
+>> +				compatible = "qcom,q6asm-dais";
+>> +				#sound-dai-cells = <1>;
+>> +				iommus = <&apps_smmu 0x1821 0x0>;
+>> +			};
+>> +		};
+>> +
+>> +		q6adm: q6adm {
+>> +			compatible = "qcom,q6adm";
+>> +			reg = <APR_SVC_ADM>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +			q6routing: routing {
+>> +				compatible = "qcom,q6adm-routing";
+>> +				#sound-dai-cells = <0>;
+>> +			};
+>> +		};
+>> +	};
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
