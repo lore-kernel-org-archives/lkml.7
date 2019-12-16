@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A580AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F34C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB34205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4B124685
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519111;
-	bh=3UrjpHRQoSZmVLtaegrGsjNkfqQ564PJ6o7FAiDIfIE=;
+	s=default; t=1576519115;
+	bh=Tq1/5fPlzCnrmjEKJYkJ4HNVUR07SsD7RSrgauShTUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMOin30JXux1CCVESyu7UpWQRauirwKbVj2gsunEF1l1hh/nISyNJ2v3J05cqYuzq
-	 2ZlOSaDyYUZlYvUci8c48sjj//s/v1+IG1OYVhZAkCXjXJnsld8I9CX67Ts+J0LOKD
-	 VyxSJxVFLiv9iXSjY5qGC4wKvqYNKGKwiEz5MbEs=
+	b=Bj42REV+dR798J+buGQA17hltIQtuNFX0kYs6UBc2/6zmuG0m7XWbB66aXy9eNKLO
+	 EFQqqT2XKrDyYUXYL2+KpY/Fv+Ljs7djcWPk/5lBAIsPvm2VI3GRUf2Wyl1d0I2NQI
+	 JImCCwkJ/bGlWHiUUWI3XX9X8SAFCHBSyjrdo6Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfLPR6a (ORCPT
+        id S1727783AbfLPR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:58:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:58:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfLPR6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:58:25 -0500
+        id S1728606AbfLPR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:58:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA55820733;
-        Mon, 16 Dec 2019 17:58:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE18205ED;
+        Mon, 16 Dec 2019 17:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519105;
-        bh=3UrjpHRQoSZmVLtaegrGsjNkfqQ564PJ6o7FAiDIfIE=;
+        s=default; t=1576519102;
+        bh=Tq1/5fPlzCnrmjEKJYkJ4HNVUR07SsD7RSrgauShTUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CoTP/ghAWklkXyhmRQF9LoT0IO+yl7GeHY20o/HKkKoxB494OwW5U0lzcDi7C+POV
-         HKeDdbJoxcESfTMTmtCJumEH9XdEx76w3kNMjy29l6xJN6vZvPX8mr/CLtp3Tmd2Zc
-         y5JnyrRRkknrppNN1gjsCxHNz/1WL3bhAdrR5dVs=
+        b=R1ufLlsv7RhR2HgtLtjB6zlezgFCtsGdgm9ZHFYdV/Z8EP1VWZTMmKyOicXPxbOnH
+         yURQL4AkyfCxWHlSqScGh4UF3899cvno8QYjlKSWIrBe7F2jC6yIW7lGw8qbeQLmID
+         E9ARtUjygzi8Vhy3lnaiOG+aao77kN9Bm0QzChRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 198/267] watchdog: aspeed: Fix clock behaviour for ast2600
-Date:   Mon, 16 Dec 2019 18:48:44 +0100
-Message-Id: <20191216174913.385533960@linuxfoundation.org>
+Subject: [PATCH 4.14 197/267] md/raid0: Fix an error message in raid0_make_request()
+Date:   Mon, 16 Dec 2019 18:48:43 +0100
+Message-Id: <20191216174913.320713854@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,64 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c04571251b3d842096f1597f5d4badb508be016d ]
+[ Upstream commit e3fc3f3d0943b126f76b8533960e4168412d9e5a ]
 
-The ast2600 no longer uses bit 4 in the control register to indicate a
-1MHz clock (It now controls whether this watchdog is reset by a SOC
-reset). This means we do not want to set it. It also does not need to be
-set for the ast2500, as it is read-only on that SoC.
+The first argument to WARN() is supposed to be a condition.  The
+original code will just print the mdname() instead of the full warning
+message.
 
-The comment next to the clock rate selection wandered away from where it
-was set, so put it back next to the register setting it's describing.
-
-Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191108032905.22463-1-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/md/raid0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index cee7334b2a000..f5835cbd5d415 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -204,11 +204,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(wdt->base))
- 		return PTR_ERR(wdt->base);
- 
--	/*
--	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
--	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
--	 * good reason to have a faster watchdog counter.
--	 */
- 	wdt->wdd.info = &aspeed_wdt_info;
- 	wdt->wdd.ops = &aspeed_wdt_ops;
- 	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
-@@ -224,7 +219,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	config = ofdid->data;
- 
--	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-+	/*
-+	 * On clock rates:
-+	 *  - ast2400 wdt can run at PCLK, or 1MHz
-+	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
-+	 *  - ast2600 always runs at 1MHz
-+	 *
-+	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
-+	 */
-+	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
-+		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
- 
- 	/*
- 	 * Control reset on a per-device basis to ensure the
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index 449c4dd060fcd..204adde004a3c 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -616,7 +616,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 		tmp_dev = map_sector(mddev, zone, sector, &sector);
+ 		break;
+ 	default:
+-		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
++		WARN(1, "md/raid0:%s: Invalid layout\n", mdname(mddev));
+ 		bio_io_error(bio);
+ 		return true;
+ 	}
 -- 
 2.20.1
 
