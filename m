@@ -2,95 +2,220 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E5FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7452082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD9F206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521976;
-	bh=5QarJk2vf4AgFG65xfyZVNxmgPHhg74dg5zRhUTzMgc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PTxB92AqbgjP05mc1COrmS4oGnag+YPhnY4QcBS8JCfwIFN/Y4Oy6+Nv01GqCFkrd
-	 TwFYmlKekCknrsiPqkKsywVGM36f7GYX/XNWehO0es2gzXLPwSQiQBAnHPxUgvdDoJ
-	 mr+yCBc5HW2qyOOlK6RLlmsFpgjJUwdkZyGaATBc=
+	s=default; t=1576521981;
+	bh=S/ZI0/t3JJ3sZ1nghjzdLLcA7v4p3ZJs0Zv7kefuPyo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dwOw0dxnbRDR/k4l5nfZJkY/zwAs5jBUtMzAf4rchUVuhlxO2tPLEi4muaONqJH5J
+	 Cpi7m1T1S7XkKdNfpL1yz7/0h+TQqVJ1K6Ecd9oItxJGrR0eBRGFXiP+P+VMYNaM6i
+	 8isk7QCc8e+N6DUNEkcXEBWdTFASKPDTQjrWNzKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfLPSqP (ORCPT
+        id S1728202AbfLPR4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36813 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfLPR41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c16so3255618oic.3;
-        Mon, 16 Dec 2019 09:56:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NSxjmaL8rqoc8+SB0zsgyZ8fRQmy0mATs46EIZXgEyk=;
-        b=Qgl2b+TMaU7LakVluiTrx/MNWV6P2Cm6yJabsMTMGvoFFRKQVm+OjFJ6CgQBO7vpiI
-         zn5szxT3LbEbR6D6HcZckJKkZzQhyZwBu6wtSyEA6s8QsxQIUXAQ+DAJYCAfmKGjKas+
-         ADAWTJrwGa+an5BPjC33tH+4t5I/5tBOO7qqzqxcWBVS6UvvniXIaU3XGdcD89sVbdn2
-         L+CI7Xukyd0eWTy+3zJeAqlsq+tkdY90Qqziv/+LNjzzrOFYTePOa9agC+XKxFyktjQm
-         EPVajn0YhB4+8A0SyvodES8eHLxiHvbGvifRzprvH0P47HeEzRDyQChwvmc/g0P04LHY
-         WEqg==
-X-Gm-Message-State: APjAAAV43tivx9hOjjQ8YJQ1NH29MVP7LydvwA6geS5Wqnbvby+NeIFB
-        g0DQflpE8BwHuf+S+iHMIrWzbLg=
-X-Google-Smtp-Source: APXvYqyXP65Nz9zaHaZk148ttbC2NvwuE+K2RDevNtaBL+faMyDiMYmBW9qIEqPRu2uHBQ6qq8iWfA==
-X-Received: by 2002:aca:498e:: with SMTP id w136mr146134oia.103.1576518986288;
-        Mon, 16 Dec 2019 09:56:26 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k5sm6960322oif.24.2019.12.16.09.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 09:56:25 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:56:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
-        robh+dt@kernel.org, paul.kocialkowski@bootlin.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com,
-        Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: Re: [PATCH v3 3/6] media: dt-bindings: Add bindings for i.MX8QXP/QM
- JPEG driver
-Message-ID: <20191216175624.GA24066@bogus>
-References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
- <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
+        Mon, 16 Dec 2019 12:56:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727398AbfLPR4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C99E205ED;
+        Mon, 16 Dec 2019 17:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576518981;
+        bh=S/ZI0/t3JJ3sZ1nghjzdLLcA7v4p3ZJs0Zv7kefuPyo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kFWJdf2MvkpCtmkh1RSsDfqWnWO+ZEfhAIVXvkTlpm4nmJtau+v5Cf9qn5TiKfb+b
+         bvnBR14vPp+7PmeT8XQc4vcSOC3nvfb9Q2FXEo4nM5Vm4ywrCWZmalnM7HSLIZBfpC
+         m2t0/Yas9fuP4OtxOmP71qOC5OQ0qUsQ+aLcbpxU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 108/267] tty: Dont block on IO when ldisc change is pending
+Date:   Mon, 16 Dec 2019 18:47:14 +0100
+Message-Id: <20191216174902.634453449@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 14:06:18 +0200, Mirela Rabulea wrote:
-> Add bindings documentation for i.MX8QXP/QM JPEG decoder & encoder driver.
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> ---
->  .../devicetree/bindings/media/imx8-jpeg.yaml       | 83 ++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
-> 
+From: Dmitry Safonov <dima@arista.com>
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+[ Upstream commit c96cf923a98d1b094df9f0cf97a83e118817e31b ]
 
-If a tag was not added on purpose, please state why and what changed.
+There might be situations where tty_ldisc_lock() has blocked, but there
+is already IO on tty and it prevents line discipline changes.
+It might theoretically turn into dead-lock.
+
+Basically, provide more priority to pending tty_ldisc_lock() than to
+servicing reads/writes over tty.
+
+User-visible issue was reported by Mikulas where on pa-risc with
+Debian 5 reboot took either 80 seconds, 3 minutes or 3:25 after proper
+locking in tty_reopen().
+
+Cc: Jiri Slaby <jslaby@suse.com>
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/n_hdlc.c    | 4 ++--
+ drivers/tty/n_r3964.c   | 2 +-
+ drivers/tty/n_tty.c     | 8 ++++----
+ drivers/tty/tty_ldisc.c | 7 +++++++
+ include/linux/tty.h     | 7 +++++++
+ 5 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index e83dea8d6633a..19c4aa800c810 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -614,7 +614,7 @@ static ssize_t n_hdlc_tty_read(struct tty_struct *tty, struct file *file,
+ 		}
+ 			
+ 		/* no data */
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			ret = -EAGAIN;
+ 			break;
+ 		}
+@@ -681,7 +681,7 @@ static ssize_t n_hdlc_tty_write(struct tty_struct *tty, struct file *file,
+ 		if (tbuf)
+ 			break;
+ 
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			error = -EAGAIN;
+ 			break;
+ 		}
+diff --git a/drivers/tty/n_r3964.c b/drivers/tty/n_r3964.c
+index 305b6490d4053..08ac04d089916 100644
+--- a/drivers/tty/n_r3964.c
++++ b/drivers/tty/n_r3964.c
+@@ -1080,7 +1080,7 @@ static ssize_t r3964_read(struct tty_struct *tty, struct file *file,
+ 		pMsg = remove_msg(pInfo, pClient);
+ 		if (pMsg == NULL) {
+ 			/* no messages available. */
+-			if (file->f_flags & O_NONBLOCK) {
++			if (tty_io_nonblock(tty, file)) {
+ 				ret = -EAGAIN;
+ 				goto unlock;
+ 			}
+diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+index 904fc9c37fdea..8214b0326b3a1 100644
+--- a/drivers/tty/n_tty.c
++++ b/drivers/tty/n_tty.c
+@@ -1704,7 +1704,7 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
+ 
+ 	down_read(&tty->termios_rwsem);
+ 
+-	while (1) {
++	do {
+ 		/*
+ 		 * When PARMRK is set, each input char may take up to 3 chars
+ 		 * in the read buf; reduce the buffer space avail by 3x
+@@ -1746,7 +1746,7 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
+ 			fp += n;
+ 		count -= n;
+ 		rcvd += n;
+-	}
++	} while (!test_bit(TTY_LDISC_CHANGING, &tty->flags));
+ 
+ 	tty->receive_room = room;
+ 
+@@ -2213,7 +2213,7 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file,
+ 					break;
+ 				if (!timeout)
+ 					break;
+-				if (file->f_flags & O_NONBLOCK) {
++				if (tty_io_nonblock(tty, file)) {
+ 					retval = -EAGAIN;
+ 					break;
+ 				}
+@@ -2367,7 +2367,7 @@ static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
+ 		}
+ 		if (!nr)
+ 			break;
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			retval = -EAGAIN;
+ 			break;
+ 		}
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index 01fcdc7ff0771..62dd2abb57fea 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -348,6 +348,11 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
+ {
+ 	int ret;
+ 
++	/* Kindly asking blocked readers to release the read side */
++	set_bit(TTY_LDISC_CHANGING, &tty->flags);
++	wake_up_interruptible_all(&tty->read_wait);
++	wake_up_interruptible_all(&tty->write_wait);
++
+ 	ret = __tty_ldisc_lock(tty, timeout);
+ 	if (!ret)
+ 		return -EBUSY;
+@@ -358,6 +363,8 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
+ void tty_ldisc_unlock(struct tty_struct *tty)
+ {
+ 	clear_bit(TTY_LDISC_HALTED, &tty->flags);
++	/* Can be cleared here - ldisc_unlock will wake up writers firstly */
++	clear_bit(TTY_LDISC_CHANGING, &tty->flags);
+ 	__tty_ldisc_unlock(tty);
+ }
+ 
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index 1dd587ba6d882..0cd621d8c7f05 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -365,6 +365,7 @@ struct tty_file_private {
+ #define TTY_NO_WRITE_SPLIT 	17	/* Preserve write boundaries to driver */
+ #define TTY_HUPPED 		18	/* Post driver->hangup() */
+ #define TTY_HUPPING		19	/* Hangup in progress */
++#define TTY_LDISC_CHANGING	20	/* Change pending - non-block IO */
+ #define TTY_LDISC_HALTED	22	/* Line discipline is halted */
+ 
+ /* Values for tty->flow_change */
+@@ -382,6 +383,12 @@ static inline void tty_set_flow_change(struct tty_struct *tty, int val)
+ 	smp_mb();
+ }
+ 
++static inline bool tty_io_nonblock(struct tty_struct *tty, struct file *file)
++{
++	return file->f_flags & O_NONBLOCK ||
++		test_bit(TTY_LDISC_CHANGING, &tty->flags);
++}
++
+ static inline bool tty_io_error(struct tty_struct *tty)
+ {
+ 	return test_bit(TTY_IO_ERROR, &tty->flags);
+-- 
+2.20.1
+
+
+
