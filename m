@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C85C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFD1206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B0D207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520409;
-	bh=cbNPlnp3RZdHG/QI5oceeLss/Ui224GBU1q62a4/UdQ=;
+	s=default; t=1576520413;
+	bh=XhccZtZRkjxwIxKwlKZElL/mBn9ub7/v1FJHOoH0a2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w28SmVZbX5PSC9pw+a+0YV/dicYUkjXK6MyWf2ebWCaBirnAYsMYgIEGeSrls1Wqw
-	 1GJNjeqQBXN6P59Ty7+ShV7Ky+ZBNhzz4BvxzmQEf/v4nEKKuyvl8p6E5M+geEqwF2
-	 y5PU/kdtkXopSMEoLKpoyVGzgh5u9m3p3n3rq6Ow=
+	b=F9+XSk1b4JPzdKKcT25Mw5oTpPKIxKGCEpEeJ4fyLpULyrT/mf+nZbce4pPXkZi+O
+	 YqtTI6bqEPuLi6gbpZ1QPNjJe44ro3jppj74PIYJJrAjN2PmOLcfXH3uGR5EgVwnVt
+	 1/PhTxzG3sLhO9RLa/cZ7VioVtZ0GhiYstPFm6w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732028AbfLPSUI (ORCPT
+        id S1731772AbfLPSUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:20:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:20:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731590AbfLPSUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:01 -0500
+        id S1732001AbfLPSUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C78420717;
-        Mon, 16 Dec 2019 18:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5E220717;
+        Mon, 16 Dec 2019 18:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520400;
-        bh=cbNPlnp3RZdHG/QI5oceeLss/Ui224GBU1q62a4/UdQ=;
+        s=default; t=1576520405;
+        bh=XhccZtZRkjxwIxKwlKZElL/mBn9ub7/v1FJHOoH0a2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jYkFtpiCy28wK2JvQ4HOImQbmr+dsUnpvEBYsh98pkpZb2Zqv3FaSjLA8SlX8gfNj
-         rN4MAVGl+87UW0b1KZnprJCWMoDSgRjB9+ibu1mfk6xTF9bU56/Bp9sT0X89a1CreL
-         PAAUwr0bXf/jATDpM2LjmJBf4TPgfi28mfO3GZTM=
+        b=x9kWCK0aDB9UuB3tGC/eVAexNdAAsYBoRisReMwe/UptjoaibX65Jv2xm0bdR80J0
+         dztRaZlzvEBMIK6s3qGyDc3yBWmSsTrOLb2Ad8xUpYKOm6jljCl3OxPKgPCo8E5tdb
+         2wkAiHG80kX8RhcSXthIvfKtly9Lz7swTM2gtsvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 140/177] RDMA/core: Fix ib_dma_max_seg_size()
-Date:   Mon, 16 Dec 2019 18:49:56 +0100
-Message-Id: <20191216174846.681477103@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH 5.4 142/177] stm class: Lose the protocol driver when dropping its reference
+Date:   Mon, 16 Dec 2019 18:49:58 +0100
+Message-Id: <20191216174846.926961571@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -59,67 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit ecdfdfdbe4d4c74029f2b416b7ee6d0aeb56364a upstream.
+commit 0a8f72fafb3f72a08df4ee491fcbeaafd6de85fd upstream.
 
-If dev->dma_device->params == NULL then the maximum DMA segment size is 64
-KB. See also the dma_get_max_seg_size() implementation. This patch fixes
-the following kernel warning:
+Commit c7fd62bc69d02 ("stm class: Introduce framing protocol drivers")
+forgot to tear down the link between an stm device and its protocol
+driver when policy is removed. This leads to an invalid pointer reference
+if one tries to write to an stm device after the policy has been removed
+and the protocol driver module unloaded, leading to the below splat:
 
-  DMA-API: infiniband rxe0: mapping sg segment longer than device claims to support [len=126976] [max=65536]
-  WARNING: CPU: 4 PID: 4848 at kernel/dma/debug.c:1220 debug_dma_map_sg+0x3d9/0x450
-  RIP: 0010:debug_dma_map_sg+0x3d9/0x450
-  Call Trace:
-   srp_queuecommand+0x626/0x18d0 [ib_srp]
-   scsi_queue_rq+0xd02/0x13e0 [scsi_mod]
-   __blk_mq_try_issue_directly+0x2b3/0x3f0
-   blk_mq_request_issue_directly+0xac/0xf0
-   blk_insert_cloned_request+0xdf/0x170
-   dm_mq_queue_rq+0x43d/0x830 [dm_mod]
-   __blk_mq_try_issue_directly+0x2b3/0x3f0
-   blk_mq_request_issue_directly+0xac/0xf0
-   blk_mq_try_issue_list_directly+0xb8/0x170
-   blk_mq_sched_insert_requests+0x23c/0x3b0
-   blk_mq_flush_plug_list+0x529/0x730
-   blk_flush_plug_list+0x21f/0x260
-   blk_mq_make_request+0x56b/0xf20
-   generic_make_request+0x196/0x660
-   submit_bio+0xae/0x290
-   blkdev_direct_IO+0x822/0x900
-   generic_file_direct_write+0x110/0x200
-   __generic_file_write_iter+0x124/0x2a0
-   blkdev_write_iter+0x168/0x270
-   aio_write+0x1c4/0x310
-   io_submit_one+0x971/0x1390
-   __x64_sys_io_submit+0x12a/0x390
-   do_syscall_64+0x6f/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> BUG: unable to handle page fault for address: ffffffffc0737068
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 3d780f067 P4D 3d780f067 PUD 3d7811067 PMD 492781067 PTE 0
+> Oops: 0000 [#1] SMP NOPTI
+> CPU: 1 PID: 26122 Comm: cat Not tainted 5.4.0-rc5+ #1
+> RIP: 0010:stm_output_free+0x40/0xc0 [stm_core]
+> Call Trace:
+>  stm_char_release+0x3e/0x70 [stm_core]
+>  __fput+0xc6/0x260
+>  ____fput+0xe/0x10
+>  task_work_run+0x9d/0xc0
+>  exit_to_usermode_loop+0x103/0x110
+>  do_syscall_64+0x19d/0x1e0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Link: https://lore.kernel.org/r/20191025225830.257535-2-bvanassche@acm.org
-Cc: <stable@vger.kernel.org>
-Fixes: 0b5cb3300ae5 ("RDMA/srp: Increase max_segment_size")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by tearing down the link from an stm device to its protocol
+driver when the policy involving that driver is removed.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: c7fd62bc69d02 ("stm class: Introduce framing protocol drivers")
+Reported-by: Ammy Yi <ammy.yi@intel.com>
+Tested-by: Ammy Yi <ammy.yi@intel.com>
+CC: stable@vger.kernel.org # v4.20+
+Link: https://lore.kernel.org/r/20191114064201.43089-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/rdma/ib_verbs.h |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/hwtracing/stm/policy.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -4043,9 +4043,7 @@ static inline void ib_dma_unmap_sg_attrs
-  */
- static inline unsigned int ib_dma_max_seg_size(struct ib_device *dev)
- {
--	struct device_dma_parameters *p = dev->dma_device->dma_parms;
--
--	return p ? p->max_segment_size : UINT_MAX;
-+	return dma_get_max_seg_size(dev->dma_device);
+--- a/drivers/hwtracing/stm/policy.c
++++ b/drivers/hwtracing/stm/policy.c
+@@ -345,7 +345,11 @@ void stp_policy_unbind(struct stp_policy
+ 	stm->policy = NULL;
+ 	policy->stm = NULL;
+ 
++	/*
++	 * Drop the reference on the protocol driver and lose the link.
++	 */
+ 	stm_put_protocol(stm->pdrv);
++	stm->pdrv = NULL;
+ 	stm_put_device(stm);
  }
  
- /**
 
 
