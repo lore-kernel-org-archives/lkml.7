@@ -2,154 +2,87 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB2AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BE6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D3F206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503575;
-	bh=7SGMKiJuU0qvOnDKNSk19Hh1fTjIukPVmdPORtDYtmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gI0BvNckDhclurbvzTI46qWzFHlQJq+qvPP6lhxU3eslIgTPDO7j0X1yG6Ai0nfoI
-	 cyBtAf+/TYF1DRJoUzi14XDEI8oebRek5VUaR5Qx7tXnYXwSQTrF33BtuygDa9Q08F
-	 rRvtcCncWcWadTmfVF7zxDGUJr8jRuhUklfNBubo=
+	by mail.kernel.org (Postfix) with ESMTP id D09E9206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:40:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="er4Y+Dsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfLPNje (ORCPT
+        id S1727968AbfLPNkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfLPNje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:39:34 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 121A620409;
-        Mon, 16 Dec 2019 13:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503573;
-        bh=7SGMKiJuU0qvOnDKNSk19Hh1fTjIukPVmdPORtDYtmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vfLGXmzS2aEJJUXCz87hGKfWnfKZK5c+nQN4ASKWZC/3ARcgJPTTGa+WMDjs1sCGz
-         hAJOTeLNBGoTrgn63VcheYdOsnr3rihcQ7gSl17aXmp5oXdeYdin1sQ0wtwpLbkMPd
-         gvnWCW7oIuMe3ciOPsbHGa/nr2xx6KpcjOQZK1DI=
-Date:   Mon, 16 Dec 2019 14:39:31 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 11/14] ARM: dts: sun8i: r40: Add device node for CSI0
-Message-ID: <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-12-wens@kernel.org>
+        Mon, 16 Dec 2019 08:40:00 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbfLPNkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:40:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576503598; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I7vYLgIsS5tJQdkPlZ9agIsnannevGQoUa/+rxeDUjY=;
+        b=er4Y+DsflE5wUPtNmfE+vP4acAeAWY2VasEC5ZAK0iwplyEheRxoF8oC8WW16PAZ3sBGK5
+        g/L+Xb7D38tLwomnMp060HpmiumzH8/nW1obInbZ7Dj2TwgSzXPHzSm8opYwCwR1WXbYWr
+        PqhDYdgDzDakj5IgDit7Slkbr29+23E=
+Date:   Mon, 16 Dec 2019 14:39:53 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/6] dt-bindings: display/ingenic: Add compatible
+ string for JZ4770
+To:     Ville =?iso-8859-1?b?U3lyauRs5A==?= 
+        <ville.syrjala@linux.intel.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-Id: <1576503593.3.2@crapouillou.net>
+In-Reply-To: <20191216131529.GN1208@intel.com>
+References: <20191210144142.33143-1-paul@crapouillou.net>
+        <20191214105418.GA5687@ravnborg.org> <20191216131529.GN1208@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qmlybd2b72avx3db"
-Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-12-wens@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ville,
 
---qmlybd2b72avx3db
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Dec 16, 2019 at 12:59:21AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The CSI0 and CSI1 blocks are the same as found on the A20. However only
-> CSI0 is supported upstream right now.
->
-> Add a device node for CSI0 using the A20 compatible as a fallback, and
-> the standard pinctrl options. Also add the MBUS interconnect.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 82ea0b5b0710..2d1e97cc4155 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -180,6 +180,20 @@ nmi_intc: interrupt-controller@1c00030 {
->  			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->
-> +		csi0: csi@1c09000 {
-> +			compatible = "allwinner,sun8i-r40-csi0",
-> +				     "allwinner,sun7i-a20-csi0";
-> +			reg = <0x01c09000 0x1000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_CSI0>, <&ccu CLK_CSI_SCLK>,
-> +				 <&ccu CLK_DRAM_CSI0>;
-> +			clock-names = "bus", "isp", "ram";
-> +			resets = <&ccu RST_BUS_CSI0>;
-> +			interconnects = <&mbus 5>;
-> +			interconnect-names = "dma-mem";
-> +			status = "disabled";
-> +		};
-> +
->  		mmc0: mmc@1c0f000 {
->  			compatible = "allwinner,sun8i-r40-mmc",
->  				     "allwinner,sun50i-a64-mmc";
-> @@ -355,6 +369,20 @@ clk_out_a_pin: clk-out-a-pin {
->  				function = "clk_out_a";
->  			};
->
-> +			/omit-if-no-ref/
-> +			csi0_8bits_pins: csi0-8bits-pins {
-> +				pins = "PE0", "PE2", "PE3", "PE4", "PE5",
-> +				       "PE6", "PE7", "PE8", "PE9", "PE10",
-> +				       "PE11";
-> +				function = "csi0";
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			csi0_mclk_pin: csi0-mclk-pin {
-> +				pins = "PE1";
-> +				function = "csi0";
-> +			};
-> +
->  			gmac_rgmii_pins: gmac-rgmii-pins {
->  				pins = "PA0", "PA1", "PA2", "PA3",
->  				       "PA4", "PA5", "PA6", "PA7",
-> @@ -624,6 +652,14 @@ gmac_mdio: mdio {
->  			};
->  		};
->
-> +		mbus: dram-controller@1c62000 {
-> +			compatible = "allwinner,sun8i-r40-mbus";
-> +			reg = <0x01c62000 0x1000>;
-> +			clocks = <&ccu 155>;
+Le lun., d=E9c. 16, 2019 at 15:15, Ville Syrj=E4l=E4=20
+<ville.syrjala@linux.intel.com> a =E9crit :
+> On Sat, Dec 14, 2019 at 11:54:18AM +0100, Sam Ravnborg wrote:
+>>  Hi Paul.
+>>=20
+>>  On Tue, Dec 10, 2019 at 03:41:37PM +0100, Paul Cercueil wrote:
+>>  > Add a compatible string for the LCD controller found in the=20
+>> JZ4770 SoC.
+>>  >
+>>  > v2: No change
+>>  >
+>>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  > Acked-by: Rob Herring <robh@kernel.org>
+>>=20
+>>  Whole series looks good.
+>>  Acked-by: Sam Ravnborg <sam@ravnborg.org>
+>=20
+> Paul, looks like you forgot to git commit --amend after adding the=20
+> tags.
+> Now the commit messages have and extra "# *** extracted tags ***" in=20
+> them.
 
-We should export the clock too?
+Sorry, I'm still relatively new to this :(
 
-Maxime
->
+I thought they were going to be automatically removed since they are=20
+comments.
 
---qmlybd2b72avx3db
-Content-Type: application/pgp-signature; name="signature.asc"
+-Paul
 
------BEGIN PGP SIGNATURE-----
+=
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeJEwAKCRDj7w1vZxhR
-xX4mAP9raoaBd1QdA12eLJMz9YoIz/KDkCY7IQsU8z/3jU+6kAEA/VtzPoBPHD0K
-JHbPLHhucKTZH4r3G5PLW3g/rkleMQA=
-=CsA8
------END PGP SIGNATURE-----
-
---qmlybd2b72avx3db--
