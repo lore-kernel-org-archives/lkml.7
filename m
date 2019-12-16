@@ -2,51 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68209C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A22FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEA921739
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2813324655
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518971;
-	bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
+	s=default; t=1576518974;
+	bh=m0Xi4nTk+oGEpyZ0wdmXOfeFk6InEJHjaHdGJ/1h9rE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ox8GgV+ZU8ZJxlFpoitFKBQhd66TDUGQapIXjJXkHLTN9AtTPgQWYHj6I/7KJiKO6
-	 3pgi57Y+wZyTVm2JCmKnfK45UhfqdmWTSpueGdxkDkXiRcszWNbwkwdCkOmCyOzo0s
-	 WcsAeakllaOb2Ketg3wmfYzGpUgdRCh4b7fRxHUE=
+	b=0AFa8eTsUV9gnO3xWkajVx+uYx3Ps1cOyoAEWDkpW/YLrWs+5sX2wF6iEEhW5P7Ov
+	 9S8oELTlPBrEBVbab+6v9ZvK3RX9PIqU0pj6xUCb14vu9+fZOL3mgtva/HJedZ9rkS
+	 Qo2VUjdtjzn5Brxzmp15p0psB1ejRuJugCrlDxCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfLPR4K (ORCPT
+        id S1728177AbfLPR4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:56:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbfLPR4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:06 -0500
+        id S1727337AbfLPR4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB95205ED;
-        Mon, 16 Dec 2019 17:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB3420733;
+        Mon, 16 Dec 2019 17:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518966;
-        bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
+        s=default; t=1576518969;
+        bh=m0Xi4nTk+oGEpyZ0wdmXOfeFk6InEJHjaHdGJ/1h9rE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o01QSfvjzfn5bIgl7GxhGsFUczQK/HvtFGc4GmMCbJx/qssNALz/aOKbf/p926QbR
-         up3DYCEFm50UB1pVnzyaKoFZD0WyhnI0tn9Ch/N/DVTE9BKSh/1qkND7pMVVtiaKBC
-         LOMFV1Czy6HNLX6TEcJKZtTfwXxfMzGTq2k3aUdE=
+        b=c6Uy/4SLeSmgSZwP8EuHKgoyf88zS4pSeiBLq9Fs6O/224MaPTQmQWHI2BHfUBnyO
+         qaWwW/AxLJN0oX/quMLdqZDbnOJSG6Ba7f5Q8y1gsayTVUU0Bafk+zu0bUxK3VXw2y
+         aGGWWosObMMcg05q426Moi8Zwz1iQZS0UKdgRuaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 4.14 139/267] drm/i810: Prevent underflow in ioctl
-Date:   Mon, 16 Dec 2019 18:47:45 +0100
-Message-Id: <20191216174910.100743175@linuxfoundation.org>
+        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 104/267] powerpc/math-emu: Update macros from GCC
+Date:   Mon, 16 Dec 2019 18:47:10 +0100
+Message-Id: <20191216174902.408908071@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,43 +62,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Joel Stanley <joel@jms.id.au>
 
-commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
+[ Upstream commit b682c8692442711684befe413cf93cf01c5324ea ]
 
-The "used" variables here come from the user in the ioctl and it can be
-negative.  It could result in an out of bounds write.
+The add_ssaaaa, sub_ddmmss, umul_ppmm and udiv_qrnnd macros originate
+from GCC's longlong.h which in turn was copied from GMP's longlong.h a
+few decades ago.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This was found when compiling with clang:
 
+   arch/powerpc/math-emu/fnmsub.c:46:2: error: invalid use of a cast in a
+   inline asm context requiring an l-value: remove the cast or build with
+   -fheinous-gnu-extensions
+           FP_ADD_D(R, T, B);
+           ^~~~~~~~~~~~~~~~~
+   ...
+
+   ./arch/powerpc/include/asm/sfp-machine.h:283:27: note: expanded from
+   macro 'sub_ddmmss'
+                  : "=r" ((USItype)(sh)),                                  \
+                          ~~~~~~~~~~^~~
+
+Segher points out: this was fixed in GCC over 16 years ago
+( https://gcc.gnu.org/r56600 ), and in GMP (where it comes from)
+presumably before that.
+
+Update the add_ssaaaa, sub_ddmmss, umul_ppmm and udiv_qrnnd macros to
+the latest GCC version in order to git rid of the invalid casts. These
+were taken as-is from GCC's longlong in order to make future syncs
+obvious. Other parts of sfp-machine.h were left as-is as the file
+contains more features than present in longlong.h.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/260
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i810/i810_dma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/sfp-machine.h | 92 ++++++++------------------
+ 1 file changed, 29 insertions(+), 63 deletions(-)
 
---- a/drivers/gpu/drm/i810/i810_dma.c
-+++ b/drivers/gpu/drm/i810/i810_dma.c
-@@ -721,7 +721,7 @@ static void i810_dma_dispatch_vertex(str
- 	if (nbox > I810_NR_SAREA_CLIPRECTS)
- 		nbox = I810_NR_SAREA_CLIPRECTS;
+diff --git a/arch/powerpc/include/asm/sfp-machine.h b/arch/powerpc/include/asm/sfp-machine.h
+index d89beaba26ff9..8b957aabb826d 100644
+--- a/arch/powerpc/include/asm/sfp-machine.h
++++ b/arch/powerpc/include/asm/sfp-machine.h
+@@ -213,30 +213,18 @@
+  * respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow
+  * (i.e. carry out) is not stored anywhere, and is lost.
+  */
+-#define add_ssaaaa(sh, sl, ah, al, bh, bl)				\
++#define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+   do {									\
+     if (__builtin_constant_p (bh) && (bh) == 0)				\
+-      __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\
+-	     : "=r" ((USItype)(sh)),					\
+-	       "=&r" ((USItype)(sl))					\
+-	     : "%r" ((USItype)(ah)),					\
+-	       "%r" ((USItype)(al)),					\
+-	       "rI" ((USItype)(bl)));					\
+-    else if (__builtin_constant_p (bh) && (bh) ==~(USItype) 0)		\
+-      __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\
+-	     : "=r" ((USItype)(sh)),					\
+-	       "=&r" ((USItype)(sl))					\
+-	     : "%r" ((USItype)(ah)),					\
+-	       "%r" ((USItype)(al)),					\
+-	       "rI" ((USItype)(bl)));					\
++      __asm__ ("add%I4c %1,%3,%4\n\taddze %0,%2"		\
++	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\
++    else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
++      __asm__ ("add%I4c %1,%3,%4\n\taddme %0,%2"		\
++	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\
+     else								\
+-      __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\
+-	     : "=r" ((USItype)(sh)),					\
+-	       "=&r" ((USItype)(sl))					\
+-	     : "%r" ((USItype)(ah)),					\
+-	       "r" ((USItype)(bh)),					\
+-	       "%r" ((USItype)(al)),					\
+-	       "rI" ((USItype)(bl)));					\
++      __asm__ ("add%I5c %1,%4,%5\n\tadde %0,%2,%3"		\
++	     : "=r" (sh), "=&r" (sl)					\
++	     : "%r" (ah), "r" (bh), "%r" (al), "rI" (bl));		\
+   } while (0)
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+ /* sub_ddmmss is used in op-2.h and udivmodti4.c and should be equivalent to
+@@ -248,44 +236,24 @@
+  * and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,
+  * and is lost.
+  */
+-#define sub_ddmmss(sh, sl, ah, al, bh, bl)				\
++#define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+   do {									\
+     if (__builtin_constant_p (ah) && (ah) == 0)				\
+-      __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\
+-	       : "=r" ((USItype)(sh)),					\
+-		 "=&r" ((USItype)(sl))					\
+-	       : "r" ((USItype)(bh)),					\
+-		 "rI" ((USItype)(al)),					\
+-		 "r" ((USItype)(bl)));					\
+-    else if (__builtin_constant_p (ah) && (ah) ==~(USItype) 0)		\
+-      __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\
+-	       : "=r" ((USItype)(sh)),					\
+-		 "=&r" ((USItype)(sl))					\
+-	       : "r" ((USItype)(bh)),					\
+-		 "rI" ((USItype)(al)),					\
+-		 "r" ((USItype)(bl)));					\
++      __asm__ ("subf%I3c %1,%4,%3\n\tsubfze %0,%2"	\
++	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
++    else if (__builtin_constant_p (ah) && (ah) == ~(USItype) 0)		\
++      __asm__ ("subf%I3c %1,%4,%3\n\tsubfme %0,%2"	\
++	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
+     else if (__builtin_constant_p (bh) && (bh) == 0)			\
+-      __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\
+-	       : "=r" ((USItype)(sh)),					\
+-		 "=&r" ((USItype)(sl))					\
+-	       : "r" ((USItype)(ah)),					\
+-		 "rI" ((USItype)(al)),					\
+-		 "r" ((USItype)(bl)));					\
+-    else if (__builtin_constant_p (bh) && (bh) ==~(USItype) 0)		\
+-      __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\
+-	       : "=r" ((USItype)(sh)),					\
+-		 "=&r" ((USItype)(sl))					\
+-	       : "r" ((USItype)(ah)),					\
+-		 "rI" ((USItype)(al)),					\
+-		 "r" ((USItype)(bl)));					\
++      __asm__ ("subf%I3c %1,%4,%3\n\taddme %0,%2"		\
++	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
++    else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
++      __asm__ ("subf%I3c %1,%4,%3\n\taddze %0,%2"		\
++	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
+     else								\
+-      __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\
+-	       : "=r" ((USItype)(sh)),					\
+-		 "=&r" ((USItype)(sl))					\
+-	       : "r" ((USItype)(ah)),					\
+-		 "r" ((USItype)(bh)),					\
+-		 "rI" ((USItype)(al)),					\
+-		 "r" ((USItype)(bl)));					\
++      __asm__ ("subf%I4c %1,%5,%4\n\tsubfe %0,%3,%2"	\
++	       : "=r" (sh), "=&r" (sl)					\
++	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl));		\
+   } while (0)
  
- 	if (sarea_priv->dirty)
-@@ -1041,7 +1041,7 @@ static void i810_dma_dispatch_mc(struct
- 	if (u != I810_BUF_CLIENT)
- 		DRM_DEBUG("MC found buffer that isn't mine!\n");
+ /* asm fragments for mul and div */
+@@ -294,13 +262,10 @@
+  * UWtype integers MULTIPLER and MULTIPLICAND, and generates a two UWtype
+  * word product in HIGH_PROD and LOW_PROD.
+  */
+-#define umul_ppmm(ph, pl, m0, m1)					\
++#define umul_ppmm(ph, pl, m0, m1) \
+   do {									\
+     USItype __m0 = (m0), __m1 = (m1);					\
+-    __asm__ ("mulhwu %0,%1,%2"						\
+-	     : "=r" ((USItype)(ph))					\
+-	     : "%r" (__m0),						\
+-               "r" (__m1));						\
++    __asm__ ("mulhwu %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\
+     (pl) = __m0 * __m1;							\
+   } while (0)
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
- 
- 	sarea_priv->dirty = 0x7f;
+@@ -312,9 +277,10 @@
+  * significant bit of DENOMINATOR must be 1, then the pre-processor symbol
+  * UDIV_NEEDS_NORMALIZATION is defined to 1.
+  */
+-#define udiv_qrnnd(q, r, n1, n0, d)					\
++#define udiv_qrnnd(q, r, n1, n0, d) \
+   do {									\
+-    UWtype __d1, __d0, __q1, __q0, __r1, __r0, __m;			\
++    UWtype __d1, __d0, __q1, __q0;					\
++    UWtype __r1, __r0, __m;						\
+     __d1 = __ll_highpart (d);						\
+     __d0 = __ll_lowpart (d);						\
+ 									\
+@@ -325,7 +291,7 @@
+     if (__r1 < __m)							\
+       {									\
+ 	__q1--, __r1 += (d);						\
+-	if (__r1 >= (d)) /* we didn't get carry when adding to __r1 */	\
++	if (__r1 >= (d)) /* i.e. we didn't get carry when adding to __r1 */\
+ 	  if (__r1 < __m)						\
+ 	    __q1--, __r1 += (d);					\
+       }									\
+-- 
+2.20.1
+
 
 
