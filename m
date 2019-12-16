@@ -2,87 +2,96 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF8AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 23:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F0AC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 23:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A55206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 23:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A8620CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 23:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="srSXHoz4"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="A860KQ4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfLPXIX (ORCPT
+        id S1727189AbfLPXKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 18:08:23 -0500
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:44532 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726487AbfLPXIX (ORCPT
+        Mon, 16 Dec 2019 18:10:35 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33657 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLPXKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 18:08:23 -0500
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 5352B30C314;
-        Mon, 16 Dec 2019 15:03:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 5352B30C314
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1576537414;
-        bh=tNe9jvD+5chQn79aLCyEclvjgXPj+VGw2GW/43TZLBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=srSXHoz4cswAPHaty5INghjNTJz8PHS1SNmf6+y06EP2p5RSwglJMjUD7hjggaZPF
-         9376L+OpNBCMOCH9xn46VW/r+lsPvfv3Mior5xZjgbAREDLi7E1GqXoMd2Xclbh0ME
-         WlbVQe+4hqagWEVOo5+AnHfuUTBx7LwWkwlajgqg=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 92E63140069;
-        Mon, 16 Dec 2019 15:08:20 -0800 (PST)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Subject: [PATCH v2 1/1] spi: bcm2835: no dev_err() on clk_get() -EPROBE_DEFER
-Date:   Mon, 16 Dec 2019 18:08:02 -0500
-Message-Id: <20191216230802.45715-2-jquinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216230802.45715-1-jquinlan@broadcom.com>
-References: <20191216230802.45715-1-jquinlan@broadcom.com>
+        Mon, 16 Dec 2019 18:10:34 -0500
+Received: by mail-io1-f67.google.com with SMTP id z8so7068452ioh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 15:10:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dCnC/jfvEWt+z7fAdBW+xSdl7SEaUneQSHaq+EB0tW8=;
+        b=A860KQ4K3o5h8+6NmyV0mWqxB7G9iucprwDUlid50DJIt930o0EdvyrIQmDddU8BU/
+         bII7+rThzGEDdo1NoanT+8dfcEbll4RsPU/2r2erpSocVBIUD8HBJv/ZJ1ydcHCtI1Np
+         V5hqkNOaMZx3TmRNaZ1sCyvu6URHi990RaWsTjZd+axtL0dF6DkRNbqZoRcqmNkY3QEg
+         /8Ycnsxw0i50SdGvYuPFBq+MGZ3yMfzTwU5bQEeG8LS4MaZ+3mbDQgvVmTM7dSPBmjhD
+         lNQlUwedlAFoXrSrY7l3oXi86KE2p/ZLiYZxfh48oTu9MZ9P07dNtHABxC7j6VZJvVAt
+         3M8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dCnC/jfvEWt+z7fAdBW+xSdl7SEaUneQSHaq+EB0tW8=;
+        b=gGKBA3TKgYImGA63gweHiUcvOxampnQkVEZu+h4/qdrwalQVLR0oyLWgmdKLY+tHau
+         Z8Fk3Dh8fUziMGeXK7fNBMs1nkCH+7YG0I97xjBpwyX00tcrfy8jG9BLfehm91dUL5DH
+         oWVJsAlpVLrdfOdT+b056OKwOAp7fs731FVTXQ7m4bJgO0oa3tAzOtRyxM1J7g0wIh/s
+         7x3SudTIKsxqwqxmKudVI/GKFM/xXBwXBA+gawTHJCkZU0burRVk0AaXvcBajADMM1iE
+         tWCfWzwYxB9He1aNH8mbQ2gbg268aq4mytaMh+8a0JLWfodaltNk7Atcsh/mssaWlThY
+         GRKw==
+X-Gm-Message-State: APjAAAX4zJPIWDi7RAQ9vwGTzTYTsFrLAO+77Ch82sPgvUY8dimcS1An
+        4SR+sH/r3sYzaZnBp+zyU6bGvg==
+X-Google-Smtp-Source: APXvYqzbm6Awsl5NFoCXB4S8ZwNWX05gmf9fBekjP0vGzfoTbJRwv3EC4ru2y7C/PxbU2pyATedezQ==
+X-Received: by 2002:a5d:875a:: with SMTP id k26mr1430389iol.45.1576537833871;
+        Mon, 16 Dec 2019 15:10:33 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id h71sm6259626ila.30.2019.12.16.15.10.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 15:10:33 -0800 (PST)
+Subject: Re: [PATCH block/for-5.5-fixes] iocost: over-budget forced IOs should
+ schedule async delay
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>
+References: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fc474a2f-4e1b-8c9f-06bf-b479f7455c77@kernel.dk>
+Date:   Mon, 16 Dec 2019 16:10:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191216213400.GA2914998@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use dev_dbg() on -EPROBE_DEFER and dev_err() on all
-other errors.
+On 12/16/19 2:34 PM, Tejun Heo wrote:
+> When over-budget IOs are force-issued through root cgroup,
+> iocg_kick_delay() adjusts the async delay accordingly but doesn't
+> actually schedule async throttle for the issuing task.  This bug is
+> pretty well masked because sooner or later the offending threads are
+> gonna get directly throttled on regular IOs or have async delay
+> scheduled by mem_cgroup_throttle_swaprate().
+> 
+> However, it can affect control quality on filesystem metadata heavy
+> operations.  Let's fix it by invoking blkcg_schedule_throttle() when
+> iocg_kick_delay() says async delay is needed.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- drivers/spi/spi-bcm2835.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Applied, thanks Tejun.
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index fb61a620effc..e4b57b751ce2 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1305,7 +1305,10 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
- 	bs->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(bs->clk)) {
- 		err = PTR_ERR(bs->clk);
--		dev_err(&pdev->dev, "could not get clk: %d\n", err);
-+		if (err == -EPROBE_DEFER)
-+			dev_dbg(&pdev->dev, "could not get clk: %d\n", err);
-+		else
-+			dev_err(&pdev->dev, "could not get clk: %d\n", err);
- 		goto out_controller_put;
- 	}
- 
 -- 
-2.17.1
+Jens Axboe
 
