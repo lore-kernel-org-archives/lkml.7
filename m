@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6D6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AB9218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E404E218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520051;
-	bh=9qlUL9FC7N+k1z+E4k4mGKZs9S4CLnnOmFfX4VzFhWY=;
+	s=default; t=1576520056;
+	bh=D4XvgHEeCS0KzbBgydQLZIYD/5a0d+mwsPG0HseOUWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzX1CUme0wUYdruopxP6bpCdVCUDqiM28ge6yOeeKPIHeR/Z46bhH1vq3lRZ+uN0K
-	 aOuhA5k++xgO7yaydmwXzaKWM5WZIk9OvnB6vn7fRK0pwHnQf57lnB4xd4f5tOB736
-	 /yfqetxVeWd8Qwqvn/G3HUIabznxRGT2mgcwLroE=
+	b=DtlfI/LYgCbm1SBFIW1Sa6JkVGw+e1whdRCNRbxYWsNDLbU3pJd4o90PsHmHYptzp
+	 NJlzwKKgF9Ig/mX+ovOEn/k8fgJLcWWoyE5uC+AyneIB4NAyZ7ttmi9tSqLfrSKSGh
+	 A3hzsji3r/+ECmMz0LuANCNvmrRzzUiWT4xe1MbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfLPSOK (ORCPT
+        id S1731073AbfLPSON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:14:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60914 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfLPSOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:00 -0500
+        id S1730936AbfLPSOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C43920CC7;
-        Mon, 16 Dec 2019 18:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C1921775;
+        Mon, 16 Dec 2019 18:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520040;
-        bh=9qlUL9FC7N+k1z+E4k4mGKZs9S4CLnnOmFfX4VzFhWY=;
+        s=default; t=1576520042;
+        bh=D4XvgHEeCS0KzbBgydQLZIYD/5a0d+mwsPG0HseOUWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXyuEO3+q/hyIEAjL3h6sNHsyLJKYObZAJlTbHYpYIVPSpy5o22S6P98DHEvU+2Qs
-         1r29h8oGeRYg0L7pSNwWYJ+B5DmPK+OPDnGm3oqqxRJQ0+o70NoIhajPr+WgZ+rQSb
-         4n/cMbzgIeXaSzjNlgAsbdbCMj6XN2fXzlznewhU=
+        b=qj+Bz56jt+/SDH74fMvI4WPYX6NzMU/s5T2deAQPzGlfzcRYc9gqwDESMpaOSI1ne
+         PEtfZQxWnsUxw9y90zGSH0R0o1AYaKyjA/0xXQfIjJZZDnWPE8kyJEHgrY7v2Bee1y
+         H4soWxQG3Jd/TUg9ByYhBYVMH+VFDLY2INjMQY1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>
-Subject: [PATCH 5.3 173/180] ext4: work around deleting a file with i_nlink == 0 safely
-Date:   Mon, 16 Dec 2019 18:50:13 +0100
-Message-Id: <20191216174847.858148201@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.3 174/180] firmware: qcom: scm: Ensure a0 status code is treated as signed
+Date:   Mon, 16 Dec 2019 18:50:14 +0100
+Message-Id: <20191216174847.965780398@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,61 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Will Deacon <will@kernel.org>
 
-commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 upstream.
+commit ff34f3cce278a0982a7b66b1afaed6295141b1fc upstream.
 
-If the file system is corrupted such that a file's i_links_count is
-too small, then it's possible that when unlinking that file, i_nlink
-will already be zero.  Previously we were working around this kind of
-corruption by forcing i_nlink to one; but we were doing this before
-trying to delete the directory entry --- and if the file system is
-corrupted enough that ext4_delete_entry() fails, then we exit with
-i_nlink elevated, and this causes the orphan inode list handling to be
-FUBAR'ed, such that when we unmount the file system, the orphan inode
-list can get corrupted.
+The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned long',
+however the Qualcomm SCM firmware interface driver expects to receive
+negative error codes via this field, so ensure that it's cast to 'long'
+before comparing to see if it is less than 0.
 
-A better way to fix this is to simply skip trying to call drop_nlink()
-if i_nlink is already zero, thus moving the check to the place where
-it makes the most sense.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=205433
-
-Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/namei.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/firmware/qcom_scm-64.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -3182,18 +3182,17 @@ static int ext4_unlink(struct inode *dir
- 	if (IS_DIRSYNC(dir))
- 		ext4_handle_sync(handle);
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -150,7 +150,7 @@ static int qcom_scm_call(struct device *
+ 		kfree(args_virt);
+ 	}
  
--	if (inode->i_nlink == 0) {
--		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
--				   dentry->d_name.len, dentry->d_name.name);
--		set_nlink(inode, 1);
--	}
- 	retval = ext4_delete_entry(handle, dir, de, bh);
- 	if (retval)
- 		goto end_unlink;
- 	dir->i_ctime = dir->i_mtime = current_time(dir);
- 	ext4_update_dx_flag(dir);
- 	ext4_mark_inode_dirty(handle, dir);
--	drop_nlink(inode);
-+	if (inode->i_nlink == 0)
-+		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
-+				   dentry->d_name.len, dentry->d_name.name);
-+	else
-+		drop_nlink(inode);
- 	if (!inode->i_nlink)
- 		ext4_orphan_add(handle, inode);
- 	inode->i_ctime = current_time(inode);
+-	if (res->a0 < 0)
++	if ((long)res->a0 < 0)
+ 		return qcom_scm_remap_error(res->a0);
+ 
+ 	return 0;
 
 
