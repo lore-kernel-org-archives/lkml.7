@@ -2,235 +2,196 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB4AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81CEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16FB2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMOYkt+D"
+	by mail.kernel.org (Postfix) with ESMTP id ACCDB2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576523064;
+	bh=n2niy3GX1/9dWzk5LJO7Idaltrdy2g6TUiU7ytqHdg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gRZzSEypscIKpEPgKlnhe6PaHu4YBkzC5pcBeA9SXlTy9ePwpBZdYMiydfk04Tb47
+	 I0UDOahU8E0p/FahZQqU4s0xHm67bdDgYaySCZVz8YWkOOk9QjB6p2QsXfkZrOzoEv
+	 QuuOB/eDWLVj2ad2kLMDc2CI8e1cU4jkqban7asY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfLPTDd (ORCPT
+        id S1726998AbfLPTEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:03:33 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33061 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfLPTDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:03:33 -0500
-Received: by mail-il1-f195.google.com with SMTP id r81so6328599ilk.0;
-        Mon, 16 Dec 2019 11:03:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ck1hLhwSHsxU4HX6xIBXPsVqEUK44VPQA89Rn8jGGuY=;
-        b=QMOYkt+Dgwg+QpYo9pIxOHMJ4twFhfGv+NutR3SmTq+VsYY5/eck7P8wJpL+9miaqW
-         QXjOwgO24Z1pmxfcbJEeuNYFP4SxqQ2POdx5FKclCw7BuNUMyDisYicACKoYvdSpqn8Q
-         95wXiNEWETEYSKm8bGHkaw+7DSX5rQ4LiHEXgAdzIcrgWyF++9DUc7UzoS814BbAzPx3
-         ZDhQMNsZJ/88XeOJ3Yd2h4lVv307j1byoqLevCUZJv9GLDc4p4hB4zvkhukLqc5NvUkS
-         H2RVhJuE4msKmT0grPiL4Vd7Tl0TLKSSwZUwdDcDlH4IXUEdJ/Vv3vycwronvNbmjfFd
-         nLOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ck1hLhwSHsxU4HX6xIBXPsVqEUK44VPQA89Rn8jGGuY=;
-        b=HkxJMCBzu5fUpnwJSt7ATWVfRHGImJxZ0OWN/YZWjwLUv/mLtBM3bNl5dTzcQvOKH7
-         7K02D5rOH+ETmfQRWfeLIs9jh7if2WXB/Kfhu1s9s1JU8THN9jhQnRln5/680rIpbvyM
-         YM/Wbkuk6oWNm8GSVrVaVo96meLFfjdtQSQqHrMQ/jUBFbhpZkANz/HciXDpKT7zUnoA
-         GeqfBX1ZaV29mQpoiQ9lKofhzQDq//Y+TZmfF0nmyW268iCxThUZhI+o5Eq7bFLZuxWM
-         Thddm5SmBHSMeoFKLWl/ZT7nywlDMADwITg8rVeSQrw+x2CzDKvoJf6f6ZOgNvMj8EGs
-         PnHw==
-X-Gm-Message-State: APjAAAUqWrsYI1mJnTrZtXiIjtaofX6oiK8WmI4NLPFb06TsoKfD0WIr
-        woJQbmK1Jm4xLwR5MNcAXZhrpa/C+q7Snu6QAf0=
-X-Google-Smtp-Source: APXvYqwO7oXYYv+mzV2pJaMp0PXw81S6LrL/BZmy2OSI1itMD2phWOB1PU9MCTuXBQuX3Po4snX73E+BpN2Cbf/IW/4=
-X-Received: by 2002:a92:dc91:: with SMTP id c17mr11266604iln.78.1576523012236;
- Mon, 16 Dec 2019 11:03:32 -0800 (PST)
+        Mon, 16 Dec 2019 14:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbfLPTEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 14:04:23 -0500
+Received: from localhost (unknown [122.182.192.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF892064B;
+        Mon, 16 Dec 2019 19:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576523062;
+        bh=n2niy3GX1/9dWzk5LJO7Idaltrdy2g6TUiU7ytqHdg4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GrLm1kH8cGzprX5bRAdC9IFHf9PwgtB3rDM9Y1Rh4KyynOYRUxfFrdcO29vCOgCfS
+         S14SXrlvWYR1u/7RD/9MEzzKGP8YrjBDnYATHx8f8RDGUaSe7IQR9yNwwfN3hJH8Tj
+         MPM1KdIkBgL+6AY5w0e50P3IClgXBBcMGsxm00ao=
+Date:   Tue, 17 Dec 2019 00:34:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
+ host controller
+Message-ID: <20191216190415.GL2536@vkoul-mobl>
+References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
+ <1573798172-20534-3-git-send-email-cang@codeaurora.org>
 MIME-Version: 1.0
-References: <20191216145359.28219-1-tony@atomide.com> <20191216164335.GP35479@atomide.com>
-In-Reply-To: <20191216164335.GP35479@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 16 Dec 2019 13:03:20 -0600
-Message-ID: <CAHCN7xLYRm3Lstb=-r6hguDOrxwi-dT0nTzkhYM0S5GYtEzckw@mail.gmail.com>
-Subject: Re: [PATCHv2] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573798172-20534-3-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:43 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Tony Lindgren <tony@atomide.com> [191216 14:54]:
-> > Vignesh, any comments on the ti,mode = "1w" and removal of the call to
-> > hdq_disable_interrupt()? Is there some specific section where we need
-> > to have interrupts disabled and then re-enabled?
->
-> OK I got "1w" mode working too now. We need to clear the irqstatus before
-> calling wait_event_timeout() on it, and we're now missing it in the
-> hdq_read_byte().
->
-> Looks like we should not tinker with the actual irstatus register though,
-> that's up to the hdq_isr() to manage.
->
-> So the following helper is probably what we want to do additionally.
-> I'll be posting v3 of the $subject patch.
+Hi Can,
 
-I manually attempted to apply the patches.  I 'think' I did it right.
+On 14-11-19, 22:09, Can Guo wrote:
+> Add reset control for host controller so that host controller can be reset
+> as required in its power up sequence.
 
-For testing, I ran:
-  watch cat /sys/devices/w1_bus_master1/01-000000000000/power_supply/bq27000-battery/voltage_now
+I am seeing a regression on UFS on SM8150-mtp with this patch. I think
+Jeff is seeing same one lenove laptop on 8998.
 
-I inserted and removed the power cable several times and observed the
-voltage readings with the battery connected.
-The numbers looked reasonable.
+845 does not seem to have this issue and only thing I can see is that on
+sm8150 and 8998 we define reset as:
 
-I then put the board to suspend, waited a few seconds and woke the
-board from sleep.  I resumed my 'watch' function from above and it
-worked just fine.
-If there is nothing else you want me to test, go ahead and add:
+                        resets = <&gcc GCC_UFS_BCR>;
+                        reset-names = "rst";
 
-Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+Thanks
 
-adam
->
-> Regards,
->
-> Tony
->
-> 8< ----------------------
-> diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
-> --- a/drivers/w1/masters/omap_hdq.c
-> +++ b/drivers/w1/masters/omap_hdq.c
-> @@ -119,22 +119,24 @@ static int hdq_wait_for_flag(struct hdq_data *hdq_data, u32 offset,
->         return ret;
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs-qcom.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/scsi/ufs/ufs-qcom.h |  3 +++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index a5b7148..c69c29a1c 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -246,6 +246,44 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
+>  	mb();
 >  }
->
-> +/* Clear saved irqstatus after using an interrupt */
-> +static void hdq_reset_irqstatus(struct hdq_data *hdq_data)
+>  
+> +/**
+> + * ufs_qcom_host_reset - reset host controller and PHY
+> + */
+> +static int ufs_qcom_host_reset(struct ufs_hba *hba)
 > +{
-> +       unsigned long irqflags;
+> +	int ret = 0;
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
 > +
-> +       spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
-> +       hdq_data->hdq_irqstatus = 0;
-> +       spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
+> +	if (!host->core_reset) {
+> +		dev_warn(hba->dev, "%s: reset control not set\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	ret = reset_control_assert(host->core_reset);
+> +	if (ret) {
+> +		dev_err(hba->dev, "%s: core_reset assert failed, err = %d\n",
+> +				 __func__, ret);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * The hardware requirement for delay between assert/deassert
+> +	 * is at least 3-4 sleep clock (32.7KHz) cycles, which comes to
+> +	 * ~125us (4/32768). To be on the safe side add 200us delay.
+> +	 */
+> +	usleep_range(200, 210);
+> +
+> +	ret = reset_control_deassert(host->core_reset);
+> +	if (ret)
+> +		dev_err(hba->dev, "%s: core_reset deassert failed, err = %d\n",
+> +				 __func__, ret);
+> +
+> +	usleep_range(1000, 1100);
+> +
+> +out:
+> +	return ret;
 > +}
 > +
->  /* write out a byte and fill *status with HDQ_INT_STATUS */
->  static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
+>  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
 >  {
->         int ret;
->         u8 tmp_status;
-> -       unsigned long irqflags;
->
->         *status = 0;
->
-> -       spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
-> -       /* clear interrupt flags via a dummy read */
-> -       hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
-> -       /* ISR loads it with new INT_STATUS */
-> -       hdq_data->hdq_irqstatus = 0;
-> -       spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
-> -
->         hdq_reg_out(hdq_data, OMAP_HDQ_TX_DATA, val);
->
->         /* set the GO bit */
-> @@ -168,6 +170,7 @@ static int hdq_write_byte(struct hdq_data *hdq_data, u8 val, u8 *status)
->         }
->
->  out:
-> +       hdq_reset_irqstatus(hdq_data);
->         return ret;
->  }
->
-> @@ -219,7 +222,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
->  {
->         int ret = 0;
->         u8 tmp_status;
-> -       unsigned long irqflags;
->
->         ret = mutex_lock_interruptible(&hdq_data->hdq_mutex);
->         if (ret < 0) {
-> @@ -228,13 +230,6 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
->                 goto rtn;
->         }
->
-> -       spin_lock_irqsave(&hdq_data->hdq_spinlock, irqflags);
-> -       /* clear interrupt flags via a dummy read */
-> -       hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);
-> -       /* ISR loads it with new INT_STATUS */
-> -       hdq_data->hdq_irqstatus = 0;
-> -       spin_unlock_irqrestore(&hdq_data->hdq_spinlock, irqflags);
-> -
->         /* set the INIT and GO bit */
->         hdq_reg_merge(hdq_data, OMAP_HDQ_CTRL_STATUS,
->                 OMAP_HDQ_CTRL_STATUS_INITIALIZATION | OMAP_HDQ_CTRL_STATUS_GO,
-> @@ -283,6 +278,7 @@ static int omap_hdq_break(struct hdq_data *hdq_data)
->                         " return to zero, %x", tmp_status);
->
->  out:
-> +       hdq_reset_irqstatus(hdq_data);
->         mutex_unlock(&hdq_data->hdq_mutex);
->  rtn:
->         return ret;
-> @@ -330,6 +326,7 @@ static int hdq_read_byte(struct hdq_data *hdq_data, u8 *val)
->         /* the data is ready. Read it in! */
->         *val = hdq_reg_in(hdq_data, OMAP_HDQ_RX_DATA);
->  out:
-> +       hdq_reset_irqstatus(hdq_data);
->         mutex_unlock(&hdq_data->hdq_mutex);
->  rtn:
->         return ret;
-> @@ -363,7 +360,6 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
->                 goto rtn;
->         }
->
-> -       hdq_data->hdq_irqstatus = 0;
->         /* read id_bit */
->         hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
->                       ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
-> @@ -377,7 +373,9 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
->         }
->         id_bit = (hdq_reg_in(_hdq, OMAP_HDQ_RX_DATA) & 0x01);
->
-> -       hdq_data->hdq_irqstatus = 0;
-> +       /* Must clear irqstatus for another RXCOMPLETE interrupt */
-> +       hdq_reset_irqstatus(hdq_data);
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> @@ -254,6 +292,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  	bool is_rate_B = (UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B)
+>  							? true : false;
+>  
+> +	/* Reset UFS Host Controller and PHY */
+> +	ret = ufs_qcom_host_reset(hba);
+> +	if (ret)
+> +		dev_warn(hba->dev, "%s: host reset returned %d\n",
+> +				  __func__, ret);
 > +
->         /* read comp_bit */
->         hdq_reg_merge(_hdq, OMAP_HDQ_CTRL_STATUS,
->                       ctrl | OMAP_HDQ_CTRL_STATUS_DIR, mask);
-> @@ -420,6 +418,7 @@ static u8 omap_w1_triplet(void *_hdq, u8 bdir)
->                       OMAP_HDQ_CTRL_STATUS_SINGLE);
->
->  out:
-> +       hdq_reset_irqstatus(hdq_data);
->         mutex_unlock(&hdq_data->hdq_mutex);
->  rtn:
->         pm_runtime_mark_last_busy(hdq_data->dev);
-> @@ -460,7 +459,7 @@ static u8 omap_w1_read_byte(void *_hdq)
->         if (ret < 0) {
->                 pm_runtime_put_noidle(hdq_data->dev);
->
-> -               return ret;
-> +               return -1;
->         }
->
->         ret = hdq_read_byte(hdq_data, &val);
-> --
-> 2.24.1
+>  	if (is_rate_B)
+>  		phy_set_mode(phy, PHY_MODE_UFS_HS_B);
+>  
+> @@ -1101,6 +1145,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>  	host->hba = hba;
+>  	ufshcd_set_variant(hba, host);
+>  
+> +	/* Setup the reset control of HCI */
+> +	host->core_reset = devm_reset_control_get(hba->dev, "rst");
+> +	if (IS_ERR(host->core_reset)) {
+> +		err = PTR_ERR(host->core_reset);
+> +		dev_warn(dev, "Failed to get reset control %d\n", err);
+> +		host->core_reset = NULL;
+> +		err = 0;
+> +	}
+> +
+>  	/* Fire up the reset controller. Failure here is non-fatal. */
+>  	host->rcdev.of_node = dev->of_node;
+>  	host->rcdev.ops = &ufs_qcom_reset_ops;
+> diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+> index d401f17..2d95e7c 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.h
+> +++ b/drivers/scsi/ufs/ufs-qcom.h
+> @@ -6,6 +6,7 @@
+>  #define UFS_QCOM_H_
+>  
+>  #include <linux/reset-controller.h>
+> +#include <linux/reset.h>
+>  
+>  #define MAX_UFS_QCOM_HOSTS	1
+>  #define MAX_U32                 (~(u32)0)
+> @@ -233,6 +234,8 @@ struct ufs_qcom_host {
+>  	u32 dbg_print_en;
+>  	struct ufs_qcom_testbus testbus;
+>  
+> +	/* Reset control of HCI */
+> +	struct reset_control *core_reset;
+>  	struct reset_controller_dev rcdev;
+>  
+>  	struct gpio_desc *device_reset;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+-- 
+~Vinod
