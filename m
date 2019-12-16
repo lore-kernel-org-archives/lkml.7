@@ -2,115 +2,164 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B14C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5172146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9A02146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0EDEWKHI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHHL7O+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfLPUQV (ORCPT
+        id S1727470AbfLPUSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:16:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44739 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfLPUQS (ORCPT
+        Mon, 16 Dec 2019 15:18:48 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38818 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfLPUSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:16:18 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so5198337lfa.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:16:16 -0800 (PST)
+        Mon, 16 Dec 2019 15:18:48 -0500
+Received: by mail-il1-f196.google.com with SMTP id f5so6469231ilq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:18:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=YLUuImzEeNdgR4wgqVgRBbAIWmyCTwR/wtnyDd3xIaE=;
-        b=0EDEWKHIm56j47HaFMM23Z3l1LkmrWmnHY1vwaiC80joIxDNVf68/zHyaL5o/+Lno3
-         jS607DFkpV9KSvysbU3IDwbrLZ1mLeiY7CX6/iqErTbFVxleUV8gIyNL+1JgaVcqSFsH
-         1nnIVwAmIgGN7cAVMzgm0kfZ4hU+l67/r69M4dIzz2+/43LE/kZ1O2N70G6d4P+AivYw
-         knkVpPKaJZlw9y26rrvgYDXTE3UJNnUZI3Zaj144jWyOaLMSMguaaOmz0ZzmHsc9rFcq
-         OhTrIg9WMCIvoVT3FX3TXPMmq/qGg3NY4v2qt831uQs7kgAsBUASHHCN2qbpxRFaN3mf
-         JInA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KyCUVV3rdpr7tDeSg76g9nK9b781278O7KA2xbZ0dR0=;
+        b=iHHL7O+as7eWolVxsmxzpxUyxvjNe8LFILfa7HkOK3iS7jup4IU/ntb2NK2sS1LAdZ
+         YUvpju6Hy0xYjRvu0i18C3RxHU8A4ywJcP213xDCLThJteRskHpFGfq4zC9blpJzR8e5
+         Kd43QUsSdDR3WU4L/dLU5D8TX6fJvEHMgUcFLH3bJdI35YopTcDXxT64L7GxyLjs4++W
+         eWMlt8U5wKEs5/QFSgJhG79Qg4Pj5iqPMJ+MQet720XPq4NfPpcO5DuDuZ8qhrC7eVDn
+         r+UWbDsF1gLq8Z2P+t8FLkB1Y5Vhj2/ZIQ2aob4JBnVSZy5cUTfiF06/fbyqSld4PJLe
+         QfIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=YLUuImzEeNdgR4wgqVgRBbAIWmyCTwR/wtnyDd3xIaE=;
-        b=eLQ4hoZTF9rBc0090izmn/TBABQYQXQaVB9TA5nk6dycckwnuzB9tSlxplc4zD5Iwr
-         jF//y06FfnK7Xvf8vQxXF99zArRoYD06uOaeXYLt8pquAsK/6iYThH5slKv98mhN4IoN
-         Mf7CUPrUVpV4bqdy0KZJdD0TYMC8vNIRgS6a/+XnxiG4ELb43Kx70UHtmtWoJencCSGN
-         ec30RMeqacK6pkT9BCVKq1giluosOAwBqGqIfAXHVuJrkKGce97+eJYLiVTVwTXYoovY
-         JpUHbRre/3LO6dT8ttIQ04Zg8MeFdG4V8VpnyzxVt5zmZ6C80kn3xvNcMxRqrqGpFRsS
-         NjYw==
-X-Gm-Message-State: APjAAAWaeYsMCUurRgBe4rV96/c6KdgGlD16u/m5FHDM8DkQ4HCV2C21
-        kez6vUPNtDxJ5xL5vM9jQISdfQ==
-X-Google-Smtp-Source: APXvYqyt/fVYTuNQcFJk0htjrTxRnckdp1ZR4t6oFaGjxai9lo0wTzQ8KMfd0AAc9f/0dPUfeLqsog==
-X-Received: by 2002:ac2:4884:: with SMTP id x4mr559623lfc.92.1576527376259;
-        Mon, 16 Dec 2019 12:16:16 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id a24sm11015145ljp.97.2019.12.16.12.16.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 12:16:16 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:16:05 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 4/4] net: stmmac: Always use TX coalesce timer
- value when rescheduling
-Message-ID: <20191216121605.4780302d@cakuba.netronome.com>
-In-Reply-To: <BN8PR12MB3266BDA48CE9F65D564B0918D3510@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
-        <23c0ff1feddcc690ee66adebefdc3b10031afe1b.1576007149.git.Jose.Abreu@synopsys.com>
-        <20191214122837.4960adfd@cakuba.netronome.com>
-        <BN8PR12MB3266BDA48CE9F65D564B0918D3510@BN8PR12MB3266.namprd12.prod.outlook.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KyCUVV3rdpr7tDeSg76g9nK9b781278O7KA2xbZ0dR0=;
+        b=b1lV93LHjmqLEoinWkZ2TPLwbfSuyYlqlbkHRkKjZTkSKjN7Vvu/RVgX3t8X6vUe5j
+         3yfJP90A/CoDzT04YDdbLKUnSfWzCdhm4XMlnmf7rWK1zkbrzuYCeUzHlCaj41k5dmyf
+         l6sclaUFIrQjQUwdnuPiDL1mSXSijGuIphIlfvR0XOT1b6q7jVhF9CYnYWMTUZpSZkd+
+         s06SVa3+SGaT2E2VIt9RtxJFx9PsM5fwgqT9yZX3AdyjYFDfjfUtcv6FDVKO/yQTzn0G
+         0qb1itRl2AbWXH0Otvz+Z3DFnIbBrVNtnVywFHUvZP5JjrX/GoPC+PrcIgGwqWOb8KWh
+         ULZQ==
+X-Gm-Message-State: APjAAAXQeAN138vZRTvb5OloqohN2iNSkRpaL0IQ947nN+KJva+OXZkw
+        IZlpXxOnsLcg2lz8NUPwhx1XhoJ8MwrXNGU+Vfk=
+X-Google-Smtp-Source: APXvYqzSEzu9t2auDYj+3nxgS4a5/G+lOTRzSkjO0L50ebyLT6+kDt8bpDOMCXv7X1n602yk6tYppRZnPhdejAau5WY=
+X-Received: by 2002:a92:89c2:: with SMTP id w63mr13740064ilk.252.1576527527066;
+ Mon, 16 Dec 2019 12:18:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191215013306.18880-1-navid.emamdoost@gmail.com> <6159c10a-2f5f-e6ef-7a64-4b613e422efa@mev.co.uk>
+In-Reply-To: <6159c10a-2f5f-e6ef-7a64-4b613e422efa@mev.co.uk>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Mon, 16 Dec 2019 14:18:35 -0600
+Message-ID: <CAEkB2ERefAPHerg=F2V_-OHDH4P8sq2QjiP8+W=0HVgcCQNscw@mail.gmail.com>
+Subject: Re: [PATCH] staging: comedi: drivers: Fix memory leak in gsc_hpdi_auto_attach
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 09:20:53 +0000, Jose Abreu wrote:
-> > > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > index f61780ae30ac..726a17d9cc35 100644
-> > > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > > @@ -1975,7 +1975,7 @@ static int stmmac_tx_clean(struct stmmac_priv *priv, int budget, u32 queue)
-> > >  
-> > >  	/* We still have pending packets, let's call for a new scheduling */
-> > >  	if (tx_q->dirty_tx != tx_q->cur_tx)
-> > > -		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(10));
-> > > +		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(priv->tx_coal_timer));  
-> > 
-> > I think intent of this code is to re-check the ring soon. The same
-> > value of 10 is used in stmmac_tx_timer() for quick re-check.
-> > 
-> > tx_coal_timer defaults to 1000, so it's quite a jump from 10 to 1000.
-> > 
-> > I think the commit message leaves too much unsaid.
-> > 
-> > Also if you want to change to the ethtool timeout value, could you move 
-> > stmmac_tx_timer_arm() and reuse that helper?  
-> 
-> Yeah, it's a quick re-check but 10us can be too low on some speeds and 
-> leads to CPU useless-looping. The intent is to let this always be 
-> configurable by user.
+Ian, thanks for your feedback.
 
-Okay, please do mention the bump from 10us to the default of 1ms in the
-commit message, though.
+On Mon, Dec 16, 2019 at 4:36 AM Ian Abbott <abbotti@mev.co.uk> wrote:
+>
+> On 15/12/2019 01:33, Navid Emamdoost wrote:
+> > In the implementation of gsc_hpdi_auto_attach(), the allocated dma
+> > description is leaks in case of alignment error, or failure of
+> > gsc_hpdi_setup_dma_descriptors() or comedi_alloc_subdevices(). Release
+> > devpriv->dma_desc via dma_free_coherent().
+> >
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>
+> Actually, there is no memory leak (although there is another problem
+> that I'll mention below).  If the "auto_attach" handler
+> gsc_hpdi_auto_attach() returns an error, then the "detach" handler
+> gsc_hpdi_detach() will be called automatically to clean up.  (This is
+> true for all comedi drivers).  gsc_hpdi_detach() calls
+> gsc_hpdi_free_dma() to free the DMA buffers and DMA descriptors.
+>
+I was aware that comedi_alloc_devpriv() is a resource managed
+allocation, but was not sure how subsequent dma_desc allocation will
+be handled when device detach.
+
+> > ---
+> >   drivers/staging/comedi/drivers/gsc_hpdi.c | 16 +++++++++++++---
+> >   1 file changed, 13 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/staging/comedi/drivers/gsc_hpdi.c b/drivers/staging/comedi/drivers/gsc_hpdi.c
+> > index 4bdf44d82879..c0c7047a6d1b 100644
+> > --- a/drivers/staging/comedi/drivers/gsc_hpdi.c
+> > +++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
+> > @@ -633,16 +633,17 @@ static int gsc_hpdi_auto_attach(struct comedi_device *dev,
+> >       if (devpriv->dma_desc_phys_addr & 0xf) {
+> >               dev_warn(dev->class_dev,
+> >                        " dma descriptors not quad-word aligned (bug)\n");
+> > -             return -EIO;
+> > +             retval = -EIO;
+> > +             goto release_dma_desc;
+> >       }
+> >
+> >       retval = gsc_hpdi_setup_dma_descriptors(dev, 0x1000);
+> >       if (retval < 0)
+> > -             return retval;
+> > +             goto release_dma_desc;
+> >
+> >       retval = comedi_alloc_subdevices(dev, 1);
+> >       if (retval)
+> > -             return retval;
+> > +             goto release_dma_desc;
+> >
+> >       /* Digital I/O subdevice */
+> >       s = &dev->subdevices[0];
+> > @@ -660,6 +661,15 @@ static int gsc_hpdi_auto_attach(struct comedi_device *dev,
+> >       s->cancel       = gsc_hpdi_cancel;
+> >
+> >       return gsc_hpdi_init(dev);
+> > +
+> > +release_dma_desc:
+> > +     if (devpriv->dma_desc)
+> > +             dma_free_coherent(&pcidev->dev,
+> > +                               sizeof(struct plx_dma_desc) *
+> > +                             NUM_DMA_DESCRIPTORS,
+> > +                             devpriv->dma_desc,
+> > +                             devpriv->dma_desc_phys_addr);
+> > +     return retval;
+> >   }
+> >
+> >   static void gsc_hpdi_detach(struct comedi_device *dev)
+> >
+>
+> This patch could actually result in devpriv->dma_desc being freed twice
+> - once in the 'release_dma_desc:' code and again when gsc_hpdi_detach()
+> is called externally as part of the clean-up.
+>
+> The real bug in the original code is that it does not check whether any
+> of the calls to dma_alloc_coherent() returned NULL.  If any of the calls
+> to dma_alloc_coherent() returns NULL, gsc_hpdi_auto_attach() needs to
+> return an error (-ENOMEM).  The subsequent call to gsc_hpdi_detach()
+> will then free whatever DMA coherent buffers where allocated.
+>
+Yes, this potential null deref is another type of bug, which I will
+send a patch for separately.
+
+> --
+> -=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+> -=( MEV Ltd. is a company registered in England & Wales. )=-
+> -=( Registered number: 02862268.  Registered address:    )=-
+> -=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+
+
+
+-- 
+Navid.
