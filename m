@@ -2,176 +2,151 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9692C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BAAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B070D20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F0P+45XX"
+	by mail.kernel.org (Postfix) with ESMTP id 3935E20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfLPIyQ (ORCPT
+        id S1727035AbfLPIy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:54:16 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50762 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfLPIyQ (ORCPT
+        Mon, 16 Dec 2019 03:54:28 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37827 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfLPIy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:54:16 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rqsP083176;
-        Mon, 16 Dec 2019 02:53:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576486432;
-        bh=6aFcWyhsHHVnr6Cqjh6RFG3uMltbSLRzg3ZmXfAwROo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=F0P+45XXO+oyrT9rlcf9tv/US8pM8xKSRjl88mVxP6m173McAj6Pyhkfi+bIFs8oh
-         W3IDPIBKql+P+k+9vXABGrikOVH+ShRd+3NHkLQy0AFryRaIEvVF7KwOjF0qQFXtQU
-         TlwhjfDx+D/yzAhFW7NqrutL/8PZPK8Q+YS8YyYA=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8rqNW082176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 02:53:52 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 02:53:50 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 02:53:50 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rlLb101138;
-        Mon, 16 Dec 2019 02:53:48 -0600
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
-To:     Michael Walle <michael@walle.cc>, <linux-mtd@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-References: <20191214191943.3679-1-michael@walle.cc>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
-Date:   Mon, 16 Dec 2019 14:24:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:54:28 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1igm93-0003jo-DP; Mon, 16 Dec 2019 09:54:25 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1igm92-0005WW-Pm; Mon, 16 Dec 2019 09:54:24 +0100
+Date:   Mon, 16 Dec 2019 09:54:24 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191216085424.x6fqr4gxkph5zqjh@pengutronix.de>
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+ <20191212211434.455trhnlcvn26zl6@pengutronix.de>
+ <20191216093955.177a04af@xps13>
 MIME-Version: 1.0
-In-Reply-To: <20191214191943.3679-1-michael@walle.cc>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216093955.177a04af@xps13>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Miquel,
 
-On 15/12/19 12:49 am, Michael Walle wrote:
-> Document the new flag "no-unlock".
+On Mon, Dec 16, 2019 at 09:39:55AM +0100, Miquel Raynal wrote:
+> Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Thu, 12 Dec
+> 2019 22:14:34 +0100:
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Does the property need a prefix? I couldn't find any hint. If so, what
-> should it be? "m25p," or "spi-nor," ?
+> > On Fri, Nov 29, 2019 at 08:10:23PM +0100, Miquel Raynal wrote:
+> > > +static int max7313_pwm_apply(struct pwm_chip *chip,
+> > > +			     struct pwm_device *pwm,
+> > > +			     const struct pwm_state *state)
+> > > +{
+> > > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > > +	unsigned int intensity, active;
+> > > +	int ret = 0;
+> > > +
+> > > +	if (!state->enabled ||
+> > > +	    state->period < PWM_PERIOD_NS ||
+> > > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* Convert the duty-cycle to be in the [0;16] range */
+> > > +	intensity = DIV_ROUND_DOWN_ULL(state->duty_cycle,
+> > > +				       state->period / PWM_DC_STATES);  
+> > 
+> > this looks wrong. The period must not have an influence on the selection
+> > of the duty_cycle (other than duty_cycle < period). So given that the
+> > period is fixed at 31.25 ms, the result of
+> > 
+> > 	pwm_apply_state(pwm, { .enabled = 1, .period = 2s, .duty_cycle = 16 ms })
+> > 
+> > must be the same as for
+> > 
+> > 	pwm_apply_state(pwm, { .enabled = 1, .period = 3s, .duty_cycle = 16 ms })
 > 
->  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> This was not my understanding of our previous discussion and, again, I
+> don't really understand this choice but if the framework works like
+> that we shall probably continue with this logic. However, all this
+> should probably be explained directly in the kernel doc of each core
+> helper, that would help a lot.
+
+I agree. There is a pending doc patch and once Thierry applies it I plan
+to add these details.
+
+The idea is to make the policy simple (both computational and to
+understand). With each policy there are strange corner cases, so for
+sure you can come up with examples that yield results that are way off
+from the request. The idea is that drivers all implement the same policy
+and then create helper functions to match the different consumer needs.
+
+> > . Also dividing by a division looses precision.
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index f03be904d3c2..2d305c893ed7 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -78,6 +78,12 @@ Optional properties:
->  		   cannot reboot properly if the flash is left in the "wrong"
->  		   state. This boolean flag can be used on such systems, to
->  		   denote the absence of a reliable reset mechanism.
-> +- no-unlock : By default, linux unlocks the whole flash because there
-> +		   are legacy flash devices which are locked by default
-> +		   after reset. Set this flag if you don't want linux to
-> +		   unlock the whole flash automatically. In this case you
-> +		   can control the non-volatile bits by the
-> +		   flash_lock/flash_unlock tools.
->  
+> I agree but this is a problem with fixed point calculations. Maybe I
+> could first multiply the numerator by a factor of 100 or 1000 to
+> minimize the error. Do you have a better idea?
 
-Current SPI NOR framework unconditionally unlocks entire flash which
-I agree is not the best thing to do, but I don't think we need
-new DT property here. MTD cmdline partitions and DT partitions already 
-provide a way to specify that a partition should remain locked[1][2]
+intensity = DIV_ROUND_DOWN_ULL((unsigned long long)state->duty_cycle * PWM_DC_STATES, state->period);
 
-SPI NOR framework should instead set MTD_POWERUP_LOCK flags in mtd->flags
-for flash devices that power up with lock bits set. And MTD core will 
-take care of unlocking flash regions while taking into account partition
-flags defined by user as part of MTD partitions defined in DT or
-via cmdline args.
-
-So that change should to be set MTD_POWERUP_LOCK for
-in SPI NOR core. Can you check below[3] (untested) diff helps?
-This should prevent unlocking partitions that are to remain locked 
-as specified in DT/cmdline 
-
-[1] Documentation/devicetree/bindings/mtd/partition.txt
-[2] drivers/mtd/parsers/cmdlinepart.c (see "lk" parameter)
-
-[3]
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 1082b6bb1393..6adb950849f6 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -4914,23 +4914,6 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
- 	return nor->params.quad_enable(nor);
- }
+should be both more exact and cheaper to calculate. (But this is
+somewhat moot given that state->period shouldn't be there.)
+(And in general you have to care for overflowing, but I think that's not
+a problem in practise here as struct pwm_state::duty_cycle is an int
+(still), and PWM_DC_STATES is small.)
  
--/**
-- * spi_nor_unlock_all() - Unlocks the entire flash memory array.
-- * @nor:	pointer to a 'struct spi_nor'.
-- *
-- * Some SPI NOR flashes are write protected by default after a power-on reset
-- * cycle, in order to avoid inadvertent writes during power-up. Backward
-- * compatibility imposes to unlock the entire flash memory array at power-up
-- * by default.
-- */
--static int spi_nor_unlock_all(struct spi_nor *nor)
--{
--	if (nor->flags & SNOR_F_HAS_LOCK)
--		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
--
--	return 0;
--}
--
- static int spi_nor_init(struct spi_nor *nor)
- {
- 	int err;
-@@ -4941,11 +4924,11 @@ static int spi_nor_init(struct spi_nor *nor)
- 		return err;
- 	}
- 
--	err = spi_nor_unlock_all(nor);
--	if (err) {
--		dev_dbg(nor->dev, "Failed to unlock the entire flash memory array\n");
--		return err;
--	}
-+	/*
-+	 * Flashes may power up locked. Set this flag so that MTD core
-+	 * takes care of unlocking partitions as required.
-+	 */
-+	nor->mtd.flags |= MTD_POWERUP_LOCK;
- 
- 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
- 		/*
+> > > +static void max7313_pwm_get_state(struct pwm_chip *chip,
+> > > +				  struct pwm_device *pwm,
+> > > +				  struct pwm_state *state)
+> > > +{
+> > > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > > +	u8 intensity;
+> > > +
+> > > +	state->enabled = true;
+> > > +	state->period = PWM_PERIOD_NS;
+> > > +	state->polarity = PWM_POLARITY_NORMAL;
+> > > +
+> > > +	intensity = max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
+> > > +	state->duty_cycle = intensity * PWM_OFFSET_NS;  
+> > 
+> > I think you need to take into account the blink phase bit.
+> 
+> It is already done by .pwm_get_intensity itself, no?
 
+Ah, possible, I admin I didn't look deep enough to catch it there.
 
-
+Best regards
+Uwe
 
 -- 
-Regards
-Vignesh
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
