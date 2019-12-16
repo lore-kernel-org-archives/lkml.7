@@ -2,112 +2,72 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51176C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128FDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2083020733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED5820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wOHPZF2+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QHtdUBuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLPIbh (ORCPT
+        id S1726931AbfLPIbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:31:37 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:34368 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfLPIbg (ORCPT
+        Mon, 16 Dec 2019 03:31:49 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:37168 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfLPIbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:31:36 -0500
-Received: by mail-ua1-f68.google.com with SMTP id w20so1785594uap.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:31:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rfvNJ6SwD135PnS64Nblsl7Xm55KVFsUpW1c0eS2aVY=;
-        b=wOHPZF2+BYK6vzqlz1znc9EAj8uqLkELPngMwylGAxwnHWVHi5jDTQsS5EfDYt6Bqa
-         V4ru3lw+J8heO3Q5g6OoS8A8ConuE4Ic3Lym6EkjxnEQ3Z9oY8AXSmMVRGHWNXBZVI2t
-         /p4RShonvw73Ywu2BrVxv02T0FhA9iagfClQ10XNrKcMAYVoIyYj8vWu0h3p0mgQNX40
-         MN7v6mUuqZLSHvblwbxzjcgQCNrsgg5oaCLfiGP6PvS2qJZGQFszpU8BS5wAjLraSRIu
-         QuSxv1yIZyYfmQWeq/HignciG/JW4vhXQVXGIlx/5x816KYrIYVFPzELAaL9QymoQWAu
-         1S7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rfvNJ6SwD135PnS64Nblsl7Xm55KVFsUpW1c0eS2aVY=;
-        b=MUmHTL5pyZMmnvnfivK2nzeJVWBH/EfWMGB+NhvBrxdvz5fw4ZnHPyFAjUKfIrbtFo
-         hzBV2WsT5vy/OD2fVEpPdP7pryfnB7zc8yL/VnXOByfFtRikJb3M1gbOLyjbfKTw2D23
-         Au2Dk3HENf4cpFgsUzGVbWvuhUVSg1XJ9cKMTUrVInbS4vr2+G7t+R9Em1yDbZBJTdDC
-         cBYqT2d2q+3H7RvUDo4m5ddrnnDUOowj0OVWlv80fdR1aQYR88BhCnPkzEBtUYb++3s1
-         Wib3UV2KCJbn2N4o3UK2z231P3N5siwzMnDxwIfN5hIMFYUdayXv4t0S2VvT0FyOn0bm
-         F/Bg==
-X-Gm-Message-State: APjAAAWHowBSRMWs784UiggueC2WDqZNWHgSGJAzO8hmEqlmUDa/TPoD
-        A+7PAIesC89vQPqmFZ7s45JhIuTKWtXPldLk+38dXg==
-X-Google-Smtp-Source: APXvYqxpum27qzlPECIy99bHs3MTRT1fsw5fQXcrzj94L1CgoL4z3o4EdzdWdo+LFQweAhtr1FIPsa+WvuSZCwwL/ps=
-X-Received: by 2002:ab0:2716:: with SMTP id s22mr22638741uao.20.1576485095866;
- Mon, 16 Dec 2019 00:31:35 -0800 (PST)
+        Mon, 16 Dec 2019 03:31:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7nL0ywYvvzT3nVoIZ+avpVZJdPqWoTy/wgaWFoJjuU4=; b=QHtdUBuO9fnNKxryNSzv4Q5Sr
+        TEOCqYXwt1R9kxsxXiTna4r3EVzw8UNjBK5YgqwJg0jVLEP1v39mevYUNg2GQodQds1XiTo2sGMMK
+        HJH+J5jv7mxM2Apu4GtT+tcOCVG2TR256CECZYg4CYhUmtwCxaEjwRIyDnKILE5Eks9R8KLIYtVKz
+        mHPWmldwsXMMToZ1CVje4MRirs57ul4TJ0SFWJbXhqF56/nBy5TeSwXtrUu2yUwVdDWFnpZ3y3/Um
+        byKOs/Q2/Ps9cKklHc1ZOffyLvofogRfTCnw+pb3SpGANa3uiapB7SLfnTV/4PeI9A02WTAtPz9s5
+        ClGkmSl4g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iglmu-0001yK-Np; Mon, 16 Dec 2019 08:31:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E838F3035D4;
+        Mon, 16 Dec 2019 09:30:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB23629D73DC1; Mon, 16 Dec 2019 09:31:28 +0100 (CET)
+Date:   Mon, 16 Dec 2019 09:31:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     bokun.feng@gmail.com, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: events: add releases() notation
+Message-ID: <20191216083128.GI2844@hirez.programming.kicks-ass.net>
+References: <20191216002400.89985-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com> <f56dce4fcb71592cbcf0fc48a841f86f52770d4c.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <f56dce4fcb71592cbcf0fc48a841f86f52770d4c.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:31:24 +0100
-Message-ID: <CACRpkdap9TXqWpUKb+vPmLkjV-1msm8zVWshv+m6c87oDxip7A@mail.gmail.com>
-Subject: Re: [PATCH v6 11/15] docs: driver-model: Add missing managed GPIO
- array get functions
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216002400.89985-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:48 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Mon, Dec 16, 2019 at 12:24:00AM +0000, Jules Irenge wrote:
+> Add releases() notation to remove issue detected by sparse
+> context imbalance in perf_output_end() - unexpected unlock
 
-> devm_gpiod_get_array and devm_gpiod_get_array_optional were missing
-> from the list. Add them.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> No changes sinnce v5
+None of the perf code uses the __acquire / __release annotations crud.
+Also, your annotation is broken, I think it should be __releases(RCU) or
+something like that.
 
-Patch applied.
-
-No need to merge this patch into MFD or other subsystem where the
-rest gets merged.
-
-Yours,
-Linus Walleij
