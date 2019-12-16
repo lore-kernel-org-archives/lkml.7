@@ -2,148 +2,220 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B01C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B92B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AEE52067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfLPNOi (ORCPT
+        id S1727901AbfLPNPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:14:38 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727722AbfLPNOi (ORCPT
+        Mon, 16 Dec 2019 08:15:11 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:45036 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbfLPNPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:14:38 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGD7FFH116950;
-        Mon, 16 Dec 2019 08:14:03 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wwdt9td02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:14:02 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBGD8ZEh121681;
-        Mon, 16 Dec 2019 08:14:02 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wwdt9tcyg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:14:02 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGDA1mV009817;
-        Mon, 16 Dec 2019 13:14:01 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wvqc638vu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 13:14:01 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGDE1Z150397666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 13:14:01 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6E132805E;
-        Mon, 16 Dec 2019 13:14:00 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B18D2805A;
-        Mon, 16 Dec 2019 13:13:55 +0000 (GMT)
-Received: from [9.199.36.91] (unknown [9.199.36.91])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 13:13:55 +0000 (GMT)
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org> <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
-Date:   Mon, 16 Dec 2019 18:43:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:15:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id h87so5130624ild.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 05:15:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jrC1hy+B+ZUZUUL3zO0Ty88a7c56IoHN5y2LItNpz4g=;
+        b=hteUYL190P86qzDT2DnDQRi9t6BbYUEq8QEQsI7G9FU11pW9DY1hqccFhZcP7pImYu
+         ot2HRhRD7FcgurSEScx8+vq3jyRijeNon1KjD0S+EsDQ+CJLsYTCZDdIQHSxDiQSLoCQ
+         3T8xiGRUUTqGGE+YeJmvBpPyiBD+7u/0sZ9tOAZIDNzfVW1VlD7D2gGaY6Jjh99JxyUM
+         NcTM9kk1l6RgUHjFRGCtyPco5Tbb/YsIXzI4Yqqd0Kyz8HOIe0WTB6Lv9gDYVH2en0Mw
+         kAXfpL2rMAHi5mdBSsBu4RnPTqMR3tpioI++CHepWM+Tviqh4pc58iBb/+SJximjxKxI
+         EdiQ==
+X-Gm-Message-State: APjAAAVWRzKGpkcH98CbvMyeIzi2RqeaneslK7mK0fuSXm1sZe2if2Hq
+        rlKIm/opmnwgMT9tJXyR39hx3sVjZVSAcYaWRzN+vsrbDlYp
+X-Google-Smtp-Source: APXvYqwsKRh3vgeP21Wrq9YSX6ApLsb7V4nNezP2v/oMJABOflvdEuhucLI0lb7fvR7rsC91k6055RuFLZiFiQg9WpNkkLtGhn5Y
 MIME-Version: 1.0
-In-Reply-To: <20191216123752.GM2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_04:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 clxscore=1015 suspectscore=2 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160118
+X-Received: by 2002:a6b:7e48:: with SMTP id k8mr4574965ioq.39.1576502109853;
+ Mon, 16 Dec 2019 05:15:09 -0800 (PST)
+Date:   Mon, 16 Dec 2019 05:15:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003ee3610599d20096@google.com>
+Subject: KASAN: use-after-free Read in __media_entity_remove_links
+From:   syzbot <syzbot+0b0095300dfeb8a83dc8@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 6:07 PM, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 06:01:58PM +0530, Aneesh Kumar K.V wrote:
->> Peter Zijlstra <peterz@infradead.org> writes:
->>
->>> Towards a more consistent naming scheme.
->>>
->>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>> ---
->>>   arch/Kconfig              |    3 ++-
->>>   arch/powerpc/Kconfig      |    2 +-
->>>   arch/sparc/Kconfig        |    2 +-
->>>   include/asm-generic/tlb.h |    2 +-
->>>   mm/mmu_gather.c           |    2 +-
->>>   5 files changed, 6 insertions(+), 5 deletions(-)
->>>
->>> --- a/arch/Kconfig
->>> +++ b/arch/Kconfig
->>> @@ -396,8 +396,9 @@ config HAVE_ARCH_JUMP_LABEL_RELATIVE
->>>   config MMU_GATHER_RCU_TABLE_FREE
->>>   	bool
->>>   
->>> -config HAVE_RCU_TABLE_NO_INVALIDATE
->>> +config MMU_GATHER_NO_TABLE_INVALIDATE
->>>   	bool
->>> +	depends on MMU_GATHER_RCU_TABLE_FREE
->>
->>
->> Can we drop this Kernel config option instead use
->> MMU_GATHER_RCU_TABLE_FREE? IMHO reducing the kernel config related to
->> mmu_gather can reduce the complexity.
-> 
-> I'm confused, are you saing you're happy to have PowerPC eat the extra
-> TLB invalidates? I thought you cared about PPC performance :-)
-> 
-> 
+Hello,
 
-Instead can we do
+syzbot found the following crash on:
 
-static inline void tlb_table_invalidate(struct mmu_gather *tlb)
-{
-#ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-	 * Invalidate page-table caches used by hardware walkers. Then we still
-	 * need to RCU-sched wait while freeing the pages because software
-	 * walkers can still be in-flight.
-	 */
-	tlb_flush_mmu_tlbonly(tlb);
-#endif
-}
+HEAD commit:    4cc037ec usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=104e177ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e9c2b6de462bc469
+dashboard link: https://syzkaller.appspot.com/bug?extid=0b0095300dfeb8a83dc8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f2fb1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16842d2ee00000
 
--aneesh
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0b0095300dfeb8a83dc8@syzkaller.appspotmail.com
+
+usb 1-1: USB disconnect, device number 2
+==================================================================
+BUG: KASAN: use-after-free in __media_entity_remove_links+0x134/0x160  
+drivers/media/mc/mc-entity.c:779
+Read of size 8 at addr ffff8881d199f120 by task kworker/1:2/1719
+
+CPU: 1 PID: 1719 Comm: kworker/1:2 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xef/0x16e lib/dump_stack.c:118
+  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
+  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:639
+  __media_entity_remove_links+0x134/0x160 drivers/media/mc/mc-entity.c:779
+  __media_device_unregister_entity+0x187/0x300  
+drivers/media/mc/mc-device.c:596
+  media_device_unregister_entity+0x49/0x70 drivers/media/mc/mc-device.c:688
+  v4l2_device_unregister_subdev+0x257/0x380  
+drivers/media/v4l2-core/v4l2-device.c:283
+  v4l2_device_unregister drivers/media/v4l2-core/v4l2-device.c:100 [inline]
+  v4l2_device_unregister+0x139/0x220 drivers/media/v4l2-core/v4l2-device.c:88
+  uvc_unregister_video+0x11a/0x210 drivers/media/usb/uvc/uvc_driver.c:1929
+  uvc_disconnect+0xbc/0x160 drivers/media/usb/uvc/uvc_driver.c:2242
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
+  device_del+0x481/0xd30 drivers/base/core.c:2664
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
+  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1753/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 22:
+  save_stack+0x1b/0x80 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  media_add_link+0x47/0x180 drivers/media/mc/mc-entity.c:592
+  media_create_pad_link+0x1fb/0x530 drivers/media/mc/mc-entity.c:684
+  uvc_mc_create_links drivers/media/usb/uvc/uvc_entity.c:50 [inline]
+  uvc_mc_register_entities+0x468/0x77a drivers/media/usb/uvc/uvc_entity.c:114
+  uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2075 [inline]
+  uvc_probe.cold+0x2137/0x29de drivers/media/usb/uvc/uvc_driver.c:2201
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x1480/0x1c20 drivers/base/core.c:2487
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 1719:
+  save_stack+0x1b/0x80 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x129/0x170 mm/kasan/common.c:474
+  slab_free_hook mm/slub.c:1425 [inline]
+  slab_free_freelist_hook mm/slub.c:1458 [inline]
+  slab_free mm/slub.c:3005 [inline]
+  kfree+0xda/0x310 mm/slub.c:3957
+  __media_entity_remove_link+0x25c/0x5d0 drivers/media/mc/mc-entity.c:622
+  __media_entity_remove_links+0x86/0x160 drivers/media/mc/mc-entity.c:780
+  __media_device_unregister_entity+0x187/0x300  
+drivers/media/mc/mc-device.c:596
+  media_device_unregister_entity+0x49/0x70 drivers/media/mc/mc-device.c:688
+  v4l2_device_unregister_subdev+0x257/0x380  
+drivers/media/v4l2-core/v4l2-device.c:283
+  v4l2_device_unregister drivers/media/v4l2-core/v4l2-device.c:100 [inline]
+  v4l2_device_unregister+0x139/0x220 drivers/media/v4l2-core/v4l2-device.c:88
+  uvc_unregister_video+0x11a/0x210 drivers/media/usb/uvc/uvc_driver.c:1929
+  uvc_disconnect+0xbc/0x160 drivers/media/usb/uvc/uvc_driver.c:2242
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
+  device_del+0x481/0xd30 drivers/base/core.c:2664
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
+  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1753/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d199f100
+  which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 32 bytes inside of
+  96-byte region [ffff8881d199f100, ffff8881d199f160)
+The buggy address belongs to the page:
+page:ffffea00074667c0 refcount:1 mapcount:0 mapping:ffff8881da002f00  
+index:0xffff8881d199fe80
+raw: 0200000000000200 ffffea0007474e40 0000000e0000000e ffff8881da002f00
+raw: ffff8881d199fe80 0000000080200016 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d199f000: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+  ffff8881d199f080: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+> ffff8881d199f100: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                                ^
+  ffff8881d199f180: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+  ffff8881d199f200: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
