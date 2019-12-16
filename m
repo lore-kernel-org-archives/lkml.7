@@ -2,84 +2,104 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3C3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB8FC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ED82082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA98206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oN62Nud0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ce0JkAaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfLPTgF (ORCPT
+        id S1727120AbfLPTjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:36:05 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:45802 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbfLPTgE (ORCPT
+        Mon, 16 Dec 2019 14:39:31 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42570 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfLPTjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:36:04 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r11so3429994pjp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 11:36:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc:user-agent:date;
-        bh=5tZt6zZ1S+fVatR78M8B2+XrluLkJCGawdF/aH5D3dQ=;
-        b=oN62Nud0FYaBL8CqZaYUiBC5XOS4rWL5oonbdEYsU8eQ+ZGcuCgjcE9v4/7Qz0wu59
-         wKgD8Wj+JKQfNUNviBHq9U6I8ZMFtpRMg/u9mPXTfWFLYN/6fR41kqy447Im38AbbCI2
-         s4ZPUmBDonYOo0h2c23bsZ2PB3sxgsl/+ulwo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
-         :user-agent:date;
-        bh=5tZt6zZ1S+fVatR78M8B2+XrluLkJCGawdF/aH5D3dQ=;
-        b=EHghOQifu7Qas3WrShVjy8hsylAc9SZ+6e81hBPOaW/A6JNyxhv+X4EmQQc02h0kDA
-         ZdZyoTWusC8TQMiWXZy22WQr7+SRCJMvEpu4sF4XEUOfFQ8FKvDc9Y3tHITm/jQKYKmn
-         YcgW2QLPtpLVcmKiFPciaQAt7OWsZIAcRBUvyxdHUxFF9KAuUwPqHJlum5XUjlSYMt/A
-         EJ/l5INd3gtc7Dqd/DGwIMLcDIGc5pHYFG2kKXxFzyjmWJKWhCMOrEV8bsqb/d80+RY9
-         fE0Pg0ChFcMtNOnXz/o7aFaZCXVlIJ5ibrInwDk4lO5Y9JpPP05EFoki2L58+CK7uXIi
-         Mu+w==
-X-Gm-Message-State: APjAAAX2Wl1JWuWBwIyiFoN7MPV64KdqQiBDeu9eMzclG/avAtHYKMO4
-        7hxJkmzY1dyTDN+BiD5B1lCrRg==
-X-Google-Smtp-Source: APXvYqzgLVp5SCoceOc5nLMs72Cez/6LNuWcnU638uhaNvnqczKBacjWrTm0MGwLpqBCR+EHdcKNvQ==
-X-Received: by 2002:a17:902:8ec2:: with SMTP id x2mr17690413plo.290.1576524964286;
-        Mon, 16 Dec 2019 11:36:04 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id ce22sm275996pjb.17.2019.12.16.11.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 11:36:03 -0800 (PST)
-Message-ID: <5df7dca3.1c69fb81.e53a7.1650@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 16 Dec 2019 14:39:31 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGJdOj3115233;
+        Mon, 16 Dec 2019 13:39:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576525164;
+        bh=vCabfj6+uoFYGOCcB6wnIJ2lDm1TOSkgjhyBX1IgwgI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ce0JkAaZ1zfcH19gaXbXctW9eDGOI2v98/etQOtrPVORgjAgNzstbSOh2wxlHkPge
+         7qKDnkYChgPW8NknN6iO12Ne2oIXYFGuv/Cwm0GoXYodV8s8IjzTu//cSAQrSKvy9Y
+         Hr0UAakYNRFzYpW204a9Dbt3RuE5ZiKsRzo1LiO0=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGJdOQX046541;
+        Mon, 16 Dec 2019 13:39:24 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 13:39:23 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 13:39:23 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGJdLtG095374;
+        Mon, 16 Dec 2019 13:39:21 -0600
+Subject: Re: [PATCH] ARM: dts: omap3: name mdio node properly
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191216193022.30201-1-grygorii.strashko@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <0b341b95-9d59-8053-09fc-db009e1099b9@ti.com>
+Date:   Mon, 16 Dec 2019 21:39:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191216115531.17573-3-sibis@codeaurora.org>
-References: <20191216115531.17573-1-sibis@codeaurora.org> <20191216115531.17573-3-sibis@codeaurora.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add rpmh power-domain node
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        rnayak@codeaurora.org, robh+dt@kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 16 Dec 2019 11:36:02 -0800
+In-Reply-To: <20191216193022.30201-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sibi Sankar (2019-12-16 03:55:31)
-> Add the DT node for the rpmhpd power controller on SC7180 SoCs.
->=20
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Hi All,
+
+Pls. Ignore this mail.
+
+On 16/12/2019 21:30, Grygorii Strashko wrote:
+> Rename davinci_mdio DT node "ethernet"->"mdio"
+> This fixes the following DT schemas check errors:
+> am3517-craneboard.dt.yaml: ethernet@5c030000: $nodename:0: 'ethernet@5c030000' does not match '^mdio(@.*)?'
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
+>   arch/arm/boot/dts/am3517.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
+> index 76f819f4ba48..84e13778a64a 100644
+> --- a/arch/arm/boot/dts/am3517.dtsi
+> +++ b/arch/arm/boot/dts/am3517.dtsi
+> @@ -74,7 +74,7 @@
+>   			clock-names = "ick";
+>   		};
+>   
+> -		davinci_mdio: ethernet@5c030000 {
+> +		davinci_mdio: mdio@5c030000 {
+>   			compatible = "ti,davinci_mdio";
+>   			ti,hwmods = "davinci_mdio";
+>   			status = "disabled";
+> 
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Pls. Ignore this mail.
 
+-- 
+Best regards,
+grygorii
