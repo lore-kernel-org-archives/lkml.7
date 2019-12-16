@@ -7,116 +7,104 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3126CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E27C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046FF22B48
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0DB2465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HchpIwQM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Es/WNnW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLPEFg (ORCPT
+        id S1726759AbfLPEHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:05:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39390 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfLPEFf (ORCPT
+        Sun, 15 Dec 2019 23:07:44 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42648 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfLPEHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:05:35 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so4844496pfx.6
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 20:05:35 -0800 (PST)
+        Sun, 15 Dec 2019 23:07:43 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 4so4838699pfz.9
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 20:07:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=d4XspCOLY0K+C1Vfb2PDWcaWLInJRK+f1WKwR2zrrME=;
-        b=HchpIwQMnBNKqHOnvMjOMVaASy6pIUbbRENB4Er0WySYNfH+cBpQd/VVttcEc1iKxU
-         S1PRRWmCeQcvQ71kCjxcxw41+AUwXVn06ggSP/Zx9ly0DoKdBGTHyVbF0ccUKPnpjHM+
-         xX3YY+c/v+G56ALgVfZqfy5qyUXDan07Mw01WG8VVtLiAxZf3yM10dpMJQx5B+lGuXdA
-         hydKasR+2Z/bXmU6U1hqBFvb0IYLydzNSl3ZU39fzdqrbkMJDNWsewQly1buzzFbWPFk
-         ielGKUyIRolOQcCwzMA3Dslc650R54M64soVcZ6fdMEva18UuIe1odrXveTbZJmYsueA
-         Ga0w==
+        bh=O0EDp2VR7vRrdpezRRk8VnhFZPtMH566WLQKOyukB0Q=;
+        b=Es/WNnW6oIegDELYoewhci7zWAZBMTG3UNR4q9zqfYkP7PKxVi1jqOIrLQwmesPGvB
+         X0kF3I7HDgxiZ7YT95a53VFsmqGg2Hcsl0pNhQPx6LWk2QmOfwcstIUNlbAbNtZxltxE
+         RPUgTj+qs/eQsF/6/NhDx3bzydjDTzI0iuVLe0aL0zUIaNBUxcxZiT/9nzq08ji6w9su
+         ocl7Uh418YxUzz4Z3jDsqOl5f/A3WL/ajKMklV2HuK0h0cRA+iV2XvngPWufeRupTJx6
+         iuL/aU0EqICCUzd2nIzGvv2ZwhWCb0r/fti0JMwgBUqW0Oc82u/nRLR3ZbHjMbdLboQr
+         sXPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d4XspCOLY0K+C1Vfb2PDWcaWLInJRK+f1WKwR2zrrME=;
-        b=qbCwRhFea0DzPlABXA9Q/O3R7hg5ad99gxLuFvaZ1fQskI5ZL9jQHUJrAAcVQSyJBT
-         l3kNub4MDmGJbW60P38oTsu4jK4/6Ka6wBSfXy3bMK+Y3bYEJZCDgHE8jFpICNQPdMwr
-         l5/mUzG3ECNu7Wch3qdC+VzkubYYo7+zGxldZoCHfQZZfID640LYnie1I6yNlXgyycpr
-         O7dNVwr4etha7wxZnmP6yHj0CW2a49jfXuJXGJlDwoSGqSz5C+VbBhHX9hjDUdsx8LVW
-         IoSwoBm00iLot6Jh2+/bm8sK+nXYPD+TL0klgs0HPluwtcv5KMbwlauHlQvC0XH15l8P
-         rgkg==
-X-Gm-Message-State: APjAAAXoH1+IpQF0eMEQ0qteP/wdfS10R3g6ux3pOuSpeI9qTD6kMoZz
-        +m/9Jl790XQWMW3ln20BOrbKEw==
-X-Google-Smtp-Source: APXvYqwLt7wj56FeIgG9ZelBz/Zll/j8P4bcApK8Q+7U541auajpxb17fqK7nFsQ5ScZhkF9BwftfQ==
-X-Received: by 2002:a65:66d7:: with SMTP id c23mr16106550pgw.40.1576469135086;
-        Sun, 15 Dec 2019 20:05:35 -0800 (PST)
+        bh=O0EDp2VR7vRrdpezRRk8VnhFZPtMH566WLQKOyukB0Q=;
+        b=gz+h2g8nDM6VXriSRl1kWCitLSLoHfnWtipZtOz8hyTCPJ/8t4VqHm61qbLZLTeoLg
+         1fuu5Zyh7Mi/cWC4zjzhI3qVjEUe+ZdOCWZiunc2v6tpz6+Be9/XiTaF+KrtBCW55P30
+         uUMBdrlnLMhVrNP96sIWymskX9woFeC6pl98zo4olyjCN3O4viFD4KDtXd6iIxOOZwwm
+         kMyHvFNdqNoDnvtvR96NZqeGFQRib4O7oacIjWW8N5JS5CwpWbxvNbjfRlQrTIl82TmO
+         sKzcvsvCqc/Dq/7LxY2iao0ZoGVGLUPTjXiAVMpSOJ4EVFkeg3UQr8SAiiCK6pzzal+T
+         J23A==
+X-Gm-Message-State: APjAAAVfjCSqd7XgDfaAxXa+VdR5sYqGhiPw33x+TNbiizRoiRmv6x+z
+        3va9HO3mB4UpvkBq6YfA8++xGw==
+X-Google-Smtp-Source: APXvYqwcp08t+zOBxQyHNztM8wNJhrrKhtCm3cB1YuJMwthppEEIOJAkZprpR/02QkZjtblZgQjDSQ==
+X-Received: by 2002:a62:c541:: with SMTP id j62mr14001745pfg.237.1576469263222;
+        Sun, 15 Dec 2019 20:07:43 -0800 (PST)
 Received: from localhost ([122.171.234.168])
-        by smtp.gmail.com with ESMTPSA id e10sm20480322pfm.3.2019.12.15.20.05.33
+        by smtp.gmail.com with ESMTPSA id 100sm18149086pjo.17.2019.12.15.20.07.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Dec 2019 20:05:34 -0800 (PST)
-Date:   Mon, 16 Dec 2019 09:35:32 +0530
+        Sun, 15 Dec 2019 20:07:42 -0800 (PST)
+Date:   Mon, 16 Dec 2019 09:37:40 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/11] cpufreq: dt-platdev: Blacklist NVIDIA Tegra20
- and Tegra30 SoCs
-Message-ID: <20191216040532.mzdovqoub5rdztwb@vireshk-i7>
-References: <20191118164512.8676-1-digetx@gmail.com>
- <20191118164512.8676-8-digetx@gmail.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rjw@rjwysocki.net, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpufreq: kirkwood: convert to
+ devm_platform_ioremap_resource
+Message-ID: <20191216040740.d5r2dn3gs6xamxh3@vireshk-i7>
+References: <20191215140522.30872-1-tiny.windzz@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118164512.8676-8-digetx@gmail.com>
+In-Reply-To: <20191215140522.30872-1-tiny.windzz@gmail.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-11-19, 19:45, Dmitry Osipenko wrote:
-> Both NVIDIA Tegra20 and Tegra30 SoCs should be blacklisted because CPU
-> OPPs use supported_hw and thus platdev isn't suitable for these SoCs.
-> Currently cpufreq-dt driver produces a bit annoying warning splats
-> during boot because valid OPPs are not found, this will be fixed once
-> tegra20-cpufreq driver will be update to support cpufreq-dt. The warnings
-> will also happen on older stable kernels using newer device-trees, thus
-> this patch should be backported to stable kernels as well.
+On 15-12-19, 14:05, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
 > 
-> Cc: <stable@vger.kernel.org>
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Fixes: 4053aa65c517 ("ARM: tegra: cardhu-a04: Add CPU Operating Performance Points")
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/cpufreq/kirkwood-cpufreq.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index f1d170dcf4d3..aba591d57c67 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
->  	{ .compatible = "mediatek,mt8176", },
->  	{ .compatible = "mediatek,mt8183", },
+> diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
+> index cb74bdc5baaa..70ad8fe1d78b 100644
+> --- a/drivers/cpufreq/kirkwood-cpufreq.c
+> +++ b/drivers/cpufreq/kirkwood-cpufreq.c
+> @@ -102,13 +102,11 @@ static struct cpufreq_driver kirkwood_cpufreq_driver = {
+>  static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np;
+> -	struct resource *res;
+>  	int err;
 >  
-> +	{ .compatible = "nvidia,tegra20", },
-> +	{ .compatible = "nvidia,tegra30", },
->  	{ .compatible = "nvidia,tegra124", },
->  	{ .compatible = "nvidia,tegra210", },
+>  	priv.dev = &pdev->dev;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	priv.base = devm_ioremap_resource(&pdev->dev, res);
+> +	priv.base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(priv.base))
+>  		return PTR_ERR(priv.base);
+>  
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Applied both. Thanks.
 
 -- 
 viresh
