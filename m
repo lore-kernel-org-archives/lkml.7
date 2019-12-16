@@ -2,62 +2,38 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36244C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5B8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9B820725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lNymz8Qi"
+	by mail.kernel.org (Postfix) with ESMTP id BB34620725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfLPLz5 (ORCPT
+        id S1727535AbfLPL4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:55:57 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:37163 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727487AbfLPLzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:55:55 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576497354; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=DxtWNO9bQTd8ysz9d48B5NN4eyzBXe6e6GV1muQQduQ=; b=lNymz8Qi1K+Gvby5lNbJy7Pg4u+IAyF8/uWnnQSSCDU9UxRG/Y3YpNrsbK2UTQh3kLzg3wd4
- a15Qna3hPPHZdiiL6BlCFBiPnw1Vxez5VRHmXhoFHxER0S1TVL+FAezqHmrpsernIMyGinJ+
- nnniuZP+ZK+1U+cxwAikxxHNLCk=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df770ca.7f2257d34ea0-smtp-out-n02;
- Mon, 16 Dec 2019 11:55:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2883DC433A2; Mon, 16 Dec 2019 11:55:54 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47FB6C433A2;
-        Mon, 16 Dec 2019 11:55:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47FB6C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: sc7180: Add rpmh power-domain node
-Date:   Mon, 16 Dec 2019 17:25:31 +0530
-Message-Id: <20191216115531.17573-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191216115531.17573-1-sibis@codeaurora.org>
-References: <20191216115531.17573-1-sibis@codeaurora.org>
+        Mon, 16 Dec 2019 06:56:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:51920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbfLPL4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:56:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E680F1FB;
+        Mon, 16 Dec 2019 03:56:42 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E41E13F719;
+        Mon, 16 Dec 2019 03:56:41 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, Steven Price <steven.price@arm.com>
+Subject: [PATCH v5 0/3] arm64: Workaround for Cortex-A55 erratum 1530923
+Date:   Mon, 16 Dec 2019 11:56:28 +0000
+Message-Id: <20191216115631.17804-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,86 +41,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT node for the rpmhpd power controller on SC7180 SoCs.
+Version 5 is a rebasing of version 4 (no changes).
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 55 ++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+This series enables a workaround for Cortex-A55 erratum 1530923. The
+erratum potentially allows TLB entries to be allocated as a result of a
+speculative AT instruction. This may happen in the middle of a guest
+world switch while the relevant VMSA configuration is in an inconsistent
+state, leading to erroneous content being allocated into TLBs.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 01bbb58ae5160..fb17dc62d7ab1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- 
- / {
-@@ -1284,6 +1285,60 @@
- 				clock-names = "xo";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmhpd: power-controller {
-+				compatible = "qcom,sc7180-rpmhpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmhpd_opp_table>;
-+
-+				rpmhpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmhpd_opp_ret: opp1 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-+					};
-+
-+					rpmhpd_opp_min_svs: opp2 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmhpd_opp_low_svs: opp3 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs: opp4 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs_l1: opp5 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					};
-+
-+					rpmhpd_opp_svs_l2: opp6 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-+					};
-+
-+					rpmhpd_opp_nom: opp7 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					};
-+
-+					rpmhpd_opp_nom_l1: opp8 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					};
-+
-+					rpmhpd_opp_nom_l2: opp9 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-+					};
-+
-+					rpmhpd_opp_turbo: opp10 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					};
-+
-+					rpmhpd_opp_turbo_l1: opp11 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+					};
-+				};
-+			};
- 		};
- 
- 		cpufreq_hw: cpufreq@18323000 {
+There are existing workarounds for similar issues, 1165522 is
+effectively the same, and 1319367/1319537 is similar but without VHE
+support.  Rather than add to the selection of errata, the first patch
+renames 1165522 to WORKAROUND_SPECULATIVE_AT which can be reused (in the
+final patch) for 1530923.
+
+The workaround for errata 1319367 and 1319537 although similar cannot
+use VHE (not available on those CPUs) so cannot share the workaround.
+However, to keep some sense of symmetry the workaround is renamed to
+SPECULATIVE_AT_NVHE.
+
+Changes since v4:
+ * Rebased to v5.5-rc1
+
+Changes since v3:
+ * Added Suzuki's reviewed-bys - thanks!
+ * Corrected ARM64_WORKAROUND_SPECULATIVE_AT to
+   ARM64_WORKAROUND_SPECULATIVE_AT_VHE in the final patch
+
+Changes since v2:
+ * Split 1319367/1319537 back into their own workaround, but rename it
+   for symmetry with the VHE workaround.
+
+Changes since v1:
+ * Combine 1319367/1319537 into the same 'SPECULATIVE_AT' workaround.
+
+Steven Price (3):
+  arm64: Rename WORKAROUND_1165522 to SPECULATIVE_AT_VHE
+  arm64: Rename WORKAROUND_1319367 to SPECULATIVE_AT_NVHE
+  arm64: Workaround for Cortex-A55 erratum 1530923
+
+ Documentation/arm64/silicon-errata.rst |  2 ++
+ arch/arm64/Kconfig                     | 21 +++++++++++++++++++++
+ arch/arm64/include/asm/cpucaps.h       |  4 ++--
+ arch/arm64/include/asm/kvm_host.h      |  2 +-
+ arch/arm64/include/asm/kvm_hyp.h       |  6 +++---
+ arch/arm64/kernel/cpu_errata.c         | 25 +++++++++++++++++++------
+ arch/arm64/kvm/hyp/switch.c            | 10 +++++-----
+ arch/arm64/kvm/hyp/sysreg-sr.c         |  4 ++--
+ arch/arm64/kvm/hyp/tlb.c               | 12 ++++++------
+ 9 files changed, 61 insertions(+), 25 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
+
