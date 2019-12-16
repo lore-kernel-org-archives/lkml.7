@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE26C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502BEC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F10206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279C9206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521168;
-	bh=+acM6/3oFbKzz7oCcG64SWWaZNc21NPB0mvTRhzs49c=;
+	s=default; t=1576521172;
+	bh=8li020Po+yB8tIM/vH97YFOqrlj1+GSSXyV+MrYkqqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lIdoACC/D6vn79oREghQHBrfWcRpbeEwbQQ3L3QlEvov9hyo2ErDmhAN+jdfa03cZ
-	 eNL7W9EZx+AsT0P2d1dfCK6KuSgKNMARfFUdtuVNq0ezWsjwTN/bLDwP5CcdoYCVn5
-	 wVcdmJWh56BAFgErectl5cAp+GLm8k517yZHRItc=
+	b=rpcp9F2LnUV0Sj18EtKxZQTXNa9BGH3sh19t9cbEfO6VVKywRge1JLZyBWik7M74H
+	 yCbik5CphkOdlwr/Tr8H7+VqvHea/U4vJORYQlYabteYP5sLfzu/NyeSYSNsva7poh
+	 HyR+bVME2RNCNtXpKWvgbz+0K+G0aDl+sHIho1co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfLPSJy (ORCPT
+        id S1730503AbfLPSJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52512 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:09:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730500AbfLPSJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:52 -0500
+        id S1730493AbfLPSJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:09:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9F5C206B7;
-        Mon, 16 Dec 2019 18:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A54A206B7;
+        Mon, 16 Dec 2019 18:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519791;
-        bh=+acM6/3oFbKzz7oCcG64SWWaZNc21NPB0mvTRhzs49c=;
+        s=default; t=1576519786;
+        bh=8li020Po+yB8tIM/vH97YFOqrlj1+GSSXyV+MrYkqqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPO1IPaCJrNBAQAVY1SvC0kV0Sv4lzQo+kQ1m+fVuSDXT2B4dDB8JojoSgI2549xm
-         1yV22tazXDorZxlpGE3JWrzYplJFN99eYWDjsHI4BDVMMFMoAvT31CSaVd3xsjNxic
-         EU+ytxBmz85oJsU62u9ZVixbNZmSRMlMiqRzm9cw=
+        b=iMHxoE8OF8VDq5N0UvkMOjXYLdpNvNBlWqq4DCza2R8/3GR+cmd+LxokWqOGvhjCs
+         NO8I4BApjT0K2/nHtNnBssg0eDGJ7PDaJ0DhlZ8COyL6qbGZ8v9stwbKxvVmrO+DL4
+         A0iY/eRfgyn0KLzmKDOy/OJNOi31Hr9kh7QXzWQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Amir Goldstein <amir73il@gmail.com>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 068/180] ovl: fix corner case of non-unique st_dev;st_ino
-Date:   Mon, 16 Dec 2019 18:48:28 +0100
-Message-Id: <20191216174830.044230419@linuxfoundation.org>
+Subject: [PATCH 5.3 067/180] ovl: fix lookup failure on multi lower squashfs
+Date:   Mon, 16 Dec 2019 18:48:27 +0100
+Message-Id: <20191216174829.950628779@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,58 +62,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amir Goldstein <amir73il@gmail.com>
 
-commit 9c6d8f13e9da10a26ad7f0a020ef86e8ef142835 upstream.
+commit 7e63c87fc2dcf3be9d3aab82d4a0ea085880bdca upstream.
 
-On non-samefs overlay without xino, non pure upper inodes should use a
-pseudo_dev assigned to each unique lower fs and pure upper inodes use the
-real upper st_dev.
+In the past, overlayfs required that lower fs have non null uuid in
+order to support nfs export and decode copy up origin file handles.
 
-It is fine for an overlay pure upper inode to use the same st_dev;st_ino
-values as the real upper inode, because the content of those two different
-filesystem objects is always the same.
+Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
+lower fs") relaxed this requirement for nfs export support, as long
+as uuid (even if null) is unique among all lower fs.
 
-In this case, however:
- - two filesystems, A and B
- - upper layer is on A
- - lower layer 1 is also on A
- - lower layer 2 is on B
+However, said commit unintentionally also relaxed the non null uuid
+requirement for decoding copy up origin file handles, regardless of
+the unique uuid requirement.
 
-Non pure upper overlay inode, whose origin is in layer 1 will have the same
-st_dev;st_ino values as the real lower inode. This may result with a false
-positive results of 'diff' between the real lower and copied up overlay
-inode.
+Amend this mistake by disabling decoding of copy up origin file handle
+from lower fs with a conflicting uuid.
 
-Fix this by using the upper st_dev;st_ino values in this case.  This breaks
-the property of constant st_dev;st_ino across copy up of this case. This
-breakage will be fixed by a later patch.
+We still encode copy up origin file handles from those fs, because
+file handles like those already exist in the wild and because they
+might provide useful information in the future.
 
-Fixes: 5148626b806a ("ovl: allocate anon bdev per unique lower fs")
-Cc: stable@vger.kernel.org # v4.17+
+There is an unhandled corner case described by Miklos this way:
+- two filesystems, A and B, both have null uuid
+- upper layer is on A
+- lower layer 1 is also on A
+- lower layer 2 is on B
+
+In this case bad_uuid won't be set for B, because the check only
+involves the list of lower fs.  Hence we'll try to decode a layer 2
+origin on layer 1 and fail.
+
+We will deal with this corner case later.
+
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Tested-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
+Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
+Cc: stable@vger.kernel.org # v4.20+
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/inode.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/overlayfs/namei.c     |    8 ++++++++
+ fs/overlayfs/ovl_entry.h |    2 ++
+ fs/overlayfs/super.c     |   24 +++++++++++++++++-------
+ 3 files changed, 27 insertions(+), 7 deletions(-)
 
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -200,8 +200,14 @@ int ovl_getattr(const struct path *path,
- 			if (ovl_test_flag(OVL_INDEX, d_inode(dentry)) ||
- 			    (!ovl_verify_lower(dentry->d_sb) &&
- 			     (is_dir || lowerstat.nlink == 1))) {
--				stat->ino = lowerstat.ino;
- 				lower_layer = ovl_layer_lower(dentry);
-+				/*
-+				 * Cannot use origin st_dev;st_ino because
-+				 * origin inode content may differ from overlay
-+				 * inode content.
-+				 */
-+				if (samefs || lower_layer->fsid)
-+					stat->ino = lowerstat.ino;
- 			}
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *o
+ 	int i;
  
- 			/*
+ 	for (i = 0; i < ofs->numlower; i++) {
++		/*
++		 * If lower fs uuid is not unique among lower fs we cannot match
++		 * fh->uuid to layer.
++		 */
++		if (ofs->lower_layers[i].fsid &&
++		    ofs->lower_layers[i].fs->bad_uuid)
++			continue;
++
+ 		origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
+ 					    connected);
+ 		if (origin)
+--- a/fs/overlayfs/ovl_entry.h
++++ b/fs/overlayfs/ovl_entry.h
+@@ -22,6 +22,8 @@ struct ovl_config {
+ struct ovl_sb {
+ 	struct super_block *sb;
+ 	dev_t pseudo_dev;
++	/* Unusable (conflicting) uuid */
++	bool bad_uuid;
+ };
+ 
+ struct ovl_layer {
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -1255,7 +1255,7 @@ static bool ovl_lower_uuid_ok(struct ovl
+ {
+ 	unsigned int i;
+ 
+-	if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
++	if (!ofs->config.nfs_export && !ofs->upper_mnt)
+ 		return true;
+ 
+ 	for (i = 0; i < ofs->numlowerfs; i++) {
+@@ -1263,9 +1263,13 @@ static bool ovl_lower_uuid_ok(struct ovl
+ 		 * We use uuid to associate an overlay lower file handle with a
+ 		 * lower layer, so we can accept lower fs with null uuid as long
+ 		 * as all lower layers with null uuid are on the same fs.
++		 * if we detect multiple lower fs with the same uuid, we
++		 * disable lower file handle decoding on all of them.
+ 		 */
+-		if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
++		if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
++			ofs->lower_fs[i].bad_uuid = true;
+ 			return false;
++		}
+ 	}
+ 	return true;
+ }
+@@ -1277,6 +1281,7 @@ static int ovl_get_fsid(struct ovl_fs *o
+ 	unsigned int i;
+ 	dev_t dev;
+ 	int err;
++	bool bad_uuid = false;
+ 
+ 	/* fsid 0 is reserved for upper fs even with non upper overlay */
+ 	if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
+@@ -1288,11 +1293,15 @@ static int ovl_get_fsid(struct ovl_fs *o
+ 	}
+ 
+ 	if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+-		ofs->config.index = false;
+-		ofs->config.nfs_export = false;
+-		pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
+-			uuid_is_null(&sb->s_uuid) ? "null" : "conflicting",
+-			path->dentry);
++		bad_uuid = true;
++		if (ofs->config.index || ofs->config.nfs_export) {
++			ofs->config.index = false;
++			ofs->config.nfs_export = false;
++			pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
++				uuid_is_null(&sb->s_uuid) ? "null" :
++							    "conflicting",
++				path->dentry);
++		}
+ 	}
+ 
+ 	err = get_anon_bdev(&dev);
+@@ -1303,6 +1312,7 @@ static int ovl_get_fsid(struct ovl_fs *o
+ 
+ 	ofs->lower_fs[ofs->numlowerfs].sb = sb;
+ 	ofs->lower_fs[ofs->numlowerfs].pseudo_dev = dev;
++	ofs->lower_fs[ofs->numlowerfs].bad_uuid = bad_uuid;
+ 	ofs->numlowerfs++;
+ 
+ 	return ofs->numlowerfs;
 
 
